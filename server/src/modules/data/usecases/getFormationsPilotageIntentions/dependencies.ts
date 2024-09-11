@@ -69,6 +69,11 @@ const selectPlacesFermees = (eb: ExpressionBuilder<DB, "demande">) =>
           + GREATEST(${eb.ref("capaciteApprentissageActuelle")}
             - ${eb.ref("capaciteApprentissage")}, 0)`;
 
+const selectPlacesColorees = (eb: ExpressionBuilder<DB, "demande">) =>
+  sql`
+    ${eb.ref("capaciteScolaireColoree")} +
+    ${eb.ref("capaciteApprentissageColoree")}`;
+
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.count<number>("demande.numero").distinct();
 
@@ -126,229 +131,234 @@ const getFormationsPilotageIntentionsQuery = ({
     return [];
   })();
 
-  return (
-    kdb
-      .selectFrom("latestDemandeIntentionView as demande")
-      .innerJoin("campagne", (join) =>
-        join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-          if (campagne) return eb.on("campagne.annee", "=", campagne);
-          return eb;
-        })
+  const effectifs = getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery({
+    statut,
+    type,
+    rentreeScolaire,
+    millesimeSortie,
+    codeRegion,
+    codeAcademie,
+    codeDepartement,
+    tauxPression,
+    codeNiveauDiplome,
+    codeNsf,
+    campagne,
+    orderBy,
+    order,
+  });
+
+  return kdb
+    .selectFrom("latestDemandeIntentionView as demande")
+    .innerJoin("campagne", (join) =>
+      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
+        if (campagne) return eb.on("campagne.annee", "=", campagne);
+        return eb;
+      })
+    )
+    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "demande.codeDispositif"
+    )
+    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .leftJoin(
+      "academie",
+      "academie.codeAcademie",
+      "dataEtablissement.codeAcademie"
+    )
+    .leftJoin(
+      "departement",
+      "departement.codeDepartement",
+      "dataEtablissement.codeDepartement"
+    )
+    .leftJoin("positionFormationRegionaleQuadrant", (join) =>
+      join.on((eb) =>
+        eb.and([
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.cfd"),
+            "=",
+            eb.ref("demande.cfd")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
+            "=",
+            eb.ref("dataEtablissement.codeRegion")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
+            "=",
+            eb.val(
+              getMillesimeFromRentreeScolaire({
+                rentreeScolaire: CURRENT_RENTREE,
+                offset: 0,
+              })
+            )
+          ),
+        ])
       )
-      .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-      .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-      .leftJoin(
-        "dispositif",
-        "dispositif.codeDispositif",
-        "demande.codeDispositif"
-      )
-      .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-      .leftJoin(
-        "academie",
-        "academie.codeAcademie",
-        "dataEtablissement.codeAcademie"
-      )
-      .leftJoin(
-        "departement",
-        "departement.codeDepartement",
-        "dataEtablissement.codeDepartement"
-      )
-      .leftJoin("positionFormationRegionaleQuadrant", (join) =>
-        join.on((eb) =>
-          eb.and([
-            eb(
-              eb.ref("positionFormationRegionaleQuadrant.cfd"),
-              "=",
-              eb.ref("demande.cfd")
-            ),
-            eb(
-              eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
-              "=",
-              eb.ref("dataEtablissement.codeRegion")
-            ),
-            eb(
-              eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
-              "=",
-              eb.val(
-                getMillesimeFromRentreeScolaire({
-                  rentreeScolaire: CURRENT_RENTREE,
-                  offset: 0,
-                })
-              )
-            ),
-          ])
+    )
+    .leftJoin(
+      kdb
+        .selectFrom(
+          effectifs.as("effectifsParCampagneCodeNiveauDiplomeCodeRegion")
         )
-      )
-      .select((eb) => [
-        "positionFormationRegionaleQuadrant.positionQuadrant",
-        "dataFormation.libelleFormation",
-        "dispositif.libelleDispositif",
-        "dataFormation.cfd",
-        "demande.codeDispositif as codeDispositif",
+        .select((eb) => [
+          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.annee",
+          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.cfd",
+          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeRegion",
+          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeNiveauDiplome",
+          sql<number>`SUM(${eb.ref(
+            "effectifsParCampagneCodeNiveauDiplomeCodeRegion.denominateur"
+          )})`.as("denominateur"),
+        ])
+        .groupBy([
+          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.annee",
+          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.cfd",
+          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeRegion",
+          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeNiveauDiplome",
+        ])
+        .as("effectifs"),
+      (join) =>
+        join
+          .onRef("campagne.annee", "=", "effectifs.annee")
+          .onRef("demande.cfd", "=", "effectifs.cfd")
+          .onRef(
+            "dataFormation.codeNiveauDiplome",
+            "=",
+            "effectifs.codeNiveauDiplome"
+          )
+          .onRef("demande.codeRegion", "=", "effectifs.codeRegion")
+    )
+    .select((eb) => [
+      sql<number>`COALESCE(${eb.ref("effectifs.denominateur")}, 0)`.as(
+        "effectif"
+      ),
+      "positionFormationRegionaleQuadrant.positionQuadrant",
+      "dataFormation.libelleFormation",
+      "dispositif.libelleDispositif",
+      "dataFormation.cfd",
+      "demande.codeDispositif as codeDispositif",
+      (eb) =>
+        withInsertionReg({
+          eb,
+          millesimeSortie,
+          cfdRef: "demande.cfd",
+          codeDispositifRef: "demande.codeDispositif",
+          codeRegionRef: "dataEtablissement.codeRegion",
+        }).as("tauxInsertion"),
+      withPoursuiteReg({
+        eb,
+        millesimeSortie,
+        cfdRef: "demande.cfd",
+        codeDispositifRef: "demande.codeDispositif",
+        codeRegionRef: "dataEtablissement.codeRegion",
+      }).as("tauxPoursuite"),
+      withTauxPressionReg({
+        eb,
+        cfdRef: "demande.cfd",
+        codeDispositifRef: "demande.codeDispositif",
+        codeRegionRef: "dataEtablissement.codeRegion",
+      }).as("tauxPression"),
+      withTauxDevenirFavorableReg({
+        eb,
+        millesimeSortie,
+        cfdRef: "demande.cfd",
+        codeDispositifRef: "demande.codeDispositif",
+        codeRegionRef: "dataEtablissement.codeRegion",
+      }).as("tauxDevenirFavorable"),
+      selectNbDemandes(eb).as("nbDemandes"),
+      selectNbEtablissements(eb).as("nbEtablissements"),
+      sql<number>`ABS(${eb.fn.sum(selectDifferencePlaces(eb, type))})`.as(
+        "differencePlaces"
+      ),
+      eb.fn.sum<number>(selectPlacesOuvertes(eb)).as("placesOuvertes"),
+      eb.fn.sum<number>(selectPlacesFermees(eb)).as("placesFermees"),
+      eb.fn.sum<number>(selectPlacesColorees(eb)).as("placesColorees"),
+      eb.fn.sum<number>(selectPlacesTransformees(eb)).as("placesTransformees"),
+      hasContinuum({
+        eb,
+        millesimeSortie,
+        cfdRef: "demande.cfd",
+        codeDispositifRef: "demande.codeDispositif",
+        codeRegionRef: "dataEtablissement.codeRegion",
+      }).as("continuum"),
+    ])
+    .$call((eb) => {
+      if (rentreeScolaire)
+        return eb.where(
+          "demande.rentreeScolaire",
+          "in",
+          rentreeScolaire.map((rentree) => parseInt(rentree))
+        );
+      return eb;
+    })
+    .where((wb) => {
+      if (!type) return wb.val(true);
+      return wb((eb) => selectDifferencePlaces(eb, type), ">", 0);
+    })
+    .having((h) => {
+      if (!tauxPression) return h.val(true);
+      return h(
         (eb) =>
-          withInsertionReg({
+          withTauxPressionReg({
             eb,
-            millesimeSortie,
             cfdRef: "demande.cfd",
             codeDispositifRef: "demande.codeDispositif",
             codeRegionRef: "dataEtablissement.codeRegion",
-          }).as("tauxInsertion"),
-        withPoursuiteReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "demande.cfd",
-          codeDispositifRef: "demande.codeDispositif",
-          codeRegionRef: "dataEtablissement.codeRegion",
-        }).as("tauxPoursuite"),
-        // sql<number>`
-        // COALESCE(
-        // ${withInsertionReg({
-        //   eb,
-        //   millesimeSortie,
-        //   cfdRef: "demande.cfd",
-        //   codeDispositifRef: "demande.codeDispositif",
-        //   codeRegionRef: "dataEtablissement.codeRegion",
-        // })},
-        // 0)`.as("tauxInsertion"),
-        // sql<number>`
-        //   COALESCE(
-        //   ${withPoursuiteReg({
-        //     eb,
-        //     millesimeSortie,
-        //     cfdRef: "demande.cfd",
-        //     codeDispositifRef: "demande.codeDispositif",
-        //     codeRegionRef: "dataEtablissement.codeRegion",
-        //   })},
-        // 0)`.as("tauxPoursuite"),
-        withTauxPressionReg({
-          eb,
-          cfdRef: "demande.cfd",
-          codeDispositifRef: "demande.codeDispositif",
-          codeRegionRef: "dataEtablissement.codeRegion",
-        }).as("tauxPression"),
-        withTauxDevenirFavorableReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "demande.cfd",
-          codeDispositifRef: "demande.codeDispositif",
-          codeRegionRef: "dataEtablissement.codeRegion",
-        }).as("tauxDevenirFavorable"),
-        selectNbDemandes(eb).as("nbDemandes"),
-        selectNbEtablissements(eb).as("nbEtablissements"),
-        sql<number>`ABS(${eb.fn.sum(selectDifferencePlaces(eb, type))})`.as(
-          "differencePlaces"
-        ),
-        eb.fn.sum<number>(selectPlacesOuvertes(eb)).as("placesOuvertes"),
-        eb.fn.sum<number>(selectPlacesFermees(eb)).as("placesFermees"),
-        eb.fn
-          .sum<number>(selectPlacesTransformees(eb))
-          .as("placesTransformees"),
-        hasContinuum({
-          eb,
-          millesimeSortie,
-          cfdRef: "demande.cfd",
-          codeDispositifRef: "demande.codeDispositif",
-          codeRegionRef: "dataEtablissement.codeRegion",
-        }).as("continuum"),
-      ])
-      .$call((eb) => {
-        if (rentreeScolaire)
-          return eb.where(
-            "demande.rentreeScolaire",
-            "in",
-            rentreeScolaire.map((rentree) => parseInt(rentree))
-          );
-        return eb;
-      })
-      .where((wb) => {
-        if (!type) return wb.val(true);
-        return wb((eb) => selectDifferencePlaces(eb, type), ">", 0);
-      })
-      // .having(
-      //   (eb) =>
-      //     withInsertionReg({
-      //       eb,
-      //       millesimeSortie,
-      //       cfdRef: "demande.cfd",
-      //       codeDispositifRef: "demande.codeDispositif",
-      //       codeRegionRef: "dataEtablissement.codeRegion",
-      //     }),
-      //   "is not",
-      //   null
-      // )
-      // .having(
-      //   (eb) =>
-      //     withPoursuiteReg({
-      //       eb,
-      //       millesimeSortie,
-      //       cfdRef: "demande.cfd",
-      //       codeDispositifRef: "demande.codeDispositif",
-      //       codeRegionRef: "dataEtablissement.codeRegion",
-      //     }),
-      //   "is not",
-      //   null
-      // )
-      .having((h) => {
-        if (!tauxPression) return h.val(true);
-        return h(
-          (eb) =>
-            withTauxPressionReg({
-              eb,
-              cfdRef: "demande.cfd",
-              codeDispositifRef: "demande.codeDispositif",
-              codeRegionRef: "dataEtablissement.codeRegion",
-            }),
-          tauxPression === "eleve" ? ">" : "<",
-          tauxPression === "eleve" ? 1.3 : 0.7
-        );
-      })
-      .$narrowType<{ tauxPoursuite: number; tauxInsertion: number }>()
-      .where((w) => {
-        if (!codeRegion) return w.val(true);
-        return w("dataEtablissement.codeRegion", "=", codeRegion);
-      })
-      .where((w) => {
-        if (!codeAcademie) return w.val(true);
-        return w("dataEtablissement.codeAcademie", "=", codeAcademie);
-      })
-      .where((w) => {
-        if (!codeDepartement) return w.val(true);
-        return w("dataEtablissement.codeDepartement", "=", codeDepartement);
-      })
-      .groupBy([
-        "positionFormationRegionaleQuadrant.positionQuadrant",
-        "demande.cfd",
-        "dataFormation.cfd",
-        "demande.codeDispositif",
-        "dispositif.libelleDispositif",
-        "dataFormation.libelleFormation",
-        ...partition,
-      ])
-      .$call((q) => {
-        if (!statut) return q;
-        return q.where("demande.statut", "=", statut);
-      })
-      .$call((q) => {
-        if (!codeNiveauDiplome?.length) return q;
-        return q.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
-      })
-      .$call((q) => {
-        if (codeNsf === undefined || codeNsf.length === 0) return q;
-        return q.where("dataFormation.codeNsf", "in", codeNsf);
-      })
-      .$call((q) => {
-        if (!orderBy || !order) return q;
-        return q.orderBy(sql.ref(orderBy), sql`${sql.raw(order)} NULLS LAST`);
-      })
-      .where(isDemandeNotDeletedOrRefused)
-      .orderBy("tauxDevenirFavorable", "desc")
-      .execute()
-      .then(cleanNull)
-  );
+          }),
+        tauxPression === "eleve" ? ">" : "<",
+        tauxPression === "eleve" ? 1.3 : 0.7
+      );
+    })
+    .$narrowType<{ tauxPoursuite: number; tauxInsertion: number }>()
+    .where((w) => {
+      if (!codeRegion) return w.val(true);
+      return w("dataEtablissement.codeRegion", "=", codeRegion);
+    })
+    .where((w) => {
+      if (!codeAcademie) return w.val(true);
+      return w("dataEtablissement.codeAcademie", "=", codeAcademie);
+    })
+    .where((w) => {
+      if (!codeDepartement) return w.val(true);
+      return w("dataEtablissement.codeDepartement", "=", codeDepartement);
+    })
+    .groupBy([
+      "positionFormationRegionaleQuadrant.positionQuadrant",
+      "demande.cfd",
+      "dataFormation.cfd",
+      "demande.codeDispositif",
+      "dispositif.libelleDispositif",
+      "dataFormation.libelleFormation",
+      "effectif",
+      ...partition,
+    ])
+    .$call((q) => {
+      if (!statut) return q;
+      return q.where("demande.statut", "=", statut);
+    })
+    .$call((q) => {
+      if (!codeNiveauDiplome?.length) return q;
+      return q.where(
+        "dataFormation.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
+    })
+    .$call((q) => {
+      if (codeNsf === undefined || codeNsf.length === 0) return q;
+      return q.where("dataFormation.codeNsf", "in", codeNsf);
+    })
+    .$call((q) => {
+      if (!orderBy || !order) return q;
+      return q.orderBy(sql.ref(orderBy), sql`${sql.raw(order)} NULLS LAST`);
+    })
+    .where(isDemandeNotDeletedOrRefused)
+    .orderBy("tauxDevenirFavorable", "desc")
+    .execute()
+    .then(cleanNull);
 };
 
 const getRegionStats = async ({
@@ -413,6 +423,75 @@ const getRegionStats = async ({
     .executeTakeFirstOrThrow();
 
   return statsSortie;
+};
+
+const getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery = ({
+  ...filters
+}: Filters) => {
+  return (
+    kdb
+      .selectFrom("campagne")
+      .leftJoin("constatRentree", (join) => join.onTrue())
+      .leftJoin(
+        "dataEtablissement",
+        "dataEtablissement.uai",
+        "constatRentree.uai"
+      )
+      .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
+      // .leftJoin("positionFormationRegionaleQuadrant", (join) =>
+      //   join
+      //     .onRef(
+      //       "positionFormationRegionaleQuadrant.codeRegion",
+      //       "=",
+      //       "dataEtablissement.codeRegion"
+      //     )
+      //     .onRef(
+      //       "positionFormationRegionaleQuadrant.cfd",
+      //       "=",
+      //       "dataFormation.cfd"
+      //     )
+      //     .onRef(
+      //       "positionFormationRegionaleQuadrant.codeNiveauDiplome",
+      //       "=",
+      //       "dataFormation.codeNiveauDiplome"
+      //     )
+      // )
+      .select((eb) => [
+        "dataFormation.cfd",
+        "dataFormation.codeNiveauDiplome",
+        "dataEtablissement.codeRegion",
+        "campagne.annee",
+        "rentreeScolaire",
+        sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as(
+          "denominateur"
+        ),
+      ])
+      .$call((eb) => {
+        if (filters.campagne)
+          return eb.where("campagne.annee", "=", filters.campagne);
+        return eb;
+      })
+      .where(
+        sql<boolean>`
+      CASE WHEN "campagne"."annee" = '2023' THEN "constatRentree"."anneeDispositif" = 1
+      ELSE
+        CASE WHEN "dataFormation"."typeFamille" in ('specialite', 'option') THEN "constatRentree"."anneeDispositif" = 2
+        WHEN "dataFormation"."typeFamille" in ('2nde_commune', '1ere_commune') THEN false
+        ELSE "constatRentree"."anneeDispositif" = 1
+        END
+      END
+      `
+      )
+      .where("constatRentree.rentreeScolaire", "=", "2023")
+      .groupBy([
+        "annee",
+        "rentreeScolaire",
+        "dataFormation.cfd",
+        "dataFormation.codeNiveauDiplome",
+        "dataEtablissement.codeRegion",
+        // "positionQuadrant",
+      ])
+  );
 };
 
 export const dependencies = {

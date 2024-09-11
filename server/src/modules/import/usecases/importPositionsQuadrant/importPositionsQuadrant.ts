@@ -12,7 +12,7 @@ import { findTauxRegionauxFormation } from "./steps/findTauxRegionauxFormation";
 import { insertPositionFormationRegionaleQuadrant } from "./steps/insertPositionFormationRegionaleQuadrant";
 import { insertTauxIJRegionaux } from "./steps/insertTauxIJRegionaux";
 
-export const [ImportPositionsQuadrant, ImportPositionsQuadrantFactory] = inject(
+export const [importPositionsQuadrant, importPositionsQuadrantFactory] = inject(
   {
     findFormations: findFormations,
     findRegions: findRegions,

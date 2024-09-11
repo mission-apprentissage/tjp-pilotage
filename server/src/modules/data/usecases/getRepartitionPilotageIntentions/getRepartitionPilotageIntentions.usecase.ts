@@ -5,6 +5,7 @@ import { z } from "zod";
 import { RequestUser } from "../../../core/model/User";
 import { getDomainesQuery } from "./deps/getDomainesQuery";
 import { getNiveauxDiplomeQuery } from "./deps/getNiveauxDiplomeQuery";
+import { getPositionsQuadrantQuery } from "./deps/getPositionsQuadrantQuery";
 import { getZonesGeographiquesQuery } from "./deps/getZonesGeographiquesQuery";
 import {
   getRepartitionPilotageIntentionsSchema,
@@ -87,29 +88,45 @@ const getRepartitionPilotageIntentionsFactory =
       getDomainesQuery,
       getNiveauxDiplomeQuery,
       getZonesGeographiquesQuery,
+      getPositionsQuadrantQuery,
     }
   ) =>
   async (activeFilters: Filters) => {
     // const campagne = await deps.getCurrentCampagneQuery();
     // const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
-    const [domaines, niveauxDiplome, zonesGeographiques] = await Promise.all([
-      deps.getDomainesQuery({
-        filters: {
-          ...activeFilters,
-        },
-      }),
-      deps.getNiveauxDiplomeQuery({
-        filters: {
-          ...activeFilters,
-        },
-      }),
-      deps.getZonesGeographiquesQuery({
-        filters: {
-          ...activeFilters,
-        },
-      }),
-    ]);
+    const [domaines, niveauxDiplome, zonesGeographiques, positionsQuadrant] =
+      await Promise.all([
+        deps.getDomainesQuery({
+          filters: {
+            ...activeFilters,
+          },
+        }),
+        deps.getNiveauxDiplomeQuery({
+          filters: {
+            ...activeFilters,
+          },
+        }),
+        deps.getZonesGeographiquesQuery({
+          filters: {
+            ...activeFilters,
+          },
+        }),
+        deps.getPositionsQuadrantQuery({
+          filters: {
+            ...activeFilters,
+          },
+        }),
+      ]);
 
+    // console.log(
+    //   formatResult(
+    //     positionsQuadrant,
+    //     activeFilters.order,
+    //     activeFilters.orderBy
+    //   )
+    // );
+    // 1363311
+    // 1375500
     return {
       domaines: formatResult(
         domaines,
@@ -123,6 +140,11 @@ const getRepartitionPilotageIntentionsFactory =
       ),
       zonesGeographiques: formatResult(
         zonesGeographiques,
+        activeFilters.order,
+        activeFilters.orderBy
+      ),
+      positionsQuadrant: formatResult(
+        positionsQuadrant,
         activeFilters.order,
         activeFilters.orderBy
       ),

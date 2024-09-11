@@ -20,11 +20,30 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
       "dataFormation.codeNiveauDiplome"
     )
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .leftJoin("positionFormationRegionaleQuadrant", (join) =>
+      join
+        .onRef(
+          "positionFormationRegionaleQuadrant.codeRegion",
+          "=",
+          "dataEtablissement.codeRegion"
+        )
+        .onRef(
+          "positionFormationRegionaleQuadrant.cfd",
+          "=",
+          "dataFormation.cfd"
+        )
+        .onRef(
+          "positionFormationRegionaleQuadrant.codeNiveauDiplome",
+          "=",
+          "dataFormation.codeNiveauDiplome"
+        )
+    )
     .select((eb) => [
       "nsf.libelleNsf",
       "nsf.codeNsf",
       "niveauDiplome.libelleNiveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
+      "positionFormationRegionaleQuadrant.positionQuadrant",
       "region.libelleRegion",
       "region.codeRegion",
       "campagne.annee",
@@ -57,5 +76,6 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
       "niveauDiplome.codeNiveauDiplome",
       "libelleRegion",
       "region.codeRegion",
+      "positionQuadrant",
     ]);
 };

@@ -1,12 +1,13 @@
-import { ViewIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
   Button,
+  Divider,
   Flex,
   FormControl,
   FormLabel,
   Heading,
+  Highlight,
   Link,
   Popover,
   PopoverCloseButton,
@@ -18,6 +19,7 @@ import {
   Skeleton,
   Stack,
   Text,
+  useToken,
   VStack,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
@@ -32,6 +34,7 @@ import {
 } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
+import { PlacesTransformeesParPositionQuadrantSection } from "@/app/(wrapped)/intentions/pilotage-refonte/components/PlacesTransformeesParPositionQuadrantSection";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
@@ -112,6 +115,7 @@ export const QuadrantSection = ({
   parentFilters: Partial<FiltersStatsPilotageIntentions>;
   scopeFilters?: StatsPilotageIntentions["filters"];
 }) => {
+  const bluefrance113 = useToken("colors", "bluefrance.113");
   const trackEvent = usePlausible();
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
@@ -208,6 +212,9 @@ export const QuadrantSection = ({
   };
 
   if (
+    (!mergedFilters.codeDepartement &&
+      !mergedFilters.codeAcademie &&
+      !mergedFilters.codeRegion) ||
     !mergedFilters.codeNiveauDiplome ||
     mergedFilters.codeNiveauDiplome.length === 0 ||
     mergedFilters.codeNiveauDiplome.length > 1
@@ -220,15 +227,9 @@ export const QuadrantSection = ({
       <Box width={"100%"}>
         <Box p="8">
           <Flex align="center" gap={6}>
-            <Heading fontSize="md" mr="auto" color="bluefrance.113">
-              RÉPARTITION DES OFFRES DE FORMATIONS TRANSFORMÉES
+            <Heading fontSize={20} mr="auto">
+              Quadrant des formations
             </Heading>
-            <Button onClick={() => toggleTypeVue()} variant="solid">
-              <ViewIcon mr={2}></ViewIcon>
-              {`Passer en vue ${
-                typeVue === "quadrant" ? "tableau" : "quadrant"
-              }`}
-            </Button>
             <Flex>
               <ExportMenuButton
                 sx={{
@@ -328,8 +329,6 @@ export const QuadrantSection = ({
             </Flex>
             <Select
               variant="newInput"
-              bg="blueecume.400_hover"
-              color="white"
               maxW={250}
               value={filters.type ?? ""}
               onChange={(item) =>
@@ -340,7 +339,7 @@ export const QuadrantSection = ({
               }
             >
               <option value="" style={{ color: "black" }}>
-                Places ouvertes et fermées
+                Toutes transformations
               </option>
               <option value="ouverture" style={{ color: "black" }}>
                 Places ouvertes
@@ -350,8 +349,202 @@ export const QuadrantSection = ({
               </option>
             </Select>
           </Flex>
+          <Divider my="4" />
           <Flex mt="4">
-            <Box p="4" w="300px" bg="blueecume.975" mr="6">
+            <Box p="4" mr="6" w="200px">
+              <Heading
+                mb="6"
+                fontSize={14}
+                fontWeight={500}
+                color={"bluefrance.113"}
+              >
+                FILTRES
+              </Heading>
+              <FormControl mb="6">
+                <FormLabel>Taux de pression</FormLabel>
+                <RadioGroup
+                  as={Stack}
+                  onChange={(v) => {
+                    setFilters({
+                      ...filters,
+                      tauxPression: (v || undefined) as "eleve" | "faible",
+                    });
+                  }}
+                  value={filters.tauxPression ?? ""}
+                >
+                  <Radio value="">Tous</Radio>
+                  <Radio value="eleve">
+                    Élevé
+                    <TooltipIcon
+                      ml="3"
+                      label="Formations pour lesquelles le taux de pression est supérieur ou égal à 1.3"
+                    />
+                  </Radio>
+                  <Radio value="faible">
+                    Bas
+                    <TooltipIcon
+                      ml="3"
+                      label="Formations pour lesquelles le taux de pression est inférieur à 0.7"
+                    />
+                  </Radio>
+                </RadioGroup>
+              </FormControl>
+              <FormControl mb="6">
+                <FormLabel>Statut de la demande</FormLabel>
+                <RadioGroup
+                  as={Stack}
+                  onChange={(v) =>
+                    setFilters({
+                      ...filters,
+                      statut: (v || undefined) as
+                        | Extract<
+                            DemandeStatutType,
+                            "demande validée" | "proposition"
+                          >
+                        | undefined,
+                    })
+                  }
+                  value={filters.statut ?? ""}
+                >
+                  <Radio value="">Toutes</Radio>
+                  <Radio value={DemandeStatutEnum["demande validée"]}>
+                    Validées
+                  </Radio>
+                  <Radio value={DemandeStatutEnum["proposition"]}>
+                    Projets
+                  </Radio>
+                </RadioGroup>
+              </FormControl>
+            </Box>
+
+            <Box flex="1">
+              <Flex direction="row" justify={"space-between"} mb={4}>
+                <Flex gap={3}>
+                  <Popover>
+                    <PopoverTrigger>
+                      <Flex cursor="pointer">
+                        <Icon
+                          icon="ri:eye-line"
+                          color={bluefrance113}
+                          width={"14px"}
+                        />
+                        <Text ms={2} color="bluefrance.113" lineHeight={"14px"}>
+                          Légende
+                        </Text>
+                      </Flex>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      _focusVisible={{ outline: "none" }}
+                      p="3"
+                      minW={"sm"}
+                    >
+                      <>
+                        <PopoverCloseButton />
+                        <InfoTooltipContent />
+                      </>
+                    </PopoverContent>
+                  </Popover>
+                  <Button
+                    onClick={() => toggleTypeVue()}
+                    variant="link"
+                    gap={2}
+                  >
+                    <Icon
+                      icon="ri:table-2"
+                      color={bluefrance113}
+                      width={"14px"}
+                    />
+                    <Text
+                      color={bluefrance113}
+                      fontWeight={400}
+                      lineHeight={"14px"}
+                    >
+                      {`Vue ${typeVue === "quadrant" ? "tableau" : "quadrant"}`}
+                    </Text>
+                  </Button>
+                </Flex>
+
+                <Flex>
+                  <Text color="grey" fontSize="sm" textAlign="left">
+                    <Highlight
+                      query={[
+                        formations?.length.toString() ?? "-",
+                        formations
+                          ?.reduce((acc, { placesOuvertes, placesFermees }) => {
+                            if (filters.type === "fermeture")
+                              return acc + (placesFermees ?? 0);
+                            if (filters.type === "ouverture")
+                              return acc + (placesOuvertes ?? 0);
+                            const total = placesOuvertes + placesFermees;
+                            return acc + (total ?? 0);
+                          }, 0)
+                          .toString() ?? "-",
+                      ]}
+                    >
+                      {`${formations?.length ?? "-"} certifications -
+                        ${
+                          formations?.reduce(
+                            (acc, { placesOuvertes, placesFermees }) => {
+                              if (filters.type === "fermeture")
+                                return acc + (placesFermees ?? 0);
+                              if (filters.type === "ouverture")
+                                return acc + (placesOuvertes ?? 0);
+                              const total = placesOuvertes + placesFermees;
+                              return acc + (total ?? 0);
+                            },
+                            0
+                          ) ?? "-"
+                        } effectif en entrée`}
+                    </Highlight>
+                  </Text>
+                </Flex>
+              </Flex>
+              <AspectRatio flex={1} ratio={1}>
+                <>
+                  {formations &&
+                    (typeVue === "quadrant" ? (
+                      <Quadrant
+                        onClick={({ cfd, codeDispositif }) =>
+                          setCurrentFormationId(`${cfd}_${codeDispositif}`)
+                        }
+                        meanInsertion={stats?.tauxInsertion}
+                        meanPoursuite={stats?.tauxPoursuite}
+                        currentFormationId={currentFormationId}
+                        data={formations
+                          .filter(
+                            (formation) =>
+                              formation.tauxInsertion && formation.tauxPoursuite
+                          )
+                          ?.map((formation) => ({
+                            ...formation,
+                            codeDispositif: formation.codeDispositif ?? "",
+                            effectif: formation.differencePlaces,
+                            tauxPoursuite: formation.tauxPoursuite ?? 0,
+                            tauxInsertion: formation.tauxInsertion ?? 0,
+                          }))}
+                        effectifSizes={EFFECTIF_SIZES}
+                      />
+                    ) : (
+                      <TableQuadrant
+                        formations={formations?.map((formation) => ({
+                          ...formation,
+                          effectif: formation.differencePlaces,
+                        }))}
+                        handleClick={setCurrentFormationId}
+                        currentFormationId={currentFormationId}
+                        order={order}
+                        handleOrder={(column?: string) =>
+                          handleOrder(
+                            column as OrderFormationsPilotageIntentions["orderBy"]
+                          )
+                        }
+                      />
+                    ))}
+                  {!formations && <Skeleton opacity="0.3" height="100%" />}
+                </>
+              </AspectRatio>
+            </Box>
+            <Box p="4" w="300px" ml="6">
               <Heading size="sm" mb="6">
                 DÉTAILS SUR LA FORMATION
               </Heading>
@@ -461,164 +654,19 @@ export const QuadrantSection = ({
                 </>
               )}
             </Box>
-            <Box flex="1">
-              <Flex justify={"space-between"} flex={1}>
-                <Flex>
-                  <Text color="grey" fontSize="sm" textAlign="left">
-                    {formations?.length ?? "-"} certifications,
-                  </Text>
-                  <Text ml="2" color="grey" fontSize="sm" textAlign="right">
-                    {formations?.reduce(
-                      (acc, { placesOuvertes, placesFermees }) => {
-                        if (filters.type === "fermeture")
-                          return acc + (placesFermees ?? 0);
-                        if (filters.type === "ouverture")
-                          return acc + (placesOuvertes ?? 0);
-                        const total = placesOuvertes + placesFermees;
-                        return acc + (total ?? 0);
-                      },
-                      0
-                    ) ?? "-"}{" "}
-                    places
-                  </Text>
-                </Flex>
-                <Flex>
-                  <Popover>
-                    <PopoverTrigger>
-                      <Flex cursor="pointer">
-                        <Icon
-                          icon="ri:eye-line"
-                          color="grey.425"
-                          width={"14px"}
-                        />
-                        <Text
-                          ms={2}
-                          color="grey.425"
-                          textDecoration={"underline"}
-                          lineHeight={"14px"}
-                        >
-                          Légende
-                        </Text>
-                      </Flex>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      _focusVisible={{ outline: "none" }}
-                      p="3"
-                      minW={"sm"}
-                    >
-                      <>
-                        <PopoverCloseButton />
-                        <InfoTooltipContent />
-                      </>
-                    </PopoverContent>
-                  </Popover>
-                </Flex>
-              </Flex>
-              <AspectRatio flex={1} ratio={1}>
-                <>
-                  {formations &&
-                    (typeVue === "quadrant" ? (
-                      <Quadrant
-                        onClick={({ cfd, codeDispositif }) =>
-                          setCurrentFormationId(`${cfd}_${codeDispositif}`)
-                        }
-                        meanInsertion={stats?.tauxInsertion}
-                        meanPoursuite={stats?.tauxPoursuite}
-                        currentFormationId={currentFormationId}
-                        data={formations
-                          .filter(
-                            (formation) =>
-                              formation.tauxInsertion && formation.tauxPoursuite
-                          )
-                          ?.map((formation) => ({
-                            ...formation,
-                            codeDispositif: formation.codeDispositif ?? "",
-                            effectif: formation.differencePlaces,
-                            tauxPoursuite: formation.tauxPoursuite ?? 0,
-                            tauxInsertion: formation.tauxInsertion ?? 0,
-                          }))}
-                        effectifSizes={EFFECTIF_SIZES}
-                      />
-                    ) : (
-                      <TableQuadrant
-                        formations={formations?.map((formation) => ({
-                          ...formation,
-                          effectif: formation.differencePlaces,
-                        }))}
-                        handleClick={setCurrentFormationId}
-                        currentFormationId={currentFormationId}
-                        order={order}
-                        handleOrder={(column?: string) =>
-                          handleOrder(
-                            column as OrderFormationsPilotageIntentions["orderBy"]
-                          )
-                        }
-                      />
-                    ))}
-                  {!formations && <Skeleton opacity="0.3" height="100%" />}
-                </>
-              </AspectRatio>
-            </Box>
-            <Box p="4" ml="6" bg="blueecume.975" w="200px">
-              <Heading size="sm" mb="6">
-                FILTRES
-              </Heading>
-              <FormControl mb="6">
-                <FormLabel>Taux de pression</FormLabel>
-                <RadioGroup
-                  as={Stack}
-                  onChange={(v) => {
-                    setFilters({
-                      ...filters,
-                      tauxPression: (v || undefined) as "eleve" | "faible",
-                    });
-                  }}
-                  value={filters.tauxPression ?? ""}
-                >
-                  <Radio value="">Tous</Radio>
-                  <Radio value="eleve">
-                    Élevé
-                    <TooltipIcon
-                      ml="3"
-                      label="Formations pour lesquelles le taux de pression est supérieur ou égal à 1.3"
-                    />
-                  </Radio>
-                  <Radio value="faible">
-                    Bas
-                    <TooltipIcon
-                      ml="3"
-                      label="Formations pour lesquelles le taux de pression est inférieur à 0.7"
-                    />
-                  </Radio>
-                </RadioGroup>
-              </FormControl>
-              <FormControl mb="6">
-                <FormLabel>Statut de la demande</FormLabel>
-                <RadioGroup
-                  as={Stack}
-                  onChange={(v) =>
-                    setFilters({
-                      ...filters,
-                      statut: (v || undefined) as
-                        | Extract<
-                            DemandeStatutType,
-                            "demande validée" | "proposition"
-                          >
-                        | undefined,
-                    })
-                  }
-                  value={filters.statut ?? ""}
-                >
-                  <Radio value="">Toutes</Radio>
-                  <Radio value={DemandeStatutEnum["demande validée"]}>
-                    Validées
-                  </Radio>
-                  <Radio value={DemandeStatutEnum["proposition"]}>
-                    Projets
-                  </Radio>
-                </RadioGroup>
-              </FormControl>
-            </Box>
+          </Flex>
+        </Box>
+        <Box p="8" mx={"auto"}>
+          <Flex align="center" gap={6}>
+            <Heading fontSize={20} mr="auto">
+              Places transformées par section du quadrant
+            </Heading>
+          </Flex>
+          <Divider my="4" />
+          <Flex mt={12} width="80%" mx={"auto"}>
+            <PlacesTransformeesParPositionQuadrantSection
+              formations={formations}
+            />
           </Flex>
         </Box>
       </Box>

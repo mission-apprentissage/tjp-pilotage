@@ -56,14 +56,16 @@ export const MainSection = ({
             setSearchParams={setSearchParams}
           />
         ) : displayType === DisplayTypeEnum.quadrant ? (
-          <QuadrantSection
-            parentFilters={filters}
-            scopeFilters={quadrantData?.filters}
-            scope={{
-              type: filters.scope,
-              value: useScopeCode(filters).code,
-            }}
-          />
+          <>
+            <QuadrantSection
+              parentFilters={filters}
+              scopeFilters={quadrantData?.filters}
+              scope={{
+                type: filters.scope,
+                value: useScopeCode(filters).code,
+              }}
+            />
+          </>
         ) : null}
       </Flex>
     </Flex>
