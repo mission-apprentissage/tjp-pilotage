@@ -75,7 +75,7 @@ export const MenuIntention = ({
             ? NextLink
             : undefined
         }
-        href="/intentions/perdir/saisie/new"
+        href="/intentions/saisie/new"
       >
         Nouvelle demande
       </Button>

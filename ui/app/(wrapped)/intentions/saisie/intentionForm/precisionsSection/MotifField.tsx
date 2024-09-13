@@ -13,8 +13,6 @@ import { Controller, useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { isTypeColoration } from "shared/validators/demandeValidators";
 
-import { isTypeAjustement } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
-
 import {
   getMotifsTypeDemande,
   MotifCampagne,
@@ -23,6 +21,7 @@ import {
 } from "../../../utils/motifDemandeUtils";
 import {
   getTypeDemandeLabel,
+  isTypeAjustement,
   isTypeFermeture,
   TypeDemande,
 } from "../../../utils/typeDemandeUtils";

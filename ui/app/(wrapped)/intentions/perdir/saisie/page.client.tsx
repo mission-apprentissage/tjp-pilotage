@@ -1,22 +1,13 @@
 "use client";
 
-import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
   Button,
   Center,
-  chakra,
   Container,
   Flex,
   IconButton,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Table,
   TableContainer,
   Tag,
@@ -27,7 +18,6 @@ import {
   Thead,
   Tooltip,
   Tr,
-  useDisclosure,
   useToast,
   useToken,
 } from "@chakra-ui/react";
@@ -56,6 +46,7 @@ import {
 import { useStateParams } from "../../../../../utils/useFilters";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { StatutTag } from "../components/StatutTag";
+import { DeleteIntentionButton } from "./components/DeleteIntentionButton";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
@@ -70,7 +61,6 @@ export const PageClient = () => {
   const queryClient = useQueryClient();
   const toast = useToast();
   const router = useRouter();
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [searchParams, setSearchParams] = useStateParams<{
     filters?: Partial<Filters>;
@@ -209,30 +199,6 @@ export const PageClient = () => {
       },
     });
 
-  const { mutate: deleteIntention } = client
-    .ref("[DELETE]/intention/:numero")
-    .useMutation({
-      onMutate: () => {
-        setIsDeleting(true);
-      },
-      onSuccess: (_body) => {
-        toast({
-          variant: "left-accent",
-          status: "success",
-          title: "La demande a bien été supprimée",
-        });
-        // Wait until view is updated before invalidating queries
-        setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: ["[GET]/intentions"] });
-          queryClient.invalidateQueries({
-            queryKey: ["[GET]/intentions/count"],
-          });
-          setIsDeleting(false);
-          onClose();
-        }, 500);
-      },
-    });
-
   const { mutate: submitSuivi } = client
     .ref("[POST]/intention/suivi")
     .useMutation({
@@ -271,7 +237,6 @@ export const PageClient = () => {
       },
     });
 
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
 
   const canDelete = () => {
@@ -532,27 +497,7 @@ export const PageClient = () => {
                               </Tooltip>
                             )}
                             {canDelete() && (
-                              <Tooltip
-                                label="Supprimer la demande"
-                                closeOnScroll={true}
-                              >
-                                <IconButton
-                                  variant={"link"}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    onOpen();
-                                  }}
-                                  aria-label="Supprimer la demande"
-                                  icon={
-                                    <Icon
-                                      icon="ri:delete-bin-line"
-                                      width={"24px"}
-                                      color={bluefrance113}
-                                    />
-                                  }
-                                />
-                              </Tooltip>
+                              <DeleteIntentionButton intention={intention} />
                             )}
                             <Tooltip label="Suivre la demande">
                               <IconButton
@@ -643,17 +588,6 @@ export const PageClient = () => {
                                   />
                                 </Tooltip>
                               ))}
-                            <ModalDeleteIntention
-                              isOpen={isOpen}
-                              onClose={onClose}
-                              numero={intention.numero}
-                              isDeleting={isDeleting}
-                              deleteIntention={() => {
-                                deleteIntention({
-                                  params: { numero: intention.numero },
-                                });
-                              }}
-                            />
                           </Flex>
                         </Td>
                         <Td textAlign={"center"}>
@@ -714,62 +648,3 @@ export const PageClient = () => {
     </Container>
   );
 };
-
-const ModalDeleteIntention = chakra(
-  ({
-    isOpen,
-    onClose,
-    numero,
-    isDeleting,
-    deleteIntention,
-  }: {
-    isOpen: boolean;
-    onClose: () => void;
-    numero: string;
-    isDeleting: boolean;
-    deleteIntention: () => void;
-  }) => {
-    return (
-      <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
-        <ModalOverlay bgColor="rgba(0, 0, 0, 0.12)" />
-        <ModalContent p="4">
-          <ModalCloseButton title="Fermer" />
-          <ModalHeader>
-            <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
-            Confirmer la suppression de l'intention n°{numero}
-          </ModalHeader>
-          <ModalBody>
-            <Text color="red" mt={2}>
-              Attention, ce changement est irréversible
-            </Text>
-          </ModalBody>
-
-          {isDeleting ? (
-            <Center>
-              <IntentionSpinner />
-            </Center>
-          ) : (
-            <ModalFooter>
-              <Button
-                colorScheme="blue"
-                mr={3}
-                variant={"secondary"}
-                onClick={() => onClose()}
-              >
-                Annuler
-              </Button>
-
-              <Button
-                isLoading={isDeleting}
-                variant="primary"
-                onClick={() => deleteIntention()}
-              >
-                Confirmer la suppression
-              </Button>
-            </ModalFooter>
-          )}
-        </ModalContent>
-      </Modal>
-    );
-  }
-);
