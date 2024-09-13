@@ -1,6 +1,8 @@
 "use client";
 
 import { Container, Flex } from "@chakra-ui/react";
+import { isAxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
@@ -18,12 +20,20 @@ export default ({
     numero: string;
   };
 }) => {
+  const { push } = useRouter();
   const { data: demande, isLoading } = client
     .ref("[GET]/demande/:numero")
     .useQuery(
       { params: { numero: numero } },
       {
         cacheTime: 0,
+        onError: (error: unknown) => {
+          if (isAxiosError(error) && error.response?.data?.message) {
+            console.error(error);
+            if (error.response?.status === 404)
+              push(`/intentions/saisie?notfound=${numero}`);
+          }
+        },
       }
     );
 

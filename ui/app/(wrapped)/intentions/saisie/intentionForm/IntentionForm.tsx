@@ -32,6 +32,7 @@ import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
+import { isTypeAjustement } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
 import { Conseils } from "../components/Conseils";
@@ -288,6 +289,8 @@ export const IntentionForm = ({
                                     ...values,
                                     statut: formId
                                       ? values.statut
+                                      : isTypeAjustement(values.typeDemande)
+                                      ? DemandeStatutEnum["demande validée"]
                                       : DemandeStatutEnum["projet de demande"],
                                     campagneId:
                                       values.campagneId ?? campagne?.id,

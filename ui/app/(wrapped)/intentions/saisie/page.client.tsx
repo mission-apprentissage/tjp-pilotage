@@ -29,13 +29,14 @@ import { fr } from "date-fns/locale/fr";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
+import { feature } from "@/utils/feature";
 import {
   formatCodeDepartement,
   formatDepartementLibelleWithCodeDepartement,
@@ -68,6 +69,7 @@ export const PageClient = () => {
     page?: string;
     campagne?: string;
     action?: Exclude<DemandeStatutType, "supprimée">;
+    notfound?: string;
   }>({
     defaultValues: {
       filters: {},
@@ -82,6 +84,18 @@ export const PageClient = () => {
   const order = searchParams.order ?? { order: "asc" };
   const campagne = searchParams.campagne;
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
+  const notFound = searchParams.notfound;
+
+  useEffect(() => {
+    if (notFound && !toast.isActive("not-found")) {
+      toast({
+        id: "not-found",
+        status: "error",
+        variant: "left-accent",
+        title: `La demande ${notFound} n'a pas été trouvée`,
+      });
+    }
+  }, [notFound]);
 
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("intentions:filtre", {
@@ -528,7 +542,9 @@ export const PageClient = () => {
                                   }}
                                 />
                               </Tooltip>
-                              <CorrectionDemandeButton demande={demande} />
+                              {feature.correction && (
+                                <CorrectionDemandeButton demande={demande} />
+                              )}
                             </Flex>
                           </Td>
                         )}

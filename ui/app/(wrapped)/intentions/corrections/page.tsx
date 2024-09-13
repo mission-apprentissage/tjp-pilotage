@@ -13,8 +13,10 @@ import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { GroupedMultiselect } from "../../../../components/GroupedMultiselect";
+import { Loading } from "../../../../components/Loading";
 import { SearchInput } from "../../../../components/SearchInput";
 import { TableHeader } from "../../../../components/TableHeader";
+import { feature } from "../../../../utils/feature";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
@@ -251,6 +253,11 @@ export default () => {
     const campagneFilterNumber = parseInt(searchParams.filters?.campagne ?? "");
     handleFilters("rentreeScolaire", campagneFilterNumber + 1);
   }, [searchParams.filters?.campagne]);
+
+  if (!feature.correction) {
+    router.replace("/");
+    return <Loading />;
+  }
 
   return (
     <GuardPermission permission="restitution-intentions/lecture">

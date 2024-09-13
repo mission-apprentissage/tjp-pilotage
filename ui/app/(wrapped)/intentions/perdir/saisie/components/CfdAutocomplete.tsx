@@ -14,12 +14,7 @@ const OptionLabel = ({
 }) => {
   return (
     <Flex gap={2}>
-      <Text
-        textOverflow={"ellipsis"}
-        overflow={"hidden"}
-        maxW={"75%"}
-        w="fit-content"
-      >
+      <Text textOverflow={"ellipsis"} overflow={"hidden"} w="fit-content">
         {option.label}
       </Text>
       {option.isSpecialite && (
