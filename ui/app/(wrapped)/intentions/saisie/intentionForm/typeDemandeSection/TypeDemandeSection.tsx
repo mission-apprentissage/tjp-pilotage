@@ -19,6 +19,7 @@ import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
+import { feature } from "@/utils/feature";
 
 import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { Campagne, Demande } from "../../types";
@@ -142,7 +143,8 @@ export const TypeDemandeSection = ({
         </Flex>
       </Tooltip>
       <CapaciteSection disabled={disabled} />
-      {campagne?.statut === CampagneStatutEnum["terminée"] &&
+      {feature.correction &&
+        campagne?.statut === CampagneStatutEnum["terminée"] &&
         demande?.statut === DemandeStatutEnum["demande validée"] && (
           <Flex justify={"right"}>
             <Button

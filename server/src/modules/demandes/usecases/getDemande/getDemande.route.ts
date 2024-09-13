@@ -20,7 +20,6 @@ export const getDemandeRoute = (server: Server) => {
           numero: request.params.numero,
           user,
         });
-        if (!demande) return response.status(404).send();
 
         const scope = getPermissionScope(user.role, "intentions/ecriture");
         const canEdit = guardScope(scope?.default, {

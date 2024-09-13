@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import {
   jsonArrayFrom,
@@ -208,7 +209,14 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
     .where("demande.numero", "=", numero)
     .orderBy("createdAt", "asc")
     .limit(1)
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow()
+    .catch(() => {
+      throw Boom.notFound(`Aucune demande trouvée pour le numéro ${numero}`, {
+        errors: {
+          demande_introuvable: `Aucune demande trouvée pour le numéro ${numero}`,
+        },
+      });
+    });
 
   const codeDispositif =
     demande?.codeDispositif &&

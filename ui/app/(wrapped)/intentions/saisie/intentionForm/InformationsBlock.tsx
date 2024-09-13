@@ -19,11 +19,11 @@ import { useFormContext } from "react-hook-form";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
-import { CorrectionSection } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/CorrectionSection";
-import { Demande } from "@/app/(wrapped)/intentions/saisie/types";
+import { feature } from "@/utils/feature";
 
 import { SectionBlock } from "../components/SectionBlock";
-import { Campagne } from "../types";
+import { CorrectionSection } from "../intentionForm/correctionSection/CorrectionSection";
+import { Campagne, Demande } from "../types";
 import { IntentionForms } from "./defaultFormValues";
 import { ObservationsSection } from "./observationsSection/ObservationsSection";
 import { PrecisionsSection } from "./precisionsSection/PrecisionsSection";
@@ -76,7 +76,7 @@ export const InformationsBlock = ({
           demande={demande}
         />
       </SectionBlock>
-      {isCorrection && demande && (
+      {feature.correction && isCorrection && demande && (
         <SectionBlock borderColor={"red"} borderWidth={"1px"}>
           <CorrectionSection
             correctionRef={refs["correction"]}

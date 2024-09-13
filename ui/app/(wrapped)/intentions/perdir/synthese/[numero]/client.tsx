@@ -1,6 +1,7 @@
 "use client";
 
 import { Container, Flex, Grid, GridItem } from "@chakra-ui/react";
+import { isAxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { useEffect } from "react";
@@ -47,6 +48,13 @@ export default ({
       { params: { numero: numero } },
       {
         cacheTime: 0,
+        onError: (error: unknown) => {
+          if (isAxiosError(error) && error.response?.data?.message) {
+            console.error(error);
+            if (error.response?.status === 404)
+              router.push(`/intentions/perdir/saisie?notfound=${numero}`);
+          }
+        },
       }
     );
 

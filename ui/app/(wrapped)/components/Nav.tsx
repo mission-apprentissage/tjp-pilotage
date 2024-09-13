@@ -21,6 +21,7 @@ import { UaiFilterContext } from "@/app/layoutClient";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { useAuth } from "@/utils/security/useAuth";
 
+import { feature } from "../../../utils/feature";
 import { Glossaire } from "../glossaire/Glossaire";
 
 const NavLink = chakra(
@@ -386,17 +387,18 @@ export const Nav = () => {
                 </NavMenuLink>
               </MenuItem>
             )}
-            {hasPermission(auth?.user.role, "intentions/lecture") && (
-              <MenuItem p="0" w="100%">
-                <NavMenuLink
-                  href="/intentions/corrections"
-                  segment="corrections"
-                  prefetch={false}
-                >
-                  Restitution des corrections
-                </NavMenuLink>
-              </MenuItem>
-            )}
+            {feature.correction &&
+              hasPermission(auth?.user.role, "intentions/lecture") && (
+                <MenuItem p="0" w="100%">
+                  <NavMenuLink
+                    href="/intentions/corrections"
+                    segment="corrections"
+                    prefetch={false}
+                  >
+                    Restitution des corrections
+                  </NavMenuLink>
+                </MenuItem>
+              )}
           </MenuList>
         </Menu>
       )}

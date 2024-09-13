@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -38,7 +38,7 @@ import { fr } from "date-fns/locale/fr";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
@@ -79,6 +79,7 @@ export const PageClient = () => {
     page?: string;
     campagne?: string;
     action?: Exclude<DemandeStatutType, "supprimée">;
+    notfound?: string;
   }>({
     defaultValues: {
       filters: {},
@@ -97,6 +98,18 @@ export const PageClient = () => {
   const order = searchParams.order ?? { order: "asc" };
   const campagne = searchParams.campagne;
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
+  const notFound = searchParams.notfound;
+
+  useEffect(() => {
+    if (notFound && !toast.isActive("not-found")) {
+      toast({
+        id: "not-found",
+        status: "error",
+        variant: "left-accent",
+        title: `La demande ${notFound} n'a pas été trouvée`,
+      });
+    }
+  }, [notFound]);
 
   const trackEvent = usePlausible();
 
@@ -573,6 +586,63 @@ export const PageClient = () => {
                                 }}
                               />
                             </Tooltip>
+                            {data?.campagne.statut ===
+                              CampagneStatutEnum["terminée"] &&
+                              (intention.numeroDemandeImportee ? (
+                                <Tooltip
+                                  label={`Voir l'intention dupliquée ${intention.numeroDemandeImportee}`}
+                                >
+                                  <IconButton
+                                    as={NextLink}
+                                    color={"bluefrance.113"}
+                                    bgColor={"transparent"}
+                                    href={`/intentions/perdir/saisie/${intention.numeroDemandeImportee}`}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                    }}
+                                    aria-label={`Voir l'intention dupliquée ${intention.numeroDemandeImportee}`}
+                                    icon={
+                                      <Icon
+                                        icon="ri:external-link-line"
+                                        width={"24px"}
+                                        color={bluefrance113}
+                                      />
+                                    }
+                                  />
+                                </Tooltip>
+                              ) : (
+                                <Tooltip label={"Dupliquer la demande"}>
+                                  <IconButton
+                                    color={"bluefrance.113"}
+                                    bgColor={"transparent"}
+                                    onClick={(e) => {
+                                      setIsImporting(true);
+                                      if (intention.numeroDemandeImportee)
+                                        return;
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      importDemande({
+                                        params: { numero: intention.numero },
+                                      });
+                                    }}
+                                    isDisabled={
+                                      !!intention.numeroDemandeImportee ||
+                                      isSubmitting ||
+                                      isImporting ||
+                                      !hasPermissionSubmitIntention
+                                    }
+                                    aria-label="Dupliquer la demande"
+                                    icon={
+                                      <Icon
+                                        icon="ri:file-copy-line"
+                                        width={"24px"}
+                                        color={bluefrance113}
+                                      />
+                                    }
+                                  />
+                                </Tooltip>
+                              ))}
                             <ModalDeleteIntention
                               isOpen={isOpen}
                               onClose={onClose}
@@ -604,46 +674,6 @@ export const PageClient = () => {
                             />
                           </Tooltip>
                         </Td>
-                        {data?.campagne.statut ===
-                          CampagneStatutEnum["terminée"] && (
-                          <Td>
-                            {intention.numeroDemandeImportee ? (
-                              <Button
-                                as={NextLink}
-                                variant="link"
-                                href={`/intentions/perdir/saisie/${intention.numeroDemandeImportee}`}
-                                leftIcon={<ExternalLinkIcon />}
-                                me={"auto"}
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                intention dupliquée{" "}
-                                {intention.numeroDemandeImportee}
-                              </Button>
-                            ) : (
-                              <Button
-                                leftIcon={<Icon icon="ri:import-line" />}
-                                variant={"newInput"}
-                                onClick={(e) => {
-                                  setIsImporting(true);
-                                  if (intention.numeroDemandeImportee) return;
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  importDemande({
-                                    params: { numero: intention.numero },
-                                  });
-                                }}
-                                isDisabled={
-                                  !!intention.numeroDemandeImportee ||
-                                  isSubmitting ||
-                                  isImporting ||
-                                  !hasPermissionSubmitIntention
-                                }
-                              >
-                                Dupliquer cette intention
-                              </Button>
-                            )}
-                          </Td>
-                        )}
                       </Tr>
                     )
                   )}

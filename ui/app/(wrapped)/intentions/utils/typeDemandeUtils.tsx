@@ -254,7 +254,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     value: "ajustement",
     label: "Ajustement de rentrée",
     campagnes: ["2024", "2025"],
-    desc: "Ce formulaire doit être utilisé uniquement opur des ouvertures ou augmentations de places afin de réopndre à l’afflux d’élèves sans affectation.",
+    desc: "Ce formulaire doit être utilisé uniquement pour des ouvertures ou augmentations de places afin de répondre à l’afflux d’élèves sans affectation.",
     exemple: (
       <>
         <Text>
