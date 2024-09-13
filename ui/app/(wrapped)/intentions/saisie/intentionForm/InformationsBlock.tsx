@@ -21,6 +21,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { client } from "@/api.client";
 import { feature } from "@/utils/feature";
 
+import { isTypeAjustement } from "../../utils/typeDemandeUtils";
 import { SectionBlock } from "../components/SectionBlock";
 import { CorrectionSection } from "../intentionForm/correctionSection/CorrectionSection";
 import { Campagne, Demande } from "../types";
@@ -47,7 +48,7 @@ export const InformationsBlock = ({
   demande?: Demande;
 }) => {
   const { push } = useRouter();
-  const { setValue } = useFormContext<IntentionForms>();
+  const { setValue, watch } = useFormContext<IntentionForms>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isLoading: isDeleting, mutateAsync: deleteDemande } = useMutation({
     mutationFn: async () => {
@@ -61,6 +62,7 @@ export const InformationsBlock = ({
 
   const queryParams = useSearchParams();
   const isCorrection = queryParams.get("correction");
+  const typeDemande = watch("typeDemande");
 
   useEffect(() => {
     refs["correction"].current?.scrollIntoView({ behavior: "smooth" });
@@ -106,9 +108,11 @@ export const InformationsBlock = ({
       </SectionBlock>
       {formId && (
         <>
-          <SectionBlock>
-            <StatusBlock disabled={disabled} />
-          </SectionBlock>
+          {!isTypeAjustement(typeDemande) && (
+            <SectionBlock>
+              <StatusBlock disabled={disabled} />
+            </SectionBlock>
+          )}
           <SectionBlock>
             <Flex justifyContent={"space-between"} flexDir={"row"}>
               <Button
@@ -172,7 +176,7 @@ export const InformationsBlock = ({
         </>
       )}
       {!formId && footerActions && (
-        <Flex justify="flex-end" mt="12" mb="4" gap={6}>
+        <Flex justify="flex-end" mt={6} mb="4" gap={6}>
           {footerActions}
         </Flex>
       )}

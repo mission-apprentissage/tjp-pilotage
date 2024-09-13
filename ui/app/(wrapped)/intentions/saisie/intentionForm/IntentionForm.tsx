@@ -29,7 +29,10 @@ import {
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { isTypeAjustement } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
@@ -142,6 +145,15 @@ export const IntentionForm = ({
   const step2Ref = useRef<HTMLDivElement>(null);
 
   const onEditUaiCfdSection = () => setStep(1);
+
+  const getStatutSubmit = (
+    demande: (typeof client.inferArgs)["[POST]/demande/submit"]["body"]["demande"]
+  ): Exclude<DemandeStatutType, "supprimée"> => {
+    if (isTypeAjustement(demande.typeDemande))
+      return DemandeStatutEnum["demande validée"];
+    if (formId) return demande.statut;
+    return DemandeStatutEnum["projet de demande"];
+  };
 
   useEffect(() => {
     if (isCFDUaiSectionValid(getValues())) {
@@ -287,11 +299,7 @@ export const IntentionForm = ({
                                   demande: {
                                     numero: formId,
                                     ...values,
-                                    statut: formId
-                                      ? values.statut
-                                      : isTypeAjustement(values.typeDemande)
-                                      ? DemandeStatutEnum["demande validée"]
-                                      : DemandeStatutEnum["projet de demande"],
+                                    statut: getStatutSubmit(values),
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },
