@@ -23,7 +23,6 @@ export const getZonesGeographiquesQuery = async ({
             .selectFrom(effectifsParCampagne.as("effectifsParCampagne"))
             .select((eb) => [
               "effectifsParCampagne.annee",
-              "effectifsParCampagne.libelleRegion",
               "effectifsParCampagne.codeRegion",
               sql<number>`SUM(${eb.ref(
                 "effectifsParCampagne.denominateur"
@@ -31,7 +30,6 @@ export const getZonesGeographiquesQuery = async ({
             ])
             .groupBy([
               "effectifsParCampagne.annee",
-              "effectifsParCampagne.libelleRegion",
               "effectifsParCampagne.codeRegion",
             ])
             .as("effectifs"),
@@ -43,7 +41,6 @@ export const getZonesGeographiquesQuery = async ({
         .select((eb) => [
           "effectifs.denominateur as placesEffectivementOccupees",
           "demandes.annee",
-          "demandes.rentreeScolaire",
           "demandes.libelleRegion",
           "demandes.codeRegion",
           sql<number>`SUM(
@@ -69,7 +66,6 @@ export const getZonesGeographiquesQuery = async ({
         ])
         .groupBy([
           "demandes.annee",
-          "demandes.rentreeScolaire",
           "demandes.libelleRegion",
           "demandes.codeRegion",
           "placesEffectivementOccupees",
@@ -88,9 +84,6 @@ export const getZonesGeographiquesQuery = async ({
             );
           return eb;
         })
-        .where(
-          sql<boolean>`"demandes"."annee"::int = "demandes"."rentreeScolaire"::int - 1`
-        )
         .as("demandesAvecEffectif")
     )
     .selectAll("demandesAvecEffectif")

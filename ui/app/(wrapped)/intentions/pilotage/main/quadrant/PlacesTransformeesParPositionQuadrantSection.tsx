@@ -1,5 +1,4 @@
 import {
-  AspectRatio,
   Box,
   Table,
   Tbody,
@@ -13,9 +12,10 @@ import {
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
-import { FormationsPilotageIntentions } from "@/app/(wrapped)/intentions/pilotage-refonte/types";
+import { FormationsPilotageIntentions } from "@/app/(wrapped)/intentions/pilotage/types";
 
-import { formatPercentage } from "../../../../../utils/formatUtils";
+import { formatPercentage } from "../../../../../../utils/formatUtils";
+import { BarChart } from "../../components/BarChart";
 
 type PositionQuadrant = "Q1" | "Q2" | "Q3" | "Q4" | "Hors quadrant";
 
@@ -312,11 +312,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
     <>
       <Box width={"100%"}>
         <Box>
-          <AspectRatio ratio={4}>
-            <Box position="relative" overflow={"visible !important"}>
-              <Box ref={containerRef} h={300} w={"100%"}></Box>
-            </Box>
-          </AspectRatio>
+          <BarChart formations={formations} />
         </Box>
         <Box marginRight={"15%"} mt={12}>
           <Table variant="unstyled">

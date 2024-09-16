@@ -19,7 +19,6 @@ export const getDomainesQuery = async ({ filters }: { filters: Filters }) => {
             .selectFrom(effectifsParCampagne.as("effectifsParCampagne"))
             .select((eb) => [
               "effectifsParCampagne.annee",
-              "effectifsParCampagne.libelleNsf",
               "effectifsParCampagne.codeNsf",
               sql<number>`SUM(${eb.ref(
                 "effectifsParCampagne.denominateur"
@@ -27,7 +26,6 @@ export const getDomainesQuery = async ({ filters }: { filters: Filters }) => {
             ])
             .groupBy([
               "effectifsParCampagne.annee",
-              "effectifsParCampagne.libelleNsf",
               "effectifsParCampagne.codeNsf",
             ])
             .as("effectifs"),
@@ -39,7 +37,6 @@ export const getDomainesQuery = async ({ filters }: { filters: Filters }) => {
         .select((eb) => [
           "effectifs.denominateur as placesEffectivementOccupees",
           "demandes.annee",
-          "demandes.rentreeScolaire",
           "demandes.codeNsf",
           "demandes.libelleNsf",
           sql<number>`SUM(
@@ -65,11 +62,24 @@ export const getDomainesQuery = async ({ filters }: { filters: Filters }) => {
         ])
         .groupBy([
           "demandes.annee",
-          "demandes.rentreeScolaire",
           "demandes.codeNsf",
           "demandes.libelleNsf",
           "placesEffectivementOccupees",
         ])
+        .$call((eb) => {
+          if (filters.campagne)
+            return eb.where("demandes.annee", "=", filters.campagne);
+          return eb;
+        })
+        .$call((eb) => {
+          if (filters.rentreeScolaire)
+            return eb.where(
+              "demandes.rentreeScolaire",
+              "in",
+              filters.rentreeScolaire.map((rs) => Number.parseInt(rs))
+            );
+          return eb;
+        })
         .as("demandesAvecEffectif")
     )
     .selectAll("demandesAvecEffectif")

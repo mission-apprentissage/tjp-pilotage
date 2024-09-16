@@ -34,7 +34,7 @@ import {
 } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
-import { PlacesTransformeesParPositionQuadrantSection } from "@/app/(wrapped)/intentions/pilotage-refonte/components/PlacesTransformeesParPositionQuadrantSection";
+import { PlacesTransformeesParPositionQuadrantSection } from "@/app/(wrapped)/intentions/pilotage/main/quadrant/PlacesTransformeesParPositionQuadrantSection";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
@@ -46,13 +46,13 @@ import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatNumber } from "@/utils/formatUtils";
 import { useStateParams } from "@/utils/useFilters";
 
+import QuadrantPlaceholder from "../../components/QuadrantPlaceholder";
 import {
   FiltersStatsPilotageIntentions,
   OrderFormationsPilotageIntentions,
   SelectedScope,
   StatsPilotageIntentions,
-} from "../types";
-import QuadrantPlaceholder from "./QuadrantPlaceholder";
+} from "../../types";
 
 const EFFECTIF_SIZES = [
   { max: 15, size: 6 },
@@ -661,8 +661,19 @@ export const QuadrantSection = ({
             <Heading fontSize={20} mr="auto">
               Places transformées par section du quadrant
             </Heading>
+            <Button
+              variant={"ghost"}
+              color={"bluefrance.113"}
+              leftIcon={<Icon icon="ri:download-line" />}
+              as={Link}
+              href={"__TODO__"}
+              isDisabled
+              target="_blank"
+            >
+              Exporter
+            </Button>
           </Flex>
-          <Divider my="4" />
+          <Divider my="4" mb={6} />
           <Flex mt={12} width="80%" mx={"auto"}>
             <PlacesTransformeesParPositionQuadrantSection
               formations={formations}

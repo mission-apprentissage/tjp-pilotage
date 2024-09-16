@@ -32,11 +32,14 @@ export const PositiveNegativeBarChart = ({
   const grey425 = useToken("colors", "grey.425");
 
   const getYAxisTitle = () => {
-    return Object.keys(data).slice(0, limit);
+    return Object.keys(data)
+      .filter((key) => key !== "Total")
+      .slice(0, limit);
   };
 
   const getSolde = () => {
     return Object.keys(data)
+      .filter((key) => key !== "Total")
       .map((key) => (data[key].solde > 0 ? "+" : "") + data[key].solde)
       .slice(0, limit);
   };

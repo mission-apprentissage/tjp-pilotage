@@ -106,7 +106,7 @@ export const PilotageNationalClient = () => {
     <Box bg="blueecume.950">
       <DefinitionTauxTransfoModal isOpen={isOpen} onClose={onClose} />
       <Container maxWidth={"container.xl"}>
-        <VStack>
+        <VStack gap={8}>
           <FiltersSection
             filters={filters}
             setFilters={setFilters}

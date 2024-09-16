@@ -1,10 +1,10 @@
 import { Flex } from "@chakra-ui/react";
 
-import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage-refonte/main/displayTypeEnum";
+import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage/main/displayTypeEnum";
 import {
   FiltersStatsPilotageIntentions,
   OrderRepartitionPilotageIntentions,
-} from "@/app/(wrapped)/intentions/pilotage-refonte/types";
+} from "@/app/(wrapped)/intentions/pilotage/types";
 
 import { RepartitionPilotageIntentions } from "../../types";
 import { AnalyseComparativeSection } from "./AnalyseComparativeSection";
