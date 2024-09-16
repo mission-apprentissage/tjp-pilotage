@@ -1,4 +1,4 @@
-export type Scope = "national" | "region" | "uai" | "user";
+export type Scope = "national" | "region" | "uai" | "user" | "role";
 export type Role = keyof typeof PERMISSIONS;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -100,9 +100,8 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "uai" },
   },
   invite: {
-    "intentions/lecture": { default: "region", draft: "region" },
-    "pilotage-intentions/lecture": { default: "national" },
-    "restitution-intentions/lecture": { default: "region" },
+    "intentions/lecture": { default: "role", draft: "role" },
+    "restitution-intentions/lecture": { default: "role" },
     "intentions-perdir/lecture": { default: "region", draft: "region" },
     "intentions-perdir-statut/lecture": { default: "region" },
     "intentions-perdir-avis/lecture": { default: "region" },
