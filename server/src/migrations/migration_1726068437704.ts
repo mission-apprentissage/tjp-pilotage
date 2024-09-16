@@ -81,6 +81,7 @@ export const up = async (_db: Kysely<unknown>) => {
     ALTER TABLE intention DISABLE TRIGGER ALL;
     `.compile(kdb)
   );
+
   await kdb.executeQuery(sql.raw(sqlQuery).compile(kdb));
 
   // enable les triggers
@@ -105,7 +106,6 @@ export const down = async (_db: Kysely<unknown>) => {
   let sqlQuery = "";
   Object.keys(correspondancesCFD).map(async (ancienCFD) => {
     const nouveauCFD = correspondancesCFD[ancienCFD];
-
     sqlQuery += `UPDATE demande SET cfd = '${ancienCFD}' WHERE cfd = '${nouveauCFD}';\n`;
     sqlQuery += `UPDATE intention SET cfd = '${ancienCFD}' WHERE cfd = '${nouveauCFD}';\n`;
   });
@@ -117,6 +117,7 @@ export const down = async (_db: Kysely<unknown>) => {
     ALTER TABLE intention DISABLE TRIGGER ALL;
     `.compile(kdb)
   );
+
   await kdb.executeQuery(sql.raw(sqlQuery).compile(kdb));
 
   // enable les triggers
