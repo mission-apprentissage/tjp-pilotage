@@ -1,6 +1,5 @@
 import { Flex } from "@chakra-ui/react";
 
-import { QuadrantSection } from "../components/QuadrantSection";
 import { useScopeCode } from "../hooks";
 import {
   FiltersStatsPilotageIntentions,
@@ -9,6 +8,7 @@ import {
   StatsPilotageIntentions,
 } from "../types";
 import { DisplayTypeEnum } from "./displayTypeEnum";
+import { QuadrantSection } from "./quadrant/QuadrantSection";
 import { RepartitionSection } from "./repartition/RepartitionSection";
 import { TabsSection } from "./TabsSection";
 

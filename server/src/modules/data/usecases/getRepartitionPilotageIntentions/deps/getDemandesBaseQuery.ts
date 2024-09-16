@@ -1,5 +1,7 @@
 import { sql } from "kysely";
+import { CURRENT_RENTREE } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { kdb } from "../../../../../db/db";
 import { Filters } from "../getRepartitionPilotageIntentions.usecase";
@@ -16,23 +18,31 @@ export const getDemandesBaseQuery = ({ ...filters }: Filters) => {
     )
     .innerJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
     .innerJoin("region", "dataEtablissement.codeRegion", "region.codeRegion")
-    .innerJoin("positionFormationRegionaleQuadrant", (join) =>
-      join
-        .onRef(
-          "positionFormationRegionaleQuadrant.codeRegion",
-          "=",
-          "dataEtablissement.codeRegion"
-        )
-        .onRef(
-          "positionFormationRegionaleQuadrant.cfd",
-          "=",
-          "dataFormation.cfd"
-        )
-        .onRef(
-          "positionFormationRegionaleQuadrant.codeNiveauDiplome",
-          "=",
-          "dataFormation.codeNiveauDiplome"
-        )
+    .leftJoin("positionFormationRegionaleQuadrant", (join) =>
+      join.on((eb) =>
+        eb.and([
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.cfd"),
+            "=",
+            eb.ref("demande.cfd")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
+            "=",
+            eb.ref("dataEtablissement.codeRegion")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
+            "=",
+            eb.val(
+              getMillesimeFromRentreeScolaire({
+                rentreeScolaire: CURRENT_RENTREE,
+                offset: 0,
+              })
+            )
+          ),
+        ])
+      )
     )
     .innerJoin("campagne", "demande.campagneId", "campagne.id")
     .select((eb) => [

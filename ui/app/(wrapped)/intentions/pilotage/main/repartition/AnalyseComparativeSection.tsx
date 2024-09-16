@@ -18,11 +18,12 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 import { usePlausible } from "next-plausible";
 import { useCallback, useState } from "react";
 
-import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage-refonte/main/displayTypeEnum";
-import { FiltersStatsPilotageIntentions } from "@/app/(wrapped)/intentions/pilotage-refonte/types";
+import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage/main/displayTypeEnum";
+import { FiltersStatsPilotageIntentions } from "@/app/(wrapped)/intentions/pilotage/types";
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
 
@@ -177,17 +178,24 @@ export const AnalyseComparativeSection = ({
   };
 
   return (
-    <Flex direction={"column"} gap={4}>
+    <Flex direction={"column"} gap={6}>
       <Flex direction={"row"} justify={"space-between"}>
         <Heading as="h3" fontWeight={700} fontSize={20}>
           Analyse comparative
         </Heading>
-        <Flex direction={"row"} color={"bluefrance.113"} gap={2} mt={"auto"}>
-          <Icon icon={"ri:download-line"} />
-          <Text>Exporter</Text>
-        </Flex>
+        <Button
+          variant={"ghost"}
+          color={"bluefrance.113"}
+          leftIcon={<Icon icon="ri:download-line" />}
+          as={Link}
+          href={"__TODO__"}
+          isDisabled
+          target="_blank"
+        >
+          Exporter
+        </Button>
       </Flex>
-      <Divider w={"100%"} my={6} />
+      <Divider w={"100%"} />
       <AnalyseComparativeTabsSection
         isZoneGeographiqueSelected={isZoneGeographiqueSelected}
         isDomaineSelected={isDomaineSelected}
@@ -382,8 +390,9 @@ export const AnalyseComparativeSection = ({
               <Td
                 isNumeric
                 bgColor={
-                  dataToDisplay["Total"]?.ratioFermeture &&
-                  dataToDisplay["Total"]?.ratioFermeture < 0.33
+                  !dataToDisplay["Total"]?.ratioFermeture ||
+                  (dataToDisplay["Total"]?.ratioFermeture &&
+                    dataToDisplay["Total"]?.ratioFermeture < 0.33)
                     ? customPalette[0]
                     : "inherit"
                 }

@@ -1,5 +1,6 @@
-import { Divider, Flex, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+import { Button, Divider, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 
 import { PositiveNegativeBarChart } from "../../components/PositiveNegativeBarChart";
 import { RepartitionPilotageIntentions } from "../../types";
@@ -10,17 +11,24 @@ export const FiliereNiveauDiplomeSection = ({
   repartitionData?: RepartitionPilotageIntentions;
 }) => {
   return (
-    <Flex direction={"column"} gap={4}>
+    <Flex direction={"column"} gap={6}>
       <Flex direction={"row"} justify={"space-between"}>
         <Heading as="h3" fontWeight={700} fontSize={20}>
           Par filière et niveau de diplôme
         </Heading>
-        <Flex direction={"row"} color={"bluefrance.113"} gap={2} mt={"auto"}>
-          <Icon icon={"ri:download-line"} />
-          <Text>Exporter</Text>
-        </Flex>
+        <Button
+          variant={"ghost"}
+          color={"bluefrance.113"}
+          leftIcon={<Icon icon="ri:download-line" />}
+          as={Link}
+          href={"__TODO__"}
+          isDisabled
+          target="_blank"
+        >
+          Exporter
+        </Button>
       </Flex>
-      <Divider w={"100%"} my={6} />
+      <Divider w={"100%"} />
       <SimpleGrid columns={2} gap={20} height={400}>
         <PositiveNegativeBarChart
           title="10 DOMAINES LES PLUS TRANSFORMÉS"

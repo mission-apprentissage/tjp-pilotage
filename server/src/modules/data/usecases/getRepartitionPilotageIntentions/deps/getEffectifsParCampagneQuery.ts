@@ -1,4 +1,6 @@
 import { sql } from "kysely";
+import { CURRENT_RENTREE } from "shared";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { kdb } from "../../../../../db/db";
 import { Filters } from "../getRepartitionPilotageIntentions.usecase";
@@ -13,48 +15,41 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
       "constatRentree.uai"
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
-    .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "dataFormation.codeNiveauDiplome"
-    )
-    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
-      join
-        .onRef(
-          "positionFormationRegionaleQuadrant.codeRegion",
-          "=",
-          "dataEtablissement.codeRegion"
-        )
-        .onRef(
-          "positionFormationRegionaleQuadrant.cfd",
-          "=",
-          "dataFormation.cfd"
-        )
-        .onRef(
-          "positionFormationRegionaleQuadrant.codeNiveauDiplome",
-          "=",
-          "dataFormation.codeNiveauDiplome"
-        )
+      join.on((eb) =>
+        eb.and([
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.cfd"),
+            "=",
+            eb.ref("dataFormation.cfd")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
+            "=",
+            eb.ref("dataEtablissement.codeRegion")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
+            "=",
+            eb.val(
+              getMillesimeFromRentreeScolaire({
+                rentreeScolaire: CURRENT_RENTREE,
+                offset: 0,
+              })
+            )
+          ),
+        ])
+      )
     )
     .select((eb) => [
-      "nsf.libelleNsf",
-      "nsf.codeNsf",
-      "niveauDiplome.libelleNiveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
+      "dataFormation.codeNsf",
+      "dataFormation.codeNiveauDiplome",
       "positionFormationRegionaleQuadrant.positionQuadrant",
-      "region.libelleRegion",
-      "region.codeRegion",
+      "dataEtablissement.codeRegion",
       "campagne.annee",
       "rentreeScolaire",
       sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("denominateur"),
     ])
-    .$call((eb) => {
-      if (filters.campagne)
-        return eb.where("campagne.annee", "=", filters.campagne);
-      return eb;
-    })
     .where(
       sql<boolean>`
       CASE WHEN "campagne"."annee" = '2023' THEN "constatRentree"."anneeDispositif" = 1
@@ -66,16 +61,18 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
       END
       `
     )
-    .where("constatRentree.rentreeScolaire", "=", "2023")
+    .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)
+    .$call((eb) => {
+      if (filters.campagne)
+        return eb.where("campagne.annee", "=", filters.campagne);
+      return eb;
+    })
     .groupBy([
       "annee",
       "rentreeScolaire",
-      "libelleNsf",
-      "nsf.codeNsf",
-      "libelleNiveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "libelleRegion",
-      "region.codeRegion",
+      "dataFormation.codeNsf",
+      "dataFormation.codeNiveauDiplome",
+      "dataEtablissement.codeRegion",
       "positionQuadrant",
     ]);
 };

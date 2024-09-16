@@ -1,305 +1,301 @@
-import { Box, FormLabel, Select, SimpleGrid, Skeleton } from "@chakra-ui/react";
-import { ChangeEvent } from "react";
-import { Scope, ScopeEnum } from "shared";
-
-import { Multiselect } from "@/components/Multiselect";
-import { TooltipIcon } from "@/components/TooltipIcon";
-
-import { useGlossaireContext } from "../../../glossaire/glossaireContext";
 import {
-  FiltersEventsStatsPilotageIntentions,
+  Button,
+  FormLabel,
+  Grid,
+  GridItem,
+  Select,
+  VStack,
+} from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
+import _ from "lodash";
+import { ScopeEnum } from "shared";
+
+import { Multiselect } from "../../../../../components/Multiselect";
+import {
   FiltersStatsPilotageIntentions,
-  SelectedScope,
   StatsPilotageIntentions,
 } from "../types";
 
-const Loader = () => (
-  <Box height={48}>
-    <Skeleton
-      opacity="0.3"
-      width="100%"
-      height={"100%"}
-      py={4}
-      px={8}
-    ></Skeleton>
-  </Box>
-);
+const findDefaultRentreeScolaireForCampagne = (
+  annee: string,
+  rentreesScolaires: StatsPilotageIntentions["filters"]["rentreesScolaires"]
+) => {
+  if (rentreesScolaires) {
+    const rentreeScolaire = rentreesScolaires.find(
+      (r) => parseInt(r.value) === parseInt(annee) + 1
+    );
 
-const generateEventFromScope = (
-  scope: Scope
-): "codeRegion" | "codeDepartement" | "codeAcademie" => {
-  switch (scope) {
-    case ScopeEnum.departement:
-      return "codeDepartement";
-    case ScopeEnum.academie:
-      return "codeAcademie";
-    case ScopeEnum.region:
-    default:
-      return "codeRegion";
+    if (rentreeScolaire) return rentreeScolaire.value;
   }
+
+  return undefined;
 };
 
 export const FiltersSection = ({
-  activeFilters,
-  handleFilters,
-  filterTracker,
-  isLoading,
+  filters,
+  setFilters,
+  setDefaultFilters,
   data,
-  scope,
-  findDefaultRentreeScolaireForCampagne,
 }: {
-  activeFilters: Partial<FiltersStatsPilotageIntentions>;
-  handleFilters: (filter: Partial<FiltersStatsPilotageIntentions>) => void;
-  filterTracker: (
-    filterName: FiltersEventsStatsPilotageIntentions
-  ) => () => void;
-  isLoading: boolean;
-  data?: StatsPilotageIntentions;
-  scope: SelectedScope;
-  findDefaultRentreeScolaireForCampagne: (
-    campagne: string
-  ) => string | undefined;
+  filters: FiltersStatsPilotageIntentions;
+  setFilters: (filters: FiltersStatsPilotageIntentions) => void;
+  setDefaultFilters: () => void;
+  data: StatsPilotageIntentions | undefined;
 }) => {
-  const { openGlossaire } = useGlossaireContext();
-  if (isLoading) {
-    return <Loader />;
-  }
+  const onUpdateFilter = <T,>({
+    key,
+    selected,
+  }: {
+    key: keyof FiltersStatsPilotageIntentions;
+    selected: T | T[] | null;
+  }) => {
+    let value = undefined;
 
-  const isDefaultRentreeScolaire =
-    activeFilters.rentreeScolaire?.length === 1 &&
-    activeFilters.rentreeScolaire[0] ===
-      findDefaultRentreeScolaireForCampagne(activeFilters.campagne ?? "");
-
-  const onCampagneChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    filterTracker("campagne");
-    const rentreeScolaire = findDefaultRentreeScolaireForCampagne(
-      e.target.value
-    );
-
-    if (rentreeScolaire !== undefined && isDefaultRentreeScolaire) {
-      handleFilters({
-        campagne: e.target.value,
-        rentreeScolaire: [rentreeScolaire],
-      });
+    if (selected instanceof Array) {
+      value = selected as Array<T>;
+    } else if (selected !== null && selected !== undefined) {
+      value = selected as T;
     } else {
-      handleFilters({ campagne: e.target.value });
+      value = undefined;
     }
+
+    let newFilters: Partial<FiltersStatsPilotageIntentions> = {
+      [key]: value,
+    };
+
+    if (key === "campagne" && typeof value === "string") {
+      const defaultRentreeScolaire = findDefaultRentreeScolaireForCampagne(
+        value,
+        data?.filters?.rentreesScolaires ?? []
+      );
+      newFilters = {
+        ...newFilters,
+        rentreeScolaire: defaultRentreeScolaire
+          ? [defaultRentreeScolaire]
+          : undefined,
+      };
+    }
+
+    // Valeurs par défaut pour les codes
+    switch (key) {
+      case "codeAcademie":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            scope: ScopeEnum.academie,
+          };
+        }
+        break;
+      case "codeRegion":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            scope: ScopeEnum.region,
+          };
+        }
+        break;
+      case "codeDepartement":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            scope: ScopeEnum.departement,
+          };
+        }
+        break;
+    }
+
+    setFilters({ ...filters, ...newFilters });
   };
 
   return (
-    <Box borderRadius={4}>
-      <SimpleGrid columns={[1, null, 4]} py={3} spacing={8}>
-        <Box flex={[1, null, "unset"]}>
-          <FormLabel>Campagne</FormLabel>
-          <Select
-            width={"100%"}
-            size="md"
-            variant="newInput"
-            value={activeFilters.campagne ?? ""}
-            borderBottomColor={
-              scope.type === ScopeEnum.region ? "info.525" : ""
-            }
-            onChange={(e) => onCampagneChange(e)}
-            placeholder="Choisir une campagne"
-          >
-            {data?.filters?.campagnes?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-        </Box>
-      </SimpleGrid>
-      <SimpleGrid columns={[1, null, 4]} py={3} spacing={8}>
-        <Box flex={[1, null, "unset"]}>
-          <FormLabel>Granularité</FormLabel>
-          <Select
-            width={["100%", null, "100%"]}
-            size="md"
-            variant="newInput"
-            value={scope.type}
-            onChange={(e) => {
-              filterTracker(generateEventFromScope(e.target.value as Scope));
-              handleFilters({
-                scope: e.target.value as Scope,
-                code: undefined,
-              });
-            }}
-          >
-            <option key={ScopeEnum.region} value={ScopeEnum.region}>
-              Régions
+    <Grid
+      gap={4}
+      mt={6}
+      paddingTop={4}
+      paddingBottom={3}
+      templateColumns="repeat(6, minmax(0, 1fr))"
+      width="100%"
+    >
+      <GridItem>
+        <FormLabel>Campagne</FormLabel>
+        <Select
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          value={filters.campagne ?? ""}
+          onChange={(e) => {
+            onUpdateFilter({ key: "campagne", selected: e.target.value });
+          }}
+          placeholder="Choisir une Campagne"
+        >
+          {data?.filters.campagnes.map((campagne) => (
+            <option key={campagne.value} value={campagne.value}>
+              {_.capitalize(campagne.label)}
             </option>
-            <option key={ScopeEnum.academie} value={ScopeEnum.academie}>
-              Académies
+          ))}
+        </Select>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Rentrée scolaire</FormLabel>
+        <Multiselect
+          size="md"
+          width={"100%"}
+          variant="newInput"
+          onChange={(selected) =>
+            onUpdateFilter({ key: "rentreeScolaire", selected })
+          }
+          options={data?.filters.rentreesScolaires}
+          value={filters.rentreeScolaire ?? []}
+        >
+          Rentrée scolaire
+        </Multiselect>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Granularité</FormLabel>
+        <Select
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          value={filters.scope ?? ""}
+          onChange={(e) => {
+            onUpdateFilter({ key: "scope", selected: e.target.value });
+          }}
+        >
+          {Object.keys(ScopeEnum)
+            .filter((s) => s !== ScopeEnum.national)
+            .map((scope) => (
+              <option key={scope} value={scope}>
+                {_.capitalize(scope)}
+              </option>
+            ))}
+        </Select>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Région</FormLabel>
+        <Select
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          value={filters.codeRegion ?? ""}
+          onChange={(e) => {
+            onUpdateFilter({ key: "codeRegion", selected: e.target.value });
+          }}
+          placeholder="Tous"
+        >
+          {data?.filters.regions.map((region) => (
+            <option key={region.value} value={region.value}>
+              {_.capitalize(region.label)}
             </option>
-            <option key={ScopeEnum.departement} value={ScopeEnum.departement}>
-              Départements
+          ))}
+        </Select>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Académie</FormLabel>
+        <Select
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          value={filters.codeAcademie ?? ""}
+          onChange={(e) => {
+            onUpdateFilter({ key: "codeAcademie", selected: e.target.value });
+          }}
+          placeholder="Tous"
+        >
+          {data?.filters.academies.map((academie) => (
+            <option key={academie.value} value={academie.value}>
+              {_.capitalize(academie.label)}
             </option>
-          </Select>
-        </Box>
-        <Box display={["none", null, "block"]}>
-          <FormLabel>Région</FormLabel>
-          <Select
-            width={"100%"}
-            size="md"
-            variant="newInput"
-            value={
-              scope.type === ScopeEnum.region && scope?.value
-                ? scope.value ?? ""
-                : ""
-            }
-            borderBottomColor={
-              scope.type === ScopeEnum.region ? "info.525" : ""
-            }
-            onChange={(e) => {
-              filterTracker("codeRegion");
-              handleFilters({ scope: ScopeEnum.region, code: e.target.value });
-            }}
-            placeholder="Choisir une région"
+          ))}
+        </Select>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Département</FormLabel>
+        <Select
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          value={filters.codeDepartement ?? ""}
+          onChange={(e) => {
+            onUpdateFilter({
+              key: "codeDepartement",
+              selected: e.target.value,
+            });
+          }}
+          placeholder="Tous"
+        >
+          {data?.filters.departements.map((departement) => (
+            <option key={departement.value} value={departement.value}>
+              {_.capitalize(departement.label)}
+            </option>
+          ))}
+        </Select>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Diplôme</FormLabel>
+        <Multiselect
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          onChange={(selected) =>
+            onUpdateFilter({ key: "codeNiveauDiplome", selected })
+          }
+          options={data?.filters.diplomes}
+          value={filters.codeNiveauDiplome ?? []}
+        >
+          Tous
+        </Multiselect>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Domaine (NSF)</FormLabel>
+        <Multiselect
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          onChange={(selected) => onUpdateFilter({ key: "codeNsf", selected })}
+          options={data?.filters.libellesNsf}
+          value={filters.codeNsf ?? []}
+        >
+          Tous
+        </Multiselect>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Public / Privé</FormLabel>
+        <Multiselect
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          onChange={(selected) => onUpdateFilter({ key: "secteur", selected })}
+          options={data?.filters.secteurFilters}
+          value={filters.secteur ?? []}
+        >
+          Tous
+        </Multiselect>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Statut de la demande</FormLabel>
+        <Multiselect
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          onChange={(selected) => onUpdateFilter({ key: "statut", selected })}
+          options={data?.filters.statutFilters}
+          value={filters.statut ?? []}
+        >
+          Tous
+        </Multiselect>
+      </GridItem>
+      <GridItem>
+        <VStack width="100%" height="100%" justifyContent="end">
+          <Button
+            leftIcon={<Icon icon="ri:refresh-line" />}
+            variant="ghost"
+            color="bluefrance.113"
+            onClick={() => setDefaultFilters()}
           >
-            {data?.filters?.regions?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-        </Box>
-        <Box display={["none", null, "block"]}>
-          <FormLabel>Académie</FormLabel>
-          <Select
-            width={"100%"}
-            size="md"
-            variant="newInput"
-            value={
-              scope.type === ScopeEnum.academie && scope?.value
-                ? scope.value ?? ""
-                : ""
-            }
-            borderBottomColor={
-              scope.type === ScopeEnum.academie ? "info.525" : ""
-            }
-            onChange={(e) => {
-              filterTracker("codeAcademie");
-              handleFilters({
-                scope: ScopeEnum.academie,
-                code: e.target.value,
-              });
-            }}
-            placeholder="Choisir une académie"
-          >
-            {data?.filters?.academies?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-        </Box>
-        <Box display={["none", null, "block"]}>
-          <FormLabel>Département</FormLabel>
-          <Select
-            width={"100%"}
-            size="md"
-            variant="newInput"
-            value={
-              scope.type === ScopeEnum.departement && scope?.value
-                ? scope.value
-                : ""
-            }
-            borderBottomColor={
-              scope.type === ScopeEnum.departement ? "info.525" : ""
-            }
-            onChange={(e) => {
-              filterTracker("codeDepartement");
-              handleFilters({
-                scope: ScopeEnum.departement,
-                code: e.target.value,
-              });
-            }}
-            placeholder="Choisir un département"
-          >
-            {data?.filters?.departements?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-        </Box>
-      </SimpleGrid>
-      <SimpleGrid columns={[1, null, 4]} py={3} spacing={8}>
-        <Box flex={[1, null, "unset"]}>
-          <FormLabel>Rentrée scolaire</FormLabel>
-          <Multiselect
-            onClose={filterTracker("rentreeScolaire")}
-            width={"100%"}
-            size="md"
-            variant={"newInput"}
-            onChange={(selected) =>
-              handleFilters({ rentreeScolaire: selected })
-            }
-            options={data?.filters?.rentreesScolaires ?? []}
-            value={activeFilters.rentreeScolaire ?? []}
-            disabled={!data?.filters?.rentreesScolaires?.length}
-          >
-            TOUS ({data?.filters?.rentreesScolaires?.length ?? 0})
-          </Multiselect>
-        </Box>
-        <Box display={["none", null, "block"]}>
-          <FormLabel>Diplôme</FormLabel>
-          <Multiselect
-            onClose={filterTracker("codeNiveauDiplome")}
-            width={"100%"}
-            size="md"
-            variant={"newInput"}
-            onChange={(selected) =>
-              handleFilters({ codeNiveauDiplome: selected })
-            }
-            options={data?.filters?.diplomes ?? []}
-            value={activeFilters.codeNiveauDiplome ?? []}
-            disabled={!data?.filters?.diplomes?.length}
-          >
-            TOUS ({data?.filters?.diplomes?.length ?? 0})
-          </Multiselect>
-        </Box>
-        <Box display={["none", null, "block"]}>
-          <FormLabel>CPC</FormLabel>
-          <Multiselect
-            onClose={filterTracker("CPC")}
-            width={"100%"}
-            size="md"
-            variant={"newInput"}
-            onChange={(selected) => handleFilters({ CPC: selected })}
-            options={data?.filters?.CPCs}
-            value={activeFilters.CPC ?? []}
-            disabled={!data?.filters?.CPCs?.length}
-            hasDefaultValue={false}
-          >
-            TOUS ({data?.filters?.CPCs?.length ?? 0})
-          </Multiselect>
-        </Box>
-        <Box display={["none", null, "block"]}>
-          <FormLabel>
-            Domaine de formation (NSF)
-            <TooltipIcon
-              ml="1"
-              label="cliquez pour plus d'infos."
-              onClick={() => openGlossaire("domaine-de-formation-nsf")}
-            />
-          </FormLabel>
-          <Multiselect
-            onClose={filterTracker("codeNsf")}
-            width={"100%"}
-            size="md"
-            variant={"newInput"}
-            onChange={(selected) => handleFilters({ codeNsf: selected })}
-            options={data?.filters?.libellesNsf ?? []}
-            value={activeFilters.codeNsf ?? []}
-            disabled={!data?.filters?.libellesNsf?.length}
-            hasDefaultValue={false}
-          >
-            TOUS ({data?.filters?.libellesNsf?.length ?? 0})
-          </Multiselect>
-        </Box>
-      </SimpleGrid>
-    </Box>
+            Réinitialiser les filtres
+          </Button>
+        </VStack>
+      </GridItem>
+    </Grid>
   );
 };

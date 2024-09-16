@@ -3,6 +3,7 @@ import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 import { RequestUser } from "../../../core/model/User";
+import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import { getDomainesQuery } from "./deps/getDomainesQuery";
 import { getNiveauxDiplomeQuery } from "./deps/getNiveauxDiplomeQuery";
 import { getPositionsQuadrantQuery } from "./deps/getPositionsQuadrantQuery";
@@ -84,7 +85,7 @@ const formatResult = (
 const getRepartitionPilotageIntentionsFactory =
   (
     deps = {
-      // getCurrentCampagneQuery,
+      getCurrentCampagneQuery,
       getDomainesQuery,
       getNiveauxDiplomeQuery,
       getZonesGeographiquesQuery,
@@ -92,41 +93,42 @@ const getRepartitionPilotageIntentionsFactory =
     }
   ) =>
   async (activeFilters: Filters) => {
-    // const campagne = await deps.getCurrentCampagneQuery();
-    // const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
+    const campagne = await deps.getCurrentCampagneQuery();
+    const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
     const [domaines, niveauxDiplome, zonesGeographiques, positionsQuadrant] =
       await Promise.all([
         deps.getDomainesQuery({
           filters: {
             ...activeFilters,
+            campagne: anneeCampagne,
           },
         }),
         deps.getNiveauxDiplomeQuery({
           filters: {
             ...activeFilters,
+            campagne: anneeCampagne,
           },
         }),
         deps.getZonesGeographiquesQuery({
           filters: {
             ...activeFilters,
+            campagne: anneeCampagne,
           },
         }),
         deps.getPositionsQuadrantQuery({
           filters: {
             ...activeFilters,
+            campagne: anneeCampagne,
           },
         }),
       ]);
 
-    // console.log(
-    //   formatResult(
-    //     positionsQuadrant,
-    //     activeFilters.order,
-    //     activeFilters.orderBy
-    //   )
-    // );
-    // 1363311
-    // 1375500
+    // console.log(zonesGeographiques);
+    console.log({
+      rentreeScolaire: zonesGeographiques[0]["annee"],
+      ...formatResult(zonesGeographiques)["Total"],
+    });
+
     return {
       domaines: formatResult(
         domaines,

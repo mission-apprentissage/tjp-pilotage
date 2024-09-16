@@ -11,7 +11,7 @@ import {
 } from "react";
 import { Scope, ScopeEnum } from "shared";
 
-import { SelectedScope } from "@/app/(wrapped)/intentions/pilotage/types";
+import { SelectedScope } from "@/app/(wrapped)/intentions/pilotage-old/types";
 import CarteFranceAcademies from "@/public/fond_carte_academies.json";
 import CarteFranceDepartements from "@/public/fond_carte_departements.json";
 import CarteFranceRegions from "@/public/fond_carte_regions.json";

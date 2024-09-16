@@ -45,7 +45,6 @@ export const getPositionsQuadrantQuery = async ({
         .select((eb) => [
           "effectifs.denominateur as placesEffectivementOccupees",
           "demandes.annee",
-          "demandes.rentreeScolaire",
           "demandes.positionQuadrant",
           sql<number>`SUM(
             ${eb.ref("demandes.placesOuvertesScolaire")} + ${eb.ref(
@@ -70,7 +69,6 @@ export const getPositionsQuadrantQuery = async ({
         ])
         .groupBy([
           "demandes.annee",
-          "demandes.rentreeScolaire",
           "demandes.positionQuadrant",
           "placesEffectivementOccupees",
         ])

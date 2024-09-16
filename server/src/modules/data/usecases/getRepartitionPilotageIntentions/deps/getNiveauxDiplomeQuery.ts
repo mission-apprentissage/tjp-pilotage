@@ -23,7 +23,6 @@ export const getNiveauxDiplomeQuery = async ({
             .selectFrom(effectifsParCampagne.as("effectifsParCampagne"))
             .select((eb) => [
               "effectifsParCampagne.annee",
-              "effectifsParCampagne.libelleNiveauDiplome",
               "effectifsParCampagne.codeNiveauDiplome",
               sql<number>`SUM(${eb.ref(
                 "effectifsParCampagne.denominateur"
@@ -31,7 +30,6 @@ export const getNiveauxDiplomeQuery = async ({
             ])
             .groupBy([
               "effectifsParCampagne.annee",
-              "effectifsParCampagne.libelleNiveauDiplome",
               "effectifsParCampagne.codeNiveauDiplome",
             ])
             .as("effectifs"),
@@ -47,7 +45,6 @@ export const getNiveauxDiplomeQuery = async ({
         .select((eb) => [
           "effectifs.denominateur as placesEffectivementOccupees",
           "demandes.annee",
-          "demandes.rentreeScolaire",
           "demandes.libelleNiveauDiplome",
           "demandes.codeNiveauDiplome",
           sql<number>`SUM(
@@ -73,7 +70,6 @@ export const getNiveauxDiplomeQuery = async ({
         ])
         .groupBy([
           "demandes.annee",
-          "demandes.rentreeScolaire",
           "demandes.libelleNiveauDiplome",
           "demandes.codeNiveauDiplome",
           "placesEffectivementOccupees",
