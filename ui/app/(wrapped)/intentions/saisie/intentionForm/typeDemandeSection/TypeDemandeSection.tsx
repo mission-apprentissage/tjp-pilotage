@@ -20,6 +20,7 @@ import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
 import { feature } from "@/utils/feature";
+import { usePermission } from "@/utils/security/usePermission";
 
 import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { Campagne, Demande } from "../../types";
@@ -103,6 +104,16 @@ export const TypeDemandeSection = ({
   const queryParams = useSearchParams();
   const isCorrection = queryParams.get("correction");
 
+  const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
+
+  const showButtonCorrection =
+    feature.correction &&
+    isCorrection &&
+    demande &&
+    demande.statut === DemandeStatutEnum["demande validée"] &&
+    campagne?.statut === CampagneStatutEnum["terminée"] &&
+    hasPermissionSubmitIntention;
+
   return (
     <Flex
       ref={typeDemandeRef}
@@ -143,27 +154,25 @@ export const TypeDemandeSection = ({
         </Flex>
       </Tooltip>
       <CapaciteSection disabled={disabled} />
-      {feature.correction &&
-        campagne?.statut === CampagneStatutEnum["terminée"] &&
-        demande?.statut === DemandeStatutEnum["demande validée"] && (
-          <Flex justify={"right"}>
-            <Button
-              w="fit-content"
-              bgColor="transparent"
-              border="1px solid black"
-              onClick={() => {
-                const link = isCorrection
-                  ? `/intentions/saisie/${demande.numero}`
-                  : `/intentions/saisie/${demande.numero}?correction=true`;
-                router.replace(link);
-              }}
-            >
-              {demande.correction
-                ? "Consulter la correction"
-                : "Rectifier les capacités"}
-            </Button>
-          </Flex>
-        )}
+      {showButtonCorrection && (
+        <Flex justify={"right"}>
+          <Button
+            w="fit-content"
+            bgColor="transparent"
+            border="1px solid black"
+            onClick={() => {
+              const link = isCorrection
+                ? `/intentions/saisie/${demande.numero}`
+                : `/intentions/saisie/${demande.numero}?correction=true`;
+              router.replace(link);
+            }}
+          >
+            {demande.correction
+              ? "Consulter la correction"
+              : "Rectifier les capacités"}
+          </Button>
+        </Flex>
+      )}
     </Flex>
   );
 };
