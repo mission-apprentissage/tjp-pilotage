@@ -114,6 +114,33 @@ export const getDemandesBaseQuery = ({ ...filters }: Filters) => {
         );
       return eb;
     })
+    .$call((eb) => {
+      if (filters.codeRegion)
+        return eb.where(
+          "dataEtablissement.codeRegion",
+          "=",
+          filters.codeRegion
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (filters.codeDepartement)
+        return eb.where(
+          "dataEtablissement.codeDepartement",
+          "=",
+          filters.codeDepartement
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (filters.codeAcademie)
+        return eb.where(
+          "dataEtablissement.codeAcademie",
+          "=",
+          filters.codeAcademie
+        );
+      return eb;
+    })
     .$call((q) => {
       if (!filters.statut)
         return q.where("demande.statut", "in", [

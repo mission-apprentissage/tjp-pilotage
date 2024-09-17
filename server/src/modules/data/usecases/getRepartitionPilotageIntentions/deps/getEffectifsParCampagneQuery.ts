@@ -67,6 +67,33 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
         return eb.where("campagne.annee", "=", filters.campagne);
       return eb;
     })
+    .$call((eb) => {
+      if (filters.codeRegion)
+        return eb.where(
+          "dataEtablissement.codeRegion",
+          "=",
+          filters.codeRegion
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (filters.codeDepartement)
+        return eb.where(
+          "dataEtablissement.codeDepartement",
+          "=",
+          filters.codeDepartement
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (filters.codeAcademie)
+        return eb.where(
+          "dataEtablissement.codeAcademie",
+          "=",
+          filters.codeAcademie
+        );
+      return eb;
+    })
     .groupBy([
       "annee",
       "rentreeScolaire",

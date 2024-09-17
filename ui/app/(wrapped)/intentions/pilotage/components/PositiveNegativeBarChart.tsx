@@ -44,6 +44,24 @@ export const PositiveNegativeBarChart = ({
       .slice(0, limit);
   };
 
+  const placesOuvertes = Object.keys(data)
+    .filter((key) => key !== "Total")
+    .map((key) => data[key].placesOuvertes)
+    .slice(0, limit)
+    .reverse();
+
+  const placesFermees = Object.keys(data)
+    .filter((key) => key !== "Total")
+    .map((key) => -data[key].placesFermees ?? null)
+    .slice(0, limit)
+    .reverse();
+
+  const placesColorees = Object.keys(data)
+    .filter((key) => key !== "Total")
+    .map((key) => data[key].placesColorees)
+    .slice(0, limit)
+    .reverse();
+
   const seriesOption: echarts.BarSeriesOption = {
     type: "bar",
     barGap: 0.5,
@@ -269,10 +287,7 @@ export const PositiveNegativeBarChart = ({
       ],
       series: [
         {
-          data: Object.keys(data)
-            .filter((key) => key !== "Total")
-            .map((key) => data[key].placesColorees ?? null)
-            .slice(0, limit),
+          data: placesColorees,
           position: "right",
           color: bf850,
           itemStyle: {
@@ -283,10 +298,7 @@ export const PositiveNegativeBarChart = ({
           ...seriesOption,
         },
         {
-          data: Object.keys(data)
-            .filter((key) => key !== "Total")
-            .map((key) => -data[key].placesFermees ?? null)
-            .slice(0, limit),
+          data: placesFermees,
           position: "left",
           stack: "placesTransformées",
           stackStrategy: "all",
@@ -300,10 +312,7 @@ export const PositiveNegativeBarChart = ({
           ...seriesOption,
         },
         {
-          data: Object.keys(data)
-            .filter((key) => key !== "Total")
-            .map((key) => data[key].placesOuvertes ?? null)
-            .slice(0, limit),
+          data: placesOuvertes,
           position: "right",
           stack: "placesTransformées",
           color: bf850_active,
