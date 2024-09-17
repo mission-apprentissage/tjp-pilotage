@@ -40,27 +40,27 @@ import { usePermission } from "@/utils/security/usePermission";
 import {
   MotifCorrectionCampagne,
   MOTIFS_CORRECTION_LABELS,
-} from "../../utils/motifCorrectionUtils";
+} from "../../../utils/motifCorrectionUtils";
 
 export const CorrectionDemandeButton = chakra(
   ({
-    demande,
+    intention,
   }: {
-    demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0];
+    intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0];
   }) => {
     const toast = useToast();
     const queryClient = useQueryClient();
     const router = useRouter();
     const bluefrance113 = useToken("colors", "bluefrance.113");
     const [isCorrected, setIsCorrected] = useState<boolean>(
-      !!demande.correction
+      !!intention.correction
     );
 
     const { mutateAsync: submitCorrection } = client
       .ref("[POST]/correction/submit")
       .useMutation({
         onSuccess: (_body) => {
-          queryClient.invalidateQueries(["[GET]/demandes/"]);
+          queryClient.invalidateQueries(["[GET]/intentions/"]);
           let message: string | null = null;
           message = "Correction enregistrée avec succès";
 
@@ -122,14 +122,14 @@ export const CorrectionDemandeButton = chakra(
 
     const showCorrectionButton =
       feature.correction &&
-      demande.statut === DemandeStatutEnum["demande validée"] &&
+      intention.statut === DemandeStatutEnum["demande validée"] &&
       hasPermissionSubmitIntention;
 
     return (
       <>
         {showCorrectionButton &&
           (isCorrected ? (
-            <Tooltip label="Demande déjà corrigée">
+            <Tooltip label="demande déjà corrigée">
               <Button
                 ms={2}
                 disabled={isCorrected}
@@ -180,7 +180,7 @@ export const CorrectionDemandeButton = chakra(
                     e.preventDefault();
                     e.stopPropagation();
                     router.push(
-                      `/intentions/saisie/${demande.numero}?correction=true`
+                      `/intentions/saisie/${intention.numero}?correction=true`
                     );
                   }}
                 >
@@ -288,16 +288,17 @@ export const CorrectionDemandeButton = chakra(
                   submitCorrection({
                     body: {
                       correction: {
-                        ...demande,
-                        intentionNumero: demande.numero,
-                        capaciteScolaire: demande.capaciteScolaireActuelle ?? 0,
+                        ...intention,
+                        intentionNumero: intention.numero,
+                        capaciteScolaire:
+                          intention.capaciteScolaireActuelle ?? 0,
                         capaciteApprentissage:
-                          demande.capaciteApprentissageActuelle ?? 0,
+                          intention.capaciteApprentissageActuelle ?? 0,
                         capaciteScolaireActuelle:
-                          demande.capaciteScolaireActuelle ?? 0,
+                          intention.capaciteScolaireActuelle ?? 0,
                         capaciteScolaireColoree: 0,
                         capaciteApprentissageActuelle:
-                          demande.capaciteApprentissageActuelle ?? 0,
+                          intention.capaciteApprentissageActuelle ?? 0,
                         capaciteApprentissageColoree: 0,
                         raison: "report",
                         motif: correction.motif,
@@ -317,7 +318,7 @@ export const CorrectionDemandeButton = chakra(
                   <FormControl isRequired>
                     <FormLabel mb={4}>
                       Pour quel motif êtes vous amené à modifier les capacités
-                      de cette demande ?
+                      de cette intention ?
                     </FormLabel>
                     <Select
                       {...formReport.register("motif", {
@@ -427,16 +428,17 @@ export const CorrectionDemandeButton = chakra(
                   submitCorrection({
                     body: {
                       correction: {
-                        ...demande,
-                        intentionNumero: demande.numero,
-                        capaciteScolaire: demande.capaciteScolaireActuelle ?? 0,
+                        ...intention,
+                        intentionNumero: intention.numero,
+                        capaciteScolaire:
+                          intention.capaciteScolaireActuelle ?? 0,
                         capaciteApprentissage:
-                          demande.capaciteApprentissageActuelle ?? 0,
+                          intention.capaciteApprentissageActuelle ?? 0,
                         capaciteScolaireActuelle:
-                          demande.capaciteScolaireActuelle ?? 0,
+                          intention.capaciteScolaireActuelle ?? 0,
                         capaciteScolaireColoree: 0,
                         capaciteApprentissageActuelle:
-                          demande.capaciteApprentissageActuelle ?? 0,
+                          intention.capaciteApprentissageActuelle ?? 0,
                         capaciteApprentissageColoree: 0,
                         raison: "annulation",
                         motif: correction.motif,
@@ -456,7 +458,7 @@ export const CorrectionDemandeButton = chakra(
                   <FormControl isRequired>
                     <FormLabel mb={4}>
                       Pour quel motif êtes vous amené à modifier les capacités
-                      de cette demande ?
+                      de cette intention ?
                     </FormLabel>
                     <Select
                       {...formAnnulation.register("motif", {

@@ -36,7 +36,6 @@ import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
-import { feature } from "@/utils/feature";
 import {
   formatCodeDepartement,
   formatDepartementLibelleWithCodeDepartement,
@@ -439,12 +438,12 @@ export const PageClient = () => {
                                 <IconButton
                                   as={NextLink}
                                   variant="link"
-                                  href={`/intentions/perdir/synthese/${demande.numero}`}
+                                  href={`/intentions/synthese/${demande.numero}`}
                                   onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
                                     router.push(
-                                      `/intentions/perdir/synthese/${demande.numero}`
+                                      `/intentions/synthese/${demande.numero}`
                                     );
                                   }}
                                   aria-label="Voir la demande"
@@ -542,9 +541,7 @@ export const PageClient = () => {
                                   />
                                 </Tooltip>
                               )}
-                              {feature.correction && (
-                                <CorrectionDemandeButton demande={demande} />
-                              )}
+                              <CorrectionDemandeButton demande={demande} />
                             </Flex>
                           </Td>
                         )}

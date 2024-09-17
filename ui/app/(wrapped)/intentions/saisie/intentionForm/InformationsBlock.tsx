@@ -20,6 +20,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { feature } from "@/utils/feature";
+import { usePermission } from "@/utils/security/usePermission";
 
 import { isTypeAjustement } from "../../utils/typeDemandeUtils";
 import { SectionBlock } from "../components/SectionBlock";
@@ -68,6 +69,15 @@ export const InformationsBlock = ({
     refs["correction"].current?.scrollIntoView({ behavior: "smooth" });
   }, [isCorrection]);
 
+  const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
+
+  const showCorrection =
+    feature.correction &&
+    isCorrection &&
+    demande &&
+    demande.statut === DemandeStatutEnum["demande validée"] &&
+    hasPermissionSubmitIntention;
+
   return (
     <Flex direction="column" gap={6} mt={6}>
       <SectionBlock>
@@ -78,7 +88,7 @@ export const InformationsBlock = ({
           demande={demande}
         />
       </SectionBlock>
-      {feature.correction && isCorrection && demande && (
+      {showCorrection && (
         <SectionBlock borderColor={"red"} borderWidth={"1px"}>
           <CorrectionSection
             correctionRef={refs["correction"]}
