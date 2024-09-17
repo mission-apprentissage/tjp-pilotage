@@ -135,17 +135,9 @@ export const getDemandes = async (
                 sql`concat(
                   unaccent(${eb.ref("demande.numero")}),
                   ' ',
-                  unaccent(${eb.ref("demande.cfd")}),
-                  ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("departement.libelleDepartement")}),
-                  ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
-                  ' ',
-                  unaccent(${eb.ref("user.firstname")}),
-                  ' ',
-                  unaccent(${eb.ref("user.lastname")})
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
                 )`,
                 "ilike",
                 `%${search_word}%`
