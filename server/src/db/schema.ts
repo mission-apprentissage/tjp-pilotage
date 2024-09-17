@@ -93,8 +93,6 @@ export interface Correction {
   capaciteApprentissageActuelle: number | null;
   capaciteScolaireColoree: number | null;
   capaciteApprentissageColoree: number | null;
-  coloration: boolean | null;
-  libelleColoration: string | null;
   campagneId: string;
 }
 

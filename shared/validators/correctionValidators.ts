@@ -48,14 +48,6 @@ export const correctionValidators: Record<
       return "Le champ 'autre motif' est obligatoire";
     }
   },
-  libelleColoration: (correction) => {
-    if (correction.coloration && !correction.libelleColoration) {
-      return "Le champ 'libellé coloration' est obligatoire";
-    }
-    if (!correction.coloration && correction.libelleColoration) {
-      return "Le champ 'libellé coloration' doit être vide";
-    }
-  },
   /**
    *
    * La future capacité scolaire doit être :

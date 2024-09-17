@@ -11,8 +11,6 @@ export type CorrectionForms = {
   capaciteApprentissage: number;
   capaciteApprentissageColoree: number;
   // Précisions
-  coloration: boolean;
-  libelleColoration?: string;
   raison: string;
   motif: string;
   autreMotif?: string;

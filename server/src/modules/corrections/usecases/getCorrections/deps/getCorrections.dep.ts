@@ -145,8 +145,6 @@ export const getCorrectionsQuery = async ({
       "correction.autreMotif as autreMotifCorrection",
       "correction.createdAt",
       "correction.updatedAt",
-      "correction.coloration",
-      "correction.libelleColoration",
       "correction.commentaire",
     ])
     .$call((eb) => {

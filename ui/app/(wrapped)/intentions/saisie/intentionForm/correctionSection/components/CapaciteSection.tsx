@@ -3,7 +3,6 @@ import {
   Flex,
   FormErrorMessage,
   Heading,
-  Input,
   Table,
   Tbody,
   Td,
@@ -14,10 +13,7 @@ import {
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import {
-  isTypeColoration,
-  isTypeFermeture,
-} from "../../../../utils/typeDemandeUtils";
+import { isTypeColoration } from "../../../../utils/typeDemandeUtils";
 import { CorrectionForms } from "../defaultFormValues";
 import { Intention } from "../types";
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
@@ -26,22 +22,6 @@ import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
 import { CapaciteScolaireActuelleField } from "./CapaciteScolaireActuelleField";
 import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
 import { CapaciteScolaireField } from "./CapaciteScolaireField";
-
-const ConstanteField = ({ value }: { value: string | number | undefined }) => (
-  <Input
-    opacity="1!important"
-    color="blueecume.850"
-    fontSize={"16px"}
-    fontWeight={700}
-    isDisabled
-    value={Number.isNaN(value) ? undefined : value}
-    textAlign={"end"}
-    maxW={496}
-    borderColor={"gray.200"}
-    borderRadius={4}
-    py={6}
-  />
-);
 
 const differenceCapacité = (
   valueA: number | undefined = 0,
@@ -66,9 +46,8 @@ export const CapaciteSection = ({
 
   const typeDemande = demande?.typeDemande;
   const coloration =
-    typeDemande !== undefined &&
-    (isTypeColoration(typeDemande) ||
-      (!isTypeFermeture(typeDemande) && watch("coloration")));
+    (typeDemande !== undefined && isTypeColoration(typeDemande)) ||
+    demande?.coloration;
 
   const [
     capaciteScolaireActuelle,
@@ -83,21 +62,40 @@ export const CapaciteSection = ({
   ]);
 
   useEffect(() => {
-    setValue("capaciteApprentissage", demande?.capaciteApprentissage ?? 0);
+    setValue(
+      "capaciteApprentissage",
+      demande?.correction?.capaciteApprentissage ??
+        demande?.capaciteApprentissage ??
+        0
+    );
     setValue(
       "capaciteApprentissageActuelle",
-      demande?.capaciteApprentissageActuelle ?? 0
+      demande?.correction?.capaciteApprentissageActuelle ??
+        demande?.capaciteApprentissageActuelle ??
+        0
     );
     setValue(
       "capaciteApprentissageColoree",
-      demande?.capaciteApprentissageColoree ?? 0
+      demande?.correction?.capaciteApprentissageColoree ??
+        demande?.capaciteApprentissageColoree ??
+        0
     );
-    setValue("capaciteScolaire", demande?.capaciteScolaire ?? 0);
+    setValue(
+      "capaciteScolaire",
+      demande?.correction?.capaciteScolaire ?? demande?.capaciteScolaire ?? 0
+    );
     setValue(
       "capaciteScolaireActuelle",
-      demande?.capaciteScolaireActuelle ?? 0
+      demande?.correction?.capaciteScolaireActuelle ??
+        demande?.capaciteScolaireActuelle ??
+        0
     );
-    setValue("capaciteScolaireColoree", demande?.capaciteScolaireColoree ?? 0);
+    setValue(
+      "capaciteScolaireColoree",
+      demande?.correction?.capaciteScolaireColoree ??
+        demande?.capaciteScolaireColoree ??
+        0
+    );
     nouvellesPlacesScolaire;
     nouvellesPlacesApprentissage;
   }, []);
@@ -135,9 +133,6 @@ export const CapaciteSection = ({
                 Dont places colorées
               </Th>
             )}
-            <Th textAlign={"end"} p={2} pe={0}>
-              Écart
-            </Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -168,9 +163,6 @@ export const CapaciteSection = ({
                 />
               </Td>
             )}
-            <Td p={0} border={"none"}>
-              <ConstanteField value={nouvellesPlacesScolaire} />
-            </Td>
           </Tr>
           <Tr border={"none"}>
             <Td p={2} bgColor={"grey.975"} border={"1px solid gray.200"}>
@@ -199,9 +191,6 @@ export const CapaciteSection = ({
                 />
               </Td>
             )}
-            <Td p={0} border={"none"}>
-              <ConstanteField value={nouvellesPlacesApprentissage} />
-            </Td>
           </Tr>
         </Tbody>
       </Table>

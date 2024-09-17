@@ -7,6 +7,7 @@ import {
   Center,
   Container,
   Flex,
+  HStack,
   IconButton,
   Table,
   TableContainer,
@@ -30,26 +31,30 @@ import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
 import { hasRole } from "shared";
+import { AvisTypeType } from "shared/enum/avisTypeEnum";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
+import {
+  formatCodeDepartement,
+  formatDepartementLibelleWithCodeDepartement,
+} from "@/utils/formatLibelle";
 import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { TableFooter } from "../../../../../components/TableFooter";
-import {
-  formatCodeDepartement,
-  formatDepartementLibelleWithCodeDepartement,
-} from "../../../../../utils/formatLibelle";
 import { useStateParams } from "../../../../../utils/useFilters";
+import { getStepWorkflow, getStepWorkflowAvis } from "../../utils/statutUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { StatutTag } from "../components/StatutTag";
+import { AvisTags } from "./components/AvisTags";
 import { DeleteIntentionButton } from "./components/DeleteIntentionButton";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
+import { ProgressSteps } from "./components/ProgressSteps";
 import { INTENTIONS_COLUMNS } from "./INTENTIONS_COLUMNS";
 import { Filters, Order } from "./types";
 import { canEditIntention, isSaisieDisabled } from "./utils/canEditIntention";
@@ -319,6 +324,8 @@ export const PageClient = () => {
                     <Th
                       cursor="pointer"
                       onClick={() => handleOrder("libelleFormation")}
+                      minW={300}
+                      maxW={300}
                     >
                       <OrderIcon {...order} column="libelleFormation" />
                       {INTENTIONS_COLUMNS.libelleFormation}
@@ -326,6 +333,8 @@ export const PageClient = () => {
                     <Th
                       cursor="pointer"
                       onClick={() => handleOrder("libelleEtablissement")}
+                      minW={350}
+                      maxW={350}
                     >
                       <OrderIcon {...order} column="libelleEtablissement" />
                       {INTENTIONS_COLUMNS.libelleEtablissement}
@@ -354,6 +363,21 @@ export const PageClient = () => {
                       <OrderIcon {...order} column="typeDemande" />
                       {INTENTIONS_COLUMNS.typeDemande}
                     </Th>
+
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("createdAt")}
+                    >
+                      <OrderIcon {...order} column="createdAt" />
+                      {INTENTIONS_COLUMNS.createdAt}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("numeroDemandeImportee")}
+                    >
+                      <OrderIcon {...order} column="numeroDemandeImportee" />
+                      {INTENTIONS_COLUMNS.numero}
+                    </Th>
                     <Th
                       cursor="pointer"
                       onClick={() => handleOrder("userName")}
@@ -362,6 +386,18 @@ export const PageClient = () => {
                       <OrderIcon {...order} column="userName" />
                       {INTENTIONS_COLUMNS.userName}
                     </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("inspecteurReferent")}
+                      minW={250}
+                      maxW={250}
+                    >
+                      <OrderIcon {...order} column="inspecteurReferent" />
+                      {INTENTIONS_COLUMNS.inspecteurReferent}
+                    </Th>
+                    <Th textAlign={"center"}>Progression</Th>
+                    <Th>Avis (Phase en cours)</Th>
+                    <Th>Derniers avis - Phase en cours</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -595,6 +631,30 @@ export const PageClient = () => {
                             {getTypeDemandeLabel(intention.typeDemande)}
                           </Tag>
                         </Td>
+
+                        <Td textAlign={"center"}>
+                          <Tooltip
+                            label={`Le ${format(
+                              intention.createdAt,
+                              "d MMMM yyyy à HH:mm",
+                              { locale: fr }
+                            )}`}
+                          >
+                            {format(intention.createdAt, "d MMM HH:mm", {
+                              locale: fr,
+                            })}
+                          </Tooltip>
+                        </Td>
+                        <Td>
+                          <Text
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            textAlign={"center"}
+                          >
+                            {intention.numero}
+                          </Text>
+                        </Td>
                         <Td w="15" textAlign={"center"}>
                           <Tooltip label={intention.userName}>
                             <Avatar
@@ -607,6 +667,44 @@ export const PageClient = () => {
                               position={"unset"}
                             />
                           </Tooltip>
+                        </Td>
+                        <Td>
+                          <Text
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                          >
+                            {intention.inspecteurReferent}
+                          </Text>
+                        </Td>
+                        <Td>
+                          <ProgressSteps statut={intention.statut} />
+                        </Td>
+                        <Td>
+                          <HStack w={"100%"} justify={"center"}>
+                            <Tag
+                              size="md"
+                              color={"white"}
+                              bgColor={"bluefrance.525"}
+                              fontWeight={"bold"}
+                            >
+                              {
+                                intention.avis.filter(
+                                  (avis) =>
+                                    getStepWorkflowAvis(
+                                      avis.type as AvisTypeType
+                                    ) === getStepWorkflow(intention.statut)
+                                ).length
+                              }
+                            </Tag>
+                            <Text>({intention.avis.length} au total)</Text>
+                          </HStack>
+                        </Td>
+                        <Td>
+                          <AvisTags
+                            listeAvis={intention.avis}
+                            statut={intention.statut}
+                          />
                         </Td>
                       </Tr>
                     )

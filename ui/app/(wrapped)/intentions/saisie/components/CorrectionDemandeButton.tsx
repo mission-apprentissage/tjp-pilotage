@@ -290,8 +290,6 @@ export const CorrectionDemandeButton = chakra(
                         capaciteApprentissageActuelle:
                           demande.capaciteApprentissageActuelle ?? 0,
                         capaciteApprentissageColoree: 0,
-                        coloration: demande.coloration ?? false,
-                        libelleColoration: demande.libelleColoration,
                         raison: "report",
                         motif: correction.motif,
                       },
@@ -431,8 +429,6 @@ export const CorrectionDemandeButton = chakra(
                         capaciteApprentissageActuelle:
                           demande.capaciteApprentissageActuelle ?? 0,
                         capaciteApprentissageColoree: 0,
-                        coloration: demande.coloration ?? false,
-                        libelleColoration: demande.libelleColoration,
                         raison: "annulation",
                         motif: correction.motif,
                       },
