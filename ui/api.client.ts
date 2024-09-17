@@ -1,7 +1,7 @@
 import { ZodTypeProvider } from "@http-wizard/core";
 import { createQueryClient } from "@http-wizard/react-query";
 import axios from "axios";
-import type { Router } from "server";
+import { Router } from "server/src/routes";
 
 export const API_BASE_URL =
   typeof document === "undefined"

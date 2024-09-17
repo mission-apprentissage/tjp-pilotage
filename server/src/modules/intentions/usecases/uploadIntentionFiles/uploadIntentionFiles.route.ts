@@ -14,6 +14,7 @@ export const uploadIntentionFilesRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions-perdir/ecriture"),
       handler: async (request, response) => {
+        // @ts-ignore
         const files = request.files();
 
         for await (const file of files) {
