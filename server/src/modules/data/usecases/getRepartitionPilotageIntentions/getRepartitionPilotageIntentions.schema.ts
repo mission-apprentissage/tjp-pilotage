@@ -56,6 +56,7 @@ export const getRepartitionPilotageIntentionsSchema = {
   response: {
     200: z.object({
       domaines: StatsRepartitionSchema,
+      top10Domaines: StatsRepartitionSchema,
       niveauxDiplome: StatsRepartitionSchema,
       zonesGeographiques: StatsRepartitionSchema,
     }),

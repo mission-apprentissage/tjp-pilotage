@@ -64,7 +64,7 @@ const calculateTotal = (
 
 const formatResult = (
   result: z.infer<typeof StatsSchema>[],
-  order: "asc" | "desc" = "asc",
+  order: "asc" | "desc" = "desc",
   orderBy?: string
 ) => {
   return _.chain(calculateTotal(result))
@@ -76,7 +76,7 @@ const formatResult = (
     }))
     .orderBy((item) => {
       if (orderBy) return item[orderBy as keyof typeof item];
-      return item.libelle;
+      return item.placesTransformees;
     }, order)
     .keyBy("libelle")
     .value();
@@ -123,20 +123,13 @@ const getRepartitionPilotageIntentionsFactory =
         }),
       ]);
 
-    // console.log(zonesGeographiques);
-    console.log({
-      rentreeScolaire: zonesGeographiques[0]["annee"],
-      ...formatResult(zonesGeographiques)["Total"],
-    });
-
     return {
+      // Répartitions non ordonnées
+      top10Domaines: formatResult(domaines),
+      niveauxDiplome: formatResult(niveauxDiplome),
+      // Répartitions ordonnées
       domaines: formatResult(
         domaines,
-        activeFilters.order,
-        activeFilters.orderBy
-      ),
-      niveauxDiplome: formatResult(
-        niveauxDiplome,
         activeFilters.order,
         activeFilters.orderBy
       ),

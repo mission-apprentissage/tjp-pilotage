@@ -139,7 +139,6 @@ export const getDomainesQuery = async ({ filters }: { filters: Filters }) => {
         ${eb.ref("demandesAvecEffectif.placesEffectivementOccupees")}
       `.as("tauxTransformationColorations"),
     ])
-    .orderBy("placesTransformees", "desc")
     .execute()
     .then(cleanNull);
 };

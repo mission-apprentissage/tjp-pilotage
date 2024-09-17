@@ -33,7 +33,7 @@ export const FiliereNiveauDiplomeSection = ({
         <PositiveNegativeBarChart
           title="10 DOMAINES LES PLUS TRANSFORMÉS"
           type="domaines"
-          data={repartitionData?.domaines}
+          data={repartitionData?.top10Domaines}
         />
         <PositiveNegativeBarChart
           title="TRANSFORMATIONS PAR DIPLÔME"
