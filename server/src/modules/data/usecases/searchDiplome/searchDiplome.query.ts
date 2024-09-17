@@ -57,15 +57,7 @@ export const findManyInDataFormationQuery = async ({
               sql`concat(
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("dataFormation.cfd")}),
-                  ' ',
-                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
-                  ' ',
-                  unaccent(${eb.ref("familleMetier.cfdFamille")}),
-                  ' ',
-                  unaccent(${eb.ref("familleMetier.cfd")}),
-                  ' ',
-                  unaccent(${eb.ref("familleMetier.libelleFamille")})
+                  unaccent(${eb.ref("dataFormation.cfd")})
                 )`,
               "ilike",
               `%${search_word}%`
