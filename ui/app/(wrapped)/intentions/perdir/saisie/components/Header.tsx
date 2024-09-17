@@ -237,7 +237,7 @@ export const Header = ({
           value={searchIntention}
           onChange={setSearchIntention}
           onClick={onClickSearchIntention}
-          placeholder="Rechercher par diplôme, établissement, numéro,..."
+          placeholder="30745A1I, Jules Verne, Cybersécurité..."
         />
       </Flex>
     </Flex>
