@@ -67,6 +67,23 @@ export const CorrectionSection = ({
       raison: "modification_capacite",
       coloration: demande.coloration ?? false,
       libelleColoration: demande.libelleColoration,
+      capaciteScolaireActuelle:
+        demande?.correction?.capaciteScolaireActuelle ??
+        demande.capaciteScolaireActuelle,
+      capaciteScolaire:
+        demande?.correction?.capaciteScolaire ?? demande.capaciteScolaire,
+      capaciteScolaireColoree:
+        demande?.correction?.capaciteScolaireColoree ??
+        demande.capaciteScolaireColoree,
+      capaciteApprentissageActuelle:
+        demande?.correction?.capaciteApprentissageActuelle ??
+        demande.capaciteApprentissageActuelle,
+      capaciteApprentissage:
+        demande?.correction?.capaciteApprentissage ??
+        demande.capaciteApprentissage,
+      capaciteApprentissageColoree:
+        demande?.correction?.capaciteApprentissageColoree ??
+        demande.capaciteApprentissageColoree,
       ...demande.correction,
     },
     mode: "onTouched",
@@ -228,8 +245,6 @@ export const CorrectionSection = ({
                             capaciteApprentissageActuelle:
                               demande.capaciteApprentissageActuelle ?? 0,
                             capaciteApprentissageColoree: 0,
-                            coloration: demande.coloration ?? false,
-                            libelleColoration: demande.libelleColoration,
                             motif: correction.motif,
                           },
                         },

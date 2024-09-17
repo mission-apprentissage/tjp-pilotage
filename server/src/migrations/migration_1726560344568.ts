@@ -25,8 +25,6 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("capaciteApprentissageActuelle", "integer")
     .addColumn("capaciteScolaireColoree", "integer")
     .addColumn("capaciteApprentissageColoree", "integer")
-    .addColumn("coloration", "boolean")
-    .addColumn("libelleColoration", "varchar")
     .addColumn("campagneId", "uuid", (c) => c.notNull())
     .execute();
 

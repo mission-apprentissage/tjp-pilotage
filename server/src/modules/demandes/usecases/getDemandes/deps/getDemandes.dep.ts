@@ -5,6 +5,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
+import { isAllowedToSeePreviousCampagnes } from "../../../../utils/isAllowedToSeePreviousCampagnes";
 import { isDemandeCampagneEnCours } from "../../../../utils/isDemandeCampagneEnCours";
 import { isDemandeSelectable } from "../../../../utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
@@ -184,6 +185,7 @@ export const getDemandes = async (
   const campagnes = await kdb
     .selectFrom("campagne")
     .selectAll()
+    .where(isAllowedToSeePreviousCampagnes({ user }))
     .orderBy("annee desc")
     .execute();
 

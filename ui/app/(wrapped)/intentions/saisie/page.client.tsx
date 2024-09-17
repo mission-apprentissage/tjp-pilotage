@@ -435,57 +435,6 @@ export const PageClient = () => {
                               gap={0}
                               justifyContent={"left"}
                             >
-                              {demande.numeroDemandeImportee ? (
-                                <Tooltip
-                                  label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
-                                >
-                                  <IconButton
-                                    as={NextLink}
-                                    variant={"link"}
-                                    aria-label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
-                                    href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
-                                    icon={
-                                      <Icon
-                                        icon="ri:external-link-line"
-                                        width={"24px"}
-                                        color={bluefrance113}
-                                      />
-                                    }
-                                    me={"auto"}
-                                    passHref
-                                    onClick={(e) => e.stopPropagation()}
-                                  />
-                                </Tooltip>
-                              ) : (
-                                <Tooltip label="Dupliquer la demande">
-                                  <IconButton
-                                    icon={
-                                      <Icon
-                                        icon="ri:file-copy-line"
-                                        width={"24px"}
-                                        color={bluefrance113}
-                                      />
-                                    }
-                                    variant="link"
-                                    aria-label="Dupliquer la demande"
-                                    onClick={(e) => {
-                                      setIsImporting(true);
-                                      if (demande.numeroDemandeImportee) return;
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      importDemande({
-                                        params: { numero: demande.numero },
-                                      });
-                                    }}
-                                    isDisabled={
-                                      !!demande.numeroDemandeImportee ||
-                                      isSubmitting ||
-                                      isImporting ||
-                                      !hasPermissionSubmitIntention
-                                    }
-                                  />
-                                </Tooltip>
-                              )}
                               <Tooltip label="Voir la demande">
                                 <IconButton
                                   as={NextLink}
@@ -542,6 +491,57 @@ export const PageClient = () => {
                                   }}
                                 />
                               </Tooltip>
+                              {demande.numeroDemandeImportee ? (
+                                <Tooltip
+                                  label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
+                                >
+                                  <IconButton
+                                    as={NextLink}
+                                    variant={"link"}
+                                    aria-label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
+                                    href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
+                                    icon={
+                                      <Icon
+                                        icon="ri:external-link-line"
+                                        width={"24px"}
+                                        color={bluefrance113}
+                                      />
+                                    }
+                                    me={"auto"}
+                                    passHref
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                </Tooltip>
+                              ) : (
+                                <Tooltip label="Dupliquer la demande">
+                                  <IconButton
+                                    icon={
+                                      <Icon
+                                        icon="ri:file-copy-line"
+                                        width={"24px"}
+                                        color={bluefrance113}
+                                      />
+                                    }
+                                    variant="link"
+                                    aria-label="Dupliquer la demande"
+                                    onClick={(e) => {
+                                      setIsImporting(true);
+                                      if (demande.numeroDemandeImportee) return;
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      importDemande({
+                                        params: { numero: demande.numero },
+                                      });
+                                    }}
+                                    isDisabled={
+                                      !!demande.numeroDemandeImportee ||
+                                      isSubmitting ||
+                                      isImporting ||
+                                      !hasPermissionSubmitIntention
+                                    }
+                                  />
+                                </Tooltip>
+                              )}
                               {feature.correction && (
                                 <CorrectionDemandeButton demande={demande} />
                               )}
