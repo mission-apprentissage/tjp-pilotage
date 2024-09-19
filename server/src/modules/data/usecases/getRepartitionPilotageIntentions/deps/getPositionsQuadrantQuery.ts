@@ -43,35 +43,14 @@ export const getPositionsQuadrantQuery = async ({
               )
         )
         .select((eb) => [
-          "effectifs.denominateur as placesEffectivementOccupees",
+          "effectifs.denominateur as effectif",
           "demandes.annee",
           "demandes.positionQuadrant",
-          sql<number>`SUM(
-            ${eb.ref("demandes.placesOuvertesScolaire")} + ${eb.ref(
-              "demandes.placesOuvertesApprentissage"
-            )}
-          )`.as("placesOuvertes"),
-          sql<number>`SUM(
-            CASE WHEN ${eb.ref("demandes.annee")} = '2023'
-            THEN ${eb.ref("demandes.placesFermeesScolaire")}
-            ELSE
-              ${eb.ref("demandes.placesFermeesScolaire")} +
-              ${eb.ref("demandes.placesFermeesApprentissage")}
-            END
-          )`.as("placesFermees"),
-          sql<number>`SUM(
-            CASE WHEN ${eb.ref("demandes.typeDemande")} = 'coloration'
-            THEN COALESCE(${eb.ref("demandes.placesColoreesScolaire")}, 0) +
-              COALESCE(${eb.ref("demandes.placesColoreesApprentissage")}, 0)
-            ELSE 0
-            END
-          )`.as("placesColorees"),
+          eb.fn.sum<number>("demandes.placesOuvertes").as("placesOuvertes"),
+          eb.fn.sum<number>("demandes.placesFermees").as("placesFermees"),
+          eb.fn.sum<number>("demandes.placesColorees").as("placesColorees"),
         ])
-        .groupBy([
-          "demandes.annee",
-          "demandes.positionQuadrant",
-          "placesEffectivementOccupees",
-        ])
+        .groupBy(["demandes.annee", "demandes.positionQuadrant", "effectif"])
         .$call((eb) => {
           if (filters.campagne)
             return eb.where("demandes.annee", "=", filters.campagne);
@@ -90,9 +69,9 @@ export const getPositionsQuadrantQuery = async ({
     )
     .selectAll("demandesAvecEffectif")
     .select((eb) => [
-      sql<number>`COALESCE(${eb.ref(
-        "demandesAvecEffectif.placesEffectivementOccupees"
-      )}, 0)`.as("placesEffectivementOccupees"),
+      sql<number>`COALESCE(${eb.ref("demandesAvecEffectif.effectif")}, 0)`.as(
+        "effectif"
+      ),
       sql<string>`COALESCE(${eb.ref(
         "demandesAvecEffectif.positionQuadrant"
       )}, '')`.as("code"),
@@ -114,19 +93,19 @@ export const getPositionsQuadrantQuery = async ({
           ${eb.ref("placesFermees")} +
           ${eb.ref("placesColorees")}
         ) /
-        ${eb.ref("demandesAvecEffectif.placesEffectivementOccupees")}
+        ${eb.ref("demandesAvecEffectif.effectif")}
       `.as("tauxTransformation"),
       sql<number>`
         ${eb.ref("placesOuvertes")} /
-        ${eb.ref("demandesAvecEffectif.placesEffectivementOccupees")}
+        ${eb.ref("demandesAvecEffectif.effectif")}
       `.as("tauxTransformationOuvertures"),
       sql<number>`
         ${eb.ref("placesFermees")} /
-        ${eb.ref("demandesAvecEffectif.placesEffectivementOccupees")}
+        ${eb.ref("demandesAvecEffectif.effectif")}
       `.as("tauxTransformationFermetures"),
       sql<number>`
         ${eb.ref("placesColorees")} /
-        ${eb.ref("demandesAvecEffectif.placesEffectivementOccupees")}
+        ${eb.ref("demandesAvecEffectif.effectif")}
       `.as("tauxTransformationColorations"),
     ])
     .execute()

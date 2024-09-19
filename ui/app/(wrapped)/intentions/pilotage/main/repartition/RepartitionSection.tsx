@@ -1,6 +1,5 @@
 import { Flex } from "@chakra-ui/react";
 
-import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage/main/displayTypeEnum";
 import {
   FiltersStatsPilotageIntentions,
   OrderRepartitionPilotageIntentions,
@@ -14,14 +13,14 @@ export const RepartitionSection = ({
   repartitionData,
   order,
   setSearchParams,
+  filters,
 }: {
   repartitionData?: RepartitionPilotageIntentions;
   order: Partial<OrderRepartitionPilotageIntentions>;
   setSearchParams: (params: {
-    displayType?: DisplayTypeEnum;
-    filters?: Partial<FiltersStatsPilotageIntentions>;
     order?: Partial<OrderRepartitionPilotageIntentions>;
   }) => void;
+  filters?: Partial<FiltersStatsPilotageIntentions>;
 }) => {
   return (
     <Flex direction={"column"} gap={8} w={"100%"}>
@@ -31,6 +30,7 @@ export const RepartitionSection = ({
         domaines={repartitionData?.domaines}
         order={order}
         setSearchParams={setSearchParams}
+        filters={filters}
       />
     </Flex>
   );

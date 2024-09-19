@@ -51,8 +51,9 @@ export const PilotageNationalClient = () => {
 
   const [filters, setFilters] = useStateParams<FiltersStatsPilotageIntentions>({
     defaultValues: {
-      scope: ScopeEnum.region,
+      scope: ScopeEnum["région"],
       campagne: undefined,
+      withColoration: "true",
     },
   });
 
@@ -94,7 +95,7 @@ export const PilotageNationalClient = () => {
       codeNsf: undefined,
       codeNiveauDiplome: undefined,
       CPC: undefined,
-      scope: ScopeEnum.region,
+      scope: ScopeEnum["région"],
       secteur: undefined,
       statut: undefined,
     });

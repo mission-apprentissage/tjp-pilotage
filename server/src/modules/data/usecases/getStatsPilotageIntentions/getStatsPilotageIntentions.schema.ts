@@ -19,22 +19,22 @@ const ScopedStatsTransfoSchema = z.object({
   placesTransformees: z.number(),
   tauxTransformation: z.number().optional(),
   placesOuvertesScolaire: z.number(),
-  placesOuvertesScolaireQ1Q2: z.number(),
   placesFermeesScolaire: z.number(),
+  placesOuvertesScolaireQ1Q2: z.number(),
   placesFermeesScolaireQ3Q4: z.number(),
   placesOuvertesApprentissage: z.number(),
-  placesOuvertesApprentissageQ1Q2: z.number(),
   placesFermeesApprentissage: z.number(),
+  placesOuvertesApprentissageQ1Q2: z.number(),
   placesFermeesApprentissageQ3Q4: z.number(),
-  placesFermees: z.number(),
-  placesFermeesQ3Q4: z.number(),
   placesOuvertes: z.number(),
+  placesFermees: z.number(),
   placesOuvertesQ1Q2: z.number(),
-  placesOuvertesColorees: z.number(),
-  placesOuvertesColoreesQ3Q4: z.number(),
+  placesFermeesQ3Q4: z.number(),
+  placesColorees: z.number(),
+  placesColoreesQ3Q4: z.number(),
   placesOuvertesTransformationEcologique: z.number(),
-  ratioOuverture: z.number(),
-  ratioFermeture: z.number(),
+  ratioOuverture: z.number().optional(),
+  ratioFermeture: z.number().optional(),
 });
 
 const QuerySchema = z.object({
@@ -49,6 +49,7 @@ const QuerySchema = z.object({
   campagne: z.string().optional(),
   secteur: z.array(SecteurZodType).optional(),
   statut: z.array(DemandeStatutZodType).optional(),
+  withColoration: z.string().optional(),
 });
 
 export type QuerySchema = z.infer<typeof QuerySchema>;

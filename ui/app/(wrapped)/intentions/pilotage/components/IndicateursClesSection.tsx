@@ -20,7 +20,10 @@ import { ProgressBar } from "@/components/ProgressBar";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
 import { themeColors } from "@/theme/themeColors";
-import { formatNumber } from "@/utils/formatUtils";
+import {
+  formatPercentage,
+  formatPercentageWithoutSign,
+} from "@/utils/formatUtils";
 
 import { useScopeCode } from "../hooks";
 import {
@@ -70,9 +73,7 @@ function generateGetScopedData(
 ) {
   return (statut: Statut, indicateur: Indicateur): number => {
     if (!code) return 0;
-    return Number.parseFloat(
-      ((data?.[statut]?.[`_${code}`]?.[indicateur] as number) ?? 0).toFixed(1)
-    );
+    return (data?.[statut]?.[`_${code}`]?.[indicateur] as number) ?? 0;
   };
 }
 
@@ -81,14 +82,12 @@ const NumberWithLabel = ({
   label,
   percentage,
   objective,
-  symbol,
   round = 2,
 }: {
   icon?: React.ReactNode;
   label?: string;
   percentage: number;
   objective?: number;
-  symbol?: string;
   round?: number;
 }) => {
   return (
@@ -101,13 +100,15 @@ const NumberWithLabel = ({
       </HStack>
       <VStack gap="16px" width="100%" alignItems="start">
         <Text fontSize="32px" lineHeight="40px" fontWeight="700">
-          {percentage === 0 ? "-" : formatNumber(percentage, round)} {symbol}
+          {percentage === 0 ? "-" : formatPercentage(percentage, round)}
         </Text>
         {objective && (
           <Box width="100%">
-            <ProgressBar percentage={percentage / objective} />
+            <ProgressBar
+              percentage={formatPercentageWithoutSign(percentage / objective)}
+            />
             <Text color={themeDefinition.colors.grey[425]}>
-              {formatNumber(percentage / objective, 0)}% de l'objectif
+              {formatPercentage(percentage / objective, 0)} de l'objectif
             </Text>
           </Box>
         )}
@@ -160,16 +161,16 @@ const NumberWithProgressBars = ({
         {all}
       </Text>
       <ProgressBar
-        percentage={100}
+        percentage={formatPercentageWithoutSign(demandeValidee / all)}
         rightLabel="Validées"
         leftLabel={demandeValidee}
         colorScheme={themeColors.success[975]}
       />
       <ProgressBar
-        percentage={100}
+        percentage={formatPercentageWithoutSign(projetDeDemande / all)}
         rightLabel="En projet"
         leftLabel={projetDeDemande}
-        colorScheme={themeColors.grey[975]}
+        colorScheme={themeColors.orange.draft}
       />
       {children}
     </Flex>
@@ -182,7 +183,7 @@ export const IndicateursClesSection = ({
   setFilters,
   onOpenTauxTransfoDefinition,
 }: {
-  data: StatsPilotageIntentions | undefined;
+  data?: StatsPilotageIntentions;
   filters: FiltersStatsPilotageIntentions;
   setFilters: (filters: FiltersStatsPilotageIntentions) => void;
   onOpenTauxTransfoDefinition: () => void;
@@ -255,7 +256,6 @@ export const IndicateursClesSection = ({
                       "tauxTransformation"
                     )}
                     objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
-                    symbol="%"
                   />
                 </GridItem>
                 <GridItem height="100%">
@@ -267,7 +267,6 @@ export const IndicateursClesSection = ({
                       "tauxTransformation"
                     )}
                     objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
-                    symbol="%"
                   />
                 </GridItem>
               </Grid>
@@ -279,7 +278,6 @@ export const IndicateursClesSection = ({
                 <NumberWithLabel
                   label=" "
                   percentage={getScopedData("all", "ratioFermeture")}
-                  symbol="%"
                   round={0}
                 />
               </GridItem>
@@ -318,13 +316,10 @@ export const IndicateursClesSection = ({
                   alignItems="start"
                 >
                   <Text>
-                    {formatNumber(
-                      (getScopedData("all", "placesOuvertesQ1Q2") /
-                        getScopedData("all", "placesOuvertes")) *
-                        100,
-                      0
+                    {formatPercentage(
+                      getScopedData("all", "placesOuvertesQ1Q2") /
+                        getScopedData("all", "placesOuvertes")
                     )}
-                    %
                   </Text>
                   <Text>places en Q1 / Q2</Text>
                 </HStack>
@@ -364,13 +359,10 @@ export const IndicateursClesSection = ({
                   alignItems="start"
                 >
                   <Text>
-                    {formatNumber(
-                      (getScopedData("all", "placesFermeesQ3Q4") /
-                        getScopedData("all", "placesFermees")) *
-                        100,
-                      0
+                    {formatPercentage(
+                      getScopedData("all", "placesFermeesQ3Q4") /
+                        getScopedData("all", "placesFermees")
                     )}
-                    %
                   </Text>
                   <Text>places en Q3 / Q4</Text>
                 </HStack>
@@ -379,7 +371,7 @@ export const IndicateursClesSection = ({
           </GridItem>
           <GridItem>
             <NumberWithProgressBars
-              all={getScopedData("all", "placesOuvertesColorees")}
+              all={getScopedData("all", "placesColorees")}
               icon={
                 <Icon
                   width="24px"
@@ -390,11 +382,11 @@ export const IndicateursClesSection = ({
               title="Pl. Colorées"
               demandeValidee={getScopedData(
                 DemandeStatutEnum["demande validée"],
-                "placesOuvertesColorees"
+                "placesColorees"
               )}
               projetDeDemande={getScopedData(
                 DemandeStatutEnum["projet de demande"],
-                "placesOuvertesColorees"
+                "placesColorees"
               )}
             >
               <Divider />
@@ -410,13 +402,10 @@ export const IndicateursClesSection = ({
                   alignItems="start"
                 >
                   <Text>
-                    {formatNumber(
-                      (getScopedData("all", "placesOuvertesColoreesQ3Q4") /
-                        getScopedData("all", "placesOuvertesColorees")) *
-                        100,
-                      0
+                    {formatPercentage(
+                      getScopedData("all", "placesColoreesQ3Q4") /
+                        getScopedData("all", "placesColorees")
                     )}
-                    %
                   </Text>
                   <Text>places en Q3 / Q4</Text>
                 </HStack>

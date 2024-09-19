@@ -46,6 +46,8 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
       "dataFormation.codeNiveauDiplome",
       "positionFormationRegionaleQuadrant.positionQuadrant",
       "dataEtablissement.codeRegion",
+      "dataEtablissement.codeDepartement",
+      "dataEtablissement.codeAcademie",
       "campagne.annee",
       "rentreeScolaire",
       sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("denominateur"),
@@ -63,8 +65,21 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
     )
     .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)
     .$call((eb) => {
-      if (filters.campagne)
-        return eb.where("campagne.annee", "=", filters.campagne);
+      if (filters.CPC) return eb.where("dataFormation.cpc", "in", filters.CPC);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filters.codeNsf)
+        return eb.where("dataFormation.codeNsf", "in", filters.codeNsf);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filters.codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          filters.codeNiveauDiplome
+        );
       return eb;
     })
     .$call((eb) => {
@@ -94,12 +109,23 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
         );
       return eb;
     })
+    .$call((eb) => {
+      if (filters.campagne)
+        return eb.where("campagne.annee", "=", filters.campagne);
+      return eb;
+    })
+    .$call((q) => {
+      if (!filters.secteur || filters.secteur.length === 0) return q;
+      return q.where("dataEtablissement.secteur", "in", filters.secteur);
+    })
     .groupBy([
       "annee",
       "rentreeScolaire",
       "dataFormation.codeNsf",
       "dataFormation.codeNiveauDiplome",
       "dataEtablissement.codeRegion",
+      "dataEtablissement.codeDepartement",
+      "dataEtablissement.codeAcademie",
       "positionQuadrant",
     ]);
 };

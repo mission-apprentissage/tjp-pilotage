@@ -82,7 +82,9 @@ export const FiltersSection = ({
         if (value !== undefined) {
           newFilters = {
             ...newFilters,
-            scope: ScopeEnum.academie,
+            scope: ScopeEnum["académie"],
+            codeRegion: undefined,
+            codeDepartement: undefined,
           };
         }
         break;
@@ -90,7 +92,9 @@ export const FiltersSection = ({
         if (value !== undefined) {
           newFilters = {
             ...newFilters,
-            scope: ScopeEnum.region,
+            scope: ScopeEnum["région"],
+            codeDepartement: undefined,
+            codeAcademie: undefined,
           };
         }
         break;
@@ -98,7 +102,9 @@ export const FiltersSection = ({
         if (value !== undefined) {
           newFilters = {
             ...newFilters,
-            scope: ScopeEnum.departement,
+            scope: ScopeEnum["département"],
+            codeRegion: undefined,
+            codeAcademie: undefined,
           };
         }
         break;
@@ -259,19 +265,6 @@ export const FiltersSection = ({
         </Multiselect>
       </GridItem>
       <GridItem>
-        <FormLabel>Public / Privé</FormLabel>
-        <Multiselect
-          width={"100%"}
-          size="md"
-          variant="newInput"
-          onChange={(selected) => onUpdateFilter({ key: "secteur", selected })}
-          options={data?.filters.secteurFilters}
-          value={filters.secteur ?? []}
-        >
-          Tous
-        </Multiselect>
-      </GridItem>
-      <GridItem>
         <FormLabel>Statut de la demande</FormLabel>
         <Multiselect
           width={"100%"}
@@ -280,6 +273,38 @@ export const FiltersSection = ({
           onChange={(selected) => onUpdateFilter({ key: "statut", selected })}
           options={data?.filters.statutFilters}
           value={filters.statut ?? []}
+        >
+          Tous
+        </Multiselect>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Inclure colorations</FormLabel>
+        <Select
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          value={filters.withColoration}
+          onChange={(e) => {
+            onUpdateFilter({
+              key: "withColoration",
+              selected: e.target.value,
+            });
+          }}
+          defaultValue={"true"}
+        >
+          <option value={"true"}>Oui</option>
+          <option value={"false"}>Non</option>
+        </Select>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Public / Privé</FormLabel>
+        <Multiselect
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          onChange={(selected) => onUpdateFilter({ key: "secteur", selected })}
+          options={data?.filters.secteurFilters}
+          value={filters.secteur ?? []}
         >
           Tous
         </Multiselect>

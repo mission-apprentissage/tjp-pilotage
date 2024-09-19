@@ -6,6 +6,7 @@ export { VoieEnum, type Voie } from "./enum/voieEnum";
 export * from "./security/permissions";
 export * from "./security/securityUtils";
 export { CURRENT_IJ_MILLESIME } from "./time/CURRENT_IJ_MILLESIME";
+export { FIRST_ANNEE_CAMPAGNE } from "./time/FIRST_ANNEE_CAMPAGNE";
 export { CURRENT_RENTREE } from "./time/CURRENT_RENTREE";
 export { RENTREE_INTENTIONS } from "./time/RENTREE_INTENTIONS";
 export {

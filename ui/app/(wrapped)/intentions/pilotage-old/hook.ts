@@ -21,7 +21,7 @@ export const usePilotageIntentionsHook = () => {
     Partial<FiltersStatsPilotageIntentions>
   >({
     defaultValues: {
-      scope: ScopeEnum.region,
+      scope: ScopeEnum["région"],
       campagne: undefined,
     },
   });
@@ -64,15 +64,15 @@ export const usePilotageIntentionsHook = () => {
         ...order,
         scope: filters.scope!,
         codeRegion:
-          filters?.scope === ScopeEnum.region && filters?.code
+          filters?.scope === ScopeEnum["région"] && filters?.code
             ? filters.code
             : undefined,
         codeAcademie:
-          filters?.scope === ScopeEnum.academie && filters?.code
+          filters?.scope === ScopeEnum["académie"] && filters?.code
             ? filters.code
             : undefined,
         codeDepartement:
-          filters?.scope === ScopeEnum.departement && filters?.code
+          filters?.scope === ScopeEnum["département"] && filters?.code
             ? filters.code
             : undefined,
       },

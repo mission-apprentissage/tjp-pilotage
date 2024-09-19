@@ -29,11 +29,11 @@ const generateEventFromScope = (
   scope: Scope
 ): "codeRegion" | "codeDepartement" | "codeAcademie" => {
   switch (scope) {
-    case ScopeEnum.departement:
+    case ScopeEnum["département"]:
       return "codeDepartement";
-    case ScopeEnum.academie:
+    case ScopeEnum["académie"]:
       return "codeAcademie";
-    case ScopeEnum.region:
+    case ScopeEnum["région"]:
     default:
       return "codeRegion";
   }
@@ -97,7 +97,7 @@ export const FiltersSection = ({
             variant="newInput"
             value={activeFilters.campagne ?? ""}
             borderBottomColor={
-              scope.type === ScopeEnum.region ? "info.525" : ""
+              scope.type === ScopeEnum["région"] ? "info.525" : ""
             }
             onChange={(e) => onCampagneChange(e)}
             placeholder="Choisir une campagne"
@@ -126,13 +126,16 @@ export const FiltersSection = ({
               });
             }}
           >
-            <option key={ScopeEnum.region} value={ScopeEnum.region}>
+            <option key={ScopeEnum["région"]} value={ScopeEnum["région"]}>
               Régions
             </option>
-            <option key={ScopeEnum.academie} value={ScopeEnum.academie}>
+            <option key={ScopeEnum["académie"]} value={ScopeEnum["académie"]}>
               Académies
             </option>
-            <option key={ScopeEnum.departement} value={ScopeEnum.departement}>
+            <option
+              key={ScopeEnum["département"]}
+              value={ScopeEnum["département"]}
+            >
               Départements
             </option>
           </Select>
@@ -144,16 +147,19 @@ export const FiltersSection = ({
             size="md"
             variant="newInput"
             value={
-              scope.type === ScopeEnum.region && scope?.value
+              scope.type === ScopeEnum["région"] && scope?.value
                 ? scope.value ?? ""
                 : ""
             }
             borderBottomColor={
-              scope.type === ScopeEnum.region ? "info.525" : ""
+              scope.type === ScopeEnum["région"] ? "info.525" : ""
             }
             onChange={(e) => {
               filterTracker("codeRegion");
-              handleFilters({ scope: ScopeEnum.region, code: e.target.value });
+              handleFilters({
+                scope: ScopeEnum["région"],
+                code: e.target.value,
+              });
             }}
             placeholder="Choisir une région"
           >
@@ -171,17 +177,17 @@ export const FiltersSection = ({
             size="md"
             variant="newInput"
             value={
-              scope.type === ScopeEnum.academie && scope?.value
+              scope.type === ScopeEnum["académie"] && scope?.value
                 ? scope.value ?? ""
                 : ""
             }
             borderBottomColor={
-              scope.type === ScopeEnum.academie ? "info.525" : ""
+              scope.type === ScopeEnum["académie"] ? "info.525" : ""
             }
             onChange={(e) => {
               filterTracker("codeAcademie");
               handleFilters({
-                scope: ScopeEnum.academie,
+                scope: ScopeEnum["académie"],
                 code: e.target.value,
               });
             }}
@@ -201,17 +207,17 @@ export const FiltersSection = ({
             size="md"
             variant="newInput"
             value={
-              scope.type === ScopeEnum.departement && scope?.value
+              scope.type === ScopeEnum["département"] && scope?.value
                 ? scope.value
                 : ""
             }
             borderBottomColor={
-              scope.type === ScopeEnum.departement ? "info.525" : ""
+              scope.type === ScopeEnum["département"] ? "info.525" : ""
             }
             onChange={(e) => {
               filterTracker("codeDepartement");
               handleFilters({
-                scope: ScopeEnum.departement,
+                scope: ScopeEnum["département"],
                 code: e.target.value,
               });
             }}

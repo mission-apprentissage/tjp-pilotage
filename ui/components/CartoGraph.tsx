@@ -64,7 +64,7 @@ interface CartoGraphProps {
 
 export const CartoGraph = ({
   graphData,
-  scope = ScopeEnum.region,
+  scope = ScopeEnum["région"],
   objectif = "haut",
   customPiecesSteps,
   customColorPalette,
@@ -80,11 +80,11 @@ export const CartoGraph = ({
 
   const getGeoMap = () => {
     switch (scope) {
-      case ScopeEnum.region:
+      case ScopeEnum["région"]:
         return JSON.parse(JSON.stringify(CarteFranceRegions));
-      case ScopeEnum.academie:
+      case ScopeEnum["académie"]:
         return JSON.parse(JSON.stringify(CarteFranceAcademies));
-      case ScopeEnum.departement:
+      case ScopeEnum["département"]:
         return JSON.parse(JSON.stringify(CarteFranceDepartements));
       default:
         return JSON.parse(JSON.stringify(CarteFranceRegions));
@@ -93,11 +93,11 @@ export const CartoGraph = ({
 
   const getNameProperty = (): string => {
     switch (scope) {
-      case ScopeEnum.region:
+      case ScopeEnum["région"]:
         return "reg";
-      case ScopeEnum.academie:
+      case ScopeEnum["académie"]:
         return "code_academie";
-      case ScopeEnum.departement:
+      case ScopeEnum["département"]:
         return "dep";
       default:
         return "reg";
@@ -106,11 +106,11 @@ export const CartoGraph = ({
 
   const getNameMap = (): Record<string, string> => {
     switch (scope) {
-      case ScopeEnum.region:
+      case ScopeEnum["région"]:
         return REGIONS_LABEL_MAPPING;
-      case ScopeEnum.academie:
+      case ScopeEnum["académie"]:
         return ACADEMIES_LABEL_MAPPING;
-      case ScopeEnum.departement:
+      case ScopeEnum["département"]:
         return DEPARTEMENTS_LABEL_MAPPING;
       default:
         return REGIONS_LABEL_MAPPING;
@@ -266,17 +266,17 @@ export const CartoGraph = ({
   const handleClickOnSeries = (name: string) => {
     if (handleClick)
       switch (scope) {
-        case ScopeEnum.region:
+        case ScopeEnum["région"]:
           handleClick(
             _.findKey(REGIONS_LABEL_MAPPING, _.partial(_.isEqual, name))
           );
           break;
-        case ScopeEnum.academie:
+        case ScopeEnum["académie"]:
           handleClick(
             _.findKey(ACADEMIES_LABEL_MAPPING, _.partial(_.isEqual, name))
           );
           break;
-        case ScopeEnum.departement:
+        case ScopeEnum["département"]:
           handleClick(
             _.findKey(DEPARTEMENTS_LABEL_MAPPING, _.partial(_.isEqual, name))
           );

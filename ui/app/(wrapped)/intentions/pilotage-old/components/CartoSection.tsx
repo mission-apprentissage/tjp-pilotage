@@ -87,7 +87,9 @@ export const CartoSection = ({
           ...filters,
           ...order,
           scope:
-            scope.type === ScopeEnum.national ? ScopeEnum.region : scope.type,
+            scope.type === ScopeEnum.national
+              ? ScopeEnum["région"]
+              : scope.type,
         },
       },
       {

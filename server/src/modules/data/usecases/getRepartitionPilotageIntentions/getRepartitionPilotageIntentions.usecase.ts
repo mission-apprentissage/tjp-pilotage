@@ -1,5 +1,4 @@
 import _ from "lodash";
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 import { RequestUser } from "../../../core/model/User";
@@ -15,33 +14,32 @@ import {
 
 export interface Filters
   extends z.infer<typeof getRepartitionPilotageIntentionsSchema.querystring> {
-  statut?: Exclude<DemandeStatutType, "supprimée" | "refusée">;
   user: RequestUser;
 }
 
 const calculateTotal = (
   statsRepartition: z.infer<typeof StatsSchema>[]
 ): z.infer<typeof StatsSchema>[] => {
-  const total = {
+  const total: z.infer<typeof StatsSchema> = {
     libelle: "Total",
     code: "total",
-    placesEffectivementOccupees: 0,
+    effectif: 0,
     placesOuvertes: 0,
     placesFermees: 0,
     placesColorees: 0,
     placesTransformees: 0,
     solde: 0,
-    tauxTransformation: 0,
-    tauxTransformationOuvertures: 0,
-    tauxTransformationFermetures: 0,
-    tauxTransformationColorations: 0,
-    ratioOuverture: 0,
-    ratioFermeture: 0,
+    tauxTransformation: undefined,
+    tauxTransformationOuvertures: undefined,
+    tauxTransformationFermetures: undefined,
+    tauxTransformationColorations: undefined,
+    ratioOuverture: undefined,
+    ratioFermeture: undefined,
   };
 
   // Iterate through each entry and sum up the values
   Object.values(statsRepartition).forEach((stats) => {
-    total.placesEffectivementOccupees += stats.placesEffectivementOccupees;
+    total.effectif += stats.effectif;
     total.placesOuvertes += stats.placesOuvertes;
     total.placesFermees += stats.placesFermees;
     total.placesColorees += stats.placesColorees;
@@ -49,14 +47,16 @@ const calculateTotal = (
     total.solde += stats.solde;
   });
 
-  total.tauxTransformation =
-    total.placesTransformees / total.placesEffectivementOccupees;
-  total.tauxTransformationOuvertures =
-    total.placesOuvertes / total.placesEffectivementOccupees;
-  total.tauxTransformationFermetures =
-    total.placesFermees / total.placesEffectivementOccupees;
-  total.tauxTransformationColorations =
-    total.placesColorees / total.placesEffectivementOccupees;
+  if (total.effectif !== 0) {
+    total.tauxTransformation = total.placesTransformees / total.effectif;
+    total.tauxTransformationOuvertures = total.placesOuvertes / total.effectif;
+    total.tauxTransformationFermetures = total.placesFermees / total.effectif;
+    total.tauxTransformationColorations = total.placesColorees / total.effectif;
+  }
+  if (total.placesTransformees !== 0) {
+    total.ratioOuverture = total.placesOuvertes / total.placesTransformees;
+    total.ratioFermeture = total.placesFermees / total.placesTransformees;
+  }
 
   // Add the "total" entry to the repartition
   return [...statsRepartition, total];
@@ -71,12 +71,19 @@ const formatResult = (
     .map((item) => ({
       ...item,
       libelle: item.libelle ?? item.code,
-      ratioFermeture: (item.placesFermees || 0) / item.placesTransformees,
-      ratioOuverture: (item.placesOuvertes || 0) / item.placesTransformees,
+      ratioFermeture: item.placesTransformees
+        ? (item.placesFermees || 0) / item.placesTransformees
+        : undefined,
+      ratioOuverture: item.placesTransformees
+        ? (item.placesOuvertes || 0) / item.placesTransformees
+        : undefined,
     }))
     .orderBy((item) => {
-      if (orderBy) return item[orderBy as keyof typeof item];
-      return item.placesTransformees;
+      const value = orderBy
+        ? item[orderBy as keyof typeof item]
+        : item.placesTransformees;
+
+      return value === null || value === undefined ? 0 : value; // Treat null/undefined as 0
     }, order)
     .keyBy("libelle")
     .value();
@@ -100,6 +107,7 @@ const getRepartitionPilotageIntentionsFactory =
         deps.getDomainesQuery({
           filters: {
             ...activeFilters,
+            codeNsf: undefined,
             campagne: anneeCampagne,
           },
         }),

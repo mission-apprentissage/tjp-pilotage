@@ -11,10 +11,10 @@ import {
   countFermeturesSco,
   countOuvertures,
   countOuverturesApprentissage,
-  countOuverturesApprentissageColoree,
-  countOuverturesColorees,
   countOuverturesSco,
-  countOuverturesScolaireColoree,
+  countPlacesColorees,
+  countPlacesColoreesApprentissage,
+  countPlacesColoreesSco,
 } from "../../../utils/countCapacite";
 import { isRestitutionIntentionVisible } from "../../../utils/isRestitutionIntentionVisible";
 import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
@@ -120,12 +120,12 @@ const getStatsRestitutionIntentionsQuery = async ({
     )
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`COALESCE(SUM(${countOuverturesColorees(eb)}),0)`,
+        total: sql<number>`COALESCE(SUM(${countPlacesColorees(eb)}),0)`,
         scolaire: sql<number>`COALESCE(
-          SUM(${countOuverturesScolaireColoree(eb)}),0
+          SUM(${countPlacesColoreesSco(eb)}),0
         )`,
         apprentissage: sql<number>`COALESCE(
-          SUM(${countOuverturesApprentissageColoree(eb)}),0
+          SUM(${countPlacesColoreesApprentissage(eb)}),0
         )`,
       }).as("coloration")
     )

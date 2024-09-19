@@ -1,6 +1,7 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 
+import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../../utils/isDemandeSelectable";
@@ -20,10 +21,11 @@ export const getFiltersQuery = async ({
   campagne,
   codeAcademie,
   codeRegion,
+  withColoration,
 }: Filters) => {
-  const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
+  const inStatut = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!statut || statut === undefined) return sql<true>`true`;
-    return eb("demande.statut", "=", statut);
+    return eb("demande.statut", "in", statut);
   };
 
   const inRentreeScolaire = (eb: ExpressionBuilder<DB, "demande">) => {
@@ -56,7 +58,7 @@ export const getFiltersQuery = async ({
   };
 
   const base = kdb
-    .selectFrom("latestDemandeView as demande")
+    .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .innerJoin(
@@ -77,6 +79,16 @@ export const getFiltersQuery = async ({
       "dataFormation.codeNiveauDiplome"
     )
     .where(isDemandeNotDeletedOrRefused)
+    .$call((q) => {
+      if (!withColoration || withColoration === "false")
+        return q.where((w) =>
+          w.or([
+            w("demande.coloration", "=", false),
+            w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"]),
+          ])
+        );
+      return q;
+    })
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -159,7 +171,7 @@ export const getFiltersQuery = async ({
     .where("dataFormation.cpc", "is not", null)
     .where((eb) =>
       eb.and([
-        inStatus(eb),
+        inStatut(eb),
         inRentreeScolaire(eb),
         inCodeNiveauDiplome(eb),
         inFiliere(eb),
@@ -174,7 +186,7 @@ export const getFiltersQuery = async ({
     .where("dataFormation.codeNsf", "is not", null)
     .where((eb) =>
       eb.and([
-        inStatus(eb),
+        inStatut(eb),
         inRentreeScolaire(eb),
         inCodeNiveauDiplome(eb),
         inCPC(eb),
@@ -191,7 +203,7 @@ export const getFiltersQuery = async ({
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
     .where((eb) =>
       eb.and([
-        inStatus(eb),
+        inStatut(eb),
         inRentreeScolaire(eb),
         inCPC(eb),
         inFiliere(eb),
