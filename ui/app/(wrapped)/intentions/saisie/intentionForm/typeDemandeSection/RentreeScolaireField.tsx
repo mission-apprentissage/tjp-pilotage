@@ -42,10 +42,22 @@ export const RentreeScolaireField = ({
 
   const rentreeScolaire = watch("rentreeScolaire");
 
-  useEffect(() => {
-    if (rentreeScolaire === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE))
-      setValue("typeDemande", "ajustement");
-  }, [rentreeScolaire, setValue]);
+  useEffect(
+    () =>
+      watch(({ rentreeScolaire, typeDemande }, { name }) => {
+        if (name !== "rentreeScolaire") return;
+
+        // Le type de demande ajustement est possible uniquement pour la rentrée scolaire actuelle
+        if (
+          rentreeScolaire ===
+          parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE)
+        ) {
+          setValue("typeDemande", "ajustement");
+        } else if (typeDemande === "ajustement") {
+          setValue("typeDemande", "");
+        }
+      }).unsubscribe
+  );
 
   return (
     <FormControl
