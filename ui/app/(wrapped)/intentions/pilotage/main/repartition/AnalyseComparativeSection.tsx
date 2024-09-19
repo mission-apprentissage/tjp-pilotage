@@ -21,8 +21,8 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { usePlausible } from "next-plausible";
 import { useCallback, useState } from "react";
+import { ScopeEnum } from "shared";
 
-import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage/main/displayTypeEnum";
 import { FiltersStatsPilotageIntentions } from "@/app/(wrapped)/intentions/pilotage/types";
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -34,6 +34,8 @@ import {
   RepartitionPilotageIntentionsZonesGeographiques,
 } from "../../types";
 import { DisplayAnalyseComparativeEnum } from "../displayTypeEnum";
+
+const SEUIL_RATIO_FERMETURE: number = 0.33;
 
 const AnalyseComparativeTabsSection = chakra(
   ({
@@ -105,20 +107,45 @@ export const AnalyseComparativeSection = ({
   domaines,
   order,
   setSearchParams,
+  filters,
 }: {
   zonesGeographiques?: RepartitionPilotageIntentionsZonesGeographiques;
   domaines?: RepartitionPilotageIntentionsDomaines;
   order: Partial<OrderRepartitionPilotageIntentions>;
   setSearchParams: (params: {
-    displayType?: DisplayTypeEnum;
-    filters?: Partial<FiltersStatsPilotageIntentions>;
     order?: Partial<OrderRepartitionPilotageIntentions>;
   }) => void;
+  filters?: Partial<FiltersStatsPilotageIntentions>;
 }) => {
   const trackEvent = usePlausible();
   const [displayType, setDisplayType] = useState<DisplayAnalyseComparativeEnum>(
     DisplayAnalyseComparativeEnum.zone_geographique
   );
+
+  const getScopeKey = () => {
+    if (filters?.scope) return "codeRegion";
+    switch (filters?.scope) {
+      case ScopeEnum["académie"]:
+        return "codeAcademie";
+      case ScopeEnum["département"]:
+        return "codeDepartement";
+      case ScopeEnum["région"]:
+      default:
+        return "codeRegion";
+    }
+  };
+
+  const compareFilters = (
+    itemCode: string,
+    filterCode?: string | Array<string>
+  ) => {
+    if (typeof filterCode === "string") {
+      return itemCode === filterCode;
+    } else if (Array.isArray(filterCode)) {
+      return filterCode.includes(itemCode);
+    }
+    return false;
+  };
 
   const isZoneGeographiqueSelected =
     displayType === DisplayAnalyseComparativeEnum.zone_geographique;
@@ -146,7 +173,7 @@ export const AnalyseComparativeSection = ({
     { label: "> 6%", color: customPalette[5] },
   ];
 
-  const getTdBgColor = useCallback(
+  const getTauxTransfoBgColor = useCallback(
     (indicateur: number | undefined) => {
       if (typeof indicateur === "undefined") {
         return undefined;
@@ -211,7 +238,7 @@ export const AnalyseComparativeSection = ({
                 onClick={() => handleOrder("libelle")}
               >
                 <OrderIcon {...order} column="libelle" />
-                {isZoneGeographiqueSelected ? "Région" : "Domaine"}
+                {isZoneGeographiqueSelected ? filters?.scope : "Domaine"}
               </Th>
               <Th
                 maxWidth={"5%"}
@@ -226,9 +253,9 @@ export const AnalyseComparativeSection = ({
                 maxWidth={"5%"}
                 isNumeric
                 cursor={"pointer"}
-                onClick={() => handleOrder("placesEffectivementOccupees")}
+                onClick={() => handleOrder("effectif")}
               >
-                <OrderIcon {...order} column="placesEffectivementOccupees" />
+                <OrderIcon {...order} column="effectif" />
                 Places effectivement occupées
               </Th>
               <Th
@@ -292,9 +319,29 @@ export const AnalyseComparativeSection = ({
               .filter((key) => key !== "Total")
               .map((key) => {
                 const item = dataToDisplay[key];
+                const filterValue = isZoneGeographiqueSelected
+                  ? filters![getScopeKey()]
+                  : filters!["codeNsf"];
+
+                const trBgColor = compareFilters(item.code, filterValue)
+                  ? "blueecume.400_hover !important"
+                  : "";
+
+                const tdBgColor = compareFilters(item.code, filterValue)
+                  ? "inherit !important"
+                  : "";
+
+                const trColor = compareFilters(item.code, filterValue)
+                  ? "white"
+                  : "inherit";
+
+                const color = compareFilters(item.code, filterValue)
+                  ? "inherit"
+                  : "black";
+
                 return (
-                  <Tr key={key}>
-                    <Td>
+                  <Tr key={key} bgColor={trBgColor} color={trColor}>
+                    <Td bgColor={tdBgColor} color={color}>
                       <Tooltip label={item.libelle}>
                         <Text
                           textOverflow={"ellipsis"}
@@ -306,40 +353,90 @@ export const AnalyseComparativeSection = ({
                         </Text>
                       </Tooltip>
                     </Td>
-                    <Td width={24} maxWidth={24} isNumeric>
+                    <Td
+                      width={24}
+                      maxWidth={24}
+                      bgColor={tdBgColor}
+                      color={color}
+                      isNumeric
+                    >
                       {item.placesTransformees}
                     </Td>
-                    <Td width={24} maxWidth={24} isNumeric>
-                      {item.placesEffectivementOccupees}
+                    <Td
+                      width={24}
+                      maxWidth={24}
+                      bgColor={tdBgColor}
+                      color={color}
+                      isNumeric
+                    >
+                      {item.effectif ?? "-"}
                     </Td>
                     <Td
-                      backgroundColor={getTdBgColor(item.tauxTransformation)}
+                      bgColor={getTauxTransfoBgColor(item.tauxTransformation)}
                       color={"black"}
                       isNumeric
                     >
-                      {formatPercentage(item.tauxTransformation, 2)}
+                      {formatPercentage(item.tauxTransformation, 2, "-")}
                     </Td>
-                    <Td width={24} maxWidth={24} isNumeric>
-                      {formatPercentage(item.tauxTransformationOuvertures, 2)}
+                    <Td
+                      width={24}
+                      maxWidth={24}
+                      bgColor={tdBgColor}
+                      color={color}
+                      isNumeric
+                    >
+                      {formatPercentage(
+                        item.tauxTransformationOuvertures,
+                        2,
+                        "-"
+                      )}
                     </Td>
-                    <Td width={24} maxWidth={24} isNumeric>
-                      {formatPercentage(item.tauxTransformationFermetures, 2)}
+                    <Td
+                      width={24}
+                      maxWidth={24}
+                      bgColor={tdBgColor}
+                      color={color}
+                      isNumeric
+                    >
+                      {formatPercentage(
+                        item.tauxTransformationFermetures,
+                        2,
+                        "-"
+                      )}
                     </Td>
-                    <Td width={24} maxWidth={24} isNumeric>
-                      {formatPercentage(item.tauxTransformationColorations, 2)}
+                    <Td
+                      width={24}
+                      maxWidth={24}
+                      bgColor={tdBgColor}
+                      color={color}
+                      isNumeric
+                    >
+                      {formatPercentage(
+                        item.tauxTransformationColorations,
+                        2,
+                        "-"
+                      )}
                     </Td>
-                    <Td width={24} maxWidth={24} isNumeric>
+                    <Td
+                      width={24}
+                      maxWidth={24}
+                      bgColor={tdBgColor}
+                      color={color}
+                      isNumeric
+                    >
                       {item.solde}
                     </Td>
                     <Td
-                      isNumeric
+                      color={color}
                       bgColor={
-                        item.ratioFermeture && item.ratioFermeture < 0.33
+                        item.ratioFermeture !== undefined &&
+                        item.ratioFermeture < SEUIL_RATIO_FERMETURE
                           ? customPalette[0]
                           : "inherit"
                       }
+                      isNumeric
                     >
-                      {formatPercentage(item.ratioFermeture, 2)}
+                      {formatPercentage(item.ratioFermeture, 2, "-")}
                     </Td>
                   </Tr>
                 );
@@ -352,10 +449,10 @@ export const AnalyseComparativeSection = ({
                 {dataToDisplay["Total"]?.placesTransformees}
               </Td>
               <Td width={24} maxWidth={24} isNumeric>
-                {dataToDisplay["Total"]?.placesEffectivementOccupees}
+                {dataToDisplay["Total"]?.effectif}
               </Td>
               <Td
-                backgroundColor={getTdBgColor(
+                bgColor={getTauxTransfoBgColor(
                   dataToDisplay["Total"]?.tauxTransformation
                 )}
                 color={"black"}
@@ -363,25 +460,29 @@ export const AnalyseComparativeSection = ({
               >
                 {formatPercentage(
                   dataToDisplay["Total"]?.tauxTransformation,
-                  2
+                  2,
+                  "-"
                 )}
               </Td>
               <Td width={24} maxWidth={24} isNumeric>
                 {formatPercentage(
                   dataToDisplay["Total"]?.tauxTransformationOuvertures,
-                  2
+                  2,
+                  "-"
                 )}
               </Td>
               <Td width={24} maxWidth={24} isNumeric>
                 {formatPercentage(
                   dataToDisplay["Total"]?.tauxTransformationFermetures,
-                  2
+                  2,
+                  "-"
                 )}
               </Td>
               <Td width={24} maxWidth={24} isNumeric>
                 {formatPercentage(
                   dataToDisplay["Total"]?.tauxTransformationColorations,
-                  2
+                  2,
+                  "-"
                 )}
               </Td>
               <Td width={24} maxWidth={24} isNumeric>
@@ -397,7 +498,11 @@ export const AnalyseComparativeSection = ({
                     : "inherit"
                 }
               >
-                {formatPercentage(dataToDisplay["Total"]?.ratioFermeture, 2)}
+                {formatPercentage(
+                  dataToDisplay["Total"]?.ratioFermeture,
+                  2,
+                  "-"
+                )}
               </Td>
             </Tr>
           </Tbody>

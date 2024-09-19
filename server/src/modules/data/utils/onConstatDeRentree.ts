@@ -1,5 +1,5 @@
-import { expressionBuilder } from "kysely";
-import { CURRENT_RENTREE } from "shared";
+import { expressionBuilder, sql } from "kysely";
+import { CURRENT_RENTREE, FIRST_ANNEE_CAMPAGNE } from "shared";
 
 import { DB } from "../../../db/db";
 
@@ -10,16 +10,19 @@ export const genericOnConstatRentree =
     codeNsf,
     rentree = CURRENT_RENTREE,
     codeRegion,
+    campagne = FIRST_ANNEE_CAMPAGNE,
   }: {
     codeNiveauDiplome?: string[];
     CPC?: string[];
     codeNsf?: string[];
     rentree?: string;
     codeRegion?: string;
+    campagne?: string;
   }) =>
   () => {
     return expressionBuilder<DB, keyof DB>()
-      .selectFrom("constatRentree")
+      .selectFrom("campagne")
+      .leftJoin("constatRentree", (join) => join.onTrue())
       .leftJoin(
         "dataEtablissement",
         "dataEtablissement.uai",
@@ -27,7 +30,17 @@ export const genericOnConstatRentree =
       )
       .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
       .where("constatRentree.rentreeScolaire", "=", rentree)
-      .where("constatRentree.anneeDispositif", "=", 1)
+      .where(
+        sql<boolean>`
+        CASE WHEN "campagne"."annee" = '2023' THEN "constatRentree"."anneeDispositif" = 1
+        ELSE
+          CASE WHEN "dataFormation"."typeFamille" in ('specialite', 'option') THEN "constatRentree"."anneeDispositif" = 2
+          WHEN "dataFormation"."typeFamille" in ('2nde_commune', '1ere_commune') THEN false
+          ELSE "constatRentree"."anneeDispositif" = 1
+          END
+        END
+        `
+      )
       .$call((eb) => {
         if (codeRegion)
           return eb.where("dataEtablissement.codeRegion", "=", codeRegion);
@@ -48,6 +61,10 @@ export const genericOnConstatRentree =
             "in",
             codeNiveauDiplome
           );
+        return eb;
+      })
+      .$call((eb) => {
+        if (campagne) return eb.where("campagne.annee", "=", campagne);
         return eb;
       });
   };

@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { ScopeEnum } from "shared";
 
 import { FiltersStatsPilotageIntentions } from "./types";
 
@@ -12,11 +13,11 @@ import { FiltersStatsPilotageIntentions } from "./types";
 export const useScopeCode = (filters: FiltersStatsPilotageIntentions) => {
   const code = useMemo(() => {
     switch (filters.scope) {
-      case "region":
+      case ScopeEnum["région"]:
         return filters.codeRegion;
-      case "academie":
+      case ScopeEnum["académie"]:
         return filters.codeAcademie;
-      case "departement":
+      case ScopeEnum["département"]:
         return filters.codeDepartement;
       case "national":
         return "national";

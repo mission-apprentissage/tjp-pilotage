@@ -1,11 +1,13 @@
 import { ScopeEnum } from "shared";
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { scope } from "shared/enum/scopeEnum";
+import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
 
 export const StatsSchema = z.object({
   libelle: z.string(),
   code: z.string(),
-  placesEffectivementOccupees: z.number(),
+  effectif: z.number(),
   placesOuvertes: z.number(),
   placesFermees: z.number(),
   placesColorees: z.number(),
@@ -29,7 +31,7 @@ export const FiltersSchema = z.object({
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: StatsSchema.pick({
     libelle: true,
-    placesEffectivementOccupees: true,
+    effectif: true,
     ratioFermeture: true,
     ratioOuverture: true,
     code: true,
@@ -49,6 +51,9 @@ export const FiltersSchema = z.object({
   codeAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),
   campagne: z.string().optional(),
+  secteur: z.array(SecteurZodType).optional(),
+  statut: z.array(DemandeStatutZodType).optional(),
+  withColoration: z.string().optional(),
 });
 
 export const getRepartitionPilotageIntentionsSchema = {

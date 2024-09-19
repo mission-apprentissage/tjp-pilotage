@@ -6,7 +6,7 @@ import { Filters } from "../getRepartitionPilotageIntentions.usecase";
 import { getDemandesBaseQuery } from "./getDemandesBaseQuery";
 import { getEffectifsParCampagneQuery } from "./getEffectifsParCampagneQuery";
 
-export const getDomainesQuery = async ({ filters }: { filters: Filters }) => {
+export const getAcademiesQuery = async ({ filters }: { filters: Filters }) => {
   const demandesBaseQuery = getDemandesBaseQuery(filters);
   const effectifsParCampagne = getEffectifsParCampagneQuery(filters);
 
@@ -19,26 +19,26 @@ export const getDomainesQuery = async ({ filters }: { filters: Filters }) => {
             .selectFrom(effectifsParCampagne.as("effectifsParCampagne"))
             .select((eb) => [
               "effectifsParCampagne.annee",
-              "effectifsParCampagne.codeNsf",
+              "effectifsParCampagne.codeAcademie",
               sql<number>`SUM(${eb.ref(
                 "effectifsParCampagne.denominateur"
               )})`.as("denominateur"),
             ])
             .groupBy([
               "effectifsParCampagne.annee",
-              "effectifsParCampagne.codeNsf",
+              "effectifsParCampagne.codeAcademie",
             ])
             .as("effectifs"),
           (join) =>
             join
               .onRef("demandes.annee", "=", "effectifs.annee")
-              .onRef("demandes.codeNsf", "=", "effectifs.codeNsf")
+              .onRef("demandes.codeAcademie", "=", "effectifs.codeAcademie")
         )
         .select((eb) => [
           "effectifs.denominateur as effectif",
           "demandes.annee",
-          "demandes.codeNsf",
-          "demandes.libelleNsf",
+          "demandes.libelleAcademie",
+          "demandes.codeAcademie",
           eb.fn.sum<number>("demandes.placesOuvertes").as("placesOuvertes"),
           eb.fn.sum<number>("demandes.placesFermees").as("placesFermees"),
           eb.fn.sum<number>("demandes.placesColorees").as("placesColorees"),
@@ -48,8 +48,8 @@ export const getDomainesQuery = async ({ filters }: { filters: Filters }) => {
         ])
         .groupBy([
           "demandes.annee",
-          "demandes.codeNsf",
-          "demandes.libelleNsf",
+          "demandes.libelleAcademie",
+          "demandes.codeAcademie",
           "effectif",
         ])
         .$call((eb) => {
@@ -73,11 +73,11 @@ export const getDomainesQuery = async ({ filters }: { filters: Filters }) => {
       sql<number>`COALESCE(${eb.ref("demandesAvecEffectif.effectif")},0)`.as(
         "effectif"
       ),
-      sql<string>`COALESCE(${eb.ref("demandesAvecEffectif.codeNsf")}, '')`.as(
-        "code"
-      ),
       sql<string>`COALESCE(${eb.ref(
-        "demandesAvecEffectif.libelleNsf"
+        "demandesAvecEffectif.codeAcademie"
+      )}, '')`.as("code"),
+      sql<string>`COALESCE(${eb.ref(
+        "demandesAvecEffectif.libelleAcademie"
       )}, '')`.as("libelle"),
       sql<number>`
         ${eb.ref("placesOuvertes")} -

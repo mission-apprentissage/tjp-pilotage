@@ -88,11 +88,11 @@ const generateRestitutionUrl = (
   }
 
   if (scope?.value !== undefined) {
-    if (scope?.type === "region") {
+    if (scope?.type === ScopeEnum["région"]) {
       urlFilters.codeRegion = [scope.value];
     }
 
-    if (scope?.type === "academie") {
+    if (scope?.type === ScopeEnum["académie"]) {
       urlFilters.codeAcademie = [scope.value];
     }
 
@@ -149,10 +149,11 @@ export const QuadrantSection = ({
     tauxPression: filters.tauxPression,
     statut: filters.statut,
     type: filters.type,
-    codeRegion: scope?.type === ScopeEnum.region ? scope.value : undefined,
-    codeAcademie: scope?.type === ScopeEnum.academie ? scope.value : undefined,
+    codeRegion: scope?.type === ScopeEnum["région"] ? scope.value : undefined,
+    codeAcademie:
+      scope?.type === ScopeEnum["académie"] ? scope.value : undefined,
     codeDepartement:
-      scope?.type === ScopeEnum.departement ? scope.value : undefined,
+      scope?.type === ScopeEnum["département"] ? scope.value : undefined,
   };
 
   const { data: { formations, stats } = {} } = client
@@ -249,21 +250,21 @@ export const QuadrantSection = ({
                     formations.map((formation) => ({
                       ...formation,
                       libelleRegion:
-                        scope?.type === ScopeEnum.region
+                        scope?.type === ScopeEnum["région"]
                           ? getLibelleTerritoire(
                               scopeFilters?.regions,
                               scope.value
                             )
                           : undefined,
                       libelleAcademie:
-                        scope?.type === ScopeEnum.academie
+                        scope?.type === ScopeEnum["académie"]
                           ? getLibelleTerritoire(
                               scopeFilters?.academies,
                               scope.value
                             )
                           : undefined,
                       libelleDepartement:
-                        scope?.type === ScopeEnum.departement
+                        scope?.type === ScopeEnum["département"]
                           ? getLibelleTerritoire(
                               scopeFilters?.departements,
                               scope.value
@@ -293,21 +294,21 @@ export const QuadrantSection = ({
                     formations.map((formation) => ({
                       ...formation,
                       libelleRegion:
-                        scope?.type === ScopeEnum.region
+                        scope?.type === ScopeEnum["région"]
                           ? getLibelleTerritoire(
                               scopeFilters?.regions,
                               scope.value
                             )
                           : undefined,
                       libelleAcademie:
-                        scope?.type === ScopeEnum.academie
+                        scope?.type === ScopeEnum["académie"]
                           ? getLibelleTerritoire(
                               scopeFilters?.academies,
                               scope.value
                             )
                           : undefined,
                       libelleDepartement:
-                        scope?.type === ScopeEnum.departement
+                        scope?.type === ScopeEnum["département"]
                           ? getLibelleTerritoire(
                               scopeFilters?.departements,
                               scope.value

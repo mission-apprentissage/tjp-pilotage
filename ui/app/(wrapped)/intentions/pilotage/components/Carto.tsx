@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
 import { CartoGraph } from "@/components/CartoGraph";
+import { formatPercentageWithoutSign } from "@/utils/formatUtils";
 
 import { ExportMenuButton } from "../../../../../components/ExportMenuButton";
 import {
@@ -93,7 +94,7 @@ export const CartoSection = ({
       parentName: territoire.libelleAcademie,
       value:
         territoire.effectif || indicateur != "tauxTransformation"
-          ? territoire[indicateur] ?? 0
+          ? formatPercentageWithoutSign(territoire[indicateur])
           : undefined,
       code: territoire.code,
     }));
@@ -103,10 +104,11 @@ export const CartoSection = ({
     (code: string | undefined) =>
       handleFilters({
         scope: filters.scope,
-        codeRegion: filters.scope !== ScopeEnum.region ? undefined : code,
-        codeAcademie: filters.scope !== ScopeEnum.academie ? undefined : code,
+        codeRegion: filters.scope !== ScopeEnum["région"] ? undefined : code,
+        codeAcademie:
+          filters.scope !== ScopeEnum["académie"] ? undefined : code,
         codeDepartement:
-          filters.scope !== ScopeEnum.departement ? undefined : code,
+          filters.scope !== ScopeEnum["département"] ? undefined : code,
       }),
     [handleFilters, filters, scopeCode]
   );

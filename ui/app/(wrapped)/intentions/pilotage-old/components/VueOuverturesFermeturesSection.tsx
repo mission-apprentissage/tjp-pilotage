@@ -242,18 +242,18 @@ const ScopedTable = ({
 const getTitle = (scope: SelectedScope) =>
   ({
     [ScopeEnum.national]: "Ratio des ouvertures et fermetures par région",
-    [ScopeEnum.region]: "Ratio des ouvertures et fermetures par région",
-    [ScopeEnum.academie]: "Ratio des ouvertures et fermetures par académie",
-    [ScopeEnum.departement]:
+    [ScopeEnum["région"]]: "Ratio des ouvertures et fermetures par région",
+    [ScopeEnum["académie"]]: "Ratio des ouvertures et fermetures par académie",
+    [ScopeEnum["département"]]:
       "Ratio des ouvertures et fermetures par département",
   })[scope.type];
 
 const getColumnTitle = (scope: SelectedScope) =>
   ({
     [ScopeEnum.national]: "Région",
-    [ScopeEnum.region]: "Région",
-    [ScopeEnum.academie]: "Académie",
-    [ScopeEnum.departement]: "Département",
+    [ScopeEnum["région"]]: "Région",
+    [ScopeEnum["académie"]]: "Académie",
+    [ScopeEnum["département"]]: "Département",
   })[scope.type];
 
 export const VueOuverturesFermeturesSection = (props: {

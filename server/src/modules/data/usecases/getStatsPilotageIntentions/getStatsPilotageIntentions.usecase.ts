@@ -3,7 +3,6 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import { formatTauxTransformation } from "../../utils/formatTauxTransformation";
 import { getFiltersQuery } from "./deps/getFilters.query";
 import { getStatsPilotageIntentionsQuery } from "./deps/getStatsPilotageIntentions.query";
 import { getStatsPilotageIntentionsSchema } from "./getStatsPilotageIntentions.schema";
@@ -23,48 +22,15 @@ const formatResult = (result: GetScopedStatsPilotageIntentionsType) => {
       key: `_${item.code}`,
       libelle: item.libelle,
       code: item.code,
-      placesTransformees:
-        item.placesOuvertesScolaire +
-          item.placesOuvertesApprentissage +
-          item.placesFermeesScolaire +
-          item.placesFermeesApprentissage || 0,
-      placesOuvertesScolaire: item.placesOuvertesScolaire || 0,
-      placesFermeesScolaire: item.placesFermeesScolaire || 0,
-      placesOuvertesApprentissage: item.placesOuvertesApprentissage || 0,
-      placesFermeesApprentissage: item.placesFermeesApprentissage || 0,
-      placesOuvertes: item.placesOuvertes || 0,
-      placesOuvertesQ1Q2:
-        item.placesOuvertesScolaireQ1Q2 +
-          item.placesOuvertesApprentissageQ1Q2 || 0,
-      placesOuvertesTransformationEcologique:
-        item.placesOuvertesTransformationEcologique || 0,
-      placesFermees:
-        item.placesFermeesScolaire + item.placesFermeesApprentissage || 0,
-      placesFermeesQ3Q4:
-        item.placesFermeesScolaireQ3Q4 + item.placesFermeesApprentissageQ3Q4 ||
-        0,
-      placesOuvertesColorees: item.placeOuvertesColorees || 0,
-      placesOuvertesColoreesQ3Q4: item.placesOuvertesColoreesQ3Q4 || 0,
-      ratioOuverture:
-        Math.round(
-          ((item.placesOuvertesScolaire + item.placesOuvertesApprentissage) /
-            (item.placesOuvertesScolaire +
-              item.placesOuvertesApprentissage +
-              item.placesFermeesScolaire +
-              item.placesFermeesApprentissage) || 0) * 10000
-        ) / 100,
-      ratioFermeture:
-        Math.round(
-          (item.placesFermeesScolaire /
-            (item.placesOuvertesScolaire +
-              item.placesOuvertesApprentissage +
-              item.placesFermeesScolaire +
-              item.placesFermeesApprentissage) || 0) * 10000
-        ) / 100,
-      tauxTransformation: formatTauxTransformation(
-        item.transformes,
-        item.effectif
-      ),
+      ratioFermeture: item.placesTransformees
+        ? (item.placesFermees || 0) / item.placesTransformees
+        : undefined,
+      ratioOuverture: item.placesTransformees
+        ? (item.placesOuvertes || 0) / item.placesTransformees
+        : undefined,
+      tauxTransformation: item.effectif
+        ? item.placesTransformees / item.effectif
+        : undefined,
       effectif: item.effectif,
     }))
     .keyBy("key")

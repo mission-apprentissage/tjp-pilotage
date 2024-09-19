@@ -248,20 +248,20 @@ const getTitle = (scope: SelectedScope) =>
   ({
     [ScopeEnum.national]:
       "Nombre de places transformées et taux de transformation régional",
-    [ScopeEnum.region]:
+    [ScopeEnum["région"]]:
       "Nombre de places transformées et taux de transformation régional",
-    [ScopeEnum.academie]:
+    [ScopeEnum["académie"]]:
       "Nombre de places transformées et taux de transformation académique",
-    [ScopeEnum.departement]:
+    [ScopeEnum["département"]]:
       "Nombre de places transformées et taux de transformation départemental",
   })[scope.type];
 
 const getColumnTitle = (scope: SelectedScope) =>
   ({
     [ScopeEnum.national]: "Région",
-    [ScopeEnum.region]: "Région",
-    [ScopeEnum.academie]: "Académie",
-    [ScopeEnum.departement]: "Département",
+    [ScopeEnum["région"]]: "Région",
+    [ScopeEnum["académie"]]: "Académie",
+    [ScopeEnum["département"]]: "Département",
   })[scope.type];
 
 export const VueTauxTransformationSection = (props: {

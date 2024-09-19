@@ -30,8 +30,6 @@ export const MainSection = ({
   filters: FiltersStatsPilotageIntentions;
   order: Partial<OrderRepartitionPilotageIntentions>;
   setSearchParams: (params: {
-    displayType?: DisplayTypeEnum;
-    filters?: Partial<FiltersStatsPilotageIntentions>;
     order?: Partial<OrderRepartitionPilotageIntentions>;
   }) => void;
 }) => {
@@ -54,6 +52,7 @@ export const MainSection = ({
             repartitionData={repartitionData}
             order={order}
             setSearchParams={setSearchParams}
+            filters={filters}
           />
         ) : displayType === DisplayTypeEnum.quadrant ? (
           <>
