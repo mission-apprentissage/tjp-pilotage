@@ -13,26 +13,21 @@ export const [sendResetPassword, sendResetPasswordFactory] = inject(
   },
   (deps) =>
     async ({ email }: { email: string }) => {
-      const formattedEmail = email.toLowerCase();
-      const user = await deps.findUserQuery({ email: formattedEmail });
+      const user = await deps.findUserQuery({ email });
       if (!user) throw Boom.notFound("email does not exist");
 
-      const resetPasswordToken = jwt.sign(
-        { email: formattedEmail },
-        deps.jwtSecret,
-        {
-          expiresIn: "1h",
-        }
-      );
+      const resetPasswordToken = jwt.sign({ email }, deps.jwtSecret, {
+        expiresIn: "1h",
+      });
 
       await deps.shootTemplate({
         template: "reset_password",
         subject: "Orion : réinitialisation du mot de passe",
-        to: formattedEmail,
+        to: email,
         data: {
           resetPasswordToken,
           recipient: {
-            email: formattedEmail,
+            email,
             firstname: user.firstname,
             lastname: user.lastname,
           },
