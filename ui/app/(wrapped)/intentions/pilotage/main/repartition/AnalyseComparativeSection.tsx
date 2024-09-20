@@ -229,284 +229,350 @@ export const AnalyseComparativeSection = ({
         setDisplayType={setDisplayType}
       />
       <Flex direction={"column"}>
-        <Table>
-          <Thead>
-            <Tr>
-              <Th
-                width={"20%"}
-                cursor={"pointer"}
-                onClick={() => handleOrder("libelle")}
-              >
-                <OrderIcon {...order} column="libelle" />
-                {isZoneGeographiqueSelected ? filters?.scope : "Domaine"}
-              </Th>
-              <Th
-                maxWidth={"5%"}
-                isNumeric
-                cursor={"pointer"}
-                onClick={() => handleOrder("placesTransformees")}
-              >
-                <OrderIcon {...order} column="placesTransformees" />
-                Places transformées
-              </Th>
-              <Th
-                maxWidth={"5%"}
-                isNumeric
-                cursor={"pointer"}
-                onClick={() => handleOrder("effectif")}
-              >
-                <OrderIcon {...order} column="effectif" />
-                Places effectivement occupées
-              </Th>
-              <Th
-                maxWidth={"5%"}
-                isNumeric
-                cursor={"pointer"}
-                onClick={() => handleOrder("tauxTransformation")}
-              >
-                <OrderIcon {...order} column="tauxTransformation" />
-                Taux de transformation
-              </Th>
-              <Th
-                maxWidth={"5%"}
-                isNumeric
-                cursor={"pointer"}
-                onClick={() => handleOrder("tauxTransformationOuvertures")}
-              >
-                <OrderIcon {...order} column="tauxTransformationOuvertures" />
-                dont ouvertures
-              </Th>
-              <Th
-                maxWidth={"5%"}
-                isNumeric
-                cursor={"pointer"}
-                onClick={() => handleOrder("tauxTransformationFermetures")}
-              >
-                <OrderIcon {...order} column="tauxTransformationFermetures" />
-                dont fermetures
-              </Th>
-              <Th
-                maxWidth={"5%"}
-                isNumeric
-                cursor={"pointer"}
-                onClick={() => handleOrder("tauxTransformationColorations")}
-              >
-                <OrderIcon {...order} column="tauxTransformationColorations" />
-                dont colorations
-              </Th>
-              <Th
-                maxWidth={"5%"}
-                isNumeric
-                cursor={"pointer"}
-                onClick={() => handleOrder("solde")}
-              >
-                <OrderIcon {...order} column="solde" />
-                solde
-              </Th>
-              <Th
-                maxWidth={"5%"}
-                isNumeric
-                cursor={"pointer"}
-                onClick={() => handleOrder("ratioFermeture")}
-              >
-                <OrderIcon {...order} column="ratioFermeture" />
-                ratio fermetures
-              </Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {Object.keys(dataToDisplay)
-              .filter((key) => key !== "Total")
-              .map((key) => {
-                const item = dataToDisplay[key];
-                const filterValue = isZoneGeographiqueSelected
-                  ? filters![getScopeKey()]
-                  : filters!["codeNsf"];
+        <Flex maxHeight={850} overflowY="auto" position="relative">
+          <Table>
+            <Thead
+              position={"sticky"}
+              top={0}
+              bgColor="white"
+              boxShadow={"0px 2px 1px 1px black;"}
+            >
+              <Tr>
+                <Th
+                  width={"20%"}
+                  cursor={"pointer"}
+                  onClick={() => handleOrder("libelle")}
+                >
+                  <OrderIcon {...order} column="libelle" />
+                  {isZoneGeographiqueSelected ? filters?.scope : "Domaine"}
+                </Th>
+                <Th
+                  maxWidth={"5%"}
+                  isNumeric
+                  cursor={"pointer"}
+                  onClick={() => handleOrder("placesTransformees")}
+                >
+                  <OrderIcon {...order} column="placesTransformees" />
+                  Places transformées
+                </Th>
+                <Th
+                  maxWidth={"5%"}
+                  isNumeric
+                  cursor={"pointer"}
+                  onClick={() => handleOrder("effectif")}
+                >
+                  <OrderIcon {...order} column="effectif" />
+                  Places effectivement occupées
+                </Th>
+                <Th
+                  maxWidth={"5%"}
+                  isNumeric
+                  cursor={"pointer"}
+                  onClick={() => handleOrder("tauxTransformation")}
+                >
+                  <OrderIcon {...order} column="tauxTransformation" />
+                  Taux de transformation
+                </Th>
+                <Th
+                  maxWidth={"5%"}
+                  isNumeric
+                  cursor={"pointer"}
+                  onClick={() => handleOrder("tauxTransformationOuvertures")}
+                >
+                  <OrderIcon {...order} column="tauxTransformationOuvertures" />
+                  dont ouvertures
+                </Th>
+                <Th
+                  maxWidth={"5%"}
+                  isNumeric
+                  cursor={"pointer"}
+                  onClick={() => handleOrder("tauxTransformationFermetures")}
+                >
+                  <OrderIcon {...order} column="tauxTransformationFermetures" />
+                  dont fermetures
+                </Th>
+                <Th
+                  maxWidth={"5%"}
+                  isNumeric
+                  cursor={"pointer"}
+                  onClick={() => handleOrder("tauxTransformationColorations")}
+                >
+                  <OrderIcon
+                    {...order}
+                    column="tauxTransformationColorations"
+                  />
+                  dont colorations
+                </Th>
+                <Th
+                  maxWidth={"5%"}
+                  isNumeric
+                  cursor={"pointer"}
+                  onClick={() => handleOrder("solde")}
+                >
+                  <OrderIcon {...order} column="solde" />
+                  solde
+                </Th>
+                <Th
+                  maxWidth={"5%"}
+                  isNumeric
+                  cursor={"pointer"}
+                  onClick={() => handleOrder("ratioFermeture")}
+                >
+                  <OrderIcon {...order} column="ratioFermeture" />
+                  ratio fermetures
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {Object.keys(dataToDisplay)
+                .filter((key) => key !== "Total")
+                .map((key) => {
+                  const item = dataToDisplay[key];
+                  const filterValue = isZoneGeographiqueSelected
+                    ? filters![getScopeKey()]
+                    : filters!["codeNsf"];
 
-                const trBgColor = compareFilters(item.code, filterValue)
-                  ? "blueecume.400_hover !important"
-                  : "";
+                  const trBgColor = compareFilters(item.code, filterValue)
+                    ? "blueecume.400_hover !important"
+                    : "";
 
-                const tdBgColor = compareFilters(item.code, filterValue)
-                  ? "inherit !important"
-                  : "";
+                  const tdBgColor = compareFilters(item.code, filterValue)
+                    ? "inherit !important"
+                    : "";
 
-                const trColor = compareFilters(item.code, filterValue)
-                  ? "white"
-                  : "inherit";
+                  const trColor = compareFilters(item.code, filterValue)
+                    ? "white"
+                    : "inherit";
 
-                const color = compareFilters(item.code, filterValue)
-                  ? "inherit"
-                  : "black";
+                  const color = compareFilters(item.code, filterValue)
+                    ? "inherit"
+                    : "black";
 
-                return (
-                  <Tr key={key} bgColor={trBgColor} color={trColor}>
-                    <Td bgColor={tdBgColor} color={color}>
-                      <Tooltip label={item.libelle}>
-                        <Text
-                          textOverflow={"ellipsis"}
-                          overflow={"hidden"}
-                          whiteSpace={"break-spaces"}
-                          noOfLines={1}
-                        >
-                          {item.libelle}
-                        </Text>
-                      </Tooltip>
-                    </Td>
-                    <Td
-                      width={24}
-                      maxWidth={24}
-                      bgColor={tdBgColor}
-                      color={color}
-                      isNumeric
-                    >
-                      {item.placesTransformees}
-                    </Td>
-                    <Td
-                      width={24}
-                      maxWidth={24}
-                      bgColor={tdBgColor}
-                      color={color}
-                      isNumeric
-                    >
-                      {item.effectif ?? "-"}
-                    </Td>
-                    <Td
-                      bgColor={getTauxTransfoBgColor(item.tauxTransformation)}
-                      color={"black"}
-                      isNumeric
-                    >
-                      {formatPercentage(item.tauxTransformation, 2, "-")}
-                    </Td>
-                    <Td
-                      width={24}
-                      maxWidth={24}
-                      bgColor={tdBgColor}
-                      color={color}
-                      isNumeric
-                    >
-                      {formatPercentage(
-                        item.tauxTransformationOuvertures,
-                        2,
-                        "-"
-                      )}
-                    </Td>
-                    <Td
-                      width={24}
-                      maxWidth={24}
-                      bgColor={tdBgColor}
-                      color={color}
-                      isNumeric
-                    >
-                      {formatPercentage(
-                        item.tauxTransformationFermetures,
-                        2,
-                        "-"
-                      )}
-                    </Td>
-                    <Td
-                      width={24}
-                      maxWidth={24}
-                      bgColor={tdBgColor}
-                      color={color}
-                      isNumeric
-                    >
-                      {formatPercentage(
-                        item.tauxTransformationColorations,
-                        2,
-                        "-"
-                      )}
-                    </Td>
-                    <Td
-                      width={24}
-                      maxWidth={24}
-                      bgColor={tdBgColor}
-                      color={color}
-                      isNumeric
-                    >
-                      {item.solde}
-                    </Td>
-                    <Td
-                      color={color}
-                      bgColor={
-                        item.ratioFermeture !== undefined &&
-                        item.ratioFermeture < SEUIL_RATIO_FERMETURE
-                          ? customPalette[0]
-                          : "inherit"
-                      }
-                      isNumeric
-                    >
-                      {formatPercentage(item.ratioFermeture, 2, "-")}
-                    </Td>
-                  </Tr>
-                );
-              })}
-            <Tr borderTop={"2px solid black"} fontWeight={700}>
-              <Td width={"20%"} textTransform={"uppercase"}>
-                {dataToDisplay["Total"]?.libelle}
-              </Td>
-              <Td width={24} maxWidth={24} isNumeric>
-                {dataToDisplay["Total"]?.placesTransformees}
-              </Td>
-              <Td width={24} maxWidth={24} isNumeric>
-                {dataToDisplay["Total"]?.effectif}
-              </Td>
-              <Td
-                bgColor={getTauxTransfoBgColor(
-                  dataToDisplay["Total"]?.tauxTransformation
-                )}
-                color={"black"}
-                isNumeric
+                  return (
+                    <Tr key={key} bgColor={trBgColor} color={trColor}>
+                      <Td
+                        bgColor={tdBgColor}
+                        color={color}
+                        border={"none !important"}
+                      >
+                        <Tooltip label={item.libelle}>
+                          <Text
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={1}
+                          >
+                            {item.libelle}
+                          </Text>
+                        </Tooltip>
+                      </Td>
+                      <Td
+                        width={24}
+                        maxWidth={24}
+                        bgColor={tdBgColor}
+                        border={"none !important"}
+                        color={color}
+                        isNumeric
+                      >
+                        {item.placesTransformees}
+                      </Td>
+                      <Td
+                        width={24}
+                        maxWidth={24}
+                        bgColor={tdBgColor}
+                        border={"none !important"}
+                        color={color}
+                        isNumeric
+                      >
+                        {item.effectif ?? "-"}
+                      </Td>
+                      <Td
+                        bgColor={getTauxTransfoBgColor(item.tauxTransformation)}
+                        border={"none !important"}
+                        color={"black"}
+                        isNumeric
+                      >
+                        {formatPercentage(item.tauxTransformation, 2, "-")}
+                      </Td>
+                      <Td
+                        width={24}
+                        maxWidth={24}
+                        bgColor={tdBgColor}
+                        border={"none !important"}
+                        color={color}
+                        isNumeric
+                      >
+                        {formatPercentage(
+                          item.tauxTransformationOuvertures,
+                          2,
+                          "-"
+                        )}
+                      </Td>
+                      <Td
+                        width={24}
+                        maxWidth={24}
+                        bgColor={tdBgColor}
+                        border={"none !important"}
+                        color={color}
+                        isNumeric
+                      >
+                        {formatPercentage(
+                          item.tauxTransformationFermetures,
+                          2,
+                          "-"
+                        )}
+                      </Td>
+                      <Td
+                        width={24}
+                        maxWidth={24}
+                        bgColor={tdBgColor}
+                        border={"none !important"}
+                        color={color}
+                        isNumeric
+                      >
+                        {formatPercentage(
+                          item.tauxTransformationColorations,
+                          2,
+                          "-"
+                        )}
+                      </Td>
+                      <Td
+                        width={24}
+                        maxWidth={24}
+                        bgColor={tdBgColor}
+                        border={"none !important"}
+                        color={color}
+                        isNumeric
+                      >
+                        {item.solde}
+                      </Td>
+                      <Td
+                        color={color}
+                        bgColor={
+                          item.ratioFermeture !== undefined &&
+                          item.ratioFermeture < SEUIL_RATIO_FERMETURE
+                            ? customPalette[0]
+                            : "inherit"
+                        }
+                        border={"none !important"}
+                        isNumeric
+                      >
+                        {formatPercentage(item.ratioFermeture, 2, "-")}
+                      </Td>
+                    </Tr>
+                  );
+                })}
+              <Tr
+                border={"none !important"}
+                boxShadow={"0px -2px 1px 1px black;"}
+                zIndex="200"
+                fontWeight={700}
+                position={"sticky"}
+                bottom={-0.5}
+                bgColor="white"
               >
-                {formatPercentage(
-                  dataToDisplay["Total"]?.tauxTransformation,
-                  2,
-                  "-"
-                )}
-              </Td>
-              <Td width={24} maxWidth={24} isNumeric>
-                {formatPercentage(
-                  dataToDisplay["Total"]?.tauxTransformationOuvertures,
-                  2,
-                  "-"
-                )}
-              </Td>
-              <Td width={24} maxWidth={24} isNumeric>
-                {formatPercentage(
-                  dataToDisplay["Total"]?.tauxTransformationFermetures,
-                  2,
-                  "-"
-                )}
-              </Td>
-              <Td width={24} maxWidth={24} isNumeric>
-                {formatPercentage(
-                  dataToDisplay["Total"]?.tauxTransformationColorations,
-                  2,
-                  "-"
-                )}
-              </Td>
-              <Td width={24} maxWidth={24} isNumeric>
-                {dataToDisplay["Total"]?.solde}
-              </Td>
-              <Td
-                isNumeric
-                bgColor={
-                  !dataToDisplay["Total"]?.ratioFermeture ||
-                  (dataToDisplay["Total"]?.ratioFermeture &&
-                    dataToDisplay["Total"]?.ratioFermeture < 0.33)
-                    ? customPalette[0]
-                    : "inherit"
-                }
-              >
-                {formatPercentage(
-                  dataToDisplay["Total"]?.ratioFermeture,
-                  2,
-                  "-"
-                )}
-              </Td>
-            </Tr>
-          </Tbody>
-        </Table>
+                <Td
+                  width={"20%"}
+                  textTransform={"uppercase"}
+                  border={"none !important"}
+                >
+                  {dataToDisplay["Total"]?.libelle}
+                </Td>
+                <Td
+                  width={24}
+                  maxWidth={24}
+                  border={"none !important"}
+                  isNumeric
+                >
+                  {dataToDisplay["Total"]?.placesTransformees}
+                </Td>
+                <Td
+                  width={24}
+                  maxWidth={24}
+                  border={"none !important"}
+                  isNumeric
+                >
+                  {dataToDisplay["Total"]?.effectif}
+                </Td>
+                <Td
+                  bgColor={getTauxTransfoBgColor(
+                    dataToDisplay["Total"]?.tauxTransformation
+                  )}
+                  color={"black"}
+                  border={"none !important"}
+                  isNumeric
+                >
+                  {formatPercentage(
+                    dataToDisplay["Total"]?.tauxTransformation,
+                    2,
+                    "-"
+                  )}
+                </Td>
+                <Td
+                  width={24}
+                  maxWidth={24}
+                  border={"none !important"}
+                  isNumeric
+                >
+                  {formatPercentage(
+                    dataToDisplay["Total"]?.tauxTransformationOuvertures,
+                    2,
+                    "-"
+                  )}
+                </Td>
+                <Td
+                  width={24}
+                  maxWidth={24}
+                  border={"none !important"}
+                  isNumeric
+                >
+                  {formatPercentage(
+                    dataToDisplay["Total"]?.tauxTransformationFermetures,
+                    2,
+                    "-"
+                  )}
+                </Td>
+                <Td
+                  width={24}
+                  maxWidth={24}
+                  border={"none !important"}
+                  isNumeric
+                >
+                  {formatPercentage(
+                    dataToDisplay["Total"]?.tauxTransformationColorations,
+                    2,
+                    "-"
+                  )}
+                </Td>
+                <Td
+                  width={24}
+                  maxWidth={24}
+                  border={"none !important"}
+                  isNumeric
+                >
+                  {dataToDisplay["Total"]?.solde}
+                </Td>
+                <Td
+                  bgColor={
+                    !dataToDisplay["Total"]?.ratioFermeture ||
+                    (dataToDisplay["Total"]?.ratioFermeture &&
+                      dataToDisplay["Total"]?.ratioFermeture < 0.33)
+                      ? customPalette[0]
+                      : "inherit"
+                  }
+                  border={"none !important"}
+                  isNumeric
+                >
+                  {formatPercentage(
+                    dataToDisplay["Total"]?.ratioFermeture,
+                    2,
+                    "-"
+                  )}
+                </Td>
+              </Tr>
+            </Tbody>
+          </Table>
+        </Flex>
         <Flex direction={"row"} justify="space-between" mt={4}>
           <Flex direction={"row"} gap={4}>
             <Text my={"auto"}>Taux de transformation</Text>

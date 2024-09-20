@@ -54,8 +54,8 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
       "rentreeScolaire",
       sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("denominateur"),
     ])
-    .where(isInDenominateurTauxTransfo)
     .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)
+    .where(isInDenominateurTauxTransfo)
     .where(isInPerimetreIJDataEtablissement)
     .$call((eb) => {
       if (filters.CPC) return eb.where("dataFormation.cpc", "in", filters.CPC);
