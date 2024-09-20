@@ -404,7 +404,9 @@ export const IndicateursClesSection = ({
                   <Text>
                     {formatPercentage(
                       getScopedData("all", "placesColoreesQ3Q4") /
-                        getScopedData("all", "placesColorees")
+                        getScopedData("all", "placesColorees"),
+                      0,
+                      "-"
                     )}
                   </Text>
                   <Text>places en Q3 / Q4</Text>

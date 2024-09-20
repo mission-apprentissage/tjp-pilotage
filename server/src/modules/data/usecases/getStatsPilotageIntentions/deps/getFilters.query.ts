@@ -6,10 +6,10 @@ import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../../utils/isDemandeSelectable";
 import {
-  notPerimetreIJAcademie,
-  notPerimetreIJDepartement,
-  notPerimetreIJRegion,
-} from "../../../utils/notPerimetreIJ";
+  isInPerimetreIJAcademie,
+  isInPerimetreIJDepartement,
+  isInPerimetreIJRegion,
+} from "../../../utils/isInPerimetreIJ";
 import { Filters } from "../getStatsPilotageIntentions.usecase";
 
 export const getFiltersQuery = async ({
@@ -119,7 +119,7 @@ export const getFiltersQuery = async ({
     .leftJoin("departement", "departement.codeRegion", "region.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "region.codeRegion")
     .where("region.codeRegion", "is not", null)
-    .where(notPerimetreIJRegion)
+    .where(isInPerimetreIJRegion)
     .distinct()
     .orderBy("label", "asc")
     .execute();
@@ -134,7 +134,7 @@ export const getFiltersQuery = async ({
       eb.ref("academie.libelleAcademie").as("label"),
     ])
     .where("academie.codeAcademie", "is not", null)
-    .where(notPerimetreIJAcademie)
+    .where(isInPerimetreIJAcademie)
     .$call((q) => {
       if (codeRegion) {
         return q.where("region.codeRegion", "=", codeRegion);
@@ -151,7 +151,7 @@ export const getFiltersQuery = async ({
       "departement.libelleDepartement as label",
     ])
     .where("departement.codeDepartement", "is not", null)
-    .where(notPerimetreIJDepartement)
+    .where(isInPerimetreIJDepartement)
     .$call((q) => {
       if (codeRegion) {
         return q.where("region.codeRegion", "=", codeRegion);

@@ -5,9 +5,9 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { effectifAnnee } from "../../utils/effectifAnnee";
+import { isInPerimetreIJDepartement } from "../../utils/isInPerimetreIJ";
 import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
 import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
-import { notPerimetreIJDepartement } from "../../utils/notPerimetreIJ";
 import { selectTauxDevenirFavorableAgg } from "../../utils/tauxDevenirFavorable";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
@@ -100,7 +100,7 @@ export const getDepartementStats = async ({
         "etablissement.codeDepartement"
       )
     )
-    .where(notPerimetreIJDepartement)
+    .where(isInPerimetreIJDepartement)
     .where("departement.codeDepartement", "=", codeDepartement)
     .where((w) => {
       if (!codeNiveauDiplome?.length) {

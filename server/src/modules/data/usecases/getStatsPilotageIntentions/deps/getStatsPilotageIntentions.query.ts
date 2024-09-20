@@ -25,10 +25,10 @@ import {
 } from "../../../../utils/countCapacite";
 import { isDemandeProjetOrValidee } from "../../../../utils/isDemandeProjetOrValidee";
 import {
-  notPerimetreIJAcademie,
-  notPerimetreIJDepartement,
-  notPerimetreIJRegion,
-} from "../../../utils/notPerimetreIJ";
+  isInPerimetreIJAcademie,
+  isInPerimetreIJDepartement,
+  isInPerimetreIJRegion,
+} from "../../../utils/isInPerimetreIJ";
 import { genericOnConstatRentree } from "../../../utils/onConstatDeRentree";
 import { Filters } from "../getStatsPilotageIntentions.usecase";
 
@@ -431,7 +431,7 @@ const getRegionData = async (filters: Filters) => {
       eb.fn.coalesce("placesColoreesQ3Q4", eb.val(0)).as("placesColoreesQ3Q4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
     ])
-    .where(notPerimetreIJRegion)
+    .where(isInPerimetreIJRegion)
     .execute()
     .then(cleanNull);
 };
@@ -502,7 +502,7 @@ const getAcademieData = async (filters: Filters) => {
       eb.fn.coalesce("placesColoreesQ3Q4", eb.val(0)).as("placesColoreesQ3Q4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
     ])
-    .where(notPerimetreIJAcademie)
+    .where(isInPerimetreIJAcademie)
     .execute()
     .then(cleanNull);
 };
@@ -584,7 +584,7 @@ const getDepartementData = async (filters: Filters) => {
       eb.fn.coalesce("placesColoreesQ3Q4", eb.val(0)).as("placesColoreesQ3Q4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
     ])
-    .where(notPerimetreIJDepartement)
+    .where(isInPerimetreIJDepartement)
     .execute()
     .then(cleanNull);
 };

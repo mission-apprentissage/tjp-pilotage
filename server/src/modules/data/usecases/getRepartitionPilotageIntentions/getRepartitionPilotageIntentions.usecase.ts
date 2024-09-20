@@ -114,6 +114,7 @@ const getRepartitionPilotageIntentionsFactory =
         deps.getNiveauxDiplomeQuery({
           filters: {
             ...activeFilters,
+            codeNiveauDiplome: undefined,
             campagne: anneeCampagne,
           },
         }),

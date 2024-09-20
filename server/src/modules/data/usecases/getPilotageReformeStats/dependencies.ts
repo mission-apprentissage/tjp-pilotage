@@ -3,7 +3,7 @@ import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
-import { countPlacesTransformees } from "../../../utils/countCapacite";
+import { countPlacesTransformeesParCampagne } from "../../../utils/countCapacite";
 import {
   isDemandeNotAjustementRentree,
   isDemandeNotDeletedOrRefused,
@@ -253,7 +253,10 @@ const getTauxTransformationData = async (filters: {
     .leftJoin("campagne", "campagne.id", "demande.campagneId")
     .select((es) => [
       es.fn
-        .coalesce(es.fn.sum<number>(countPlacesTransformees(es)), sql`0`)
+        .coalesce(
+          es.fn.sum<number>(countPlacesTransformeesParCampagne(es)),
+          sql`0`
+        )
         .as("transformes"),
       genericOnConstatRentree({ ...filters })()
         .select((eb) => sql<number>`SUM(${eb.ref("effectif")})`.as("effectif"))

@@ -7,18 +7,18 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
+import {
+  isInPerimetreIJAcademie,
+  isInPerimetreIJDepartement,
+  isInPerimetreIJEtablissement,
+  isInPerimetreIJRegion,
+} from "../../utils/isInPerimetreIJ";
 import { isScolaireFormationHistorique } from "../../utils/isScolaire";
 import { notAnneeCommune } from "../../utils/notAnneeCommune";
 import {
   isHistoriqueCoExistant,
   notHistoriqueUnlessCoExistant,
 } from "../../utils/notHistorique";
-import {
-  notPerimetreIJAcademie,
-  notPerimetreIJDepartement,
-  notPerimetreIJEtablissement,
-  notPerimetreIJRegion,
-} from "../../utils/notPerimetreIJ";
 import { premiersVoeuxAnnee } from "../../utils/premiersVoeuxAnnee";
 import {
   selectTauxDevenirFavorableAgg,
@@ -326,7 +326,7 @@ const findFormationEtablissementsInDb = async ({
       if (!codeNsf) return q;
       return q.where("formationView.codeNsf", "in", codeNsf);
     })
-    .where(notPerimetreIJEtablissement)
+    .where(isInPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
     .groupBy([
       "formationView.id",
@@ -500,7 +500,7 @@ const findFiltersInDb = async ({
   const regions = await base
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
-    .where(notPerimetreIJRegion)
+    .where(isInPerimetreIJRegion)
     .execute();
 
   const academies = await base
@@ -509,7 +509,7 @@ const findFiltersInDb = async ({
       "academie.codeAcademie as value",
     ])
     .where("academie.codeAcademie", "is not", null)
-    .where(notPerimetreIJAcademie)
+    .where(isInPerimetreIJAcademie)
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb), inCodeDepartement(eb), inCommune(eb)]),
@@ -526,7 +526,7 @@ const findFiltersInDb = async ({
       "departement.codeDepartement as value",
     ])
     .where("departement.codeDepartement", "is not", null)
-    .where(notPerimetreIJDepartement)
+    .where(isInPerimetreIJDepartement)
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCommune(eb)]),

@@ -172,6 +172,14 @@ export const QuadrantSection = ({
       }
     );
 
+  const formationsQuadrant =
+    formations?.filter(
+      (formation) =>
+        formation.tauxInsertion &&
+        formation.tauxPoursuite &&
+        formation.placesTransformees
+    ) ?? [];
+
   const formation = useMemo(
     () =>
       formations?.find(
@@ -469,8 +477,8 @@ export const QuadrantSection = ({
                   <Text color="grey" fontSize="sm" textAlign="left">
                     <Highlight
                       query={[
-                        formations?.length.toString() ?? "-",
-                        formations
+                        formationsQuadrant?.length.toString() ?? "-",
+                        formationsQuadrant
                           ?.reduce((acc, { placesOuvertes, placesFermees }) => {
                             if (filters.type === "fermeture")
                               return acc + (placesFermees ?? 0);
@@ -482,9 +490,9 @@ export const QuadrantSection = ({
                           .toString() ?? "-",
                       ]}
                     >
-                      {`${formations?.length ?? "-"} certifications -
+                      {`${formationsQuadrant?.length ?? "-"} certifications -
                         ${
-                          formations?.reduce(
+                          formationsQuadrant?.reduce(
                             (acc, { placesOuvertes, placesFermees }) => {
                               if (filters.type === "fermeture")
                                 return acc + (placesFermees ?? 0);
@@ -511,25 +519,20 @@ export const QuadrantSection = ({
                         meanInsertion={stats?.tauxInsertion}
                         meanPoursuite={stats?.tauxPoursuite}
                         currentFormationId={currentFormationId}
-                        data={formations
-                          .filter(
-                            (formation) =>
-                              formation.tauxInsertion && formation.tauxPoursuite
-                          )
-                          ?.map((formation) => ({
-                            ...formation,
-                            codeDispositif: formation.codeDispositif ?? "",
-                            effectif: formation.differencePlaces,
-                            tauxPoursuite: formation.tauxPoursuite ?? 0,
-                            tauxInsertion: formation.tauxInsertion ?? 0,
-                          }))}
+                        data={formationsQuadrant?.map((formation) => ({
+                          ...formation,
+                          codeDispositif: formation.codeDispositif ?? "",
+                          effectif: formation.placesTransformees,
+                          tauxInsertion: formation.tauxInsertion ?? 0,
+                          tauxPoursuite: formation.tauxPoursuite ?? 0,
+                        }))}
                         effectifSizes={EFFECTIF_SIZES}
                       />
                     ) : (
                       <TableQuadrant
-                        formations={formations?.map((formation) => ({
+                        formations={formationsQuadrant?.map((formation) => ({
                           ...formation,
-                          effectif: formation.differencePlaces,
+                          effectif: formation.placesTransformees,
                         }))}
                         handleClick={setCurrentFormationId}
                         currentFormationId={currentFormationId}
