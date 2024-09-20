@@ -401,29 +401,23 @@ export const countPlacesTransformees = ({
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
-  exceptionColoration({
-    eb,
-    count: sql<number>`
-        ${countOuvertures(eb)} +
-        ${countFermetures(eb)} +
-        ${countPlacesColorees(eb)}
-      `,
-  });
+  sql<number>`
+    ${countOuvertures(eb)} +
+    ${countFermetures(eb)} +
+    ${countPlacesColorees(eb)}
+  `;
 
 export const countPlacesTransformeesParCampagne = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "campagne">;
 }) =>
-  exceptionColoration({
-    eb,
-    count: eb
-      .case()
-      .when("campagne.annee", "=", "2023")
-      .then(countPlacesTransformeesCampagne2023(eb))
-      .else(countPlacesTransformees(eb))
-      .end(),
-  });
+  eb
+    .case()
+    .when("campagne.annee", "=", "2023")
+    .then(countPlacesTransformeesCampagne2023(eb))
+    .else(countPlacesTransformees(eb))
+    .end();
 
 export const getTauxTransformation = ({
   demandeAlias,

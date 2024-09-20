@@ -16,6 +16,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { OBJECTIF_TAUX_TRANSFO_PERCENTAGE } from "shared/objectives/TAUX_TRANSFO";
 
 import { client } from "@/api.client";
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { ProgressBar } from "@/components/ProgressBar";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
@@ -123,6 +124,7 @@ const NumberWithProgressBars = ({
   projetDeDemande,
   title,
   icon,
+  tooltip,
   children,
 }: {
   all: number;
@@ -130,6 +132,7 @@ const NumberWithProgressBars = ({
   projetDeDemande: number;
   title: string;
   icon?: React.ReactNode;
+  tooltip?: React.ReactNode;
   children?: React.ReactNode;
 }) => {
   return (
@@ -156,6 +159,7 @@ const NumberWithProgressBars = ({
         >
           {title}
         </Text>
+        {tooltip}
       </HStack>
       <Text fontSize="40px" fontWeight="800" color="bluefrance.113">
         {all}
@@ -188,6 +192,7 @@ export const IndicateursClesSection = ({
   setFilters: (filters: FiltersStatsPilotageIntentions) => void;
   onOpenTauxTransfoDefinition: () => void;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const { code } = useScopeCode(filters);
   const [indicateur, setIndicateur] =
     useState<IndicateurType>("tauxTransformation");
@@ -235,10 +240,22 @@ export const IndicateursClesSection = ({
       alignItems="start"
       color={themeDefinition.colors.grey[50]}
     >
-      <Text fontWeight="700" fontSize="20px" lineHeight="28px">
-        Indicateurs clés de la transformation
-      </Text>
-      <Stack width="100%" gap="16px" direction="row">
+      <Flex direction={"row"} gap={3}>
+        <Text fontWeight="700" fontSize="20px" lineHeight="28px">
+          Indicateurs clés de la transformation
+        </Text>
+        <TooltipIcon
+          onClick={() => onOpenTauxTransfoDefinition()}
+          label={
+            <Flex direction="column" gap={4}>
+              <Text>Comprendre le taux de transformation.</Text>
+              <Text>Cliquez pour plus d'infos.</Text>
+            </Flex>
+          }
+          my="auto"
+        />
+      </Flex>
+      <Stack width="100%" h={"100%"} gap="16px" direction="row">
         <Grid flex="1" templateColumns="repeat(3, minmax(0, 1fr))" gap="16px">
           <GridItem colSpan={2}>
             <Card title="Taux de transformation (Prévisionnel)">
@@ -283,7 +300,7 @@ export const IndicateursClesSection = ({
               </GridItem>
             </Card>
           </GridItem>
-          <GridItem>
+          <GridItem height="100%">
             <NumberWithProgressBars
               all={getScopedData("all", "placesOuvertes")}
               icon={
@@ -321,12 +338,29 @@ export const IndicateursClesSection = ({
                         getScopedData("all", "placesOuvertes")
                     )}
                   </Text>
-                  <Text>places en Q1 / Q2</Text>
+                  <Flex direction={"row"} gap={2}>
+                    <Text>places en Q1 / Q2</Text>
+                    <TooltipIcon
+                      label={
+                        <Flex direction="column" gap={4}>
+                          <Text>
+                            Positionnement du point de la formation dans le
+                            quadrant par rapport aux moyennes régionales des
+                            taux d'emploi et de poursuite d'études appliquées au
+                            niveau de diplôme.
+                          </Text>
+                          <Text>Cliquez pour plus d'infos.</Text>
+                        </Flex>
+                      }
+                      onClick={() => openGlossaire("quadrant")}
+                      my={"auto"}
+                    />
+                  </Flex>
                 </HStack>
               </VStack>
             </NumberWithProgressBars>
           </GridItem>
-          <GridItem>
+          <GridItem height="100%">
             <NumberWithProgressBars
               all={getScopedData("all", "placesFermees")}
               icon={
@@ -364,12 +398,29 @@ export const IndicateursClesSection = ({
                         getScopedData("all", "placesFermees")
                     )}
                   </Text>
-                  <Text>places en Q3 / Q4</Text>
+                  <Flex direction={"row"} gap={2}>
+                    <Text>places en Q3 / Q4</Text>
+                    <TooltipIcon
+                      label={
+                        <Flex direction="column" gap={4}>
+                          <Text>
+                            Positionnement du point de la formation dans le
+                            quadrant par rapport aux moyennes régionales des
+                            taux d'emploi et de poursuite d'études appliquées au
+                            niveau de diplôme.
+                          </Text>
+                          <Text>Cliquez pour plus d'infos.</Text>
+                        </Flex>
+                      }
+                      onClick={() => openGlossaire("quadrant")}
+                      my={"auto"}
+                    />
+                  </Flex>
                 </HStack>
               </VStack>
             </NumberWithProgressBars>
           </GridItem>
-          <GridItem>
+          <GridItem height="100%" flex={1}>
             <NumberWithProgressBars
               all={getScopedData("all", "placesColorees")}
               icon={
@@ -388,6 +439,22 @@ export const IndicateursClesSection = ({
                 DemandeStatutEnum["projet de demande"],
                 "placesColorees"
               )}
+              tooltip={
+                <TooltipIcon
+                  label={
+                    <Box>
+                      <Text>
+                        Dans Orion, à partir de la campagne 2024, on désigne
+                        comme “Colorations” le fait de colorer des places
+                        existantes sans augmentation de capacité.
+                      </Text>
+                      <Text mt={4}>Cliquez pour plus d'infos.</Text>
+                    </Box>
+                  }
+                  h={"24px"}
+                  onClick={() => openGlossaire("coloration")}
+                />
+              }
             >
               <Divider />
               <VStack
@@ -409,22 +476,27 @@ export const IndicateursClesSection = ({
                       "-"
                     )}
                   </Text>
-                  <Text>places en Q3 / Q4</Text>
+                  <Flex direction={"row"} gap={2}>
+                    <Text>places en Q3 / Q4</Text>
+                    <TooltipIcon
+                      label={
+                        <Flex direction="column" gap={4}>
+                          <Text>
+                            Positionnement du point de la formation dans le
+                            quadrant par rapport aux moyennes régionales des
+                            taux d'emploi et de poursuite d'études appliquées au
+                            niveau de diplôme.
+                          </Text>
+                          <Text>Cliquez pour plus d'infos.</Text>
+                        </Flex>
+                      }
+                      onClick={() => openGlossaire("quadrant")}
+                      my={"auto"}
+                    />
+                  </Flex>
                 </HStack>
               </VStack>
             </NumberWithProgressBars>
-          </GridItem>
-          <GridItem colSpan={3}>
-            <HStack width="100%" justifyContent="start" alignItems="end">
-              <Text color={themeColors.bluefrance[113]} fontWeight="700">
-                <TooltipIcon
-                  mr="6px"
-                  label="Cliquez ici pour plus d’infos"
-                  onClick={() => onOpenTauxTransfoDefinition()}
-                />
-                Comprendre le calcul du taux de transformation
-              </Text>
-            </HStack>
           </GridItem>
         </Grid>
         <Grid minW="500px">

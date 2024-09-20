@@ -215,15 +215,15 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
           `${value.replace("Place(s) ", "Pl. ").replace("(s)", "s")}`,
         data: [
           {
+            name: "Place(s) colorée(s)",
+            icon: "square",
+          },
+          {
             name: "Place(s) fermée(s)",
             icon: "square",
           },
           {
             name: "Place(s) ouverte(s)",
-            icon: "square",
-          },
-          {
-            name: "Place(s) colorée(s)",
             icon: "square",
           },
         ],
@@ -267,7 +267,21 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
           stack: "placesTransformées",
           color: bf850,
           barWidth: 45,
+          stackIndex: 0,
           name: "Place(s) colorée(s)",
+          ...seriesOption,
+        },
+        {
+          data: positionsQuadrant.map(
+            (positionQuadrant) =>
+              getStatsPositionQuadrant(positionQuadrant as PositionQuadrant)[
+                "Places ouvertes"
+              ]
+          ),
+          stack: "placesTransformées",
+          stackIndex: 1,
+          color: bf850_active,
+          name: "Place(s) ouverte(s)",
           ...seriesOption,
         },
         {
@@ -280,19 +294,8 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
           stack: "placesTransformées",
           color: bf113,
           name: "Place(s) fermée(s)",
+          stackIndex: 2,
           formatter: (value: number) => `${-value}`,
-          ...seriesOption,
-        },
-        {
-          data: positionsQuadrant.map(
-            (positionQuadrant) =>
-              getStatsPositionQuadrant(positionQuadrant as PositionQuadrant)[
-                "Places ouvertes"
-              ]
-          ),
-          stack: "placesTransformées",
-          color: bf850_active,
-          name: "Place(s) ouverte(s)",
           ...seriesOption,
         },
       ],

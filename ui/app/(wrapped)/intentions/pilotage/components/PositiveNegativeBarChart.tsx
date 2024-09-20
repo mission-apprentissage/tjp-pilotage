@@ -34,14 +34,16 @@ export const PositiveNegativeBarChart = ({
   const getYAxisTitle = () => {
     return Object.keys(data)
       .filter((key) => key !== "Total")
-      .slice(0, limit);
+      .slice(0, limit)
+      .reverse();
   };
 
   const getSolde = () => {
     return Object.keys(data)
       .filter((key) => key !== "Total")
       .map((key) => (data[key].solde > 0 ? "+" : "") + data[key].solde)
-      .slice(0, limit);
+      .slice(0, limit)
+      .reverse();
   };
 
   const placesOuvertes = Object.keys(data)
@@ -198,15 +200,15 @@ export const PositiveNegativeBarChart = ({
           `${value.replace("Place(s) ", "Pl. ").replace("(s)", "s")}`,
         data: [
           {
+            name: "Place(s) colorée(s)",
+            icon: "square",
+          },
+          {
             name: "Place(s) fermée(s)",
             icon: "square",
           },
           {
             name: "Place(s) ouverte(s)",
-            icon: "square",
-          },
-          {
-            name: "Place(s) colorée(s)",
             icon: "square",
           },
         ],

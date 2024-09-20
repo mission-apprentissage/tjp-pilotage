@@ -46,8 +46,6 @@ const getQuadrantPilotageIntentionsFactory =
       getStatsSortieQuery({ ...activeFilters, codeRegion }),
     ]);
 
-    console.log("formations", formations);
-
     return {
       stats: statsSortie,
       formations: formations.map((formation) => ({

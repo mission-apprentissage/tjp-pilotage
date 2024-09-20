@@ -1,4 +1,5 @@
 import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
+import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
 
 const FormationTransformationStatsSchema = z.object({
@@ -12,7 +13,6 @@ const FormationTransformationStatsSchema = z.object({
   cfd: z.string(),
   nbDemandes: z.coerce.number(),
   nbEtablissements: z.coerce.number(),
-  differencePlaces: z.coerce.number(),
   effectif: z.coerce.number(),
   placesOuvertes: z.coerce.number(),
   placesFermees: z.coerce.number(),
@@ -36,7 +36,9 @@ export const getFormationsPilotageIntentionsSchema = {
     codeAcademie: z.string().optional(),
     codeDepartement: z.string().optional(),
     statut: DemandeStatutZodType.exclude(["refusée", "supprimée"]).optional(),
-    type: z.enum(["ouverture", "fermeture"]).optional(),
+    CPC: z.array(z.string()).optional(),
+    secteur: z.array(SecteurZodType).optional(),
+    type: z.enum(["ouverture", "fermeture", "coloration"]).optional(),
     tauxPression: z.enum(["faible", "eleve"]).optional(),
     campagne: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),

@@ -1,3 +1,4 @@
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
@@ -20,7 +21,6 @@ import {
   Stack,
   Text,
   useToken,
-  VStack,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
@@ -39,13 +39,16 @@ import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 import { Quadrant } from "@/components/Quadrant";
+import { TableBadge } from "@/components/TableBadge";
 import { TableQuadrant } from "@/components/TableQuadrant";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatNumber } from "@/utils/formatUtils";
+import { getTauxPressionStyle } from "@/utils/getBgScale";
 import { useStateParams } from "@/utils/useFilters";
 
+import { useGlossaireContext } from "../../../../glossaire/glossaireContext";
 import QuadrantPlaceholder from "../../components/QuadrantPlaceholder";
 import {
   FiltersStatsPilotageIntentions,
@@ -56,10 +59,10 @@ import {
 
 const EFFECTIF_SIZES = [
   { max: 15, size: 6 },
-  { max: 80, size: 14 },
-  { max: 150, size: 18 },
-  { max: 350, size: 22 },
-  { max: 10000000, size: 30 },
+  { min: 15, max: 40, size: 10 },
+  { min: 40, max: 80, size: 14 },
+  { min: 80, max: 150, size: 18 },
+  { min: 150, size: 22 },
 ];
 
 const generateRestitutionUrl = (
@@ -115,6 +118,7 @@ export const QuadrantSection = ({
   parentFilters: Partial<FiltersStatsPilotageIntentions>;
   scopeFilters?: StatsPilotageIntentions["filters"];
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const bluefrance113 = useToken("colors", "bluefrance.113");
   const trackEvent = usePlausible();
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
@@ -356,6 +360,9 @@ export const QuadrantSection = ({
               <option value="fermeture" style={{ color: "black" }}>
                 Places fermées
               </option>
+              <option value="coloration" style={{ color: "black" }}>
+                Places colorées
+              </option>
             </Select>
           </Flex>
           <Divider my="4" />
@@ -382,20 +389,42 @@ export const QuadrantSection = ({
                   value={filters.tauxPression ?? ""}
                 >
                   <Radio value="">Tous</Radio>
-                  <Radio value="eleve">
-                    Élevé
+                  <Flex gap={2}>
+                    <Radio value="eleve">Élevé</Radio>
                     <TooltipIcon
-                      ml="3"
-                      label="Formations pour lesquelles le taux de pression est supérieur ou égal à 1.3"
+                      label={
+                        <Box>
+                          <Text>
+                            Formations pour lesquelles le taux de pression est
+                            supérieur ou égal à 1.3
+                          </Text>
+                          <Text mt={4}>Cliquez pour plus d'infos.</Text>
+                        </Box>
+                      }
+                      onClick={() => {
+                        openGlossaire("taux-de-pression");
+                      }}
+                      my={"auto"}
                     />
-                  </Radio>
-                  <Radio value="faible">
-                    Bas
+                  </Flex>
+                  <Flex gap={2}>
+                    <Radio value="faible">Bas</Radio>
                     <TooltipIcon
-                      ml="3"
-                      label="Formations pour lesquelles le taux de pression est inférieur à 0.7"
+                      label={
+                        <Box>
+                          <Text>
+                            Formations pour lesquelles le taux de pression est
+                            inférieur à 0.7
+                          </Text>
+                          <Text mt={4}>Cliquez pour plus d'infos.</Text>
+                        </Box>
+                      }
+                      onClick={() => {
+                        openGlossaire("taux-de-pression");
+                      }}
+                      my={"auto"}
                     />
-                  </Radio>
+                  </Flex>
                 </RadioGroup>
               </FormControl>
               <FormControl mb="6">
@@ -428,51 +457,56 @@ export const QuadrantSection = ({
 
             <Box flex="1">
               <Flex direction="row" justify={"space-between"} mb={4}>
-                <Flex gap={3}>
-                  <Popover>
-                    <PopoverTrigger>
-                      <Flex cursor="pointer">
-                        <Icon
-                          icon="ri:eye-line"
-                          color={bluefrance113}
-                          width={"14px"}
-                        />
-                        <Text ms={2} color="bluefrance.113" lineHeight={"14px"}>
-                          Légende
-                        </Text>
-                      </Flex>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      _focusVisible={{ outline: "none" }}
-                      p="3"
-                      minW={"sm"}
+                <Flex gap={5}>
+                  <Flex>
+                    <Popover>
+                      <PopoverTrigger>
+                        <Button cursor="pointer" gap={2} variant="link">
+                          <Icon icon="ri:eye-line" color={bluefrance113} />
+                          <Text color="bluefrance.113" fontWeight={400}>
+                            Légende
+                          </Text>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        _focusVisible={{ outline: "none" }}
+                        p="3"
+                        minW={"sm"}
+                      >
+                        <>
+                          <PopoverCloseButton />
+                          <InfoTooltipContent />
+                        </>
+                      </PopoverContent>
+                    </Popover>
+                  </Flex>
+                  <Flex>
+                    <Button
+                      onClick={() => toggleTypeVue()}
+                      variant="link"
+                      gap={2}
                     >
-                      <>
-                        <PopoverCloseButton />
-                        <InfoTooltipContent />
-                      </>
-                    </PopoverContent>
-                  </Popover>
-                  <Button
-                    onClick={() => toggleTypeVue()}
-                    variant="link"
-                    gap={2}
-                  >
-                    <Icon
-                      icon="ri:table-2"
-                      color={bluefrance113}
-                      width={"14px"}
-                    />
-                    <Text
-                      color={bluefrance113}
-                      fontWeight={400}
-                      lineHeight={"14px"}
-                    >
-                      {`Vue ${typeVue === "quadrant" ? "tableau" : "quadrant"}`}
-                    </Text>
-                  </Button>
+                      <Icon
+                        icon={`${
+                          typeVue === "quadrant"
+                            ? "ri:table-2"
+                            : "ri:layout-grid-line"
+                        }`}
+                        color={bluefrance113}
+                        height={"14px"}
+                      />
+                      <Text
+                        color={bluefrance113}
+                        fontWeight={400}
+                        lineHeight={"14px"}
+                      >
+                        {`Vue ${
+                          typeVue === "quadrant" ? "tableau" : "quadrant"
+                        }`}
+                      </Text>
+                    </Button>
+                  </Flex>
                 </Flex>
-
                 <Flex>
                   <Text color="grey" fontSize="sm" textAlign="left">
                     <Highlight
@@ -493,17 +527,11 @@ export const QuadrantSection = ({
                       {`${formationsQuadrant?.length ?? "-"} certifications -
                         ${
                           formationsQuadrant?.reduce(
-                            (acc, { placesOuvertes, placesFermees }) => {
-                              if (filters.type === "fermeture")
-                                return acc + (placesFermees ?? 0);
-                              if (filters.type === "ouverture")
-                                return acc + (placesOuvertes ?? 0);
-                              const total = placesOuvertes + placesFermees;
-                              return acc + (total ?? 0);
-                            },
+                            (acc, { placesTransformees }) =>
+                              acc + (placesTransformees ?? 0),
                             0
                           ) ?? "-"
-                        } effectif en entrée`}
+                        } places transformées`}
                     </Highlight>
                   </Text>
                 </Flex>
@@ -548,8 +576,8 @@ export const QuadrantSection = ({
                 </>
               </AspectRatio>
             </Box>
-            <Box p="4" w="300px" ml="6">
-              <Heading size="sm" mb="6">
+            <Box p="4" w="250px" ml="6">
+              <Heading size="sm" mb="6" color="bluefrance.113">
                 DÉTAILS SUR LA FORMATION
               </Heading>
               {!formation && (
@@ -559,103 +587,112 @@ export const QuadrantSection = ({
               )}
 
               {formation && (
-                <>
+                <Flex direction="column" gap={4}>
                   <InfoBlock
-                    textBg="white"
-                    mb="4"
+                    fontSize={12}
                     label="Formation concernée"
                     value={formation?.libelleFormation}
                   />
                   <InfoBlock
-                    textBg="white"
-                    mb="4"
+                    fontSize={12}
                     label="Dispositif"
                     value={formation?.libelleDispositif}
                   />
-                  {(!filters.type || filters.type === "ouverture") && (
-                    <InfoBlock
-                      textBg="white"
-                      mb="4"
-                      label={"Places ouvertes"}
-                      value={formation?.placesOuvertes ?? 0}
-                    />
-                  )}
-                  {(!filters.type || filters.type === "fermeture") && (
-                    <InfoBlock
-                      textBg="white"
-                      mb="4"
-                      label={"Places fermées"}
-                      value={formation?.placesFermees ?? 0}
-                    />
-                  )}
-                  <Box mb="4">
-                    <InfoBlock
-                      textBg="white"
-                      label="Établissements concernés"
-                      value={formation?.nbEtablissements}
-                    />
-                    <Link
-                      fontSize="xs"
-                      as={NextLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      href={generateRestitutionUrl(
-                        formation.cfd,
-                        formation?.codeDispositif,
-                        scope,
-                        filters
-                      )}
-                    >
-                      Voir la liste des demandes
-                    </Link>
-                  </Box>
-
-                  <VStack gap={4} alignItems="start" width="100%">
-                    <Box width="100%">
+                  <Flex gap={6}>
+                    {(!filters.type || filters.type === "ouverture") && (
                       <InfoBlock
-                        label="Taux de pression"
-                        textBg="white"
-                        value={
-                          formation.tauxPression
-                            ? formatNumber(formation?.tauxPression)
-                            : "-"
-                        }
+                        flex={1}
+                        fontSize={12}
+                        label={"Pl. ouvertes"}
+                        value={formation?.placesOuvertes ?? 0}
                       />
-                    </Box>
-                    <Box width="100%">
-                      <Text mb="1" fontWeight="medium">
-                        Taux d'emploi régional
-                      </Text>
-                      <GraphWrapper
-                        w="100%"
-                        continuum={formation.continuum}
-                        value={formation.tauxInsertion}
-                      />
-                    </Box>
-                    <Box width="100%">
-                      <Text mb="1" fontWeight="medium">
-                        Taux de poursuite d'études régional
-                      </Text>
-                      <GraphWrapper
-                        w="100%"
-                        continuum={formation.continuum}
-                        value={formation.tauxPoursuite}
-                      />
-                    </Box>
-                    {formation.tauxDevenirFavorable && (
-                      <Box width="100%">
-                        <Text mb="1" fontWeight="medium">
-                          Taux de devenir favorable régional
-                        </Text>
-                        <GraphWrapper
-                          w="100%"
-                          continuum={formation.continuum}
-                          value={formation.tauxDevenirFavorable}
-                        />
-                      </Box>
                     )}
-                  </VStack>
-                </>
+                    {(!filters.type || filters.type === "fermeture") && (
+                      <InfoBlock
+                        flex={1}
+                        fontSize={12}
+                        label={"Pl. fermées"}
+                        value={formation?.placesFermees ?? 0}
+                      />
+                    )}
+                    {(!filters.type || filters.type === "fermeture") && (
+                      <InfoBlock
+                        flex={1}
+                        fontSize={12}
+                        label={"Pl. colorées"}
+                        value={formation?.placesColorees ?? 0}
+                      />
+                    )}
+                  </Flex>
+                  <InfoBlock
+                    fontSize={12}
+                    label="Établissements concernés"
+                    value={formation?.nbEtablissements}
+                  />
+                  <Button
+                    fontSize={14}
+                    fontWeight={500}
+                    color={bluefrance113}
+                    variant={"secondary"}
+                    rightIcon={<ArrowForwardIcon />}
+                    as={NextLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    href={generateRestitutionUrl(
+                      formation.cfd,
+                      formation?.codeDispositif,
+                      scope,
+                      filters
+                    )}
+                    mb={4}
+                  >
+                    Voir le détail des demandes
+                  </Button>
+                  <InfoBlock
+                    fontSize={12}
+                    label="Taux de pression"
+                    textBg="white"
+                    value={
+                      <TableBadge
+                        sx={getTauxPressionStyle(formation?.tauxPression)}
+                      >
+                        {formation.tauxPression !== undefined
+                          ? formatNumber(formation?.tauxPression, 2)
+                          : "-"}
+                      </TableBadge>
+                    }
+                  />
+                  <Flex direction="column" width="100%">
+                    <Text fontSize={12}>Taux d'emploi régional</Text>
+                    <GraphWrapper
+                      w="100%"
+                      continuum={formation.continuum}
+                      value={formation.tauxInsertion}
+                    />
+                  </Flex>
+                  <Flex direction="column" width="100%">
+                    <Text fontSize={12}>
+                      Taux de poursuite d'études régional
+                    </Text>
+                    <GraphWrapper
+                      w="100%"
+                      continuum={formation.continuum}
+                      value={formation.tauxPoursuite}
+                    />
+                  </Flex>
+                  {formation.tauxDevenirFavorable && (
+                    <Flex direction="column" width="100%">
+                      <Text fontSize={12}>
+                        Taux de devenir favorable régional
+                      </Text>
+                      <GraphWrapper
+                        w="100%"
+                        continuum={formation.continuum}
+                        value={formation.tauxDevenirFavorable}
+                      />
+                    </Flex>
+                  )}
+                </Flex>
               )}
             </Box>
           </Flex>
@@ -677,7 +714,7 @@ export const QuadrantSection = ({
               Exporter
             </Button>
           </Flex>
-          <Divider my="4" mb={6} />
+          <Divider my="4" mb={6} bgColor={"grey.900"} />
           <Flex mt={12} width="80%" mx={"auto"}>
             <PlacesTransformeesParPositionQuadrantSection
               formations={formations}
@@ -692,32 +729,37 @@ export const QuadrantSection = ({
 const InfoTooltipContent = () => (
   <Box minW={"md"}>
     <Text mt="4" mb="2" fontSize="sm" fontWeight="bold">
-      Légende:
+      Nombre de places transformées :
     </Text>
-    <VStack align="flex-start" spacing={2}>
-      {EFFECTIF_SIZES.map(({ max, size }, i) => (
-        <Flex key={max} align="center">
+    <Flex direction={"column"} align="flex-start" gap={2}>
+      {EFFECTIF_SIZES.map(({ min, max, size }) => (
+        <Flex key={`${min}_${max}_${size}`} align="center">
           <Box
             borderRadius={100}
             width={`${size}px`}
             height={`${size}px`}
-            mx={`${28 - size / 2}`}
+            mx={`${22 - size / 2}`}
             border="1px solid black"
           />
           <Text flex={1} ml="4" fontSize="sm">
-            {max !== 10000000 && (
+            {typeof min === "undefined" && (
               <>
-                Nombre de places changées {"<"} {max}
+                {"<"} {max} places transformées
               </>
             )}
-            {max === 10000000 && (
+            {typeof max === "undefined" && (
               <>
-                Nombre de places changées {">"} {EFFECTIF_SIZES[i - 1].max}
+                {">"} {min} places transformées
+              </>
+            )}
+            {typeof min !== "undefined" && typeof max !== "undefined" && (
+              <>
+                {min} à {max} places transformées
               </>
             )}
           </Text>
         </Flex>
       ))}
-    </VStack>
+    </Flex>
   </Box>
 );
