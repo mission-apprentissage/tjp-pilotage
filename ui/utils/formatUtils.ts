@@ -57,7 +57,8 @@ export const formatPercentage = (
   numberOfDigits: number = 0,
   nullValue: string = "0 %"
 ): string => {
-  if (value === undefined || value === null) return nullValue;
+  if (value === undefined || value === null || Number.isNaN(value))
+    return nullValue;
   return new Intl.NumberFormat("fr-FR", {
     style: "percent",
     maximumFractionDigits: numberOfDigits,

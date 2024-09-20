@@ -5,6 +5,12 @@ import { z } from "zod";
 
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import {
+  countFermetures,
+  countOuvertures,
+  countPlacesColorees,
+  countPlacesTransformeesParCampagne,
+} from "../../../utils/countCapacite";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import { hasContinuum } from "../../utils/hasContinuum";
 import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
@@ -49,30 +55,30 @@ const selectDifferencePlaces = (
   - ${eb.ref("capaciteApprentissageActuelle")})`;
 };
 
-const selectPlacesTransformees = (eb: ExpressionBuilder<DB, "demande">) =>
-  sql`GREATEST(${eb.ref("capaciteScolaire")}
-  - ${eb.ref("capaciteScolaireActuelle")}, 0)
-  + GREATEST(${eb.ref("capaciteApprentissage")}
-  - ${eb.ref("capaciteApprentissageActuelle")}, 0)
-  + GREATEST(${eb.ref("capaciteScolaireActuelle")}
-  - ${eb.ref("capaciteScolaire")}, 0)`;
+// const selectPlacesTransformees = (eb: ExpressionBuilder<DB, "demande">) =>
+//   sql`GREATEST(${eb.ref("capaciteScolaire")}
+//   - ${eb.ref("capaciteScolaireActuelle")}, 0)
+//   + GREATEST(${eb.ref("capaciteApprentissage")}
+//   - ${eb.ref("capaciteApprentissageActuelle")}, 0)
+//   + GREATEST(${eb.ref("capaciteScolaireActuelle")}
+//   - ${eb.ref("capaciteScolaire")}, 0)`;
 
-const selectPlacesOuvertes = (eb: ExpressionBuilder<DB, "demande">) =>
-  sql`GREATEST(${eb.ref("capaciteScolaire")}
-            - ${eb.ref("capaciteScolaireActuelle")}, 0)
-          + GREATEST(${eb.ref("capaciteApprentissage")}
-            - ${eb.ref("capaciteApprentissageActuelle")}, 0)`;
+// const selectPlacesOuvertes = (eb: ExpressionBuilder<DB, "demande">) =>
+//   sql`GREATEST(${eb.ref("capaciteScolaire")}
+//             - ${eb.ref("capaciteScolaireActuelle")}, 0)
+//           + GREATEST(${eb.ref("capaciteApprentissage")}
+//             - ${eb.ref("capaciteApprentissageActuelle")}, 0)`;
 
-const selectPlacesFermees = (eb: ExpressionBuilder<DB, "demande">) =>
-  sql`GREATEST(${eb.ref("capaciteScolaireActuelle")}
-            - ${eb.ref("capaciteScolaire")}, 0)
-          + GREATEST(${eb.ref("capaciteApprentissageActuelle")}
-            - ${eb.ref("capaciteApprentissage")}, 0)`;
+// const selectPlacesFermees = (eb: ExpressionBuilder<DB, "demande">) =>
+//   sql`GREATEST(${eb.ref("capaciteScolaireActuelle")}
+//             - ${eb.ref("capaciteScolaire")}, 0)
+//           + GREATEST(${eb.ref("capaciteApprentissageActuelle")}
+//             - ${eb.ref("capaciteApprentissage")}, 0)`;
 
-const selectPlacesColorees = (eb: ExpressionBuilder<DB, "demande">) =>
-  sql`
-    ${eb.ref("capaciteScolaireColoree")} +
-    ${eb.ref("capaciteApprentissageColoree")}`;
+// const selectPlacesColorees = (eb: ExpressionBuilder<DB, "demande">) =>
+//   sql`
+//     ${eb.ref("capaciteScolaireColoree")} +
+//     ${eb.ref("capaciteApprentissageColoree")}`;
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.count<number>("demande.numero").distinct();
@@ -273,10 +279,12 @@ const getFormationsPilotageIntentionsQuery = ({
       sql<number>`ABS(${eb.fn.sum(selectDifferencePlaces(eb, type))})`.as(
         "differencePlaces"
       ),
-      eb.fn.sum<number>(selectPlacesOuvertes(eb)).as("placesOuvertes"),
-      eb.fn.sum<number>(selectPlacesFermees(eb)).as("placesFermees"),
-      eb.fn.sum<number>(selectPlacesColorees(eb)).as("placesColorees"),
-      eb.fn.sum<number>(selectPlacesTransformees(eb)).as("placesTransformees"),
+      eb.fn.sum<number>(countOuvertures(eb)).as("placesOuvertes"),
+      eb.fn.sum<number>(countFermetures(eb)).as("placesFermees"),
+      eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
+      eb.fn
+        .sum<number>(countPlacesTransformeesParCampagne(eb))
+        .as("placesTransformees"),
       hasContinuum({
         eb,
         millesimeSortie,
@@ -473,13 +481,13 @@ const getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery = ({
       })
       .where(
         sql<boolean>`
-      CASE WHEN "campagne"."annee" = '2023' THEN "constatRentree"."anneeDispositif" = 1
-      ELSE
-        CASE WHEN "dataFormation"."typeFamille" in ('specialite', 'option') THEN "constatRentree"."anneeDispositif" = 2
-        WHEN "dataFormation"."typeFamille" in ('2nde_commune', '1ere_commune') THEN false
-        ELSE "constatRentree"."anneeDispositif" = 1
+        CASE WHEN "campagne"."annee" = '2023' THEN "constatRentree"."anneeDispositif" = 1
+        ELSE
+          CASE WHEN "dataFormation"."typeFamille" in ('specialite', 'option') THEN "constatRentree"."anneeDispositif" = 2
+          WHEN "dataFormation"."typeFamille" in ('2nde_commune', '1ere_commune') THEN false
+          ELSE "constatRentree"."anneeDispositif" = 1
+          END
         END
-      END
       `
       )
       .where("constatRentree.rentreeScolaire", "=", "2023")

@@ -3,6 +3,8 @@ import { CURRENT_RENTREE } from "shared";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { kdb } from "../../../../../db/db";
+import { isInDenominateurTauxTransfo } from "../../../../utils/isInDenominateurTauxTransfo";
+import { isInPerimetreIJDataEtablissement } from "../../../utils/isInPerimetreIJ";
 import { Filters } from "../getRepartitionPilotageIntentions.usecase";
 
 export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
@@ -52,18 +54,9 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
       "rentreeScolaire",
       sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("denominateur"),
     ])
-    .where(
-      sql<boolean>`
-      CASE WHEN "campagne"."annee" = '2023' THEN "constatRentree"."anneeDispositif" = 1
-      ELSE
-        CASE WHEN "dataFormation"."typeFamille" in ('specialite', 'option') THEN "constatRentree"."anneeDispositif" = 2
-        WHEN "dataFormation"."typeFamille" in ('2nde_commune', '1ere_commune') THEN false
-        ELSE "constatRentree"."anneeDispositif" = 1
-        END
-      END
-      `
-    )
+    .where(isInDenominateurTauxTransfo)
     .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)
+    .where(isInPerimetreIJDataEtablissement)
     .$call((eb) => {
       if (filters.CPC) return eb.where("dataFormation.cpc", "in", filters.CPC);
       return eb;

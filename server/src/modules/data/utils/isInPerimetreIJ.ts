@@ -2,11 +2,11 @@ import { ExpressionBuilder } from "kysely";
 
 import { DB } from "../../../db/db";
 
-export const notPerimetreIJRegion = (eb: ExpressionBuilder<DB, "region">) => {
+export const isInPerimetreIJRegion = (eb: ExpressionBuilder<DB, "region">) => {
   return eb("region.codeRegion", "not in", ["00", "99"]);
 };
 
-export const notPerimetreIJDepartement = (
+export const isInPerimetreIJDepartement = (
   eb: ExpressionBuilder<DB, "departement">
 ) => {
   return eb.and([
@@ -21,7 +21,7 @@ export const notPerimetreIJDepartement = (
   ]);
 };
 
-export const notPerimetreIJAcademie = (
+export const isInPerimetreIJAcademie = (
   eb: ExpressionBuilder<DB, "academie">
 ) => {
   return eb.and([
@@ -44,13 +44,13 @@ export const notPerimetreIJAcademie = (
   ]);
 };
 
-export const notPerimetreIJIndicateurRegionSortie = (
+export const isInPerimetreIJIndicateurRegionSortie = (
   eb: ExpressionBuilder<DB, "indicateurRegionSortie">
 ) => {
   return eb("indicateurRegionSortie.codeRegion", "not in", ["00"]);
 };
 
-export const notPerimetreIJEtablissement = (
+export const isInPerimetreIJEtablissement = (
   eb: ExpressionBuilder<DB, "etablissement">
 ) => {
   return eb
@@ -82,4 +82,38 @@ export const notPerimetreIJEtablissement = (
     .or("etablissement.codeRegion", "is", null)
     .or("etablissement.codeAcademie", "is", null)
     .or("etablissement.codeDepartement", "is", null);
+};
+
+export const isInPerimetreIJDataEtablissement = (
+  eb: ExpressionBuilder<DB, "dataEtablissement">
+) => {
+  return eb
+    .and([
+      eb("dataEtablissement.codeRegion", "not in", ["00", "99"]),
+      eb("dataEtablissement.codeAcademie", "not in", [
+        "00",
+        "40",
+        "41",
+        "42",
+        "44",
+        "54",
+        "61",
+        "62",
+        "63",
+        "66",
+        "67",
+        "91",
+        "99",
+      ]),
+      eb("dataEtablissement.codeDepartement", "not in", [
+        "986",
+        "975",
+        "988",
+        "987",
+        "990",
+      ]),
+    ])
+    .or("dataEtablissement.codeRegion", "is", null)
+    .or("dataEtablissement.codeAcademie", "is", null)
+    .or("dataEtablissement.codeDepartement", "is", null);
 };

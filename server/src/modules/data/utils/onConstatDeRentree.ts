@@ -1,7 +1,9 @@
-import { expressionBuilder, sql } from "kysely";
+import { expressionBuilder } from "kysely";
 import { CURRENT_RENTREE, FIRST_ANNEE_CAMPAGNE } from "shared";
 
 import { DB } from "../../../db/db";
+import { isInDenominateurTauxTransfo } from "../../utils/isInDenominateurTauxTransfo";
+import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
 
 export const genericOnConstatRentree =
   ({
@@ -30,17 +32,8 @@ export const genericOnConstatRentree =
       )
       .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
       .where("constatRentree.rentreeScolaire", "=", rentree)
-      .where(
-        sql<boolean>`
-        CASE WHEN "campagne"."annee" = '2023' THEN "constatRentree"."anneeDispositif" = 1
-        ELSE
-          CASE WHEN "dataFormation"."typeFamille" in ('specialite', 'option') THEN "constatRentree"."anneeDispositif" = 2
-          WHEN "dataFormation"."typeFamille" in ('2nde_commune', '1ere_commune') THEN false
-          ELSE "constatRentree"."anneeDispositif" = 1
-          END
-        END
-        `
-      )
+      .where(isInDenominateurTauxTransfo)
+      .where(isInPerimetreIJDataEtablissement)
       .$call((eb) => {
         if (codeRegion)
           return eb.where("dataEtablissement.codeRegion", "=", codeRegion);
