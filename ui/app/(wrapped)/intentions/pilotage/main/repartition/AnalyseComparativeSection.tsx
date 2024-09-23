@@ -23,12 +23,12 @@ import { usePlausible } from "next-plausible";
 import { useCallback, useState } from "react";
 import { ScopeEnum } from "shared";
 
-import { FiltersStatsPilotageIntentions } from "@/app/(wrapped)/intentions/pilotage/types";
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
+import { formatPercentage } from "@/utils/formatUtils";
 
-import { formatPercentage } from "../../../../../../utils/formatUtils";
 import {
+  FiltersStatsPilotageIntentions,
   OrderRepartitionPilotageIntentions,
   RepartitionPilotageIntentionsDomaines,
   RepartitionPilotageIntentionsZonesGeographiques,
@@ -229,7 +229,7 @@ export const AnalyseComparativeSection = ({
         setDisplayType={setDisplayType}
       />
       <Flex direction={"column"}>
-        <Flex maxHeight={850} overflowY="auto" position="relative">
+        <Flex maxH={"650"} overflowY="auto" position="relative">
           <Table>
             <Thead
               position={"sticky"}
@@ -239,7 +239,7 @@ export const AnalyseComparativeSection = ({
             >
               <Tr>
                 <Th
-                  width={"20%"}
+                  width={"15%"}
                   cursor={"pointer"}
                   onClick={() => handleOrder("libelle")}
                 >
@@ -256,13 +256,13 @@ export const AnalyseComparativeSection = ({
                   Places transformées
                 </Th>
                 <Th
-                  maxWidth={"5%"}
+                  maxWidth={"10%"}
                   isNumeric
                   cursor={"pointer"}
                   onClick={() => handleOrder("effectif")}
                 >
                   <OrderIcon {...order} column="effectif" />
-                  Places effectivement occupées
+                  Effectif en entrée
                 </Th>
                 <Th
                   maxWidth={"5%"}
@@ -392,7 +392,7 @@ export const AnalyseComparativeSection = ({
                         color={"black"}
                         isNumeric
                       >
-                        {formatPercentage(item.tauxTransformation, 2, "-")}
+                        {formatPercentage(item.tauxTransformation, 1, "-")}
                       </Td>
                       <Td
                         width={24}
@@ -404,7 +404,7 @@ export const AnalyseComparativeSection = ({
                       >
                         {formatPercentage(
                           item.tauxTransformationOuvertures,
-                          2,
+                          1,
                           "-"
                         )}
                       </Td>
@@ -418,7 +418,7 @@ export const AnalyseComparativeSection = ({
                       >
                         {formatPercentage(
                           item.tauxTransformationFermetures,
-                          2,
+                          1,
                           "-"
                         )}
                       </Td>
@@ -432,7 +432,7 @@ export const AnalyseComparativeSection = ({
                       >
                         {formatPercentage(
                           item.tauxTransformationColorations,
-                          2,
+                          1,
                           "-"
                         )}
                       </Td>
@@ -457,7 +457,7 @@ export const AnalyseComparativeSection = ({
                         border={"none !important"}
                         isNumeric
                       >
-                        {formatPercentage(item.ratioFermeture, 2, "-")}
+                        {formatPercentage(item.ratioFermeture, 1, "-")}
                       </Td>
                     </Tr>
                   );
@@ -504,7 +504,7 @@ export const AnalyseComparativeSection = ({
                 >
                   {formatPercentage(
                     dataToDisplay["Total"]?.tauxTransformation,
-                    2,
+                    1,
                     "-"
                   )}
                 </Td>
@@ -516,7 +516,7 @@ export const AnalyseComparativeSection = ({
                 >
                   {formatPercentage(
                     dataToDisplay["Total"]?.tauxTransformationOuvertures,
-                    2,
+                    1,
                     "-"
                   )}
                 </Td>
@@ -528,7 +528,7 @@ export const AnalyseComparativeSection = ({
                 >
                   {formatPercentage(
                     dataToDisplay["Total"]?.tauxTransformationFermetures,
-                    2,
+                    1,
                     "-"
                   )}
                 </Td>
@@ -540,7 +540,7 @@ export const AnalyseComparativeSection = ({
                 >
                   {formatPercentage(
                     dataToDisplay["Total"]?.tauxTransformationColorations,
-                    2,
+                    1,
                     "-"
                   )}
                 </Td>
@@ -565,7 +565,7 @@ export const AnalyseComparativeSection = ({
                 >
                   {formatPercentage(
                     dataToDisplay["Total"]?.ratioFermeture,
-                    2,
+                    1,
                     "-"
                   )}
                 </Td>

@@ -10,6 +10,7 @@ import {
   MenuButton,
   MenuList,
   Portal,
+  PositionProps,
   Text,
 } from "@chakra-ui/react";
 import {
@@ -135,6 +136,7 @@ export const Multiselect = chakra(
     hasDefaultValue = true,
     variant = "input",
     menuZIndex,
+    gutter,
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
@@ -146,7 +148,8 @@ export const Multiselect = chakra(
     size?: "sm" | "md";
     hasDefaultValue?: boolean;
     variant?: string;
-    menuZIndex?: number;
+    menuZIndex?: PositionProps["zIndex"];
+    gutter?: number;
   }) => {
     const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
 
@@ -221,6 +224,7 @@ export const Multiselect = chakra(
           onClose?.();
         }}
         closeOnSelect={false}
+        gutter={gutter}
       >
         <MenuButton
           as={Button}

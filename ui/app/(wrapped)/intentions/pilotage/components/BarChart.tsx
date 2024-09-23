@@ -41,13 +41,6 @@ export const BarChart = ({
     "Hors quadrant",
   ];
 
-  const indicateursTableau: Array<keyof StatsPositionQuadrant> = [
-    "Effectif",
-    "Taux de transformation",
-    "Solde",
-    "Ratio de fermeture",
-  ];
-
   const getStatsPositionQuadrant = (
     positionQuadrant: PositionQuadrant
   ): StatsPositionQuadrant => {
@@ -129,34 +122,41 @@ export const BarChart = ({
             <div style="min-width: fit-content;">
               <span style="font-weight: 700;">${params[0]?.name} :</span>
               <br />
-              ${indicateursTableau
-                .map(
-                  (indicateur) => `
-                    ${indicateur.toLowerCase()} :
-                    ${
-                      getStatsPositionQuadrant(
-                        params[0]?.name as PositionQuadrant
-                      )[indicateur]
-                    }`
-                )
-                .join("<br />")}
+              Ratio de fermetures :
+              <span style="font-weight: 700;">
+                ${
+                  getStatsPositionQuadrant(params[0]?.name as PositionQuadrant)[
+                    "Ratio de fermeture"
+                  ]
+                }
+              </span>
+              <br />
               <br />
               <div style="display: inline-block; margin-top: 5px;">
-                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[0]
+                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[2]
                   ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
-                <span>${params[0]?.seriesName} : ${params[0]?.data}</span>
+                <span>
+                  Pl. colorées :
+                  <span style="font-weight: 700;">${params[2]?.data}</span>
+                </span>
               </div>
               <br />
               <div style="display: inline-block; margin-top: 5px;">
                 <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[1]
                   ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
-                <span >${params[1]?.seriesName} : ${params[1]?.data}</span>
+                <span>
+                  Pl. ouvertes :
+                  <span style="font-weight: 700;">${params[1]?.data}</span>
+                </span>
               </div>
               <br />
               <div style="display: inline-block; margin-top: 5px;">
-                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[2]
+                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[0]
                   ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
-                <span>${params[2]?.seriesName} : ${params[2]?.data}</span>
+                <span>
+                  Pl. fermées :
+                  <span style="font-weight: 700;"> ${params[0]?.data}</span>
+                </span>
               </div>
             </div>
             `;
@@ -204,7 +204,7 @@ export const BarChart = ({
           `${value.replace("Place(s) ", "Pl. ").replace("(s)", "s")}`,
         data: [
           {
-            name: "Place(s) fermée(s)",
+            name: "Place(s) colorée(s)",
             icon: "square",
           },
           {
@@ -212,7 +212,7 @@ export const BarChart = ({
             icon: "square",
           },
           {
-            name: "Place(s) colorée(s)",
+            name: "Place(s) fermée(s)",
             icon: "square",
           },
         ],
@@ -250,26 +250,12 @@ export const BarChart = ({
           data: positionsQuadrant.map(
             (positionQuadrant) =>
               getStatsPositionQuadrant(positionQuadrant as PositionQuadrant)[
-                "Places colorées"
-              ]
-          ),
-          stack: "placesTransformées",
-          color: bf850,
-          barWidth: 45,
-          name: "Place(s) colorée(s)",
-          ...seriesOption,
-        },
-        {
-          data: positionsQuadrant.map(
-            (positionQuadrant) =>
-              getStatsPositionQuadrant(positionQuadrant as PositionQuadrant)[
                 "Places fermées"
               ]
           ),
           stack: "placesTransformées",
           color: bf113,
           name: "Place(s) fermée(s)",
-          formatter: (value: number) => `${-value}`,
           ...seriesOption,
         },
         {
@@ -282,6 +268,19 @@ export const BarChart = ({
           stack: "placesTransformées",
           color: bf850_active,
           name: "Place(s) ouverte(s)",
+          ...seriesOption,
+        },
+        {
+          data: positionsQuadrant.map(
+            (positionQuadrant) =>
+              getStatsPositionQuadrant(positionQuadrant as PositionQuadrant)[
+                "Places colorées"
+              ]
+          ),
+          stack: "placesTransformées",
+          color: bf850,
+          barWidth: 45,
+          name: "Place(s) colorée(s)",
           ...seriesOption,
         },
       ],

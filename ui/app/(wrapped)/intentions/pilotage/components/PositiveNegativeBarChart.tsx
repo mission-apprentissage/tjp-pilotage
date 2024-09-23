@@ -30,6 +30,8 @@ export const PositiveNegativeBarChart = ({
   const bf850 = useToken("colors", "bluefrance.850");
   const bf850_active = useToken("colors", "bluefrance.850_active");
   const grey425 = useToken("colors", "grey.425");
+  const pilotageGreen2 = useToken("colors", "pilotage.green.2");
+  const pilotageRed = useToken("colors", "pilotage.red");
 
   const getYAxisTitle = () => {
     return Object.keys(data)
@@ -93,19 +95,17 @@ export const PositiveNegativeBarChart = ({
           texttransform: "uppercase",
         },
       },
-      tooltip: [
-        {
-          trigger: "axis",
-          axisPointer: {
-            type: "shadow",
-          },
-          textStyle: {
-            width: "fit-content",
-          },
-
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          formatter: (params: any) => {
-            return `
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "shadow",
+        },
+        textStyle: {
+          width: "fit-content",
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        formatter: (params: any) => {
+          return `
             <div style="min-width: fit-content;">
               <span>${params[0]?.name} :</span>
               ${
@@ -115,7 +115,7 @@ export const PositiveNegativeBarChart = ({
                   (taux de transformation :
                   ${formatPercentage(
                     data[params[0]?.name].tauxTransformation,
-                    2
+                    1
                   )})
                 </div>
                 `
@@ -123,42 +123,35 @@ export const PositiveNegativeBarChart = ({
               }
               <br />
               <div style="display: inline-block; margin-top: 5px;">
-                <span style="width:15px; height:15px; background-color:${params[0]
+                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[0]
                   ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
-                <span>${params[0]?.seriesName} : ${params[0]?.data}</span>
+                <span>
+                  Pl. colorées :
+                  <span style="font-weight: 700;">${params[0]?.data}</span>
+                </span>
               </div>
               <br />
               <div style="display: inline-block; margin-top: 5px;">
-                <span style="width:15px; height:15px; background-color:${params[1]
+                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[2]
                   ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
-                <span >${params[1]?.seriesName} : ${params[1]?.data}</span>
+                <span>
+                  Pl. ouvertes :
+                  <span style="font-weight: 700;">${params[2]?.data}</span>
+                </span>
               </div>
               <br />
               <div style="display: inline-block; margin-top: 5px;">
-                <span style="width:15px; height:15px; background-color:${params[2]
+                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[1]
                   ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
-                <span>${params[2]?.seriesName} : ${params[2]?.data}</span>
+                <span>
+                  Pl. fermées :
+                  <span style="font-weight: 700;"> ${-params[1]?.data}</span>
+                </span>
               </div>
             </div>
             `;
-          },
         },
-        {
-          trigger: "item",
-          axisPointer: {
-            type: "shadow",
-          },
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          formatter: (params: any) =>
-            `${params?.name} : ${
-              params?.data > 0 ? params?.data : -params?.data
-            } place${
-              (params?.data > 0 ? params?.data : -params?.data) > 1 ? "s" : ""
-            } ${params?.seriesName}${
-              (params?.data > 0 ? params?.data : -params?.data) > 1 ? "s" : ""
-            }`,
-        },
-      ],
+      },
       toolbox: {
         showTitle: false,
         tooltip: {
@@ -204,11 +197,11 @@ export const PositiveNegativeBarChart = ({
             icon: "square",
           },
           {
-            name: "Place(s) fermée(s)",
+            name: "Place(s) ouverte(s)",
             icon: "square",
           },
           {
-            name: "Place(s) ouverte(s)",
+            name: "Place(s) fermée(s)",
             icon: "square",
           },
         ],
@@ -274,9 +267,26 @@ export const PositiveNegativeBarChart = ({
           data: getSolde(),
           axisLabel: {
             show: true,
-            fontSize: 14,
-            fontWeight: 400,
-            color: "black",
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            formatter: (value: any) => {
+              if ((value as number) > 0) {
+                return "{green|" + value + "}"; // Texte en vert si > 0
+              } else {
+                return "{red|" + value + "}"; // Texte en rouge si <= 0
+              }
+            },
+            rich: {
+              green: {
+                color: pilotageGreen2,
+                fontSize: 14,
+                fontWeight: 400,
+              },
+              red: {
+                color: pilotageRed,
+                fontSize: 14,
+                fontWeight: 400,
+              },
+            },
           },
           axisTick: {
             show: false,
@@ -301,7 +311,6 @@ export const PositiveNegativeBarChart = ({
         },
         {
           data: placesFermees,
-          position: "left",
           stack: "placesTransformées",
           stackStrategy: "all",
           color: bf113,
@@ -315,7 +324,6 @@ export const PositiveNegativeBarChart = ({
         },
         {
           data: placesOuvertes,
-          position: "right",
           stack: "placesTransformées",
           color: bf850_active,
           itemStyle: {
