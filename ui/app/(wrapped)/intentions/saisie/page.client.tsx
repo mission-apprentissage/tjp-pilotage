@@ -1,5 +1,6 @@
 "use client";
 
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -7,7 +8,6 @@ import {
   Center,
   Container,
   Flex,
-  IconButton,
   Table,
   TableContainer,
   Tag,
@@ -19,33 +19,30 @@ import {
   Tooltip,
   Tr,
   useToast,
-  useToken,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale/fr";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
-import { TableFooter } from "@/components/TableFooter";
+import { usePermission } from "@/utils/security/usePermission";
+
+import { TableFooter } from "../../../../components/TableFooter";
+import { useStateParams } from "../../../../utils/useFilters";
 import {
   formatCodeDepartement,
   formatDepartementLibelleWithCodeDepartement,
-} from "@/utils/formatLibelle";
-import { usePermission } from "@/utils/security/usePermission";
-import { useStateParams } from "@/utils/useFilters";
-
+} from "../../utils/formatLibelle";
 import { StatutTag } from "../perdir/components/StatutTag";
 import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
-import { CorrectionDemandeButton } from "./components/CorrectionDemandeButton";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
@@ -57,10 +54,7 @@ const PAGE_SIZE = 30;
 
 export const PageClient = () => {
   const toast = useToast();
-  const queryClient = useQueryClient();
   const router = useRouter();
-  const trackEvent = usePlausible();
-
   const [searchParams, setSearchParams] = useStateParams<{
     filters?: Partial<Filters>;
     search?: string;
@@ -68,7 +62,6 @@ export const PageClient = () => {
     page?: string;
     campagne?: string;
     action?: Exclude<DemandeStatutType, "supprimée">;
-    notfound?: string;
   }>({
     defaultValues: {
       filters: {},
@@ -83,18 +76,8 @@ export const PageClient = () => {
   const order = searchParams.order ?? { order: "asc" };
   const campagne = searchParams.campagne;
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
-  const notFound = searchParams.notfound;
 
-  useEffect(() => {
-    if (notFound && !toast.isActive("not-found")) {
-      toast({
-        id: "not-found",
-        status: "error",
-        variant: "left-accent",
-        title: `La demande ${notFound} n'a pas été trouvée`,
-      });
-    }
-  }, [notFound]);
+  const trackEvent = usePlausible();
 
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("intentions:filtre", {
@@ -175,7 +158,6 @@ export const PageClient = () => {
     ];
     return colors[userName.charCodeAt(1) % colors.length];
   };
-  const bluefrance113 = useToken("colors", "bluefrance.113");
 
   const { mutateAsync: importDemande, isLoading: isSubmitting } = client
     .ref("[POST]/demande/import/:numero")
@@ -190,44 +172,6 @@ export const PageClient = () => {
             (isAxiosError(error) && error.response?.data?.message) ??
             error.message,
         }),
-    });
-
-  const { mutate: submitSuivi } = client
-    .ref("[POST]/demande/suivi")
-    .useMutation({
-      onSuccess: (_body) => {
-        toast({
-          variant: "left-accent",
-          status: "success",
-          title: "La demande a bien été ajoutée à vos demandes suivies",
-        });
-        // Wait until view is updated before invalidating queries
-        setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: ["[GET]/intentions"] });
-          queryClient.invalidateQueries({
-            queryKey: ["[GET]/intentions/count"],
-          });
-        }, 500);
-      },
-    });
-
-  const { mutate: deleteSuivi } = client
-    .ref("[DELETE]/demande/suivi/:id")
-    .useMutation({
-      onSuccess: (_body) => {
-        toast({
-          variant: "left-accent",
-          status: "success",
-          title: "La demande a bien été supprimée de vos demandes suivies",
-        });
-        // Wait until view is updated before invalidating queries
-        setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: ["[GET]/demandes"] });
-          queryClient.invalidateQueries({
-            queryKey: ["[GET]/demandes/count"],
-          });
-        }, 500);
-      },
     });
 
   const [isImporting, setIsImporting] = useState(false);
@@ -276,9 +220,8 @@ export const PageClient = () => {
           diplomes={data?.filters.diplomes ?? []}
           academies={data?.filters.academies ?? []}
         />
-        {isLoading ? (
-          <IntentionSpinner />
-        ) : data?.demandes.length ? (
+        {isLoading && <IntentionSpinner />}
+        {!isLoading && data?.demandes.length ? (
           <>
             <TableContainer overflowY="auto" flex={1}>
               <Table
@@ -313,7 +256,6 @@ export const PageClient = () => {
                     <Th
                       cursor="pointer"
                       onClick={() => handleOrder("libelleEtablissement")}
-                      w={400}
                     >
                       <OrderIcon {...order} column="libelleEtablissement" />
                       {DEMANDES_COLUMNS.libelleEtablissement}
@@ -333,10 +275,6 @@ export const PageClient = () => {
                       <OrderIcon {...order} column="statut" />
                       {DEMANDES_COLUMNS.statut}
                     </Th>
-                    {data?.campagne.statut ===
-                      CampagneStatutEnum["terminée"] && (
-                      <Th textAlign={"center"}>Actions</Th>
-                    )}
                     <Th
                       cursor="pointer"
                       onClick={() => handleOrder("typeDemande")}
@@ -353,6 +291,8 @@ export const PageClient = () => {
                       <OrderIcon {...order} column="userName" />
                       {DEMANDES_COLUMNS.userName}
                     </Th>
+                    {data?.campagne.statut ===
+                      CampagneStatutEnum["terminée"] && <Th />}
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -426,125 +366,6 @@ export const PageClient = () => {
                         <Td textAlign={"center"} w={0}>
                           <StatutTag statut={demande.statut} size="md" />
                         </Td>
-                        {data?.campagne.statut ===
-                          CampagneStatutEnum["terminée"] && (
-                          <Td>
-                            <Flex
-                              direction={"row"}
-                              gap={0}
-                              justifyContent={"left"}
-                            >
-                              <Tooltip label="Voir la demande">
-                                <IconButton
-                                  as={NextLink}
-                                  variant="link"
-                                  href={`/intentions/synthese/${demande.numero}`}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    router.push(
-                                      `/intentions/synthese/${demande.numero}`
-                                    );
-                                  }}
-                                  aria-label="Voir la demande"
-                                  icon={
-                                    <Icon
-                                      icon="ri:eye-line"
-                                      width={"24px"}
-                                      color={bluefrance113}
-                                    />
-                                  }
-                                />
-                              </Tooltip>
-                              <Tooltip label="Suivre la demande">
-                                <IconButton
-                                  aria-label="Suivre la demande"
-                                  color={"bluefrance.113"}
-                                  bgColor={"transparent"}
-                                  icon={
-                                    demande.suiviId ? (
-                                      <Icon
-                                        width="24px"
-                                        icon="ri:bookmark-fill"
-                                      />
-                                    ) : (
-                                      <Icon
-                                        width="24px"
-                                        icon="ri:bookmark-line"
-                                      />
-                                    )
-                                  }
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    if (!demande.suiviId)
-                                      submitSuivi({
-                                        body: {
-                                          intentionNumero: demande.numero,
-                                        },
-                                      });
-                                    else
-                                      deleteSuivi({
-                                        params: { id: demande.suiviId },
-                                      });
-                                  }}
-                                />
-                              </Tooltip>
-                              {demande.numeroDemandeImportee ? (
-                                <Tooltip
-                                  label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
-                                >
-                                  <IconButton
-                                    as={NextLink}
-                                    variant={"link"}
-                                    aria-label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
-                                    href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
-                                    icon={
-                                      <Icon
-                                        icon="ri:external-link-line"
-                                        width={"24px"}
-                                        color={bluefrance113}
-                                      />
-                                    }
-                                    me={"auto"}
-                                    passHref
-                                    onClick={(e) => e.stopPropagation()}
-                                  />
-                                </Tooltip>
-                              ) : (
-                                <Tooltip label="Dupliquer la demande">
-                                  <IconButton
-                                    icon={
-                                      <Icon
-                                        icon="ri:file-copy-line"
-                                        width={"24px"}
-                                        color={bluefrance113}
-                                      />
-                                    }
-                                    variant="link"
-                                    aria-label="Dupliquer la demande"
-                                    onClick={(e) => {
-                                      setIsImporting(true);
-                                      if (demande.numeroDemandeImportee) return;
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      importDemande({
-                                        params: { numero: demande.numero },
-                                      });
-                                    }}
-                                    isDisabled={
-                                      !!demande.numeroDemandeImportee ||
-                                      isSubmitting ||
-                                      isImporting ||
-                                      !hasPermissionSubmitIntention
-                                    }
-                                  />
-                                </Tooltip>
-                              )}
-                              <CorrectionDemandeButton demande={demande} />
-                            </Flex>
-                          </Td>
-                        )}
                         <Td textAlign={"center"}>
                           <Tag colorScheme="blue" size={"md"} h="fit-content">
                             {getTypeDemandeLabel(demande.typeDemande)}
@@ -564,6 +385,47 @@ export const PageClient = () => {
                             />
                           </Tooltip>
                         </Td>
+                        {data?.campagne.statut ===
+                          CampagneStatutEnum["terminée"] && (
+                          <Td>
+                            {demande.numeroDemandeImportee ? (
+                              <Button
+                                as={NextLink}
+                                variant="link"
+                                href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
+                                leftIcon={<ExternalLinkIcon />}
+                                me={"auto"}
+                                passHref
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                Demande dupliquée{" "}
+                                {demande.numeroDemandeImportee}
+                              </Button>
+                            ) : (
+                              <Button
+                                leftIcon={<Icon icon="ri:import-line" />}
+                                variant={"newInput"}
+                                onClick={(e) => {
+                                  setIsImporting(true);
+                                  if (demande.numeroDemandeImportee) return;
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  importDemande({
+                                    params: { numero: demande.numero },
+                                  });
+                                }}
+                                isDisabled={
+                                  !!demande.numeroDemandeImportee ||
+                                  isSubmitting ||
+                                  isImporting ||
+                                  !hasPermissionSubmitIntention
+                                }
+                              >
+                                Dupliquer cette demande
+                              </Button>
+                            )}
+                          </Td>
+                        )}
                       </Tr>
                     )
                   )}

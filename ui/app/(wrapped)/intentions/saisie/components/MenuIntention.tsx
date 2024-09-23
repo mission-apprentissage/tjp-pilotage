@@ -1,11 +1,4 @@
-import {
-  Button,
-  Divider,
-  Flex,
-  Text,
-  useToken,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Flex, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
@@ -14,7 +7,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { client } from "@/api.client";
 
 import { Filters } from "../types";
-import { isSaisieDisabled } from "../utils/canEditDemande";
+import { isSaisieDisabled } from "../utils/isSaisieDisabled";
 
 export const MenuIntention = ({
   isRecapView = false,
@@ -34,10 +27,7 @@ export const MenuIntention = ({
   };
 }) => {
   const statut =
-    searchParams.filters?.statut === undefined
-      ? "none"
-      : searchParams.filters?.statut;
-  const suivies = searchParams.filters?.suivies;
+    searchParams.filters === undefined ? "none" : searchParams.filters?.statut;
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
   const isDisabled =
@@ -46,7 +36,7 @@ export const MenuIntention = ({
   const codeAcademie = searchParams.filters?.codeAcademie;
   const codeNiveauDiplome = searchParams.filters?.codeNiveauDiplome;
 
-  const { data: countDemandes } = client.ref("[GET]/intentions/count").useQuery(
+  const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery(
     {
       query: {
         anneeCampagne,
@@ -60,8 +50,6 @@ export const MenuIntention = ({
       staleTime: 0,
     }
   );
-
-  const bluefrance113 = useToken("colors", "bluefrance.113");
 
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
@@ -79,89 +67,22 @@ export const MenuIntention = ({
       >
         Nouvelle demande
       </Button>
-      <VStack flex="1" align="flex-start" spacing={1}>
-        {/* Toutes */}
+
+      <VStack flex="1" align="flex-start" spacing={2}>
         <Button
           bgColor={"unset"}
           size="sm"
           onClick={() => handleFilters("statut", undefined)}
           width={"100%"}
-          iconSpacing={2}
-          leftIcon={
-            <Icon icon={"ri:stack-line"} color={bluefrance113} width={"24px"} />
-          }
-          rightIcon={
-            <Text
-              fontWeight={isRecapView && statut === "none" ? "bold" : "normal"}
-              fontSize={14}
-            >
-              {countDemandes?.total}
-            </Text>
-          }
-          isActive={statut === "none"}
-          _active={{
-            borderRadius: "none",
-            bg: "bluefrance.950",
-          }}
-          p={5}
+          iconSpacing={"auto"}
+          rightIcon={<Text fontWeight={"normal"}>{countDemandes?.total}</Text>}
         >
           <Text
             fontWeight={isRecapView && statut === "none" ? "bold" : "normal"}
-            fontSize={14}
-            me={"auto"}
           >
             Toutes
           </Text>
         </Button>
-        {/* Projet de demande */}
-        <Button
-          bgColor={"unset"}
-          size="sm"
-          onClick={() =>
-            handleFilters("statut", DemandeStatutEnum["projet de demande"])
-          }
-          width={"100%"}
-          iconSpacing={2}
-          leftIcon={
-            <Icon
-              icon={"ri:file-text-line"}
-              color={bluefrance113}
-              width={"24px"}
-            />
-          }
-          rightIcon={
-            <Text
-              fontWeight={
-                isRecapView && statut === DemandeStatutEnum["projet de demande"]
-                  ? "bold"
-                  : "normal"
-              }
-              fontSize={14}
-            >
-              {countDemandes?.["projet de demande"]}
-            </Text>
-          }
-          isActive={statut === DemandeStatutEnum["projet de demande"]}
-          _active={{
-            borderRadius: "none",
-            bg: "bluefrance.950",
-          }}
-          p={5}
-        >
-          <Text
-            fontWeight={
-              isRecapView && statut === DemandeStatutEnum["projet de demande"]
-                ? "bold"
-                : "normal"
-            }
-            fontSize={14}
-            me={"auto"}
-          >
-            Projet de demande
-          </Text>
-        </Button>
-
-        {/* Demandes validées */}
         <Button
           bgColor={"unset"}
           size="sm"
@@ -169,32 +90,12 @@ export const MenuIntention = ({
             handleFilters("statut", DemandeStatutEnum["demande validée"])
           }
           width={"100%"}
-          iconSpacing={2}
-          leftIcon={
-            <Icon
-              icon={"ri:checkbox-circle-line"}
-              color={bluefrance113}
-              width={"24px"}
-            />
-          }
+          iconSpacing={"auto"}
           rightIcon={
-            <Text
-              fontWeight={
-                isRecapView && statut === DemandeStatutEnum["demande validée"]
-                  ? "bold"
-                  : "normal"
-              }
-              fontSize={14}
-            >
+            <Text fontWeight={"normal"}>
               {countDemandes?.["demande validée"]}
             </Text>
           }
-          isActive={statut === DemandeStatutEnum["demande validée"]}
-          _active={{
-            borderRadius: "none",
-            bg: "bluefrance.950",
-          }}
-          p={5}
         >
           <Text
             fontWeight={
@@ -202,8 +103,6 @@ export const MenuIntention = ({
                 ? "bold"
                 : "normal"
             }
-            fontSize={14}
-            me={"auto"}
           >
             Demandes validées
           </Text>
@@ -211,34 +110,36 @@ export const MenuIntention = ({
         <Button
           bgColor={"unset"}
           size="sm"
-          onClick={() => handleFilters("statut", DemandeStatutEnum["refusée"])}
-          width={"100%"}
-          iconSpacing={2}
-          leftIcon={
-            <Icon
-              icon={"ri:close-circle-line"}
-              color={bluefrance113}
-              width={"24px"}
-            />
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["projet de demande"])
           }
+          width={"100%"}
+          iconSpacing={"auto"}
           rightIcon={
-            <Text
-              fontWeight={
-                isRecapView && statut === DemandeStatutEnum["refusée"]
-                  ? "bold"
-                  : "normal"
-              }
-              fontSize={14}
-            >
-              {countDemandes?.["refusée"]}
+            <Text fontWeight={"normal"}>
+              {countDemandes?.["projet de demande"]}
             </Text>
           }
-          isActive={statut === DemandeStatutEnum["refusée"]}
-          _active={{
-            borderRadius: "none",
-            bg: "bluefrance.950",
-          }}
-          p={5}
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["projet de demande"]
+                ? "bold"
+                : "normal"
+            }
+          >
+            Projets de demandes
+          </Text>
+        </Button>
+        <Button
+          bgColor={"unset"}
+          size="sm"
+          onClick={() => handleFilters("statut", DemandeStatutEnum["refusée"])}
+          width={"100%"}
+          iconSpacing={"auto"}
+          rightIcon={
+            <Text fontWeight={"normal"}>{countDemandes?.["refusée"]}</Text>
+          }
         >
           <Text
             fontWeight={
@@ -246,93 +147,8 @@ export const MenuIntention = ({
                 ? "bold"
                 : "normal"
             }
-            fontSize={14}
-            me={"auto"}
           >
             Demandes refusées
-          </Text>
-        </Button>
-        <Divider my={2} />
-        <Text fontSize={12} color="grey.425" mb={1}>
-          Visible par vous uniquement
-        </Text>
-
-        <Button
-          bgColor={"unset"}
-          size="sm"
-          onClick={() => handleFilters("suivies", true)}
-          width={"100%"}
-          iconSpacing={2}
-          leftIcon={
-            <Icon width="24px" icon="ri:bookmark-line" color={bluefrance113} />
-          }
-          rightIcon={
-            <Text
-              fontWeight={isRecapView && suivies ? "bold" : "normal"}
-              fontSize={14}
-            >
-              {countDemandes?.["suivies"]}
-            </Text>
-          }
-          isActive={suivies}
-          _active={{
-            borderRadius: "none",
-            bg: "bluefrance.950",
-          }}
-          p={5}
-        >
-          <Text
-            fontWeight={
-              isRecapView && statut === DemandeStatutEnum["brouillon"]
-                ? "bold"
-                : "normal"
-            }
-            fontSize={14}
-            me={"auto"}
-          >
-            Demandes suivies
-          </Text>
-        </Button>
-        <Button
-          bgColor={"unset"}
-          size="sm"
-          onClick={() =>
-            handleFilters("statut", DemandeStatutEnum["brouillon"])
-          }
-          width={"100%"}
-          iconSpacing={2}
-          leftIcon={
-            <Icon icon={"ri:draft-line"} color={bluefrance113} width={"24px"} />
-          }
-          rightIcon={
-            <Text
-              fontWeight={
-                isRecapView && statut === DemandeStatutEnum["brouillon"]
-                  ? "bold"
-                  : "normal"
-              }
-              fontSize={14}
-            >
-              {countDemandes?.["brouillon"]}
-            </Text>
-          }
-          isActive={statut === DemandeStatutEnum["brouillon"]}
-          _active={{
-            borderRadius: "none",
-            bg: "bluefrance.950",
-          }}
-          p={5}
-        >
-          <Text
-            fontWeight={
-              isRecapView && statut === DemandeStatutEnum["brouillon"]
-                ? "bold"
-                : "normal"
-            }
-            fontSize={14}
-            me={"auto"}
-          >
-            Brouillons
           </Text>
         </Button>
       </VStack>

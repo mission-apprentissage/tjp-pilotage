@@ -84,7 +84,7 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
   })();
 
   return (
-    <Flex gap="6" direction={"column"}>
+    <Flex gap="6" mb="6" direction={"column"}>
       <ColorationField disabled={disabled} />
       <LibelleColorationField disabled={disabled} />
       <Table columnGap={1} rowGap={1}>

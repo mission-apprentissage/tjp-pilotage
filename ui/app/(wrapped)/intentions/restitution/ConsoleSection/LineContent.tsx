@@ -1,12 +1,12 @@
 import { chakra, Td } from "@chakra-ui/react";
 
 import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
+import { formatCommuneLibelleWithCodeDepartement } from "@/app/(wrapped)/utils/formatLibelle";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
-import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
-import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
+import { formatNumber } from "../../../../../utils/formatUtils";
 import {
   getMotifLabel,
   MotifCampagne,

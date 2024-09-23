@@ -17,10 +17,10 @@ import NextLink from "next/link";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import { formatAnneeCommuneLibelle } from "@/utils/formatLibelle";
-import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
+import { formatNumber } from "../../../../../utils/formatUtils";
+import { formatAnneeCommuneLibelle } from "../../../utils/formatLibelle";
 import { ETABLISSEMENT_COLUMN_WIDTH } from "../ETABLISSEMENT_COLUMN_WIDTH";
 import { Line } from "../types";
 
@@ -110,8 +110,8 @@ export const EtablissementLineContent = ({
             size="sm"
             ms={2}
             my={"auto"}
-            bgColor={"greenArchipel.950"}
-            color={"greenArchipel.391"}
+            bgColor={"greenarchipel.950"}
+            color={"greenarchipel.391"}
             h={"fit-content"}
             flex={"shrink"}
           >

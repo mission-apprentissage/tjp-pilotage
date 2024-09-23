@@ -9,8 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { toBoolean } from "@/utils/toBoolean";
-
+import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
 export const AugmentationCapaciteAccueilHebergementField = chakra(

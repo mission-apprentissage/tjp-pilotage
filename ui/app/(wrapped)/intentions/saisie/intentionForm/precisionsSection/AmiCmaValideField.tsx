@@ -10,8 +10,7 @@ import {
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { toBoolean } from "@/utils/toBoolean";
-
+import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
 export const AmiCmaValideField = chakra(

@@ -7,7 +7,7 @@ import { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
 import { formatDate } from "@/utils/formatDate";
 
-import { formatDepartementLibelleWithCodeDepartement } from "../../../../../../../utils/formatLibelle";
+import { formatDepartementLibelleWithCodeDepartement } from "../../../../../utils/formatLibelle";
 import { getMotifLabel, MotifLabel } from "../../../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../../../utils/typeDemandeUtils";
 import { FilesSection } from "./files/FilesSection";

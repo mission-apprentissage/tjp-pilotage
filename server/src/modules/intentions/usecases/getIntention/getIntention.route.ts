@@ -20,6 +20,7 @@ export const getIntentionRoute = (server: Server) => {
           numero: request.params.numero,
           user,
         });
+        if (!intention) return response.status(404).send();
 
         const scope = getPermissionScope(
           user.role,

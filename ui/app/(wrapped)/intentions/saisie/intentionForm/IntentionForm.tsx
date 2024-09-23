@@ -29,19 +29,15 @@ import {
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
-import { isTypeAjustement } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
 import { Conseils } from "../components/Conseils";
 import { MenuFormulaire } from "../components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "../SCROLL_OFFSETS";
-import { Campagne, Demande } from "../types";
+import { Campagne } from "../types";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
 import { InformationsBlock } from "./InformationsBlock";
@@ -60,14 +56,12 @@ export const IntentionForm = ({
   defaultValues,
   formMetadata,
   campagne,
-  demande,
 }: {
   disabled?: boolean;
   formId?: string;
   defaultValues: PartialIntentionForms;
   formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
   campagne?: Campagne;
-  demande?: Demande;
 }) => {
   const toast = useToast();
   const { push } = useRouter();
@@ -146,15 +140,6 @@ export const IntentionForm = ({
 
   const onEditUaiCfdSection = () => setStep(1);
 
-  const getStatutSubmit = (
-    demande: (typeof client.inferArgs)["[POST]/demande/submit"]["body"]["demande"]
-  ): Exclude<DemandeStatutType, "supprimée"> => {
-    if (isTypeAjustement(demande.typeDemande))
-      return DemandeStatutEnum["demande validée"];
-    if (formId) return demande.statut;
-    return DemandeStatutEnum["projet de demande"];
-  };
-
   useEffect(() => {
     if (isCFDUaiSectionValid(getValues())) {
       submitCFDUAISection();
@@ -181,7 +166,6 @@ export const IntentionForm = ({
   const travauxEtEquipementsRef = useRef<HTMLDivElement>(null);
   const internatEtRestaurationRef = useRef<HTMLDivElement>(null);
   const commentaireEtPiecesJointesRef = useRef<HTMLDivElement>(null);
-  const correctionRef = useRef<HTMLDivElement>(null);
 
   const anchorsRefs = {
     typeDemande: typeDemandeRef,
@@ -190,7 +174,6 @@ export const IntentionForm = ({
     travauxEtEquipements: travauxEtEquipementsRef,
     internatEtRestauration: internatEtRestaurationRef,
     commentaireEtPiecesJointes: commentaireEtPiecesJointesRef,
-    correction: correctionRef,
   } as Record<string, React.RefObject<HTMLDivElement>>;
 
   return (
@@ -281,7 +264,6 @@ export const IntentionForm = ({
                       formId={formId}
                       disabled={isFormDisabled}
                       campagne={campagne}
-                      demande={demande}
                       footerActions={
                         <Box justifyContent={"center"} ref={statusComponentRef}>
                           <Button
@@ -299,7 +281,9 @@ export const IntentionForm = ({
                                   demande: {
                                     numero: formId,
                                     ...values,
-                                    statut: getStatutSubmit(values),
+                                    statut: formId
+                                      ? values.statut
+                                      : DemandeStatutEnum["projet de demande"],
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },

@@ -91,7 +91,7 @@ export const CountersSection = ({
 }: {
   countData?: StatsRestitutionIntentions;
 }) => {
-  const colorationColor = useToken("colors", "purpleGlycine.850_active");
+  const colorationColor = useToken("colors", "purpleglycine.850_active");
 
   return (
     <Flex

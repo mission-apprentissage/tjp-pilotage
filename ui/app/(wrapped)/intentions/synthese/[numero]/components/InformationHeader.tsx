@@ -26,7 +26,7 @@ export const InformationHeader = ({
 
   const bgColors = {
     success: "success.950",
-    warning: "orangeTerreBattue.850",
+    warning: "orangeterrebattue.850",
     info: "info.950",
   };
 

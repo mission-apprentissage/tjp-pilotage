@@ -204,6 +204,7 @@ export default function Etablissements() {
   const handleScroll = () => {
     if (tableRef.current) {
       const scrollLeft = tableRef.current.scrollLeft;
+      console.log(scrollLeft);
       if (scrollLeft > 90 && scrollLeft <= 470) {
         setIsFirstColumnSticky(true);
       } else {

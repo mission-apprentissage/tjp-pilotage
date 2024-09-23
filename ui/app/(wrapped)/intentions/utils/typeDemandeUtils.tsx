@@ -1,4 +1,4 @@
-import { ListItem, OrderedList, Text } from "@chakra-ui/react";
+import { ListItem, OrderedList, Text, UnorderedList } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 export type TypeDemande = keyof typeof TYPES_DEMANDES_OPTIONS;
@@ -254,15 +254,27 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     value: "ajustement",
     label: "Ajustement de rentrée",
     campagnes: ["2024", "2025"],
-    desc: "Ce formulaire doit être utilisé uniquement pour des ouvertures ou augmentations de places afin de répondre à l’afflux d’élèves sans affectation.",
+    desc: "Ce formulaire doit être utilisé uniquement pour des ouvertures ou augmentations de places afin de répondre à une hause imprévue des demandes sur la rentrée scolaire.",
     exemple: (
       <>
-        <Text>
-          Toute augmentation de capacité concernant des élèves non affectés doit
-          être saisie dans ce formulaire, y compris si la formation concernée
-          avait déjà fait l’objet d’une saisie d’ouverture ou d'augmentation
-          durant la campagne 2023.
+        <Text mb="3" fontWeight="bold">
+          Exemple pour un ajustement de rentrée :
         </Text>
+        <Text mb={2}>
+          J’augmente la capacité d'une formation existante dans mon
+          établissement :
+        </Text>
+        <UnorderedList mb={3} ps={2}>
+          <ListItem>capacité actuelle 10 ;</ListItem>
+          <ListItem>nouvelle capacité 15 ;</ListItem>
+          <ListItem>dont 5 colorées</ListItem>
+        </UnorderedList>
+        <Text mb={2}>J'ouvre une formation dans mon établissement :</Text>
+        <UnorderedList mb={3} ps={2}>
+          <ListItem>capacité actuelle 0 ;</ListItem>
+          <ListItem>nouvelle capacité 10</ListItem>
+        </UnorderedList>
+        <Text>J’apporte des précisions en commentaire.</Text>
       </>
     ),
   },

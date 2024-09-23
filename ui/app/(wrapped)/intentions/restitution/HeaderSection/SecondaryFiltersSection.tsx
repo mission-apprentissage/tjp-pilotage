@@ -4,8 +4,8 @@ import { Icon } from "@iconify/react";
 import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
-import { formatDepartementLibelleWithCodeDepartement } from "../../../../../utils/formatLibelle";
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
+import { formatDepartementLibelleWithCodeDepartement } from "../../../utils/formatLibelle";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import {
   DemandesRestitutionIntentions,
