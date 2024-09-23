@@ -149,14 +149,6 @@ export const getIntentions = async (
           .where(isAvisVisible({ user }))
       ).as("avis"),
     ])
-    .select((eb) =>
-      eb
-        .selectFrom("correction")
-        .whereRef("correction.intentionNumero", "=", "intention.numero")
-        .select("correction.id")
-        .limit(1)
-        .as("correction")
-    )
     .$call((eb) => {
       if (statut) return eb.where("intention.statut", "=", statut);
       return eb;

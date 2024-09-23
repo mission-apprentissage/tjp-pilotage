@@ -44,7 +44,7 @@ export const PrecisionsSection = ({
         </Flex>
       </Heading>
       <Divider pt="4" mb="4" />
-      <Flex gap="6" direction={"column"}>
+      <Flex gap="6" mb="4" direction={"column"}>
         <MotifField disabled={disabled} mb="4" campagne={campagne} />
         <AutreMotifField disabled={disabled} mb="4" />
         <QuestionBlock active={!!amiCma}>

@@ -25,7 +25,7 @@ export const ProgressSteps = ({
             h={"100%"}
             bgColor={
               statut === DemandeStatutEnum["dossier incomplet"]
-                ? "orangeTerreBattue.850"
+                ? "orangeterrebattue.850"
                 : "bluefrance.525"
             }
             justify={"center"}

@@ -14,10 +14,10 @@ import { Controller, useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { TooltipIcon } from "@/components/TooltipIcon";
-import { toBoolean } from "@/utils/toBoolean";
 
 import { useGlossaireContext } from "../../../../../glossaire/glossaireContext";
 import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
+import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
 export const CmqImpliqueField = chakra(

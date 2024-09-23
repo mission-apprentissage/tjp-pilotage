@@ -1,7 +1,5 @@
 "use client";
 
-import { isAxiosError } from "axios";
-import { useRouter } from "next/navigation";
 import { hasRole } from "shared";
 
 import { client } from "@/api.client";
@@ -20,7 +18,6 @@ export default ({
     numero: string;
   };
 }) => {
-  const { push } = useRouter();
   const { auth } = useAuth();
   const isPerdir = hasRole({
     user: auth?.user,
@@ -35,13 +32,6 @@ export default ({
       { params: { numero: numero } },
       {
         cacheTime: 0,
-        onError: (error: unknown) => {
-          if (isAxiosError(error) && error.response?.data?.message) {
-            console.error(error);
-            if (error.response?.status === 404)
-              push(`/intentions/perdir/saisie?notfound=${numero}`);
-          }
-        },
       }
     );
 

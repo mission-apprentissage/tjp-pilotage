@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import {
   jsonArrayFrom,
@@ -160,19 +159,11 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       "departement.libelleDepartement",
       "departement.codeDepartement",
     ])
-    .where("intention.isIntention", "=", true)
     .where(isIntentionNotDeleted)
     .where(isIntentionSelectable({ user }))
     .where("intention.numero", "=", numero)
     .limit(1)
-    .executeTakeFirstOrThrow()
-    .catch(() => {
-      throw Boom.notFound(`Aucune intention trouvée pour le numéro ${numero}`, {
-        errors: {
-          intention_introuvable: `Aucune demande trouvée pour le numéro ${numero}`,
-        },
-      });
-    });
+    .executeTakeFirstOrThrow();
 
   const changementsStatut = await kdb
     .selectFrom("changementStatut")

@@ -16,8 +16,8 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
 > = {
   // établissement
   ["établissement"]: {
-    color: themeDefinition.colors.grey[950],
-    cellColor: themeDefinition.colors.grey[1000],
+    color: "#EEEEEE",
+    cellColor: "#FFFFFF",
     options: {
       uai: "UAI",
       libelleEtablissement: "Établissement",
@@ -33,8 +33,8 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
   },
   // formation
   ["formation"]: {
-    color: themeDefinition.colors.bluefrance[950],
-    cellColor: themeDefinition.colors.bluefrance[975],
+    color: "#ECECFE",
+    cellColor: "#F5F5FE",
     options: {
       cfd: "CFD",
       libelleNsf: "Domaine de formation (NSF)",
@@ -108,7 +108,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
   },
   // Travaux et achats
   ["travaux et achats"]: {
-    color: themeDefinition.colors.greenArchipel[950],
+    color: "#C7F6FC",
     cellColor: "#E5FBFD",
     options: {
       travauxAmenagement: "Travaux ou aménagement ?",
@@ -121,7 +121,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
   },
   // Hébergement
   ["hébergement et restauration"]: {
-    color: themeDefinition.colors.purpleGlycine[950],
+    color: "#FEE7FC",
     cellColor: "#FEF3FD",
     options: {
       augmentationCapaciteAccueilHebergement:
@@ -140,8 +140,8 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
   },
   // Statut
   ["statut"]: {
-    color: themeDefinition.colors.grey[950],
-    cellColor: themeDefinition.colors.grey[1000],
+    color: "#EEEEEE",
+    cellColor: "#FFFFFF",
     options: {
       statut: "Statut",
       motifRefus: "Motif(s) de refus",
@@ -162,7 +162,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
 > = {
   // établissement
   ["établissement"]: {
-    color: themeDefinition.colors.grey[950],
+    color: "#EEEEEE",
     options: {
       libelleEtablissement: "Établissement",
       commune: "Commune",
@@ -173,7 +173,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   },
   // formation
   ["formation"]: {
-    color: themeDefinition.colors.bluefrance[950],
+    color: "#ECECFE",
     options: {
       libelleNsf: "Domaine de formation (NSF)",
       libelleFormation: "Formation",
@@ -230,7 +230,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   },
   // Travaux et achats
   ["travaux et achats"]: {
-    color: themeDefinition.colors.greenArchipel[950],
+    color: "#C7F6FC",
     options: {
       travauxAmenagement: "Travaux ou aménagement ?",
       travauxAmenagementCout: "Coût des travaux et aménagement",
@@ -242,7 +242,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   },
   // Hébergement
   ["hébergement et restauration"]: {
-    color: themeDefinition.colors.grey[950],
+    color: "#FEE7FC",
     options: {
       augmentationCapaciteAccueilHebergement:
         "Besoin d'augmentation de la capacité d'hébergement ?",
@@ -260,7 +260,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   },
   // Statut
   ["statut"]: {
-    color: themeDefinition.colors.grey[950],
+    color: "#EEEEEE",
     options: {
       statut: "Statut",
       motifRefus: "Motif(s) de refus",
@@ -277,7 +277,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
 > = {
   // établissement
   ["établissement"]: {
-    color: themeDefinition.colors.grey[950],
+    color: "#EEEEEE",
     options: {
       libelleEtablissement: "Établissement",
       commune: "Commune",
@@ -285,7 +285,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
   },
   // formation
   ["formation"]: {
-    color: themeDefinition.colors.bluefrance[950],
+    color: "#ECECFE",
     options: {
       libelleNsf: "Domaine de formation (NSF)",
       libelleFormation: "Formation",
@@ -313,7 +313,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
     },
   },
   ["statut"]: {
-    color: themeDefinition.colors.grey[950],
+    color: "#EEEEEE",
     options: {
       statut: "Statut",
     },

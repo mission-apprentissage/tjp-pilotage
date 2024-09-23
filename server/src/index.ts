@@ -18,7 +18,6 @@ import { migrateToLatest } from "./migrations/migrate";
 import { registerChangelogModule } from "./modules/changelog";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { userLastSeenAt } from "./modules/core/utils/lastSeenAt/userLastSeenAt";
-import { registerCorrectionModule } from "./modules/corrections";
 import { registerFormationModule } from "./modules/data";
 import { registerIntentionsModule } from "./modules/demandes";
 import { registerGlossaireModule } from "./modules/glossaire";
@@ -138,7 +137,6 @@ const registerRoutes = (instance: Server) => {
     ...registerFormationModule({ server: instance }),
     ...registerIntentionsModule({ server: instance }),
     ...registerIntentionsExpeModule({ server: instance }),
-    ...registerCorrectionModule({ server: instance }),
     ...registerChangelogModule({ server: instance }),
     ...registerGlossaireModule({ server: instance }),
   };

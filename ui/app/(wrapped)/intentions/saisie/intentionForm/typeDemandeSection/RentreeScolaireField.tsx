@@ -11,6 +11,7 @@ import {
   MenuList,
   Tag,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -65,49 +66,59 @@ export const RentreeScolaireField = ({
       isRequired
     >
       <FormLabel>Rentrée scolaire</FormLabel>
-      <Menu gutter={0} matchWidth={true} autoSelect={false}>
-        <MenuButton
-          as={Button}
-          variant={"selectButton"}
-          rightIcon={<ChevronDownIcon />}
-          width={[null, null, "72"]}
-          size="md"
-          borderWidth="1px"
-          borderStyle="solid"
-          borderColor="grey.900"
-          bg={"white"}
-          isDisabled={disabled}
-        >
-          <Flex direction="row">
-            <Text ms={2}>{rentreeScolaire}</Text>
-            {rentreeScolaire ===
-              parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) && (
-              <Tag mx={3} colorScheme="red">
-                Ajustement RS {rentreeScolaire}
-              </Tag>
-            )}
-          </Flex>
-        </MenuButton>
-        <MenuList py={0} borderTopRadius={0}>
-          {rentreeScolaireOptions.map((rentreeScolaireOption) => (
-            <MenuItem
-              p={2}
-              key={rentreeScolaireOption}
-              onClick={() => setValue("rentreeScolaire", rentreeScolaireOption)}
-            >
-              <Flex direction="row" w="100%">
-                <Text ms={2}>{rentreeScolaireOption}</Text>
-                {rentreeScolaireOption ===
-                  parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) && (
-                  <Tag mx={3} colorScheme="red">
-                    Ajustement RS {rentreeScolaireOption}
-                  </Tag>
-                )}
-              </Flex>
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Menu>
+      <Tooltip
+        label={
+          disabled
+            ? "Pour modifier la rentrée scolaire d'une demande veuillez refuser celle-ci et en créer une autre."
+            : ""
+        }
+      >
+        <Menu gutter={0} matchWidth={true} autoSelect={false}>
+          <MenuButton
+            as={Button}
+            variant={"selectButton"}
+            rightIcon={<ChevronDownIcon />}
+            width={[null, null, "72"]}
+            size="md"
+            borderWidth="1px"
+            borderStyle="solid"
+            borderColor="grey.900"
+            bg={"white"}
+            isDisabled={disabled}
+          >
+            <Flex direction="row">
+              <Text ms={2}>{rentreeScolaire}</Text>
+              {rentreeScolaire ===
+                parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) && (
+                <Tag mx={3} colorScheme="red">
+                  Ajustement RS {rentreeScolaire}
+                </Tag>
+              )}
+            </Flex>
+          </MenuButton>
+          <MenuList py={0} borderTopRadius={0}>
+            {rentreeScolaireOptions.map((rentreeScolaireOption) => (
+              <MenuItem
+                p={2}
+                key={rentreeScolaireOption}
+                onClick={() =>
+                  setValue("rentreeScolaire", rentreeScolaireOption)
+                }
+              >
+                <Flex direction="row" w="100%">
+                  <Text ms={2}>{rentreeScolaireOption}</Text>
+                  {rentreeScolaireOption ===
+                    parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) && (
+                    <Tag mx={3} colorScheme="red">
+                      Ajustement RS {rentreeScolaireOption}
+                    </Tag>
+                  )}
+                </Flex>
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+      </Tooltip>
       {errors.rentreeScolaire && (
         <FormErrorMessage>{errors.rentreeScolaire.message}</FormErrorMessage>
       )}

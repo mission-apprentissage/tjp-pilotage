@@ -43,10 +43,7 @@ import { LinkButton } from "@/components/LinkButton";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { getStepWorkflow } from "../../../utils/statutUtils";
-import {
-  isTypeAjustement,
-  isTypeFermeture,
-} from "../../../utils/typeDemandeUtils";
+import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "../../SCROLL_OFFSETS";
 import { Conseils } from "../components/Conseils";
 import { MenuFormulaire } from "../components/MenuFormulaire";
@@ -218,9 +215,6 @@ export const IntentionForm = ({
     ) {
       return DemandeStatutEnum["proposition"];
     }
-    if (isTypeAjustement(typeDemande)) {
-      return DemandeStatutEnum["demande validée"];
-    }
     if (statutActuel) return statutActuel;
     return DemandeStatutEnum["projet de demande"];
   };
@@ -229,10 +223,7 @@ export const IntentionForm = ({
     statut: Exclude<DemandeStatutType, "supprimée">,
     statutPrecedent?: Exclude<DemandeStatutType, "supprimée">
   ): string => {
-    if (
-      statut === DemandeStatutEnum["projet de demande"] ||
-      statut === DemandeStatutEnum["demande validée"]
-    ) {
+    if (statut === DemandeStatutEnum["projet de demande"]) {
       return "Valider mon projet de demande";
     }
     if (

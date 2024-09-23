@@ -96,6 +96,8 @@ export default function Panorama({
       { keepPreviousData: true, staleTime: 10000000 }
     );
 
+  console.log({ stats });
+
   return (
     <>
       <FiltersSection

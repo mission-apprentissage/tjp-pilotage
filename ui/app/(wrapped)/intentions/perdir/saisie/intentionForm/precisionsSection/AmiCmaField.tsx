@@ -14,10 +14,10 @@ import { Controller, useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import { toBoolean } from "@/utils/toBoolean";
 
 import { TooltipIcon } from "../../../../../../../components/TooltipIcon";
 import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
+import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
 export const AmiCmaField = chakra(

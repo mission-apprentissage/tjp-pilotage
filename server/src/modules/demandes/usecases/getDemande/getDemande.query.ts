@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import {
   jsonArrayFrom,
@@ -47,13 +46,6 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
       "departement.codeDepartement",
-      jsonObjectFrom(
-        eb
-          .selectFrom("correction")
-          .selectAll("correction")
-          .whereRef("correction.intentionNumero", "=", "demande.numero")
-          .limit(1)
-      ).as("correction"),
       jsonObjectFrom(
         eb
           .selectFrom("campagne")
@@ -209,14 +201,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
     .where("demande.numero", "=", numero)
     .orderBy("createdAt", "asc")
     .limit(1)
-    .executeTakeFirstOrThrow()
-    .catch(() => {
-      throw Boom.notFound(`Aucune demande trouvée pour le numéro ${numero}`, {
-        errors: {
-          demande_introuvable: `Aucune demande trouvée pour le numéro ${numero}`,
-        },
-      });
-    });
+    .executeTakeFirst();
 
   const codeDispositif =
     demande?.codeDispositif &&

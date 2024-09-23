@@ -11,19 +11,14 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { RefObject, useState } from "react";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
-import { feature } from "@/utils/feature";
-import { usePermission } from "@/utils/security/usePermission";
 
 import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
-import { Campagne, Demande } from "../../types";
+import { Campagne } from "../../types";
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { RentreeScolaireField } from "./RentreeScolaireField";
 import { TypeDemandeField } from "./TypeDemandeField";
@@ -91,29 +86,12 @@ const InfoAjustementSection = chakra(
 export const TypeDemandeSection = ({
   disabled,
   campagne,
-  demande,
   typeDemandeRef,
 }: {
   disabled: boolean;
   campagne?: Campagne;
-  demande?: Demande;
   typeDemandeRef: RefObject<HTMLDivElement>;
 }) => {
-  const router = useRouter();
-
-  const queryParams = useSearchParams();
-  const isCorrection = queryParams.get("correction");
-
-  const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
-
-  const showButtonCorrection =
-    feature.correction &&
-    isCorrection &&
-    demande &&
-    demande.statut === DemandeStatutEnum["demande validée"] &&
-    campagne?.statut === CampagneStatutEnum["terminée"] &&
-    hasPermissionSubmitIntention;
-
   return (
     <Flex
       ref={typeDemandeRef}
@@ -154,25 +132,6 @@ export const TypeDemandeSection = ({
         </Flex>
       </Tooltip>
       <CapaciteSection disabled={disabled} />
-      {showButtonCorrection && (
-        <Flex justify={"right"}>
-          <Button
-            w="fit-content"
-            bgColor="transparent"
-            border="1px solid black"
-            onClick={() => {
-              const link = isCorrection
-                ? `/intentions/saisie/${demande.numero}`
-                : `/intentions/saisie/${demande.numero}?correction=true`;
-              router.replace(link);
-            }}
-          >
-            {demande.correction
-              ? "Consulter la correction"
-              : "Rectifier les capacités"}
-          </Button>
-        </Flex>
-      )}
     </Flex>
   );
 };
