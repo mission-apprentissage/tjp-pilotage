@@ -14,10 +14,10 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/utils/formatLibelle";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { formatAnneeCommuneLibelle } from "@/utils/formatLibelle";
 import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -81,8 +81,8 @@ export const FormationLineContent = ({
             size="sm"
             ms={2}
             my={"auto"}
-            bgColor={"greenarchipel.950"}
-            color={"greenarchipel.391"}
+            bgColor={"greenArchipel.950"}
+            color={"greenArchipel.391"}
             h={"fit-content"}
             flex={"shrink"}
           >
