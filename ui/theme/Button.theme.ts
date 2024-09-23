@@ -36,10 +36,10 @@ const secondary = defineStyle({
 
 const draft = defineStyle({
   ...primary,
-  bg: "orangeterrebattue.645",
+  bg: "orangeTerreBattue.645",
   _hover: {
-    bg: "orangeterrebattue.645_hover",
-    _disabled: { bg: "orangeterrebattue.645" },
+    bg: "orangeTerreBattue.645_hover",
+    _disabled: { bg: "orangeTerreBattue.645" },
   },
 });
 

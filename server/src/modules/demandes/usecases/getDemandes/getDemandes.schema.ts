@@ -65,12 +65,16 @@ const DemandeItem = z.object({
   discipline1FormationRH: z.string().optional(),
   discipline2FormationRH: z.string().optional(),
   canEdit: z.boolean(),
+  correction: z.string().optional(),
+  suiviId: z.string().optional(),
+  alreadyAccessed: z.boolean(),
 });
 
 export const getDemandesSchema = {
   querystring: z.object({
     statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
     search: z.string().optional(),
+    suivies: z.coerce.boolean().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: DemandeItem.keyof().optional(),
     offset: z.coerce.number().optional(),

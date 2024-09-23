@@ -14,8 +14,8 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import { toBoolean } from "@/utils/toBoolean";
 
-import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
 export const AmiCmaField = chakra(
