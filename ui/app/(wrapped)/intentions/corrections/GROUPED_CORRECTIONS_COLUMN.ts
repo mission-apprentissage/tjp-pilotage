@@ -16,8 +16,8 @@ export const GROUPED_CORRECTIONS_COLUMNS: Record<
 > = {
   // établissement
   ["établissement"]: {
-    color: "#EEEEEE",
-    cellColor: "#FFFFFF",
+    color: themeDefinition.colors.grey[950],
+    cellColor: "white",
     options: {
       uai: "UAI",
       libelleEtablissement: "Établissement",
@@ -33,8 +33,8 @@ export const GROUPED_CORRECTIONS_COLUMNS: Record<
   },
   // formation
   ["formation"]: {
-    color: "#ECECFE",
-    cellColor: "#F5F5FE",
+    color: themeDefinition.colors.bluefrance[950],
+    cellColor: themeDefinition.colors.bluefrance[975],
     options: {
       cfd: "CFD",
       libelleNsf: "Domaine de formation (NSF)",
@@ -98,7 +98,7 @@ export const GROUPED_CORRECTIONS_COLUMNS_OPTIONAL: Record<
 > = {
   // établissement
   ["établissement"]: {
-    color: "#EEEEEE",
+    color: themeDefinition.colors.grey[950],
     options: {
       libelleEtablissement: "Établissement",
       commune: "Commune",
@@ -110,7 +110,7 @@ export const GROUPED_CORRECTIONS_COLUMNS_OPTIONAL: Record<
   },
   // formation
   ["formation"]: {
-    color: "#ECECFE",
+    color: themeDefinition.colors.bluefrance[950],
     options: {
       cfd: "CFD",
       libelleNsf: "Domaine de formation (NSF)",
@@ -167,7 +167,7 @@ export const GROUPED_CORRECTIONS_COLUMNS_DEFAULT: Record<
 > = {
   // établissement
   ["établissement"]: {
-    color: "#EEEEEE",
+    color: themeDefinition.colors.grey[950],
     options: {
       libelleEtablissement: "Établissement",
       commune: "Commune",
@@ -175,7 +175,7 @@ export const GROUPED_CORRECTIONS_COLUMNS_DEFAULT: Record<
   },
   // formation
   ["formation"]: {
-    color: "#ECECFE",
+    color: themeDefinition.colors.bluefrance[950],
     options: {
       libelleNsf: "Domaine de formation (NSF)",
       libelleFormation: "Formation",
@@ -184,7 +184,7 @@ export const GROUPED_CORRECTIONS_COLUMNS_DEFAULT: Record<
   },
   // Correction
   ["correction"]: {
-    color: "#EEEEEE",
+    color: themeDefinition.colors.yellowTournesol[950],
     options: {
       motifCorrection: "Motif(s) de la correction",
       autreMotifCorrection: "Autre motif de correction",

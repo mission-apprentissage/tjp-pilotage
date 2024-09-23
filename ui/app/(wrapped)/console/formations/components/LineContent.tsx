@@ -81,8 +81,8 @@ export const FormationLineContent = ({
             size="sm"
             ms={2}
             my={"auto"}
-            bgColor={"greenarchipel.950"}
-            color={"greenarchipel.391"}
+            bgColor={"greenArchipel.950"}
+            color={"greenArchipel.391"}
             h={"fit-content"}
             flex={"shrink"}
           >
