@@ -56,7 +56,7 @@ export const ROLES_LABELS: {
   invite: () => ({
     label: "Invité",
     description:
-      "Il a un rôle dans la formation professionnelle initiale, en région ou en académie (membre du conseil régional, directeur de CMQ…). Il  peut visualiser les propositions puis les projets de demandes, en consultant les avis émis et la décision finale. Il a accès à la console de restitution et à la page de pilotage.",
+      "Il a un rôle dans la formation professionnelle initiale, en région ou en académie (membre du conseil régional, directeur de CMQ…). Il peut visualiser les demandes validées ou refusées.",
   }),
 };
 

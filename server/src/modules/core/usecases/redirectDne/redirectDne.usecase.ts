@@ -129,7 +129,7 @@ export const [redirectDne, redirectDneFactory] = inject(
         tokenSet.access_token
       );
 
-      const email = userinfo.email;
+      const email = userinfo.email?.toLowerCase();
       if (!email) {
         logger.error("Error (SSO) : Il manque l'email de l'utilisateur", {
           error: new Error("missing user email"),
