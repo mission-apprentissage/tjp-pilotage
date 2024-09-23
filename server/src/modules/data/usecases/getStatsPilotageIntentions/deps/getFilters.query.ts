@@ -1,5 +1,6 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
 import { DB, kdb } from "../../../../../db/db";
@@ -245,10 +246,6 @@ export const getFiltersQuery = async ({
     ])
     .execute();
 
-  const statutFilters = await base
-    .select(["demande.statut as value", "demande.statut as label"])
-    .execute();
-
   return {
     campagnes: campagnesFilters.map(cleanNull),
     rentreesScolaires: rentreesScolairesFilters.map(cleanNull),
@@ -259,6 +256,12 @@ export const getFiltersQuery = async ({
     libellesNsf: libellesNsf.map(cleanNull),
     diplomes: diplomesFilters.map(cleanNull),
     secteurFilters: secteurFilters.map(cleanNull),
-    statutFilters: statutFilters.map(cleanNull),
+    statutFilters: [
+      { value: DemandeStatutEnum["demande validée"], label: "Demande validée" },
+      {
+        value: DemandeStatutEnum["projet de demande"],
+        label: "Projet de demande",
+      },
+    ],
   };
 };

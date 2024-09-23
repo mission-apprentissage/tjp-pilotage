@@ -164,6 +164,8 @@ export const FiltersSection = ({
             }
             options={data?.filters.rentreesScolaires}
             value={filters.rentreeScolaire ?? []}
+            gutter={0}
+            menuZIndex={"sticky"}
           >
             Rentrée scolaire
           </Multiselect>
@@ -259,6 +261,8 @@ export const FiltersSection = ({
             }
             options={data?.filters.diplomes}
             value={filters.codeNiveauDiplome ?? []}
+            gutter={0}
+            menuZIndex={"sticky"}
           >
             Tous
           </Multiselect>
@@ -274,6 +278,8 @@ export const FiltersSection = ({
             }
             options={data?.filters.libellesNsf}
             value={filters.codeNsf ?? []}
+            gutter={0}
+            menuZIndex={"sticky"}
           >
             Tous
           </Multiselect>
@@ -287,6 +293,8 @@ export const FiltersSection = ({
             onChange={(selected) => onUpdateFilter({ key: "statut", selected })}
             options={data?.filters.statutFilters}
             value={filters.statut ?? []}
+            gutter={0}
+            menuZIndex={"sticky"}
           >
             Tous
           </Multiselect>
@@ -320,6 +328,8 @@ export const FiltersSection = ({
             }
             options={data?.filters.secteurFilters}
             value={filters.secteur ?? []}
+            gutter={0}
+            menuZIndex={"sticky"}
           >
             Tous
           </Multiselect>

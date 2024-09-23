@@ -1,4 +1,13 @@
-import { Box, Flex, Select, Skeleton, Text, useToken } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Flex,
+  Highlight,
+  Select,
+  Skeleton,
+  Text,
+  useToken,
+} from "@chakra-ui/react";
 import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
@@ -112,6 +121,30 @@ export const CartoSection = ({
       }),
     [handleFilters, filters, scopeCode]
   );
+
+  if (!Object.keys(ScopeEnum).includes(filters.scope))
+    return (
+      <Box
+        flex={1}
+        borderRadius={4}
+        border={"1px solid"}
+        borderColor="grey.900"
+        bg="white"
+        p={3}
+      >
+        <Center flex={1} flexDirection={"column"} h={"100%"} gap={4}>
+          <Text>
+            <Highlight
+              query={filters.scope}
+              styles={{ fontWeight: 700, textDecoration: "underline" }}
+            >
+              {`Granularité "${filters.scope}" non gérée.`}
+            </Highlight>
+          </Text>
+          <Text>Veuillez en sélectionner une autre dans les filtres.</Text>
+        </Center>
+      </Box>
+    );
 
   return (
     <Box

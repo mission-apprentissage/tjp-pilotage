@@ -79,9 +79,7 @@ const formatResult = (
         : undefined,
     }))
     .orderBy((item) => {
-      const value = orderBy
-        ? item[orderBy as keyof typeof item]
-        : item.placesTransformees;
+      const value = orderBy ? item[orderBy as keyof typeof item] : item.libelle;
 
       return value === null || value === undefined ? 0 : value; // Treat null/undefined as 0
     }, order)

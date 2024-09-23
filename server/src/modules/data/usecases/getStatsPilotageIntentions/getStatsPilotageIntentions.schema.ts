@@ -42,7 +42,12 @@ const QuerySchema = z.object({
   codeNiveauDiplome: z.array(z.string()).optional(),
   CPC: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
-  scope: scope.default(ScopeEnum.national),
+  scope: z.preprocess((val) => {
+    if (!Object.keys(ScopeEnum).includes(val as string)) {
+      return ScopeEnum.national; // Valeur par défaut si invalide
+    }
+    return val; // Sinon, retourne la valeur valide
+  }, scope),
   codeRegion: z.string().optional(),
   codeAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),

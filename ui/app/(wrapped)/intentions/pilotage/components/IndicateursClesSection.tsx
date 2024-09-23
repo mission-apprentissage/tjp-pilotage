@@ -83,7 +83,7 @@ const NumberWithLabel = ({
   label,
   percentage,
   objective,
-  round = 2,
+  round = 1,
 }: {
   icon?: React.ReactNode;
   label?: string;
@@ -335,7 +335,9 @@ export const IndicateursClesSection = ({
                   <Text>
                     {formatPercentage(
                       getScopedData("all", "placesOuvertesQ1Q2") /
-                        getScopedData("all", "placesOuvertes")
+                        getScopedData("all", "placesOuvertes"),
+                      0,
+                      "-"
                     )}
                   </Text>
                   <Flex direction={"row"} gap={2}>
