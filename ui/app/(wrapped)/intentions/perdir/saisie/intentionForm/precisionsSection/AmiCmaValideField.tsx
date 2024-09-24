@@ -11,8 +11,9 @@ import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
+import { toBoolean } from "@/utils/toBoolean";
+
 import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
-import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
 export const AmiCmaValideField = chakra(

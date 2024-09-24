@@ -13,8 +13,6 @@ export interface PublicConfig {
 }
 
 function getConfig(): PublicConfig {
-  console.log({ baseUrl: process.env.NEXT_PUBLIC_BASE_URL });
-
   const url = new URL(process.env.NEXT_PUBLIC_BASE_URL!);
 
   return {

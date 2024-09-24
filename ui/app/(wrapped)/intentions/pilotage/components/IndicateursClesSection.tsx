@@ -429,7 +429,7 @@ export const IndicateursClesSection = ({
                 <Icon
                   width="24px"
                   icon="ri:account-pin-box-fill"
-                  color={themeDefinition.colors.purpleglycine["850_active"]}
+                  color={themeDefinition.colors.purpleGlycine["850_active"]}
                 />
               }
               title="Pl. Colorées"

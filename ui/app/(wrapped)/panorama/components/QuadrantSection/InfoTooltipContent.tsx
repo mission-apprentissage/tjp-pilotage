@@ -1,6 +1,6 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
-export const EFFECTIF_SIZES = [
+export const effectifSizes = [
   { min: undefined, max: 50, size: 6 },
   { min: 50, max: 199, size: 10 },
   { min: 200, max: 499, size: 14 },
@@ -14,7 +14,7 @@ export const InfoTooltipContent = () => (
       Effectif en entrée :
     </Text>
     <VStack align="flex-start" spacing={2}>
-      {EFFECTIF_SIZES.map(({ min, max, size }) => (
+      {effectifSizes.map(({ min, max, size }) => (
         <Flex key={`${min}_${max}_${size}`} align="center">
           <Box
             borderRadius={100}

@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import {
   BadgeTypeFamille,
   TypeFamilleKeys,
-} from "../../../components/BadgeTypeFamille";
+} from "../components/BadgeTypeFamille";
 
 export const formatAnneeCommuneLibelle = (
   formation: {
