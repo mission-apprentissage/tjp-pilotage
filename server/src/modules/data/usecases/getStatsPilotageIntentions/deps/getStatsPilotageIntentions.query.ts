@@ -98,7 +98,7 @@ const genericOnDemandes =
 
 const getNationalData = async (filters: Filters) => {
   return kdb
-    .selectFrom("latestDemandeView as demande")
+    .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (filters.campagne)
