@@ -1,7 +1,16 @@
 "use client";
 
-import { Box, Container, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  Collapse,
+  Container,
+  Flex,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 
+import { feature } from "../../../../utils/feature";
 import { CartoSection } from "./components/CartoSection";
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
@@ -9,6 +18,52 @@ import { QuadrantSection } from "./components/QuadrantSection";
 import { VueOuverturesFermeturesSection } from "./components/VueOuverturesFermeturesSection";
 import { VueTauxTransformationSection } from "./components/VueTauxTransformationSection";
 import { usePilotageIntentionsHook } from "./hook";
+
+const BandeauTauxTransfo = () => {
+  const { isOpen, onClose } = useDisclosure({
+    defaultIsOpen: feature.bandeauTauxTransfo,
+  });
+
+  return (
+    <Collapse in={isOpen}>
+      <Flex flex={1} justify={"center"}>
+        <Flex
+          maxWidth={"container.xl"}
+          direction={"row"}
+          gap={4}
+          mt={4}
+          color={"info.text"}
+          border={"1px solid"}
+          borderColor={"info.text"}
+        >
+          <Flex bgColor={"info.text"} color={"white"} p={3}>
+            <Icon
+              icon="ri:file-info-fill"
+              fontSize="20px"
+              style={{ marginBottom: "auto" }}
+            />
+          </Flex>
+          <Text fontSize={16} p={2} px={1}>
+            Le taux de transformation affiché actuellement ne tient pas compte
+            de certaines données (colorations, places fermées en
+            apprentissage...) ; il sera rectifié lors de la mise en ligne de la
+            nouvelle page début octobre. Nous vous remercions de votre
+            compréhension.
+          </Text>
+          <Flex p={2} px={1}>
+            <Icon
+              onClick={onClose}
+              cursor="pointer"
+              icon="ri:close-fill"
+              width="24px"
+              height="24px"
+            />
+          </Flex>
+        </Flex>
+      </Flex>
+    </Collapse>
+  );
+};
 
 export const PilotageIntentionsClient = () => {
   const {
@@ -28,6 +83,7 @@ export const PilotageIntentionsClient = () => {
 
   return (
     <Box bg="blueecume.950">
+      <BandeauTauxTransfo />
       <Container maxWidth={"container.xl"} py="4">
         <FiltersSection
           activeFilters={filters}
