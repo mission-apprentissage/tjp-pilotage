@@ -21,6 +21,7 @@ import { UaiFilterContext } from "@/app/layoutClient";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { useAuth } from "@/utils/security/useAuth";
 
+import { feature } from "../../../utils/feature";
 import { Glossaire } from "../glossaire/Glossaire";
 
 const NavLink = chakra(
@@ -305,14 +306,14 @@ export const Nav = () => {
         </MenuList>
       </Menu>
       {hasIntentionsMenu && (
-        <Menu gutter={0} matchWidth={true} isOpen={isMenuIntentionOpen}>
+        <Menu gutter={0} isOpen={isMenuIntentionOpen}>
           <NavMenuButton
             segment="intentions"
             isOpen={isMenuIntentionOpen}
             onMouseEnter={onMenuIntentionOpen}
             onMouseLeave={onMenuIntentionClose}
           >
-            Recueil des demandes
+            Transformation
           </NavMenuButton>
           <MenuList
             p="0"
@@ -328,7 +329,7 @@ export const Nav = () => {
                     href="/intentions/saisie"
                     segment="saisie-intentions"
                   >
-                    Formulaire
+                    Gestion des demandes
                   </NavMenuLink>
                 </MenuItem>
                 <MenuItem p="0" w="100%">
@@ -336,7 +337,7 @@ export const Nav = () => {
                     href="/intentions/perdir/saisie"
                     segment="saisie-intentions-perdir"
                   >
-                    Formulaire (EXPE)
+                    Gestion des demandes (EXPE)
                   </NavMenuLink>
                 </MenuItem>
               </>
@@ -348,7 +349,7 @@ export const Nav = () => {
                       href="/intentions/saisie"
                       segment="saisie-intentions"
                     >
-                      Formulaire
+                      Gestion des demandes
                     </NavMenuLink>
                   </MenuItem>
                 )}
@@ -358,7 +359,7 @@ export const Nav = () => {
                       href="/intentions/perdir/saisie"
                       segment="saisie-intentions-perdir"
                     >
-                      Formulaire
+                      Gestion des demandes
                     </NavMenuLink>
                   </MenuItem>
                 )}
@@ -382,16 +383,28 @@ export const Nav = () => {
                   segment="restitution-intentions"
                   prefetch={false}
                 >
-                  Restitution
+                  Restitution des demandes
                 </NavMenuLink>
               </MenuItem>
             )}
+            {feature.correction &&
+              hasPermission(auth?.user.role, "intentions/lecture") && (
+                <MenuItem p="0" w="100%">
+                  <NavMenuLink
+                    href="/intentions/corrections"
+                    segment="corrections"
+                    prefetch={false}
+                  >
+                    Restitution des corrections
+                  </NavMenuLink>
+                </MenuItem>
+              )}
           </MenuList>
         </Menu>
       )}
       {hasPermission(auth?.user.role, "pilotage_reforme/lecture") && (
         <NavLink href="/pilotage-reforme" segment="pilotage-reforme">
-          Pilotage de la réforme
+          Suivi de l'impact
         </NavLink>
       )}
 

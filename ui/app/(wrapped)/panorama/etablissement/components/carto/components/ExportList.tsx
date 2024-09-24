@@ -1,14 +1,14 @@
 import { usePlausible } from "next-plausible";
 
 import { client } from "@/api.client";
-import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
-import { useEtablissementContext } from "@/app/(wrapped)/panorama/etablissement/context/etablissementContext";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatExportFilename } from "@/utils/formatExportFilename";
+import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { formatArray } from "@/utils/formatUtils";
 
-import { formatExportFilename } from "../../../../../../../utils/formatExportFilename";
-import { formatCommuneLibelleWithCodeDepartement } from "../../../../../utils/formatLibelle";
+import { useEtablissementContext } from "../../../context/etablissementContext";
+import { useEtablissementMapContext } from "../context/etablissementMapContext";
 
 const EXPORT_LIMIT = 1_000_000;
 
