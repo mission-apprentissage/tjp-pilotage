@@ -1,4 +1,5 @@
 import {
+  Box,
   chakra,
   Flex,
   FormControl,
@@ -7,13 +8,13 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { TooltipIcon } from "@/components/TooltipIcon";
 import { toBoolean } from "@/utils/toBoolean";
 
-import { useGlossaireContext } from "../../../../../../glossaire/glossaireContext";
+import { GlossaireShortcut } from "../../../../../../../../components/GlossaireShortcut";
 import { IntentionForms } from "../../defaultFormValues";
 
 export const ProfesseurAssocieRHField = chakra(
@@ -22,7 +23,6 @@ export const ProfesseurAssocieRHField = chakra(
       formState: { errors },
       control,
     } = useFormContext<IntentionForms>();
-    const { openGlossaire } = useGlossaireContext();
 
     return (
       <FormControl
@@ -32,14 +32,19 @@ export const ProfesseurAssocieRHField = chakra(
       >
         <Flex direction={"row"}>
           <FormLabel>Un professeur associé ?</FormLabel>
-          <TooltipIcon
-            mt={"1"}
-            ml={2}
-            onClick={(e) => {
-              e.preventDefault();
-              openGlossaire("professeur-associe");
-            }}
-            color={"bluefrance.113"}
+          <GlossaireShortcut
+            glossaireEntryKey={"professeur-associe"}
+            color="bluefrance.113"
+            mb={"6px"}
+            tooltip={
+              <Box>
+                <Text>
+                  Dans le cas d’enseignements assurés par un salarié du secteur
+                  privé expert dans son domaine.
+                </Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
           />
         </Flex>
         <Controller
