@@ -2,104 +2,53 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
+import { genericOnConstatRentree } from "../../../utils/onConstatDeRentree";
 import { Filters } from "../getRepartitionPilotageIntentions.usecase";
-import { getDemandesBaseQuery } from "./getDemandesBaseQuery";
-import { getEffectifsParCampagneQuery } from "./getEffectifsParCampagneQuery";
+import { genericOnDemandes } from "./getDemandesBaseQuery";
 
 export const getDomainesQuery = async ({ filters }: { filters: Filters }) => {
-  const demandesBaseQuery = getDemandesBaseQuery(filters);
-  const effectifsParCampagne = getEffectifsParCampagneQuery(filters);
-
   return kdb
-    .selectFrom(
-      kdb
-        .selectFrom(demandesBaseQuery.as("demandes"))
-        .leftJoin(
-          kdb
-            .selectFrom(effectifsParCampagne.as("effectifsParCampagne"))
-            .select((eb) => [
-              "effectifsParCampagne.annee",
-              "effectifsParCampagne.codeNsf",
-              sql<number>`SUM(${eb.ref(
-                "effectifsParCampagne.denominateur"
-              )})`.as("denominateur"),
-            ])
-            .groupBy([
-              "effectifsParCampagne.annee",
-              "effectifsParCampagne.codeNsf",
-            ])
-            .as("effectifs"),
-          (join) =>
-            join
-              .onRef("demandes.annee", "=", "effectifs.annee")
-              .onRef("demandes.codeNsf", "=", "effectifs.codeNsf")
-        )
-        .select((eb) => [
-          "effectifs.denominateur as effectif",
-          "demandes.annee",
-          "demandes.codeNsf",
-          "demandes.libelleNsf",
-          eb.fn.sum<number>("demandes.placesOuvertes").as("placesOuvertes"),
-          eb.fn.sum<number>("demandes.placesFermees").as("placesFermees"),
-          eb.fn.sum<number>("demandes.placesColorees").as("placesColorees"),
-          eb.fn
-            .sum<number>("demandes.placesTransformees")
-            .as("placesTransformees"),
-        ])
-        .groupBy([
-          "demandes.annee",
-          "demandes.codeNsf",
-          "demandes.libelleNsf",
-          "effectif",
-        ])
-        .$call((eb) => {
-          if (filters.campagne)
-            return eb.where("demandes.annee", "=", filters.campagne);
-          return eb;
-        })
-        .$call((eb) => {
-          if (filters.rentreeScolaire)
-            return eb.where(
-              "demandes.rentreeScolaire",
-              "in",
-              filters.rentreeScolaire.map((rs) => Number.parseInt(rs))
-            );
-          return eb;
-        })
-        .as("demandesAvecEffectif")
+    .selectFrom("nsf")
+    .leftJoin(
+      (eb) =>
+        genericOnDemandes(filters)(eb)
+          .select((eb) => [eb.ref("dataFormation.codeNsf").as("codeNsf")])
+          .groupBy(["dataFormation.codeNsf"])
+          .as("demandes"),
+      (join) => join.onRef("demandes.codeNsf", "=", "nsf.codeNsf")
     )
-    .selectAll("demandesAvecEffectif")
+    .leftJoin(
+      () =>
+        genericOnConstatRentree(filters)()
+          .select((eb) => [
+            eb.ref("dataFormation.codeNsf").as("codeNsf"),
+            sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as(
+              "effectif"
+            ),
+          ])
+          .groupBy(["dataFormation.codeNsf"])
+          .as("effectifs"),
+      (join) => join.onRef("effectifs.codeNsf", "=", "nsf.codeNsf")
+    )
     .select((eb) => [
-      sql<number>`COALESCE(${eb.ref("demandesAvecEffectif.effectif")},0)`.as(
-        "effectif"
-      ),
-      sql<string>`COALESCE(${eb.ref("demandesAvecEffectif.codeNsf")}, '')`.as(
-        "code"
-      ),
-      sql<string>`COALESCE(${eb.ref(
-        "demandesAvecEffectif.libelleNsf"
-      )}, '')`.as("libelle"),
+      sql<string>`COALESCE(${eb.ref("nsf.codeNsf")}, '')`.as("code"),
+      sql<string>`COALESCE(${eb.ref("nsf.libelleNsf")}, '')`.as("libelle"),
+      eb.fn.coalesce("placesOuvertes", eb.val(0)).as("placesOuvertes"),
+      eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
+      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
+      eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
+      eb.fn.coalesce("effectif", eb.val(0)).as("effectif"),
       sql<number>`
-        ${eb.ref("placesOuvertes")} -
-        ${eb.ref("placesFermees")}
-      `.as("solde"),
-      sql<number>`
-        ${eb.ref("demandesAvecEffectif.placesTransformees")} /
-        ${eb.ref("demandesAvecEffectif.effectif")}
-      `.as("tauxTransformation"),
-      sql<number>`
-        ${eb.ref("placesOuvertes")} /
-        ${eb.ref("demandesAvecEffectif.effectif")}
-      `.as("tauxTransformationOuvertures"),
-      sql<number>`
-        ${eb.ref("placesFermees")} /
-        ${eb.ref("demandesAvecEffectif.effectif")}
-      `.as("tauxTransformationFermetures"),
-      sql<number>`
-        ${eb.ref("placesColorees")} /
-        ${eb.ref("demandesAvecEffectif.effectif")}
-      `.as("tauxTransformationColorations"),
+            ${eb.fn.coalesce("placesOuvertes", eb.val(0))} -
+            ${eb.fn.coalesce("placesFermees", eb.val(0))}
+          `.as("solde"),
     ])
+    .where((w) =>
+      w.or([
+        w("effectifs.effectif", "is not", null),
+        w("demandes.codeNsf", "is not", null),
+      ])
+    )
     .execute()
     .then(cleanNull);
 };

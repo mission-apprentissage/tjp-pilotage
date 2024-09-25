@@ -73,3 +73,12 @@ export const formatPercentageWithoutSign = (
   if (value === undefined || value === null) return nullValue;
   return formatNumber(value * 100, numberOfDigits);
 };
+
+export const formatLargeNumber = (
+  value?: number,
+  thousandSeparator: string = "\u00A0",
+  nullValue: string = "0"
+): string => {
+  if (value === undefined || value === null) return nullValue;
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+};

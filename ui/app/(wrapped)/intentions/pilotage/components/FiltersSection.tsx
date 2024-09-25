@@ -141,6 +141,7 @@ export const FiltersSection = ({
             size="md"
             variant="newInput"
             value={filters.campagne ?? ""}
+            data-has-value={!!filters.campagne}
             onChange={(e) => {
               onUpdateFilter({ key: "campagne", selected: e.target.value });
             }}

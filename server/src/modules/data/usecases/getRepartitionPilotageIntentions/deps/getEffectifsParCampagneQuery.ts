@@ -1,3 +1,5 @@
+// TO DO : rm file ?
+
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
