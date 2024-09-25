@@ -1,4 +1,4 @@
-import { Badge, Text } from "@chakra-ui/react";
+import { Badge, Box, Text } from "@chakra-ui/react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -41,8 +41,13 @@ export const Effectifs = ({
       tooltip={
         <TooltipIcon
           ml="1"
-          label="Effectifs en entrée en première année de formation"
-          onClick={() => openGlossaire("effectifs")}
+          label={
+            <Box>
+              <Text>Effectifs en entrée en première année de formation.</Text>
+              <Text>Cliquez pour plus d'infos.</Text>
+            </Box>
+          }
+          onClick={() => openGlossaire("effectif-en-entree")}
         />
       }
       badge={

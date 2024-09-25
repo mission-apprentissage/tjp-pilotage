@@ -281,7 +281,7 @@ export const FiltersSection = ({
             Domaine de formation (NSF)
             <TooltipIcon
               ml="1"
-              label="cliquez pour plus d'infos."
+              label="Cliquez pour plus d'infos."
               onClick={() => openGlossaire("domaine-de-formation-nsf")}
             />
           </FormLabel>
