@@ -25,7 +25,7 @@ import { ScopeEnum } from "shared";
 
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
-import { formatPercentage } from "@/utils/formatUtils";
+import { formatLargeNumber, formatPercentage } from "@/utils/formatUtils";
 
 import {
   FiltersStatsPilotageIntentions,
@@ -238,16 +238,11 @@ export const AnalyseComparativeSection = ({
               boxShadow={"0px 2px 1px 1px black;"}
             >
               <Tr>
-                <Th
-                  width={"15%"}
-                  cursor={"pointer"}
-                  onClick={() => handleOrder("libelle")}
-                >
+                <Th cursor={"pointer"} onClick={() => handleOrder("libelle")}>
                   <OrderIcon {...order} column="libelle" />
                   {isZoneGeographiqueSelected ? filters?.scope : "Domaine"}
                 </Th>
                 <Th
-                  maxWidth={"5%"}
                   isNumeric
                   cursor={"pointer"}
                   onClick={() => handleOrder("placesTransformees")}
@@ -256,7 +251,6 @@ export const AnalyseComparativeSection = ({
                   Places transformées
                 </Th>
                 <Th
-                  maxWidth={"10%"}
                   isNumeric
                   cursor={"pointer"}
                   onClick={() => handleOrder("effectif")}
@@ -265,7 +259,6 @@ export const AnalyseComparativeSection = ({
                   Effectif en entrée
                 </Th>
                 <Th
-                  maxWidth={"5%"}
                   isNumeric
                   cursor={"pointer"}
                   onClick={() => handleOrder("tauxTransformation")}
@@ -274,7 +267,6 @@ export const AnalyseComparativeSection = ({
                   Taux de transformation
                 </Th>
                 <Th
-                  maxWidth={"5%"}
                   isNumeric
                   cursor={"pointer"}
                   onClick={() => handleOrder("tauxTransformationOuvertures")}
@@ -283,7 +275,6 @@ export const AnalyseComparativeSection = ({
                   dont ouvertures
                 </Th>
                 <Th
-                  maxWidth={"5%"}
                   isNumeric
                   cursor={"pointer"}
                   onClick={() => handleOrder("tauxTransformationFermetures")}
@@ -292,7 +283,6 @@ export const AnalyseComparativeSection = ({
                   dont fermetures
                 </Th>
                 <Th
-                  maxWidth={"5%"}
                   isNumeric
                   cursor={"pointer"}
                   onClick={() => handleOrder("tauxTransformationColorations")}
@@ -304,7 +294,6 @@ export const AnalyseComparativeSection = ({
                   dont colorations
                 </Th>
                 <Th
-                  maxWidth={"5%"}
                   isNumeric
                   cursor={"pointer"}
                   onClick={() => handleOrder("solde")}
@@ -313,7 +302,6 @@ export const AnalyseComparativeSection = ({
                   solde
                 </Th>
                 <Th
-                  maxWidth={"5%"}
                   isNumeric
                   cursor={"pointer"}
                   onClick={() => handleOrder("ratioFermeture")}
@@ -367,24 +355,20 @@ export const AnalyseComparativeSection = ({
                         </Tooltip>
                       </Td>
                       <Td
-                        width={24}
-                        maxWidth={24}
                         bgColor={tdBgColor}
                         border={"none !important"}
                         color={color}
                         isNumeric
                       >
-                        {item.placesTransformees}
+                        {formatLargeNumber(item.placesTransformees)}
                       </Td>
                       <Td
-                        width={24}
-                        maxWidth={24}
                         bgColor={tdBgColor}
                         border={"none !important"}
                         color={color}
                         isNumeric
                       >
-                        {item.effectif ?? "-"}
+                        {formatLargeNumber(item.effectif, "\u00A0", "-")}
                       </Td>
                       <Td
                         bgColor={getTauxTransfoBgColor(item.tauxTransformation)}
@@ -472,27 +456,23 @@ export const AnalyseComparativeSection = ({
                 bgColor="white"
               >
                 <Td
-                  width={"20%"}
+                  w={"20%"}
                   textTransform={"uppercase"}
                   border={"none !important"}
                 >
                   {dataToDisplay["Total"]?.libelle}
                 </Td>
-                <Td
-                  width={24}
-                  maxWidth={24}
-                  border={"none !important"}
-                  isNumeric
-                >
-                  {dataToDisplay["Total"]?.placesTransformees}
+                <Td border={"none !important"} isNumeric>
+                  {formatLargeNumber(
+                    dataToDisplay["Total"]?.placesTransformees
+                  )}
                 </Td>
-                <Td
-                  width={24}
-                  maxWidth={24}
-                  border={"none !important"}
-                  isNumeric
-                >
-                  {dataToDisplay["Total"]?.effectif}
+                <Td border={"none !important"} isNumeric>
+                  {formatLargeNumber(
+                    dataToDisplay["Total"]?.effectif,
+                    "\u00A0",
+                    "-"
+                  )}
                 </Td>
                 <Td
                   bgColor={getTauxTransfoBgColor(
@@ -508,48 +488,28 @@ export const AnalyseComparativeSection = ({
                     "-"
                   )}
                 </Td>
-                <Td
-                  width={24}
-                  maxWidth={24}
-                  border={"none !important"}
-                  isNumeric
-                >
+                <Td border={"none !important"} isNumeric>
                   {formatPercentage(
                     dataToDisplay["Total"]?.tauxTransformationOuvertures,
                     1,
                     "-"
                   )}
                 </Td>
-                <Td
-                  width={24}
-                  maxWidth={24}
-                  border={"none !important"}
-                  isNumeric
-                >
+                <Td border={"none !important"} isNumeric>
                   {formatPercentage(
                     dataToDisplay["Total"]?.tauxTransformationFermetures,
                     1,
                     "-"
                   )}
                 </Td>
-                <Td
-                  width={24}
-                  maxWidth={24}
-                  border={"none !important"}
-                  isNumeric
-                >
+                <Td border={"none !important"} isNumeric>
                   {formatPercentage(
                     dataToDisplay["Total"]?.tauxTransformationColorations,
                     1,
                     "-"
                   )}
                 </Td>
-                <Td
-                  width={24}
-                  maxWidth={24}
-                  border={"none !important"}
-                  isNumeric
-                >
+                <Td border={"none !important"} isNumeric>
                   {dataToDisplay["Total"]?.solde}
                 </Td>
                 <Td

@@ -77,6 +77,21 @@ const formatResult = (
       ratioOuverture: item.placesTransformees
         ? (item.placesOuvertes || 0) / item.placesTransformees
         : undefined,
+      tauxTransformation: item.effectif
+        ? item.placesTransformees / item.effectif
+        : undefined,
+      tauxTransformationColorations:
+        item.effectif && item.placesColorees
+          ? item.placesColorees / item.effectif
+          : undefined,
+      tauxTransformationFermetures:
+        item.effectif && item.placesFermees
+          ? item.placesFermees / item.effectif
+          : undefined,
+      tauxTransformationOuvertures:
+        item.effectif && item.placesOuvertes
+          ? item.placesOuvertes / item.effectif
+          : undefined,
     }))
     .orderBy((item) => {
       const value = orderBy ? item[orderBy as keyof typeof item] : item.libelle;
