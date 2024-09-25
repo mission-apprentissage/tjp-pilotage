@@ -147,8 +147,12 @@ const getRepartitionPilotageIntentionsFactory =
 
     return {
       // Répartitions non ordonnées
-      top10Domaines: formatResult(domaines),
-      niveauxDiplome: formatResult(niveauxDiplome),
+      top10Domaines: formatResult(domaines, "desc", "placesTransformees"),
+      niveauxDiplome: formatResult(
+        niveauxDiplome,
+        "desc",
+        "placesTransformees"
+      ),
       // Répartitions ordonnées
       domaines: formatResult(
         domaines,

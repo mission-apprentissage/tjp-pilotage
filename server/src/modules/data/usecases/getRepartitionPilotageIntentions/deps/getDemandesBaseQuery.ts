@@ -205,6 +205,9 @@ export const genericOnDemandes =
     codeNsf,
     campagne,
     secteur,
+    codeRegion,
+    codeAcademie,
+    codeDepartement,
     withColoration,
   }: Filters) =>
   (
@@ -299,6 +302,10 @@ export const genericOnDemandes =
           .as("placesTransformees"),
       ])
       .$call((eb) => {
+        if (campagne) return eb.where("campagne.annee", "=", campagne);
+        return eb;
+      })
+      .$call((eb) => {
         if (rentreeScolaire)
           return eb.where(
             "demande.rentreeScolaire",
@@ -308,11 +315,22 @@ export const genericOnDemandes =
         return eb;
       })
       .$call((eb) => {
-        if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
+        if (codeRegion)
+          return eb.where("dataEtablissement.codeRegion", "=", codeRegion);
         return eb;
       })
       .$call((eb) => {
-        if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
+        if (codeAcademie)
+          return eb.where("dataEtablissement.codeAcademie", "=", codeAcademie);
+        return eb;
+      })
+      .$call((eb) => {
+        if (codeDepartement)
+          return eb.where(
+            "dataEtablissement.codeDepartement",
+            "=",
+            codeDepartement
+          );
         return eb;
       })
       .$call((eb) => {
@@ -325,7 +343,11 @@ export const genericOnDemandes =
         return eb;
       })
       .$call((eb) => {
-        if (campagne) return eb.where("campagne.annee", "=", campagne);
+        if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
+        return eb;
+      })
+      .$call((eb) => {
+        if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
         return eb;
       })
       .$call((q) => {

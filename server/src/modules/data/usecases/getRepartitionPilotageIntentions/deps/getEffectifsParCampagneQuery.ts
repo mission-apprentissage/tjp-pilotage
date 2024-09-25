@@ -60,6 +60,11 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
     .where(isInDenominateurTauxTransfo)
     .where(isInPerimetreIJDataEtablissement)
     .$call((eb) => {
+      if (filters.campagne)
+        return eb.where("campagne.annee", "=", filters.campagne);
+      return eb;
+    })
+    .$call((eb) => {
       if (filters.CPC) return eb.where("dataFormation.cpc", "in", filters.CPC);
       return eb;
     })
@@ -102,11 +107,6 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
           "=",
           filters.codeAcademie
         );
-      return eb;
-    })
-    .$call((eb) => {
-      if (filters.campagne)
-        return eb.where("campagne.annee", "=", filters.campagne);
       return eb;
     })
     .$call((q) => {
