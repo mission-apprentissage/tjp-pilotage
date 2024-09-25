@@ -11,6 +11,7 @@ import {
   SliderThumb,
   SliderTrack,
   TabPanel,
+  Text,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
@@ -50,7 +51,17 @@ export const TabFiltres = ({
         <FormControl>
           <FormLabel>
             Effectif minimum (en entrée){" "}
-            <TooltipIcon onClick={() => openGlossaire("effectifs")} />
+            <TooltipIcon
+              onClick={() => openGlossaire("effectif-en-entree")}
+              label={
+                <Box>
+                  <Text>
+                    Effectifs en entrée en première année de formation.
+                  </Text>
+                  <Text>Cliquez pour plus d'infos.</Text>
+                </Box>
+              }
+            />
           </FormLabel>
           <Slider
             mt="6"
@@ -94,7 +105,7 @@ export const TabFiltres = ({
           label={"Effectif"}
           tendance={filters.effectif}
           setTendance={(effectif) => setFilters({ ...filters, effectif })}
-          glossaire={"effectifs"}
+          glossaire={"effectif-en-entree"}
         />
         <TendanceRadio
           label={"Taux de pression"}
