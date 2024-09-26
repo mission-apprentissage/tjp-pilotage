@@ -6,15 +6,15 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import {
-  countFermetures,
-  countFermeturesApprentissage,
-  countFermeturesSco,
-  countOuvertures,
-  countOuverturesApprentissage,
-  countOuverturesSco,
   countPlacesColorees,
   countPlacesColoreesApprentissage,
-  countPlacesColoreesSco,
+  countPlacesColoreesScolaire,
+  countPlacesFermees,
+  countPlacesFermeesApprentissage,
+  countPlacesFermeesScolaire,
+  countPlacesOuvertes,
+  countPlacesOuvertesApprentissage,
+  countPlacesOuvertesScolaire,
 } from "../../../utils/countCapacite";
 import { isRestitutionIntentionVisible } from "../../../utils/isRestitutionIntentionVisible";
 import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
@@ -77,24 +77,24 @@ const getStatsRestitutionIntentionsQuery = async ({
         total: sql<number>`
         COALESCE(
           SUM(
-            ${countOuvertures(eb)} +
-            ${countFermetures(eb)}
+            ${countPlacesOuvertes(eb)} +
+            ${countPlacesFermees(eb)}
           ),
           0
         )`,
         scolaire: sql<number>`
         COALESCE(
           SUM(
-            ${countOuverturesSco(eb)} +
-            ${countFermeturesSco(eb)}
+            ${countPlacesOuvertesScolaire(eb)} +
+            ${countPlacesFermeesScolaire(eb)}
           ),
           0
         )`,
         apprentissage: sql<number>`
         COALESCE(
           SUM(
-            ${countOuverturesApprentissage(eb)} +
-            ${countFermeturesApprentissage(eb)}
+            ${countPlacesOuvertesApprentissage(eb)} +
+            ${countPlacesFermeesApprentissage(eb)}
           ),
           0
         )`,
@@ -102,19 +102,23 @@ const getStatsRestitutionIntentionsQuery = async ({
     )
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`COALESCE(SUM(${countOuvertures(eb)}),0)`,
-        scolaire: sql<number>`COALESCE(SUM(${countOuverturesSco(eb)}),0)`,
+        total: sql<number>`COALESCE(SUM(${countPlacesOuvertes(eb)}),0)`,
+        scolaire: sql<number>`COALESCE(SUM(${countPlacesOuvertesScolaire(
+          eb
+        )}),0)`,
         apprentissage: sql<number>`COALESCE(
-          SUM(${countOuverturesApprentissage(eb)}),0
+          SUM(${countPlacesOuvertesApprentissage(eb)}),0
         )`,
       }).as("ouvertures")
     )
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`COALESCE(SUM(${countFermetures(eb)}),0)`,
-        scolaire: sql<number>`COALESCE(SUM(${countFermeturesSco(eb)}),0)`,
+        total: sql<number>`COALESCE(SUM(${countPlacesFermees(eb)}),0)`,
+        scolaire: sql<number>`COALESCE(SUM(${countPlacesFermeesScolaire(
+          eb
+        )}),0)`,
         apprentissage: sql<number>`COALESCE(
-          SUM(${countFermeturesApprentissage(eb)}),0
+          SUM(${countPlacesFermeesApprentissage(eb)}),0
         )`,
       }).as("fermetures")
     )
@@ -122,7 +126,7 @@ const getStatsRestitutionIntentionsQuery = async ({
       jsonBuildObject({
         total: sql<number>`COALESCE(SUM(${countPlacesColorees(eb)}),0)`,
         scolaire: sql<number>`COALESCE(
-          SUM(${countPlacesColoreesSco(eb)}),0
+          SUM(${countPlacesColoreesScolaire(eb)}),0
         )`,
         apprentissage: sql<number>`COALESCE(
           SUM(${countPlacesColoreesApprentissage(eb)}),0
@@ -136,7 +140,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           SUM(
             CASE WHEN
             ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('561', '461')
-            THEN ${countOuvertures(eb)}
+            THEN ${countPlacesOuvertes(eb)}
             ELSE 0
             END
           ),
@@ -147,7 +151,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           SUM(
             CASE WHEN
             ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('561', '461')
-            THEN ${countOuverturesSco(eb)}
+            THEN ${countPlacesOuvertesScolaire(eb)}
             ELSE 0
             END
           ),
@@ -158,7 +162,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           SUM(
             CASE WHEN
             ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('561', '461')
-            THEN ${countOuverturesApprentissage(eb)}
+            THEN ${countPlacesOuvertesApprentissage(eb)}
             ELSE 0
             END
           ),
@@ -175,7 +179,7 @@ const getStatsRestitutionIntentionsQuery = async ({
             ${eb.ref(
               "dataFormation.codeNiveauDiplome"
             )} IN ('381', '481', '581')
-            THEN ${countOuvertures(eb)}
+            THEN ${countPlacesOuvertes(eb)}
             ELSE 0
             END
           ),
@@ -188,7 +192,7 @@ const getStatsRestitutionIntentionsQuery = async ({
             ${eb.ref(
               "dataFormation.codeNiveauDiplome"
             )} IN ('381', '481', '581')
-            THEN ${countOuverturesSco(eb)}
+            THEN ${countPlacesOuvertesScolaire(eb)}
             ELSE 0
             END
           ),
@@ -201,7 +205,7 @@ const getStatsRestitutionIntentionsQuery = async ({
             ${eb.ref(
               "dataFormation.codeNiveauDiplome"
             )} IN ('381', '481', '581')
-            THEN ${countOuverturesApprentissage(eb)}
+            THEN ${countPlacesOuvertesApprentissage(eb)}
             ELSE 0
             END
           ),

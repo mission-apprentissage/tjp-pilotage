@@ -1,8 +1,19 @@
-import { AspectRatio, Box, useToken } from "@chakra-ui/react";
+import {
+  AspectRatio,
+  Box,
+  Flex,
+  Heading,
+  Img,
+  useToken,
+  VStack,
+} from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
-import { formatPercentage } from "../../../../../utils/formatUtils";
+import { themeDefinition } from "@/theme/theme";
+import { themeColors } from "@/theme/themeColors";
+import { formatPercentage } from "@/utils/formatUtils";
+
 import {
   RepartitionPilotageIntentionsDomaines,
   RepartitionPilotageIntentionsNiveauxDiplome,
@@ -21,7 +32,25 @@ export const PositiveNegativeBarChart = ({
     | RepartitionPilotageIntentionsZonesGeographiques
     | RepartitionPilotageIntentionsNiveauxDiplome;
 }) => {
-  if (!data) return <></>;
+  if (!data || !Object.keys(data).filter((key) => key !== "Total").length)
+    return (
+      <VStack
+        mt={16}
+        mb={5}
+        width="100%"
+        backgroundColor={themeColors.grey[975]}
+        color={themeColors.grey[625]}
+        p={8}
+      >
+        <Heading as="h3">Aucune donnée à afficher</Heading>
+        <Heading as="h4" size="md">
+          pour les filtres sélectionnés
+        </Heading>
+        <Flex flex={1} backgroundColor={themeDefinition.colors.bluefrance[975]}>
+          <Img src="/illustrations/search.svg" />
+        </Flex>
+      </VStack>
+    );
 
   const limit = 10;
   const chartRef = useRef<echarts.ECharts>();
@@ -84,17 +113,6 @@ export const PositiveNegativeBarChart = ({
       animationDelay: 0.5,
       responsive: true,
       maintainAspectRatio: true,
-      title: {
-        text: title,
-        show: true,
-        textStyle: {
-          color: bf113,
-          fontFamily: "Marianne",
-          fontSize: 16,
-          fontWeight: 500,
-          texttransform: "uppercase",
-        },
-      },
       tooltip: {
         trigger: "axis",
         axisPointer: {
@@ -146,6 +164,15 @@ export const PositiveNegativeBarChart = ({
                 <span>
                   Pl. fermées :
                   <span style="font-weight: 700;"> ${-params[1]?.data}</span>
+                </span>
+              </div>
+              <br />
+              <div style="display: inline-block; margin-top: 15px;">
+                <span>
+                  Pl. transformées :
+                  <span style="font-weight: 700;"> ${
+                    data[params[0]?.name].placesTransformees
+                  }</span>
                 </span>
               </div>
             </div>

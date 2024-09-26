@@ -19,19 +19,19 @@ const inQ1Q2 = (
     "Q2",
   ]);
 
-export const countOuverturesTransitionEcologique = ({
+export const countPlacesOuvertesTransitionEcologique = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
   exceptionColoration({
     eb,
-    count: sql<number>`${countOuverturesScoTransitionEcologique(
+    count: sql<number>`${countPlacesOuvertesScolaireTransitionEcologique(
       eb
-    )} + ${countOuverturesApprentissageTransitionEcologique(eb)}`,
+    )} + ${countPlacesOuvertesApprentissageTransitionEcologique(eb)}`,
   });
 
-export const countOuverturesScoTransitionEcologique = ({
+export const countPlacesOuvertesScolaireTransitionEcologique = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "rome">;
@@ -49,7 +49,7 @@ export const countOuverturesScoTransitionEcologique = ({
     END`,
   });
 
-export const countOuverturesApprentissageTransitionEcologique = ({
+export const countPlacesOuvertesApprentissageTransitionEcologique = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "rome">;
@@ -67,20 +67,20 @@ export const countOuverturesApprentissageTransitionEcologique = ({
     END`,
   });
 
-export const countOuvertures = ({
+export const countPlacesOuvertes = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
   exceptionColoration({
     eb,
-    count: sql<number>`${countOuverturesSco(
+    count: sql<number>`${countPlacesOuvertesScolaire(
       eb
-    )} + ${countOuverturesApprentissage(eb)}`,
+    )} + ${countPlacesOuvertesApprentissage(eb)}`,
   });
 
 // TODO: remplacer par GREATEST((${eb.ref("demande.capaciteScolaire")} - ${eb.ref("demande.capaciteScolaireActuelle")}),0)
-export const countOuverturesSco = ({
+export const countPlacesOuvertesScolaire = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
@@ -104,7 +104,7 @@ export const countOuverturesSco = ({
       .end(),
   });
 
-export const countOuverturesScoQ1Q2 = ({
+export const countPlacesOuvertesScolaireQ1Q2 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
@@ -133,7 +133,7 @@ export const countOuverturesScoQ1Q2 = ({
       .end(),
   });
 
-export const countOuverturesApprentissage = ({
+export const countPlacesOuvertesApprentissage = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
@@ -157,7 +157,7 @@ export const countOuverturesApprentissage = ({
       .end(),
   });
 
-export const countOuverturesApprentissageQ1Q2 = ({
+export const countPlacesOuvertesApprentissageQ1Q2 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
@@ -186,19 +186,19 @@ export const countOuverturesApprentissageQ1Q2 = ({
       .end(),
   });
 
-export const countFermetures = ({
+export const countPlacesFermees = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
   exceptionColoration({
     eb,
-    count: sql<number>`${countFermeturesSco(
+    count: sql<number>`${countPlacesFermeesScolaire(
       eb
-    )} + ${countFermeturesApprentissage(eb)}`,
+    )} + ${countPlacesFermeesApprentissage(eb)}`,
   });
 
-export const countFermeturesSco = ({
+export const countPlacesFermeesScolaire = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
@@ -217,7 +217,7 @@ export const countFermeturesSco = ({
     END`,
   });
 
-export const countFermeturesScoQ3Q4 = ({
+export const countPlacesFermeesScolaireQ3Q4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
@@ -249,7 +249,7 @@ export const countFermeturesScoQ3Q4 = ({
       .end(),
   });
 
-export const countFermeturesApprentissage = ({
+export const countPlacesFermeesApprentissage = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "campagne">;
@@ -277,7 +277,7 @@ export const countFermeturesApprentissage = ({
       .end(),
   });
 
-export const countFermeturesApprentissageQ3Q4 = ({
+export const countPlacesFermeesApprentissageQ3Q4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<
@@ -338,11 +338,13 @@ export const countPlacesTransformees = ({
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
-  sql<number>`${countOuverturesSco(eb)} + ${countFermeturesSco(
+  sql<number>`${countPlacesOuvertesScolaire(eb)} + ${countPlacesFermeesScolaire(
     eb
-  )} + ${countOuverturesApprentissage(eb)} + ${countFermeturesApprentissage(
+  )} + ${countPlacesOuvertesApprentissage(
     eb
-  )} + ${countOuverturesColorees(eb)}`;
+  )} + ${countPlacesFermeesApprentissage(eb)} + ${countPlacesOuvertesColorees(
+    eb
+  )}`;
 
 export const countDifferenceCapaciteScolaireIntention = ({
   eb,
@@ -361,9 +363,9 @@ export const countPlacesTransformeesCampagne2023 = ({
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
-  sql<number>`${countOuverturesSco(eb)} +
-    ${countOuverturesApprentissage(eb)} -
-    ${countFermeturesSco(eb)}`;
+  sql<number>`${countPlacesOuvertesScolaire(eb)} +
+    ${countPlacesOuvertesApprentissage(eb)} -
+    ${countPlacesFermeesScolaire(eb)}`;
 
 export const countDifferenceCapaciteApprentissageIntention = ({
   eb,
@@ -377,7 +379,7 @@ export const countDifferenceCapaciteApprentissageIntention = ({
     )})`,
   });
 
-export const countOuverturesScolaireColoree = ({
+export const countPlacesOuvertesScolairelaireColoree = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
@@ -394,7 +396,7 @@ export const countOuverturesScolaireColoree = ({
     .else(0)
     .end();
 
-export const countOuverturesScolaireColoreeQ3Q4 = ({
+export const countPlacesOuvertesScolairelaireColoreeQ3Q4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
@@ -412,7 +414,7 @@ export const countOuverturesScolaireColoreeQ3Q4 = ({
     .else(0)
     .end();
 
-export const countOuverturesApprentissageColoree = ({
+export const countPlacesOuvertesApprentissageColoree = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
@@ -429,7 +431,7 @@ export const countOuverturesApprentissageColoree = ({
     .else(0)
     .end();
 
-export const countOuverturesApprentissageColoreeQ3Q4 = ({
+export const countPlacesOuvertesApprentissageColoreeQ3Q4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
@@ -447,23 +449,23 @@ export const countOuverturesApprentissageColoreeQ3Q4 = ({
     .else(0)
     .end();
 
-export const countOuverturesColorees = ({
+export const countPlacesOuvertesColorees = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
-  sql<number>`${countOuverturesScolaireColoree(
+  sql<number>`${countPlacesOuvertesScolairelaireColoree(
     eb
-  )} + ${countOuverturesApprentissageColoree(eb)}`;
+  )} + ${countPlacesOuvertesApprentissageColoree(eb)}`;
 
-export const countOuverturesColoreesQ3Q4 = ({
+export const countPlacesOuvertesColoreesQ3Q4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) =>
-  sql<number>`${countOuverturesScolaireColoreeQ3Q4(
+  sql<number>`${countPlacesOuvertesScolairelaireColoreeQ3Q4(
     eb
-  )} + ${countOuverturesApprentissageColoreeQ3Q4(eb)}`;
+  )} + ${countPlacesOuvertesApprentissageColoreeQ3Q4(eb)}`;
 
 export const exceptionColoration = ({
   eb,

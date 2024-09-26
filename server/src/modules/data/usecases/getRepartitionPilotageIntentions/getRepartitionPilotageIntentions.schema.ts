@@ -37,11 +37,9 @@ export const FiltersSchema = z.object({
     code: true,
     placesFermees: true,
     placesOuvertes: true,
+    placesColorees: true,
     placesTransformees: true,
     tauxTransformation: true,
-    tauxTransformationColorations: true,
-    tauxTransformationFermetures: true,
-    tauxTransformationOuvertures: true,
     solde: true,
   })
     .keyof()

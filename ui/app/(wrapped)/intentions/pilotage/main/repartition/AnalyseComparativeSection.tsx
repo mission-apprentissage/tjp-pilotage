@@ -25,8 +25,12 @@ import { ScopeEnum } from "shared";
 
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
-import { formatLargeNumber, formatPercentage } from "@/utils/formatUtils";
 
+import {
+  formatLargeNumber,
+  formatNumber,
+  formatPercentage,
+} from "../../../../../../utils/formatUtils";
 import {
   FiltersStatsPilotageIntentions,
   OrderRepartitionPilotageIntentions,
@@ -123,7 +127,7 @@ export const AnalyseComparativeSection = ({
   );
 
   const getScopeKey = () => {
-    if (filters?.scope) return "codeRegion";
+    if (!filters?.scope) return "codeRegion";
     switch (filters?.scope) {
       case ScopeEnum["académie"]:
         return "codeAcademie";
@@ -263,51 +267,68 @@ export const AnalyseComparativeSection = ({
                   cursor={"pointer"}
                   onClick={() => handleOrder("tauxTransformation")}
                 >
-                  <OrderIcon {...order} column="tauxTransformation" />
-                  Taux de transformation
+                  <>
+                    <OrderIcon {...order} column="tauxTransformation" />
+                    <Tooltip label={"Places transformées / effectif"}>
+                      Taux de transformation
+                    </Tooltip>
+                  </>
                 </Th>
                 <Th
                   isNumeric
                   cursor={"pointer"}
-                  onClick={() => handleOrder("tauxTransformationOuvertures")}
+                  onClick={() => handleOrder("placesOuvertes")}
                 >
-                  <OrderIcon {...order} column="tauxTransformationOuvertures" />
-                  dont ouvertures
+                  <>
+                    <OrderIcon {...order} column="placesOuvertes" />
+                    <Tooltip label={"Places ouvertes"}>dont ouvertures</Tooltip>
+                  </>
                 </Th>
                 <Th
                   isNumeric
                   cursor={"pointer"}
-                  onClick={() => handleOrder("tauxTransformationFermetures")}
+                  onClick={() => handleOrder("placesFermees")}
                 >
-                  <OrderIcon {...order} column="tauxTransformationFermetures" />
-                  dont fermetures
+                  <>
+                    <OrderIcon {...order} column="placesFermees" />
+                    <Tooltip label={"Places fermées"}>dont fermetures</Tooltip>
+                  </>
                 </Th>
                 <Th
                   isNumeric
                   cursor={"pointer"}
-                  onClick={() => handleOrder("tauxTransformationColorations")}
+                  onClick={() => handleOrder("placesColorees")}
                 >
-                  <OrderIcon
-                    {...order}
-                    column="tauxTransformationColorations"
-                  />
-                  dont colorations
+                  <>
+                    <OrderIcon {...order} column="placesColorees" />
+                    <Tooltip label={"Places colorées"}>
+                      dont colorations
+                    </Tooltip>
+                  </>
                 </Th>
                 <Th
                   isNumeric
                   cursor={"pointer"}
                   onClick={() => handleOrder("solde")}
                 >
-                  <OrderIcon {...order} column="solde" />
-                  solde
+                  <>
+                    <OrderIcon {...order} column="solde" />
+                    <Tooltip label={"Places ouvertes - places fermées"}>
+                      solde
+                    </Tooltip>
+                  </>
                 </Th>
                 <Th
                   isNumeric
                   cursor={"pointer"}
                   onClick={() => handleOrder("ratioFermeture")}
                 >
-                  <OrderIcon {...order} column="ratioFermeture" />
-                  ratio fermetures
+                  <>
+                    <OrderIcon {...order} column="ratioFermeture" />
+                    <Tooltip label={"Places fermées / places transformées"}>
+                      ratio fermetures
+                    </Tooltip>
+                  </>
                 </Th>
               </Tr>
             </Thead>
@@ -376,7 +397,11 @@ export const AnalyseComparativeSection = ({
                         color={"black"}
                         isNumeric
                       >
-                        {formatPercentage(item.tauxTransformation, 1, "-")}
+                        <Tooltip
+                          label={`${item.placesTransformees} / ${item.effectif}`}
+                        >
+                          {formatPercentage(item.tauxTransformation, 1, "-")}
+                        </Tooltip>
                       </Td>
                       <Td
                         width={24}
@@ -386,11 +411,7 @@ export const AnalyseComparativeSection = ({
                         color={color}
                         isNumeric
                       >
-                        {formatPercentage(
-                          item.tauxTransformationOuvertures,
-                          1,
-                          "-"
-                        )}
+                        {formatLargeNumber(item.placesOuvertes)}
                       </Td>
                       <Td
                         width={24}
@@ -400,11 +421,7 @@ export const AnalyseComparativeSection = ({
                         color={color}
                         isNumeric
                       >
-                        {formatPercentage(
-                          item.tauxTransformationFermetures,
-                          1,
-                          "-"
-                        )}
+                        {formatLargeNumber(item.placesFermees)}
                       </Td>
                       <Td
                         width={24}
@@ -414,11 +431,7 @@ export const AnalyseComparativeSection = ({
                         color={color}
                         isNumeric
                       >
-                        {formatPercentage(
-                          item.tauxTransformationColorations,
-                          1,
-                          "-"
-                        )}
+                        {formatLargeNumber(item.placesColorees)}
                       </Td>
                       <Td
                         width={24}
@@ -428,7 +441,11 @@ export const AnalyseComparativeSection = ({
                         color={color}
                         isNumeric
                       >
-                        {item.solde}
+                        <Tooltip
+                          label={`${item.placesOuvertes} - ${item.placesFermees}`}
+                        >
+                          {item.solde.toString()}
+                        </Tooltip>
                       </Td>
                       <Td
                         color={color}
@@ -441,7 +458,11 @@ export const AnalyseComparativeSection = ({
                         border={"none !important"}
                         isNumeric
                       >
-                        {formatPercentage(item.ratioFermeture, 1, "-")}
+                        <Tooltip
+                          label={`${item.placesFermees} / ${item.placesTransformees}`}
+                        >
+                          {formatPercentage(item.ratioFermeture, 1, "-")}
+                        </Tooltip>
                       </Td>
                     </Tr>
                   );
@@ -482,35 +503,31 @@ export const AnalyseComparativeSection = ({
                   border={"none !important"}
                   isNumeric
                 >
-                  {formatPercentage(
-                    dataToDisplay["Total"]?.tauxTransformation,
-                    1,
-                    "-"
-                  )}
+                  <Tooltip
+                    label={`${dataToDisplay["Total"]?.placesTransformees} / ${dataToDisplay["Total"]?.effectif}`}
+                  >
+                    {formatPercentage(
+                      dataToDisplay["Total"]?.tauxTransformation,
+                      1,
+                      "-"
+                    )}
+                  </Tooltip>
                 </Td>
                 <Td border={"none !important"} isNumeric>
-                  {formatPercentage(
-                    dataToDisplay["Total"]?.tauxTransformationOuvertures,
-                    1,
-                    "-"
-                  )}
+                  {formatLargeNumber(dataToDisplay["Total"]?.placesOuvertes)}
                 </Td>
                 <Td border={"none !important"} isNumeric>
-                  {formatPercentage(
-                    dataToDisplay["Total"]?.tauxTransformationFermetures,
-                    1,
-                    "-"
-                  )}
+                  {formatLargeNumber(dataToDisplay["Total"]?.placesFermees)}
                 </Td>
                 <Td border={"none !important"} isNumeric>
-                  {formatPercentage(
-                    dataToDisplay["Total"]?.tauxTransformationColorations,
-                    1,
-                    "-"
-                  )}
+                  {formatLargeNumber(dataToDisplay["Total"]?.placesColorees)}
                 </Td>
                 <Td border={"none !important"} isNumeric>
-                  {dataToDisplay["Total"]?.solde}
+                  <Tooltip
+                    label={`${dataToDisplay["Total"]?.placesOuvertes} - ${dataToDisplay["Total"]?.placesFermees}`}
+                  >
+                    {formatNumber(dataToDisplay["Total"]?.solde).toString()}
+                  </Tooltip>
                 </Td>
                 <Td
                   bgColor={
@@ -523,11 +540,15 @@ export const AnalyseComparativeSection = ({
                   border={"none !important"}
                   isNumeric
                 >
-                  {formatPercentage(
-                    dataToDisplay["Total"]?.ratioFermeture,
-                    1,
-                    "-"
-                  )}
+                  <Tooltip
+                    label={`${dataToDisplay["Total"]?.placesFermees} / ${dataToDisplay["Total"]?.effectif}`}
+                  >
+                    {formatPercentage(
+                      dataToDisplay["Total"]?.ratioFermeture,
+                      1,
+                      "-"
+                    )}
+                  </Tooltip>
                 </Td>
               </Tr>
             </Tbody>
