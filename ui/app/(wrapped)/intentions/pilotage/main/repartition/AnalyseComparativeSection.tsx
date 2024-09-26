@@ -20,9 +20,10 @@ import {
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { usePlausible } from "next-plausible";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
+import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage/main/displayTypeEnum";
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
 
@@ -37,7 +38,6 @@ import {
   RepartitionPilotageIntentionsDomaines,
   RepartitionPilotageIntentionsZonesGeographiques,
 } from "../../types";
-import { DisplayAnalyseComparativeEnum } from "../displayTypeEnum";
 
 const SEUIL_RATIO_FERMETURE: number = 0.33;
 
@@ -49,7 +49,12 @@ const AnalyseComparativeTabsSection = chakra(
   }: {
     isZoneGeographiqueSelected: boolean;
     isDomaineSelected: boolean;
-    setDisplayType: (displayType: DisplayAnalyseComparativeEnum) => void;
+    setDisplayType: (
+      displayType: Extract<
+        DisplayTypeEnum,
+        DisplayTypeEnum.zone_geographique | DisplayTypeEnum.domaine
+      >
+    ) => void;
   }) => {
     const getTabIndex = () => {
       if (isZoneGeographiqueSelected) return 0;
@@ -61,9 +66,7 @@ const AnalyseComparativeTabsSection = chakra(
         <Tabs isLazy={true} index={getTabIndex()} variant="blue-border">
           <TabList>
             <Tab
-              onClick={() =>
-                setDisplayType(DisplayAnalyseComparativeEnum.zone_geographique)
-              }
+              onClick={() => setDisplayType(DisplayTypeEnum.zone_geographique)}
               color={"black"}
             >
               <Flex
@@ -81,9 +84,7 @@ const AnalyseComparativeTabsSection = chakra(
             </Tab>
             <Tab
               as={Button}
-              onClick={() =>
-                setDisplayType(DisplayAnalyseComparativeEnum.domaine)
-              }
+              onClick={() => setDisplayType(DisplayTypeEnum.domaine)}
               color={"black"}
             >
               <Flex
@@ -112,6 +113,9 @@ export const AnalyseComparativeSection = ({
   order,
   setSearchParams,
   filters,
+  displayType,
+  displayZonesGeographiques,
+  displayDomaines,
 }: {
   zonesGeographiques?: RepartitionPilotageIntentionsZonesGeographiques;
   domaines?: RepartitionPilotageIntentionsDomaines;
@@ -120,11 +124,27 @@ export const AnalyseComparativeSection = ({
     order?: Partial<OrderRepartitionPilotageIntentions>;
   }) => void;
   filters?: Partial<FiltersStatsPilotageIntentions>;
+  displayType: DisplayTypeEnum;
+  displayZonesGeographiques: () => void;
+  displayDomaines: () => void;
 }) => {
   const trackEvent = usePlausible();
-  const [displayType, setDisplayType] = useState<DisplayAnalyseComparativeEnum>(
-    DisplayAnalyseComparativeEnum.zone_geographique
-  );
+
+  const setDisplayType = (
+    displayType: Extract<
+      DisplayTypeEnum,
+      DisplayTypeEnum.zone_geographique | DisplayTypeEnum.domaine
+    >
+  ) => {
+    trackEvent("pilotage-transformation:analyse-comparative-tabs", {
+      props: { type: displayType },
+    });
+    if (displayType === DisplayTypeEnum.zone_geographique) {
+      displayZonesGeographiques();
+    } else {
+      displayDomaines();
+    }
+  };
 
   const getScopeKey = () => {
     if (!filters?.scope) return "codeRegion";
@@ -152,10 +172,9 @@ export const AnalyseComparativeSection = ({
   };
 
   const isZoneGeographiqueSelected =
-    displayType === DisplayAnalyseComparativeEnum.zone_geographique;
+    displayType === DisplayTypeEnum.zone_geographique;
 
-  const isDomaineSelected =
-    displayType === DisplayAnalyseComparativeEnum.domaine;
+  const isDomaineSelected = displayType === DisplayTypeEnum.domaine;
 
   const dataToDisplay =
     (isZoneGeographiqueSelected ? zonesGeographiques : domaines) ?? {};

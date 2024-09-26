@@ -55,7 +55,9 @@ export const FiltersSchema = z.object({
   codeDepartement: z.string().optional(),
   campagne: z.string().optional(),
   secteur: z.array(SecteurZodType).optional(),
-  statut: z.array(DemandeStatutZodType).optional(),
+  statut: z
+    .array(DemandeStatutZodType.exclude(["refusée", "supprimée"]))
+    .optional(),
   withColoration: z.string().optional(),
 });
 

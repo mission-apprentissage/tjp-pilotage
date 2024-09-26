@@ -25,7 +25,7 @@ export const PilotageNationalClient = () => {
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
-    displayType?: DisplayTypeEnum;
+    displayTypes?: Array<DisplayTypeEnum>;
     filters?: Partial<FiltersStatsPilotageIntentions>;
     order?: Partial<OrderRepartitionPilotageIntentions>;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
@@ -40,13 +40,37 @@ export const PilotageNationalClient = () => {
   const displayRepartition = () =>
     setSearchParams({
       ...searchParams,
-      displayType: DisplayTypeEnum.repartition,
+      displayTypes: [
+        DisplayTypeEnum.repartition,
+        searchParams.displayTypes?.[1] ?? DisplayTypeEnum.zone_geographique,
+      ],
     });
 
   const displayQuadrant = () =>
     setSearchParams({
       ...searchParams,
-      displayType: DisplayTypeEnum.quadrant,
+      displayTypes: [
+        DisplayTypeEnum.quadrant,
+        searchParams.displayTypes?.[1] ?? DisplayTypeEnum.zone_geographique,
+      ],
+    });
+
+  const displayZonesGeographiques = () =>
+    setSearchParams({
+      ...searchParams,
+      displayTypes: [
+        searchParams.displayTypes?.[0] ?? DisplayTypeEnum.repartition,
+        DisplayTypeEnum.zone_geographique,
+      ],
+    });
+
+  const displayDomaines = () =>
+    setSearchParams({
+      ...searchParams,
+      displayTypes: [
+        searchParams.displayTypes?.[0] ?? DisplayTypeEnum.repartition,
+        DisplayTypeEnum.domaine,
+      ],
     });
 
   const [filters, setFilters] = useStateParams<FiltersStatsPilotageIntentions>({
@@ -121,12 +145,17 @@ export const PilotageNationalClient = () => {
             onOpenTauxTransfoDefinition={onOpen}
           />
           <MainSection
-            displayType={
-              searchParams.displayType ?? DisplayTypeEnum.repartition
+            displayTypes={
+              searchParams.displayTypes ?? [
+                DisplayTypeEnum.repartition,
+                DisplayTypeEnum.zone_geographique,
+              ]
             }
             filters={filters}
             displayRepartition={displayRepartition}
             displayQuadrant={displayQuadrant}
+            displayZonesGeographiques={displayZonesGeographiques}
+            displayDomaines={displayDomaines}
             quadrantData={data}
             repartitionData={repartitionData}
             order={order}

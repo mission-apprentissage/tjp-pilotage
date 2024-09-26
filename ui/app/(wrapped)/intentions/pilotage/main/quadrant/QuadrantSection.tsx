@@ -28,10 +28,7 @@ import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 import { ScopeEnum } from "shared";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { PlacesTransformeesParPositionQuadrantSection } from "@/app/(wrapped)/intentions/pilotage/main/quadrant/PlacesTransformeesParPositionQuadrantSection";
@@ -49,6 +46,7 @@ import { getTauxPressionStyle } from "@/utils/getBgScale";
 import { useStateParams } from "@/utils/useFilters";
 
 import { useGlossaireContext } from "../../../../glossaire/glossaireContext";
+import { InfoTooltipContent } from "../../../../panorama/components/QuadrantSection/InfoTooltipContent";
 import QuadrantPlaceholder from "../../components/QuadrantPlaceholder";
 import {
   FiltersStatsPilotageIntentions,
@@ -71,7 +69,9 @@ const generateRestitutionUrl = (
   scope?: SelectedScope,
   filters?: {
     tauxPression?: "faible" | "eleve";
-    statut?: Extract<DemandeStatutType, "demande validée" | "proposition">;
+    statut?: Array<
+      Extract<DemandeStatutType, "demande validée" | "projet de demande">
+    >;
     type?: "ouverture" | "fermeture";
     order?: Partial<OrderFormationsPilotageIntentions>;
   }
@@ -132,12 +132,10 @@ export const QuadrantSection = ({
     prefix: "quadrant",
     defaultValues: {
       tauxPression: undefined,
-      statut: undefined,
       type: undefined,
       order: undefined,
     } as {
       tauxPression?: "eleve" | "faible";
-      statut?: Extract<DemandeStatutType, "demande validée" | "proposition">;
       type?: "ouverture" | "fermeture";
       order?: Partial<OrderFormationsPilotageIntentions>;
     },
@@ -152,7 +150,6 @@ export const QuadrantSection = ({
   const mergedFilters = {
     ...otherFilters,
     tauxPression: filters.tauxPression,
-    statut: filters.statut,
     type: filters.type,
     codeRegion: scope?.type === ScopeEnum["région"] ? scope.value : undefined,
     codeAcademie:
@@ -165,10 +162,7 @@ export const QuadrantSection = ({
     .ref("[GET]/pilotage-intentions/formations")
     .useQuery(
       {
-        query: {
-          ...mergedFilters,
-          ...order,
-        },
+        query: { ...mergedFilters, ...order },
       },
       {
         keepPreviousData: true,
@@ -455,34 +449,7 @@ export const QuadrantSection = ({
                         </Flex>
                       </RadioGroup>
                     </FormControl>
-                    <FormControl mb="6">
-                      <FormLabel>Statut de la demande</FormLabel>
-                      <RadioGroup
-                        as={Stack}
-                        onChange={(v) =>
-                          setFilters({
-                            ...filters,
-                            statut: (v || undefined) as
-                              | Extract<
-                                  DemandeStatutType,
-                                  "demande validée" | "proposition"
-                                >
-                              | undefined,
-                          })
-                        }
-                        value={filters.statut ?? ""}
-                      >
-                        <Radio value="">Toutes</Radio>
-                        <Radio value={DemandeStatutEnum["demande validée"]}>
-                          Validées
-                        </Radio>
-                        <Radio value={DemandeStatutEnum["proposition"]}>
-                          Projets
-                        </Radio>
-                      </RadioGroup>
-                    </FormControl>
                   </Box>
-
                   <Box flex="1">
                     <Flex direction="row" justify={"space-between"} mb={4}>
                       <Flex gap={5}>
@@ -750,41 +717,3 @@ export const QuadrantSection = ({
     </>
   );
 };
-
-const InfoTooltipContent = () => (
-  <Box minW={"md"}>
-    <Text mt="4" mb="2" fontSize="sm" fontWeight="bold">
-      Nombre de places transformées :
-    </Text>
-    <Flex direction={"column"} align="flex-start" gap={2}>
-      {EFFECTIF_SIZES.map(({ min, max, size }) => (
-        <Flex key={`${min}_${max}_${size}`} align="center">
-          <Box
-            borderRadius={100}
-            width={`${size}px`}
-            height={`${size}px`}
-            mx={`${22 - size / 2}`}
-            border="1px solid black"
-          />
-          <Text flex={1} ml="4" fontSize="sm">
-            {typeof min === "undefined" && (
-              <>
-                {"<"} {max} places transformées
-              </>
-            )}
-            {typeof max === "undefined" && (
-              <>
-                {">"} {min} places transformées
-              </>
-            )}
-            {typeof min !== "undefined" && typeof max !== "undefined" && (
-              <>
-                {min} à {max} places transformées
-              </>
-            )}
-          </Text>
-        </Flex>
-      ))}
-    </Flex>
-  </Box>
-);

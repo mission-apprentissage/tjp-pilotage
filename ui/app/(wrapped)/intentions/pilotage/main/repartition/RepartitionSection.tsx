@@ -6,6 +6,7 @@ import {
 } from "@/app/(wrapped)/intentions/pilotage/types";
 
 import { RepartitionPilotageIntentions } from "../../types";
+import { DisplayTypeEnum } from "../displayTypeEnum";
 import { AnalyseComparativeSection } from "./AnalyseComparativeSection";
 import { FiliereNiveauDiplomeSection } from "./FiliereNiveauDiplomeSection";
 
@@ -14,6 +15,9 @@ export const RepartitionSection = ({
   order,
   setSearchParams,
   filters,
+  displayType,
+  displayZonesGeographiques,
+  displayDomaines,
 }: {
   repartitionData?: RepartitionPilotageIntentions;
   order: Partial<OrderRepartitionPilotageIntentions>;
@@ -21,6 +25,9 @@ export const RepartitionSection = ({
     order?: Partial<OrderRepartitionPilotageIntentions>;
   }) => void;
   filters?: Partial<FiltersStatsPilotageIntentions>;
+  displayType: DisplayTypeEnum;
+  displayZonesGeographiques: () => void;
+  displayDomaines: () => void;
 }) => {
   return (
     <Flex direction={"column"} gap={8} w={"100%"}>
@@ -31,6 +38,9 @@ export const RepartitionSection = ({
         order={order}
         setSearchParams={setSearchParams}
         filters={filters}
+        displayType={displayType}
+        displayZonesGeographiques={displayZonesGeographiques}
+        displayDomaines={displayDomaines}
       />
     </Flex>
   );
