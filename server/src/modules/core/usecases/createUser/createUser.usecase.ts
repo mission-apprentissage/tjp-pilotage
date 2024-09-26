@@ -28,17 +28,25 @@ export const [createUser, createUserFactory] = inject(
     }) => {
       const { email, firstname, lastname, role, codeRegion } = body;
 
-      if (!email.match(emailRegex)) throw Boom.badRequest("email is not valid");
+      if (!email.match(emailRegex))
+        throw Boom.badRequest(`L'email est invalide`);
 
       if (requestUser) {
         if (!canCreateRole({ requestUser, role: body.role }))
-          throw Boom.unauthorized("cannot create user with this role");
+          throw Boom.unauthorized(
+            `Vous n'avez pas les droits de créer un utilisateur avec le rôle ${body.role}`
+          );
         if (!canCreateUserInScope({ requestUser, body }))
-          throw Boom.unauthorized("cannot create user within this scope");
+          throw Boom.unauthorized(
+            "Vous ne pouvez pas créer un utilisateur dans ce périmètre."
+          );
       }
 
       const existingUser = await deps.findUserQuery({ email });
-      if (existingUser) throw Boom.badRequest("email already exist");
+
+      if (existingUser) {
+        throw Boom.badRequest(`${email} est déjà éxistant dans l'application.`);
+      }
 
       await deps.insertUserQuery({
         email,
