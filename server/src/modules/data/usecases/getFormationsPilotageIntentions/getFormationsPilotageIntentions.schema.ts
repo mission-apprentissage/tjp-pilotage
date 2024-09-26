@@ -35,12 +35,15 @@ export const getFormationsPilotageIntentionsSchema = {
     codeRegion: z.string().optional(),
     codeAcademie: z.string().optional(),
     codeDepartement: z.string().optional(),
-    statut: DemandeStatutZodType.exclude(["refusée", "supprimée"]).optional(),
+    statut: z
+      .array(DemandeStatutZodType.exclude(["refusée", "supprimée"]))
+      .optional(),
     CPC: z.array(z.string()).optional(),
     secteur: z.array(SecteurZodType).optional(),
     type: z.enum(["ouverture", "fermeture", "coloration"]).optional(),
     tauxPression: z.enum(["faible", "eleve"]).optional(),
     campagne: z.string().optional(),
+    withColoration: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationTransformationStatsSchema.keyof().optional(),
   }),

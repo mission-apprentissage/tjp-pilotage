@@ -13,18 +13,22 @@ import { RepartitionSection } from "./repartition/RepartitionSection";
 import { TabsSection } from "./TabsSection";
 
 export const MainSection = ({
-  displayType,
+  displayTypes,
   displayRepartition,
   displayQuadrant,
+  displayZonesGeographiques,
+  displayDomaines,
   quadrantData,
   repartitionData,
   filters,
   order,
   setSearchParams,
 }: {
-  displayType: DisplayTypeEnum;
+  displayTypes: Array<DisplayTypeEnum>;
   displayRepartition: () => void;
   displayQuadrant: () => void;
+  displayZonesGeographiques: () => void;
+  displayDomaines: () => void;
   quadrantData?: StatsPilotageIntentions;
   repartitionData?: RepartitionPilotageIntentions;
   filters: FiltersStatsPilotageIntentions;
@@ -33,10 +37,13 @@ export const MainSection = ({
     order?: Partial<OrderRepartitionPilotageIntentions>;
   }) => void;
 }) => {
+  const tabsDisplayType = displayTypes[0];
+  const analyseComparativeDisplayType = displayTypes[1];
+
   return (
     <Flex direction="column" w={"100%"} mb={16}>
       <TabsSection
-        displayType={displayType}
+        displayType={tabsDisplayType}
         displayRepartition={displayRepartition}
         displayQuadrant={displayQuadrant}
       />
@@ -47,14 +54,17 @@ export const MainSection = ({
         borderTopRightRadius={4}
         borderLeftWidth={1}
       >
-        {displayType === DisplayTypeEnum.repartition ? (
+        {tabsDisplayType === DisplayTypeEnum.repartition ? (
           <RepartitionSection
             repartitionData={repartitionData}
             order={order}
             setSearchParams={setSearchParams}
             filters={filters}
+            displayType={analyseComparativeDisplayType}
+            displayZonesGeographiques={displayZonesGeographiques}
+            displayDomaines={displayDomaines}
           />
-        ) : displayType === DisplayTypeEnum.quadrant ? (
+        ) : tabsDisplayType === DisplayTypeEnum.quadrant ? (
           <>
             <QuadrantSection
               parentFilters={filters}

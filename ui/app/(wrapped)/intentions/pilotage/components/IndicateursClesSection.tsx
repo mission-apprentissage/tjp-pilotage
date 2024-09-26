@@ -154,15 +154,18 @@ const NumberWithLabel = ({
           fontWeight="700"
           color={"grey.50"}
         >
-          {percentage === 0 ? "-" : formatPercentage(percentage, round)}
+          {formatPercentage(percentage, round, "-")}
         </Text>
         {objective && (
           <Box width="100%">
             <ProgressBar
-              percentage={formatPercentageWithoutSign(percentage / objective)}
+              percentage={formatPercentageWithoutSign(
+                percentage / objective,
+                1
+              )}
             />
             <Text color={themeDefinition.colors.grey[425]}>
-              {formatPercentage(percentage / objective, 0)} de l'objectif
+              {formatPercentage(percentage / objective, 1)} de l'objectif
             </Text>
           </Box>
         )}
@@ -312,6 +315,16 @@ export const IndicateursClesSection = ({
     },
   ];
 
+  const shouldShowProjetDemande = () =>
+    filters.statut === undefined ||
+    filters.statut.length === 0 ||
+    filters.statut.includes(DemandeStatutEnum["projet de demande"]);
+
+  const shouldShowDemandeValidee = () =>
+    filters.statut === undefined ||
+    filters.statut.length === 0 ||
+    filters.statut.includes(DemandeStatutEnum["demande validée"]);
+
   return (
     <VStack gap={8} width="100%" alignItems="start" color={"grey.50"}>
       <Flex direction={"row"} gap={3}>
@@ -333,39 +346,48 @@ export const IndicateursClesSection = ({
         <Flex flex="1" direction={"column"} gap={6}>
           <Flex direction={"row"} gap={6}>
             <Card title="Taux de transformation (Prévisionnel)">
-              <Grid templateColumns="repeat(2, 1fr)" width="100%" gap="24px">
-                <GridItem>
-                  <NumberWithLabel
-                    label="Projets"
-                    icon={<Icon icon="ri:file-text-line" />}
-                    scopeCode={code}
-                    percentage={getScopedData(
-                      DemandeStatutEnum["projet de demande"],
-                      "tauxTransformation"
-                    )}
-                    nationalPercentage={
-                      nationalStats?.["projet de demande"]?.["_national"]
-                        .tauxTransformation
-                    }
-                    objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
-                  />
-                </GridItem>
-                <GridItem>
-                  <NumberWithLabel
-                    label="Demandes validées"
-                    icon={<Icon icon="ri:checkbox-circle-line" />}
-                    scopeCode={code}
-                    percentage={getScopedData(
-                      DemandeStatutEnum["demande validée"],
-                      "tauxTransformation"
-                    )}
-                    nationalPercentage={
-                      nationalStats?.["demande validée"]?.["_national"]
-                        .tauxTransformation
-                    }
-                    objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
-                  />
-                </GridItem>
+              <Grid
+                templateColumns="repeat(2, 1fr)"
+                width="100%"
+                minW={450}
+                gap="24px"
+              >
+                {shouldShowProjetDemande() && (
+                  <GridItem colSpan={shouldShowDemandeValidee() ? 1 : 2}>
+                    <NumberWithLabel
+                      label="Projets"
+                      icon={<Icon icon="ri:file-text-line" />}
+                      scopeCode={code}
+                      percentage={getScopedData(
+                        DemandeStatutEnum["projet de demande"],
+                        "tauxTransformation"
+                      )}
+                      nationalPercentage={
+                        nationalStats?.["projet de demande"]?.["_national"]
+                          .tauxTransformation
+                      }
+                      objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
+                    />
+                  </GridItem>
+                )}
+                {shouldShowDemandeValidee() && (
+                  <GridItem colSpan={shouldShowProjetDemande() ? 1 : 2}>
+                    <NumberWithLabel
+                      label="Demandes validées"
+                      icon={<Icon icon="ri:checkbox-circle-line" />}
+                      scopeCode={code}
+                      percentage={getScopedData(
+                        DemandeStatutEnum["demande validée"],
+                        "tauxTransformation"
+                      )}
+                      nationalPercentage={
+                        nationalStats?.["demande validée"]?.["_national"]
+                          .tauxTransformation
+                      }
+                      objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
+                    />
+                  </GridItem>
+                )}
               </Grid>
             </Card>
             <Card title="Ratio de fermetures">
@@ -376,7 +398,6 @@ export const IndicateursClesSection = ({
                 nationalPercentage={
                   nationalStats?.all?.["_national"].ratioFermeture
                 }
-                round={0}
               />
             </Card>
           </Flex>
@@ -416,7 +437,7 @@ export const IndicateursClesSection = ({
                     {formatPercentage(
                       getScopedData("all", "placesOuvertesQ1Q2") /
                         getScopedData("all", "placesOuvertes"),
-                      0,
+                      1,
                       "-"
                     )}
                   </Text>
@@ -475,7 +496,9 @@ export const IndicateursClesSection = ({
                   <Text>
                     {formatPercentage(
                       getScopedData("all", "placesFermeesQ3Q4") /
-                        getScopedData("all", "placesFermees")
+                        getScopedData("all", "placesFermees"),
+                      1,
+                      "-"
                     )}
                   </Text>
                   <Flex direction={"row"} gap={2}>
@@ -550,7 +573,7 @@ export const IndicateursClesSection = ({
                     {formatPercentage(
                       getScopedData("all", "placesColoreesQ3Q4") /
                         getScopedData("all", "placesColorees"),
-                      0,
+                      1,
                       "-"
                     )}
                   </Text>

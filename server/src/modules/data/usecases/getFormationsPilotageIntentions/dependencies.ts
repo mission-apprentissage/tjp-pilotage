@@ -3,6 +3,7 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import { z } from "zod";
 
+import { DemandeTypeEnum } from "../../../../../../shared/enum/demandeTypeEnum";
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import {
@@ -11,6 +12,7 @@ import {
   countPlacesOuvertes,
   countPlacesTransformeesParCampagne,
 } from "../../../utils/countCapacite";
+import { isDemandeProjetOrValidee } from "../../../utils/isDemandeProjetOrValidee";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import { isInDenominateurTauxTransfo } from "../../../utils/isInDenominateurTauxTransfo";
 import { hasContinuum } from "../../utils/hasContinuum";
@@ -84,6 +86,7 @@ const getFormationsPilotageIntentionsQuery = ({
   CPC,
   secteur,
   campagne,
+  withColoration,
   orderBy,
   order,
 }: Filters) => {
@@ -325,6 +328,22 @@ const getFormationsPilotageIntentionsQuery = ({
     .$call((q) => {
       if (!secteur || secteur.length === 0) return q;
       return q.where("dataEtablissement.secteur", "in", secteur);
+    })
+    .$call((q) => {
+      if (!statut || statut.length === 0) {
+        return q.where(isDemandeProjetOrValidee);
+      }
+      return q.where("demande.statut", "in", statut);
+    })
+    .$call((q) => {
+      if (!withColoration || withColoration === "false")
+        return q.where((w) =>
+          w.or([
+            w("demande.coloration", "=", false),
+            w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"]),
+          ])
+        );
+      return q;
     })
     .$call((q) => {
       if (!orderBy || !order) return q;
