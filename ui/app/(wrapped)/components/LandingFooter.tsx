@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Flex,
   HStack,
   Img,
   Link,
@@ -112,10 +113,33 @@ export const LandingFooter = () => {
           }}
           divider={<StackDivider borderColor={"grey.900"} />}
           wrap="wrap"
+          justifyContent={"center"}
         >
           <Box>
-            <Link as={NextLink} href="/mentions-legales">
+            <Link
+              as={NextLink}
+              href="/mentions-legales"
+              onClick={() => trackEvent("footer:mentions-legales")}
+            >
               Mentions légales
+            </Link>
+          </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/cgu"
+              onClick={() => trackEvent("footer:cgu")}
+            >
+              CGU
+            </Link>
+          </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/politique-de-confidentialite"
+              onClick={() => trackEvent("footer:politique-de-confidentialite")}
+            >
+              Politique de confidentialité
             </Link>
           </Box>
           <Box>
@@ -162,8 +186,17 @@ export const LandingFooter = () => {
               Schéma pluriannuel d’accessibilité
             </Link>
           </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/ressources"
+              onClick={() => trackEvent("footer:ressources")}
+            >
+              Ressources
+            </Link>
+          </Box>
         </HStack>
-        <Box width="100%">
+        <Flex justifyContent={"center"} width="100%">
           <Text color={"grey.425"} fontSize="12px">
             Sauf mention explicite de propriété intellectuelle détenue par des
             tiers, les contenus de ce site sont proposés sous{" "}
@@ -173,7 +206,7 @@ export const LandingFooter = () => {
               </Text>
             </LinkWithIcon>
           </Text>
-        </Box>
+        </Flex>
       </Stack>
     </VStack>
   );
