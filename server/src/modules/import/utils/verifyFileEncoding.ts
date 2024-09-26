@@ -21,7 +21,7 @@ const checkUTF8BOM = async (filePath: string) => {
 export const verifyFileEncoding = async (filePath: string) => {
   const hasUTF8BOM = await checkUTF8BOM(filePath);
   if (hasUTF8BOM) {
-    return;
+    return true;
   }
 
   const encodingPredictions: { [encoding: string]: number } = {};
@@ -74,4 +74,6 @@ export const verifyFileEncoding = async (filePath: string) => {
       `Le fichier ${filePath} n'est pas correctement encodé en UTF-8. Veuillez le ré-encoder ou le sauvegarder sour le format UTF-8 (BOM).`
     );
   }
+
+  return true;
 };
