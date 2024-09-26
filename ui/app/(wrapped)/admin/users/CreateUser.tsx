@@ -22,6 +22,7 @@ import { getHierarchy, Role } from "shared";
 import { z } from "zod";
 
 import { client } from "../../../../api.client";
+import { getErrorMessage } from "../../../../utils/apiError";
 import { useAuth } from "../../../../utils/security/useAuth";
 
 export const CreateUser = ({
@@ -62,6 +63,7 @@ export const CreateUser = ({
     mutate: createUser,
     isLoading,
     isError,
+    error,
   } = client.ref("[POST]/users/:userId").useMutation({
     onSuccess: () => {
       queryClient.invalidateQueries(["[GET]/users"]);
@@ -177,7 +179,7 @@ export const CreateUser = ({
           </FormControl>
           {isError && (
             <Alert status="error">
-              <AlertDescription>Erreur lors de la création</AlertDescription>
+              <AlertDescription>{getErrorMessage(error)}</AlertDescription>
             </Alert>
           )}
         </ModalBody>
