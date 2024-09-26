@@ -40,10 +40,33 @@ export const MinimalFooter = () => {
           }}
           divider={<StackDivider borderColor={"grey.900"} />}
           wrap="wrap"
+          justifyContent={"center"}
         >
           <Box>
-            <Link as={NextLink} href="/mentions-legales">
+            <Link
+              as={NextLink}
+              href="/mentions-legales"
+              onClick={() => trackEvent("footer:mentions-legales")}
+            >
               Mentions légales
+            </Link>
+          </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/cgu"
+              onClick={() => trackEvent("footer:cgu")}
+            >
+              CGU
+            </Link>
+          </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/politique-de-confidentialite"
+              onClick={() => trackEvent("footer:politique-de-confidentialite")}
+            >
+              Politique de confidentialité
             </Link>
           </Box>
           <Box>
@@ -88,6 +111,15 @@ export const MinimalFooter = () => {
               }
             >
               Schéma pluriannuel d’accessibilité
+            </Link>
+          </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/ressources"
+              onClick={() => trackEvent("footer:ressources")}
+            >
+              Ressources
             </Link>
           </Box>
         </HStack>
