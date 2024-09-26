@@ -82,6 +82,29 @@ export const FiltersSection = ({
 
     // Valeurs par défaut pour les codes
     switch (key) {
+      case "scope":
+        if (value === ScopeEnum["région"]) {
+          newFilters = {
+            ...newFilters,
+            codeAcademie: undefined,
+            codeDepartement: undefined,
+          };
+        }
+        if (value === ScopeEnum["académie"]) {
+          newFilters = {
+            ...newFilters,
+            codeRegion: undefined,
+            codeDepartement: undefined,
+          };
+        }
+        if (value === ScopeEnum["département"]) {
+          newFilters = {
+            ...newFilters,
+            codeRegion: undefined,
+            codeAcademie: undefined,
+          };
+        }
+        break;
       case "codeAcademie":
         if (value !== undefined) {
           newFilters = {

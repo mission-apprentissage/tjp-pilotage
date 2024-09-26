@@ -6,21 +6,21 @@ import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnu
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import {
-  countFermetures,
-  countFermeturesApprentissage,
-  countFermeturesApprentissageQ3Q4,
-  countFermeturesQ3Q4,
-  countFermeturesSco,
-  countFermeturesScoQ3Q4,
-  countOuvertures,
-  countOuverturesApprentissage,
-  countOuverturesApprentissageQ1Q2,
-  countOuverturesQ1Q2,
-  countOuverturesSco,
-  countOuverturesScoQ1Q2,
-  countOuverturesTransitionEcologique,
   countPlacesColorees,
   countPlacesColoreesQ3Q4,
+  countPlacesFermees,
+  countPlacesFermeesApprentissage,
+  countPlacesFermeesApprentissageQ3Q4,
+  countPlacesFermeesQ3Q4,
+  countPlacesFermeesScolaire,
+  countPlacesFermeesScolaireQ3Q4,
+  countPlacesOuvertes,
+  countPlacesOuvertesApprentissage,
+  countPlacesOuvertesApprentissageQ1Q2,
+  countPlacesOuvertesQ1Q2,
+  countPlacesOuvertesScolaire,
+  countPlacesOuvertesScolaireQ1Q2,
+  countPlacesOuvertesTransitionEcologique,
   countPlacesTransformeesParCampagne,
 } from "../../../../utils/countCapacite";
 import { isDemandeProjetOrValidee } from "../../../../utils/isDemandeProjetOrValidee";
@@ -100,32 +100,36 @@ const genericOnDemandes =
       )
       .select((eb) => [
         selectNbDemandes(eb).as("countDemande"),
-        eb.fn.sum<number>(countOuverturesSco(eb)).as("placesOuvertesScolaire"),
-        eb.fn.sum<number>(countFermeturesSco(eb)).as("placesFermeesScolaire"),
         eb.fn
-          .sum<number>(countOuverturesScoQ1Q2(eb))
+          .sum<number>(countPlacesOuvertesScolaire(eb))
+          .as("placesOuvertesScolaire"),
+        eb.fn
+          .sum<number>(countPlacesFermeesScolaire(eb))
+          .as("placesFermeesScolaire"),
+        eb.fn
+          .sum<number>(countPlacesOuvertesScolaireQ1Q2(eb))
           .as("placesOuvertesScolaireQ1Q2"),
         eb.fn
-          .sum<number>(countFermeturesScoQ3Q4(eb))
+          .sum<number>(countPlacesFermeesScolaireQ3Q4(eb))
           .as("placesFermeesScolaireQ3Q4"),
         eb.fn
-          .sum<number>(countOuverturesApprentissage(eb))
+          .sum<number>(countPlacesOuvertesApprentissage(eb))
           .as("placesOuvertesApprentissage"),
         eb.fn
-          .sum<number>(countFermeturesApprentissage(eb))
+          .sum<number>(countPlacesFermeesApprentissage(eb))
           .as("placesFermeesApprentissage"),
         eb.fn
-          .sum<number>(countOuverturesApprentissageQ1Q2(eb))
+          .sum<number>(countPlacesOuvertesApprentissageQ1Q2(eb))
           .as("placesOuvertesApprentissageQ1Q2"),
         eb.fn
-          .sum<number>(countFermeturesApprentissageQ3Q4(eb))
+          .sum<number>(countPlacesFermeesApprentissageQ3Q4(eb))
           .as("placesFermeesApprentissageQ3Q4"),
-        eb.fn.sum<number>(countOuvertures(eb)).as("placesOuvertes"),
-        eb.fn.sum<number>(countFermetures(eb)).as("placesFermees"),
-        eb.fn.sum<number>(countOuverturesQ1Q2(eb)).as("placesOuvertesQ1Q2"),
-        eb.fn.sum<number>(countFermeturesQ3Q4(eb)).as("placesFermeesQ3Q4"),
+        eb.fn.sum<number>(countPlacesOuvertes(eb)).as("placesOuvertes"),
+        eb.fn.sum<number>(countPlacesFermees(eb)).as("placesFermees"),
+        eb.fn.sum<number>(countPlacesOuvertesQ1Q2(eb)).as("placesOuvertesQ1Q2"),
+        eb.fn.sum<number>(countPlacesFermeesQ3Q4(eb)).as("placesFermeesQ3Q4"),
         eb.fn
-          .sum<number>(countOuverturesTransitionEcologique(eb))
+          .sum<number>(countPlacesOuvertesTransitionEcologique(eb))
           .as("placesOuvertesTransformationEcologique"),
         eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
         eb.fn.sum<number>(countPlacesColoreesQ3Q4(eb)).as("placesColoreesQ3Q4"),
@@ -240,56 +244,64 @@ const getNationalData = async (filters: Filters) => {
     .select((eb) => [
       selectNbDemandes(eb).as("countDemande"),
       eb.fn
-        .coalesce(eb.fn.sum<number>(countOuverturesSco(eb)), eb.val(0))
+        .coalesce(eb.fn.sum<number>(countPlacesOuvertesScolaire(eb)), eb.val(0))
         .as("placesOuvertesScolaire"),
       eb.fn
-        .coalesce(eb.fn.sum<number>(countFermeturesSco(eb)), eb.val(0))
+        .coalesce(eb.fn.sum<number>(countPlacesFermeesScolaire(eb)), eb.val(0))
         .as("placesFermeesScolaire"),
       eb.fn
-        .coalesce(eb.fn.sum<number>(countOuverturesScoQ1Q2(eb)), eb.val(0))
+        .coalesce(
+          eb.fn.sum<number>(countPlacesOuvertesScolaireQ1Q2(eb)),
+          eb.val(0)
+        )
         .as("placesOuvertesScolaireQ1Q2"),
       eb.fn
-        .coalesce(eb.fn.sum<number>(countFermeturesScoQ3Q4(eb)), eb.val(0))
+        .coalesce(
+          eb.fn.sum<number>(countPlacesFermeesScolaireQ3Q4(eb)),
+          eb.val(0)
+        )
         .as("placesFermeesScolaireQ3Q4"),
       eb.fn
         .coalesce(
-          eb.fn.sum<number>(countOuverturesApprentissage(eb)),
+          eb.fn.sum<number>(countPlacesOuvertesApprentissage(eb)),
           eb.val(0)
         )
         .as("placesOuvertesApprentissage"),
       eb.fn
         .coalesce(
-          eb.fn.sum<number>(countFermeturesApprentissage(eb)),
+          eb.fn.sum<number>(countPlacesFermeesApprentissage(eb)),
           eb.val(0)
         )
         .as("placesFermeesApprentissage"),
       eb.fn
         .coalesce(
-          eb.fn.sum<number>(countOuverturesApprentissageQ1Q2(eb)),
+          eb.fn.sum<number>(countPlacesOuvertesApprentissageQ1Q2(eb)),
           eb.val(0)
         )
         .as("placesOuvertesApprentissageQ1Q2"),
       eb.fn
         .coalesce(
-          eb.fn.sum<number>(countFermeturesApprentissageQ3Q4(eb)),
+          eb.fn.sum<number>(countPlacesFermeesApprentissageQ3Q4(eb)),
           eb.val(0)
         )
         .as("placesFermeesApprentissageQ3Q4"),
       eb.fn
-        .coalesce(eb.fn.sum<number>(countOuvertures(eb)), eb.val(0))
+        .coalesce(eb.fn.sum<number>(countPlacesOuvertes(eb)), eb.val(0))
         .as("placesOuvertes"),
       eb.fn
-        .coalesce(eb.fn.sum<number>(countFermetures(eb)), eb.val(0))
+        .coalesce(eb.fn.sum<number>(countPlacesFermees(eb)), eb.val(0))
         .as("placesFermees"),
       eb.fn
-        .coalesce(eb.fn.sum<number>(countOuverturesQ1Q2(eb)), eb.val(0))
+        .coalesce(eb.fn.sum<number>(countPlacesOuvertesQ1Q2(eb)), eb.val(0))
         .as("placesOuvertesQ1Q2"),
       eb.fn
-        .coalesce(eb.fn.sum<number>(countFermeturesQ3Q4(eb)), eb.val(0))
+        .coalesce(eb.fn.sum<number>(countPlacesFermeesQ3Q4(eb)), eb.val(0))
         .as("placesFermeesQ3Q4"),
       eb.fn
         .coalesce(
-          eb.fn.sum<number>(countOuverturesTransitionEcologique({ eb: eb })),
+          eb.fn.sum<number>(
+            countPlacesOuvertesTransitionEcologique({ eb: eb })
+          ),
           eb.val(0)
         )
         .as("placesOuvertesTransformationEcologique"),

@@ -174,6 +174,7 @@ export const CartoSection = ({
                 borderBottomColor={
                   typeof indicateur !== "undefined" ? "info.525" : ""
                 }
+                cursor={"pointer"}
               >
                 {indicateurOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -183,7 +184,34 @@ export const CartoSection = ({
               </Select>
             </Flex>
           </Flex>
-          <Box mt={"-20px"}>
+          <Flex justifyContent="start" zIndex={1} position={"relative"}>
+            <ExportMenuButton
+              onExportCsv={async () => {
+                downloadCsv(
+                  `visualisation_territoriale_${indicateur}_${filters.scope}`,
+                  getGraphData(),
+                  {
+                    name: "Nom",
+                    value: indicateur,
+                    code: "Code",
+                  }
+                );
+              }}
+              onExportExcel={async () => {
+                downloadExcel(
+                  `visualisation_territoriale_${indicateur}_${filters.scope}`,
+                  getGraphData(),
+                  {
+                    name: "Nom",
+                    value: indicateur,
+                    code: "Code",
+                  }
+                );
+              }}
+              variant="ghost"
+            />
+          </Flex>
+          <Box mt={"-60px"}>
             <CartoGraph
               graphData={getGraphData()}
               scope={filters.scope}
@@ -196,33 +224,6 @@ export const CartoSection = ({
               }}
             />
           </Box>
-          <Flex justifyContent="end">
-            <ExportMenuButton
-              onExportCsv={async () => {
-                downloadCsv(
-                  `visulaisation_territoriale_${indicateur}_${filters.scope}`,
-                  getGraphData(),
-                  {
-                    name: "Nom",
-                    value: indicateur,
-                    code: "Code",
-                  }
-                );
-              }}
-              onExportExcel={async () => {
-                downloadExcel(
-                  `visulaisation_territoriale_${indicateur}_${filters.scope}`,
-                  getGraphData(),
-                  {
-                    name: "Nom",
-                    value: indicateur,
-                    code: "Code",
-                  }
-                );
-              }}
-              variant="ghost"
-            />
-          </Flex>
         </Box>
       )}
     </Box>

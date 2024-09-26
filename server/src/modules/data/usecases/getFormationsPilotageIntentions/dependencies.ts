@@ -6,9 +6,9 @@ import { z } from "zod";
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import {
-  countFermetures,
-  countOuvertures,
   countPlacesColorees,
+  countPlacesFermees,
+  countPlacesOuvertes,
   countPlacesTransformeesParCampagne,
 } from "../../../utils/countCapacite";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
@@ -232,8 +232,8 @@ const getFormationsPilotageIntentionsQuery = ({
       }).as("tauxDevenirFavorable"),
       selectNbDemandes(eb).as("nbDemandes"),
       selectNbEtablissements(eb).as("nbEtablissements"),
-      eb.fn.sum<number>(countOuvertures(eb)).as("placesOuvertes"),
-      eb.fn.sum<number>(countFermetures(eb)).as("placesFermees"),
+      eb.fn.sum<number>(countPlacesOuvertes(eb)).as("placesOuvertes"),
+      eb.fn.sum<number>(countPlacesFermees(eb)).as("placesFermees"),
       eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
       eb.fn
         .sum<number>(countPlacesTransformeesParCampagne(eb))
@@ -250,9 +250,9 @@ const getFormationsPilotageIntentionsQuery = ({
       if (!type) return wb.val(true);
       switch (type) {
         case "ouverture":
-          return wb(countOuvertures(wb), ">", 0);
+          return wb(countPlacesOuvertes(wb), ">", 0);
         case "fermeture":
-          return wb(countFermetures(wb), ">", 0);
+          return wb(countPlacesFermees(wb), ">", 0);
         case "coloration":
           return wb(countPlacesColorees(wb), ">", 0);
         default:

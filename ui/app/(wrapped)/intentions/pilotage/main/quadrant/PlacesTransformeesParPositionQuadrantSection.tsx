@@ -80,7 +80,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
     value: number | string
   ) => {
     if (key === "Solde") {
-      return (value as number) >= 0 ? "pilotage.red" : "pilotage.green.2";
+      return (value as number) < 0 ? "pilotage.red" : "pilotage.green.2";
     }
     return "";
   };

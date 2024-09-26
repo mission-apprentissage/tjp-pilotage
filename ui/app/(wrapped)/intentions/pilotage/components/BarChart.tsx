@@ -158,6 +158,17 @@ export const BarChart = ({
                   <span style="font-weight: 700;"> ${params[0]?.data}</span>
                 </span>
               </div>
+              <br />
+              <div style="display: inline-block; margin-top: 15px;">
+                <span>
+                  Pl. transformées :
+                  <span style="font-weight: 700;"> ${
+                    getStatsPositionQuadrant(
+                      params[0]?.name as PositionQuadrant
+                    )["Places transformées"]
+                  }</span>
+                </span>
+              </div>
             </div>
             `;
           },
