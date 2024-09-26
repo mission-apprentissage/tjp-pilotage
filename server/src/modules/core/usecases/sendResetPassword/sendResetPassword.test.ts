@@ -7,6 +7,7 @@ const user = {
   firstname: "firstname",
   lastname: "lastname",
   password: "password",
+  sub: undefined,
 };
 
 describe("sendResetPassword usecase", () => {
@@ -21,7 +22,23 @@ describe("sendResetPassword usecase", () => {
       sendResetPassword({
         email: "other@test.fr",
       })
-    ).rejects.toThrow("email does not exist");
+    ).rejects.toThrow("Email inconnu dans Orion.");
+  });
+
+  it("should throw an exception if the user is connected with SSO", async () => {
+    const sendResetPassword = sendResetPasswordFactory({
+      jwtSecret,
+      findUserQuery: async () => ({ ...user, sub: "XABCD" }),
+      shootTemplate: async () => {},
+    });
+
+    await expect(() =>
+      sendResetPassword({
+        email: "test@test.fr",
+      })
+    ).rejects.toThrow(
+      "Vous ne pouvez pas réinitialiser votre mot de passe, veuillez vous connecter à Orion via le portail ARENA."
+    );
   });
 
   it("should send the reset password email", async () => {
@@ -37,7 +54,7 @@ describe("sendResetPassword usecase", () => {
       email: "test@test.fr",
     });
 
-    await expect(deps.shootTemplate).toBeCalledWith(
+    await expect(deps.shootTemplate).toHaveBeenCalledWith(
       expect.objectContaining({ template: "reset_password" })
     );
   });
