@@ -1,6 +1,6 @@
 import { program as cli } from "commander";
 import { parse } from "csv-parse/sync";
-import fs, { writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import _ from "lodash";
 import { PERMISSIONS, Role } from "shared";
 import { z } from "zod";
@@ -133,16 +133,15 @@ cli
   .command("importFiles")
   .argument("[filename]")
   .action(async (filename: string) => {
-    const getImport = (type: string, year?: string) =>
-      importRawFile({
+    const getImport = (type: string, year?: string) => {
+      const filePath = year
+        ? `${basepath}/files/${year}/${type}_${year}.csv`
+        : `${basepath}/files/${type}.csv`;
+      return importRawFile({
         type: year ? `${type}_${year}` : type,
-        fileStream: fs.createReadStream(
-          year
-            ? `${basepath}/files/${year}/${type}_${year}.csv`
-            : `${basepath}/files/${type}.csv`,
-          "utf8"
-        ),
+        path: filePath,
       });
+    };
 
     const getImports = (type: keyof LineTypes, years?: string[]) => {
       if (!years) {

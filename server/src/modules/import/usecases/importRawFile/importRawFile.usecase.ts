@@ -1,9 +1,10 @@
+import fs from "fs";
 import { inject } from "injecti";
-import { Readable, Writable } from "stream";
-import { pipeline } from "stream/promises";
+import { pipeline, Writable } from "stream";
 
 import batchCreate from "../../utils/batchCreate";
 import { getStreamParser } from "../../utils/parse";
+import { verifyFileEncoding } from "../../utils/verifyFileEncoding";
 import { createRawDatas } from "./createRawDatas.dep";
 import { deleteRawData } from "./deleteRawData.dep";
 
@@ -13,14 +14,21 @@ export const [importRawFile, importRawFileFactory] = inject(
     deleteRawData,
   },
   (deps) =>
-    async ({ fileStream, type }: { fileStream: Readable; type: string }) => {
-      process.stdout.write(`Import des lignes du fichier ${type}...\n`);
+    async ({ type, path }: { type: string; path: string }) => {
+      try {
+        console.log(`Vérification de l'intégrité du fichier ${path}`);
+        await verifyFileEncoding(path);
+      } catch (err) {
+        console.log(err);
+      }
 
       await deps.deleteRawData({ type });
 
+      process.stdout.write(`Import des lignes du fichier ${type}...\n`);
+
       let count = 0;
       await pipeline(
-        fileStream,
+        fs.createReadStream(path),
         getStreamParser(),
         new Writable({
           final: async (callback) => {
