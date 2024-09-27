@@ -1,11 +1,12 @@
 import { Box, chakra, Th, Tooltip } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
-import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
-import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
-import { OrderDemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 import { OrderIcon } from "@/components/OrderIcon";
+import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
+
+import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
+import { OrderDemandesRestitutionIntentions } from "../types";
 
 const ConditionalTh = chakra(
   ({
@@ -27,30 +28,33 @@ const ConditionalTh = chakra(
   }) => {
     if (colonneFilters.includes(colonne))
       return (
-        <Tooltip label={STATS_DEMANDES_COLUMNS[colonne]} placement="top">
-          <Th
-            className={className}
-            style={style}
-            isNumeric={isNumeric}
-            maxW={170}
-            p={2}
-            cursor={onClick ? "pointer" : "default"}
-            whiteSpace="nowrap"
-            onClick={() =>
-              onClick &&
-              onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])
-            }
-            fontSize={12}
-            fontWeight={700}
-            lineHeight={"20px"}
-            textTransform={"uppercase"}
-            textOverflow={"ellipsis"}
-            alignSelf={"stretch"}
-            isTruncated
-          >
-            {children}
-          </Th>
-        </Tooltip>
+        <Th
+          maxW={170}
+          p={2}
+          className={className}
+          style={style}
+          isNumeric={isNumeric}
+          cursor={onClick ? "pointer" : "default"}
+          onClick={() =>
+            onClick &&
+            onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])
+          }
+        >
+          <Tooltip label={STATS_DEMANDES_COLUMNS[colonne]} placement="top">
+            <Box
+              fontSize={12}
+              fontWeight={700}
+              lineHeight={"20px"}
+              textTransform={"uppercase"}
+              textOverflow={"ellipsis"}
+              alignSelf={"stretch"}
+              isTruncated
+              whiteSpace="nowrap"
+            >
+              {children}
+            </Box>
+          </Tooltip>
+        </Th>
       );
     return null;
   }

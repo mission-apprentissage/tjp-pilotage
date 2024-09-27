@@ -14,7 +14,7 @@ import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 
 import { client } from "@/api.client";
@@ -22,6 +22,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
 import { TableHeader } from "../../../../components/TableHeader";
+import { formatExportFilename } from "../../../../utils/formatExportFilename";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleFilters } from "./components/ConsoleFilters";
 import { HeadLineContent } from "./components/HeadLineContent";
@@ -135,7 +136,11 @@ export default function Formations() {
       ? columns
       : _.omit(columns, "positionQuadrant");
 
-    downloadCsv("formations_export", formations, filteredColumns);
+    downloadCsv(
+      formatExportFilename("formation_export", filters?.codeRegion),
+      formations,
+      filteredColumns
+    );
   };
 
   const onExportExcel = async () => {
@@ -150,7 +155,11 @@ export default function Formations() {
       ? columns
       : _.omit(columns, "positionQuadrant");
 
-    downloadExcel("formations_export", formations, filteredColumns);
+    downloadExcel(
+      formatExportFilename("formation_export", filters?.codeRegion),
+      formations,
+      filteredColumns
+    );
   };
 
   const [historiqueId, setHistoriqueId] = useState<LineId>();
@@ -185,6 +194,30 @@ export default function Formations() {
 
   const canShowQuadrantPosition = filters.codeRegion?.length === 1;
 
+  const [isSticky, setIsSticky] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    if (tableRef.current) {
+      const scrollLeft = tableRef.current.scrollLeft;
+      if (scrollLeft > 200) {
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const box = tableRef.current;
+    if (box) {
+      box.addEventListener("scroll", handleScroll);
+      return () => {
+        box.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, []);
+
   return (
     <>
       <ConsoleFilters
@@ -213,9 +246,15 @@ export default function Formations() {
           count={data?.count}
           onPageChange={(newPage) => setSearchParams({ page: newPage })}
         />
-        <TableContainer overflowY="auto" flex={1} position="relative">
+        <TableContainer
+          overflowY="auto"
+          flex={1}
+          position="relative"
+          ref={tableRef}
+        >
           <Table variant="simple" size={"sm"}>
             <HeadLineContent
+              isSticky={isSticky}
               order={order}
               setSearchParams={setSearchParams}
               canShowQuadrantPosition={canShowQuadrantPosition}
@@ -225,6 +264,7 @@ export default function Formations() {
                 <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
                   <Tr h="12">
                     <FormationLineContent
+                      isSticky={isSticky}
                       defaultRentreeScolaire={CURRENT_RENTREE}
                       line={line}
                       expended={
@@ -250,6 +290,7 @@ export default function Formations() {
                             bg={"grey.975"}
                           >
                             <FormationLineContent
+                              isSticky={isSticky}
                               line={historiqueLine}
                               canShowQuadrantPosition={canShowQuadrantPosition}
                             />

@@ -10,10 +10,11 @@ import {
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
+import { toBoolean } from "@/utils/toBoolean";
+
 import { TooltipIcon } from "../../../../../../../components/TooltipIcon";
 import { useGlossaireContext } from "../../../../../glossaire/glossaireContext";
 import { isTypeColoration } from "../../../../utils/typeDemandeUtils";
-import { toBoolean } from "../../../utils/toBoolean";
 import { IntentionForms } from "../../defaultFormValues";
 
 export const ColorationField = chakra(

@@ -14,10 +14,11 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/utils/formatLibelle";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { formatAnneeCommuneLibelle } from "@/utils/formatLibelle";
+import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { Line } from "../types";
@@ -29,6 +30,7 @@ export const FormationLineContent = ({
   onClickCollapse,
   expended = false,
   canShowQuadrantPosition,
+  isSticky,
 }: {
   line: Partial<Line>;
   defaultRentreeScolaire?: string;
@@ -36,6 +38,7 @@ export const FormationLineContent = ({
   onClickCollapse?: () => void;
   expended?: boolean;
   canShowQuadrantPosition?: boolean;
+  isSticky?: boolean;
 }) => (
   <>
     <Td pr="0" py="1">
@@ -57,18 +60,29 @@ export const FormationLineContent = ({
     </Td>
     <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
     <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-    <Td minW={450} whiteSpace={"normal"}>
+    <Td
+      minW={450}
+      whiteSpace={"normal"}
+      left={0}
+      zIndex={1}
+      bgColor="white"
+      position={{ lg: "relative", xl: "sticky" }}
+      boxShadow={{
+        lg: "none",
+        xl: isSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
+      }}
+    >
       <Flex>
-        <Text w={"fit-content"} my={"auto"}>
+        <Flex w={"fit-content"} my={"auto"}>
           {formatAnneeCommuneLibelle(line, "long", "sm")}
-        </Text>
+        </Flex>
         {line.isFormationRenovee && (
           <Badge
             size="sm"
             ms={2}
             my={"auto"}
-            bgColor={"greenarchipel.950"}
-            color={"greenarchipel.391"}
+            bgColor={"greenArchipel.950"}
+            color={"greenArchipel.391"}
             h={"fit-content"}
             flex={"shrink"}
           >
@@ -140,12 +154,12 @@ export const FormationLineContent = ({
       <TableBadge
         sx={getTauxPressionStyle(
           line.tauxPression !== undefined
-            ? Math.round(line.tauxPression * 100) / 100
+            ? formatNumber(line.tauxPression, 2)
             : undefined
         )}
       >
         {line.tauxPression !== undefined
-          ? Math.round(line.tauxPression * 100) / 100
+          ? formatNumber(line.tauxPression, 2)
           : "-"}
       </TableBadge>
     </Td>

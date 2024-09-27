@@ -1,6 +1,7 @@
 import { kdb } from "../../../db/db";
 import { Attractivite_capacite } from "../fileTypes/Attractivite_capacite";
 import { BTS_Attractivite_capacite } from "../fileTypes/BTS_Attractivite_capacite";
+import { Certif_Info } from "../fileTypes/Certif_Info";
 import { Chomage_departemental_INSEE } from "../fileTypes/Chomage_departemental_INSEE";
 import { Chomage_regional_INSEE } from "../fileTypes/Chomage_regional_INSEE";
 import { Constat } from "../fileTypes/Constat";
@@ -9,7 +10,6 @@ import { DiplomeProfessionnelLine } from "../fileTypes/DiplomesProfessionnels";
 import { Discipline } from "../fileTypes/Discipline";
 import { Domaine_Professionnel } from "../fileTypes/DomaineProfessionnel";
 import { FamillesMetiersLine } from "../fileTypes/FamilleMetiers";
-import { Formation_Rome } from "../fileTypes/FormationRome";
 import { LyceesACCELine } from "../fileTypes/LyceesACCELine";
 import { Metier } from "../fileTypes/Metier";
 import { NDispositifFormation } from "../fileTypes/NDispositifFormation";
@@ -24,6 +24,7 @@ import { OptionsBTSLine } from "../fileTypes/OptionsBTS";
 import { Regroupement } from "../fileTypes/Regroupement";
 import { Rome } from "../fileTypes/Rome";
 import { StructureDenseignement } from "../fileTypes/Structures_denseignement";
+import { Tension_Departement_Rome } from "../fileTypes/Tension_Departement_rome";
 import { VFormationDiplomeLine } from "../fileTypes/VFormationDiplome";
 import { IjRegionData } from "../services/inserJeunesApi/formatRegionData";
 import { IJUaiData } from "../services/inserJeunesApi/formatUaiData";
@@ -56,8 +57,9 @@ export type LineTypes = {
   domaine_professionnel: Domaine_Professionnel;
   rome: Rome;
   metier: Metier;
-  formation_rome: Formation_Rome;
+  certif_info: Certif_Info;
   discipline: Discipline;
+  tension_departement_rome: Tension_Departement_Rome;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

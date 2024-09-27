@@ -137,7 +137,7 @@ export const themeColors = {
   green: {
     submitted: "#C8F6D6",
   },
-  greenarchipel: {
+  greenArchipel: {
     391: "#006A6F",
     "391_hover": "#009fa7",
     "391_active": "#00bbc3",
@@ -148,19 +148,13 @@ export const themeColors = {
     "950_hover": "#64ecf8",
     "950_active": "#5bd8e3",
   },
-  orangeterrebattue: {
+  orangeTerreBattue: {
     645: "#E4794A",
     "645_hover": "#f1a892",
     "645_active": "#f4bfb1",
     850: "#FCC0B0",
     "850_hover": "#fb926b",
     "850_active": "#fa7a35",
-  },
-  purpleglycine: {
-    494: "#A558A0",
-    "494_hover": "#d282cd",
-    "494_active": "#db9cd6",
-    "850_active": "#F767EF",
   },
   pilotage: {
     red: "#FA9293",
@@ -185,6 +179,10 @@ export const themeColors = {
   purpleGlycine: {
     319: "#6e445a",
     950: "#fee7fc",
+    494: "#A558A0",
+    "494_hover": "#d282cd",
+    "494_active": "#db9cd6",
+    "850_active": "#F767EF",
   },
   pinkTuile: {
     425: "#a94645",

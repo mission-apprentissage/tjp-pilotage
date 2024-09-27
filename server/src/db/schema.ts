@@ -76,6 +76,26 @@ export interface ConstatRentree {
   cfd: string | null;
 }
 
+export interface Correction {
+  id: Generated<string>;
+  intentionNumero: string;
+  createdBy: string;
+  updatedBy: string;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Generated<Timestamp>;
+  raison: string | null;
+  motif: string | null;
+  autreMotif: string | null;
+  commentaire: string | null;
+  capaciteScolaire: number | null;
+  capaciteApprentissage: number | null;
+  capaciteScolaireActuelle: number | null;
+  capaciteApprentissageActuelle: number | null;
+  capaciteScolaireColoree: number | null;
+  capaciteApprentissageColoree: number | null;
+  campagneId: string;
+}
+
 export interface DataEtablissement {
   uai: string;
   libelleEtablissement: string | null;
@@ -194,6 +214,7 @@ export interface Demande {
   campagneId: string | null;
   id: Generated<string>;
   numeroHistorique: string | null;
+  autreBesoinRH: string | null;
   amiCmaValide: boolean | null;
   amiCmaValideAnnee: string | null;
   recrutementRH: boolean | null;
@@ -212,7 +233,6 @@ export interface Demande {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  autreBesoinRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
 }
@@ -372,8 +392,8 @@ export interface FormationEtablissement {
 }
 
 export interface FormationHistorique {
-  ancienCFD: string;
   cfd: string;
+  ancienCFD: string;
   voie: string;
 }
 
@@ -408,8 +428,8 @@ export interface IndicateurEntree {
   formationEtablissementId: string;
   rentreeScolaire: string;
   effectifs: Json | null;
-  anneeDebut: number | null;
   capacites: Json | null;
+  anneeDebut: number | null;
   premiersVoeux: Json | null;
 }
 
@@ -646,6 +666,7 @@ export interface LatestDemandeNonMaterializedView {
   campagneId: string | null;
   id: string | null;
   numeroHistorique: string | null;
+  autreBesoinRH: string | null;
   amiCmaValide: boolean | null;
   amiCmaValideAnnee: string | null;
   recrutementRH: boolean | null;
@@ -664,7 +685,6 @@ export interface LatestDemandeNonMaterializedView {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  autreBesoinRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
 }
@@ -743,6 +763,10 @@ export interface LatestIntentionNonMaterializedView {
   travauxAmenagementCout: number | null;
 }
 
+export interface Maintenance {
+  isMaintenance: Generated<boolean>;
+}
+
 export interface Metier {
   codeMetier: string;
   codeRome: string;
@@ -759,10 +783,20 @@ export interface Nsf {
   libelleNsf: string;
 }
 
+export interface PositionFormationRegionaleQuadrant {
+  cfd: string;
+  codeRegion: string;
+  codeNiveauDiplome: string;
+  positionQuadrant: string;
+  millesimeSortie: string;
+  moyenneInsertionCfdRegion: number | null;
+  moyennePoursuiteEtudeCfdRegion: number | null;
+}
+
 export interface RawData {
   type: string;
   data: Json | null;
-  id: Generated<string | null>;
+  id: Generated<string>;
 }
 
 export interface Region {
@@ -774,6 +808,9 @@ export interface Rome {
   codeRome: string;
   libelleRome: string;
   codeDomaineProfessionnel: string;
+  transitionEcologique: Generated<boolean>;
+  transitionNumerique: Generated<boolean>;
+  transitionDemographique: Generated<boolean>;
 }
 
 export interface Suivi {
@@ -781,6 +818,28 @@ export interface Suivi {
   intentionNumero: string;
   userId: string;
   createdAt: Generated<Timestamp>;
+}
+
+export interface TauxIJNiveauDiplomeRegion {
+  codeRegion: string;
+  codeNiveauDiplome: string;
+  millesimeSortie: string;
+  tauxInsertion6mois: number;
+  tauxPoursuite: number;
+  tauxDevenirFavorable: number;
+}
+
+export interface Tension {
+  codeTension: string;
+  libelleTension: string;
+}
+
+export interface TensionRomeDepartement {
+  codeRome: string;
+  codeDepartement: string;
+  codeTension: string;
+  annee: string;
+  valeur: number;
 }
 
 export interface User {
@@ -805,6 +864,7 @@ export interface DB {
   changeLog: ChangeLog;
   changementStatut: ChangementStatut;
   constatRentree: ConstatRentree;
+  correction: Correction;
   dataEtablissement: DataEtablissement;
   dataFormation: DataFormation;
   demande: Demande;
@@ -832,12 +892,17 @@ export interface DB {
   latestDemandeIntentionNonMaterializedView: LatestDemandeIntentionNonMaterializedView;
   latestDemandeNonMaterializedView: LatestDemandeNonMaterializedView;
   latestIntentionNonMaterializedView: LatestIntentionNonMaterializedView;
+  maintenance: Maintenance;
   metier: Metier;
   niveauDiplome: NiveauDiplome;
   nsf: Nsf;
+  positionFormationRegionaleQuadrant: PositionFormationRegionaleQuadrant;
   rawData: RawData;
   region: Region;
   rome: Rome;
   suivi: Suivi;
+  tauxIJNiveauDiplomeRegion: TauxIJNiveauDiplomeRegion;
+  tension: Tension;
+  tensionRomeDepartement: TensionRomeDepartement;
   user: User;
 }

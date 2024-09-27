@@ -15,6 +15,8 @@ const formatScopeLabel = (scope: Scope) => {
       return "Établissement";
     case "user":
       return "Utilisateur";
+    case "role":
+      return "Limité";
   }
 };
 
@@ -36,6 +38,8 @@ const PermissionBadge = ({
         return "draft";
       case "user":
         return "success";
+      case "role":
+        return "new";
     }
   };
 

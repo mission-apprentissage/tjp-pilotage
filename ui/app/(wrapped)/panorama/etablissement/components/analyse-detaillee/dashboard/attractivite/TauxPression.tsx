@@ -1,6 +1,7 @@
 import { Box, Text, useToken } from "@chakra-ui/react";
 
-import { GlossaireShortcut } from "../../../../../../../../components/GlossaireShortcut";
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 import { LineChart } from "../../components/LineChart";
@@ -75,9 +76,9 @@ export const TauxPression = ({
   };
 
   const blue = useToken("colors", "bluefrance.113");
-  const green = useToken("colors", "greenarchipel.557");
-  const orange = useToken("colors", "orangeterrebattue.645");
-  const purple = useToken("colors", "purpleglycine.494");
+  const green = useToken("colors", "greenArchipel.557");
+  const orange = useToken("colors", "orangeTerreBattue.645");
+  const purple = useToken("colors", "purpleGlycine.494");
   const colors: Record<string, string> = {
     établissement: blue,
     national: purple,

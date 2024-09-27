@@ -1,4 +1,4 @@
-export type Scope = "national" | "region" | "uai" | "user";
+export type Scope = "national" | "region" | "uai" | "user" | "role";
 export type Role = keyof typeof PERMISSIONS;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -99,6 +99,13 @@ export const PERMISSIONS = {
     "intentions-perdir-statut/lecture": { default: "uai" },
     "intentions-perdir-avis/lecture": { default: "uai" },
   },
+  invite: {
+    "intentions/lecture": { default: "role", draft: "role" },
+    "restitution-intentions/lecture": { default: "role" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir-statut/lecture": { default: "region" },
+    "intentions-perdir-avis/lecture": { default: "region" },
+  },
 } satisfies {
   [R: string]: {
     [s: string]: Record<string, Scope>;
@@ -120,7 +127,13 @@ export const HIERARCHY: {
     scope: "national",
   },
   admin_region: {
-    sub: ["gestionnaire_region", "pilote_region", "expert_region", "region"],
+    sub: [
+      "gestionnaire_region",
+      "pilote_region",
+      "expert_region",
+      "region",
+      "invite",
+    ],
     scope: "region",
   },
   region: {
@@ -142,5 +155,9 @@ export const HIERARCHY: {
   perdir: {
     sub: [],
     scope: "uai",
+  },
+  invite: {
+    sub: [],
+    scope: "region",
   },
 };

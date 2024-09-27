@@ -2,10 +2,10 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Button, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 
+import { Callout } from "@/components/Callout";
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
-import { Callout } from "../../../../../../../components/Callout";
-import { GlossaireShortcut } from "../../../../../../../components/GlossaireShortcut";
 import { Etablissement, Formation } from "../types";
 
 export const DonneesIndisponiblesSection = ({

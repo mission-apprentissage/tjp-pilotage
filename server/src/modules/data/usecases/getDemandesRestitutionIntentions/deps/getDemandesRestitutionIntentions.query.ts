@@ -124,7 +124,6 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
-      "demande.inspecteurReferent",
     ])
     .$call((eb) => {
       if (search)

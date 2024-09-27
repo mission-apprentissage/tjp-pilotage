@@ -3,13 +3,11 @@ import { inject } from "injecti";
 
 import { RequestUser } from "../../../core/model/User";
 import { findOneIntention } from "../../repositories/findOneIntention.query";
-import { updateIntentionWithHistory } from "../../repositories/updateIntentionWithHistory.query";
 import { createSuiviQuery } from "./submitSuivi.query";
 
 export const [submitSuiviUsecase, submitSuiviFactory] = inject(
   {
     createSuiviQuery,
-    updateIntentionWithHistory,
     findOneIntention,
   },
   (deps) =>

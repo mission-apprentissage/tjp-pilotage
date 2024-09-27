@@ -5,6 +5,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
+import { isAllowedToSeePreviousCampagnes } from "../../../../utils/isAllowedToSeePreviousCampagnes";
 import { isDemandeCampagneEnCours } from "../../../../utils/isDemandeCampagneEnCours";
 import { isDemandeSelectable } from "../../../../utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
@@ -47,17 +48,33 @@ export const getDemandes = async (
       "demande.codeDispositif"
     )
     .leftJoin("user", "user.id", "demande.createdBy")
+    .leftJoin("suivi", (join) =>
+      join
+        .onRef("suivi.intentionNumero", "=", "demande.numero")
+        .on("userId", "=", user.id)
+    )
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
         return eb;
       })
     )
+    .leftJoin("intentionAccessLog", (join) =>
+      join
+        .onRef("intentionAccessLog.intentionNumero", "=", "demande.numero")
+        .onRef("intentionAccessLog.updatedAt", ">", "demande.updatedAt")
+        .on("intentionAccessLog.userId", "=", user.id)
+    )
     .selectAll("demande")
     .select((eb) => [
+      "suivi.id as suiviId",
       sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
         "user.lastname"
       )})`.as("userName"),
+      sql<boolean>`(
+        "intentionAccessLog"."id" is not null
+         or "demande"."updatedBy" = ${user.id}
+      )`.as("alreadyAccessed"),
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.codeDepartement",
@@ -97,6 +114,14 @@ export const getDemandes = async (
         )
         .as("numeroDemandeImportee"),
     ])
+    .select((eb) =>
+      eb
+        .selectFrom("correction")
+        .whereRef("correction.intentionNumero", "=", "demande.numero")
+        .select("correction.id")
+        .limit(1)
+        .as("correction")
+    )
     .$call((eb) => {
       if (statut) return eb.where("demande.statut", "=", statut);
       return eb;
@@ -110,17 +135,9 @@ export const getDemandes = async (
                 sql`concat(
                   unaccent(${eb.ref("demande.numero")}),
                   ' ',
-                  unaccent(${eb.ref("demande.cfd")}),
-                  ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("departement.libelleDepartement")}),
-                  ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
-                  ' ',
-                  unaccent(${eb.ref("user.firstname")}),
-                  ' ',
-                  unaccent(${eb.ref("user.lastname")})
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
                 )`,
                 "ilike",
                 `%${search_word}%`
@@ -160,6 +177,7 @@ export const getDemandes = async (
   const campagnes = await kdb
     .selectFrom("campagne")
     .selectAll()
+    .where(isAllowedToSeePreviousCampagnes({ user }))
     .orderBy("annee desc")
     .execute();
 
@@ -172,6 +190,7 @@ export const getDemandes = async (
         updatedAt: demande.updatedAt?.toISOString(),
         numeroCompensation: demande.demandeCompensee?.numero,
         typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
+        alreadyAccessed: demande.alreadyAccessed ?? true,
       })
     ),
     count: parseInt(demandes[0]?.count) || 0,

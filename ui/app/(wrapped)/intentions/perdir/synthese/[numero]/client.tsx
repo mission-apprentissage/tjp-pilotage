@@ -1,15 +1,20 @@
 "use client";
 
 import { Container, Flex, Grid, GridItem } from "@chakra-ui/react";
+import { isAxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { useEffect } from "react";
+import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
+import { EditoSection } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/actions/EditoSection";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { useAuth } from "@/utils/security/useAuth";
 
+import { isChangementStatutAvisDisabled } from "../../../utils/statutUtils";
 import { ActionsSection } from "./actions/ActionsSection";
 import { InformationHeader } from "./components/InformationHeader";
 import { SyntheseSpinner } from "./components/SyntheseSpinner";
@@ -24,6 +29,8 @@ export default ({
     numero: string;
   };
 }) => {
+  const { auth } = useAuth();
+  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -41,6 +48,13 @@ export default ({
       { params: { numero: numero } },
       {
         cacheTime: 0,
+        onError: (error: unknown) => {
+          if (isAxiosError(error) && error.response?.data?.message) {
+            console.error(error);
+            if (error.response?.status === 404)
+              router.push(`/intentions/perdir/saisie?notfound=${numero}`);
+          }
+        },
       }
     );
 
@@ -101,7 +115,13 @@ export default ({
           <Flex direction={"column"} gap={8}>
             <StepperSection intention={intention} />
             <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
-              <GridItem colSpan={3}>
+              <GridItem
+                colSpan={
+                  isChangementStatutAvisDisabled(intention.statut) && !isPerdir
+                    ? 4
+                    : 3
+                }
+              >
                 <MainSection
                   isCampagneEnCours={isCampagneEnCours}
                   intention={intention}
@@ -112,9 +132,16 @@ export default ({
                   displayCommentairesEtAvis={displayCommentairesEtAvis}
                 />
               </GridItem>
-              <GridItem colSpan={1}>
-                <ActionsSection intention={intention} />
-              </GridItem>
+              {isPerdir && (
+                <GridItem colSpan={1}>
+                  <EditoSection />
+                </GridItem>
+              )}
+              {!isChangementStatutAvisDisabled(intention.statut) && (
+                <GridItem colSpan={1}>
+                  <ActionsSection intention={intention} />
+                </GridItem>
+              )}
             </Grid>
           </Flex>
         ) : (

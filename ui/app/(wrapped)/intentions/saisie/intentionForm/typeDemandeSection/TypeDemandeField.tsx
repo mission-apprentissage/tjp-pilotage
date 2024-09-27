@@ -12,7 +12,7 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
-import { ComponentProps, ReactNode, useContext, useEffect } from "react";
+import { ComponentProps, ReactNode, useContext } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
@@ -104,20 +104,11 @@ export const TypeDemandeField = chakra(
       formState: { errors },
       control,
       watch,
-      setValue,
     } = useFormContext<IntentionForms>();
     const queryParams = useSearchParams();
     const compensation = queryParams.get("compensation");
     const { campagne } = useContext(CampagneContext);
     const rentreeScolaire = watch("rentreeScolaire");
-
-    useEffect(
-      () =>
-        watch((_, { name }) => {
-          if (name !== "rentreeScolaire") return;
-          setValue("typeDemande", "");
-        }).unsubscribe
-    );
 
     return (
       <FormControl
