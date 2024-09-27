@@ -58,7 +58,7 @@ export const getChiffresIj = async ({
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxInsertionRegional"),
       "dataFormation.cfd",
-      "codeDispositif",
+      "formationEtablissement.codeDispositif",
       "effectifSortie",
       "nbSortants",
       "nbPoursuiteEtudes",
@@ -91,7 +91,6 @@ export const getChiffresIj = async ({
       "nbInsertion6mois",
       "effectifSortie",
       "nbSortants",
-      "codeDispositif",
     ])
     .execute()
     .then(cleanNull);

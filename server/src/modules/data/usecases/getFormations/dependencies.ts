@@ -110,7 +110,7 @@ const findFormationsInDb = async ({
       sql<number>`COUNT(*) OVER()`.as("count"),
       "familleMetier.libelleFamille",
       "libelleDispositif",
-      "codeDispositif",
+      "dispositif.codeDispositif",
       "libelleNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
       sql<number>`COUNT("indicateurEntree"."rentreeScolaire")

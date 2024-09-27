@@ -224,7 +224,7 @@ export const withTauxPressionReg = <
       sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
     )
     .select([selectTauxPressionAgg("subIE", "subF", withTauxDemande).as("s")])
-    .groupBy(["subFE.cfd", "codeDispositif"]);
+    .groupBy(["subFE.cfd", "subFE.codeDispositif"]);
 };
 
 export const withTauxPressionDep = <
@@ -269,7 +269,7 @@ export const withTauxPressionDep = <
       sql`ANY(array_agg(${eb.ref(codeDepartementRef)}))`
     )
     .select([selectTauxPressionAgg("subIE", "subF", withTauxDemande).as("s")])
-    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "codeDispositif"]);
+    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "subFE.codeDispositif"]);
 };
 
 export const withTauxPressionNat = <
@@ -307,5 +307,5 @@ export const withTauxPressionNat = <
     .whereRef("subFE.cfd", "=", cfdRef)
     .whereRef("subFE.codeDispositif", "=", codeDispositifRef)
     .select([selectTauxPressionAgg("subIE", "subF", withTauxDemande).as("s")])
-    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "codeDispositif"]);
+    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "subFE.codeDispositif"]);
 };
