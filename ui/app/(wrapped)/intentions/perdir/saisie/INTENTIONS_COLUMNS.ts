@@ -2,7 +2,7 @@ import { client } from "@/api.client";
 import { ExportColumns } from "@/utils/downloadExport";
 
 export const INTENTIONS_COLUMNS = {
-  numero: "numero",
+  numero: "N°Demande",
   cfd: "CFD",
   libelleFormation: "Diplôme",
   codeDispositif: "Code dispositif",
@@ -23,14 +23,10 @@ export const INTENTIONS_COLUMNS = {
   coloration: "Coloration",
   libelleColoration: "Libelle coloration",
   amiCma: "AMI/CMA ?",
-  poursuitePedagogique: "Poursuite pédagogique ?",
   commentaire: "Commentaire",
   statut: "Statut",
-  createdAt: "Date de création",
+  createdAt: "Créé le",
   updatedAt: "Der. modif.",
-  compensationCfd: "CFD compensé",
-  compensationUai: "UAI compensé",
-  compensationCodeDispositif: "Dispositif compensé",
   capaciteScolaireActuelle: "Capacité scolaire actuelle",
   capaciteScolaire: "Capacité scolaire",
   capaciteScolaireColoree: "Capacité scolaire coloree",
@@ -54,6 +50,19 @@ export const INTENTIONS_COLUMNS = {
   discipline1RecrutementRH: "Discipline 1 recrutement",
   discipline2RecrutementRH: "Discipline 2 recrutement",
   userName: "Auteur",
+  inspecteurReferent: "Inspecteur",
+  avis0: "Avis 1",
+  avis1: "Avis 2",
+  avis2: "Avis 3",
+  avis3: "Avis 4",
+  avis4: "Avis 5",
+  avis5: "Avis 6",
+  avis6: "Avis 7",
+  avis7: "Avis 8",
+  avis8: "Avis 9",
+  avis9: "Avis 10",
 } satisfies ExportColumns<
-  (typeof client.infer)["[GET]/demandes"]["demandes"][number]
+  (typeof client.infer)["[GET]/intentions"]["intentions"][number] & {
+    [key: `avis${number}`]: string;
+  }
 >;

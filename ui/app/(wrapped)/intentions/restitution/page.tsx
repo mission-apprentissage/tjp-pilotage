@@ -6,7 +6,7 @@ import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   DemandeStatutEnum,
   DemandeStatutType,
@@ -21,6 +21,7 @@ import { GuardPermission } from "@/utils/security/GuardPermission";
 import { GroupedMultiselect } from "../../../../components/GroupedMultiselect";
 import { SearchInput } from "../../../../components/SearchInput";
 import { TableHeader } from "../../../../components/TableHeader";
+import { formatExportFilename } from "../../../../utils/formatExportFilename";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDES_COLUMN";
@@ -305,6 +306,112 @@ export default () => {
     setSearchParams({ filters: filters });
   };
 
+  const onExportCsv = useCallback(async () => {
+    trackEvent("restitution-demandes:export");
+    const data = await client
+      .ref("[GET]/restitution-intentions/demandes")
+      .query({
+        query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
+      });
+    downloadCsv(
+      formatExportFilename("restitution_export", filters?.codeRegion),
+      data.demandes.map((demande) => ({
+        ...demande,
+        createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        updatedAt: new Date(demande.updatedAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        disciplinesRecrutementRH:
+          demande.discipline1RecrutementRH &&
+          `${demande.discipline1RecrutementRH} ${
+            demande.discipline2RecrutementRH
+              ? `- ${demande.discipline2RecrutementRH}`
+              : ""
+          }`,
+        disciplinesReconversionRH:
+          demande.discipline1ReconversionRH &&
+          `${demande.discipline1ReconversionRH} ${
+            demande.discipline2ReconversionRH
+              ? `- ${demande.discipline2ReconversionRH}`
+              : ""
+          }`,
+        disciplinesFormationRH:
+          demande.discipline1FormationRH &&
+          `${demande.discipline1FormationRH} ${
+            demande.discipline2FormationRH
+              ? `- ${demande.discipline2FormationRH}`
+              : ""
+          }`,
+        disciplinesProfesseurAssocieRH:
+          demande.discipline1ProfesseurAssocieRH &&
+          `${demande.discipline1ProfesseurAssocieRH} ${
+            demande.discipline2ProfesseurAssocieRH
+              ? `- ${demande.discipline2ProfesseurAssocieRH}`
+              : ""
+          }`,
+        secteur: demande.secteur === "PU" ? "Public" : "Privé",
+      })),
+      STATS_DEMANDES_COLUMNS
+    );
+  }, [getIntentionsStatsQueryParameters]);
+
+  const onExportExcel = useCallback(async () => {
+    trackEvent("restitution-demandes:export-excel");
+    const data = await client
+      .ref("[GET]/restitution-intentions/demandes")
+      .query({
+        query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
+      });
+    downloadExcel(
+      formatExportFilename("restitution_export", filters?.codeRegion),
+      data.demandes.map((demande) => ({
+        ...demande,
+        createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        updatedAt: new Date(demande.updatedAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        disciplinesRecrutementRH:
+          demande.discipline1RecrutementRH &&
+          `${demande.discipline1RecrutementRH} ${
+            demande.discipline2RecrutementRH
+              ? `- ${demande.discipline2RecrutementRH}`
+              : ""
+          }`,
+        disciplinesReconversionRH:
+          demande.discipline1ReconversionRH &&
+          `${demande.discipline1ReconversionRH} ${
+            demande.discipline2ReconversionRH
+              ? `- ${demande.discipline2ReconversionRH}`
+              : ""
+          }`,
+        disciplinesFormationRH:
+          demande.discipline1FormationRH &&
+          `${demande.discipline1FormationRH} ${
+            demande.discipline2FormationRH
+              ? `- ${demande.discipline2FormationRH}`
+              : ""
+          }`,
+        disciplinesProfesseurAssocieRH:
+          demande.discipline1ProfesseurAssocieRH &&
+          `${demande.discipline1ProfesseurAssocieRH} ${
+            demande.discipline2ProfesseurAssocieRH
+              ? `- ${demande.discipline2ProfesseurAssocieRH}`
+              : ""
+          }`,
+        secteur: demande.secteur === "PU" ? "Public" : "Privé",
+      })),
+      STATS_DEMANDES_COLUMNS
+    );
+  }, [getIntentionsStatsQueryParameters]);
+
   useEffect(() => {
     setDefaultFilters();
   }, []);
@@ -349,94 +456,8 @@ export default () => {
               handleColonneFilters={handleColonneFilters}
             />
           }
-          onExportCsv={async () => {
-            trackEvent("restitution-demandes:export");
-            const data = await client
-              .ref("[GET]/restitution-intentions/demandes")
-              .query({
-                query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
-              });
-            downloadCsv(
-              "demandes_stats_export",
-              data.demandes.map((demande) => ({
-                ...demande,
-                createdAt: new Date(demande.createdAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                updatedAt: new Date(demande.updatedAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                disciplinesRecrutementRH:
-                  demande.discipline1RecrutementRH &&
-                  `${demande.discipline1RecrutementRH} ${
-                    demande.discipline2RecrutementRH
-                      ? `- ${demande.discipline2RecrutementRH}`
-                      : ""
-                  }`,
-                disciplinesReconversionRH:
-                  demande.discipline1ReconversionRH &&
-                  `${demande.discipline1ReconversionRH} ${
-                    demande.discipline2ReconversionRH
-                      ? `- ${demande.discipline2ReconversionRH}`
-                      : ""
-                  }`,
-                disciplinesFormationRH:
-                  demande.discipline1FormationRH &&
-                  `${demande.discipline1FormationRH} ${
-                    demande.discipline2FormationRH
-                      ? `- ${demande.discipline2FormationRH}`
-                      : ""
-                  }`,
-                disciplinesProfesseurAssocieRH:
-                  demande.discipline1ProfesseurAssocieRH &&
-                  `${demande.discipline1ProfesseurAssocieRH} ${
-                    demande.discipline2ProfesseurAssocieRH
-                      ? `- ${demande.discipline2ProfesseurAssocieRH}`
-                      : ""
-                  }`,
-                secteur: demande.secteur === "PU" ? "Public" : "Privé",
-              })),
-              STATS_DEMANDES_COLUMNS
-            );
-          }}
-          onExportExcel={async () => {
-            trackEvent("restitution-demandes:export-excel");
-            const data = await client
-              .ref("[GET]/restitution-intentions/demandes")
-              .query({
-                query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
-              });
-            downloadExcel(
-              "demandes_stats_export",
-              data.demandes.map((demande) => ({
-                ...demande,
-                createdAt: new Date(demande.createdAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                updatedAt: new Date(demande.updatedAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                secteur: demande.secteur === "PU" ? "Public" : "Privé",
-              })),
-              STATS_DEMANDES_COLUMNS
-            );
-          }}
+          onExportCsv={onExportCsv}
+          onExportExcel={onExportExcel}
           page={page}
           pageSize={PAGE_SIZE}
           count={data?.count}

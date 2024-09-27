@@ -9,12 +9,14 @@ export const isDemandeSelectable =
   ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "demande">) => {
     const { filter, draftFilter } = getDemandeSelectableFilters(user);
+
     return eb.or([
       eb.and([
         eb("demande.statut", "=", DemandeStatutEnum["proposition"]),
         draftFilter.codeRegion
           ? eb("demande.codeRegion", "=", draftFilter.codeRegion)
           : sql<boolean>`true`,
+        draftFilter.role == "invite" ? sql<boolean>`false` : sql<boolean>`true`,
       ]),
       eb.and([
         eb("demande.statut", "!=", DemandeStatutEnum["proposition"]),
@@ -22,6 +24,17 @@ export const isDemandeSelectable =
           ? eb("demande.codeRegion", "=", filter.codeRegion)
           : sql<boolean>`true`,
         filter.uais ? eb("demande.uai", "in", filter.uais) : sql<boolean>`true`,
+        filter.role === "invite" ? sql<boolean>`false` : sql<boolean>`true`,
+      ]),
+      eb.and([
+        filter.role === "invite" ? sql<boolean>`true` : sql<boolean>`false`,
+        filter.codeRegion
+          ? eb("demande.codeRegion", "=", filter.codeRegion)
+          : sql<boolean>`true`,
+        eb("demande.statut", "in", [
+          DemandeStatutEnum["demande validée"],
+          DemandeStatutEnum["refusée"],
+        ]),
       ]),
     ]);
   };
@@ -36,6 +49,7 @@ const getDemandeSelectableFilters = (user?: RequestUser) => {
     region: { codeRegion: user.codeRegion },
     user: { userId: user.id },
     uai: { uais: user.uais ?? [] },
+    role: { role: user.role, codeRegion: user.codeRegion },
   }[scope?.draft];
 
   const filter = {
@@ -43,6 +57,7 @@ const getDemandeSelectableFilters = (user?: RequestUser) => {
     region: { codeRegion: user.codeRegion },
     user: { userId: user.id },
     uai: { uais: user.uais ?? [] },
+    role: { role: user.role, codeRegion: user.codeRegion },
   }[scope?.default];
 
   return { filter, draftFilter };
@@ -58,6 +73,10 @@ export const isDemandeNotDeletedOrRefused = (
     DemandeStatutEnum["supprimée"],
     DemandeStatutEnum["refusée"],
   ]);
+
+export const isDemandeNotAjustementRentree = (
+  eb: ExpressionBuilder<DB, "demande">
+) => eb("demande.typeDemande", "not in", ["ajustement"]);
 
 export const isIntentionBrouillonVisible =
   ({ user }: { user: RequestUser }) =>

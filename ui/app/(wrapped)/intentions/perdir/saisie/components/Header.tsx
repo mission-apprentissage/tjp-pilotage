@@ -19,6 +19,7 @@ import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
 import { Multiselect } from "../../../../../../components/Multiselect";
 import { SearchInput } from "../../../../../../components/SearchInput";
+import { formatExportFilename } from "../../../../../../utils/formatExportFilename";
 import { INTENTIONS_COLUMNS } from "../INTENTIONS_COLUMNS";
 import { Campagnes, Filters } from "../types";
 import { isSaisieDisabled } from "../utils/canEditIntention";
@@ -176,8 +177,26 @@ export const Header = ({
                 query: getIntentionsQueryParameters(EXPORT_LIMIT),
               });
               downloadCsv(
-                "export_saisie_intentions",
-                data.intentions,
+                formatExportFilename(
+                  "recueil_demandes",
+                  activeFilters.codeAcademie
+                ),
+                [
+                  ...data.intentions.map((intention) => ({
+                    ...intention,
+                    ...intention.avis.reduce(
+                      (acc, current, index) => {
+                        acc[`avis${index}`] = [
+                          current.fonction!.toUpperCase(),
+                          `Avis ${current.statut}`,
+                          current.commentaire,
+                        ].join(" - ");
+                        return acc;
+                      },
+                      {} as Record<string, string>
+                    ),
+                  })),
+                ],
                 INTENTIONS_COLUMNS
               );
             }}
@@ -187,8 +206,26 @@ export const Header = ({
                 query: getIntentionsQueryParameters(EXPORT_LIMIT),
               });
               downloadExcel(
-                "export_saisie_intentions",
-                data.intentions,
+                formatExportFilename(
+                  "recueil_demandes",
+                  activeFilters.codeAcademie
+                ),
+                [
+                  ...data.intentions.map((intention) => ({
+                    ...intention,
+                    ...intention.avis.reduce(
+                      (acc, current, index) => {
+                        acc[`avis${index}`] = [
+                          current.fonction!.toUpperCase(),
+                          `Avis ${current.statut}`,
+                          current.commentaire,
+                        ].join(" - ");
+                        return acc;
+                      },
+                      {} as Record<string, string>
+                    ),
+                  })),
+                ],
                 INTENTIONS_COLUMNS
               );
             }}
@@ -200,7 +237,7 @@ export const Header = ({
           value={searchIntention}
           onChange={setSearchIntention}
           onClick={onClickSearchIntention}
-          placeholder="Rechercher par diplôme, établissement, numéro,..."
+          placeholder="30745A1I, Jules Verne, Cybersécurité..."
         />
       </Flex>
     </Flex>

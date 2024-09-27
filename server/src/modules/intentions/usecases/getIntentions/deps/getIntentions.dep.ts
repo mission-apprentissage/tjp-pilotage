@@ -1,10 +1,11 @@
 import { sql } from "kysely";
-import { jsonObjectFrom } from "kysely/helpers/postgres";
+import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
+import { isAvisVisible } from "../../../../utils/isAvisVisible";
 import { isIntentionCampagneEnCours } from "../../../../utils/isDemandeCampagneEnCours";
 import {
   isIntentionBrouillonVisible,
@@ -134,7 +135,28 @@ export const getIntentions = async (
           ])
           .where("intention.updatedBy", "is not", null)
       ).as("updatedBy"),
+      jsonArrayFrom(
+        eb
+          .selectFrom("avis")
+          .whereRef("avis.intentionNumero", "=", "intention.numero")
+          .select(({ ref }) => [
+            ref("avis.id").as("id"),
+            ref("avis.statutAvis").as("statut"),
+            ref("avis.commentaire").as("commentaire"),
+            ref("avis.typeAvis").as("type"),
+            ref("avis.userFonction").as("fonction"),
+          ])
+          .where(isAvisVisible({ user }))
+      ).as("avis"),
     ])
+    .select((eb) =>
+      eb
+        .selectFrom("correction")
+        .whereRef("correction.intentionNumero", "=", "intention.numero")
+        .select("correction.id")
+        .limit(1)
+        .as("correction")
+    )
     .$call((eb) => {
       if (statut) return eb.where("intention.statut", "=", statut);
       return eb;
@@ -148,17 +170,9 @@ export const getIntentions = async (
                 sql`concat(
                   unaccent(${eb.ref("intention.numero")}),
                   ' ',
-                  unaccent(${eb.ref("intention.cfd")}),
-                  ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("departement.libelleDepartement")}),
-                  ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
-                  ' ',
-                  unaccent(${eb.ref("user.firstname")}),
-                  ' ',
-                  unaccent(${eb.ref("user.lastname")})
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
                 )`,
                 "ilike",
                 `%${search_word}%`
@@ -224,6 +238,7 @@ export const getIntentions = async (
     intentions: intentions.map((intention) =>
       cleanNull({
         ...intention,
+        avis: intention.avis.filter((c) => c).map((avis) => avis),
         statut: castDemandeStatutWithoutSupprimee(intention.statut),
         createdAt: intention.createdAt?.toISOString(),
         updatedAt: intention.updatedAt?.toISOString(),

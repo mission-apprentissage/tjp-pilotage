@@ -14,6 +14,7 @@ import { Fragment } from "react";
 
 import { OrderIcon } from "../../../../components/OrderIcon";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
+import { formatPercentage } from "../../../../utils/formatUtils";
 import { Order, PilotageReformeStatsRegion } from "../types";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
@@ -100,9 +101,9 @@ export const VueRegionAcademieSection = ({
                     cursor="pointer"
                     pb="4"
                     width="20%"
-                    onClick={() => handleOrder("poursuite")}
+                    onClick={() => handleOrder("tauxPoursuite")}
                   >
-                    <OrderIcon {...order} column="poursuite" />
+                    <OrderIcon {...order} column="tauxPoursuite" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuite}
                   </Th>
                   <Th
@@ -110,9 +111,9 @@ export const VueRegionAcademieSection = ({
                     cursor="pointer"
                     pb="4"
                     width="20%"
-                    onClick={() => handleOrder("insertion")}
+                    onClick={() => handleOrder("tauxInsertion")}
                   >
-                    <OrderIcon {...order} column="insertion" />
+                    <OrderIcon {...order} column="tauxInsertion" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion}
                   </Th>
                   <Th
@@ -162,10 +163,10 @@ export const VueRegionAcademieSection = ({
                             {region.libelleRegion}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {Math.round((region.poursuite ?? 0) * 100)} %
+                            {formatPercentage(region.tauxPoursuite ?? 0)}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {Math.round((region.insertion ?? 0) * 100)} %
+                            {formatPercentage(region.tauxInsertion ?? 0)}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
                             {region.tauxChomage ?? "-"} %

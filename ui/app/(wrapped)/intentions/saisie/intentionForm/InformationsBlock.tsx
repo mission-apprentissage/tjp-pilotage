@@ -13,15 +13,19 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { ReactNode, RefObject } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ReactNode, RefObject, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
+import { feature } from "@/utils/feature";
+import { usePermission } from "@/utils/security/usePermission";
 
+import { isTypeAjustement } from "../../utils/typeDemandeUtils";
 import { SectionBlock } from "../components/SectionBlock";
-import { Campagne } from "../types";
+import { CorrectionSection } from "../intentionForm/correctionSection/CorrectionSection";
+import { Campagne, Demande } from "../types";
 import { IntentionForms } from "./defaultFormValues";
 import { ObservationsSection } from "./observationsSection/ObservationsSection";
 import { PrecisionsSection } from "./precisionsSection/PrecisionsSection";
@@ -35,15 +39,17 @@ export const InformationsBlock = ({
   disabled,
   footerActions,
   campagne,
+  demande,
 }: {
   refs: Record<string, RefObject<HTMLDivElement>>;
   formId?: string;
   disabled: boolean;
   footerActions: ReactNode;
   campagne?: Campagne;
+  demande?: Demande;
 }) => {
   const { push } = useRouter();
-  const { setValue } = useFormContext<IntentionForms>();
+  const { setValue, watch } = useFormContext<IntentionForms>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isLoading: isDeleting, mutateAsync: deleteDemande } = useMutation({
     mutationFn: async () => {
@@ -55,6 +61,23 @@ export const InformationsBlock = ({
     },
   });
 
+  const queryParams = useSearchParams();
+  const isCorrection = queryParams.get("correction");
+  const typeDemande = watch("typeDemande");
+
+  useEffect(() => {
+    refs["correction"].current?.scrollIntoView({ behavior: "smooth" });
+  }, [isCorrection]);
+
+  const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
+
+  const showCorrection =
+    feature.correction &&
+    isCorrection &&
+    demande &&
+    demande.statut === DemandeStatutEnum["demande validée"] &&
+    hasPermissionSubmitIntention;
+
   return (
     <Flex direction="column" gap={6} mt={6}>
       <SectionBlock>
@@ -62,8 +85,18 @@ export const InformationsBlock = ({
           typeDemandeRef={refs["typeDemande"]}
           disabled={disabled}
           campagne={campagne}
+          demande={demande}
         />
       </SectionBlock>
+      {showCorrection && (
+        <SectionBlock borderColor={"red"} borderWidth={"1px"}>
+          <CorrectionSection
+            correctionRef={refs["correction"]}
+            demande={demande}
+            campagne={campagne}
+          />
+        </SectionBlock>
+      )}
       <SectionBlock>
         <PrecisionsSection
           motifsEtPrecisionsRef={refs["motifsEtPrecisions"]}
@@ -85,9 +118,11 @@ export const InformationsBlock = ({
       </SectionBlock>
       {formId && (
         <>
-          <SectionBlock>
-            <StatusBlock disabled={disabled} />
-          </SectionBlock>
+          {!isTypeAjustement(typeDemande) && (
+            <SectionBlock>
+              <StatusBlock disabled={disabled} />
+            </SectionBlock>
+          )}
           <SectionBlock>
             <Flex justifyContent={"space-between"} flexDir={"row"}>
               <Button
@@ -151,7 +186,7 @@ export const InformationsBlock = ({
         </>
       )}
       {!formId && footerActions && (
-        <Flex justify="flex-end" mt="12" mb="4" gap={6}>
+        <Flex justify="flex-end" mt={6} mb="4" gap={6}>
           {footerActions}
         </Flex>
       )}

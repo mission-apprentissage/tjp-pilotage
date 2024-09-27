@@ -20,7 +20,7 @@ const StepIcon = chakra(
           w="32px"
           h="28px"
           borderRadius={"100%"}
-          bgColor={"orangeterrebattue.850"}
+          bgColor={"orangeTerreBattue.850"}
         >
           <Icon icon={"ri:close-line"} color={bluefrance113} width="100%" />
         </Box>

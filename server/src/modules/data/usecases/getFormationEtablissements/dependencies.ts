@@ -140,6 +140,8 @@ const findFormationEtablissementsInDb = async ({
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .select((eb) => [
       "etablissement.libelleEtablissement",
+      "etablissement.secteur",
+      "etablissement.commune",
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
@@ -148,7 +150,9 @@ const findFormationEtablissementsInDb = async ({
       "nsf.libelleNsf",
       sql<number>`COUNT(*) OVER()`.as("count"),
       "departement.libelleDepartement",
+      "departement.codeDepartement",
       "academie.libelleAcademie",
+      "academie.codeAcademie",
       "region.libelleRegion",
       "etablissement.codeRegion",
       "etablissement.uai as uai",
@@ -337,7 +341,9 @@ const findFormationEtablissementsInDb = async ({
       "formationHistorique.cfd",
       "etablissement.id",
       "departement.libelleDepartement",
+      "departement.codeDepartement",
       "academie.libelleAcademie",
+      "academie.codeAcademie",
       "region.libelleRegion",
       "indicateurEntree.rentreeScolaire",
       "indicateurEntree.formationEtablissementId",

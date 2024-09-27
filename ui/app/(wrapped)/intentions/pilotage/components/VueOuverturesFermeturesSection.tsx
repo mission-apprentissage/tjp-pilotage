@@ -16,7 +16,7 @@ import { ScopeEnum } from "shared";
 
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
-import { displayPercentage } from "@/utils/displayPercent";
+import { formatPercentage } from "@/utils/formatUtils";
 
 import {
   OrderStatsPilotageIntentions,
@@ -220,10 +220,10 @@ const ScopedTable = ({
                               : "inherit"
                           }
                         >
-                          {displayPercentage(territoire.ratioFermeture / 100)}
+                          {formatPercentage(territoire.ratioFermeture / 100)}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor}>
-                          {displayPercentage(territoire.ratioOuverture / 100)}
+                          {formatPercentage(territoire.ratioOuverture / 100)}
                         </Td>
                       </Tr>
                     </Fragment>

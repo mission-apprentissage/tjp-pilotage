@@ -24,4 +24,4 @@ export type PilotageReformeStats =
 export type PilotageReformeStatsRegion =
   (typeof client.infer)["[GET]/pilotage-reforme/stats/regions"];
 
-export type IndicateurType = "insertion" | "poursuite";
+export type IndicateurType = "tauxInsertion" | "tauxPoursuite";

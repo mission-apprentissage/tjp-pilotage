@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 
 import { client } from "@/api.client";
@@ -22,6 +22,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
 import { TableHeader } from "../../../../components/TableHeader";
+import { formatExportFilename } from "../../../../utils/formatExportFilename";
 import {
   CodeRegionFilterContext,
   UaiFilterContext,
@@ -144,7 +145,11 @@ export default function Etablissements() {
 
     const { columns, etablissements } = getDataForExport(data);
 
-    downloadCsv("etablissements_export", etablissements, columns);
+    downloadCsv(
+      formatExportFilename("etablissement_export", filters?.codeRegion),
+      etablissements,
+      columns
+    );
   };
 
   const onExportExcel = async () => {
@@ -155,7 +160,11 @@ export default function Etablissements() {
 
     const { columns, etablissements } = getDataForExport(data);
 
-    downloadExcel("etablissements_export", etablissements, columns);
+    downloadExcel(
+      formatExportFilename("etablissement_export", filters?.codeRegion),
+      etablissements,
+      columns
+    );
   };
 
   const [historiqueId, setHistoriqueId] = useState<LineId>();
@@ -188,6 +197,36 @@ export default function Etablissements() {
     },
   });
 
+  const [isFirstColumnSticky, setIsFirstColumnSticky] = useState(false);
+  const [isSecondColumnSticky, setIsSecondColumnSticky] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    if (tableRef.current) {
+      const scrollLeft = tableRef.current.scrollLeft;
+      if (scrollLeft > 90 && scrollLeft <= 470) {
+        setIsFirstColumnSticky(true);
+      } else {
+        setIsFirstColumnSticky(false);
+      }
+      if (scrollLeft > 475) {
+        setIsSecondColumnSticky(true);
+      } else {
+        setIsSecondColumnSticky(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const box = tableRef.current;
+    if (box) {
+      box.addEventListener("scroll", handleScroll);
+      return () => {
+        box.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, []);
+
   return (
     <>
       <ConsoleFilters
@@ -217,9 +256,14 @@ export default function Etablissements() {
           count={data?.count}
           onPageChange={(newPage) => setSearchParams({ page: newPage })}
         />
-        <TableContainer overflowY="auto">
+        <TableContainer overflowY="auto" ref={tableRef}>
           <Table variant="simple" size={"sm"}>
-            <HeadLineContent order={order} setSearchParams={setSearchParams} />
+            <HeadLineContent
+              isFirstColumnSticky={isFirstColumnSticky}
+              isSecondColumnSticky={isSecondColumnSticky}
+              order={order}
+              setSearchParams={setSearchParams}
+            />
             <Tbody>
               {data?.etablissements.map((line) => (
                 <Fragment
@@ -227,6 +271,8 @@ export default function Etablissements() {
                 >
                   <Tr h="12">
                     <EtablissementLineContent
+                      isFirstColumnSticky={isFirstColumnSticky}
+                      isSecondColumnSticky={isSecondColumnSticky}
                       line={line}
                       defaultRentreeScolaire={CURRENT_RENTREE}
                       expended={
@@ -253,7 +299,11 @@ export default function Etablissements() {
                             key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
                             bg={"grey.975"}
                           >
-                            <EtablissementLineContent line={historiqueLine} />
+                            <EtablissementLineContent
+                              isFirstColumnSticky={isFirstColumnSticky}
+                              isSecondColumnSticky={isSecondColumnSticky}
+                              line={historiqueLine}
+                            />
                           </Tr>
                         ))}
 

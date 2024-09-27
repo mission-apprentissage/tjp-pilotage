@@ -17,9 +17,11 @@ import NextLink from "next/link";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { formatAnneeCommuneLibelle } from "@/utils/formatLibelle";
+import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { formatAnneeCommuneLibelle } from "../../../utils/formatLibelle";
+import { ETABLISSEMENT_COLUMN_WIDTH } from "../ETABLISSEMENT_COLUMN_WIDTH";
 import { Line } from "../types";
 
 export const EtablissementLineContent = ({
@@ -28,12 +30,16 @@ export const EtablissementLineContent = ({
   onClickExpend,
   onClickCollapse,
   expended = false,
+  isFirstColumnSticky,
+  isSecondColumnSticky,
 }: {
   line: Partial<Line>;
   defaultRentreeScolaire?: string;
   onClickExpend?: () => void;
   onClickCollapse?: () => void;
   expended?: boolean;
+  isFirstColumnSticky?: boolean;
+  isSecondColumnSticky?: boolean;
 }) => (
   <>
     <Td pr="0" py="1">
@@ -54,7 +60,19 @@ export const EtablissementLineContent = ({
       )}
     </Td>
     <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
-    <Td minW={300} maxW={300} whiteSpace="normal">
+    <Td
+      minW={ETABLISSEMENT_COLUMN_WIDTH}
+      maxW={ETABLISSEMENT_COLUMN_WIDTH}
+      whiteSpace="normal"
+      left={0}
+      zIndex={1}
+      bgColor={"white"}
+      position={{ lg: "relative", xl: "sticky" }}
+      boxShadow={{
+        lg: "none",
+        xl: isFirstColumnSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
+      }}
+    >
       <Link
         as={NextLink}
         href={`/panorama/etablissement/${line.uai}`}
@@ -73,7 +91,18 @@ export const EtablissementLineContent = ({
     </Td>
     <Td>{line.libelleDepartement ?? "-"}</Td>
     <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-    <Td minW={450} whiteSpace="normal">
+    <Td
+      minW={450}
+      whiteSpace="normal"
+      zIndex={1}
+      bgColor={"white"}
+      position={{ lg: "relative", xl: "sticky" }}
+      left={{ lg: "unset", xl: ETABLISSEMENT_COLUMN_WIDTH - 1 }}
+      boxShadow={{
+        lg: "none",
+        xl: isSecondColumnSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
+      }}
+    >
       <Flex>
         {formatAnneeCommuneLibelle(line, "long", "sm")}
         {line.isFormationRenovee && (
@@ -81,8 +110,8 @@ export const EtablissementLineContent = ({
             size="sm"
             ms={2}
             my={"auto"}
-            bgColor={"greenarchipel.950"}
-            color={"greenarchipel.391"}
+            bgColor={"greenArchipel.950"}
+            color={"greenArchipel.391"}
             h={"fit-content"}
             flex={"shrink"}
           >
@@ -139,12 +168,12 @@ export const EtablissementLineContent = ({
       <TableBadge
         sx={getTauxPressionStyle(
           line.tauxPression !== undefined
-            ? Math.round(line.tauxPression * 100) / 100
+            ? formatNumber(line.tauxPression, 2)
             : undefined
         )}
       >
         {line.tauxPression !== undefined
-          ? Math.round(line.tauxPression * 100) / 100
+          ? formatNumber(line.tauxPression, 2)
           : "-"}
       </TableBadge>
     </Td>

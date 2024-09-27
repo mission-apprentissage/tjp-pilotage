@@ -8,6 +8,14 @@ const UserSchema = z.object({
   role: z.string().optional(),
 });
 
+const AvisSchema = z.object({
+  id: z.string().optional(),
+  statut: z.string().optional(),
+  commentaire: z.string().optional(),
+  type: z.string().optional(),
+  fonction: z.string().optional(),
+});
+
 const IntentionsItem = z.object({
   // Formation
   libelleFormation: z.string().optional(),
@@ -99,7 +107,9 @@ const IntentionsItem = z.object({
   updatedBy: UserSchema.optional(),
   suiviId: z.string().optional(),
   canEdit: z.boolean(),
+  correction: z.string().optional(),
   alreadyAccessed: z.boolean(),
+  avis: z.array(AvisSchema),
 });
 
 export const getIntentionsSchema = {

@@ -1,6 +1,7 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 
 import { CartoGraph } from "../../../../components/CartoGraph";
+import { formatNumber } from "../../../../utils/formatUtils";
 import { Filters, IndicateurType, PilotageReformeStatsRegion } from "../types";
 
 interface CartoSelectionProps {
@@ -29,7 +30,7 @@ export const CartoSection = ({
   const graphData = data?.statsRegions.map((region) => {
     return {
       name: region.libelleRegion,
-      value: Math.round((region[indicateur] ?? 0) * 100),
+      value: formatNumber((region[indicateur] ?? 0) * 100),
     };
   });
 

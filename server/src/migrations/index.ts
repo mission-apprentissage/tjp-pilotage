@@ -78,8 +78,17 @@ import * as migration_1717491229364 from "./migration_1717491229364";
 import * as migration_1718716355306 from "./migration_1718716355306";
 import * as migration_1719393901251 from "./migration_1719393901251";
 import * as migration_1719563257899 from "./migration_1719563257899";
+import * as migration_1720190144765 from "./migration_1720190144765";
 import * as migration_1720598958779 from "./migration_1720598958779";
 import * as migration_1721827020716 from "./migration_1721827020716";
+import * as migration_1724142453681 from "./migration_1724142453681";
+import * as migration_1724248019274 from "./migration_1724248019274";
+import * as migration_1724832698225 from "./migration_1724832698225";
+import * as migration_1724934536809 from "./migration_1724934536809";
+import * as migration_1724939359838 from "./migration_1724939359838";
+import * as migration_1726560344568 from "./migration_1726560344568";
+import * as migration_1726811693181 from "./migration_1726811693181";
+import * as migration_1727438989073 from "./migration_1727438989073";
 
 type Migration = {
   up: (db: Kysely<any>) => Promise<void>;
@@ -167,4 +176,13 @@ export const migrations: Migrations = {
   migration_1719563257899,
   migration_1721827020716,
   migration_1720598958779,
+  migration_1720190144765,
+  migration_1724142453681,
+  migration_1724832698225,
+  migration_1724248019274,
+  migration_1724934536809,
+  migration_1724939359838,
+  migration_1726560344568,
+  migration_1726811693181,
+  migration_1727438989073,
 };

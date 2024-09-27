@@ -25,7 +25,7 @@ export const deleteIntentionFactory =
       national: () => true,
     });
     if (!isAllowed) throw Boom.forbidden();
-    await deps.deleteIntentionQuery(intention);
+    await deps.deleteIntentionQuery({ intention, updatedBy: user.id });
     logger.info("Intention supprimée", { numero, intention: intention });
   };
 
