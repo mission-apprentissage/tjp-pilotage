@@ -77,7 +77,7 @@ export const getChiffresIj = ({
     )
     .where("millesimeSortie", "in", millesime)
     .select([
-      "uai",
+      "formationEtablissement.uai",
       "voie",
       "millesimeSortie",
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuite"),

@@ -21,7 +21,7 @@ export const getFormations = async ({ uai }: { uai: string }) =>
       "dataFormation.codeNiveauDiplome",
       "dataFormation.cfd",
       "dataFormation.dateOuverture",
-      "codeDispositif",
+      "formationEtablissement.codeDispositif",
       "dataFormation.typeFamille",
       "dispositif.libelleDispositif",
     ])
