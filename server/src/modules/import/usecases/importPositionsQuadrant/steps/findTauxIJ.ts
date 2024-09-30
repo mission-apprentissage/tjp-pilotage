@@ -20,14 +20,14 @@ export const findTauxIJ = async ({
   codeNiveauDiplome?: string | undefined;
 }) =>
   await kdb
-    .selectFrom("indicateurRegionSortie")
-    .leftJoin("formationView", (join) =>
+    .selectFrom("formationView")
+    .leftJoin("indicateurRegionSortie", (join) =>
       join.on((eb) =>
         eb.and([
           eb(
-            eb.ref("formationView.cfd"),
+            eb.ref("indicateurRegionSortie.cfd"),
             "=",
-            eb.ref("indicateurRegionSortie.cfd")
+            eb.ref("formationView.cfd")
           ),
           eb(
             eb.ref("indicateurRegionSortie.voie"),

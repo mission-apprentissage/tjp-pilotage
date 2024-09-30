@@ -449,14 +449,6 @@ export const Nav = () => {
           </MenuList>
         </Menu>
       )}
-
-      <NavLink
-        href="/ressources"
-        segment="ressources"
-        plausibleEventName="ressources"
-      >
-        Ressources
-      </NavLink>
       <Glossaire />
     </Flex>
   );
