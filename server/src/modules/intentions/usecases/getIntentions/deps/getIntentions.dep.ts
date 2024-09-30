@@ -170,17 +170,9 @@ export const getIntentions = async (
                 sql`concat(
                   unaccent(${eb.ref("intention.numero")}),
                   ' ',
-                  unaccent(${eb.ref("intention.cfd")}),
-                  ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("departement.libelleDepartement")}),
-                  ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
-                  ' ',
-                  unaccent(${eb.ref("user.firstname")}),
-                  ' ',
-                  unaccent(${eb.ref("user.lastname")})
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
                 )`,
                 "ilike",
                 `%${search_word}%`

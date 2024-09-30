@@ -18,7 +18,7 @@ function generate_certificate() {
 
   echo "Generating certificate for domain ${dns_name}..."
   certbot certonly \
-    --email misson.apprentissage.devops@gmail.com \
+    --email contact@inserjeunes.beta.gouv.fr \
     --agree-tos \
     --non-interactive \
     --webroot \
