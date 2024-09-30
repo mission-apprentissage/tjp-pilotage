@@ -1,4 +1,14 @@
-import { Box, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import {
+  Box,
+  Skeleton,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 
 import {
   FormationsPilotageIntentions,
@@ -29,7 +39,8 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
   formations?: FormationsPilotageIntentions["formations"];
   positionsQuadrant?: RepartitionPilotageIntentionsPositionQuadrant;
 }) => {
-  if (!formations) return <></>;
+  if (!formations || !positionsQuadrant)
+    return <Skeleton opacity={0.3} height="100%" />;
 
   const indicateursTableau: Array<keyof StatsPositionQuadrant> = [
     "Effectif en entrée",
@@ -78,7 +89,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
     return statsPositionQuadrant;
   };
 
-  const getTdBgColor = (
+  const getTdColor = (
     key: keyof StatsPositionQuadrant,
     value: number | string
   ) => {
@@ -135,7 +146,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                   <Td
                     maxWidth={"100px"}
                     px={3}
-                    bgColor={getTdBgColor(
+                    color={getTdColor(
                       indicateur,
                       getStatsPositionQuadrant("Q1")[indicateur]
                     )}
@@ -147,7 +158,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                   <Td
                     maxWidth={"100px"}
                     px={3}
-                    bgColor={getTdBgColor(
+                    color={getTdColor(
                       indicateur,
                       getStatsPositionQuadrant("Q2")[indicateur]
                     )}
@@ -159,7 +170,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                   <Td
                     maxWidth={"100px"}
                     px={3}
-                    bgColor={getTdBgColor(
+                    color={getTdColor(
                       indicateur,
                       getStatsPositionQuadrant("Q3")[indicateur]
                     )}
@@ -171,7 +182,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                   <Td
                     maxWidth={"100px"}
                     px={3}
-                    bgColor={getTdBgColor(
+                    color={getTdColor(
                       indicateur,
                       getStatsPositionQuadrant("Q4")[indicateur]
                     )}
@@ -183,7 +194,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                   <Td
                     maxWidth={"100px"}
                     px={3}
-                    bgColor={getTdBgColor(
+                    color={getTdColor(
                       indicateur,
                       getStatsPositionQuadrant("Hors quadrant")[indicateur]
                     )}

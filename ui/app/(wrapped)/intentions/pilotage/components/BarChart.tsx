@@ -184,10 +184,11 @@ export const BarChart = ({
         type: "category",
         show: true,
         axisLabel: {
-          show: false,
+          show: true,
           fontSize: 14,
           color: grey425,
           fontWeight: 700,
+          position: "top",
         },
         axisTick: {
           show: false,

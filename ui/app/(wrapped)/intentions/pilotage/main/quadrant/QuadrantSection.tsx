@@ -258,6 +258,18 @@ export const QuadrantSection = ({
             />
           </Flex>
         </Box>
+        <Box ms={8} mt={4}>
+          <Link
+            as={NextLink}
+            href={createParametrizedUrl("/intentions/restitution", {
+              ...mergedFilters,
+            })}
+            color={"bluefrance.113"}
+          >
+            Voir la liste des demandes de transformation correspondantes
+            <ArrowForwardIcon ms={2} />
+          </Link>
+        </Box>
         <Box p="8">
           <Flex align="center" gap={6} direction="column">
             <Heading fontSize={20} mr="auto">

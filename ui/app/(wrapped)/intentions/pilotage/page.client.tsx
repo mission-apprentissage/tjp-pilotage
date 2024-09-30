@@ -10,8 +10,8 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { client } from "../../../../api.client";
 import { useStateParams } from "../../../../utils/useFilters";
 import { DefinitionTauxTransfoModal } from "../../components/TauxTransformationCard";
-import { FiltersSection } from "./components/FiltersSection";
-import { IndicateursClesSection } from "./components/IndicateursClesSection";
+import { FiltersSection } from "./filter/FiltersSection";
+import { HeaderSection } from "./header/HeaderSection";
 import { DisplayTypeEnum } from "./main/displayTypeEnum";
 import { MainSection } from "./main/MainSection";
 import {
@@ -81,27 +81,29 @@ export const PilotageNationalClient = () => {
     },
   });
 
-  const { data: repartitionData } = client
+  const { data: repartitionData, isLoading: isLoadingRepartition } = client
     .ref("[GET]/pilotage-intentions/repartition")
     .useQuery({
       query: { ...filters, ...order },
     });
 
-  const { data } = client.ref("[GET]/pilotage-intentions/stats").useQuery(
-    {
-      query: { ...filters },
-    },
-
-    {
-      keepPreviousData: true,
-      staleTime: 10000000,
-      onSuccess: (data) => {
-        if (!filters.campagne) {
-          setDefaultFilters(data);
-        }
+  const { data, isLoading: isLoadingStats } = client
+    .ref("[GET]/pilotage-intentions/stats")
+    .useQuery(
+      {
+        query: { ...filters },
       },
-    }
-  );
+
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+        onSuccess: (data) => {
+          if (!filters.campagne) {
+            setDefaultFilters(data);
+          }
+        },
+      }
+    );
 
   const setDefaultFilters = (data: StatsPilotageIntentions | undefined) => {
     if (!data) return;
@@ -137,12 +139,14 @@ export const PilotageNationalClient = () => {
             setFilters={setFilters}
             data={data}
             setDefaultFilters={() => setDefaultFilters(data)}
+            isLoading={isLoadingStats}
           />
-          <IndicateursClesSection
+          <HeaderSection
             data={data}
             filters={filters}
             setFilters={setFilters}
             onOpenTauxTransfoDefinition={onOpen}
+            isLoading={isLoadingStats}
           />
           <MainSection
             displayTypes={
@@ -158,6 +162,7 @@ export const PilotageNationalClient = () => {
             displayDomaines={displayDomaines}
             quadrantData={data}
             repartitionData={repartitionData}
+            isLoading={isLoadingRepartition}
             order={order}
             setSearchParams={setSearchParams}
           />

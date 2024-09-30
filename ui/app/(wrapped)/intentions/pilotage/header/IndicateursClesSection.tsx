@@ -6,11 +6,12 @@ import {
   GridItem,
   HStack,
   Icon as ChakraIcon,
+  Skeleton,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ScopeEnum } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { OBJECTIF_TAUX_TRANSFO_PERCENTAGE } from "shared/objectives/TAUX_TRANSFO";
@@ -33,7 +34,39 @@ import {
   StatsPilotageIntentions,
   Statut,
 } from "../types";
-import { CartoSection, IndicateurType } from "./Carto";
+
+const Loader = () => {
+  return (
+    <Flex
+      minH={550}
+      minW={700}
+      w={"100%"}
+      gap={6}
+      direction={"row"}
+      borderBottomRadius={4}
+      borderTopRightRadius={4}
+      borderLeftWidth={1}
+    >
+      <Grid templateColumns="repeat(3, 1fr)" gap={6} flex={1}>
+        <GridItem colSpan={2} p={4} bgColor={"white"} minW={450}>
+          <Skeleton opacity={0.3} h={"100%"} w={"100%"} />
+        </GridItem>
+        <GridItem colSpan={1} p={4} bgColor={"white"}>
+          <Skeleton opacity={0.3} h={"100%"} w={"100%"} />
+        </GridItem>
+        <GridItem colSpan={1} p={4} bgColor={"white"}>
+          <Skeleton opacity={0.3} h={"100%"} w={"100%"} />
+        </GridItem>
+        <GridItem colSpan={1} p={4} bgColor={"white"}>
+          <Skeleton opacity={0.3} h={"100%"} w={"100%"} />
+        </GridItem>
+        <GridItem colSpan={1} p={4} bgColor={"white"}>
+          <Skeleton opacity={0.3} h={"100%"} w={"100%"} />
+        </GridItem>
+      </Grid>
+    </Flex>
+  );
+};
 
 const DrapeauFrancaisIcon = ({ ...props }) => (
   <ChakraIcon boxSize={4} {...props}>
@@ -266,18 +299,14 @@ const NumberWithProgressBars = ({
 export const IndicateursClesSection = ({
   data,
   filters,
-  setFilters,
-  onOpenTauxTransfoDefinition,
+  isLoading,
 }: {
   data?: StatsPilotageIntentions;
   filters: FiltersStatsPilotageIntentions;
-  setFilters: (filters: FiltersStatsPilotageIntentions) => void;
-  onOpenTauxTransfoDefinition: () => void;
+  isLoading?: boolean;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const { code } = useScopeCode(filters);
-  const [indicateur, setIndicateur] =
-    useState<IndicateurType>("tauxTransformation");
 
   const { data: nationalStats } = client
     .ref("[GET]/pilotage-intentions/stats")
@@ -302,19 +331,6 @@ export const IndicateursClesSection = ({
     [generateGetScopedData, data, code, nationalStats]
   );
 
-  const indicateurOptions = [
-    {
-      label: "Taux de transformation",
-      value: "tauxTransformation",
-      isDefault: true,
-    },
-    {
-      label: "Ratio de fermetures",
-      value: "ratioFermeture",
-      isDefault: false,
-    },
-  ];
-
   const shouldShowProjetDemande = () =>
     filters.statut === undefined ||
     filters.statut.length === 0 ||
@@ -325,294 +341,262 @@ export const IndicateursClesSection = ({
     filters.statut.length === 0 ||
     filters.statut.includes(DemandeStatutEnum["demande validée"]);
 
+  if (isLoading) return <Loader />;
+
   return (
-    <VStack gap={8} width="100%" alignItems="start" color={"grey.50"}>
-      <Flex direction={"row"} gap={3}>
-        <Text fontWeight="700" fontSize="20px" lineHeight="28px">
-          Indicateurs clés de la transformation
-        </Text>
-        <TooltipIcon
-          onClick={() => onOpenTauxTransfoDefinition()}
-          label={
-            <Flex direction="column" gap={4}>
-              <Text>Comprendre le taux de transformation.</Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Flex>
-          }
-          my="auto"
-        />
+    <Flex flex="1" direction={"column"} gap={6}>
+      <Flex direction={"row"} gap={6}>
+        <Card title="Taux de transformation (Prévisionnel)">
+          <Grid
+            templateColumns="repeat(2, 1fr)"
+            width="100%"
+            minW={450}
+            gap="24px"
+          >
+            {shouldShowProjetDemande() && (
+              <GridItem colSpan={shouldShowDemandeValidee() ? 1 : 2}>
+                <NumberWithLabel
+                  label="Projets"
+                  icon={<Icon icon="ri:file-text-line" />}
+                  scopeCode={code}
+                  percentage={getScopedData(
+                    DemandeStatutEnum["projet de demande"],
+                    "tauxTransformation"
+                  )}
+                  nationalPercentage={
+                    nationalStats?.["projet de demande"]?.["_national"]
+                      .tauxTransformation
+                  }
+                  objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
+                />
+              </GridItem>
+            )}
+            {shouldShowDemandeValidee() && (
+              <GridItem colSpan={shouldShowProjetDemande() ? 1 : 2}>
+                <NumberWithLabel
+                  label="Demandes validées"
+                  icon={<Icon icon="ri:checkbox-circle-line" />}
+                  scopeCode={code}
+                  percentage={getScopedData(
+                    DemandeStatutEnum["demande validée"],
+                    "tauxTransformation"
+                  )}
+                  nationalPercentage={
+                    nationalStats?.["demande validée"]?.["_national"]
+                      .tauxTransformation
+                  }
+                  objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
+                />
+              </GridItem>
+            )}
+          </Grid>
+        </Card>
+        <Card title="Ratio de fermetures">
+          <NumberWithLabel
+            label=" "
+            scopeCode={code}
+            percentage={getScopedData("all", "ratioFermeture")}
+            nationalPercentage={
+              nationalStats?.all?.["_national"].ratioFermeture
+            }
+          />
+        </Card>
       </Flex>
-      <Flex direction={"row"} width="100%" h="100%" gap="16px">
-        <Flex flex="1" direction={"column"} gap={6}>
-          <Flex direction={"row"} gap={6}>
-            <Card title="Taux de transformation (Prévisionnel)">
-              <Grid
-                templateColumns="repeat(2, 1fr)"
-                width="100%"
-                minW={450}
-                gap="24px"
-              >
-                {shouldShowProjetDemande() && (
-                  <GridItem colSpan={shouldShowDemandeValidee() ? 1 : 2}>
-                    <NumberWithLabel
-                      label="Projets"
-                      icon={<Icon icon="ri:file-text-line" />}
-                      scopeCode={code}
-                      percentage={getScopedData(
-                        DemandeStatutEnum["projet de demande"],
-                        "tauxTransformation"
-                      )}
-                      nationalPercentage={
-                        nationalStats?.["projet de demande"]?.["_national"]
-                          .tauxTransformation
-                      }
-                      objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
-                    />
-                  </GridItem>
-                )}
-                {shouldShowDemandeValidee() && (
-                  <GridItem colSpan={shouldShowProjetDemande() ? 1 : 2}>
-                    <NumberWithLabel
-                      label="Demandes validées"
-                      icon={<Icon icon="ri:checkbox-circle-line" />}
-                      scopeCode={code}
-                      percentage={getScopedData(
-                        DemandeStatutEnum["demande validée"],
-                        "tauxTransformation"
-                      )}
-                      nationalPercentage={
-                        nationalStats?.["demande validée"]?.["_national"]
-                          .tauxTransformation
-                      }
-                      objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
-                    />
-                  </GridItem>
-                )}
-              </Grid>
-            </Card>
-            <Card title="Ratio de fermetures">
-              <NumberWithLabel
-                label=" "
-                scopeCode={code}
-                percentage={getScopedData("all", "ratioFermeture")}
-                nationalPercentage={
-                  nationalStats?.all?.["_national"].ratioFermeture
-                }
-              />
-            </Card>
-          </Flex>
-          <Flex direction={"row"} gap={6}>
-            <NumberWithProgressBars
-              all={getScopedData("all", "placesOuvertes")}
-              icon={
-                <Icon
-                  width="24px"
-                  icon="ri:user-add-fill"
-                  color={themeDefinition.colors.bluefrance[525]}
-                />
-              }
-              title="Pl. Ouvertes"
-              demandeValidee={getScopedData(
-                DemandeStatutEnum["demande validée"],
-                "placesOuvertes"
-              )}
-              projetDeDemande={getScopedData(
-                DemandeStatutEnum["projet de demande"],
-                "placesOuvertes"
-              )}
+      <Flex direction={"row"} gap={6}>
+        <NumberWithProgressBars
+          all={getScopedData("all", "placesOuvertes")}
+          icon={
+            <Icon
+              width="24px"
+              icon="ri:user-add-fill"
+              color={themeDefinition.colors.bluefrance[525]}
+            />
+          }
+          title="Pl. Ouvertes"
+          demandeValidee={getScopedData(
+            DemandeStatutEnum["demande validée"],
+            "placesOuvertes"
+          )}
+          projetDeDemande={getScopedData(
+            DemandeStatutEnum["projet de demande"],
+            "placesOuvertes"
+          )}
+        >
+          <Divider />
+          <VStack
+            width="100%"
+            color={themeDefinition.colors.grey[425]}
+            fontSize="12px"
+          >
+            <Text alignSelf="end">dont</Text>
+            <HStack
+              justifyContent="space-between"
+              width="100%"
+              alignItems="start"
             >
-              <Divider />
-              <VStack
-                width="100%"
-                color={themeDefinition.colors.grey[425]}
-                fontSize="12px"
-              >
-                <Text alignSelf="end">dont</Text>
-                <HStack
-                  justifyContent="space-between"
-                  width="100%"
-                  alignItems="start"
-                >
-                  <Text>
-                    {formatPercentage(
-                      getScopedData("all", "placesOuvertesQ1Q2") /
-                        getScopedData("all", "placesOuvertes"),
-                      1,
-                      "-"
-                    )}
-                  </Text>
-                  <Flex direction={"row"} gap={2}>
-                    <Text>places en Q1 / Q2</Text>
-                    <TooltipIcon
-                      label={
-                        <Flex direction="column" gap={4}>
-                          <Text>
-                            Positionnement du point de la formation dans le
-                            quadrant par rapport aux moyennes régionales des
-                            taux d'emploi et de poursuite d'études appliquées au
-                            niveau de diplôme.
-                          </Text>
-                          <Text>Cliquez pour plus d'infos.</Text>
-                        </Flex>
-                      }
-                      onClick={() => openGlossaire("quadrant")}
-                      my={"auto"}
-                    />
-                  </Flex>
-                </HStack>
-              </VStack>
-            </NumberWithProgressBars>
-            <NumberWithProgressBars
-              all={getScopedData("all", "placesFermees")}
-              icon={
-                <Icon
-                  width="24px"
-                  icon="ri:user-unfollow-fill"
-                  color={themeDefinition.colors.success["425_active"]}
-                />
-              }
-              title="Pl. Fermées"
-              demandeValidee={getScopedData(
-                DemandeStatutEnum["demande validée"],
-                "placesFermees"
-              )}
-              projetDeDemande={getScopedData(
-                DemandeStatutEnum["projet de demande"],
-                "placesFermees"
-              )}
-            >
-              <Divider />
-              <VStack
-                width="100%"
-                color={themeDefinition.colors.grey[425]}
-                fontSize="12px"
-              >
-                <Text alignSelf="end">dont</Text>
-                <HStack
-                  justifyContent="space-between"
-                  width="100%"
-                  alignItems="start"
-                >
-                  <Text>
-                    {formatPercentage(
-                      getScopedData("all", "placesFermeesQ3Q4") /
-                        getScopedData("all", "placesFermees"),
-                      1,
-                      "-"
-                    )}
-                  </Text>
-                  <Flex direction={"row"} gap={2}>
-                    <Text>places en Q3 / Q4</Text>
-                    <TooltipIcon
-                      label={
-                        <Flex direction="column" gap={4}>
-                          <Text>
-                            Positionnement du point de la formation dans le
-                            quadrant par rapport aux moyennes régionales des
-                            taux d'emploi et de poursuite d'études appliquées au
-                            niveau de diplôme.
-                          </Text>
-                          <Text>Cliquez pour plus d'infos.</Text>
-                        </Flex>
-                      }
-                      onClick={() => openGlossaire("quadrant")}
-                      my={"auto"}
-                    />
-                  </Flex>
-                </HStack>
-              </VStack>
-            </NumberWithProgressBars>
-            <NumberWithProgressBars
-              all={getScopedData("all", "placesColorees")}
-              icon={
-                <Icon
-                  width="24px"
-                  icon="ri:account-pin-box-fill"
-                  color={themeDefinition.colors.purpleGlycine["850_active"]}
-                />
-              }
-              title="Pl. Colorées"
-              demandeValidee={getScopedData(
-                DemandeStatutEnum["demande validée"],
-                "placesColorees"
-              )}
-              projetDeDemande={getScopedData(
-                DemandeStatutEnum["projet de demande"],
-                "placesColorees"
-              )}
-              tooltip={
+              <Text>
+                {formatPercentage(
+                  getScopedData("all", "placesOuvertesQ1Q2") /
+                    getScopedData("all", "placesOuvertes"),
+                  1,
+                  "-"
+                )}
+              </Text>
+              <Flex direction={"row"} gap={2}>
+                <Text>places en Q1 / Q2</Text>
                 <TooltipIcon
                   label={
-                    <Box>
+                    <Flex direction="column" gap={4}>
                       <Text>
-                        Dans Orion, à partir de la campagne 2024, on désigne
-                        comme “Colorations” le fait de colorer des places
-                        existantes sans augmentation de capacité.
+                        Positionnement du point de la formation dans le quadrant
+                        par rapport aux moyennes régionales des taux d'emploi et
+                        de poursuite d'études appliquées au niveau de diplôme.
                       </Text>
-                      <Text mt={4}>Cliquez pour plus d'infos.</Text>
-                    </Box>
+                      <Text>Cliquez pour plus d'infos.</Text>
+                    </Flex>
                   }
-                  h={"24px"}
-                  onClick={() => openGlossaire("coloration")}
+                  onClick={() => openGlossaire("quadrant")}
+                  my={"auto"}
                 />
-              }
+              </Flex>
+            </HStack>
+          </VStack>
+        </NumberWithProgressBars>
+        <NumberWithProgressBars
+          all={getScopedData("all", "placesFermees")}
+          icon={
+            <Icon
+              width="24px"
+              icon="ri:user-unfollow-fill"
+              color={themeDefinition.colors.success["425_active"]}
+            />
+          }
+          title="Pl. Fermées"
+          demandeValidee={getScopedData(
+            DemandeStatutEnum["demande validée"],
+            "placesFermees"
+          )}
+          projetDeDemande={getScopedData(
+            DemandeStatutEnum["projet de demande"],
+            "placesFermees"
+          )}
+        >
+          <Divider />
+          <VStack
+            width="100%"
+            color={themeDefinition.colors.grey[425]}
+            fontSize="12px"
+          >
+            <Text alignSelf="end">dont</Text>
+            <HStack
+              justifyContent="space-between"
+              width="100%"
+              alignItems="start"
             >
-              <Divider />
-              <VStack
-                width="100%"
-                color={themeDefinition.colors.grey[425]}
-                fontSize="12px"
-              >
-                <Text alignSelf="end">dont</Text>
-                <HStack
-                  justifyContent="space-between"
-                  width="100%"
-                  alignItems="start"
-                >
+              <Text>
+                {formatPercentage(
+                  getScopedData("all", "placesFermeesQ3Q4") /
+                    getScopedData("all", "placesFermees"),
+                  1,
+                  "-"
+                )}
+              </Text>
+              <Flex direction={"row"} gap={2}>
+                <Text>places en Q3 / Q4</Text>
+                <TooltipIcon
+                  label={
+                    <Flex direction="column" gap={4}>
+                      <Text>
+                        Positionnement du point de la formation dans le quadrant
+                        par rapport aux moyennes régionales des taux d'emploi et
+                        de poursuite d'études appliquées au niveau de diplôme.
+                      </Text>
+                      <Text>Cliquez pour plus d'infos.</Text>
+                    </Flex>
+                  }
+                  onClick={() => openGlossaire("quadrant")}
+                  my={"auto"}
+                />
+              </Flex>
+            </HStack>
+          </VStack>
+        </NumberWithProgressBars>
+        <NumberWithProgressBars
+          all={getScopedData("all", "placesColorees")}
+          icon={
+            <Icon
+              width="24px"
+              icon="ri:account-pin-box-fill"
+              color={themeDefinition.colors.purpleGlycine["850_active"]}
+            />
+          }
+          title="Pl. Colorées"
+          demandeValidee={getScopedData(
+            DemandeStatutEnum["demande validée"],
+            "placesColorees"
+          )}
+          projetDeDemande={getScopedData(
+            DemandeStatutEnum["projet de demande"],
+            "placesColorees"
+          )}
+          tooltip={
+            <TooltipIcon
+              label={
+                <Box>
                   <Text>
-                    {formatPercentage(
-                      getScopedData("all", "placesColoreesQ3Q4") /
-                        getScopedData("all", "placesColorees"),
-                      1,
-                      "-"
-                    )}
+                    Dans Orion, à partir de la campagne 2024, on désigne comme
+                    “Colorations” le fait de colorer des places existantes sans
+                    augmentation de capacité.
                   </Text>
-                  <Flex direction={"row"} gap={2}>
-                    <Text>places en Q3 / Q4</Text>
-                    <TooltipIcon
-                      label={
-                        <Flex direction="column" gap={4}>
-                          <Text>
-                            Positionnement du point de la formation dans le
-                            quadrant par rapport aux moyennes régionales des
-                            taux d'emploi et de poursuite d'études appliquées au
-                            niveau de diplôme.
-                          </Text>
-                          <Text>Cliquez pour plus d'infos.</Text>
-                        </Flex>
-                      }
-                      onClick={() => openGlossaire("quadrant")}
-                      my={"auto"}
-                    />
-                  </Flex>
-                </HStack>
-              </VStack>
-            </NumberWithProgressBars>
-          </Flex>
-        </Flex>
-        <Flex flex={1} minW={500} minH={500}>
-          <CartoSection
-            indicateur={indicateur}
-            handleIndicateurChange={(newIndicateur) =>
-              setIndicateur(newIndicateur as IndicateurType)
-            }
-            indicateurOptions={indicateurOptions}
-            filters={filters}
-            data={data}
-            handleFilters={(f) => setFilters({ ...filters, ...f })}
-          />
-        </Flex>
+                  <Text mt={4}>Cliquez pour plus d'infos.</Text>
+                </Box>
+              }
+              h={"24px"}
+              onClick={() => openGlossaire("coloration")}
+            />
+          }
+        >
+          <Divider />
+          <VStack
+            width="100%"
+            color={themeDefinition.colors.grey[425]}
+            fontSize="12px"
+          >
+            <Text alignSelf="end">dont</Text>
+            <HStack
+              justifyContent="space-between"
+              width="100%"
+              alignItems="start"
+            >
+              <Text>
+                {formatPercentage(
+                  getScopedData("all", "placesColoreesQ3Q4") /
+                    getScopedData("all", "placesColorees"),
+                  1,
+                  "-"
+                )}
+              </Text>
+              <Flex direction={"row"} gap={2}>
+                <Text>places en Q3 / Q4</Text>
+                <TooltipIcon
+                  label={
+                    <Flex direction="column" gap={4}>
+                      <Text>
+                        Positionnement du point de la formation dans le quadrant
+                        par rapport aux moyennes régionales des taux d'emploi et
+                        de poursuite d'études appliquées au niveau de diplôme.
+                      </Text>
+                      <Text>Cliquez pour plus d'infos.</Text>
+                    </Flex>
+                  }
+                  onClick={() => openGlossaire("quadrant")}
+                  my={"auto"}
+                />
+              </Flex>
+            </HStack>
+          </VStack>
+        </NumberWithProgressBars>
       </Flex>
-    </VStack>
+    </Flex>
   );
 };
