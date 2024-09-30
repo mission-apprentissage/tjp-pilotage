@@ -3,8 +3,10 @@ import { z } from "zod";
 
 import { RequestUser } from "../../../core/model/User";
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
+import { getDenominateurQuery } from "./deps/getDenominateurQuery";
 import { getDomainesQuery } from "./deps/getDomainesQuery";
 import { getNiveauxDiplomeQuery } from "./deps/getNiveauxDiplomeQuery";
+import { getNumerateurQuery } from "./deps/getNumerateurQuery";
 import { getPositionsQuadrantQuery } from "./deps/getPositionsQuadrantQuery";
 import { getZonesGeographiquesQuery } from "./deps/getZonesGeographiquesQuery";
 import {
@@ -16,6 +18,22 @@ export interface Filters
   extends z.infer<typeof getRepartitionPilotageIntentionsSchema.querystring> {
   user: RequestUser;
 }
+
+type Numerateur = Awaited<ReturnType<typeof getNumerateurQuery>>;
+type Denominateur = Awaited<ReturnType<typeof getDenominateurQuery>>;
+type GroupByCodeLibelle =
+  | { code: "codeRegion"; libelle: "libelleRegion" }
+  | { code: "codeAcademie"; libelle: "libelleAcademie" }
+  | { code: "codeDepartement"; libelle: "libelleDepartement" }
+  | { code: "positionQuadrant"; libelle: "positionQuadrant" }
+  | { code: "codeNsf"; libelle: "libelleNsf" }
+  | { code: "codeNiveauDiplome"; libelle: "libelleNiveauDiplome" };
+
+export type Repartition = {
+  numerateur: Numerateur;
+  denominateur: Denominateur;
+  groupBy: GroupByCodeLibelle;
+};
 
 const calculateTotal = (
   statsRepartition: z.infer<typeof StatsSchema>[]
@@ -30,9 +48,6 @@ const calculateTotal = (
     placesTransformees: 0,
     solde: 0,
     tauxTransformation: undefined,
-    tauxTransformationOuvertures: undefined,
-    tauxTransformationFermetures: undefined,
-    tauxTransformationColorations: undefined,
     ratioOuverture: undefined,
     ratioFermeture: undefined,
   };
@@ -49,9 +64,6 @@ const calculateTotal = (
 
   if (total.effectif !== 0) {
     total.tauxTransformation = total.placesTransformees / total.effectif;
-    total.tauxTransformationOuvertures = total.placesOuvertes / total.effectif;
-    total.tauxTransformationFermetures = total.placesFermees / total.effectif;
-    total.tauxTransformationColorations = total.placesColorees / total.effectif;
   }
   if (total.placesTransformees !== 0) {
     total.ratioOuverture = total.placesOuvertes / total.placesTransformees;
@@ -90,6 +102,61 @@ const formatResult = (
     .value();
 };
 
+const groupByResult = ({
+  numerateur,
+  denominateur,
+  groupBy,
+}: {
+  numerateur: Numerateur;
+  denominateur: Denominateur;
+  groupBy: GroupByCodeLibelle;
+}) => {
+  const allKeys = _.union(
+    _.keys(_(numerateur).groupBy(groupBy.code).value()),
+    _.keys(_(denominateur).groupBy(groupBy.code).value())
+  );
+
+  return _(allKeys)
+    .map((code) => {
+      // Chercher les demandes associées
+      const effectifGrouped = _.filter(denominateur, {
+        [groupBy.code]: code,
+      });
+      // Chercher les demandes associées
+      const demandeGrouped = _.filter(numerateur, {
+        [groupBy.code]: code,
+      });
+
+      // Somme des effectifs
+      const totalEffectifs = _.sumBy(effectifGrouped, "effectif");
+
+      // Somme des placesOuvertes
+      const sommePlacesOuvertes = _.sumBy(demandeGrouped, "placesOuvertes");
+      const sommePlacesFermees = _.sumBy(demandeGrouped, "placesFermees");
+      const sommePlacesColorees = _.sumBy(demandeGrouped, "placesColorees");
+      const sommePlacesTransformees = _.sumBy(
+        demandeGrouped,
+        "placesTransformees"
+      );
+      const sommeSolde = sommePlacesOuvertes - sommePlacesFermees;
+      const libelle =
+        _.get(effectifGrouped[0], groupBy.libelle) ??
+        _.get(demandeGrouped[0], groupBy.libelle);
+
+      return {
+        code: code,
+        libelle: libelle ?? code,
+        effectif: totalEffectifs,
+        placesOuvertes: sommePlacesOuvertes,
+        placesFermees: sommePlacesFermees,
+        placesColorees: sommePlacesColorees,
+        placesTransformees: sommePlacesTransformees,
+        solde: sommeSolde,
+      };
+    })
+    .value();
+};
+
 const getRepartitionPilotageIntentionsFactory =
   (
     deps = {
@@ -98,6 +165,8 @@ const getRepartitionPilotageIntentionsFactory =
       getNiveauxDiplomeQuery,
       getZonesGeographiquesQuery,
       getPositionsQuadrantQuery,
+      getDenominateurQuery,
+      getNumerateurQuery,
     }
   ) =>
   async (activeFilters: Filters) => {
@@ -135,25 +204,29 @@ const getRepartitionPilotageIntentionsFactory =
 
     return {
       // Répartitions non ordonnées
-      top10Domaines: formatResult(domaines, "desc", "placesTransformees"),
+      top10Domaines: formatResult(
+        groupByResult(domaines),
+        "desc",
+        "placesTransformees"
+      ),
       niveauxDiplome: formatResult(
-        niveauxDiplome,
+        groupByResult(niveauxDiplome),
         "desc",
         "placesTransformees"
       ),
       // Répartitions ordonnées
       domaines: formatResult(
-        domaines,
+        groupByResult(domaines),
         activeFilters.order,
         activeFilters.orderBy
       ),
       zonesGeographiques: formatResult(
-        zonesGeographiques,
+        groupByResult(zonesGeographiques),
         activeFilters.order,
         activeFilters.orderBy
       ),
       positionsQuadrant: formatResult(
-        positionsQuadrant,
+        groupByResult(positionsQuadrant),
         activeFilters.order,
         activeFilters.orderBy
       ),

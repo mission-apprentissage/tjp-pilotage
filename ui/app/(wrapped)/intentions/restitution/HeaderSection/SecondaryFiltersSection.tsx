@@ -248,6 +248,34 @@ export const SecondaryFiltersSection = ({
               ))}
             </Select>
           </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>Position quadrant</FormLabel>
+            <Select
+              width={"64"}
+              size="md"
+              variant={"newInput"}
+              value={activeFilters.positionQuadrant?.toString() ?? ""}
+              onChange={(e) =>
+                handleFilters("positionQuadrant", e.target.value)
+              }
+              borderBottomColor={
+                activeFilters.positionQuadrant != undefined ? "info.525" : ""
+              }
+              placeholder="TOUTES"
+            >
+              {[
+                { value: "Q1", label: "Q1" },
+                { value: "Q2", label: "Q2" },
+                { value: "Q3", label: "Q3" },
+                { value: "Q4", label: "Q4" },
+                { value: "Hors quadrant", label: "Hors quadrant" },
+              ].map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+          </Box>
           <Button
             variant="externalLink"
             border={"none"}

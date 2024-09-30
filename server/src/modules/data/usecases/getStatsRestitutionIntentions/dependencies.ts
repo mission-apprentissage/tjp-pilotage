@@ -1,5 +1,7 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
+import { CURRENT_RENTREE } from "shared";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
@@ -42,6 +44,7 @@ const getStatsRestitutionIntentionsQuery = async ({
   codeNsf,
   campagne,
   search,
+  positionQuadrant,
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
@@ -71,6 +74,32 @@ const getStatsRestitutionIntentionsQuery = async ({
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
       "dataFormation.codeNiveauDiplome"
+    )
+    .leftJoin("positionFormationRegionaleQuadrant", (join) =>
+      join.on((eb) =>
+        eb.and([
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.cfd"),
+            "=",
+            eb.ref("demande.cfd")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
+            "=",
+            eb.ref("dataEtablissement.codeRegion")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
+            "=",
+            eb.val(
+              getMillesimeFromRentreeScolaire({
+                rentreeScolaire: CURRENT_RENTREE,
+                offset: 0,
+              })
+            )
+          ),
+        ])
+      )
     )
     .select((eb) =>
       jsonBuildObject({
@@ -245,6 +274,15 @@ const getStatsRestitutionIntentionsQuery = async ({
               )
             )
           )
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (positionQuadrant)
+        return eb.where(
+          "positionFormationRegionaleQuadrant.positionQuadrant",
+          "=",
+          positionQuadrant
         );
       return eb;
     })

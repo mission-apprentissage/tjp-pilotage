@@ -1,6 +1,9 @@
 import { Box, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 
-import { FormationsPilotageIntentions } from "@/app/(wrapped)/intentions/pilotage/types";
+import {
+  FormationsPilotageIntentions,
+  RepartitionPilotageIntentionsPositionQuadrant,
+} from "@/app/(wrapped)/intentions/pilotage/types";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { formatPercentage } from "@/utils/formatUtils";
 
@@ -21,8 +24,10 @@ type StatsPositionQuadrant = {
 
 export const PlacesTransformeesParPositionQuadrantSection = ({
   formations,
+  positionsQuadrant,
 }: {
   formations?: FormationsPilotageIntentions["formations"];
+  positionsQuadrant?: RepartitionPilotageIntentionsPositionQuadrant;
 }) => {
   if (!formations) return <></>;
 
@@ -46,20 +51,18 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
       ["Ratio de fermeture"]: "-",
     };
 
-    formations
-      .filter((formation) => formation.positionQuadrant === positionQuadrant)
-      .map((formation) => {
-        if (statsPositionQuadrant) {
-          statsPositionQuadrant["Places fermées"] += formation.placesFermees;
-          statsPositionQuadrant["Places ouvertes"] += formation.placesOuvertes;
-          statsPositionQuadrant["Places colorées"] += formation.placesColorees;
-          statsPositionQuadrant["Effectif en entrée"] += formation.effectif;
-          statsPositionQuadrant["Places transformées"] +=
-            formation.placesTransformees;
-          statsPositionQuadrant["Solde"] +=
-            formation.placesOuvertes - formation.placesFermees;
-        }
-      });
+    statsPositionQuadrant["Places fermées"] =
+      positionsQuadrant?.[positionQuadrant].placesFermees ?? 0;
+    statsPositionQuadrant["Places ouvertes"] =
+      positionsQuadrant?.[positionQuadrant].placesOuvertes ?? 0;
+    statsPositionQuadrant["Places colorées"] =
+      positionsQuadrant?.[positionQuadrant].placesColorees ?? 0;
+    statsPositionQuadrant["Places transformées"] =
+      positionsQuadrant?.[positionQuadrant].placesTransformees ?? 0;
+    statsPositionQuadrant["Solde"] =
+      positionsQuadrant?.[positionQuadrant].solde ?? 0;
+    statsPositionQuadrant["Effectif en entrée"] =
+      positionsQuadrant?.[positionQuadrant].effectif ?? 0;
 
     statsPositionQuadrant["Taux de transformation"] = formatPercentage(
       statsPositionQuadrant["Places transformées"] /
@@ -89,7 +92,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
     <>
       <Box width={"100%"}>
         <Box>
-          <BarChart formations={formations} />
+          <BarChart positionsQuadrant={positionsQuadrant} />
         </Box>
         <Box marginRight={"15%"} mt={12}>
           <Table variant="unstyled">
@@ -137,13 +140,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                       getStatsPositionQuadrant("Q1")[indicateur]
                     )}
                   >
-                    <Text
-                      align="center"
-                      bgColor={getTdBgColor(
-                        indicateur,
-                        getStatsPositionQuadrant("Q1")[indicateur]
-                      )}
-                    >
+                    <Text align="center">
                       {getStatsPositionQuadrant("Q1")[indicateur]}
                     </Text>
                   </Td>

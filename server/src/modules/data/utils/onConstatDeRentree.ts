@@ -1,8 +1,10 @@
 import { expressionBuilder } from "kysely";
 import { CURRENT_RENTREE, FIRST_ANNEE_CAMPAGNE } from "shared";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { DB } from "../../../db/db";
 import { isInDenominateurTauxTransfo } from "../../utils/isInDenominateurTauxTransfo";
+import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
 
 export const genericOnConstatRentree =
   ({
@@ -36,7 +38,34 @@ export const genericOnConstatRentree =
         "constatRentree.uai"
       )
       .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
+      .leftJoin("positionFormationRegionaleQuadrant", (join) =>
+        join.on((eb) =>
+          eb.and([
+            eb(
+              eb.ref("positionFormationRegionaleQuadrant.cfd"),
+              "=",
+              eb.ref("dataFormation.cfd")
+            ),
+            eb(
+              eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
+              "=",
+              eb.ref("dataEtablissement.codeRegion")
+            ),
+            eb(
+              eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
+              "=",
+              eb.val(
+                getMillesimeFromRentreeScolaire({
+                  rentreeScolaire: CURRENT_RENTREE,
+                  offset: 0,
+                })
+              )
+            ),
+          ])
+        )
+      )
       .where(isInDenominateurTauxTransfo)
+      .where(isInPerimetreIJDataEtablissement)
       .$call((eb) => {
         if (campagne) return eb.where("campagne.annee", "=", campagne);
         return eb;
