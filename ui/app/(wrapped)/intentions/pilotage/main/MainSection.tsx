@@ -73,6 +73,7 @@ export const MainSection = ({
                 type: filters.scope,
                 value: useScopeCode(filters).code,
               }}
+              repartitionData={repartitionData}
             />
           </>
         ) : null}

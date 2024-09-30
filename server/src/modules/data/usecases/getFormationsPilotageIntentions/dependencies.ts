@@ -200,7 +200,10 @@ const getFormationsPilotageIntentionsQuery = ({
       sql<number>`COALESCE(${eb.ref("effectifs.denominateur")}, 0)`.as(
         "effectif"
       ),
-      "positionFormationRegionaleQuadrant.positionQuadrant",
+      sql<string>`COALESCE(
+        ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
+        'Hors quadrant'
+      )`.as("positionQuadrant"),
       "dataFormation.libelleFormation",
       "dispositif.libelleDispositif",
       "dataFormation.cfd",

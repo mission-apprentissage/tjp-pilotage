@@ -2,29 +2,17 @@ import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
-import { formatPercentage } from "@/utils/formatUtils";
-
-import { FormationsPilotageIntentions } from "../types";
+import { formatPercentage } from "../../../../../utils/formatUtils";
+import { RepartitionPilotageIntentionsPositionQuadrant } from "../types";
 
 type PositionQuadrant = "Q1" | "Q2" | "Q3" | "Q4" | "Hors quadrant";
 
-type StatsPositionQuadrant = {
-  ["Places fermées"]: number;
-  ["Places ouvertes"]: number;
-  ["Places colorées"]: number;
-  ["Places transformées"]: number;
-  ["Solde"]: number;
-  ["Effectif"]: number;
-  ["Taux de transformation"]: string;
-  ["Ratio de fermeture"]: string;
-};
-
 export const BarChart = ({
-  formations,
+  positionsQuadrant,
 }: {
-  formations?: FormationsPilotageIntentions["formations"];
+  positionsQuadrant?: RepartitionPilotageIntentionsPositionQuadrant;
 }) => {
-  if (!formations) return <></>;
+  if (!positionsQuadrant) return <></>;
 
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,56 +21,13 @@ export const BarChart = ({
   const bf850_active = useToken("colors", "bluefrance.850_active");
   const grey425 = useToken("colors", "grey.425");
 
-  const positionsQuadrant: PositionQuadrant[] = [
+  const positionsQuadrantOptions: PositionQuadrant[] = [
     "Q1",
     "Q2",
     "Q3",
     "Q4",
     "Hors quadrant",
   ];
-
-  const getStatsPositionQuadrant = (
-    positionQuadrant: PositionQuadrant
-  ): StatsPositionQuadrant => {
-    const statsPositionQuadrant: StatsPositionQuadrant = {
-      ["Places fermées"]: 0,
-      ["Places ouvertes"]: 0,
-      ["Places colorées"]: 0,
-      ["Places transformées"]: 0,
-      ["Solde"]: 0,
-      ["Effectif"]: 0,
-      ["Taux de transformation"]: "-",
-      ["Ratio de fermeture"]: "-",
-    };
-
-    formations
-      .filter((formation) => formation.positionQuadrant === positionQuadrant)
-      .map((formation) => {
-        if (statsPositionQuadrant) {
-          statsPositionQuadrant["Places fermées"] += formation.placesFermees;
-          statsPositionQuadrant["Places ouvertes"] += formation.placesOuvertes;
-          statsPositionQuadrant["Places colorées"] += formation.placesColorees;
-          statsPositionQuadrant["Effectif"] += formation.effectif;
-          statsPositionQuadrant["Places transformées"] +=
-            formation.placesTransformees;
-          statsPositionQuadrant["Solde"] +=
-            formation.placesOuvertes - formation.placesFermees;
-        }
-      });
-
-    statsPositionQuadrant["Taux de transformation"] = formatPercentage(
-      statsPositionQuadrant["Places transformées"] /
-        statsPositionQuadrant["Effectif"],
-      2
-    );
-    statsPositionQuadrant["Ratio de fermeture"] = formatPercentage(
-      statsPositionQuadrant["Places fermées"] /
-        statsPositionQuadrant["Places transformées"],
-      2
-    );
-
-    return statsPositionQuadrant;
-  };
 
   const seriesOption: echarts.BarSeriesOption = {
     type: "bar",
@@ -124,11 +69,12 @@ export const BarChart = ({
               <br />
               Ratio de fermetures :
               <span style="font-weight: 700;">
-                ${
-                  getStatsPositionQuadrant(params[0]?.name as PositionQuadrant)[
-                    "Ratio de fermeture"
-                  ]
-                }
+                ${formatPercentage(
+                  positionsQuadrant[params[0]?.name as PositionQuadrant]
+                    .ratioFermeture,
+                  0,
+                  "-"
+                )}
               </span>
               <br />
               <br />
@@ -163,9 +109,8 @@ export const BarChart = ({
                 <span>
                   Pl. transformées :
                   <span style="font-weight: 700;"> ${
-                    getStatsPositionQuadrant(
-                      params[0]?.name as PositionQuadrant
-                    )["Places transformées"]
+                    positionsQuadrant[params[0]?.name as PositionQuadrant]
+                      .placesTransformees
                   }</span>
                 </span>
               </div>
@@ -235,7 +180,7 @@ export const BarChart = ({
         bottom: 0,
       },
       xAxis: {
-        data: positionsQuadrant,
+        data: positionsQuadrantOptions,
         type: "category",
         show: true,
         axisLabel: {
@@ -258,11 +203,9 @@ export const BarChart = ({
       },
       series: [
         {
-          data: positionsQuadrant.map(
+          data: positionsQuadrantOptions.map(
             (positionQuadrant) =>
-              getStatsPositionQuadrant(positionQuadrant as PositionQuadrant)[
-                "Places fermées"
-              ]
+              positionsQuadrant[positionQuadrant].placesFermees
           ),
           stack: "placesTransformées",
           color: bf113,
@@ -270,11 +213,9 @@ export const BarChart = ({
           ...seriesOption,
         },
         {
-          data: positionsQuadrant.map(
+          data: positionsQuadrantOptions.map(
             (positionQuadrant) =>
-              getStatsPositionQuadrant(positionQuadrant as PositionQuadrant)[
-                "Places ouvertes"
-              ]
+              positionsQuadrant[positionQuadrant].placesOuvertes
           ),
           stack: "placesTransformées",
           color: bf850_active,
@@ -282,11 +223,9 @@ export const BarChart = ({
           ...seriesOption,
         },
         {
-          data: positionsQuadrant.map(
+          data: positionsQuadrantOptions.map(
             (positionQuadrant) =>
-              getStatsPositionQuadrant(positionQuadrant as PositionQuadrant)[
-                "Places colorées"
-              ]
+              positionsQuadrant[positionQuadrant].placesColorees
           ),
           stack: "placesTransformées",
           color: bf850,
@@ -296,7 +235,7 @@ export const BarChart = ({
         },
       ],
     }),
-    [formations]
+    [positionsQuadrant]
   );
 
   useLayoutEffect(() => {
@@ -305,7 +244,7 @@ export const BarChart = ({
       chartRef.current = echarts.init(containerRef.current);
     }
     chartRef.current.setOption(option, true);
-  }, [formations]);
+  }, [positionsQuadrant]);
 
   return (
     <>

@@ -48,7 +48,10 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
     .select((eb) => [
       "dataFormation.codeNsf",
       "dataFormation.codeNiveauDiplome",
-      "positionFormationRegionaleQuadrant.positionQuadrant",
+      sql<string>`COALESCE(
+        ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
+        ''
+      )`.as("positionQuadrant"),
       "dataEtablissement.codeRegion",
       "dataEtablissement.codeDepartement",
       "dataEtablissement.codeAcademie",

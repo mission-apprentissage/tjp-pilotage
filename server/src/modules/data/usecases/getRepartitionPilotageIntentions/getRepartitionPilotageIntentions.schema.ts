@@ -69,6 +69,7 @@ export const getRepartitionPilotageIntentionsSchema = {
       top10Domaines: StatsRepartitionSchema,
       niveauxDiplome: StatsRepartitionSchema,
       zonesGeographiques: StatsRepartitionSchema,
+      positionsQuadrant: StatsRepartitionSchema,
     }),
   },
 };

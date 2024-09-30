@@ -51,6 +51,7 @@ import QuadrantPlaceholder from "../../components/QuadrantPlaceholder";
 import {
   FiltersStatsPilotageIntentions,
   OrderFormationsPilotageIntentions,
+  RepartitionPilotageIntentions,
   SelectedScope,
   StatsPilotageIntentions,
 } from "../../types";
@@ -113,10 +114,12 @@ export const QuadrantSection = ({
   scope,
   parentFilters,
   scopeFilters,
+  repartitionData,
 }: {
   scope?: SelectedScope;
   parentFilters: Partial<FiltersStatsPilotageIntentions>;
   scopeFilters?: StatsPilotageIntentions["filters"];
+  repartitionData?: RepartitionPilotageIntentions;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const bluefrance113 = useToken("colors", "bluefrance.113");
@@ -251,6 +254,7 @@ export const QuadrantSection = ({
           <Flex mt={12} width="80%" mx={"auto"}>
             <PlacesTransformeesParPositionQuadrantSection
               formations={formations}
+              positionsQuadrant={repartitionData?.positionsQuadrant}
             />
           </Flex>
         </Box>

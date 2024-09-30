@@ -1,113 +1,34 @@
-import { sql } from "kysely";
-
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { Filters } from "../getRepartitionPilotageIntentions.usecase";
-import { getDemandesBaseQuery } from "./getDemandesBaseQuery";
-import { getEffectifsParCampagneQuery } from "./getEffectifsParCampagneQuery";
+import {
+  Filters,
+  Repartition,
+} from "../getRepartitionPilotageIntentions.usecase";
+import { getDenominateurQuery } from "./getDenominateurQuery";
+import { getNumerateurQuery } from "./getNumerateurQuery";
 
 export const getPositionsQuadrantQuery = async ({
   filters,
 }: {
   filters: Filters;
-}) => {
-  const demandesBaseQuery = getDemandesBaseQuery(filters);
-  const effectifsParCampagne = getEffectifsParCampagneQuery(filters);
+}): Promise<Repartition> => {
+  const [numerateur, denominateur] = await Promise.all([
+    getNumerateurQuery({
+      filters: {
+        ...filters,
+      },
+    }),
+    getDenominateurQuery({
+      filters: {
+        ...filters,
+      },
+    }),
+  ]);
 
-  return kdb
-    .selectFrom(
-      kdb
-        .selectFrom(demandesBaseQuery.as("demandes"))
-        .leftJoin(
-          kdb
-            .selectFrom(effectifsParCampagne.as("effectifsParCampagne"))
-            .select((eb) => [
-              "effectifsParCampagne.annee",
-              "effectifsParCampagne.positionQuadrant",
-              sql<number>`SUM(${eb.ref(
-                "effectifsParCampagne.denominateur"
-              )})`.as("denominateur"),
-            ])
-            .groupBy([
-              "effectifsParCampagne.annee",
-              "effectifsParCampagne.positionQuadrant",
-            ])
-            .as("effectifs"),
-          (join) =>
-            join
-              .onRef("demandes.annee", "=", "effectifs.annee")
-              .onRef(
-                "demandes.positionQuadrant",
-                "=",
-                "effectifs.positionQuadrant"
-              )
-        )
-        .select((eb) => [
-          "effectifs.denominateur as effectif",
-          "demandes.annee",
-          "demandes.positionQuadrant",
-          eb.fn.sum<number>("demandes.placesOuvertes").as("placesOuvertes"),
-          eb.fn.sum<number>("demandes.placesFermees").as("placesFermees"),
-          eb.fn.sum<number>("demandes.placesColorees").as("placesColorees"),
-        ])
-        .groupBy(["demandes.annee", "demandes.positionQuadrant", "effectif"])
-        .$call((eb) => {
-          if (filters.campagne)
-            return eb.where("demandes.annee", "=", filters.campagne);
-          return eb;
-        })
-        .$call((eb) => {
-          if (filters.rentreeScolaire)
-            return eb.where(
-              "demandes.rentreeScolaire",
-              "in",
-              filters.rentreeScolaire.map((rs) => Number.parseInt(rs))
-            );
-          return eb;
-        })
-        .as("demandesAvecEffectif")
-    )
-    .selectAll("demandesAvecEffectif")
-    .select((eb) => [
-      sql<number>`COALESCE(${eb.ref("demandesAvecEffectif.effectif")}, 0)`.as(
-        "effectif"
-      ),
-      sql<string>`COALESCE(${eb.ref(
-        "demandesAvecEffectif.positionQuadrant"
-      )}, '')`.as("code"),
-      sql<string>`COALESCE(${eb.ref(
-        "demandesAvecEffectif.positionQuadrant"
-      )}, '')`.as("libelle"),
-      sql<number>`
-        ${eb.ref("placesOuvertes")} +
-        ${eb.ref("placesFermees")} +
-        ${eb.ref("placesColorees")}
-      `.as("placesTransformees"),
-      sql<number>`
-        ${eb.ref("placesOuvertes")} -
-        ${eb.ref("placesFermees")}
-      `.as("solde"),
-      sql<number>`
-        (
-          ${eb.ref("placesOuvertes")} +
-          ${eb.ref("placesFermees")} +
-          ${eb.ref("placesColorees")}
-        ) /
-        ${eb.ref("demandesAvecEffectif.effectif")}
-      `.as("tauxTransformation"),
-      sql<number>`
-        ${eb.ref("placesOuvertes")} /
-        ${eb.ref("demandesAvecEffectif.effectif")}
-      `.as("tauxTransformationOuvertures"),
-      sql<number>`
-        ${eb.ref("placesFermees")} /
-        ${eb.ref("demandesAvecEffectif.effectif")}
-      `.as("tauxTransformationFermetures"),
-      sql<number>`
-        ${eb.ref("placesColorees")} /
-        ${eb.ref("demandesAvecEffectif.effectif")}
-      `.as("tauxTransformationColorations"),
-    ])
-    .execute()
-    .then(cleanNull);
+  return {
+    numerateur,
+    denominateur,
+    groupBy: {
+      code: "positionQuadrant",
+      libelle: "positionQuadrant",
+    },
+  };
 };

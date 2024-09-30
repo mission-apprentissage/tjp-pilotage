@@ -7,9 +7,7 @@ import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnu
 import { DB, kdb } from "../../../../../db/db";
 import {
   countPlacesColorees,
-  countPlacesColoreesApprentissage,
   countPlacesColoreesQ3Q4,
-  countPlacesColoreesScolaire,
   countPlacesFermees,
   countPlacesFermeesApprentissage,
   countPlacesFermeesApprentissageQ3Q4,
@@ -26,6 +24,7 @@ import {
   countPlacesTransformeesParCampagne,
 } from "../../../../utils/countCapacite";
 import { isDemandeProjetOrValidee } from "../../../../utils/isDemandeProjetOrValidee";
+import { isInPerimetreIJDataEtablissement } from "../../../utils/isInPerimetreIJ";
 import { Filters } from "../getRepartitionPilotageIntentions.usecase";
 
 // TO DO : rm query ?
@@ -80,7 +79,9 @@ export const getDemandesBaseQuery = ({ ...filters }: Filters) => {
     )
     .innerJoin("campagne", "demande.campagneId", "campagne.id")
     .select((eb) => [
-      "positionFormationRegionaleQuadrant.positionQuadrant",
+      sql<number>`COALESCE(${eb.ref(
+        "positionFormationRegionaleQuadrant.positionQuadrant"
+      )}, 'Hors quadrant')`.as("positionQuadrant"),
       "rentreeScolaire",
       "campagne.annee",
       "nsf.libelleNsf",
@@ -96,30 +97,9 @@ export const getDemandesBaseQuery = ({ ...filters }: Filters) => {
       "demande.cfd",
       "demande.typeDemande",
       "demande.statut",
-      eb.fn
-        .coalesce(countPlacesOuvertesScolaire(eb), eb.val(0))
-        .as("placesOuvertesScolaire"),
-      eb.fn
-        .coalesce(countPlacesFermeesScolaire(eb), eb.val(0))
-        .as("placesFermeesScolaire"),
-      eb.fn
-        .coalesce(countPlacesColoreesScolaire(eb), eb.val(0))
-        .as("placesColoreesScolaire"),
-      eb.fn
-        .coalesce(countPlacesOuvertesApprentissage(eb), eb.val(0))
-        .as("placesOuvertesApprentissage"),
-      eb.fn
-        .coalesce(countPlacesFermeesApprentissage(eb), eb.val(0))
-        .as("placesFermeesApprentissage"),
-      eb.fn
-        .coalesce(countPlacesColoreesApprentissage(eb), eb.val(0))
-        .as("placesColoreesApprentissage"),
       eb.fn.coalesce(countPlacesFermees(eb), eb.val(0)).as("placesFermees"),
       eb.fn.coalesce(countPlacesOuvertes(eb), eb.val(0)).as("placesOuvertes"),
       eb.fn.coalesce(countPlacesColorees(eb), eb.val(0)).as("placesColorees"),
-      eb.fn
-        .coalesce(countPlacesTransformeesParCampagne(eb), eb.val(0))
-        .as("placesTransformees"),
     ])
     .$call((eb) => {
       if (filters.CPC) return eb.where("dataFormation.cpc", "in", filters.CPC);
@@ -310,6 +290,7 @@ export const genericOnDemandes =
           .sum<number>(countPlacesTransformeesParCampagne(eb))
           .as("placesTransformees"),
       ])
+      .where(isInPerimetreIJDataEtablissement)
       .$call((eb) => {
         if (campagne) return eb.where("campagne.annee", "=", campagne);
         return eb;

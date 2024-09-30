@@ -1,28 +1,64 @@
 import { ScopeEnum } from "shared";
 
-import { Filters } from "../getRepartitionPilotageIntentions.usecase";
-import { getAcademiesQuery } from "./getAcademiesQuery";
-import { getDepartementsQuery } from "./getDepartementsQuery";
-import { getRegionsQuery } from "./getRegionsQuery";
+import {
+  Filters,
+  Repartition,
+} from "../getRepartitionPilotageIntentions.usecase";
+import { getDenominateurQuery } from "./getDenominateurQuery";
+import { getNumerateurQuery } from "./getNumerateurQuery";
 
 export const getZonesGeographiquesQuery = async ({
   filters,
 }: {
   filters: Filters;
-}) => {
+}): Promise<Repartition> => {
+  const [numerateur, denominateur] = await Promise.all([
+    getNumerateurQuery({
+      filters: {
+        ...filters,
+        codeRegion: undefined,
+        codeAcademie: undefined,
+        codeDepartement: undefined,
+      },
+    }),
+    getDenominateurQuery({
+      filters: {
+        ...filters,
+        codeRegion: undefined,
+        codeAcademie: undefined,
+        codeDepartement: undefined,
+      },
+    }),
+  ]);
+
   switch (filters.scope) {
     case ScopeEnum["département"]:
-      return getDepartementsQuery({
-        filters: { ...filters, codeDepartement: undefined },
-      });
+      return {
+        numerateur,
+        denominateur,
+        groupBy: {
+          code: "codeDepartement",
+          libelle: "libelleDepartement",
+        },
+      };
     case ScopeEnum["académie"]:
-      return getAcademiesQuery({
-        filters: { ...filters, codeAcademie: undefined },
-      });
+      return {
+        numerateur,
+        denominateur,
+        groupBy: {
+          code: "codeAcademie",
+          libelle: "libelleAcademie",
+        },
+      };
     case ScopeEnum["région"]:
     default:
-      return getRegionsQuery({
-        filters: { ...filters, codeRegion: undefined },
-      });
+      return {
+        numerateur,
+        denominateur,
+        groupBy: {
+          code: "codeRegion",
+          libelle: "libelleRegion",
+        },
+      };
   }
 };
