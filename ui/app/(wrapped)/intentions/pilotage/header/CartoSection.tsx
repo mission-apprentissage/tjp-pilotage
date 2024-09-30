@@ -12,13 +12,10 @@ import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
 import { CartoGraph } from "@/components/CartoGraph";
+import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatPercentageWithoutSign } from "@/utils/formatUtils";
 
-import { ExportMenuButton } from "../../../../../components/ExportMenuButton";
-import {
-  downloadCsv,
-  downloadExcel,
-} from "../../../../../utils/downloadExport";
 import { useScopeCode } from "../hooks";
 import {
   FiltersStatsPilotageIntentions,
@@ -26,7 +23,15 @@ import {
 } from "../types";
 export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 
-type Props = {
+export const CartoSection = ({
+  indicateur,
+  handleIndicateurChange,
+  indicateurOptions,
+  filters,
+  handleFilters,
+  data,
+  isLoading,
+}: {
   indicateur: IndicateurType;
   handleIndicateurChange: (indicateur: string) => void;
   indicateurOptions: {
@@ -37,16 +42,8 @@ type Props = {
   filters: FiltersStatsPilotageIntentions;
   handleFilters: (filters: Partial<FiltersStatsPilotageIntentions>) => void;
   data: StatsPilotageIntentions | undefined;
-};
-
-export const CartoSection = ({
-  indicateur,
-  handleIndicateurChange,
-  indicateurOptions,
-  filters,
-  handleFilters,
-  data,
-}: Props) => {
+  isLoading?: boolean;
+}) => {
   const { code: scopeCode } = useScopeCode(filters);
 
   const customPalette = [
@@ -155,7 +152,7 @@ export const CartoSection = ({
       bg="white"
       p={3}
     >
-      {data === undefined ? (
+      {isLoading ? (
         <Skeleton opacity="0.3" height="100%" />
       ) : (
         <Box>
