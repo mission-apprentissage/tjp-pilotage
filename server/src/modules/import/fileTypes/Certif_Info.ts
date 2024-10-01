@@ -1,39 +1,43 @@
-export type Certif_Info = {
-  Code_Diplome: string;
-  Libelle_Diplome: string;
-  Libelle_Type_Diplome: string;
-  Code_Niveau_Europeen: string;
-  Date_MaJ: string;
-  Code_FormaCode: string;
-  Libelle_FormaCode: string;
-  Code_Rome_1: string;
-  Code_Rome_2: string;
-  Code_Rome_3: string;
-  Code_Rome_4: string;
-  Code_Rome_5: string;
-  Code_Nsf: string;
-  Code_RNCP: string;
-  Code_RS: string;
-  Code_Scolarité: string;
-  valideur: string;
-  certificateur: string;
-  Annee_Premiere_Session: string;
-  Annee_Derniere_Session: string;
-  Code_Ancien_Diplome: string;
-  Intitulé_Ancien_Diplome: string;
-  Code_Ancien_RNCP: string;
-  Code_Ancien_Scolarité: string;
-  Options: string;
-  Etat: string;
-  Etat_Libelle: string;
-  Etat_Ancien_Diplome: string;
-  Etat_Ancien_Diplome_Libelle: string;
-  accessibilite_fi: string;
-  accessibilite_ca: string;
-  accessibilite_fc: string;
-  accessibilite_cp: string;
-  accessibilite_vae: string;
-  accessibilite_ind: string;
-  code_type_diplome: string;
-  codeIdeo2: string;
-};
+import { z } from "zod";
+
+export const CertifInfoSchema = z.object({
+  Code_Diplome: z.string(),
+  Libelle_Diplome: z.string(),
+  Libelle_Type_Diplome: z.string(),
+  Code_Niveau_Europeen: z.string(),
+  Date_MaJ: z.string(),
+  Code_FormaCode: z.string(),
+  Libelle_FormaCode: z.string(),
+  Code_Rome_1: z.string(),
+  Code_Rome_2: z.string(),
+  Code_Rome_3: z.string(),
+  Code_Rome_4: z.string(),
+  Code_Rome_5: z.string(),
+  Code_Nsf: z.string(),
+  Code_RNCP: z.string(),
+  Code_RS: z.string(),
+  Code_Scolarité: z.string(),
+  valideur: z.string(),
+  certificateur: z.string(),
+  Annee_Premiere_Session: z.string(),
+  Annee_Derniere_Session: z.string(),
+  Code_Ancien_Diplome: z.string(),
+  Intitulé_Ancien_Diplome: z.string(),
+  Code_Ancien_RNCP: z.string(),
+  Code_Ancien_Scolarité: z.string(),
+  Options: z.string(),
+  Etat: z.string(),
+  Etat_Libelle: z.string(),
+  Etat_Ancien_Diplome: z.string(),
+  Etat_Ancien_Diplome_Libelle: z.string(),
+  accessibilite_fi: z.string(),
+  accessibilite_ca: z.string(),
+  accessibilite_fc: z.string(),
+  accessibilite_cp: z.string(),
+  accessibilite_vae: z.string(),
+  accessibilite_ind: z.string(),
+  code_type_diplome: z.string(),
+  codeIdeo2: z.string(),
+});
+
+export type Certif_Info = z.infer<typeof CertifInfoSchema>;

@@ -1,12 +1,18 @@
-export type BTS_Attractivite_capacite = {
-  UAI: string;
-  LIBELLÉFORMATION: string;
-  MEFSTAT11: string;
-  NB_VOEUX_CONFIRMES: string;
-  STATUT: string;
-  CAPACITEPSUP: string;
-  CFD: string;
-  "CFD rectifié": string;
-  Rectif: string;
-  MEFSTAT11_old: string;
-};
+import { z } from "zod";
+
+export const BTSAttractiviteCapaciteSchema = z.object({
+  UAI: z.string(),
+  LIBELLÉFORMATION: z.string(),
+  MEFSTAT11: z.string(),
+  NB_VOEUX_CONFIRMES: z.string(),
+  STATUT: z.string(),
+  CAPACITEPSUP: z.string(),
+  CFD: z.string(),
+  "CFD rectifié": z.string(),
+  Rectif: z.string(),
+  MEFSTAT11_old: z.string(),
+});
+
+export type BTS_Attractivite_capacite = z.infer<
+  typeof BTSAttractiviteCapaciteSchema
+>;

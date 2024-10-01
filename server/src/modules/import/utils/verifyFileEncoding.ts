@@ -25,45 +25,43 @@ export const verifyFileEncoding = async (filePath: string) => {
   }
 
   const encodingPredictions: { [encoding: string]: number } = {};
+  const writable = new Writable({
+    final: async (callback) => {
+      callback();
+    },
+    objectMode: true,
+    decodeStrings: false,
+    write: async (line, _, callback) => {
+      const encodingPrediction = detect(line);
 
-  const stream = pipeline(
-    fs.createReadStream(filePath),
-    new Writable({
-      final: async (callback) => {
-        callback();
-      },
-      objectMode: true,
-      decodeStrings: false,
-      write: async (line, _, callback) => {
-        const encodingPrediction = detect(line);
-
-        if (!encodingPredictions[encodingPrediction.encoding]) {
-          encodingPredictions[encodingPrediction.encoding] = 0;
-        }
-
-        encodingPredictions[encodingPrediction.encoding] +=
-          encodingPrediction.confidence;
-
-        callback();
-      },
-    }),
-    (err) => {
-      if (err) {
-        throw err;
+      if (!encodingPredictions[encodingPrediction.encoding]) {
+        encodingPredictions[encodingPrediction.encoding] = 0;
       }
-    }
-  );
 
-  const promise = new Promise<void>((resolve, reject) => {
-    stream.on("error", (err) => {
-      reject(err);
-    });
-    stream.on("finish", () => {
-      resolve();
-    });
+      encodingPredictions[encodingPrediction.encoding] +=
+        encodingPrediction.confidence;
+
+      callback();
+    },
   });
 
-  await promise;
+  const stream = pipeline(fs.createReadStream(filePath), writable, (err) => {
+    if (err) {
+      throw err;
+    }
+  });
+
+  const promise = async () =>
+    new Promise<void>((resolve, reject) => {
+      stream.on("error", (err) => {
+        reject(err);
+      });
+      stream.on("finish", () => {
+        resolve();
+      });
+    });
+
+  await promise();
 
   const highestScoreEncoding = Object.keys(encodingPredictions).reduce(
     (a, b) => (encodingPredictions[a] > encodingPredictions[b] ? a : b)
