@@ -105,9 +105,11 @@ const DrapeauFrancaisIcon = ({ ...props }) => (
 const Card = ({
   children,
   title,
+  tooltip,
 }: {
   children: React.ReactNode;
   title: string;
+  tooltip?: React.ReactNode;
 }) => {
   return (
     <Flex
@@ -122,15 +124,18 @@ const Card = ({
       alignItems="start"
       gap={4}
     >
-      <Text
-        color={"bluefrance.113"}
-        fontSize="14px"
-        fontWeight="500"
-        lineHeight="24px"
-        textTransform="uppercase"
-      >
-        {title}
-      </Text>
+      <Flex direction={"row"} gap={2}>
+        <Text
+          color={"bluefrance.113"}
+          fontSize="14px"
+          fontWeight="500"
+          lineHeight="24px"
+          textTransform="uppercase"
+        >
+          {title}
+        </Text>
+        {tooltip}
+      </Flex>
       <Flex w={"100%"} h={"100%"}>
         {children}
       </Flex>
@@ -307,10 +312,12 @@ export const IndicateursClesSection = ({
   data,
   filters,
   isLoading,
+  onOpenTauxTransfoDefinition,
 }: {
   data?: StatsPilotageIntentions;
   filters: FiltersStatsPilotageIntentions;
   isLoading?: boolean;
+  onOpenTauxTransfoDefinition: () => void;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const { code } = useScopeCode(filters);
@@ -354,7 +361,21 @@ export const IndicateursClesSection = ({
   return (
     <Flex flex="1" direction={"column"} gap={6}>
       <Flex direction={"row"} gap={6}>
-        <Card title="Taux de transformation (Prévisionnel)">
+        <Card
+          title="Taux de transformation (Prévisionnel)"
+          tooltip={
+            <TooltipIcon
+              onClick={() => onOpenTauxTransfoDefinition()}
+              label={
+                <Flex direction="column" gap={4}>
+                  <Text>Comprendre le taux de transformation.</Text>
+                  <Text>Cliquez pour plus d'infos.</Text>
+                </Flex>
+              }
+              my="auto"
+            />
+          }
+        >
           <Grid
             templateColumns="repeat(2, 1fr)"
             width="100%"

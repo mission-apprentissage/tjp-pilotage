@@ -1,8 +1,6 @@
 import { Flex, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { TooltipIcon } from "@/components/TooltipIcon";
-
 import {
   FiltersStatsPilotageIntentions,
   StatsPilotageIntentions,
@@ -45,16 +43,6 @@ export const HeaderSection = ({
         <Text fontWeight="700" fontSize="20px" lineHeight="28px">
           Indicateurs clés de la transformation
         </Text>
-        <TooltipIcon
-          onClick={() => onOpenTauxTransfoDefinition()}
-          label={
-            <Flex direction="column" gap={4}>
-              <Text>Comprendre le taux de transformation.</Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Flex>
-          }
-          my="auto"
-        />
       </Flex>
       <Flex direction={"row"} width="100%" h="100%" gap="16px">
         <Flex flex="1" direction={"column"} gap={6}>
@@ -62,6 +50,7 @@ export const HeaderSection = ({
             data={data}
             filters={filters}
             isLoading={isLoading}
+            onOpenTauxTransfoDefinition={onOpenTauxTransfoDefinition}
           />
         </Flex>
         <Flex flex={1} minW={500} minH={500}>
