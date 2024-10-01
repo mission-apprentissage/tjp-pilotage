@@ -102,9 +102,6 @@ export const PositiveNegativeBarChart = ({
     label: {
       show: false,
     },
-    itemStyle: {
-      borderRadius: 8,
-    },
     yAxisIndex: 0,
   };
 
@@ -120,6 +117,9 @@ export const PositiveNegativeBarChart = ({
         },
         textStyle: {
           width: "fit-content",
+          color: grey425,
+          fontSize: 14,
+          fontFamily: "Marianne",
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         formatter: (params: any) => {
@@ -180,6 +180,7 @@ export const PositiveNegativeBarChart = ({
         },
       },
       toolbox: {
+        z: 2,
         showTitle: false,
         tooltip: {
           show: true,
@@ -187,6 +188,7 @@ export const PositiveNegativeBarChart = ({
             color: bf113,
             backgroundColor: "transparent",
             fontSize: 12,
+            fontFamily: "Marianne",
           },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           formatter: (params: any) => `${params.title}`,
@@ -197,8 +199,10 @@ export const PositiveNegativeBarChart = ({
             name: title,
             type: "png",
             backgroundColor: "transparent",
+            zIndex: 2,
             textStyle: {
               color: bf113,
+              fontFamily: "Marianne",
             },
             iconStyle: {
               color: bf113,
@@ -216,6 +220,11 @@ export const PositiveNegativeBarChart = ({
         itemGap: 15,
         itemWidth: 15,
         selectedMode: false,
+        textStyle: {
+          color: grey425,
+          fontSize: 14,
+          fontFamily: "Marianne",
+        },
         formatter: (value: string) =>
           `${value.replace("Place(s) ", "Pl. ").replace("(s)", "s")}`,
         data: [
@@ -264,10 +273,11 @@ export const PositiveNegativeBarChart = ({
             show: true,
             fontSize: 14,
             fontWeight: 400,
-            color: "black",
+            color: grey425,
             align: "left",
             width: 150,
             overflow: "truncate",
+            fontFamily: "Marianne",
           },
           axisTick: {
             show: false,
@@ -294,6 +304,9 @@ export const PositiveNegativeBarChart = ({
           data: getSolde(),
           axisLabel: {
             show: true,
+            fontSize: 14,
+            fontWeight: 400,
+            fontFamily: "Marianne",
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             formatter: (value: any) => {
               if ((value as number) > 0) {

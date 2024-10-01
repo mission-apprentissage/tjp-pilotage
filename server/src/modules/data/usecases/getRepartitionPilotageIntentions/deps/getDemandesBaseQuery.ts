@@ -1,6 +1,7 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
@@ -79,9 +80,10 @@ export const getDemandesBaseQuery = ({ ...filters }: Filters) => {
     )
     .innerJoin("campagne", "demande.campagneId", "campagne.id")
     .select((eb) => [
-      sql<number>`COALESCE(${eb.ref(
-        "positionFormationRegionaleQuadrant.positionQuadrant"
-      )}, 'Hors quadrant')`.as("positionQuadrant"),
+      sql<number>`COALESCE(
+        ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
+        ${eb.val(PositionQuadrantEnum["Hors quadrant"])}
+      )`.as("positionQuadrant"),
       "rentreeScolaire",
       "campagne.annee",
       "nsf.libelleNsf",
@@ -351,7 +353,8 @@ export const genericOnDemandes =
         return q.where("demande.statut", "in", statut);
       })
       .$call((q) => {
-        if (!withColoration || withColoration === "false")
+        if (withColoration === undefined) return q;
+        if (withColoration === "false")
           return q.where((w) =>
             w.or([
               w("demande.coloration", "=", false),

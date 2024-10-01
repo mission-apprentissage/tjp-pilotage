@@ -1,5 +1,6 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import { z } from "zod";
 
@@ -202,7 +203,7 @@ const getFormationsPilotageIntentionsQuery = ({
       ),
       sql<string>`COALESCE(
         ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
-        'Hors quadrant'
+        ${eb.val(PositionQuadrantEnum["Hors quadrant"])}
       )`.as("positionQuadrant"),
       "dataFormation.libelleFormation",
       "dispositif.libelleDispositif",

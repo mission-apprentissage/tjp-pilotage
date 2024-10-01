@@ -258,9 +258,11 @@ export const QuadrantSection = ({
             />
           </Flex>
         </Box>
-        <Box ms={8} mt={4}>
+        <Box ms={8}>
           <Link
             as={NextLink}
+            target="_blank"
+            rel="noreferrer"
             href={createParametrizedUrl("/intentions/restitution", {
               ...mergedFilters,
             })}
@@ -270,281 +272,269 @@ export const QuadrantSection = ({
             <ArrowForwardIcon ms={2} />
           </Link>
         </Box>
-        <Box p="8">
-          <Flex align="center" gap={6} direction="column">
-            <Heading fontSize={20} mr="auto">
-              Quadrant des formations
-            </Heading>
-            {shouldShowQuadrant ? (
-              <>
-                <Flex>
-                  <Flex>
-                    <ExportMenuButton
-                      sx={{
-                        display:
-                          "none" /* Le boutton Exporter est désactivé tant qu'il n'y a pas eu l'harmonisation des données */,
-                      }}
-                      onExportCsv={async () => {
-                        if (!formations) return;
-                        downloadCsv(
-                          "formations_transformees",
-                          formations.map((formation) => ({
-                            ...formation,
-                            libelleRegion:
-                              scope?.type === ScopeEnum["région"]
-                                ? getLibelleTerritoire(
-                                    scopeFilters?.regions,
-                                    scope.value
-                                  )
-                                : undefined,
-                            libelleAcademie:
-                              scope?.type === ScopeEnum["académie"]
-                                ? getLibelleTerritoire(
-                                    scopeFilters?.academies,
-                                    scope.value
-                                  )
-                                : undefined,
-                            libelleDepartement:
-                              scope?.type === ScopeEnum["département"]
-                                ? getLibelleTerritoire(
-                                    scopeFilters?.departements,
-                                    scope.value
-                                  )
-                                : undefined,
-                          })),
-                          {
-                            libelleFormation: "Formation",
-                            cfd: "CFD",
-                            libelleDispositif: "Dispositif",
-                            tauxInsertion: "Taux d'emploi",
-                            tauxPoursuite: "Taux de poursuite",
-                            tauxPression: "Taux de pression",
-                            placesOuvertes: "Places ouvertes",
-                            placesFermees: "Places fermées",
-                            positionQuadrant: "Position dans le quadrant",
-                            libelleRegion: "Région",
-                            libelleAcademie: "Académie",
-                            libelleDepartement: "Département",
-                          }
-                        );
-                      }}
-                      onExportExcel={async () => {
-                        if (!formations) return;
-                        downloadExcel(
-                          "formations_transformees",
-                          formations.map((formation) => ({
-                            ...formation,
-                            libelleRegion:
-                              scope?.type === ScopeEnum["région"]
-                                ? getLibelleTerritoire(
-                                    scopeFilters?.regions,
-                                    scope.value
-                                  )
-                                : undefined,
-                            libelleAcademie:
-                              scope?.type === ScopeEnum["académie"]
-                                ? getLibelleTerritoire(
-                                    scopeFilters?.academies,
-                                    scope.value
-                                  )
-                                : undefined,
-                            libelleDepartement:
-                              scope?.type === ScopeEnum["département"]
-                                ? getLibelleTerritoire(
-                                    scopeFilters?.departements,
-                                    scope.value
-                                  )
-                                : undefined,
-                          })),
-                          {
-                            libelleFormation: "Formation",
-                            cfd: "CFD",
-                            libelleDispositif: "Dispositif",
-                            tauxInsertion: "Taux d'emploi",
-                            tauxPoursuite: "Taux de poursuite",
-                            tauxPression: "Taux de pression",
-                            placesOuvertes: "Places ouvertes",
-                            placesFermees: "Places fermées",
-                            positionQuadrant: "Position dans le quadrant",
-                            libelleRegion: "Région",
-                            libelleAcademie: "Académie",
-                            libelleDepartement: "Département",
-                          }
-                        );
-                      }}
-                      variant="solid"
-                    />
-                  </Flex>
-                  <Select
-                    variant="newInput"
-                    maxW={250}
-                    value={filters.type ?? ""}
-                    onChange={(item) =>
+        {shouldShowQuadrant ? (
+          <Flex gap={6} direction="column" p={8}>
+            <Flex direction="row" justify="space-between" gap={4} flex={1}>
+              <Heading fontSize={20}>Quadrant des formations</Heading>
+              <Flex direction={"row"} gap={4}>
+                <ExportMenuButton
+                  sx={{
+                    display:
+                      "none" /* Le boutton Exporter est désactivé tant qu'il n'y a pas eu l'harmonisation des données */,
+                  }}
+                  onExportCsv={async () => {
+                    if (!formations) return;
+                    downloadCsv(
+                      "formations_transformees",
+                      formations.map((formation) => ({
+                        ...formation,
+                        libelleRegion:
+                          scope?.type === ScopeEnum["région"]
+                            ? getLibelleTerritoire(
+                                scopeFilters?.regions,
+                                scope.value
+                              )
+                            : undefined,
+                        libelleAcademie:
+                          scope?.type === ScopeEnum["académie"]
+                            ? getLibelleTerritoire(
+                                scopeFilters?.academies,
+                                scope.value
+                              )
+                            : undefined,
+                        libelleDepartement:
+                          scope?.type === ScopeEnum["département"]
+                            ? getLibelleTerritoire(
+                                scopeFilters?.departements,
+                                scope.value
+                              )
+                            : undefined,
+                      })),
+                      {
+                        libelleFormation: "Formation",
+                        cfd: "CFD",
+                        libelleDispositif: "Dispositif",
+                        tauxInsertion: "Taux d'emploi",
+                        tauxPoursuite: "Taux de poursuite",
+                        tauxPression: "Taux de pression",
+                        placesOuvertes: "Places ouvertes",
+                        placesFermees: "Places fermées",
+                        positionQuadrant: "Position dans le quadrant",
+                        libelleRegion: "Région",
+                        libelleAcademie: "Académie",
+                        libelleDepartement: "Département",
+                      }
+                    );
+                  }}
+                  onExportExcel={async () => {
+                    if (!formations) return;
+                    downloadExcel(
+                      "formations_transformees",
+                      formations.map((formation) => ({
+                        ...formation,
+                        libelleRegion:
+                          scope?.type === ScopeEnum["région"]
+                            ? getLibelleTerritoire(
+                                scopeFilters?.regions,
+                                scope.value
+                              )
+                            : undefined,
+                        libelleAcademie:
+                          scope?.type === ScopeEnum["académie"]
+                            ? getLibelleTerritoire(
+                                scopeFilters?.academies,
+                                scope.value
+                              )
+                            : undefined,
+                        libelleDepartement:
+                          scope?.type === ScopeEnum["département"]
+                            ? getLibelleTerritoire(
+                                scopeFilters?.departements,
+                                scope.value
+                              )
+                            : undefined,
+                      })),
+                      {
+                        libelleFormation: "Formation",
+                        cfd: "CFD",
+                        libelleDispositif: "Dispositif",
+                        tauxInsertion: "Taux d'emploi",
+                        tauxPoursuite: "Taux de poursuite",
+                        tauxPression: "Taux de pression",
+                        placesOuvertes: "Places ouvertes",
+                        placesFermees: "Places fermées",
+                        positionQuadrant: "Position dans le quadrant",
+                        libelleRegion: "Région",
+                        libelleAcademie: "Académie",
+                        libelleDepartement: "Département",
+                      }
+                    );
+                  }}
+                  variant="solid"
+                />
+                <Select
+                  variant="newInput"
+                  maxW={250}
+                  value={filters.type ?? ""}
+                  onChange={(item) =>
+                    setFilters({
+                      ...filters,
+                      type: (item.target.value ||
+                        undefined) as typeof filters.type,
+                    })
+                  }
+                >
+                  <option value="" style={{ color: "black" }}>
+                    Toutes transformations
+                  </option>
+                  <option value="ouverture" style={{ color: "black" }}>
+                    Places ouvertes
+                  </option>
+                  <option value="fermeture" style={{ color: "black" }}>
+                    Places fermées
+                  </option>
+                  <option value="coloration" style={{ color: "black" }}>
+                    Places colorées
+                  </option>
+                </Select>
+              </Flex>
+            </Flex>
+            <Divider />
+            <Flex mt="4">
+              <Box p="4" mr="6" w="200px">
+                <Heading
+                  mb="6"
+                  fontSize={14}
+                  fontWeight={500}
+                  color={"bluefrance.113"}
+                >
+                  FILTRES
+                </Heading>
+                <FormControl mb="6">
+                  <FormLabel>Taux de pression</FormLabel>
+                  <RadioGroup
+                    as={Stack}
+                    onChange={(v) => {
                       setFilters({
                         ...filters,
-                        type: (item.target.value ||
-                          undefined) as typeof filters.type,
-                      })
-                    }
+                        tauxPression: (v || undefined) as "eleve" | "faible",
+                      });
+                    }}
+                    value={filters.tauxPression ?? ""}
                   >
-                    <option value="" style={{ color: "black" }}>
-                      Toutes transformations
-                    </option>
-                    <option value="ouverture" style={{ color: "black" }}>
-                      Places ouvertes
-                    </option>
-                    <option value="fermeture" style={{ color: "black" }}>
-                      Places fermées
-                    </option>
-                    <option value="coloration" style={{ color: "black" }}>
-                      Places colorées
-                    </option>
-                  </Select>
-                </Flex>
-                <Divider my="4" />
-                <Flex mt="4">
-                  <Box p="4" mr="6" w="200px">
-                    <Heading
-                      mb="6"
-                      fontSize={14}
-                      fontWeight={500}
-                      color={"bluefrance.113"}
-                    >
-                      FILTRES
-                    </Heading>
-                    <FormControl mb="6">
-                      <FormLabel>Taux de pression</FormLabel>
-                      <RadioGroup
-                        as={Stack}
-                        onChange={(v) => {
-                          setFilters({
-                            ...filters,
-                            tauxPression: (v || undefined) as
-                              | "eleve"
-                              | "faible",
-                          });
+                    <Radio value="">Tous</Radio>
+                    <Flex gap={2}>
+                      <Radio value="eleve">Élevé</Radio>
+                      <TooltipIcon
+                        label={
+                          <Box>
+                            <Text>
+                              Formations pour lesquelles le taux de pression est
+                              supérieur ou égal à 1.3
+                            </Text>
+                            <Text mt={4}>Cliquez pour plus d'infos.</Text>
+                          </Box>
+                        }
+                        onClick={() => {
+                          openGlossaire("taux-de-pression");
                         }}
-                        value={filters.tauxPression ?? ""}
-                      >
-                        <Radio value="">Tous</Radio>
-                        <Flex gap={2}>
-                          <Radio value="eleve">Élevé</Radio>
-                          <TooltipIcon
-                            label={
-                              <Box>
-                                <Text>
-                                  Formations pour lesquelles le taux de pression
-                                  est supérieur ou égal à 1.3
-                                </Text>
-                                <Text mt={4}>Cliquez pour plus d'infos.</Text>
-                              </Box>
-                            }
-                            onClick={() => {
-                              openGlossaire("taux-de-pression");
-                            }}
-                            my={"auto"}
-                          />
-                        </Flex>
-                        <Flex gap={2}>
-                          <Radio value="faible">Bas</Radio>
-                          <TooltipIcon
-                            label={
-                              <Box>
-                                <Text>
-                                  Formations pour lesquelles le taux de pression
-                                  est inférieur à 0.7
-                                </Text>
-                                <Text mt={4}>Cliquez pour plus d'infos.</Text>
-                              </Box>
-                            }
-                            onClick={() => {
-                              openGlossaire("taux-de-pression");
-                            }}
-                            my={"auto"}
-                          />
-                        </Flex>
-                      </RadioGroup>
-                    </FormControl>
-                  </Box>
-                  <Box flex="1">
-                    <Flex direction="row" justify={"space-between"} mb={4}>
-                      <Flex gap={5}>
-                        <Flex>
-                          <Popover>
-                            <PopoverTrigger>
-                              <Button cursor="pointer" gap={2} variant="link">
-                                <Icon
-                                  icon="ri:eye-line"
-                                  color={bluefrance113}
-                                />
-                                <Text color="bluefrance.113" fontWeight={400}>
-                                  Légende
-                                </Text>
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              _focusVisible={{ outline: "none" }}
-                              p="3"
-                              minW={"sm"}
-                            >
-                              <>
-                                <PopoverCloseButton />
-                                <InfoTooltipContent />
-                              </>
-                            </PopoverContent>
-                          </Popover>
-                        </Flex>
-                        <Flex>
-                          <Button
-                            onClick={() => toggleTypeVue()}
-                            variant="link"
-                            gap={2}
-                          >
-                            <Icon
-                              icon={`${
-                                typeVue === "quadrant"
-                                  ? "ri:table-2"
-                                  : "ri:layout-grid-line"
-                              }`}
-                              color={bluefrance113}
-                              height={"14px"}
-                            />
-                            <Text
-                              color={bluefrance113}
-                              fontWeight={400}
-                              lineHeight={"14px"}
-                            >
-                              {`Vue ${
-                                typeVue === "quadrant" ? "tableau" : "quadrant"
-                              }`}
+                        my={"auto"}
+                      />
+                    </Flex>
+                    <Flex gap={2}>
+                      <Radio value="faible">Bas</Radio>
+                      <TooltipIcon
+                        label={
+                          <Box>
+                            <Text>
+                              Formations pour lesquelles le taux de pression est
+                              inférieur à 0.7
+                            </Text>
+                            <Text mt={4}>Cliquez pour plus d'infos.</Text>
+                          </Box>
+                        }
+                        onClick={() => {
+                          openGlossaire("taux-de-pression");
+                        }}
+                        my={"auto"}
+                      />
+                    </Flex>
+                  </RadioGroup>
+                </FormControl>
+              </Box>
+              <Box flex="1">
+                <Flex direction="row" justify={"space-between"} mb={4}>
+                  <Flex gap={5}>
+                    <Flex>
+                      <Popover>
+                        <PopoverTrigger>
+                          <Button cursor="pointer" gap={2} variant="link">
+                            <Icon icon="ri:eye-line" color={bluefrance113} />
+                            <Text color="bluefrance.113" fontWeight={400}>
+                              Légende
                             </Text>
                           </Button>
-                        </Flex>
-                      </Flex>
-                      <Flex>
-                        <Text color="grey" fontSize="sm" textAlign="left">
-                          <Highlight
-                            query={[
-                              formationsQuadrant?.length.toString() ?? "-",
-                              formationsQuadrant
-                                ?.reduce(
-                                  (acc, { placesOuvertes, placesFermees }) => {
-                                    if (filters.type === "fermeture")
-                                      return acc + (placesFermees ?? 0);
-                                    if (filters.type === "ouverture")
-                                      return acc + (placesOuvertes ?? 0);
-                                    const total =
-                                      placesOuvertes + placesFermees;
-                                    return acc + (total ?? 0);
-                                  },
-                                  0
-                                )
-                                .toString() ?? "-",
-                            ]}
-                          >
-                            {`${
-                              formationsQuadrant?.length ?? "-"
-                            } certifications -
+                        </PopoverTrigger>
+                        <PopoverContent
+                          _focusVisible={{ outline: "none" }}
+                          p="3"
+                          minW={"sm"}
+                        >
+                          <>
+                            <PopoverCloseButton />
+                            <InfoTooltipContent />
+                          </>
+                        </PopoverContent>
+                      </Popover>
+                    </Flex>
+                    <Flex>
+                      <Button
+                        onClick={() => toggleTypeVue()}
+                        variant="link"
+                        gap={2}
+                      >
+                        <Icon
+                          icon={`${
+                            typeVue === "quadrant"
+                              ? "ri:table-2"
+                              : "ri:layout-grid-line"
+                          }`}
+                          color={bluefrance113}
+                          height={"14px"}
+                        />
+                        <Text
+                          color={bluefrance113}
+                          fontWeight={400}
+                          lineHeight={"14px"}
+                        >
+                          {`Vue ${
+                            typeVue === "quadrant" ? "tableau" : "quadrant"
+                          }`}
+                        </Text>
+                      </Button>
+                    </Flex>
+                  </Flex>
+                  <Flex>
+                    <Text color="grey" fontSize="sm" textAlign="left">
+                      <Highlight
+                        query={[
+                          formationsQuadrant?.length.toString() ?? "-",
+                          formationsQuadrant
+                            ?.reduce(
+                              (acc, { placesOuvertes, placesFermees }) => {
+                                if (filters.type === "fermeture")
+                                  return acc + (placesFermees ?? 0);
+                                if (filters.type === "ouverture")
+                                  return acc + (placesOuvertes ?? 0);
+                                const total = placesOuvertes + placesFermees;
+                                return acc + (total ?? 0);
+                              },
+                              0
+                            )
+                            .toString() ?? "-",
+                        ]}
+                      >
+                        {`${formationsQuadrant?.length ?? "-"} certifications -
                                 ${
                                   formationsQuadrant?.reduce(
                                     (acc, { placesTransformees }) =>
@@ -552,183 +542,175 @@ export const QuadrantSection = ({
                                     0
                                   ) ?? "-"
                                 } places transformées`}
-                          </Highlight>
-                        </Text>
-                      </Flex>
-                    </Flex>
-                    <AspectRatio flex={1} ratio={1}>
-                      <>
-                        {formations &&
-                          (typeVue === "quadrant" ? (
-                            <Quadrant
-                              onClick={({ cfd, codeDispositif }) =>
-                                setCurrentFormationId(
-                                  `${cfd}_${codeDispositif}`
-                                )
-                              }
-                              meanInsertion={stats?.tauxInsertion}
-                              meanPoursuite={stats?.tauxPoursuite}
-                              currentFormationId={currentFormationId}
-                              data={formationsQuadrant?.map((formation) => ({
-                                ...formation,
-                                codeDispositif: formation.codeDispositif ?? "",
-                                effectif: formation.placesTransformees,
-                                tauxInsertion: formation.tauxInsertion ?? 0,
-                                tauxPoursuite: formation.tauxPoursuite ?? 0,
-                              }))}
-                              effectifSizes={EFFECTIF_SIZES}
-                            />
-                          ) : (
-                            <TableQuadrant
-                              formations={formationsQuadrant?.map(
-                                (formation) => ({
-                                  ...formation,
-                                  effectif: formation.placesTransformees,
-                                })
-                              )}
-                              handleClick={setCurrentFormationId}
-                              currentFormationId={currentFormationId}
-                              order={order}
-                              handleOrder={(column?: string) =>
-                                handleOrder(
-                                  column as OrderFormationsPilotageIntentions["orderBy"]
-                                )
-                              }
-                            />
-                          ))}
-                        {!formations && (
-                          <Skeleton opacity="0.3" height="100%" />
-                        )}
-                      </>
-                    </AspectRatio>
-                  </Box>
-                  <Box p="4" w="250px" ml="6">
-                    <Heading size="sm" mb="6" color="bluefrance.113">
-                      DÉTAILS SUR LA FORMATION
-                    </Heading>
-                    {!formation && (
-                      <Text color="gray.500">
-                        Cliquez sur un point pour afficher le détail de la
-                        formation.
-                      </Text>
-                    )}
-
-                    {formation && (
-                      <Flex direction="column" gap={4}>
-                        <InfoBlock
-                          fontSize={12}
-                          label="Formation concernée"
-                          value={formation?.libelleFormation}
+                      </Highlight>
+                    </Text>
+                  </Flex>
+                </Flex>
+                <AspectRatio flex={1} ratio={1}>
+                  <>
+                    {formations &&
+                      (typeVue === "quadrant" ? (
+                        <Quadrant
+                          onClick={({ cfd, codeDispositif }) =>
+                            setCurrentFormationId(`${cfd}_${codeDispositif}`)
+                          }
+                          meanInsertion={stats?.tauxInsertion}
+                          meanPoursuite={stats?.tauxPoursuite}
+                          currentFormationId={currentFormationId}
+                          data={formationsQuadrant?.map((formation) => ({
+                            ...formation,
+                            codeDispositif: formation.codeDispositif ?? "",
+                            effectif: formation.placesTransformees,
+                            tauxInsertion: formation.tauxInsertion ?? 0,
+                            tauxPoursuite: formation.tauxPoursuite ?? 0,
+                          }))}
+                          effectifSizes={EFFECTIF_SIZES}
                         />
-                        <InfoBlock
-                          fontSize={12}
-                          label="Dispositif"
-                          value={formation?.libelleDispositif}
-                        />
-                        <Flex gap={6}>
-                          {(!filters.type || filters.type === "ouverture") && (
-                            <InfoBlock
-                              flex={1}
-                              fontSize={12}
-                              label={"Pl. ouvertes"}
-                              value={formation?.placesOuvertes ?? 0}
-                            />
-                          )}
-                          {(!filters.type || filters.type === "fermeture") && (
-                            <InfoBlock
-                              flex={1}
-                              fontSize={12}
-                              label={"Pl. fermées"}
-                              value={formation?.placesFermees ?? 0}
-                            />
-                          )}
-                          {(!filters.type || filters.type === "fermeture") && (
-                            <InfoBlock
-                              flex={1}
-                              fontSize={12}
-                              label={"Pl. colorées"}
-                              value={formation?.placesColorees ?? 0}
-                            />
-                          )}
-                        </Flex>
-                        <InfoBlock
-                          fontSize={12}
-                          label="Établissements concernés"
-                          value={formation?.nbEtablissements}
-                        />
-                        <Button
-                          fontSize={14}
-                          fontWeight={500}
-                          color={bluefrance113}
-                          variant={"secondary"}
-                          rightIcon={<ArrowForwardIcon />}
-                          as={NextLink}
-                          target="_blank"
-                          rel="noreferrer"
-                          href={generateRestitutionUrl(
-                            formation.cfd,
-                            formation?.codeDispositif,
-                            scope,
-                            filters
-                          )}
-                          mb={4}
-                        >
-                          Voir le détail des demandes
-                        </Button>
-                        <InfoBlock
-                          fontSize={12}
-                          label="Taux de pression"
-                          textBg="white"
-                          value={
-                            <TableBadge
-                              sx={getTauxPressionStyle(formation?.tauxPression)}
-                            >
-                              {formation.tauxPression !== undefined
-                                ? formatNumber(formation?.tauxPression, 2)
-                                : "-"}
-                            </TableBadge>
+                      ) : (
+                        <TableQuadrant
+                          formations={formationsQuadrant?.map((formation) => ({
+                            ...formation,
+                            effectif: formation.placesTransformees,
+                          }))}
+                          handleClick={setCurrentFormationId}
+                          currentFormationId={currentFormationId}
+                          order={order}
+                          handleOrder={(column?: string) =>
+                            handleOrder(
+                              column as OrderFormationsPilotageIntentions["orderBy"]
+                            )
                           }
                         />
-                        <Flex direction="column" width="100%">
-                          <Text fontSize={12}>Taux d'emploi régional</Text>
-                          <GraphWrapper
-                            w="100%"
-                            continuum={formation.continuum}
-                            value={formation.tauxInsertion}
-                          />
-                        </Flex>
-                        <Flex direction="column" width="100%">
-                          <Text fontSize={12}>
-                            Taux de poursuite d'études régional
-                          </Text>
-                          <GraphWrapper
-                            w="100%"
-                            continuum={formation.continuum}
-                            value={formation.tauxPoursuite}
-                          />
-                        </Flex>
-                        {formation.tauxDevenirFavorable && (
-                          <Flex direction="column" width="100%">
-                            <Text fontSize={12}>
-                              Taux de devenir favorable régional
-                            </Text>
-                            <GraphWrapper
-                              w="100%"
-                              continuum={formation.continuum}
-                              value={formation.tauxDevenirFavorable}
-                            />
-                          </Flex>
-                        )}
+                      ))}
+                    {!formations && <Skeleton opacity="0.3" height="100%" />}
+                  </>
+                </AspectRatio>
+              </Box>
+              <Box p="4" w="250px" ml="6">
+                <Heading size="sm" mb="6" color="bluefrance.113">
+                  DÉTAILS SUR LA FORMATION
+                </Heading>
+                {!formation && (
+                  <Text color="gray.500">
+                    Cliquez sur un point pour afficher le détail de la
+                    formation.
+                  </Text>
+                )}
+
+                {formation && (
+                  <Flex direction="column" gap={4}>
+                    <InfoBlock
+                      fontSize={12}
+                      label="Formation concernée"
+                      value={formation?.libelleFormation}
+                    />
+                    <InfoBlock
+                      fontSize={12}
+                      label="Dispositif"
+                      value={formation?.libelleDispositif}
+                    />
+                    <Flex gap={6}>
+                      {(!filters.type || filters.type === "ouverture") && (
+                        <InfoBlock
+                          flex={1}
+                          fontSize={12}
+                          label={"Pl. ouvertes"}
+                          value={formation?.placesOuvertes ?? 0}
+                        />
+                      )}
+                      {(!filters.type || filters.type === "fermeture") && (
+                        <InfoBlock
+                          flex={1}
+                          fontSize={12}
+                          label={"Pl. fermées"}
+                          value={formation?.placesFermees ?? 0}
+                        />
+                      )}
+                      {(!filters.type || filters.type === "fermeture") && (
+                        <InfoBlock
+                          flex={1}
+                          fontSize={12}
+                          label={"Pl. colorées"}
+                          value={formation?.placesColorees ?? 0}
+                        />
+                      )}
+                    </Flex>
+                    <InfoBlock
+                      fontSize={12}
+                      label="Établissements concernés"
+                      value={formation?.nbEtablissements}
+                    />
+                    <Button
+                      fontSize={14}
+                      fontWeight={500}
+                      color={bluefrance113}
+                      variant={"secondary"}
+                      rightIcon={<ArrowForwardIcon />}
+                      as={NextLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      href={generateRestitutionUrl(
+                        formation.cfd,
+                        formation?.codeDispositif,
+                        scope,
+                        filters
+                      )}
+                      mb={4}
+                    >
+                      Voir le détail des demandes
+                    </Button>
+                    <InfoBlock
+                      fontSize={12}
+                      label="Taux de pression"
+                      textBg="white"
+                      value={
+                        <TableBadge
+                          sx={getTauxPressionStyle(formation?.tauxPression)}
+                        >
+                          {formation.tauxPression !== undefined
+                            ? formatNumber(formation?.tauxPression, 2)
+                            : "-"}
+                        </TableBadge>
+                      }
+                    />
+                    <Flex direction="column" width="100%">
+                      <Text fontSize={12}>Taux d'emploi régional</Text>
+                      <GraphWrapper
+                        w="100%"
+                        continuum={formation.continuum}
+                        value={formation.tauxInsertion}
+                      />
+                    </Flex>
+                    <Flex direction="column" width="100%">
+                      <Text fontSize={12}>
+                        Taux de poursuite d'études régional
+                      </Text>
+                      <GraphWrapper
+                        w="100%"
+                        continuum={formation.continuum}
+                        value={formation.tauxPoursuite}
+                      />
+                    </Flex>
+                    {formation.tauxDevenirFavorable && (
+                      <Flex direction="column" width="100%">
+                        <Text fontSize={12}>
+                          Taux de devenir favorable régional
+                        </Text>
+                        <GraphWrapper
+                          w="100%"
+                          continuum={formation.continuum}
+                          value={formation.tauxDevenirFavorable}
+                        />
                       </Flex>
                     )}
-                  </Box>
-                </Flex>
-              </>
-            ) : (
-              <QuadrantPlaceholder />
-            )}
+                  </Flex>
+                )}
+              </Box>
+            </Flex>
           </Flex>
-        </Box>
+        ) : (
+          <QuadrantPlaceholder />
+        )}
       </Box>
     </>
   );

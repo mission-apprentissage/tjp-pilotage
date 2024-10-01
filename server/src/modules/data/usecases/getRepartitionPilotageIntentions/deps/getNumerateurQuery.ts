@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -17,7 +18,7 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
           sql<string>`
             COALESCE(
             ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
-            'Hors quadrant'
+            ${eb.val(PositionQuadrantEnum["Hors quadrant"])}
           )`.as("positionQuadrant"),
           eb.ref("dataEtablissement.codeRegion").as("codeRegion"),
           eb.ref("dataEtablissement.codeAcademie").as("codeAcademie"),

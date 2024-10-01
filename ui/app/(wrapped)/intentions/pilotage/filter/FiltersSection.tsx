@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   chakra,
   Flex,
@@ -7,15 +8,18 @@ import {
   GridItem,
   Select,
   Skeleton,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { ScopeEnum } from "shared";
 
+import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
 
 import { Multiselect } from "../../../../../components/Multiselect";
+import { useGlossaireContext } from "../../../glossaire/glossaireContext";
 import { getStickyNavHeight } from "../../../utils/getStickyNavOffset";
 import {
   FiltersStatsPilotageIntentions,
@@ -26,16 +30,14 @@ const Loader = chakra(() => {
   return (
     <Grid
       gap={4}
-      mt={4}
-      paddingTop={4}
-      paddingBottom={3}
+      p={4}
       templateColumns="repeat(6, minmax(0, 1fr))"
       w={"container.xl"}
-      h={180}
-      zIndex={10000}
+      h={178.5}
+      zIndex={100}
     >
       {Array.from({ length: 12 }).map((_, i) => (
-        <GridItem key={i}>
+        <GridItem key={i} mt={"auto"}>
           <Skeleton opacity={0.3} h={14} w={"100%"} />
         </GridItem>
       ))}
@@ -71,6 +73,7 @@ export const FiltersSection = ({
   data: StatsPilotageIntentions | undefined;
   isLoading?: boolean;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const onUpdateFilter = <T,>({
     key,
     selected,
@@ -197,7 +200,7 @@ export const FiltersSection = ({
               onChange={(e) => {
                 onUpdateFilter({ key: "campagne", selected: e.target.value });
               }}
-              placeholder="Choisir une Campagne"
+              placeholder="Choisir une campagne"
             >
               {data?.filters.campagnes.map((campagne) => (
                 <option key={campagne.value} value={campagne.value}>
@@ -257,7 +260,7 @@ export const FiltersSection = ({
             >
               {data?.filters.regions.map((region) => (
                 <option key={region.value} value={region.value}>
-                  {_.capitalize(region.label)}
+                  {region.label}
                 </option>
               ))}
             </Select>
@@ -279,7 +282,7 @@ export const FiltersSection = ({
             >
               {data?.filters.academies.map((academie) => (
                 <option key={academie.value} value={academie.value}>
-                  {_.capitalize(academie.label)}
+                  {academie.label}
                 </option>
               ))}
             </Select>
@@ -301,7 +304,7 @@ export const FiltersSection = ({
             >
               {data?.filters.departements.map((departement) => (
                 <option key={departement.value} value={departement.value}>
-                  {_.capitalize(departement.label)}
+                  {departement.label}
                 </option>
               ))}
             </Select>
@@ -315,7 +318,7 @@ export const FiltersSection = ({
               onChange={(selected) =>
                 onUpdateFilter({ key: "codeNiveauDiplome", selected })
               }
-              options={data?.filters.diplomes}
+              options={data?.filters.niveauxDiplome}
               value={filters.codeNiveauDiplome ?? []}
               gutter={0}
               menuZIndex={"sticky"}
@@ -332,7 +335,7 @@ export const FiltersSection = ({
               onChange={(selected) =>
                 onUpdateFilter({ key: "codeNsf", selected })
               }
-              options={data?.filters.libellesNsf}
+              options={data?.filters.nsfs}
               value={filters.codeNsf ?? []}
               gutter={0}
               menuZIndex={"sticky"}
@@ -349,7 +352,7 @@ export const FiltersSection = ({
               onChange={(selected) =>
                 onUpdateFilter({ key: "statut", selected })
               }
-              options={data?.filters.statutFilters}
+              options={data?.filters.statuts}
               value={filters.statut ?? []}
               gutter={0}
               menuZIndex={"sticky"}
@@ -358,7 +361,24 @@ export const FiltersSection = ({
             </Multiselect>
           </GridItem>
           <GridItem>
-            <FormLabel>Inclure colorations</FormLabel>
+            <FormLabel>
+              Inclure colorations
+              <TooltipIcon
+                ms={2}
+                label={
+                  <Box>
+                    <Text>
+                      Dans Orion, à partir de la campagne 2024, on désigne comme
+                      “Colorations” le fait de colorer des places existantes
+                      sans augmentation de capacité.
+                    </Text>
+                    <Text mt={4}>Cliquez pour plus d'infos.</Text>
+                  </Box>
+                }
+                h={"24px"}
+                onClick={() => openGlossaire("coloration")}
+              />
+            </FormLabel>
             <Select
               width={"100%"}
               size="md"
@@ -384,7 +404,7 @@ export const FiltersSection = ({
               onChange={(selected) =>
                 onUpdateFilter({ key: "secteur", selected })
               }
-              options={data?.filters.secteurFilters}
+              options={data?.filters.secteurs}
               value={filters.secteur ?? []}
               gutter={0}
               menuZIndex={"sticky"}

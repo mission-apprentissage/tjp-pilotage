@@ -9,17 +9,19 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-
 import {
-  FormationsPilotageIntentions,
-  RepartitionPilotageIntentionsPositionQuadrant,
-} from "@/app/(wrapped)/intentions/pilotage/types";
+  PositionQuadrantEnum,
+  PositionQuadrantType,
+} from "shared/enum/positionQuadrantEnum";
+
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { formatPercentage } from "@/utils/formatUtils";
 
 import { BarChart } from "../../components/BarChart";
-
-type PositionQuadrant = "Q1" | "Q2" | "Q3" | "Q4" | "Hors quadrant";
+import {
+  FormationsPilotageIntentions,
+  RepartitionPilotageIntentionsPositionQuadrant,
+} from "../../types";
 
 type StatsPositionQuadrant = {
   ["Places fermées"]: number;
@@ -49,7 +51,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
   ];
 
   const getStatsPositionQuadrant = (
-    positionQuadrant: PositionQuadrant
+    positionQuadrant: PositionQuadrantType
   ): StatsPositionQuadrant => {
     const statsPositionQuadrant: StatsPositionQuadrant = {
       ["Places fermées"]: 0,
@@ -63,17 +65,17 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
     };
 
     statsPositionQuadrant["Places fermées"] =
-      positionsQuadrant?.[positionQuadrant].placesFermees ?? 0;
+      positionsQuadrant?.[positionQuadrant]?.placesFermees ?? 0;
     statsPositionQuadrant["Places ouvertes"] =
-      positionsQuadrant?.[positionQuadrant].placesOuvertes ?? 0;
+      positionsQuadrant?.[positionQuadrant]?.placesOuvertes ?? 0;
     statsPositionQuadrant["Places colorées"] =
-      positionsQuadrant?.[positionQuadrant].placesColorees ?? 0;
+      positionsQuadrant?.[positionQuadrant]?.placesColorees ?? 0;
     statsPositionQuadrant["Places transformées"] =
-      positionsQuadrant?.[positionQuadrant].placesTransformees ?? 0;
+      positionsQuadrant?.[positionQuadrant]?.placesTransformees ?? 0;
     statsPositionQuadrant["Solde"] =
-      positionsQuadrant?.[positionQuadrant].solde ?? 0;
+      positionsQuadrant?.[positionQuadrant]?.solde ?? 0;
     statsPositionQuadrant["Effectif en entrée"] =
-      positionsQuadrant?.[positionQuadrant].effectif ?? 0;
+      positionsQuadrant?.[positionQuadrant]?.effectif ?? 0;
 
     statsPositionQuadrant["Taux de transformation"] = formatPercentage(
       statsPositionQuadrant["Places transformées"] /
@@ -111,19 +113,21 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
               <Tr>
                 <Th maxWidth={"200px"}></Th>
                 <Th maxWidth={"100px"} px={3}>
-                  <Text align="center">Q1</Text>
+                  <Text align="center">{PositionQuadrantEnum.Q1}</Text>
                 </Th>
                 <Th maxWidth={"100px"} px={3}>
-                  <Text align="center">Q2</Text>
+                  <Text align="center">{PositionQuadrantEnum.Q2}</Text>
                 </Th>
                 <Th maxWidth={"100px"} px={3}>
-                  <Text align="center">Q3</Text>
+                  <Text align="center">{PositionQuadrantEnum.Q3}</Text>
                 </Th>
                 <Th maxWidth={"100px"} px={3}>
-                  <Text align="center">Q4</Text>
+                  <Text align="center">{PositionQuadrantEnum.Q4}</Text>
                 </Th>
                 <Th width={"100px"}>
-                  <Text align="center">Hors quadrant</Text>
+                  <Text align="center">
+                    {PositionQuadrantEnum["Hors quadrant"]}
+                  </Text>
                 </Th>
               </Tr>
             </Thead>
@@ -148,11 +152,17 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                     px={3}
                     color={getTdColor(
                       indicateur,
-                      getStatsPositionQuadrant("Q1")[indicateur]
+                      getStatsPositionQuadrant(PositionQuadrantEnum.Q1)[
+                        indicateur
+                      ]
                     )}
                   >
                     <Text align="center">
-                      {getStatsPositionQuadrant("Q1")[indicateur]}
+                      {
+                        getStatsPositionQuadrant(PositionQuadrantEnum.Q1)[
+                          indicateur
+                        ]
+                      }
                     </Text>
                   </Td>
                   <Td
@@ -160,11 +170,17 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                     px={3}
                     color={getTdColor(
                       indicateur,
-                      getStatsPositionQuadrant("Q2")[indicateur]
+                      getStatsPositionQuadrant(PositionQuadrantEnum.Q2)[
+                        indicateur
+                      ]
                     )}
                   >
                     <Text align="center">
-                      {getStatsPositionQuadrant("Q2")[indicateur]}
+                      {
+                        getStatsPositionQuadrant(PositionQuadrantEnum.Q2)[
+                          indicateur
+                        ]
+                      }
                     </Text>
                   </Td>
                   <Td
@@ -172,11 +188,17 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                     px={3}
                     color={getTdColor(
                       indicateur,
-                      getStatsPositionQuadrant("Q3")[indicateur]
+                      getStatsPositionQuadrant(PositionQuadrantEnum.Q3)[
+                        indicateur
+                      ]
                     )}
                   >
                     <Text align="center">
-                      {getStatsPositionQuadrant("Q3")[indicateur]}
+                      {
+                        getStatsPositionQuadrant(PositionQuadrantEnum.Q3)[
+                          indicateur
+                        ]
+                      }
                     </Text>
                   </Td>
                   <Td
@@ -184,11 +206,17 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                     px={3}
                     color={getTdColor(
                       indicateur,
-                      getStatsPositionQuadrant("Q4")[indicateur]
+                      getStatsPositionQuadrant(PositionQuadrantEnum.Q4)[
+                        indicateur
+                      ]
                     )}
                   >
                     <Text align="center">
-                      {getStatsPositionQuadrant("Q4")[indicateur]}
+                      {
+                        getStatsPositionQuadrant(PositionQuadrantEnum.Q4)[
+                          indicateur
+                        ]
+                      }
                     </Text>
                   </Td>
                   <Td
@@ -196,11 +224,17 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                     px={3}
                     color={getTdColor(
                       indicateur,
-                      getStatsPositionQuadrant("Hors quadrant")[indicateur]
+                      getStatsPositionQuadrant(
+                        PositionQuadrantEnum["Hors quadrant"]
+                      )[indicateur]
                     )}
                   >
                     <Text align="center">
-                      {getStatsPositionQuadrant("Hors quadrant")[indicateur]}
+                      {
+                        getStatsPositionQuadrant(
+                          PositionQuadrantEnum["Hors quadrant"]
+                        )[indicateur]
+                      }
                     </Text>
                   </Td>
                 </Tr>

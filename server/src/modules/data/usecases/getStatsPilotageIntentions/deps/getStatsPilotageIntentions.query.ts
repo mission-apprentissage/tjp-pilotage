@@ -7,19 +7,19 @@ import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import {
   countPlacesColorees,
-  countPlacesColoreesQ3Q4,
+  countPlacesColoreesQ4,
   countPlacesFermees,
   countPlacesFermeesApprentissage,
-  countPlacesFermeesApprentissageQ3Q4,
-  countPlacesFermeesQ3Q4,
+  countPlacesFermeesApprentissageQ4,
+  countPlacesFermeesQ4,
   countPlacesFermeesScolaire,
-  countPlacesFermeesScolaireQ3Q4,
+  countPlacesFermeesScolaireQ4,
   countPlacesOuvertes,
   countPlacesOuvertesApprentissage,
-  countPlacesOuvertesApprentissageQ1Q2,
-  countPlacesOuvertesQ1Q2,
+  countPlacesOuvertesApprentissageQ1,
+  countPlacesOuvertesQ1,
   countPlacesOuvertesScolaire,
-  countPlacesOuvertesScolaireQ1Q2,
+  countPlacesOuvertesScolaireQ1,
   countPlacesOuvertesTransitionEcologique,
   countPlacesTransformeesParCampagne,
 } from "../../../../utils/countCapacite";
@@ -107,11 +107,11 @@ const genericOnDemandes =
           .sum<number>(countPlacesFermeesScolaire(eb))
           .as("placesFermeesScolaire"),
         eb.fn
-          .sum<number>(countPlacesOuvertesScolaireQ1Q2(eb))
-          .as("placesOuvertesScolaireQ1Q2"),
+          .sum<number>(countPlacesOuvertesScolaireQ1(eb))
+          .as("placesOuvertesScolaireQ1"),
         eb.fn
-          .sum<number>(countPlacesFermeesScolaireQ3Q4(eb))
-          .as("placesFermeesScolaireQ3Q4"),
+          .sum<number>(countPlacesFermeesScolaireQ4(eb))
+          .as("placesFermeesScolaireQ4"),
         eb.fn
           .sum<number>(countPlacesOuvertesApprentissage(eb))
           .as("placesOuvertesApprentissage"),
@@ -119,20 +119,20 @@ const genericOnDemandes =
           .sum<number>(countPlacesFermeesApprentissage(eb))
           .as("placesFermeesApprentissage"),
         eb.fn
-          .sum<number>(countPlacesOuvertesApprentissageQ1Q2(eb))
-          .as("placesOuvertesApprentissageQ1Q2"),
+          .sum<number>(countPlacesOuvertesApprentissageQ1(eb))
+          .as("placesOuvertesApprentissageQ1"),
         eb.fn
-          .sum<number>(countPlacesFermeesApprentissageQ3Q4(eb))
-          .as("placesFermeesApprentissageQ3Q4"),
+          .sum<number>(countPlacesFermeesApprentissageQ4(eb))
+          .as("placesFermeesApprentissageQ4"),
         eb.fn.sum<number>(countPlacesOuvertes(eb)).as("placesOuvertes"),
         eb.fn.sum<number>(countPlacesFermees(eb)).as("placesFermees"),
-        eb.fn.sum<number>(countPlacesOuvertesQ1Q2(eb)).as("placesOuvertesQ1Q2"),
-        eb.fn.sum<number>(countPlacesFermeesQ3Q4(eb)).as("placesFermeesQ3Q4"),
+        eb.fn.sum<number>(countPlacesOuvertesQ1(eb)).as("placesOuvertesQ1"),
+        eb.fn.sum<number>(countPlacesFermeesQ4(eb)).as("placesFermeesQ4"),
         eb.fn
           .sum<number>(countPlacesOuvertesTransitionEcologique(eb))
           .as("placesOuvertesTransformationEcologique"),
         eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
-        eb.fn.sum<number>(countPlacesColoreesQ3Q4(eb)).as("placesColoreesQ3Q4"),
+        eb.fn.sum<number>(countPlacesColoreesQ4(eb)).as("placesColoreesQ4"),
         eb.fn
           .sum<number>(countPlacesTransformeesParCampagne(eb))
           .as("placesTransformees"),
@@ -251,16 +251,16 @@ const getNationalData = async (filters: Filters) => {
         .as("placesFermeesScolaire"),
       eb.fn
         .coalesce(
-          eb.fn.sum<number>(countPlacesOuvertesScolaireQ1Q2(eb)),
+          eb.fn.sum<number>(countPlacesOuvertesScolaireQ1(eb)),
           eb.val(0)
         )
-        .as("placesOuvertesScolaireQ1Q2"),
+        .as("placesOuvertesScolaireQ1"),
       eb.fn
         .coalesce(
-          eb.fn.sum<number>(countPlacesFermeesScolaireQ3Q4(eb)),
+          eb.fn.sum<number>(countPlacesFermeesScolaireQ4(eb)),
           eb.val(0)
         )
-        .as("placesFermeesScolaireQ3Q4"),
+        .as("placesFermeesScolaireQ4"),
       eb.fn
         .coalesce(
           eb.fn.sum<number>(countPlacesOuvertesApprentissage(eb)),
@@ -275,16 +275,16 @@ const getNationalData = async (filters: Filters) => {
         .as("placesFermeesApprentissage"),
       eb.fn
         .coalesce(
-          eb.fn.sum<number>(countPlacesOuvertesApprentissageQ1Q2(eb)),
+          eb.fn.sum<number>(countPlacesOuvertesApprentissageQ1(eb)),
           eb.val(0)
         )
-        .as("placesOuvertesApprentissageQ1Q2"),
+        .as("placesOuvertesApprentissageQ1"),
       eb.fn
         .coalesce(
-          eb.fn.sum<number>(countPlacesFermeesApprentissageQ3Q4(eb)),
+          eb.fn.sum<number>(countPlacesFermeesApprentissageQ4(eb)),
           eb.val(0)
         )
-        .as("placesFermeesApprentissageQ3Q4"),
+        .as("placesFermeesApprentissageQ4"),
       eb.fn
         .coalesce(eb.fn.sum<number>(countPlacesOuvertes(eb)), eb.val(0))
         .as("placesOuvertes"),
@@ -292,11 +292,11 @@ const getNationalData = async (filters: Filters) => {
         .coalesce(eb.fn.sum<number>(countPlacesFermees(eb)), eb.val(0))
         .as("placesFermees"),
       eb.fn
-        .coalesce(eb.fn.sum<number>(countPlacesOuvertesQ1Q2(eb)), eb.val(0))
-        .as("placesOuvertesQ1Q2"),
+        .coalesce(eb.fn.sum<number>(countPlacesOuvertesQ1(eb)), eb.val(0))
+        .as("placesOuvertesQ1"),
       eb.fn
-        .coalesce(eb.fn.sum<number>(countPlacesFermeesQ3Q4(eb)), eb.val(0))
-        .as("placesFermeesQ3Q4"),
+        .coalesce(eb.fn.sum<number>(countPlacesFermeesQ4(eb)), eb.val(0))
+        .as("placesFermeesQ4"),
       eb.fn
         .coalesce(
           eb.fn.sum<number>(
@@ -309,8 +309,8 @@ const getNationalData = async (filters: Filters) => {
         .coalesce(eb.fn.sum<number>(countPlacesColorees(eb)), eb.val(0))
         .as("placesColorees"),
       eb.fn
-        .coalesce(eb.fn.sum<number>(countPlacesColoreesQ3Q4(eb)), eb.val(0))
-        .as("placesColoreesQ3Q4"),
+        .coalesce(eb.fn.sum<number>(countPlacesColoreesQ4(eb)), eb.val(0))
+        .as("placesColoreesQ4"),
       eb.fn
         .coalesce(
           eb.fn.sum<number>(countPlacesTransformeesParCampagne(eb)),
@@ -415,11 +415,11 @@ const getRegionData = async (filters: Filters) => {
         .coalesce("placesFermeesScolaire", eb.val(0))
         .as("placesFermeesScolaire"),
       eb.fn
-        .coalesce("placesOuvertesScolaireQ1Q2", eb.val(0))
-        .as("placesOuvertesScolaireQ1Q2"),
+        .coalesce("placesOuvertesScolaireQ1", eb.val(0))
+        .as("placesOuvertesScolaireQ1"),
       eb.fn
-        .coalesce("placesFermeesScolaireQ3Q4", eb.val(0))
-        .as("placesFermeesScolaireQ3Q4"),
+        .coalesce("placesFermeesScolaireQ4", eb.val(0))
+        .as("placesFermeesScolaireQ4"),
       eb.fn
         .coalesce("placesOuvertesApprentissage", eb.val(0))
         .as("placesOuvertesApprentissage"),
@@ -427,20 +427,20 @@ const getRegionData = async (filters: Filters) => {
         .coalesce("placesFermeesApprentissage", eb.val(0))
         .as("placesFermeesApprentissage"),
       eb.fn
-        .coalesce("placesOuvertesApprentissageQ1Q2", eb.val(0))
-        .as("placesOuvertesApprentissageQ1Q2"),
+        .coalesce("placesOuvertesApprentissageQ1", eb.val(0))
+        .as("placesOuvertesApprentissageQ1"),
       eb.fn
-        .coalesce("placesFermeesApprentissageQ3Q4", eb.val(0))
-        .as("placesFermeesApprentissageQ3Q4"),
+        .coalesce("placesFermeesApprentissageQ4", eb.val(0))
+        .as("placesFermeesApprentissageQ4"),
       eb.fn.coalesce("placesOuvertes", eb.val(0)).as("placesOuvertes"),
       eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
-      eb.fn.coalesce("placesOuvertesQ1Q2", eb.val(0)).as("placesOuvertesQ1Q2"),
-      eb.fn.coalesce("placesFermeesQ3Q4", eb.val(0)).as("placesFermeesQ3Q4"),
+      eb.fn.coalesce("placesOuvertesQ1", eb.val(0)).as("placesOuvertesQ1"),
+      eb.fn.coalesce("placesFermeesQ4", eb.val(0)).as("placesFermeesQ4"),
       eb.fn
         .coalesce("placesOuvertesTransformationEcologique", eb.val(0))
         .as("placesOuvertesTransformationEcologique"),
       eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
-      eb.fn.coalesce("placesColoreesQ3Q4", eb.val(0)).as("placesColoreesQ3Q4"),
+      eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
     ])
     .where(isInPerimetreIJRegion)
@@ -486,11 +486,11 @@ const getAcademieData = async (filters: Filters) => {
         .coalesce("placesFermeesScolaire", eb.val(0))
         .as("placesFermeesScolaire"),
       eb.fn
-        .coalesce("placesOuvertesScolaireQ1Q2", eb.val(0))
-        .as("placesOuvertesScolaireQ1Q2"),
+        .coalesce("placesOuvertesScolaireQ1", eb.val(0))
+        .as("placesOuvertesScolaireQ1"),
       eb.fn
-        .coalesce("placesFermeesScolaireQ3Q4", eb.val(0))
-        .as("placesFermeesScolaireQ3Q4"),
+        .coalesce("placesFermeesScolaireQ4", eb.val(0))
+        .as("placesFermeesScolaireQ4"),
       eb.fn
         .coalesce("placesOuvertesApprentissage", eb.val(0))
         .as("placesOuvertesApprentissage"),
@@ -498,20 +498,20 @@ const getAcademieData = async (filters: Filters) => {
         .coalesce("placesFermeesApprentissage", eb.val(0))
         .as("placesFermeesApprentissage"),
       eb.fn
-        .coalesce("placesOuvertesApprentissageQ1Q2", eb.val(0))
-        .as("placesOuvertesApprentissageQ1Q2"),
+        .coalesce("placesOuvertesApprentissageQ1", eb.val(0))
+        .as("placesOuvertesApprentissageQ1"),
       eb.fn
-        .coalesce("placesFermeesApprentissageQ3Q4", eb.val(0))
-        .as("placesFermeesApprentissageQ3Q4"),
+        .coalesce("placesFermeesApprentissageQ4", eb.val(0))
+        .as("placesFermeesApprentissageQ4"),
       eb.fn.coalesce("placesOuvertes", eb.val(0)).as("placesOuvertes"),
       eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
-      eb.fn.coalesce("placesOuvertesQ1Q2", eb.val(0)).as("placesOuvertesQ1Q2"),
-      eb.fn.coalesce("placesFermeesQ3Q4", eb.val(0)).as("placesFermeesQ3Q4"),
+      eb.fn.coalesce("placesOuvertesQ1", eb.val(0)).as("placesOuvertesQ1"),
+      eb.fn.coalesce("placesFermeesQ4", eb.val(0)).as("placesFermeesQ4"),
       eb.fn
         .coalesce("placesOuvertesTransformationEcologique", eb.val(0))
         .as("placesOuvertesTransformationEcologique"),
       eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
-      eb.fn.coalesce("placesColoreesQ3Q4", eb.val(0)).as("placesColoreesQ3Q4"),
+      eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
     ])
     .where(isInPerimetreIJAcademie)
@@ -568,11 +568,11 @@ const getDepartementData = async (filters: Filters) => {
         .coalesce("placesFermeesScolaire", eb.val(0))
         .as("placesFermeesScolaire"),
       eb.fn
-        .coalesce("placesOuvertesScolaireQ1Q2", eb.val(0))
-        .as("placesOuvertesScolaireQ1Q2"),
+        .coalesce("placesOuvertesScolaireQ1", eb.val(0))
+        .as("placesOuvertesScolaireQ1"),
       eb.fn
-        .coalesce("placesFermeesScolaireQ3Q4", eb.val(0))
-        .as("placesFermeesScolaireQ3Q4"),
+        .coalesce("placesFermeesScolaireQ4", eb.val(0))
+        .as("placesFermeesScolaireQ4"),
       eb.fn
         .coalesce("placesOuvertesApprentissage", eb.val(0))
         .as("placesOuvertesApprentissage"),
@@ -580,20 +580,20 @@ const getDepartementData = async (filters: Filters) => {
         .coalesce("placesFermeesApprentissage", eb.val(0))
         .as("placesFermeesApprentissage"),
       eb.fn
-        .coalesce("placesOuvertesApprentissageQ1Q2", eb.val(0))
-        .as("placesOuvertesApprentissageQ1Q2"),
+        .coalesce("placesOuvertesApprentissageQ1", eb.val(0))
+        .as("placesOuvertesApprentissageQ1"),
       eb.fn
-        .coalesce("placesFermeesApprentissageQ3Q4", eb.val(0))
-        .as("placesFermeesApprentissageQ3Q4"),
+        .coalesce("placesFermeesApprentissageQ4", eb.val(0))
+        .as("placesFermeesApprentissageQ4"),
       eb.fn.coalesce("placesOuvertes", eb.val(0)).as("placesOuvertes"),
       eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
-      eb.fn.coalesce("placesOuvertesQ1Q2", eb.val(0)).as("placesOuvertesQ1Q2"),
-      eb.fn.coalesce("placesFermeesQ3Q4", eb.val(0)).as("placesFermeesQ3Q4"),
+      eb.fn.coalesce("placesOuvertesQ1", eb.val(0)).as("placesOuvertesQ1"),
+      eb.fn.coalesce("placesFermeesQ4", eb.val(0)).as("placesFermeesQ4"),
       eb.fn
         .coalesce("placesOuvertesTransformationEcologique", eb.val(0))
         .as("placesOuvertesTransformationEcologique"),
       eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
-      eb.fn.coalesce("placesColoreesQ3Q4", eb.val(0)).as("placesColoreesQ3Q4"),
+      eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
     ])
     .where(isInPerimetreIJDepartement)
