@@ -16,7 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { AxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
@@ -127,10 +127,16 @@ export const IntentionForm = ({
 
       push(`/intentions/perdir/saisie`);
     },
-    //@ts-ignore
-    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-      const errors = e.response?.data.errors;
-      setErrors(errors);
+    onError: (e: unknown) => {
+      if (isAxiosError<{ errors: Record<string, string> }>(e)) {
+        const errors = e.response?.data.errors ?? {
+          erreur: "Une erreur est survenue lors de la sauvegarde.",
+        };
+
+        console.log({ e, errors });
+
+        setErrors(errors);
+      }
     },
   });
 
