@@ -2,13 +2,31 @@ import { pipeline, Writable } from "node:stream";
 
 import fs from "fs";
 import { inject } from "injecti";
-import { ZodError } from "zod";
+import { ZodError, ZodIssueCode } from "zod";
 
 import batchCreate from "../../utils/batchCreate";
 import { getStreamParser } from "../../utils/parse";
 import { verifyFileEncoding } from "../../utils/verifyFileEncoding";
 import { createRawDatas } from "./createRawDatas.dep";
 import { deleteRawData } from "./deleteRawData.dep";
+
+export enum ImportFileErrorType {
+  FILE = "file",
+  LINE = "line",
+}
+
+export type ImportFileError =
+  | {
+      type: ImportFileErrorType.FILE;
+      path: string;
+      error: ZodError;
+    }
+  | {
+      type: ImportFileErrorType.LINE;
+      path: string;
+      error: ZodError;
+      line: number;
+    };
 
 export const [importRawFile, importRawFileFactory] = inject(
   {
@@ -25,17 +43,27 @@ export const [importRawFile, importRawFileFactory] = inject(
       path: string;
       schema: Zod.Schema<unknown>;
     }) => {
-      console.log(`Vérification de l'intégrité du fichier : ${path}`);
-      await verifyFileEncoding(path);
-      console.log(`Fichier validé : ${path}`);
-      console.log(`Suppression des raw data ${type}`);
+      const errors: Array<ImportFileError> = [];
+
+      try {
+        await verifyFileEncoding(path);
+      } catch (err) {
+        errors.push({
+          type: ImportFileErrorType.FILE,
+          path,
+          error: new ZodError([
+            { code: ZodIssueCode.custom, message: err as string, path: [path] },
+          ]),
+        });
+        return errors;
+      }
 
       await deps.deleteRawData({ type });
 
       process.stdout.write(`Import des lignes du fichier ${type}...\n`);
 
       let count = 0;
-      pipeline(
+      const stream = pipeline(
         fs.createReadStream(path),
         getStreamParser(),
         new Writable({
@@ -55,12 +83,12 @@ export const [importRawFile, importRawFileFactory] = inject(
               process.stdout.write(`Ajout de ${count} lignes\r`);
             } catch (err) {
               const zodError = err as ZodError;
-              console.warn(
-                `- Erreur ligne ${count} : \n`,
-                zodError.issues
-                  .map((i) => `- ${i.path}: ${i.message}`)
-                  .join("\n")
-              );
+              errors.push({
+                type: ImportFileErrorType.LINE,
+                error: zodError,
+                path,
+                line: count,
+              });
             }
             callback();
           },
@@ -71,5 +99,19 @@ export const [importRawFile, importRawFileFactory] = inject(
           }
         }
       );
+
+      const promise = async () =>
+        new Promise<void>((resolve, reject) => {
+          stream.on("error", (err) => {
+            reject(err);
+          });
+          stream.on("finish", () => {
+            resolve();
+          });
+        });
+
+      await promise();
+
+      return errors;
     }
 );
