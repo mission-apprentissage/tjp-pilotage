@@ -2,6 +2,7 @@ import { program as cli } from "commander";
 import { parse } from "csv-parse/sync";
 import { writeFileSync } from "fs";
 import _ from "lodash";
+import path from "path";
 import { PERMISSIONS, Role } from "shared";
 import { z } from "zod";
 
@@ -27,11 +28,15 @@ import { importLienEmploiFormation } from "./modules/import/usecases/importLienE
 import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importNSF } from "./modules/import/usecases/importNSF/importNSF.usecase";
 import { ImportPositionsQuadrant } from "./modules/import/usecases/importPositionsQuadrant/importPositionsQuadrant";
-import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
+import {
+  ImportFileError,
+  importRawFile,
+} from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
 import { importTensionDepartementRome } from "./modules/import/usecases/importTensionDepartementRome/importTensionDepartementRome.usecase";
 import { importTensionFranceTravail } from "./modules/import/usecases/importTensionFranceTravail/importTensionFranceTravail.usecase";
 import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
+import { writeErrorLogs } from "./modules/import/utils/writeErrorLogs";
 
 cli.command("migrateDB").action(async () => {
   await migrateToLatest();
@@ -136,7 +141,7 @@ cli
   .command("importFiles")
   .argument("[filename]")
   .action(async (filename: string) => {
-    const getImport = ({
+    const getImport = async ({
       type,
       year,
       schema,
@@ -148,7 +153,7 @@ cli
       const filePath = year
         ? `${basepath}/files/${year}/${type}_${year}.csv`
         : `${basepath}/files/${type}.csv`;
-      return importRawFile({
+      return await importRawFile({
         type: year ? `${type}_${year}` : type,
         path: filePath,
         schema,
@@ -172,7 +177,7 @@ cli
           ...acc,
           [`${type}_${year}`]: () => getImport({ type, year, schema }),
         }),
-        {} as Record<string, () => Promise<void>>
+        {} as Record<string, () => Promise<Array<ImportFileError>>>
       );
     };
 
@@ -267,11 +272,31 @@ cli
       }),
     };
 
+    await writeErrorLogs({
+      path: path.join(__dirname, "import_files_report.csv"),
+      withHeader: true,
+    });
+
     if (filename) {
-      await actions[filename as keyof typeof actions]();
+      const actionErrors = await actions[filename as keyof typeof actions]();
+      if (actionErrors.length > 0) {
+        await writeErrorLogs({
+          path: path.join(__dirname, "import_files_report.csv"),
+          errors: actionErrors,
+          withHeader: false,
+        });
+      }
     } else {
       for (const action of Object.values(actions)) {
-        await action();
+        const actionErrors = await action();
+
+        if (actionErrors.length > 0) {
+          await writeErrorLogs({
+            path: path.join(__dirname, "import_files_report.csv"),
+            errors: actionErrors,
+            withHeader: false,
+          });
+        }
       }
     }
   });
