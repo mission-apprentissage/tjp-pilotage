@@ -99,6 +99,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
             eb.ref("demande.cfd")
           ),
           eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
+            "=",
+            eb.ref("demande.codeDispositif")
+          ),
+          eb(
             eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
             "=",
             eb.ref("dataEtablissement.codeRegion")

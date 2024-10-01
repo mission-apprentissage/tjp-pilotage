@@ -74,6 +74,7 @@ export interface ConstatRentree {
   effectif: number | null;
   anneeDispositif: number | null;
   cfd: string | null;
+  codeDispositif: string | null;
 }
 
 export interface Correction {

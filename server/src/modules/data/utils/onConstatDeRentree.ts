@@ -47,6 +47,11 @@ export const genericOnConstatRentree =
               eb.ref("dataFormation.cfd")
             ),
             eb(
+              eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
+              "=",
+              eb.ref("constatRentree.codeDispositif")
+            ),
+            eb(
               eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
               "=",
               eb.ref("dataEtablissement.codeRegion")

@@ -81,6 +81,11 @@ const genericOnDemandes =
               eb.ref("demande.cfd")
             ),
             eb(
+              eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
+              "=",
+              eb.ref("demande.codeDispositif")
+            ),
+            eb(
               eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
               "=",
               eb.ref("dataEtablissement.codeRegion")
@@ -178,7 +183,8 @@ const genericOnDemandes =
         return q.where("demande.statut", "in", statut);
       })
       .$call((q) => {
-        if (!withColoration || withColoration === "false")
+        if (withColoration === undefined) return q;
+        if (withColoration === "false")
           return q.where((w) =>
             w.or([
               w("demande.coloration", "=", false),
@@ -222,6 +228,11 @@ const getNationalData = async (filters: Filters) => {
             eb.ref("positionFormationRegionaleQuadrant.cfd"),
             "=",
             eb.ref("demande.cfd")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
+            "=",
+            eb.ref("demande.codeDispositif")
           ),
           eb(
             eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
@@ -366,7 +377,8 @@ const getNationalData = async (filters: Filters) => {
       return q.where("demande.statut", "in", filters.statut);
     })
     .$call((q) => {
-      if (!filters.withColoration || filters.withColoration === "false")
+      if (filters.withColoration === undefined) return q;
+      if (filters.withColoration === "false")
         return q.where((w) =>
           w.or([
             w("demande.coloration", "=", false),

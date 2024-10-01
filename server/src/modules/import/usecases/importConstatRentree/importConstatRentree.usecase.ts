@@ -52,6 +52,7 @@ export const [importConstatRentree] = inject(
                 constatRentreeLine["Nombre d'élèves : Total"] ?? "0"
               ),
               cfd: nMef.FORMATION_DIPLOME,
+              codeDispositif: nMef.DISPOSITIF_FORMATION,
               anneeDispositif: Number(nMef.ANNEE_DISPOSITIF ?? "0"),
               rentreeScolaire,
             };
