@@ -72,21 +72,6 @@ export const IndicateursSection = ({
             typeTerritoire === "region" ? "région" : "département"
           }`}
           value={stats?.nbFormations ?? "-"}
-          glossaire={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Box display="inline">
-                  <Text>
-                    Dans Orion, une formation s’entend pour un niveau de diplôme
-                    et une durée donnés
-                  </Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              onClick={() => openGlossaire()}
-            />
-          }
         />
         <StatCard
           label={`Nombre total d’élèves dans votre ${
