@@ -10,6 +10,7 @@ import { FiltersSection } from "../../components/FiltersSection";
 import { IndicateursSection } from "../../components/IndicateursSection/IndicateursSection";
 import { InfoSection } from "../../components/InfoSection";
 import { QuadrantSection } from "../../components/QuadrantSection/QuadrantSection";
+import { TauxInserJeunesSection } from "../../components/TauxInserJeunesSection/TauxInserJeunesSection";
 import { TopFlopSection } from "../../components/TopFlopSection/TopFlopSection";
 import { FiltersPanoramaFormation, OrderPanoramaFormation } from "../../types";
 
@@ -119,6 +120,11 @@ export default function Panorama({
             (item) => item.value === searchParams.codeNiveauDiplome?.[0]
           )?.label
         }
+      />
+      <TauxInserJeunesSection
+        region={stats?.libelleRegion}
+        tauxInsertion={data?.tauxInsertion}
+        tauxPoursuite={data?.tauxPoursuite}
       />
       <QuadrantSection
         meanInsertion={stats?.tauxInsertion}
