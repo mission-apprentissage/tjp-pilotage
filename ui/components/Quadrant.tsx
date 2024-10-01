@@ -25,6 +25,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 const quadrantLabelStyle = {
   show: true,
@@ -159,16 +160,20 @@ export const Quadrant = function <
     meanInsertion && meanPoursuite
       ? {
           q1: data.filter(
-            (item) => item.positionQuadrant === "Q1" && item.effectif
+            (item) =>
+              item.positionQuadrant === PositionQuadrantEnum.Q1 && item.effectif
           ).length,
           q2: data.filter(
-            (item) => item.positionQuadrant === "Q2" && item.effectif
+            (item) =>
+              item.positionQuadrant === PositionQuadrantEnum.Q2 && item.effectif
           ).length,
           q3: data.filter(
-            (item) => item.positionQuadrant === "Q3" && item.effectif
+            (item) =>
+              item.positionQuadrant === PositionQuadrantEnum.Q3 && item.effectif
           ).length,
           q4: data.filter(
-            (item) => item.positionQuadrant === "Q4" && item.effectif
+            (item) =>
+              item.positionQuadrant === PositionQuadrantEnum.Q4 && item.effectif
           ).length,
         }
       : undefined;

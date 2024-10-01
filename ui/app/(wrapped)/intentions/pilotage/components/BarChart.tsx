@@ -1,11 +1,14 @@
 import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
+import {
+  PositionQuadrantEnum,
+  PositionQuadrantType,
+} from "shared/enum/positionQuadrantEnum";
 
-import { formatPercentage } from "../../../../../utils/formatUtils";
+import { formatPercentage } from "@/utils/formatUtils";
+
 import { RepartitionPilotageIntentionsPositionQuadrant } from "../types";
-
-type PositionQuadrant = "Q1" | "Q2" | "Q3" | "Q4" | "Hors quadrant";
 
 export const BarChart = ({
   positionsQuadrant,
@@ -21,12 +24,12 @@ export const BarChart = ({
   const bf850_active = useToken("colors", "bluefrance.850_active");
   const grey425 = useToken("colors", "grey.425");
 
-  const positionsQuadrantOptions: PositionQuadrant[] = [
-    "Q1",
-    "Q2",
-    "Q3",
-    "Q4",
-    "Hors quadrant",
+  const positionsQuadrantOptions: PositionQuadrantType[] = [
+    PositionQuadrantEnum.Q1,
+    PositionQuadrantEnum.Q2,
+    PositionQuadrantEnum.Q3,
+    PositionQuadrantEnum.Q4,
+    PositionQuadrantEnum["Hors quadrant"],
   ];
 
   const seriesOption: echarts.BarSeriesOption = {
@@ -37,7 +40,7 @@ export const BarChart = ({
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
-      animationDelay: 0.5,
+      animationDelay: 0,
       responsive: true,
       maintainAspectRatio: true,
       title: {
@@ -59,8 +62,10 @@ export const BarChart = ({
           },
           textStyle: {
             width: "fit-content",
+            color: grey425,
+            fontSize: 14,
+            fontFamily: "Marianne",
           },
-
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           formatter: (params: any) => {
             return `
@@ -70,9 +75,9 @@ export const BarChart = ({
               Ratio de fermetures :
               <span style="font-weight: 700;">
                 ${formatPercentage(
-                  positionsQuadrant[params[0]?.name as PositionQuadrant]
+                  positionsQuadrant[params[0]?.name as PositionQuadrantType]
                     .ratioFermeture,
-                  0,
+                  1,
                   "-"
                 )}
               </span>
@@ -109,7 +114,7 @@ export const BarChart = ({
                 <span>
                   Pl. transformées :
                   <span style="font-weight: 700;"> ${
-                    positionsQuadrant[params[0]?.name as PositionQuadrant]
+                    positionsQuadrant[params[0]?.name as PositionQuadrantType]
                       .placesTransformees
                   }</span>
                 </span>
@@ -156,6 +161,12 @@ export const BarChart = ({
         itemGap: 15,
         itemWidth: 15,
         selectedMode: false,
+        textStyle: {
+          width: "fit-content",
+          color: grey425,
+          fontSize: 14,
+          fontFamily: "Marianne",
+        },
         formatter: (value: string) =>
           `${value.replace("Place(s) ", "Pl. ").replace("(s)", "s")}`,
         data: [
@@ -185,10 +196,12 @@ export const BarChart = ({
         show: true,
         axisLabel: {
           show: true,
-          fontSize: 14,
-          color: grey425,
-          fontWeight: 700,
           position: "top",
+          textStyle: {
+            color: grey425,
+            fontSize: 14,
+            fontFamily: "Marianne",
+          },
         },
         axisTick: {
           show: false,
@@ -205,8 +218,8 @@ export const BarChart = ({
       series: [
         {
           data: positionsQuadrantOptions.map(
-            (positionQuadrant) =>
-              positionsQuadrant[positionQuadrant].placesFermees
+            (PositionQuadrantType) =>
+              positionsQuadrant[PositionQuadrantType]?.placesFermees ?? 0
           ),
           stack: "placesTransformées",
           color: bf113,
@@ -215,8 +228,8 @@ export const BarChart = ({
         },
         {
           data: positionsQuadrantOptions.map(
-            (positionQuadrant) =>
-              positionsQuadrant[positionQuadrant].placesOuvertes
+            (PositionQuadrantType) =>
+              positionsQuadrant[PositionQuadrantType]?.placesOuvertes
           ),
           stack: "placesTransformées",
           color: bf850_active,
@@ -225,8 +238,8 @@ export const BarChart = ({
         },
         {
           data: positionsQuadrantOptions.map(
-            (positionQuadrant) =>
-              positionsQuadrant[positionQuadrant].placesColorees
+            (PositionQuadrantType) =>
+              positionsQuadrant[PositionQuadrantType]?.placesColorees
           ),
           stack: "placesTransformées",
           color: bf850,

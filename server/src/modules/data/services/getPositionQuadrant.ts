@@ -1,11 +1,8 @@
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+
 const PREMIERE_COMMUNE = "1ere_commune";
 const SECONDE_COMMUNE = "2nde_commune";
 
-export const Q1 = "Q1";
-export const Q2 = "Q2";
-export const Q3 = "Q3";
-export const Q4 = "Q4";
-export const HORS_QUADRANT = "Hors quadrant";
 export const UNDEFINED_QUADRANT = "-";
 
 export const getPositionQuadrant = (
@@ -31,7 +28,7 @@ export const getPositionQuadrant = (
     moyenne?.tauxInsertion === undefined ||
     moyenne?.tauxPoursuite === undefined
   )
-    return HORS_QUADRANT;
+    return PositionQuadrantEnum["Hors quadrant"];
 
   const tauxInsertion = formation.tauxInsertion;
   const tauxPoursuite = formation.tauxPoursuite;
@@ -42,23 +39,23 @@ export const getPositionQuadrant = (
     tauxInsertion >= tauxInsertionMoyen &&
     tauxPoursuite >= tauxPoursuiteMoyen
   ) {
-    return Q1;
+    return PositionQuadrantEnum.Q1;
   } else if (
     tauxInsertion >= tauxInsertionMoyen &&
     tauxPoursuite < tauxPoursuiteMoyen
   ) {
-    return Q2;
+    return PositionQuadrantEnum.Q2;
   } else if (
     tauxInsertion < tauxInsertionMoyen &&
     tauxPoursuite >= tauxPoursuiteMoyen
   ) {
-    return Q3;
+    return PositionQuadrantEnum.Q3;
   } else if (
     tauxInsertion < tauxInsertionMoyen &&
     tauxPoursuite < tauxPoursuiteMoyen
   ) {
-    return Q4;
-  } else return HORS_QUADRANT;
+    return PositionQuadrantEnum.Q4;
+  } else return PositionQuadrantEnum["Hors quadrant"];
 };
 
 export const filterPositionQuadrant = (

@@ -144,7 +144,7 @@ function generateGetScopedData(
 ) {
   return (statut: Statut, indicateur: Indicateur): number => {
     if (!code) return 0;
-    return (data?.[statut]?.[`_${code}`]?.[indicateur] as number) ?? 0;
+    return data?.[statut]?.[`_${code}`]?.[indicateur] as number;
   };
 }
 
@@ -160,7 +160,7 @@ const NumberWithLabel = ({
   icon?: React.ReactNode;
   label?: string;
   scopeCode?: string;
-  percentage: number;
+  percentage?: number;
   nationalPercentage?: number;
   objective?: number;
   round?: number;
@@ -187,18 +187,23 @@ const NumberWithLabel = ({
           fontWeight="700"
           color={"grey.50"}
         >
-          {formatPercentage(percentage, round, "-")}
+          {formatPercentage(percentage, round, "- %")}
         </Text>
         {objective && (
           <Box width="100%">
             <ProgressBar
               percentage={formatPercentageWithoutSign(
-                percentage / objective,
+                percentage ? percentage / objective : undefined,
                 1
               )}
             />
             <Text color={themeDefinition.colors.grey[425]}>
-              {formatPercentage(percentage / objective, 1)} de l'objectif
+              {formatPercentage(
+                percentage ? percentage / objective : undefined,
+                1,
+                "- %"
+              )}{" "}
+              de l'objectif
             </Text>
           </Box>
         )}
@@ -211,16 +216,18 @@ const NumberWithLabel = ({
               fontSize="14px"
               lineHeight="20px"
               color={
-                percentage - nationalPercentage > 0
+                (percentage ? percentage - nationalPercentage > 0 : false)
                   ? "success.425"
                   : "error.425"
               }
               mb={"auto"}
             >
               {`${
-                percentage - nationalPercentage > 0 ? "+" : ""
+                (percentage ? percentage - nationalPercentage > 0 : false)
+                  ? "+"
+                  : ""
               }${formatPercentageWithoutSign(
-                percentage - nationalPercentage,
+                percentage ? percentage - nationalPercentage : undefined,
                 1
               )} pts`}
             </Text>
@@ -341,7 +348,8 @@ export const IndicateursClesSection = ({
     filters.statut.length === 0 ||
     filters.statut.includes(DemandeStatutEnum["demande validée"]);
 
-  if (isLoading) return <Loader />;
+  if (isLoading || !filters.campagne || !filters.rentreeScolaire)
+    return <Loader />;
 
   return (
     <Flex flex="1" direction={"column"} gap={6}>
@@ -436,14 +444,14 @@ export const IndicateursClesSection = ({
             >
               <Text>
                 {formatPercentage(
-                  getScopedData("all", "placesOuvertesQ1Q2") /
+                  getScopedData("all", "placesOuvertesQ1") /
                     getScopedData("all", "placesOuvertes"),
                   1,
                   "-"
                 )}
               </Text>
               <Flex direction={"row"} gap={2}>
-                <Text>places en Q1 / Q2</Text>
+                <Text>places en Q1</Text>
                 <TooltipIcon
                   label={
                     <Flex direction="column" gap={4}>
@@ -495,14 +503,14 @@ export const IndicateursClesSection = ({
             >
               <Text>
                 {formatPercentage(
-                  getScopedData("all", "placesFermeesQ3Q4") /
+                  getScopedData("all", "placesFermeesQ4") /
                     getScopedData("all", "placesFermees"),
                   1,
                   "-"
                 )}
               </Text>
               <Flex direction={"row"} gap={2}>
-                <Text>places en Q3 / Q4</Text>
+                <Text>places en Q4</Text>
                 <TooltipIcon
                   label={
                     <Flex direction="column" gap={4}>
@@ -570,14 +578,14 @@ export const IndicateursClesSection = ({
             >
               <Text>
                 {formatPercentage(
-                  getScopedData("all", "placesColoreesQ3Q4") /
+                  getScopedData("all", "placesColoreesQ4") /
                     getScopedData("all", "placesColorees"),
                   1,
                   "-"
                 )}
               </Text>
               <Flex direction={"row"} gap={2}>
-                <Text>places en Q3 / Q4</Text>
+                <Text>places en Q4</Text>
                 <TooltipIcon
                   label={
                     <Flex direction="column" gap={4}>

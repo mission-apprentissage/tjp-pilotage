@@ -152,7 +152,7 @@ export const CartoSection = ({
       bg="white"
       p={3}
     >
-      {isLoading ? (
+      {isLoading || !filters.campagne || !filters.rentreeScolaire ? (
         <Skeleton opacity="0.3" height="100%" />
       ) : (
         <Box>

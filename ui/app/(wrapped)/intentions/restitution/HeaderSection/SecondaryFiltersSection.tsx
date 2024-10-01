@@ -1,5 +1,6 @@
 import { Box, Button, Flex, FormLabel, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -264,11 +265,26 @@ export const SecondaryFiltersSection = ({
               placeholder="TOUTES"
             >
               {[
-                { value: "Q1", label: "Q1" },
-                { value: "Q2", label: "Q2" },
-                { value: "Q3", label: "Q3" },
-                { value: "Q4", label: "Q4" },
-                { value: "Hors quadrant", label: "Hors quadrant" },
+                {
+                  value: PositionQuadrantEnum.Q1,
+                  label: PositionQuadrantEnum.Q1,
+                },
+                {
+                  value: PositionQuadrantEnum.Q2,
+                  label: PositionQuadrantEnum.Q2,
+                },
+                {
+                  value: PositionQuadrantEnum.Q3,
+                  label: PositionQuadrantEnum.Q3,
+                },
+                {
+                  value: PositionQuadrantEnum.Q4,
+                  label: PositionQuadrantEnum.Q4,
+                },
+                {
+                  value: PositionQuadrantEnum["Hors quadrant"],
+                  label: PositionQuadrantEnum["Hors quadrant"],
+                },
               ].map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}

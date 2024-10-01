@@ -388,7 +388,7 @@ export const AnalyseComparativeSection = ({
                             textOverflow={"ellipsis"}
                             overflow={"hidden"}
                             whiteSpace={"break-spaces"}
-                            noOfLines={1}
+                            noOfLines={2}
                           >
                             {item.libelle}
                           </Text>

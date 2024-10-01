@@ -1,11 +1,7 @@
 "use client";
 
 import { Box, Container, useDisclosure, VStack } from "@chakra-ui/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import qs from "qs";
 import { ScopeEnum } from "shared";
-
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { client } from "../../../../api.client";
 import { useStateParams } from "../../../../utils/useFilters";
@@ -22,19 +18,36 @@ import {
 import { findDefaultRentreeScolaireForCampagne } from "./utils";
 
 export const PilotageNationalClient = () => {
-  const router = useRouter();
-  const queryParams = useSearchParams();
-  const searchParams: {
+  const [searchParams, setSearchParams] = useStateParams<{
+    filters?: FiltersStatsPilotageIntentions;
     displayTypes?: Array<DisplayTypeEnum>;
-    filters?: Partial<FiltersStatsPilotageIntentions>;
     order?: Partial<OrderRepartitionPilotageIntentions>;
-  } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
+  }>({
+    defaultValues: {
+      filters: {
+        scope: ScopeEnum["région"],
+        campagne: undefined,
+        withColoration: "true",
+      },
+      displayTypes: [
+        DisplayTypeEnum.repartition,
+        DisplayTypeEnum.zone_geographique,
+      ],
+    },
+  });
+
+  const filters = searchParams.filters ?? {
+    scope: ScopeEnum["région"],
+    campagne: undefined,
+    withColoration: "true",
+  };
   const order = searchParams.order ?? { order: "asc" };
 
-  const setSearchParams = (params: typeof searchParams) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+  const setFilters = (filters: FiltersStatsPilotageIntentions) => {
+    setSearchParams({
+      ...searchParams,
+      filters,
+    });
   };
 
   const displayRepartition = () =>
@@ -73,14 +86,6 @@ export const PilotageNationalClient = () => {
       ],
     });
 
-  const [filters, setFilters] = useStateParams<FiltersStatsPilotageIntentions>({
-    defaultValues: {
-      scope: ScopeEnum["région"],
-      campagne: undefined,
-      withColoration: "true",
-    },
-  });
-
   const { data: repartitionData, isLoading: isLoadingRepartition } = client
     .ref("[GET]/pilotage-intentions/repartition")
     .useQuery({
@@ -93,10 +98,7 @@ export const PilotageNationalClient = () => {
       {
         query: { ...filters },
       },
-
       {
-        keepPreviousData: true,
-        staleTime: 10000000,
         onSuccess: (data) => {
           if (!filters.campagne) {
             setDefaultFilters(data);
@@ -139,7 +141,7 @@ export const PilotageNationalClient = () => {
             setFilters={setFilters}
             data={data}
             setDefaultFilters={() => setDefaultFilters(data)}
-            isLoading={isLoadingStats}
+            isLoading={isLoadingStats && !data}
           />
           <HeaderSection
             data={data}

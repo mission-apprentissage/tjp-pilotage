@@ -48,7 +48,7 @@ export const getFiltersQuery = async ({
     return eb("dataFormation.cpc", "in", CPC);
   };
 
-  const inFiliere = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+  const inNsf = (eb: ExpressionBuilder<DB, "dataFormation">) => {
     if (!codeNsf) return sql<true>`true`;
     return eb("dataFormation.codeNsf", "in", codeNsf);
   };
@@ -175,13 +175,13 @@ export const getFiltersQuery = async ({
         inStatut(eb),
         inRentreeScolaire(eb),
         inCodeNiveauDiplome(eb),
-        inFiliere(eb),
+        inNsf(eb),
         inCampagne(eb),
       ])
     )
     .execute();
 
-  const libellesNsf = await base
+  const nsfFilters = await base
     .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
     .select(["nsf.libelleNsf as label", "nsf.codeNsf as value"])
     .where("dataFormation.codeNsf", "is not", null)
@@ -196,7 +196,7 @@ export const getFiltersQuery = async ({
     )
     .execute();
 
-  const diplomesFilters = await base
+  const niveauxDiplomesFilters = await base
     .select([
       "niveauDiplome.libelleNiveauDiplome as label",
       "niveauDiplome.codeNiveauDiplome as value",
@@ -207,7 +207,7 @@ export const getFiltersQuery = async ({
         inStatut(eb),
         inRentreeScolaire(eb),
         inCPC(eb),
-        inFiliere(eb),
+        inNsf(eb),
         inCampagne(eb),
       ])
     )
@@ -227,7 +227,7 @@ export const getFiltersQuery = async ({
         .distinct()
         .where("niveauDiplome.codeNiveauDiplome", "is not", null)
         .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)
-        .where((eb) => eb.and([inCPC(eb), inFiliere(eb)]))
+        .where((eb) => eb.and([inCPC(eb), inNsf(eb)]))
         .$castTo<{ label: string; value: string }>()
     )
     .execute();
@@ -253,10 +253,10 @@ export const getFiltersQuery = async ({
     academies: academiesFilters.map(cleanNull),
     departements: departementsFilters.map(cleanNull),
     CPCs: CPCFilters.map(cleanNull),
-    libellesNsf: libellesNsf.map(cleanNull),
-    diplomes: diplomesFilters.map(cleanNull),
-    secteurFilters: secteurFilters.map(cleanNull),
-    statutFilters: [
+    nsfs: nsfFilters.map(cleanNull),
+    niveauxDiplome: niveauxDiplomesFilters.map(cleanNull),
+    secteurs: secteurFilters.map(cleanNull),
+    statuts: [
       { value: DemandeStatutEnum["demande validée"], label: "Demande validée" },
       {
         value: DemandeStatutEnum["projet de demande"],

@@ -10,6 +10,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { formatNumber } from "@/utils/formatUtils";
@@ -68,9 +69,9 @@ export const TableQuadrant = ({
     )
       return "blueecume.400_hover !important";
     switch (formation.positionQuadrant) {
-      case "Q1":
+      case PositionQuadrantEnum.Q1:
         return "green.submitted";
-      case "Q4":
+      case PositionQuadrantEnum.Q4:
         return "redmarianne.925";
       default:
         return "inherit";

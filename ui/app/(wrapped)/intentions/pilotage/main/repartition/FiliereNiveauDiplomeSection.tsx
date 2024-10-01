@@ -44,17 +44,31 @@ export const FiliereNiveauDiplomeSection = ({
           <Text fontWeight={500} fontSize={16}>
             10 DOMAINES LES PLUS TRANSFORMÉS
           </Text>
+          <TooltipIcon
+            zIndex={1}
+            my={"auto"}
+            label={
+              <Flex direction={"column"} gap={3}>
+                <Text>
+                  en nombre de places transformées (places ouvertes + places
+                  fermées + places existantes colorées)
+                </Text>
+              </Flex>
+            }
+          />
         </Flex>
         <Flex direction={"row"} gap={2} color={"bluefrance.113"}>
           <Text fontWeight={500} fontSize={16}>
             TRANSFORMATIONS PAR DIPLÔME
           </Text>
           <TooltipIcon
+            zIndex={1}
             my={"auto"}
             label={
               <Flex direction={"column"} gap={3}>
                 <Text>
-                  Certains diplômes n'ont pas de taux de transformation :
+                  Pour certains diplômes le taux de transformation n'apparaît
+                  pas :
                 </Text>
                 <List>
                   <ListItem>
