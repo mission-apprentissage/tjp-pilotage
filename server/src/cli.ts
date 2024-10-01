@@ -8,7 +8,10 @@ import { z } from "zod";
 import { basepath } from "./basepath";
 import { migrateDownDB, migrateToLatest } from "./migrations/migrate";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
-import { LineTypes } from "./modules/import/repositories/rawData.repository";
+import {
+  LineTypes,
+  Schemas,
+} from "./modules/import/repositories/rawData.repository";
 import { importConstatRentree } from "./modules/import/usecases/importConstatRentree/importConstatRentree.usecase";
 import { importDataEtablissements } from "./modules/import/usecases/importDataEtablissements/importDataEtablissements.usecase";
 import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
@@ -133,58 +136,135 @@ cli
   .command("importFiles")
   .argument("[filename]")
   .action(async (filename: string) => {
-    const getImport = (type: string, year?: string) => {
+    const getImport = ({
+      type,
+      year,
+      schema,
+    }: {
+      type: string;
+      year?: string;
+      schema: Zod.Schema<unknown>;
+    }) => {
       const filePath = year
         ? `${basepath}/files/${year}/${type}_${year}.csv`
         : `${basepath}/files/${type}.csv`;
       return importRawFile({
         type: year ? `${type}_${year}` : type,
         path: filePath,
+        schema,
       });
     };
 
-    const getImports = (type: keyof LineTypes, years?: string[]) => {
+    const getImports = ({
+      type,
+      years,
+      schema,
+    }: {
+      type: keyof LineTypes;
+      years?: string[];
+      schema: Zod.Schema<unknown>;
+    }) => {
       if (!years) {
-        return { [type]: () => getImport(type) };
+        return { [type]: () => getImport({ type, schema }) };
       }
       return years.reduce(
         (acc, year) => ({
           ...acc,
-          [`${type}_${year}`]: () => getImport(type, year),
+          [`${type}_${year}`]: () => getImport({ type, year, schema }),
         }),
         {} as Record<string, () => Promise<void>>
       );
     };
 
     const actions = {
-      ...getImports("regroupements"),
-      ...getImports("attractivite_capacite", ["2021", "2022", "2023"]),
-      ...getImports("BTS_attractivite_capacite", ["2022", "2023"]),
-      ...getImports("constat", ["2020", "2021", "2022", "2023"]),
-      ...getImports("nMef"),
-      ...getImports("nNiveauFormationDiplome_"),
-      ...getImports("nDispositifFormation_"),
-      ...getImports("departements_academies_regions"),
-      ...getImports("familleMetiers"),
-      ...getImports("optionsBTS"),
-      ...getImports("diplomesProfessionnels"),
-      ...getImports("offres_apprentissage"),
-      ...getImports("nFormationDiplome_"),
-      ...getImports("vFormationDiplome_"),
-      ...getImports("lyceesACCE"),
-      ...getImports("chomage_regional_INSEE"),
-      ...getImports("chomage_departemental_INSEE"),
-      ...getImports("onisep_structures_denseignement_secondaire"),
-      ...getImports("onisep_structures_denseignement_superieur"),
-      ...getImports("n_categorie_specialite_"),
-      ...getImports("n_domaine_specialite_"),
-      ...getImports("n_groupe_specialite_"),
-      ...getImports("domaine_professionnel"),
-      ...getImports("rome"),
-      ...getImports("metier"),
-      ...getImports("certif_info"),
-      ...getImports("discipline"),
-      ...getImports("tension_departement_rome"),
+      ...getImports({ type: "regroupements", schema: Schemas.regroupements }),
+      ...getImports({
+        type: "attractivite_capacite",
+        years: ["2021", "2022", "2023"],
+        schema: Schemas.attractivite_capacite,
+      }),
+      ...getImports({
+        type: "BTS_attractivite_capacite",
+        years: ["2022", "2023"],
+        schema: Schemas.BTS_attractivite_capacite,
+      }),
+      ...getImports({
+        type: "constat",
+        years: ["2020", "2021", "2022", "2023"],
+        schema: Schemas.constat,
+      }),
+      ...getImports({ type: "nMef", schema: Schemas.nMef }),
+      ...getImports({
+        type: "nNiveauFormationDiplome_",
+        schema: Schemas.nNiveauFormationDiplome_,
+      }),
+      ...getImports({
+        type: "nDispositifFormation_",
+        schema: Schemas.nDispositifFormation_,
+      }),
+      ...getImports({
+        type: "departements_academies_regions",
+        schema: Schemas.departements_academies_regions,
+      }),
+      ...getImports({ type: "familleMetiers", schema: Schemas.familleMetiers }),
+      ...getImports({ type: "optionsBTS", schema: Schemas.optionsBTS }),
+      ...getImports({
+        type: "diplomesProfessionnels",
+        schema: Schemas.diplomesProfessionnels,
+      }),
+      ...getImports({
+        type: "offres_apprentissage",
+        schema: Schemas.offresApprentissage,
+      }),
+      ...getImports({
+        type: "nFormationDiplome_",
+        schema: Schemas.nFormationDiplome,
+      }),
+      ...getImports({
+        type: "vFormationDiplome_",
+        schema: Schemas.vFormationDiplome,
+      }),
+      ...getImports({ type: "lyceesACCE", schema: Schemas.lyceesACCE }),
+      ...getImports({
+        type: "chomage_regional_INSEE",
+        schema: Schemas.chomage_regional_INSEE,
+      }),
+      ...getImports({
+        type: "chomage_departemental_INSEE",
+        schema: Schemas.chomage_departemental_INSEE,
+      }),
+      ...getImports({
+        type: "onisep_structures_denseignement_secondaire",
+        schema: Schemas.onisep_structures_denseignement_secondaire,
+      }),
+      ...getImports({
+        type: "onisep_structures_denseignement_superieur",
+        schema: Schemas.onisep_structures_denseignement_superieur,
+      }),
+      ...getImports({
+        type: "n_categorie_specialite_",
+        schema: Schemas.n_categorie_specialite_,
+      }),
+      ...getImports({
+        type: "n_domaine_specialite_",
+        schema: Schemas.n_domaine_specialite_,
+      }),
+      ...getImports({
+        type: "n_groupe_specialite_",
+        schema: Schemas.n_groupe_specialite_,
+      }),
+      ...getImports({
+        type: "domaine_professionnel",
+        schema: Schemas.domaine_professionnel,
+      }),
+      ...getImports({ type: "rome", schema: Schemas.rome }),
+      ...getImports({ type: "metier", schema: Schemas.metier }),
+      ...getImports({ type: "certif_info", schema: Schemas.certif_info }),
+      ...getImports({ type: "discipline", schema: Schemas.discipline }),
+      ...getImports({
+        type: "tension_departement_rome",
+        schema: Schemas.tension_departement_rome,
+      }),
     };
 
     if (filename) {

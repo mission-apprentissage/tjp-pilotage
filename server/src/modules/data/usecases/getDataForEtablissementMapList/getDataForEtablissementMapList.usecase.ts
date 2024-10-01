@@ -1,5 +1,5 @@
 import Boom from "@hapi/boom";
-import z from "zod";
+import { z } from "zod";
 
 import * as dependencies from "./dependencies";
 import { getCountEtablissementsProches } from "./dependencies/getCountEtablissementsProches";

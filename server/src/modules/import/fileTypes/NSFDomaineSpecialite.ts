@@ -1,11 +1,15 @@
-export type NSF_Domaine_Specialite = {
-  DOMAINE_SPECIALITE: string;
-  CATEGORIE_SPECIALITE: string;
-  LIBELLE_COURT: string;
-  LIBELLE_LONG: string;
-  LIBELLE_STAT_33: string;
-  DATE_OUVERTURE: string;
-  DATE_FERMETURE: string;
-  DATE_INTERVENTION: string;
-  N_COMMENTAIRE: string;
-};
+import { z } from "zod";
+
+export const NSFDomaineSpecialiteSchema = z.object({
+  DOMAINE_SPECIALITE: z.string(),
+  CATEGORIE_SPECIALITE: z.string(),
+  LIBELLE_COURT: z.string(),
+  LIBELLE_LONG: z.string(),
+  LIBELLE_STAT_33: z.string(),
+  DATE_OUVERTURE: z.string(),
+  DATE_FERMETURE: z.string(),
+  DATE_INTERVENTION: z.string(),
+  N_COMMENTAIRE: z.string(),
+});
+
+export type NSF_Domaine_Specialite = z.infer<typeof NSFDomaineSpecialiteSchema>;
