@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+export const TauxIJSchema = z.object({
+  annee: z.string(),
+  libelleAnnee: z.string(),
+  filtered: z.number().optional(),
+  nationale: z.number().optional(),
+});
+
+export const TauxIJParAnneeSchema = z.record(z.string(), TauxIJSchema);
+
 const OptionSchema = z.object({
   label: z.coerce.string(),
   value: z.coerce.string(),
@@ -51,6 +60,8 @@ export const getDataForPanoramaRegionSchema = {
         diplomes: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),
       }),
+      tauxInsertion: TauxIJParAnneeSchema,
+      tauxPoursuite: TauxIJParAnneeSchema,
     }),
   },
 };
