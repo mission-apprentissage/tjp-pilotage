@@ -37,7 +37,8 @@ export const [importDataEtablissements] = inject(
             adresse: lyceeACCE.adresse_uai,
             commune: lyceeACCE.commune_libe,
             codePostal:
-              lyceeACCE.code_postal_uai?.length <= 5
+              lyceeACCE.code_postal_uai?.length &&
+              lyceeACCE.code_postal_uai.length <= 5
                 ? lyceeACCE.code_postal_uai
                 : undefined,
             secteur: lyceeACCE.secteur_public_prive,

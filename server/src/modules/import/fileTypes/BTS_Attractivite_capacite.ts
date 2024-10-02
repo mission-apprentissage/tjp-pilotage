@@ -6,7 +6,7 @@ export const BTSAttractiviteCapaciteSchema = z.object({
   MEFSTAT11: z.string(),
   NB_VOEUX_CONFIRMES: z.string(),
   STATUT: z.string(),
-  CAPACITEPSUP: z.string(),
+  CAPACITEPSUP: z.string().optional(),
   CFD: z.string(),
   "CFD rectifié": z.string(),
   Rectif: z.string(),
