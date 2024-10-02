@@ -1,4 +1,5 @@
 import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
+import { unEscapeString } from "shared/utils/escapeString";
 import { z } from "zod";
 
 export const submitChangementStatutSchema = {
@@ -7,7 +8,10 @@ export const submitChangementStatutSchema = {
       intentionNumero: z.string(),
       statutPrecedent: DemandeStatutZodType.exclude(["supprimée"]).optional(),
       statut: DemandeStatutZodType.exclude(["supprimée"]),
-      commentaire: z.string().optional(),
+      commentaire: z
+        .string()
+        .optional()
+        .transform((commentaire) => unEscapeString(commentaire)),
     }),
   }),
   response: {
