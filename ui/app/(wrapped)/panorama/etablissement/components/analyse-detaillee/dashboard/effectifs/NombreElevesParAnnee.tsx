@@ -70,7 +70,7 @@ export const NombreElevesParAnnee = ({
       tooltip={
         <GlossaireShortcut
           tooltip="Nombre d'élèves"
-          glossaireEntryKey="effectifs"
+          glossaireEntryKey="nombre-deleves"
         />
       }
       badge={

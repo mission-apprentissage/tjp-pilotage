@@ -1,5 +1,5 @@
 import { Args, ZodTypeProvider } from "@http-wizard/core";
-import { Router } from "server";
+import { Router } from "server/src/routes";
 
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
 
