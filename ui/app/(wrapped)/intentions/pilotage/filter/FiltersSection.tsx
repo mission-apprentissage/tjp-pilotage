@@ -1,13 +1,11 @@
 import {
   Box,
   Button,
-  chakra,
   Flex,
   FormLabel,
   Grid,
   GridItem,
   Select,
-  Skeleton,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -25,25 +23,6 @@ import {
   FiltersStatsPilotageIntentions,
   StatsPilotageIntentions,
 } from "../types";
-
-const Loader = chakra(() => {
-  return (
-    <Grid
-      gap={4}
-      p={4}
-      templateColumns="repeat(6, minmax(0, 1fr))"
-      w={"container.xl"}
-      h={178.5}
-      zIndex={100}
-    >
-      {Array.from({ length: 12 }).map((_, i) => (
-        <GridItem key={i} mt={"auto"}>
-          <Skeleton opacity={0.3} h={14} w={"100%"} />
-        </GridItem>
-      ))}
-    </Grid>
-  );
-});
 
 const findDefaultRentreeScolaireForCampagne = (
   annee: string,
@@ -65,13 +44,11 @@ export const FiltersSection = ({
   setFilters,
   setDefaultFilters,
   data,
-  isLoading,
 }: {
   filters: FiltersStatsPilotageIntentions;
   setFilters: (filters: FiltersStatsPilotageIntentions) => void;
   setDefaultFilters: () => void;
   data: StatsPilotageIntentions | undefined;
-  isLoading?: boolean;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const onUpdateFilter = <T,>({
@@ -178,254 +155,248 @@ export const FiltersSection = ({
       boxShadow={`0px 1px 0px 0px ${themeDefinition.colors.grey[850]}`}
       justify={"center"}
     >
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <Grid
-          gap={4}
-          mt={4}
-          paddingTop={4}
-          paddingBottom={3}
-          templateColumns="repeat(6, minmax(0, 1fr))"
-          w={"container.xl"}
-        >
-          <GridItem>
-            <FormLabel>Campagne</FormLabel>
-            <Select
-              width={"100%"}
-              size="md"
-              variant="newInput"
-              value={filters.campagne ?? ""}
-              data-has-value={!!filters.campagne}
-              onChange={(e) => {
-                onUpdateFilter({ key: "campagne", selected: e.target.value });
-              }}
-              placeholder="Choisir une campagne"
-            >
-              {data?.filters.campagnes.map((campagne) => (
-                <option key={campagne.value} value={campagne.value}>
-                  {_.capitalize(campagne.label)}
+      <Grid
+        gap={4}
+        mt={4}
+        paddingTop={4}
+        paddingBottom={3}
+        templateColumns="repeat(6, minmax(0, 1fr))"
+        w={"container.xl"}
+      >
+        <GridItem>
+          <FormLabel>Campagne</FormLabel>
+          <Select
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            value={filters.campagne ?? ""}
+            data-has-value={!!filters.campagne}
+            onChange={(e) => {
+              onUpdateFilter({ key: "campagne", selected: e.target.value });
+            }}
+            placeholder="Choisir une campagne"
+          >
+            {data?.filters.campagnes.map((campagne) => (
+              <option key={campagne.value} value={campagne.value}>
+                {_.capitalize(campagne.label)}
+              </option>
+            ))}
+          </Select>
+        </GridItem>
+        <GridItem>
+          <FormLabel>Rentrée scolaire</FormLabel>
+          <Multiselect
+            size="md"
+            width={"100%"}
+            variant="newInput"
+            onChange={(selected) =>
+              onUpdateFilter({ key: "rentreeScolaire", selected })
+            }
+            options={data?.filters.rentreesScolaires}
+            value={filters.rentreeScolaire ?? []}
+            gutter={0}
+            menuZIndex={"sticky"}
+          >
+            Rentrée scolaire
+          </Multiselect>
+        </GridItem>
+        <GridItem>
+          <FormLabel>Granularité</FormLabel>
+          <Select
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            value={filters.scope ?? ""}
+            onChange={(e) => {
+              onUpdateFilter({ key: "scope", selected: e.target.value });
+            }}
+          >
+            {Object.keys(ScopeEnum)
+              .filter((s) => s !== ScopeEnum.national)
+              .map((scope) => (
+                <option key={scope} value={scope}>
+                  {_.capitalize(scope)}
                 </option>
               ))}
-            </Select>
-          </GridItem>
-          <GridItem>
-            <FormLabel>Rentrée scolaire</FormLabel>
-            <Multiselect
-              size="md"
-              width={"100%"}
-              variant="newInput"
-              onChange={(selected) =>
-                onUpdateFilter({ key: "rentreeScolaire", selected })
+          </Select>
+        </GridItem>
+        <GridItem>
+          <FormLabel>Région</FormLabel>
+          <Select
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            value={filters.codeRegion ?? ""}
+            onChange={(e) => {
+              onUpdateFilter({ key: "codeRegion", selected: e.target.value });
+            }}
+            placeholder="Tous"
+          >
+            {data?.filters.regions.map((region) => (
+              <option key={region.value} value={region.value}>
+                {region.label}
+              </option>
+            ))}
+          </Select>
+        </GridItem>
+        <GridItem>
+          <FormLabel>Académie</FormLabel>
+          <Select
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            value={filters.codeAcademie ?? ""}
+            onChange={(e) => {
+              onUpdateFilter({
+                key: "codeAcademie",
+                selected: e.target.value,
+              });
+            }}
+            placeholder="Tous"
+          >
+            {data?.filters.academies.map((academie) => (
+              <option key={academie.value} value={academie.value}>
+                {academie.label}
+              </option>
+            ))}
+          </Select>
+        </GridItem>
+        <GridItem>
+          <FormLabel>Département</FormLabel>
+          <Select
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            value={filters.codeDepartement ?? ""}
+            onChange={(e) => {
+              onUpdateFilter({
+                key: "codeDepartement",
+                selected: e.target.value,
+              });
+            }}
+            placeholder="Tous"
+          >
+            {data?.filters.departements.map((departement) => (
+              <option key={departement.value} value={departement.value}>
+                {departement.label}
+              </option>
+            ))}
+          </Select>
+        </GridItem>
+        <GridItem>
+          <FormLabel>Diplôme</FormLabel>
+          <Multiselect
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            onChange={(selected) =>
+              onUpdateFilter({ key: "codeNiveauDiplome", selected })
+            }
+            options={data?.filters.niveauxDiplome}
+            value={filters.codeNiveauDiplome ?? []}
+            gutter={0}
+            menuZIndex={"sticky"}
+          >
+            Tous
+          </Multiselect>
+        </GridItem>
+        <GridItem>
+          <FormLabel>Domaine (NSF)</FormLabel>
+          <Multiselect
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            onChange={(selected) =>
+              onUpdateFilter({ key: "codeNsf", selected })
+            }
+            options={data?.filters.nsfs}
+            value={filters.codeNsf ?? []}
+            gutter={0}
+            menuZIndex={"sticky"}
+          >
+            Tous
+          </Multiselect>
+        </GridItem>
+        <GridItem>
+          <FormLabel>Statut de la demande</FormLabel>
+          <Multiselect
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            onChange={(selected) => onUpdateFilter({ key: "statut", selected })}
+            options={data?.filters.statuts}
+            value={filters.statut ?? []}
+            gutter={0}
+            menuZIndex={"sticky"}
+          >
+            Tous
+          </Multiselect>
+        </GridItem>
+        <GridItem>
+          <FormLabel>
+            Inclure colorations
+            <TooltipIcon
+              ms={2}
+              label={
+                <Box>
+                  <Text>
+                    Dans Orion, à partir de la campagne 2024, on désigne comme
+                    “Colorations” le fait de colorer des places existantes sans
+                    augmentation de capacité.
+                  </Text>
+                  <Text mt={4}>Cliquez pour plus d'infos.</Text>
+                </Box>
               }
-              options={data?.filters.rentreesScolaires}
-              value={filters.rentreeScolaire ?? []}
-              gutter={0}
-              menuZIndex={"sticky"}
+              h={"24px"}
+              onClick={() => openGlossaire("coloration")}
+            />
+          </FormLabel>
+          <Select
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            value={filters.withColoration}
+            onChange={(e) => {
+              onUpdateFilter({
+                key: "withColoration",
+                selected: e.target.value,
+              });
+            }}
+          >
+            <option value={"true"}>Oui</option>
+            <option value={"false"}>Non</option>
+          </Select>
+        </GridItem>
+        <GridItem>
+          <FormLabel>Public / Privé</FormLabel>
+          <Multiselect
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            onChange={(selected) =>
+              onUpdateFilter({ key: "secteur", selected })
+            }
+            options={data?.filters.secteurs}
+            value={filters.secteur ?? []}
+            gutter={0}
+            menuZIndex={"sticky"}
+          >
+            Tous
+          </Multiselect>
+        </GridItem>
+        <GridItem>
+          <VStack width="100%" height="100%" justifyContent="end">
+            <Button
+              leftIcon={<Icon icon="ri:refresh-line" />}
+              variant="ghost"
+              color="bluefrance.113"
+              onClick={() => setDefaultFilters()}
             >
-              Rentrée scolaire
-            </Multiselect>
-          </GridItem>
-          <GridItem>
-            <FormLabel>Granularité</FormLabel>
-            <Select
-              width={"100%"}
-              size="md"
-              variant="newInput"
-              value={filters.scope ?? ""}
-              onChange={(e) => {
-                onUpdateFilter({ key: "scope", selected: e.target.value });
-              }}
-            >
-              {Object.keys(ScopeEnum)
-                .filter((s) => s !== ScopeEnum.national)
-                .map((scope) => (
-                  <option key={scope} value={scope}>
-                    {_.capitalize(scope)}
-                  </option>
-                ))}
-            </Select>
-          </GridItem>
-          <GridItem>
-            <FormLabel>Région</FormLabel>
-            <Select
-              width={"100%"}
-              size="md"
-              variant="newInput"
-              value={filters.codeRegion ?? ""}
-              onChange={(e) => {
-                onUpdateFilter({ key: "codeRegion", selected: e.target.value });
-              }}
-              placeholder="Tous"
-            >
-              {data?.filters.regions.map((region) => (
-                <option key={region.value} value={region.value}>
-                  {region.label}
-                </option>
-              ))}
-            </Select>
-          </GridItem>
-          <GridItem>
-            <FormLabel>Académie</FormLabel>
-            <Select
-              width={"100%"}
-              size="md"
-              variant="newInput"
-              value={filters.codeAcademie ?? ""}
-              onChange={(e) => {
-                onUpdateFilter({
-                  key: "codeAcademie",
-                  selected: e.target.value,
-                });
-              }}
-              placeholder="Tous"
-            >
-              {data?.filters.academies.map((academie) => (
-                <option key={academie.value} value={academie.value}>
-                  {academie.label}
-                </option>
-              ))}
-            </Select>
-          </GridItem>
-          <GridItem>
-            <FormLabel>Département</FormLabel>
-            <Select
-              width={"100%"}
-              size="md"
-              variant="newInput"
-              value={filters.codeDepartement ?? ""}
-              onChange={(e) => {
-                onUpdateFilter({
-                  key: "codeDepartement",
-                  selected: e.target.value,
-                });
-              }}
-              placeholder="Tous"
-            >
-              {data?.filters.departements.map((departement) => (
-                <option key={departement.value} value={departement.value}>
-                  {departement.label}
-                </option>
-              ))}
-            </Select>
-          </GridItem>
-          <GridItem>
-            <FormLabel>Diplôme</FormLabel>
-            <Multiselect
-              width={"100%"}
-              size="md"
-              variant="newInput"
-              onChange={(selected) =>
-                onUpdateFilter({ key: "codeNiveauDiplome", selected })
-              }
-              options={data?.filters.niveauxDiplome}
-              value={filters.codeNiveauDiplome ?? []}
-              gutter={0}
-              menuZIndex={"sticky"}
-            >
-              Tous
-            </Multiselect>
-          </GridItem>
-          <GridItem>
-            <FormLabel>Domaine (NSF)</FormLabel>
-            <Multiselect
-              width={"100%"}
-              size="md"
-              variant="newInput"
-              onChange={(selected) =>
-                onUpdateFilter({ key: "codeNsf", selected })
-              }
-              options={data?.filters.nsfs}
-              value={filters.codeNsf ?? []}
-              gutter={0}
-              menuZIndex={"sticky"}
-            >
-              Tous
-            </Multiselect>
-          </GridItem>
-          <GridItem>
-            <FormLabel>Statut de la demande</FormLabel>
-            <Multiselect
-              width={"100%"}
-              size="md"
-              variant="newInput"
-              onChange={(selected) =>
-                onUpdateFilter({ key: "statut", selected })
-              }
-              options={data?.filters.statuts}
-              value={filters.statut ?? []}
-              gutter={0}
-              menuZIndex={"sticky"}
-            >
-              Tous
-            </Multiselect>
-          </GridItem>
-          <GridItem>
-            <FormLabel>
-              Inclure colorations
-              <TooltipIcon
-                ms={2}
-                label={
-                  <Box>
-                    <Text>
-                      Dans Orion, à partir de la campagne 2024, on désigne comme
-                      “Colorations” le fait de colorer des places existantes
-                      sans augmentation de capacité.
-                    </Text>
-                    <Text mt={4}>Cliquez pour plus d'infos.</Text>
-                  </Box>
-                }
-                h={"24px"}
-                onClick={() => openGlossaire("coloration")}
-              />
-            </FormLabel>
-            <Select
-              width={"100%"}
-              size="md"
-              variant="newInput"
-              value={filters.withColoration}
-              onChange={(e) => {
-                onUpdateFilter({
-                  key: "withColoration",
-                  selected: e.target.value,
-                });
-              }}
-            >
-              <option value={"true"}>Oui</option>
-              <option value={"false"}>Non</option>
-            </Select>
-          </GridItem>
-          <GridItem>
-            <FormLabel>Public / Privé</FormLabel>
-            <Multiselect
-              width={"100%"}
-              size="md"
-              variant="newInput"
-              onChange={(selected) =>
-                onUpdateFilter({ key: "secteur", selected })
-              }
-              options={data?.filters.secteurs}
-              value={filters.secteur ?? []}
-              gutter={0}
-              menuZIndex={"sticky"}
-            >
-              Tous
-            </Multiselect>
-          </GridItem>
-          <GridItem>
-            <VStack width="100%" height="100%" justifyContent="end">
-              <Button
-                leftIcon={<Icon icon="ri:refresh-line" />}
-                variant="ghost"
-                color="bluefrance.113"
-                onClick={() => setDefaultFilters()}
-              >
-                Réinitialiser les filtres
-              </Button>
-            </VStack>
-          </GridItem>
-        </Grid>
-      )}
+              Réinitialiser les filtres
+            </Button>
+          </VStack>
+        </GridItem>
+      </Grid>
     </Flex>
   );
 };

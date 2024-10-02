@@ -31,6 +31,12 @@ export type RepartitionPilotageIntentionsNiveauxDiplome =
 export type RepartitionPilotageIntentionsPositionQuadrant =
   (typeof client.infer)["[GET]/pilotage-intentions/repartition"]["positionsQuadrant"];
 
+export type RepartitionPilotageIntentionsLine =
+  | RepartitionPilotageIntentionsDomaines[string]
+  | RepartitionPilotageIntentionsZonesGeographiques[string]
+  | RepartitionPilotageIntentionsNiveauxDiplome[string]
+  | RepartitionPilotageIntentionsPositionQuadrant[string];
+
 export type StatsPilotageIntentions =
   (typeof client.infer)["[GET]/pilotage-intentions/stats"];
 

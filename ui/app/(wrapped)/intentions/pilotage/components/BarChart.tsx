@@ -15,8 +15,6 @@ export const BarChart = ({
 }: {
   positionsQuadrant?: RepartitionPilotageIntentionsPositionQuadrant;
 }) => {
-  if (!positionsQuadrant) return <></>;
-
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
   const bf113 = useToken("colors", "bluefrance.113");
@@ -75,7 +73,7 @@ export const BarChart = ({
               Ratio de fermetures :
               <span style="font-weight: 700;">
                 ${formatPercentage(
-                  positionsQuadrant[params[0]?.name as PositionQuadrantType]
+                  positionsQuadrant?.[params[0]?.name as PositionQuadrantType]
                     .ratioFermeture,
                   1,
                   "-"
@@ -113,10 +111,9 @@ export const BarChart = ({
               <div style="display: inline-block; margin-top: 15px;">
                 <span>
                   Pl. transformées :
-                  <span style="font-weight: 700;"> ${
-                    positionsQuadrant[params[0]?.name as PositionQuadrantType]
-                      .placesTransformees
-                  }</span>
+                  <span style="font-weight: 700;"> ${positionsQuadrant?.[
+                    params[0]?.name as PositionQuadrantType
+                  ].placesTransformees}</span>
                 </span>
               </div>
             </div>
@@ -197,11 +194,9 @@ export const BarChart = ({
         axisLabel: {
           show: true,
           position: "top",
-          textStyle: {
-            color: grey425,
-            fontSize: 14,
-            fontFamily: "Marianne",
-          },
+          color: grey425,
+          fontSize: 14,
+          fontFamily: "Marianne",
         },
         axisTick: {
           show: false,
@@ -219,7 +214,7 @@ export const BarChart = ({
         {
           data: positionsQuadrantOptions.map(
             (PositionQuadrantType) =>
-              positionsQuadrant[PositionQuadrantType]?.placesFermees ?? 0
+              positionsQuadrant?.[PositionQuadrantType]?.placesFermees ?? 0
           ),
           stack: "placesTransformées",
           color: bf113,
@@ -229,7 +224,7 @@ export const BarChart = ({
         {
           data: positionsQuadrantOptions.map(
             (PositionQuadrantType) =>
-              positionsQuadrant[PositionQuadrantType]?.placesOuvertes
+              positionsQuadrant?.[PositionQuadrantType]?.placesOuvertes
           ),
           stack: "placesTransformées",
           color: bf850_active,
@@ -239,7 +234,7 @@ export const BarChart = ({
         {
           data: positionsQuadrantOptions.map(
             (PositionQuadrantType) =>
-              positionsQuadrant[PositionQuadrantType]?.placesColorees
+              positionsQuadrant?.[PositionQuadrantType]?.placesColorees
           ),
           stack: "placesTransformées",
           color: bf850,
@@ -260,17 +255,17 @@ export const BarChart = ({
     chartRef.current.setOption(option, true);
   }, [positionsQuadrant]);
 
+  if (!positionsQuadrant) return <></>;
+
   return (
-    <>
-      <Box width={"100%"}>
-        <Box>
-          <AspectRatio ratio={4}>
-            <Box position="relative" overflow={"visible !important"}>
-              <Box ref={containerRef} h={300} w={"100%"}></Box>
-            </Box>
-          </AspectRatio>
-        </Box>
+    <Box width={"100%"}>
+      <Box>
+        <AspectRatio ratio={4}>
+          <Box position="relative" overflow={"visible !important"}>
+            <Box ref={containerRef} h={300} w={"100%"}></Box>
+          </Box>
+        </AspectRatio>
       </Box>
-    </>
+    </Box>
   );
 };

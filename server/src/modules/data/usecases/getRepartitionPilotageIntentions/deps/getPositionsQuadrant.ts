@@ -5,7 +5,7 @@ import {
 import { getDenominateurQuery } from "./getDenominateurQuery";
 import { getNumerateurQuery } from "./getNumerateurQuery";
 
-export const getPositionsQuadrantQuery = async ({
+export const getPositionsQuadrant = async ({
   filters,
 }: {
   filters: Filters;

@@ -251,15 +251,19 @@ const getTauxTransformationData = async (filters: {
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("campagne", "campagne.id", "demande.campagneId")
-    .select((es) => [
-      es.fn
+    .select((eb) => [
+      eb.fn
         .coalesce(
-          es.fn.sum<number>(countPlacesTransformeesParCampagne(es)),
+          eb.fn.sum<number>(countPlacesTransformeesParCampagne(eb)),
           sql`0`
         )
         .as("transformes"),
-      genericOnConstatRentree({ ...filters })()
-        .select((eb) => sql<number>`SUM(${eb.ref("effectif")})`.as("effectif"))
+      genericOnConstatRentree({ ...filters })
+        .select((eb) =>
+          eb.fn
+            .coalesce(eb.fn.sum<number>("effectif"), eb.val(0))
+            .as("effectif")
+        )
         .as("effectif"),
     ])
     .where(isDemandeNotDeletedOrRefused)

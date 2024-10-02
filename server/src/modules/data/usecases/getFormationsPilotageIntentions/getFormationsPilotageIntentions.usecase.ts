@@ -1,17 +1,30 @@
+import { MILLESIMES_IJ } from "shared";
+import { z } from "zod";
+
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import { getStatsSortieQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import {
-  dependencies,
-  Filters,
-  getCodeRegionFromAcademie,
-  getCodeRegionFromDepartement,
-} from "./dependencies";
+  getCodeRegionFromAcademieQuery,
+  getCodeRegionFromDepartementQuery,
+  getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery,
+  getFormationsPilotageIntentionsQuery,
+  getRegionStatsQuery,
+} from "./deps";
+import { getFormationsPilotageIntentionsSchema } from "./getFormationsPilotageIntentions.schema";
+
+export interface Filters
+  extends z.infer<typeof getFormationsPilotageIntentionsSchema.querystring> {
+  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+}
 
 const getQuadrantPilotageIntentionsFactory =
   (
     deps = {
-      getFormationsPilotageIntentionsQuery:
-        dependencies.getFormationsPilotageIntentionsQuery,
+      getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery,
+      getRegionStatsQuery,
+      getFormationsPilotageIntentionsQuery,
+      getCodeRegionFromDepartementQuery,
+      getCodeRegionFromAcademieQuery,
       getStatsSortieQuery,
       getCurrentCampagneQuery,
     }
@@ -23,7 +36,7 @@ const getQuadrantPilotageIntentionsFactory =
 
     if (!codeRegion && activeFilters.codeDepartement) {
       const { codeRegion: departementCodeRegion } =
-        await getCodeRegionFromDepartement(activeFilters.codeDepartement);
+        await getCodeRegionFromDepartementQuery(activeFilters.codeDepartement);
       if (departementCodeRegion) {
         codeRegion = departementCodeRegion;
       }
@@ -31,7 +44,7 @@ const getQuadrantPilotageIntentionsFactory =
 
     if (!codeRegion && activeFilters.codeAcademie) {
       const { codeRegion: academieCodeRegion } =
-        await getCodeRegionFromAcademie(activeFilters.codeAcademie);
+        await getCodeRegionFromAcademieQuery(activeFilters.codeAcademie);
       if (academieCodeRegion) {
         codeRegion = academieCodeRegion;
       }

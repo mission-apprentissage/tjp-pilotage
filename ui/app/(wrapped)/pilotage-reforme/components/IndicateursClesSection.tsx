@@ -19,7 +19,7 @@ import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
 import { formatNumber } from "@/utils/formatUtils";
 
-import { DefinitionTauxTransfoModal } from "../../components/TauxTransformationCard";
+import { DefinitionTauxTransfoModal } from "../../components/DefinitionTauxTransfoModal";
 import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import { IndicateurType, PilotageReformeStats } from "../types";
 

@@ -7,7 +7,7 @@ import {
 import { getDenominateurQuery } from "./getDenominateurQuery";
 import { getNumerateurQuery } from "./getNumerateurQuery";
 
-export const getZonesGeographiquesQuery = async ({
+export const getZonesGeographiques = async ({
   filters,
 }: {
   filters: Filters;

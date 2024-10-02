@@ -90,17 +90,15 @@ export const MainSection = ({
               displayDomaines={displayDomaines}
             />
           ) : tabsDisplayType === DisplayTypeEnum.quadrant ? (
-            <>
-              <QuadrantSection
-                parentFilters={filters}
-                scopeFilters={quadrantData?.filters}
-                scope={{
-                  type: filters.scope,
-                  value: useScopeCode(filters).code,
-                }}
-                repartitionData={repartitionData}
-              />
-            </>
+            <QuadrantSection
+              parentFilters={filters}
+              scopeFilters={quadrantData?.filters}
+              scope={{
+                type: filters.scope,
+                value: useScopeCode(filters).code,
+              }}
+              repartitionData={repartitionData}
+            />
           ) : null}
         </Flex>
       )}

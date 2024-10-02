@@ -5,7 +5,7 @@ import { ScopeEnum } from "shared";
 
 import { client } from "../../../../api.client";
 import { useStateParams } from "../../../../utils/useFilters";
-import { DefinitionTauxTransfoModal } from "../../components/TauxTransformationCard";
+import { DefinitionTauxTransfoModal } from "../../components/DefinitionTauxTransfoModal";
 import { FiltersSection } from "./filter/FiltersSection";
 import { HeaderSection } from "./header/HeaderSection";
 import { DisplayTypeEnum } from "./main/displayTypeEnum";
@@ -141,7 +141,6 @@ export const PilotageNationalClient = () => {
             setFilters={setFilters}
             data={data}
             setDefaultFilters={() => setDefaultFilters(data)}
-            isLoading={isLoadingStats && !data}
           />
           <HeaderSection
             data={data}
