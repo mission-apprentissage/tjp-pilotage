@@ -28,6 +28,7 @@ import CreatableSelect from "react-select/creatable";
 import { AvisStatutEnum, AvisStatutType } from "shared/enum/avisStatutEnum";
 import { AvisTypeEnum, AvisTypeType } from "shared/enum/avisTypeEnum";
 import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { escapeString } from "shared/utils/escapeString";
 
 import { client } from "@/api.client";
 import { getTypeAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
@@ -139,7 +140,12 @@ export const AvisForm = ({
         noValidate
         onSubmit={handleSubmit((values) =>
           submitAvis({
-            body: { avis: values },
+            body: {
+              avis: {
+                ...values,
+                commentaire: escapeString(values.commentaire),
+              },
+            },
           })
         )}
       >
@@ -364,6 +370,7 @@ export const AvisForm = ({
                       avis: {
                         ...values,
                         typeAvis: getTypeAvis(intention.statut),
+                        commentaire: escapeString(values.commentaire),
                       },
                     },
                   });

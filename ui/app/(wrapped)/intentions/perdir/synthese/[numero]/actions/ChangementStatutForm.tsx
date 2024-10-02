@@ -28,6 +28,7 @@ import {
   DemandeStatutEnum,
   DemandeStatutType,
 } from "shared/enum/demandeStatutEnum";
+import { escapeString } from "shared/utils/escapeString";
 
 import { client } from "@/api.client";
 
@@ -139,7 +140,12 @@ export const ChangementStatutForm = ({
         noValidate
         onSubmit={handleSubmit((values) =>
           submitChangementStatut({
-            body: { changementStatut: values },
+            body: {
+              changementStatut: {
+                ...values,
+                commentaire: escapeString(values.commentaire),
+              },
+            },
           })
         )}
       >
@@ -255,7 +261,10 @@ export const ChangementStatutForm = ({
                 onClick={handleSubmit((values) =>
                   submitChangementStatut({
                     body: {
-                      changementStatut: values,
+                      changementStatut: {
+                        ...values,
+                        commentaire: escapeString(values.commentaire),
+                      },
                     },
                   })
                 )}
