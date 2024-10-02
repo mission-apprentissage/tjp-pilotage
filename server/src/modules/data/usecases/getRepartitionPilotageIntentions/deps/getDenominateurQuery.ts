@@ -13,7 +13,7 @@ export const getDenominateurQuery = async ({
 }) => {
   return kdb
     .selectFrom(
-      genericOnConstatRentree(filters)()
+      genericOnConstatRentree(filters)
         .select((eb) => [
           eb.ref("campagne.annee").as("annee"),
           eb.ref("constatRentree.rentreeScolaire").as("rentreeScolaire"),

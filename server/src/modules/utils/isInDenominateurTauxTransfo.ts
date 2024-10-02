@@ -1,4 +1,5 @@
 import { ExpressionBuilder } from "kysely";
+import { FIRST_ANNEE_CAMPAGNE } from "shared";
 
 import { DB } from "../../db/db";
 
@@ -9,7 +10,7 @@ export const isInDenominateurTauxTransfo = ({
 }) =>
   eb
     .case()
-    .when("campagne.annee", "=", "2023")
+    .when("campagne.annee", "=", FIRST_ANNEE_CAMPAGNE)
     .then(eb("constatRentree.anneeDispositif", "=", 1))
     .else(
       eb

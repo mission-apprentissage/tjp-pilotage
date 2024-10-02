@@ -11,7 +11,7 @@ import {
 } from "react";
 import { Scope, ScopeEnum } from "shared";
 
-import { SelectedScope } from "@/app/(wrapped)/intentions/pilotage-old/types";
+import { SelectedScope } from "@/app/(wrapped)/intentions/pilotage/types";
 import CarteFranceAcademies from "@/public/fond_carte_academies.json";
 import CarteFranceDepartements from "@/public/fond_carte_departements.json";
 import CarteFranceRegions from "@/public/fond_carte_regions.json";
@@ -176,12 +176,18 @@ export const CartoGraph = ({
         formatter: (params: any) => {
           if (params?.data?.value !== undefined) {
             if (params.data.parentName) {
-              return `${params.name} : ${params.data?.value}%
+              return `${params.name} : ${formatPercentage(
+                params.data?.value / 100,
+                1
+              )}
                   <br>
-                  (<span style="font-style:italic">${params.data.parentName}</span>)`;
+                  (<span style="font-style:italic">${
+                    params.data.parentName
+                  }</span>)`;
             }
             return `${params.name} : ${formatPercentage(
-              params.data?.value / 100
+              params.data?.value / 100,
+              1
             )}`;
           }
           return `Aucune donnée disponible pour ${params.name}`;

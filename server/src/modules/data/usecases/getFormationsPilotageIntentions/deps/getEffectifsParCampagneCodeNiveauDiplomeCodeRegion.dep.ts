@@ -1,15 +1,13 @@
-// TO DO : rm file ?
-
 import { sql } from "kysely";
-import { CURRENT_RENTREE } from "shared";
-import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { kdb } from "../../../../../db/db";
 import { isInDenominateurTauxTransfo } from "../../../../utils/isInDenominateurTauxTransfo";
 import { isInPerimetreIJDataEtablissement } from "../../../utils/isInPerimetreIJ";
-import { Filters } from "../getRepartitionPilotageIntentions.usecase";
+import { Filters } from "../getFormationsPilotageIntentions.usecase";
 
-export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
+export const getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery = ({
+  ...filters
+}: Filters) => {
   return kdb
     .selectFrom("campagne")
     .leftJoin("constatRentree", (join) => join.onTrue())
@@ -19,54 +17,14 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
       "constatRentree.uai"
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
-    .leftJoin("positionFormationRegionaleQuadrant", (join) =>
-      join.on((eb) =>
-        eb.and([
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.cfd"),
-            "=",
-            eb.ref("dataFormation.cfd")
-          ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
-            "=",
-            eb.ref("dataEtablissement.codeRegion")
-          ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
-            "=",
-            eb.val(
-              getMillesimeFromRentreeScolaire({
-                rentreeScolaire: CURRENT_RENTREE,
-                offset: 0,
-              })
-            )
-          ),
-        ])
-      )
-    )
     .select((eb) => [
-      "dataFormation.codeNsf",
+      "dataFormation.cfd",
       "dataFormation.codeNiveauDiplome",
-      sql<string>`COALESCE(
-        ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
-        ''
-      )`.as("positionQuadrant"),
       "dataEtablissement.codeRegion",
-      "dataEtablissement.codeDepartement",
-      "dataEtablissement.codeAcademie",
       "campagne.annee",
       "rentreeScolaire",
       sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("denominateur"),
     ])
-    .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)
-    .where(isInDenominateurTauxTransfo)
-    .where(isInPerimetreIJDataEtablissement)
-    .$call((eb) => {
-      if (filters.campagne)
-        return eb.where("campagne.annee", "=", filters.campagne);
-      return eb;
-    })
     .$call((eb) => {
       if (filters.CPC) return eb.where("dataFormation.cpc", "in", filters.CPC);
       return eb;
@@ -112,18 +70,23 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
         );
       return eb;
     })
+    .$call((eb) => {
+      if (filters.campagne)
+        return eb.where("campagne.annee", "=", filters.campagne);
+      return eb;
+    })
     .$call((q) => {
       if (!filters.secteur || filters.secteur.length === 0) return q;
       return q.where("dataEtablissement.secteur", "in", filters.secteur);
     })
+    .where(isInDenominateurTauxTransfo)
+    .where(isInPerimetreIJDataEtablissement)
+    .where("constatRentree.rentreeScolaire", "=", "2023")
     .groupBy([
       "annee",
       "rentreeScolaire",
-      "dataFormation.codeNsf",
+      "dataFormation.cfd",
       "dataFormation.codeNiveauDiplome",
       "dataEtablissement.codeRegion",
-      "dataEtablissement.codeDepartement",
-      "dataEtablissement.codeAcademie",
-      "positionQuadrant",
     ]);
 };

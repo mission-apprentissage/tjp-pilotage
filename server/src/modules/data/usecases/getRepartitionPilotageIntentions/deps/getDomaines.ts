@@ -5,7 +5,7 @@ import {
 import { getDenominateurQuery } from "./getDenominateurQuery";
 import { getNumerateurQuery } from "./getNumerateurQuery";
 
-export const getNiveauxDiplomeQuery = async ({
+export const getDomaines = async ({
   filters,
 }: {
   filters: Filters;
@@ -14,13 +14,13 @@ export const getNiveauxDiplomeQuery = async ({
     getNumerateurQuery({
       filters: {
         ...filters,
-        codeNiveauDiplome: undefined,
+        codeNsf: undefined,
       },
     }),
     getDenominateurQuery({
       filters: {
         ...filters,
-        codeNiveauDiplome: undefined,
+        codeNsf: undefined,
       },
     }),
   ]);
@@ -29,8 +29,8 @@ export const getNiveauxDiplomeQuery = async ({
     numerateur,
     denominateur,
     groupBy: {
-      code: "codeNiveauDiplome",
-      libelle: "libelleNiveauDiplome",
+      code: "codeNsf",
+      libelle: "libelleNsf",
     },
   };
 };

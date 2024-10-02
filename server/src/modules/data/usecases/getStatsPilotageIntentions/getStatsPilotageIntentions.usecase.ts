@@ -20,18 +20,15 @@ const formatResult = (result: GetScopedStatsPilotageIntentionsType) => {
     .map((item) => ({
       ...item,
       key: `_${item.code}`,
-      libelle: item.libelle,
-      code: item.code,
       ratioFermeture: item.placesTransformees
-        ? (item.placesFermees || 0) / item.placesTransformees
+        ? item.placesFermees / item.placesTransformees
         : undefined,
       ratioOuverture: item.placesTransformees
-        ? (item.placesOuvertes || 0) / item.placesTransformees
+        ? item.placesOuvertes / item.placesTransformees
         : undefined,
       tauxTransformation: item.effectif
         ? item.placesTransformees / item.effectif
         : undefined,
-      effectif: item.effectif,
     }))
     .keyBy("key")
     .value();

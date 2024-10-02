@@ -12,7 +12,7 @@
     "dev": "TSUP_DEV=true tsup",
     "build": "tsup",
     "copyPublic": "cp -a public/. dist",
-    "typecheck": "tsc",
+    "typecheck": "NODE_OPTIONS='--max-old-space-size=8192' tsc",
     "cli": "ts-node -T src/cli.ts ",
     "kysely": "npx kysely-codegen --schema public --out-file=./src/db/schema.ts --dialect postgres && yarn prettier:fix",
     "test": "jest"

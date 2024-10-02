@@ -1,5 +1,7 @@
 import {
   Divider,
+  Flex,
+  Highlight,
   HStack,
   ListItem,
   Modal,
@@ -14,7 +16,7 @@ import {
 
 import { themeColors } from "../../../theme/themeColors";
 
-const DefinitionTauxTransfoModal = ({
+export const DefinitionTauxTransfoModal = ({
   isOpen,
   onClose,
 }: {
@@ -53,27 +55,35 @@ const DefinitionTauxTransfoModal = ({
                 mx="10%"
                 backgroundColor={themeColors.bluefrance[975]}
                 width="80%"
-                alignItems="center"
                 fontSize="12px"
                 fontStyle="italic"
                 px="16px"
                 paddingTop="24px"
                 paddingBottom="8px"
               >
-                <HStack>
+                <HStack alignItems="center">
                   <VStack lineHeight="20px">
                     <Text fontWeight="700">% de transformation</Text>
                     <Text>Rentrée Scolaire N</Text>
                   </VStack>
                   <Text lineHeight="20px">=</Text>
                   <VStack lineHeight="20px">
-                    <Text fontWeight="700">Pl. ouvertes + Pl. fermées</Text>
+                    <Text fontWeight="700">
+                      <Highlight query={"*"} styles={{ color: "info.text" }}>
+                        Pl. ouvertes + Pl. fermées + Pl. existantes colorées *
+                      </Highlight>
+                    </Text>
                     <Text>issues des demandes validées en année N-1</Text>
                     <Divider borderColor="black" />
                     <Text fontWeight="700">Pl. effectivement occupées</Text>
                     <Text>Constat de rentrée N-1</Text>
                   </VStack>
                 </HStack>
+                <Flex mt={3} ms={"auto"}>
+                  <Text color="info.text">
+                    * à partir de la Rentrée Scolaire 2025 seulement
+                  </Text>
+                </Flex>
               </VStack>
             </VStack>
             <VStack
@@ -91,8 +101,7 @@ const DefinitionTauxTransfoModal = ({
                     Le calcul tient compte des places transformées en{" "}
                     <b>voie scolaire</b> et en <b>apprentissage</b> (diplômes
                     retenus : CAP, Bac Pro, CS, BTS, FCIL, BT, BP, DNMADE, BMA).
-                    Le dénominateur concerne les effectifs{" "}
-                    <b>en entrée de formation</b>.
+                    Le dénominateur concerne les effectifs <b>en entrée</b>.
                   </Text>
                 </ListItem>
                 <ListItem>
@@ -107,9 +116,17 @@ const DefinitionTauxTransfoModal = ({
                     </ListItem>
                     <ListItem>
                       ils sont rapportés à un total de places de la{" "}
-                      <b>Rentrée N-1</b> et non N
+                      <b>Rentrée N-1</b> et non N, jusquà parution du constat de
+                      rentrée N (en fin d'année).
                     </ListItem>
                   </UnorderedList>
+                </ListItem>
+                <ListItem>
+                  <Text>
+                    On peut également suivre dans Orion le taux de
+                    transformation prévisionnel <b>hors colorations</b> (à
+                    partir de la Rentrée Scolaire 2025).
+                  </Text>
                 </ListItem>
               </UnorderedList>
             </VStack>
@@ -119,4 +136,3 @@ const DefinitionTauxTransfoModal = ({
     </Modal>
   );
 };
-export { DefinitionTauxTransfoModal };

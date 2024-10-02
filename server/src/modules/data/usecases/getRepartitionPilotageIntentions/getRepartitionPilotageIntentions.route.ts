@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
@@ -17,15 +16,11 @@ export const getRepartitionPilotageIntentionsRoute = ({
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions/lecture"),
+      preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
       handler: async (request, response) => {
         const { ...filters } = request.query;
-        if (!request.user) throw Boom.forbidden();
 
-        const result = await getRepartitionPilotageIntentionsUsecase({
-          ...filters,
-          user: request.user,
-        });
+        const result = await getRepartitionPilotageIntentionsUsecase(filters);
         response.status(200).send(result);
       },
     });

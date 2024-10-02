@@ -3,13 +3,13 @@ import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
+import { genericOnDemandes } from "../../../utils/onDemande";
 import { Filters } from "../getRepartitionPilotageIntentions.usecase";
-import { genericOnDemandes } from "./getDemandesBaseQuery";
 
 export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
   return kdb
-    .selectFrom((eb) =>
-      genericOnDemandes(filters)(eb)
+    .selectFrom(
+      genericOnDemandes(filters)
         .select((eb) => [
           eb.ref("campagne.annee").as("annee"),
           eb.ref("demande.rentreeScolaire").as("rentreeScolaire"),

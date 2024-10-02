@@ -90,8 +90,10 @@ export const ExportMenuButton = ({
         </Flex>
       </MenuButton>
       <MenuList p={0} zIndex={"tooltip"}>
-        <ExportButton onExport={handleExportCsv} />
-        <ExportButton onExport={handleExportExcel} type={"excel"} />
+        {onExportCsv && <ExportButton onExport={handleExportCsv} />}
+        {onExportExcel && (
+          <ExportButton onExport={handleExportExcel} type={"excel"} />
+        )}
       </MenuList>
     </Menu>
   );

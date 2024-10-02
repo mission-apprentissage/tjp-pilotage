@@ -7,7 +7,7 @@ import {
 
 import { RepartitionPilotageIntentions } from "../../types";
 import { DisplayTypeEnum } from "../displayTypeEnum";
-import { AnalyseComparativeSection } from "./AnalyseComparativeSection";
+import { AnalyseComparativeSection } from "./AnalyseComparative/AnalyseComparativeSection";
 import { FiliereNiveauDiplomeSection } from "./FiliereNiveauDiplomeSection";
 
 export const RepartitionSection = ({

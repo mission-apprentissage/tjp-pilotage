@@ -16,6 +16,9 @@ export type ExportColumns<T extends object> = {
     : never]?: string;
 };
 
+export type MultipleData = Record<string, Array<object>>;
+export type MultipleColumns = Record<string, ExportColumns<object>>;
+
 /**
  *
  * @param filename filename with or without extension
@@ -24,7 +27,7 @@ export type ExportColumns<T extends object> = {
  */
 export function downloadCsv<D extends object>(
   filename: string,
-  data: D[],
+  data: Array<D>,
   columns: ExportColumns<D>
 ) {
   const filenameWithExtension =
@@ -76,56 +79,136 @@ function downloadCsvFromString(filename: string, text: string) {
 
 export async function downloadExcel<D extends object>(
   filename: string,
-  data: D[],
-  columns: ExportColumns<D>
+  data: Array<D> | MultipleData,
+  columns: ExportColumns<D> | MultipleColumns
+) {
+  const hasMultipleSheets = Object.values(data).every((value) =>
+    Array.isArray(value)
+  );
+  if (hasMultipleSheets) {
+    downloadExcelMultipleSheets(
+      filename,
+      data as Record<string, Array<D>>,
+      columns as Record<string, ExportColumns<D>>
+    );
+    return;
+  } else if (Array.isArray(data)) {
+    const filenameWithExtension =
+      filename.indexOf(".xlsx") !== -1 ? filename : `${filename}.xlsx`;
+
+    const workbook = new Excel.Workbook();
+
+    const worksheet = workbook.addWorksheet(filename);
+
+    worksheet.columns = Object.entries(columns).map(([key, value]) => ({
+      header: value as string,
+      key,
+    }));
+
+    const setColumnWrapText = (columnName: string) => {
+      worksheet
+        .getColumn(columnName)
+        .eachCell({ includeEmpty: true }, (cell) => {
+          cell.alignment = { wrapText: true };
+        });
+    };
+
+    const setColumnWrapNumber = (columnName: string) => {
+      worksheet.getColumn(columnName).numFmt = "#,##0.00";
+    };
+
+    Object.entries(columns).forEach(([key, _value]) => {
+      switch (typeof _.get(data[0], key)) {
+        case "string":
+          setColumnWrapText(key);
+          break;
+        case "number":
+          setColumnWrapNumber(key);
+          break;
+        default:
+          setColumnWrapText(key);
+          break;
+      }
+    });
+
+    for (const dataRow of data) {
+      worksheet.addRow(
+        Object.keys(columns).reduce(
+          (acc, key) => {
+            acc[key as keyof D] = _.get(dataRow, key);
+            return acc;
+          },
+          {} as Record<keyof D, D[keyof D]>
+        )
+      );
+    }
+
+    workbook.xlsx.writeBuffer().then((buffer) => {
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      saveAs(blob, filenameWithExtension);
+    });
+    return;
+  }
+}
+
+function downloadExcelMultipleSheets<D extends object>(
+  filename: string,
+  data: Record<string, Array<D>>,
+  columns: Record<string, ExportColumns<D>>
 ) {
   const filenameWithExtension =
     filename.indexOf(".xlsx") !== -1 ? filename : `${filename}.xlsx`;
 
   const workbook = new Excel.Workbook();
 
-  const worksheet = workbook.addWorksheet(filename);
+  Object.entries(data).map(([key, sheetData]) => {
+    const worksheet = workbook.addWorksheet(`${key}`);
 
-  worksheet.columns = Object.entries(columns).map(([key, value]) => ({
-    header: value as string,
-    key,
-  }));
+    worksheet.columns = Object.entries(columns[key]).map(([key, value]) => ({
+      header: value as string,
+      key,
+    }));
 
-  const setColumnWrapText = (columnName: string) => {
-    worksheet.getColumn(columnName).eachCell({ includeEmpty: true }, (cell) => {
-      cell.alignment = { wrapText: true };
+    const setColumnWrapText = (columnName: string) => {
+      worksheet
+        .getColumn(columnName)
+        .eachCell({ includeEmpty: true }, (cell) => {
+          cell.alignment = { wrapText: true };
+        });
+    };
+
+    const setColumnWrapNumber = (columnName: string) => {
+      worksheet.getColumn(columnName).numFmt = "#,##0.00";
+    };
+
+    Object.entries(columns[key]).forEach(([key, _value]) => {
+      switch (typeof _.get(sheetData[0], key)) {
+        case "string":
+          setColumnWrapText(key);
+          break;
+        case "number":
+          setColumnWrapNumber(key);
+          break;
+        default:
+          setColumnWrapText(key);
+          break;
+      }
     });
-  };
 
-  const setColumnWrapNumber = (columnName: string) => {
-    worksheet.getColumn(columnName).numFmt = "#,##0.00";
-  };
-
-  Object.entries(columns).forEach(([key, _value]) => {
-    switch (typeof _.get(data[0], key)) {
-      case "string":
-        setColumnWrapText(key);
-        break;
-      case "number":
-        setColumnWrapNumber(key);
-        break;
-      default:
-        setColumnWrapText(key);
-        break;
+    for (const dataRow of sheetData) {
+      worksheet.addRow(
+        Object.keys(columns[key]).reduce(
+          (acc, key) => {
+            acc[key as keyof D] = _.get(dataRow, key);
+            return acc;
+          },
+          {} as Record<keyof D, D[keyof D]>
+        )
+      );
     }
   });
-
-  for (const dataRow of data) {
-    worksheet.addRow(
-      Object.keys(columns).reduce(
-        (acc, key) => {
-          acc[key as keyof D] = _.get(dataRow, key);
-          return acc;
-        },
-        {} as Record<keyof D, D[keyof D]>
-      )
-    );
-  }
 
   workbook.xlsx.writeBuffer().then((buffer) => {
     const blob = new Blob([buffer], {

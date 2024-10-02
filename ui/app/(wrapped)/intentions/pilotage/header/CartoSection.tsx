@@ -100,11 +100,11 @@ export const CartoSection = ({
       parentName: territoire.libelleAcademie,
       value:
         territoire.effectif || indicateur != "tauxTransformation"
-          ? formatPercentageWithoutSign(territoire[indicateur])
+          ? formatPercentageWithoutSign(territoire[indicateur], 1)
           : undefined,
       code: territoire.code,
     }));
-  }, [data, filters]);
+  }, [data, filters, indicateur]);
 
   const handleClickOnTerritoire = useCallback(
     (code: string | undefined) =>
