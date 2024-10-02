@@ -78,9 +78,7 @@ export const [importRawFile, importRawFileFactory] = inject(
           write: async (line, _, callback) => {
             try {
               count++;
-              const sanitizedLine = schema.parse(line) as JSON;
-              await deps.batch.create({ data: { data: sanitizedLine, type } });
-              process.stdout.write(`Ajout de ${count} lignes\r`);
+              schema.parse(line) as JSON;
             } catch (err) {
               const zodError = err as ZodError;
               errors.push({
@@ -90,6 +88,8 @@ export const [importRawFile, importRawFileFactory] = inject(
                 line: count,
               });
             }
+            await deps.batch.create({ data: { data: line, type } });
+            process.stdout.write(`Ajout de ${count} lignes\r`);
             callback();
           },
         }),

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const AttractiviteCapaciteSchema = z.object({
-  "Etablissement d’accueil": z.string(),
+  "Etablissement d'accueil": z.string(),
   "MEF STAT 11": z.string(),
   "Voeu de recensement O/N": z.string(),
   "Statut Offre de formation": z.string(),

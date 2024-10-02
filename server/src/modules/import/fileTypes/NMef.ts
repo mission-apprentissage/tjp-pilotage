@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const NMefSchema = z.object({
+  FORMATION_DIPLOME: z.string(),
   MEF: z.string(),
   MEF_STAT_11: z.string(),
   LIBELLE_LONG: z.string(),
