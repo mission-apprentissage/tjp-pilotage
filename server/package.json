@@ -15,7 +15,9 @@
     "typecheck": "NODE_OPTIONS='--max-old-space-size=8192' tsc",
     "cli": "ts-node -T src/cli.ts ",
     "kysely": "npx kysely-codegen --schema public --out-file=./src/db/schema.ts --dialect postgres && yarn prettier:fix",
-    "test": "jest"
+    "test": "jest --config ./test/jest.config.js",
+    "test:unit": "jest --config ./test/jest.config.js",
+    "test:integration": "jest -i --config ./test/jest-integration.config.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.574.0",
@@ -62,7 +64,6 @@
     "rate-limiter-flexible": "2.3.6",
     "shared": "*",
     "stream-transform": "^3.2.2",
-    "ts-node": "^10.9.1",
     "tsup": "^8.0.1",
     "uglify-js": "^3.17.4",
     "uuid": "^9.0.1",
@@ -92,7 +93,9 @@
     "esbuild-jest": "^0.5.0",
     "jest": "^29.7.0",
     "kysely-codegen": "^0.10.0",
-    "ts-jest": "^29.1.0",
+    "testcontainers": "^10.13.1",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.1",
     "typescript": "5.0.2"
   }
 }

@@ -1,4 +1,5 @@
 import {
+  Box,
   chakra,
   Flex,
   FormControl,
@@ -7,14 +8,14 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { toBoolean } from "@/utils/toBoolean";
 
-import { TooltipIcon } from "../../../../../../../../components/TooltipIcon";
-import { useGlossaireContext } from "../../../../../../glossaire/glossaireContext";
 import { isTypeColoration } from "../../../../../utils/typeDemandeUtils";
 import { IntentionForms } from "../../defaultFormValues";
 
@@ -27,8 +28,6 @@ export const ColorationField = chakra(
       setValue,
       getValues,
     } = useFormContext<IntentionForms>();
-
-    const { openGlossaire } = useGlossaireContext();
 
     useEffect(
       () =>
@@ -58,14 +57,20 @@ export const ColorationField = chakra(
       >
         <Flex direction={"row"}>
           <FormLabel>Coloration</FormLabel>
-          <TooltipIcon
-            mt={"1"}
-            ml={2}
-            onClick={(e) => {
-              e.preventDefault();
-              openGlossaire("coloration");
-            }}
-            color={"bluefrance.113"}
+          <GlossaireShortcut
+            glossaireEntryKey={"coloration"}
+            color="bluefrance.113"
+            mb={"6px"}
+            tooltip={
+              <Box>
+                <Text>
+                  Une coloration consiste à adapter le projet pédagogique à un
+                  champ professionnel particulier, en général concentré sur un
+                  territoire donné.
+                </Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
           />
         </Flex>
         <Controller

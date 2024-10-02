@@ -32,7 +32,7 @@ describe("createUser usecase", () => {
         body: user,
         requestUser,
       })
-    ).rejects.toThrow("email already exist");
+    ).rejects.toThrow("test@test.fr est déjà éxistant dans l'application.");
   });
 
   it("should throw an error if the given email is not valid", async () => {
@@ -48,7 +48,7 @@ describe("createUser usecase", () => {
         body: { ...user, email: "fakeEmail" },
         requestUser,
       })
-    ).rejects.toThrow("email is not valid");
+    ).rejects.toThrow("L'email est invalide");
   });
 
   it("should create the user and send the activation email", async () => {
@@ -89,7 +89,9 @@ describe("createUser usecase", () => {
             body: user,
             requestUser: { ...requestUser, role },
           })
-        ).rejects.toThrow("cannot create user with this role");
+        ).rejects.toThrow(
+          `Vous n'avez pas les droits de créer un utilisateur avec le rôle ${user.role}`
+        );
       }
     });
 
@@ -158,7 +160,9 @@ describe("createUser usecase", () => {
             role: "admin_region",
           },
         })
-      ).rejects.toThrow("cannot create user within this scope");
+      ).rejects.toThrow(
+        "Vous ne pouvez pas créer un utilisateur dans ce périmètre."
+      );
     });
   });
 });

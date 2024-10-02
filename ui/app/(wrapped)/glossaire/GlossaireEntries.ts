@@ -2,7 +2,6 @@ export const GLOSSAIRE_ENTRIES_KEYS = {
   ["taux-de-remplissage"]: "36f68946-cd00-47b8-8541-4c05548ab99e",
   ["valeur-ajoutee"]: "6fa45afa-65a5-4c3f-83a4-54956b0040f9",
   ["capacite"]: "51fcf4e0-218b-4ebe-b320-fcaee9263249",
-  ["effectifs"]: "24a35cbf-d90a-4c40-97e2-bfee28bc24d8",
   ["taux-de-devenir-favorable"]: "e0a0732f-0989-4b51-8180-8d8a12fc9efb",
   ["taux-poursuite-etudes"]: "fe215545-9be6-438c-a766-f437f381bfc5",
   ["taux-de-pression"]: "e5ac1bc8-3e99-46b3-a0ff-aba391248909",
@@ -20,6 +19,9 @@ export const GLOSSAIRE_ENTRIES_KEYS = {
   ["cmq"]: "e1c9a0da4476473c8b03d5cc24f8d90b",
   ["coloration"]: "018685f470a9495684b27799143e5266",
   ["professeur-associe"]: "5a3905c3-c3a3-4a4d-8714-0ded4200e891",
+  ["nombre-deleves"]: "e329e9ff-0e2c-42b2-b340-4b2fa9c4ce30",
+  ["millesime"]: "686ca38f-a583-4849-b709-b84d5ba1f62a",
+  ["effectif-en-entree"]: "e2e29107-f570-4ff8-a734-46b3977cc974",
 };
 
 export type GlossaireEntryKey = keyof typeof GLOSSAIRE_ENTRIES_KEYS;

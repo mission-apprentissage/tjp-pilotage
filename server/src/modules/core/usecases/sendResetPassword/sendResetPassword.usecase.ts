@@ -14,7 +14,16 @@ export const [sendResetPassword, sendResetPasswordFactory] = inject(
   (deps) =>
     async ({ email }: { email: string }) => {
       const user = await deps.findUserQuery({ email });
-      if (!user) throw Boom.notFound("email does not exist");
+
+      if (!user) {
+        throw Boom.notFound("Email inconnu dans Orion.");
+      }
+
+      if (user.sub) {
+        throw Boom.badRequest(
+          "Vous ne pouvez pas réinitialiser votre mot de passe, veuillez vous connecter à Orion via le portail ARENA."
+        );
+      }
 
       const resetPasswordToken = jwt.sign({ email }, deps.jwtSecret, {
         expiresIn: "1h",

@@ -301,7 +301,10 @@ export const QuadrantSection = ({
               campagne: mergedFilters.campagne,
               codeNsf: mergedFilters.codeNsf,
               statut: mergedFilters.statut,
-              secteur: mergedFilters.secteur,
+              secteur:
+                mergedFilters.secteur && mergedFilters.secteur?.length === 1
+                  ? mergedFilters.secteur[0]
+                  : undefined,
             },
           })}
           color={"bluefrance.113"}
