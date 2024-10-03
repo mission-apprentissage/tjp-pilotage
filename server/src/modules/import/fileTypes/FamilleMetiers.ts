@@ -1,9 +1,13 @@
-export type FamillesMetiersLine = {
-  FAMILLE: string;
-  SPECIALITE: string;
-  MEFSTAT11_COMMUN: string;
-  CFD_COMMUN: string;
-  MEFSTAT11_SPECIALITE: string;
-  CFD_SPECIALITE: string;
-  CODE_MINISTERE_TUTELLE: string;
-};
+import { z } from "zod";
+
+export const FamillesMetiersSchema = z.object({
+  FAMILLE: z.string(),
+  SPECIALITE: z.string(),
+  MEFSTAT11_COMMUN: z.string(),
+  CFD_COMMUN: z.string(),
+  MEFSTAT11_SPECIALITE: z.string(),
+  CFD_SPECIALITE: z.string(),
+  CODE_MINISTERE_TUTELLE: z.string(),
+});
+
+export type FamillesMetiersLine = z.infer<typeof FamillesMetiersSchema>;
