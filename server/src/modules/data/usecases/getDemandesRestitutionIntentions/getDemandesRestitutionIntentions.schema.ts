@@ -106,7 +106,7 @@ export const FiltersSchema = z.object({
   codeNiveauDiplome: z.array(z.string()).optional(),
   cfd: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
-  coloration: z.string().optional(),
+  coloration: z.enum(["all", "with", "without"]).optional(),
   amiCMA: z.string().optional(),
   secteur: z.string().optional(),
   positionQuadrant: z.string().optional(),

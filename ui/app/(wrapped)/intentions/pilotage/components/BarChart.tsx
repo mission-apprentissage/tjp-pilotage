@@ -85,7 +85,7 @@ export const BarChart = ({
                 <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[2]
                   ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
-                  Pl. colorées :
+                  Colorations :
                   <span style="font-weight: 700;">${params[2]?.data}</span>
                 </span>
               </div>
@@ -168,7 +168,7 @@ export const BarChart = ({
           `${value.replace("Place(s) ", "Pl. ").replace("(s)", "s")}`,
         data: [
           {
-            name: "Place(s) colorée(s)",
+            name: "Coloration(s)",
             icon: "square",
           },
           {
@@ -239,7 +239,7 @@ export const BarChart = ({
           stack: "placesTransformées",
           color: bf850,
           barWidth: 45,
-          name: "Place(s) colorée(s)",
+          name: "Coloration(s)",
           ...seriesOption,
         },
       ],

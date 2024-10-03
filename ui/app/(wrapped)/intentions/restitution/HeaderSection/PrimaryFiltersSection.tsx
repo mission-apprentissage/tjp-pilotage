@@ -141,7 +141,7 @@ export const PrimaryFiltersSection = ({
                             {data?.filters.rentreesScolaires?.find(
                               (c) => c.value === activeFilters.rentreeScolaire
                             )?.value ??
-                              `TOUTES (${data?.filters.rentreesScolaires?.length})`}
+                              `Toutes (${data?.filters.rentreesScolaires?.length})`}
                           </Text>
                           {(activeFilters.rentreeScolaire ===
                             data?.filters.campagnes?.find(
@@ -164,7 +164,7 @@ export const PrimaryFiltersSection = ({
                           <Flex direction="row">
                             <Text
                               my={"auto"}
-                            >{`TOUTES (${data?.filters.rentreesScolaires?.length})`}</Text>
+                            >{`Toutes (${data?.filters.rentreesScolaires?.length})`}</Text>
                           </Flex>
                         </MenuItem>
                         {data?.filters.rentreesScolaires?.map(
@@ -213,7 +213,7 @@ export const PrimaryFiltersSection = ({
                     options={data?.filters.regions}
                     value={activeFilters.codeRegion ?? []}
                   >
-                    TOUTES ({data?.filters.regions.length ?? 0})
+                    Toutes ({data?.filters.regions.length ?? 0})
                   </Multiselect>
                 </Box>
                 <Box justifyContent={"start"}>
@@ -230,7 +230,7 @@ export const PrimaryFiltersSection = ({
                     value={activeFilters.codeAcademie ?? []}
                     disabled={data?.filters.academies.length === 0}
                   >
-                    TOUTES ({data?.filters.academies.length ?? 0})
+                    Toutes ({data?.filters.academies.length ?? 0})
                   </Multiselect>
                 </Box>
               </Flex>

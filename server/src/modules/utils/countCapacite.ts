@@ -794,12 +794,12 @@ export const exceptionColoration = ({
     | RawBuilder<number>
     | ExpressionWrapper<DB, "demande" | "campagne", number>;
 }) =>
-  sql<number>`CASE WHEN ${eb.ref("demande.typeDemande")} = ${eb.val(
-    DemandeTypeEnum.coloration
-  )}
-    THEN 0
-    ELSE ${count}
-    END`;
+  eb
+    .case()
+    .when("demande.typeDemande", "=", DemandeTypeEnum.coloration)
+    .then(0)
+    .else(count)
+    .end();
 
 export const exceptionColorationIntention = ({
   eb,
@@ -808,12 +808,12 @@ export const exceptionColorationIntention = ({
   eb: ExpressionBuilder<DB, "intention">;
   count: RawBuilder<number>;
 }) =>
-  sql<number>`CASE WHEN ${eb.ref("intention.typeDemande")} = ${eb.val(
-    DemandeTypeEnum.coloration
-  )}
-      THEN 0
-      ELSE ${count}
-      END`;
+  eb
+    .case()
+    .when("intention.typeDemande", "=", DemandeTypeEnum.coloration)
+    .then(0)
+    .else(count)
+    .end();
 
 export const countPlacesTransformeesCampagne2023 = ({
   eb,

@@ -130,7 +130,7 @@ export const CapaciteSection = ({
             </Th>
             {coloration && (
               <Th textAlign={"end"} p={2} pe={0}>
-                Dont places colorées
+                Dont colorations
               </Th>
             )}
           </Tr>

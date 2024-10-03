@@ -152,12 +152,14 @@ const formatResult = (
     .map((item) => ({
       ...item,
       libelle: item.libelle ?? item.code,
-      ratioFermeture: item.placesTransformees
-        ? (item.placesFermees || 0) / item.placesTransformees
-        : undefined,
-      ratioOuverture: item.placesTransformees
-        ? (item.placesOuvertes || 0) / item.placesTransformees
-        : undefined,
+      ratioFermeture:
+        item.placesFermees && item.placesOuvertes
+          ? item.placesFermees / (item.placesFermees + item.placesOuvertes)
+          : undefined,
+      ratioOuverture:
+        item.placesFermees && item.placesOuvertes
+          ? item.placesOuvertes / (item.placesFermees + item.placesOuvertes)
+          : undefined,
       tauxTransformation: item.effectif
         ? item.placesTransformees / item.effectif
         : undefined,

@@ -1,19 +1,23 @@
-export type LyceesACCELine = {
-  numero_uai: string;
-  numero_siren_siret_uai: string;
-  academie: string;
-  nature_uai: string;
-  appellation_officielle: string;
-  commune: string;
-  commune_libe: string;
-  adresse_uai: string;
-  code_postal_uai: string;
-  coordonnee_x?: string;
-  coordonnee_y?: string;
-  secteur_public_prive: string;
-  date_ouverture: string;
-  date_fermeture: string;
-  ministere_tutelle: string;
-  departement_insee_3?: string;
-  type_uai: string;
-};
+import { z } from "zod";
+
+export const LyceesACCESchema = z.object({
+  numero_uai: z.string(),
+  numero_siren_siret_uai: z.string().optional(),
+  academie: z.string().optional(),
+  nature_uai: z.string(),
+  appellation_officielle: z.string(),
+  commune: z.string().optional(),
+  commune_libe: z.string(),
+  adresse_uai: z.string(),
+  code_postal_uai: z.string().optional(),
+  coordonnee_x: z.string().optional(),
+  coordonnee_y: z.string().optional(),
+  secteur_public_prive: z.string(),
+  date_ouverture: z.string(),
+  date_fermeture: z.string().optional(),
+  ministere_tutelle: z.string(),
+  departement_insee_3: z.string(),
+  type_uai: z.string(),
+});
+
+export type LyceesACCELine = z.infer<typeof LyceesACCESchema>;

@@ -1,9 +1,13 @@
-export type NMefLine = {
-  FORMATION_DIPLOME: string;
-  MEF: string;
-  MEF_STAT_11: string;
-  LIBELLE_LONG: string;
-  DUREE_DISPOSITIF: string;
-  ANNEE_DISPOSITIF: string;
-  DISPOSITIF_FORMATION: string;
-};
+import { z } from "zod";
+
+export const NMefSchema = z.object({
+  FORMATION_DIPLOME: z.string(),
+  MEF: z.string(),
+  MEF_STAT_11: z.string(),
+  LIBELLE_LONG: z.string(),
+  DUREE_DISPOSITIF: z.string(),
+  ANNEE_DISPOSITIF: z.string(),
+  DISPOSITIF_FORMATION: z.string(),
+});
+
+export type NMefLine = z.infer<typeof NMefSchema>;

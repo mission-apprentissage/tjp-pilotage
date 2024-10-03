@@ -26,7 +26,7 @@ import {
 type StatsPositionQuadrant = {
   ["Places fermées"]: number;
   ["Places ouvertes"]: number;
-  ["Places colorées"]: number;
+  ["Colorations"]: number;
   ["Places transformées"]: number;
   ["Solde"]: number;
   ["Effectif en entrée"]: number;
@@ -41,7 +41,7 @@ const getStatsPositionQuadrant = (
   const statsPositionQuadrant: StatsPositionQuadrant = {
     ["Places fermées"]: 0,
     ["Places ouvertes"]: 0,
-    ["Places colorées"]: 0,
+    ["Colorations"]: 0,
     ["Places transformées"]: 0,
     ["Solde"]: 0,
     ["Effectif en entrée"]: 0,
@@ -53,7 +53,7 @@ const getStatsPositionQuadrant = (
     positionsQuadrant?.[positionQuadrant]?.placesFermees ?? 0;
   statsPositionQuadrant["Places ouvertes"] =
     positionsQuadrant?.[positionQuadrant]?.placesOuvertes ?? 0;
-  statsPositionQuadrant["Places colorées"] =
+  statsPositionQuadrant["Colorations"] =
     positionsQuadrant?.[positionQuadrant]?.placesColorees ?? 0;
   statsPositionQuadrant["Places transformées"] =
     positionsQuadrant?.[positionQuadrant]?.placesTransformees ?? 0;
