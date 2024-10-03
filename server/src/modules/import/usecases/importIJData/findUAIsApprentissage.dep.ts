@@ -15,7 +15,7 @@ export const findUAIsApprentissage = ({ cfd }: { cfd: string }) => {
         .map((rawData) => {
           if (rawData["UAI formation"]) return rawData["UAI formation"];
           if (rawData["UAI formateur"]) return rawData["UAI formateur"];
-          return rawData["UAI Responsable"];
+          return rawData["UAI Responsable"]!;
         })
         .filter((uai) => uai);
     });
