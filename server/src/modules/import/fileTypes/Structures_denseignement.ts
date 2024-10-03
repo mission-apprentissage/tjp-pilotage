@@ -1,17 +1,23 @@
-export type StructureDenseignement = {
-  '"code UAI"': string;
-  "type d'établissement": string;
-  nom: string;
-  "boîte postale": string;
-  adresse: string;
-  CP: string;
-  commune: string;
-  '"commune (COG)"': string;
-  téléphone: string;
-  département: string;
-  académie: string;
-  région: string;
-  '"latitude (Y)"': string;
-  '"longitude (X)"': string;
-  '"région (COG)"': string;
-};
+import { z } from "zod";
+
+export const StructureDenseignementSchema = z.object({
+  '"code UAI"': z.string(),
+  "type d'établissement": z.string().optional(),
+  nom: z.string().optional(),
+  "boîte postale": z.string().optional(),
+  adresse: z.string().optional(),
+  CP: z.string().optional(),
+  commune: z.string().optional(),
+  '"commune (COG)"': z.string().optional(),
+  téléphone: z.string().optional(),
+  département: z.string().optional(),
+  académie: z.string().optional(),
+  région: z.string().optional(),
+  '"latitude (Y)"': z.string(),
+  '"longitude (X)"': z.string(),
+  '"région (COG)"': z.string().optional(),
+});
+
+export type StructureDenseignement = z.infer<
+  typeof StructureDenseignementSchema
+>;

@@ -251,7 +251,7 @@ export const QuadrantSection = ({
                   tauxTransformation: "Taux de transformation",
                   placesOuvertes: "Places ouvertes",
                   placesFermees: "Places fermées",
-                  placesColorees: "Places colorées",
+                  placesColorees: "Colorations",
                   solde: "Solde",
                   ratioFermeture: "Ratio de fermeture",
                 }
@@ -269,7 +269,7 @@ export const QuadrantSection = ({
                   tauxTransformation: "Taux de transformation",
                   placesOuvertes: "Places ouvertes",
                   placesFermees: "Places fermées",
-                  placesColorees: "Places colorées",
+                  placesColorees: "Colorations",
                   solde: "Solde",
                   ratioFermeture: "Ratio de fermeture",
                 }
@@ -431,7 +431,7 @@ export const QuadrantSection = ({
                   Places fermées
                 </option>
                 <option value="coloration" style={{ color: "black" }}>
-                  Places colorées
+                  Colorations
                 </option>
               </Select>
             </Flex>
@@ -663,7 +663,7 @@ export const QuadrantSection = ({
                       <InfoBlock
                         flex={1}
                         fontSize={12}
-                        label={"Pl. colorées"}
+                        label={"Colorations"}
                         value={formation?.placesColorees ?? 0}
                       />
                     )}

@@ -323,7 +323,7 @@ export const IndicateursClesSection = ({
               color={themeDefinition.colors.purpleGlycine["850_active"]}
             />
           }
-          title="Pl. Colorées"
+          title="Colorations"
           demandeValidee={getScopedData(
             DemandeStatutEnum["demande validée"],
             "placesColorees"

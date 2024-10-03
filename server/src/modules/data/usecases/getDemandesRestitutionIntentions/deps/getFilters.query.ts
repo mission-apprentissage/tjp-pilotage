@@ -20,7 +20,6 @@ export const getFilters = async ({
   cfd,
   codeNiveauDiplome,
   codeNsf,
-  coloration,
   amiCMA,
   secteur,
   codeDepartement,
@@ -77,15 +76,6 @@ export const getFilters = async ({
   const inTypeDemande = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!typeDemande) return sql<true>`true`;
     return eb("demande.typeDemande", "in", typeDemande);
-  };
-
-  const inColoration = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!coloration) return sql<true>`true`;
-    return eb(
-      "demande.coloration",
-      "=",
-      coloration === "true" ? sql<true>`true` : sql<false>`false`
-    );
   };
 
   const inAmiCMA = (eb: ExpressionBuilder<DB, "demande">) => {
@@ -222,7 +212,6 @@ export const getFilters = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeNsf(eb),
-          inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
           inStatut(eb),
@@ -250,7 +239,6 @@ export const getFilters = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeNsf(eb),
-          inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
           inStatut(eb),
@@ -277,7 +265,6 @@ export const getFilters = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeNsf(eb),
-          inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
           inStatut(eb),
@@ -307,7 +294,6 @@ export const getFilters = async ({
           inTypeDemande(eb),
           inCfd(eb),
           inCodeNsf(eb),
-          inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
           inStatut(eb),
@@ -342,7 +328,6 @@ export const getFilters = async ({
           inTypeDemande(eb),
           inCodeNiveauDiplome(eb),
           inCodeNsf(eb),
-          inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
           inStatut(eb),
@@ -368,7 +353,6 @@ export const getFilters = async ({
           inTypeDemande(eb),
           inCfd(eb),
           inCodeNiveauDiplome(eb),
-          inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
           inStatut(eb),
@@ -426,12 +410,18 @@ export const getFilters = async ({
     ],
     colorations: [
       {
-        label: "Oui",
-        value: "true",
+        label: "Toutes demandes (avec et sans places colorées)",
+        value: "all",
       },
       {
-        label: "Non",
-        value: "false",
+        label:
+          "Uniquement les ouvertures/fermetures (sans les colorations de places existantes)",
+        value: "without",
+      },
+      {
+        label:
+          "Uniquement les demandes avec places colorées (ouvertures/fermetures/existantes)",
+        value: "with",
       },
     ],
     compensations: [
