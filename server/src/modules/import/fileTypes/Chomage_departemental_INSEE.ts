@@ -6,8 +6,6 @@ export const ChomageDepartementalINSEESchema = z.object({
   tauxChomage: z.string(),
 });
 
-export type Chomage_departemental_INSEE = {
-  codeDepartement: string;
-  rentreeScolaire: string;
-  tauxChomage: string;
-};
+export type Chomage_departemental_INSEE = z.infer<
+  typeof ChomageDepartementalINSEESchema
+>;
