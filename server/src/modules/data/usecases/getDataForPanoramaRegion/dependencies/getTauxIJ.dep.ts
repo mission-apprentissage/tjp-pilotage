@@ -4,7 +4,6 @@ import { z } from "zod";
 import { kdb } from "../../../../../db/db";
 import { isScolaireIndicateurRegionSortie } from "../../../utils/isScolaire";
 import { notAnneeCommuneIndicateurRegionSortie } from "../../../utils/notAnneeCommune";
-import { notHistoriqueIndicateurRegionSortie } from "../../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../../utils/tauxPoursuite";
 import { TauxIJParAnneeSchema } from "../getDataForPanoramaRegion.schema";
@@ -52,7 +51,7 @@ const selectStatsSortie = ({
 }) =>
   kdb
     .selectFrom("indicateurRegionSortie")
-    .leftJoin(
+    .innerJoin(
       "formationScolaireView as formationView",
       "formationView.cfd",
       "indicateurRegionSortie.cfd"
@@ -76,10 +75,8 @@ const selectStatsSortie = ({
         getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: annee })
       )
     )
-    .where("indicateurRegionSortie.cfdContinuum", "is", null)
     .where(isScolaireIndicateurRegionSortie)
     .where(notAnneeCommuneIndicateurRegionSortie)
-    .where(notHistoriqueIndicateurRegionSortie)
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),

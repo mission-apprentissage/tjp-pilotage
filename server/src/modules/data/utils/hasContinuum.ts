@@ -29,7 +29,7 @@ export function hasContinuum<
         "subIRS.cfdContinuum"
       )
       .whereRef("subIRS.cfd", "=", cfdRef)
-      .whereRef("subIRS.dispositifId", "=", codeDispositifRef)
+      .whereRef("subIRS.codeDispositif", "=", codeDispositifRef)
       .whereRef(
         "subIRS.codeRegion",
         "=",

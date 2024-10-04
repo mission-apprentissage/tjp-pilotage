@@ -66,7 +66,7 @@ export function withInsertionReg<
   return eb
     .selectFrom("indicateurRegionSortie as subIRS")
     .whereRef("subIRS.cfd", "=", cfdRef)
-    .whereRef("subIRS.dispositifId", "=", codeDispositifRef)
+    .whereRef("subIRS.codeDispositif", "=", codeDispositifRef)
     .where("subIRS.millesimeSortie", "=", millesimeSortie)
     .where("subIRS.voie", "=", "scolaire")
     .whereRef(
@@ -75,5 +75,5 @@ export function withInsertionReg<
       sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
     )
     .select([selectTauxInsertion6moisAgg("subIRS").as("sa")])
-    .groupBy(["subIRS.cfd", "subIRS.dispositifId"]);
+    .groupBy(["subIRS.cfd", "subIRS.codeDispositif"]);
 }

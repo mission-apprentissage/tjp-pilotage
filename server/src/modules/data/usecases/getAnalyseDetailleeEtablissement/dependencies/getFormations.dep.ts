@@ -11,7 +11,7 @@ export const getFormations = async ({ uai }: { uai: string }) =>
       sql<string>`CONCAT(
         ${eb.ref("dataEtablissement.uai")},
         ${eb.ref("dataFormation.cfd")},
-        COALESCE(${eb.ref("formationEtablissement.dispositifId")},''),
+        COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
       "libelleNiveauDiplome",
@@ -21,7 +21,7 @@ export const getFormations = async ({ uai }: { uai: string }) =>
       "dataFormation.codeNiveauDiplome",
       "dataFormation.cfd",
       "dataFormation.dateOuverture",
-      "codeDispositif",
+      "formationEtablissement.codeDispositif",
       "dataFormation.typeFamille",
       "dispositif.libelleDispositif",
     ])

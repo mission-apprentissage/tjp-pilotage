@@ -43,16 +43,16 @@ export const getChiffresEntree = async ({
       sql<string>`CONCAT(
         ${eb.ref("dataEtablissement.uai")},
         ${eb.ref("dataFormation.cfd")},
-        COALESCE(${eb.ref("formationEtablissement.dispositifId")},''),
+        COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
       eb.fn
         .coalesce("ie.rentreeScolaire", sql<string>`${rentreeScolaire}`)
         .as("rentreeScolaire"),
       "voie",
-      "uai",
+      "dataEtablissement.uai",
       "dataFormation.cfd",
-      "dispositifId",
+      "formationEtablissement.codeDispositif",
       sql<number>`EXTRACT('year' FROM ${eb.ref(
         "dataFormation.dateOuverture"
       )})`.as("dateOuverture"),
@@ -67,14 +67,14 @@ export const getChiffresEntree = async ({
       withTauxPressionNat({
         eb: eb2,
         cfdRef: "dataFormation.cfd",
-        codeDispositifRef: "codeDispositif",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         indicateurEntreeAlias: "ie",
         withTauxDemande: true,
       }).as("tauxPressionNational"),
       withTauxPressionReg({
         eb: eb2,
         cfdRef: "dataFormation.cfd",
-        codeDispositifRef: "codeDispositif",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
         indicateurEntreeAlias: "ie",
         withTauxDemande: true,
@@ -82,7 +82,7 @@ export const getChiffresEntree = async ({
       withTauxPressionDep({
         eb: eb2,
         cfdRef: "dataFormation.cfd",
-        codeDispositifRef: "codeDispositif",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeDepartementRef: "dataEtablissement.codeDepartement",
         indicateurEntreeAlias: "ie",
         withTauxDemande: true,
@@ -102,8 +102,7 @@ export const getChiffresEntree = async ({
     .groupBy([
       "ie.rentreeScolaire",
       "formationEtablissement.voie",
-      "formationEtablissement.dispositifId",
-      "codeDispositif",
+      "formationEtablissement.codeDispositif",
       "dataEtablissement.uai",
       "dataFormation.cfd",
       "nd.codeNiveauDiplome",

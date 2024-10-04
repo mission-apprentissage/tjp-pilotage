@@ -57,7 +57,7 @@ const toEtablissement = ({
   geoloc?: EtablissementGeoloc;
 }): Insertable<DB["etablissement"]> => {
   return {
-    UAI: uai,
+    uai: uai,
     siret: lyceeACCE?.numero_siren_siret_uai,
     codeAcademie: departement?.codeAcademie,
     codeRegion: departement?.codeRegion,

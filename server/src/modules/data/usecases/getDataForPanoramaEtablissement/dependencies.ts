@@ -44,15 +44,15 @@ export const getStatsEtablissement = async ({
     )
     .innerJoin(
       "etablissement",
-      "formationEtablissement.UAI",
-      "etablissement.UAI"
+      "formationEtablissement.uai",
+      "etablissement.uai"
     )
     .leftJoin("indicateurEtablissement", (join) =>
       join
-        .onRef("etablissement.UAI", "=", "indicateurEtablissement.UAI")
+        .onRef("etablissement.uai", "=", "indicateurEtablissement.uai")
         .on("indicateurEtablissement.millesime", "=", millesimeSortie)
     )
-    .where("etablissement.UAI", "=", uai)
+    .where("etablissement.uai", "=", uai)
     .where((w) =>
       w.or([
         w("etablissement.dateFermeture", "is", null),
@@ -70,7 +70,7 @@ export const getStatsEtablissement = async ({
     .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .select([
       sql<string>`${rentreeScolaire}`.as("rentreeScolaire"),
-      "etablissement.UAI as uai",
+      "etablissement.uai as uai",
       "etablissement.libelleEtablissement",
       "region.libelleRegion",
       "region.codeRegion",
@@ -79,13 +79,13 @@ export const getStatsEtablissement = async ({
     ])
     .executeTakeFirstOrThrow()
     .catch(() => {
-      throw Boom.badRequest(`Code UAI invalide : ${uai}`);
+      throw Boom.badRequest(`Code uai invalide : ${uai}`);
     });
 
   const nbFormations = await baseStatsEntree
     .where(notAnneeCommune)
     .select([
-      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
+      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."codeDispositif"))`.as(
         "nbFormations"
       ),
     ])
@@ -136,8 +136,8 @@ const getFormationsEtablissement = async ({
     )
     .innerJoin(
       "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
+      "etablissement.uai",
+      "formationEtablissement.uai"
     )
     .leftJoin(
       "niveauDiplome",
@@ -147,7 +147,7 @@ const getFormationsEtablissement = async ({
     .leftJoin(
       "dispositif",
       "dispositif.codeDispositif",
-      "formationEtablissement.dispositifId"
+      "formationEtablissement.codeDispositif"
     )
     .leftJoin("indicateurEntree as iep", (join) =>
       join
@@ -162,7 +162,7 @@ const getFormationsEtablissement = async ({
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .select((sb) => [
       "formationEtablissement.cfd as cfd",
-      "formationEtablissement.dispositifId as codeDispositif",
+      "formationEtablissement.codeDispositif as codeDispositif",
       "libelleDispositif",
       "formationView.codeNiveauDiplome",
       "formationView.typeFamille",
@@ -189,7 +189,7 @@ const getFormationsEtablissement = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }).as("continuum"),
       (eb) =>
@@ -197,7 +197,7 @@ const getFormationsEtablissement = async ({
           eb,
           millesimeSortie: getMillesimePrecedent(millesimeSortie),
           cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxInsertionPrecedent"),
       (eb) =>
@@ -205,28 +205,28 @@ const getFormationsEtablissement = async ({
           eb,
           millesimeSortie: getMillesimePrecedent(millesimeSortie),
           cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxPoursuitePrecedent"),
       withInsertionReg({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxInsertion"),
       withPoursuiteReg({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxPoursuite"),
       withTauxDevenirFavorableReg({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
     ])
@@ -236,14 +236,14 @@ const getFormationsEtablissement = async ({
       tauxDevenirFavorable: number;
     }>()
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire))
-    .where("formationEtablissement.UAI", "=", uai)
+    .where("formationEtablissement.uai", "=", uai)
     .groupBy([
       "formationView.id",
       "formationView.libelleFormation",
       "nsf.libelleNsf",
       "formationView.typeFamille",
       "formationEtablissement.cfd",
-      "formationEtablissement.dispositifId",
+      "formationEtablissement.codeDispositif",
       "indicateurEntree.effectifs",
       "indicateurEntree.capacites",
       "indicateurEntree.premiersVoeux",
