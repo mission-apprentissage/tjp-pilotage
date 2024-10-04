@@ -12,10 +12,10 @@ export const getValeurAjoutee = async ({
 }) =>
   kdb
     .selectFrom("indicateurEtablissement")
-    .where("UAI", "=", uai)
+    .where("indicateurEtablissement.uai", "=", uai)
     .where("millesime", "in", millesime)
     .select((eb) => [
-      eb.ref("UAI").as("uai"),
+      eb.ref("indicateurEtablissement.uai").as("uai"),
       eb.ref("millesime").as("millesime"),
       eb.ref("valeurAjoutee").as("valeurAjoutee"),
     ])

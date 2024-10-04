@@ -103,7 +103,7 @@ export const [importPositionsQuadrant, importPositionsQuadrantFactory] = inject(
                 positionQuadrant,
                 moyenneInsertionCfdRegion: tauxUnique?.tauxInsertion6mois,
                 moyennePoursuiteEtudeCfdRegion: tauxUnique?.tauxPoursuite,
-                codeDispositif: tauxUnique?.dispositifId,
+                codeDispositif: tauxUnique?.codeDispositif,
               });
             }
           }

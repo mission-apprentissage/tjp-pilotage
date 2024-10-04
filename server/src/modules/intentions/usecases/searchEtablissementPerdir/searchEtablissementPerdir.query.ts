@@ -72,7 +72,7 @@ export const searchEtablissementPerdirQuery = async ({
       return q
         .innerJoin("etablissement", (join) =>
           join
-            .onRef("etablissement.UAI", "=", "dataEtablissement.uai")
+            .onRef("etablissement.uai", "=", "dataEtablissement.uai")
             .on((on) =>
               on.or([
                 on("etablissement.dateFermeture", "is", null),
@@ -86,8 +86,8 @@ export const searchEtablissementPerdirQuery = async ({
         )
         .innerJoin(
           "formationEtablissement",
-          "formationEtablissement.UAI",
-          "etablissement.UAI"
+          "formationEtablissement.uai",
+          "etablissement.uai"
         );
     })
     .limit(20)

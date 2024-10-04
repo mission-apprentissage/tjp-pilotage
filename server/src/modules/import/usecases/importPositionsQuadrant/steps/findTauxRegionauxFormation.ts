@@ -82,14 +82,14 @@ export const findTauxRegionauxFormation = async ({
         .end()
         .as("tauxDevenirFavorable"),
       "formationView.cfd",
-      "indicateurRegionSortie.dispositifId",
+      "indicateurRegionSortie.codeDispositif",
     ])
     .groupBy([
       "millesimeSortie",
       "indicateurRegionSortie.codeRegion",
       "formationView.cfd",
       "formationView.voie",
-      "indicateurRegionSortie.dispositifId",
+      "indicateurRegionSortie.codeDispositif",
     ])
     .where((eb) =>
       eb(eb.ref("formationView.voie"), "=", eb.val(VoieEnum.scolaire))

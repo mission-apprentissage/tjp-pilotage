@@ -15,7 +15,6 @@ import { ScopeEnum } from "shared";
 
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
-import { feature } from "@/utils/feature";
 
 import { Multiselect } from "../../../../../components/Multiselect";
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
@@ -333,44 +332,41 @@ export const FiltersSection = ({
             Tous
           </Multiselect>
         </GridItem>
-
-        {feature.showColorationFilter && (
-          <GridItem>
-            <FormLabel>
-              Inclure colorations
-              <TooltipIcon
-                ms={2}
-                label={
-                  <Box>
-                    <Text>
-                      Dans Orion, à partir de la campagne 2024, on désigne comme
-                      “Colorations” le fait de colorer des places existantes
-                      sans augmentation de capacité.
-                    </Text>
-                    <Text mt={4}>Cliquez pour plus d'infos.</Text>
-                  </Box>
-                }
-                h={"24px"}
-                onClick={() => openGlossaire("coloration")}
-              />
-            </FormLabel>
-            <Select
-              width={"100%"}
-              size="md"
-              variant="newInput"
-              value={filters.withColoration}
-              onChange={(e) => {
-                onUpdateFilter({
-                  key: "withColoration",
-                  selected: e.target.value,
-                });
-              }}
-            >
-              <option value={"true"}>Oui</option>
-              <option value={"false"}>Non</option>
-            </Select>
-          </GridItem>
-        )}
+        <GridItem>
+          <FormLabel>
+            Inclure colorations
+            <TooltipIcon
+              ms={2}
+              label={
+                <Box>
+                  <Text>
+                    Dans Orion, à partir de la campagne 2024, on désigne comme
+                    “Colorations” le fait de colorer des places existantes sans
+                    augmentation de capacité.
+                  </Text>
+                  <Text mt={4}>Cliquez pour plus d'infos.</Text>
+                </Box>
+              }
+              h={"24px"}
+              onClick={() => openGlossaire("coloration")}
+            />
+          </FormLabel>
+          <Select
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            value={filters.withColoration}
+            onChange={(e) => {
+              onUpdateFilter({
+                key: "withColoration",
+                selected: e.target.value,
+              });
+            }}
+          >
+            <option value={"true"}>Oui</option>
+            <option value={"false"}>Non</option>
+          </Select>
+        </GridItem>
         <GridItem>
           <FormLabel>Public / Privé</FormLabel>
           <Multiselect

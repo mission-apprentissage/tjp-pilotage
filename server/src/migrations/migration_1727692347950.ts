@@ -8,10 +8,12 @@ export const up = async (db: Kysely<DB>) => {
     .alterTable("positionFormationRegionaleQuadrant")
     .dropConstraint("positionFormationRegionaleQuadrant_unique_constraint")
     .execute();
+
   await db.schema
     .alterTable("positionFormationRegionaleQuadrant")
     .addColumn("codeDispositif", "varchar(3)")
     .execute();
+
   await db.schema
     .alterTable("positionFormationRegionaleQuadrant")
     .addForeignKeyConstraint(
@@ -21,6 +23,7 @@ export const up = async (db: Kysely<DB>) => {
       ["codeDispositif"]
     )
     .execute();
+
   await db.schema
     .alterTable("positionFormationRegionaleQuadrant")
     .addUniqueConstraint(
@@ -38,18 +41,22 @@ export const up = async (db: Kysely<DB>) => {
 
 export const down = async (db: Kysely<DB>) => {
   await db.deleteFrom("positionFormationRegionaleQuadrant").execute();
+
   await db.schema
     .alterTable("positionFormationRegionaleQuadrant")
     .dropConstraint("positionFormationRegionaleQuadrant_unique_constraint")
     .execute();
+
   await db.schema
     .alterTable("positionFormationRegionaleQuadrant")
     .dropConstraint("fk_positionFormationRegionaleQuadrant_codeDispositif")
     .execute();
+
   await db.schema
     .alterTable("positionFormationRegionaleQuadrant")
     .dropColumn("codeDispositif")
     .execute();
+
   await db.schema
     .alterTable("positionFormationRegionaleQuadrant")
     .addUniqueConstraint(

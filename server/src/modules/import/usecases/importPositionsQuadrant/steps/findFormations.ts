@@ -11,7 +11,7 @@ export const findFormations = async ({ offset = 0 }: { offset: number }) =>
     .leftJoin(
       "dataEtablissement",
       "dataEtablissement.uai",
-      "formationEtablissement.UAI"
+      "formationEtablissement.uai"
     )
     .select([
       "formationScolaireView.cfd",

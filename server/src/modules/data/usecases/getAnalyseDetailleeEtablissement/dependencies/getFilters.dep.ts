@@ -40,7 +40,7 @@ export const getFiltersCodeNiveauDiplome = async ({
       sql<number>`COUNT(DISTINCT CONCAT(
              ${eb.ref("dataEtablissement.uai")},
              ${eb.ref("dataFormation.cfd")},
-             COALESCE(${eb.ref("formationEtablissement.dispositifId")},''),
+             COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
              ${eb.ref("formationEtablissement.voie")}
            ))`.as("nbOffres"),
     ])

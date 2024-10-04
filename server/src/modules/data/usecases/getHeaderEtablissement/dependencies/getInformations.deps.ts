@@ -18,21 +18,21 @@ export const getInformations = ({ uai }: { uai: string }) =>
     )
     .leftJoin("formationEtablissement as feScolaire", (join) =>
       join
-        .onRef("feScolaire.UAI", "=", "etablissement.UAI")
+        .onRef("feScolaire.uai", "=", "etablissement.uai")
         .on("feScolaire.voie", "=", "scolaire")
     )
     .leftJoin("formationEtablissement as feApprentissage", (join) =>
       join
-        .onRef("feApprentissage.UAI", "=", "etablissement.UAI")
+        .onRef("feApprentissage.uai", "=", "etablissement.uai")
         .on("feApprentissage.voie", "=", "apprentissage")
     )
-    .where("etablissement.UAI", "=", uai)
+    .where("etablissement.uai", "=", uai)
     .select((eb) => [
       getEtablissementLibelle(eb).as("libelleEtablissement"),
       sql<string>`INITCAP(${eb.ref("etablissement.adresseEtablissement")})`.as(
         "adresse"
       ),
-      eb.ref("etablissement.UAI").as("uai"),
+      eb.ref("etablissement.uai").as("uai"),
       eb.ref("etablissement.commune").as("commune"),
       eb.ref("etablissement.codePostal").as("codePostal"),
       eb.ref("departement.libelleDepartement").as("libelleDepartement"),
@@ -40,12 +40,12 @@ export const getInformations = ({ uai }: { uai: string }) =>
       eb.ref("departement.codeRegion").as("codeRegion"),
       sql<boolean>`count(${eb.table(
         "feScolaire"
-      )}.*) over (partition by ${eb.ref("feScolaire.UAI")}) > 0`.as(
+      )}.*) over (partition by ${eb.ref("feScolaire.uai")}) > 0`.as(
         "isScolaire"
       ),
       sql<boolean>`count(${eb.table(
         "feApprentissage"
-      )}.*) over (partition by ${eb.ref("feApprentissage.UAI")}) > 0`.as(
+      )}.*) over (partition by ${eb.ref("feApprentissage.uai")}) > 0`.as(
         "isApprentissage"
       ),
       eb.ref("etablissement.secteur").as("secteur"),

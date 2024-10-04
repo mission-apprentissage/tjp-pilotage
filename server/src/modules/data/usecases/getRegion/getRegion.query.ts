@@ -85,8 +85,8 @@ export const getRegionStats = async ({
     )
     .innerJoin(
       "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
+      "etablissement.uai",
+      "formationEtablissement.uai"
     )
     .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .where(isInPerimetreIJRegion)
@@ -119,7 +119,7 @@ export const getRegionStats = async ({
       eb.ref("region.codeRegion").as("codeRegion"),
       eb.ref("formationView.codeNiveauDiplome").as("codeNiveauDiplome"),
       eb.ref("libelleNiveauDiplome").as("libelleNiveauDiplome"),
-      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
+      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."codeDispositif"))`.as(
         "nbFormations"
       ),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})

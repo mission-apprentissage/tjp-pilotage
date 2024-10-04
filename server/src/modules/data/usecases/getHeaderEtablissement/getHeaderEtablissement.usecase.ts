@@ -27,7 +27,7 @@ export const [getHeaderEtablissement] = inject(
         ]);
 
       if (!etablissementId) {
-        throw Boom.notFound(`Etablissement avec l'UAI ${uai} inconnu`);
+        throw Boom.notFound(`Etablissement avec l'uai ${uai} inconnu`);
       }
 
       return {

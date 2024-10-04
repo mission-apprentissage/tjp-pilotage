@@ -57,12 +57,12 @@ const findFormationsInDb = async ({
     .leftJoin("formationEtablissement", (join) =>
       join
         .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
-        .on("formationEtablissement.dispositifId", "is not", null)
+        .on("formationEtablissement.codeDispositif", "is not", null)
     )
     .leftJoin(
       "dispositif",
       "dispositif.codeDispositif",
-      "formationEtablissement.dispositifId"
+      "formationEtablissement.codeDispositif"
     )
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
@@ -90,8 +90,8 @@ const findFormationsInDb = async ({
     )
     .leftJoin(
       "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
+      "etablissement.uai",
+      "formationEtablissement.uai"
     )
     .leftJoin("formationHistorique", (join) =>
       join
@@ -110,7 +110,7 @@ const findFormationsInDb = async ({
       sql<number>`COUNT(*) OVER()`.as("count"),
       "familleMetier.libelleFamille",
       "libelleDispositif",
-      "codeDispositif",
+      "dispositif.codeDispositif",
       "libelleNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
       sql<number>`COUNT("indicateurEntree"."rentreeScolaire")
@@ -154,28 +154,28 @@ const findFormationsInDb = async ({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "etablissement.codeRegion",
       }).as("continuum"),
       withPoursuiteReg({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxPoursuite"),
       withInsertionReg({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxInsertion"),
       withTauxDevenirFavorableReg({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
       isHistoriqueCoExistant(eb, rentreeScolaire[0]).as(
@@ -218,9 +218,9 @@ const findFormationsInDb = async ({
                   )
                   .where("rentreeScolaire", "in", rentreeScolaire)
                   .whereRef(
-                    "fe.dispositifId",
+                    "fe.codeDispositif",
                     "=",
-                    "formationEtablissement.dispositifId"
+                    "formationEtablissement.codeDispositif"
                   )
                   .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
               )
@@ -243,7 +243,7 @@ const findFormationsInDb = async ({
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
       "dispositif.codeDispositif",
-      "formationEtablissement.dispositifId",
+      "formationEtablissement.codeDispositif",
       "libelleFamille",
       "niveauDiplome.libelleNiveauDiplome",
     ])
@@ -347,7 +347,7 @@ const findFiltersInDb = async ({
     .leftJoin(
       "dispositif",
       "dispositif.codeDispositif",
-      "formationEtablissement.dispositifId"
+      "formationEtablissement.codeDispositif"
     )
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
@@ -357,8 +357,8 @@ const findFiltersInDb = async ({
     )
     .leftJoin(
       "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
+      "etablissement.uai",
+      "formationEtablissement.uai"
     )
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .leftJoin(
@@ -416,7 +416,7 @@ const findFiltersInDb = async ({
     eb: ExpressionBuilder<DB, "formationEtablissement">
   ) => {
     if (!codeDispositif) return sql<true>`true`;
-    return eb("formationEtablissement.dispositifId", "in", codeDispositif);
+    return eb("formationEtablissement.codeDispositif", "in", codeDispositif);
   };
 
   const regions = await base

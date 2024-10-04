@@ -18,8 +18,8 @@ export const getEtablissementsProches = async ({
     .selectFrom("etablissement")
     .leftJoin(
       "formationEtablissement",
-      "formationEtablissement.UAI",
-      "etablissement.UAI"
+      "formationEtablissement.uai",
+      "etablissement.uai"
     )
     .leftJoin(
       "dataFormation",
@@ -34,7 +34,7 @@ export const getEtablissementsProches = async ({
     .leftJoin(
       "dispositif",
       "dispositif.codeDispositif",
-      "formationEtablissement.dispositifId"
+      "formationEtablissement.codeDispositif"
     )
     .leftJoin(
       "indicateurSortie",
@@ -56,7 +56,7 @@ export const getEtablissementsProches = async ({
       sql<string[]>`array_agg(distinct ${sb.ref(
         "dispositif.libelleDispositif"
       )})`.as("libellesDispositifs"),
-      "etablissement.UAI",
+      "etablissement.uai",
       "etablissement.codeDepartement",
       "etablissement.commune",
       "etablissement.longitude",
@@ -109,7 +109,7 @@ export const getEtablissementsProches = async ({
     .limit(limit)
     .groupBy([
       "dataFormation.libelleFormation",
-      "etablissement.UAI",
+      "etablissement.uai",
       "etablissement.codeDepartement",
       "etablissement.commune",
       "etablissement.longitude",

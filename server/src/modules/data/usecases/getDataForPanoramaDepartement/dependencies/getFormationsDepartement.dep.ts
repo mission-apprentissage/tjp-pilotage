@@ -13,7 +13,7 @@ export const getFormationsDepartement = async (filters: Filters) =>
           eb,
           millesimeSortie: filters.millesimeSortie ?? CURRENT_IJ_MILLESIME,
           cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }),
       "is not",
