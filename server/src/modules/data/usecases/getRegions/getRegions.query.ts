@@ -7,8 +7,8 @@ export const getRegions = () => {
     .innerJoin("etablissement", "etablissement.codeRegion", "region.codeRegion")
     .innerJoin(
       "formationEtablissement",
-      "formationEtablissement.UAI",
-      "etablissement.UAI"
+      "formationEtablissement.uai",
+      "etablissement.uai"
     )
     .select(["region.codeRegion as value", "region.libelleRegion as label"])
     .where("region.codeRegion", "is not", null)

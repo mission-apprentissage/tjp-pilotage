@@ -11,8 +11,8 @@ export const getDepartements = () => {
     )
     .innerJoin(
       "formationEtablissement",
-      "formationEtablissement.UAI",
-      "etablissement.UAI"
+      "formationEtablissement.uai",
+      "etablissement.uai"
     )
     .select([
       "departement.codeDepartement as value",

@@ -12,7 +12,7 @@ export const createIndicateurRegionSortie = async (
       oc
         .column("cfd")
         .column("codeRegion")
-        .column("dispositifId")
+        .column("codeDispositif")
         .column("voie")
         .column("millesimeSortie")
         .doUpdateSet(indicateurRegionSortie)

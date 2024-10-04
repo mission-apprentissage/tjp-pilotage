@@ -22,18 +22,18 @@ export const nbEtablissementFormationRegion = ({
     )
     .leftJoin(
       "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
+      "etablissement.uai",
+      "formationEtablissement.uai"
     )
     .whereRef("etablissement.codeRegion", "=", "demande.codeRegion")
     .whereRef("formationEtablissement.cfd", "=", "demande.cfd")
     .whereRef(
-      "formationEtablissement.dispositifId",
+      "formationEtablissement.codeDispositif",
       "=",
       "demande.codeDispositif"
     )
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .select((eb2) =>
-      sql<number>`count(${eb2.ref("formationEtablissement.UAI")})`.as("nbEtab")
+      sql<number>`count(${eb2.ref("formationEtablissement.uai")})`.as("nbEtab")
     );
 };

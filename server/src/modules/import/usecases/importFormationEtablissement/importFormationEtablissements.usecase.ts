@@ -109,9 +109,9 @@ export const [importFormationEtablissements] = inject(
           }
           const formationEtablissement =
             await deps.createFormationEtablissement({
-              UAI: uai,
+              uai,
               cfd,
-              dispositifId: null,
+              codeDispositif: null,
               voie: "apprentissage",
             });
 
@@ -135,7 +135,7 @@ export const [importFormationEtablissements] = inject(
 
           await deps.importIndicateursRegionSortie({
             cfd,
-            dispositifId: codeDispositif,
+            codeDispositif: codeDispositif,
             mefstat: lastMefstat,
           });
 
@@ -160,9 +160,9 @@ export const [importFormationEtablissements] = inject(
               }
               const formationEtablissement =
                 await deps.createFormationEtablissement({
-                  UAI: uai,
+                  uai,
                   cfd,
-                  dispositifId: codeDispositif,
+                  codeDispositif: codeDispositif,
                   voie,
                 });
 

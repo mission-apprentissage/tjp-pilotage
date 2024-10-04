@@ -17,7 +17,7 @@ const toIndicateurEtablissement = ({
 }): Insertable<DB["indicateurEtablissement"]> | undefined => {
   if (!uaiData) return;
   return {
-    UAI: uai,
+    uai: uai,
     millesime,
     valeurAjoutee: uaiData.ensemble?.valeur_ajoutee_6_mois,
   };
