@@ -42,6 +42,8 @@ export const [ImportPositionsQuadrant, ImportPositionsQuadrantFactory] = inject(
             millesimeSortie,
           });
 
+          if (!taux) continue;
+
           if (
             taux &&
             taux.tauxDevenirFavorable &&
@@ -74,33 +76,36 @@ export const [ImportPositionsQuadrant, ImportPositionsQuadrantFactory] = inject(
               codeRegion: formation.codeRegion,
             });
 
-            const tauxRegionaux = await findTauxIJRegionaux({
-              millesimeSortie,
-              codeNiveauDiplome: formation.codeNiveauDiplome,
-              codeRegion: formation.codeRegion!,
-            });
+            for (const tauxUnique of tauxFormation) {
+              const tauxRegionaux = await findTauxIJRegionaux({
+                millesimeSortie,
+                codeNiveauDiplome: formation.codeNiveauDiplome,
+                codeRegion: formation.codeRegion!,
+              });
 
-            const positionQuadrant = getPositionQuadrant(
-              {
-                tauxInsertion: tauxFormation?.tauxInsertion6mois ?? undefined,
-                tauxPoursuite: tauxFormation?.tauxPoursuite ?? undefined,
-                typeFamille: formation.typeFamille,
-              },
-              {
-                tauxInsertion: tauxRegionaux?.tauxInsertion6mois,
-                tauxPoursuite: tauxRegionaux?.tauxPoursuite,
-              }
-            );
+              const positionQuadrant = getPositionQuadrant(
+                {
+                  tauxInsertion: tauxUnique?.tauxInsertion6mois ?? undefined,
+                  tauxPoursuite: tauxUnique?.tauxPoursuite ?? undefined,
+                  typeFamille: formation.typeFamille,
+                },
+                {
+                  tauxInsertion: tauxRegionaux?.tauxInsertion6mois,
+                  tauxPoursuite: tauxRegionaux?.tauxPoursuite,
+                }
+              );
 
-            await insertPositionFormationRegionaleQuadrant({
-              codeRegion: formation.codeRegion,
-              cfd: formation.cfd,
-              codeNiveauDiplome: formation.codeNiveauDiplome,
-              millesimeSortie,
-              positionQuadrant,
-              moyenneInsertionCfdRegion: tauxFormation?.tauxInsertion6mois,
-              moyennePoursuiteEtudeCfdRegion: tauxFormation?.tauxPoursuite,
-            });
+              await insertPositionFormationRegionaleQuadrant({
+                codeRegion: formation.codeRegion,
+                cfd: formation.cfd,
+                codeNiveauDiplome: formation.codeNiveauDiplome,
+                millesimeSortie,
+                positionQuadrant,
+                moyenneInsertionCfdRegion: tauxUnique?.tauxInsertion6mois,
+                moyennePoursuiteEtudeCfdRegion: tauxUnique?.tauxPoursuite,
+                codeDispositif: tauxUnique?.codeDispositif,
+              });
+            }
           }
         }
 

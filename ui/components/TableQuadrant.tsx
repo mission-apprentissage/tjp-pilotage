@@ -149,7 +149,7 @@ export const TableQuadrant = ({
                         La part de ceux qui sont en emploi 6 mois après leur
                         sortie d’étude.
                       </Text>
-                      <Text>Cliquer pour plus d'informations.</Text>
+                      <Text>Cliquez pour plus d'infos.</Text>
                     </Box>
                   }
                   onClick={() => openGlossaire("taux-emploi-6-mois")}
@@ -173,7 +173,7 @@ export const TableQuadrant = ({
                         Tout élève inscrit à N+1 (réorientation et redoublement
                         compris).
                       </Text>
-                      <Text>Cliquez pour plus d'informations</Text>
+                      <Text>Cliquez pour plus d'infos.</Text>
                     </Box>
                   }
                   onClick={() => openGlossaire("taux-poursuite-etudes")}

@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 import { getStatsSortieQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";

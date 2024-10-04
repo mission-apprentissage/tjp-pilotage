@@ -11,7 +11,13 @@ export const insertPositionFormationRegionaleQuadrant = async (
     .values(positionQuadrant)
     .onConflict((cb) =>
       cb
-        .columns(["codeRegion", "cfd", "millesimeSortie", "codeNiveauDiplome"])
+        .columns([
+          "codeRegion",
+          "cfd",
+          "millesimeSortie",
+          "codeNiveauDiplome",
+          "codeDispositif",
+        ])
         .doUpdateSet(positionQuadrant)
     )
     .execute();

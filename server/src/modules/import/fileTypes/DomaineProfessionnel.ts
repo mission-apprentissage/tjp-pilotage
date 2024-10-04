@@ -1,4 +1,8 @@
-export type Domaine_Professionnel = {
-  code_domaine_professionnel: string;
-  libelle_domaine_professionnel: string;
-};
+import { z } from "zod";
+
+export const DomaineProfessionnelSchema = z.object({
+  code_domaine_professionnel: z.string(),
+  libelle_domaine_professionnel: z.string(),
+});
+
+export type Domaine_Professionnel = z.infer<typeof DomaineProfessionnelSchema>;

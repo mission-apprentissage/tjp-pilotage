@@ -37,7 +37,18 @@ export const FormationTooltipContent = ({
           label={
             <span>
               Effectif en entrée
-              <TooltipIcon ml="1" onClick={() => openGlossaire("effectifs")} />
+              <TooltipIcon
+                ml="1"
+                onClick={() => openGlossaire("effectif-en-entree")}
+                label={
+                  <Box>
+                    <Text>
+                      Effectifs en entrée en première année de formation.
+                    </Text>
+                    <Text>Cliquez pour plus d'infos.</Text>
+                  </Box>
+                }
+              />
             </span>
           }
           value={formation?.effectif}

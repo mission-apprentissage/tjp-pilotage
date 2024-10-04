@@ -105,8 +105,13 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.effectif1}
           <TooltipIcon
             ml="1"
-            label="Nb d'élèves"
-            onClick={() => openGlossaire("effectifs")}
+            label={
+              <Box>
+                <Text>Nb d'élèves.</Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
+            onClick={() => openGlossaire("nombre-deleves")}
           />
         </Th>
         <Th isNumeric cursor="pointer" onClick={() => handleOrder("effectif2")}>
@@ -114,8 +119,13 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.effectif2}
           <TooltipIcon
             ml="1"
-            label="Nb d'élèves"
-            onClick={() => openGlossaire("effectifs")}
+            label={
+              <Box>
+                <Text>Nb d'élèves.</Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
+            onClick={() => openGlossaire("nombre-deleves")}
           />
         </Th>
         <Th isNumeric cursor="pointer" onClick={() => handleOrder("effectif3")}>
@@ -123,8 +133,13 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.effectif3}
           <TooltipIcon
             ml="1"
-            label="Nb d'élèves"
-            onClick={() => openGlossaire("effectifs")}
+            label={
+              <Box>
+                <Text>Nb d'élèves.</Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
+            onClick={() => openGlossaire("nombre-deleves")}
           />
         </Th>
         <Th isNumeric cursor="pointer" onClick={() => handleOrder("capacite")}>
@@ -354,13 +369,23 @@ export const HeadLineContent = ({
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleNsf}
           <TooltipIcon
             ml="1"
-            label="cliquez pour plus d'infos."
+            label="Cliquez pour plus d'infos."
             onClick={() => openGlossaire("domaine-de-formation-nsf")}
           />
         </Th>
         <Th cursor="pointer" onClick={() => handleOrder("effectifEntree")}>
           <OrderIcon {...order} column="effectifEntree" />
           {FORMATION_ETABLISSEMENT_COLUMNS.effectifEntree}
+          <TooltipIcon
+            ml="1"
+            label={
+              <Box>
+                <Text>Effectifs en entrée en première année de formation.</Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
+            onClick={() => openGlossaire("effectif-en-entree")}
+          />
         </Th>
       </Tr>
     </Thead>

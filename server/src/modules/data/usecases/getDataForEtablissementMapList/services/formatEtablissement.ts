@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 import { EtablissementSchema } from "../getDataForEtablissementMapList.schema";
 import { EtablissementWithDistance } from "../getDataForEtablissementMapList.usecase";

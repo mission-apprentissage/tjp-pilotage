@@ -16,7 +16,7 @@ export const StatCard = chakra(
     color?: string;
     tooltip?: string;
     type?: "absolute" | "percentage";
-    sub?: string;
+    sub?: ReactNode;
     glossaire?: ReactNode;
   }) => (
     <Card>
@@ -45,11 +45,7 @@ export const StatCard = chakra(
               )}
             </Flex>
           </Tooltip>
-          {sub && (
-            <Text fontSize={"12px"} color={"grey.425"}>
-              {sub}
-            </Text>
-          )}
+          {sub}
         </Flex>
       </CardBody>
     </Card>
