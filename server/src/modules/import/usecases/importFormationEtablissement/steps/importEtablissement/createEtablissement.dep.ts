@@ -9,7 +9,7 @@ export const createEtablissement = async (
   kdb
     .insertInto("etablissement")
     .values(etablissement)
-    .onConflict((oc) => oc.column("UAI").doUpdateSet(etablissement))
+    .onConflict((oc) => oc.column("uai").doUpdateSet(etablissement))
     .returningAll()
     .executeTakeFirstOrThrow()
     .then(cleanNull);

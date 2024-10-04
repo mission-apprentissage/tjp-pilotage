@@ -81,7 +81,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         .onRef("indicateurRegionSortie.cfd", "=", "demande.cfd")
         .onRef("indicateurRegionSortie.codeRegion", "=", "demande.codeRegion")
         .onRef(
-          "indicateurRegionSortie.dispositifId",
+          "indicateurRegionSortie.codeDispositif",
           "=",
           "demande.codeDispositif"
         )

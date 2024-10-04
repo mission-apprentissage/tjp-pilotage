@@ -89,8 +89,8 @@ export const getDepartementStats = async ({
     )
     .innerJoin(
       "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
+      "etablissement.uai",
+      "formationEtablissement.uai"
     )
     .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .innerJoin("departement", (join) =>
@@ -132,7 +132,7 @@ export const getDepartementStats = async ({
       eb.ref("departement.libelleDepartement").as("libelleDepartement"),
       eb.ref("formationView.codeNiveauDiplome").as("codeNiveauDiplome"),
       eb.ref("libelleNiveauDiplome").as("libelleNiveauDiplome"),
-      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
+      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."codeDispositif"))`.as(
         "nbFormations"
       ),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})

@@ -20,7 +20,7 @@ const getBase = ({
     .innerJoin(
       "dataEtablissement",
       "dataEtablissement.uai",
-      "formationEtablissement.UAI"
+      "formationEtablissement.uai"
     )
     .innerJoin(
       "dataFormation",
@@ -37,7 +37,7 @@ const getBase = ({
         .onRef(
           "dispositif.codeDispositif",
           "=",
-          "formationEtablissement.dispositifId"
+          "formationEtablissement.codeDispositif"
         )
         .on("formationEtablissement.voie", "=", "scolaire")
     )
@@ -56,7 +56,7 @@ const getBase = ({
           w("indicateurEntree.rentreeScolaire", "=", rentreeScolaire),
           w("indicateurEntree.rentreeScolaire", "is", null),
         ]),
-        w("formationEtablissement.UAI", "=", uai),
+        w("formationEtablissement.uai", "=", uai),
       ])
     );
 
@@ -77,7 +77,7 @@ export const getChiffresIj = ({
     )
     .where("millesimeSortie", "in", millesime)
     .select([
-      "UAI",
+      "formationEtablissement.uai",
       "voie",
       "millesimeSortie",
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuite"),
@@ -89,7 +89,7 @@ export const getChiffresIj = ({
       "effectifSortie",
     ])
     .groupBy([
-      "formationEtablissement.UAI",
+      "formationEtablissement.uai",
       "voie",
       "millesimeSortie",
       "indicateurSortie.nbPoursuiteEtudes",
@@ -112,7 +112,7 @@ export const getChiffresNumerateurAndDenominateur = ({
       getChiffresIj({ uai, millesime, rentreeScolaire }).as("chiffresIj")
     )
     .select((eb) => [
-      "UAI",
+      "uai",
       "voie",
       "millesimeSortie",
       eb.fn
@@ -206,7 +206,7 @@ export const getChiffresNumerateurAndDenominateur = ({
         )
         .as("denominateurDevenir"),
     ])
-    .groupBy(["UAI", "voie", "millesimeSortie"]);
+    .groupBy(["uai", "voie", "millesimeSortie"]);
 
 export const getTauxIJ = async ({
   uai,
@@ -227,7 +227,7 @@ export const getTauxIJ = async ({
       }).as("chiffres")
     )
     .select((eb) => [
-      eb.ref("UAI").as("uai"),
+      eb.ref("uai").as("uai"),
       "voie",
       "millesimeSortie",
       eb
@@ -264,6 +264,6 @@ export const getTauxIJ = async ({
         .end()
         .as("tauxDevenir"),
     ])
-    .orderBy(["UAI", "voie", "millesimeSortie desc"])
+    .orderBy(["uai", "voie", "millesimeSortie desc"])
     .execute()
     .then(cleanNull);

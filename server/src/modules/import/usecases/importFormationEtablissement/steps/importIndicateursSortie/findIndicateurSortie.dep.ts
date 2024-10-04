@@ -23,10 +23,10 @@ export const findIndicateurSortie = ({
     .select("formationEtablissement.cfd")
     .where("cfd", "=", cfd)
     .$call((eb) => {
-      if (!codeDispositif) return eb.where("dispositifId", "is", null);
-      return eb.where("dispositifId", "=", codeDispositif);
+      if (!codeDispositif) return eb.where("codeDispositif", "is", null);
+      return eb.where("codeDispositif", "=", codeDispositif);
     })
-    .where("UAI", "=", uai)
+    .where("uai", "=", uai)
     .where("millesimeSortie", "=", millesimeSortie)
     .executeTakeFirst()
     .then(cleanNull);
