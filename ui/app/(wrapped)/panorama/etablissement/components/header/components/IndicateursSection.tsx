@@ -1,4 +1,3 @@
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Box,
@@ -11,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
-import { TooltipIcon } from "@/components/TooltipIcon";
 import { formatNumber } from "@/utils/formatUtils";
 
 import { useGlossaireContext } from "../../../../../glossaire/glossaireContext";
@@ -241,20 +239,44 @@ export const IndicateursSection = ({
           <Text fontSize={{ base: "14px" }} fontWeight={"bold"}>
             INDICATEURS ÉTABLISSEMENT
           </Text>
-          <TooltipIcon
-            ml="2"
-            label="Ces chiffres incluent l'apprentissage pour les établissements qui en proposent."
-            placement="right"
+          <GlossaireShortcut
+            display={"inline"}
+            ml={2}
+            mr={2}
+            pr={2}
+            iconSize={"14px"}
+            glossaireEntryKey={"inserjeunes"}
+            tooltip={
+              <Box>
+                <Text>
+                  Ces chiffres incluent l'apprentissage pour les établissements
+                  qui en proposent.
+                </Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
           />
         </Flex>
         <Badge
           variant="info"
           size={"md"}
           as="button"
-          onClick={() => openGlossaire("inserjeunes")}
+          onClick={() => openGlossaire("millesime")}
         >
           Millésimes {indicateurs?.millesime}
-          <QuestionOutlineIcon ml={"0.2rem"} />
+          <GlossaireShortcut
+            marginLeft={1}
+            glossaireEntryKey={"millesime"}
+            tooltip={
+              <Box>
+                <Text>
+                  Cohorte d’élèves pour laquelle les indicateurs InserJeunes ont
+                  été mesurés systématiquement sur 2 années scolaires cumulées.
+                </Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
+          />
         </Badge>
       </Flex>
       <Flex width={"100%"} gap={2} justifyContent={"space-between"} mt={"16px"}>

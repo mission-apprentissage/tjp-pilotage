@@ -7,3 +7,5 @@ logs/
 # Ignore files inside public/upload folder
 public/upload/*
 !public/upload/.gitkeep
+
+src/import_files_report.csv

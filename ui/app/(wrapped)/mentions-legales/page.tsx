@@ -7,7 +7,7 @@ export const revalidate = 60;
 const fetchData = async () => {
   const notion = new NotionAPI();
   const recordMap = await notion.getPage(
-    "Mentions-l-gales-fc279d2c008c4ea58e62f2a6a17a2a95"
+    "Mentions-l-gales-2ba4934ec113453e9e66fd5b2cf895df"
   );
   return recordMap;
 };

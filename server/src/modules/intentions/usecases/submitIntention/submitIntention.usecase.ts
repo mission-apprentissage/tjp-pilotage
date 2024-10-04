@@ -138,7 +138,7 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       });
 
       if (created.statut !== currentIntention?.statut) {
-        createChangementStatutQuery({
+        deps.createChangementStatutQuery({
           id: generateId(),
           intentionNumero: created.numero,
           statutPrecedent: currentIntention?.statut,

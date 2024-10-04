@@ -791,6 +791,7 @@ export interface PositionFormationRegionaleQuadrant {
   millesimeSortie: string;
   moyenneInsertionCfdRegion: number | null;
   moyennePoursuiteEtudeCfdRegion: number | null;
+  codeDispositif: string | null;
 }
 
 export interface RawData {

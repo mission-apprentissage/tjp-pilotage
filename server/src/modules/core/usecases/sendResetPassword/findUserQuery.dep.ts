@@ -6,7 +6,7 @@ export const findUserQuery = async ({ email }: { email: string }) => {
     .selectFrom("user")
     .where("user.email", "=", email)
     .where("enabled", "=", true)
-    .select(["email", "password", "firstname", "lastname"])
+    .select(["email", "password", "firstname", "lastname", "sub"])
     .executeTakeFirst();
 
   return user && cleanNull(user);

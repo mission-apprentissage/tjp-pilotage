@@ -1,5 +1,9 @@
-export type Constat = {
-  UAI: string;
-  "Mef Bcp 11": string;
-  "Nombre d'élèves : Total": string;
-};
+import { z } from "zod";
+
+export const ConstatSchema = z.object({
+  UAI: z.string(),
+  "Mef Bcp 11": z.string(),
+  "Nombre d'élèves : Total": z.string(),
+});
+
+export type Constat = z.infer<typeof ConstatSchema>;

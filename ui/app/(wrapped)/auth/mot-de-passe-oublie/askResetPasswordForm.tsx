@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { emailRegex } from "shared";
 
 import { client } from "../../../../api.client";
+import { getErrorMessage } from "../../../../utils/apiError";
 import { AuthContext } from "../authContext";
 
 export const ForgottenPasswordForm = () => {
@@ -36,6 +37,7 @@ export const ForgottenPasswordForm = () => {
     mutateAsync: login,
     isLoading,
     isError,
+    error,
   } = client.ref("[POST]/auth/send-reset-password").useMutation({
     onSuccess: () => {
       router.replace("/auth/mot-de-passe-oublie/confirmation");
@@ -76,7 +78,7 @@ export const ForgottenPasswordForm = () => {
           </FormControl>
           {isError && (
             <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
-              Erreur lors de la demande
+              {getErrorMessage(error)}
             </Text>
           )}
           <Flex>

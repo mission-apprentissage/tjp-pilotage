@@ -82,12 +82,14 @@ export const findTauxRegionauxFormation = async ({
         .end()
         .as("tauxDevenirFavorable"),
       "formationView.cfd",
+      "indicateurRegionSortie.codeDispositif",
     ])
     .groupBy([
       "millesimeSortie",
       "indicateurRegionSortie.codeRegion",
       "formationView.cfd",
       "formationView.voie",
+      "indicateurRegionSortie.codeDispositif",
     ])
     .where((eb) =>
       eb(eb.ref("formationView.voie"), "=", eb.val(VoieEnum.scolaire))
@@ -114,4 +116,4 @@ export const findTauxRegionauxFormation = async ({
       }
       return q;
     })
-    .executeTakeFirst();
+    .execute();

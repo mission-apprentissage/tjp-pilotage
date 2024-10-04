@@ -2,6 +2,7 @@ import {
   Box,
   Flex,
   Heading,
+  HStack,
   Img,
   SimpleGrid,
   Stack,
@@ -54,11 +55,6 @@ export const IndicateursSection = ({
           <Flex style={{ textWrap: "pretty" }}>
             Retrouvez ici les principaux indicateurs sur votre territoire (Voie
             scolaire, Chiffres {CURRENT_RENTREE}).{" "}
-            <GlossaireShortcut
-              display={"inline"}
-              marginInline={1}
-              iconSize={"16px"}
-            />
           </Flex>
         </Flex>
         <Img
@@ -76,21 +72,6 @@ export const IndicateursSection = ({
             typeTerritoire === "region" ? "région" : "département"
           }`}
           value={stats?.nbFormations ?? "-"}
-          glossaire={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Box display="inline">
-                  <Text>
-                    Dans Orion, une formation s’entend pour un niveau de diplôme
-                    et une durée donnés
-                  </Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              onClick={() => openGlossaire()}
-            />
-          }
         />
         <StatCard
           label={`Nombre total d’élèves dans votre ${
@@ -98,9 +79,26 @@ export const IndicateursSection = ({
           }`}
           value={stats?.effectifTotal ? stats.effectifTotal : "-"}
           sub={
-            stats?.effectifEntree
-              ? `dont effectif en entrée ${stats.effectifEntree}`
-              : undefined
+            stats?.effectifEntree ? (
+              <HStack>
+                <Text fontSize={"12px"} color={"grey.425"}>
+                  dont effectif en entrée {stats.effectifEntree}{" "}
+                </Text>
+                <GlossaireShortcut
+                  glossaireEntryKey="effectif-en-entree"
+                  ml={0.5}
+                  color="grey.425"
+                  tooltip={
+                    <Box>
+                      <Text>
+                        Effectifs en entrée en première année de formation.
+                      </Text>
+                      <Text>Cliquez pour plus d'infos.</Text>
+                    </Box>
+                  }
+                />
+              </HStack>
+            ) : undefined
           }
           glossaire={
             <TooltipIcon
@@ -113,7 +111,7 @@ export const IndicateursSection = ({
                   <Text>Cliquez pour plus d'infos.</Text>
                 </Box>
               }
-              onClick={() => openGlossaire("effectifs")}
+              onClick={() => openGlossaire("nombre-deleves")}
             />
           }
         />
@@ -223,7 +221,7 @@ export const IndicateursSection = ({
                 <Box>
                   <Text>
                     La part de ceux qui sont en emploi 6 mois après leur sortie
-                    d’étude.
+                    d’études.
                   </Text>
                   <Text>Cliquez pour plus d'infos.</Text>
                 </Box>

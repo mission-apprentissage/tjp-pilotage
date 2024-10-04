@@ -620,7 +620,15 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
             tooltip={
               <TooltipIcon
                 mr="6px"
-                label="Cliquez ici pour plus d’infos"
+                label={
+                  <Box>
+                    <Text>
+                      La part d’élèves qui sont en emploi 6 mois après leur
+                      sortie d’études
+                    </Text>
+                    <Text>Cliquez ici pour plus d'infos.</Text>
+                  </Box>
+                }
                 onClick={() => openGlossaire("taux-emploi-6-mois")}
               />
             }
@@ -632,7 +640,15 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
             tooltip={
               <TooltipIcon
                 mr="6px"
-                label="Cliquez ici pour plus d’infos"
+                label={
+                  <Box>
+                    <Text>
+                      Tout élève inscrit à la rentrée N+1 (réorientation et
+                      redoublement compris)
+                    </Text>
+                    <Text>Cliquez ici pour plus d'infos.</Text>
+                  </Box>
+                }
                 onClick={() => openGlossaire("taux-poursuite-etudes")}
               />
             }
