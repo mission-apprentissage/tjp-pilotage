@@ -1,75 +1,37 @@
 import _ from "lodash";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import { formatTauxTransformation } from "../../utils/formatTauxTransformation";
 import { getFiltersQuery } from "./deps/getFilters.query";
 import { getStatsPilotageIntentionsQuery } from "./deps/getStatsPilotageIntentions.query";
 import { getStatsPilotageIntentionsSchema } from "./getStatsPilotageIntentions.schema";
 
-export interface Filters
-  extends z.infer<typeof getStatsPilotageIntentionsSchema.querystring> {
-  statut?: Exclude<DemandeStatutType, "supprimée" | "refusée">;
-}
+export type Filters = z.infer<
+  typeof getStatsPilotageIntentionsSchema.querystring
+>;
 
 export type GetScopedStatsPilotageIntentionsType = Awaited<
   ReturnType<typeof getStatsPilotageIntentionsQuery>
 >;
 
-const formatResult = (
-  result: GetScopedStatsPilotageIntentionsType,
-  order: "asc" | "desc" = "asc",
-  orderBy?: string
-) => {
+const formatResult = (result: GetScopedStatsPilotageIntentionsType) => {
   return _.chain(result)
     .map((item) => ({
       ...item,
       key: `_${item.code}`,
-      libelle: item.libelle,
-      code: item.code,
-      placesTransformees:
-        item.placesOuvertesScolaire +
-          item.placesOuvertesApprentissage +
-          item.placesFermeesScolaire +
-          item.placesFermeesApprentissage || 0,
-      placesOuvertesScolaire: item.placesOuvertesScolaire || 0,
-      placesFermeesScolaire: item.placesFermeesScolaire || 0,
-      placesOuvertesApprentissage: item.placesOuvertesApprentissage || 0,
-      placesFermeesApprentissage: item.placesFermeesApprentissage || 0,
-      placesOuvertes:
-        item.placesOuvertesScolaire + item.placesOuvertesApprentissage || 0,
-      placesFermees:
-        item.placesFermeesScolaire + item.placesFermeesApprentissage || 0,
-      ratioOuverture:
-        Math.round(
-          ((item.placesOuvertesScolaire + item.placesOuvertesApprentissage) /
-            (item.placesOuvertesScolaire +
-              item.placesOuvertesApprentissage +
-              item.placesFermeesScolaire +
-              item.placesFermeesApprentissage) || 0) * 10000
-        ) / 100,
       ratioFermeture:
-        Math.round(
-          (item.placesFermeesScolaire /
-            (item.placesOuvertesScolaire +
-              item.placesOuvertesApprentissage +
-              item.placesFermeesScolaire +
-              item.placesFermeesApprentissage) || 0) * 10000
-        ) / 100,
-      tauxTransformation: formatTauxTransformation(
-        item.transformes,
-        item.effectif
-      ),
-      effectif: item.effectif,
+        item.placesFermees && item.placesOuvertes
+          ? item.placesFermees / (item.placesFermees + item.placesOuvertes)
+          : undefined,
+      ratioOuverture:
+        item.placesFermees && item.placesOuvertes
+          ? item.placesOuvertes / (item.placesFermees + item.placesOuvertes)
+          : undefined,
+      tauxTransformation: item.effectif
+        ? item.placesTransformees / item.effectif
+        : undefined,
     }))
-    .orderBy((item) => {
-      if (orderBy) return item[orderBy as keyof typeof item];
-      return item.libelle;
-    }, order)
     .keyBy("key")
     .value();
 };
@@ -92,12 +54,12 @@ const getStatsPilotageIntentionsFactory =
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
-        statut: DemandeStatutEnum["projet de demande"],
+        statut: [DemandeStatutEnum["projet de demande"]],
         campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
-        statut: DemandeStatutEnum["demande validée"],
+        statut: [DemandeStatutEnum["demande validée"]],
         campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
@@ -107,17 +69,9 @@ const getStatsPilotageIntentionsFactory =
     ]);
 
     return {
-      ["projet de demande"]: formatResult(
-        projets,
-        activeFilters.order,
-        activeFilters.orderBy
-      ),
-      ["demande validée"]: formatResult(
-        validees,
-        activeFilters.order,
-        activeFilters.orderBy
-      ),
-      all: formatResult(all, activeFilters.order, activeFilters.orderBy),
+      ["projet de demande"]: formatResult(projets),
+      ["demande validée"]: formatResult(validees),
+      all: formatResult(all),
       campagne: currentCampagne,
       filters,
     };

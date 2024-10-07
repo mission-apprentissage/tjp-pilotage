@@ -370,6 +370,7 @@ export const Nav = () => {
                 <NavMenuLink
                   href="/intentions/pilotage"
                   segment="pilotage-intentions"
+                  prefetch={false}
                 >
                   Pilotage
                 </NavMenuLink>

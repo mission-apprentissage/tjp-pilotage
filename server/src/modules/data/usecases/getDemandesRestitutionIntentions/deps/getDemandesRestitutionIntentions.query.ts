@@ -1,6 +1,8 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
+import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
@@ -37,6 +39,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   millesimeSortie = CURRENT_IJ_MILLESIME,
   voie,
   campagne,
+  positionQuadrant,
   offset = 0,
   limit = 20,
   order = "desc",
@@ -87,6 +90,37 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         )
         .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
         .on(isScolaireIndicateurRegionSortie)
+    )
+    .leftJoin("positionFormationRegionaleQuadrant", (join) =>
+      join.on((eb) =>
+        eb.and([
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.cfd"),
+            "=",
+            eb.ref("demande.cfd")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
+            "=",
+            eb.ref("demande.codeDispositif")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
+            "=",
+            eb.ref("dataEtablissement.codeRegion")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
+            "=",
+            eb.val(
+              getMillesimeFromRentreeScolaire({
+                rentreeScolaire: CURRENT_RENTREE,
+                offset: 0,
+              })
+            )
+          ),
+        ])
+      )
     )
     .selectAll("demande")
     .select((eb) => [
@@ -161,6 +195,15 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
+      if (positionQuadrant)
+        return eb.where(
+          "positionFormationRegionaleQuadrant.positionQuadrant",
+          "=",
+          positionQuadrant
+        );
+      return eb;
+    })
+    .$call((eb) => {
       if (statut) return eb.where("demande.statut", "in", statut);
       return eb;
     })
@@ -219,11 +262,20 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     })
     .$call((eb) => {
       if (coloration)
-        return eb.where(
-          "demande.coloration",
-          "=",
-          coloration === "true" ? sql<true>`true` : sql<false>`false`
-        );
+        switch (coloration) {
+          case "with":
+            return eb.where("demande.coloration", "=", true);
+          case "without":
+            return eb.where((w) =>
+              w.or([
+                w("demande.coloration", "=", false),
+                w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"]),
+              ])
+            );
+          case "all":
+          default:
+            return eb;
+        }
       return eb;
     })
     .$call((eb) => {

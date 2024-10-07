@@ -27,7 +27,7 @@ import { importIndicateursRegion } from "./modules/import/usecases/importIndicat
 import { importLienEmploiFormation } from "./modules/import/usecases/importLienEmploiFormation/importLienEmploiFormation.usecase";
 import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importNSF } from "./modules/import/usecases/importNSF/importNSF.usecase";
-import { ImportPositionsQuadrant } from "./modules/import/usecases/importPositionsQuadrant/importPositionsQuadrant";
+import { importPositionsQuadrant } from "./modules/import/usecases/importPositionsQuadrant/importPositionsQuadrant";
 import {
   ImportFileError,
   importRawFile,
@@ -347,7 +347,7 @@ cli
     const usecases = {
       importFormations,
       refreshViews,
-      ImportPositionsQuadrant,
+      importPositionsQuadrant,
     };
 
     if (usecaseName) {
@@ -370,7 +370,7 @@ cli
   .command("importPositionsQuadrant")
   .description("Calcul des positions quadrants")
   .action(async () => {
-    await ImportPositionsQuadrant();
+    await importPositionsQuadrant();
   });
 
 cli.parse(process.argv);

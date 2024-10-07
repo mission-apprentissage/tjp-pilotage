@@ -6,6 +6,7 @@ import { themeColors } from "../../../../../theme/themeColors";
 const QuadrantPlaceholder = () => {
   return (
     <VStack
+      mt={6}
       width="100%"
       backgroundColor={themeColors.grey[975]}
       color={themeColors.grey[625]}

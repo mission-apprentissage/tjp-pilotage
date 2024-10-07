@@ -1,14 +1,12 @@
 import { MILLESIMES_IJ } from "shared";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { z } from "zod";
 
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "../../queries/getStatsSortie/getStatsSortie";
-import {
-  getPositionQuadrant,
-  HORS_QUADRANT,
-} from "../../services/getPositionQuadrant";
+import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { getDemandesRestitutionIntentionsQuery } from "./deps/getDemandesRestitutionIntentions.query";
 import { getFilters } from "./deps/getFilters.query";
 import { FiltersSchema } from "./getDemandesRestitutionIntentions.schema";
@@ -58,7 +56,7 @@ const getDemandesRestitutionIntentionsFactory =
                     demande.codeNiveauDiplome ?? ""
                   ] || {}
                 )
-              : HORS_QUADRANT,
+              : PositionQuadrantEnum["Hors quadrant"],
         })
       ),
       campagne,

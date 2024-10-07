@@ -1,7 +1,41 @@
 import { Scope } from "shared";
 import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
-import { client } from "@/api.client";
+import { client } from "../../../../api.client";
+
+export type RepartitionPilotageIntentions =
+  (typeof client.infer)["[GET]/pilotage-intentions/repartition"];
+
+export type RepartitionPilotageIntentionsQuery =
+  (typeof client.inferArgs)["[GET]/pilotage-intentions/repartition"]["query"];
+
+export type FiltersRepartitionPilotageIntentions = Omit<
+  RepartitionPilotageIntentionsQuery,
+  "order" | "orderBy"
+>;
+
+export type OrderRepartitionPilotageIntentions = Pick<
+  RepartitionPilotageIntentionsQuery,
+  "order" | "orderBy"
+>;
+
+export type RepartitionPilotageIntentionsDomaines =
+  (typeof client.infer)["[GET]/pilotage-intentions/repartition"]["domaines"];
+
+export type RepartitionPilotageIntentionsZonesGeographiques =
+  (typeof client.infer)["[GET]/pilotage-intentions/repartition"]["zonesGeographiques"];
+
+export type RepartitionPilotageIntentionsNiveauxDiplome =
+  (typeof client.infer)["[GET]/pilotage-intentions/repartition"]["niveauxDiplome"];
+
+export type RepartitionPilotageIntentionsPositionQuadrant =
+  (typeof client.infer)["[GET]/pilotage-intentions/repartition"]["positionsQuadrant"];
+
+export type RepartitionPilotageIntentionsLine =
+  | RepartitionPilotageIntentionsDomaines[string]
+  | RepartitionPilotageIntentionsZonesGeographiques[string]
+  | RepartitionPilotageIntentionsNiveauxDiplome[string]
+  | RepartitionPilotageIntentionsPositionQuadrant[string];
 
 export type StatsPilotageIntentions =
   (typeof client.infer)["[GET]/pilotage-intentions/stats"];
@@ -9,77 +43,29 @@ export type StatsPilotageIntentions =
 export type StatsPilotageIntentionsQuery =
   (typeof client.inferArgs)["[GET]/pilotage-intentions/stats"]["query"];
 
-export type StatsPilotageIntentionsData = Omit<
-  StatsPilotageIntentions,
-  "filters"
->;
-
-export type FiltersStatsPilotageIntentions = Pick<
-  StatsPilotageIntentionsQuery,
-  | "rentreeScolaire"
-  | "CPC"
-  | "codeNiveauDiplome"
-  | "scope"
-  | "codeNsf"
-  | "campagne"
-> & {
-  code?: string;
-};
-
-export type FiltersEventsStatsPilotageIntentions =
-  | keyof FiltersStatsPilotageIntentions
-  | "codeRegion"
-  | "codeAcademie"
-  | "codeDepartement";
-
-export type ScopedFiltersStatsPilotageIntentions = Pick<
-  StatsPilotageIntentionsQuery,
-  | "rentreeScolaire"
-  | "CPC"
-  | "codeNsf"
-  | "codeNiveauDiplome"
-  | "scope"
-  | "campagne"
->;
-
-export type StatsPilotageIntentionsByScope = {
-  [K in Scope]?: StatsPilotageIntentionsData;
-} & {
-  filters?: StatsPilotageIntentions["filters"];
-};
-
-export type OrderStatsPilotageIntentions = Pick<
+export type FiltersStatsPilotageIntentions = Omit<
   StatsPilotageIntentionsQuery,
   "order" | "orderBy"
 >;
 
-export type IndicateurType = "tauxTransformation" | "ratioFermeture";
+export type Statut =
+  | Extract<DemandeStatutType, "demande validée" | "projet de demande">
+  | "all";
+
+export type Indicateur = keyof StatsPilotageIntentions["all"][string];
 
 export type SelectedScope = {
   type: Scope;
   value?: string;
 };
-export type Statut =
-  | Extract<DemandeStatutType, "demande validée" | "projet de demande">
-  | "all";
-export type Indicateur =
-  | "tauxTransformation"
-  | "countDemande"
-  | "placesOuvertesScolaire"
-  | "placesFermeesScolaire"
-  | "placesOuvertesApprentissage"
-  | "placesFermeesApprentissage"
-  | "placesOuvertes"
-  | "placesFermees"
-  | "ratioFermeture"
-  | "ratioOuverture";
-
-export type TerritoiresFilters = {
-  [K in Scope]?: string;
-};
 
 export type FormationsPilotageIntentionsQuery =
   (typeof client.inferArgs)["[GET]/pilotage-intentions/formations"]["query"];
+
+export type FiltersFormationsPilotageIntentionsQuery = Omit<
+  FormationsPilotageIntentionsQuery,
+  "order" | "orderBy"
+>;
 
 export type FormationsPilotageIntentions =
   (typeof client.infer)["[GET]/pilotage-intentions/formations"];

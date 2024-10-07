@@ -16,7 +16,7 @@ export const InfoBlock = chakra(
   }) => {
     return (
       <Box className={className}>
-        <Flex mb="1" fontWeight="medium">
+        <Flex mb="1" fontWeight="500">
           {label}
         </Flex>
         <Flex py="1" px="1.5" bg={textBg}>

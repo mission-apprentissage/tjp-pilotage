@@ -1,13 +1,11 @@
 import { MILLESIMES_IJ } from "shared";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { z } from "zod";
 
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "../../../data/queries/getStatsSortie/getStatsSortie";
-import {
-  getPositionQuadrant,
-  HORS_QUADRANT,
-} from "../../../data/services/getPositionQuadrant";
+import { getPositionQuadrant } from "../../../data/services/getPositionQuadrant";
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import {
   getCampagneQuery,
@@ -58,7 +56,7 @@ const getCorrectionsFactory =
                     correction.codeNiveauDiplome ?? ""
                   ] || {}
                 )
-              : HORS_QUADRANT,
+              : PositionQuadrantEnum["Hors quadrant"],
         })
       ),
       count,

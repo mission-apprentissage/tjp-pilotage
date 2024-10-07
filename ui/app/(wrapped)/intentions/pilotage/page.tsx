@@ -1,11 +1,11 @@
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { PilotageIntentionsClient } from "./client";
+import { PilotageNationalClient } from "./page.client";
 
 export default () => {
   return (
     <GuardPermission permission="pilotage-intentions/lecture">
-      <PilotageIntentionsClient />
+      <PilotageNationalClient />
     </GuardPermission>
   );
 };
