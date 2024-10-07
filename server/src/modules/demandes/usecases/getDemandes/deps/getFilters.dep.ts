@@ -5,7 +5,7 @@ import { kdb } from "../../../../../db/db";
 import { DB } from "../../../../../db/schema";
 import { cleanNull } from "../../../../../utils/noNull";
 import { RequestUser } from "../../../../core/model/User";
-import { notPerimetreIJAcademie } from "../../../../data/utils/notPerimetreIJ";
+import { isInPerimetreIJAcademie } from "../../../../data/utils/isInPerimetreIJ";
 import { isDemandeNotDeleted } from "../../../../utils/isDemandeSelectable";
 import { isRestitutionIntentionVisible } from "../../../../utils/isRestitutionIntentionVisible";
 import { getDemandesSchema } from "../getDemandes.schema";
@@ -38,7 +38,7 @@ export const getFilters = async ({
       "academie.codeAcademie as value",
     ])
     .where("academie.codeAcademie", "is not", null)
-    .where(notPerimetreIJAcademie)
+    .where(isInPerimetreIJAcademie)
     .where((eb) => {
       return eb.or([
         user.codeRegion

@@ -1,5 +1,7 @@
 import { ScopeEnum } from "shared";
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { scope } from "shared/enum/scopeEnum";
+import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
 
 const OptionSchema = z.object({
@@ -18,12 +20,21 @@ const ScopedStatsTransfoSchema = z.object({
   tauxTransformation: z.number().optional(),
   placesOuvertesScolaire: z.number(),
   placesFermeesScolaire: z.number(),
+  placesOuvertesScolaireQ1: z.number(),
+  placesFermeesScolaireQ4: z.number(),
   placesOuvertesApprentissage: z.number(),
   placesFermeesApprentissage: z.number(),
+  placesOuvertesApprentissageQ1: z.number(),
+  placesFermeesApprentissageQ4: z.number(),
   placesOuvertes: z.number(),
   placesFermees: z.number(),
-  ratioOuverture: z.number(),
-  ratioFermeture: z.number(),
+  placesOuvertesQ1: z.number(),
+  placesFermeesQ4: z.number(),
+  placesColorees: z.number(),
+  placesColoreesQ4: z.number(),
+  placesOuvertesTransformationEcologique: z.number(),
+  ratioOuverture: z.number().optional(),
+  ratioFermeture: z.number().optional(),
 });
 
 const QuerySchema = z.object({
@@ -31,25 +42,21 @@ const QuerySchema = z.object({
   codeNiveauDiplome: z.array(z.string()).optional(),
   CPC: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
-  order: z.enum(["asc", "desc"]).optional(),
-  orderBy: ScopedStatsTransfoSchema.pick({
-    libelle: true,
-    effectif: true,
-    ratioFermeture: true,
-    ratioOuverture: true,
-    code: true,
-    placesFermees: true,
-    placesOuvertes: true,
-    placesTransformees: true,
-    tauxTransformation: true,
-  })
-    .keyof()
-    .optional(),
-  scope: scope.default(ScopeEnum.national),
+  scope: z.preprocess((val) => {
+    if (!Object.keys(ScopeEnum).includes(val as string)) {
+      return ScopeEnum.national; // Valeur par défaut si invalide
+    }
+    return val; // Sinon, retourne la valeur valide
+  }, scope),
   codeRegion: z.string().optional(),
   codeAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),
   campagne: z.string().optional(),
+  secteur: z.array(SecteurZodType).optional(),
+  statut: z
+    .array(DemandeStatutZodType.exclude(["refusée", "supprimée"]))
+    .optional(),
+  withColoration: z.string().optional(),
 });
 
 export type QuerySchema = z.infer<typeof QuerySchema>;
@@ -80,8 +87,10 @@ export const getStatsPilotageIntentionsSchema = {
         academies: z.array(OptionSchema),
         departements: z.array(OptionSchema),
         CPCs: z.array(OptionSchema),
-        libellesNsf: z.array(OptionSchema),
-        diplomes: z.array(OptionSchema),
+        nsfs: z.array(OptionSchema),
+        niveauxDiplome: z.array(OptionSchema),
+        secteurs: z.array(OptionSchema),
+        statuts: z.array(OptionSchema),
       }),
     }),
   },

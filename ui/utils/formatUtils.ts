@@ -54,11 +54,31 @@ export const formatNumber = (
 
 export const formatPercentage = (
   value?: number,
-  numberOfDigits: number = 0
+  numberOfDigits: number = 0,
+  nullValue: string = "0 %"
 ): string => {
-  if (!value) return "0 %";
+  if (value === undefined || value === null || Number.isNaN(value))
+    return nullValue;
   return new Intl.NumberFormat("fr-FR", {
     style: "percent",
     maximumFractionDigits: numberOfDigits,
   }).format(value);
+};
+
+export const formatPercentageWithoutSign = (
+  value?: number,
+  numberOfDigits: number = 0,
+  nullValue: number = 0
+): number => {
+  if (value === undefined || value === null) return nullValue;
+  return formatNumber(value * 100, numberOfDigits);
+};
+
+export const formatLargeNumber = (
+  value?: number,
+  thousandSeparator: string = "\u00A0",
+  nullValue: string = "0"
+): string => {
+  if (value === undefined || value === null) return nullValue;
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
 };

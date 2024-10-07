@@ -1,14 +1,16 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
+import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../../utils/isDemandeSelectable";
 import {
-  notPerimetreIJAcademie,
-  notPerimetreIJDepartement,
-  notPerimetreIJRegion,
-} from "../../../utils/notPerimetreIJ";
+  isInPerimetreIJAcademie,
+  isInPerimetreIJDepartement,
+  isInPerimetreIJRegion,
+} from "../../../utils/isInPerimetreIJ";
 import { Filters } from "../getStatsPilotageIntentions.usecase";
 
 export const getFiltersQuery = async ({
@@ -20,10 +22,11 @@ export const getFiltersQuery = async ({
   campagne,
   codeAcademie,
   codeRegion,
+  withColoration,
 }: Filters) => {
-  const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
+  const inStatut = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!statut || statut === undefined) return sql<true>`true`;
-    return eb("demande.statut", "=", statut);
+    return eb("demande.statut", "in", statut);
   };
 
   const inRentreeScolaire = (eb: ExpressionBuilder<DB, "demande">) => {
@@ -45,7 +48,7 @@ export const getFiltersQuery = async ({
     return eb("dataFormation.cpc", "in", CPC);
   };
 
-  const inFiliere = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+  const inNsf = (eb: ExpressionBuilder<DB, "dataFormation">) => {
     if (!codeNsf) return sql<true>`true`;
     return eb("dataFormation.codeNsf", "in", codeNsf);
   };
@@ -56,7 +59,7 @@ export const getFiltersQuery = async ({
   };
 
   const base = kdb
-    .selectFrom("latestDemandeView as demande")
+    .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .innerJoin(
@@ -77,6 +80,16 @@ export const getFiltersQuery = async ({
       "dataFormation.codeNiveauDiplome"
     )
     .where(isDemandeNotDeletedOrRefused)
+    .$call((q) => {
+      if (!withColoration || withColoration === "false")
+        return q.where((w) =>
+          w.or([
+            w("demande.coloration", "=", false),
+            w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"]),
+          ])
+        );
+      return q;
+    })
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -107,7 +120,7 @@ export const getFiltersQuery = async ({
     .leftJoin("departement", "departement.codeRegion", "region.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "region.codeRegion")
     .where("region.codeRegion", "is not", null)
-    .where(notPerimetreIJRegion)
+    .where(isInPerimetreIJRegion)
     .distinct()
     .orderBy("label", "asc")
     .execute();
@@ -122,7 +135,7 @@ export const getFiltersQuery = async ({
       eb.ref("academie.libelleAcademie").as("label"),
     ])
     .where("academie.codeAcademie", "is not", null)
-    .where(notPerimetreIJAcademie)
+    .where(isInPerimetreIJAcademie)
     .$call((q) => {
       if (codeRegion) {
         return q.where("region.codeRegion", "=", codeRegion);
@@ -139,7 +152,7 @@ export const getFiltersQuery = async ({
       "departement.libelleDepartement as label",
     ])
     .where("departement.codeDepartement", "is not", null)
-    .where(notPerimetreIJDepartement)
+    .where(isInPerimetreIJDepartement)
     .$call((q) => {
       if (codeRegion) {
         return q.where("region.codeRegion", "=", codeRegion);
@@ -159,22 +172,22 @@ export const getFiltersQuery = async ({
     .where("dataFormation.cpc", "is not", null)
     .where((eb) =>
       eb.and([
-        inStatus(eb),
+        inStatut(eb),
         inRentreeScolaire(eb),
         inCodeNiveauDiplome(eb),
-        inFiliere(eb),
+        inNsf(eb),
         inCampagne(eb),
       ])
     )
     .execute();
 
-  const libellesNsf = await base
+  const nsfFilters = await base
     .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
     .select(["nsf.libelleNsf as label", "nsf.codeNsf as value"])
     .where("dataFormation.codeNsf", "is not", null)
     .where((eb) =>
       eb.and([
-        inStatus(eb),
+        inStatut(eb),
         inRentreeScolaire(eb),
         inCodeNiveauDiplome(eb),
         inCPC(eb),
@@ -183,7 +196,7 @@ export const getFiltersQuery = async ({
     )
     .execute();
 
-  const diplomesFilters = await base
+  const niveauxDiplomesFilters = await base
     .select([
       "niveauDiplome.libelleNiveauDiplome as label",
       "niveauDiplome.codeNiveauDiplome as value",
@@ -191,10 +204,10 @@ export const getFiltersQuery = async ({
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
     .where((eb) =>
       eb.and([
-        inStatus(eb),
+        inStatut(eb),
         inRentreeScolaire(eb),
         inCPC(eb),
-        inFiliere(eb),
+        inNsf(eb),
         inCampagne(eb),
       ])
     )
@@ -214,9 +227,23 @@ export const getFiltersQuery = async ({
         .distinct()
         .where("niveauDiplome.codeNiveauDiplome", "is not", null)
         .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)
-        .where((eb) => eb.and([inCPC(eb), inFiliere(eb)]))
+        .where((eb) => eb.and([inCPC(eb), inNsf(eb)]))
         .$castTo<{ label: string; value: string }>()
     )
+    .execute();
+
+  const secteurFilters = await base
+    .select((eb) => [
+      "dataEtablissement.secteur as value",
+      eb
+        .case()
+        .when("dataEtablissement.secteur", "=", "PU")
+        .then("Public")
+        .when("dataEtablissement.secteur", "=", "PR")
+        .then("Privé")
+        .end()
+        .as("label"),
+    ])
     .execute();
 
   return {
@@ -226,7 +253,15 @@ export const getFiltersQuery = async ({
     academies: academiesFilters.map(cleanNull),
     departements: departementsFilters.map(cleanNull),
     CPCs: CPCFilters.map(cleanNull),
-    libellesNsf: libellesNsf.map(cleanNull),
-    diplomes: diplomesFilters.map(cleanNull),
+    nsfs: nsfFilters.map(cleanNull),
+    niveauxDiplome: niveauxDiplomesFilters.map(cleanNull),
+    secteurs: secteurFilters.map(cleanNull),
+    statuts: [
+      { value: DemandeStatutEnum["demande validée"], label: "Demande validée" },
+      {
+        value: DemandeStatutEnum["projet de demande"],
+        label: "Projet de demande",
+      },
+    ],
   };
 };

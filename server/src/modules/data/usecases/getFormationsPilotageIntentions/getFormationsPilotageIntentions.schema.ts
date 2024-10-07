@@ -1,20 +1,22 @@
 import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
+import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
 
 const FormationTransformationStatsSchema = z.object({
   libelleFormation: z.string().optional(),
   libelleDispositif: z.string().optional(),
-  tauxInsertion: z.coerce.number(),
-  tauxPoursuite: z.coerce.number(),
+  tauxInsertion: z.coerce.number().optional(),
+  tauxPoursuite: z.coerce.number().optional(),
   tauxDevenirFavorable: z.coerce.number().optional(),
   tauxPression: z.coerce.number().optional(),
   codeDispositif: z.string().optional(),
   cfd: z.string(),
   nbDemandes: z.coerce.number(),
   nbEtablissements: z.coerce.number(),
-  differencePlaces: z.coerce.number(),
+  effectif: z.coerce.number(),
   placesOuvertes: z.coerce.number(),
   placesFermees: z.coerce.number(),
+  placesColorees: z.coerce.number(),
   placesTransformees: z.coerce.number(),
   positionQuadrant: z.string().optional(),
   continuum: z
@@ -33,10 +35,15 @@ export const getFormationsPilotageIntentionsSchema = {
     codeRegion: z.string().optional(),
     codeAcademie: z.string().optional(),
     codeDepartement: z.string().optional(),
-    statut: DemandeStatutZodType.exclude(["refusée", "supprimée"]).optional(),
-    type: z.enum(["ouverture", "fermeture"]).optional(),
+    statut: z
+      .array(DemandeStatutZodType.exclude(["refusée", "supprimée"]))
+      .optional(),
+    CPC: z.array(z.string()).optional(),
+    secteur: z.array(SecteurZodType).optional(),
+    type: z.enum(["ouverture", "fermeture", "coloration"]).optional(),
     tauxPression: z.enum(["faible", "eleve"]).optional(),
     campagne: z.string().optional(),
+    withColoration: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationTransformationStatsSchema.keyof().optional(),
   }),

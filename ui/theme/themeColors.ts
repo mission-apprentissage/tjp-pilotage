@@ -108,6 +108,12 @@ export const themeColors = {
     625: "#929292",
     50: "#161616",
   },
+  error: {
+    425: "#ce0500",
+    950: "#ffe9e9",
+    "950_hover": "#ffc5c5",
+    "950_active": "#ffafaf",
+  },
   warning: {
     425: "#b34000",
     525: "#d64d00",
@@ -125,6 +131,7 @@ export const themeColors = {
     950: "#b8fec9",
     "950_hover": "#46fd89",
     "950_active": "#34eb7b",
+    975: "#DFFEE6",
   },
   orange: {
     draft: "#FEEBCA",
@@ -165,12 +172,6 @@ export const themeColors = {
       2: "#58B77D",
       3: "#4B9F6C",
     },
-  },
-  error: {
-    425: "#ce0500",
-    950: "#ffe9e9",
-    "950_hover": "#ffc5c5",
-    "950_active": "#ffafaf",
   },
   yellowMoutarde: {
     348: "#695240",

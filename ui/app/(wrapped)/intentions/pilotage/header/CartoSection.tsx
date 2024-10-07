@@ -1,18 +1,37 @@
-import { Box, Flex, Select, Skeleton, Text, useToken } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Flex,
+  Highlight,
+  Select,
+  Skeleton,
+  Text,
+  useToken,
+} from "@chakra-ui/react";
 import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
-import { client } from "@/api.client";
 import { CartoGraph } from "@/components/CartoGraph";
+import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatPercentageWithoutSign } from "@/utils/formatUtils";
 
+import { useScopeCode } from "../hooks";
 import {
   FiltersStatsPilotageIntentions,
-  IndicateurType,
-  OrderStatsPilotageIntentions,
-  SelectedScope,
+  StatsPilotageIntentions,
 } from "../types";
+export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 
-type Props = {
+export const CartoSection = ({
+  indicateur,
+  handleIndicateurChange,
+  indicateurOptions,
+  filters,
+  handleFilters,
+  data,
+  isLoading,
+}: {
   indicateur: IndicateurType;
   handleIndicateurChange: (indicateur: string) => void;
   indicateurOptions: {
@@ -20,21 +39,13 @@ type Props = {
     value: string;
     isDefault: boolean;
   }[];
-  filters: Partial<FiltersStatsPilotageIntentions>;
-  order: Partial<OrderStatsPilotageIntentions>;
-  scope: SelectedScope;
+  filters: FiltersStatsPilotageIntentions;
   handleFilters: (filters: Partial<FiltersStatsPilotageIntentions>) => void;
-};
+  data: StatsPilotageIntentions | undefined;
+  isLoading?: boolean;
+}) => {
+  const { code: scopeCode } = useScopeCode(filters);
 
-export const CartoSection = ({
-  indicateur,
-  handleIndicateurChange,
-  indicateurOptions,
-  filters,
-  order,
-  scope,
-  handleFilters,
-}: Props) => {
   const customPalette = [
     useToken("colors", "pilotage.red"),
     useToken("colors", "pilotage.orange"),
@@ -79,23 +90,6 @@ export const CartoSection = ({
     }
   };
 
-  const { data, isLoading } = client
-    .ref("[GET]/pilotage-intentions/stats")
-    .useQuery(
-      {
-        query: {
-          ...filters,
-          ...order,
-          scope:
-            scope.type === ScopeEnum.national ? ScopeEnum.region : scope.type,
-        },
-      },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
-
   const getGraphData = useCallback(() => {
     if (!data) {
       return [];
@@ -106,20 +100,48 @@ export const CartoSection = ({
       parentName: territoire.libelleAcademie,
       value:
         territoire.effectif || indicateur != "tauxTransformation"
-          ? territoire[indicateur] ?? 0
+          ? formatPercentageWithoutSign(territoire[indicateur], 1)
           : undefined,
       code: territoire.code,
     }));
-  }, [scope, data, filters]);
+  }, [data, filters, indicateur]);
 
   const handleClickOnTerritoire = useCallback(
     (code: string | undefined) =>
       handleFilters({
-        scope: scope.type,
-        code: scope.value === code ? undefined : code,
+        scope: filters.scope,
+        codeRegion: filters.scope !== ScopeEnum["région"] ? undefined : code,
+        codeAcademie:
+          filters.scope !== ScopeEnum["académie"] ? undefined : code,
+        codeDepartement:
+          filters.scope !== ScopeEnum["département"] ? undefined : code,
       }),
-    [handleFilters, scope]
+    [handleFilters, filters, scopeCode]
   );
+
+  if (!Object.keys(ScopeEnum).includes(filters.scope))
+    return (
+      <Box
+        flex={1}
+        borderRadius={4}
+        border={"1px solid"}
+        borderColor="grey.900"
+        bg="white"
+        p={3}
+      >
+        <Center flex={1} flexDirection={"column"} h={"100%"} gap={4}>
+          <Text>
+            <Highlight
+              query={filters.scope}
+              styles={{ fontWeight: 700, textDecoration: "underline" }}
+            >
+              {`Granularité "${filters.scope}" non gérée.`}
+            </Highlight>
+          </Text>
+          <Text>Veuillez en sélectionner une autre dans les filtres.</Text>
+        </Center>
+      </Box>
+    );
 
   return (
     <Box
@@ -129,9 +151,8 @@ export const CartoSection = ({
       borderColor="grey.900"
       bg="white"
       p={3}
-      mt={12}
     >
-      {isLoading ? (
+      {isLoading || !filters.campagne || !filters.rentreeScolaire ? (
         <Skeleton opacity="0.3" height="100%" />
       ) : (
         <Box>
@@ -150,6 +171,7 @@ export const CartoSection = ({
                 borderBottomColor={
                   typeof indicateur !== "undefined" ? "info.525" : ""
                 }
+                cursor={"pointer"}
               >
                 {indicateurOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -159,14 +181,44 @@ export const CartoSection = ({
               </Select>
             </Flex>
           </Flex>
-          <Box mt={"-20"}>
+          <Flex justifyContent="start" zIndex={1} position={"relative"}>
+            <ExportMenuButton
+              onExportCsv={async () => {
+                downloadCsv(
+                  `visualisation_territoriale_${indicateur}_${filters.scope}`,
+                  getGraphData(),
+                  {
+                    name: "Nom",
+                    value: indicateur,
+                    code: "Code",
+                  }
+                );
+              }}
+              onExportExcel={async () => {
+                downloadExcel(
+                  `visualisation_territoriale_${indicateur}_${filters.scope}`,
+                  getGraphData(),
+                  {
+                    name: "Nom",
+                    value: indicateur,
+                    code: "Code",
+                  }
+                );
+              }}
+              variant="ghost"
+            />
+          </Flex>
+          <Box mt={"-60px"}>
             <CartoGraph
               graphData={getGraphData()}
-              scope={scope.type}
+              scope={filters.scope}
               customPiecesSteps={getCustomPieces()}
               customColorPalette={getCustomPalette()}
               handleClick={handleClickOnTerritoire}
-              selectedScope={scope}
+              selectedScope={{
+                type: filters.scope,
+                value: scopeCode ?? "national",
+              }}
             />
           </Box>
         </Box>

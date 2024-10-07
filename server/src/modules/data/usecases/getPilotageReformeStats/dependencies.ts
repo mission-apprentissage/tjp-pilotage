@@ -3,7 +3,7 @@ import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
-import { countDifferenceCapacite } from "../../../utils/countCapacite";
+import { countPlacesTransformeesParCampagne } from "../../../utils/countCapacite";
 import {
   isDemandeNotAjustementRentree,
   isDemandeNotDeletedOrRefused,
@@ -250,12 +250,20 @@ const getTauxTransformationData = async (filters: {
     .selectFrom("latestDemandeIntentionView as demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .select((es) => [
-      es.fn
-        .coalesce(es.fn.sum<number>(countDifferenceCapacite(es)), sql`0`)
+    .leftJoin("campagne", "campagne.id", "demande.campagneId")
+    .select((eb) => [
+      eb.fn
+        .coalesce(
+          eb.fn.sum<number>(countPlacesTransformeesParCampagne(eb)),
+          sql`0`
+        )
         .as("transformes"),
-      genericOnConstatRentree({ ...filters })()
-        .select((eb) => sql<number>`SUM(${eb.ref("effectif")})`.as("effectif"))
+      genericOnConstatRentree({ ...filters })
+        .select((eb) =>
+          eb.fn
+            .coalesce(eb.fn.sum<number>("effectif"), eb.val(0))
+            .as("effectif")
+        )
         .as("effectif"),
     ])
     .where(isDemandeNotDeletedOrRefused)

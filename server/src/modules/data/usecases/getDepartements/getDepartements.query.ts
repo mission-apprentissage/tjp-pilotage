@@ -1,5 +1,5 @@
 import { kdb } from "../../../../db/db";
-import { notPerimetreIJDepartement } from "../../utils/notPerimetreIJ";
+import { isInPerimetreIJDepartement } from "../../utils/isInPerimetreIJ";
 
 export const getDepartements = () => {
   return kdb
@@ -19,7 +19,7 @@ export const getDepartements = () => {
       "departement.libelleDepartement as label",
     ])
     .where("departement.codeDepartement", "is not", null)
-    .where(notPerimetreIJDepartement)
+    .where(isInPerimetreIJDepartement)
     .distinct()
     .orderBy("label", "asc")
     .execute();

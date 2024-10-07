@@ -1,171 +1,68 @@
-import { ExpressionBuilder, sql } from "kysely";
+import { sql } from "kysely";
 import { ScopeEnum } from "shared";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { DB, kdb } from "../../../../../db/db";
+import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import {
-  countDifferenceCapacite,
-  countFermeturesApprentissage,
-  countFermeturesSco,
-  countOuverturesApprentissage,
-  countOuverturesSco,
-} from "../../../../utils/countCapacite";
-import { isDemandeNotDeletedOrRefused } from "../../../../utils/isDemandeSelectable";
-import {
-  notPerimetreIJAcademie,
-  notPerimetreIJDepartement,
-  notPerimetreIJRegion,
-} from "../../../utils/notPerimetreIJ";
+  isInPerimetreIJAcademie,
+  isInPerimetreIJDepartement,
+  isInPerimetreIJRegion,
+} from "../../../utils/isInPerimetreIJ";
 import { genericOnConstatRentree } from "../../../utils/onConstatDeRentree";
+import { genericOnDemandes } from "../../../utils/onDemande";
 import { Filters } from "../getStatsPilotageIntentions.usecase";
-
-const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
-  eb.fn.count<number>("demande.numero");
-
-const genericOnDemandes =
-  ({
-    statut,
-    rentreeScolaire,
-    codeNiveauDiplome,
-    CPC,
-    codeNsf,
-    campagne,
-  }: Filters) =>
-  (eb: ExpressionBuilder<DB, "region" | "academie" | "departement">) =>
-    eb
-      .selectFrom("latestDemandeIntentionView as demande")
-      .innerJoin("campagne", (join) =>
-        join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-          if (campagne) return eb.on("campagne.annee", "=", campagne);
-          return eb;
-        })
-      )
-      .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-      .select((es) => [
-        es.fn
-          .coalesce(eb.fn.sum<number>(countOuverturesSco(es)), sql`0`)
-          .as("placesOuvertesScolaire"),
-        es.fn
-          .coalesce(eb.fn.sum<number>(countFermeturesSco(es)), sql`0`)
-          .as("placesFermeesScolaire"),
-        es.fn
-          .coalesce(eb.fn.sum<number>(countOuverturesApprentissage(es)), sql`0`)
-          .as("placesOuvertesApprentissage"),
-        es.fn
-          .coalesce(eb.fn.sum<number>(countFermeturesApprentissage(es)), sql`0`)
-          .as("placesFermeesApprentissage"),
-        es.fn
-          .coalesce(eb.fn.sum<number>(countDifferenceCapacite(es)), sql`0`)
-          .as("transformes"),
-        selectNbDemandes(es).as("countDemande"),
-      ])
-      .where(isDemandeNotDeletedOrRefused)
-      .$call((eb) => {
-        if (rentreeScolaire)
-          return eb.where(
-            "demande.rentreeScolaire",
-            "in",
-            rentreeScolaire.map((rentree) => parseInt(rentree))
-          );
-        return eb;
-      })
-      .$call((eb) => {
-        if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
-        return eb;
-      })
-      .$call((eb) => {
-        if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
-        return eb;
-      })
-      .$call((eb) => {
-        if (codeNiveauDiplome)
-          return eb.where(
-            "dataFormation.codeNiveauDiplome",
-            "in",
-            codeNiveauDiplome
-          );
-        return eb;
-      })
-      .$call((q) => {
-        if (!statut)
-          return q.where("demande.statut", "in", [
-            DemandeStatutEnum["demande validée"],
-            DemandeStatutEnum["projet de demande"],
-          ]);
-        return q.where("demande.statut", "=", statut);
-      });
 
 const getNationalData = async (filters: Filters) => {
   return kdb
-    .selectFrom("latestDemandeIntentionView as demande")
-    .innerJoin("campagne", (join) =>
-      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-        if (filters.campagne)
-          return eb.on("campagne.annee", "=", filters.campagne);
-        return eb;
-      })
+    .selectFrom(genericOnDemandes(filters).as("demandes"))
+    .leftJoin(
+      genericOnConstatRentree(filters)
+        .select((eb) => [
+          sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("effectif"),
+        ])
+        .as("effectifs"),
+      (join) => join.onTrue()
     )
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .select((es) => [
-      es.fn
-        .coalesce(es.fn.sum<number>(countOuverturesSco(es)), sql`0`)
+    .select((eb) => [
+      eb.fn.coalesce("countDemande", eb.val(0)).as("countDemande"),
+      eb.fn
+        .coalesce("placesOuvertesScolaire", eb.val(0))
         .as("placesOuvertesScolaire"),
-      es.fn
-        .coalesce(es.fn.sum<number>(countFermeturesSco(es)), sql`0`)
+      eb.fn
+        .coalesce("placesFermeesScolaire", eb.val(0))
         .as("placesFermeesScolaire"),
-      es.fn
-        .coalesce(es.fn.sum<number>(countOuverturesApprentissage(es)), sql`0`)
+      eb.fn
+        .coalesce("placesOuvertesScolaireQ1", eb.val(0))
+        .as("placesOuvertesScolaireQ1"),
+      eb.fn
+        .coalesce("placesFermeesScolaireQ4", eb.val(0))
+        .as("placesFermeesScolaireQ4"),
+      eb.fn
+        .coalesce("placesOuvertesApprentissage", eb.val(0))
         .as("placesOuvertesApprentissage"),
-      es.fn
-        .coalesce(es.fn.sum<number>(countFermeturesApprentissage(es)), sql`0`)
+      eb.fn
+        .coalesce("placesFermeesApprentissage", eb.val(0))
         .as("placesFermeesApprentissage"),
-      es.fn
-        .coalesce(es.fn.sum<number>(countDifferenceCapacite(es)), sql`0`)
-        .as("transformes"),
-      selectNbDemandes(es).as("countDemande"),
-      genericOnConstatRentree(filters)()
-        .select((eb) => sql<number>`SUM(${eb.ref("effectif")})`.as("effectif"))
-        .as("effectif"),
-      sql<string>`'national'`.as("code"),
-      sql<string>`'national'`.as("libelle"),
+      eb.fn
+        .coalesce("placesOuvertesApprentissageQ1", eb.val(0))
+        .as("placesOuvertesApprentissageQ1"),
+      eb.fn
+        .coalesce("placesFermeesApprentissageQ4", eb.val(0))
+        .as("placesFermeesApprentissageQ4"),
+      eb.fn.coalesce("placesOuvertes", eb.val(0)).as("placesOuvertes"),
+      eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
+      eb.fn.coalesce("placesOuvertesQ1", eb.val(0)).as("placesOuvertesQ1"),
+      eb.fn.coalesce("placesFermeesQ4", eb.val(0)).as("placesFermeesQ4"),
+      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
+      eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
+      eb.fn
+        .coalesce("placesOuvertesTransformationEcologique", eb.val(0))
+        .as("placesOuvertesTransformationEcologique"),
+      eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
+      eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
+      eb.val("national").as("code"),
+      eb.val("national").as("libelle"),
     ])
-    .where(isDemandeNotDeletedOrRefused)
-    .$call((eb) => {
-      if (filters.rentreeScolaire)
-        return eb.where(
-          "demande.rentreeScolaire",
-          "in",
-          filters.rentreeScolaire.map((rentree) => parseInt(rentree))
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (filters.CPC) return eb.where("dataFormation.cpc", "in", filters.CPC);
-      return eb;
-    })
-    .$call((eb) => {
-      if (filters.codeNsf)
-        return eb.where("dataFormation.codeNsf", "in", filters.codeNsf);
-      return eb;
-    })
-    .$call((eb) => {
-      if (filters.codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          filters.codeNiveauDiplome
-        );
-      return eb;
-    })
-    .$call((q) => {
-      if (!filters.statut)
-        return q.where("demande.statut", "in", [
-          DemandeStatutEnum["demande validée"],
-          DemandeStatutEnum["projet de demande"],
-        ]);
-      return q.where("demande.statut", "=", filters.statut);
-    })
     .execute()
     .then(cleanNull);
 };
@@ -174,50 +71,63 @@ const getRegionData = async (filters: Filters) => {
   return kdb
     .selectFrom("region")
     .leftJoin(
-      (eb) =>
-        genericOnDemandes(filters)(eb)
-          .select((es) => [es.ref("demande.codeRegion").as("codeRegion")])
-          .groupBy(["demande.codeRegion"])
-          .as("demandes"),
+      genericOnDemandes(filters)
+        .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])
+        .groupBy(["demande.codeRegion"])
+        .as("demandes"),
       (join) => join.onRef("demandes.codeRegion", "=", "region.codeRegion")
     )
     .leftJoin(
-      () =>
-        genericOnConstatRentree(filters)()
-          .select((es) => [
-            es.ref("dataEtablissement.codeRegion").as("codeRegion"),
-            sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
-              "effectif"
-            ),
-          ])
-          .groupBy(["dataEtablissement.codeRegion"])
-          .as("effectifs"),
+      genericOnConstatRentree(filters)
+        .select((eb) => [
+          eb.ref("dataEtablissement.codeRegion").as("codeRegion"),
+          sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("effectif"),
+        ])
+        .groupBy(["dataEtablissement.codeRegion"])
+        .as("effectifs"),
       (join) => join.onRef("effectifs.codeRegion", "=", "region.codeRegion")
     )
     .select((eb) => [
-      eb.ref("region.codeRegion").as("code"),
-      eb.ref("region.libelleRegion").as("libelle"),
-      eb.ref("effectifs.effectif").as("effectif"),
-      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesScolaire")}, 0)`.as(
-        "placesOuvertesScolaire"
-      ),
-      sql<number>`COALESCE(${eb.ref("demandes.placesFermeesScolaire")}, 0)`.as(
-        "placesFermeesScolaire"
-      ),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesOuvertesApprentissage"
-      )}, 0)`.as("placesOuvertesApprentissage"),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesFermeesApprentissage"
-      )}, 0)`.as("placesFermeesApprentissage"),
-      sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
-        "transformes"
-      ),
-      sql<number>`COALESCE(${eb.ref("demandes.countDemande")}, 0)`.as(
-        "countDemande"
-      ),
+      eb.fn.coalesce("countDemande", eb.val(0)).as("countDemande"),
+      eb.fn
+        .coalesce("placesOuvertesScolaire", eb.val(0))
+        .as("placesOuvertesScolaire"),
+      eb.fn
+        .coalesce("placesFermeesScolaire", eb.val(0))
+        .as("placesFermeesScolaire"),
+      eb.fn
+        .coalesce("placesOuvertesScolaireQ1", eb.val(0))
+        .as("placesOuvertesScolaireQ1"),
+      eb.fn
+        .coalesce("placesFermeesScolaireQ4", eb.val(0))
+        .as("placesFermeesScolaireQ4"),
+      eb.fn
+        .coalesce("placesOuvertesApprentissage", eb.val(0))
+        .as("placesOuvertesApprentissage"),
+      eb.fn
+        .coalesce("placesFermeesApprentissage", eb.val(0))
+        .as("placesFermeesApprentissage"),
+      eb.fn
+        .coalesce("placesOuvertesApprentissageQ1", eb.val(0))
+        .as("placesOuvertesApprentissageQ1"),
+      eb.fn
+        .coalesce("placesFermeesApprentissageQ4", eb.val(0))
+        .as("placesFermeesApprentissageQ4"),
+      eb.fn.coalesce("placesOuvertes", eb.val(0)).as("placesOuvertes"),
+      eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
+      eb.fn.coalesce("placesOuvertesQ1", eb.val(0)).as("placesOuvertesQ1"),
+      eb.fn.coalesce("placesFermeesQ4", eb.val(0)).as("placesFermeesQ4"),
+      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
+      eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
+      eb.fn
+        .coalesce("placesOuvertesTransformationEcologique", eb.val(0))
+        .as("placesOuvertesTransformationEcologique"),
+      eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
+      eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
+      "region.codeRegion as code",
+      "region.libelleRegion as libelle",
     ])
-    .where(notPerimetreIJRegion)
+    .where(isInPerimetreIJRegion)
     .execute()
     .then(cleanNull);
 };
@@ -226,52 +136,65 @@ const getAcademieData = async (filters: Filters) => {
   return kdb
     .selectFrom("academie")
     .leftJoin(
-      (eb) =>
-        genericOnDemandes(filters)(eb)
-          .select((es) => [es.ref("demande.codeAcademie").as("codeAcademie")])
-          .groupBy(["demande.codeAcademie"])
-          .as("demandes"),
+      genericOnDemandes(filters)
+        .select((eb) => [eb.ref("demande.codeAcademie").as("codeAcademie")])
+        .groupBy(["demande.codeAcademie"])
+        .as("demandes"),
       (join) =>
         join.onRef("demandes.codeAcademie", "=", "academie.codeAcademie")
     )
     .leftJoin(
-      () =>
-        genericOnConstatRentree(filters)()
-          .select((es) => [
-            es.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
-            sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
-              "effectif"
-            ),
-          ])
-          .groupBy(["dataEtablissement.codeAcademie"])
-          .as("effectifs"),
+      genericOnConstatRentree(filters)
+        .select((eb) => [
+          eb.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
+          sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("effectif"),
+        ])
+        .groupBy(["dataEtablissement.codeAcademie"])
+        .as("effectifs"),
       (join) =>
         join.onRef("effectifs.codeAcademie", "=", "academie.codeAcademie")
     )
     .select((eb) => [
-      eb.ref("academie.codeAcademie").as("code"),
-      eb.ref("academie.libelleAcademie").as("libelle"),
-      eb.ref("effectifs.effectif").as("effectif"),
-      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesScolaire")}, 0)`.as(
-        "placesOuvertesScolaire"
-      ),
-      sql<number>`COALESCE(${eb.ref("demandes.placesFermeesScolaire")}, 0)`.as(
-        "placesFermeesScolaire"
-      ),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesOuvertesApprentissage"
-      )}, 0)`.as("placesOuvertesApprentissage"),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesFermeesApprentissage"
-      )}, 0)`.as("placesFermeesApprentissage"),
-      sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
-        "transformes"
-      ),
-      sql<number>`COALESCE(${eb.ref("demandes.countDemande")}, 0)`.as(
-        "countDemande"
-      ),
+      eb.fn.coalesce("countDemande", eb.val(0)).as("countDemande"),
+      eb.fn
+        .coalesce("placesOuvertesScolaire", eb.val(0))
+        .as("placesOuvertesScolaire"),
+      eb.fn
+        .coalesce("placesFermeesScolaire", eb.val(0))
+        .as("placesFermeesScolaire"),
+      eb.fn
+        .coalesce("placesOuvertesScolaireQ1", eb.val(0))
+        .as("placesOuvertesScolaireQ1"),
+      eb.fn
+        .coalesce("placesFermeesScolaireQ4", eb.val(0))
+        .as("placesFermeesScolaireQ4"),
+      eb.fn
+        .coalesce("placesOuvertesApprentissage", eb.val(0))
+        .as("placesOuvertesApprentissage"),
+      eb.fn
+        .coalesce("placesFermeesApprentissage", eb.val(0))
+        .as("placesFermeesApprentissage"),
+      eb.fn
+        .coalesce("placesOuvertesApprentissageQ1", eb.val(0))
+        .as("placesOuvertesApprentissageQ1"),
+      eb.fn
+        .coalesce("placesFermeesApprentissageQ4", eb.val(0))
+        .as("placesFermeesApprentissageQ4"),
+      eb.fn.coalesce("placesOuvertes", eb.val(0)).as("placesOuvertes"),
+      eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
+      eb.fn.coalesce("placesOuvertesQ1", eb.val(0)).as("placesOuvertesQ1"),
+      eb.fn.coalesce("placesFermeesQ4", eb.val(0)).as("placesFermeesQ4"),
+      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
+      eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
+      eb.fn
+        .coalesce("placesOuvertesTransformationEcologique", eb.val(0))
+        .as("placesOuvertesTransformationEcologique"),
+      eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
+      eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
+      "academie.codeAcademie as code",
+      "academie.libelleAcademie as libelle",
     ])
-    .where(notPerimetreIJAcademie)
+    .where(isInPerimetreIJAcademie)
     .execute()
     .then(cleanNull);
 };
@@ -280,33 +203,27 @@ const getDepartementData = async (filters: Filters) => {
   return kdb
     .selectFrom("departement")
     .leftJoin(
-      (eb) =>
-        genericOnDemandes(filters)(eb)
-          .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-          .select((es) => [
-            es.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
-          ])
-          .groupBy(["dataEtablissement.codeDepartement"])
-          .as("demandes"),
+      genericOnDemandes(filters)
+        .select((eb) => [
+          eb.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
+        ])
+        .groupBy(["dataEtablissement.codeDepartement"])
+        .as("demandes"),
       (join) =>
         join.onRef(
           "demandes.codeDepartement",
           "=",
-
           "departement.codeDepartement"
         )
     )
     .leftJoin(
-      () =>
-        genericOnConstatRentree(filters)()
-          .select((es) => [
-            es.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
-            sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
-              "effectif"
-            ),
-          ])
-          .groupBy(["dataEtablissement.codeDepartement"])
-          .as("effectifs"),
+      genericOnConstatRentree(filters)
+        .select((eb) => [
+          eb.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
+          sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("effectif"),
+        ])
+        .groupBy(["dataEtablissement.codeDepartement"])
+        .as("effectifs"),
       (join) =>
         join.onRef(
           "effectifs.codeDepartement",
@@ -316,30 +233,47 @@ const getDepartementData = async (filters: Filters) => {
     )
     .leftJoin("academie", "academie.codeAcademie", "departement.codeAcademie")
     .select((eb) => [
-      eb.ref("departement.codeDepartement").as("code"),
-      eb.ref("departement.libelleDepartement").as("libelle"),
-      eb.ref("academie.libelleAcademie").as("libelleAcademie"),
-      eb.ref("effectifs.effectif").as("effectif"),
-      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesScolaire")}, 0)`.as(
-        "placesOuvertesScolaire"
-      ),
-      sql<number>`COALESCE(${eb.ref("demandes.placesFermeesScolaire")}, 0)`.as(
-        "placesFermeesScolaire"
-      ),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesOuvertesApprentissage"
-      )}, 0)`.as("placesOuvertesApprentissage"),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesFermeesApprentissage"
-      )}, 0)`.as("placesFermeesApprentissage"),
-      sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
-        "transformes"
-      ),
-      sql<number>`COALESCE(${eb.ref("demandes.countDemande")}, 0)`.as(
-        "countDemande"
-      ),
+      eb.fn.coalesce("countDemande", eb.val(0)).as("countDemande"),
+      eb.fn
+        .coalesce("placesOuvertesScolaire", eb.val(0))
+        .as("placesOuvertesScolaire"),
+      eb.fn
+        .coalesce("placesFermeesScolaire", eb.val(0))
+        .as("placesFermeesScolaire"),
+      eb.fn
+        .coalesce("placesOuvertesScolaireQ1", eb.val(0))
+        .as("placesOuvertesScolaireQ1"),
+      eb.fn
+        .coalesce("placesFermeesScolaireQ4", eb.val(0))
+        .as("placesFermeesScolaireQ4"),
+      eb.fn
+        .coalesce("placesOuvertesApprentissage", eb.val(0))
+        .as("placesOuvertesApprentissage"),
+      eb.fn
+        .coalesce("placesFermeesApprentissage", eb.val(0))
+        .as("placesFermeesApprentissage"),
+      eb.fn
+        .coalesce("placesOuvertesApprentissageQ1", eb.val(0))
+        .as("placesOuvertesApprentissageQ1"),
+      eb.fn
+        .coalesce("placesFermeesApprentissageQ4", eb.val(0))
+        .as("placesFermeesApprentissageQ4"),
+      eb.fn.coalesce("placesOuvertes", eb.val(0)).as("placesOuvertes"),
+      eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
+      eb.fn.coalesce("placesOuvertesQ1", eb.val(0)).as("placesOuvertesQ1"),
+      eb.fn.coalesce("placesFermeesQ4", eb.val(0)).as("placesFermeesQ4"),
+      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
+      eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
+      eb.fn
+        .coalesce("placesOuvertesTransformationEcologique", eb.val(0))
+        .as("placesOuvertesTransformationEcologique"),
+      eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
+      eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
+      "departement.codeDepartement as code",
+      "departement.libelleDepartement as libelle",
+      "academie.libelleAcademie as libelleAcademie",
     ])
-    .where(notPerimetreIJDepartement)
+    .where(isInPerimetreIJDepartement)
     .execute()
     .then(cleanNull);
 };
@@ -352,9 +286,11 @@ export const getStatsPilotageIntentionsQuery = async ({
   codeNsf,
   scope,
   campagne,
+  secteur,
+  withColoration,
 }: Filters) => {
   switch (scope) {
-    case ScopeEnum.academie:
+    case ScopeEnum["académie"]:
       return getAcademieData({
         statut,
         rentreeScolaire,
@@ -363,9 +299,11 @@ export const getStatsPilotageIntentionsQuery = async ({
         codeNsf,
         campagne,
         scope,
+        secteur,
+        withColoration,
       });
 
-    case ScopeEnum.departement:
+    case ScopeEnum["département"]:
       return getDepartementData({
         statut,
         rentreeScolaire,
@@ -374,8 +312,10 @@ export const getStatsPilotageIntentionsQuery = async ({
         codeNsf,
         campagne,
         scope,
+        secteur,
+        withColoration,
       });
-    case ScopeEnum.region:
+    case ScopeEnum["région"]:
       return getRegionData({
         statut,
         rentreeScolaire,
@@ -384,6 +324,8 @@ export const getStatsPilotageIntentionsQuery = async ({
         codeNsf,
         campagne,
         scope,
+        secteur,
+        withColoration,
       });
     case ScopeEnum.national:
     default:
@@ -395,6 +337,8 @@ export const getStatsPilotageIntentionsQuery = async ({
         codeNsf,
         campagne,
         scope,
+        secteur,
+        withColoration,
       });
   }
 };

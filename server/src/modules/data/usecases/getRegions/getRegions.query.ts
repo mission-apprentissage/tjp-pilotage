@@ -1,5 +1,5 @@
 import { kdb } from "../../../../db/db";
-import { notPerimetreIJRegion } from "../../utils/notPerimetreIJ";
+import { isInPerimetreIJRegion } from "../../utils/isInPerimetreIJ";
 
 export const getRegions = () => {
   return kdb
@@ -12,7 +12,7 @@ export const getRegions = () => {
     )
     .select(["region.codeRegion as value", "region.libelleRegion as label"])
     .where("region.codeRegion", "is not", null)
-    .where(notPerimetreIJRegion)
+    .where(isInPerimetreIJRegion)
     .distinct()
     .orderBy("label", "asc")
     .execute();

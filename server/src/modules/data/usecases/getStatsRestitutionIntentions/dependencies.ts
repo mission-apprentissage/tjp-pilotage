@@ -1,20 +1,23 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
+import { CURRENT_RENTREE } from "shared";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import { z } from "zod";
 
+import { DemandeTypeEnum } from "../../../../../../shared/enum/demandeTypeEnum";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import {
-  countFermetures,
-  countFermeturesApprentissage,
-  countFermeturesSco,
-  countOuvertures,
-  countOuverturesApprentissage,
-  countOuverturesApprentissageColoree,
-  countOuverturesColoree,
-  countOuverturesSco,
-  countOuverturesScolaireColoree,
+  countPlacesColorees,
+  countPlacesColoreesApprentissage,
+  countPlacesColoreesScolaire,
+  countPlacesFermees,
+  countPlacesFermeesApprentissage,
+  countPlacesFermeesScolaire,
+  countPlacesOuvertes,
+  countPlacesOuvertesApprentissage,
+  countPlacesOuvertesScolaire,
 } from "../../../utils/countCapacite";
 import { isRestitutionIntentionVisible } from "../../../utils/isRestitutionIntentionVisible";
 import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
@@ -42,6 +45,7 @@ const getStatsRestitutionIntentionsQuery = async ({
   codeNsf,
   campagne,
   search,
+  positionQuadrant,
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
@@ -72,29 +76,60 @@ const getStatsRestitutionIntentionsQuery = async ({
       "niveauDiplome.codeNiveauDiplome",
       "dataFormation.codeNiveauDiplome"
     )
+    .leftJoin("positionFormationRegionaleQuadrant", (join) =>
+      join.on((eb) =>
+        eb.and([
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.cfd"),
+            "=",
+            eb.ref("demande.cfd")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
+            "=",
+            eb.ref("demande.codeDispositif")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
+            "=",
+            eb.ref("dataEtablissement.codeRegion")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
+            "=",
+            eb.val(
+              getMillesimeFromRentreeScolaire({
+                rentreeScolaire: CURRENT_RENTREE,
+                offset: 0,
+              })
+            )
+          ),
+        ])
+      )
+    )
     .select((eb) =>
       jsonBuildObject({
         total: sql<number>`
         COALESCE(
           SUM(
-            ${countOuvertures(eb)} +
-            ${countFermetures(eb)}
+            ${countPlacesOuvertes(eb)} +
+            ${countPlacesFermees(eb)}
           ),
           0
         )`,
         scolaire: sql<number>`
         COALESCE(
           SUM(
-            ${countOuverturesSco(eb)} +
-            ${countFermeturesSco(eb)}
+            ${countPlacesOuvertesScolaire(eb)} +
+            ${countPlacesFermeesScolaire(eb)}
           ),
           0
         )`,
         apprentissage: sql<number>`
         COALESCE(
           SUM(
-            ${countOuverturesApprentissage(eb)} +
-            ${countFermeturesApprentissage(eb)}
+            ${countPlacesOuvertesApprentissage(eb)} +
+            ${countPlacesFermeesApprentissage(eb)}
           ),
           0
         )`,
@@ -102,30 +137,34 @@ const getStatsRestitutionIntentionsQuery = async ({
     )
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`COALESCE(SUM(${countOuvertures(eb)}),0)`,
-        scolaire: sql<number>`COALESCE(SUM(${countOuverturesSco(eb)}),0)`,
+        total: sql<number>`COALESCE(SUM(${countPlacesOuvertes(eb)}),0)`,
+        scolaire: sql<number>`COALESCE(SUM(${countPlacesOuvertesScolaire(
+          eb
+        )}),0)`,
         apprentissage: sql<number>`COALESCE(
-          SUM(${countOuverturesApprentissage(eb)}),0
+          SUM(${countPlacesOuvertesApprentissage(eb)}),0
         )`,
       }).as("ouvertures")
     )
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`COALESCE(SUM(${countFermetures(eb)}),0)`,
-        scolaire: sql<number>`COALESCE(SUM(${countFermeturesSco(eb)}),0)`,
+        total: sql<number>`COALESCE(SUM(${countPlacesFermees(eb)}),0)`,
+        scolaire: sql<number>`COALESCE(SUM(${countPlacesFermeesScolaire(
+          eb
+        )}),0)`,
         apprentissage: sql<number>`COALESCE(
-          SUM(${countFermeturesApprentissage(eb)}),0
+          SUM(${countPlacesFermeesApprentissage(eb)}),0
         )`,
       }).as("fermetures")
     )
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`COALESCE(SUM(${countOuverturesColoree(eb)}),0)`,
+        total: sql<number>`COALESCE(SUM(${countPlacesColorees(eb)}),0)`,
         scolaire: sql<number>`COALESCE(
-          SUM(${countOuverturesScolaireColoree(eb)}),0
+          SUM(${countPlacesColoreesScolaire(eb)}),0
         )`,
         apprentissage: sql<number>`COALESCE(
-          SUM(${countOuverturesApprentissageColoree(eb)}),0
+          SUM(${countPlacesColoreesApprentissage(eb)}),0
         )`,
       }).as("coloration")
     )
@@ -136,7 +175,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           SUM(
             CASE WHEN
             ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('561', '461')
-            THEN ${countOuvertures(eb)}
+            THEN ${countPlacesOuvertes(eb)}
             ELSE 0
             END
           ),
@@ -147,7 +186,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           SUM(
             CASE WHEN
             ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('561', '461')
-            THEN ${countOuverturesSco(eb)}
+            THEN ${countPlacesOuvertesScolaire(eb)}
             ELSE 0
             END
           ),
@@ -158,7 +197,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           SUM(
             CASE WHEN
             ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('561', '461')
-            THEN ${countOuverturesApprentissage(eb)}
+            THEN ${countPlacesOuvertesApprentissage(eb)}
             ELSE 0
             END
           ),
@@ -175,7 +214,7 @@ const getStatsRestitutionIntentionsQuery = async ({
             ${eb.ref(
               "dataFormation.codeNiveauDiplome"
             )} IN ('381', '481', '581')
-            THEN ${countOuvertures(eb)}
+            THEN ${countPlacesOuvertes(eb)}
             ELSE 0
             END
           ),
@@ -188,7 +227,7 @@ const getStatsRestitutionIntentionsQuery = async ({
             ${eb.ref(
               "dataFormation.codeNiveauDiplome"
             )} IN ('381', '481', '581')
-            THEN ${countOuverturesSco(eb)}
+            THEN ${countPlacesOuvertesScolaire(eb)}
             ELSE 0
             END
           ),
@@ -201,7 +240,7 @@ const getStatsRestitutionIntentionsQuery = async ({
             ${eb.ref(
               "dataFormation.codeNiveauDiplome"
             )} IN ('381', '481', '581')
-            THEN ${countOuverturesApprentissage(eb)}
+            THEN ${countPlacesOuvertesApprentissage(eb)}
             ELSE 0
             END
           ),
@@ -241,6 +280,15 @@ const getStatsRestitutionIntentionsQuery = async ({
               )
             )
           )
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (positionQuadrant)
+        return eb.where(
+          "positionFormationRegionaleQuadrant.positionQuadrant",
+          "=",
+          positionQuadrant
         );
       return eb;
     })
@@ -299,11 +347,20 @@ const getStatsRestitutionIntentionsQuery = async ({
     })
     .$call((eb) => {
       if (coloration)
-        return eb.where(
-          "demande.coloration",
-          "=",
-          coloration === "true" ? sql<true>`true` : sql<false>`false`
-        );
+        switch (coloration) {
+          case "with":
+            return eb.where("demande.coloration", "=", true);
+          case "without":
+            return eb.where((w) =>
+              w.or([
+                w("demande.coloration", "=", false),
+                w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"]),
+              ])
+            );
+          case "all":
+          default:
+            return eb;
+        }
       return eb;
     })
     .$call((eb) => {
