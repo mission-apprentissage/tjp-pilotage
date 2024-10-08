@@ -22,6 +22,7 @@ export const getFiltersQuery = async ({
   codeDiplome,
   codeDispositif,
   cpc,
+  codeNsf,
   rentreeScolaire = [CURRENT_RENTREE],
 }: Partial<Filters>) => {
   const base = kdb
@@ -31,6 +32,7 @@ export const getFiltersQuery = async ({
       "formationEtablissement.cfd",
       "formationView.cfd"
     )
+    .leftJoin("dataFormation", "dataFormation.cfd", "formationView.cfd")
     .leftJoin(
       "dispositif",
       "dispositif.codeDispositif",
@@ -104,6 +106,16 @@ export const getFiltersQuery = async ({
   ) => {
     if (!codeDispositif) return sql<true>`true`;
     return eb("formationEtablissement.codeDispositif", "in", codeDispositif);
+  };
+
+  const inCPCSecteur = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+    if (!cpc) return sql<true>`true`;
+    return eb("dataFormation.cpc", "in", cpc);
+  };
+
+  const inDomaine = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+    if (!codeNsf) return sql<true>`true`;
+    return eb("dataFormation.codeNsf", "in", codeNsf);
   };
 
   const regions = await base
@@ -219,7 +231,13 @@ export const getFiltersQuery = async ({
     .where("formationView.cfd", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCfdFamille(eb), inCodeDiplome(eb), inCodeDispositif(eb)]),
+        eb.and([
+          inCfdFamille(eb),
+          inCodeDiplome(eb),
+          inCodeDispositif(eb),
+          inCPCSecteur(eb),
+          inDomaine(eb),
+        ]),
         cfd ? eb("formationView.cfd", "in", cfd) : sql<boolean>`false`,
       ]);
     })
