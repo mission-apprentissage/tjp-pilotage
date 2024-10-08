@@ -2,18 +2,19 @@ import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 
 import { CartoGraph } from "../../../../components/CartoGraph";
 import { formatNumber } from "../../../../utils/formatUtils";
-import { Filters, IndicateurType, PilotageReformeStatsRegion } from "../types";
+import {
+  Filters,
+  IndicateurOption,
+  IndicateurType,
+  PilotageReformeStatsRegion,
+} from "../types";
 
 interface CartoSelectionProps {
   data?: PilotageReformeStatsRegion;
   isLoading: boolean;
   indicateur: IndicateurType;
-  handleIndicateurChange: (indicateur: string) => void;
-  indicateurOptions: {
-    label: string;
-    value: string;
-    isDefault: boolean;
-  }[];
+  handleIndicateurChange: (indicateur: IndicateurType) => void;
+  indicateurOptions: IndicateurOption[];
   activeFilters: Filters;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
 }
@@ -30,7 +31,7 @@ export const CartoSection = ({
   const graphData = data?.statsRegions.map((region) => {
     return {
       name: region.libelleRegion,
-      value: formatNumber((region[indicateur] ?? 0) * 100),
+      value: formatNumber((region[indicateur] ?? 0) * 100, 1),
     };
   });
 
@@ -63,7 +64,9 @@ export const CartoSection = ({
               size="sm"
               variant="newInput"
               bg={"grey.150"}
-              onChange={(e) => handleIndicateurChange(e.target.value)}
+              onChange={(e) =>
+                handleIndicateurChange(e.target.value as IndicateurType)
+              }
               value={indicateur}
             >
               {indicateurOptions.map((option) => (

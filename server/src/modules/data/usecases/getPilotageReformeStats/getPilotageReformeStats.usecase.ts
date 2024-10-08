@@ -1,31 +1,39 @@
-import { formatTauxTransformation } from "../../utils/formatTauxTransformation";
-import { dependencies } from "./dependencies";
+import {
+  getFilters,
+  getStats,
+  getStatsTauxDeTransformation,
+  getTauxTransformationCumule,
+} from "./dependencies";
 
 const getPilotageReformeStatsFactory =
   (
     deps = {
-      getStats: dependencies.getStats,
-      findFiltersInDb: dependencies.findFiltersInDb,
-      getTauxTransformationData: dependencies.getTauxTransformationData,
+      getStats,
+      getFilters,
+      getTauxTransformationCumule,
+      getStatsTauxDeTransformation,
     }
   ) =>
   async (activeFilters: {
-    codeNiveauDiplome?: string[];
-    orderBy?: { order: "asc" | "desc"; column: string };
+    codeRegion?: string | undefined;
+    codeNiveauDiplome?: string[] | undefined;
   }) => {
-    const [stats, filters] = await Promise.all([
+    const [
+      stats,
+      filters,
+      tauxTransformationCumule,
+      statsTauxDeTransformation,
+    ] = await Promise.all([
       deps.getStats(activeFilters),
-      deps.findFiltersInDb(),
+      deps.getFilters(),
+      deps.getTauxTransformationCumule(activeFilters),
+      deps.getStatsTauxDeTransformation(activeFilters),
     ]);
-
-    const [{ transformes, effectif }] =
-      await deps.getTauxTransformationData(activeFilters);
-
-    const tauxTransformation = formatTauxTransformation(transformes, effectif);
 
     return {
       ...stats,
-      tauxTransformation: tauxTransformation ?? 0,
+      statsTauxDeTransformation,
+      tauxTransformationCumule,
       filters,
     };
   };

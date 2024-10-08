@@ -44,47 +44,49 @@ export const DefinitionTauxTransfoModal = ({
               color={themeColors.bluefrance[113]}
               width="100%"
             >
-              Taux de transformation prévisionnel
+              Taux de transformation cumulé
             </Text>
             <VStack gap="16px" width="100%" alignItems="start">
               <Text>
-                Dans Orion, le taux de transformation prévisionnel est défini
-                par défaut comme suit :
+                Dans Orion, le taux de transformation cumulé est défini par
+                défaut comme suit :
               </Text>
-              <VStack
-                mx="10%"
-                backgroundColor={themeColors.bluefrance[975]}
-                width="80%"
-                fontSize="12px"
-                fontStyle="italic"
-                px="16px"
-                paddingTop="24px"
-                paddingBottom="8px"
+              <Flex
+                width="100%"
+                justifyContent={"center"}
+                alignItems={"center"}
               >
-                <HStack alignItems="center">
-                  <VStack lineHeight="20px">
-                    <Text fontWeight="700">% de transformation</Text>
-                    <Text>Rentrée Scolaire N</Text>
-                  </VStack>
-                  <Text lineHeight="20px">=</Text>
-                  <VStack lineHeight="20px">
-                    <Text fontWeight="700">
-                      <Highlight query={"*"} styles={{ color: "info.text" }}>
-                        Pl. ouvertes + Pl. fermées + Pl. existantes colorées *
-                      </Highlight>
-                    </Text>
-                    <Text>issues des demandes validées en année N-1</Text>
-                    <Divider borderColor="black" />
-                    <Text fontWeight="700">Pl. effectivement occupées</Text>
-                    <Text>Constat de rentrée N-1</Text>
-                  </VStack>
-                </HStack>
-                <Flex mt={3} ms={"auto"}>
-                  <Text color="info.text">
-                    * à partir de la Rentrée Scolaire 2025 seulement
-                  </Text>
-                </Flex>
-              </VStack>
+                <VStack
+                  backgroundColor={themeColors.yellowTournesol[950]}
+                  fontSize="12px"
+                  fontStyle="italic"
+                  px="16px"
+                  paddingTop="24px"
+                  paddingBottom="8px"
+                >
+                  <HStack alignItems="center">
+                    <VStack lineHeight="20px">
+                      <Text fontWeight="700">% de transformation</Text>
+                      <Text>cumulé</Text>
+                    </VStack>
+                    <Text lineHeight="20px">=</Text>
+                    <VStack lineHeight="20px">
+                      <Text fontWeight="700">
+                        <Highlight query={"*"} styles={{ color: "info.text" }}>
+                          Pl. transformées Rentrées 2023 + 2024 + 2025 + 2026 +
+                          etc.
+                        </Highlight>
+                      </Text>
+                      <Text>issues des demandes validées</Text>
+                      <Divider borderColor="black" />
+                      <Text fontWeight="700">
+                        Effectif en entrée de formation
+                      </Text>
+                      <Text>Constat de rentrée 2022</Text>
+                    </VStack>
+                  </HStack>
+                </VStack>
+              </Flex>
             </VStack>
             <VStack
               gap="16px"
@@ -98,34 +100,21 @@ export const DefinitionTauxTransfoModal = ({
               <UnorderedList spacing="16px">
                 <ListItem>
                   <Text>
+                    Pl. <b>transformées</b> = Pl. <b>ouvertes</b> + Pl.{" "}
+                    <b>fermées</b> + Pl. <b>existantes colorées</b> (à partir de
+                    Rentrée 2025). Pour la Rentrée scolaire "année N", le nombre
+                    de places transformées au numérateur correspond aux
+                    transformations <b>prévues</b> (sur la base des demandes
+                    validées) et non <b>constatées.</b>
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text>
                     Le calcul tient compte des places transformées en{" "}
                     <b>voie scolaire</b> et en <b>apprentissage</b> (diplômes
-                    retenus : CAP, Bac Pro, CS, BTS, FCIL, BT, BP, DNMADE, BMA).
-                    Le dénominateur concerne les effectifs <b>en entrée</b>.
-                  </Text>
-                </ListItem>
-                <ListItem>
-                  <Text>
-                    Les taux affichés dans Orion sont <b>prévisionnels</b>{" "}
-                    puisque :
-                  </Text>
-                  <UnorderedList>
-                    <ListItem>
-                      ils sont calculés à partir des transformations{" "}
-                      <b>prévues</b> et non constatées
-                    </ListItem>
-                    <ListItem>
-                      ils sont rapportés à un total de places de la{" "}
-                      <b>Rentrée N-1</b> et non N, jusquà parution du constat de
-                      rentrée N (en fin d'année).
-                    </ListItem>
-                  </UnorderedList>
-                </ListItem>
-                <ListItem>
-                  <Text>
-                    On peut également suivre dans Orion le taux de
-                    transformation prévisionnel <b>hors colorations</b> (à
-                    partir de la Rentrée Scolaire 2025).
+                    retenus : CAP, Bac Pro, MC/CS, BTS, FCIL, BT, BP, DNMADE,
+                    BMA). Le dénominateur concerne les effectifs en{" "}
+                    <b>entrée de formation.</b>
                   </Text>
                 </ListItem>
               </UnorderedList>

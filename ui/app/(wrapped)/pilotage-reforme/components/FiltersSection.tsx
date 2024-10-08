@@ -1,6 +1,5 @@
 import { Box, Flex, FormLabel, Select, Skeleton } from "@chakra-ui/react";
 
-import { Multiselect } from "../../../../components/Multiselect";
 import { Filters, PilotageReformeStats } from "../types";
 
 export const FiltersSection = ({
@@ -27,19 +26,26 @@ export const FiltersSection = ({
           <Flex justifyContent={"start"} gap={8} py={3}>
             <Box justifyContent={"start"}>
               <FormLabel>Niveau de diplôme</FormLabel>
-              <Multiselect
-                onClose={filterTracker("codeNiveauDiplome")}
+              <Select
                 width={["12rem", null, "72"]}
                 size="md"
                 variant="newInput"
-                onChange={(selected) =>
-                  handleFilters("codeNiveauDiplome", selected)
+                borderBottomColor={
+                  activeFilters.codeNiveauDiplome != undefined ? "info.525" : ""
                 }
-                options={data?.filters.diplomes}
-                value={activeFilters.codeNiveauDiplome ?? []}
+                value={activeFilters.codeNiveauDiplome ?? ""}
+                onChange={(e) => {
+                  handleFilters("codeNiveauDiplome", [e.target.value]);
+                  filterTracker("codeNiveauDiplome");
+                }}
+                placeholder="TOUTES"
               >
-                TOUS
-              </Multiselect>
+                {data?.filters.diplomes?.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
             </Box>
             <Box justifyContent={"start"}>
               <FormLabel>Régions</FormLabel>

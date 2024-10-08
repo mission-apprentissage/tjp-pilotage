@@ -10,6 +10,7 @@ const StatsRegionLineSchema = z.object({
   tauxChomage: z.coerce.number().optional(),
   tauxPoursuite: z.coerce.number().optional(),
   tauxInsertion: z.coerce.number().optional(),
+  tauxTransformation: z.coerce.number().optional(),
 });
 
 const FiltersRegionsSchema = z.object({

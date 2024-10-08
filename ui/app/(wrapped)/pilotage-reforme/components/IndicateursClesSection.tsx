@@ -12,24 +12,21 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
-import { ProgressBar } from "@/components/ProgressBar";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumber, formatPercentage } from "@/utils/formatUtils";
 
+import { feature } from "../../../../utils/feature";
 import { DefinitionTauxTransfoModal } from "../../components/DefinitionTauxTransfoModal";
 import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import { IndicateurType, PilotageReformeStats } from "../types";
-
-const EFFECTIF_FEATURE_FLAG = false;
 
 const Loader = () => {
   return (
     <>
       <Box mt={12}>
-        {EFFECTIF_FEATURE_FLAG && (
+        {feature.pilotageReformeEffectif && (
           <Box height={"124px"} mb={24}>
             <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
             <Divider borderBottom={"2px solid"} opacity={"15%"} />
@@ -437,7 +434,6 @@ const TauxTransfoCard = ({
 }: {
   tauxTransformation: number;
 }) => {
-  const percentage = (tauxTransformation * 100) / 6;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -448,44 +444,34 @@ const TauxTransfoCard = ({
           <CardBody color="inherit" py="2" px="3" minHeight={40}>
             <VStack
               width="100%"
+              height={"100%"}
               px="8px"
-              padding="8px"
-              gap="16px"
               color={themeColors.bluefrance[113]}
               alignItems="start"
+              justifyContent={"space-between"}
             >
-              <Box>
-                <Text
-                  fontSize="14px"
-                  fontWeight="500"
-                  lineHeight="24px"
-                  textTransform="uppercase"
-                >
-                  Taux de transformation prévisionnel - Rentrée {NEXT_RENTREE}{" "}
-                </Text>
-                <Text fontSize="32px" fontWeight="700" lineHeight="40px">
-                  {formatNumber(tauxTransformation, 1)} %
-                </Text>
-              </Box>
-              <Box width="100%">
-                <ProgressBar percentage={percentage} />
-                <Text color={themeColors.grey[425]} fontSize="12px">
-                  {formatNumber(percentage, 1)}% de l'objectif
-                </Text>
-              </Box>
+              <Text
+                fontSize="14px"
+                fontWeight="500"
+                lineHeight="24px"
+                textTransform="uppercase"
+              >
+                Taux de transformation cumulé - sur une base 2022
+              </Text>
+              <Text fontSize="40px" fontWeight="700" lineHeight="40px">
+                {formatPercentage(tauxTransformation, 1)}
+              </Text>
+              <Text
+                color={themeColors.bluefrance[113]}
+                onClick={onOpen}
+                cursor="pointer"
+              >
+                <TooltipIcon mr="6px" label="Cliquez ici pour plus d’infos" />
+                Comprendre le calcul du taux de transformation cumulé
+              </Text>
             </VStack>
           </CardBody>
         </Card>
-        <HStack width="100%" justifyContent="start" alignItems="end">
-          <Text color={themeColors.bluefrance[113]}>
-            <TooltipIcon
-              mr="6px"
-              label="Cliquez ici pour plus d’infos"
-              onClick={() => onOpen()}
-            />
-            Comprendre le calcul du taux de transformation
-          </Text>
-        </HStack>
       </VStack>
     </>
   );
@@ -500,7 +486,9 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
         INDICATEURS CLÉS DE LA RÉFORME
       </Text>
       <VStack width="100%" spacing="18px" mt="12px">
-        <TauxTransfoCard tauxTransformation={data?.tauxTransformation ?? 0} />
+        <TauxTransfoCard
+          tauxTransformation={data?.tauxTransformationCumule ?? 0}
+        />
         <SimpleGrid spacing={3} columns={[2]} width="100%">
           <StatCard
             label="taux d'emploi à 6 mois"
@@ -554,22 +542,20 @@ export const IndicateursClesSection = ({
   data?: PilotageReformeStats;
   isLoading: boolean;
 }) => {
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
-    <>
-      {isLoading ? (
-        <Loader></Loader>
-      ) : (
-        <Box>
-          {EFFECTIF_FEATURE_FLAG && (
-            <Flex>
-              <IndicateursEffectif data={data}></IndicateursEffectif>
-            </Flex>
-          )}
-          <Flex mt={EFFECTIF_FEATURE_FLAG ? 14 : 0}>
-            <IndicateursSortie data={data}></IndicateursSortie>
-          </Flex>
-        </Box>
+    <Box>
+      {feature.pilotageReformeEffectif && (
+        <Flex>
+          <IndicateursEffectif data={data} />
+        </Flex>
       )}
-    </>
+      <Flex mt={feature.pilotageReformeEffectif ? 14 : 0}>
+        <IndicateursSortie data={data} />
+      </Flex>
+    </Box>
   );
 };

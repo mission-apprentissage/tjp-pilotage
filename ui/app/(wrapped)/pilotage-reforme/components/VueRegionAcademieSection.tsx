@@ -19,6 +19,7 @@ import { Order, PilotageReformeStatsRegion } from "../types";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
   libelleRegion: "Région",
+  tauxTransformation: "Taux de transformation cumulé",
   tauxInsertion: "Emploi",
   tauxPoursuite: "Poursuite",
   tauxChomage: "Taux de chômage",
@@ -99,6 +100,16 @@ export const VueRegionAcademieSection = ({
                   <Th
                     isNumeric
                     cursor="pointer"
+                    width="20%"
+                    pb="4"
+                    onClick={() => handleOrder("tauxTransformation")}
+                  >
+                    <OrderIcon {...order} column="tauxTransformation" />
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxTransformation}
+                  </Th>
+                  <Th
+                    isNumeric
+                    cursor="pointer"
                     pb="4"
                     width="20%"
                     onClick={() => handleOrder("tauxPoursuite")}
@@ -161,6 +172,12 @@ export const VueRegionAcademieSection = ({
                         >
                           <Td backgroundColor={tdBgColor} color={color}>
                             {region.libelleRegion}
+                          </Td>
+                          <Td isNumeric backgroundColor={tdBgColor}>
+                            {formatPercentage(
+                              region.tauxTransformation ?? 0,
+                              1
+                            )}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
                             {formatPercentage(region.tauxPoursuite ?? 0)}
