@@ -1,4 +1,5 @@
-import { Checkbox, Flex, Select, Text } from "@chakra-ui/react";
+import { Button, Checkbox, Flex, Select, Text } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 import { unstable_batchedUpdates } from "react-dom";
 
@@ -9,6 +10,7 @@ export const ConsoleFilters = ({
   setUaiFilter,
   setCodeRegionFilter,
   setSearchParams,
+  resetFilters,
   searchParams,
   data,
 }: {
@@ -20,6 +22,7 @@ export const ConsoleFilters = ({
     order?: Partial<Order>;
     page?: number;
   }) => void;
+  resetFilters: () => void;
   searchParams: {
     filters?: Partial<Filters>;
     withAnneeCommune?: string;
@@ -147,11 +150,11 @@ export const ConsoleFilters = ({
         Secteur
       </Multiselect>
       <Multiselect
-        onClose={filterTracker("codeDiplome")}
+        onClose={filterTracker("codeNiveauDiplome")}
         width="12rem"
-        onChange={(selected) => handleFilters("codeDiplome", selected)}
+        onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
         options={data?.filters.diplomes}
-        value={filters.codeDiplome ?? []}
+        value={filters.codeNiveauDiplome ?? []}
         menuZIndex={3}
       >
         Diplôme
@@ -187,16 +190,6 @@ export const ConsoleFilters = ({
         Formation
       </Multiselect>
       <Multiselect
-        onClose={filterTracker("cpc")}
-        width="12rem"
-        onChange={(selected) => handleFilters("cpc", selected)}
-        options={data?.filters.cpcs}
-        value={filters.cpc ?? []}
-        menuZIndex={3}
-      >
-        CPC
-      </Multiselect>
-      <Multiselect
         onClose={filterTracker("codeNsf")}
         width="12rem"
         onChange={(selected) => handleFilters("codeNsf", selected)}
@@ -206,7 +199,7 @@ export const ConsoleFilters = ({
       >
         Domaine de formation (NSF)
       </Multiselect>
-      <Flex w="24rem" mr="3">
+      <Flex w="24rem">
         <Checkbox
           size="lg"
           onChange={(event) => {
@@ -222,6 +215,15 @@ export const ConsoleFilters = ({
           </Text>
         </Checkbox>
       </Flex>
+      <Button
+        variant="externalLink"
+        border={"none"}
+        leftIcon={<Icon icon={"ri:refresh-line"} />}
+        mt={"auto"}
+        onClick={() => resetFilters()}
+      >
+        Réinitialiser les filtres
+      </Button>
     </Flex>
   );
 };

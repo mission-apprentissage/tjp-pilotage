@@ -22,7 +22,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
-  positionQuadrant: "Positionnement dans le quadrant",
+  positionQuadrant: "Position dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
   tauxInsertionEtablissement:
     "Tx d'emploi 6 mois de la formation dans l'établissement",
