@@ -1,7 +1,7 @@
-ARG NGINX_VERSION="1.20.2"
+ARG NGINX_VERSION="1.25.3"
 FROM nginx:${NGINX_VERSION} as nginxModules
 
-ARG HEADERS_MORE_VERSION="v0.33"
+ARG HEADERS_MORE_VERSION="v0.37"
 
 RUN set -eux; \
     apt-get update; \
@@ -14,9 +14,9 @@ RUN set -eux; \
     libcurl4-gnutls-dev \
     libgeoip-dev \
     liblua5.3-dev \
-    libpcre++-dev \
     libtool \
     libxml2-dev \
+    libpcre3-dev \
     make \
     ruby \
     pkg-config \
@@ -38,10 +38,9 @@ RUN set -eux; \
     cp objs/ngx_http_headers_more_filter_module.so /etc/nginx/modules/;
 
 
-FROM owasp/modsecurity-crs:3.3.2-nginx
+FROM owasp/modsecurity-crs:3.3.5-nginx-202401080101
 
-RUN apt-get update \
-    && apt-get install -y logrotate
+RUN apt-get update && apt-get install -y logrotate
 
 COPY --from=nginxModules /etc/nginx/modules/ngx_http_headers_more_filter_module.so /etc/nginx/modules/ngx_http_headers_more_filter_module.so
 
