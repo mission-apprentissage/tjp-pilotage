@@ -50,6 +50,7 @@ export default function Etablissements() {
     order?: Partial<Order>;
     page?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
+
   const setSearchParams = (params: {
     filters?: typeof filters;
     withAnneeCommune?: typeof withAnneeCommune;
