@@ -1,8 +1,36 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 import _ from "lodash";
 
-import { IndicateurType, PilotageReformeStats } from "../types";
+import {
+  IndicateurOption,
+  IndicateurType,
+  PilotageReformeStats,
+} from "../types";
 import { BarGraph, BarGraphData } from "./BarGraph";
+
+const transformStatsToBarGraphData = (
+  indicateur: IndicateurType,
+  data: PilotageReformeStats | undefined
+): BarGraphData => {
+  let graphData: BarGraphData = {};
+
+  if (indicateur === "tauxTransformation") {
+    graphData = {
+      ...data?.statsTauxDeTransformation,
+    };
+  } else {
+    data?.annees.forEach((anneeData) => {
+      graphData[anneeData.annee.toString()] = {
+        annee: anneeData.annee.toString(),
+        libelleAnnee: anneeData.millesime.join("+"),
+        filtered: (anneeData.scoped[indicateur] ?? 0) * 100,
+        nationale: (anneeData.nationale[indicateur] ?? 0) * 100,
+      };
+    });
+  }
+
+  return graphData;
+};
 
 export const EvolutionIndicateursClesSection = ({
   data,
@@ -18,19 +46,13 @@ export const EvolutionIndicateursClesSection = ({
   isFiltered?: boolean | string;
   codeRegion?: string;
   indicateur: IndicateurType;
-  handleIndicateurChange: (indicateur: string) => void;
-  indicateurOptions: { label: string; value: string; isDefault: boolean }[];
+  handleIndicateurChange: (indicateur: IndicateurType) => void;
+  indicateurOptions: IndicateurOption[];
 }) => {
-  const graphData: BarGraphData = {};
-
-  data?.annees.forEach((anneeData) => {
-    graphData[anneeData.annee.toString()] = {
-      annee: anneeData.annee.toString(),
-      libelleAnnee: anneeData.millesime.join("+"),
-      filtered: (anneeData.scoped[indicateur] ?? 0) * 100,
-      nationale: (anneeData.nationale[indicateur] ?? 0) * 100,
-    };
-  });
+  const graphData: BarGraphData = transformStatsToBarGraphData(
+    indicateur,
+    data
+  );
 
   const getLibelleRegion = (
     regions?: Array<{ label: string; value: string }>,
@@ -66,7 +88,9 @@ export const EvolutionIndicateursClesSection = ({
               size="sm"
               variant="newInput"
               bg={"grey.150"}
-              onChange={(e) => handleIndicateurChange(e.target.value)}
+              onChange={(e) =>
+                handleIndicateurChange(e.target.value as IndicateurType)
+              }
               value={indicateur}
             >
               {indicateurOptions.map((option) => (

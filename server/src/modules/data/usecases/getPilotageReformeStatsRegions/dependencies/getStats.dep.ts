@@ -1,17 +1,15 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
-import { DB, kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
-import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
-import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
-import {
-  notHistoriqueFormation,
-  notHistoriqueIndicateurRegionSortie,
-} from "../../utils/notHistorique";
-import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
-import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
+import { kdb } from "../../../../../db/db";
+import { DB } from "../../../../../db/schema";
+import { cleanNull } from "../../../../../utils/noNull";
+import { isScolaireIndicateurRegionSortie } from "../../../utils/isScolaire";
+import { notAnneeCommuneIndicateurRegionSortie } from "../../../utils/notAnneeCommune";
+import { notHistoriqueIndicateurRegionSortie } from "../../../utils/notHistorique";
+import { selectTauxInsertion6moisAgg } from "../../../utils/tauxInsertion6mois";
+import { selectTauxPoursuiteAgg } from "../../../utils/tauxPoursuite";
 
 /**
  * On prend le taux de chomage du dernier trimestre de l'année
@@ -28,7 +26,7 @@ const dernierTauxDeChomage = (
   ]);
 };
 
-const getStatsRegions = async ({
+export const getStats = async ({
   codeNiveauDiplome,
   orderBy = { order: "asc", column: "libelleRegion" },
 }: {
@@ -88,44 +86,16 @@ const getStatsRegions = async ({
       "indicateurRegion.tauxChomage",
     ])
     .$call((q) => {
-      if (!orderBy) return q;
-      return q.orderBy(
-        sql.ref(orderBy.column),
-        sql`${sql.raw(orderBy.order)} NULLS LAST`
-      );
+      if (orderBy && orderBy.column !== "tauxTransformation") {
+        return q.orderBy(
+          sql.ref(orderBy.column),
+          sql`${sql.raw(orderBy.order)} NULLS LAST`
+        );
+      }
+
+      return q;
     })
     .execute();
 
   return statsRegions.map(cleanNull);
-};
-
-const findFiltersInDb = async () => {
-  const filtersBase = kdb
-    .selectFrom("formationScolaireView as formationView")
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "formationView.codeNiveauDiplome"
-    )
-    .where(notHistoriqueFormation)
-    .distinct()
-    .$castTo<{ label: string; value: string }>();
-
-  const diplomes = filtersBase
-    .select([
-      "niveauDiplome.libelleNiveauDiplome as label",
-      "niveauDiplome.codeNiveauDiplome as value",
-    ])
-    .where("niveauDiplome.codeNiveauDiplome", "is not", null)
-    .where("niveauDiplome.codeNiveauDiplome", "in", ["500", "320", "400"])
-    .execute();
-
-  return {
-    diplomes: (await diplomes).map(cleanNull),
-  };
-};
-
-export const dependencies = {
-  getStatsRegions,
-  findFiltersInDb,
 };

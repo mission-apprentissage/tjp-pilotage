@@ -15,7 +15,13 @@ import { EvolutionIndicateursClesSection } from "./components/EvolutionIndicateu
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
 import { VueRegionAcademieSection } from "./components/VueRegionAcademieSection";
-import { Filters, FiltersRegions, IndicateurType, Order } from "./types";
+import {
+  Filters,
+  FiltersRegions,
+  IndicateurOption,
+  IndicateurType,
+  Order,
+} from "./types";
 
 export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   const router = useRouter();
@@ -99,7 +105,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
 
   const isFiltered = filters.codeRegion;
 
-  const indicateurOptions = [
+  const indicateurOptions: IndicateurOption[] = [
     {
       label: "Taux d'emploi à 6 mois",
       value: "tauxInsertion",
@@ -110,13 +116,17 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
       value: "tauxPoursuite",
       isDefault: false,
     },
+    {
+      label: "Taux de transformation prévisionnel cumulé",
+      value: "tauxTransformation",
+      isDefault: false,
+    },
   ];
 
   const [indicateur, setIndicateur] = useState<IndicateurType>("tauxInsertion");
 
-  const handleIndicateurChange = (indicateur: string): void => {
-    if (indicateur === "tauxInsertion" || indicateur === "tauxPoursuite")
-      setIndicateur(indicateur);
+  const handleIndicateurChange = (indicateur: IndicateurType): void => {
+    setIndicateur(indicateur);
   };
 
   return (
@@ -151,7 +161,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
               indicateurOptions={indicateurOptions}
               activeFilters={filters}
               handleFilters={handleFilters}
-            ></CartoSection>
+            />
           </Flex>
           <SimpleGrid spacing={5} columns={[1]} mt={14}>
             <VueRegionAcademieSection
@@ -160,7 +170,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
               isLoading={isLoadingRegions}
               handleOrder={handleOrder}
               codeRegion={filters.codeRegion}
-            ></VueRegionAcademieSection>
+            />
           </SimpleGrid>
         </Box>
       </Container>

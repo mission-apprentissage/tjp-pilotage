@@ -1,29 +1,20 @@
 import { sql } from "kysely";
-import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
+import { getRentreeScolaire } from "shared/utils/getRentreeScolaire";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { countPlacesTransformeesParCampagne } from "../../../utils/countCapacite";
-import {
-  isDemandeNotAjustementRentree,
-  isDemandeNotDeletedOrRefused,
-} from "../../../utils/isDemandeSelectable";
-import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
-import { getRentreeScolaire } from "../../services/getRentreeScolaire";
-import { effectifAnnee } from "../../utils/effectifAnnee";
-import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
+import { kdb } from "../../../../../db/db";
+import { effectifAnnee } from "../../../utils/effectifAnnee";
+import { isScolaireIndicateurRegionSortie } from "../../../utils/isScolaire";
 import {
   notAnneeCommune,
   notAnneeCommuneIndicateurRegionSortie,
-} from "../../utils/notAnneeCommune";
+} from "../../../utils/notAnneeCommune";
 import {
   notHistorique,
-  notHistoriqueFormation,
   notHistoriqueIndicateurRegionSortie,
-} from "../../utils/notHistorique";
-import { genericOnConstatRentree } from "../../utils/onConstatDeRentree";
-import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
-import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
+} from "../../../utils/notHistorique";
+import { selectTauxInsertion6moisAgg } from "../../../utils/tauxInsertion6mois";
+import { selectTauxPoursuiteAgg } from "../../../utils/tauxPoursuite";
 
 const getRentreesScolaires = async () => {
   return await kdb
@@ -196,108 +187,4 @@ export const getStats = async ({
   return {
     annees,
   };
-};
-
-const findFiltersInDb = async () => {
-  const filtersBase = kdb
-    .selectFrom("formationScolaireView as formationView")
-    .leftJoin(
-      "formationEtablissement",
-      "formationEtablissement.cfd",
-      "formationView.cfd"
-    )
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "formationView.codeNiveauDiplome"
-    )
-    .leftJoin(
-      "etablissement",
-      "etablissement.uai",
-      "formationEtablissement.uai"
-    )
-    .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
-    .where(notHistoriqueFormation)
-    .distinct()
-    .$castTo<{ label: string; value: string }>()
-    .orderBy("label", "asc");
-
-  const regions = filtersBase
-    .select(["region.libelleRegion as label", "region.codeRegion as value"])
-    .where("region.codeRegion", "is not", null)
-    .execute();
-
-  const diplomes = filtersBase
-    .select([
-      "niveauDiplome.libelleNiveauDiplome as label",
-      "niveauDiplome.codeNiveauDiplome as value",
-    ])
-    .where("niveauDiplome.codeNiveauDiplome", "is not", null)
-    .where("niveauDiplome.codeNiveauDiplome", "in", ["500", "320", "400"])
-    .execute();
-
-  return {
-    regions: (await regions).map(cleanNull),
-    diplomes: (await diplomes).map(cleanNull),
-  };
-};
-
-const getTauxTransformationData = async (filters: {
-  codeNiveauDiplome?: string[];
-  codeRegion?: string;
-}) => {
-  return kdb
-    .selectFrom("latestDemandeIntentionView as demande")
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("campagne", "campagne.id", "demande.campagneId")
-    .select((eb) => [
-      eb.fn
-        .coalesce(
-          eb.fn.sum<number>(countPlacesTransformeesParCampagne(eb)),
-          sql`0`
-        )
-        .as("transformes"),
-      genericOnConstatRentree({ ...filters })
-        .select((eb) =>
-          eb.fn
-            .coalesce(eb.fn.sum<number>("effectif"), eb.val(0))
-            .as("effectif")
-        )
-        .as("effectif"),
-    ])
-    .where(isDemandeNotDeletedOrRefused)
-    .where(isDemandeNotAjustementRentree)
-    .$call((eb) => {
-      return eb.where("demande.rentreeScolaire", "in", [
-        parseInt(NEXT_RENTREE),
-      ]);
-    })
-    .$call((eb) => {
-      if (filters.codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          filters.codeNiveauDiplome
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (filters.codeRegion) {
-        return eb.where(
-          "dataEtablissement.codeRegion",
-          "=",
-          filters.codeRegion
-        );
-      }
-      return eb;
-    })
-    .execute()
-    .then(cleanNull);
-};
-
-export const dependencies = {
-  getStats,
-  findFiltersInDb,
-  getTauxTransformationData,
 };

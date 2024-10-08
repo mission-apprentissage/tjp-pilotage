@@ -39,7 +39,7 @@ export const BarGraph = function <F extends BarGraphData>({
   const getNationalSerieData = () => {
     if (graphData !== undefined) {
       return Object.keys(graphData).map((annee) =>
-        formatNumber(graphData[annee].nationale)
+        formatNumber(graphData[annee].nationale, 1)
       );
     }
 
@@ -49,7 +49,7 @@ export const BarGraph = function <F extends BarGraphData>({
   const getFilteredSerieData = () => {
     if (isFiltered && graphData !== undefined) {
       return Object.keys(graphData).map((annee) =>
-        formatNumber(graphData[annee].filtered)
+        formatNumber(graphData[annee].filtered, 1)
       );
     }
 
@@ -97,7 +97,7 @@ export const BarGraph = function <F extends BarGraphData>({
         },
         splitNumber: 3,
         min: function (value) {
-          return Math.floor(value.min - 5);
+          return Math.floor(value.min - 5) < 0 ? 0 : Math.floor(value.min - 5);
         },
       },
       series: isFiltered
