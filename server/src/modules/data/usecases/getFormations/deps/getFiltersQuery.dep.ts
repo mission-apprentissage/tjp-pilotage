@@ -118,13 +118,13 @@ export const getFiltersQuery = async ({
     return eb("dataFormation.codeNsf", "in", codeNsf);
   };
 
-  const regions = await base
+  const regionsFilters = await base
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
     .where(isInPerimetreIJRegion)
     .execute();
 
-  const academies = await base
+  const academieFilters = await base
     .select([
       "academie.libelleAcademie as label",
       "academie.codeAcademie as value",
@@ -141,7 +141,7 @@ export const getFiltersQuery = async ({
     })
     .execute();
 
-  const departements = await base
+  const departementFilters = await base
     .select([
       "departement.libelleDepartement as label",
       "departement.codeDepartement as value",
@@ -158,7 +158,7 @@ export const getFiltersQuery = async ({
     })
     .execute();
 
-  const communes = await base
+  const communeFilters = await base
     .select([
       "etablissement.commune as label",
       "etablissement.commune as value",
@@ -174,7 +174,7 @@ export const getFiltersQuery = async ({
     })
     .execute();
 
-  const diplomes = await base
+  const diplomeFilters = await base
     .select([
       "niveauDiplome.libelleNiveauDiplome as label",
       "niveauDiplome.codeNiveauDiplome as value",
@@ -190,7 +190,7 @@ export const getFiltersQuery = async ({
     })
     .execute();
 
-  const dispositifs = await base
+  const dispositifFilters = await base
     .select([
       "dispositif.libelleDispositif as label",
       "dispositif.codeDispositif as value",
@@ -206,7 +206,7 @@ export const getFiltersQuery = async ({
     })
     .execute();
 
-  const familles = await base
+  const familleFilters = await base
     .select([
       "familleMetier.libelleFamille as label",
       "familleMetier.cfdFamille as value",
@@ -222,7 +222,7 @@ export const getFiltersQuery = async ({
     })
     .execute();
 
-  const formations = await base
+  const formationFilters = await base
     .select([
       sql`CONCAT("formationView"."libelleFormation", ' (', "niveauDiplome"."libelleNiveauDiplome", ')')
       `.as("label"),
@@ -243,7 +243,7 @@ export const getFiltersQuery = async ({
     })
     .execute();
 
-  const cpcs = await base
+  const cpcFilters = await base
     .select(["formationView.cpc as label", "formationView.cpc as value"])
     .where("formationView.cpc", "is not", null)
     .where((eb) => {
@@ -254,22 +254,22 @@ export const getFiltersQuery = async ({
     })
     .execute();
 
-  const libellesNsf = await base
+  const libelleNsfFilters = await base
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .select(["nsf.libelleNsf as label", "formationView.codeNsf as value"])
     .where("nsf.libelleNsf", "is not", null)
     .execute();
 
   return {
-    regions: regions.map(cleanNull),
-    departements: departements.map(cleanNull),
-    academies: academies.map(cleanNull),
-    communes: communes.map(cleanNull),
-    diplomes: diplomes.map(cleanNull),
-    dispositifs: dispositifs.map(cleanNull),
-    familles: familles.map(cleanNull),
-    formations: formations.map(cleanNull),
-    cpcs: cpcs.map(cleanNull),
-    libellesNsf: libellesNsf.map(cleanNull),
+    regions: regionsFilters.map(cleanNull),
+    departements: departementFilters.map(cleanNull),
+    academies: academieFilters.map(cleanNull),
+    communes: communeFilters.map(cleanNull),
+    diplomes: diplomeFilters.map(cleanNull),
+    dispositifs: dispositifFilters.map(cleanNull),
+    familles: familleFilters.map(cleanNull),
+    formations: formationFilters.map(cleanNull),
+    cpcs: cpcFilters.map(cleanNull),
+    libellesNsf: libelleNsfFilters.map(cleanNull),
   };
 };
