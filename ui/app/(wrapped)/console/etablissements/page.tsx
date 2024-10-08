@@ -232,7 +232,6 @@ export default function Etablissements() {
         codeDispositif: [],
         cfdFamille: [],
         cfd: [],
-        cpc: [],
         codeNsf: [],
       },
     });
