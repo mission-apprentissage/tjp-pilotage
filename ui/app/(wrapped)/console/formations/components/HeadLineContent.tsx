@@ -229,7 +229,8 @@ export const HeadLineContent = ({
           />
         </Th>
         {canShowQuadrantPosition && (
-          <Th>
+          <Th cursor="pointer" onClick={() => handleOrder("positionQuadrant")}>
+            <OrderIcon {...order} column="positionQuadrant" />
             {FORMATION_COLUMNS.positionQuadrant}
             <TooltipIcon
               ml="1"

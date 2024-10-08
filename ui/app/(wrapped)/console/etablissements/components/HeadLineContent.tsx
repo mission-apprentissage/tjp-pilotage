@@ -215,7 +215,8 @@ export const HeadLineContent = ({
             onClick={() => openGlossaire("taux-poursuite-etudes")}
           />
         </Th>
-        <Th>
+        <Th cursor="pointer" onClick={() => handleOrder("positionQuadrant")}>
+          <OrderIcon {...order} column="positionQuadrant" />
           {FORMATION_ETABLISSEMENT_COLUMNS.positionQuadrant}
           <TooltipIcon
             ml="1"
