@@ -140,10 +140,7 @@ export const ConsoleFilters = ({
         onClose={filterTracker("secteur")}
         width="12rem"
         onChange={(selected) => handleFilters("secteur", selected)}
-        options={[
-          { label: "PR", value: "PR" },
-          { label: "PU", value: "PU" },
-        ]}
+        options={data?.filters.secteurs}
         value={filters.secteur ?? []}
         menuZIndex={3}
       >

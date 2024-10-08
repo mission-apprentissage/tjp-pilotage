@@ -1,3 +1,4 @@
+import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
 
 const OptionSchema = z.object({
@@ -76,7 +77,7 @@ export const getFormationEtablissementsSchema = {
     codeDispositif: z.array(z.string()).optional(),
     cfdFamille: z.array(z.string()).optional(),
     rentreeScolaire: z.array(z.string()).optional(),
-    secteur: z.array(z.string()).optional(),
+    secteur: z.array(SecteurZodType).optional(),
     uai: z.array(z.string()).optional(),
     cpc: z.array(z.string()).optional(),
     codeNsf: z.array(z.string()).optional(),
@@ -101,6 +102,7 @@ export const getFormationEtablissementsSchema = {
         etablissements: z.array(OptionSchema),
         cpcs: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),
+        secteurs: z.array(OptionSchema),
       }),
       etablissements: z.array(FormationEtablissementLineSchema),
     }),

@@ -98,6 +98,11 @@ export const getFormationsQuery = async ({
             eb.ref("formationEtablissement.cfd")
           ),
           eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
+            "=",
+            eb.ref("formationEtablissement.codeDispositif")
+          ),
+          eb(
             eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
             "=",
             eb.ref("etablissement.codeRegion")
