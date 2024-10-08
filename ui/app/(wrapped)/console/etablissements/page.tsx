@@ -218,6 +218,26 @@ export default function Etablissements() {
     }
   };
 
+  const resetFilters = () => {
+    setSearchParams({
+      filters: {
+        ...filters,
+        codeRegion: [],
+        codeAcademie: [],
+        codeDepartement: [],
+        commune: [],
+        uai: [],
+        secteur: undefined,
+        codeNiveauDiplome: [],
+        codeDispositif: [],
+        cfdFamille: [],
+        cfd: [],
+        cpc: [],
+        codeNsf: [],
+      },
+    });
+  };
+
   useEffect(() => {
     const box = tableRef.current;
     if (box) {
@@ -234,6 +254,7 @@ export default function Etablissements() {
         setUaiFilter={setUaiFilter}
         setCodeRegionFilter={setCodeRegionFilter}
         setSearchParams={setSearchParams}
+        resetFilters={resetFilters}
         searchParams={searchParams}
         data={data}
       />

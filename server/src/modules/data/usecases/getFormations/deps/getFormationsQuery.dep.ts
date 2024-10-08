@@ -30,14 +30,13 @@ export const getFormationsQuery = async ({
   codeRegion,
   codeAcademie,
   codeDepartement,
-  codeDiplome,
+  codeNiveauDiplome,
   codeDispositif,
   commune,
   cfd,
   cfdFamille,
   withEmptyFormations = true,
   withAnneeCommune,
-  cpc,
   codeNsf,
   order,
   orderBy,
@@ -293,8 +292,12 @@ export const getFormationsQuery = async ({
       return q.where("dispositif.codeDispositif", "in", codeDispositif);
     })
     .$call((q) => {
-      if (!codeDiplome) return q;
-      return q.where("formationView.codeNiveauDiplome", "in", codeDiplome);
+      if (!codeNiveauDiplome) return q;
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
     })
     .$call((q) => {
       if (!cfdFamille) return q;
@@ -307,10 +310,6 @@ export const getFormationsQuery = async ({
           ]),
         ])
       );
-    })
-    .$call((q) => {
-      if (!cpc) return q;
-      return q.where("formationView.cpc", "in", cpc);
     })
     .$call((q) => {
       if (!codeNsf) return q;

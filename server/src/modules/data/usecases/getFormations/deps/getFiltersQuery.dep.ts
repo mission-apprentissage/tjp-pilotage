@@ -19,9 +19,8 @@ export const getFiltersQuery = async ({
   commune,
   cfdFamille,
   cfd,
-  codeDiplome,
+  codeNiveauDiplome,
   codeDispositif,
-  cpc,
   codeNsf,
   rentreeScolaire = [CURRENT_RENTREE],
 }: Partial<Filters>) => {
@@ -97,8 +96,8 @@ export const getFiltersQuery = async ({
   };
 
   const inCodeDiplome = (eb: ExpressionBuilder<DB, "formationView">) => {
-    if (!codeDiplome) return sql<true>`true`;
-    return eb("formationView.codeNiveauDiplome", "in", codeDiplome);
+    if (!codeNiveauDiplome) return sql<true>`true`;
+    return eb("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
   };
 
   const inCodeDispositif = (
@@ -106,11 +105,6 @@ export const getFiltersQuery = async ({
   ) => {
     if (!codeDispositif) return sql<true>`true`;
     return eb("formationEtablissement.codeDispositif", "in", codeDispositif);
-  };
-
-  const inCPCSecteur = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!cpc) return sql<true>`true`;
-    return eb("dataFormation.cpc", "in", cpc);
   };
 
   const inDomaine = (eb: ExpressionBuilder<DB, "dataFormation">) => {
@@ -183,8 +177,8 @@ export const getFiltersQuery = async ({
     .where((eb) => {
       return eb.or([
         eb.and([inCfdFamille(eb), inCfd(eb), inCodeDispositif(eb)]),
-        codeDiplome
-          ? eb("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
+        codeNiveauDiplome
+          ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome)
           : sql<boolean>`false`,
       ]);
     })
@@ -199,8 +193,8 @@ export const getFiltersQuery = async ({
     .where((eb) => {
       return eb.or([
         eb.and([inCfdFamille(eb), inCfd(eb), inCodeDiplome(eb)]),
-        codeDiplome
-          ? eb("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
+        codeNiveauDiplome
+          ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome)
           : sql<boolean>`false`,
       ]);
     })
@@ -235,21 +229,9 @@ export const getFiltersQuery = async ({
           inCfdFamille(eb),
           inCodeDiplome(eb),
           inCodeDispositif(eb),
-          inCPCSecteur(eb),
           inDomaine(eb),
         ]),
         cfd ? eb("formationView.cfd", "in", cfd) : sql<boolean>`false`,
-      ]);
-    })
-    .execute();
-
-  const cpcFilters = await base
-    .select(["formationView.cpc as label", "formationView.cpc as value"])
-    .where("formationView.cpc", "is not", null)
-    .where((eb) => {
-      return eb.or([
-        eb.and([]),
-        cpc ? eb("formationView.cpc", "in", cpc) : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -269,7 +251,6 @@ export const getFiltersQuery = async ({
     dispositifs: dispositifFilters.map(cleanNull),
     familles: familleFilters.map(cleanNull),
     formations: formationFilters.map(cleanNull),
-    cpcs: cpcFilters.map(cleanNull),
     libellesNsf: libelleNsfFilters.map(cleanNull),
   };
 };

@@ -208,6 +208,23 @@ export default function Formations() {
     }
   };
 
+  const resetFilters = () => {
+    setSearchParams({
+      filters: {
+        ...filters,
+        codeRegion: [],
+        codeAcademie: [],
+        codeDepartement: [],
+        commune: [],
+        codeNiveauDiplome: [],
+        codeDispositif: [],
+        cfdFamille: [],
+        cfd: [],
+        codeNsf: [],
+      },
+    });
+  };
+
   useEffect(() => {
     const box = tableRef.current;
     if (box) {
@@ -224,6 +241,7 @@ export default function Formations() {
         setSearchParams={setSearchParams}
         searchParams={searchParams}
         setCodeRegionFilter={setCodeRegionFilter}
+        resetFilters={resetFilters}
         data={data}
       />
       <Flex direction="column" flex={1} position="relative" minH="0">

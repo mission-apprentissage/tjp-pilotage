@@ -40,14 +40,13 @@ export const getFormationEtablissementsQuery = async ({
   codeRegion,
   codeAcademie,
   codeDepartement,
-  codeDiplome,
+  codeNiveauDiplome,
   codeDispositif,
   commune,
   cfd,
   cfdFamille,
   uai,
   secteur,
-  cpc,
   codeNsf,
   withAnneeCommune,
   order,
@@ -306,8 +305,8 @@ export const getFormationEtablissementsQuery = async ({
       return q.where("dispositif.codeDispositif", "in", codeDispositif);
     })
     .$call((q) => {
-      if (!codeDiplome) return q;
-      return q.where("dispositif.codeNiveauDiplome", "in", codeDiplome);
+      if (!codeNiveauDiplome) return q;
+      return q.where("dispositif.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
     .$call((q) => {
       if (!cfdFamille) return q;
@@ -328,10 +327,6 @@ export const getFormationEtablissementsQuery = async ({
     .$call((q) => {
       if (!secteur) return q;
       return q.where("etablissement.secteur", "in", secteur);
-    })
-    .$call((q) => {
-      if (!cpc) return q;
-      return q.where("formationView.cpc", "in", cpc);
     })
     .$call((q) => {
       if (!codeNsf) return q;
