@@ -5,6 +5,7 @@ import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
+import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
 import { capaciteAnnee } from "../../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../../utils/effectifAnnee";
 import { hasContinuum } from "../../../utils/hasContinuum";
@@ -49,9 +50,12 @@ export const getFormationEtablissementsQuery = async ({
   secteur,
   codeNsf,
   withAnneeCommune,
+  search,
   order,
   orderBy,
 }: Partial<Filters>) => {
+  const search_array = getNormalizedSearchArray(search);
+
   const result = await kdb
     .selectFrom("formationScolaireView as formationView")
     .innerJoin(
@@ -128,6 +132,11 @@ export const getFormationEtablissementsQuery = async ({
             eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
             "=",
             eb.ref("formationEtablissement.codeDispositif")
+          ),
+          eb(
+            eb.ref("positionFormationRegionaleQuadrant.codeNiveauDiplome"),
+            "=",
+            eb.ref("formationView.codeNiveauDiplome")
           ),
           eb(
             eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
@@ -275,6 +284,43 @@ export const getFormationEtablissementsQuery = async ({
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
     ])
+    .$call((eb) => {
+      if (search)
+        return eb.where((eb) =>
+          eb.and(
+            search_array.map((search_word) =>
+              eb(
+                sql`concat(
+                  unaccent(${eb.ref("formationView.libelleFormation")}),
+                  ' ',
+                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
+                  ' ',
+                  unaccent(${eb.ref("dispositif.libelleDispositif")}),
+                  ' ',
+                  unaccent(${eb.ref(
+                    "positionFormationRegionaleQuadrant.positionQuadrant"
+                  )}),
+                  ' ',
+                  unaccent(${eb.ref("nsf.libelleNsf")}),
+                  ' ',
+                  unaccent(${eb.ref("etablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("etablissement.commune")}),
+                  ' ',
+                  unaccent(${eb.ref("region.libelleRegion")}),
+                  ' ',
+                  unaccent(${eb.ref("academie.libelleAcademie")}),
+                  ' ',
+                  unaccent(${eb.ref("departement.libelleDepartement")})
+                )`,
+                "ilike",
+                `%${search_word}%`
+              )
+            )
+          )
+        );
+      return eb;
+    })
     .$call((q) => {
       if (!withAnneeCommune || withAnneeCommune === "false")
         return q.where(notAnneeCommune);

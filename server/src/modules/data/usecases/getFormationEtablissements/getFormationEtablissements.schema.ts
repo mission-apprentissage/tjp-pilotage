@@ -81,6 +81,7 @@ export const getFormationEtablissementsSchema = {
     uai: z.array(z.string()).optional(),
     codeNsf: z.array(z.string()).optional(),
     withAnneeCommune: z.string().optional(),
+    search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationEtablissementLineSchema.keyof().optional(),
     offset: z.coerce.number().optional(),

@@ -1,36 +1,42 @@
 import { Button, Checkbox, Flex, Select, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
+import { useContext, useEffect } from "react";
 
-import { Formations } from "@/app/(wrapped)/console/formations/types";
+import { CodeRegionFilterContext } from "@/app/layoutClient";
 import { Multiselect } from "@/components/Multiselect";
 
-import { Filters, Order } from "../types";
+import { FORMATION_COLUMNS } from "../FORMATION_COLUMNS";
+import { Filters, Formations, Order } from "../types";
 
-export const ConsoleFilters = ({
-  setCodeRegionFilter,
+export const FiltersSection = ({
   setSearchParams,
-  resetFilters,
   searchParams,
   data,
 }: {
-  setCodeRegionFilter: (codeRegion: string) => void;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
+    search?: string;
     withAnneeCommune?: string;
+    columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: number;
   }) => void;
-  resetFilters: () => void;
   searchParams: {
     filters?: Partial<Filters>;
+    search?: string;
     withAnneeCommune?: string;
+    columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: string;
   };
   data?: Formations;
 }) => {
   const trackEvent = usePlausible();
+
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(
+    CodeRegionFilterContext
+  );
 
   const filters = searchParams.filters ?? {};
   const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
@@ -63,6 +69,31 @@ export const ConsoleFilters = ({
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("formations:filtre", { props: { filter_name: filterName } });
   };
+
+  const resetFilters = () => {
+    setSearchParams({
+      filters: {
+        ...filters,
+        codeRegion: [],
+        codeAcademie: [],
+        codeDepartement: [],
+        commune: [],
+        codeNiveauDiplome: [],
+        codeDispositif: [],
+        cfdFamille: [],
+        cfd: [],
+        codeNsf: [],
+      },
+      search: "",
+    });
+  };
+
+  useEffect(() => {
+    if (codeRegionFilter !== "" && !filters.codeRegion?.length) {
+      filters.codeRegion = [codeRegionFilter];
+      setSearchParams({ filters: filters, withAnneeCommune });
+    }
+  }, []);
 
   return (
     <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
