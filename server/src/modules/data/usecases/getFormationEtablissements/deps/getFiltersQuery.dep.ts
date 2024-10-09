@@ -140,7 +140,7 @@ export const getFiltersQuery = async ({
     .where(isInPerimetreIJAcademie)
     .where((eb) => {
       return eb.or([
-        eb.and([inCodeRegion(eb), inCodeDepartement(eb), inCommune(eb)]),
+        eb.and([inCodeRegion(eb)]),
         codeAcademie
           ? eb("academie.codeAcademie", "in", codeAcademie)
           : sql<boolean>`false`,
@@ -157,7 +157,7 @@ export const getFiltersQuery = async ({
     .where(isInPerimetreIJDepartement)
     .where((eb) => {
       return eb.or([
-        eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCommune(eb)]),
+        eb.and([inCodeRegion(eb), inCodeAcademie(eb)]),
         codeDepartement
           ? eb("departement.codeDepartement", "in", codeDepartement)
           : sql<boolean>`false`,

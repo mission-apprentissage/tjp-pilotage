@@ -2,6 +2,7 @@ import { Button, Checkbox, Flex, Select, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 import { useContext, useEffect } from "react";
+import { unstable_batchedUpdates } from "react-dom";
 
 import { CodeRegionFilterContext } from "@/app/layoutClient";
 import { Multiselect } from "@/components/Multiselect";
@@ -48,15 +49,54 @@ export const FiltersSection = ({
     if (type === "codeRegion" && value != null)
       setCodeRegionFilter((value as string[])[0] ?? "");
   };
+
   const handleFilters = (
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
     handleFiltersContext(type, value);
-    setSearchParams({
-      page: 0,
-      filters: { ...filters, [type]: value },
-      withAnneeCommune,
+
+    let newFilters: Partial<Filters> = {
+      [type]: value,
+    };
+
+    // Valeurs par défaut pour les codes
+    switch (type) {
+      case "codeRegion":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeAcademie: undefined,
+            codeDepartement: undefined,
+            commune: undefined,
+          };
+        }
+        break;
+      case "codeAcademie":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeDepartement: undefined,
+            commune: undefined,
+          };
+        }
+        break;
+      case "codeDepartement":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            commune: undefined,
+          };
+        }
+        break;
+    }
+
+    unstable_batchedUpdates(() => {
+      setSearchParams({
+        page: 0,
+        filters: { ...filters, ...newFilters },
+        withAnneeCommune,
+      });
     });
   };
 

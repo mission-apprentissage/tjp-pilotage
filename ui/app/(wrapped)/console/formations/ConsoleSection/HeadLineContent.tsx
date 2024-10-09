@@ -218,6 +218,26 @@ export const HeadLineContent = ({
           />
         </ConditionalTh>
         <ConditionalTh
+          colonne={"effectifEntree"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          cursor="pointer"
+          onClick={() => handleOrder("effectifEntree")}
+        >
+          <OrderIcon {...order} column="effectifEntree" />
+          {FORMATION_COLUMNS.effectifEntree}
+          <TooltipIcon
+            ml="1"
+            label={
+              <Box>
+                <Text>Effectifs en entrée en première année de formation.</Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
+            onClick={() => openGlossaire("effectif-en-entree")}
+          />
+        </ConditionalTh>
+        <ConditionalTh
           colonne={"tauxPression"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -428,26 +448,6 @@ export const HeadLineContent = ({
             ml="1"
             label="Cliquez pour plus d'infos."
             onClick={() => openGlossaire("domaine-de-formation-nsf")}
-          />
-        </ConditionalTh>
-        <ConditionalTh
-          colonne={"effectifEntree"}
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          cursor="pointer"
-          onClick={() => handleOrder("effectifEntree")}
-        >
-          <OrderIcon {...order} column="effectifEntree" />
-          {FORMATION_COLUMNS.effectifEntree}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Effectifs en entrée en première année de formation.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("effectif-en-entree")}
           />
         </ConditionalTh>
       </Tr>
