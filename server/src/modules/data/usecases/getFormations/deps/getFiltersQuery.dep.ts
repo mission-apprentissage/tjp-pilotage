@@ -65,14 +65,10 @@ export const getFiltersQuery = async ({
     if (!codeAcademie) return sql<true>`true`;
     return eb("academie.codeAcademie", "in", codeAcademie);
   };
+
   const inCodeDepartement = (eb: ExpressionBuilder<DB, "departement">) => {
     if (!codeDepartement) return sql<true>`true`;
     return eb("departement.codeDepartement", "in", codeDepartement);
-  };
-
-  const inCommune = (eb: ExpressionBuilder<DB, "etablissement">) => {
-    if (!commune) return sql<true>`true`;
-    return eb("etablissement.commune", "in", commune);
   };
 
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
@@ -127,7 +123,7 @@ export const getFiltersQuery = async ({
     .where(isInPerimetreIJAcademie)
     .where((eb) => {
       return eb.or([
-        eb.and([inCodeRegion(eb), inCodeDepartement(eb), inCommune(eb)]),
+        eb.and([inCodeRegion(eb)]),
         codeAcademie
           ? eb("academie.codeAcademie", "in", codeAcademie)
           : sql<boolean>`false`,
@@ -144,7 +140,7 @@ export const getFiltersQuery = async ({
     .where(isInPerimetreIJDepartement)
     .where((eb) => {
       return eb.or([
-        eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCommune(eb)]),
+        eb.and([inCodeRegion(eb), inCodeAcademie(eb)]),
         codeDepartement
           ? eb("departement.codeDepartement", "in", codeDepartement)
           : sql<boolean>`false`,

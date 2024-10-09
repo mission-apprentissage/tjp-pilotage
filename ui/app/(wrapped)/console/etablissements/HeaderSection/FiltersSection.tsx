@@ -57,10 +57,69 @@ export const FiltersSection = ({
     value: Filters[keyof Filters]
   ) => {
     handleFiltersContext(type, value);
+
+    let newFilters: Partial<Filters> = {
+      [type]: value,
+    };
+
+    // Valeurs par défaut pour les codes
+    switch (type) {
+      case "codeRegion":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeAcademie: undefined,
+            codeDepartement: undefined,
+            commune: undefined,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "codeAcademie":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeDepartement: undefined,
+            commune: undefined,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "codeDepartement":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            commune: undefined,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "commune":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "secteur":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            uai: [],
+          };
+        }
+        break;
+    }
+
     unstable_batchedUpdates(() => {
       setSearchParams({
         page: 0,
-        filters: { ...filters, [type]: value },
+        filters: { ...filters, ...newFilters },
         withAnneeCommune,
       });
     });
@@ -115,17 +174,7 @@ export const FiltersSection = ({
         variant="input"
         size="sm"
         onChange={(e) => {
-          handleFiltersContext("codeRegion", [e.target.value]);
-          setSearchParams({
-            page: 0,
-            filters: {
-              ...filters,
-              codeAcademie: undefined,
-              codeDepartement: undefined,
-              commune: undefined,
-              codeRegion: e.target.value === "" ? undefined : [e.target.value],
-            },
-          });
+          handleFilters("codeRegion", [e.target.value]);
         }}
         value={filters.codeRegion?.[0] ?? ""}
       >
@@ -169,16 +218,6 @@ export const FiltersSection = ({
         Commune
       </Multiselect>
       <Multiselect
-        onClose={filterTracker("uai")}
-        width="12rem"
-        onChange={(selected) => handleFilters("uai", selected)}
-        options={filtersLists?.etablissements}
-        value={filters.uai ?? []}
-        menuZIndex={3}
-      >
-        Établissement
-      </Multiselect>
-      <Multiselect
         onClose={filterTracker("secteur")}
         width="12rem"
         onChange={(selected) => handleFilters("secteur", selected)}
@@ -187,6 +226,16 @@ export const FiltersSection = ({
         menuZIndex={3}
       >
         Secteur
+      </Multiselect>
+      <Multiselect
+        onClose={filterTracker("uai")}
+        width="12rem"
+        onChange={(selected) => handleFilters("uai", selected)}
+        options={filtersLists?.etablissements}
+        value={filters.uai ?? []}
+        menuZIndex={3}
+      >
+        Établissement
       </Multiselect>
       <Multiselect
         onClose={filterTracker("codeNiveauDiplome")}
