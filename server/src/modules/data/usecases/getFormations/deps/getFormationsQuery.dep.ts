@@ -4,6 +4,7 @@ import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
+import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
 import { capaciteAnnee } from "../../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../../utils/effectifAnnee";
 import { hasContinuum } from "../../../utils/hasContinuum";
@@ -35,12 +36,15 @@ export const getFormationsQuery = async ({
   commune,
   cfd,
   cfdFamille,
+  codeNsf,
+  search,
   withEmptyFormations = true,
   withAnneeCommune,
-  codeNsf,
   order,
   orderBy,
 }: Partial<Filters>) => {
+  const search_array = getNormalizedSearchArray(search);
+
   const query = kdb
     .selectFrom("formationScolaireView as formationView")
     .leftJoin("formationEtablissement", (join) =>
@@ -88,33 +92,52 @@ export const getFormationsQuery = async ({
         .on(isScolaireFormationHistorique)
     )
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
-    .leftJoin("positionFormationRegionaleQuadrant", (join) =>
-      join.on((eb) =>
-        eb.and([
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.cfd"),
-            "=",
-            eb.ref("formationEtablissement.cfd")
-          ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
-            "=",
-            eb.ref("formationEtablissement.codeDispositif")
-          ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
-            "=",
-            eb.ref("etablissement.codeRegion")
-          ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
-            "=",
-            millesimeSortie
-          ),
-        ])
-      )
-    )
+    .$call((eb) => {
+      if (!codeRegion || !codeNiveauDiplome) return eb;
+      return eb
+        .leftJoin("positionFormationRegionaleQuadrant", (join) =>
+          join
+            .onRef(
+              "positionFormationRegionaleQuadrant.cfd",
+              "=",
+              "formationView.cfd"
+            )
+            .onRef(
+              "positionFormationRegionaleQuadrant.codeDispositif",
+              "=",
+              "formationEtablissement.codeDispositif"
+            )
+            .onRef(
+              "positionFormationRegionaleQuadrant.codeNiveauDiplome",
+              "=",
+              "formationView.codeNiveauDiplome"
+            )
+            .onRef(
+              "positionFormationRegionaleQuadrant.codeRegion",
+              "=",
+              "etablissement.codeRegion"
+            )
+            .on(
+              "positionFormationRegionaleQuadrant.millesimeSortie",
+              "=",
+              millesimeSortie
+            )
+        )
+        .select((eb) =>
+          eb.fn
+            .coalesce(
+              "positionFormationRegionaleQuadrant.positionQuadrant",
+              eb.val(PositionQuadrantEnum["Hors quadrant"])
+            )
+            .as("positionQuadrant")
+        )
+        .groupBy("positionQuadrant");
+    })
     .select((eb) => [
+      sql<number>`COUNT(*) OVER()`.as("count"),
+      sql<number>`
+        COUNT("indicateurEntree"."rentreeScolaire")
+      `.as("nbEtablissement"),
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
@@ -127,15 +150,6 @@ export const getFormationsQuery = async ({
       "dispositif.codeDispositif",
       "libelleNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
-      eb.fn
-        .coalesce(
-          "positionFormationRegionaleQuadrant.positionQuadrant",
-          eb.val(PositionQuadrantEnum["Hors quadrant"])
-        )
-        .as("positionQuadrant"),
-      sql<number>`COUNT(*) OVER()`.as("count"),
-      sql<number>`COUNT("indicateurEntree"."rentreeScolaire")
-      `.as("nbEtablissement"),
       sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
@@ -265,8 +279,34 @@ export const getFormationsQuery = async ({
       "formationEtablissement.codeDispositif",
       "libelleFamille",
       "niveauDiplome.libelleNiveauDiplome",
-      "positionFormationRegionaleQuadrant.positionQuadrant",
     ])
+    .$call((eb) => {
+      if (search)
+        return eb.where((eb) =>
+          eb.and(
+            search_array.map((search_word) =>
+              eb(
+                sql`concat(
+                  unaccent(${eb.ref("formationView.libelleFormation")}),
+                  ' ',
+                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
+                  ' ',
+                  unaccent(${eb.ref("dispositif.libelleDispositif")}),
+                  ' ',
+                  unaccent(${eb.ref("nsf.libelleNsf")}),
+                  ' ',
+                  unaccent(${eb.ref("etablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("etablissement.commune")})
+                )`,
+                "ilike",
+                `%${search_word}%`
+              )
+            )
+          )
+        );
+      return eb;
+    })
     .$call((q) => {
       if (!codeRegion) return q;
       return q.where("etablissement.codeRegion", "in", codeRegion);
@@ -289,7 +329,11 @@ export const getFormationsQuery = async ({
     })
     .$call((q) => {
       if (!codeDispositif) return q;
-      return q.where("dispositif.codeDispositif", "in", codeDispositif);
+      return q.where(
+        "formationEtablissement.codeDispositif",
+        "in",
+        codeDispositif
+      );
     })
     .$call((q) => {
       if (!codeNiveauDiplome) return q;

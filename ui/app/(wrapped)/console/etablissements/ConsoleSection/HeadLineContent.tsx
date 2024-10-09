@@ -1,5 +1,6 @@
-import { Box, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, chakra, Text, Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
+import { CSSProperties } from "react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -10,21 +11,85 @@ import { ETABLISSEMENT_COLUMN_WIDTH } from "../ETABLISSEMENT_COLUMN_WIDTH";
 import { FORMATION_ETABLISSEMENT_COLUMNS } from "../FORMATION_ETABLISSEMENT_COLUMNS";
 import { Filters, Order } from "../types";
 
+const ConditionalTh = chakra(
+  ({
+    className,
+    children,
+    style,
+    colonneFilters,
+    colonne,
+    getCellBgColor,
+    onClick,
+    isNumeric = false,
+  }: {
+    className?: string;
+    style?: CSSProperties;
+    children: React.ReactNode;
+    colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
+    colonne: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS;
+    getCellBgColor: (
+      column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS
+    ) => string;
+    onClick?: (column: Order["orderBy"]) => void;
+    isNumeric?: boolean;
+  }) => {
+    if (colonneFilters.includes(colonne))
+      return (
+        <Th
+          maxW={300}
+          p={2}
+          className={className}
+          style={style}
+          isNumeric={isNumeric}
+          cursor={onClick ? "pointer" : "default"}
+          onClick={() => onClick && onClick(colonne as Order["orderBy"])}
+          bgColor={getCellBgColor(colonne)}
+        >
+          <Tooltip
+            label={FORMATION_ETABLISSEMENT_COLUMNS[colonne]}
+            placement="top"
+          >
+            <Box
+              fontSize={12}
+              fontWeight={700}
+              lineHeight={"20px"}
+              textTransform={"uppercase"}
+              textOverflow={"ellipsis"}
+              alignSelf={"stretch"}
+              isTruncated
+              whiteSpace="nowrap"
+            >
+              {children}
+            </Box>
+          </Tooltip>
+        </Th>
+      );
+    return null;
+  }
+);
+
 export const HeadLineContent = ({
   order,
   setSearchParams,
   isFirstColumnSticky,
   isSecondColumnSticky,
+  colonneFilters,
+  getCellBgColor,
 }: {
   order: Partial<Order>;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
+    search?: string;
     withAnneeCommune?: string;
     order?: Partial<Order>;
     page?: number;
   }) => void;
   isFirstColumnSticky?: boolean;
   isSecondColumnSticky?: boolean;
+  colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
+  getCellBgColor: (
+    column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS
+  ) => string;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const trackEvent = usePlausible();
@@ -52,13 +117,21 @@ export const HeadLineContent = ({
     >
       <Tr>
         <Th />
-        <Th>{FORMATION_ETABLISSEMENT_COLUMNS.rentreeScolaire}</Th>
-        <Th
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="rentreeScolaire"
+        >
+          {FORMATION_ETABLISSEMENT_COLUMNS.rentreeScolaire}
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleEtablissement"
           cursor="pointer"
           onClick={() => handleOrder("libelleEtablissement")}
           left={0}
           zIndex={1}
-          bgColor={"white"}
           position={{ lg: "relative", xl: "sticky" }}
           boxShadow={{
             lg: "none",
@@ -67,27 +140,43 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="libelleEtablissement" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleEtablissement}
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("commune")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="commune"
+          cursor="pointer"
+          onClick={() => handleOrder("commune")}
+        >
           <OrderIcon {...order} column="commune" />
           {FORMATION_ETABLISSEMENT_COLUMNS.commune}
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("libelleDepartement")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleDepartement"
+          cursor="pointer"
+        >
           <OrderIcon {...order} column="libelleDepartement" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleDepartement}
-        </Th>
-        <Th
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleNiveauDiplome"
           cursor="pointer"
           onClick={() => handleOrder("libelleNiveauDiplome")}
         >
           <OrderIcon {...order} column="libelleNiveauDiplome" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleNiveauDiplome}
-        </Th>
-        <Th
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleFormation"
           cursor="pointer"
           onClick={() => handleOrder("libelleFormation")}
           zIndex={1}
-          bgColor={"white"}
           position={{ lg: "relative", xl: "sticky" }}
           left={{ lg: "unset", xl: ETABLISSEMENT_COLUMN_WIDTH - 1 }}
           boxShadow={{
@@ -99,8 +188,15 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="libelleFormation" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleFormation}
-        </Th>
-        <Th isNumeric cursor="pointer" onClick={() => handleOrder("effectif1")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="effectif1"
+          isNumeric
+          cursor="pointer"
+          onClick={() => handleOrder("effectif1")}
+        >
           <OrderIcon {...order} column="effectif1" />
           {FORMATION_ETABLISSEMENT_COLUMNS.effectif1}
           <TooltipIcon
@@ -113,8 +209,15 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("nombre-deleves")}
           />
-        </Th>
-        <Th isNumeric cursor="pointer" onClick={() => handleOrder("effectif2")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="effectif2"
+          isNumeric
+          cursor="pointer"
+          onClick={() => handleOrder("effectif2")}
+        >
           <OrderIcon {...order} column="effectif2" />
           {FORMATION_ETABLISSEMENT_COLUMNS.effectif2}
           <TooltipIcon
@@ -127,8 +230,15 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("nombre-deleves")}
           />
-        </Th>
-        <Th isNumeric cursor="pointer" onClick={() => handleOrder("effectif3")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="effectif3"
+          isNumeric
+          cursor="pointer"
+          onClick={() => handleOrder("effectif3")}
+        >
           <OrderIcon {...order} column="effectif3" />
           {FORMATION_ETABLISSEMENT_COLUMNS.effectif3}
           <TooltipIcon
@@ -141,12 +251,46 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("nombre-deleves")}
           />
-        </Th>
-        <Th isNumeric cursor="pointer" onClick={() => handleOrder("capacite")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="effectifEntree"
+          cursor="pointer"
+          onClick={() => handleOrder("effectifEntree")}
+          width={"fit-content"}
+        >
+          <OrderIcon {...order} column="effectifEntree" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.effectifEntree}
+          <TooltipIcon
+            ml="1"
+            label={
+              <Box>
+                <Text>Effectifs en entrée en première année de formation.</Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
+            onClick={() => openGlossaire("effectif-en-entree")}
+          />
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="capacite"
+          isNumeric
+          cursor="pointer"
+          onClick={() => handleOrder("capacite")}
+        >
           <OrderIcon {...order} column="capacite" />
           {FORMATION_ETABLISSEMENT_COLUMNS.capacite}
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("tauxPression")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="tauxPression"
+          cursor="pointer"
+          onClick={() => handleOrder("tauxPression")}
+        >
           <OrderIcon {...order} column="tauxPression" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPression}
           <TooltipIcon
@@ -163,8 +307,14 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("taux-de-pression")}
           />
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("tauxRemplissage")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="tauxRemplissage"
+          cursor="pointer"
+          onClick={() => handleOrder("tauxRemplissage")}
+        >
           <OrderIcon {...order} column="tauxRemplissage" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxRemplissage}
           <TooltipIcon
@@ -180,8 +330,14 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("taux-de-remplissage")}
           />
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("tauxInsertion")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="tauxInsertion"
+          cursor="pointer"
+          onClick={() => handleOrder("tauxInsertion")}
+        >
           <OrderIcon {...order} column="tauxInsertion" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxInsertion}
           <TooltipIcon
@@ -197,8 +353,14 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("taux-emploi-6-mois")}
           />
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("tauxPoursuite")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="tauxPoursuite"
+          cursor="pointer"
+          onClick={() => handleOrder("tauxPoursuite")}
+        >
           <OrderIcon {...order} column="tauxPoursuite" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPoursuite}
           <TooltipIcon
@@ -214,8 +376,14 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("taux-poursuite-etudes")}
           />
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("positionQuadrant")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="positionQuadrant"
+          cursor="pointer"
+          onClick={() => handleOrder("positionQuadrant")}
+        >
           <OrderIcon {...order} column="positionQuadrant" />
           {FORMATION_ETABLISSEMENT_COLUMNS.positionQuadrant}
           <TooltipIcon
@@ -232,8 +400,11 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("quadrant")}
           />
-        </Th>
-        <Th
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="tauxDevenirFavorable"
           cursor="pointer"
           onClick={() => handleOrder("tauxDevenirFavorable")}
         >
@@ -253,8 +424,11 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("taux-de-devenir-favorable")}
           />
-        </Th>
-        <Th
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="tauxInsertionEtablissement"
           cursor="pointer"
           onClick={() => handleOrder("tauxInsertionEtablissement")}
         >
@@ -273,8 +447,11 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("taux-de-devenir-favorable")}
           />
-        </Th>
-        <Th
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="tauxPoursuiteEtablissement"
           cursor="pointer"
           onClick={() => handleOrder("tauxPoursuiteEtablissement")}
         >
@@ -293,8 +470,11 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("taux-poursuite-etudes")}
           />
-        </Th>
-        <Th
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="tauxDevenirFavorableEtablissement"
           cursor="pointer"
           onClick={() => handleOrder("tauxDevenirFavorableEtablissement")}
         >
@@ -313,8 +493,11 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("taux-de-devenir-favorable")}
           />
-        </Th>
-        <Th
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="valeurAjoutee"
           isNumeric
           cursor="pointer"
           onClick={() => handleOrder("valeurAjoutee")}
@@ -336,36 +519,84 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("valeur-ajoutee")}
           />
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("secteur")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="secteur"
+          cursor="pointer"
+          onClick={() => handleOrder("secteur")}
+        >
           <OrderIcon {...order} column="secteur" />
           {FORMATION_ETABLISSEMENT_COLUMNS.secteur}
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("uai")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="uai"
+          cursor="pointer"
+          onClick={() => handleOrder("uai")}
+        >
           <OrderIcon {...order} column="uai" />
           {FORMATION_ETABLISSEMENT_COLUMNS.uai}
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("libelleDispositif")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleDispositif"
+          cursor="pointer"
+          onClick={() => handleOrder("libelleDispositif")}
+        >
           <OrderIcon {...order} column="libelleDispositif" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleDispositif}
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("libelleFamille")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleFamille"
+          cursor="pointer"
+          onClick={() => handleOrder("libelleFamille")}
+        >
           <OrderIcon {...order} column="libelleFamille" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleFamille}
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("cfd")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="cfd"
+          cursor="pointer"
+          onClick={() => handleOrder("cfd")}
+        >
           <OrderIcon {...order} column="cfd" />
           {FORMATION_ETABLISSEMENT_COLUMNS.cfd}
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("cpc")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="cpc"
+          cursor="pointer"
+          onClick={() => handleOrder("cpc")}
+        >
           <OrderIcon {...order} column="cpc" />
           {FORMATION_ETABLISSEMENT_COLUMNS.cpc}
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("cpcSecteur")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="cpcSecteur"
+          cursor="pointer"
+          onClick={() => handleOrder("cpcSecteur")}
+        >
           <OrderIcon {...order} column="cpcSecteur" />
           {FORMATION_ETABLISSEMENT_COLUMNS.cpcSecteur}
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleNsf"
+          cursor="pointer"
+          onClick={() => handleOrder("libelleNsf")}
+        >
           <OrderIcon {...order} column="libelleNsf" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleNsf}
           <TooltipIcon
@@ -373,21 +604,7 @@ export const HeadLineContent = ({
             label="Cliquez pour plus d'infos."
             onClick={() => openGlossaire("domaine-de-formation-nsf")}
           />
-        </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("effectifEntree")}>
-          <OrderIcon {...order} column="effectifEntree" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.effectifEntree}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Effectifs en entrée en première année de formation.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("effectif-en-entree")}
-          />
-        </Th>
+        </ConditionalTh>
       </Tr>
     </Thead>
   );
