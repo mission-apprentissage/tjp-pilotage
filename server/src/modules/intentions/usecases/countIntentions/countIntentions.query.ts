@@ -56,7 +56,6 @@ export const countIntentionsQuery = async ({
         .onRef("suivi.intentionNumero", "=", "intention.numero")
         .on("suivi.userId", "=", user.id)
     )
-
     .select((eb) =>
       sql<number>`count(${eb.ref("intention.numero")})`.as("total")
     )
@@ -175,9 +174,6 @@ export const countIntentionsQuery = async ({
         0
       )`.as("suivies")
     )
-    .where(isIntentionNotDeleted)
-    .where(isIntentionSelectable({ user }))
-    .where(isIntentionBrouillonVisible({ user }))
     .$call((q) => {
       if (shouldFetchOnlyIntention)
         return q.where("intention.isIntention", "=", true);
@@ -208,7 +204,6 @@ export const countIntentionsQuery = async ({
       if (codeAcademie) {
         return eb.where("academie.codeAcademie", "in", codeAcademie);
       }
-
       return eb;
     })
     .$call((eb) => {
@@ -219,7 +214,6 @@ export const countIntentionsQuery = async ({
           codeNiveauDiplome
         );
       }
-
       return eb;
     })
     .$call((q) => {
@@ -231,6 +225,9 @@ export const countIntentionsQuery = async ({
         );
       return q;
     })
+    .where(isIntentionNotDeleted)
+    .where(isIntentionSelectable({ user }))
+    .where(isIntentionBrouillonVisible({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);
 

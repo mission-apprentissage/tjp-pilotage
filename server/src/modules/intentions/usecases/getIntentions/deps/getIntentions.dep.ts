@@ -26,8 +26,8 @@ export const getIntentions = async (
     orderBy,
     codeAcademie,
     codeNiveauDiplome,
+    campagne,
   }: Filters,
-  anneeCampagne: string,
   shouldFetchOnlyIntention: boolean
 ) => {
   const search_array = getNormalizedSearchArray(search);
@@ -60,7 +60,7 @@ export const getIntentions = async (
     )
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "intention.campagneId").$call((eb) => {
-        if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
+        if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
       })
     )
