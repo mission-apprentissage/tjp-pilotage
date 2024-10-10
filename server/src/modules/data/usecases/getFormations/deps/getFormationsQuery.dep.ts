@@ -93,7 +93,7 @@ export const getFormationsQuery = async ({
     )
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .$call((eb) => {
-      if (!codeRegion || !codeNiveauDiplome) return eb;
+      if (!codeRegion) return eb;
       return eb
         .leftJoin("positionFormationRegionaleQuadrant", (join) =>
           join
@@ -106,11 +106,6 @@ export const getFormationsQuery = async ({
               "positionFormationRegionaleQuadrant.codeDispositif",
               "=",
               "formationEtablissement.codeDispositif"
-            )
-            .onRef(
-              "positionFormationRegionaleQuadrant.codeNiveauDiplome",
-              "=",
-              "formationView.codeNiveauDiplome"
             )
             .onRef(
               "positionFormationRegionaleQuadrant.codeRegion",
@@ -366,6 +361,9 @@ export const getFormationsQuery = async ({
     })
     .$call((q) => {
       if (!orderBy || !order) return q;
+      // disable ordering by positionQuadrant if codeRegion or codeNiveauDiplome is not set
+      if ((!codeRegion || !codeNiveauDiplome) && orderBy === "positionQuadrant")
+        return q;
       return q.orderBy(sql.ref(orderBy), sql`${sql.raw(order)} NULLS LAST`);
     })
     .orderBy("libelleFormation", "asc")

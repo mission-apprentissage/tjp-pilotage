@@ -16,7 +16,7 @@ import { client } from "@/api.client";
 import { Filters } from "../types";
 import { isSaisieDisabled } from "../utils/canEditDemande";
 
-export const MenuIntention = ({
+export const MenuBoiteReception = ({
   isRecapView = false,
   hasPermissionSubmitIntention,
   campagne,
@@ -46,20 +46,15 @@ export const MenuIntention = ({
   const codeAcademie = searchParams.filters?.codeAcademie;
   const codeNiveauDiplome = searchParams.filters?.codeNiveauDiplome;
 
-  const { data: countDemandes } = client.ref("[GET]/intentions/count").useQuery(
-    {
-      query: {
-        anneeCampagne,
-        search,
-        codeAcademie,
-        codeNiveauDiplome,
-      },
+  const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery({
+    query: {
+      anneeCampagne,
+      codeAcademie,
+      codeNiveauDiplome,
+      search,
+      suivies,
     },
-    {
-      keepPreviousData: true,
-      staleTime: 0,
-    }
-  );
+  });
 
   const bluefrance113 = useToken("colors", "bluefrance.113");
 
@@ -138,7 +133,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["projet de demande"]}
+              {countDemandes?.[DemandeStatutEnum["projet de demande"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["projet de demande"]}
@@ -186,7 +181,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["demande validée"]}
+              {countDemandes?.[DemandeStatutEnum["demande validée"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["demande validée"]}
@@ -230,7 +225,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["refusée"]}
+              {countDemandes?.[DemandeStatutEnum["refusée"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["refusée"]}
@@ -260,7 +255,10 @@ export const MenuIntention = ({
         <Button
           bgColor={"unset"}
           size="sm"
-          onClick={() => handleFilters("suivies", true)}
+          onClick={() => {
+            handleFilters("statut", undefined);
+            handleFilters("suivies", suivies ? undefined : true);
+          }}
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -282,11 +280,7 @@ export const MenuIntention = ({
           p={5}
         >
           <Text
-            fontWeight={
-              isRecapView && statut === DemandeStatutEnum["brouillon"]
-                ? "bold"
-                : "normal"
-            }
+            fontWeight={isRecapView && suivies ? "bold" : "normal"}
             fontSize={14}
             me={"auto"}
           >
@@ -313,7 +307,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["brouillon"]}
+              {countDemandes?.[DemandeStatutEnum["brouillon"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["brouillon"]}

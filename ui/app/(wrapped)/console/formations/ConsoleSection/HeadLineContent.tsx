@@ -70,7 +70,7 @@ export const HeadLineContent = ({
   colonneFilters,
   getCellBgColor,
 }: {
-  order: Partial<Order>;
+  order: Order;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
@@ -99,6 +99,7 @@ export const HeadLineContent = ({
       },
     });
   };
+
   return (
     <Thead
       position="sticky"
@@ -121,7 +122,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("libelleNiveauDiplome")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="libelleNiveauDiplome" />
           {FORMATION_COLUMNS.libelleNiveauDiplome}
@@ -131,7 +132,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("libelleFormation")}
+          onClick={handleOrder}
           left={0}
           zIndex={1}
           position={{ lg: "relative", xl: "sticky" }}
@@ -149,7 +150,7 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           isNumeric
           cursor="pointer"
-          onClick={() => handleOrder("nbEtablissement")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="nbEtablissement" />
           {FORMATION_COLUMNS.nbEtablissement}
@@ -160,7 +161,7 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           isNumeric
           cursor="pointer"
-          onClick={() => handleOrder("effectif1")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="effectif1" />
           {FORMATION_COLUMNS.effectif1}
@@ -181,7 +182,7 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           isNumeric
           cursor="pointer"
-          onClick={() => handleOrder("effectif2")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="effectif2" />
           {FORMATION_COLUMNS.effectif2}
@@ -202,7 +203,7 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           isNumeric
           cursor="pointer"
-          onClick={() => handleOrder("effectif3")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="effectif3" />
           {FORMATION_COLUMNS.effectif3}
@@ -222,7 +223,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("effectifEntree")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="effectifEntree" />
           {FORMATION_COLUMNS.effectifEntree}
@@ -242,7 +243,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("tauxPression")}
+          onClick={handleOrder}
           textAlign={"center"}
         >
           <OrderIcon {...order} column="tauxPression" />
@@ -267,7 +268,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("tauxRemplissage")}
+          onClick={handleOrder}
           textAlign={"center"}
         >
           <OrderIcon {...order} column="tauxRemplissage" />
@@ -291,7 +292,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("tauxInsertion")}
+          onClick={handleOrder}
           textAlign={"center"}
         >
           <OrderIcon {...order} column="tauxInsertion" />
@@ -315,7 +316,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("tauxPoursuite")}
+          onClick={handleOrder}
           textAlign={"center"}
         >
           <OrderIcon {...order} column="tauxPoursuite" />
@@ -339,7 +340,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("tauxDevenirFavorable")}
+          onClick={handleOrder}
           textAlign={"center"}
         >
           <OrderIcon {...order} column="tauxDevenirFavorable" />
@@ -365,7 +366,7 @@ export const HeadLineContent = ({
             colonneFilters={colonneFilters}
             getCellBgColor={getCellBgColor}
             cursor="pointer"
-            onClick={() => handleOrder("positionQuadrant")}
+            onClick={handleOrder}
           >
             <OrderIcon {...order} column="positionQuadrant" />
             {FORMATION_COLUMNS.positionQuadrant}
@@ -390,7 +391,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("libelleDispositif")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="libelleDispositif" />
           {FORMATION_COLUMNS.libelleDispositif}
@@ -400,7 +401,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("libelleFamille")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="libelleFamille" />
           {FORMATION_COLUMNS.libelleFamille}
@@ -410,7 +411,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("cfd")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="cfd" />
           {FORMATION_COLUMNS.cfd}
@@ -420,7 +421,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("cpc")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="cpc" />
           {FORMATION_COLUMNS.cpc}
@@ -430,7 +431,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("cpcSecteur")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="cpcSecteur" />
           {FORMATION_COLUMNS.cpcSecteur}
@@ -440,7 +441,7 @@ export const HeadLineContent = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           cursor="pointer"
-          onClick={() => handleOrder("libelleNsf")}
+          onClick={handleOrder}
         >
           <OrderIcon {...order} column="libelleNsf" />
           {FORMATION_COLUMNS.libelleNsf}

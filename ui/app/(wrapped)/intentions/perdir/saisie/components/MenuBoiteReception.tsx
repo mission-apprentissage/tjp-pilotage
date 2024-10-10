@@ -16,7 +16,7 @@ import { client } from "@/api.client";
 import { Filters } from "../types";
 import { isSaisieDisabled } from "../utils/canEditIntention";
 
-export const MenuIntention = ({
+export const MenuBoiteReception = ({
   isRecapView = false,
   hasPermissionSubmitIntention,
   campagne,
@@ -47,8 +47,9 @@ export const MenuIntention = ({
   const isDisabled =
     !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
-  const { data: countDemandes } = client.ref("[GET]/intentions/count").useQuery(
-    {
+  const { data: countDemandes } = client
+    .ref("[GET]/intentions/count")
+    .useQuery({
       query: {
         anneeCampagne,
         codeAcademie,
@@ -56,12 +57,7 @@ export const MenuIntention = ({
         search,
         suivies,
       },
-    },
-    {
-      keepPreviousData: true,
-      staleTime: 0,
-    }
-  );
+    });
 
   const bluefrance113 = useToken("colors", "bluefrance.113");
 
@@ -137,7 +133,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["dossier complet"]}
+              {countDemandes?.[DemandeStatutEnum["dossier complet"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["dossier complet"]}
@@ -185,7 +181,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["dossier incomplet"]}
+              {countDemandes?.[DemandeStatutEnum["dossier incomplet"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["dossier incomplet"]}
@@ -233,7 +229,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["proposition"]}
+              {countDemandes?.[DemandeStatutEnum["proposition"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["proposition"]}
@@ -281,7 +277,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["projet de demande"]}
+              {countDemandes?.[DemandeStatutEnum["projet de demande"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["projet de demande"]}
@@ -329,7 +325,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["prêt pour le vote"]}
+              {countDemandes?.[DemandeStatutEnum["prêt pour le vote"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["prêt pour le vote"]}
@@ -377,7 +373,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["demande validée"]}
+              {countDemandes?.[DemandeStatutEnum["demande validée"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["demande validée"]}
@@ -421,7 +417,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["refusée"]}
+              {countDemandes?.[DemandeStatutEnum["refusée"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["refusée"]}
@@ -451,12 +447,10 @@ export const MenuIntention = ({
         <Button
           bgColor={"unset"}
           size="sm"
-          onClick={() =>
-            handleFilters(
-              "suivies",
-              searchParams.filters?.suivies ? undefined : true
-            )
-          }
+          onClick={() => {
+            handleFilters("statut", undefined);
+            handleFilters("suivies", suivies ? undefined : true);
+          }}
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -478,11 +472,7 @@ export const MenuIntention = ({
           p={5}
         >
           <Text
-            fontWeight={
-              isRecapView && statut === DemandeStatutEnum["brouillon"]
-                ? "bold"
-                : "normal"
-            }
+            fontWeight={isRecapView && suivies ? "bold" : "normal"}
             fontSize={14}
             me={"auto"}
           >
@@ -509,7 +499,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["brouillon"]}
+              {countDemandes?.[DemandeStatutEnum["brouillon"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["brouillon"]}

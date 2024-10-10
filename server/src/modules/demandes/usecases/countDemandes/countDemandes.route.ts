@@ -14,15 +14,10 @@ export const countDemandesRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
-        const { anneeCampagne, codeAcademie, codeNiveauDiplome, search } =
-          request.query;
-
+        const { user, query: filters } = request;
         const result = await countDemandesUsecase({
-          user: request.user!,
-          anneeCampagne,
-          codeAcademie,
-          codeNiveauDiplome,
-          search,
+          user: user!,
+          ...filters,
         });
         response.status(200).send(result);
       },

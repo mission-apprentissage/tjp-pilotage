@@ -16,7 +16,7 @@ export const GROUPED_FORMATION_COLUMNS: Record<
   // rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
-    cellColor: themeDefinition.colors.grey[1000],
+    cellColor: "white",
     options: {
       rentreeScolaire: "Rentrée scolaire",
     },
@@ -24,7 +24,7 @@ export const GROUPED_FORMATION_COLUMNS: Record<
   // formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
-    cellColor: themeDefinition.colors.bluefrance[975],
+    cellColor: "white",
     options: {
       libelleNiveauDiplome: "Diplôme",
       libelleFormation: "Formation",
@@ -42,9 +42,9 @@ export const GROUPED_FORMATION_COLUMNS: Record<
   // effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
-    cellColor: "#FEF4F2",
+    cellColor: "white",
     options: {
-      nbEtablissement: "Nb Étab",
+      nbEtablissement: "Nombre d'établissements",
       capacite: "Capacité",
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
@@ -55,7 +55,7 @@ export const GROUPED_FORMATION_COLUMNS: Record<
   // indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
-    cellColor: "#E3FDEB",
+    cellColor: "white",
     options: {
       positionQuadrant: "Position dans le quadrant",
       tauxPression: "Taux de pression",
@@ -84,7 +84,7 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
   // rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
-    cellColor: themeDefinition.colors.grey[1000],
+    cellColor: "white",
     options: {
       rentreeScolaire: "Rentrée scolaire",
     },
@@ -92,9 +92,9 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
   // effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
-    cellColor: "#FEF4F2",
+    cellColor: "white",
     options: {
-      nbEtablissement: "Nb Étab",
+      nbEtablissement: "Nombre d'établissements",
       capacite: "Capacité",
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
@@ -120,7 +120,7 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
   // indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
-    cellColor: "#E3FDEB",
+    cellColor: "white",
     options: {
       positionQuadrant: "Position dans le quadrant",
       tauxPression: "Taux de pression",
@@ -149,9 +149,9 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
   // effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
-    cellColor: "#FEF4F2",
+    cellColor: "white",
     options: {
-      nbEtablissement: "Nb Étab",
+      nbEtablissement: "Nombre d'établissements",
       capacite: "Capacité",
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
@@ -162,7 +162,7 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
   // formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
-    cellColor: themeDefinition.colors.bluefrance[975],
+    cellColor: "white",
     options: {
       libelleNiveauDiplome: "Diplôme",
       libelleFormation: "Formation",
@@ -174,7 +174,7 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
   // indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
-    cellColor: "#E3FDEB",
+    cellColor: "white",
     options: {
       positionQuadrant: "Position dans le quadrant",
       tauxPression: "Taux de pression",

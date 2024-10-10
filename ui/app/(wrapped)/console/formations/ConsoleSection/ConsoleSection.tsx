@@ -1,4 +1,4 @@
-import { chakra, Table, TableContainer, Tbody, Tr } from "@chakra-ui/react";
+import { Table, TableContainer, Tbody, Tr } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
@@ -26,154 +26,152 @@ const getCellBgColor = (column: keyof typeof FORMATION_COLUMNS) => {
   return GROUPED_FORMATION_COLUMNS[groupLabel as string].cellColor;
 };
 
-export const ConsoleSection = chakra(
-  ({
-    data,
-    filters,
-    order,
-    setSearchParams,
-    canShowQuadrantPosition,
-    colonneFilters,
-  }: {
-    data?: Formations;
-    filters: Partial<Filters>;
-    order: Partial<Order>;
-    setSearchParams: (params: {
-      filters?: Partial<Filters>;
-      search?: string;
-      withAnneeCommune?: string;
-      columns?: (keyof typeof FORMATION_COLUMNS)[];
-      order?: Partial<Order>;
-      page?: number;
-    }) => void;
-    canShowQuadrantPosition: boolean;
-    colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
-  }) => {
-    const [historiqueId, setHistoriqueId] = useState<LineId>();
+export const ConsoleSection = ({
+  data,
+  filters,
+  order,
+  setSearchParams,
+  canShowQuadrantPosition,
+  colonneFilters,
+}: {
+  data?: Formations;
+  filters: Partial<Filters>;
+  order: Order;
+  setSearchParams: (params: {
+    filters?: Partial<Filters>;
+    search?: string;
+    withAnneeCommune?: string;
+    columns?: (keyof typeof FORMATION_COLUMNS)[];
+    order?: Partial<Order>;
+    page?: number;
+  }) => void;
+  canShowQuadrantPosition: boolean;
+  colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
+}) => {
+  const [historiqueId, setHistoriqueId] = useState<LineId>();
 
-    const { data: historique, isFetching: isFetchingHistorique } = useQuery({
-      keepPreviousData: false,
-      staleTime: 10000000,
-      queryKey: ["formations", historiqueId, filters],
-      enabled: !!historiqueId,
-      queryFn: async () => {
-        if (!historiqueId) return;
-        return (
-          await client.ref("[GET]/formations").query({
-            query: {
-              ...filters,
-              cfd: [historiqueId?.cfd],
-              codeDispositif: historiqueId?.codeDispositif
-                ? [historiqueId?.codeDispositif]
-                : undefined,
-              limit: 2,
-              order: "desc",
-              orderBy: "rentreeScolaire",
-              rentreeScolaire: RENTREES_SCOLAIRES.filter(
-                (rentree) => rentree !== CURRENT_RENTREE
-              ),
-              withEmptyFormations: false,
-            },
-          })
-        ).formations;
-      },
-    });
+  const { data: historique, isFetching: isFetchingHistorique } = useQuery({
+    keepPreviousData: false,
+    staleTime: 10000000,
+    queryKey: ["formations", historiqueId, filters],
+    enabled: !!historiqueId,
+    queryFn: async () => {
+      if (!historiqueId) return;
+      return (
+        await client.ref("[GET]/formations").query({
+          query: {
+            ...filters,
+            cfd: [historiqueId?.cfd],
+            codeDispositif: historiqueId?.codeDispositif
+              ? [historiqueId?.codeDispositif]
+              : undefined,
+            limit: 2,
+            order: "desc",
+            orderBy: "rentreeScolaire",
+            rentreeScolaire: RENTREES_SCOLAIRES.filter(
+              (rentree) => rentree !== CURRENT_RENTREE
+            ),
+            withEmptyFormations: false,
+          },
+        })
+      ).formations;
+    },
+  });
 
-    const [isSticky, setIsSticky] = useState(false);
-    const tableRef = useRef<HTMLDivElement>(null);
+  const [isSticky, setIsSticky] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
 
-    const handleScroll = () => {
-      if (tableRef.current) {
-        const scrollLeft = tableRef.current.scrollLeft;
-        if (scrollLeft > 200) {
-          setIsSticky(true);
-        } else {
-          setIsSticky(false);
-        }
+  const handleScroll = () => {
+    if (tableRef.current) {
+      const scrollLeft = tableRef.current.scrollLeft;
+      if (scrollLeft > 200) {
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
       }
-    };
+    }
+  };
 
-    useEffect(() => {
-      const box = tableRef.current;
-      if (box) {
-        box.addEventListener("scroll", handleScroll);
-        return () => {
-          box.removeEventListener("scroll", handleScroll);
-        };
-      }
-    }, []);
+  useEffect(() => {
+    const box = tableRef.current;
+    if (box) {
+      box.addEventListener("scroll", handleScroll);
+      return () => {
+        box.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, []);
 
-    return (
-      <TableContainer
-        overflowY="auto"
-        flex={1}
-        position="relative"
-        ref={tableRef}
-      >
-        <Table variant="simple" size={"sm"}>
-          <HeadLineContent
-            isSticky={isSticky}
-            order={order}
-            setSearchParams={setSearchParams}
-            canShowQuadrantPosition={canShowQuadrantPosition}
-            colonneFilters={colonneFilters}
-            getCellBgColor={getCellBgColor}
-          />
-          <Tbody>
-            {data?.formations.map((line) => (
-              <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
-                <Tr h="12">
-                  <FormationLineContent
-                    isSticky={isSticky}
-                    line={line}
-                    expended={
-                      historiqueId?.cfd === line.cfd &&
-                      historiqueId.codeDispositif === line.codeDispositif
-                    }
-                    onClickExpend={() =>
-                      setHistoriqueId({
-                        cfd: line.cfd,
-                        codeDispositif: line.codeDispositif,
-                      })
-                    }
-                    onClickCollapse={() => setHistoriqueId(undefined)}
-                    canShowQuadrantPosition={canShowQuadrantPosition}
-                    colonneFilters={colonneFilters}
-                    getCellBgColor={getCellBgColor}
-                  />
-                </Tr>
-                {historiqueId?.cfd === line.cfd &&
-                  historiqueId.codeDispositif === line.codeDispositif && (
-                    <>
-                      {historique?.map((historiqueLine) => (
-                        <Tr
-                          key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
-                          bg={"grey.975"}
-                        >
-                          <FormationLineContent
-                            isSticky={isSticky}
-                            line={historiqueLine}
-                            canShowQuadrantPosition={canShowQuadrantPosition}
-                            colonneFilters={colonneFilters}
-                            getCellBgColor={getCellBgColor}
-                          />
-                        </Tr>
-                      ))}
-                      {historique && !historique.length && (
-                        <FormationLinePlaceholder
+  return (
+    <TableContainer
+      overflowY="auto"
+      flex={1}
+      position="relative"
+      ref={tableRef}
+    >
+      <Table variant="simple" size={"sm"}>
+        <HeadLineContent
+          isSticky={isSticky}
+          order={order}
+          setSearchParams={setSearchParams}
+          canShowQuadrantPosition={canShowQuadrantPosition}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+        />
+        <Tbody>
+          {data?.formations.map((line) => (
+            <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
+              <Tr h="12">
+                <FormationLineContent
+                  isSticky={isSticky}
+                  line={line}
+                  expended={
+                    historiqueId?.cfd === line.cfd &&
+                    historiqueId.codeDispositif === line.codeDispositif
+                  }
+                  onClickExpend={() =>
+                    setHistoriqueId({
+                      cfd: line.cfd,
+                      codeDispositif: line.codeDispositif,
+                    })
+                  }
+                  onClickCollapse={() => setHistoriqueId(undefined)}
+                  canShowQuadrantPosition={canShowQuadrantPosition}
+                  colonneFilters={colonneFilters}
+                  getCellBgColor={getCellBgColor}
+                />
+              </Tr>
+              {historiqueId?.cfd === line.cfd &&
+                historiqueId.codeDispositif === line.codeDispositif && (
+                  <>
+                    {historique?.map((historiqueLine) => (
+                      <Tr
+                        key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}_${historiqueLine.rentreeScolaire}`}
+                        bg={"grey.975"}
+                      >
+                        <FormationLineContent
+                          isSticky={isSticky}
+                          line={historiqueLine}
+                          canShowQuadrantPosition={canShowQuadrantPosition}
                           colonneFilters={colonneFilters}
                           getCellBgColor={getCellBgColor}
                         />
-                      )}
+                      </Tr>
+                    ))}
+                    {historique && !historique.length && (
+                      <FormationLinePlaceholder
+                        colonneFilters={colonneFilters}
+                        getCellBgColor={getCellBgColor}
+                      />
+                    )}
 
-                      {isFetchingHistorique && <FormationLineLoader />}
-                    </>
-                  )}
-              </Fragment>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
-    );
-  }
-);
+                    {isFetchingHistorique && <FormationLineLoader />}
+                  </>
+                )}
+            </Fragment>
+          ))}
+        </Tbody>
+      </Table>
+    </TableContainer>
+  );
+};
