@@ -96,6 +96,7 @@ const IntentionsItem = z.object({
   statut: DemandeStatutZodType,
   motifRefus: z.array(z.string()).optional(),
   autreMotifRefus: z.string().optional(),
+  lastChangementStatutCommentaire: z.string().optional(),
   // Autre
   numero: z.string(),
   userName: z.string().optional(),
