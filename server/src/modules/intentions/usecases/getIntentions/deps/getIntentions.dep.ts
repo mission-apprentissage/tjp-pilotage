@@ -52,6 +52,24 @@ export const getIntentions = async (
       "dispositif.codeDispositif",
       "intention.codeDispositif"
     )
+    .leftJoin(
+      (join) =>
+        join
+          .selectFrom("changementStatut")
+          .select([
+            "changementStatut.intentionNumero",
+            "changementStatut.statut",
+            "changementStatut.commentaire",
+          ])
+          .distinctOn(["changementStatut.intentionNumero"])
+          .orderBy("changementStatut.intentionNumero", "desc")
+          .orderBy("changementStatut.updatedAt", "desc")
+          .as("changementStatut"),
+      (join) =>
+        join
+          .onRef("changementStatut.intentionNumero", "=", "intention.numero")
+          .onRef("changementStatut.statut", "=", "intention.statut")
+    )
     .leftJoin("user", "user.id", "intention.createdBy")
     .leftJoin("suivi", (join) =>
       join
@@ -148,6 +166,7 @@ export const getIntentions = async (
           ])
           .where(isAvisVisible({ user }))
       ).as("avis"),
+      "changementStatut.commentaire as lastChangementStatutCommentaire",
     ])
     .select((eb) =>
       eb
