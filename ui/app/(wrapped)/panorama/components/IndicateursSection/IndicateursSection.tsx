@@ -126,7 +126,7 @@ export const IndicateursSection = ({
           }
           tooltip={
             stats?.tauxRemplissage
-              ? formatPercentage(stats?.tauxRemplissage)
+              ? formatPercentage(stats?.tauxRemplissage, 2)
               : "-"
           }
           type={"percentage"}
@@ -155,7 +155,7 @@ export const IndicateursSection = ({
           }
           tooltip={
             stats?.tauxDevenirFavorable
-              ? formatPercentage(stats?.tauxDevenirFavorable)
+              ? formatPercentage(stats?.tauxDevenirFavorable, 2)
               : "-"
           }
           type={"percentage"}
@@ -184,7 +184,9 @@ export const IndicateursSection = ({
               : undefined
           }
           tooltip={
-            stats?.tauxPoursuite ? formatPercentage(stats?.tauxPoursuite) : "-"
+            stats?.tauxPoursuite
+              ? formatPercentage(stats?.tauxPoursuite, 2)
+              : "-"
           }
           type={"percentage"}
           glossaire={
@@ -211,7 +213,9 @@ export const IndicateursSection = ({
               : undefined
           }
           tooltip={
-            stats?.tauxInsertion ? formatPercentage(stats?.tauxInsertion) : "-"
+            stats?.tauxInsertion
+              ? formatPercentage(stats?.tauxInsertion, 2)
+              : "-"
           }
           type={"percentage"}
           glossaire={

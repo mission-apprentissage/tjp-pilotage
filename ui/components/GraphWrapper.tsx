@@ -33,7 +33,7 @@ export const GraphWrapper = chakra(
             display="inline-block"
             mr="1"
           />
-          <Tooltip label={formatPercentage(value)}>
+          <Tooltip label={formatPercentage(value, 2)}>
             <Box textAlign="center" w="10">
               {formatPercentage(value, 0)}
             </Box>
