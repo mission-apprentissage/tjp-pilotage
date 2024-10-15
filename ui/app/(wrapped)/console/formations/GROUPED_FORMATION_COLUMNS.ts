@@ -16,7 +16,7 @@ export const GROUPED_FORMATION_COLUMNS: Record<
   // rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       rentreeScolaire: "Rentrée scolaire",
     },
@@ -24,11 +24,11 @@ export const GROUPED_FORMATION_COLUMNS: Record<
   // formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
-      libelleNiveauDiplome: "Diplôme",
-      libelleFormation: "Formation",
       libelleDispositif: "Dispositif",
+      libelleFormation: "Formation",
+      libelleNiveauDiplome: "Diplôme",
       libelleFamille: "Famille de métiers",
       cfd: "Code formation diplôme",
       cpc: "CPC",
@@ -42,7 +42,7 @@ export const GROUPED_FORMATION_COLUMNS: Record<
   // effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       nbEtablissement: "Nombre d'établissements",
       capacite: "Capacité",
@@ -55,7 +55,7 @@ export const GROUPED_FORMATION_COLUMNS: Record<
   // indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       positionQuadrant: "Position dans le quadrant",
       tauxPression: "Taux de pression",
@@ -84,15 +84,30 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
   // rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       rentreeScolaire: "Rentrée scolaire",
+    },
+  },
+  // formation
+  ["formation"]: {
+    color: themeDefinition.colors.bluefrance[950],
+    cellColor: "inherit",
+    options: {
+      libelleDispositif: "Dispositif",
+      libelleFormation: "Formation",
+      libelleNiveauDiplome: "Diplôme",
+      libelleFamille: "Famille de métiers",
+      cfd: "Code formation diplôme",
+      cpc: "CPC",
+      cpcSecteur: "CPC Secteur",
+      libelleNsf: "Domaine de formation (NSF)",
     },
   },
   // effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       nbEtablissement: "Nombre d'établissements",
       capacite: "Capacité",
@@ -102,25 +117,10 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
       effectifEntree: "Effectif en entrée",
     },
   },
-  // formation
-  ["formation"]: {
-    color: themeDefinition.colors.bluefrance[950],
-    cellColor: themeDefinition.colors.bluefrance[975],
-    options: {
-      libelleNiveauDiplome: "Diplôme",
-      libelleFormation: "Formation",
-      libelleDispositif: "Dispositif",
-      libelleFamille: "Famille de métiers",
-      cfd: "Code formation diplôme",
-      cpc: "CPC",
-      cpcSecteur: "CPC Secteur",
-      libelleNsf: "Domaine de formation (NSF)",
-    },
-  },
   // indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       positionQuadrant: "Position dans le quadrant",
       tauxPression: "Taux de pression",
@@ -146,10 +146,19 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
     options: Partial<typeof FORMATION_COLUMNS_DEFAULT>;
   }
 > = {
+  // formation
+  ["formation"]: {
+    color: themeDefinition.colors.bluefrance[950],
+    cellColor: "inherit",
+    options: {
+      libelleDispositif: "Dispositif",
+      libelleFormation: "Formation",
+    },
+  },
   // effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       nbEtablissement: "Nombre d'établissements",
       capacite: "Capacité",
@@ -159,22 +168,10 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
       effectifEntree: "Effectif en entrée",
     },
   },
-  // formation
-  ["formation"]: {
-    color: themeDefinition.colors.bluefrance[950],
-    cellColor: "white",
-    options: {
-      libelleNiveauDiplome: "Diplôme",
-      libelleFormation: "Formation",
-      libelleDispositif: "Dispositif",
-      libelleFamille: "Famille de métiers",
-      libelleNsf: "Domaine de formation (NSF)",
-    },
-  },
   // indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       positionQuadrant: "Position dans le quadrant",
       tauxPression: "Taux de pression",

@@ -121,7 +121,7 @@ export const ConsoleSection = ({
         <Tbody>
           {data?.formations.map((line) => (
             <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
-              <Tr h="12">
+              <Tr h="12" bg={"white"}>
                 <FormationLineContent
                   isSticky={isSticky}
                   line={line}

@@ -124,7 +124,7 @@ export const ConsoleSection = ({
         <Tbody>
           {data?.etablissements.map((line) => (
             <Fragment key={`${line.uai}_${line.codeDispositif}_${line.cfd}`}>
-              <Tr h="12">
+              <Tr h="12" bg={"white"}>
                 <EtablissementLineContent
                   isFirstColumnSticky={isFirstColumnSticky}
                   isSecondColumnSticky={isSecondColumnSticky}

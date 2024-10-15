@@ -10,9 +10,9 @@ export const FORMATION_COLUMNS = {
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
   // Formation
-  libelleNiveauDiplome: "Diplôme",
-  libelleFormation: "Formation",
   libelleDispositif: "Dispositif",
+  libelleFormation: "Formation",
+  libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",
   cpc: "CPC",
@@ -33,6 +33,15 @@ export const FORMATION_COLUMNS = {
 >;
 
 export const FORMATION_COLUMNS_OPTIONAL = {
+  // Formation
+  libelleDispositif: "Dispositif",
+  libelleFormation: "Formation",
+  libelleNiveauDiplome: "Diplôme",
+  libelleFamille: "Famille de métiers",
+  cfd: "Code formation diplôme",
+  cpc: "CPC",
+  cpcSecteur: "CPC Secteur",
+  libelleNsf: "Domaine de formation (NSF)",
   // Effectifs
   rentreeScolaire: "RS",
   nbEtablissement: "Nb Étab",
@@ -40,15 +49,6 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   effectif2: "Année 2",
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
-  // Formation
-  libelleNiveauDiplome: "Diplôme",
-  libelleFormation: "Formation",
-  libelleDispositif: "Dispositif",
-  libelleFamille: "Famille de métiers",
-  cfd: "Code formation diplôme",
-  cpc: "CPC",
-  cpcSecteur: "CPC Secteur",
-  libelleNsf: "Domaine de formation (NSF)",
   // Indicateurs
   positionQuadrant: "Position dans le quadrant",
   tauxPression: "Tx de pression",
@@ -61,18 +61,15 @@ export const FORMATION_COLUMNS_OPTIONAL = {
 >;
 
 export const FORMATION_COLUMNS_DEFAULT = {
+  // Formation
+  libelleDispositif: "Dispositif",
+  libelleFormation: "Formation",
   // Effectifs
   rentreeScolaire: "RS",
   nbEtablissement: "Nb Étab",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
-  // Formation
-  libelleNiveauDiplome: "Diplôme",
-  libelleFormation: "Formation",
-  libelleDispositif: "Dispositif",
-  libelleFamille: "Famille de métiers",
-  libelleNsf: "Domaine de formation (NSF)",
   // Indicateurs
   positionQuadrant: "Position dans le quadrant",
   tauxPression: "Tx de pression",
