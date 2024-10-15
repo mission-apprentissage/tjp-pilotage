@@ -10,7 +10,7 @@ import {
   isRestitutionIntentionRegionVisible,
   isRestitutionIntentionVisible,
 } from "../../../../utils/isRestitutionIntentionVisible";
-import { Filters } from "../getDemandesRestitutionIntentions.usecase";
+import { Filters } from "./getDemandesRestitutionIntentions.query";
 
 export const getFilters = async ({
   statut,

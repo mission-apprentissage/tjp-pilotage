@@ -1,10 +1,12 @@
 import { sql } from "kysely";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
-import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
+import { CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
+import { z } from "zod";
 
 import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
+import { RequestUser } from "../../../../core/model/User";
 import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
 import {
   countDifferenceCapaciteApprentissage,
@@ -19,7 +21,13 @@ import { selectTauxDevenirFavorable } from "../../../utils/tauxDevenirFavorable"
 import { selectTauxInsertion6mois } from "../../../utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "../../../utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "../../../utils/tauxPression";
-import { Filters } from "../getDemandesRestitutionIntentions.usecase";
+import { FiltersSchema } from "../getDemandesRestitutionIntentions.schema";
+
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+  campagne: string;
+}
 
 export const getDemandesRestitutionIntentionsQuery = async ({
   statut,
@@ -36,7 +44,6 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   codeAcademie,
   uai,
   user,
-  millesimeSortie = CURRENT_IJ_MILLESIME,
   voie,
   campagne,
   positionQuadrant,
@@ -88,7 +95,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
           "=",
           "demande.codeDispositif"
         )
-        .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+        .on(
+          "indicateurRegionSortie.millesimeSortie",
+          "=",
+          getMillesimeFromCampagne(campagne)
+        )
         .on(isScolaireIndicateurRegionSortie)
     )
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
@@ -112,12 +123,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
-            eb.val(
-              getMillesimeFromRentreeScolaire({
-                rentreeScolaire: CURRENT_RENTREE,
-                offset: 0,
-              })
-            )
+            eb.val(getMillesimeFromCampagne(campagne))
           ),
         ])
       )
@@ -158,6 +164,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
+      "positionFormationRegionaleQuadrant.positionQuadrant",
     ])
     .$call((eb) => {
       if (search)

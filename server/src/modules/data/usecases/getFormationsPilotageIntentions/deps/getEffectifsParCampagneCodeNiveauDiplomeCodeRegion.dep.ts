@@ -3,7 +3,7 @@ import { sql } from "kysely";
 import { kdb } from "../../../../../db/db";
 import { isInDenominateurTauxTransfo } from "../../../../utils/isInDenominateurTauxTransfo";
 import { isInPerimetreIJDataEtablissement } from "../../../utils/isInPerimetreIJ";
-import { Filters } from "../getFormationsPilotageIntentions.usecase";
+import { Filters } from "./getFormationsPilotageIntentions.dep";
 
 export const getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery = ({
   ...filters
