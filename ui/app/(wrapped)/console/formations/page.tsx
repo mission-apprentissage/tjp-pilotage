@@ -35,10 +35,12 @@ const ColonneFiltersSection = chakra(
     colonneFilters,
     forcedColonnes,
     handleColonneFilters,
+    trackEvent,
   }: {
     colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
     forcedColonnes?: (keyof typeof FORMATION_COLUMNS)[];
     handleColonneFilters: (value: (keyof typeof FORMATION_COLUMNS)[]) => void;
+    trackEvent: (name: string, params?: Record<string, unknown>) => void;
   }) => {
     return (
       <Flex justifyContent={"start"} direction="row">
@@ -87,6 +89,7 @@ const ColonneFiltersSection = chakra(
               variant={"externalLink"}
               leftIcon={<Icon icon={"ri:table-line"} />}
               color="bluefrance.113"
+              onClick={() => trackEvent("formations:affichage-colonnes")}
             >
               Modifier l'affichage des colonnes
             </Button>
@@ -276,6 +279,7 @@ export default function Formations() {
               colonneFilters={colonneFilters}
               handleColonneFilters={handleColonneFilters}
               forcedColonnes={["libelleFormation"]}
+              trackEvent={trackEvent}
             />
           }
           onExportCsv={() => onExportCsv()}

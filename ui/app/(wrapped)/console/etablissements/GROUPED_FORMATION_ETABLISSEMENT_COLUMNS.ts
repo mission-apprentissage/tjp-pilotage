@@ -16,7 +16,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
   // rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       rentreeScolaire: "Rentrée scolaire",
     },
@@ -24,11 +24,9 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
   // établissement
   ["établissement"]: {
     color: themeDefinition.colors.purpleGlycine[950],
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       libelleEtablissement: "Nom d'établissement",
-      secteur: "Secteur",
-      uai: "UAI",
       commune: "Commune",
       codeDepartement: "Code Département",
       libelleDepartement: "Département",
@@ -36,16 +34,18 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
       libelleAcademie: "Académie",
       codeRegion: "Code Région",
       libelleRegion: "Région",
+      secteur: "Secteur",
+      uai: "UAI",
     },
   },
   // formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
+      libelleDispositif: "Dispositif",
       libelleFormation: "Formation",
       libelleNiveauDiplome: "Diplôme",
-      libelleDispositif: "Dispositif",
       libelleFamille: "Famille de métiers",
       cfd: "Code formation diplôme",
       cpc: "CPC",
@@ -59,7 +59,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
   // effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
@@ -72,7 +72,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
   // indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",
@@ -108,7 +108,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
   // rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       rentreeScolaire: "Rentrée scolaire",
     },
@@ -116,25 +116,25 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
   // établissement
   ["établissement"]: {
     color: themeDefinition.colors.purpleGlycine[950],
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       libelleEtablissement: "Nom d'établissement",
-      secteur: "Secteur",
-      uai: "UAI",
       commune: "Commune",
       libelleDepartement: "Département",
       libelleAcademie: "Académie",
       libelleRegion: "Région",
+      secteur: "Secteur",
+      uai: "UAI",
     },
   },
   // formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
+      libelleDispositif: "Dispositif",
       libelleFormation: "Formation",
       libelleNiveauDiplome: "Diplôme",
-      libelleDispositif: "Dispositif",
       libelleFamille: "Famille de métiers",
       cpc: "CPC",
       cpcSecteur: "CPC Secteur",
@@ -145,7 +145,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
   // effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
@@ -158,7 +158,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
   // indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",
@@ -194,7 +194,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
   // rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       rentreeScolaire: "Rentrée scolaire",
     },
@@ -205,33 +205,22 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
     cellColor: "#FEF3FD",
     options: {
       libelleEtablissement: "Nom d'établissement",
-      secteur: "Secteur",
-      uai: "UAI",
       commune: "Commune",
-      libelleDepartement: "Département",
-      libelleAcademie: "Académie",
-      libelleRegion: "Région",
     },
   },
   // formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
-      libelleFormation: "Formation",
-      libelleNiveauDiplome: "Diplôme",
       libelleDispositif: "Dispositif",
-      libelleFamille: "Famille de métiers",
-      cpc: "CPC",
-      cpcSecteur: "CPC Secteur",
-      libelleNsf: "Domaine de formation (NSF)",
-      "continuum.libelleFormation": "Diplôme historique",
+      libelleFormation: "Formation",
     },
   },
   // effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
@@ -244,7 +233,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
   // indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
-    cellColor: "white",
+    cellColor: "inherit",
     options: {
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",

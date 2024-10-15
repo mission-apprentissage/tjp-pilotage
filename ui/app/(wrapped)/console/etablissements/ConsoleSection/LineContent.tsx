@@ -18,7 +18,10 @@ import { CURRENT_RENTREE } from "shared";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import { formatAnneeCommuneLibelle } from "@/utils/formatLibelle";
+import {
+  formatAnneeCommuneLibelle,
+  formatCodeDepartement,
+} from "@/utils/formatLibelle";
 import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -143,7 +146,9 @@ export const EtablissementLineContent = ({
       maxW={150}
       whiteSpace="normal"
     >
-      {line.commune ?? "-"}
+      {line.commune
+        ? `${line.commune} (${formatCodeDepartement(line.codeDepartement)})`
+        : "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne="libelleDepartement"
@@ -153,11 +158,25 @@ export const EtablissementLineContent = ({
       {line.libelleDepartement ?? "-"}
     </ConditionalTd>
     <ConditionalTd
-      colonne="libelleNiveauDiplome"
+      colonne="secteur"
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
     >
-      {line.libelleNiveauDiplome ?? "-"}
+      {line.secteur ?? "-"}{" "}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="uai"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.uai ?? "-"}{" "}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="libelleDispositif"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.libelleDispositif ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne="libelleFormation"
@@ -231,6 +250,48 @@ export const EtablissementLineContent = ({
       </Flex>
     </ConditionalTd>
     <ConditionalTd
+      colonne="libelleNiveauDiplome"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.libelleNiveauDiplome ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="libelleFamille"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.libelleFamille ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="cfd"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.cfd ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="cpc"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.cpc ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="cpcSecteur"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.cpcSecteur ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne="libelleNsf"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.libelleNsf ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
       colonne="effectif1"
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
@@ -297,6 +358,13 @@ export const EtablissementLineContent = ({
       <GraphWrapper value={line.tauxRemplissage} />
     </ConditionalTd>
     <ConditionalTd
+      colonne="positionQuadrant"
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.positionQuadrant ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
       colonne="tauxInsertion"
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
@@ -311,13 +379,6 @@ export const EtablissementLineContent = ({
       textAlign={"center"}
     >
       <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="positionQuadrant"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.positionQuadrant ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne="tauxDevenirFavorable"
@@ -365,64 +426,9 @@ export const EtablissementLineContent = ({
       colonne="valeurAjoutee"
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
+      isNumeric
     >
-      {line.valeurAjoutee ?? "-"}{" "}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="secteur"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.secteur ?? "-"}{" "}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="uai"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.uai ?? "-"}{" "}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="libelleDispositif"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.libelleDispositif ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="libelleFamille"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.libelleFamille ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="cfd"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.cfd ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="cpc"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.cpc ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="cpcSecteur"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.cpcSecteur ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne="libelleNsf"
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.libelleNsf ?? "-"}
+      {line.valeurAjoutee ?? "-"}
     </ConditionalTd>
   </>
 );

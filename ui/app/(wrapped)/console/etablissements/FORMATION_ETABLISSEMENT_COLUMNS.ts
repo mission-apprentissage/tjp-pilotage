@@ -6,9 +6,6 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   rentreeScolaire: "RS",
   // établissement
   libelleEtablissement: "Nom d'établissement",
-  secteur: "Secteur",
-  uai: "UAI",
-  // granularité
   commune: "Commune",
   codeDepartement: "Code Département",
   libelleDepartement: "Département",
@@ -16,10 +13,12 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   libelleAcademie: "Académie",
   codeRegion: "Code Région",
   libelleRegion: "Région",
+  secteur: "Secteur",
+  uai: "UAI",
   // formation
+  libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
   libelleNiveauDiplome: "Diplôme",
-  libelleDispositif: "Dispositif",
   libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",
   cpc: "CPC",
@@ -56,17 +55,16 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
 export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   // établissement
   libelleEtablissement: "Nom d'établissement",
-  secteur: "Secteur",
-  uai: "UAI",
-  // granularité
   commune: "Commune",
   libelleDepartement: "Département",
   libelleAcademie: "Académie",
   libelleRegion: "Région",
+  secteur: "Secteur",
+  uai: "UAI",
   // formation
+  libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
   libelleNiveauDiplome: "Diplôme",
-  libelleDispositif: "Dispositif",
   libelleFamille: "Famille de métiers",
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
@@ -101,14 +99,10 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
 export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   // établissement
   libelleEtablissement: "Nom d'établissement",
-  // granularité
   commune: "Commune",
   // formation
-  libelleFormation: "Formation",
-  libelleNiveauDiplome: "Diplôme",
   libelleDispositif: "Dispositif",
-  libelleFamille: "Famille de métiers",
-  libelleNsf: "Domaine de formation (NSF)",
+  libelleFormation: "Formation",
   // effectifs
   rentreeScolaire: "RS",
   effectif1: "Année 1",

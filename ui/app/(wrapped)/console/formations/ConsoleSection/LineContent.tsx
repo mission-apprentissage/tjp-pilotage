@@ -103,11 +103,11 @@ export const FormationLineContent = ({
       {line.rentreeScolaire ?? CURRENT_RENTREE}
     </ConditionalTd>
     <ConditionalTd
-      colonne={"libelleNiveauDiplome"}
+      colonne={"libelleDispositif"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
     >
-      {line.libelleNiveauDiplome ?? "-"}
+      {line.libelleDispositif ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne={"libelleFormation"}
@@ -183,6 +183,48 @@ export const FormationLineContent = ({
       </Flex>
     </ConditionalTd>
     <ConditionalTd
+      colonne={"libelleNiveauDiplome"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.libelleNiveauDiplome ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne={"libelleFamille"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.libelleFamille ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne={"cfd"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.cfd ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne={"cpc"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.cpc ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne={"cpcSecteur"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.cpcSecteur ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
+      colonne={"libelleNsf"}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+    >
+      {line.libelleNsf ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd
       colonne={"nbEtablissement"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
@@ -231,6 +273,7 @@ export const FormationLineContent = ({
       colonne={"effectifEntree"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
+      isNumeric
     >
       {line.effectifEntree ?? "-"}
     </ConditionalTd>
@@ -260,6 +303,16 @@ export const FormationLineContent = ({
     >
       <GraphWrapper value={line.tauxRemplissage} />
     </ConditionalTd>
+    {canShowQuadrantPosition && (
+      <ConditionalTd
+        colonne={"positionQuadrant"}
+        colonneFilters={colonneFilters}
+        getCellBgColor={getCellBgColor}
+        textAlign={"center"}
+      >
+        {line.positionQuadrant ?? "-"}
+      </ConditionalTd>
+    )}
     <ConditionalTd
       colonne={"tauxInsertion"}
       colonneFilters={colonneFilters}
@@ -280,63 +333,12 @@ export const FormationLineContent = ({
       colonne={"tauxDevenirFavorable"}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
-      textAlign="center"
     >
       <GraphWrapper
         continuum={line.continuum}
         value={line.tauxDevenirFavorable}
+        my="auto"
       />
-    </ConditionalTd>
-    {canShowQuadrantPosition && (
-      <ConditionalTd
-        colonne={"positionQuadrant"}
-        colonneFilters={colonneFilters}
-        getCellBgColor={getCellBgColor}
-      >
-        {line.positionQuadrant ?? "-"}
-      </ConditionalTd>
-    )}
-    <ConditionalTd
-      colonne={"libelleDispositif"}
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.libelleDispositif ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne={"libelleFamille"}
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.libelleFamille ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne={"cfd"}
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.cfd ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne={"cpc"}
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.cpc ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne={"cpcSecteur"}
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.cpcSecteur ?? "-"}
-    </ConditionalTd>
-    <ConditionalTd
-      colonne={"libelleNsf"}
-      colonneFilters={colonneFilters}
-      getCellBgColor={getCellBgColor}
-    >
-      {line.libelleNsf ?? "-"}
     </ConditionalTd>
   </>
 );

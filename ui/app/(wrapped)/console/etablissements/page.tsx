@@ -8,20 +8,20 @@ import qs from "qs";
 import { Fragment, useState } from "react";
 
 import { client } from "@/api.client";
+import { GroupedMultiselect } from "@/components/GroupedMultiselect";
+import { SearchInput } from "@/components/SearchInput";
+import { TableHeader } from "@/components/TableHeader";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatExportFilename } from "@/utils/formatExportFilename";
+
+import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
   FORMATION_ETABLISSEMENT_COLUMNS,
   FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
-} from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
-import { FiltersSection } from "@/app/(wrapped)/console/etablissements/HeaderSection/FiltersSection";
-import { GroupedMultiselect } from "@/components/GroupedMultiselect";
-import { SearchInput } from "@/components/SearchInput";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
-
-import { TableHeader } from "../../../../components/TableHeader";
-import { formatExportFilename } from "../../../../utils/formatExportFilename";
-import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
+} from "./FORMATION_ETABLISSEMENT_COLUMNS";
 import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
+import { FiltersSection } from "./HeaderSection/FiltersSection";
 import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
@@ -34,12 +34,14 @@ const ColonneFiltersSection = chakra(
     colonneFilters,
     forcedColonnes,
     handleColonneFilters,
+    trackEvent,
   }: {
     colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     forcedColonnes?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     handleColonneFilters: (
       value: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]
     ) => void;
+    trackEvent: (name: string, params?: Record<string, unknown>) => void;
   }) => {
     return (
       <Flex justifyContent={"start"} direction="row">
@@ -90,6 +92,7 @@ const ColonneFiltersSection = chakra(
               variant={"externalLink"}
               leftIcon={<Icon icon={"ri:table-line"} />}
               color="bluefrance.113"
+              onClick={() => trackEvent("etablissements:affichage-colonnes")}
             >
               Modifier l'affichage des colonnes
             </Button>
@@ -277,6 +280,7 @@ export default function Etablissements() {
               colonneFilters={colonneFilters}
               handleColonneFilters={handleColonneFilters}
               forcedColonnes={["libelleEtablissement", "libelleFormation"]}
+              trackEvent={trackEvent}
             />
           }
           onExportCsv={() => onExportCsv()}
