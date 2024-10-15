@@ -98,6 +98,7 @@ const IntentionsItem = z.object({
   statut: DemandeStatutZodType.exclude(["supprimée"]),
   motifRefus: z.array(z.string()).optional(),
   autreMotifRefus: z.string().optional(),
+  lastChangementStatutCommentaire: z.string().optional(),
   // Autre
   numero: z.string(),
   campagneId: z.string(),

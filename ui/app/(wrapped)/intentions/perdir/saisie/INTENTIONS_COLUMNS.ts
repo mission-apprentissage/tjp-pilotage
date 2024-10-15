@@ -64,6 +64,8 @@ export const INTENTIONS_COLUMNS = {
   avis7: "Avis 8",
   avis8: "Avis 9",
   avis9: "Avis 10",
+  lastChangementStatutCommentaire:
+    "Commentaire du dernier changement de statut",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/intentions"]["intentions"][number] & {
     [key: `avis${number}`]: string;
