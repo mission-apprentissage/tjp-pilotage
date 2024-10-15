@@ -37,7 +37,6 @@ export const MenuBoiteReception = ({
     searchParams.filters?.statut === undefined
       ? "none"
       : searchParams.filters?.statut;
-  const suivies = searchParams.filters?.suivies;
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
   const isDisabled =
@@ -52,7 +51,6 @@ export const MenuBoiteReception = ({
       codeAcademie,
       codeNiveauDiplome,
       search,
-      suivies,
     },
   });
 
@@ -256,8 +254,7 @@ export const MenuBoiteReception = ({
           bgColor={"unset"}
           size="sm"
           onClick={() => {
-            handleFilters("statut", undefined);
-            handleFilters("suivies", suivies ? undefined : true);
+            handleFilters("statut", "suivies");
           }}
           width={"100%"}
           iconSpacing={2}
@@ -266,13 +263,15 @@ export const MenuBoiteReception = ({
           }
           rightIcon={
             <Text
-              fontWeight={isRecapView && suivies ? "bold" : "normal"}
+              fontWeight={
+                isRecapView && statut === "suivies" ? "bold" : "normal"
+              }
               fontSize={14}
             >
               {countDemandes?.["suivies"]}
             </Text>
           }
-          isActive={suivies}
+          isActive={statut === "suivies"}
           _active={{
             borderRadius: "none",
             bg: "bluefrance.950",
@@ -280,7 +279,7 @@ export const MenuBoiteReception = ({
           p={5}
         >
           <Text
-            fontWeight={isRecapView && suivies ? "bold" : "normal"}
+            fontWeight={isRecapView && statut === "suivies" ? "bold" : "normal"}
             fontSize={14}
             me={"auto"}
           >

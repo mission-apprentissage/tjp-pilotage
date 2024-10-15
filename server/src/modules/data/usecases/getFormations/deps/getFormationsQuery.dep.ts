@@ -1,6 +1,5 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
-import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -118,14 +117,7 @@ export const getFormationsQuery = async ({
               millesimeSortie
             )
         )
-        .select((eb) =>
-          eb.fn
-            .coalesce(
-              "positionFormationRegionaleQuadrant.positionQuadrant",
-              eb.val(PositionQuadrantEnum["Hors quadrant"])
-            )
-            .as("positionQuadrant")
-        )
+        .select("positionFormationRegionaleQuadrant.positionQuadrant")
         .groupBy("positionQuadrant");
     })
     .select((eb) => [
@@ -361,9 +353,8 @@ export const getFormationsQuery = async ({
     })
     .$call((q) => {
       if (!orderBy || !order) return q;
-      // disable ordering by positionQuadrant if codeRegion or codeNiveauDiplome is not set
-      if ((!codeRegion || !codeNiveauDiplome) && orderBy === "positionQuadrant")
-        return q;
+      // disable ordering by positionQuadrant if codeRegion is not set
+      if (!codeRegion && orderBy === "positionQuadrant") return q;
       return q.orderBy(sql.ref(orderBy), sql`${sql.raw(order)} NULLS LAST`);
     })
     .orderBy("libelleFormation", "asc")

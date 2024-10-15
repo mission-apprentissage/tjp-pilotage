@@ -1,7 +1,6 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
-import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -178,12 +177,7 @@ export const getFormationEtablissementsQuery = async ({
       "indicateurEtablissement.valeurAjoutee",
       "anneeDebut",
       "formationHistorique.cfd as formationRenovee",
-      eb.fn
-        .coalesce(
-          "positionFormationRegionaleQuadrant.positionQuadrant",
-          eb.val(PositionQuadrantEnum["Hors quadrant"])
-        )
-        .as("positionQuadrant"),
+      "positionFormationRegionaleQuadrant.positionQuadrant",
       selectTauxRemplissage("indicateurEntree").as("tauxRemplissage"),
       effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
       effectifAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as(

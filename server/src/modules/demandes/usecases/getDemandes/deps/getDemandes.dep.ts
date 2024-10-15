@@ -15,7 +15,6 @@ export const getDemandes = async ({
   statut,
   search,
   user,
-  suivies,
   codeAcademie,
   codeNiveauDiplome,
   offset = 0,
@@ -122,7 +121,15 @@ export const getDemandes = async ({
         .as("correction")
     )
     .$call((eb) => {
-      if (statut) return eb.where("demande.statut", "=", statut);
+      if (statut) {
+        if (statut === "suivies")
+          return eb.innerJoin("suivi as suiviUtilisateur", (join) =>
+            join
+              .onRef("suiviUtilisateur.intentionNumero", "=", "demande.numero")
+              .on("suiviUtilisateur.userId", "=", user.id)
+          );
+        return eb.where("demande.statut", "=", statut);
+      }
       return eb;
     })
     .$call((eb) => {
@@ -164,16 +171,6 @@ export const getDemandes = async ({
           "dataFormation.codeNiveauDiplome",
           "in",
           codeNiveauDiplome
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      console.log("suivies", suivies);
-      if (suivies)
-        return eb.innerJoin("suivi as suiviUtilisateur", (join) =>
-          join
-            .onRef("suiviUtilisateur.intentionNumero", "=", "demande.numero")
-            .on("suiviUtilisateur.userId", "=", user.id)
         );
       return eb;
     })
