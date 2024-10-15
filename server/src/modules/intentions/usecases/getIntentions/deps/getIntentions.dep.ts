@@ -17,7 +17,6 @@ import { Filters } from "./getFilters.dep";
 export const getIntentions = async (
   {
     statut,
-    suivies,
     search,
     user,
     offset = 0,
@@ -177,7 +176,19 @@ export const getIntentions = async (
         .as("correction")
     )
     .$call((eb) => {
-      if (statut) return eb.where("intention.statut", "=", statut);
+      if (statut) {
+        if (statut === "suivies")
+          return eb.innerJoin("suivi as suiviUtilisateur", (join) =>
+            join
+              .onRef(
+                "suiviUtilisateur.intentionNumero",
+                "=",
+                "intention.numero"
+              )
+              .on("suiviUtilisateur.userId", "=", user.id)
+          );
+        return eb.where("intention.statut", "=", statut);
+      }
       return eb;
     })
     .$call((eb) => {
@@ -207,15 +218,6 @@ export const getIntentions = async (
         sql`${sql.ref(orderBy)}`,
         sql`${sql.raw(order)} NULLS LAST`
       );
-    })
-    .$call((q) => {
-      if (suivies)
-        return q.innerJoin("suivi as suiviUtilisateur", (join) =>
-          join
-            .onRef("suiviUtilisateur.intentionNumero", "=", "intention.numero")
-            .on("suiviUtilisateur.userId", "=", user.id)
-        );
-      return q;
     })
     .$call((q) => {
       if (shouldFetchOnlyIntention)

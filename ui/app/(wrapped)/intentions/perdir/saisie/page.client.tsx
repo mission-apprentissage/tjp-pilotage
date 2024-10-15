@@ -37,15 +37,15 @@ import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
+import { TableFooter } from "@/components/TableFooter";
 import {
   formatCodeDepartement,
   formatDepartementLibelleWithCodeDepartement,
 } from "@/utils/formatLibelle";
 import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
+import { useStateParams } from "@/utils/useFilters";
 
-import { TableFooter } from "../../../../../components/TableFooter";
-import { useStateParams } from "../../../../../utils/useFilters";
 import { getStepWorkflow, getStepWorkflowAvis } from "../../utils/statutUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { StatutTag } from "../components/StatutTag";

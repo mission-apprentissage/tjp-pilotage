@@ -22,7 +22,6 @@ export const countDemandesQuery = async ({
   codeAcademie,
   codeNiveauDiplome,
   search,
-  suivies,
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
@@ -152,15 +151,6 @@ export const countDemandesQuery = async ({
           codeNiveauDiplome
         );
       return eb;
-    })
-    .$call((q) => {
-      if (suivies)
-        return q.innerJoin("suivi as suiviUtilisateur", (join) =>
-          join
-            .onRef("suiviUtilisateur.intentionNumero", "=", "demande.numero")
-            .on("suiviUtilisateur.userId", "=", user.id)
-        );
-      return q;
     })
     .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))

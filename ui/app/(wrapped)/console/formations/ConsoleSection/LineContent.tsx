@@ -293,7 +293,7 @@ export const FormationLineContent = ({
         colonneFilters={colonneFilters}
         getCellBgColor={getCellBgColor}
       >
-        {line.positionQuadrant}
+        {line.positionQuadrant ?? "-"}
       </ConditionalTd>
     )}
     <ConditionalTd

@@ -37,7 +37,6 @@ export const MenuBoiteReception = ({
     searchParams.filters?.statut === undefined
       ? "none"
       : searchParams.filters?.statut;
-  const suivies = searchParams.filters?.suivies;
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
   const search = searchParams.search;
@@ -47,7 +46,7 @@ export const MenuBoiteReception = ({
   const isDisabled =
     !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
-  const { data: countDemandes } = client
+  const { data: countIntentions } = client
     .ref("[GET]/intentions/count")
     .useQuery({
       query: {
@@ -55,7 +54,6 @@ export const MenuBoiteReception = ({
         codeAcademie,
         codeNiveauDiplome,
         search,
-        suivies,
       },
     });
 
@@ -93,7 +91,7 @@ export const MenuBoiteReception = ({
               fontWeight={isRecapView && statut === "none" ? "bold" : "normal"}
               fontSize={14}
             >
-              {countDemandes?.total}
+              {countIntentions?.total}
             </Text>
           }
           isActive={statut === "none"}
@@ -133,7 +131,7 @@ export const MenuBoiteReception = ({
               }
               fontSize={14}
             >
-              {countDemandes?.[DemandeStatutEnum["dossier complet"]]}
+              {countIntentions?.[DemandeStatutEnum["dossier complet"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["dossier complet"]}
@@ -181,7 +179,7 @@ export const MenuBoiteReception = ({
               }
               fontSize={14}
             >
-              {countDemandes?.[DemandeStatutEnum["dossier incomplet"]]}
+              {countIntentions?.[DemandeStatutEnum["dossier incomplet"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["dossier incomplet"]}
@@ -229,7 +227,7 @@ export const MenuBoiteReception = ({
               }
               fontSize={14}
             >
-              {countDemandes?.[DemandeStatutEnum["proposition"]]}
+              {countIntentions?.[DemandeStatutEnum["proposition"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["proposition"]}
@@ -277,7 +275,7 @@ export const MenuBoiteReception = ({
               }
               fontSize={14}
             >
-              {countDemandes?.[DemandeStatutEnum["projet de demande"]]}
+              {countIntentions?.[DemandeStatutEnum["projet de demande"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["projet de demande"]}
@@ -325,7 +323,7 @@ export const MenuBoiteReception = ({
               }
               fontSize={14}
             >
-              {countDemandes?.[DemandeStatutEnum["prêt pour le vote"]]}
+              {countIntentions?.[DemandeStatutEnum["prêt pour le vote"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["prêt pour le vote"]}
@@ -373,7 +371,7 @@ export const MenuBoiteReception = ({
               }
               fontSize={14}
             >
-              {countDemandes?.[DemandeStatutEnum["demande validée"]]}
+              {countIntentions?.[DemandeStatutEnum["demande validée"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["demande validée"]}
@@ -417,7 +415,7 @@ export const MenuBoiteReception = ({
               }
               fontSize={14}
             >
-              {countDemandes?.[DemandeStatutEnum["refusée"]]}
+              {countIntentions?.[DemandeStatutEnum["refusée"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["refusée"]}
@@ -448,8 +446,7 @@ export const MenuBoiteReception = ({
           bgColor={"unset"}
           size="sm"
           onClick={() => {
-            handleFilters("statut", undefined);
-            handleFilters("suivies", suivies ? undefined : true);
+            handleFilters("statut", "suivies");
           }}
           width={"100%"}
           iconSpacing={2}
@@ -458,13 +455,15 @@ export const MenuBoiteReception = ({
           }
           rightIcon={
             <Text
-              fontWeight={isRecapView && suivies ? "bold" : "normal"}
+              fontWeight={
+                isRecapView && statut === "suivies" ? "bold" : "normal"
+              }
               fontSize={14}
             >
-              {countDemandes?.["suivies"]}
+              {countIntentions?.["suivies"]}
             </Text>
           }
-          isActive={suivies}
+          isActive={statut === "suivies"}
           _active={{
             borderRadius: "none",
             bg: "bluefrance.950",
@@ -472,7 +471,7 @@ export const MenuBoiteReception = ({
           p={5}
         >
           <Text
-            fontWeight={isRecapView && suivies ? "bold" : "normal"}
+            fontWeight={isRecapView && statut === "suivies" ? "bold" : "normal"}
             fontSize={14}
             me={"auto"}
           >
@@ -499,7 +498,7 @@ export const MenuBoiteReception = ({
               }
               fontSize={14}
             >
-              {countDemandes?.[DemandeStatutEnum["brouillon"]]}
+              {countIntentions?.[DemandeStatutEnum["brouillon"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["brouillon"]}

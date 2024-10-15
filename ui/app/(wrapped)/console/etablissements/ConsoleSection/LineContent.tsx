@@ -317,7 +317,7 @@ export const EtablissementLineContent = ({
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}
     >
-      {line.positionQuadrant}
+      {line.positionQuadrant ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne="tauxDevenirFavorable"
