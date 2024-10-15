@@ -88,7 +88,7 @@ export const LineContent = chakra(
           color={tdColor}
           isNumeric
         >
-          {formatLargeNumber(line.placesColorees)}
+          {formatLargeNumber(line.placesColoreesTransformees)}
         </Td>
         <Td
           width={24}

@@ -315,7 +315,7 @@ export const IndicateursClesSection = ({
           </VStack>
         </NumberWithProgressBars>
         <NumberWithProgressBars
-          all={getScopedData("all", "placesColorees")}
+          all={getScopedData("all", "placesColoreesTransformees")}
           icon={
             <Icon
               width="24px"
@@ -326,11 +326,11 @@ export const IndicateursClesSection = ({
           title="Colorations"
           demandeValidee={getScopedData(
             DemandeStatutEnum["demande validée"],
-            "placesColorees"
+            "placesColoreesTransformees"
           )}
           projetDeDemande={getScopedData(
             DemandeStatutEnum["projet de demande"],
-            "placesColorees"
+            "placesColoreesTransformees"
           )}
           tooltip={
             <TooltipIcon
@@ -363,8 +363,8 @@ export const IndicateursClesSection = ({
             >
               <Text>
                 {formatPercentage(
-                  getScopedData("all", "placesColoreesQ4") /
-                    getScopedData("all", "placesColorees"),
+                  getScopedData("all", "placesColoreesTransformeesQ4") /
+                    getScopedData("all", "placesColoreesTransformees"),
                   1,
                   "-"
                 )}

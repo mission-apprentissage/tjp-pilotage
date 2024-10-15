@@ -1,13 +1,15 @@
 import { chakra } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeFermeture } from "shared/validators/demandeValidators";
 
-import { isTypeColoration } from "../../../../utils/typeDemandeUtils";
+import {
+  isTypeColoration,
+  isTypeOuverture,
+} from "../../../../utils/typeDemandeUtils";
 import { CapaciteField } from "../../../components/CapaciteField";
 import { IntentionForms } from "../../defaultFormValues";
 
-export const CapaciteScolaireColoreeField = chakra(
+export const CapaciteApprentissageColoreeActuelleField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const { watch, setValue } = useFormContext<IntentionForms>();
 
@@ -15,19 +17,19 @@ export const CapaciteScolaireColoreeField = chakra(
       () =>
         watch((_, { name }) => {
           if (name !== "typeDemande") return;
-          setValue("capaciteScolaireColoree", 0);
+          setValue("capaciteApprentissageColoreeActuelle", 0);
         }).unsubscribe
     );
 
     const typeDemande = watch("typeDemande");
-    const fermeture = isTypeFermeture(typeDemande);
+    const ouverture = isTypeOuverture(typeDemande);
     const coloration = isTypeColoration(typeDemande) || watch("coloration");
-    const isReadOnly = disabled || fermeture || !coloration;
+    const isReadOnly = disabled || ouverture || !coloration;
     if (!coloration) return <></>;
 
     return (
       <CapaciteField
-        name={"capaciteScolaireColoree"}
+        name={"capaciteApprentissageColoreeActuelle"}
         className={className}
         isReadOnly={isReadOnly}
       />

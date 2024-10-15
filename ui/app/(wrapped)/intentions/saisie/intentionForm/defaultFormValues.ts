@@ -17,9 +17,11 @@ export type IntentionForms = {
   mixte: boolean;
   capaciteScolaireActuelle?: number;
   capaciteScolaire?: number;
+  capaciteScolaireColoreeActuelle?: number;
   capaciteScolaireColoree?: number;
   capaciteApprentissageActuelle?: number;
   capaciteApprentissage?: number;
+  capaciteApprentissageColoreeActuelle?: number;
   capaciteApprentissageColoree?: number;
   // Précisions
   motif?: string[];

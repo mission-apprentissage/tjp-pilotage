@@ -53,11 +53,24 @@ const getNationalData = async (filters: Filters) => {
       eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
       eb.fn.coalesce("placesOuvertesQ1", eb.val(0)).as("placesOuvertesQ1"),
       eb.fn.coalesce("placesFermeesQ4", eb.val(0)).as("placesFermeesQ4"),
-      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
-      eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
       eb.fn
         .coalesce("placesOuvertesTransformationEcologique", eb.val(0))
         .as("placesOuvertesTransformationEcologique"),
+      eb.fn
+        .coalesce("placesNonColoreesTransformees", eb.val(0))
+        .as("placesNonColoreesTransformees"),
+      eb.fn
+        .coalesce("placesColoreesOuvertes", eb.val(0))
+        .as("placesColoreesOuvertes"),
+      eb.fn
+        .coalesce("placesColoreesFermees", eb.val(0))
+        .as("placesColoreesFermees"),
+      eb.fn
+        .coalesce("placesColoreesTransformees", eb.val(0))
+        .as("placesColoreesTransformees"),
+      eb.fn
+        .coalesce("placesColoreesTransformeesQ4", eb.val(0))
+        .as("placesColoreesTransformeesQ4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
       eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
       eb.val("national").as("code"),
@@ -117,11 +130,24 @@ const getRegionData = async (filters: Filters) => {
       eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
       eb.fn.coalesce("placesOuvertesQ1", eb.val(0)).as("placesOuvertesQ1"),
       eb.fn.coalesce("placesFermeesQ4", eb.val(0)).as("placesFermeesQ4"),
-      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
-      eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
       eb.fn
         .coalesce("placesOuvertesTransformationEcologique", eb.val(0))
         .as("placesOuvertesTransformationEcologique"),
+      eb.fn
+        .coalesce("placesNonColoreesTransformees", eb.val(0))
+        .as("placesNonColoreesTransformees"),
+      eb.fn
+        .coalesce("placesColoreesOuvertes", eb.val(0))
+        .as("placesColoreesOuvertes"),
+      eb.fn
+        .coalesce("placesColoreesFermees", eb.val(0))
+        .as("placesColoreesFermees"),
+      eb.fn
+        .coalesce("placesColoreesTransformees", eb.val(0))
+        .as("placesColoreesTransformees"),
+      eb.fn
+        .coalesce("placesColoreesTransformeesQ4", eb.val(0))
+        .as("placesColoreesTransformeesQ4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
       eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
       "region.codeRegion as code",
@@ -184,11 +210,24 @@ const getAcademieData = async (filters: Filters) => {
       eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
       eb.fn.coalesce("placesOuvertesQ1", eb.val(0)).as("placesOuvertesQ1"),
       eb.fn.coalesce("placesFermeesQ4", eb.val(0)).as("placesFermeesQ4"),
-      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
-      eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
       eb.fn
         .coalesce("placesOuvertesTransformationEcologique", eb.val(0))
         .as("placesOuvertesTransformationEcologique"),
+      eb.fn
+        .coalesce("placesNonColoreesTransformees", eb.val(0))
+        .as("placesNonColoreesTransformees"),
+      eb.fn
+        .coalesce("placesColoreesOuvertes", eb.val(0))
+        .as("placesColoreesOuvertes"),
+      eb.fn
+        .coalesce("placesColoreesFermees", eb.val(0))
+        .as("placesColoreesFermees"),
+      eb.fn
+        .coalesce("placesColoreesTransformees", eb.val(0))
+        .as("placesColoreesTransformees"),
+      eb.fn
+        .coalesce("placesColoreesTransformeesQ4", eb.val(0))
+        .as("placesColoreesTransformeesQ4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
       eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
       "academie.codeAcademie as code",
@@ -262,11 +301,24 @@ const getDepartementData = async (filters: Filters) => {
       eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
       eb.fn.coalesce("placesOuvertesQ1", eb.val(0)).as("placesOuvertesQ1"),
       eb.fn.coalesce("placesFermeesQ4", eb.val(0)).as("placesFermeesQ4"),
-      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
-      eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
       eb.fn
         .coalesce("placesOuvertesTransformationEcologique", eb.val(0))
         .as("placesOuvertesTransformationEcologique"),
+      eb.fn
+        .coalesce("placesNonColoreesTransformees", eb.val(0))
+        .as("placesNonColoreesTransformees"),
+      eb.fn
+        .coalesce("placesColoreesOuvertes", eb.val(0))
+        .as("placesColoreesOuvertes"),
+      eb.fn
+        .coalesce("placesColoreesFermees", eb.val(0))
+        .as("placesColoreesFermees"),
+      eb.fn
+        .coalesce("placesColoreesTransformees", eb.val(0))
+        .as("placesColoreesTransformees"),
+      eb.fn
+        .coalesce("placesColoreesTransformeesQ4", eb.val(0))
+        .as("placesColoreesTransformeesQ4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
       eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
       "departement.codeDepartement as code",

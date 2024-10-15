@@ -93,6 +93,7 @@ export const getCorrectionsQuery = async ({
     )
     .leftJoin("user", "user.id", "demande.createdBy")
     .select((eb) => [
+      eb.fn.count<number>("correction.id").over().as("count"),
       "demande.uai",
       "demande.cfd",
       "demande.codeDispositif",
@@ -100,7 +101,6 @@ export const getCorrectionsQuery = async ({
       sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
         "user.lastname"
       )})`.as("userName"),
-      sql<string>`count(*) over()`.as("count"),
       "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
       "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
       "dataFormation.libelleFormation",
@@ -115,7 +115,6 @@ export const getCorrectionsQuery = async ({
       "academie.libelleAcademie",
       "academie.codeAcademie as codeAcademie",
       "dataFormation.typeFamille",
-      sql<string>`count(*) over()`.as("count"),
       selectTauxInsertion6mois("indicateurRegionSortie").as(
         "tauxInsertionRegional"
       ),

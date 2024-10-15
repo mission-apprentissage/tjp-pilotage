@@ -7,8 +7,6 @@ import { DB } from "../../db/db";
 
 // UTILITAIRES
 
-// CALCUL DE JADY
-
 export const exceptionCampagne2023 = ({
   eb,
   count,
@@ -87,9 +85,9 @@ export const countPlacesOuvertesTransitionEcologique = ({
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) => sql<number>`
-    ${countPlacesOuvertesScolaireTransitionEcologique(eb)} +
-    ${countPlacesOuvertesApprentissageTransitionEcologique(eb)}
-  `;
+      ${countPlacesOuvertesScolaireTransitionEcologique(eb)} +
+      ${countPlacesOuvertesApprentissageTransitionEcologique(eb)}
+    `;
 
 export const countPlacesOuvertesScolaireTransitionEcologique = ({
   eb,
@@ -120,9 +118,9 @@ export const countPlacesOuvertes = ({
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) => sql<number>`
-    ${countPlacesOuvertesScolaire(eb)} +
-    ${countPlacesOuvertesApprentissage(eb)}
-  `;
+      ${countPlacesOuvertesScolaire(eb)} +
+      ${countPlacesOuvertesApprentissage(eb)}
+    `;
 
 export const countPlacesOuvertesQ1 = ({
   eb,
@@ -260,13 +258,11 @@ export const countPlacesFermeesQ3 = ({
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) => eb.case().when(inQ3(eb)).then(countPlacesFermees(eb)).else(0).end();
-
 export const countPlacesFermeesQ4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) => eb.case().when(inQ4(eb)).then(countPlacesFermees(eb)).else(0).end();
-
 export const countPlacesFermeesQ3Q4 = ({
   eb,
 }: {
@@ -289,7 +285,7 @@ export const countPlacesFermeesScolaire = ({
   eb: ExpressionBuilder<DB, "demande">;
 }) => sql<number>`ABS(
         LEAST(0,
-          ${eb.ref("demande.capaciteScolaire")}-
+          ${eb.ref("demande.capaciteScolaire")} -
           ${eb.ref("demande.capaciteScolaireActuelle")}
         )
       )`;
@@ -329,13 +325,17 @@ export const countPlacesFermeesScolaireQ3Q4 = ({
 export const countPlacesFermeesApprentissage = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) => sql<number>`ABS(
+  eb: ExpressionBuilder<DB, "demande" | "campagne">;
+}) =>
+  exceptionCampagne2023({
+    eb,
+    count: sql<number>`ABS(
       LEAST(0,
         ${eb.ref("demande.capaciteApprentissage")} -
         ${eb.ref("demande.capaciteApprentissageActuelle")}
       )
-    )`;
+    )`,
+  });
 
 export const countPlacesFermeesApprentissageCorrection = ({
   eb,
@@ -346,12 +346,15 @@ export const countPlacesFermeesApprentissageCorrection = ({
         ${eb.ref("correction.capaciteApprentissage")} -
         ${eb.ref("correction.capaciteApprentissageActuelle")}
       )
-    )`;
+  )`;
 
 export const countPlacesFermeesApprentissageQ3 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
+  eb: ExpressionBuilder<
+    DB,
+    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
+  >;
 }) =>
   eb
     .case()
@@ -363,7 +366,10 @@ export const countPlacesFermeesApprentissageQ3 = ({
 export const countPlacesFermeesApprentissageQ4 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
+  eb: ExpressionBuilder<
+    DB,
+    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
+  >;
 }) =>
   eb
     .case()
@@ -375,7 +381,10 @@ export const countPlacesFermeesApprentissageQ4 = ({
 export const countPlacesFermeesApprentissageQ3Q4 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
+  eb: ExpressionBuilder<
+    DB,
+    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
+  >;
 }) =>
   eb
     .case()
@@ -410,18 +419,18 @@ export const countDifferenceCapaciteApprentissage = ({
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) => sql<number>`
-    ${eb.ref("demande.capaciteApprentissage")} -
-    ${eb.ref("demande.capaciteApprentissageActuelle")}
-  `;
+      ${eb.ref("demande.capaciteApprentissage")} -
+      ${eb.ref("demande.capaciteApprentissageActuelle")}
+    `;
 
 export const countDifferenceCapaciteApprentissageCorrection = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "correction">;
-}) => sql<number>`
-    ${eb.ref("correction.capaciteApprentissage")} -
-    ${eb.ref("correction.capaciteApprentissageActuelle")}
-  `;
+}) => sql<number>`(
+      ${eb.ref("correction.capaciteApprentissage")} -
+      ${eb.ref("correction.capaciteApprentissageActuelle")}
+    )`;
 
 export const countDifferenceCapaciteScolaireIntention = ({
   eb,
@@ -448,28 +457,18 @@ export const countDifferenceCapaciteApprentissageIntention = ({
 export const countPlacesColoreesOuvertesScolaire = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande" | "campagne">;
-}) =>
-  exceptionCampagne2023({
-    eb,
-    count: sql<number>`
+  eb: ExpressionBuilder<DB, "demande">;
+}) => sql<number>`
     GREATEST(0,
-      LEAST(
-        ${eb.ref("demande.capaciteScolaireActuelle")},
-        (
-          ${eb.ref("demande.capaciteScolaireColoree")} -
-          ${eb.ref("demande.capaciteScolaireColoreeActuelle")}
-        )
-      )
-    )`,
-  });
+      ${eb.ref("demande.capaciteScolaireColoree")} -
+      ${eb.ref("demande.capaciteScolaireColoreeActuelle")}
+    )`;
 
 export const countPlacesColoreesFermeesScolaire = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
-}) => sql<number>`
-  ABS(
+}) => sql<number>`ABS(
     LEAST(0,
       ${eb.ref("demande.capaciteScolaireColoree")} -
       ${eb.ref("demande.capaciteScolaireColoreeActuelle")}
@@ -479,10 +478,7 @@ export const countPlacesColoreesFermeesScolaire = ({
 export const countPlacesColoreesOuvertesScolaireQ3 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
+  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) =>
   eb
     .case()
@@ -494,10 +490,7 @@ export const countPlacesColoreesOuvertesScolaireQ3 = ({
 export const countPlacesColoreesOuvertesScolaireQ4 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
+  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) =>
   eb
     .case()
@@ -509,10 +502,7 @@ export const countPlacesColoreesOuvertesScolaireQ4 = ({
 export const countPlacesColoreesOuvertesScolaireQ3Q4 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
+  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) =>
   eb
     .case()
@@ -524,21 +514,12 @@ export const countPlacesColoreesOuvertesScolaireQ3Q4 = ({
 export const countPlacesColoreesOuvertesApprentissage = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande" | "campagne">;
-}) =>
-  exceptionCampagne2023({
-    eb,
-    count: sql<number>`
-    GREATEST(0,
-      LEAST(
-        ${eb.ref("demande.capaciteApprentissageActuelle")},
-        (
-          ${eb.ref("demande.capaciteApprentissageColoree")} -
-          ${eb.ref("demande.capaciteApprentissageColoreeActuelle")}
-        )
-      )
-    )`,
-  });
+  eb: ExpressionBuilder<DB, "demande">;
+}) => sql<number>`
+  GREATEST(0,
+    ${eb.ref("demande.capaciteApprentissageColoree")} -
+    ${eb.ref("demande.capaciteApprentissageColoreeActuelle")}
+  )`;
 
 export const countPlacesColoreesFermeesApprentissage = ({
   eb,
@@ -555,10 +536,7 @@ export const countPlacesColoreesFermeesApprentissage = ({
 export const countPlacesColoreesOuvertesApprentissageQ3 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
+  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) =>
   eb
     .case()
@@ -570,10 +548,7 @@ export const countPlacesColoreesOuvertesApprentissageQ3 = ({
 export const countPlacesColoreesOuvertesApprentissageQ4 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
+  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) =>
   eb
     .case()
@@ -585,10 +560,7 @@ export const countPlacesColoreesOuvertesApprentissageQ4 = ({
 export const countPlacesColoreesOuvertesApprentissageQ3Q4 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
+  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) =>
   eb
     .case()
@@ -684,24 +656,24 @@ export const countPlacesColoreesFermeesScolaireCorrection = ({
 }: {
   eb: ExpressionBuilder<DB, "correction">;
 }) => sql<number>`
-  ABS(
-    LEAST(0,
-      ${eb.ref("correction.capaciteScolaireColoree")} -
-      ${eb.ref("correction.capaciteScolaireColoreeActuelle")}
-    )
-  )`;
+    ABS(
+      LEAST(0,
+        ${eb.ref("correction.capaciteScolaireColoree")} -
+        ${eb.ref("correction.capaciteScolaireColoreeActuelle")}
+      )
+    )`;
 
 export const countPlacesColoreesFermeesApprentissageCorrection = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "correction">;
 }) => sql<number>`
-  ABS(
-    LEAST(0,
-      ${eb.ref("correction.capaciteApprentissageColoree")} -
-      ${eb.ref("correction.capaciteApprentissageColoreeActuelle")}
-    )
-  )`;
+      ABS(
+        LEAST(0,
+          ${eb.ref("correction.capaciteApprentissageColoree")} -
+          ${eb.ref("correction.capaciteApprentissageColoreeActuelle")}
+        )
+      )`;
 
 // PLACES TRANSFORMÉES
 
@@ -783,8 +755,8 @@ export const countPlacesColoreesTransformees = ({
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) => sql<number>`
-    ${countPlacesColoreesOuvertesScolaire(eb)} +
-    ${countPlacesColoreesOuvertesApprentissage(eb)}
+    ${countPlacesColoreesTransformeesScolaire(eb)} +
+    ${countPlacesColoreesTransformeesApprentissage(eb)}
   `;
 
 export const countPlacesColoreesTransformeesQ4 = ({
@@ -817,9 +789,10 @@ export const countPlacesTransformees = ({
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
   sql<number>`
-      ${countPlacesColoreesTransformees(eb)} +
+    GREATEST(
+      ${countPlacesColoreesTransformees(eb)},
       ${countPlacesNonColoreesTransformees(eb)}
-
+    )
   `;
 
 export const countPlacesTransformeesParCampagne = ({
