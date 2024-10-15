@@ -6,14 +6,18 @@ import { DemandeStatutType } from "../../../../../shared/enum/demandeStatutEnum"
 import { DemandeTypeEnum } from "../../../../../shared/enum/demandeTypeEnum";
 import { DB } from "../../../db/db";
 import {
-  countPlacesColorees,
-  countPlacesColoreesQ4,
+  countPlacesColoreesFermees,
+  countPlacesColoreesOuvertes,
+  countPlacesColoreesOuvertesQ4,
+  countPlacesColoreesTransformees,
+  countPlacesColoreesTransformeesQ4,
   countPlacesFermees,
   countPlacesFermeesApprentissage,
   countPlacesFermeesApprentissageQ4,
   countPlacesFermeesQ4,
   countPlacesFermeesScolaire,
   countPlacesFermeesScolaireQ4,
+  countPlacesNonColoreesTransformees,
   countPlacesOuvertes,
   countPlacesOuvertesApprentissage,
   countPlacesOuvertesApprentissageQ1,
@@ -138,10 +142,26 @@ export const genericOnDemandes = ({
       eb.fn.sum<number>(countPlacesOuvertesQ1(eb)).as("placesOuvertesQ1"),
       eb.fn.sum<number>(countPlacesFermeesQ4(eb)).as("placesFermeesQ4"),
       eb.fn
+        .sum<number>(countPlacesNonColoreesTransformees(eb))
+        .as("placesNonColoreesTransformees"),
+      eb.fn
         .sum<number>(countPlacesOuvertesTransitionEcologique(eb))
         .as("placesOuvertesTransformationEcologique"),
-      eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
-      eb.fn.sum<number>(countPlacesColoreesQ4(eb)).as("placesColoreesQ4"),
+      eb.fn
+        .sum<number>(countPlacesColoreesTransformees(eb))
+        .as("placesColoreesTransformees"),
+      eb.fn
+        .sum<number>(countPlacesColoreesTransformeesQ4(eb))
+        .as("placesColoreesTransformeesQ4"),
+      eb.fn
+        .sum<number>(countPlacesColoreesOuvertes(eb))
+        .as("placesColoreesOuvertes"),
+      eb.fn
+        .sum<number>(countPlacesColoreesFermees(eb))
+        .as("placesColoreesFermees"),
+      eb.fn
+        .sum<number>(countPlacesColoreesOuvertesQ4(eb))
+        .as("placesColoreesOuvertesQ4"),
       eb.fn
         .sum<number>(countPlacesTransformeesParCampagne(eb))
         .as("placesTransformees"),

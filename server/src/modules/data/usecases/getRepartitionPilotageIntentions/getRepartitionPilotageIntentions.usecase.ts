@@ -75,7 +75,22 @@ const groupByResult = ({ numerateur, denominateur, groupBy }: Repartition) => {
       // Somme des places
       const sommePlacesOuvertes = _.sumBy(demandeGrouped, "placesOuvertes");
       const sommePlacesFermees = _.sumBy(demandeGrouped, "placesFermees");
-      const sommePlacesColorees = _.sumBy(demandeGrouped, "placesColorees");
+      const sommePlacesNonColoreesTransformees = _.sumBy(
+        demandeGrouped,
+        "placesNonColoreesTransformees"
+      );
+      const sommePlacesColoreesTransformees = _.sumBy(
+        demandeGrouped,
+        "placesColoreesTransformees"
+      );
+      const sommePlacesColoreesOuvertes = _.sumBy(
+        demandeGrouped,
+        "placesColoreesOuvertes"
+      );
+      const sommePlacesColoreesFermees = _.sumBy(
+        demandeGrouped,
+        "placesColoreesFermees"
+      );
       const sommePlacesTransformees = _.sumBy(
         demandeGrouped,
         "placesTransformees"
@@ -91,7 +106,10 @@ const groupByResult = ({ numerateur, denominateur, groupBy }: Repartition) => {
         effectif: totalEffectifs,
         placesOuvertes: sommePlacesOuvertes,
         placesFermees: sommePlacesFermees,
-        placesColorees: sommePlacesColorees,
+        placesNonColoreesTransformees: sommePlacesNonColoreesTransformees,
+        placesColoreesOuvertes: sommePlacesColoreesOuvertes,
+        placesColoreesFermees: sommePlacesColoreesFermees,
+        placesColoreesTransformees: sommePlacesColoreesTransformees,
         placesTransformees: sommePlacesTransformees,
         solde: sommeSolde,
       };
@@ -115,7 +133,10 @@ const calculateTotal = (
     effectif: 0,
     placesOuvertes: 0,
     placesFermees: 0,
-    placesColorees: 0,
+    placesNonColoreesTransformees: 0,
+    placesColoreesOuvertes: 0,
+    placesColoreesFermees: 0,
+    placesColoreesTransformees: 0,
     placesTransformees: 0,
     solde: 0,
     tauxTransformation: undefined,
@@ -127,7 +148,10 @@ const calculateTotal = (
     total.effectif += stats.effectif;
     total.placesOuvertes += stats.placesOuvertes;
     total.placesFermees += stats.placesFermees;
-    total.placesColorees += stats.placesColorees;
+    total.placesNonColoreesTransformees += stats.placesNonColoreesTransformees;
+    total.placesColoreesOuvertes += stats.placesColoreesOuvertes;
+    total.placesColoreesFermees += stats.placesColoreesFermees;
+    total.placesColoreesTransformees += stats.placesColoreesTransformees;
     total.placesTransformees += stats.placesTransformees;
     total.solde += stats.solde;
   });
