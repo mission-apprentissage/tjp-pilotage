@@ -17,7 +17,6 @@ import { Filters } from "./getFilters.dep";
 export const getIntentions = async (
   {
     statut,
-    suivies,
     search,
     user,
     offset = 0,
@@ -26,8 +25,8 @@ export const getIntentions = async (
     orderBy,
     codeAcademie,
     codeNiveauDiplome,
+    campagne,
   }: Filters,
-  anneeCampagne: string,
   shouldFetchOnlyIntention: boolean
 ) => {
   const search_array = getNormalizedSearchArray(search);
@@ -78,7 +77,7 @@ export const getIntentions = async (
     )
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "intention.campagneId").$call((eb) => {
-        if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
+        if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
       })
     )
@@ -177,7 +176,19 @@ export const getIntentions = async (
         .as("correction")
     )
     .$call((eb) => {
-      if (statut) return eb.where("intention.statut", "=", statut);
+      if (statut) {
+        if (statut === "suivies")
+          return eb.innerJoin("suivi as suiviUtilisateur", (join) =>
+            join
+              .onRef(
+                "suiviUtilisateur.intentionNumero",
+                "=",
+                "intention.numero"
+              )
+              .on("suiviUtilisateur.userId", "=", user.id)
+          );
+        return eb.where("intention.statut", "=", statut);
+      }
       return eb;
     })
     .$call((eb) => {
@@ -207,15 +218,6 @@ export const getIntentions = async (
         sql`${sql.ref(orderBy)}`,
         sql`${sql.raw(order)} NULLS LAST`
       );
-    })
-    .$call((q) => {
-      if (suivies)
-        return q.innerJoin("suivi as suiviUtilisateur", (join) =>
-          join
-            .onRef("suiviUtilisateur.intentionNumero", "=", "intention.numero")
-            .on("suiviUtilisateur.userId", "=", user.id)
-        );
-      return q;
     })
     .$call((q) => {
       if (shouldFetchOnlyIntention)

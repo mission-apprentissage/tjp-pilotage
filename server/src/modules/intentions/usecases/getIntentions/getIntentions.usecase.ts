@@ -23,8 +23,10 @@ const getIntentionsFactory =
 
     const [intentions, campagne, filters] = await Promise.all([
       deps.getIntentions(
-        activeFilters,
-        anneeCampagne,
+        {
+          ...activeFilters,
+          campagne: anneeCampagne,
+        },
         shouldFetchOnlyIntention
       ),
       deps.getCampagne(anneeCampagne),

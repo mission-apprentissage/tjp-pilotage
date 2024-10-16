@@ -1,50 +1,121 @@
 "use client";
 
-import {
-  Center,
-  Flex,
-  Spinner,
-  Table,
-  TableContainer,
-  Tbody,
-  Tr,
-} from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { Button, Center, chakra, Flex, Spinner } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
-import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
+import { useState } from "react";
 
 import { client } from "@/api.client";
+import { GroupedMultiselect } from "@/components/GroupedMultiselect";
+import { SearchInput } from "@/components/SearchInput";
+import { TableHeader } from "@/components/TableHeader";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatExportFilename } from "@/utils/formatExportFilename";
 
-import { TableHeader } from "../../../../components/TableHeader";
-import { formatExportFilename } from "../../../../utils/formatExportFilename";
-import { CodeRegionFilterContext } from "../../../layoutClient";
-import { ConsoleFilters } from "./components/ConsoleFilters";
-import { HeadLineContent } from "./components/HeadLineContent";
+import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
-  FormationLineContent,
-  FormationLineLoader,
-  FormationLinePlaceholder,
-} from "./components/LineContent";
-import { FORMATION_COLUMNS } from "./FORMATION_COLUMNS";
-import { Filters, LineId, Order } from "./types";
+  FORMATION_COLUMNS,
+  FORMATION_COLUMNS_DEFAULT,
+} from "./FORMATION_COLUMNS";
+import { GROUPED_FORMATION_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_COLUMNS";
+import { FiltersSection } from "./HeaderSection/FiltersSection";
+import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
 
 type QueryResult = (typeof client.infer)["[GET]/formations"];
 
+const ColonneFiltersSection = chakra(
+  ({
+    colonneFilters,
+    forcedColonnes,
+    handleColonneFilters,
+    trackEvent,
+    canShowQuadrantPosition = false,
+  }: {
+    colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
+    forcedColonnes?: (keyof typeof FORMATION_COLUMNS)[];
+    handleColonneFilters: (value: (keyof typeof FORMATION_COLUMNS)[]) => void;
+    trackEvent: (name: string, params?: Record<string, unknown>) => void;
+    canShowQuadrantPosition?: boolean;
+  }) => {
+    return (
+      <Flex justifyContent={"start"} direction="row">
+        <GroupedMultiselect
+          width={"48"}
+          size="md"
+          variant={"newInput"}
+          onChange={(selected) =>
+            handleColonneFilters(selected as (keyof typeof FORMATION_COLUMNS)[])
+          }
+          groupedOptions={Object.entries(
+            GROUPED_FORMATION_COLUMNS_OPTIONAL
+          ).reduce(
+            (acc, [group, { color, options }]) => {
+              acc[group] = {
+                color,
+                options: Object.entries(options)
+                  .map(([value, label]) => ({
+                    label,
+                    value,
+                    isDisabled: forcedColonnes?.includes(
+                      value as keyof typeof FORMATION_COLUMNS
+                    ),
+                  }))
+                  .filter(({ label }) => {
+                    if (!canShowQuadrantPosition)
+                      return label !== FORMATION_COLUMNS.positionQuadrant;
+                    return true;
+                  }),
+              };
+              return acc;
+            },
+            {} as Record<
+              string,
+              {
+                color: string;
+                options: { label: string; value: string; disabled?: boolean }[];
+              }
+            >
+          )}
+          defaultOptions={Object.entries(FORMATION_COLUMNS_DEFAULT)?.map(
+            ([value, label]) => {
+              return {
+                label,
+                value,
+              };
+            }
+          )}
+          value={colonneFilters ?? []}
+          customButton={
+            <Button
+              variant={"externalLink"}
+              leftIcon={<Icon icon={"ri:table-line"} />}
+              color="bluefrance.113"
+              onClick={() => trackEvent("formations:affichage-colonnes")}
+            >
+              Modifier l'affichage des colonnes
+            </Button>
+          }
+        />
+      </Flex>
+    );
+  }
+);
+
 export default function Formations() {
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
+    search?: string;
     withAnneeCommune?: string;
+    columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
@@ -52,7 +123,9 @@ export default function Formations() {
 
   const setSearchParams = (params: {
     filters?: typeof filters;
+    search?: typeof search;
     withAnneeCommune?: typeof withAnneeCommune;
+    columns?: typeof columns;
     order?: typeof order;
     page?: typeof page;
   }) => {
@@ -63,23 +136,17 @@ export default function Formations() {
 
   const filters = searchParams.filters ?? {};
   const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
+  const columns = searchParams.columns ?? [];
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
+  const search = searchParams.search ?? "";
 
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(
-    CodeRegionFilterContext
-  );
-
-  useEffect(() => {
-    if (codeRegionFilter !== "" && !filters.codeRegion?.length) {
-      filters.codeRegion = [codeRegionFilter];
-      setSearchParams({ filters: filters, withAnneeCommune });
-    }
-  }, []);
+  const [searchFormation, setSearchFormation] = useState<string>(search);
 
   const getFormationsQueryParameters = (qLimit: number, qOffset?: number) => ({
     ...filters,
     ...order,
+    search,
     offset: qOffset,
     limit: qLimit,
     withAnneeCommune: withAnneeCommune?.toString() ?? "true",
@@ -89,7 +156,7 @@ export default function Formations() {
     {
       query: getFormationsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
-    { staleTime: 10000000, keepPreviousData: true }
+    { staleTime: 10000000, keepPreviousData: false }
   );
 
   const getDataForExport = (data: QueryResult) => {
@@ -162,68 +229,36 @@ export default function Formations() {
     );
   };
 
-  const [historiqueId, setHistoriqueId] = useState<LineId>();
-
-  const { data: historique, isFetching: isFetchingHistorique } = useQuery({
-    keepPreviousData: false,
-    staleTime: 10000000,
-    queryKey: ["formations", historiqueId, filters],
-    enabled: !!historiqueId,
-    queryFn: async () => {
-      if (!historiqueId) return;
-      return (
-        await client.ref("[GET]/formations").query({
-          query: {
-            ...filters,
-            cfd: [historiqueId?.cfd],
-            codeDispositif: historiqueId?.codeDispositif
-              ? [historiqueId?.codeDispositif]
-              : undefined,
-            limit: 2,
-            order: "desc",
-            orderBy: "rentreeScolaire",
-            rentreeScolaire: RENTREES_SCOLAIRES.filter(
-              (rentree) => rentree !== CURRENT_RENTREE
-            ),
-            withEmptyFormations: false,
-          },
-        })
-      ).formations;
-    },
-  });
-
   const canShowQuadrantPosition = filters.codeRegion?.length === 1;
 
-  const [isSticky, setIsSticky] = useState(false);
-  const tableRef = useRef<HTMLDivElement>(null);
+  const [colonneFilters, setColonneFilters] = useState<
+    (keyof typeof FORMATION_COLUMNS)[]
+  >(
+    (columns.length
+      ? columns
+      : Object.keys(
+          FORMATION_COLUMNS_DEFAULT
+        )) as (keyof typeof FORMATION_COLUMNS)[]
+  );
 
-  const handleScroll = () => {
-    if (tableRef.current) {
-      const scrollLeft = tableRef.current.scrollLeft;
-      if (scrollLeft > 200) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
-    }
+  const handleColonneFilters = (value: (keyof typeof FORMATION_COLUMNS)[]) => {
+    setSearchParams({ columns: value });
+    setColonneFilters(value);
   };
 
-  useEffect(() => {
-    const box = tableRef.current;
-    if (box) {
-      box.addEventListener("scroll", handleScroll);
-      return () => {
-        box.removeEventListener("scroll", handleScroll);
-      };
-    }
-  }, []);
+  const onClickSearch = () => {
+    setSearchParams({
+      filters: filters,
+      order: order,
+      search: searchFormation,
+    });
+  };
 
   return (
     <>
-      <ConsoleFilters
+      <FiltersSection
         setSearchParams={setSearchParams}
         searchParams={searchParams}
-        setCodeRegionFilter={setCodeRegionFilter}
         data={data}
       />
       <Flex direction="column" flex={1} position="relative" minH="0">
@@ -239,6 +274,23 @@ export default function Formations() {
           </Center>
         )}
         <TableHeader
+          SearchInput={
+            <SearchInput
+              placeholder="Rechercher une formation, un domaine, une commune..."
+              onChange={setSearchFormation}
+              value={searchFormation}
+              onClick={onClickSearch}
+            />
+          }
+          ColonneFilter={
+            <ColonneFiltersSection
+              colonneFilters={colonneFilters}
+              handleColonneFilters={handleColonneFilters}
+              forcedColonnes={["libelleFormation"]}
+              trackEvent={trackEvent}
+              canShowQuadrantPosition={canShowQuadrantPosition}
+            />
+          }
           onExportCsv={() => onExportCsv()}
           onExportExcel={() => onExportExcel()}
           page={page}
@@ -246,68 +298,14 @@ export default function Formations() {
           count={data?.count}
           onPageChange={(newPage) => setSearchParams({ page: newPage })}
         />
-        <TableContainer
-          overflowY="auto"
-          flex={1}
-          position="relative"
-          ref={tableRef}
-        >
-          <Table variant="simple" size={"sm"}>
-            <HeadLineContent
-              isSticky={isSticky}
-              order={order}
-              setSearchParams={setSearchParams}
-              canShowQuadrantPosition={canShowQuadrantPosition}
-            />
-            <Tbody>
-              {data?.formations.map((line) => (
-                <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
-                  <Tr h="12">
-                    <FormationLineContent
-                      isSticky={isSticky}
-                      defaultRentreeScolaire={CURRENT_RENTREE}
-                      line={line}
-                      expended={
-                        historiqueId?.cfd === line.cfd &&
-                        historiqueId.codeDispositif === line.codeDispositif
-                      }
-                      onClickExpend={() =>
-                        setHistoriqueId({
-                          cfd: line.cfd,
-                          codeDispositif: line.codeDispositif,
-                        })
-                      }
-                      onClickCollapse={() => setHistoriqueId(undefined)}
-                      canShowQuadrantPosition={canShowQuadrantPosition}
-                    />
-                  </Tr>
-                  {historiqueId?.cfd === line.cfd &&
-                    historiqueId.codeDispositif === line.codeDispositif && (
-                      <>
-                        {historique?.map((historiqueLine) => (
-                          <Tr
-                            key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
-                            bg={"grey.975"}
-                          >
-                            <FormationLineContent
-                              isSticky={isSticky}
-                              line={historiqueLine}
-                              canShowQuadrantPosition={canShowQuadrantPosition}
-                            />
-                          </Tr>
-                        ))}
-                        {historique && !historique.length && (
-                          <FormationLinePlaceholder />
-                        )}
-
-                        {isFetchingHistorique && <FormationLineLoader />}
-                      </>
-                    )}
-                </Fragment>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
+        <ConsoleSection
+          data={data}
+          canShowQuadrantPosition={canShowQuadrantPosition}
+          order={order}
+          filters={filters}
+          setSearchParams={setSearchParams}
+          colonneFilters={colonneFilters}
+        />
       </Flex>
     </>
   );
