@@ -1,5 +1,6 @@
 import { Search2Icon } from "@chakra-ui/icons";
 import { Button, Flex, Input } from "@chakra-ui/react";
+
 export const SearchInput = ({
   className,
   value,

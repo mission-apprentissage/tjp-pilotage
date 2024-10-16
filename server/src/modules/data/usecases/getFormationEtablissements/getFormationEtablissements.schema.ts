@@ -1,3 +1,4 @@
+import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
 
 const OptionSchema = z.object({
@@ -72,15 +73,15 @@ export const getFormationEtablissementsSchema = {
     codeAcademie: z.array(z.string()).optional(),
     codeDepartement: z.array(z.string()).optional(),
     commune: z.array(z.string()).optional(),
-    codeDiplome: z.array(z.string()).optional(),
+    codeNiveauDiplome: z.array(z.string()).optional(),
     codeDispositif: z.array(z.string()).optional(),
     cfdFamille: z.array(z.string()).optional(),
     rentreeScolaire: z.array(z.string()).optional(),
-    secteur: z.array(z.string()).optional(),
+    secteur: z.array(SecteurZodType).optional(),
     uai: z.array(z.string()).optional(),
-    cpc: z.array(z.string()).optional(),
     codeNsf: z.array(z.string()).optional(),
     withAnneeCommune: z.string().optional(),
+    search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationEtablissementLineSchema.keyof().optional(),
     offset: z.coerce.number().optional(),
@@ -99,8 +100,8 @@ export const getFormationEtablissementsSchema = {
         familles: z.array(OptionSchema),
         formations: z.array(OptionSchema),
         etablissements: z.array(OptionSchema),
-        cpcs: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),
+        secteurs: z.array(OptionSchema),
       }),
       etablissements: z.array(FormationEtablissementLineSchema),
     }),

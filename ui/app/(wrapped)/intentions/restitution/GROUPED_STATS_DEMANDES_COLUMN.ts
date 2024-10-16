@@ -1,10 +1,9 @@
+import { themeDefinition } from "../../../../theme/theme";
 import {
   STATS_DEMANDES_COLUMNS,
   STATS_DEMANDES_COLUMNS_DEFAULT,
   STATS_DEMANDES_COLUMNS_OPTIONAL,
-} from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
-
-import { themeDefinition } from "../../../../theme/theme";
+} from "./STATS_DEMANDES_COLUMN";
 
 export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
   string,
@@ -46,8 +45,8 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
   },
   // demande
   ["demande"]: {
-    color: "#C3FAD5",
-    cellColor: "#E3FDEB",
+    color: "#FEE9E5",
+    cellColor: "#FEF4F2",
     options: {
       typeDemande: "Type de demande",
       motif: "Motif(s) de la demande",
@@ -80,8 +79,8 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
   },
   // Devenir favorable de la formation
   ["devenir favorable de la formation"]: {
-    color: "#FEE9E5",
-    cellColor: "#FEF4F2",
+    color: "#C3FAD5",
+    cellColor: "#E3FDEB",
     options: {
       positionQuadrant: "Position dans le quadrant",
       tauxInsertionRegional: "Tx d'emploi à 6 mois régional",
@@ -182,7 +181,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   },
   // demande
   ["demande"]: {
-    color: "#C3FAD5",
+    color: "#FEE9E5",
     options: {
       typeDemande: "Type de demande",
       motif: "Motif(s) de la demande",
@@ -208,7 +207,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   },
   // Devenir favorable de la formation
   ["devenir favorable de la formation"]: {
-    color: "#FEE9E5",
+    color: "#C3FAD5",
     options: {
       positionQuadrant: "Position dans le quadrant",
       tauxInsertionRegional: "Tx d'emploi à 6 mois régional",
@@ -294,7 +293,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
   },
   // demande
   ["demande"]: {
-    color: "#C3FAD5",
+    color: "#FEE9E5",
     options: {
       typeDemande: "Type de demande",
       differenceCapaciteScolaire: "Nombre de places en voie scolaire",
@@ -307,7 +306,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
   },
   // Devenir favorable de la formation
   ["devenir favorable de la formation"]: {
-    color: "#FEE9E5",
+    color: "#C3FAD5",
     options: {
       positionQuadrant: "Position dans le quadrant",
     },
