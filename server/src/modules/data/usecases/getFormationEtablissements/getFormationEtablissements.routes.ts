@@ -16,10 +16,9 @@ export const getFormationEtablissementsRoutes = ({
     server.route({
       ...props,
       handler: async (request, response) => {
-        const { order, orderBy, ...filters } = request.query;
+        const { ...filters } = request.query;
         const etablissements = await getFormationEtablissements({
           ...filters,
-          orderBy: order && orderBy ? { order, column: orderBy } : undefined,
         });
         response.status(200).send(etablissements);
       },
