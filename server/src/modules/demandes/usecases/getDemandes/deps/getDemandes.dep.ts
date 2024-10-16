@@ -11,20 +11,18 @@ import { isDemandeSelectable } from "../../../../utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
 import { Filters } from "./getFilters.dep";
 
-export const getDemandes = async (
-  {
-    statut,
-    search,
-    user,
-    offset = 0,
-    limit = 20,
-    order,
-    orderBy,
-    codeAcademie,
-    codeNiveauDiplome,
-  }: Filters,
-  anneeCampagne: string
-) => {
+export const getDemandes = async ({
+  statut,
+  search,
+  user,
+  codeAcademie,
+  codeNiveauDiplome,
+  offset = 0,
+  limit = 20,
+  order,
+  orderBy,
+  campagne,
+}: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
   const demandes = await kdb
@@ -55,7 +53,7 @@ export const getDemandes = async (
     )
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-        if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
+        if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
       })
     )
@@ -149,7 +147,15 @@ export const getDemandes = async (
         .as("correction")
     )
     .$call((eb) => {
-      if (statut) return eb.where("demande.statut", "=", statut);
+      if (statut) {
+        if (statut === "suivies")
+          return eb.innerJoin("suivi as suiviUtilisateur", (join) =>
+            join
+              .onRef("suiviUtilisateur.intentionNumero", "=", "demande.numero")
+              .on("suiviUtilisateur.userId", "=", user.id)
+          );
+        return eb.where("demande.statut", "=", statut);
+      }
       return eb;
     })
     .$call((eb) => {

@@ -37,15 +37,15 @@ import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
+import { TableFooter } from "@/components/TableFooter";
 import {
   formatCodeDepartement,
   formatDepartementLibelleWithCodeDepartement,
 } from "@/utils/formatLibelle";
 import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
+import { useStateParams } from "@/utils/useFilters";
 
-import { TableFooter } from "../../../../../components/TableFooter";
-import { useStateParams } from "../../../../../utils/useFilters";
 import { getStepWorkflow, getStepWorkflowAvis } from "../../utils/statutUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { StatutTag } from "../components/StatutTag";
@@ -54,7 +54,7 @@ import { CorrectionDemandeButton } from "./components/CorrectionDemandeButton";
 import { DeleteIntentionButton } from "./components/DeleteIntentionButton";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
-import { MenuIntention } from "./components/MenuIntention";
+import { MenuBoiteReception } from "./components/MenuBoiteReception";
 import { ProgressSteps } from "./components/ProgressSteps";
 import { INTENTIONS_COLUMNS } from "./INTENTIONS_COLUMNS";
 import { Filters, Order } from "./types";
@@ -262,7 +262,7 @@ export const PageClient = () => {
       minHeight={0}
       py={4}
     >
-      <MenuIntention
+      <MenuBoiteReception
         hasPermissionSubmitIntention={hasPermissionSubmitIntention}
         isRecapView
         campagne={data?.campagne}
@@ -496,7 +496,6 @@ export const PageClient = () => {
                                 <Tooltip label="Voir la demande">
                                   <IconButton
                                     as={NextLink}
-                                    variant="link"
                                     href={
                                       campagne === "2023"
                                         ? `/intentions/synthese/${intention.numero}`
@@ -512,6 +511,8 @@ export const PageClient = () => {
                                       );
                                     }}
                                     aria-label="Voir la demande"
+                                    color={"bluefrance.113"}
+                                    bgColor={"transparent"}
                                     icon={
                                       <Icon
                                         icon="ri:eye-line"
@@ -532,7 +533,6 @@ export const PageClient = () => {
                                   <Tooltip label="Modifier la demande">
                                     <IconButton
                                       as={NextLink}
-                                      variant="link"
                                       href={`/intentions/perdir/saisie/${intention.numero}`}
                                       onClick={(e) => {
                                         e.preventDefault();
@@ -542,6 +542,8 @@ export const PageClient = () => {
                                         );
                                       }}
                                       aria-label="Modifier la demande"
+                                      color={"bluefrance.113"}
+                                      bgColor={"transparent"}
                                       icon={
                                         <Icon
                                           icon="ri:pencil-line"
@@ -559,6 +561,18 @@ export const PageClient = () => {
                                 )}
                                 <Tooltip label="Suivre la demande">
                                   <IconButton
+                                    onClick={() => {
+                                      if (!intention.suiviId)
+                                        submitSuivi({
+                                          body: {
+                                            intentionNumero: intention.numero,
+                                          },
+                                        });
+                                      else
+                                        deleteSuivi({
+                                          params: { id: intention.suiviId },
+                                        });
+                                    }}
                                     aria-label="Suivre la demande"
                                     color={"bluefrance.113"}
                                     bgColor={"transparent"}
@@ -575,18 +589,6 @@ export const PageClient = () => {
                                         />
                                       )
                                     }
-                                    onClick={() => {
-                                      if (!intention.suiviId)
-                                        submitSuivi({
-                                          body: {
-                                            intentionNumero: intention.numero,
-                                          },
-                                        });
-                                      else
-                                        deleteSuivi({
-                                          params: { id: intention.suiviId },
-                                        });
-                                    }}
                                   />
                                 </Tooltip>
                                 {data?.campagne.statut ===
@@ -597,8 +599,6 @@ export const PageClient = () => {
                                     >
                                       <IconButton
                                         as={NextLink}
-                                        color={"bluefrance.113"}
-                                        bgColor={"transparent"}
                                         href={
                                           campagne === "2023"
                                             ? `/intentions/saisie/${intention.numeroDemandeImportee}`
@@ -609,6 +609,8 @@ export const PageClient = () => {
                                           e.stopPropagation();
                                         }}
                                         aria-label={`Voir l'intention dupliquée ${intention.numeroDemandeImportee}`}
+                                        color={"bluefrance.113"}
+                                        bgColor={"transparent"}
                                         icon={
                                           <Icon
                                             icon="ri:external-link-line"
@@ -621,8 +623,6 @@ export const PageClient = () => {
                                   ) : (
                                     <Tooltip label={"Dupliquer la demande"}>
                                       <IconButton
-                                        color={"bluefrance.113"}
-                                        bgColor={"transparent"}
                                         onClick={(e) => {
                                           setIsImporting(true);
                                           if (intention.numeroDemandeImportee)
@@ -642,6 +642,8 @@ export const PageClient = () => {
                                           !hasPermissionSubmitIntention
                                         }
                                         aria-label="Dupliquer la demande"
+                                        color={"bluefrance.113"}
+                                        bgColor={"transparent"}
                                         icon={
                                           <Icon
                                             icon="ri:file-copy-line"

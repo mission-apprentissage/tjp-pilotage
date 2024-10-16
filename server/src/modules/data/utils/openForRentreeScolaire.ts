@@ -15,9 +15,9 @@ export const openForRentreeScolaire = (
     ),
     eb.or([
       eb(
-        "formationView.dateFermeture",
-        ">=",
-        sql<Date>`${getDateRentreeScolaire(rentreeScolaire)}`
+        sql<string>`date_part('year',${eb.ref("formationView.dateFermeture")})`,
+        ">",
+        rentreeScolaire
       ),
       eb("formationView.dateFermeture", "is", null),
     ]),

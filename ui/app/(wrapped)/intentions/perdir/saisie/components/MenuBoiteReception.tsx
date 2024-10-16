@@ -14,9 +14,9 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { client } from "@/api.client";
 
 import { Filters } from "../types";
-import { isSaisieDisabled } from "../utils/canEditDemande";
+import { isSaisieDisabled } from "../utils/canEditIntention";
 
-export const MenuIntention = ({
+export const MenuBoiteReception = ({
   isRecapView = false,
   hasPermissionSubmitIntention,
   campagne,
@@ -37,29 +37,25 @@ export const MenuIntention = ({
     searchParams.filters?.statut === undefined
       ? "none"
       : searchParams.filters?.statut;
-  const suivies = searchParams.filters?.suivies;
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
-  const isDisabled =
-    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
   const search = searchParams.search;
   const codeAcademie = searchParams.filters?.codeAcademie;
   const codeNiveauDiplome = searchParams.filters?.codeNiveauDiplome;
 
-  const { data: countDemandes } = client.ref("[GET]/intentions/count").useQuery(
-    {
+  const isDisabled =
+    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
+
+  const { data: countIntentions } = client
+    .ref("[GET]/intentions/count")
+    .useQuery({
       query: {
         anneeCampagne,
-        search,
         codeAcademie,
         codeNiveauDiplome,
+        search,
       },
-    },
-    {
-      keepPreviousData: true,
-      staleTime: 0,
-    }
-  );
+    });
 
   const bluefrance113 = useToken("colors", "bluefrance.113");
 
@@ -75,7 +71,7 @@ export const MenuIntention = ({
             ? NextLink
             : undefined
         }
-        href="/intentions/saisie/new"
+        href="/intentions/perdir/saisie/new"
       >
         Nouvelle demande
       </Button>
@@ -95,7 +91,7 @@ export const MenuIntention = ({
               fontWeight={isRecapView && statut === "none" ? "bold" : "normal"}
               fontSize={14}
             >
-              {countDemandes?.total}
+              {countIntentions?.total}
             </Text>
           }
           isActive={statut === "none"}
@@ -113,6 +109,147 @@ export const MenuIntention = ({
             Toutes
           </Text>
         </Button>
+
+        {/* Dossiers complets */}
+        <Button
+          bgColor={"unset"}
+          size="sm"
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["dossier complet"])
+          }
+          width={"100%"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon icon={"ri:task-line"} color={bluefrance113} width={"24px"} />
+          }
+          rightIcon={
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["dossier complet"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countIntentions?.[DemandeStatutEnum["dossier complet"]]}
+            </Text>
+          }
+          isActive={statut === DemandeStatutEnum["dossier complet"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["dossier complet"]
+                ? "bold"
+                : "normal"
+            }
+            fontSize={14}
+            me={"auto"}
+          >
+            Dossiers complets
+          </Text>
+        </Button>
+
+        {/* Dossiers incomplets */}
+        <Button
+          bgColor={"unset"}
+          size="sm"
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["dossier incomplet"])
+          }
+          width={"100%"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon
+              icon={"ri:file-warning-line"}
+              color={bluefrance113}
+              width={"24px"}
+            />
+          }
+          rightIcon={
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["dossier incomplet"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countIntentions?.[DemandeStatutEnum["dossier incomplet"]]}
+            </Text>
+          }
+          isActive={statut === DemandeStatutEnum["dossier incomplet"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["dossier incomplet"]
+                ? "bold"
+                : "normal"
+            }
+            fontSize={14}
+            me={"auto"}
+          >
+            Dossiers incomplets
+          </Text>
+        </Button>
+
+        {/* Propositions */}
+        <Button
+          bgColor={"unset"}
+          size="sm"
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["proposition"])
+          }
+          width={"100%"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon
+              icon={"ri:file-unknow-line"}
+              color={bluefrance113}
+              width={"24px"}
+            />
+          }
+          rightIcon={
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["proposition"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countIntentions?.[DemandeStatutEnum["proposition"]]}
+            </Text>
+          }
+          isActive={statut === DemandeStatutEnum["proposition"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["proposition"]
+                ? "bold"
+                : "normal"
+            }
+            fontSize={14}
+            me={"auto"}
+          >
+            Propositions
+          </Text>
+        </Button>
+
         {/* Projet de demande */}
         <Button
           bgColor={"unset"}
@@ -138,7 +275,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["projet de demande"]}
+              {countIntentions?.[DemandeStatutEnum["projet de demande"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["projet de demande"]}
@@ -158,6 +295,54 @@ export const MenuIntention = ({
             me={"auto"}
           >
             Projet de demande
+          </Text>
+        </Button>
+
+        {/* Prêts pour le vote */}
+        <Button
+          bgColor={"unset"}
+          size="sm"
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["prêt pour le vote"])
+          }
+          width={"100%"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon
+              icon={"ri:file-user-line"}
+              color={bluefrance113}
+              width={"24px"}
+            />
+          }
+          rightIcon={
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["prêt pour le vote"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countIntentions?.[DemandeStatutEnum["prêt pour le vote"]]}
+            </Text>
+          }
+          isActive={statut === DemandeStatutEnum["prêt pour le vote"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["prêt pour le vote"]
+                ? "bold"
+                : "normal"
+            }
+            fontSize={14}
+            me={"auto"}
+          >
+            Prêt pour le vote
           </Text>
         </Button>
 
@@ -186,7 +371,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["demande validée"]}
+              {countIntentions?.[DemandeStatutEnum["demande validée"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["demande validée"]}
@@ -230,7 +415,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["refusée"]}
+              {countIntentions?.[DemandeStatutEnum["refusée"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["refusée"]}
@@ -260,7 +445,9 @@ export const MenuIntention = ({
         <Button
           bgColor={"unset"}
           size="sm"
-          onClick={() => handleFilters("suivies", true)}
+          onClick={() => {
+            handleFilters("statut", "suivies");
+          }}
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -268,13 +455,15 @@ export const MenuIntention = ({
           }
           rightIcon={
             <Text
-              fontWeight={isRecapView && suivies ? "bold" : "normal"}
+              fontWeight={
+                isRecapView && statut === "suivies" ? "bold" : "normal"
+              }
               fontSize={14}
             >
-              {countDemandes?.["suivies"]}
+              {countIntentions?.["suivies"]}
             </Text>
           }
-          isActive={suivies}
+          isActive={statut === "suivies"}
           _active={{
             borderRadius: "none",
             bg: "bluefrance.950",
@@ -282,11 +471,7 @@ export const MenuIntention = ({
           p={5}
         >
           <Text
-            fontWeight={
-              isRecapView && statut === DemandeStatutEnum["brouillon"]
-                ? "bold"
-                : "normal"
-            }
+            fontWeight={isRecapView && statut === "suivies" ? "bold" : "normal"}
             fontSize={14}
             me={"auto"}
           >
@@ -313,7 +498,7 @@ export const MenuIntention = ({
               }
               fontSize={14}
             >
-              {countDemandes?.["brouillon"]}
+              {countIntentions?.[DemandeStatutEnum["brouillon"]]}
             </Text>
           }
           isActive={statut === DemandeStatutEnum["brouillon"]}

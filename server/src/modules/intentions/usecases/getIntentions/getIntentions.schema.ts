@@ -117,7 +117,12 @@ const IntentionsItem = z.object({
 
 export const getIntentionsSchema = {
   querystring: z.object({
-    statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
+    statut: z
+      .union([
+        DemandeStatutZodType.exclude(["supprimée"]),
+        z.literal("suivies"),
+      ])
+      .optional(),
     suivies: z.coerce.boolean().optional(),
     search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),

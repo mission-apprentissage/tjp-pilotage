@@ -73,15 +73,18 @@ const InputWapper = memo(
     onChange: (_: { checked: boolean; value: string; label: string }) => void;
     children: string;
     checked: boolean;
+    isReadOnly?: boolean;
   }) => {
     return (
       <Checkbox
         onChange={(e) =>
-          onChange({
-            checked: (e.target as HTMLInputElement).checked,
-            label: props.children,
-            value: props.value,
-          })
+          props.isReadOnly
+            ? undefined
+            : onChange({
+                checked: (e.target as HTMLInputElement).checked,
+                label: props.children,
+                value: props.value,
+              })
         }
         {...props}
       ></Checkbox>
@@ -143,7 +146,10 @@ export const GroupedMultiselect = chakra(
     children?: ReactNode;
     groupedOptions: Record<
       string,
-      { color?: string; options: { label: string; value: string }[] }
+      {
+        color?: string;
+        options: { label: string; value: string; isDisabled?: boolean }[];
+      }
     >;
     readonly defaultOptions?: { label: string; value: string }[];
     onChange?: (value: string[]) => void;
@@ -205,7 +211,10 @@ export const GroupedMultiselect = chakra(
               }
               return acc;
             },
-            {} as Record<string, { label: string; value: string }[]>
+            {} as Record<
+              string,
+              { label: string; value: string; isDisabled?: boolean }[]
+            >
           )
         : Object.keys(groupedOptions).reduce(
             (acc, key) => {
@@ -215,7 +224,10 @@ export const GroupedMultiselect = chakra(
               }
               return acc;
             },
-            {} as Record<string, { label: string; value: string }[]>
+            {} as Record<
+              string,
+              { label: string; value: string; isDisabled?: boolean }[]
+            >
           );
     };
 
@@ -235,7 +247,9 @@ export const GroupedMultiselect = chakra(
     const selectGroupOptions = (groupLabel: string) => {
       const options = groupedOptions[groupLabel].options;
       if (options) {
-        const values = options.map((option) => option.value);
+        const values = options
+          .filter((option) => !option.isDisabled)
+          .map((option) => option.value);
         const allOptionsSelected = values.every((value) => map.has(value));
         if (allOptionsSelected) {
           onChange?.(value.filter((val) => !values.includes(val)));
@@ -358,26 +372,29 @@ export const GroupedMultiselect = chakra(
                     >
                       {groupLabel}
                     </Tag>
-                    {filteredOptions[groupLabel].map(({ value, label }) => (
-                      <MenuItemOption key={value}>
-                        <InputWapper
-                          checked={!!map.get(value)}
-                          onChange={({ checked, label, value }) => {
-                            const newMap = new Map(map);
-                            if (checked) {
-                              newMap.set(value, label);
-                            } else {
-                              newMap.delete(value);
-                            }
-                            stateValue.current = newMap;
-                            onChange?.(Array.from(newMap.keys()));
-                          }}
-                          value={value}
-                        >
-                          {label}
-                        </InputWapper>
-                      </MenuItemOption>
-                    ))}
+                    {filteredOptions[groupLabel].map(
+                      ({ value, label, isDisabled }) => (
+                        <MenuItemOption key={value} isDisabled={isDisabled}>
+                          <InputWapper
+                            isReadOnly={isDisabled}
+                            checked={!!map.get(value)}
+                            onChange={({ checked, label, value }) => {
+                              const newMap = new Map(map);
+                              if (checked) {
+                                newMap.set(value, label);
+                              } else {
+                                newMap.delete(value);
+                              }
+                              stateValue.current = newMap;
+                              onChange?.(Array.from(newMap.keys()));
+                            }}
+                            value={value}
+                          >
+                            {label}
+                          </InputWapper>
+                        </MenuItemOption>
+                      )
+                    )}
                   </MenuGroup>
                   <MenuDivider mb={0} />
                 </Box>

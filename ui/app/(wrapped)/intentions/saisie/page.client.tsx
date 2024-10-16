@@ -48,7 +48,7 @@ import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
 import { CorrectionDemandeButton } from "./components/CorrectionDemandeButton";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
-import { MenuIntention } from "./components/MenuIntention";
+import { MenuBoiteReception } from "./components/MenuBoiteReception";
 import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
 import { Filters, Order } from "./types";
 import { isSaisieDisabled } from "./utils/isSaisieDisabled";
@@ -241,7 +241,7 @@ export const PageClient = () => {
       minHeight={0}
       py={4}
     >
-      <MenuIntention
+      <MenuBoiteReception
         hasPermissionSubmitIntention={hasPermissionSubmitIntention}
         isRecapView
         campagne={data?.campagne}
@@ -333,10 +333,7 @@ export const PageClient = () => {
                       <OrderIcon {...order} column="statut" />
                       {DEMANDES_COLUMNS.statut}
                     </Th>
-                    {data?.campagne.statut ===
-                      CampagneStatutEnum["terminée"] && (
-                      <Th textAlign={"center"}>Actions</Th>
-                    )}
+                    <Th textAlign={"center"}>Actions</Th>
                     <Th
                       cursor="pointer"
                       onClick={() => handleOrder("typeDemande")}
@@ -426,131 +423,136 @@ export const PageClient = () => {
                         <Td textAlign={"center"} w={0}>
                           <StatutTag statut={demande.statut} size="md" />
                         </Td>
-                        {data?.campagne.statut ===
-                          CampagneStatutEnum["terminée"] && (
-                          <Td>
-                            <Flex
-                              direction={"row"}
-                              gap={0}
-                              justifyContent={"left"}
-                            >
-                              <Tooltip label="Voir la demande">
-                                <IconButton
-                                  as={NextLink}
-                                  variant="link"
-                                  href={`/intentions/synthese/${demande.numero}`}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    router.push(
-                                      `/intentions/synthese/${demande.numero}`
-                                    );
-                                  }}
-                                  aria-label="Voir la demande"
-                                  icon={
+                        <Td>
+                          <Flex
+                            direction={"row"}
+                            gap={0}
+                            justifyContent={"left"}
+                          >
+                            <Tooltip label="Voir la demande">
+                              <IconButton
+                                as={NextLink}
+                                href={`/intentions/synthese/${demande.numero}`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  router.push(
+                                    `/intentions/synthese/${demande.numero}`
+                                  );
+                                }}
+                                aria-label="Voir la demande"
+                                color={"bluefrance.113"}
+                                bgColor={"transparent"}
+                                icon={
+                                  <Icon
+                                    icon="ri:eye-line"
+                                    width={"24px"}
+                                    color={bluefrance113}
+                                  />
+                                }
+                              />
+                            </Tooltip>
+                            <Tooltip label="Suivre la demande">
+                              <IconButton
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  if (!demande.suiviId)
+                                    submitSuivi({
+                                      body: {
+                                        intentionNumero: demande.numero,
+                                      },
+                                    });
+                                  else
+                                    deleteSuivi({
+                                      params: { id: demande.suiviId },
+                                    });
+                                }}
+                                aria-label="Suivre la demande"
+                                color={"bluefrance.113"}
+                                bgColor={"transparent"}
+                                icon={
+                                  demande.suiviId ? (
                                     <Icon
-                                      icon="ri:eye-line"
-                                      width={"24px"}
-                                      color={bluefrance113}
+                                      width="24px"
+                                      icon="ri:bookmark-fill"
                                     />
-                                  }
-                                />
-                              </Tooltip>
-                              <Tooltip label="Suivre la demande">
-                                <IconButton
-                                  aria-label="Suivre la demande"
-                                  color={"bluefrance.113"}
-                                  bgColor={"transparent"}
-                                  icon={
-                                    demande.suiviId ? (
-                                      <Icon
-                                        width="24px"
-                                        icon="ri:bookmark-fill"
-                                      />
-                                    ) : (
-                                      <Icon
-                                        width="24px"
-                                        icon="ri:bookmark-line"
-                                      />
-                                    )
-                                  }
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    if (!demande.suiviId)
-                                      submitSuivi({
-                                        body: {
-                                          intentionNumero: demande.numero,
-                                        },
-                                      });
-                                    else
-                                      deleteSuivi({
-                                        params: { id: demande.suiviId },
-                                      });
-                                  }}
-                                />
-                              </Tooltip>
-                              {demande.numeroDemandeImportee ? (
-                                <Tooltip
-                                  label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
-                                >
-                                  <IconButton
-                                    as={NextLink}
-                                    variant={"link"}
-                                    aria-label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
-                                    href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
-                                    icon={
-                                      <Icon
-                                        icon="ri:external-link-line"
-                                        width={"24px"}
-                                        color={bluefrance113}
-                                      />
-                                    }
-                                    me={"auto"}
-                                    passHref
-                                    onClick={(e) => e.stopPropagation()}
-                                  />
-                                </Tooltip>
-                              ) : (
-                                <Tooltip label="Dupliquer la demande">
-                                  <IconButton
-                                    icon={
-                                      <Icon
-                                        icon="ri:file-copy-line"
-                                        width={"24px"}
-                                        color={bluefrance113}
-                                      />
-                                    }
-                                    variant="link"
-                                    aria-label="Dupliquer la demande"
-                                    onClick={(e) => {
-                                      setIsImporting(true);
-                                      if (demande.numeroDemandeImportee) return;
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      importDemande({
-                                        params: { numero: demande.numero },
-                                      });
-                                    }}
-                                    isDisabled={
-                                      !!demande.numeroDemandeImportee ||
-                                      isSubmitting ||
-                                      isImporting ||
-                                      !hasPermissionSubmitIntention
-                                    }
-                                  />
-                                </Tooltip>
-                              )}
-                              <CorrectionDemandeButton demande={demande} />
-                            </Flex>
-                          </Td>
-                        )}
+                                  ) : (
+                                    <Icon
+                                      width="24px"
+                                      icon="ri:bookmark-line"
+                                    />
+                                  )
+                                }
+                              />
+                            </Tooltip>
+                            {data?.campagne.statut ===
+                              CampagneStatutEnum["terminée"] && (
+                              <>
+                                {demande.numeroDemandeImportee ? (
+                                  <Tooltip
+                                    label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
+                                  >
+                                    <IconButton
+                                      as={NextLink}
+                                      href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
+                                      passHref
+                                      onClick={(e) => e.stopPropagation()}
+                                      aria-label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
+                                      color={"bluefrance.113"}
+                                      bgColor={"transparent"}
+                                      me={"auto"}
+                                      icon={
+                                        <Icon
+                                          icon="ri:external-link-line"
+                                          width={"24px"}
+                                          color={bluefrance113}
+                                        />
+                                      }
+                                    />
+                                  </Tooltip>
+                                ) : (
+                                  <Tooltip label="Dupliquer la demande">
+                                    <IconButton
+                                      icon={
+                                        <Icon
+                                          icon="ri:file-copy-line"
+                                          width={"24px"}
+                                          color={bluefrance113}
+                                        />
+                                      }
+                                      aria-label="Dupliquer la demande"
+                                      color={"bluefrance.113"}
+                                      bgColor={"transparent"}
+                                      onClick={(e) => {
+                                        setIsImporting(true);
+                                        if (demande.numeroDemandeImportee)
+                                          return;
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        importDemande({
+                                          params: { numero: demande.numero },
+                                        });
+                                      }}
+                                      isDisabled={
+                                        !!demande.numeroDemandeImportee ||
+                                        isSubmitting ||
+                                        isImporting ||
+                                        !hasPermissionSubmitIntention
+                                      }
+                                    />
+                                  </Tooltip>
+                                )}
+                                <CorrectionDemandeButton demande={demande} />
+                              </>
+                            )}
+                          </Flex>
+                        </Td>
                         <Td textAlign={"center"}>
                           <Tag colorScheme="blue" size={"md"} h="fit-content">
                             {getTypeDemandeLabel(demande.typeDemande)}
                           </Tag>
                         </Td>
-
                         <Td w="15" textAlign={"center"}>
                           <Tooltip label={demande.userName}>
                             <Avatar

@@ -1,48 +1,33 @@
-import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import { MILLESIMES_IJ } from "shared";
+import { z } from "zod";
 
 import { getFormationsRenoveesEnseigneesQuery } from "../../queries/getFormationsRenovees/getFormationsRenovees";
 import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "../../queries/getStatsSortie/getStatsSortie";
-import { getPositionQuadrant } from "../../services/getPositionQuadrant";
-import { dependencies } from "./dependencies";
+import { getFiltersQuery } from "./deps/getFiltersQuery.dep";
+import { getFormationEtablissementsQuery } from "./deps/getFormationEtablissementsQuery.dep";
+import { getFormationEtablissementsSchema } from "./getFormationEtablissements.schema";
+
+export interface Filters
+  extends z.infer<typeof getFormationEtablissementsSchema.querystring> {
+  millesimeSortie: (typeof MILLESIMES_IJ)[number];
+}
 
 const getFormationEtablissementsFactory =
   (
     deps = {
-      findFormationEtablissementsInDb:
-        dependencies.findFormationEtablissementsInDb,
-      findFiltersInDb: dependencies.findFiltersInDb,
+      getFormationEtablissementsQuery,
+      getFiltersQuery,
       getFormationsRenoveesEnseigneesQuery,
       getStatsSortieParRegionsEtNiveauDiplomeQuery,
     }
   ) =>
-  async (activeFilters: {
-    offset?: number;
-    limit?: number;
-    codeRegion?: string[];
-    codeAcademie?: string[];
-    codeDepartement?: string[];
-    codeDiplome?: string[];
-    codeDispositif?: string[];
-    commune?: string[];
-    cfd?: string[];
-    cfdFamille?: string[];
-    uai?: string[];
-    secteur?: string[];
-    withAnneeCommune?: string;
-    rentreeScolaire?: string[];
-    orderBy?: { order: "asc" | "desc"; column: string };
-  }) => {
-    const [
-      { etablissements, count },
-      filters,
-      statsSortie,
-      formationsRenoveesEnseignees,
-    ] = await Promise.all([
-      deps.findFormationEtablissementsInDb(activeFilters),
-      deps.findFiltersInDb(activeFilters),
-      deps.getStatsSortieParRegionsEtNiveauDiplomeQuery(activeFilters),
-      deps.getFormationsRenoveesEnseigneesQuery(activeFilters),
-    ]);
+  async (activeFilters: Partial<Filters>) => {
+    const [{ etablissements, count }, filters, formationsRenoveesEnseignees] =
+      await Promise.all([
+        deps.getFormationEtablissementsQuery(activeFilters),
+        deps.getFiltersQuery(activeFilters),
+        deps.getFormationsRenoveesEnseigneesQuery(activeFilters),
+      ]);
 
     return {
       count,
@@ -54,15 +39,6 @@ const getFormationEtablissementsFactory =
         )
           ? etablissement.formationRenovee
           : undefined,
-        positionQuadrant:
-          statsSortie && statsSortie[etablissement.codeRegion ?? ""]
-            ? getPositionQuadrant(
-                etablissement,
-                statsSortie[etablissement.codeRegion ?? ""][
-                  etablissement.codeNiveauDiplome ?? ""
-                ] || {}
-              )
-            : PositionQuadrantEnum["Hors quadrant"],
       })),
     };
   };

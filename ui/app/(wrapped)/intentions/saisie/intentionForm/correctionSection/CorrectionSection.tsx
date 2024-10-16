@@ -235,15 +235,17 @@ export const CorrectionSection = ({
                             ...correction,
                             ...demande,
                             intentionNumero: demande.numero ?? "",
-                            capaciteScolaire:
-                              demande.capaciteScolaireActuelle ?? 0,
-                            capaciteApprentissage:
-                              demande.capaciteApprentissageActuelle ?? 0,
                             capaciteScolaireActuelle:
                               demande.capaciteScolaireActuelle ?? 0,
-                            capaciteScolaireColoree: 0,
+                            capaciteScolaire:
+                              demande.capaciteScolaireActuelle ?? 0,
                             capaciteApprentissageActuelle:
                               demande.capaciteApprentissageActuelle ?? 0,
+                            capaciteApprentissage:
+                              demande.capaciteApprentissageActuelle ?? 0,
+                            capaciteScolaireColoreeActuelle: 0,
+                            capaciteScolaireColoree: 0,
+                            capaciteApprentissageColoreeActuelle: 0,
                             capaciteApprentissageColoree: 0,
                             motif: correction.motif,
                           },
