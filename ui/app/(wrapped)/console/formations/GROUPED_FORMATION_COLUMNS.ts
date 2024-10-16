@@ -13,7 +13,7 @@ export const GROUPED_FORMATION_COLUMNS: Record<
     options: Partial<typeof FORMATION_COLUMNS>;
   }
 > = {
-  // rentrée scolaire
+  // Rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
     cellColor: "inherit",
@@ -21,7 +21,7 @@ export const GROUPED_FORMATION_COLUMNS: Record<
       rentreeScolaire: "Rentrée scolaire",
     },
   },
-  // formation
+  // Formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
     cellColor: "inherit",
@@ -39,7 +39,7 @@ export const GROUPED_FORMATION_COLUMNS: Record<
       codeDispositif: "Code dispositif",
     },
   },
-  // effectifs
+  // Effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
     cellColor: "inherit",
@@ -52,7 +52,7 @@ export const GROUPED_FORMATION_COLUMNS: Record<
       effectifEntree: "Effectif en entrée",
     },
   },
-  // indicateurs
+  // Indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
     cellColor: "inherit",
@@ -81,7 +81,7 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
     options: Partial<typeof FORMATION_COLUMNS_OPTIONAL>;
   }
 > = {
-  // rentrée scolaire
+  // Rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
     cellColor: "inherit",
@@ -89,7 +89,7 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
       rentreeScolaire: "Rentrée scolaire",
     },
   },
-  // formation
+  // Formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
     cellColor: "inherit",
@@ -104,7 +104,7 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
       libelleNsf: "Domaine de formation (NSF)",
     },
   },
-  // effectifs
+  // Effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
     cellColor: "inherit",
@@ -117,7 +117,7 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
       effectifEntree: "Effectif en entrée",
     },
   },
-  // indicateurs
+  // Indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
     cellColor: "inherit",
@@ -146,7 +146,15 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
     options: Partial<typeof FORMATION_COLUMNS_DEFAULT>;
   }
 > = {
-  // formation
+  // Rentrée scolaire
+  ["rentrée scolaire"]: {
+    color: themeDefinition.colors.grey[950],
+    cellColor: "inherit",
+    options: {
+      rentreeScolaire: "Rentrée scolaire",
+    },
+  },
+  // Formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
     cellColor: "inherit",
@@ -155,7 +163,7 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
       libelleFormation: "Formation",
     },
   },
-  // effectifs
+  // Effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
     cellColor: "inherit",
@@ -168,7 +176,7 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
       effectifEntree: "Effectif en entrée",
     },
   },
-  // indicateurs
+  // Indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
     cellColor: "inherit",

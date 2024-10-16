@@ -2,13 +2,8 @@ import { client } from "@/api.client";
 import { ExportColumns } from "@/utils/downloadExport";
 
 export const FORMATION_COLUMNS = {
-  // Effectifs
+  // Rentrée scolaire
   rentreeScolaire: "RS",
-  nbEtablissement: "Nb Étab",
-  effectif1: "Année 1",
-  effectif2: "Année 2",
-  effectif3: "Année 3",
-  effectifEntree: "Effectif en entrée",
   // Formation
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
@@ -21,6 +16,12 @@ export const FORMATION_COLUMNS = {
   "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   codeDispositif: "Code dispositif",
+  // Effectifs
+  nbEtablissement: "Nb Étab",
+  effectif1: "Année 1",
+  effectif2: "Année 2",
+  effectif3: "Année 3",
+  effectifEntree: "Effectif en entrée",
   // Indicateurs
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
@@ -33,6 +34,8 @@ export const FORMATION_COLUMNS = {
 >;
 
 export const FORMATION_COLUMNS_OPTIONAL = {
+  // Rentrée scolaire
+  rentreeScolaire: "RS",
   // Formation
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
@@ -43,7 +46,6 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   cpcSecteur: "CPC Secteur",
   libelleNsf: "Domaine de formation (NSF)",
   // Effectifs
-  rentreeScolaire: "RS",
   nbEtablissement: "Nb Étab",
   effectif1: "Année 1",
   effectif2: "Année 2",
@@ -61,11 +63,12 @@ export const FORMATION_COLUMNS_OPTIONAL = {
 >;
 
 export const FORMATION_COLUMNS_DEFAULT = {
+  // Rentrée scolaire
+  rentreeScolaire: "RS",
   // Formation
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
   // Effectifs
-  rentreeScolaire: "RS",
   nbEtablissement: "Nb Étab",
   effectif1: "Année 1",
   effectif2: "Année 2",
