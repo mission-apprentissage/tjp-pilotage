@@ -57,9 +57,9 @@ export const GROUPED_FORMATION_COLUMNS: Record<
     color: "#C3FAD5",
     cellColor: "inherit",
     options: {
-      positionQuadrant: "Position dans le quadrant",
       tauxPression: "Taux de pression",
       tauxRemplissage: "Taux de remplissage",
+      positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",
       tauxDevenirFavorable: "Taux de devenir favorable régional",
@@ -122,9 +122,9 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
     color: "#C3FAD5",
     cellColor: "inherit",
     options: {
-      positionQuadrant: "Position dans le quadrant",
       tauxPression: "Taux de pression",
       tauxRemplissage: "Taux de remplissage",
+      positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",
       tauxDevenirFavorable: "Taux de devenir favorable régional",
@@ -173,9 +173,9 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
     color: "#C3FAD5",
     cellColor: "inherit",
     options: {
-      positionQuadrant: "Position dans le quadrant",
       tauxPression: "Taux de pression",
       tauxRemplissage: "Taux de remplissage",
+      positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",
       tauxDevenirFavorable: "Taux de devenir favorable régional",

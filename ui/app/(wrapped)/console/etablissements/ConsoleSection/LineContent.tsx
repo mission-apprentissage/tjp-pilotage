@@ -52,7 +52,6 @@ const ConditionalTd = chakra(
         <Td
           className={className}
           isNumeric={isNumeric}
-          border={"none"}
           whiteSpace={"normal"}
           _groupHover={{ bgColor: "blueecume.850 !important" }}
           bgColor={getCellBgColor(colonne)}
