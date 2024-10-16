@@ -765,7 +765,7 @@ export interface LatestIntentionNonMaterializedView {
 }
 
 export interface Maintenance {
-  isMaintenance: Generated<boolean>;
+  isMaintenance: boolean;
 }
 
 export interface Metier {
@@ -894,6 +894,7 @@ export interface DB {
   latestDemandeIntentionNonMaterializedView: LatestDemandeIntentionNonMaterializedView;
   latestDemandeNonMaterializedView: LatestDemandeNonMaterializedView;
   latestIntentionNonMaterializedView: LatestIntentionNonMaterializedView;
+  maintenance: Maintenance;
   maintenance: Maintenance;
   metier: Metier;
   niveauDiplome: NiveauDiplome;

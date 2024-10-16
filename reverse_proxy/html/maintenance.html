@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orion | Maintenance</title>
+    <style>
+      @font-face {
+        font-family: "Marianne";
+        src:
+          url("./assets/fonts/Marianne/Marianne-Regular.woff2") format("woff2"),
+          url("./assets/fonts/Marianne/Marianne-Bold.woff2") format("woff2"),
+          url("./assets/fonts/Marianne/Marianne-ExtraBold.woff2")
+            format("woff2"),
+          url("./assets/fonts/Marianne/Marianne-Medium.woff2") format("woff2"),
+          url("./assets/fonts/Marianne/Marianne-Regular.woff2") format("woff2");
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      body {
+        font-family: "Marianne", sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100dvh;
+      }
+
+      h1 {
+        font-size: 32px;
+        font-weight: 700;
+      }
+
+      .in-progress {
+        width: 210px;
+        height: auto;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100dvh;
+        width: fit-content;
+      }
+
+      .logo {
+        width: 400px;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img src="assets/logos/logo_orion.svg" alt="logo orion" class="logo" />
+      <h1>Maintenance en cours</h1>
+      <img src="assets/in-progress.svg" alt="in progress" class="in-progress" />
+      <p>En cas de demande urgente veuillez contacter</p>
+      <a href="mailto: orion@inserjeunes.beta.gouv.fr"
+        >orion@inserjeunes.beta.gouv.fr</a
+      >
+    </div>
+  </body>
+</html>

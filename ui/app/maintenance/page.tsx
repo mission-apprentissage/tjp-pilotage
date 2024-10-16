@@ -1,7 +1,7 @@
 import { Center, Flex, Heading, Img, Link, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-export const MaintenancePage = () => {
+export default () => {
   return (
     <Flex width={"100%"} height={"100%"}>
       <Center display={"flex"} flexDirection={"column"} m={"auto"}>

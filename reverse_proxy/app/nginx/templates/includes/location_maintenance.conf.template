@@ -1,0 +1,4 @@
+location @maintenance {
+    root /etc/nginx/html;
+    try_files /maintenance.html =503;
+}

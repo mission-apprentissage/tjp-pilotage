@@ -12,7 +12,6 @@ Sentry.init({
   enabled: publicConfig.sentry_enabled,
   normalizeDepth: 8,
   integrations: [
-    new Sentry.Integrations.Http({ tracing: true }),
     // @ts-ignore
     new ExtraErrorData({ depth: 8 }),
     // @ts-ignore
