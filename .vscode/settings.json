@@ -52,5 +52,11 @@
   "compareFolders.ignoreAllWhiteSpaces": true,
   "compareFolders.ignoreEmptyLines": true,
   "compareFolders.ignoreWhiteSpaces": true,
-  "compareFolders.respectGitIgnore": true
+  "compareFolders.respectGitIgnore": true,
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  }
 }

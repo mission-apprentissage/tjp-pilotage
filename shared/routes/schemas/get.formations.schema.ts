@@ -46,7 +46,7 @@ export const FormationLineSchema = z.object({
   dateFermeture: z.string().optional(),
 });
 
-export const getFormationSchema = {
+export const getFormationsSchema = {
   querystring: z.object({
     cfd: z.array(z.string()).optional(),
     codeRegion: z.array(z.string()).optional(),
