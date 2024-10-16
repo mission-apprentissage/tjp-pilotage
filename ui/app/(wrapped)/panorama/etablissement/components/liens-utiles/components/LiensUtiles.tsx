@@ -4,22 +4,7 @@ import { usePlausible } from "next-plausible";
 import { InfoCard } from "@/app/(wrapped)/panorama/components/InfoCard";
 import type { Filters } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import type { AnalyseDetailleeType } from "@/app/(wrapped)/panorama/etablissement/context/etablissementContext";
-
-const lienDares: Record<string, string> = {
-  84: "https://dares.travail-emploi.gouv.fr/publication/auvergne-rhone-alpes-quelles-difficultes-de-recrutement-dici-2030",
-  53: "https://dares.travail-emploi.gouv.fr/publication/bretagne-quelles-difficultes-de-recrutement-dici-2030",
-  27: "https://dares.travail-emploi.gouv.fr/publication/bourgogne-franche-comte-quelles-difficultes-de-recrutement-dici-2030",
-  24: "https://dares.travail-emploi.gouv.fr/publication/centre-val-de-loire-quelles-difficultes-de-recrutement-dici-2030",
-  94: "https://dares.travail-emploi.gouv.fr/publication/corse-quelles-difficultes-de-recrutement-dici-2030",
-  44: "https://dares.travail-emploi.gouv.fr/publication/grand-est-quelles-difficultes-de-recrutement-dici-2030",
-  32: "https://dares.travail-emploi.gouv.fr/publication/hauts-de-france-quelles-difficultes-de-recrutement-dici-2030",
-  11: "https://dares.travail-emploi.gouv.fr/publication/ile-de-france-quelles-difficultes-de-recrutement-dici-2030",
-  28: "https://dares.travail-emploi.gouv.fr/publication/normandie-quelles-difficultes-de-recrutement-dici-2030",
-  75: "https://dares.travail-emploi.gouv.fr/publication/nouvelle-aquitaine-quelles-difficultes-de-recrutement-dici-2030",
-  76: "https://dares.travail-emploi.gouv.fr/publication/occitanie-quelles-difficultes-de-recrutement-dici-2030",
-  52: "https://dares.travail-emploi.gouv.fr/publication/pays-de-la-loire-quelles-difficultes-de-recrutement-dici-2030",
-  93: "https://dares.travail-emploi.gouv.fr/publication/paca-quelles-difficultes-de-recrutement-dici-2030",
-};
+import { liensDares } from "@/utils/liensDares";
 
 function formatCodeDepartement(codeDepartement: string): string {
   return codeDepartement?.startsWith("0") ? codeDepartement.substring(1) : codeDepartement;
@@ -77,11 +62,11 @@ export const LiensUtiles = ({ analyseDetaillee }: { analyseDetaillee: AnalyseDet
             sourceText="* Source: France Travail"
             linkTracker={linkTracker}
           />
-          {codeRegion && lienDares[codeRegion] && (
+          {codeRegion && liensDares[codeRegion] && (
             <InfoCard
               title="Projection métiers 2030"
               description="Retrouvez le dernier rapport de votre région"
-              links={{ href: (codeRegion && lienDares[codeRegion]) ?? "" }}
+              links={{ href: (codeRegion && liensDares[codeRegion]) ?? "" }}
               img="/graphs_statistics2.png"
               sourceText="* Source: DARES"
               linkTracker={linkTracker}

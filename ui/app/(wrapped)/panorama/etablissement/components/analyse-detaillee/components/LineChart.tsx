@@ -40,6 +40,9 @@ export const LineChart = ({
         },
       },
       legend: {
+        selected: {
+          [mainKey]: true,
+        },
         data: Object.keys(data),
         icon: "none",
         orient: "vertical",
@@ -110,7 +113,12 @@ export const LineChart = ({
             position: "top",
             color: "inherit",
             distance: 5,
-            formatter: (value) => value?.data?.toString().replace(".", ",") ?? "",
+            formatter: ({ value }) =>
+              Intl.NumberFormat("fr-FR", {
+                style: "decimal",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }).format(value as number),
             fontSize: 14,
             fontWeight: 700,
           },
