@@ -8,6 +8,7 @@ import { getDataForPanoramaRegionRoute } from "./usecases/getDataForPanoramaRegi
 import { getDemandesRestitutionIntentionsRoute } from "./usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.route";
 import { getDepartementRoute } from "./usecases/getDepartement/getDepartement.route";
 import { getDepartementsRoute } from "./usecases/getDepartements/getDepartements.route";
+import { getDomainesDeFormationRoute } from "./usecases/getDomainesDeFormation/getDomainesDeFormation.route";
 import { getEtablissementRoute } from "./usecases/getEtablissement/getEtablissement.route";
 import { getFormationEtablissementsRoutes } from "./usecases/getFormationEtablissements/getFormationEtablissements.routes";
 import { getFormationsRoute } from "./usecases/getFormations/getFormations.routes";
@@ -62,5 +63,6 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
     ...searchFiliereRoute(server),
     ...searchCampusRoute(server),
     ...getRepartitionPilotageIntentionsRoute({ server }),
+    ...getDomainesDeFormationRoute({ server }),
   };
 };

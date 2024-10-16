@@ -254,6 +254,16 @@ export const Nav = () => {
               Établissement
             </NavMenuLink>
           </MenuItem>
+          {feature.panoramaFormation && (
+            <MenuItem p="0">
+              <NavMenuLink
+                href="/panorama/domaine-de-formation"
+                segment="panorama/domaine-de-formation"
+              >
+                Domaine de formation
+              </NavMenuLink>
+            </MenuItem>
+          )}
           <MenuItem p="0">
             <NavMenuLink
               href="/panorama/lien-metier-formation"
