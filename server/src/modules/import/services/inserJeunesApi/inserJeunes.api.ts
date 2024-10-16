@@ -1,5 +1,5 @@
 import type { AxiosError } from "axios";
-import axiosRetry, { isNetworkError } from "axios-retry";
+import axiosRetry, { exponentialDelay, isNetworkError } from "axios-retry";
 
 import config from "@/config";
 
@@ -38,7 +38,7 @@ async function retryCondition(error: AxiosError) {
 
 axiosRetry(instance, {
   retries: 20,
-  retryDelay: axiosRetry.exponentialDelay,
+  retryDelay: exponentialDelay,
   retryCondition,
   shouldResetTimeout: true,
 });
