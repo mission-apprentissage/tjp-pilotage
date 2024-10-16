@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -117,7 +118,32 @@ export const getFormationsQuery = async ({
               millesimeSortie
             )
         )
-        .select("positionFormationRegionaleQuadrant.positionQuadrant")
+        .select((eb) =>
+          eb
+            .case()
+            .when(
+              eb("formationView.typeFamille", "in", [
+                "1ere_commune",
+                "2nde_commune",
+              ])
+            )
+            .then(
+              sql<string>`
+              COALESCE(
+                ${eb.ref("positionQuadrant")},
+                '-'
+              )`
+            )
+            .else(
+              sql<string>`
+              COALESCE(
+                ${eb.ref("positionQuadrant")},
+                ${PositionQuadrantEnum["Hors quadrant"]}
+              )`
+            )
+            .end()
+            .as("positionQuadrant")
+        )
         .groupBy("positionQuadrant");
     })
     .select((eb) => [

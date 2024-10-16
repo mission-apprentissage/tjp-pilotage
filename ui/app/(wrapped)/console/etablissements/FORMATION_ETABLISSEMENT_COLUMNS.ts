@@ -35,6 +35,8 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   capacite: "Capacité",
   premiersVoeux: "Nb de voeux",
   // indicateurs
+  tauxPression: "Tx de pression",
+  tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
   positionQuadrant: "Position dans le quadrant",
@@ -45,8 +47,6 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
     "Tx de poursuite d'études de la formation dans l'établissement",
   tauxDevenirFavorableEtablissement:
     "Tx de devenir favorable de la formation dans l'établissement",
-  tauxPression: "Tx de pression",
-  tauxRemplissage: "Tx de remplissage",
   valeurAjoutee: "Valeur ajoutée",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]
@@ -79,6 +79,8 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   capacite: "Capacité",
   premiersVoeux: "Nb de voeux",
   // indicateurs
+  tauxPression: "Tx de pression",
+  tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
   positionQuadrant: "Position dans le quadrant",
@@ -89,8 +91,6 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
     "Tx de poursuite d'études de la formation dans l'établissement",
   tauxDevenirFavorableEtablissement:
     "Tx de devenir favorable de la formation dans l'établissement",
-  tauxPression: "Tx de pression",
-  tauxRemplissage: "Tx de remplissage",
   valeurAjoutee: "Valeur ajoutée",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]
@@ -111,6 +111,8 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   capacite: "Capacité",
   premiersVoeux: "Nb de voeux",
   // indicateurs
+  tauxPression: "Tx de pression",
+  tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
   positionQuadrant: "Position dans le quadrant",
@@ -121,8 +123,6 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
     "Tx de poursuite d'études de la formation dans l'établissement",
   tauxDevenirFavorableEtablissement:
     "Tx de devenir favorable de la formation dans l'établissement",
-  tauxPression: "Tx de pression",
-  tauxRemplissage: "Tx de remplissage",
   valeurAjoutee: "Valeur ajoutée",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]

@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -177,7 +178,6 @@ export const getFormationEtablissementsQuery = async ({
       "indicateurEtablissement.valeurAjoutee",
       "anneeDebut",
       "formationHistorique.cfd as formationRenovee",
-      "positionFormationRegionaleQuadrant.positionQuadrant",
       selectTauxRemplissage("indicateurEntree").as("tauxRemplissage"),
       effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
       effectifAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as(
@@ -240,6 +240,30 @@ export const getFormationEtablissementsQuery = async ({
         else null
         end
       `.as("dateFermeture"),
+      eb
+        .case()
+        .when(
+          eb("formationView.typeFamille", "in", [
+            "1ere_commune",
+            "2nde_commune",
+          ])
+        )
+        .then(
+          sql<string>`
+            COALESCE(
+              ${eb.ref("positionQuadrant")},
+              '-'
+            )`
+        )
+        .else(
+          sql<string>`
+            COALESCE(
+              ${eb.ref("positionQuadrant")},
+              ${PositionQuadrantEnum["Hors quadrant"]}
+            )`
+        )
+        .end()
+        .as("positionQuadrant"),
     ])
     .$narrowType<{
       continuumEtablissement: { cfd: string; libelleFormation: string };

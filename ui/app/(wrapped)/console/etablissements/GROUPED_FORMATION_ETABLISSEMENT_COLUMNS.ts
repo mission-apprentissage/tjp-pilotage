@@ -74,9 +74,11 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
     color: "#C3FAD5",
     cellColor: "inherit",
     options: {
+      tauxPression: "Taux de pression",
+      tauxRemplissage: "Taux de remplissage",
+      positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",
-      positionQuadrant: "Position dans le quadrant",
       tauxDevenirFavorable: "Taux de devenir favorable régional",
       tauxInsertionEtablissement:
         "Taux d'emploi 6 mois de la formation dans l'établissement",
@@ -84,8 +86,6 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
         "Taux de poursuite d'études de la formation dans l'établissement",
       tauxDevenirFavorableEtablissement:
         "Taux de devenir favorable de la formation dans l'établissement",
-      tauxPression: "Taux de pression",
-      tauxRemplissage: "Taux de remplissage",
       valeurAjoutee: "Valeur ajoutée",
     },
   },
@@ -160,9 +160,11 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
     color: "#C3FAD5",
     cellColor: "inherit",
     options: {
+      tauxPression: "Taux de pression",
+      tauxRemplissage: "Taux de remplissage",
+      positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",
-      positionQuadrant: "Position dans le quadrant",
       tauxDevenirFavorable: "Taux de devenir favorable régional",
       tauxInsertionEtablissement:
         "Taux d'emploi 6 mois de la formation dans l'établissement",
@@ -170,8 +172,6 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
         "Taux de poursuite d'études de la formation dans l'établissement",
       tauxDevenirFavorableEtablissement:
         "Taux de devenir favorable de la formation dans l'établissement",
-      tauxPression: "Taux de pression",
-      tauxRemplissage: "Taux de remplissage",
       valeurAjoutee: "Valeur ajoutée",
     },
   },
@@ -235,9 +235,11 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
     color: "#C3FAD5",
     cellColor: "inherit",
     options: {
+      tauxPression: "Taux de pression",
+      tauxRemplissage: "Taux de remplissage",
+      positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",
-      positionQuadrant: "Position dans le quadrant",
       tauxDevenirFavorable: "Taux de devenir favorable régional",
       tauxInsertionEtablissement:
         "Taux d'emploi 6 mois de la formation dans l'établissement",
@@ -245,8 +247,6 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
         "Taux de poursuite d'études de la formation dans l'établissement",
       tauxDevenirFavorableEtablissement:
         "Taux de devenir favorable de la formation dans l'établissement",
-      tauxPression: "Taux de pression",
-      tauxRemplissage: "Taux de remplissage",
       valeurAjoutee: "Valeur ajoutée",
     },
   },

@@ -36,11 +36,13 @@ const ColonneFiltersSection = chakra(
     forcedColonnes,
     handleColonneFilters,
     trackEvent,
+    canShowQuadrantPosition = false,
   }: {
     colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
     forcedColonnes?: (keyof typeof FORMATION_COLUMNS)[];
     handleColonneFilters: (value: (keyof typeof FORMATION_COLUMNS)[]) => void;
     trackEvent: (name: string, params?: Record<string, unknown>) => void;
+    canShowQuadrantPosition?: boolean;
   }) => {
     return (
       <Flex justifyContent={"start"} direction="row">
@@ -57,13 +59,19 @@ const ColonneFiltersSection = chakra(
             (acc, [group, { color, options }]) => {
               acc[group] = {
                 color,
-                options: Object.entries(options).map(([value, label]) => ({
-                  label,
-                  value,
-                  isDisabled: forcedColonnes?.includes(
-                    value as keyof typeof FORMATION_COLUMNS
-                  ),
-                })),
+                options: Object.entries(options)
+                  .map(([value, label]) => ({
+                    label,
+                    value,
+                    isDisabled: forcedColonnes?.includes(
+                      value as keyof typeof FORMATION_COLUMNS
+                    ),
+                  }))
+                  .filter(({ label }) => {
+                    if (!canShowQuadrantPosition)
+                      return label !== FORMATION_COLUMNS.positionQuadrant;
+                    return true;
+                  }),
               };
               return acc;
             },
@@ -280,6 +288,7 @@ export default function Formations() {
               handleColonneFilters={handleColonneFilters}
               forcedColonnes={["libelleFormation"]}
               trackEvent={trackEvent}
+              canShowQuadrantPosition={canShowQuadrantPosition}
             />
           }
           onExportCsv={() => onExportCsv()}
