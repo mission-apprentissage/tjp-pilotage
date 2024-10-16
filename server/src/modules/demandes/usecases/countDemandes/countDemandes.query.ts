@@ -39,7 +39,6 @@ export const countDemandesQuery = async ({
       "academie.codeAcademie",
       "dataEtablissement.codeAcademie"
     )
-    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("user", "user.id", "demande.createdBy")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
@@ -48,6 +47,11 @@ export const countDemandesQuery = async ({
         }
         return eb;
       })
+    )
+    .leftJoin("suivi", (join) =>
+      join
+        .onRef("suivi.intentionNumero", "=", "demande.numero")
+        .on("suivi.userId", "=", user.id)
     )
     .select((eb) => sql<number>`count(${eb.ref("demande.numero")})`.as("total"))
     .select((eb) =>
@@ -89,20 +93,30 @@ export const countDemandesQuery = async ({
         0
       )`.as(DemandeStatutEnum["refusée"])
     )
-    .$call((eb) => {
-      if (codeAcademie)
-        return eb.where("academie.codeAcademie", "in", codeAcademie);
-      return eb;
-    })
-    .$call((eb) => {
-      if (codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
-      return eb;
-    })
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("demande.statut")} = ${
+            DemandeStatutEnum["brouillon"]
+          }
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as(DemandeStatutEnum["brouillon"])
+    )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("suivi.userId")} = ${user.id}
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as("suivies")
+    )
     .$call((eb) => {
       if (search)
         return eb.where((eb) =>
@@ -121,6 +135,20 @@ export const countDemandesQuery = async ({
               )
             )
           )
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeAcademie)
+        return eb.where("academie.codeAcademie", "in", codeAcademie);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
         );
       return eb;
     })

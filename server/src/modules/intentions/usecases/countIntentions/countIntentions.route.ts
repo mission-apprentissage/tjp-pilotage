@@ -14,8 +14,7 @@ export const countIntentionsRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions-perdir/lecture"),
       handler: async (request, response) => {
-        const filters = request.query;
-        const { user } = request;
+        const { user, query: filters } = request;
         const result = await countIntentionsUsecase({
           user: user!,
           ...filters,

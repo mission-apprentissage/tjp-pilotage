@@ -698,6 +698,8 @@ export interface LatestDemandeNonMaterializedView {
   discipline2FormationRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
+  capaciteScolaireColoreeActuelle: number | null;
+  capaciteApprentissageColoreeActuelle: number | null;
 }
 
 export interface LatestIntentionNonMaterializedView {

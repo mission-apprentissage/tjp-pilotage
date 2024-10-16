@@ -91,7 +91,12 @@ const DemandeItem = z.object({
 
 export const getDemandesSchema = {
   querystring: z.object({
-    statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
+    statut: z
+      .union([
+        DemandeStatutZodType.exclude(["supprimée"]),
+        z.literal("suivies"),
+      ])
+      .optional(),
     search: z.string().optional(),
     suivies: z.coerce.boolean().optional(),
     order: z.enum(["asc", "desc"]).optional(),

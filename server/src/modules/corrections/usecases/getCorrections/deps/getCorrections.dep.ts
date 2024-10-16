@@ -309,6 +309,6 @@ export const getCorrectionsQuery = async ({
       })
     ),
     campagnes: campagnes.map(cleanNull),
-    count: parseInt(corrections[0]?.count) || 0,
+    count: corrections[0]?.count || 0,
   };
 };

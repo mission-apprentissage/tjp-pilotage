@@ -18,7 +18,7 @@ const getDemandesFactory =
       activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
 
     const [demandes, campagne, filters] = await Promise.all([
-      deps.getDemandes(activeFilters, anneeCampagne),
+      deps.getDemandes({ ...activeFilters, campagne: anneeCampagne }),
       deps.getCampagne(anneeCampagne),
       deps.getFilters(activeFilters),
     ]);

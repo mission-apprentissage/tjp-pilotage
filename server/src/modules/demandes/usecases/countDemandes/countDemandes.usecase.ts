@@ -10,6 +10,7 @@ const countDemandesFactory =
   async (activeFilters: Filters) => {
     const currentCampagne = await deps.getCurrentCampagneQuery();
     const anneeCampagne = activeFilters.anneeCampagne ?? currentCampagne.annee;
+
     return await deps.countDemandesQuery({
       anneeCampagne,
       ...activeFilters,

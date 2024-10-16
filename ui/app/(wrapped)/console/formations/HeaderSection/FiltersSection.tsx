@@ -1,33 +1,43 @@
-import { Checkbox, Flex, Select, Text } from "@chakra-ui/react";
+import { Button, Checkbox, Flex, Select, Text } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
+import { useContext, useEffect } from "react";
+import { unstable_batchedUpdates } from "react-dom";
 
-import { Formations } from "@/app/(wrapped)/console/formations/types";
+import { CodeRegionFilterContext } from "@/app/layoutClient";
 import { Multiselect } from "@/components/Multiselect";
 
-import { Filters, Order } from "../types";
+import { FORMATION_COLUMNS } from "../FORMATION_COLUMNS";
+import { Filters, Formations, Order } from "../types";
 
-export const ConsoleFilters = ({
-  setCodeRegionFilter,
+export const FiltersSection = ({
   setSearchParams,
   searchParams,
   data,
 }: {
-  setCodeRegionFilter: (codeRegion: string) => void;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
+    search?: string;
     withAnneeCommune?: string;
+    columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: number;
   }) => void;
   searchParams: {
     filters?: Partial<Filters>;
+    search?: string;
     withAnneeCommune?: string;
+    columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: string;
   };
   data?: Formations;
 }) => {
   const trackEvent = usePlausible();
+
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(
+    CodeRegionFilterContext
+  );
 
   const filters = searchParams.filters ?? {};
   const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
@@ -39,15 +49,54 @@ export const ConsoleFilters = ({
     if (type === "codeRegion" && value != null)
       setCodeRegionFilter((value as string[])[0] ?? "");
   };
+
   const handleFilters = (
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
     handleFiltersContext(type, value);
-    setSearchParams({
-      page: 0,
-      filters: { ...filters, [type]: value },
-      withAnneeCommune,
+
+    let newFilters: Partial<Filters> = {
+      [type]: value,
+    };
+
+    // Valeurs par défaut pour les codes
+    switch (type) {
+      case "codeRegion":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeAcademie: undefined,
+            codeDepartement: undefined,
+            commune: undefined,
+          };
+        }
+        break;
+      case "codeAcademie":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeDepartement: undefined,
+            commune: undefined,
+          };
+        }
+        break;
+      case "codeDepartement":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            commune: undefined,
+          };
+        }
+        break;
+    }
+
+    unstable_batchedUpdates(() => {
+      setSearchParams({
+        page: 0,
+        filters: { ...filters, ...newFilters },
+        withAnneeCommune,
+      });
     });
   };
 
@@ -60,6 +109,31 @@ export const ConsoleFilters = ({
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("formations:filtre", { props: { filter_name: filterName } });
   };
+
+  const resetFilters = () => {
+    setSearchParams({
+      filters: {
+        ...filters,
+        codeRegion: [],
+        codeAcademie: [],
+        codeDepartement: [],
+        commune: [],
+        codeNiveauDiplome: [],
+        codeDispositif: [],
+        cfdFamille: [],
+        cfd: [],
+        codeNsf: [],
+      },
+      search: "",
+    });
+  };
+
+  useEffect(() => {
+    if (codeRegionFilter !== "" && !filters.codeRegion?.length) {
+      filters.codeRegion = [codeRegionFilter];
+      setSearchParams({ filters: filters, withAnneeCommune });
+    }
+  }, []);
 
   return (
     <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
@@ -127,11 +201,11 @@ export const ConsoleFilters = ({
       </Multiselect>
       <Multiselect
         display={["none", null, "flex"]}
-        onClose={filterTracker("codeDiplome")}
+        onClose={filterTracker("codeNiveauDiplome")}
         width="12rem"
-        onChange={(selected) => handleFilters("codeDiplome", selected)}
+        onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
         options={data?.filters.diplomes}
-        value={filters.codeDiplome ?? []}
+        value={filters.codeNiveauDiplome ?? []}
         menuZIndex={3}
       >
         Diplôme
@@ -170,17 +244,6 @@ export const ConsoleFilters = ({
       </Multiselect>
       <Multiselect
         display={["none", null, "flex"]}
-        width="12rem"
-        onClose={filterTracker("cpc")}
-        onChange={(selected) => handleFilters("cpc", selected)}
-        options={data?.filters.cpcs}
-        value={filters.cpc ?? []}
-        menuZIndex={3}
-      >
-        CPC
-      </Multiselect>
-      <Multiselect
-        display={["none", null, "flex"]}
         onClose={filterTracker("codeNsf")}
         width="12rem"
         onChange={(selected) => handleFilters("codeNsf", selected)}
@@ -190,7 +253,7 @@ export const ConsoleFilters = ({
       >
         Domaine de formation (NSF)
       </Multiselect>
-      <Flex w="24rem" mr="3">
+      <Flex w="24rem">
         <Checkbox
           size="lg"
           variant="accessible"
@@ -207,6 +270,15 @@ export const ConsoleFilters = ({
           </Text>
         </Checkbox>
       </Flex>
+      <Button
+        variant="externalLink"
+        border={"none"}
+        leftIcon={<Icon icon={"ri:refresh-line"} />}
+        mt={"auto"}
+        onClick={() => resetFilters()}
+      >
+        Réinitialiser les filtres
+      </Button>
     </Flex>
   );
 };

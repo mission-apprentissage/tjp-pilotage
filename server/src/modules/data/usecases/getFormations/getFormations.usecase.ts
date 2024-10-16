@@ -1,29 +1,33 @@
+import { MILLESIMES_IJ } from "shared";
+import { z } from "zod";
+
 import { getFormationsRenoveesRentreeScolaireQuery } from "../../queries/getFormationsRenovees/getFormationsRenovees";
 import { getStatsSortieParNiveauDiplomeQuery } from "../../queries/getStatsSortie/getStatsSortie";
-import { getPositionQuadrant } from "../../services/getPositionQuadrant";
-import { dependencies, Filters } from "./dependencies";
+import { getFiltersQuery } from "./deps/getFiltersQuery.dep";
+import { getFormationsQuery } from "./deps/getFormationsQuery.dep";
+import { getFormationSchema } from "./getFormations.schema";
+
+export interface Filters
+  extends z.infer<typeof getFormationSchema.querystring> {
+  millesimeSortie: (typeof MILLESIMES_IJ)[number];
+}
 
 const getFormationsFactory =
   (
     deps = {
-      findFormationsInDb: dependencies.findFormationsInDb,
-      findFiltersInDb: dependencies.findFiltersInDb,
+      getFormationsQuery,
+      getFiltersQuery,
       getStatsSortieParNiveauDiplomeQuery,
       getFormationsRenoveesRentreeScolaireQuery,
     }
   ) =>
   async (activeFilters: Partial<Filters>) => {
-    const [
-      { formations, count },
-      filters,
-      statsSortie,
-      formationsRenoveesEnseignees,
-    ] = await Promise.all([
-      deps.findFormationsInDb(activeFilters),
-      deps.findFiltersInDb(activeFilters),
-      deps.getStatsSortieParNiveauDiplomeQuery(activeFilters),
-      deps.getFormationsRenoveesRentreeScolaireQuery(activeFilters),
-    ]);
+    const [{ formations, count }, filters, formationsRenoveesEnseignees] =
+      await Promise.all([
+        deps.getFormationsQuery(activeFilters),
+        deps.getFiltersQuery(activeFilters),
+        deps.getFormationsRenoveesRentreeScolaireQuery(activeFilters),
+      ]);
 
     return {
       count,
@@ -35,10 +39,6 @@ const getFormationsFactory =
         )
           ? formation.formationRenovee
           : undefined,
-        positionQuadrant: getPositionQuadrant(
-          formation,
-          statsSortie[formation.codeNiveauDiplome ?? ""] ?? {}
-        ),
       })),
     };
   };
