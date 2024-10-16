@@ -228,45 +228,52 @@ export const Nav = () => {
         >
           Panorama
         </NavMenuButton>
-        <Portal>
-          <MenuList
-            p="0"
-            borderTop="unset"
-            onMouseEnter={onMenuPanoramaOpen}
-            onMouseLeave={onMenuPanoramaClose}
-            zIndex={"dropdown"}
-          >
-            <MenuItem p="0">
-              <NavMenuLink href="/panorama/region" segment="panorama/region">
-                Région
-              </NavMenuLink>
-            </MenuItem>
+        <MenuList
+          p="0"
+          borderTop="unset"
+          onMouseEnter={onMenuPanoramaOpen}
+          onMouseLeave={onMenuPanoramaClose}
+        >
+          <MenuItem p="0">
+            <NavMenuLink href="/panorama/region" segment="panorama/region">
+              Région
+            </NavMenuLink>
+          </MenuItem>
+          <MenuItem p="0">
+            <NavMenuLink
+              href="/panorama/departement"
+              segment="panorama/departement"
+            >
+              Département
+            </NavMenuLink>
+          </MenuItem>
+          <MenuItem p="0">
+            <NavMenuLink
+              href="/panorama/etablissement"
+              segment="panorama/etablissement"
+            >
+              Établissement
+            </NavMenuLink>
+          </MenuItem>
+          {feature.panoramaFormation && (
             <MenuItem p="0">
               <NavMenuLink
-                href="/panorama/departement"
-                segment="panorama/departement"
+                href="/panorama/domaine-de-formation"
+                segment="panorama/domaine-de-formation"
               >
-                Département
+                Domaine de formation
               </NavMenuLink>
             </MenuItem>
-            <MenuItem p="0">
-              <NavMenuLink
-                href="/panorama/etablissement"
-                segment="panorama/etablissement"
-              >
-                Établissement
-              </NavMenuLink>
-            </MenuItem>
-            <MenuItem p="0">
-              <NavMenuLink
-                href="/panorama/lien-metier-formation"
-                segment="panorama/lien-metier-formation"
-              >
-                Lien métier formation
-              </NavMenuLink>
-            </MenuItem>
-          </MenuList>
-        </Portal>
+          )}
+          <MenuItem p="0">
+            <NavMenuLink
+              href="/panorama/lien-metier-formation"
+              segment="panorama/lien-metier-formation"
+            >
+              Lien métier formation
+            </NavMenuLink>
+          </MenuItem>
+        </MenuList>
       </Menu>
       <Menu gutter={0} matchWidth={true} isOpen={isMenuConsoleOpen}>
         <NavMenuButton
