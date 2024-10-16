@@ -13,7 +13,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
     options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS>;
   }
 > = {
-  // rentrée scolaire
+  // Rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
     cellColor: "inherit",
@@ -21,7 +21,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
       rentreeScolaire: "Rentrée scolaire",
     },
   },
-  // établissement
+  // Établissement
   ["établissement"]: {
     color: themeDefinition.colors.purpleGlycine[950],
     cellColor: "inherit",
@@ -38,7 +38,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
       uai: "UAI",
     },
   },
-  // formation
+  // Formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
     cellColor: "inherit",
@@ -56,7 +56,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
       codeDispositif: "Code dispositif",
     },
   },
-  // effectifs
+  // Effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
     cellColor: "inherit",
@@ -69,7 +69,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
       premiersVoeux: "Nb de voeux",
     },
   },
-  // indicateurs
+  // Indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
     cellColor: "inherit",
@@ -105,7 +105,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
     options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL>;
   }
 > = {
-  // rentrée scolaire
+  // Rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
     cellColor: "inherit",
@@ -113,7 +113,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
       rentreeScolaire: "Rentrée scolaire",
     },
   },
-  // établissement
+  // Établissement
   ["établissement"]: {
     color: themeDefinition.colors.purpleGlycine[950],
     cellColor: "inherit",
@@ -127,7 +127,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
       uai: "UAI",
     },
   },
-  // formation
+  // Formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
     cellColor: "inherit",
@@ -142,7 +142,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
       "continuum.libelleFormation": "Diplôme historique",
     },
   },
-  // effectifs
+  // Effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
     cellColor: "inherit",
@@ -155,7 +155,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
       premiersVoeux: "Nb de voeux",
     },
   },
-  // indicateurs
+  // Indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
     cellColor: "inherit",
@@ -191,7 +191,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
     options: Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT>;
   }
 > = {
-  // rentrée scolaire
+  // Rentrée scolaire
   ["rentrée scolaire"]: {
     color: themeDefinition.colors.grey[950],
     cellColor: "inherit",
@@ -199,7 +199,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
       rentreeScolaire: "Rentrée scolaire",
     },
   },
-  // établissement
+  // Établissement
   ["établissement"]: {
     color: themeDefinition.colors.purpleGlycine[950],
     cellColor: "#FEF3FD",
@@ -208,7 +208,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
       commune: "Commune",
     },
   },
-  // formation
+  // Formation
   ["formation"]: {
     color: themeDefinition.colors.bluefrance[950],
     cellColor: "inherit",
@@ -217,7 +217,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
       libelleFormation: "Formation",
     },
   },
-  // effectifs
+  // Effectifs
   ["effectifs"]: {
     color: "#FEE9E5",
     cellColor: "inherit",
@@ -230,7 +230,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
       premiersVoeux: "Nb de voeux",
     },
   },
-  // indicateurs
+  // Indicateurs
   ["indicateurs"]: {
     color: "#C3FAD5",
     cellColor: "inherit",

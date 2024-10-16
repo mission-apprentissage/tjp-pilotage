@@ -2,10 +2,13 @@ import { client } from "@/api.client";
 import { ExportColumns } from "@/utils/downloadExport";
 
 export const FORMATION_ETABLISSEMENT_COLUMNS = {
-  // rentrée scolaire
+  // Rentrée scolaire
   rentreeScolaire: "RS",
-  // établissement
+  // Formation établissement
   libelleEtablissement: "Nom d'établissement",
+  libelleDispositif: "Dispositif",
+  libelleFormation: "Formation",
+  // Établissement
   commune: "Commune",
   codeDepartement: "Code Département",
   libelleDepartement: "Département",
@@ -15,9 +18,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   libelleRegion: "Région",
   secteur: "Secteur",
   uai: "UAI",
-  // formation
-  libelleDispositif: "Dispositif",
-  libelleFormation: "Formation",
+  // Formation
   libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",
@@ -27,14 +28,14 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   codeDispositif: "Code dispositif",
-  // effectifs
+  // Effectifs
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
   capacite: "Capacité",
   premiersVoeux: "Nb de voeux",
-  // indicateurs
+  // Indicateurs
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
@@ -53,32 +54,34 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
 >;
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
-  // établissement
+  // Rentrée scolaire
+  rentreeScolaire: "RS",
+  // Formation établissement
   libelleEtablissement: "Nom d'établissement",
+  libelleDispositif: "Dispositif",
+  libelleFormation: "Formation",
+  // Établissement
   commune: "Commune",
   libelleDepartement: "Département",
   libelleAcademie: "Académie",
   libelleRegion: "Région",
   secteur: "Secteur",
   uai: "UAI",
-  // formation
-  libelleDispositif: "Dispositif",
-  libelleFormation: "Formation",
+  // Formation
   libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
   libelleNsf: "Domaine de formation (NSF)",
   "continuum.libelleFormation": "Diplôme historique",
-  // effectifs
-  rentreeScolaire: "RS",
+  // Effectifs
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
   effectifEntree: "Effectif en entrée",
   capacite: "Capacité",
   premiersVoeux: "Nb de voeux",
-  // indicateurs
+  // Indicateurs
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
@@ -97,20 +100,21 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
 >;
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
-  // établissement
+  // Rentrée scolaire
+  rentreeScolaire: "RS",
+  // Formation établissement
   libelleEtablissement: "Nom d'établissement",
-  commune: "Commune",
-  // formation
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
-  // effectifs
-  rentreeScolaire: "RS",
+  // Établissement
+  commune: "Commune",
+  // Effectifs
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
   capacite: "Capacité",
   premiersVoeux: "Nb de voeux",
-  // indicateurs
+  // Indicateurs
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
