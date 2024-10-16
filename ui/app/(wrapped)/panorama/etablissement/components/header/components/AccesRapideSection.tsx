@@ -1,54 +1,6 @@
-import {
-  forwardRef,
-  GridItem,
-  HStack,
-  Link,
-  LinkProps,
-  StackDivider,
-} from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
+import { GridItem, HStack, StackDivider } from "@chakra-ui/react";
 
-type ShtLinkProps = LinkProps & {
-  label: string;
-  iconLeft?: string;
-  iconRight?: string;
-};
-
-const ShortLink = forwardRef<ShtLinkProps, "a">(
-  ({ label, href, iconLeft, iconRight, target, ...rest }, ref) => (
-    <Link
-      variant={"link"}
-      mx={"12px"}
-      color={"bluefrance"}
-      fontWeight={"bold"}
-      href={href}
-      target={target}
-      display={"flex"}
-      flexDirection={"row"}
-      alignItems={"center"}
-      ref={ref}
-      {...rest}
-    >
-      {iconLeft && (
-        <Icon
-          icon={iconLeft}
-          height={"16px"}
-          width={"16px"}
-          style={{ marginRight: "8px" }}
-        />
-      )}
-      {label}
-      {iconRight && (
-        <Icon
-          icon={iconRight}
-          height={"16px"}
-          width={"16px"}
-          style={{ marginLeft: "8px" }}
-        />
-      )}
-    </Link>
-  )
-);
+import { ShortLink } from "@/components/ShortLink";
 
 export const AccesRapideSection = ({ uai }: { uai: string }) => {
   return (

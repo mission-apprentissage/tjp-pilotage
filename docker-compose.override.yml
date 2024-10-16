@@ -6,8 +6,6 @@ services:
         - DIR=dev
     volumes:
       - pilotage_nginx_data:/data:z
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     depends_on:
       - smtp
 

@@ -52,8 +52,21 @@ export const formatNumber = (
   return Number.parseFloat(value.toFixed(numberOfDigits));
 };
 
+export const formatNumberToString = (
+  value?: number | null,
+  numberOfDigits: number = 0,
+  nullValue: string = "0"
+): string => {
+  if (value === undefined || value === null || Number.isNaN(value))
+    return nullValue;
+  return new Intl.NumberFormat("fr-FR", {
+    style: "decimal",
+    maximumFractionDigits: numberOfDigits,
+  }).format(value);
+};
+
 export const formatPercentage = (
-  value?: number,
+  value?: number | null,
   numberOfDigits: number = 0,
   nullValue: string = "0 %"
 ): string => {

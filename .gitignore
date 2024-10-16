@@ -142,7 +142,6 @@ setEnv.sh
 **/node_modules/
 yarn-error.log
 
-
 # Builds
 dist
 build
@@ -161,3 +160,6 @@ sonar.sh
 
 # Vs code config
 .vscode/terminals.json
+
+# Cursor
+.cursorrules

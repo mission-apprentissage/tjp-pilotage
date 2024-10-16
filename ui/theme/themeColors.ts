@@ -40,6 +40,9 @@ export const themeColors = {
     "975_hover": "#d7dffb",
     "975_active": "#c3cffa",
   },
+  blueCumulus: {
+    526: "#417dc4",
+  },
   bluefrance: {
     113: "#000091",
     "113_hover": "#1212ff",
@@ -165,6 +168,7 @@ export const themeColors = {
     850: "#FCC0B0",
     "850_hover": "#fb926b",
     "850_active": "#fa7a35",
+    950: "#fee9e5",
   },
   pilotage: {
     red: "#FA9293",
@@ -178,6 +182,7 @@ export const themeColors = {
   },
   yellowMoutarde: {
     348: "#695240",
+    679: "#c3992a",
     950: "#feebd0",
   },
   purpleGlycine: {

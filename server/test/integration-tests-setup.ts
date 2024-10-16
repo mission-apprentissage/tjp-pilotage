@@ -96,11 +96,24 @@ export const spawnPostgresDb = async () => {
     .up();
 };
 
-export const stopPostresDb = async () => {
-  await kdb.destroy();
+const isInWatchMode = () => {
+  // Jest adds specific arguments when running in watch mode
+  const cliArgs = process.argv.join(" ");
 
-  if (dockerPostgresInstance) {
-    await dockerPostgresInstance.down({ timeout: 10000 });
+  return (
+    (cliArgs.includes("--watch") || cliArgs.includes("--watchAll")) &&
+    process.env.JEST_WORKER_ID === "1"
+  );
+};
+
+export const stopPostresDb = async () => {
+  if (!isInWatchMode()) {
+    console.log("Destruction de la connexion à la DB");
+    await kdb.destroy();
+
+    if (dockerPostgresInstance) {
+      await dockerPostgresInstance.down({ timeout: 10000 });
+    }
   }
 };
 
