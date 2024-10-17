@@ -61,6 +61,7 @@ export const formatPercentage = (
     return nullValue;
   return new Intl.NumberFormat("fr-FR", {
     style: "percent",
+    minimumFractionDigits: numberOfDigits,
     maximumFractionDigits: numberOfDigits,
   }).format(value);
 };

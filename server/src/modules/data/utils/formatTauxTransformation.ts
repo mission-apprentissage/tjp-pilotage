@@ -8,5 +8,5 @@ export const formatTauxTransformation = (
 
   if (effectif === 0) return 0;
 
-  return Math.round((transformes / effectif) * 10000) / 100;
+  return transformes / effectif;
 };
