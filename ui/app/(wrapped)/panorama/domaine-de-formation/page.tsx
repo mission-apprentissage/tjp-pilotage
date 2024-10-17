@@ -7,7 +7,7 @@ const fetchDefaultNsf = async () => {
   const headersList = Object.fromEntries(headers().entries());
   try {
     return await client
-      .ref("[GET]/domaines-de-formation")
+      .ref("[GET]/domaine-de-formation")
       .query({ query: { search: undefined } }, { headers: headersList });
   } catch (e) {
     return [];

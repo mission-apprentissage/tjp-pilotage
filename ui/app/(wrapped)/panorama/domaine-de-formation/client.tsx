@@ -52,9 +52,11 @@ export const PanoramaFormationClient = ({
     if (selected) {
       setSelectedNsf(selected);
       if (selected.type === "formation") {
-        router.push(`/formation/${selected.nsf}?cfd=${selected.value}`);
+        router.push(
+          `/domaine-de-formation/${selected.nsf}?cfd=${selected.value}`
+        );
       } else {
-        router.push(`/formation/${selected.value}`);
+        router.push(`/domaine-de-formation/${selected.value}`);
       }
     }
   };
