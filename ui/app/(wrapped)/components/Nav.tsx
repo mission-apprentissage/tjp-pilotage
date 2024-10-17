@@ -11,9 +11,9 @@ import {
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react";
+import { usePlausible } from "next-plausible";
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
-import { usePlausible } from "next-plausible";
 import { HTMLAttributeAnchorTarget, ReactNode, useContext } from "react";
 import { hasPermission, hasRole, isUserInRegionsExperimentation } from "shared";
 
@@ -254,6 +254,16 @@ export const Nav = () => {
               Établissement
             </NavMenuLink>
           </MenuItem>
+          {feature.panoramaFormation && (
+            <MenuItem p="0">
+              <NavMenuLink
+                href="/panorama/domaine-de-formation"
+                segment="panorama/domaine-de-formation"
+              >
+                Domaine de formation
+              </NavMenuLink>
+            </MenuItem>
+          )}
           <MenuItem p="0">
             <NavMenuLink
               href="/panorama/lien-metier-formation"
