@@ -121,8 +121,26 @@ export const demandeValidators: Record<
       isTypeTransfert(demande.typeDemande) &&
       isPositiveNumber(demande.capaciteScolaireActuelle) &&
       demande.capaciteScolaire >= demande.capaciteScolaireActuelle
-    )
-      return "La capacité scolaire devrait être inférieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage";
+    ) {
+      if (
+        !isPositiveNumber(demande.capaciteScolaireActuelle) ||
+        !isPositiveNumber(demande.capaciteApprentissageActuelle) ||
+        !isPositiveNumber(demande.capaciteScolaire) ||
+        !isPositiveNumber(demande.capaciteApprentissage)
+      ) {
+        return "Un transfert inclue toujours un passage de scolaire vers apprentissage ou d'apprentissage vers scolaire";
+      }
+      if (
+        (demande.capaciteScolaire >= demande.capaciteScolaireActuelle &&
+          demande.capaciteApprentissage >=
+            demande.capaciteApprentissageActuelle) ||
+        (demande.capaciteScolaire <= demande.capaciteScolaireActuelle &&
+          demande.capaciteApprentissage <=
+            demande.capaciteApprentissageActuelle)
+      ) {
+        return "Si un transfert est effectué, la capacité scolaire ou l'apprentissage doivent être modifiée. Dans le cas d'un transfert vers l'apprentissage, la capacité en apprentissage devrait être supérieure à la capacité actuelle. Dans le cas d'un transfert vers le scolaire, la capacité scolaire devrait être supérieur à la capacité actuelle.";
+      }
+    }
     if (
       isTypeAjustement(demande.typeDemande) &&
       isPositiveNumber(demande.capaciteScolaireActuelle) &&
@@ -227,16 +245,6 @@ export const demandeValidators: Record<
       demande.capaciteApprentissage > demande.capaciteApprentissageActuelle
     )
       return "La capacité en apprentissage devrait être inférieure ou égale à la capacité actuelle dans le cas d'une diminution";
-
-    if (isTypeTransfert(demande.typeDemande)) {
-      if (demande.capaciteApprentissage === 0)
-        return "La capacité en apprentissage devrait être supérieure à 0 dans le cas d'un transfert vers l'apprentissage";
-      if (
-        isPositiveNumber(demande.capaciteApprentissageActuelle) &&
-        demande.capaciteApprentissage <= demande.capaciteApprentissageActuelle
-      )
-        return "La capacité en apprentissage devrait être supérieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage";
-    }
   },
   /**
    *
