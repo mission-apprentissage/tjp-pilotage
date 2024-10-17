@@ -1,6 +1,7 @@
 import { expressionBuilder } from "kysely";
-import { CURRENT_RENTREE, FIRST_ANNEE_CAMPAGNE } from "shared";
-import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
+import { CURRENT_RENTREE } from "shared";
+import { getCampagneFromRentreeScolaire } from "shared/time/campagne";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import { DB } from "../../../db/db";
 import { isInDenominateurTauxTransfo } from "../../utils/isInDenominateurTauxTransfo";
@@ -14,7 +15,7 @@ export const genericOnConstatRentree = ({
   codeRegion,
   codeAcademie,
   codeDepartement,
-  campagne = FIRST_ANNEE_CAMPAGNE,
+  campagne,
   secteur,
 }: {
   codeNiveauDiplome?: string[];
@@ -58,10 +59,9 @@ export const genericOnConstatRentree = ({
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
             eb.val(
-              getMillesimeFromRentreeScolaire({
-                rentreeScolaire: CURRENT_RENTREE,
-                offset: 0,
-              })
+              getMillesimeFromCampagne(
+                campagne ?? getCampagneFromRentreeScolaire(rentree)
+              )
             )
           ),
         ])

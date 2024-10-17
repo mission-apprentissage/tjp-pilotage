@@ -11,7 +11,7 @@ import {
   isInPerimetreIJDepartement,
   isInPerimetreIJRegion,
 } from "../../../utils/isInPerimetreIJ";
-import { Filters } from "../getStatsPilotageIntentions.usecase";
+import { Filters } from "./getStatsPilotageIntentions.query";
 
 export const getFiltersQuery = async ({
   statut,

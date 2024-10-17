@@ -1,6 +1,10 @@
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import { dependencies, Filters } from "./dependencies";
 
+interface ActiveFilters extends Omit<Filters, "campagne"> {
+  campagne?: string;
+}
+
 const getStatsRestitutionIntentionsFactory =
   (
     deps = {
@@ -9,12 +13,12 @@ const getStatsRestitutionIntentionsFactory =
       getCurrentCampagneQuery: getCurrentCampagneQuery,
     }
   ) =>
-  async (activeFilters: Filters) => {
+  async (activeFilters: ActiveFilters) => {
     const anneeCampagne =
       activeFilters.campagne ?? (await deps.getCurrentCampagneQuery()).annee;
     const countRestitutionIntentions = deps.getStatsRestitutionIntentionsQuery({
-      campagne: anneeCampagne,
       ...activeFilters,
+      campagne: anneeCampagne,
     });
 
     return await countRestitutionIntentions;
