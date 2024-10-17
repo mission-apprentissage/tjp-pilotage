@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { z } from "zod";
 
@@ -164,7 +165,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
-      "positionFormationRegionaleQuadrant.positionQuadrant",
+      sql<string>`
+        COALESCE(
+        ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
+        ${eb.val(PositionQuadrantEnum["Hors quadrant"])}
+      )`.as("positionQuadrant"),
     ])
     .$call((eb) => {
       if (search)
