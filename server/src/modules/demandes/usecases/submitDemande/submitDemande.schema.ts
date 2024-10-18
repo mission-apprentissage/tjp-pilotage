@@ -1,4 +1,5 @@
 import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
+import { unEscapeString } from "shared/utils/escapeString";
 import { z } from "zod";
 
 export const submitDemandeSchema = {
@@ -16,7 +17,10 @@ export const submitDemandeSchema = {
       compensationCodeDispositif: z.string().optional(),
       compensationRentreeScolaire: z.coerce.number().optional(),
       motif: z.array(z.string()).optional(),
-      autreMotif: z.string().optional(),
+      autreMotif: z
+        .string()
+        .optional()
+        .transform((motif) => unEscapeString(motif)),
       libelleColoration: z.string().optional(),
       coloration: z.boolean(),
       amiCma: z.boolean().optional(),
@@ -24,7 +28,10 @@ export const submitDemandeSchema = {
       amiCmaValideAnnee: z.string().optional(),
       amiCmaEnCoursValidation: z.boolean().optional(),
       poursuitePedagogique: z.boolean().optional(),
-      commentaire: z.string().optional(),
+      commentaire: z
+        .string()
+        .optional()
+        .transform((commentaire) => unEscapeString(commentaire)),
       mixte: z.boolean().optional(),
       capaciteScolaireActuelle: z.coerce.number().optional(),
       capaciteScolaire: z.coerce.number().optional(),
@@ -34,7 +41,10 @@ export const submitDemandeSchema = {
       capaciteApprentissageColoree: z.coerce.number().optional(),
       statut: DemandeStatutZodType.exclude(["supprimée"]),
       motifRefus: z.array(z.string()).optional(),
-      autreMotifRefus: z.string().optional(),
+      autreMotifRefus: z
+        .string()
+        .optional()
+        .transform((motif) => unEscapeString(motif)),
       recrutementRH: z.boolean().optional(),
       nbRecrutementRH: z.coerce.number().optional(),
       discipline1RecrutementRH: z.string().optional(),
