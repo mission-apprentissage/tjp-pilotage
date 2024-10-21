@@ -31,6 +31,8 @@ const getDemandesRestitutionIntentionsFactory =
       deps.getFilters({ ...activeFilters, campagne: anneeCampagne }),
     ]);
 
+    console.log(demandes);
+
     return {
       count,
       filters,

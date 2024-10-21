@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
@@ -122,9 +123,30 @@ export const getDemandesRestitutionIntentionsQuery = async ({
             eb.ref("dataEtablissement.codeRegion")
           ),
           eb(
-            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
+            "positionFormationRegionaleQuadrant.millesimeSortie",
             "=",
-            eb.val(getMillesimeFromCampagne(campagne))
+            getMillesimeFromCampagne(campagne)
+          ),
+        ])
+      )
+    )
+    .leftJoin("tauxIJNiveauDiplomeRegion", (join) =>
+      join.on((eb) =>
+        eb.and([
+          eb(
+            eb.ref("tauxIJNiveauDiplomeRegion.codeRegion"),
+            "=",
+            eb.ref("dataEtablissement.codeRegion")
+          ),
+          eb(
+            eb.ref("tauxIJNiveauDiplomeRegion.codeNiveauDiplome"),
+            "=",
+            eb.ref("dataFormation.codeNiveauDiplome")
+          ),
+          eb(
+            eb.ref("tauxIJNiveauDiplomeRegion.millesimeSortie"),
+            "=",
+            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie")
           ),
         ])
       )
@@ -170,6 +192,24 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
         ${eb.val(PositionQuadrantEnum["Hors quadrant"])}
       )`.as("positionQuadrant"),
+      jsonBuildObject({
+        moyenneInsertionCfdRegion: eb.ref(
+          "positionFormationRegionaleQuadrant.moyenneInsertionCfdRegion"
+        ),
+        moyennePoursuiteEtudeCfdRegion: eb.ref(
+          "positionFormationRegionaleQuadrant.moyennePoursuiteEtudeCfdRegion"
+        ),
+        millesimeSortie: eb.ref(
+          "positionFormationRegionaleQuadrant.millesimeSortie"
+        ),
+      }).as("positionFormationRegionaleQuadrant"),
+      jsonBuildObject({
+        tauxInsertion6mois: eb.ref(
+          "tauxIJNiveauDiplomeRegion.tauxInsertion6mois"
+        ),
+        tauxPoursuite: eb.ref("tauxIJNiveauDiplomeRegion.tauxPoursuite"),
+        millesimeSortie: eb.ref("tauxIJNiveauDiplomeRegion.millesimeSortie"),
+      }).as("tauxIJNiveauDiplomeRegion"),
     ])
     .$call((eb) => {
       if (search)
@@ -335,6 +375,19 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     .where(isRestitutionIntentionVisible({ user }))
     .offset(offset)
     .limit(limit)
+    .$call((q) => {
+      const params = q.compile().parameters;
+      let str = q.compile().sql;
+      params.forEach((p, i) => {
+        str = str.replace(
+          `$${i + 1}`,
+          typeof p === "string" ? `'${p}'` : "" + p
+        );
+      });
+
+      console.log(str);
+      return q;
+    })
     .execute();
 
   return {
