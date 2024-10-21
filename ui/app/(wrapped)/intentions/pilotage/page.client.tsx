@@ -140,6 +140,17 @@ export const PilotageNationalClient = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const tauxTransfoDefinitionModalTracker = (open: boolean) => {
+    trackEvent("pilotage-transformation:definition-modal", {
+      props: { open },
+    });
+  };
+
+  const onOpenTauxTransfoDefinition = () => {
+    tauxTransfoDefinitionModalTracker(true);
+    onOpen();
+  };
+
   return (
     <Box bg="blueecume.950">
       <DefinitionTauxTransfoModal isOpen={isOpen} onClose={onClose} />
@@ -157,7 +168,7 @@ export const PilotageNationalClient = () => {
             filters={filters}
             setFilters={setFilters}
             filterTracker={filterTracker}
-            onOpenTauxTransfoDefinition={onOpen}
+            onOpenTauxTransfoDefinition={onOpenTauxTransfoDefinition}
             isLoading={isLoadingStats}
           />
           <MainSection
