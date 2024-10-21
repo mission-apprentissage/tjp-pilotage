@@ -221,6 +221,16 @@ export const QuadrantSection = ({
     });
   };
 
+  const trackRestitutionsLink = () => {
+    trackEvent("pilotage-transformation:quadrant-link-restitution");
+  };
+
+  const trackRestitutionsLinkFromQuadrantSelection = () => {
+    trackEvent(
+      "pilotage-transformation:quadrant-link-restitution-from-selection"
+    );
+  };
+
   const shouldShowQuadrant = !(
     (!mergedFilters.codeDepartement &&
       !mergedFilters.codeAcademie &&
@@ -308,6 +318,7 @@ export const QuadrantSection = ({
             },
           })}
           color={"bluefrance.113"}
+          onClick={() => trackRestitutionsLink()}
         >
           Voir la liste des demandes de transformation correspondantes
           <ArrowForwardIcon ms={2} />
@@ -413,13 +424,20 @@ export const QuadrantSection = ({
                 variant="newInput"
                 maxW={250}
                 value={filters.type ?? ""}
-                onChange={(item) =>
+                onChange={(item) => {
+                  trackEvent("pilotage-transformation:quadrant-filter", {
+                    props: {
+                      type: "type",
+                      value: item.target.value,
+                    },
+                  });
+
                   setFilters({
                     ...filters,
                     type: (item.target.value ||
                       undefined) as typeof filters.type,
-                  })
-                }
+                  });
+                }}
               >
                 <option value="" style={{ color: "black" }}>
                   Toutes transformations
@@ -452,6 +470,13 @@ export const QuadrantSection = ({
                 <RadioGroup
                   as={Stack}
                   onChange={(v) => {
+                    trackEvent("pilotage-transformation:quadrant-filter", {
+                      props: {
+                        type: "tauxPression",
+                        value: v,
+                      },
+                    });
+
                     setFilters({
                       ...filters,
                       tauxPression: (v || undefined) as "eleve" | "faible",
@@ -689,6 +714,7 @@ export const QuadrantSection = ({
                       filters
                     )}
                     mb={4}
+                    onClick={() => trackRestitutionsLinkFromQuadrantSelection()}
                   >
                     Voir le détail des demandes
                   </Button>
