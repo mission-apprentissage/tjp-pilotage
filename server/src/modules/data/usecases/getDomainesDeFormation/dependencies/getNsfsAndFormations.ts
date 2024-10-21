@@ -1,6 +1,6 @@
 import { sql } from "kysely";
-
 import { CURRENT_RENTREE } from "shared";
+
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";

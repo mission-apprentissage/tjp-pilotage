@@ -1,8 +1,10 @@
 "use client";
 
-import { getNsfIcon } from "@/utils/getNsfIcon";
 import { Flex, Heading, Icon, Img } from "@chakra-ui/react";
 import { Icon as Iconify } from "@iconify/react";
+
+import { getNsfIcon } from "@/utils/getNsfIcon";
+
 import { AccesRapide } from "./AccesRapide";
 
 export const HeaderSection = ({

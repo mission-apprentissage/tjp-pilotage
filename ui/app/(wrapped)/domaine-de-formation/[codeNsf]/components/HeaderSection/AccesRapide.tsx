@@ -1,5 +1,6 @@
-import { ShortLink } from "@/components/ShortLink";
 import { HStack, StackDivider } from "@chakra-ui/react";
+
+import { ShortLink } from "@/components/ShortLink";
 
 export const AccesRapide = () => {
   return (

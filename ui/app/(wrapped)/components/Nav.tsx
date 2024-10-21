@@ -11,9 +11,9 @@ import {
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react";
-import { usePlausible } from "next-plausible";
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
+import { usePlausible } from "next-plausible";
 import { HTMLAttributeAnchorTarget, ReactNode, useContext } from "react";
 import { hasPermission, hasRole, isUserInRegionsExperimentation } from "shared";
 

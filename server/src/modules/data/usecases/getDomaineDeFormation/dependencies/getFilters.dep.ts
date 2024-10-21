@@ -10,6 +10,7 @@ export const getFilters = async () => {
     .selectFrom("region")
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where(isInPerimetreIJRegion)
+    .orderBy("region.libelleRegion", "asc")
     .execute();
 
   const academies = await kdb
@@ -20,6 +21,7 @@ export const getFilters = async () => {
       "academie.codeRegion as codeRegion",
     ])
     .where(isInPerimetreIJAcademie)
+    .orderBy("academie.libelleAcademie", "asc")
     .execute();
 
   const departements = await kdb

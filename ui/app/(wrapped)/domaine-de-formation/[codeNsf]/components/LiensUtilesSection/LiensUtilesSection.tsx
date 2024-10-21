@@ -1,6 +1,5 @@
 "use client";
 
-import { liensDares } from "@/utils/liensDares";
 import {
   Box,
   Container,
@@ -10,6 +9,9 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
+
+import { liensDares } from "@/utils/liensDares";
+
 import { InfoCard } from "../../../../panorama/components/InfoCard";
 
 const useLiensUtilesSection = () => {

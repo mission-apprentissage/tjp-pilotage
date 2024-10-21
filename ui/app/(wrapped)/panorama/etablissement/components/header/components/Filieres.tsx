@@ -1,4 +1,3 @@
-import { getNsfIcon } from "@/utils/getNsfIcon";
 import {
   Flex,
   GridItem,
@@ -9,6 +8,9 @@ import {
 } from "@chakra-ui/react";
 import { Icon as Iconify } from "@iconify/react";
 import { useEffect, useState } from "react";
+
+import { getNsfIcon } from "@/utils/getNsfIcon";
+
 import { Nsfs } from "../types";
 
 const NUMBER_OF_MAX_FILIERES_TO_DISPLAY = 6;

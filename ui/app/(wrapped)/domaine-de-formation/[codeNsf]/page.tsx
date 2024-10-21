@@ -1,11 +1,9 @@
-import { client } from "@/api.client";
-import { Container, Flex } from "@chakra-ui/react";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { FiltersSection } from "./components/FiltersSection/FiltersSection";
-import { HeaderSection } from "./components/HeaderSection/HeaderSection";
-import { LiensUtilesSection } from "./components/LiensUtilesSection/LiensUtilesSection";
-import { FormationContextProvider } from "./context/formationContext";
+
+import { client } from "@/api.client";
+
+import { PageDomaineDeFormationClient } from "./client";
 
 type Params = {
   params: {
@@ -45,17 +43,12 @@ export default async function PageDomaineDeFormation({
     return notFound();
   }
 
-  const libelleNsf = results?.libelleNsf;
-
   return (
-    <FormationContextProvider>
-      <Flex bgColor={"bluefrance.975"}>
-        <Container mt={"44px"} maxW={"container.xl"}>
-          <HeaderSection codeNsf={codeNsf} libelleNsf={libelleNsf} />
-          <FiltersSection />
-        </Container>
-      </Flex>
-      <LiensUtilesSection />
-    </FormationContextProvider>
+    <PageDomaineDeFormationClient
+      libelleNsf={results.libelleNsf}
+      codeNsf={codeNsf}
+      filters={results.filters}
+      nsfs={nsfs}
+    />
   );
 }

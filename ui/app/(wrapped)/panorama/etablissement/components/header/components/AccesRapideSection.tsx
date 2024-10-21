@@ -1,5 +1,6 @@
-import { ShortLink } from "@/components/ShortLink";
 import { GridItem, HStack, StackDivider } from "@chakra-ui/react";
+
+import { ShortLink } from "@/components/ShortLink";
 
 export const AccesRapideSection = ({ uai }: { uai: string }) => {
   return (

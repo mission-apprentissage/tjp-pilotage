@@ -2,6 +2,7 @@ import { Box, Divider, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
 
 import { liensDares } from "@/utils/liensDares";
+
 import { InfoCard } from "../../../../components/InfoCard";
 import { AnalyseDetailleeType } from "../../../context/etablissementContext";
 import { Filters } from "../../analyse-detaillee/types";
