@@ -17,6 +17,7 @@ import { formatArray, formatBoolean, formatDate } from "@/utils/formatUtils";
 import { formatDepartementLibelleWithCodeDepartement } from "../../../../../../../../utils/formatLibelle";
 import {
   getMotifLabel,
+  hasMotifAutre,
   MotifLabel,
 } from "../../../../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../../../../utils/typeDemandeUtils";
@@ -31,7 +32,9 @@ const formatDifferenceCapacite = (difference?: number) => {
 const formatMotifArray = (values?: Array<string | undefined>): string => {
   if (!values) return "Aucun";
   return formatArray(
-    values.map((motif) => getMotifLabel({ motif: motif as MotifLabel }))
+    values
+      .filter((motif) => !hasMotifAutre([motif]))
+      .map((motif) => getMotifLabel({ motif: motif as MotifLabel }))
   );
 };
 
@@ -261,6 +264,11 @@ export const SyntheseSection = ({
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text fontSize={14}>{formatMotifArray(intention.motif)}</Text>
           </Flex>
+          {hasMotifAutre(intention.motif) && (
+            <Flex direction={"row"} gap={4} justify={"space-between"}>
+              <Text fontSize={14}>Autre motif : {intention.autreMotif!}</Text>
+            </Flex>
+          )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Heading as={"h6"} fontSize={14}>
