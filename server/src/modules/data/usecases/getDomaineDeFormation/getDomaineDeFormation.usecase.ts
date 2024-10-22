@@ -1,18 +1,27 @@
 import Boom from "@hapi/boom";
 
-import { getFilters, getNsf } from "./dependencies";
+import { getFilters, getFormations, getNsf } from "./dependencies";
+import { QueryFilters } from "./getDomaineDeFormation.schema";
 
 const getDomaineDeFormationFactory =
   (
     deps = {
       getNsf,
       getFilters,
+      getFormations,
     }
   ) =>
-  async (codeNsf: string) => {
-    const [nsf, filters] = await Promise.all([
+  async (codeNsf: string, queryFilters: QueryFilters) => {
+    const { codeRegion, codeDepartement, codeAcademie } = queryFilters;
+    const [nsf, filters, formations] = await Promise.all([
       deps.getNsf(codeNsf),
       deps.getFilters(),
+      deps.getFormations({
+        codeNsf,
+        codeRegion,
+        codeDepartement,
+        codeAcademie,
+      }),
     ]);
 
     if (!nsf) {
@@ -25,6 +34,7 @@ const getDomaineDeFormationFactory =
       codeNsf,
       libelleNsf: nsf.libelleNsf,
       filters,
+      formations,
     };
   };
 

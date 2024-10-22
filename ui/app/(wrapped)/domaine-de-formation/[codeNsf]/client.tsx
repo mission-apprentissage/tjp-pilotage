@@ -3,17 +3,20 @@
 import { Container, Flex } from "@chakra-ui/react";
 
 import { FiltersSection } from "./components/FiltersSection/FiltersSection";
+import { FormationSection } from "./components/FormationSection/FormationSection";
 import { HeaderSection } from "./components/HeaderSection/HeaderSection";
 import { LiensUtilesSection } from "./components/LiensUtilesSection/LiensUtilesSection";
 import { FormationContextProvider } from "./context/formationContext";
 import { useDomaineDeFormation } from "./hook";
-import { DomaineDeFormationFilters, NsfOptions } from "./types";
+import { DomaineDeFormationFilters, Formation, NsfOptions } from "./types";
 
 type Props = {
   codeNsf: string;
   libelleNsf: string;
   filters: DomaineDeFormationFilters;
   nsfs: NsfOptions;
+  defaultFormations: Formation[];
+  cfd: string;
 };
 
 export const PageDomaineDeFormationClient = ({
@@ -21,6 +24,8 @@ export const PageDomaineDeFormationClient = ({
   libelleNsf,
   filters,
   nsfs,
+  defaultFormations,
+  cfd,
 }: Props) => {
   const {
     currentFilters,
@@ -29,9 +34,20 @@ export const PageDomaineDeFormationClient = ({
     handleAcademieChange,
     handleDepartementChange,
     currentNsfOption,
+    handlePresenceChange,
+    handleVoieChange,
+    handleTabFormationChange,
+    handleSelectCfd,
+    regionOptions,
+    academieOptions,
+    departementOptions,
+    formations,
   } = useDomaineDeFormation({
     nsfs,
     codeNsf,
+    filters,
+    defaultFormations,
+    cfd,
   });
 
   return (
@@ -39,22 +55,38 @@ export const PageDomaineDeFormationClient = ({
       <Flex bgColor={"bluefrance.975"}>
         <Container mt={"44px"} maxW={"container.xl"}>
           <HeaderSection codeNsf={codeNsf} libelleNsf={libelleNsf} />
+        </Container>
+      </Flex>
+      <Flex
+        bgColor={"bluefrance.975"}
+        position="sticky"
+        top={"52px"}
+        left={0}
+        zIndex="banner"
+      >
+        <Container maxW={"container.xl"}>
           <FiltersSection
+            filters={currentFilters}
             onRegionChange={handleRegionChange}
-            codeRegion={currentFilters.codeRegion ?? ""}
-            regionOptions={filters.regions}
+            regionOptions={regionOptions}
             onAcademieChange={handleAcademieChange}
-            codeAcademie={currentFilters.codeAcademie ?? ""}
-            academieOptions={filters.academies}
+            academieOptions={academieOptions}
             onDepartementChange={handleDepartementChange}
-            codeDepartement={currentFilters.codeDepartement ?? ""}
-            departementOptions={filters.departements}
-            resetFilters={resetFilters}
+            departementOptions={departementOptions}
+            resetFilters={() => resetFilters({})}
             nsfs={nsfs}
             currentNsfOption={currentNsfOption}
           />
         </Container>
       </Flex>
+      <FormationSection
+        filters={currentFilters}
+        onChangePresence={handlePresenceChange}
+        onChangeVoie={handleVoieChange}
+        changeTab={handleTabFormationChange}
+        formations={formations}
+        selectCfd={handleSelectCfd}
+      />
       <LiensUtilesSection />
     </FormationContextProvider>
   );

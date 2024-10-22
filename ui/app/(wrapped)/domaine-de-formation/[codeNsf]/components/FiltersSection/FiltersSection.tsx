@@ -3,33 +3,29 @@ import { Icon } from "@iconify/react";
 import { OptionSchema } from "shared/schema/optionSchema";
 
 import { SelectNsf } from "../../../../panorama/domaine-de-formation/components/selectNsf";
-import { NsfOption, NsfOptions } from "../../types";
+import { Filters, NsfOption, NsfOptions } from "../../types";
 
 export const FiltersSection = ({
-  codeRegion,
   onRegionChange,
   regionOptions,
   academieOptions,
-  codeAcademie,
   onAcademieChange,
   departementOptions,
-  codeDepartement,
   onDepartementChange,
   resetFilters,
   nsfs,
+  filters,
   currentNsfOption,
 }: {
   regionOptions: OptionSchema[];
-  codeRegion: string;
   onRegionChange: (codeRegion: string) => void;
   academieOptions: OptionSchema[];
-  codeAcademie: string;
   onAcademieChange: (codeAcademie: string) => void;
   departementOptions: OptionSchema[];
-  codeDepartement: string;
   onDepartementChange: (codeDepartement: string) => void;
   resetFilters: () => void;
   nsfs: NsfOptions;
+  filters: Filters;
   currentNsfOption: NsfOption | null;
 }) => {
   return (
@@ -40,7 +36,7 @@ export const FiltersSection = ({
           placeholder="Région: Toutes"
           onChange={(e) => onRegionChange(e.target.value)}
           bgColor={"white"}
-          value={codeRegion}
+          value={filters.codeRegion}
           autoFocus={true}
           borderWidth={"2px"}
           borderColor={"bluefrance.113"}
@@ -59,7 +55,7 @@ export const FiltersSection = ({
           placeholder="Académie: Toutes"
           onChange={(e) => onAcademieChange(e.target.value)}
           bgColor={"white"}
-          value={codeAcademie}
+          value={filters.codeAcademie}
           autoFocus={true}
           borderWidth={"2px"}
           borderColor={"bluefrance.113"}
@@ -78,7 +74,7 @@ export const FiltersSection = ({
           placeholder="Département: Tous"
           onChange={(e) => onDepartementChange(e.target.value)}
           bgColor={"white"}
-          value={codeDepartement}
+          value={filters.codeDepartement}
           autoFocus={true}
           borderWidth={"2px"}
           borderColor={"bluefrance.113"}

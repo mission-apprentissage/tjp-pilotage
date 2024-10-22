@@ -13,7 +13,7 @@ export const getDomaineDeFormationRoute = ({ server }: { server: Server }) => {
       ...props,
       handler: async (request, response) => {
         const { codeNsf } = request.params;
-        const result = await getDomaineDeFormation(codeNsf);
+        const result = await getDomaineDeFormation(codeNsf, request.query);
         response.status(200).send(result);
       },
     })
