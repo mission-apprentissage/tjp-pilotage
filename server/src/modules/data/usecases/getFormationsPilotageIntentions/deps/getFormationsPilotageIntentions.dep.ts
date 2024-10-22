@@ -161,7 +161,7 @@ export const getFormationsPilotageIntentionsQuery = ({
       ),
       sql<string>`COALESCE(
         ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
-        ${eb.val(PositionQuadrantEnum["Hors quadrant"])}
+        ${eb.val(PositionQuadrantEnum["-"])}
       )`.as("positionQuadrant"),
       "dataFormation.libelleFormation",
       "dispositif.libelleDispositif",

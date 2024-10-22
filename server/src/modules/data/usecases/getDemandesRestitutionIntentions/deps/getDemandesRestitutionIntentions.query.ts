@@ -190,7 +190,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       sql<string>`
         COALESCE(
         ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
-        ${eb.val(PositionQuadrantEnum["Hors quadrant"])}
+        ${eb.val(PositionQuadrantEnum["-"])}
       )`.as("positionQuadrant"),
       jsonBuildObject({
         moyenneInsertionCfdRegion: eb.ref(

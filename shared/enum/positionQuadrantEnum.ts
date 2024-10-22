@@ -6,6 +6,7 @@ export const PositionQuadrantZodType = z.enum([
   "Q3",
   "Q4",
   "Hors quadrant",
+  "-",
 ]);
 
 export const PositionQuadrantEnum = PositionQuadrantZodType.Enum;
