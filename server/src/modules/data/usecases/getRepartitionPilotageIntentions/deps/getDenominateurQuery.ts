@@ -22,7 +22,7 @@ export const getDenominateurQuery = async ({
           sql<string>`
             COALESCE(
             ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
-            ${eb.val(PositionQuadrantEnum["Hors quadrant"])}
+            ${eb.val(PositionQuadrantEnum["-"])}
           )`.as("positionQuadrant"),
           eb.ref("dataEtablissement.codeRegion").as("codeRegion"),
           eb.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
