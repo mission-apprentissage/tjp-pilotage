@@ -1,9 +1,9 @@
 import { sql } from "kysely";
-import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { genericOnConstatRentree } from "../../../utils/onConstatDeRentree";
+import { selectPositionQuadrant } from "../../../utils/positionFormationRegionaleQuadrant";
 import { Filters } from "../getRepartitionPilotageIntentions.usecase";
 
 export const getDenominateurQuery = async ({
@@ -19,11 +19,7 @@ export const getDenominateurQuery = async ({
           eb.ref("constatRentree.rentreeScolaire").as("rentreeScolaire"),
           eb.ref("dataFormation.codeNsf").as("codeNsf"),
           eb.ref("dataFormation.codeNiveauDiplome").as("codeNiveauDiplome"),
-          sql<string>`
-            COALESCE(
-            ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
-            ${eb.val(PositionQuadrantEnum["Hors quadrant"])}
-          )`.as("positionQuadrant"),
+          selectPositionQuadrant(eb).as("positionQuadrant"),
           eb.ref("dataEtablissement.codeRegion").as("codeRegion"),
           eb.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
           eb.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
@@ -37,6 +33,7 @@ export const getDenominateurQuery = async ({
           "constatRentree.cfd",
           "dataFormation.codeNsf",
           "dataFormation.codeNiveauDiplome",
+          "dataFormation.typeFamille",
           "dataEtablissement.codeAcademie",
           "dataEtablissement.codeDepartement",
         ])
