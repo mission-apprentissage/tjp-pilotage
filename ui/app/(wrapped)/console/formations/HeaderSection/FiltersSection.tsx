@@ -1,4 +1,4 @@
-import { Button, Checkbox, Flex, Select, Text } from "@chakra-ui/react";
+import { Button, Flex, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 import { useContext, useEffect } from "react";
@@ -8,12 +8,12 @@ import { CodeRegionFilterContext } from "@/app/layoutClient";
 import { Multiselect } from "@/components/Multiselect";
 
 import { FORMATION_COLUMNS } from "../FORMATION_COLUMNS";
-import { Filters, Formations, Order } from "../types";
+import { Filters, FiltersList, Order } from "../types";
 
 export const FiltersSection = ({
   setSearchParams,
   searchParams,
-  data,
+  filtersList,
 }: {
   setSearchParams: (params: {
     filters?: Partial<Filters>;
@@ -31,7 +31,7 @@ export const FiltersSection = ({
     order?: Partial<Order>;
     page?: string;
   };
-  data?: Formations;
+  filtersList?: FiltersList;
 }) => {
   const trackEvent = usePlausible();
 
@@ -100,16 +100,6 @@ export const FiltersSection = ({
     });
   };
 
-  const handleToggleShowAnneeCommune = (value: string) => {
-    setSearchParams({
-      withAnneeCommune: value,
-    });
-  };
-
-  const filterTracker = (filterName: keyof Filters) => () => {
-    trackEvent("formations:filtre", { props: { filter_name: filterName } });
-  };
-
   const resetFilters = () => {
     setSearchParams({
       filters: {
@@ -128,6 +118,10 @@ export const FiltersSection = ({
     });
   };
 
+  const filterTracker = (filterName: keyof Filters) => () => {
+    trackEvent("formations:filtre", { props: { filter_name: filterName } });
+  };
+
   useEffect(() => {
     if (codeRegionFilter !== "" && !filters.codeRegion?.length) {
       filters.codeRegion = [codeRegionFilter];
@@ -136,12 +130,12 @@ export const FiltersSection = ({
   }, []);
 
   return (
-    <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
+    <Flex gap={3} wrap={"wrap"} p={4} py={8} bgColor="bluefrance.950">
       <Select
         placeholder="Toutes les régions"
-        width="12rem"
-        variant="input"
-        size="sm"
+        size="md"
+        variant="newInput"
+        width="20rem"
         onChange={(e) => {
           handleFiltersContext("codeRegion", [e.target.value]);
           setSearchParams({
@@ -157,7 +151,7 @@ export const FiltersSection = ({
         }}
         value={filters.codeRegion?.[0] ?? ""}
       >
-        {data?.filters.regions.map((item) => (
+        {filtersList?.regions.map((item) => (
           <option key={item.value} value={item.value}>
             {item.label}
           </option>
@@ -167,9 +161,11 @@ export const FiltersSection = ({
         display={["none", null, "flex"]}
         disabled={!filters.codeRegion}
         onClose={filterTracker("codeAcademie")}
-        width="12rem"
+        size="md"
+        variant="newInput"
+        width="20rem"
         onChange={(selected) => handleFilters("codeAcademie", selected)}
-        options={data?.filters.academies}
+        options={filtersList?.academies}
         value={filters.codeAcademie ?? []}
         menuZIndex={3}
       >
@@ -179,9 +175,11 @@ export const FiltersSection = ({
         display={["none", null, "flex"]}
         disabled={!filters.codeRegion}
         onClose={filterTracker("codeDepartement")}
-        width="12rem"
+        size="md"
+        variant="newInput"
+        width="20rem"
         onChange={(selected) => handleFilters("codeDepartement", selected)}
-        options={data?.filters.departements}
+        options={filtersList?.departements}
         value={filters.codeDepartement ?? []}
         menuZIndex={3}
       >
@@ -191,85 +189,16 @@ export const FiltersSection = ({
         display={["none", null, "flex"]}
         disabled={!filters.codeRegion}
         onClose={filterTracker("commune")}
-        width="12rem"
+        size="md"
+        variant="newInput"
+        width="20rem"
         onChange={(selected) => handleFilters("commune", selected)}
-        options={data?.filters.communes}
+        options={filtersList?.communes}
         value={filters.commune ?? []}
         menuZIndex={3}
       >
         Commune
       </Multiselect>
-      <Multiselect
-        display={["none", null, "flex"]}
-        onClose={filterTracker("codeNiveauDiplome")}
-        width="12rem"
-        onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
-        options={data?.filters.diplomes}
-        value={filters.codeNiveauDiplome ?? []}
-        menuZIndex={3}
-      >
-        Diplôme
-      </Multiselect>
-      <Multiselect
-        display={["none", null, "flex"]}
-        onClose={filterTracker("codeDispositif")}
-        width="12rem"
-        onChange={(selected) => handleFilters("codeDispositif", selected)}
-        options={data?.filters.dispositifs}
-        value={filters.codeDispositif ?? []}
-        menuZIndex={3}
-      >
-        Dispositif
-      </Multiselect>
-      <Multiselect
-        display={["none", null, "flex"]}
-        onClose={filterTracker("cfdFamille")}
-        width="12rem"
-        onChange={(selected) => handleFilters("cfdFamille", selected)}
-        options={data?.filters.familles}
-        value={filters.cfdFamille ?? []}
-        menuZIndex={3}
-      >
-        Famille
-      </Multiselect>
-      <Multiselect
-        onClose={filterTracker("cfd")}
-        width="12rem"
-        onChange={(selected) => handleFilters("cfd", selected)}
-        options={data?.filters.formations}
-        value={filters.cfd ?? []}
-        menuZIndex={3}
-      >
-        Formation
-      </Multiselect>
-      <Multiselect
-        display={["none", null, "flex"]}
-        onClose={filterTracker("codeNsf")}
-        width="12rem"
-        onChange={(selected) => handleFilters("codeNsf", selected)}
-        options={data?.filters.libellesNsf}
-        value={filters.codeNsf ?? []}
-        menuZIndex={3}
-      >
-        Domaine de formation (NSF)
-      </Multiselect>
-      <Flex w="24rem">
-        <Checkbox
-          size="lg"
-          variant="accessible"
-          onChange={(event) => {
-            handleToggleShowAnneeCommune(
-              event.target.checked.toString() ?? "false"
-            );
-          }}
-          isChecked={searchParams.withAnneeCommune !== "false"}
-          whiteSpace={"nowrap"}
-        >
-          <Text fontSize={"14px"}>
-            Afficher les secondes et premières communes
-          </Text>
-        </Checkbox>
-      </Flex>
       <Button
         variant="externalLink"
         border={"none"}

@@ -1,4 +1,4 @@
-import { Button, Checkbox, Flex, Select, Text } from "@chakra-ui/react";
+import { Button, Flex, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 import { useContext, useEffect } from "react";
@@ -13,7 +13,7 @@ import { Filters, FiltersList, Order } from "../types";
 export const FiltersSection = ({
   setSearchParams,
   searchParams,
-  filtersLists,
+  filtersList,
 }: {
   setSearchParams: (params: {
     filters?: Partial<Filters>;
@@ -31,7 +31,7 @@ export const FiltersSection = ({
     order?: Partial<Order>;
     page?: string;
   };
-  filtersLists?: FiltersList;
+  filtersList?: FiltersList;
 }) => {
   const trackEvent = usePlausible();
   const { codeRegionFilter, setCodeRegionFilter } = useContext(
@@ -125,12 +125,6 @@ export const FiltersSection = ({
     });
   };
 
-  const handleToggleShowAnneeCommune = (value: string) => {
-    setSearchParams({
-      withAnneeCommune: value,
-    });
-  };
-
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("etablissements:filtre", { props: { filter_name: filterName } });
   };
@@ -167,142 +161,75 @@ export const FiltersSection = ({
   }, []);
 
   return (
-    <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
+    <Flex gap={3} wrap={"wrap"} p={4} py={8} bgColor="bluefrance.950">
       <Select
         placeholder="Toutes les régions"
-        width="12rem"
-        variant="input"
-        size="sm"
+        size="md"
+        variant="newInput"
+        width="20rem"
         onChange={(e) => {
-          handleFilters("codeRegion", [e.target.value]);
+          handleFiltersContext("codeRegion", [e.target.value]);
+          setSearchParams({
+            page: 0,
+            filters: {
+              ...filters,
+              codeAcademie: undefined,
+              codeDepartement: undefined,
+              commune: undefined,
+              codeRegion: e.target.value === "" ? undefined : [e.target.value],
+            },
+          });
         }}
         value={filters.codeRegion?.[0] ?? ""}
       >
-        {filtersLists?.regions.map((item) => (
+        {filtersList?.regions.map((item) => (
           <option key={item.value} value={item.value}>
             {item.label}
           </option>
         ))}
       </Select>
       <Multiselect
+        display={["none", null, "flex"]}
         disabled={!filters.codeRegion}
         onClose={filterTracker("codeAcademie")}
-        width="12rem"
+        size="md"
+        variant="newInput"
+        width="20rem"
         onChange={(selected) => handleFilters("codeAcademie", selected)}
-        options={filtersLists?.academies}
+        options={filtersList?.academies}
         value={filters.codeAcademie ?? []}
         menuZIndex={3}
       >
         Académie
       </Multiselect>
       <Multiselect
+        display={["none", null, "flex"]}
         disabled={!filters.codeRegion}
         onClose={filterTracker("codeDepartement")}
-        width="12rem"
+        size="md"
+        variant="newInput"
+        width="20rem"
         onChange={(selected) => handleFilters("codeDepartement", selected)}
-        options={filtersLists?.departements}
+        options={filtersList?.departements}
         value={filters.codeDepartement ?? []}
         menuZIndex={3}
       >
         Département
       </Multiselect>
       <Multiselect
+        display={["none", null, "flex"]}
         disabled={!filters.codeRegion}
         onClose={filterTracker("commune")}
-        width="12rem"
+        size="md"
+        variant="newInput"
+        width="20rem"
         onChange={(selected) => handleFilters("commune", selected)}
-        options={filtersLists?.communes}
+        options={filtersList?.communes}
         value={filters.commune ?? []}
         menuZIndex={3}
       >
         Commune
       </Multiselect>
-      <Multiselect
-        onClose={filterTracker("secteur")}
-        width="12rem"
-        onChange={(selected) => handleFilters("secteur", selected)}
-        options={filtersLists?.secteurs}
-        value={filters.secteur ?? []}
-        menuZIndex={3}
-      >
-        Secteur
-      </Multiselect>
-      <Multiselect
-        onClose={filterTracker("uai")}
-        width="12rem"
-        onChange={(selected) => handleFilters("uai", selected)}
-        options={filtersLists?.etablissements}
-        value={filters.uai ?? []}
-        menuZIndex={3}
-      >
-        Établissement
-      </Multiselect>
-      <Multiselect
-        onClose={filterTracker("codeNiveauDiplome")}
-        width="12rem"
-        onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
-        options={filtersLists?.diplomes}
-        value={filters.codeNiveauDiplome ?? []}
-        menuZIndex={3}
-      >
-        Diplôme
-      </Multiselect>
-      <Multiselect
-        onClose={filterTracker("codeDispositif")}
-        width="12rem"
-        onChange={(selected) => handleFilters("codeDispositif", selected)}
-        options={filtersLists?.dispositifs}
-        value={filters.codeDispositif ?? []}
-        menuZIndex={3}
-      >
-        Dispositif
-      </Multiselect>
-      <Multiselect
-        onClose={filterTracker("cfdFamille")}
-        width="12rem"
-        onChange={(selected) => handleFilters("cfdFamille", selected)}
-        options={filtersLists?.familles}
-        value={filters.cfdFamille ?? []}
-        menuZIndex={3}
-      >
-        Famille
-      </Multiselect>
-      <Multiselect
-        onClose={filterTracker("cfd")}
-        width="12rem"
-        onChange={(selected) => handleFilters("cfd", selected)}
-        options={filtersLists?.formations}
-        value={filters.cfd ?? []}
-        menuZIndex={3}
-      >
-        Formation
-      </Multiselect>
-      <Multiselect
-        onClose={filterTracker("codeNsf")}
-        width="12rem"
-        onChange={(selected) => handleFilters("codeNsf", selected)}
-        options={filtersLists?.libellesNsf}
-        value={filters.codeNsf ?? []}
-        menuZIndex={3}
-      >
-        Domaine de formation (NSF)
-      </Multiselect>
-      <Flex w="24rem">
-        <Checkbox
-          size="lg"
-          onChange={(event) => {
-            handleToggleShowAnneeCommune(
-              event.target.checked.toString() ?? "false"
-            );
-          }}
-          isChecked={searchParams.withAnneeCommune !== "false"}
-          whiteSpace={"nowrap"}
-        >
-          <Text fontSize={"14px"}>
-            Afficher les secondes et premières communes
-          </Text>
-        </Checkbox>
-      </Flex>
       <Button
         variant="externalLink"
         border={"none"}
