@@ -68,13 +68,16 @@ export const [importPositionsQuadrant, importPositionsQuadrantFactory] = inject(
     await streamIt(
       (count) => findFormations({ offset: count }),
       async (formation) => {
-        for (const { millesimeSortie } of millesimesSortie) {
-          if (formation.formationEtablissement && formation.codeRegion) {
+        if (formation.cfd === "50023325" && formation.codeRegion === "52") {
+          for (const { millesimeSortie } of millesimesSortie) {
+            console.log(formation.cfd, millesimeSortie, formation.codeRegion);
             const tauxFormation = await findTauxRegionauxFormation({
               cfd: formation.cfd,
               millesimeSortie: millesimeSortie,
-              codeRegion: formation.codeRegion,
+              codeRegion: formation.codeRegion!,
             });
+
+            console.log(tauxFormation);
 
             for (const tauxUnique of tauxFormation) {
               const tauxRegionaux = await findTauxIJRegionaux({
@@ -96,7 +99,7 @@ export const [importPositionsQuadrant, importPositionsQuadrantFactory] = inject(
               );
 
               await insertPositionFormationRegionaleQuadrant({
-                codeRegion: formation.codeRegion,
+                codeRegion: formation.codeRegion!,
                 cfd: formation.cfd,
                 codeNiveauDiplome: formation.codeNiveauDiplome,
                 millesimeSortie,
