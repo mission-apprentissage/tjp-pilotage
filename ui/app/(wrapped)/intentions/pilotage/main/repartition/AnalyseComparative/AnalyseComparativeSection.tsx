@@ -203,7 +203,9 @@ export const AnalyseComparativeSection = ({
   const handleOrder = (
     column: OrderRepartitionPilotageIntentions["orderBy"]
   ) => {
-    trackEvent("formations:ordre", { props: { colonne: column } });
+    trackEvent("pilotage-transformation:formations-ordre", {
+      props: { colonne: column },
+    });
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
       return;
@@ -225,6 +227,9 @@ export const AnalyseComparativeSection = ({
         <ExportMenuButton
           color={"bluefrance.113"}
           onExportCsv={async () => {
+            trackEvent("pilotage-transformation:analyse-comparative-export", {
+              props: { type: "csv" },
+            });
             downloadCsv(
               `analyse_comparative_${
                 isZoneGeographiqueSelected ? filters?.scope : "domaine"
@@ -245,6 +250,9 @@ export const AnalyseComparativeSection = ({
             );
           }}
           onExportExcel={async () => {
+            trackEvent("pilotage-transformation:analyse-comparative-export", {
+              props: { type: "xslx" },
+            });
             downloadExcel(
               `analyse_comparative_${
                 isZoneGeographiqueSelected ? filters?.scope : "domaine"

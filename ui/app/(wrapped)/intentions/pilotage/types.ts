@@ -74,3 +74,8 @@ export type OrderFormationsPilotageIntentions = Pick<
   FormationsPilotageIntentionsQuery,
   "order" | "orderBy"
 >;
+
+export type FilterTracker = (
+  filterName: keyof FiltersStatsPilotageIntentions,
+  options?: { value?: unknown; context?: string }
+) => void;

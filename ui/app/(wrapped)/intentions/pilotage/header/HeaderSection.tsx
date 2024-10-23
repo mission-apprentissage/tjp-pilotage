@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import {
   FiltersStatsPilotageIntentions,
+  FilterTracker,
   StatsPilotageIntentions,
 } from "../types";
 import { CartoSection, IndicateurType } from "./CartoSection";
@@ -13,12 +14,14 @@ export const HeaderSection = ({
   filters,
   setFilters,
   onOpenTauxTransfoDefinition,
+  filterTracker,
   isLoading,
 }: {
   data?: StatsPilotageIntentions;
   filters: FiltersStatsPilotageIntentions;
   setFilters: (filters: FiltersStatsPilotageIntentions) => void;
   onOpenTauxTransfoDefinition: () => void;
+  filterTracker: FilterTracker;
   isLoading?: boolean;
 }) => {
   const [indicateur, setIndicateur] =
@@ -63,6 +66,7 @@ export const HeaderSection = ({
             filters={filters}
             data={data}
             handleFilters={(f) => setFilters({ ...filters, ...f })}
+            filterTracker={filterTracker}
             isLoading={isLoading}
           />
         </Flex>
