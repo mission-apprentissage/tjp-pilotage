@@ -1,5 +1,6 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -301,5 +302,15 @@ export const getFiltersQuery = async ({
     formations: formationFilters.map(cleanNull),
     libellesNsf: libelleNsfFilters.map(cleanNull),
     secteurs: secteurFilters.map(cleanNull),
+    positionsQuadrant: [
+      { label: PositionQuadrantEnum["Q1"], value: PositionQuadrantEnum["Q1"] },
+      { label: PositionQuadrantEnum["Q2"], value: PositionQuadrantEnum["Q2"] },
+      { label: PositionQuadrantEnum["Q3"], value: PositionQuadrantEnum["Q3"] },
+      { label: PositionQuadrantEnum["Q4"], value: PositionQuadrantEnum["Q4"] },
+      {
+        label: PositionQuadrantEnum["Hors quadrant"],
+        value: PositionQuadrantEnum["Hors quadrant"],
+      },
+    ],
   };
 };

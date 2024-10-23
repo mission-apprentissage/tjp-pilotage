@@ -10,19 +10,20 @@ import { useState } from "react";
 
 import { client } from "@/api.client";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
-import { SearchInput } from "@/components/SearchInput";
 import { TableHeader } from "@/components/TableHeader";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 
+import { ConsoleSearchInput } from "../../../../components/ConsoleSearchInput";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
   FORMATION_COLUMNS,
   FORMATION_COLUMNS_DEFAULT,
 } from "./FORMATION_COLUMNS";
 import { GROUPED_FORMATION_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_COLUMNS";
-import { FiltersSection } from "./HeaderSection/FiltersSection";
+import { HeaderSection } from "./HeaderSection/HeaderSection";
+import { SideSection } from "./SideSection/SideSection";
 import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
@@ -30,7 +31,7 @@ const EXPORT_LIMIT = 1_000_000;
 
 type QueryResult = (typeof client.infer)["[GET]/formations"];
 
-const ColonneFiltersSection = chakra(
+const ColonneHeaderSection = chakra(
   ({
     colonneFilters,
     forcedColonnes,
@@ -256,56 +257,64 @@ export default function Formations() {
 
   return (
     <>
-      <FiltersSection
+      <HeaderSection
         setSearchParams={setSearchParams}
         searchParams={searchParams}
-        data={data}
+        filtersList={data?.filters}
       />
-      <Flex direction="column" flex={1} position="relative" minH="0">
-        {isFetching && (
-          <Center
-            height="100%"
-            width="100%"
-            position="absolute"
-            bg="rgb(255,255,255,0.8)"
-            zIndex="1"
-          >
-            <Spinner />
-          </Center>
-        )}
-        <TableHeader
-          SearchInput={
-            <SearchInput
-              placeholder="Rechercher une formation, un domaine, une commune..."
-              onChange={setSearchFormation}
-              value={searchFormation}
-              onClick={onClickSearch}
-            />
-          }
-          ColonneFilter={
-            <ColonneFiltersSection
-              colonneFilters={colonneFilters}
-              handleColonneFilters={handleColonneFilters}
-              forcedColonnes={["libelleFormation"]}
-              trackEvent={trackEvent}
-              canShowQuadrantPosition={canShowQuadrantPosition}
-            />
-          }
-          onExportCsv={() => onExportCsv()}
-          onExportExcel={() => onExportExcel()}
-          page={page}
-          pageSize={PAGE_SIZE}
-          count={data?.count}
-          onPageChange={(newPage) => setSearchParams({ page: newPage })}
-        />
-        <ConsoleSection
-          data={data}
-          canShowQuadrantPosition={canShowQuadrantPosition}
-          order={order}
-          filters={filters}
+      <Flex direction={"row"} flex={1} position="relative" minH="0" minW={0}>
+        <SideSection
           setSearchParams={setSearchParams}
-          colonneFilters={colonneFilters}
+          searchParams={searchParams}
+          filtersList={data?.filters}
         />
+        <Flex direction="column" flex={1} position="relative" minW={0}>
+          {isFetching && (
+            <Center
+              height="100%"
+              width="100%"
+              position="absolute"
+              bg="rgb(255,255,255,0.8)"
+              zIndex="1"
+            >
+              <Spinner />
+            </Center>
+          )}
+          <TableHeader
+            p={4}
+            SearchInput={
+              <ConsoleSearchInput
+                placeholder="Rechercher dans les résultats"
+                onChange={setSearchFormation}
+                value={searchFormation}
+                onClick={onClickSearch}
+              />
+            }
+            ColonneFilter={
+              <ColonneHeaderSection
+                colonneFilters={colonneFilters}
+                handleColonneFilters={handleColonneFilters}
+                forcedColonnes={["libelleFormation"]}
+                trackEvent={trackEvent}
+                canShowQuadrantPosition={canShowQuadrantPosition}
+              />
+            }
+            onExportCsv={() => onExportCsv()}
+            onExportExcel={() => onExportExcel()}
+            page={page}
+            pageSize={PAGE_SIZE}
+            count={data?.count}
+            onPageChange={(newPage) => setSearchParams({ page: newPage })}
+          />
+          <ConsoleSection
+            data={data}
+            canShowQuadrantPosition={canShowQuadrantPosition}
+            order={order}
+            filters={filters}
+            setSearchParams={setSearchParams}
+            colonneFilters={colonneFilters}
+          />
+        </Flex>
       </Flex>
     </>
   );

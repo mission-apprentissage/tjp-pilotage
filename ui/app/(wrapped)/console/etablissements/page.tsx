@@ -8,8 +8,8 @@ import qs from "qs";
 import { Fragment, useState } from "react";
 
 import { client } from "@/api.client";
+import { ConsoleSearchInput } from "@/components/ConsoleSearchInput";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
-import { SearchInput } from "@/components/SearchInput";
 import { TableHeader } from "@/components/TableHeader";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
@@ -21,9 +21,9 @@ import {
   FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
 } from "./FORMATION_ETABLISSEMENT_COLUMNS";
 import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
-import { FiltersSection } from "./HeaderSection/FiltersSection";
+import { HeaderSection } from "./HeaderSection/HeaderSection";
+import { SideSection } from "./SideSection/SideSection";
 import { Filters, Order } from "./types";
-
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
 
@@ -249,54 +249,62 @@ export default function Etablissements() {
 
   return (
     <>
-      <FiltersSection
+      <HeaderSection
         setSearchParams={setSearchParams}
         searchParams={searchParams}
-        filtersLists={data?.filters}
+        filtersList={data?.filters}
       />
-      <Flex direction="column" flex={1} position="relative" minH="0">
-        {isFetching && (
-          <Center
-            height="100%"
-            width="100%"
-            position="absolute"
-            bg="rgb(255,255,255,0.8)"
-            zIndex="1"
-          >
-            <Spinner />
-          </Center>
-        )}
-        <TableHeader
-          SearchInput={
-            <SearchInput
-              placeholder="Rechercher un établissement, un domaine, une commune..."
-              onChange={setSearchFormationEtablissement}
-              value={searchFormationEtablissement}
-              onClick={onClickSearch}
-            />
-          }
-          ColonneFilter={
-            <ColonneFiltersSection
-              colonneFilters={colonneFilters}
-              handleColonneFilters={handleColonneFilters}
-              forcedColonnes={["libelleEtablissement", "libelleFormation"]}
-              trackEvent={trackEvent}
-            />
-          }
-          onExportCsv={() => onExportCsv()}
-          onExportExcel={() => onExportExcel()}
-          page={page}
-          pageSize={PAGE_SIZE}
-          count={data?.count}
-          onPageChange={(newPage) => setSearchParams({ page: newPage })}
-        />
-        <ConsoleSection
-          data={data}
-          filters={filters}
-          order={order}
+      <Flex direction={"row"} flex={1} position="relative" minH="0">
+        <SideSection
           setSearchParams={setSearchParams}
-          colonneFilters={colonneFilters}
+          searchParams={searchParams}
+          filtersList={data?.filters}
         />
+        <Flex direction="column" flex={1} position="relative" minW={0}>
+          {isFetching && (
+            <Center
+              height="100%"
+              width="100%"
+              position="absolute"
+              bg="rgb(255,255,255,0.8)"
+              zIndex="1"
+            >
+              <Spinner />
+            </Center>
+          )}
+          <TableHeader
+            p={4}
+            SearchInput={
+              <ConsoleSearchInput
+                placeholder="Rechercher dans les résultats"
+                onChange={setSearchFormationEtablissement}
+                value={searchFormationEtablissement}
+                onClick={onClickSearch}
+              />
+            }
+            ColonneFilter={
+              <ColonneFiltersSection
+                colonneFilters={colonneFilters}
+                handleColonneFilters={handleColonneFilters}
+                forcedColonnes={["libelleEtablissement", "libelleFormation"]}
+                trackEvent={trackEvent}
+              />
+            }
+            onExportCsv={() => onExportCsv()}
+            onExportExcel={() => onExportExcel()}
+            page={page}
+            pageSize={PAGE_SIZE}
+            count={data?.count}
+            onPageChange={(newPage) => setSearchParams({ page: newPage })}
+          />
+          <ConsoleSection
+            data={data}
+            filters={filters}
+            order={order}
+            setSearchParams={setSearchParams}
+            colonneFilters={colonneFilters}
+          />
+        </Flex>
       </Flex>
     </>
   );

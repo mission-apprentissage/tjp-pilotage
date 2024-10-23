@@ -1,3 +1,4 @@
+import { PositionQuadrantZodType } from "shared/enum/positionQuadrantEnum";
 import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
 
@@ -80,6 +81,7 @@ export const getFormationEtablissementsSchema = {
     secteur: z.array(SecteurZodType).optional(),
     uai: z.array(z.string()).optional(),
     codeNsf: z.array(z.string()).optional(),
+    positionQuadrant: z.array(PositionQuadrantZodType).optional(),
     withAnneeCommune: z.string().optional(),
     search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
@@ -102,6 +104,7 @@ export const getFormationEtablissementsSchema = {
         etablissements: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),
         secteurs: z.array(OptionSchema),
+        positionsQuadrant: z.array(OptionSchema),
       }),
       etablissements: z.array(FormationEtablissementLineSchema),
     }),

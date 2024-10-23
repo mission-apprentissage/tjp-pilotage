@@ -37,6 +37,7 @@ export const getFormationsQuery = async ({
   cfd,
   cfdFamille,
   codeNsf,
+  positionQuadrant,
   search,
   withEmptyFormations = true,
   withAnneeCommune,
@@ -144,6 +145,10 @@ export const getFormationsQuery = async ({
             .end()
             .as("positionQuadrant")
         )
+        .$call((eb) => {
+          if (!positionQuadrant) return eb;
+          return eb.where("positionQuadrant", "in", positionQuadrant);
+        })
         .groupBy("positionQuadrant");
     })
     .select((eb) => [
