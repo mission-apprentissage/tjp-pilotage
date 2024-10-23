@@ -1,7 +1,6 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, MILLESIMES_IJ } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
-import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { z } from "zod";
 
@@ -16,6 +15,7 @@ import {
 import { isDemandeProjetOrValidee } from "../../../../utils/isDemandeProjetOrValidee";
 import { isDemandeNotDeletedOrRefused } from "../../../../utils/isDemandeSelectable";
 import { hasContinuum } from "../../../utils/hasContinuum";
+import { selectPositionQuadrant } from "../../../utils/positionFormationRegionaleQuadrant";
 import { withTauxDevenirFavorableReg } from "../../../utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../../utils/tauxPoursuite";
@@ -159,10 +159,7 @@ export const getFormationsPilotageIntentionsQuery = ({
       sql<number>`COALESCE(${eb.ref("effectifs.denominateur")}, 0)`.as(
         "effectif"
       ),
-      sql<string>`COALESCE(
-        ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
-        ${eb.val(PositionQuadrantEnum["-"])}
-      )`.as("positionQuadrant"),
+      selectPositionQuadrant(eb).as("positionQuadrant"),
       "dataFormation.libelleFormation",
       "dispositif.libelleDispositif",
       "dataFormation.cfd",

@@ -1,7 +1,6 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
-import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { z } from "zod";
 
@@ -19,6 +18,7 @@ import { isRestitutionIntentionVisible } from "../../../../utils/isRestitutionIn
 import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
 import { isScolaireIndicateurRegionSortie } from "../../../utils/isScolaire";
 import { nbEtablissementFormationRegion } from "../../../utils/nbEtablissementFormationRegion";
+import { selectPositionQuadrant } from "../../../utils/positionFormationRegionaleQuadrant";
 import { selectTauxDevenirFavorable } from "../../../utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "../../../utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "../../../utils/tauxPoursuite";
@@ -187,11 +187,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
-      sql<string>`
-        COALESCE(
-        ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
-        ${eb.val(PositionQuadrantEnum["-"])}
-      )`.as("positionQuadrant"),
+      selectPositionQuadrant(eb).as("positionQuadrant"),
       jsonBuildObject({
         moyenneInsertionCfdRegion: eb.ref(
           "positionFormationRegionaleQuadrant.moyenneInsertionCfdRegion"
@@ -375,19 +371,6 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     .where(isRestitutionIntentionVisible({ user }))
     .offset(offset)
     .limit(limit)
-    .$call((q) => {
-      const params = q.compile().parameters;
-      let str = q.compile().sql;
-      params.forEach((p, i) => {
-        str = str.replace(
-          `$${i + 1}`,
-          typeof p === "string" ? `'${p}'` : "" + p
-        );
-      });
-
-      console.log(str);
-      return q;
-    })
     .execute();
 
   return {
