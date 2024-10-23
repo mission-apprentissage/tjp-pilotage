@@ -8,7 +8,11 @@ import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
 import { formatDate } from "@/utils/formatDate";
 
 import { formatDepartementLibelleWithCodeDepartement } from "../../../../../../../utils/formatLibelle";
-import { getMotifLabel, MotifLabel } from "../../../../utils/motifDemandeUtils";
+import {
+  getMotifLabel,
+  hasMotifAutre,
+  MotifLabel,
+} from "../../../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../../../utils/typeDemandeUtils";
 import { FilesSection } from "./files/FilesSection";
 
@@ -36,8 +40,11 @@ const formatArray = (values?: Array<string | number | undefined>): string => {
 
 const formatMotifArray = (values?: Array<string | undefined>): string => {
   if (!values) return "Aucun";
+  // Filtrer le motifs autre pour les ajouter différemment sur la synthèse
   return formatArray(
-    values.map((motif) => getMotifLabel({ motif: motif as MotifLabel }))
+    values
+      .filter((motif) => !hasMotifAutre([motif]))
+      .map((motif) => getMotifLabel({ motif: motif as MotifLabel }))
   );
 };
 
@@ -174,7 +181,7 @@ export const SyntheseSection = ({
             <Flex direction={"row"} gap={4} justify={"space-between"}>
               <Text fontSize={14}>
                 {demande.commentaire && demande.commentaire.length
-                  ? demande.commentaire
+                  ? demande.commentaire.replace("\n", "-")
                   : "Aucune"}
               </Text>
             </Flex>
@@ -257,6 +264,11 @@ export const SyntheseSection = ({
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text fontSize={14}>{formatMotifArray(demande.motif)}</Text>
           </Flex>
+          {hasMotifAutre(demande.motif) && (
+            <Flex direction={"row"} gap={4} justify={"space-between"}>
+              <Text fontSize={14}>Autre motif : {demande.autreMotif!}</Text>
+            </Flex>
+          )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Heading as={"h6"} fontSize={14}>
