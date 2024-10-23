@@ -171,12 +171,16 @@ export const SyntheseSection = ({
                 Observations sur la demande
               </Heading>
             </Flex>
-            <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text fontSize={14}>
-                {demande.commentaire && demande.commentaire.length
-                  ? demande.commentaire
-                  : "Aucune"}
-              </Text>
+            <Flex gap={2} direction="column">
+              {demande.commentaire && demande.commentaire.length ? (
+                demande.commentaire.split("\n").map((p, i) => (
+                  <Text key={`commentaire-${i}`} fontSize={14}>
+                    {p}
+                  </Text>
+                ))
+              ) : (
+                <Text fontSize={14}>Aucune</Text>
+              )}
             </Flex>
           </Flex>
           <FilesSection numero={demande.numero!} />
