@@ -112,12 +112,26 @@ export const intentionValidators: Record<
     ) {
       return "La capacité scolaire devrait être inférieure à la capacité actuelle dans le cas d'une diminution";
     }
-    if (
-      isTypeTransfert(intention.typeDemande) &&
-      isPositiveNumber(intention.capaciteScolaireActuelle) &&
-      intention.capaciteScolaire >= intention.capaciteScolaireActuelle
-    )
-      return "La capacité scolaire devrait être inférieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage";
+    if (isTypeTransfert(intention.typeDemande)) {
+      if (
+        !isPositiveNumber(intention.capaciteScolaireActuelle) ||
+        !isPositiveNumber(intention.capaciteApprentissageActuelle) ||
+        !isPositiveNumber(intention.capaciteScolaire) ||
+        !isPositiveNumber(intention.capaciteApprentissage)
+      ) {
+        return "Un transfert inclue toujours un passage de scolaire vers apprentissage ou d'apprentissage vers scolaire";
+      }
+      if (
+        (intention.capaciteScolaire >= intention.capaciteScolaireActuelle &&
+          intention.capaciteApprentissage >=
+            intention.capaciteApprentissageActuelle) ||
+        (intention.capaciteScolaire <= intention.capaciteScolaireActuelle &&
+          intention.capaciteApprentissage <=
+            intention.capaciteApprentissageActuelle)
+      ) {
+        return "Si un transfert est effectué, la capacité scolaire ou l'apprentissage doivent être modifiée. Dans le cas d'un transfert vers l'apprentissage, la capacité en apprentissage devrait être supérieure à la capacité actuelle. Dans le cas d'un transfert vers le scolaire, la capacité scolaire devrait être supérieur à la capacité actuelle.";
+      }
+    }
     if (
       isTypeAjustement(intention.typeDemande) &&
       isPositiveNumber(intention.capaciteScolaireActuelle) &&

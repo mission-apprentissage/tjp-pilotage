@@ -1,15 +1,16 @@
 import _ from "lodash";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { z } from "zod";
 
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import { getFiltersQuery } from "./deps/getFilters.query";
-import { getStatsPilotageIntentionsQuery } from "./deps/getStatsPilotageIntentions.query";
-import { getStatsPilotageIntentionsSchema } from "./getStatsPilotageIntentions.schema";
+import {
+  Filters,
+  getStatsPilotageIntentionsQuery,
+} from "./deps/getStatsPilotageIntentions.query";
 
-export type Filters = z.infer<
-  typeof getStatsPilotageIntentionsSchema.querystring
->;
+interface ActiveFilters extends Omit<Filters, "campagne"> {
+  campagne?: string;
+}
 
 export type GetScopedStatsPilotageIntentionsType = Awaited<
   ReturnType<typeof getStatsPilotageIntentionsQuery>
@@ -44,7 +45,7 @@ const getStatsPilotageIntentionsFactory =
       getCurrentCampagneQuery,
     }
   ) =>
-  async (activeFilters: Filters) => {
+  async (activeFilters: ActiveFilters) => {
     const currentCampagne = await getCurrentCampagneQuery();
     const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
     const [filters, projets, validees, all] = await Promise.all([

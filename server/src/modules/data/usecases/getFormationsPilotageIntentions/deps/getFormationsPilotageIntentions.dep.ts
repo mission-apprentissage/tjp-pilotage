@@ -1,8 +1,8 @@
 import { ExpressionBuilder, sql } from "kysely";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { CURRENT_IJ_MILLESIME, MILLESIMES_IJ } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
-import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
-import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
+import { z } from "zod";
 
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -17,12 +17,19 @@ import {
 import { isDemandeProjetOrValidee } from "../../../../utils/isDemandeProjetOrValidee";
 import { isDemandeNotDeletedOrRefused } from "../../../../utils/isDemandeSelectable";
 import { hasContinuum } from "../../../utils/hasContinuum";
+import { selectPositionQuadrant } from "../../../utils/positionFormationRegionaleQuadrant";
 import { withTauxDevenirFavorableReg } from "../../../utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../../utils/tauxPoursuite";
 import { withTauxPressionReg } from "../../../utils/tauxPression";
-import { Filters } from "../getFormationsPilotageIntentions.usecase";
+import { getFormationsPilotageIntentionsSchema } from "../getFormationsPilotageIntentions.schema";
 import { getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery } from "./getEffectifsParCampagneCodeNiveauDiplomeCodeRegion.dep";
+
+export interface Filters
+  extends z.infer<typeof getFormationsPilotageIntentionsSchema.querystring> {
+  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+  campagne: string;
+}
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.count<number>("demande.numero").distinct();
@@ -113,12 +120,7 @@ export const getFormationsPilotageIntentionsQuery = ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
-            eb.val(
-              getMillesimeFromRentreeScolaire({
-                rentreeScolaire: CURRENT_RENTREE,
-                offset: 0,
-              })
-            )
+            eb.val(getMillesimeFromCampagne(campagne))
           ),
         ])
       )
@@ -159,10 +161,7 @@ export const getFormationsPilotageIntentionsQuery = ({
       sql<number>`COALESCE(${eb.ref("effectifs.denominateur")}, 0)`.as(
         "effectif"
       ),
-      sql<string>`COALESCE(
-        ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
-        ${eb.val(PositionQuadrantEnum["Hors quadrant"])}
-      )`.as("positionQuadrant"),
+      selectPositionQuadrant(eb).as("positionQuadrant"),
       "dataFormation.libelleFormation",
       "dispositif.libelleDispositif",
       "dataFormation.cfd",
@@ -170,14 +169,14 @@ export const getFormationsPilotageIntentionsQuery = ({
       (eb) =>
         withInsertionReg({
           eb,
-          millesimeSortie,
+          millesimeSortie: getMillesimeFromCampagne(campagne),
           cfdRef: "demande.cfd",
           codeDispositifRef: "demande.codeDispositif",
           codeRegionRef: "dataEtablissement.codeRegion",
         }).as("tauxInsertion"),
       withPoursuiteReg({
         eb,
-        millesimeSortie,
+        millesimeSortie: getMillesimeFromCampagne(campagne),
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
@@ -190,7 +189,7 @@ export const getFormationsPilotageIntentionsQuery = ({
       }).as("tauxPression"),
       withTauxDevenirFavorableReg({
         eb,
-        millesimeSortie,
+        millesimeSortie: getMillesimeFromCampagne(campagne),
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",

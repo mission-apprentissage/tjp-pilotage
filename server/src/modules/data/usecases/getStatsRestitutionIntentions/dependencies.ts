@@ -1,7 +1,6 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
-import { CURRENT_RENTREE } from "shared";
-import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { z } from "zod";
 
 import { DemandeTypeEnum } from "../../../../../../shared/enum/demandeTypeEnum";
@@ -28,6 +27,8 @@ import { FiltersSchema } from "./getStatsRestitutionIntentions.schema";
 
 export interface Filters extends z.infer<typeof FiltersSchema> {
   user: RequestUser;
+  // campagne est modifié pour qu'il y ait toujours une valeur dans le usecase
+  campagne: string;
 }
 
 const getStatsRestitutionIntentionsQuery = async ({
@@ -100,12 +101,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
-            eb.val(
-              getMillesimeFromRentreeScolaire({
-                rentreeScolaire: CURRENT_RENTREE,
-                offset: 0,
-              })
-            )
+            eb.val(getMillesimeFromCampagne(campagne))
           ),
         ])
       )
