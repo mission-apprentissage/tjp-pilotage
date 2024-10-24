@@ -1,6 +1,6 @@
 import { expressionBuilder, sql } from "kysely";
-import { CURRENT_RENTREE } from "shared";
-import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import { DemandeStatutType } from "../../../../../shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "../../../../../shared/enum/demandeTypeEnum";
@@ -97,12 +97,7 @@ export const genericOnDemandes = ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
-            eb.val(
-              getMillesimeFromRentreeScolaire({
-                rentreeScolaire: CURRENT_RENTREE,
-                offset: 0,
-              })
-            )
+            eb.val(getMillesimeFromCampagne(campagne ?? CURRENT_ANNEE_CAMPAGNE))
           ),
         ])
       )

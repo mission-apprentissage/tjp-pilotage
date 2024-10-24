@@ -1,5 +1,6 @@
 import { AvisStatutZodType } from "shared/enum/avisStatutEnum";
 import { AvisTypeZodType } from "shared/enum/avisTypeEnum";
+import { unEscapeString } from "shared/utils/escapeString";
 import { z } from "zod";
 
 export const submitAvisSchema = {
@@ -8,7 +9,10 @@ export const submitAvisSchema = {
       intentionNumero: z.string(),
       statutAvis: AvisStatutZodType,
       typeAvis: AvisTypeZodType,
-      commentaire: z.string().optional(),
+      commentaire: z
+        .string()
+        .optional()
+        .transform((commentaire) => unEscapeString(commentaire)),
       userFonction: z.string().optional(),
       isVisibleParTous: z.boolean(),
       createdAt: z.string().optional(),

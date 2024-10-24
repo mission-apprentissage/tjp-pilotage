@@ -1,5 +1,4 @@
-import { MILLESIMES_IJ } from "shared";
-import { z } from "zod";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import { getStatsSortieQuery } from "../../queries/getStatsSortie/getStatsSortie";
@@ -10,11 +9,10 @@ import {
   getFormationsPilotageIntentionsQuery,
   getRegionStatsQuery,
 } from "./deps";
-import { getFormationsPilotageIntentionsSchema } from "./getFormationsPilotageIntentions.schema";
+import { Filters } from "./deps/getFormationsPilotageIntentions.dep";
 
-export interface Filters
-  extends z.infer<typeof getFormationsPilotageIntentionsSchema.querystring> {
-  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+interface ActiveFilters extends Omit<Filters, "campagne"> {
+  campagne?: string;
 }
 
 const getQuadrantPilotageIntentionsFactory =
@@ -29,7 +27,7 @@ const getQuadrantPilotageIntentionsFactory =
       getCurrentCampagneQuery,
     }
   ) =>
-  async (activeFilters: Filters) => {
+  async (activeFilters: ActiveFilters) => {
     const campagne = await deps.getCurrentCampagneQuery();
     const anneeCampagne = activeFilters.campagne ?? campagne.annee;
     let codeRegion = activeFilters.codeRegion;
@@ -52,11 +50,15 @@ const getQuadrantPilotageIntentionsFactory =
 
     const [formations, statsSortie] = await Promise.all([
       deps.getFormationsPilotageIntentionsQuery({
-        campagne: anneeCampagne,
         ...activeFilters,
+        campagne: anneeCampagne,
         codeRegion,
       }),
-      getStatsSortieQuery({ ...activeFilters, codeRegion }),
+      getStatsSortieQuery({
+        ...activeFilters,
+        codeRegion,
+        millesimeSortie: getMillesimeFromCampagne(anneeCampagne),
+      }),
     ]);
 
     return {
