@@ -16,7 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { AxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
@@ -35,6 +35,7 @@ import {
   DemandeStatutEnum,
   DemandeStatutType,
 } from "shared/enum/demandeStatutEnum";
+import { escapeString } from "shared/utils/escapeString";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { client } from "@/api.client";
@@ -127,10 +128,14 @@ export const IntentionForm = ({
 
       push(`/intentions/perdir/saisie`);
     },
-    //@ts-ignore
-    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-      const errors = e.response?.data.errors;
-      setErrors(errors);
+    onError: (e: unknown) => {
+      if (isAxiosError<{ errors: Record<string, string> }>(e)) {
+        const errors = e.response?.data?.errors ?? {
+          erreur: "Une erreur est survenue lors de la sauvegarde.",
+        };
+
+        setErrors(errors);
+      }
     },
   });
 
@@ -270,7 +275,15 @@ export const IntentionForm = ({
           noValidate
           onSubmit={handleSubmit((values) =>
             submitDemande({
-              body: { intention: { numero: formId, ...values } },
+              body: {
+                intention: {
+                  numero: formId,
+                  ...values,
+                  commentaire: escapeString(values.commentaire),
+                  autreMotif: escapeString(values.autreMotif),
+                  autreMotifRefus: escapeString(values.autreMotifRefus),
+                },
+              },
             })
           )}
         >
@@ -377,6 +390,15 @@ export const IntentionForm = ({
                                       statut: DemandeStatutEnum["brouillon"],
                                       campagneId:
                                         values.campagneId ?? campagne?.id,
+                                      commentaire: escapeString(
+                                        values.commentaire
+                                      ),
+                                      autreMotif: escapeString(
+                                        values.autreMotif
+                                      ),
+                                      autreMotifRefus: escapeString(
+                                        values.autreMotifRefus
+                                      ),
                                     },
                                   },
                                 })
@@ -404,6 +426,13 @@ export const IntentionForm = ({
                                     statut: getStatutSubmit(values.statut),
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
+                                    commentaire: escapeString(
+                                      values.commentaire
+                                    ),
+                                    autreMotif: escapeString(values.autreMotif),
+                                    autreMotifRefus: escapeString(
+                                      values.autreMotifRefus
+                                    ),
                                   },
                                 },
                               })

@@ -27,8 +27,7 @@ import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
-import { ScopeEnum } from "shared";
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { CURRENT_RENTREE, ScopeEnum } from "shared";
 
 import { client } from "@/api.client";
 import { PlacesTransformeesParPositionQuadrantSection } from "@/app/(wrapped)/intentions/pilotage/main/quadrant/PlacesTransformeesParPositionQuadrantSection";
@@ -63,52 +62,6 @@ const EFFECTIF_SIZES = [
   { min: 80, max: 150, size: 18 },
   { min: 150, size: 22 },
 ];
-
-const generateRestitutionUrl = (
-  cfd: string,
-  dispositifId?: string,
-  scope?: SelectedScope,
-  filters?: {
-    tauxPression?: "faible" | "eleve";
-    statut?: Array<
-      Extract<DemandeStatutType, "demande validée" | "projet de demande">
-    >;
-    type?: "ouverture" | "fermeture";
-    order?: Partial<OrderFormationsPilotageIntentions>;
-  }
-) => {
-  const urlFilters: Record<string, unknown> = {
-    rentreeScolaire: "2024",
-    cfd: [cfd],
-    codeDispositif: [dispositifId],
-  };
-
-  if (filters?.type) {
-    if (filters.type === "ouverture") {
-      urlFilters.typeDemande = ["ouverture_nette", "ouverture_compensation"];
-    } else {
-      urlFilters.typeDemande = ["fermeture", "diminution"];
-    }
-  }
-
-  if (scope?.value !== undefined) {
-    if (scope?.type === ScopeEnum["région"]) {
-      urlFilters.codeRegion = [scope.value];
-    }
-
-    if (scope?.type === ScopeEnum["académie"]) {
-      urlFilters.codeAcademie = [scope.value];
-    }
-
-    if (scope?.type === ScopeEnum["département"]) {
-      urlFilters.codeDepartement = [scope.value];
-    }
-  }
-
-  return createParametrizedUrl("/intentions/restitution", {
-    filters: urlFilters,
-  });
-};
 
 export const QuadrantSection = ({
   scope,
@@ -229,6 +182,41 @@ export const QuadrantSection = ({
     mergedFilters.codeNiveauDiplome.length === 0 ||
     mergedFilters.codeNiveauDiplome.length > 1
   );
+
+  const generateRestitutionUrl = (cfd: string, dispositifId?: string) => {
+    const urlFilters: Record<string, unknown> = {
+      campagne: mergedFilters.campagne ?? undefined,
+      rentreeScolaire: mergedFilters.rentreeScolaire ?? CURRENT_RENTREE,
+      cfd: [cfd],
+      codeDispositif: [dispositifId],
+    };
+
+    if (filters?.type) {
+      if (filters.type === "ouverture") {
+        urlFilters.typeDemande = ["ouverture_nette", "ouverture_compensation"];
+      } else {
+        urlFilters.typeDemande = ["fermeture", "diminution"];
+      }
+    }
+
+    if (scope?.value !== undefined) {
+      if (scope?.type === ScopeEnum["région"]) {
+        urlFilters.codeRegion = [scope.value];
+      }
+
+      if (scope?.type === ScopeEnum["académie"]) {
+        urlFilters.codeAcademie = [scope.value];
+      }
+
+      if (scope?.type === ScopeEnum["département"]) {
+        urlFilters.codeDepartement = [scope.value];
+      }
+    }
+
+    return createParametrizedUrl("/intentions/restitution", {
+      filters: urlFilters,
+    });
+  };
 
   return (
     <Box width={"100%"}>
@@ -694,9 +682,7 @@ export const QuadrantSection = ({
                     rel="noreferrer"
                     href={generateRestitutionUrl(
                       formation.cfd,
-                      formation?.codeDispositif,
-                      scope,
-                      filters
+                      formation?.codeDispositif
                     )}
                     mb={4}
                   >

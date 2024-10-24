@@ -93,6 +93,16 @@ const DemandeSchema = z.object({
   createdAt: z.string(),
   campagneId: z.string(),
   isIntention: z.boolean(),
+  tauxIJNiveauDiplomeRegion: z.object({
+    tauxInsertion6mois: z.coerce.number().nullable().optional(),
+    tauxPoursuite: z.coerce.number().nullable().optional(),
+    millesimeSortie: z.string().optional(),
+  }),
+  positionFormationRegionaleQuadrant: z.object({
+    moyenneInsertionCfdRegion: z.coerce.number().nullable().optional(),
+    moyennePoursuiteEtudeCfdRegion: z.coerce.number().nullable().optional(),
+    millesimeSortie: z.string().optional(),
+  }),
 });
 
 export const FiltersSchema = z.object({
