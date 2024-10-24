@@ -40,7 +40,7 @@ export const SearchInput = ({ uai }: { uai: string }) => {
     }),
   };
 
-  const { data: defaultEtablissementSearchValues, isLoading } = client
+  const { isLoading } = client
     .ref("[GET]/etablissement/:uai")
     .useQuery({ params: { uai: uai } });
 
@@ -67,12 +67,6 @@ export const SearchInput = ({ uai }: { uai: string }) => {
               Control,
             }}
             onChange={(selected) => selected && router.push(selected.value)}
-            defaultValue={
-              defaultEtablissementSearchValues &&
-              ({
-                ...defaultEtablissementSearchValues,
-              } as (typeof client.infer)["[GET]/etablissement/search/:search"][0])
-            }
             loadOptions={(inputValue: string) => {
               if (inputValue.length >= 3)
                 return client.ref("[GET]/etablissement/search/:search").query({
