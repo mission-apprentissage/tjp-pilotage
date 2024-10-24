@@ -8,10 +8,10 @@ import { DB } from "../../../db/db";
 import {
   countPlacesColorees,
   countPlacesColoreesQ4,
-  countPlacesFermees,
   countPlacesFermeesApprentissage,
   countPlacesFermeesApprentissageQ4,
-  countPlacesFermeesQ4,
+  countPlacesFermeesParCampagne,
+  countPlacesFermeesQ4ParCampagne,
   countPlacesFermeesScolaire,
   countPlacesFermeesScolaireQ4,
   countPlacesOuvertes,
@@ -129,9 +129,11 @@ export const genericOnDemandes = ({
         .sum<number>(countPlacesFermeesApprentissageQ4(eb))
         .as("placesFermeesApprentissageQ4"),
       eb.fn.sum<number>(countPlacesOuvertes(eb)).as("placesOuvertes"),
-      eb.fn.sum<number>(countPlacesFermees(eb)).as("placesFermees"),
+      eb.fn.sum<number>(countPlacesFermeesParCampagne(eb)).as("placesFermees"),
       eb.fn.sum<number>(countPlacesOuvertesQ1(eb)).as("placesOuvertesQ1"),
-      eb.fn.sum<number>(countPlacesFermeesQ4(eb)).as("placesFermeesQ4"),
+      eb.fn
+        .sum<number>(countPlacesFermeesQ4ParCampagne(eb))
+        .as("placesFermeesQ4"),
       eb.fn
         .sum<number>(countPlacesOuvertesTransitionEcologique(eb))
         .as("placesOuvertesTransformationEcologique"),
