@@ -1,9 +1,7 @@
-import { sql } from "kysely";
-import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
-
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { genericOnDemandes } from "../../../utils/onDemande";
+import { selectPositionQuadrant } from "../../../utils/positionFormationRegionaleQuadrant";
 import { Filters } from "../getRepartitionPilotageIntentions.usecase";
 
 export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
@@ -15,11 +13,7 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
           eb.ref("demande.rentreeScolaire").as("rentreeScolaire"),
           eb.ref("dataFormation.codeNsf").as("codeNsf"),
           eb.ref("dataFormation.codeNiveauDiplome").as("codeNiveauDiplome"),
-          sql<string>`
-            COALESCE(
-            ${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")},
-            ${eb.val(PositionQuadrantEnum["Hors quadrant"])}
-          )`.as("positionQuadrant"),
+          selectPositionQuadrant(eb).as("positionQuadrant"),
           eb.ref("dataEtablissement.codeRegion").as("codeRegion"),
           eb.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
           eb.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
@@ -31,6 +25,7 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
           "positionQuadrant",
           "dataFormation.codeNsf",
           "dataFormation.codeNiveauDiplome",
+          "dataFormation.typeFamille",
           "dataEtablissement.codeAcademie",
           "dataEtablissement.codeDepartement",
         ])
