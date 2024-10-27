@@ -1,8 +1,9 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
-import { getScopeFilterForUser } from "../../utils/getScopeFilterForUser";
-import { hasPermissionHandler } from "../../utils/hasPermission";
+import { getScopeFilterForUser } from "@/modules/core/utils/getScopeFilterForUser";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { getUsersSchema } from "./getUsers.schema";
 import { getUsers } from "./getUsers.usecase";
 
@@ -18,10 +19,7 @@ export const getUsersRoute = (server: Server) => {
         const { user } = request;
 
         const { order, orderBy, ...rest } = request.query;
-        const { scope, scopeFilter } = getScopeFilterForUser(
-          "users/lecture",
-          user!
-        );
+        const { scope, scopeFilter } = getScopeFilterForUser("users/lecture", user!);
 
         const users = await getUsers({
           ...rest,

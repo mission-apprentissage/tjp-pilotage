@@ -1,16 +1,12 @@
 import "aws-sdk-client-mock-jest";
 
-import {
-  ListObjectsV2Command,
-  ListObjectsV2CommandOutput,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
+import type { ListObjectsV2CommandOutput } from "@aws-sdk/client-s3";
+import { ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { mockClient } from "aws-sdk-client-mock";
 
-import { ovhFilePathManagerFactory } from "../../filePathManager/ovhFilePathManager";
-import { FileType } from "../fileManager";
-import { ovhFileManagerFactory } from "../ovhFileManager";
+import type { FileType } from "@/modules/core/services/fileManager/fileManager";
+import { ovhFileManagerFactory } from "@/modules/core/services/fileManager/ovhFileManager";
+import { ovhFilePathManagerFactory } from "@/modules/core/services/filePathManager/ovhFilePathManager";
 
 const s3ClientMock = mockClient(S3Client);
 
@@ -126,36 +122,21 @@ const fileManagerFixture = (client: S3Client) => {
         },
       } as ListObjectsV2CommandOutput);
     },
-    whenUploadingAFileAsBuffer: async (
-      demandeId: string,
-      filename: string,
-      file: Buffer
-    ) => {
-      await fileManager.uploadFile(
-        filepathManager.getIntentionFilePath(demandeId, filename),
-        file
-      );
+    whenUploadingAFileAsBuffer: async (demandeId: string, filename: string, file: Buffer) => {
+      await fileManager.uploadFile(filepathManager.getIntentionFilePath(demandeId, filename), file);
     },
     whenListingFiles: async (id: string) => {
-      files = await fileManager.listFiles(
-        filepathManager.getIntentionFilePath(id)
-      );
+      files = await fileManager.listFiles(filepathManager.getIntentionFilePath(id));
     },
     whenGeneratingAnUrlForAFile: async (id: string, filename: string) => {
-      return fileManager.getDownloadUrl(
-        filepathManager.getIntentionFilePath(id, filename)
-      );
+      return fileManager.getDownloadUrl(filepathManager.getIntentionFilePath(id, filename));
     },
     thenFileShouldBeUploaded: async (id: string, filename: string) => {
-      files = await fileManager.listFiles(
-        filepathManager.getIntentionFilePath(id, filename)
-      );
+      files = await fileManager.listFiles(filepathManager.getIntentionFilePath(id, filename));
       expect(files).toContain(filename);
     },
     thenDeleteFile: (id: string, filename: string) => {
-      fileManager.deleteFile(
-        filepathManager.getIntentionFilePath(id, filename)
-      );
+      fileManager.deleteFile(filepathManager.getIntentionFilePath(id, filename));
     },
     thenZeroFilesShouldBeListed() {
       expect(files.length).toBe(0);

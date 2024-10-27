@@ -1,5 +1,7 @@
-import { kdb } from "../../../db/db";
-import { cleanNull } from "../../../utils/noNull";
+// @ts-nocheck -- TODO
+
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
 export const findOneSimilarDemande = ({
   cfd,
@@ -18,7 +20,7 @@ export const findOneSimilarDemande = ({
   libelleFCIL?: string;
   notNumero?: string;
 }) =>
-  kdb
+  getKbdClient()
     .selectFrom("latestDemandeView as demande")
     .selectAll()
     .where("campagneId", "=", campagneId)

@@ -1,11 +1,11 @@
 import fs from "fs";
 import { sql } from "kysely";
 
-import { kdb } from "../../../../db/db";
-import { FranceTravailStatsPerspectiveRecrutementValeurParPeriode } from "../../services/franceTravail/franceTravailResponse";
+import { getKbdClient } from "@/db/db";
+import type { FranceTravailStatsPerspectiveRecrutementValeurParPeriode } from "@/modules/import/services/franceTravail/franceTravailResponse";
 
 export const findAllRomeCodes = (filter?: string) =>
-  kdb
+  getKbdClient()
     .selectFrom("rome")
     .select("codeRome")
     .$call((q) => {
@@ -20,7 +20,7 @@ export const findAllRomeCodes = (filter?: string) =>
     .execute();
 
 export const findAllDepartements = (filter?: string) =>
-  kdb
+  getKbdClient()
     .selectFrom("departement")
     .where((eb) => eb.and([eb("departement.codeRegion", "not in", ["00"])]))
     .$call((q) => {
@@ -33,9 +33,7 @@ export const findAllDepartements = (filter?: string) =>
     .select(({ ref }) => [
       sql<string>`CASE WHEN LEFT(${ref(
         "codeDepartement"
-      )}, 1) = '0' THEN RIGHT(${ref("codeDepartement")}, 2) ELSE ${ref(
-        "codeDepartement"
-      )} END`.as("codeDepartement"),
+      )}, 1) = '0' THEN RIGHT(${ref("codeDepartement")}, 2) ELSE ${ref("codeDepartement")} END`.as("codeDepartement"),
     ])
     .orderBy("codeDepartement", "asc")
     .distinct()

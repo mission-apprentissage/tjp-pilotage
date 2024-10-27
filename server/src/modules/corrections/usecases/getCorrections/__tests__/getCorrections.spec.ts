@@ -1,6 +1,7 @@
-import { build } from "../../../../../build";
-import { kdb } from "../../../../../db/db";
-import { Server, server as fastifyServer } from "../../../../../server";
+import { build } from "@/build";
+import { getKbdClient } from "@/db/db";
+import type { Server } from "@/server.ts";
+import { server as fastifyServer } from "@/server.ts";
 
 describe("GET /api/corrections", () => {
   let server: Server;
@@ -11,7 +12,7 @@ describe("GET /api/corrections", () => {
   });
 
   afterAll(async () => {
-    await server.close(() => kdb.destroy());
+    await server.close(() => getKbdClient().destroy());
   });
 
   it("doit renvoyer une 401 si je ne suis pas connecté avec un utilisateur", async () => {

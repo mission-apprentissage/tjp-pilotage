@@ -1,16 +1,10 @@
 import { sql } from "kysely";
 
-import { kdb } from "../../../../db/db";
-import { Offres_apprentissage } from "../../fileTypes/Offres_apprentissage";
+import { getKbdClient } from "@/db/db";
+import type { Offres_apprentissage } from "@/modules/import/fileTypes/Offres_apprentissage";
 
-export const findOffresApprentissages = async ({
-  offset,
-  limit,
-}: {
-  offset: number;
-  limit: number;
-}) => {
-  const items = await kdb
+export const findOffresApprentissages = async ({ offset, limit }: { offset: number; limit: number }) => {
+  const items = await getKbdClient()
     .selectFrom("rawData")
     .selectAll("rawData")
     .where("type", "=", "offres_apprentissage")
@@ -21,10 +15,7 @@ export const findOffresApprentissages = async ({
           eb(sql`"data"->>'Niveau de la formation'`, "like", "4%"),
           eb(sql`"data"->>'Niveau de la formation'`, "like", "5%"),
         ]),
-        eb.or([
-          eb(sql`"data"->>'Tags'`, "like", "%2023%"),
-          eb(sql`"data"->>'Tags'`, "like", "%2024%"),
-        ]),
+        eb.or([eb(sql`"data"->>'Tags'`, "like", "%2023%"), eb(sql`"data"->>'Tags'`, "like", "%2024%")]),
       ])
     )
     .distinctOn(

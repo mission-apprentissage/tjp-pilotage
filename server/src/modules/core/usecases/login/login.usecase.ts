@@ -1,9 +1,11 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 
-import { config } from "../../../../../config/config";
-import { verifyPassword } from "../../utils/passwordUtils";
+import config from "@/config";
+import { verifyPassword } from "@/modules/core/utils/passwordUtils";
+
 import { findUserQuery } from "./findUserQuery.dep";
 
 export const [login, loginFactory] = inject(

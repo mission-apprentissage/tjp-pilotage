@@ -1,17 +1,12 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../db/db";
-import { NDispositifFormation } from "../../fileTypes/NDispositifFormation";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import type { NDispositifFormation } from "@/modules/import/fileTypes/NDispositifFormation";
 
-const findNDispositifFormation = async ({
-  offset,
-  limit,
-}: {
-  offset: number;
-  limit: number;
-}) => {
+const findNDispositifFormation = async ({ offset, limit }: { offset: number; limit: number }) => {
   return (
-    await kdb
+    await getKbdClient()
       .selectFrom("rawData")
       .selectAll("rawData")
       .where("type", "=", "nDispositifFormation_")
@@ -23,7 +18,7 @@ const findNDispositifFormation = async ({
 };
 
 const createDispositif = async (dispositif: Insertable<DB["dispositif"]>) => {
-  await kdb
+  await getKbdClient()
     .insertInto("dispositif")
     .values(dispositif)
     .onConflict((oc) => oc.column("codeDispositif").doUpdateSet(dispositif))

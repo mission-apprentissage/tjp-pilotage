@@ -1,11 +1,10 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../../../db/db";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
 
-export const createIndicateurRegionSortie = async (
-  indicateurRegionSortie: Insertable<DB["indicateurRegionSortie"]>
-) =>
-  kdb
+export const createIndicateurRegionSortie = async (indicateurRegionSortie: Insertable<DB["indicateurRegionSortie"]>) =>
+  getKbdClient()
     .insertInto("indicateurRegionSortie")
     .values(indicateurRegionSortie)
     .onConflict((oc) =>

@@ -1,19 +1,16 @@
-import { Insertable } from "kysely";
-import _ from "lodash";
+import type { Insertable } from "kysely";
+import { omit } from "lodash-es";
 
-import { DB, kdb } from "../../../db/db";
-import { castDemandeStatutWithoutSupprimee } from "../../utils/castDemandeStatut";
-import { generateId } from "../../utils/generateId";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { generateId } from "@/modules/utils/generateId";
 
-export const updateDemandeWithHistory = async (
-  demande: Insertable<DB["demande"]>
-) =>
-  kdb
+export const updateDemandeWithHistory = async (demande: Insertable<DB["demande"]>) =>
+  getKbdClient()
     .insertInto("demande")
     .values({
-      ...(_.omit(demande, ["id", "updatedAt", "isIntention"]) as Insertable<
-        DB["demande"]
-      >),
+      ...(omit(demande, ["id", "updatedAt", "isIntention"]) as Insertable<DB["demande"]>),
       id: generateId(),
       updatedAt: new Date(),
     })

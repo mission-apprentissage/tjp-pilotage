@@ -45,6 +45,7 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 .coverage
+coverage
 
 # nyc test coverage
 .nyc_output
@@ -143,14 +144,15 @@ setEnv.sh
 yarn-error.log
 
 
+.clinic/
+.local/*
+!.local/.keep
+
 # Builds
 dist
 build
 sdk/lib
 .npmrc
-
-# Local History for Visual Studio Code
-.history/
 
 .scannerwork/
 sonar.sh
@@ -159,5 +161,17 @@ sonar.sh
 
 .sonarlint/
 
-# Vs code config
-.vscode/terminals.json
+# Local History for Visual Studio Code
+.history/
+
+.vault_pwd.txt
+node_modules.tar.gz
+/.env_server
+vault-tmp-*.*
+
+ui/next-env.d.ts
+
+SEED_PASSPHRASE.txt
+seed.gz
+
+tsconfig.tsbuildinfo

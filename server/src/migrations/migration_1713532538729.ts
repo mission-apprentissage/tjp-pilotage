@@ -1,4 +1,5 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema.dropView("latestIntentionView").ifExists().execute();
@@ -15,10 +16,7 @@ export const up = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("intention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestIntention")
@@ -49,10 +47,7 @@ export const up = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("intention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestIntention")
@@ -74,17 +69,7 @@ export const up = async (db: Kysely<unknown>) => {
     .createIndex("latestIntentionView_index")
     .unique()
     .on("latestIntentionView")
-    .columns([
-      "id",
-      "numero",
-      "campagneId",
-      "cfd",
-      "uai",
-      "codeRegion",
-      "codeAcademie",
-      "createurId",
-      "codeDispositif",
-    ])
+    .columns(["id", "numero", "campagneId", "cfd", "uai", "codeRegion", "codeAcademie", "createurId", "codeDispositif"])
     .execute();
 
   await sql`
@@ -104,23 +89,14 @@ export const up = async (db: Kysely<unknown>) => {
 };
 
 export const down = async (db: Kysely<unknown>) => {
-  await sql`DROP TRIGGER update_intention_refresh_materialized_view_t ON ${sql.table(
-    "intention"
-  )}`.execute(db);
+  await sql`DROP TRIGGER update_intention_refresh_materialized_view_t ON ${sql.table("intention")}`.execute(db);
   await sql`DROP FUNCTION refresh_latest_intention_view()`.execute(db);
 
   await db.schema.dropIndex("latestIntentionView_index").ifExists().execute();
 
-  await db.schema
-    .dropView("latestIntentionView")
-    .materialized()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestIntentionView").materialized().ifExists().execute();
 
-  await db.schema
-    .dropView("latestIntentionNonMaterializedView")
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestIntentionNonMaterializedView").ifExists().execute();
 
   await db.schema
     .createView("latestIntentionView")
@@ -134,10 +110,7 @@ export const down = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("intention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestIntention")

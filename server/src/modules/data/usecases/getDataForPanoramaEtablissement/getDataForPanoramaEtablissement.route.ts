@@ -1,14 +1,11 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
+import type { Server } from "@/server/server";
+
 import { getEtablissementSchema } from "./getDataForPanoramaEtablissement.schema";
 import { getDataForPanoramaEtablissement } from "./getDataForPanoramaEtablissement.usecase";
 
-export const getDataForPanoramaEtablissementRoute = ({
-  server,
-}: {
-  server: Server;
-}) => {
+export const getDataForPanoramaEtablissementRoute = ({ server }: { server: Server }) => {
   return createRoute("/panorama/stats/etablissement/:uai", {
     method: "GET",
     schema: getEtablissementSchema,

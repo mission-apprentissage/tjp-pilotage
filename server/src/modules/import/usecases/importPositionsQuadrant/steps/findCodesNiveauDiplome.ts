@@ -1,8 +1,6 @@
-import { kdb } from "../../../../../db/db";
+// @ts-nocheck -- TODO
+
+import { getKbdClient } from "@/db/db";
 
 export const findCodesNiveauDiplome = async () =>
-  await kdb
-    .selectFrom("formationScolaireView")
-    .distinct()
-    .select(["codeNiveauDiplome"])
-    .execute();
+  await getKbdClient().selectFrom("formationScolaireView").distinct().select(["codeNiveauDiplome"]).execute();

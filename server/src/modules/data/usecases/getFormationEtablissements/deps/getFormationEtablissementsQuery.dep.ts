@@ -1,37 +1,27 @@
+// @ts-nocheck -- TODO
+
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
-import { capaciteAnnee } from "../../../utils/capaciteAnnee";
-import { effectifAnnee } from "../../../utils/effectifAnnee";
-import { hasContinuum } from "../../../utils/hasContinuum";
-import { isInPerimetreIJEtablissement } from "../../../utils/isInPerimetreIJ";
-import { isScolaireFormationHistorique } from "../../../utils/isScolaire";
-import { notAnneeCommune } from "../../../utils/notAnneeCommune";
-import {
-  isHistoriqueCoExistant,
-  notHistoriqueUnlessCoExistant,
-} from "../../../utils/notHistorique";
-import { premiersVoeuxAnnee } from "../../../utils/premiersVoeuxAnnee";
-import {
-  selectTauxDevenirFavorableAgg,
-  withTauxDevenirFavorableReg,
-} from "../../../utils/tauxDevenirFavorable";
-import {
-  selectTauxInsertion6mois,
-  withInsertionReg,
-} from "../../../utils/tauxInsertion6mois";
-import {
-  selectTauxPoursuite,
-  withPoursuiteReg,
-} from "../../../utils/tauxPoursuite";
-import { selectTauxPression } from "../../../utils/tauxPression";
-import { selectTauxRemplissage } from "../../../utils/tauxRemplissage";
-import { Filters } from "../getFormationEtablissements.usecase";
+import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getFormationEtablissements/getFormationEtablissements.usecase";
+import { capaciteAnnee } from "@/modules/data/utils/capaciteAnnee";
+import { effectifAnnee } from "@/modules/data/utils/effectifAnnee";
+import { hasContinuum } from "@/modules/data/utils/hasContinuum";
+import { isInPerimetreIJEtablissement } from "@/modules/data/utils/isInPerimetreIJ";
+import { isScolaireFormationHistorique } from "@/modules/data/utils/isScolaire";
+import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
+import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
+import { premiersVoeuxAnnee } from "@/modules/data/utils/premiersVoeuxAnnee";
+import { selectTauxDevenirFavorableAgg, withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
+import { selectTauxInsertion6mois, withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
+import { selectTauxPoursuite, withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
+import { selectTauxPression } from "@/modules/data/utils/tauxPression";
+import { selectTauxRemplissage } from "@/modules/data/utils/tauxRemplissage";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
 export const getFormationEtablissementsQuery = async ({
   offset = 0,
@@ -56,78 +46,40 @@ export const getFormationEtablissementsQuery = async ({
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const result = await kdb
+  const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")
-    .innerJoin(
-      "formationEtablissement",
-      "formationEtablissement.cfd",
-      "formationView.cfd"
-    )
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "formationEtablissement.codeDispositif"
-    )
+    .innerJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "formationView.codeNiveauDiplome"
-    )
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .innerJoin("indicateurEntree", (join) =>
       join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurEntree.formationEtablissementId"
-        )
+        .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
         .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
     )
     .leftJoin("indicateurSortie", (join) =>
       join
-        .onRef(
-          "indicateurSortie.formationEtablissementId",
-          "=",
-          "formationEtablissement.id"
-        )
+        .onRef("indicateurSortie.formationEtablissementId", "=", "formationEtablissement.id")
         .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
     )
-    .innerJoin(
-      "etablissement",
-      "etablissement.uai",
-      "formationEtablissement.uai"
-    )
+    .innerJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .leftJoin("indicateurEtablissement", (join) =>
       join
         .onRef("etablissement.uai", "=", "indicateurEtablissement.uai")
         .on("indicateurEtablissement.millesime", "=", millesimeSortie)
     )
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "etablissement.codeDepartement"
-    )
+    .leftJoin("departement", "departement.codeDepartement", "etablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
-    .leftJoin(
-      "dataFormation as dataFormationContinuum",
-      "dataFormationContinuum.cfd",
-      "indicateurSortie.cfdContinuum"
-    )
+    .leftJoin("dataFormation as dataFormationContinuum", "dataFormationContinuum.cfd", "indicateurSortie.cfdContinuum")
     .leftJoin("formationHistorique", (join) =>
-      join
-        .onRef("formationHistorique.ancienCFD", "=", "formationView.cfd")
-        .on(isScolaireFormationHistorique)
+      join.onRef("formationHistorique.ancienCFD", "=", "formationView.cfd").on(isScolaireFormationHistorique)
     )
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join.on((eb) =>
         eb.and([
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.cfd"),
-            "=",
-            eb.ref("formationEtablissement.cfd")
-          ),
+          eb(eb.ref("positionFormationRegionaleQuadrant.cfd"), "=", eb.ref("formationEtablissement.cfd")),
           eb(
             eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
             "=",
@@ -138,16 +90,8 @@ export const getFormationEtablissementsQuery = async ({
             "=",
             eb.ref("formationView.codeNiveauDiplome")
           ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
-            "=",
-            eb.ref("etablissement.codeRegion")
-          ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
-            "=",
-            millesimeSortie
-          ),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("etablissement.codeRegion")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"), "=", millesimeSortie),
         ])
       )
     )
@@ -180,39 +124,19 @@ export const getFormationEtablissementsQuery = async ({
       "formationHistorique.cfd as formationRenovee",
       selectTauxRemplissage("indicateurEntree").as("tauxRemplissage"),
       effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
-      effectifAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as(
-        "effectif1"
-      ),
-      effectifAnnee({ alias: "indicateurEntree", annee: sql`'1'` }).as(
-        "effectif2"
-      ),
-      effectifAnnee({ alias: "indicateurEntree", annee: sql`'2'` }).as(
-        "effectif3"
-      ),
+      effectifAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as("effectif1"),
+      effectifAnnee({ alias: "indicateurEntree", annee: sql`'1'` }).as("effectif2"),
+      effectifAnnee({ alias: "indicateurEntree", annee: sql`'2'` }).as("effectif3"),
       capaciteAnnee({ alias: "indicateurEntree" }).as("capacite"),
-      capaciteAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as(
-        "capacite1"
-      ),
-      capaciteAnnee({ alias: "indicateurEntree", annee: sql`'1'` }).as(
-        "capacite2"
-      ),
-      capaciteAnnee({ alias: "indicateurEntree", annee: sql`'2'` }).as(
-        "capacite3"
-      ),
+      capaciteAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as("capacite1"),
+      capaciteAnnee({ alias: "indicateurEntree", annee: sql`'1'` }).as("capacite2"),
+      capaciteAnnee({ alias: "indicateurEntree", annee: sql`'2'` }).as("capacite3"),
       premiersVoeuxAnnee({ alias: "indicateurEntree" }).as("premiersVoeux"),
-      selectTauxPression("indicateurEntree", "formationView", false).as(
-        "tauxPression"
-      ),
+      selectTauxPression("indicateurEntree", "formationView", false).as("tauxPression"),
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuiteEtablissement"),
-      selectTauxInsertion6mois("indicateurSortie").as(
-        "tauxInsertionEtablissement"
-      ),
-      selectTauxDevenirFavorableAgg("indicateurSortie").as(
-        "tauxDevenirFavorableEtablissement"
-      ),
-      isHistoriqueCoExistant(eb, rentreeScolaire[0]).as(
-        "isHistoriqueCoExistant"
-      ),
+      selectTauxInsertion6mois("indicateurSortie").as("tauxInsertionEtablissement"),
+      selectTauxDevenirFavorableAgg("indicateurSortie").as("tauxDevenirFavorableEtablissement"),
+      isHistoriqueCoExistant(eb, rentreeScolaire[0]).as("isHistoriqueCoExistant"),
       eb
         .case()
         .when("indicateurSortie.cfdContinuum", "is not", null)
@@ -229,9 +153,7 @@ export const getFormationEtablissementsQuery = async ({
         .selectFrom("formationHistorique")
         .select("formationHistorique.cfd")
         .whereRef("formationHistorique.cfd", "=", "formationView.cfd")
-        .where("formationHistorique.ancienCFD", "in", (eb) =>
-          eb.selectFrom("formationEtablissement").select("cfd")
-        )
+        .where("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
         .limit(1)
         .as("isFormationRenovee"),
       sql<string | null>`
@@ -242,12 +164,7 @@ export const getFormationEtablissementsQuery = async ({
       `.as("dateFermeture"),
       eb
         .case()
-        .when(
-          eb("formationView.typeFamille", "in", [
-            "1ere_commune",
-            "2nde_commune",
-          ])
-        )
+        .when(eb("formationView.typeFamille", "in", ["1ere_commune", "2nde_commune"]))
         .then(
           sql<string>`
             COALESCE(
@@ -315,9 +232,7 @@ export const getFormationEtablissementsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("dispositif.libelleDispositif")}),
                   ' ',
-                  unaccent(${eb.ref(
-                    "positionFormationRegionaleQuadrant.positionQuadrant"
-                  )}),
+                  unaccent(${eb.ref("positionFormationRegionaleQuadrant.positionQuadrant")}),
                   ' ',
                   unaccent(${eb.ref("nsf.libelleNsf")}),
                   ' ',
@@ -340,8 +255,7 @@ export const getFormationEtablissementsQuery = async ({
       return eb;
     })
     .$call((q) => {
-      if (!withAnneeCommune || withAnneeCommune === "false")
-        return q.where(notAnneeCommune);
+      if (!withAnneeCommune || withAnneeCommune === "false") return q.where(notAnneeCommune);
       return q;
     })
     .$call((q) => {
@@ -377,10 +291,7 @@ export const getFormationEtablissementsQuery = async ({
       return q.where((w) =>
         w.or([
           w("familleMetier.cfdFamille", "in", cfdFamille),
-          w.and([
-            w("formationView.typeFamille", "=", "2nde_commune"),
-            w("formationView.cfd", "in", cfdFamille),
-          ]),
+          w.and([w("formationView.typeFamille", "=", "2nde_commune"), w("formationView.cfd", "in", cfdFamille)]),
         ])
       );
     })

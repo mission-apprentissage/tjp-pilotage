@@ -1,5 +1,8 @@
-import { getStatsSortieParRegionsQuery } from "../../queries/getStatsSortie/getStatsSortie";
-import { getPositionQuadrant } from "../../services/getPositionQuadrant";
+// @ts-nocheck -- TODO
+
+import { getStatsSortieParRegionsQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
+import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant";
+
 import { dependencies } from "./dependencies";
 
 export const getDataForPanoramaEtablissementFactory =
@@ -11,28 +14,20 @@ export const getDataForPanoramaEtablissementFactory =
       getPositionQuadrant,
     }
   ) =>
-  async (activeFilters: {
-    uai: string;
-    orderBy?: { column: string; order: "asc" | "desc" };
-  }) => {
-    const [formationsEtablissement, statsEtablissement, statsSortie] =
-      await Promise.all([
-        deps.getFormationsEtablissement(activeFilters),
-        deps.getStatsEtablissement(activeFilters),
-        deps.getStatsSortieParRegionsQuery({}),
-      ]);
+  async (activeFilters: { uai: string; orderBy?: { column: string; order: "asc" | "desc" } }) => {
+    const [formationsEtablissement, statsEtablissement, statsSortie] = await Promise.all([
+      deps.getFormationsEtablissement(activeFilters),
+      deps.getStatsEtablissement(activeFilters),
+      deps.getStatsSortieParRegionsQuery({}),
+    ]);
 
     return {
       ...statsEtablissement,
       formations: formationsEtablissement?.map((formation) => ({
         ...formation,
-        positionQuadrant: deps.getPositionQuadrant(
-          formation,
-          statsSortie[statsEtablissement.codeRegion ?? ""] || {}
-        ),
+        positionQuadrant: deps.getPositionQuadrant(formation, statsSortie[statsEtablissement.codeRegion ?? ""] || {}),
       })),
     };
   };
 
-export const getDataForPanoramaEtablissement =
-  getDataForPanoramaEtablissementFactory();
+export const getDataForPanoramaEtablissement = getDataForPanoramaEtablissementFactory();

@@ -1,7 +1,9 @@
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
-import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import { Filters, getCampagne, getFilters, getIntentions } from "./deps";
+import { getCurrentCampagneQuery } from "@/modules/intentions/queries/getCurrentCampagne/getCurrentCampagne.query";
+
+import type { Filters } from "./deps";
+import { getCampagne, getFilters, getIntentions } from "./deps";
 
 const CAMPAGNE_DEMANDE = "2023";
 
@@ -16,8 +18,7 @@ const getIntentionsFactory =
   ) =>
   async (activeFilters: Filters) => {
     const currentCampagne = await deps.getCurrentCampagneQuery();
-    const anneeCampagne =
-      activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
+    const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
 
     const shouldFetchOnlyIntention = anneeCampagne !== CAMPAGNE_DEMANDE;
 

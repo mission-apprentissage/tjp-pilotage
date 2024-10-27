@@ -1,7 +1,7 @@
-import { kdb } from "../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const isMaintenanceQuery = async () =>
-  await kdb
+  await getKbdClient()
     .selectFrom("maintenance")
     .selectAll()
     .executeTakeFirst()

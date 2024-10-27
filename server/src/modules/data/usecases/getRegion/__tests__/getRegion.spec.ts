@@ -1,6 +1,7 @@
-import { build } from "../../../../../build";
-import { kdb } from "../../../../../db/db";
-import { Server, server as fastifyServer } from "../../../../../server";
+import { build } from "@/build";
+import { getKbdClient } from "@/db/db";
+import { server as fastifyServer } from "@/server.ts";
+import type { Server } from "@/server/server";
 
 describe("GET /api/region/:codeRegion", () => {
   let server: Server;
@@ -11,7 +12,7 @@ describe("GET /api/region/:codeRegion", () => {
   });
 
   afterAll(async () => {
-    await server.close(() => kdb.destroy());
+    await server.close(() => getKbdClient().destroy());
   });
 
   it("doit retrouver les données de la région Auvergne-Rhône-Alpes (84)", async () => {

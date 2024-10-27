@@ -5,8 +5,7 @@ export const OffresApprentissageSchema = z
     "UAI formation": z.string().optional(),
     "UAI Responsable": z.string().optional(),
     "UAI formateur": z.string().optional(),
-    "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)":
-      z.string(),
+    "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)": z.string(),
     "Niveau de la formation": z.string(),
     Tags: z.string(),
   })

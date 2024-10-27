@@ -1,10 +1,12 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 import { RENTREES_SCOLAIRES } from "shared";
 
-import { DB } from "../../../../db/schema";
-import { rawDataRepository } from "../../repositories/rawData.repository";
-import { streamIt } from "../../utils/streamIt";
+import type { DB } from "@/db/schema";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { createConstatRentree } from "./createConstatRentree.dep";
 import { findNMef } from "./findNMef.dep";
 
@@ -17,12 +19,10 @@ export const [importConstatRentree] = inject(
   (deps) => async () => {
     let errorCount = 0;
     for (const rentreeScolaire of RENTREES_SCOLAIRES) {
-      console.log(
-        `Import du constat rentrée de l'année scolaire ${rentreeScolaire}`
-      );
+      console.log(`Import du constat rentrée de l'année scolaire ${rentreeScolaire}`);
 
       await streamIt(
-        (offset) =>
+        async (offset) =>
           deps.findRawDatas({
             type: "constat",
             offset,
@@ -48,9 +48,7 @@ export const [importConstatRentree] = inject(
             const constatRentree: Insertable<DB["constatRentree"]> = {
               uai: constatRentreeLine["UAI"],
               mefstat11: constatRentreeLine["Mef Bcp 11"],
-              effectif: Number(
-                constatRentreeLine["Nombre d'élèves : Total"] ?? "0"
-              ),
+              effectif: Number(constatRentreeLine["Nombre d'élèves : Total"] ?? "0"),
               cfd: nMef.FORMATION_DIPLOME,
               codeDispositif: nMef.DISPOSITIF_FORMATION,
               anneeDispositif: Number(nMef.ANNEE_DISPOSITIF ?? "0"),
@@ -60,14 +58,9 @@ export const [importConstatRentree] = inject(
             try {
               await deps.createConstatRentree(constatRentree);
 
-              process.stdout.write(
-                `\r${count} constat de rentrée ajoutés ou mis à jour`
-              );
+              process.stdout.write(`\r${count} constat de rentrée ajoutés ou mis à jour`);
             } catch (error) {
-              console.log(
-                `An error occured while importing data`,
-                JSON.stringify(constatRentree, null, 2)
-              );
+              console.log(`An error occured while importing data`, JSON.stringify(constatRentree, null, 2));
               console.error(error);
               errorCount++;
             }
@@ -76,9 +69,7 @@ export const [importConstatRentree] = inject(
         { parallel: 20 }
       );
 
-      process.stdout.write(
-        `${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`
-      );
+      process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
     }
   }
 );

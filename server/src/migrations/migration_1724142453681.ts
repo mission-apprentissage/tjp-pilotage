@@ -1,17 +1,11 @@
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .alterTable("rome")
-    .addColumn("transitionEcologique", "boolean", (c) =>
-      c.notNull().defaultTo(false)
-    )
-    .addColumn("transitionNumerique", "boolean", (c) =>
-      c.notNull().defaultTo(false)
-    )
-    .addColumn("transitionDemographique", "boolean", (c) =>
-      c.notNull().defaultTo(false)
-    )
+    .addColumn("transitionEcologique", "boolean", (c) => c.notNull().defaultTo(false))
+    .addColumn("transitionNumerique", "boolean", (c) => c.notNull().defaultTo(false))
+    .addColumn("transitionDemographique", "boolean", (c) => c.notNull().defaultTo(false))
     .execute();
 };
 

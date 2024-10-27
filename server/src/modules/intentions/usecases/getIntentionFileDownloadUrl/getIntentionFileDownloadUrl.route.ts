@@ -1,7 +1,8 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { getIntentionFileDownloadUrlSchema } from "./getIntentionFileDownloadUrl.schema";
 import { getIntentionFileDownloadUrlUseCase } from "./getIntentionFileDownloadUrl.usecase";
 
@@ -14,10 +15,7 @@ export const getIntentionFileDownloadUrlRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions-perdir/lecture"),
       handler: async (request, response) => {
-        const url = await getIntentionFileDownloadUrlUseCase(
-          request.params.numero,
-          request.query.filename
-        );
+        const url = await getIntentionFileDownloadUrlUseCase(request.params.numero, request.query.filename);
 
         response.status(200).send({
           url,

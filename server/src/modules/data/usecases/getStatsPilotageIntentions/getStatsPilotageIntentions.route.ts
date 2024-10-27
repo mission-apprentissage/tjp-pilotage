@@ -1,15 +1,12 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { getStatsPilotageIntentionsSchema } from "./getStatsPilotageIntentions.schema";
 import { getStatsPilotageIntentionsUsecase } from "./getStatsPilotageIntentions.usecase";
 
-export const getStatsPilotageIntentionsRoute = ({
-  server,
-}: {
-  server: Server;
-}) => {
+export const getStatsPilotageIntentionsRoute = ({ server }: { server: Server }) => {
   return createRoute("/pilotage-intentions/stats", {
     method: "GET",
     schema: getStatsPilotageIntentionsSchema,
@@ -18,9 +15,7 @@ export const getStatsPilotageIntentionsRoute = ({
       ...props,
       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
       handler: async (request, response) => {
-        const statsTauxTransfo = await getStatsPilotageIntentionsUsecase(
-          request.query
-        );
+        const statsTauxTransfo = await getStatsPilotageIntentionsUsecase(request.query);
         response.status(200).send(statsTauxTransfo);
       },
     });

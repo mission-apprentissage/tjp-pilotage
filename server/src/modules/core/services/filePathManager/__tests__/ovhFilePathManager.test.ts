@@ -1,5 +1,5 @@
-import { FilePathManager } from "../filePathManager";
-import { ovhFilePathManagerFactory } from "../ovhFilePathManager";
+import type { FilePathManager } from "@/modules/core/services/filePathManager/filePathManager";
+import { ovhFilePathManagerFactory } from "@/modules/core/services/filePathManager/ovhFilePathManager";
 
 describe("Core Service: Ovh file path manager", () => {
   let filePathManager: FilePathManager;

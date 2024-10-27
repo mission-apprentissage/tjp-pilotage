@@ -1,5 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { Scope } from "shared/security/permissions";
+import type { Scope } from "shared/security/permissions";
 
 import { findUsers } from "./findUsers.dep";
 

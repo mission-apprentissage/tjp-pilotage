@@ -1,13 +1,10 @@
-import {
-  PageObjectResponse,
-  QueryDatabaseResponse,
-} from "@notionhq/client/build/src/api-endpoints";
+import type { PageObjectResponse, QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 
-import { config } from "../../../../../../config/config";
-import { PROPERTIES } from "../../utils/properties/properties";
-import { mapNotionDatabaseRowToGlossaireEntry } from "../dependencies";
-import { GlossaireEntry } from "../getGlossaire.schema";
-import { getGlossaireFactory } from "../getGlossaire.usecase";
+import config from "@/config";
+import { mapNotionDatabaseRowToGlossaireEntry } from "@/modules/glossaire/usecases/getGlossaire/dependencies";
+import type { GlossaireEntry } from "@/modules/glossaire/usecases/getGlossaire/getGlossaire.schema";
+import { getGlossaireFactory } from "@/modules/glossaire/usecases/getGlossaire/getGlossaire.usecase";
+import { PROPERTIES } from "@/modules/glossaire/usecases/utils/properties/properties";
 
 const GetGlossaireFixture = () => {
   const currentRows: PageObjectResponse[] = [];

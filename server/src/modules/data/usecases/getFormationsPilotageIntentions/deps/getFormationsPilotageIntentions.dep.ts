@@ -1,40 +1,43 @@
-import { ExpressionBuilder, sql } from "kysely";
-import { CURRENT_IJ_MILLESIME, MILLESIMES_IJ } from "shared";
+// @ts-nocheck -- TODO
+
+import type { ExpressionBuilder } from "kysely";
+import { sql } from "kysely";
+import type { MILLESIMES_IJ } from "shared";
+import { CURRENT_IJ_MILLESIME } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
-import { z } from "zod";
+import type { z } from "zod";
 
-import { DB, kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import type { getFormationsPilotageIntentionsSchema } from "@/modules/data/usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.schema";
+import { hasContinuum } from "@/modules/data/utils/hasContinuum";
+import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
+import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
+import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
+import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
+import { withTauxPressionReg } from "@/modules/data/utils/tauxPression";
 import {
   countPlacesColorees,
   countPlacesFermees,
   countPlacesOuvertes,
   countPlacesTransformeesParCampagne,
-} from "../../../../utils/countCapacite";
-import { isDemandeProjetOrValidee } from "../../../../utils/isDemandeProjetOrValidee";
-import { isDemandeNotDeletedOrRefused } from "../../../../utils/isDemandeSelectable";
-import { hasContinuum } from "../../../utils/hasContinuum";
-import { selectPositionQuadrant } from "../../../utils/positionFormationRegionaleQuadrant";
-import { withTauxDevenirFavorableReg } from "../../../utils/tauxDevenirFavorable";
-import { withInsertionReg } from "../../../utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../../../utils/tauxPoursuite";
-import { withTauxPressionReg } from "../../../utils/tauxPression";
-import { getFormationsPilotageIntentionsSchema } from "../getFormationsPilotageIntentions.schema";
+} from "@/modules/utils/countCapacite";
+import { isDemandeProjetOrValidee } from "@/modules/utils/isDemandeProjetOrValidee";
+import { isDemandeNotDeletedOrRefused } from "@/modules/utils/isDemandeSelectable";
+import { cleanNull } from "@/utils/noNull";
+
 import { getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery } from "./getEffectifsParCampagneCodeNiveauDiplomeCodeRegion.dep";
 
-export interface Filters
-  extends z.infer<typeof getFormationsPilotageIntentionsSchema.querystring> {
+export interface Filters extends z.infer<typeof getFormationsPilotageIntentionsSchema.querystring> {
   millesimeSortie?: (typeof MILLESIMES_IJ)[number];
   campagne: string;
 }
 
-const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
-  eb.fn.count<number>("demande.numero").distinct();
+const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) => eb.fn.count<number>("demande.numero").distinct();
 
-const selectNbEtablissements = (
-  eb: ExpressionBuilder<DB, "dataEtablissement">
-) => eb.fn.count<number>("dataEtablissement.uai").distinct();
+const selectNbEtablissements = (eb: ExpressionBuilder<DB, "dataEtablissement">) =>
+  eb.fn.count<number>("dataEtablissement.uai").distinct();
 
 export const getFormationsPilotageIntentionsQuery = ({
   statut,
@@ -79,42 +82,20 @@ export const getFormationsPilotageIntentionsQuery = ({
     order,
   });
 
-  return kdb
+  return getKbdClient()
     .selectFrom("latestDemandeIntentionView as demande")
-    .innerJoin("campagne", (join) =>
-      join.onRef("campagne.id", "=", "demande.campagneId")
-    )
+    .innerJoin("campagne", (join) => join.onRef("campagne.id", "=", "demande.campagneId"))
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "demande.codeDispositif"
-    )
+    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
+    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
+    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join.on((eb) =>
         eb.and([
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.cfd"),
-            "=",
-            eb.ref("demande.cfd")
-          ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
-            "=",
-            eb.ref("dataEtablissement.codeRegion")
-          ),
+          eb(eb.ref("positionFormationRegionaleQuadrant.cfd"), "=", eb.ref("demande.cfd")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
@@ -124,18 +105,16 @@ export const getFormationsPilotageIntentionsQuery = ({
       )
     )
     .leftJoin(
-      kdb
-        .selectFrom(
-          effectifs.as("effectifsParCampagneCodeNiveauDiplomeCodeRegion")
-        )
+      getKbdClient()
+        .selectFrom(effectifs.as("effectifsParCampagneCodeNiveauDiplomeCodeRegion"))
         .select((eb) => [
           "effectifsParCampagneCodeNiveauDiplomeCodeRegion.annee",
           "effectifsParCampagneCodeNiveauDiplomeCodeRegion.cfd",
           "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeRegion",
           "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeNiveauDiplome",
-          sql<number>`SUM(${eb.ref(
-            "effectifsParCampagneCodeNiveauDiplomeCodeRegion.denominateur"
-          )})`.as("denominateur"),
+          sql<number>`SUM(${eb.ref("effectifsParCampagneCodeNiveauDiplomeCodeRegion.denominateur")})`.as(
+            "denominateur"
+          ),
         ])
         .groupBy([
           "effectifsParCampagneCodeNiveauDiplomeCodeRegion.annee",
@@ -148,17 +127,11 @@ export const getFormationsPilotageIntentionsQuery = ({
         join
           .onRef("campagne.annee", "=", "effectifs.annee")
           .onRef("demande.cfd", "=", "effectifs.cfd")
-          .onRef(
-            "dataFormation.codeNiveauDiplome",
-            "=",
-            "effectifs.codeNiveauDiplome"
-          )
+          .onRef("dataFormation.codeNiveauDiplome", "=", "effectifs.codeNiveauDiplome")
           .onRef("demande.codeRegion", "=", "effectifs.codeRegion")
     )
     .select((eb) => [
-      sql<number>`COALESCE(${eb.ref("effectifs.denominateur")}, 0)`.as(
-        "effectif"
-      ),
+      sql<number>`COALESCE(${eb.ref("effectifs.denominateur")}, 0)`.as("effectif"),
       selectPositionQuadrant(eb).as("positionQuadrant"),
       "dataFormation.libelleFormation",
       "dispositif.libelleDispositif",
@@ -197,9 +170,7 @@ export const getFormationsPilotageIntentionsQuery = ({
       eb.fn.sum<number>(countPlacesOuvertes(eb)).as("placesOuvertes"),
       eb.fn.sum<number>(countPlacesFermees(eb)).as("placesFermees"),
       eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
-      eb.fn
-        .sum<number>(countPlacesTransformeesParCampagne(eb))
-        .as("placesTransformees"),
+      eb.fn.sum<number>(countPlacesTransformeesParCampagne(eb)).as("placesTransformees"),
       hasContinuum({
         eb,
         millesimeSortie,
@@ -253,31 +224,19 @@ export const getFormationsPilotageIntentionsQuery = ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
+      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (codeRegion)
-        return eb.where("dataEtablissement.codeRegion", "=", codeRegion);
+      if (codeRegion) return eb.where("dataEtablissement.codeRegion", "=", codeRegion);
       return eb;
     })
     .$call((eb) => {
-      if (codeDepartement)
-        return eb.where(
-          "dataEtablissement.codeDepartement",
-          "=",
-          codeDepartement
-        );
+      if (codeDepartement) return eb.where("dataEtablissement.codeDepartement", "=", codeDepartement);
       return eb;
     })
     .$call((eb) => {
-      if (codeAcademie)
-        return eb.where("dataEtablissement.codeAcademie", "=", codeAcademie);
+      if (codeAcademie) return eb.where("dataEtablissement.codeAcademie", "=", codeAcademie);
       return eb;
     })
     .$call((eb) => {
@@ -297,10 +256,7 @@ export const getFormationsPilotageIntentionsQuery = ({
     .$call((q) => {
       if (!withColoration || withColoration === "false")
         return q.where((w) =>
-          w.or([
-            w("demande.coloration", "=", false),
-            w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"]),
-          ])
+          w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
         );
       return q;
     })

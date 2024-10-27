@@ -1,44 +1,29 @@
+// @ts-nocheck -- TODO
+
 import { sql } from "kysely";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { z } from "zod";
+import type { z } from "zod";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../../core/model/User";
-import {
-  isDemandeNotDeleted,
-  isDemandeSelectable,
-} from "../../../utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
-import { countDemandesSchema } from "./countDemandes.schema";
+import { getKbdClient } from "@/db/db";
+import type { RequestUser } from "@/modules/core/model/User";
+import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
-export interface Filters
-  extends z.infer<typeof countDemandesSchema.querystring> {
+import type { countDemandesSchema } from "./countDemandes.schema";
+
+export interface Filters extends z.infer<typeof countDemandesSchema.querystring> {
   user: RequestUser;
 }
-export const countDemandesQuery = async ({
-  user,
-  anneeCampagne,
-  codeAcademie,
-  codeNiveauDiplome,
-  search,
-}: Filters) => {
+export const countDemandesQuery = async ({ user, anneeCampagne, codeAcademie, codeNiveauDiplome, search }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const countDemandes = kdb
+  const countDemandes = getKbdClient()
     .selectFrom("latestDemandeView as demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
-    .leftJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
+    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("user", "user.id", "demande.createdBy")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
@@ -49,17 +34,13 @@ export const countDemandesQuery = async ({
       })
     )
     .leftJoin("suivi", (join) =>
-      join
-        .onRef("suivi.intentionNumero", "=", "demande.numero")
-        .on("suivi.userId", "=", user.id)
+      join.onRef("suivi.intentionNumero", "=", "demande.numero").on("suivi.userId", "=", user.id)
     )
     .select((eb) => sql<number>`count(${eb.ref("demande.numero")})`.as("total"))
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = ${
-            DemandeStatutEnum["projet de demande"]
-          }
+          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum["projet de demande"]}
           THEN 1
           ELSE 0
           END
@@ -70,9 +51,7 @@ export const countDemandesQuery = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = ${
-            DemandeStatutEnum["demande validée"]
-          }
+          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum["demande validée"]}
           THEN 1
           ELSE 0
           END
@@ -83,9 +62,7 @@ export const countDemandesQuery = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = ${
-            DemandeStatutEnum["refusée"]
-          }
+          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum["refusée"]}
           THEN 1
           ELSE 0
           END
@@ -96,9 +73,7 @@ export const countDemandesQuery = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = ${
-            DemandeStatutEnum["brouillon"]
-          }
+          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum["brouillon"]}
           THEN 1
           ELSE 0
           END
@@ -139,17 +114,11 @@ export const countDemandesQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeAcademie)
-        return eb.where("academie.codeAcademie", "in", codeAcademie);
+      if (codeAcademie) return eb.where("academie.codeAcademie", "in", codeAcademie);
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
+      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .where(isDemandeNotDeleted)

@@ -1,18 +1,12 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { kdb } from "../../../../../db/db";
-import { DB } from "../../../../../db/schema";
+import { getKbdClient } from "@/db/db";
+import type { DB } from "@/db/schema";
 
-export const insertTauxIJRegionaux = async (
-  tauxIJ: Insertable<DB["tauxIJNiveauDiplomeRegion"]>
-) => {
-  return kdb
+export const insertTauxIJRegionaux = async (tauxIJ: Insertable<DB["tauxIJNiveauDiplomeRegion"]>) => {
+  return getKbdClient()
     .insertInto("tauxIJNiveauDiplomeRegion")
     .values(tauxIJ)
-    .onConflict((cb) =>
-      cb
-        .columns(["codeRegion", "codeNiveauDiplome", "millesimeSortie"])
-        .doUpdateSet(tauxIJ)
-    )
+    .onConflict((cb) => cb.columns(["codeRegion", "codeNiveauDiplome", "millesimeSortie"]).doUpdateSet(tauxIJ))
     .execute();
 };

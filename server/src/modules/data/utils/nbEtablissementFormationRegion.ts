@@ -1,6 +1,7 @@
-import { ExpressionBuilder, sql } from "kysely";
+import type { ExpressionBuilder } from "kysely";
+import { sql } from "kysely";
 
-import { DB } from "../../../db/db";
+import type { DB } from "@/db/db";
 
 export const nbEtablissementFormationRegion = ({
   eb,
@@ -13,27 +14,13 @@ export const nbEtablissementFormationRegion = ({
     .selectFrom("formationEtablissement")
     .leftJoin("indicateurEntree", (join) =>
       join
-        .onRef(
-          "indicateurEntree.formationEtablissementId",
-          "=",
-          "formationEtablissement.id"
-        )
+        .onRef("indicateurEntree.formationEtablissementId", "=", "formationEtablissement.id")
         .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
-    .leftJoin(
-      "etablissement",
-      "etablissement.uai",
-      "formationEtablissement.uai"
-    )
+    .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .whereRef("etablissement.codeRegion", "=", "demande.codeRegion")
     .whereRef("formationEtablissement.cfd", "=", "demande.cfd")
-    .whereRef(
-      "formationEtablissement.codeDispositif",
-      "=",
-      "demande.codeDispositif"
-    )
+    .whereRef("formationEtablissement.codeDispositif", "=", "demande.codeDispositif")
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
-    .select((eb2) =>
-      sql<number>`count(${eb2.ref("formationEtablissement.uai")})`.as("nbEtab")
-    );
+    .select((eb2) => sql<number>`count(${eb2.ref("formationEtablissement.uai")})`.as("nbEtab"));
 };

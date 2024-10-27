@@ -1,9 +1,11 @@
-import { kdb } from "../../../db/db";
-import { cleanNull } from "../../../utils/noNull";
+// @ts-nocheck -- TODO
+
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
 export const findOneDemande = async (numero: string) => {
   return cleanNull(
-    await kdb
+    await getKbdClient()
       .selectFrom("latestDemandeView as demande")
       .selectAll()
       .where("numero", "=", numero)

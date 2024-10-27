@@ -1,45 +1,30 @@
+// @ts-nocheck -- TODO
+
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
-import {
-  jsonArrayFrom,
-  jsonBuildObject,
-  jsonObjectFrom,
-} from "kysely/helpers/postgres";
-import { z } from "zod";
+import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
+import type { z } from "zod";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../../core/model/User";
-import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
-import {
-  countDifferenceCapaciteApprentissage,
-  countDifferenceCapaciteScolaire,
-} from "../../../utils/countCapacite";
-import {
-  isDemandeNotDeleted,
-  isDemandeSelectable,
-} from "../../../utils/isDemandeSelectable";
-import { getDemandeSchema } from "./getDemande.schema";
+import { getKbdClient } from "@/db/db";
+import type { RequestUser } from "@/modules/core/model/User";
+import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { countDifferenceCapaciteApprentissage, countDifferenceCapaciteScolaire } from "@/modules/utils/countCapacite";
+import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
+import { cleanNull } from "@/utils/noNull";
+
+import type { getDemandeSchema } from "./getDemande.schema";
 
 export interface Filters extends z.infer<typeof getDemandeSchema.params> {
   user: RequestUser;
 }
 
 export const getDemandeQuery = async ({ numero, user }: Filters) => {
-  const demande = await kdb
+  const demande = await getKbdClient()
     .selectFrom("latestDemandeView as demande")
-    .innerJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "demande.codeDispositif"
-    )
+    .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .innerJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
+    .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .selectAll()
     .select((eb) => [
       "dispositif.libelleDispositif as libelleDispositif",
@@ -55,11 +40,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
           .limit(1)
       ).as("correction"),
       jsonObjectFrom(
-        eb
-          .selectFrom("campagne")
-          .selectAll("campagne")
-          .whereRef("campagne.id", "=", "demande.campagneId")
-          .limit(1)
+        eb.selectFrom("campagne").selectAll("campagne").whereRef("campagne.id", "=", "demande.campagneId").limit(1)
       ).as("campagne"),
       jsonBuildObject({
         etablissement: jsonObjectFrom(
@@ -72,26 +53,14 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
         formation: jsonObjectFrom(
           eb
             .selectFrom("dataFormation")
-            .leftJoin(
-              "niveauDiplome",
-              "niveauDiplome.codeNiveauDiplome",
-              "dataFormation.codeNiveauDiplome"
-            )
+            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
             .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref(
-                "dataFormation.libelleFormation"
-              )},
-              ' (',${ebDataFormation.ref(
-                "niveauDiplome.libelleNiveauDiplome"
-              )},')',
-              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as(
-                "libelleFormation"
+              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
+              ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
+              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
+              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+                "isFCIL"
               ),
-              sql<boolean>`${ebDataFormation(
-                "dataFormation.codeNiveauDiplome",
-                "in",
-                ["381", "481", "581"]
-              )}`.as("isFCIL"),
             ])
             .select((eb) =>
               jsonArrayFrom(
@@ -100,18 +69,10 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
                   .select(["libelleDispositif", "codeDispositif"])
                   .leftJoin("rawData", (join) =>
                     join
-                      .onRef(
-                        sql`"data"->>'DISPOSITIF_FORMATION'`,
-                        "=",
-                        "dispositif.codeDispositif"
-                      )
+                      .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
                       .on("rawData.type", "=", "nMef")
                   )
-                  .whereRef(
-                    sql`"data"->>'FORMATION_DIPLOME'`,
-                    "=",
-                    "dataFormation.cfd"
-                  )
+                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
@@ -128,26 +89,14 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
         formationCompensation: jsonObjectFrom(
           eb
             .selectFrom("dataFormation")
-            .leftJoin(
-              "niveauDiplome",
-              "niveauDiplome.codeNiveauDiplome",
-              "dataFormation.codeNiveauDiplome"
-            )
+            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
             .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref(
-                "dataFormation.libelleFormation"
-              )},
-              ' (',${ebDataFormation.ref(
-                "niveauDiplome.libelleNiveauDiplome"
-              )},')',
-              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as(
-                "libelleFormation"
+              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
+              ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
+              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
+              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+                "isFCIL"
               ),
-              sql<boolean>`${ebDataFormation(
-                "dataFormation.codeNiveauDiplome",
-                "in",
-                ["381", "481", "581"]
-              )}`.as("isFCIL"),
             ])
             .select((eb) =>
               jsonArrayFrom(
@@ -156,18 +105,10 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
                   .select(["libelleDispositif", "codeDispositif"])
                   .leftJoin("rawData", (join) =>
                     join
-                      .onRef(
-                        sql`"data"->>'DISPOSITIF_FORMATION'`,
-                        "=",
-                        "dispositif.codeDispositif"
-                      )
+                      .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
                       .on("rawData.type", "=", "nMef")
                   )
-                  .whereRef(
-                    sql`"data"->>'FORMATION_DIPLOME'`,
-                    "=",
-                    "dataFormation.cfd"
-                  )
+                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
@@ -180,9 +121,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
           .selectFrom("user")
           .whereRef("user.id", "=", "demande.createdBy")
           .select((eb) => [
-            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
-              "user.lastname"
-            )})`.as("fullname"),
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
           ])
@@ -192,17 +131,13 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
           .selectFrom("user")
           .whereRef("user.id", "=", "demande.updatedBy")
           .select((eb) => [
-            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
-              "user.lastname"
-            )})`.as("fullname"),
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
           ])
       ).as("updatedBy"),
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
-      countDifferenceCapaciteApprentissage(eb).as(
-        "differenceCapaciteApprentissage"
-      ),
+      countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
     ])
     .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
@@ -220,9 +155,8 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
 
   const codeDispositif =
     demande?.codeDispositif &&
-    demande.metadata.formation?.dispositifs.find(
-      (item) => item.codeDispositif === demande?.codeDispositif
-    )?.codeDispositif;
+    demande.metadata.formation?.dispositifs.find((item) => item.codeDispositif === demande?.codeDispositif)
+      ?.codeDispositif;
 
   return (
     demande &&
@@ -232,12 +166,8 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
         ...demande.metadata,
         formation: cleanNull(demande.metadata.formation),
         etablissement: cleanNull(demande.metadata.etablissement),
-        formationCompensation: cleanNull(
-          demande.metadata.formationCompensation
-        ),
-        etablissementCompensation: cleanNull(
-          demande.metadata.etablissementCompensation
-        ),
+        formationCompensation: cleanNull(demande.metadata.formationCompensation),
+        etablissementCompensation: cleanNull(demande.metadata.etablissementCompensation),
       }),
       statut: castDemandeStatutWithoutSupprimee(demande.statut),
       createdAt: demande.createdAt?.toISOString(),

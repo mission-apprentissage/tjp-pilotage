@@ -1,8 +1,10 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import { DB } from "../../../../db/db";
-import { rawDataRepository } from "../../repositories/rawData.repository";
-import { streamIt } from "../../utils/streamIt";
+import type { DB } from "@/db/db";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { createDataEtablissement } from "./createDataEtablissement.dep";
 import { findDepartement } from "./findDepartement.dep";
 
@@ -16,15 +18,11 @@ export const [importDataEtablissements] = inject(
     let errorCount = 0;
     console.log("Import des dataEtablissement");
     await streamIt(
-      (offset) =>
-        deps.findRawDatas({ type: "lyceesACCE", offset, limit: 10000 }),
+      async (offset) => deps.findRawDatas({ type: "lyceesACCE", offset, limit: 10000 }),
       async (lyceeACCE, count) => {
-        const codeDepartement = formatCodeDepartement(
-          lyceeACCE.departement_insee_3
-        );
+        const codeDepartement = formatCodeDepartement(lyceeACCE.departement_insee_3);
 
-        const departement =
-          codeDepartement && (await deps.findDepartement({ codeDepartement }));
+        const departement = codeDepartement && (await deps.findDepartement({ codeDepartement }));
 
         try {
           await deps.createDataEtablissement({
@@ -37,8 +35,7 @@ export const [importDataEtablissements] = inject(
             adresse: lyceeACCE.adresse_uai,
             commune: lyceeACCE.commune_libe,
             codePostal:
-              lyceeACCE.code_postal_uai?.length &&
-              lyceeACCE.code_postal_uai.length <= 5
+              lyceeACCE.code_postal_uai?.length && lyceeACCE.code_postal_uai.length <= 5
                 ? lyceeACCE.code_postal_uai
                 : undefined,
             secteur: lyceeACCE.secteur_public_prive,
@@ -50,21 +47,16 @@ export const [importDataEtablissements] = inject(
           errorCount++;
         }
 
-        process.stdout.write(
-          `\r${count} dataEtablissement ajoutés ou mis à jour`
-        );
+        process.stdout.write(`\r${count} dataEtablissement ajoutés ou mis à jour`);
       },
       { parallel: 20 }
     );
-    process.stdout.write(
-      `${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`
-    );
+    process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
   }
 );
 
 const formatCodeDepartement = (codeInsee: string | undefined) => {
   if (!codeInsee) return;
   if (codeInsee.length === 3) return codeInsee as `${number}${number}${string}`;
-  if (codeInsee.length === 2)
-    return `0${codeInsee}` as `${number}${number}${string}`;
+  if (codeInsee.length === 2) return `0${codeInsee}` as `${number}${number}${string}`;
 };

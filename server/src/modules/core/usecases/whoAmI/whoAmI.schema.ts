@@ -1,4 +1,5 @@
-import { PERMISSIONS, Role } from "shared";
+import type { Role } from "shared";
+import { PERMISSIONS } from "shared";
 import { z } from "zod";
 
 export const whoAmISchema = {

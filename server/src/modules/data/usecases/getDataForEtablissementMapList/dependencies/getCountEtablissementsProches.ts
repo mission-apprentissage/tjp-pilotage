@@ -1,28 +1,17 @@
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
-import { kdb } from "../../../../../db/db";
-import { RouteQueryString } from "../getDataForEtablissementMapList.usecase";
+import { getKbdClient } from "@/db/db";
+import type { RouteQueryString } from "@/modules/data/usecases/getDataForEtablissementMapList/getDataForEtablissementMapList.usecase";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Filters extends RouteQueryString {}
 
 export const getCountEtablissementsProches = async ({ cfd, bbox }: Filters) =>
-  await kdb
+  await getKbdClient()
     .selectFrom("etablissement")
-    .leftJoin(
-      "formationEtablissement",
-      "formationEtablissement.uai",
-      "etablissement.uai"
-    )
-    .leftJoin(
-      "indicateurEntree",
-      "indicateurEntree.formationEtablissementId",
-      "formationEtablissement.id"
-    )
-    .leftJoin(
-      "indicateurSortie",
-      "indicateurSortie.formationEtablissementId",
-      "formationEtablissement.id"
-    )
+    .leftJoin("formationEtablissement", "formationEtablissement.uai", "etablissement.uai")
+    .leftJoin("indicateurEntree", "indicateurEntree.formationEtablissementId", "formationEtablissement.id")
+    .leftJoin("indicateurSortie", "indicateurSortie.formationEtablissementId", "formationEtablissement.id")
     .select((sb) => sb.fn.count<number>("etablissement.uai").over().as("count"))
     .where((eb) =>
       eb.or([

@@ -1,15 +1,9 @@
 import { z } from "zod";
 
-import { config } from "../../../../../config/config";
+import config from "@/config";
+
 import { localFileManager } from "./localFileManager";
 import { ovhFileManager } from "./ovhFileManager";
-
-export interface FileManager {
-  deleteFile: (filepath: string) => Promise<void>;
-  getDownloadUrl: (filepath: string) => Promise<string>;
-  listFiles: (filepath: string) => Promise<FileType[]>;
-  uploadFile: (filepath: string, file: Buffer) => Promise<void>;
-}
 
 export const fileTypeSchema = z.object({
   path: z.string(),
@@ -22,9 +16,16 @@ export const fileTypeSchema = z.object({
   isUploaded: z.boolean(),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface FileType extends z.infer<typeof fileTypeSchema> {}
 
-export const fileManagerFactory = (): FileManager =>
-  config.env === "dev" ? localFileManager : ovhFileManager;
+export interface FileManager {
+  deleteFile: (filepath: string) => Promise<void>;
+  getDownloadUrl: (filepath: string) => Promise<string>;
+  listFiles: (filepath: string) => Promise<FileType[]>;
+  uploadFile: (filepath: string, file: Buffer) => Promise<void>;
+}
+
+export const fileManagerFactory = (): FileManager => (config.env === "local" ? localFileManager : ovhFileManager);
 
 export const fileManager: FileManager = fileManagerFactory();

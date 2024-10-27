@@ -1,11 +1,11 @@
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { genericOnDemandes } from "../../../utils/onDemande";
-import { selectPositionQuadrant } from "../../../utils/positionFormationRegionaleQuadrant";
-import { Filters } from "../getRepartitionPilotageIntentions.usecase";
+import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.usecase";
+import { genericOnDemandes } from "@/modules/data/utils/onDemande";
+import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
+import { cleanNull } from "@/utils/noNull";
 
 export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
-  return kdb
+  return getKbdClient()
     .selectFrom(
       genericOnDemandes(filters)
         .select((eb) => [
@@ -31,17 +31,9 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
         ])
         .as("demandes")
     )
-    .innerJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "demandes.codeNiveauDiplome"
-    )
+    .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "demandes.codeNiveauDiplome")
     .innerJoin("region", "region.codeRegion", "demandes.codeRegion")
-    .innerJoin(
-      "departement",
-      "departement.codeDepartement",
-      "demandes.codeDepartement"
-    )
+    .innerJoin("departement", "departement.codeDepartement", "demandes.codeDepartement")
     .innerJoin("academie", "academie.codeAcademie", "demandes.codeAcademie")
     .innerJoin("nsf", "nsf.codeNsf", "demandes.codeNsf")
     .select((eb) => [

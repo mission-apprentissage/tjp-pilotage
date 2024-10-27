@@ -1,21 +1,17 @@
-import { rawDataRepository } from "../../repositories/rawData.repository";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 
-export const findUAIsApprentissage = ({ cfd }: { cfd: string }) => {
+export const findUAIsApprentissage = async ({ cfd }: { cfd: string }) => {
   return rawDataRepository
     .findRawDatas({
       type: "offres_apprentissage",
       filter: {
-        "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)":
-          cfd,
+        "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)": cfd,
       },
     })
     .then((rawDatas) => {
       if (!rawDatas || !rawDatas.length) return;
       return rawDatas
-        .filter(
-          (rawData) =>
-            rawData["Tags"].includes("2023") || rawData["Tags"].includes("2024")
-        )
+        .filter((rawData) => rawData["Tags"].includes("2023") || rawData["Tags"].includes("2024"))
         .map((rawData) => {
           if (rawData["UAI formation"]) return rawData["UAI formation"];
           if (rawData["UAI formateur"]) return rawData["UAI formateur"];

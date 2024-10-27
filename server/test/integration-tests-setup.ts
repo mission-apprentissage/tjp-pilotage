@@ -1,43 +1,33 @@
 import path from "path";
-import {
-  DockerComposeEnvironment,
-  StartedDockerComposeEnvironment,
-} from "testcontainers";
+import type { StartedDockerComposeEnvironment } from "testcontainers";
+import { DockerComposeEnvironment } from "testcontainers";
 
-import { kdb } from "../src/db/db";
-import { migrateToLatest } from "../src/migrations/migrate";
-import { refreshViews } from "../src/modules/import/usecases/refreshViews/refreshViews.usecase";
+import { kdb } from "@/db/db";
+import { migrateToLatest } from "@/migrations/migrate";
+import { refreshViews } from "@/modules/import/usecases/refreshViews/refreshViews.usecase";
 
 const postgresContainerName = "pilotage_postgres_db_test";
 let dockerPostgresInstance: StartedDockerComposeEnvironment | null = null;
 
 const seed = async () => {
   if (dockerPostgresInstance) {
-    const seedSchemaFilePath = path.resolve(
-      __dirname,
-      "../seed/seed_schema.dump"
-    );
+    const seedSchemaFilePath = path.resolve(__dirname, "../seed/seed_schema.dump");
     const seedSchemaFileContainerPath = "/seed_schema.dump";
     const seedDataFilePath = path.resolve(__dirname, "../seed/seed_data.dump");
     const seedDataFileContainerPath = "/seed_data.dump";
 
     console.log("Seed");
-    console.log(
-      "    --> Copie des seeds dans le conteneur docker " +
-        postgresContainerName
-    );
-    await dockerPostgresInstance
-      .getContainer(postgresContainerName)
-      .copyFilesToContainer([
-        {
-          source: seedSchemaFilePath,
-          target: seedSchemaFileContainerPath,
-        },
-        {
-          source: seedDataFilePath,
-          target: seedDataFileContainerPath,
-        },
-      ]);
+    console.log("    --> Copie des seeds dans le conteneur docker " + postgresContainerName);
+    await dockerPostgresInstance.getContainer(postgresContainerName).copyFilesToContainer([
+      {
+        source: seedSchemaFilePath,
+        target: seedSchemaFileContainerPath,
+      },
+      {
+        source: seedDataFilePath,
+        target: seedDataFileContainerPath,
+      },
+    ]);
 
     console.log("    --> Migration du schéma de la DB");
     const execSchema = await dockerPostgresInstance
@@ -56,9 +46,7 @@ const seed = async () => {
 
     if (execSchema.exitCode !== 0) {
       console.error(execSchema.output);
-      throw new Error(
-        "Erreur lors de la restauration de la seed : " + execSchema.output
-      );
+      throw new Error("Erreur lors de la restauration de la seed : " + execSchema.output);
     }
 
     console.log("    --> Migration des données de la DB");
@@ -86,10 +74,7 @@ export const spawnPostgresDb = async () => {
   const composeFile = "docker-compose.db.yml";
 
   console.log("\nDémarrage du conteneur Postgres : ", postgresContainerName);
-  dockerPostgresInstance = await new DockerComposeEnvironment(
-    composeFilePath,
-    composeFile
-  )
+  dockerPostgresInstance = await new DockerComposeEnvironment(composeFilePath, composeFile)
     .withEnvironment({
       DATABASE_PORT: "5555",
     })

@@ -1,23 +1,20 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { castAvisStatut } from "../../../../utils/castStatutAvis";
-import { castAvisType } from "../../../../utils/castTypeAvis";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import { castAvisStatut } from "@/modules/utils/castStatutAvis";
+import { castAvisType } from "@/modules/utils/castTypeAvis";
+import { cleanNull } from "@/utils/noNull";
 
 export const createAvisQuery = async (avis: Insertable<DB["avis"]>) => {
-  return await kdb
+  return await getKbdClient()
     .insertInto("avis")
     .values({
       ...avis,
       updatedAt: new Date(),
       createdAt: new Date(),
     })
-    .onConflict((oc) =>
-      oc
-        .columns(["createdBy", "intentionNumero", "userFonction", "typeAvis"])
-        .doUpdateSet(avis)
-    )
+    .onConflict((oc) => oc.columns(["createdBy", "intentionNumero", "userFonction", "typeAvis"]).doUpdateSet(avis))
     .returningAll()
     .executeTakeFirstOrThrow()
     .then((avis) =>

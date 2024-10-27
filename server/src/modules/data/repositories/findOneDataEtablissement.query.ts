@@ -1,8 +1,8 @@
-import { kdb } from "../../../db/db";
-import { cleanNull } from "../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
 export const findOneDataEtablissement = async ({ uai }: { uai: string }) => {
-  const etablissement = await kdb
+  const etablissement = await getKbdClient()
     .selectFrom("dataEtablissement")
     .selectAll()
     .where("uai", "=", uai)

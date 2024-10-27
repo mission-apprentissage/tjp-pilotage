@@ -1,32 +1,37 @@
 services:
-  reverse_proxy:
-    image: pilotage_reverse_proxy
-    container_name: pilotage_reverse_proxy
-    build:
-      context: reverse_proxy
-    mem_limit: 256m
+  postgres:
+    image: postgres:15.5
     restart: unless-stopped
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    ports:
-      - 80:80
-      - 443:443
-    networks:
-      - pilotage_network
     environment:
-      - PARANOIA=1
-      - ANOMALY_INBOUND=5
-      - ANOMALY_OUTBOUND=4
-      - REPORTING_LEVEL=4
-      - DNS_SERVER=127.0.0.11
-      - PROXY=1
-      - SERVERNAME=localhost
-      - ACCESSLOG=/data/access.log
-      - ERRORLOG=/data/error.log
-      - LOGLEVEL=warn
-      - NGINX_ALWAYS_TLS_REDIRECT=false
-      - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
+      # - POSTGRES_DB=orion
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pilotage_postgres_data:/var/lib/postgresql/data:z
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U postgres -d postgres'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
 
-networks:
-  pilotage_network:
-    name: pilotage_network
+  smtp:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - 1025:1025
+      - 8025:8025
+    environment:
+      - MP_DATA_FILE=/data/mailpit.db
+      - MP_WEBROOT=smtp
+    volumes:
+      - pilotage_smtp_data:/data
+
+volumes:
+  pilotage_postgres_data:
+    driver: local
+    name: pilotage_postgres_data
+  pilotage_smtp_data:
+    driver: local
+    name: pilotage_smtp_data

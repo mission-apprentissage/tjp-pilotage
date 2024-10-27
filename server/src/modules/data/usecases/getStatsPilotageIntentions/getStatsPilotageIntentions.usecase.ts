@@ -1,23 +1,20 @@
-import _ from "lodash";
+import { chain } from "lodash-es";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
+import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
+
 import { getFiltersQuery } from "./deps/getFilters.query";
-import {
-  Filters,
-  getStatsPilotageIntentionsQuery,
-} from "./deps/getStatsPilotageIntentions.query";
+import type { Filters } from "./deps/getStatsPilotageIntentions.query";
+import { getStatsPilotageIntentionsQuery } from "./deps/getStatsPilotageIntentions.query";
 
 interface ActiveFilters extends Omit<Filters, "campagne"> {
   campagne?: string;
 }
 
-export type GetScopedStatsPilotageIntentionsType = Awaited<
-  ReturnType<typeof getStatsPilotageIntentionsQuery>
->;
+export type GetScopedStatsPilotageIntentionsType = Awaited<ReturnType<typeof getStatsPilotageIntentionsQuery>>;
 
 const formatResult = (result: GetScopedStatsPilotageIntentionsType) => {
-  return _.chain(result)
+  return chain(result)
     .map((item) => ({
       ...item,
       key: `_${item.code}`,
@@ -29,9 +26,7 @@ const formatResult = (result: GetScopedStatsPilotageIntentionsType) => {
         item.placesFermees && item.placesOuvertes
           ? item.placesOuvertes / (item.placesFermees + item.placesOuvertes)
           : undefined,
-      tauxTransformation: item.effectif
-        ? item.placesTransformees / item.effectif
-        : undefined,
+      tauxTransformation: item.effectif ? item.placesTransformees / item.effectif : undefined,
     }))
     .keyBy("key")
     .value();
@@ -78,5 +73,4 @@ const getStatsPilotageIntentionsFactory =
     };
   };
 
-export const getStatsPilotageIntentionsUsecase =
-  getStatsPilotageIntentionsFactory();
+export const getStatsPilotageIntentionsUsecase = getStatsPilotageIntentionsFactory();

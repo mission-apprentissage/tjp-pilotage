@@ -1,5 +1,6 @@
-import { cleanNull } from "../../../../utils/noNull";
-import { searchInArray } from "../../../utils/searchHelpers";
+import { searchInArray } from "@/modules/utils/searchHelpers";
+import { cleanNull } from "@/utils/noNull";
+
 import { CAMPUS } from "./campusData";
 
 export const searchCampusQuery = async ({ search }: { search: string }) => {

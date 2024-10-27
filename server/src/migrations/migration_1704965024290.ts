@@ -1,11 +1,8 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
-  await db.schema
-    .alterTable("familleMetier")
-    .dropConstraint("familleMetier_pkey")
-    .ifExists()
-    .execute();
+  await db.schema.alterTable("familleMetier").dropConstraint("familleMetier_pkey").ifExists().execute();
 
   await db.schema
     .alterTable("familleMetier")
@@ -120,9 +117,7 @@ export const down = async (db: Kysely<unknown>) => {
 
   await db.schema.dropView("formationNonMaterializedView").execute();
 
-  await db.executeQuery(
-    sql`TRUNCATE TABLE "dataFormation" CASCADE;`.compile(db)
-  );
+  await db.executeQuery(sql`TRUNCATE TABLE "dataFormation" CASCADE;`.compile(db));
 
   await db.executeQuery(
     sql`
@@ -209,10 +204,7 @@ export const down = async (db: Kysely<unknown>) => {
     .materialized()
     .execute();
 
-  await db.schema
-    .alterTable("familleMetier")
-    .dropConstraint("familleMetier_cfdSpecialite_key")
-    .execute();
+  await db.schema.alterTable("familleMetier").dropConstraint("familleMetier_cfdSpecialite_key").execute();
 
   await db.schema
     .alterTable("familleMetier")

@@ -1,9 +1,7 @@
-import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
-import {
-  getPageAsMarkdown,
-  getPageProperties,
-} from "../../../core/services/notion/notion";
+import { getPageAsMarkdown, getPageProperties } from "@/modules/core/services/notion/notion";
+
 import { dependencies } from "./dependencies";
 
 export const getGlossaireEntryFactory =
@@ -18,10 +16,7 @@ export const getGlossaireEntryFactory =
     const page = await deps.getPageProperties(id);
     const content = await deps.getPageAsMarkdown(id);
 
-    const entry = deps.mapNotionPageToGlossaireEntry(
-      id,
-      page as PageObjectResponse
-    );
+    const entry = deps.mapNotionPageToGlossaireEntry(id, page as PageObjectResponse);
 
     return {
       ...entry,

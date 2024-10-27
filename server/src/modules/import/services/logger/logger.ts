@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import { logspath } from "../../../../basepath";
+import { logspath } from "@/basepath";
 
 type Logs = string[];
 let logsReg: Logs = [];
@@ -36,23 +36,15 @@ export const logError = (
 
   type === "UAI"
     ? loggerUai.log(
-        `${date};${code};${millesime};NOK;${response.status};${
-          response.data?.msg ?? response.data?.message
-        }`
+        `${date};${code};${millesime};NOK;${response.status};${response.data?.msg ?? response.data?.message}`
       )
     : loggerReg.log(
-        `${date};${code};${millesime};NOK;${response.status};${
-          response.data?.msg ?? response.data?.message
-        }`
+        `${date};${code};${millesime};NOK;${response.status};${response.data?.msg ?? response.data?.message}`
       );
 };
 
 export const loggerReg = {
-  set: () =>
-    fs.writeFileSync(
-      `${logspath}/reg.csv`,
-      "time;codeRegion;millesimes;OK/NOK;status;details\n"
-    ),
+  set: () => fs.writeFileSync(`${logspath}/reg.csv`, "time;codeRegion;millesimes;OK/NOK;status;details\n"),
   reset: () => {
     logsReg = [];
   },
@@ -65,11 +57,7 @@ export const loggerReg = {
 };
 
 export const loggerUai = {
-  set: () =>
-    fs.writeFileSync(
-      `${logspath}/uai.csv`,
-      "time;uai;millesimes;OK/NOK;status;details\n"
-    ),
+  set: () => fs.writeFileSync(`${logspath}/uai.csv`, "time;uai;millesimes;OK/NOK;status;details\n"),
   reset: () => {
     logsUai = [];
   },

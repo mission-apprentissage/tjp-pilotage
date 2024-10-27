@@ -1,6 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import { rawDataRepository } from "../../repositories/rawData.repository";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
+
 import { findRegionsQuery } from "./findRegionsQuery.dep";
 import { upsertRegionQuery } from "./upsertIndicateurRegionQuery.dep";
 
@@ -25,9 +27,7 @@ export const [importIndicateursRegion] = inject(
         await deps.upsertRegionQuery({
           codeRegion,
           rentreeScolaire,
-          tauxChomage: line?.tauxChomage
-            ? parseFloat(line?.tauxChomage.replace(",", "."))
-            : null,
+          tauxChomage: line?.tauxChomage ? parseFloat(line?.tauxChomage.replace(",", ".")) : null,
         });
       }
     }

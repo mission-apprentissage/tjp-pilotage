@@ -1,18 +1,15 @@
 import { sql } from "kysely";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
+import { getKbdClient } from "@/db/db";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
 export const searchDisciplineQuery = async ({ search }: { search: string }) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const disciplines = await kdb
+  const disciplines = await getKbdClient()
     .selectFrom("discipline")
-    .select([
-      "discipline.libelleDiscipline as value",
-      "discipline.libelleDiscipline as label",
-    ])
+    .select(["discipline.libelleDiscipline as value", "discipline.libelleDiscipline as label"])
     .distinct()
     .where((eb) =>
       eb.and([
@@ -20,11 +17,7 @@ export const searchDisciplineQuery = async ({ search }: { search: string }) => {
           eb("discipline.codeDiscipline", "ilike", `${search}%`),
           eb.and(
             search_array.map((search_word) =>
-              eb(
-                sql`unaccent(${eb.ref("discipline.libelleDiscipline")})`,
-                "ilike",
-                `%${search_word}%`
-              )
+              eb(sql`unaccent(${eb.ref("discipline.libelleDiscipline")})`, "ilike", `%${search_word}%`)
             )
           ),
         ]),

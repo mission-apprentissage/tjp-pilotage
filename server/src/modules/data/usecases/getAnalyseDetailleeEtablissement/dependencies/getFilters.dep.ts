@@ -1,16 +1,11 @@
 import { sql } from "kysely";
-import { Voie } from "shared/enum/voieEnum";
+import type { Voie } from "shared/enum/voieEnum";
 
-import { cleanNull } from "../../../../../utils/noNull";
+import { cleanNull } from "@/utils/noNull";
+
 import { getBase } from "./base.dep";
 
-export const getFiltersVoie = async ({
-  uai,
-  codeNiveauDiplome,
-}: {
-  uai: string;
-  codeNiveauDiplome?: string[];
-}) =>
+export const getFiltersVoie = async ({ uai, codeNiveauDiplome }: { uai: string; codeNiveauDiplome?: string[] }) =>
   getBase({ uai })
     .select(["voie"])
     .distinct()
@@ -24,13 +19,7 @@ export const getFiltersVoie = async ({
     .$castTo<{ voie: Voie }>()
     .execute();
 
-export const getFiltersCodeNiveauDiplome = async ({
-  uai,
-  voie,
-}: {
-  uai: string;
-  voie?: string[];
-}) =>
+export const getFiltersCodeNiveauDiplome = async ({ uai, voie }: { uai: string; voie?: string[] }) =>
   getBase({
     uai,
   })

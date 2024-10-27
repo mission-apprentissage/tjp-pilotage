@@ -1,17 +1,10 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
-  await db.schema
-    .dropView("formationScolaireView")
-    .materialized()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("formationScolaireView").materialized().ifExists().execute();
 
-  await db.schema
-    .dropView("formationApprentissageView")
-    .materialized()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("formationApprentissageView").materialized().ifExists().execute();
 
   await db.schema.dropView("formationView").materialized().ifExists().execute();
   await db.schema.dropView("formationNonMaterializedView").ifExists().execute();

@@ -1,4 +1,5 @@
-import { RawBuilder, sql } from "kysely";
+import type { RawBuilder } from "kysely";
+import { sql } from "kysely";
 
 export const capaciteAnnee = ({
   annee,
@@ -7,8 +8,7 @@ export const capaciteAnnee = ({
   annee?: RawBuilder<unknown>;
   alias: string;
 }) => {
-  const processedAnnee =
-    annee ?? sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`;
+  const processedAnnee = annee ?? sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`;
 
   return sql<number | null>`
 NULLIF(

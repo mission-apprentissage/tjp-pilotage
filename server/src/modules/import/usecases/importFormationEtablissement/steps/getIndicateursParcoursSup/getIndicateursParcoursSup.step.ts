@@ -1,7 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import { rawDataRepository } from "../../../../repositories/rawData.repository";
-import { AnneeDispositif } from "../../../getCfdRentrees/getCfdRentrees.usecase";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
+import type { AnneeDispositif } from "@/modules/import/usecases/getCfdRentrees/getCfdRentrees.usecase";
 
 const findAttractiviteCapaciteBTS = async ({
   mefstat,
@@ -74,14 +75,8 @@ export const [getIndicateursParcoursSup] = inject(
       });
 
       return {
-        capacites:
-          anneeDebut === 0
-            ? [numbers.capacite ?? null]
-            : [null, numbers.capacite ?? null],
-        premiersVoeux:
-          anneeDebut === 0
-            ? [numbers.premiersVoeux ?? null]
-            : [null, numbers.premiersVoeux ?? null],
+        capacites: anneeDebut === 0 ? [numbers.capacite ?? null] : [null, numbers.capacite ?? null],
+        premiersVoeux: anneeDebut === 0 ? [numbers.premiersVoeux ?? null] : [null, numbers.premiersVoeux ?? null],
       };
     }
 );

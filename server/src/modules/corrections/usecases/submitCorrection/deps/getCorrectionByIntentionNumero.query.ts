@@ -1,9 +1,7 @@
-import { kdb } from "../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
-export const getCorrectionByIntentionNumeroQuery = async (
-  intentionNumero: string
-) => {
-  const correction = await kdb
+export const getCorrectionByIntentionNumeroQuery = async (intentionNumero: string) => {
+  const correction = await getKbdClient()
     .selectFrom("correction")
     .selectAll()
     .where("intentionNumero", "=", intentionNumero)

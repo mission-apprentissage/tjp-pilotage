@@ -1,4 +1,5 @@
-import { Filters, getDemandeQuery } from "./getDemande.query";
+import type { Filters } from "./getDemande.query";
+import { getDemandeQuery } from "./getDemande.query";
 
 const getDemandeFactory =
   (

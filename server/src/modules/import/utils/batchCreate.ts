@@ -1,4 +1,4 @@
-import _ from "lodash";
+import { isEqual } from "lodash-es";
 
 const DEFAULT_BATCH_SIZE = 10000;
 
@@ -22,7 +22,7 @@ export default function batchCreate<T>(
     if (allowDuplicates) {
       BATCH.push(data);
     } else {
-      const index = BATCH.findIndex((d) => _.isEqual(d, data));
+      const index = BATCH.findIndex((d) => isEqual(d, data));
       if (index !== -1) {
         BATCH[index] = data;
       } else {

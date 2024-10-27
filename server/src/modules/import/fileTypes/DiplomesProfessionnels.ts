@@ -12,6 +12,4 @@ export const DiplomeProfessionnelSchema = z.object({
   "Sous-secteur": z.string().optional(),
 });
 
-export type DiplomeProfessionnelLine = z.infer<
-  typeof DiplomeProfessionnelSchema
->;
+export type DiplomeProfessionnelLine = z.infer<typeof DiplomeProfessionnelSchema>;

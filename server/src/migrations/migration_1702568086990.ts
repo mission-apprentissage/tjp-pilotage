@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<any>) => {
   await db.schema
@@ -10,11 +10,7 @@ export const up = async (db: Kysely<any>) => {
     .addColumn("effectif", "integer")
     .addColumn("anneeDispositif", "integer")
     .addColumn("cfd", "varchar")
-    .addUniqueConstraint("constatRentree_unique_constraint", [
-      "rentreeScolaire",
-      "mefstat11",
-      "uai",
-    ])
+    .addUniqueConstraint("constatRentree_unique_constraint", ["rentreeScolaire", "mefstat11", "uai"])
     .execute();
 };
 

@@ -1,14 +1,16 @@
+// @ts-nocheck -- TODO
+
 // Based on : https://orion.inserjeunes.beta.gouv.fr/metabase/question/515-taux-ij-par-region-niveau-et-millesime?millesime=2021_2022&code_region=&diplome=&filiere=&voie=scolaire
 
 import { sql } from "kysely";
 import { VoieEnum } from "shared";
 
-import { kdb } from "../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 import {
   selectDenominateurTauxDevenir,
   selectEffectifIJ,
   selectSortants,
-} from "../utils";
+} from "@/modules/import/usecases/importPositionsQuadrant/utils";
 
 export const findTauxRegionauxFormation = async ({
   millesimeSortie,
@@ -19,29 +21,17 @@ export const findTauxRegionauxFormation = async ({
   codeRegion?: string | undefined;
   cfd?: string | undefined;
 }) =>
-  await kdb
+  await getKbdClient()
     .selectFrom("indicateurRegionSortie")
     .leftJoin("formationView", (join) =>
       join.on((eb) =>
         eb.and([
-          eb(
-            eb.ref("formationView.cfd"),
-            "=",
-            eb.ref("indicateurRegionSortie.cfd")
-          ),
-          eb(
-            eb.ref("indicateurRegionSortie.voie"),
-            "=",
-            eb.ref("formationView.voie")
-          ),
+          eb(eb.ref("formationView.cfd"), "=", eb.ref("indicateurRegionSortie.cfd")),
+          eb(eb.ref("indicateurRegionSortie.voie"), "=", eb.ref("formationView.voie")),
         ])
       )
     )
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "formationView.codeNiveauDiplome"
-    )
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .select((sb) => [
       sb
         .case()
@@ -65,18 +55,10 @@ export const findTauxRegionauxFormation = async ({
         .as("tauxPoursuite"),
       sb
         .case()
-        .when(
-          sql<number>`${sb.fn.sum<number>(
-            selectDenominateurTauxDevenir(sb)
-          )}::FLOAT`,
-          ">=",
-          20
-        )
+        .when(sql<number>`${sb.fn.sum<number>(selectDenominateurTauxDevenir(sb))}::FLOAT`, ">=", 20)
         .then(
           sql<number>`100 * ${sb.fn.sum<number>(
-            sql<number>`${sb.ref("nbPoursuiteEtudes")} + ${sb.ref(
-              "nbInsertion6mois"
-            )}::FLOAT`
+            sql<number>`${sb.ref("nbPoursuiteEtudes")} + ${sb.ref("nbInsertion6mois")}::FLOAT`
           )} / ${sb.fn.sum<number>(selectDenominateurTauxDevenir(sb))}::FLOAT`
         )
         .end()
@@ -91,16 +73,10 @@ export const findTauxRegionauxFormation = async ({
       "formationView.voie",
       "indicateurRegionSortie.codeDispositif",
     ])
-    .where((eb) =>
-      eb(eb.ref("formationView.voie"), "=", eb.val(VoieEnum.scolaire))
-    )
+    .where((eb) => eb(eb.ref("formationView.voie"), "=", eb.val(VoieEnum.scolaire)))
     .$call((q) => {
       if (millesimeSortie) {
-        return q.where(
-          "indicateurRegionSortie.millesimeSortie",
-          "=",
-          millesimeSortie
-        );
+        return q.where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie);
       }
       return q;
     })

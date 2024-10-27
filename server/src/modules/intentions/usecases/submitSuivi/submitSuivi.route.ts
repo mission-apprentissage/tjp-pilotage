@@ -1,7 +1,8 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { submitSuiviSchema } from "./submitSuivi.schema";
 import { submitSuiviUsecase } from "./submitSuivi.usecase";
 

@@ -1,7 +1,8 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { uploadIntentionFilesSchema } from "./uploadIntentionFiles.schema";
 import { uploadIntentionFilesUsecase } from "./uploadIntentionFiles.usecase";
 

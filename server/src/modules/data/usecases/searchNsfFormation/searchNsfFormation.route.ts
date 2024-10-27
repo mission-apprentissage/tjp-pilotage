@@ -1,6 +1,7 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
+import type { Server } from "@/server/server";
+
 import { searchNsfFormationSchema } from "./searchNsfFormation.schema";
 import { searchDiplome } from "./searchNsfFormation.usecase";
 
