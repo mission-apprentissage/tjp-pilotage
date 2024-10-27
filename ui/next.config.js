@@ -1,12 +1,19 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+
+const path = require("path");
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const nextConfig = {
-  transpilePackages: ['shared', 'server'],
-  experimental: {},
-  typescript:{ ignoreBuildErrors: true }
-}
+  transpilePackages: ["shared"], // 'server'
+  poweredByHeader: false,
+  swcMinify: true,
+  experimental: {
+    outputFileTracingRoot: path.join(__dirname, "../"),
+  },
+  output: "standalone",
+  // typescript: { ignoreBuildErrors: true },
+};
 
 module.exports = withSentryConfig(
   nextConfig,
@@ -17,7 +24,9 @@ module.exports = withSentryConfig(
     url: "https://sentry.incubateur.net/",
     authToken: process.env.NEXT_PUBLIC_SENTRY_AUTH_TOKEN,
     release: process.env.NEXT_PUBLIC_SENTRY_RELEASE?.replace("/", "-").replace(" ", "-"),
-    errorHandler: (err) => { console.warn(err) }
+    errorHandler: (err) => {
+      console.warn(err);
+    },
   },
   {
     widenClientFileUpload: true,

@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import { fastifyCookie } from "@fastify/cookie";
 import { fastifyCors } from "@fastify/cors";
 import { fastifyMultipart } from "@fastify/multipart";
@@ -24,6 +22,7 @@ import { MAX_FILE_SIZE } from "shared";
 
 import config from "@/config";
 import { initSentryFastify } from "@/services/sentry/sentry.fastify";
+import { getStaticDirPath } from "@/utils/getStaticFilePath";
 
 import { errorMiddleware } from "./middlewares/errorMiddleware";
 import { logMiddleware } from "./middlewares/logMiddleware";
@@ -90,7 +89,7 @@ export async function bind(app: Server) {
   if (config.env === "local") {
     // TODO
     app.register(fastifyStatic, {
-      root: path.join(__dirname, "../public"),
+      root: getStaticDirPath(),
       prefix: "/public/",
     });
   }

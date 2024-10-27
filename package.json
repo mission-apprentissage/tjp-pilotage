@@ -35,7 +35,7 @@
     "migrations:up": "yarn cli migrations:up",
     "migrations:create": "yarn cli migrations:create",
     "server:dev": "yarn workspace server dev",
-    "ui:dev": "yarn workspace ui start",
+    "ui:dev": "yarn workspace ui dev",
     "services:start": "docker compose up --remove-orphans -d --wait",
     "services:stop": "docker compose down",
     "services:clean": "yarn services:stop; docker system prune --volumes",

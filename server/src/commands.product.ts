@@ -1,14 +1,14 @@
+// eslint-disable-next-line n/no-unsupported-features/node-builtins
+import { glob } from "node:fs/promises";
 import path from "node:path";
 
 import type { Command } from "commander";
 import { parse } from "csv-parse/sync";
-import { glob } from "glob";
 import { mapValues } from "lodash-es";
 import type { Role } from "shared";
 import { PERMISSIONS } from "shared";
 import { z } from "zod";
 
-import { basepath } from "./basepath";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
 import type { LineTypes } from "./modules/import/repositories/rawData.repository";
 import { Schemas } from "./modules/import/repositories/rawData.repository";
@@ -35,6 +35,8 @@ import { importTensionFranceTravail } from "./modules/import/usecases/importTens
 import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
 import { verifyFileEncoding } from "./modules/import/utils/verifyFileEncoding";
 import { writeErrorLogs } from "./modules/import/utils/writeErrorLogs";
+import logger from "./services/logger";
+import { getStaticDirPath, getStaticFilePath } from "./utils/getStaticFilePath";
 
 export function productCommands(cli: Command) {
   cli
@@ -117,7 +119,9 @@ export function productCommands(cli: Command) {
         year?: string;
         schema: Zod.Schema<unknown>;
       }) => {
-        const filePath = year ? `${basepath}/files/${year}/${type}_${year}.csv` : `${basepath}/files/${type}.csv`;
+        const filePath = year
+          ? `${getStaticDirPath()}/files/${year}/${type}_${year}.csv`
+          : `${getStaticDirPath()}/files/${type}.csv`;
         return await importRawFile({
           type: year ? `${type}_${year}` : type,
           path: filePath,
@@ -342,12 +346,20 @@ export function productCommands(cli: Command) {
     .command("files:encoding:verify")
     .description("Vérification de l'encodage des fichiers csv public")
     .action(async () => {
-      const publicFiles = await glob(path.join(__dirname, "../public/**/*.csv"));
+      const csvPaths = getStaticFilePath("./**/*.csv");
 
-      for (const file of publicFiles) {
-        const res = await verifyFileEncoding(file);
-        expect(res).toBe(true);
-        console.log(`${file} OK`);
+      let hasError = false;
+      for await (const entry of glob(csvPaths)) {
+        try {
+          await verifyFileEncoding(entry);
+        } catch (error) {
+          hasError = true;
+          logger.error(error);
+        }
+      }
+      if (hasError) {
+        // eslint-disable-next-line n/no-process-exit
+        process.exit(1);
       }
     });
 }

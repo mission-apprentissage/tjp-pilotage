@@ -77,7 +77,7 @@ types.setTypeParser(types.builtins.NUMERIC, (val) => parseFloat(val));
 
 export const connectToPgDb = async (uri: string) => {
   pool = new Pool({
-    connectionString: config.PILOTAGE_POSTGRES_URI,
+    connectionString: uri,
     ssl: config.PILOTAGE_POSTGRES_CA ? { rejectUnauthorized: false, ca: config.PILOTAGE_POSTGRES_CA } : undefined,
   });
 

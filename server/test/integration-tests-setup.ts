@@ -1,8 +1,10 @@
-import path from "path";
+import path from "node:path";
+
 import type { StartedDockerComposeEnvironment } from "testcontainers";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { DockerComposeEnvironment } from "testcontainers";
 
-import { kdb } from "@/db/db";
+import { getKbdClient } from "@/db/db";
 import { migrateToLatest } from "@/migrations/migrate";
 import { refreshViews } from "@/modules/import/usecases/refreshViews/refreshViews.usecase";
 
@@ -82,7 +84,7 @@ export const spawnPostgresDb = async () => {
 };
 
 export const stopPostresDb = async () => {
-  await kdb.destroy();
+  await getKbdClient().destroy();
 
   if (dockerPostgresInstance) {
     await dockerPostgresInstance.down({ timeout: 10000 });
