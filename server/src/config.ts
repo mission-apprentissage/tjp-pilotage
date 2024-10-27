@@ -28,6 +28,19 @@ const config = {
   PILOTAGE_POSTGRES_CA: env.get("PILOTAGE_POSTGRES_CA").asString(),
   PILOTAGE_INSERJEUNES_USERNAME: env.get("PILOTAGE_INSERJEUNES_USERNAME").required().asString(),
   PILOTAGE_INSERJEUNES_PASSWORD: env.get("PILOTAGE_INSERJEUNES_PASSWORD").required().asString(),
+
+  psql: {
+    host: env.get("PSQL_HOST").required().asString(),
+    port: env.get("PSQL_PORT").required().asPortNumber(),
+    user: env.get("PQSL_USER").required().asString(),
+    password: env.get("PSQL_PWD").required().asString(),
+    uri: env.get("PSQL_URI").required().asString(),
+    ca: env
+      .get("PSQL_CA")
+      .required(environement === "production")
+      .asString(),
+    logLevel: env.get("PSQL_LOG_LEVEL").required().asString(),
+  },
   auth: {
     authJwtSecret: env.get("PILOTAGE_AUTH_JWT_SECRET").required().asString(),
     activationJwtSecret: env.get("PILOTAGE_ACTIVATION_JWT_SECRET").required().asString(),

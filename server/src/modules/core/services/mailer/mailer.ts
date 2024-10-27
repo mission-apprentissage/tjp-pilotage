@@ -8,8 +8,8 @@ import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
 import path from "path";
 
-import { basepath } from "@/basepath";
 import config from "@/config";
+import { getStaticDirPath } from "@/utils/getStaticFilePath";
 
 export type TemplatePayloads = {
   reset_password: {
@@ -90,7 +90,7 @@ export const shootTemplate = async <T extends keyof TemplatePayloads>({
     to,
     data,
     subject,
-    templateFile: path.join(basepath, `/mails/${template}.mjml.ejs`),
+    templateFile: path.join(getStaticDirPath(), `/mails/${template}.mjml.ejs`),
   });
 
   await shootEmail({ html, subject, to });

@@ -15,10 +15,9 @@ export const metadata: Metadata = {
 const fetchAuth = async () => {
   const headersList = Object.fromEntries(headers().entries());
   try {
-    return await client
-      .ref("[GET]/auth/whoAmI")
-      .query({}, { headers: headersList });
+    return await client.ref("[GET]/auth/whoAmI").query({}, { headers: headersList });
   } catch (e) {
+    console.log(e);
     return undefined;
   }
 };
@@ -26,10 +25,9 @@ const fetchAuth = async () => {
 const fetchChangelog = async () => {
   const headersList = Object.fromEntries(headers().entries());
   try {
-    return await client
-      .ref("[GET]/changelog")
-      .query({}, { headers: headersList });
+    return await client.ref("[GET]/changelog").query({}, { headers: headersList });
   } catch (e) {
+    console.log(e);
     return undefined;
   }
 };
@@ -37,10 +35,9 @@ const fetchChangelog = async () => {
 const fetchGlossaire = async () => {
   const headersList = Object.fromEntries(headers().entries());
   try {
-    return await client
-      .ref("[GET]/glossaire")
-      .query({}, { headers: headersList });
+    return await client.ref("[GET]/glossaire").query({}, { headers: headersList });
   } catch (e) {
+    console.log(e);
     return undefined;
   }
 };
@@ -54,11 +51,7 @@ async function Layout({ children }: LayoutProps) {
   const changelog = await fetchChangelog();
   const glossaire = await fetchGlossaire();
   return (
-    <RootLayoutClient
-      auth={auth || undefined}
-      changelog={changelog || []}
-      glossaire={glossaire || []}
-    >
+    <RootLayoutClient auth={auth || undefined} changelog={changelog || []} glossaire={glossaire || []}>
       {children}
     </RootLayoutClient>
   );

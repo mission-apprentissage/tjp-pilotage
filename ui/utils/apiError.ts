@@ -1,4 +1,5 @@
-import { AxiosError, isAxiosError } from "axios";
+import type { AxiosError } from "axios";
+import { isAxiosError } from "axios";
 
 type ApiError = {
   error: string;
@@ -6,10 +7,7 @@ type ApiError = {
   statusCode: number;
 };
 
-export const getErrorMessage = (
-  error: Error | AxiosError<ApiError> | null,
-  message?: string
-): string | null => {
+export const getErrorMessage = (error: Error | AxiosError<ApiError> | null, message?: string): string | null => {
   if (!error) {
     return null;
   }

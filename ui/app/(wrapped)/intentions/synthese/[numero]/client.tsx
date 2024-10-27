@@ -21,32 +21,26 @@ export default ({
   };
 }) => {
   const { push } = useRouter();
-  const { data: demande, isLoading } = client
-    .ref("[GET]/demande/:numero")
-    .useQuery(
-      { params: { numero: numero } },
-      {
-        cacheTime: 0,
-        onError: (error: unknown) => {
-          if (isAxiosError(error) && error.response?.data?.message) {
-            console.error(error);
-            if (error.response?.status === 404)
-              push(`/intentions/saisie?notfound=${numero}`);
-          }
-        },
-      }
-    );
+  const { data: demande, isLoading } = client.ref("[GET]/demande/:numero").useQuery(
+    { params: { numero: numero } },
+    {
+      cacheTime: 0,
+      onError: (error: unknown) => {
+        if (isAxiosError(error) && error.response?.data?.message) {
+          console.error(error);
+          if (error.response?.status === 404) push(`/intentions/saisie?notfound=${numero}`);
+        }
+      },
+    }
+  );
 
-  const { mutate: submitIntentionAccessLog } = client
-    .ref("[POST]/demande/access/submit")
-    .useMutation({});
+  const { mutate: submitIntentionAccessLog } = client.ref("[POST]/demande/access/submit").useMutation({});
 
   useEffect(() => {
     submitIntentionAccessLog({ body: { intention: { numero: numero } } });
   }, []);
 
-  const isCampagneEnCours =
-    demande?.campagne?.statut === CampagneStatutEnum["en cours"];
+  const isCampagneEnCours = demande?.campagne?.statut === CampagneStatutEnum["en cours"];
 
   if (isLoading) return <SyntheseSpinner />;
   if (!demande) return null;
@@ -54,14 +48,7 @@ export default ({
   return (
     <Flex width={"100%"} bg="blueecume.925" direction="column">
       <InformationHeader statut={demande.statut} />
-      <Flex
-        align="center"
-        as={Container}
-        direction="column"
-        maxWidth={"container.xl"}
-        pt={4}
-        pb={20}
-      >
+      <Flex align="center" as={Container} direction="column" maxWidth={"container.xl"} pt={4} pb={20}>
         <Breadcrumb
           textAlign={"start"}
           py={2}
