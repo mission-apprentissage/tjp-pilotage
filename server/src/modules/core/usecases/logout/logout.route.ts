@@ -1,7 +1,8 @@
 import { createRoute } from "@http-wizard/core";
 import cookie from "cookie";
 
-import { Server } from "../../../../server";
+import type { Server } from "@/server/server";
+
 import { logoutSchema } from "./logout.schema";
 
 export const logoutRoute = (server: Server) => {

@@ -1,23 +1,14 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
-  await db.schema
-    .alterTable("diplomeProfessionnel")
-    .dropConstraint("diplomeProfessionnel_pkey")
-    .ifExists()
-    .execute();
+  await db.schema.alterTable("diplomeProfessionnel").dropConstraint("diplomeProfessionnel_pkey").ifExists().execute();
+
+  await db.schema.alterTable("diplomeProfessionnel").addColumn("voie", "varchar").execute();
 
   await db.schema
     .alterTable("diplomeProfessionnel")
-    .addColumn("voie", "varchar")
-    .execute();
-
-  await db.schema
-    .alterTable("diplomeProfessionnel")
-    .addUniqueConstraint("diplomeProfessionnel_unique_constraint", [
-      "cfd",
-      "voie",
-    ])
+    .addUniqueConstraint("diplomeProfessionnel_unique_constraint", ["cfd", "voie"])
     .execute();
 
   await db.schema
@@ -180,17 +171,12 @@ export const up = async (db: Kysely<unknown>) => {
     .materialized()
     .execute();
 
-  await db.schema
-    .alterTable("formationEtablissement")
-    .dropConstraint("formationetablissement_pk")
-    .execute();
+  await db.schema.alterTable("formationEtablissement").dropConstraint("formationetablissement_pk").execute();
 
   await db.schema
     .alterTable("formationEtablissement")
-    .addUniqueConstraint(
-      "formationetablissement_pk",
-      ["cfd", "UAI", "dispositifId", "voie"],
-      (builder) => builder.nullsNotDistinct()
+    .addUniqueConstraint("formationetablissement_pk", ["cfd", "UAI", "dispositifId", "voie"], (builder) =>
+      builder.nullsNotDistinct()
     )
     .execute();
 
@@ -210,17 +196,9 @@ export const up = async (db: Kysely<unknown>) => {
 };
 
 export const down = async (db: Kysely<unknown>) => {
-  await db.schema
-    .dropView("formationApprentissageView")
-    .materialized()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("formationApprentissageView").materialized().ifExists().execute();
 
-  await db.schema
-    .dropView("formationScolaireView")
-    .materialized()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("formationScolaireView").materialized().ifExists().execute();
 
   await db.schema.dropView("formationNonMaterializedView").ifExists().execute();
 
@@ -299,42 +277,27 @@ export const down = async (db: Kysely<unknown>) => {
     .materialized()
     .execute();
 
-  await db.executeQuery(
-    sql`TRUNCATE TABLE "indicateurSortie" CASCADE;`.compile(db)
-  );
+  await db.executeQuery(sql`TRUNCATE TABLE "indicateurSortie" CASCADE;`.compile(db));
 
   await db.schema
     .alterTable("indicateurSortie")
-    .addForeignKeyConstraint(
-      "indicateurSortie_cfdContinuum_fkey",
-      ["cfdContinuum"],
-      "formation",
-      ["codeFormationDiplome"]
-    )
+    .addForeignKeyConstraint("indicateurSortie_cfdContinuum_fkey", ["cfdContinuum"], "formation", [
+      "codeFormationDiplome",
+    ])
     .execute();
 
-  await db.executeQuery(
-    sql`TRUNCATE TABLE "indicateurRegionSortie" CASCADE;`.compile(db)
-  );
+  await db.executeQuery(sql`TRUNCATE TABLE "indicateurRegionSortie" CASCADE;`.compile(db));
 
   await db.schema
     .alterTable("indicateurRegionSortie")
-    .addForeignKeyConstraint(
-      "indicateurRegionSortie_cfdContinuum_fkey",
-      ["cfdContinuum"],
-      "formation",
-      ["codeFormationDiplome"]
-    )
+    .addForeignKeyConstraint("indicateurRegionSortie_cfdContinuum_fkey", ["cfdContinuum"], "formation", [
+      "codeFormationDiplome",
+    ])
     .execute();
 
   await db.schema
     .alterTable("indicateurRegionSortie")
-    .addForeignKeyConstraint(
-      "indicateurRegionSortie_cfd_fkey",
-      ["cfd"],
-      "formation",
-      ["codeFormationDiplome"]
-    )
+    .addForeignKeyConstraint("indicateurRegionSortie_cfd_fkey", ["cfd"], "formation", ["codeFormationDiplome"])
     .execute();
 
   await db.schema
@@ -342,9 +305,7 @@ export const down = async (db: Kysely<unknown>) => {
     .alterColumn("dispositifId", (col) => col.setNotNull())
     .execute();
 
-  await db.executeQuery(
-    sql`TRUNCATE TABLE "formationEtablissement" CASCADE;`.compile(db)
-  );
+  await db.executeQuery(sql`TRUNCATE TABLE "formationEtablissement" CASCADE;`.compile(db));
 
   await db.schema
     .alterTable("formationEtablissement")
@@ -357,14 +318,9 @@ export const down = async (db: Kysely<unknown>) => {
     .ifExists()
     .execute();
 
-  await db.schema
-    .alterTable("diplomeProfessionnel")
-    .dropColumn("voie")
-    .execute();
+  await db.schema.alterTable("diplomeProfessionnel").dropColumn("voie").execute();
 
-  await db.executeQuery(
-    sql`TRUNCATE TABLE "diplomeProfessionnel";`.compile(db)
-  );
+  await db.executeQuery(sql`TRUNCATE TABLE "diplomeProfessionnel";`.compile(db));
 
   await db.schema
     .alterTable("diplomeProfessionnel")

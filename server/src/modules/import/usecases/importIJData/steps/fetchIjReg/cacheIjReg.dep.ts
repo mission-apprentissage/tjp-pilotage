@@ -1,4 +1,4 @@
-import { kdb } from "../../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const cacheIjReg = async ({
   data,
@@ -9,7 +9,7 @@ export const cacheIjReg = async ({
   codeRegion: string;
   millesime: string;
 }) => {
-  await kdb
+  await getKbdClient()
     .insertInto("rawData")
     .values({
       type: "ij_reg",
@@ -18,14 +18,8 @@ export const cacheIjReg = async ({
     .execute();
 };
 
-export const clearIjRegCache = async ({
-  codeRegion,
-  millesime,
-}: {
-  codeRegion: string;
-  millesime: string;
-}) => {
-  await kdb
+export const clearIjRegCache = async ({ codeRegion, millesime }: { codeRegion: string; millesime: string }) => {
+  await getKbdClient()
     .deleteFrom("rawData")
     .where("type", "=", "ij_reg")
     .where("data", "@>", { codeRegion, millesime })

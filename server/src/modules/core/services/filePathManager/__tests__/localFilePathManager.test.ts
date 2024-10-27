@@ -1,5 +1,5 @@
-import { FilePathManager } from "../filePathManager";
-import { localFilePathManagerFactory } from "../localFilePathManager";
+import type { FilePathManager } from "@/modules/core/services/filePathManager/filePathManager";
+import { localFilePathManagerFactory } from "@/modules/core/services/filePathManager/localFilePathManager";
 
 describe("Core Service: Local file path manager", () => {
   let filePathManager: FilePathManager;

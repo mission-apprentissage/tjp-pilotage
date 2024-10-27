@@ -27,7 +27,7 @@ describe("createUser usecase", () => {
       shootTemplate: jest.fn(async () => {}),
     };
     const createUser = createUserFactory(deps);
-    expect(() =>
+    expect(async () =>
       createUser({
         body: user,
         requestUser,
@@ -43,7 +43,7 @@ describe("createUser usecase", () => {
       verifyScope: jest.fn(() => true),
     };
     const createUser = createUserFactory(deps);
-    expect(() =>
+    expect(async () =>
       createUser({
         body: { ...user, email: "fakeEmail" },
         requestUser,
@@ -64,9 +64,7 @@ describe("createUser usecase", () => {
     });
 
     await expect(deps.insertUserQuery).toHaveBeenCalled();
-    await expect(deps.shootTemplate).toHaveBeenCalledWith(
-      expect.objectContaining({ template: "activate_account" })
-    );
+    await expect(deps.shootTemplate).toHaveBeenCalledWith(expect.objectContaining({ template: "activate_account" }));
   });
 
   describe("role validation", () => {
@@ -77,21 +75,17 @@ describe("createUser usecase", () => {
         shootTemplate: jest.fn(async () => {}),
       };
       const createUser = createUserFactory(deps);
-      const notAllowedRoles: Array<keyof typeof PERMISSIONS> = Object.keys(
-        PERMISSIONS
-      ).filter((p) => !["admin", "admin_region"].includes(p)) as Array<
-        keyof typeof PERMISSIONS
-      >;
+      const notAllowedRoles: Array<keyof typeof PERMISSIONS> = Object.keys(PERMISSIONS).filter(
+        (p) => !["admin", "admin_region"].includes(p)
+      ) as Array<keyof typeof PERMISSIONS>;
 
       for (const role of notAllowedRoles) {
-        expect(() =>
+        expect(async () =>
           createUser({
             body: user,
             requestUser: { ...requestUser, role },
           })
-        ).rejects.toThrow(
-          `Vous n'avez pas les droits de créer un utilisateur avec le rôle ${user.role}`
-        );
+        ).rejects.toThrow(`Vous n'avez pas les droits de créer un utilisateur avec le rôle ${user.role}`);
       }
     });
 
@@ -109,9 +103,7 @@ describe("createUser usecase", () => {
       });
 
       await expect(deps.insertUserQuery).toHaveBeenCalled();
-      await expect(deps.shootTemplate).toHaveBeenCalledWith(
-        expect.objectContaining({ template: "activate_account" })
-      );
+      await expect(deps.shootTemplate).toHaveBeenCalledWith(expect.objectContaining({ template: "activate_account" }));
 
       await createUser({
         body: { ...user, codeRegion: "84", role: "pilote_region" },
@@ -119,9 +111,7 @@ describe("createUser usecase", () => {
       });
 
       await expect(deps.insertUserQuery).toHaveBeenCalled();
-      await expect(deps.shootTemplate).toHaveBeenCalledWith(
-        expect.objectContaining({ template: "activate_account" })
-      );
+      await expect(deps.shootTemplate).toHaveBeenCalledWith(expect.objectContaining({ template: "activate_account" }));
     });
   });
 
@@ -151,7 +141,7 @@ describe("createUser usecase", () => {
         shootTemplate: jest.fn(async () => {}),
       };
       const createUser = createUserFactory(deps);
-      expect(() =>
+      expect(async () =>
         createUser({
           body: { ...user, codeRegion: "76", role: "pilote_region" },
           requestUser: {
@@ -160,9 +150,7 @@ describe("createUser usecase", () => {
             role: "admin_region",
           },
         })
-      ).rejects.toThrow(
-        "Vous ne pouvez pas créer un utilisateur dans ce périmètre."
-      );
+      ).rejects.toThrow("Vous ne pouvez pas créer un utilisateur dans ce périmètre.");
     });
   });
 });

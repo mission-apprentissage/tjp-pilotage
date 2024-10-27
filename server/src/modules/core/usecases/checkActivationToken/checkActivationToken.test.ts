@@ -18,9 +18,7 @@ describe("activateUser usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
-      activateUser({ activationToken: "fake" })
-    ).rejects.toThrow("wrong token");
+    await expect(async () => activateUser({ activationToken: "fake" })).rejects.toThrow("wrong token");
   });
 
   it("should throw an exception if password is defined", async () => {
@@ -32,9 +30,7 @@ describe("activateUser usecase", () => {
       jwtSecret,
     });
 
-    await expect(() => activateUser({ activationToken })).rejects.toThrow(
-      "user active"
-    );
+    await expect(async () => activateUser({ activationToken })).rejects.toThrow("user active");
   });
 
   it("should return ok if the user exist without password", async () => {

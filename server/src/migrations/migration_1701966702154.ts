@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 // Méthode issue de https://blog.yo1.dog/updating-enum-values-in-postgresql-the-safe-and-easy-way/
 

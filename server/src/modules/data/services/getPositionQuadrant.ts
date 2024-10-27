@@ -16,10 +16,7 @@ export const getPositionQuadrant = (
     tauxPoursuite?: number;
   }
 ): string => {
-  if (
-    formation.typeFamille === PREMIERE_COMMUNE ||
-    formation.typeFamille === SECONDE_COMMUNE
-  )
+  if (formation.typeFamille === PREMIERE_COMMUNE || formation.typeFamille === SECONDE_COMMUNE)
     return UNDEFINED_QUADRANT;
 
   if (
@@ -35,38 +32,20 @@ export const getPositionQuadrant = (
   const tauxInsertionMoyen = moyenne.tauxInsertion;
   const tauxPoursuiteMoyen = moyenne.tauxPoursuite;
 
-  if (
-    tauxInsertion >= tauxInsertionMoyen &&
-    tauxPoursuite >= tauxPoursuiteMoyen
-  ) {
+  if (tauxInsertion >= tauxInsertionMoyen && tauxPoursuite >= tauxPoursuiteMoyen) {
     return PositionQuadrantEnum.Q1;
-  } else if (
-    tauxInsertion >= tauxInsertionMoyen &&
-    tauxPoursuite < tauxPoursuiteMoyen
-  ) {
+  } else if (tauxInsertion >= tauxInsertionMoyen && tauxPoursuite < tauxPoursuiteMoyen) {
     return PositionQuadrantEnum.Q2;
-  } else if (
-    tauxInsertion < tauxInsertionMoyen &&
-    tauxPoursuite >= tauxPoursuiteMoyen
-  ) {
+  } else if (tauxInsertion < tauxInsertionMoyen && tauxPoursuite >= tauxPoursuiteMoyen) {
     return PositionQuadrantEnum.Q3;
-  } else if (
-    tauxInsertion < tauxInsertionMoyen &&
-    tauxPoursuite < tauxPoursuiteMoyen
-  ) {
+  } else if (tauxInsertion < tauxInsertionMoyen && tauxPoursuite < tauxPoursuiteMoyen) {
     return PositionQuadrantEnum.Q4;
   } else return PositionQuadrantEnum["Hors quadrant"];
 };
 
-export const filterPositionQuadrant = (
-  formations: { positionQuadrant: string }[],
-  positionQuadrantFilter?: string
-) => {
-  if (!positionQuadrantFilter || positionQuadrantFilter === "all")
-    return formations;
-  return formations.filter(
-    (formation) => formation.positionQuadrant === positionQuadrantFilter
-  );
+export const filterPositionQuadrant = (formations: { positionQuadrant: string }[], positionQuadrantFilter?: string) => {
+  if (!positionQuadrantFilter || positionQuadrantFilter === "all") return formations;
+  return formations.filter((formation) => formation.positionQuadrant === positionQuadrantFilter);
 };
 
 export const orderPositionQuadrant = (
@@ -87,8 +66,5 @@ export const filterOrderPositionQuadrant = (
   positionQuadrantFilter?: string,
   orderBy?: { column: string; order: "asc" | "desc" }
 ) => {
-  return orderPositionQuadrant(
-    filterPositionQuadrant(formations, positionQuadrantFilter),
-    orderBy
-  );
+  return orderPositionQuadrant(filterPositionQuadrant(formations, positionQuadrantFilter), orderBy);
 };

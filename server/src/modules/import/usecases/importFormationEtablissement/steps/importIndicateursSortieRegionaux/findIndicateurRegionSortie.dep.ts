@@ -1,5 +1,5 @@
-import { kdb } from "../../../../../../db/db";
-import { cleanNull } from "../../../../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
 export const findIndicateurRegionSortie = ({
   cfd,
@@ -14,7 +14,7 @@ export const findIndicateurRegionSortie = ({
   millesimeSortie: string;
   voie: string;
 }) =>
-  kdb
+  getKbdClient()
     .selectFrom("indicateurRegionSortie")
     .selectAll()
     .where("cfd", "=", cfd)

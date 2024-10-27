@@ -1,14 +1,9 @@
-import { hasRightOverRole, Role } from "shared";
+import type { Role } from "shared";
+import { hasRightOverRole } from "shared";
 
-import { RequestUser } from "../../../model/User";
+import type { RequestUser } from "@/modules/core/model/User";
 
-export function canEditRole({
-  requestUser,
-  role,
-}: {
-  requestUser: RequestUser;
-  role: Role;
-}) {
+export function canEditRole({ requestUser, role }: { requestUser: RequestUser; role: Role }) {
   if (!requestUser.role) return [];
   return hasRightOverRole({ sourceRole: requestUser.role, targetRole: role });
 }

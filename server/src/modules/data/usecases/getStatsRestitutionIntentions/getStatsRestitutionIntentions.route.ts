@@ -1,16 +1,13 @@
 import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { getStatsRestitutionIntentionsSchema } from "./getStatsRestitutionIntentions.schema";
 import { getStatsRestitutionIntentionsUsecase } from "./getStatsRestitutionIntentions.usecase";
 
-export const getStatsRestitutionIntentionsRoute = ({
-  server,
-}: {
-  server: Server;
-}) => {
+export const getStatsRestitutionIntentionsRoute = ({ server }: { server: Server }) => {
   return createRoute("/restitution-intentions/stats", {
     method: "GET",
     schema: getStatsRestitutionIntentionsSchema,

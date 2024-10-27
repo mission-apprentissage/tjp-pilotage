@@ -1,10 +1,14 @@
+// @ts-nocheck -- TODO
+
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "shared";
 
-import { streamIt } from "../../utils/streamIt";
-import { getCfdDispositifs } from "../getCfdRentrees/getCfdDispositifs.dep";
-import { getCfdRentrees } from "../getCfdRentrees/getCfdRentrees.usecase";
-import { findDiplomesProfessionnels } from "../importIJData/findDiplomesProfessionnels.dep";
+import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";
+import { getCfdRentrees } from "@/modules/import/usecases/getCfdRentrees/getCfdRentrees.usecase";
+import { findDiplomesProfessionnels } from "@/modules/import/usecases/importIJData/findDiplomesProfessionnels.dep";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
 import { findUAIsApprentissage } from "./findUAIsApprentissage";
 import { importEtablissement } from "./steps/importEtablissement/importEtablissement.step";
@@ -34,8 +38,7 @@ export const [importFormations] = inject(
   (deps) => {
     return async () => {
       await streamIt(
-        (count) =>
-          deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
+        (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
         async (item, count) => {
           const cfd = item.cfd;
           const voie = item.voie;
@@ -88,13 +91,7 @@ export const [importFormationEtablissements] = inject(
     findUAIsApprentissage,
   },
   (deps) => {
-    return async ({
-      cfd,
-      voie = "scolaire",
-    }: {
-      cfd: string;
-      voie?: string;
-    }) => {
+    return async ({ cfd, voie = "scolaire" }: { cfd: string; voie?: string }) => {
       if (voie === "apprentissage") {
         await deps.importIndicateursRegionSortieApprentissage({ cfd });
         const uais = await deps.findUAIsApprentissage({ cfd });
@@ -107,13 +104,12 @@ export const [importFormationEtablissements] = inject(
             }
             processedUais.add(uai);
           }
-          const formationEtablissement =
-            await deps.createFormationEtablissement({
-              uai,
-              cfd,
-              codeDispositif: null,
-              voie: "apprentissage",
-            });
+          const formationEtablissement = await deps.createFormationEtablissement({
+            uai,
+            cfd,
+            codeDispositif: null,
+            voie: "apprentissage",
+          });
 
           for (const millesime of MILLESIMES_IJ) {
             await deps.importIndicateurSortieApprentissage({
@@ -158,13 +154,12 @@ export const [importFormationEtablissements] = inject(
                 }
                 processedUais.add(uai);
               }
-              const formationEtablissement =
-                await deps.createFormationEtablissement({
-                  uai,
-                  cfd,
-                  codeDispositif: codeDispositif,
-                  voie,
-                });
+              const formationEtablissement = await deps.createFormationEtablissement({
+                uai,
+                cfd,
+                codeDispositif: codeDispositif,
+                voie,
+              });
 
               await deps.importIndicateurEntree({
                 formationEtablissementId: formationEtablissement.id,

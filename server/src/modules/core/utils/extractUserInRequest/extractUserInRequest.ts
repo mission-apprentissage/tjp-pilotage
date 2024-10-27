@@ -1,12 +1,14 @@
 import * as Sentry from "@sentry/node";
 import cookie from "cookie";
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 
-import { config } from "../../../../../config/config";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../model/User";
+import config from "@/config";
+import type { RequestUser } from "@/modules/core/model/User";
+import { cleanNull } from "@/utils/noNull";
+
 import { findUserQuery } from "./findUserQuery.dep";
 
 export const [extractUserInRequest, extractUserInRequestFactory] = inject(
@@ -15,9 +17,7 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
     const token = cookie.parse(request.headers.cookie ?? "").Authorization;
     if (!token) return;
     try {
-      const decoded = jwt.verify(token, deps.jwtSecret) as
-        | { email: string }
-        | undefined;
+      const decoded = jwt.verify(token, deps.jwtSecret) as { email: string } | undefined;
       if (!decoded) return;
 
       const user = await deps.findUserQuery({ email: decoded.email });
@@ -29,7 +29,7 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
 
       if (!user?.enabled) return;
       request.user = cleanNull(user) as RequestUser;
-    } catch (e) {
+    } catch (_e) {
       return;
     }
   }

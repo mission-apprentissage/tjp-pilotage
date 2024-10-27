@@ -1,7 +1,7 @@
-import { kdb } from "../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const updateUserLastSeenAt = async ({ email }: { email: string }) => {
-  await kdb
+  await getKbdClient()
     .updateTable("user")
     .where("email", "=", email)
     .where("enabled", "=", true)

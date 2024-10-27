@@ -1,11 +1,9 @@
-import { App, Block, KnownBlock } from "@slack/bolt";
+import type { Block, KnownBlock } from "@slack/bolt";
+import { App } from "@slack/bolt";
 
-import { config } from "../../../../../config/config";
+import config from "@/config";
 
-export const sendToSlack = async (
-  main: (Block | KnownBlock)[],
-  answer?: (Block | KnownBlock)[]
-) => {
+export const sendToSlack = async (main: (Block | KnownBlock)[], answer?: (Block | KnownBlock)[]) => {
   if (!config.slack.chanel) return;
 
   const slack = new App({

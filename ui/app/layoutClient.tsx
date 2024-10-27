@@ -8,24 +8,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Crisp } from "crisp-sdk-web";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { createContext, Dispatch, SetStateAction, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { Auth, AuthContext } from "@/app/(wrapped)/auth/authContext";
 
+import { publicConfig } from "../config.public";
 import { theme } from "../theme/theme";
-import {
-  Changelog,
-  ChangelogContext,
-} from "./(wrapped)/changelog/changelogContext";
+import { Changelog, ChangelogContext } from "./(wrapped)/changelog/changelogContext";
 import { GlossaireProvider } from "./(wrapped)/glossaire/glossaireContext";
 import { GlossaireEntries } from "./(wrapped)/glossaire/types";
 
@@ -52,9 +41,7 @@ const useTracking = () => {
   const param = searchParams.get("notracking");
   const noTracking = useRef(
     param !== "reset" &&
-      (!!param ||
-        (typeof localStorage !== "undefined" &&
-          localStorage.getItem("notracking") === "true"))
+      (!!param || (typeof localStorage !== "undefined" && localStorage.getItem("notracking") === "true"))
   );
   useEffect(() => {
     if (param === "reset") {
@@ -114,19 +101,11 @@ export default function RootLayoutClient({
 
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
   const [changelog, setChangelog] = useState<Changelog>(initialChangelog);
-  const [codeRegionFilter, setCodeRegionFilter] = useState<string>(
-    auth?.user.codeRegion ?? ""
-  );
+  const [codeRegionFilter, setCodeRegionFilter] = useState<string>(auth?.user.codeRegion ?? "");
   const [uaiFilter, setUaiFilter] = useState("");
 
-  const codeRegionFilterValue = useMemo(
-    () => ({ codeRegionFilter, setCodeRegionFilter }),
-    [codeRegionFilter]
-  );
-  const uaiFilterValue = useMemo(
-    () => ({ uaiFilter, setUaiFilter }),
-    [uaiFilter]
-  );
+  const codeRegionFilterValue = useMemo(() => ({ codeRegionFilter, setCodeRegionFilter }), [codeRegionFilter]);
+  const uaiFilterValue = useMemo(() => ({ uaiFilter, setUaiFilter }), [uaiFilter]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef<number>(0);
@@ -151,11 +130,7 @@ export default function RootLayoutClient({
   return (
     <html lang="fr" data-theme="light">
       <head>
-        <PlausibleProvider
-          trackLocalhost={false}
-          enabled={tracking}
-          domain="orion.inserjeunes.beta.gouv.fr"
-        />
+        <PlausibleProvider trackLocalhost={false} enabled={tracking} domain={publicConfig.host} />
       </head>
       <body suppressHydrationWarning={true}>
         <QueryClientProvider client={queryClient}>
@@ -163,13 +138,9 @@ export default function RootLayoutClient({
             <ChakraProvider theme={theme}>
               <AuthContext.Provider value={{ auth, setAuth }}>
                 <UaiFilterContext.Provider value={uaiFilterValue}>
-                  <CodeRegionFilterContext.Provider
-                    value={codeRegionFilterValue}
-                  >
+                  <CodeRegionFilterContext.Provider value={codeRegionFilterValue}>
                     <GlossaireProvider initialEntries={initialGlossaire}>
-                      <ChangelogContext.Provider
-                        value={{ changelog, setChangelog }}
-                      >
+                      <ChangelogContext.Provider value={{ changelog, setChangelog }}>
                         <Flex
                           direction="column"
                           height="100vh"

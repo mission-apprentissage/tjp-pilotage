@@ -1,12 +1,14 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 import { emailRegex } from "shared";
 
-import { config } from "../../../../../config/config";
-import { RequestUser } from "../../model/User";
-import { shootTemplate } from "../../services/mailer/mailer";
-import { BodySchema } from "./createUser.schema";
+import config from "@/config";
+import type { RequestUser } from "@/modules/core/model/User";
+import { shootTemplate } from "@/modules/core/services/mailer/mailer";
+
+import type { BodySchema } from "./createUser.schema";
 import { findUserQuery } from "./findUserQuery.dep";
 import { insertUserQuery } from "./insertUserQuery.dep";
 import { canCreateRole } from "./utils/canCreateRole";
@@ -19,27 +21,16 @@ export const [createUser, createUserFactory] = inject(
     shootTemplate,
   },
   (deps) =>
-    async ({
-      body,
-      requestUser,
-    }: {
-      body: BodySchema;
-      requestUser?: RequestUser;
-    }) => {
+    async ({ body, requestUser }: { body: BodySchema; requestUser?: RequestUser }) => {
       const { email, firstname, lastname, role, codeRegion } = body;
 
-      if (!email.match(emailRegex))
-        throw Boom.badRequest(`L'email est invalide`);
+      if (!email.match(emailRegex)) throw Boom.badRequest(`L'email est invalide`);
 
       if (requestUser) {
         if (!canCreateRole({ requestUser, role: body.role }))
-          throw Boom.unauthorized(
-            `Vous n'avez pas les droits de créer un utilisateur avec le rôle ${body.role}`
-          );
+          throw Boom.unauthorized(`Vous n'avez pas les droits de créer un utilisateur avec le rôle ${body.role}`);
         if (!canCreateUserInScope({ requestUser, body }))
-          throw Boom.unauthorized(
-            "Vous ne pouvez pas créer un utilisateur dans ce périmètre."
-          );
+          throw Boom.unauthorized("Vous ne pouvez pas créer un utilisateur dans ce périmètre.");
       }
 
       const existingUser = await deps.findUserQuery({ email });
@@ -56,13 +47,9 @@ export const [createUser, createUserFactory] = inject(
         codeRegion,
         enabled: true,
       });
-      const activationToken = jwt.sign(
-        { email },
-        config.auth.activationJwtSecret,
-        {
-          issuer: "orion",
-        }
-      );
+      const activationToken = jwt.sign({ email }, config.auth.activationJwtSecret, {
+        issuer: "orion",
+      });
 
       const template =
         (

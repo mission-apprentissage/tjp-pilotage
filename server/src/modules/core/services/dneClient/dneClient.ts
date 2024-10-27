@@ -1,6 +1,6 @@
 import { Issuer } from "openid-client";
 
-import { config } from "../../../../../config/config";
+import config from "@/config";
 
 export const getDneClient = async () => {
   const dneIssuer = await Issuer.discover(config.dne.url);

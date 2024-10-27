@@ -1,4 +1,5 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 /**
  * Modification de la table demande pour prendre en compte la notion de campagne
@@ -7,16 +8,9 @@ import { Kysely, sql } from "kysely";
 export const up = async (db: Kysely<unknown>) => {
   // Drop view to enable dropping the table column
   await db.schema.dropView("latestDemandeView").ifExists().execute();
-  await db.schema
-    .dropView("latestDemandeNonMaterializedView")
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestDemandeNonMaterializedView").ifExists().execute();
 
-  await db.schema
-    .alterTable("demande")
-    .dropColumn("besoinRH")
-    .dropColumn("autreBesoinRH")
-    .execute();
+  await db.schema.alterTable("demande").dropColumn("besoinRH").dropColumn("autreBesoinRH").execute();
 
   await db.schema
     .alterTable("demande")
@@ -51,12 +45,7 @@ export const up = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demande" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demande"."dateModification")`.as(
-                "dateDerniereModification"
-              ),
-              "numero",
-            ])
+            .select([sql<number>`max("demande"."dateModification")`.as("dateDerniereModification"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandes")
@@ -65,11 +54,7 @@ export const up = async (db: Kysely<unknown>) => {
         .leftJoin("demande", (join) =>
           join
             .onRef("latestDemandes.numero", "=", "demande.numero")
-            .onRef(
-              "latestDemandes.dateDerniereModification",
-              "=",
-              "demande.dateModification"
-            )
+            .onRef("latestDemandes.dateDerniereModification", "=", "demande.dateModification")
         )
         // @ts-ignore
         .selectAll("demande")
@@ -122,12 +107,7 @@ export const down = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demande" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demande"."dateModification")`.as(
-                "dateDerniereModification"
-              ),
-              "numero",
-            ])
+            .select([sql<number>`max("demande"."dateModification")`.as("dateDerniereModification"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandes")
@@ -136,11 +116,7 @@ export const down = async (db: Kysely<unknown>) => {
         .leftJoin("demande", (join) =>
           join
             .onRef("latestDemandes.numero", "=", "demande.numero")
-            .onRef(
-              "latestDemandes.dateDerniereModification",
-              "=",
-              "demande.dateModification"
-            )
+            .onRef("latestDemandes.dateDerniereModification", "=", "demande.dateModification")
         )
         // @ts-ignore
         .selectAll("demande")

@@ -38,8 +38,7 @@ export const verifyFileEncoding = async (filePath: string) => {
         encodingPredictions[encodingPrediction.encoding] = 0;
       }
 
-      encodingPredictions[encodingPrediction.encoding] +=
-        encodingPrediction.confidence;
+      encodingPredictions[encodingPrediction.encoding] += encodingPrediction.confidence;
 
       callback();
     },
@@ -63,8 +62,8 @@ export const verifyFileEncoding = async (filePath: string) => {
 
   await promise();
 
-  const highestScoreEncoding = Object.keys(encodingPredictions).reduce(
-    (a, b) => (encodingPredictions[a] > encodingPredictions[b] ? a : b)
+  const highestScoreEncoding = Object.keys(encodingPredictions).reduce((a, b) =>
+    encodingPredictions[a] > encodingPredictions[b] ? a : b
   );
 
   if (highestScoreEncoding !== "UTF-8") {

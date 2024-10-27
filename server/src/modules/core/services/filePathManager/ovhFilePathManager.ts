@@ -1,4 +1,4 @@
-import { FilePathManager } from "./filePathManager";
+import type { FilePathManager } from "./filePathManager";
 
 export const ovhFilePathManagerFactory = (): FilePathManager => {
   return {

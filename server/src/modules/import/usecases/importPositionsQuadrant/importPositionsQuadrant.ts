@@ -1,7 +1,11 @@
+// @ts-nocheck -- TODO
+
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import { getPositionQuadrant } from "../../../data/services/getPositionQuadrant";
-import { streamIt } from "../../utils/streamIt";
+import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { findCodesNiveauDiplome } from "./steps/findCodesNiveauDiplome";
 import { findFormations } from "./steps/findFormations";
 import { findMillesimesSortie } from "./steps/findMillesimesSortie";
@@ -22,8 +26,7 @@ export const [importPositionsQuadrant, importPositionsQuadrantFactory] = inject(
     insertTauxIJRegionaux: insertTauxIJRegionaux,
     findTauxRegionauxFormation: findTauxRegionauxFormation,
     findTauxIJRegionaux: findTauxIJRegionaux,
-    insertPositionFormationRegionaleQuadrant:
-      insertPositionFormationRegionaleQuadrant,
+    insertPositionFormationRegionaleQuadrant: insertPositionFormationRegionaleQuadrant,
   },
   (deps) => async () => {
     let countPositionQuadrant = 0;
@@ -44,12 +47,7 @@ export const [importPositionsQuadrant, importPositionsQuadrantFactory] = inject(
 
           if (!taux) continue;
 
-          if (
-            taux &&
-            taux.tauxDevenirFavorable &&
-            taux.tauxInsertion6mois &&
-            taux.tauxPoursuite
-          ) {
+          if (taux && taux.tauxDevenirFavorable && taux.tauxInsertion6mois && taux.tauxPoursuite) {
             await insertTauxIJRegionaux({
               tauxInsertion6mois: taux.tauxInsertion6mois,
               tauxPoursuite: taux.tauxPoursuite,
@@ -66,7 +64,7 @@ export const [importPositionsQuadrant, importPositionsQuadrantFactory] = inject(
     console.log(`Import des positions quadrant`);
 
     await streamIt(
-      (count) => findFormations({ offset: count }),
+      async (count) => findFormations({ offset: count }),
       async (formation) => {
         for (const { millesimeSortie } of millesimesSortie) {
           const tauxFormation = await findTauxRegionauxFormation({

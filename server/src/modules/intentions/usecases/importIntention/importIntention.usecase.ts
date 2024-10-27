@@ -1,9 +1,12 @@
+// @ts-nocheck -- TODO
+
 import Boom from "@hapi/boom";
 import { getPermissionScope, guardScope } from "shared";
 
-import { RequestUser } from "../../../core/model/User";
-import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import { findOneIntention } from "../../repositories/findOneIntention.query";
+import type { RequestUser } from "@/modules/core/model/User";
+import { getCurrentCampagneQuery } from "@/modules/intentions/queries/getCurrentCampagne/getCurrentCampagne.query";
+import { findOneIntention } from "@/modules/intentions/repositories/findOneIntention.query";
+
 import { createIntentionQuery } from "./dependencies/createIntention.dep";
 import { getIntentionWithMetadata } from "./dependencies/getIntentionWithMetadata";
 import { hasAlreadyBeenImported } from "./dependencies/hasAlreadyBeenImported";
@@ -18,13 +21,7 @@ const importIntentionFactory =
       hasAlreadyBeenImported,
     }
   ) =>
-  async ({
-    numero,
-    user,
-  }: {
-    user: Pick<RequestUser, "id" | "codeRegion" | "role" | "uais">;
-    numero: string;
-  }) => {
+  async ({ numero, user }: { user: Pick<RequestUser, "id" | "codeRegion" | "role" | "uais">; numero: string }) => {
     const [intention, campagne, alreadyImportedIntention] = await Promise.all([
       deps.findOneIntention(numero),
       deps.getCurrentCampagneQuery(),
@@ -41,23 +38,18 @@ const importIntentionFactory =
     }
 
     if (!campagne) {
-      throw Boom.badData(
-        "Aucune campagne en cours dans laquelle importer la demande",
-        {
-          errors: {
-            aucune_campagne_en_cours:
-              "Aucune campagne en cours dans laquelle importer la demande.",
-          },
-        }
-      );
+      throw Boom.badData("Aucune campagne en cours dans laquelle importer la demande", {
+        errors: {
+          aucune_campagne_en_cours: "Aucune campagne en cours dans laquelle importer la demande.",
+        },
+      });
     }
 
     if (!intention) {
       throw Boom.badRequest("Aucune demande correspondant au numéro fourni", {
         errors: {
           numero: numero,
-          aucune_demande_correspondante:
-            "Aucune demande correspondant au numéro fourni.",
+          aucune_demande_correspondante: "Aucune demande correspondant au numéro fourni.",
         },
       });
     }

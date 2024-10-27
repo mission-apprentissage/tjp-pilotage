@@ -1,13 +1,12 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { castDemandeStatut } from "../../../../utils/castDemandeStatut";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import { castDemandeStatut } from "@/modules/utils/castDemandeStatut";
+import { cleanNull } from "@/utils/noNull";
 
-export const createChangementStatutQuery = async (
-  changementStatut: Insertable<DB["changementStatut"]>
-) => {
-  return await kdb
+export const createChangementStatutQuery = async (changementStatut: Insertable<DB["changementStatut"]>) => {
+  return await getKbdClient()
     .insertInto("changementStatut")
     .values({
       ...changementStatut,
@@ -15,9 +14,7 @@ export const createChangementStatutQuery = async (
       createdAt: new Date(),
     })
     .onConflict((oc) =>
-      oc
-        .columns(["createdBy", "intentionNumero", "statutPrecedent", "statut"])
-        .doUpdateSet(changementStatut)
+      oc.columns(["createdBy", "intentionNumero", "statutPrecedent", "statut"]).doUpdateSet(changementStatut)
     )
     .returningAll()
     .executeTakeFirstOrThrow()

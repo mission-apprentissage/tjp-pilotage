@@ -1,5 +1,6 @@
-import { dataDI } from "../../data.di";
-import { streamIt } from "../../utils/streamIt";
+import { dataDI } from "@/modules/import/data.di";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { importFamillesMetiersDeps } from "./importFamillesMetiers.deps";
 
 export const importFamillesMetiersFactory =
@@ -13,7 +14,7 @@ export const importFamillesMetiersFactory =
 
     let countFamillesMetier = 0;
     await streamIt(
-      (countFamillesMetier) =>
+      async (countFamillesMetier) =>
         findRawDatas({
           type: "familleMetiers",
           offset: countFamillesMetier,
@@ -34,15 +35,13 @@ export const importFamillesMetiersFactory =
       { parallel: 20 }
     );
 
-    process.stdout.write(
-      `\r${countFamillesMetier} familles de métiers ajoutées ou mises à jour\n\n`
-    );
+    process.stdout.write(`\r${countFamillesMetier} familles de métiers ajoutées ou mises à jour\n\n`);
 
     console.log(`Import des options BTS`);
 
     let countOptionsBTS = 0;
     await streamIt(
-      (countOptionsBTS) =>
+      async (countOptionsBTS) =>
         findRawDatas({
           type: "optionsBTS",
           offset: countOptionsBTS,
@@ -63,15 +62,13 @@ export const importFamillesMetiersFactory =
       { parallel: 20 }
     );
 
-    process.stdout.write(
-      `\r${countOptionsBTS} options de BTS ajoutées ou mises à jour\n\n`
-    );
+    process.stdout.write(`\r${countOptionsBTS} options de BTS ajoutées ou mises à jour\n\n`);
 
     console.log(`Import des années communes`);
 
     let countOptionsAnneeCommune = 0;
     await streamIt(
-      (countOptionsAnneeCommune) =>
+      async (countOptionsAnneeCommune) =>
         findFamillesMetiers({
           offset: countOptionsAnneeCommune,
           limit: 20,
@@ -91,9 +88,7 @@ export const importFamillesMetiersFactory =
       { parallel: 20 }
     );
 
-    process.stdout.write(
-      `\r${countOptionsAnneeCommune} années communes ajoutées ou mises à jour\n\n`
-    );
+    process.stdout.write(`\r${countOptionsAnneeCommune} années communes ajoutées ou mises à jour\n\n`);
   };
 
 export const importFamillesMetiers = importFamillesMetiersFactory({});

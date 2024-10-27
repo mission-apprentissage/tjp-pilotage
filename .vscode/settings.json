@@ -1,5 +1,8 @@
 {
   "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -30,13 +33,24 @@
     "**/*/build": true,
     "**/.webpack": true,
     "**/.next": true,
-    "**/node_modules": true
+    "**/node_modules": true,
+    "**/public/dsfr": true
   },
   "javascript.preferences.importModuleSpecifier": "relative",
   "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "sonarlint.connectedMode.project": {
     "connectionId": "Orion",
     "projectKey": "mission-apprentissage_tjp-pilotage"
-  }
+  },
+  "vitest.enable": true,
+  "vitest.commandLine": "yarn test --single-thread",
+  "ansible.python.interpreterPath": "/opt/homebrew/bin/python3",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "vitest.workspaceConfig": "vitest.workspace.ts",
+  "compareFolders.ignoreAllWhiteSpaces": true,
+  "compareFolders.ignoreEmptyLines": true,
+  "compareFolders.ignoreWhiteSpaces": true,
+  "compareFolders.respectGitIgnore": true
 }

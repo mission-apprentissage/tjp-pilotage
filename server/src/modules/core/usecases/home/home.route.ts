@@ -1,7 +1,7 @@
 import { createRoute } from "@http-wizard/core";
 import { z } from "zod";
 
-import { Server } from "../../../../server";
+import type { Server } from "@/server/server";
 
 export const homeRoute = ({ server }: { server: Server }) => {
   return createRoute("/", {

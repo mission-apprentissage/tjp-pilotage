@@ -1,10 +1,11 @@
-import { Insertable } from "kysely";
-import _ from "lodash";
+import type { Insertable } from "kysely";
+import { omit } from "lodash-es";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { DB, kdb } from "../../../../../db/db";
-import { RequestUser } from "../../../../core/model/User";
-import { generateId, generateShortId } from "../../../../utils/generateId";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import type { RequestUser } from "@/modules/core/model/User";
+import { generateId, generateShortId } from "@/modules/utils/generateId";
 
 export const createDemandeQuery = ({
   demande,
@@ -24,10 +25,10 @@ export const createDemandeQuery = ({
     }
     return demande.typeDemande;
   };
-  return kdb
+  return getKbdClient()
     .insertInto("demande")
     .values({
-      ...(_.omit(demande, [
+      ...(omit(demande, [
         "id",
         "numero",
         "numeroHistorique",

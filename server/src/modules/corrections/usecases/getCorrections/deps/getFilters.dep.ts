@@ -1,13 +1,15 @@
-import { ExpressionBuilder, sql } from "kysely";
-import _ from "lodash";
+import type { ExpressionBuilder } from "kysely";
+import { sql } from "kysely";
+import { capitalize, values } from "lodash-es";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { VoieEnum } from "shared/enum/voieEnum";
 
-import { DB, kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { isDemandeNotDeleted } from "../../../../utils/isDemandeSelectable";
-import { isRestitutionIntentionRegionVisible } from "../../../../utils/isRestitutionIntentionVisible";
-import { Filters } from "../getCorrections.usecase";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/corrections/usecases/getCorrections/getCorrections.usecase";
+import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
+import { isRestitutionIntentionRegionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
+import { cleanNull } from "@/utils/noNull";
 
 export const getFiltersQuery = async ({
   statut,
@@ -27,8 +29,7 @@ export const getFiltersQuery = async ({
   campagne,
 }: Filters) => {
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
-    if (!codeRegion)
-      return sql<boolean>`${isRestitutionIntentionRegionVisible({ user })}`;
+    if (!codeRegion) return sql<boolean>`${isRestitutionIntentionRegionVisible({ user })}`;
     return eb.and([
       eb("region.codeRegion", "in", codeRegion),
       sql<boolean>`${isRestitutionIntentionRegionVisible({ user })}`,
@@ -51,8 +52,7 @@ export const getFiltersQuery = async ({
   };
 
   const inRentreeScolaire = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!rentreeScolaire || Number.isNaN(rentreeScolaire))
-      return sql<true>`true`;
+    if (!rentreeScolaire || Number.isNaN(rentreeScolaire)) return sql<true>`true`;
     return eb("demande.rentreeScolaire", "=", parseInt(rentreeScolaire));
   };
 
@@ -78,20 +78,12 @@ export const getFiltersQuery = async ({
 
   const inColoration = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!coloration) return sql<true>`true`;
-    return eb(
-      "demande.coloration",
-      "=",
-      coloration === "true" ? sql<true>`true` : sql<false>`false`
-    );
+    return eb("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
   };
 
   const inAmiCMA = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!amiCMA) return sql<true>`true`;
-    return eb(
-      "demande.amiCma",
-      "=",
-      amiCMA === "true" ? sql<true>`true` : sql<false>`false`
-    );
+    return eb("demande.amiCma", "=", amiCMA === "true" ? sql<true>`true` : sql<false>`false`);
   };
 
   const inSecteur = (eb: ExpressionBuilder<DB, "dataEtablissement">) => {
@@ -109,7 +101,7 @@ export const getFiltersQuery = async ({
     return eb("campagne.annee", "=", campagne);
   };
 
-  const geoFiltersBase = kdb
+  const geoFiltersBase = getKbdClient()
     .selectFrom("region")
     .leftJoin("departement", "departement.codeRegion", "region.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "region.codeRegion")
@@ -125,50 +117,30 @@ export const getFiltersQuery = async ({
     .execute();
 
   const departementsFilters = await geoFiltersBase
-    .select([
-      "departement.libelleDepartement as label",
-      "departement.codeDepartement as value",
-    ])
+    .select(["departement.libelleDepartement as label", "departement.codeDepartement as value"])
     .where("departement.codeDepartement", "is not", null)
     .where("departement.libelleDepartement", "is not", null)
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb), inCodeAcademie(eb)]),
-        codeDepartement
-          ? eb("departement.codeDepartement", "in", codeDepartement)
-          : sql<boolean>`false`,
+        codeDepartement ? eb("departement.codeDepartement", "in", codeDepartement) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
   const academiesFilters = await geoFiltersBase
-    .select([
-      "academie.libelleAcademie as label",
-      "academie.codeAcademie as value",
-    ])
+    .select(["academie.libelleAcademie as label", "academie.codeAcademie as value"])
     .where("academie.codeAcademie", "is not", null)
-    .where("academie.codeAcademie", "not in", [
-      "00",
-      "54",
-      "61",
-      "62",
-      "63",
-      "67",
-      "66",
-      "91",
-      "99",
-    ])
+    .where("academie.codeAcademie", "not in", ["00", "54", "61", "62", "63", "67", "66", "91", "99"])
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb)]),
-        codeAcademie
-          ? eb("academie.codeAcademie", "in", codeAcademie)
-          : sql<boolean>`false`,
+        codeAcademie ? eb("academie.codeAcademie", "in", codeAcademie) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
-  const campagnesFilters = await kdb
+  const campagnesFilters = await getKbdClient()
     .selectFrom("campagne")
     .select(["campagne.annee as label", "campagne.annee as value", "statut"])
     .distinct()
@@ -177,7 +149,7 @@ export const getFiltersQuery = async ({
     .where("campagne.annee", "is not", null)
     .execute();
 
-  const filtersBase = kdb
+  const filtersBase = getKbdClient()
     .selectFrom("correction")
     .innerJoin("latestDemandeView as demande", (join) =>
       join.onRef("correction.intentionNumero", "=", "demande.numero")
@@ -185,16 +157,8 @@ export const getFiltersQuery = async ({
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "demande.codeDispositif"
-    )
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "dataFormation.codeNiveauDiplome"
-    )
+    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
     .leftJoin("departement", "departement.codeRegion", "demande.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
@@ -205,10 +169,7 @@ export const getFiltersQuery = async ({
     .orderBy("label", "asc");
 
   const etablissementsFilters = await filtersBase
-    .select([
-      "dataEtablissement.libelleEtablissement as label",
-      "dataEtablissement.uai as value",
-    ])
+    .select(["dataEtablissement.libelleEtablissement as label", "dataEtablissement.uai as value"])
     .where("dataEtablissement.libelleEtablissement", "is not", null)
     .where((eb) => {
       return eb.or([
@@ -233,10 +194,7 @@ export const getFiltersQuery = async ({
     .execute();
 
   const rentreesScolairesFilters = await filtersBase
-    .select([
-      "demande.rentreeScolaire as label",
-      "demande.rentreeScolaire as value",
-    ])
+    .select(["demande.rentreeScolaire as label", "demande.rentreeScolaire as value"])
     .where("demande.rentreeScolaire", "is not", null)
     .where((eb) => {
       return eb.or([
@@ -282,18 +240,13 @@ export const getFiltersQuery = async ({
           inStatut(eb),
           inCampagne(eb),
         ]),
-        typeDemande
-          ? eb("demande.typeDemande", "in", typeDemande)
-          : sql<boolean>`false`,
+        typeDemande ? eb("demande.typeDemande", "in", typeDemande) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
   const diplomesFilters = await filtersBase
-    .select([
-      "niveauDiplome.libelleNiveauDiplome as label",
-      "niveauDiplome.codeNiveauDiplome as value",
-    ])
+    .select(["niveauDiplome.libelleNiveauDiplome as label", "niveauDiplome.codeNiveauDiplome as value"])
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
     .where((eb) => {
       return eb.or([
@@ -312,9 +265,7 @@ export const getFiltersQuery = async ({
           inStatut(eb),
           inCampagne(eb),
         ]),
-        codeNiveauDiplome
-          ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome)
-          : sql<boolean>`false`,
+        codeNiveauDiplome ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome) : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -373,17 +324,13 @@ export const getFiltersQuery = async ({
           inStatut(eb),
           inCampagne(eb),
         ]),
-        codeNsf
-          ? eb("dataFormation.codeNsf", "in", codeNsf)
-          : sql<boolean>`false`,
+        codeNsf ? eb("dataFormation.codeNsf", "in", codeNsf) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
-  const statutsFilters = _.values(DemandeStatutEnum).filter(
-    (statut) =>
-      statut !== DemandeStatutEnum["brouillon"] &&
-      statut !== DemandeStatutEnum["supprimée"]
+  const statutsFilters = values(DemandeStatutEnum).filter(
+    (statut) => statut !== DemandeStatutEnum["brouillon"] && statut !== DemandeStatutEnum["supprimée"]
   );
 
   const filters = {
@@ -400,7 +347,7 @@ export const getFiltersQuery = async ({
     statuts: statutsFilters.map((value) =>
       cleanNull({
         value,
-        label: _.capitalize(value),
+        label: capitalize(value),
       })
     ),
     secteurs: [

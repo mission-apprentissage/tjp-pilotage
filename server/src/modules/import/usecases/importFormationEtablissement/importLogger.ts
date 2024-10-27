@@ -1,6 +1,6 @@
-import fs from "fs";
+import fs from "node:fs";
 
-import { Logs } from "./types/Logs";
+import type { Logs } from "./types/Logs";
 
 let logs: Logs = [];
 

@@ -1,17 +1,22 @@
-import { ExpressionBuilder, sql } from "kysely";
+// @ts-nocheck -- TODO
+
+import type { ExpressionBuilder } from "kysely";
+import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
-import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
-import { DB, kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { isDemandeNotDeletedOrRefused } from "../../../../utils/isDemandeSelectable";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
 import {
   isInPerimetreIJAcademie,
   isInPerimetreIJDepartement,
   isInPerimetreIJRegion,
-} from "../../../utils/isInPerimetreIJ";
-import { Filters } from "./getStatsPilotageIntentions.query";
+} from "@/modules/data/utils/isInPerimetreIJ";
+import { isDemandeNotDeletedOrRefused } from "@/modules/utils/isDemandeSelectable";
+import { cleanNull } from "@/utils/noNull";
+
+import type { Filters } from "./getStatsPilotageIntentions.query";
 
 export const getFiltersQuery = async ({
   statut,
@@ -58,35 +63,20 @@ export const getFiltersQuery = async ({
     return eb("campagne.annee", "=", campagne);
   };
 
-  const base = kdb
+  const base = getKbdClient()
     .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .innerJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
-    .innerJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
+    .innerJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
+    .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("campagne", "campagne.id", "demande.campagneId")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "dataFormation.codeNiveauDiplome"
-    )
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .where(isDemandeNotDeletedOrRefused)
     .$call((q) => {
       if (!withColoration || withColoration === "false")
         return q.where((w) =>
-          w.or([
-            w("demande.coloration", "=", false),
-            w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"]),
-          ])
+          w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
         );
       return q;
     })
@@ -94,7 +84,7 @@ export const getFiltersQuery = async ({
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
 
-  const campagnesFilters = await kdb
+  const campagnesFilters = await getKbdClient()
     .selectFrom("campagne")
     .select(["campagne.annee as label", "campagne.annee as value"])
     .distinct()
@@ -104,19 +94,13 @@ export const getFiltersQuery = async ({
     .execute();
 
   const rentreesScolairesFilters = await base
-    .select([
-      "demande.rentreeScolaire as value",
-      "demande.rentreeScolaire as label",
-    ])
+    .select(["demande.rentreeScolaire as value", "demande.rentreeScolaire as label"])
     .where("demande.rentreeScolaire", "is not", null)
     .execute();
 
-  const regionsFilters = await kdb
+  const regionsFilters = await getKbdClient()
     .selectFrom("region")
-    .select((eb) => [
-      eb.ref("region.codeRegion").as("value"),
-      eb.ref("region.libelleRegion").as("label"),
-    ])
+    .select((eb) => [eb.ref("region.codeRegion").as("value"), eb.ref("region.libelleRegion").as("label")])
     .leftJoin("departement", "departement.codeRegion", "region.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "region.codeRegion")
     .where("region.codeRegion", "is not", null)
@@ -126,14 +110,8 @@ export const getFiltersQuery = async ({
     .execute();
 
   const academiesFilters = await base
-    .select([
-      "academie.codeAcademie as value",
-      "academie.libelleAcademie as label",
-    ])
-    .select((eb) => [
-      eb.ref("academie.codeAcademie").as("value"),
-      eb.ref("academie.libelleAcademie").as("label"),
-    ])
+    .select(["academie.codeAcademie as value", "academie.libelleAcademie as label"])
+    .select((eb) => [eb.ref("academie.codeAcademie").as("value"), eb.ref("academie.libelleAcademie").as("label")])
     .where("academie.codeAcademie", "is not", null)
     .where(isInPerimetreIJAcademie)
     .$call((q) => {
@@ -147,10 +125,7 @@ export const getFiltersQuery = async ({
     .execute();
 
   const departementsFilters = await base
-    .select([
-      "departement.codeDepartement as value",
-      "departement.libelleDepartement as label",
-    ])
+    .select(["departement.codeDepartement as value", "departement.libelleDepartement as label"])
     .where("departement.codeDepartement", "is not", null)
     .where(isInPerimetreIJDepartement)
     .$call((q) => {
@@ -170,60 +145,26 @@ export const getFiltersQuery = async ({
   const CPCFilters = await base
     .select(["dataFormation.cpc as label", "dataFormation.cpc as value"])
     .where("dataFormation.cpc", "is not", null)
-    .where((eb) =>
-      eb.and([
-        inStatut(eb),
-        inRentreeScolaire(eb),
-        inCodeNiveauDiplome(eb),
-        inNsf(eb),
-        inCampagne(eb),
-      ])
-    )
+    .where((eb) => eb.and([inStatut(eb), inRentreeScolaire(eb), inCodeNiveauDiplome(eb), inNsf(eb), inCampagne(eb)]))
     .execute();
 
   const nsfFilters = await base
     .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
     .select(["nsf.libelleNsf as label", "nsf.codeNsf as value"])
     .where("dataFormation.codeNsf", "is not", null)
-    .where((eb) =>
-      eb.and([
-        inStatut(eb),
-        inRentreeScolaire(eb),
-        inCodeNiveauDiplome(eb),
-        inCPC(eb),
-        inCampagne(eb),
-      ])
-    )
+    .where((eb) => eb.and([inStatut(eb), inRentreeScolaire(eb), inCodeNiveauDiplome(eb), inCPC(eb), inCampagne(eb)]))
     .execute();
 
   const niveauxDiplomesFilters = await base
-    .select([
-      "niveauDiplome.libelleNiveauDiplome as label",
-      "niveauDiplome.codeNiveauDiplome as value",
-    ])
+    .select(["niveauDiplome.libelleNiveauDiplome as label", "niveauDiplome.codeNiveauDiplome as value"])
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
-    .where((eb) =>
-      eb.and([
-        inStatut(eb),
-        inRentreeScolaire(eb),
-        inCPC(eb),
-        inNsf(eb),
-        inCampagne(eb),
-      ])
-    )
+    .where((eb) => eb.and([inStatut(eb), inRentreeScolaire(eb), inCPC(eb), inNsf(eb), inCampagne(eb)]))
     .union(
-      kdb
+      getKbdClient()
         .selectFrom("constatRentree")
         .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
-        .leftJoin(
-          "niveauDiplome",
-          "niveauDiplome.codeNiveauDiplome",
-          "dataFormation.codeNiveauDiplome"
-        )
-        .select([
-          "niveauDiplome.libelleNiveauDiplome as label",
-          "niveauDiplome.codeNiveauDiplome as value",
-        ])
+        .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+        .select(["niveauDiplome.libelleNiveauDiplome as label", "niveauDiplome.codeNiveauDiplome as value"])
         .distinct()
         .where("niveauDiplome.codeNiveauDiplome", "is not", null)
         .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)

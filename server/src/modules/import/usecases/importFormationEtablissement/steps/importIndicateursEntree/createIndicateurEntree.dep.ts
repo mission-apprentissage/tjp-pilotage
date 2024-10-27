@@ -1,13 +1,11 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../../../db/db";
-import { JsonValue } from "../../../../../../db/schema";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import type { JsonValue } from "@/db/schema";
 
 export const createIndicateurEntree = async (
-  indicateurEntree: Omit<
-    Insertable<DB["indicateurEntree"]>,
-    "effectifs" | "capacites" | "premiersVoeux"
-  > & {
+  indicateurEntree: Omit<Insertable<DB["indicateurEntree"]>, "effectifs" | "capacites" | "premiersVoeux"> & {
     effectifs: JsonValue;
     capacites: JsonValue;
     premiersVoeux: JsonValue;
@@ -19,14 +17,9 @@ export const createIndicateurEntree = async (
     capacites: JSON.stringify(indicateurEntree.capacites),
     premiersVoeux: JSON.stringify(indicateurEntree.premiersVoeux),
   } as const;
-  await kdb
+  await getKbdClient()
     .insertInto("indicateurEntree")
     .values(formatted)
-    .onConflict((oc) =>
-      oc
-        .column("formationEtablissementId")
-        .column("rentreeScolaire")
-        .doUpdateSet(formatted)
-    )
+    .onConflict((oc) => oc.column("formationEtablissementId").column("rentreeScolaire").doUpdateSet(formatted))
     .execute();
 };

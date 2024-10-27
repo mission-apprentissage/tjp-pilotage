@@ -1,18 +1,12 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { kdb } from "../../../../db/db";
-import { DB } from "../../../../db/schema";
+import { getKbdClient } from "@/db/db";
+import type { DB } from "@/db/schema";
 
-export const createConstatRentree = async (
-  constatRentree: Insertable<DB["constatRentree"]>
-) => {
-  await kdb
+export const createConstatRentree = async (constatRentree: Insertable<DB["constatRentree"]>) => {
+  await getKbdClient()
     .insertInto("constatRentree")
     .values(constatRentree)
-    .onConflict((oc) =>
-      oc
-        .columns(["uai", "mefstat11", "rentreeScolaire"])
-        .doUpdateSet(constatRentree)
-    )
+    .onConflict((oc) => oc.columns(["uai", "mefstat11", "rentreeScolaire"]).doUpdateSet(constatRentree))
     .execute();
 };

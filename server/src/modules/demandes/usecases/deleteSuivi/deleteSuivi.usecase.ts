@@ -1,20 +1,15 @@
 import Boom from "@hapi/boom";
 
-import { logger } from "../../../../logger";
-import { RequestUser } from "../../../core/model/User";
-import { findOneDemande } from "../../repositories/findOneDemande.query";
+import type { RequestUser } from "@/modules/core/model/User";
+import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+import logger from "@/services/logger";
+
 import { deleteSuiviQuery } from "./deps/deleteSuivi.query";
 import { findOneSuiviQuery } from "./deps/findOneSuivi.query";
 
 export const deleteSuiviFactory =
   (deps = { findOneDemande, findOneSuiviQuery, deleteSuiviQuery }) =>
-  async ({
-    id,
-    user,
-  }: {
-    id: string;
-    user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
-  }) => {
+  async ({ id, user }: { id: string; user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais"> }) => {
     const suivi = await deps.findOneSuiviQuery(id);
     if (!suivi) throw Boom.notFound("Suivi not found");
 

@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 export const up = async (db: Kysely<any>) => {
-  await db.schema
-    .createType("demandeStatus")
-    .asEnum(["draft", "submitted"])
-    .execute();
+  await db.schema.createType("demandeStatus").asEnum(["draft", "submitted"]).execute();
   await db.schema
     .createTable("demande")
     .addColumn("id", "varchar", (c) => c.unique().notNull())
@@ -23,16 +21,10 @@ export const up = async (db: Kysely<any>) => {
     .addColumn("poursuitePedagogique", "boolean")
     .addColumn("commentaire", "varchar")
     .addColumn("status", sql`"demandeStatus"`, (c) => c.notNull())
-    .addColumn("codeRegion", "varchar(2)", (c) =>
-      c.references("region.codeRegion")
-    )
-    .addColumn("codeAcademie", "varchar(2)", (c) =>
-      c.references("academie.codeAcademie")
-    )
+    .addColumn("codeRegion", "varchar(2)", (c) => c.references("region.codeRegion"))
+    .addColumn("codeAcademie", "varchar(2)", (c) => c.references("academie.codeAcademie"))
     .addColumn("createurId", "uuid", (c) => c.notNull())
-    .addColumn("createdAt", "timestamptz", (c) =>
-      c.notNull().defaultTo(sql`NOW()`)
-    )
+    .addColumn("createdAt", "timestamptz", (c) => c.notNull().defaultTo(sql`NOW()`))
     .execute();
 };
 

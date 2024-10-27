@@ -1,22 +1,18 @@
 import Boom from "@hapi/boom";
-import { z } from "zod";
+import type { z } from "zod";
 
 import * as dependencies from "./dependencies";
-import { getDataForEtablissementMapSchema } from "./getDataForEtablissementMap.schema";
+import type { getDataForEtablissementMapSchema } from "./getDataForEtablissementMap.schema";
 import { formatEtablissement } from "./services/formatEtablissement";
 import { getDistance } from "./services/getDistance";
 import { getInitialZoom } from "./services/getInitialZoom";
 
-export type Etablissement = Awaited<
-  ReturnType<typeof dependencies.getEtablissementsProches>
->[number];
+export type Etablissement = Awaited<ReturnType<typeof dependencies.getEtablissementsProches>>[number];
 
 export interface EtablissementWithDistance extends Etablissement {
   distance: number;
 }
-export type RouteQueryString = z.infer<
-  typeof getDataForEtablissementMapSchema.querystring
->;
+export type RouteQueryString = z.infer<typeof getDataForEtablissementMapSchema.querystring>;
 
 export const getDataForEtablissementMapFactory =
   (
@@ -29,9 +25,7 @@ export const getDataForEtablissementMapFactory =
   async (
     params: z.infer<typeof getDataForEtablissementMapSchema.params>,
     filters: RouteQueryString
-  ): Promise<
-    z.infer<(typeof getDataForEtablissementMapSchema.response)["200"]>
-  > => {
+  ): Promise<z.infer<(typeof getDataForEtablissementMapSchema.response)["200"]>> => {
     // Nécessaire ici de récupérer l'établissement sans filtrer par
     // CFD, parce qu'il est possible que l'établissement
     // ne dispense pas la formation sur laquelle la carte est filtrée.
@@ -63,9 +57,7 @@ export const getDataForEtablissementMapFactory =
     const cfds =
       filters?.cfd && filters.cfd.length > 0
         ? filters.cfd
-        : (await deps.getEtablissementCfds({ uai: params.uai })).map(
-            (r) => r.cfd
-          );
+        : (await deps.getEtablissementCfds({ uai: params.uai })).map((r) => r.cfd);
 
     const etablissements = await deps.getEtablissementsProches({
       cfd: cfds,

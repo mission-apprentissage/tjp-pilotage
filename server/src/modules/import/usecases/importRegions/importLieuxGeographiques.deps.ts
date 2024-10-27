@@ -1,14 +1,11 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../db/db";
-import { rawDataRepository } from "../../repositories/rawData.repository";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 
-const createRegions = async ({
-  data,
-}: {
-  data: Array<Insertable<DB["region"]>>;
-}) => {
-  await kdb
+const createRegions = async ({ data }: { data: Array<Insertable<DB["region"]>> }) => {
+  await getKbdClient()
     .insertInto("region")
     .values(data)
     .onConflict((oc) =>
@@ -20,12 +17,8 @@ const createRegions = async ({
     .execute();
 };
 
-const createAcademies = async ({
-  data,
-}: {
-  data: Array<Insertable<DB["academie"]>>;
-}) => {
-  await kdb
+const createAcademies = async ({ data }: { data: Array<Insertable<DB["academie"]>> }) => {
+  await getKbdClient()
     .insertInto("academie")
     .values(data)
     .onConflict((oc) =>
@@ -40,12 +33,8 @@ const createAcademies = async ({
     .execute();
 };
 
-const createDepartements = async ({
-  data,
-}: {
-  data: Array<Insertable<DB["departement"]>>;
-}) => {
-  await kdb
+const createDepartements = async ({ data }: { data: Array<Insertable<DB["departement"]>> }) => {
+  await getKbdClient()
     .insertInto("departement")
     .values(data)
     .onConflict((oc) =>
@@ -59,13 +48,7 @@ const createDepartements = async ({
     .execute();
 };
 
-const findDepartementAcademieRegions = async ({
-  offset,
-  limit,
-}: {
-  offset?: number;
-  limit?: number;
-}) =>
+const findDepartementAcademieRegions = async ({ offset, limit }: { offset?: number; limit?: number }) =>
   rawDataRepository.findRawDatas({
     type: "departements_academies_regions",
     offset,

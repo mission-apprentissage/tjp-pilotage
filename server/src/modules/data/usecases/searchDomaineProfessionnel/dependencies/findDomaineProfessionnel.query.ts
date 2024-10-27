@@ -1,19 +1,13 @@
 import { sql } from "kysely";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { getNormalizedSearch } from "../../../../utils/normalizeSearch";
+import { getKbdClient } from "@/db/db";
+import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
-export const findDomaineProfessionnelQuery = async ({
-  search,
-  limit = 100,
-}: {
-  search: string;
-  limit?: number;
-}) => {
+export const findDomaineProfessionnelQuery = async ({ search, limit = 100 }: { search: string; limit?: number }) => {
   const normalizedSearch = getNormalizedSearch(search);
 
-  const domainesProfessionels = await kdb
+  const domainesProfessionels = await getKbdClient()
     .selectFrom("domaineProfessionnel")
     .select([
       "domaineProfessionnel.codeDomaineProfessionnel as value",
@@ -27,10 +21,7 @@ export const findDomaineProfessionnelQuery = async ({
     )
     .$castTo<{ value: string; label: string }>()
     .where(
-      (eb) =>
-        sql`unaccent(${eb.ref(
-          "domaineProfessionnel.libelleDomaineProfessionnel"
-        )})`,
+      (eb) => sql`unaccent(${eb.ref("domaineProfessionnel.libelleDomaineProfessionnel")})`,
       "ilike",
       `%${normalizedSearch}%`
     )

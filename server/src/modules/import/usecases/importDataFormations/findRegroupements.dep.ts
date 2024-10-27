@@ -1,20 +1,14 @@
-import { kdb } from "../../../../db/db";
-import { JsonObject } from "../../../../db/schema";
+import { getKbdClient } from "@/db/db";
+import type { JsonObject } from "@/db/schema";
 
-export const findRegroupements = async ({
-  mefstats,
-}: {
-  mefstats: string[];
-}) => {
+export const findRegroupements = async ({ mefstats }: { mefstats: string[] }) => {
   const data = (
-    await kdb
+    await getKbdClient()
       .selectFrom("rawData")
       .select("data")
       .where("type", "=", "regroupements")
       .where((eb) => {
-        return eb.or(
-          mefstats.map((mefstat) => eb("data", "@>", { MEF_STAT_11: mefstat }))
-        );
+        return eb.or(mefstats.map((mefstat) => eb("data", "@>", { MEF_STAT_11: mefstat })));
       })
       .executeTakeFirst()
   )?.data;

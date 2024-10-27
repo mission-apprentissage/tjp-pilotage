@@ -1,9 +1,11 @@
-import axios, { AxiosError } from "axios";
+import type { AxiosError } from "axios";
+import axios from "axios";
 import rateLimit from "axios-rate-limit";
 import axiosRetry, { isNetworkError } from "axios-retry";
 
-import { config } from "../../../../../config/config";
-import { FranceTravailStatsPerspectiveRecrutementResponse } from "./franceTravailResponse";
+import config from "@/config";
+
+import type { FranceTravailStatsPerspectiveRecrutementResponse } from "./franceTravailResponse";
 
 let loggingIn = false;
 
@@ -42,9 +44,7 @@ const retryCondition = async (error: AxiosError) => {
     console.log("--- Refreshed FranceTravail API token");
     loggingIn = false;
   } else {
-    console.log(
-      "--- Already refreshing insertjeunes API token, triggering a 10s delay"
-    );
+    console.log("--- Already refreshing insertjeunes API token, triggering a 10s delay");
     await new Promise((resolve) => setTimeout(resolve, 3000));
   }
 
@@ -85,27 +85,23 @@ export const login = async () => {
   return access_token;
 };
 
-export const getStatsPerspectivesRecrutement = async (
-  codeRome: string,
-  codeDepartement: string
-) => {
-  const response =
-    await instance.post<FranceTravailStatsPerspectiveRecrutementResponse>(
-      `/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-perspective-employeur`,
-      {
-        codeTypeTerritoire: "DEP",
-        codeTerritoire: codeDepartement,
-        codeTypeActivite: "ROME",
-        codeActivite: codeRome,
-        codeTypePeriode: "ANNEE",
-        codeTypeNomenclature: "TYPE_TENSION",
+export const getStatsPerspectivesRecrutement = async (codeRome: string, codeDepartement: string) => {
+  const response = await instance.post<FranceTravailStatsPerspectiveRecrutementResponse>(
+    `/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-perspective-employeur`,
+    {
+      codeTypeTerritoire: "DEP",
+      codeTerritoire: codeDepartement,
+      codeTypeActivite: "ROME",
+      codeActivite: codeRome,
+      codeTypePeriode: "ANNEE",
+      codeTypeNomenclature: "TYPE_TENSION",
+    },
+    {
+      headers: {
+        Accept: "application/json",
       },
-      {
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    );
+    }
+  );
 
   return response.data?.listeValeursParPeriode;
 };

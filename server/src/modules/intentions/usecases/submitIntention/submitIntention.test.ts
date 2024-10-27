@@ -4,28 +4,21 @@ import { submitIntentionFactory } from "./submitIntention.usecase";
 
 type Deps = Parameters<typeof submitIntentionFactory>[0];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AwaitedResult<V extends (...args: any[]) => Promise<any>> = Awaited<
-  ReturnType<V>
->;
+type AwaitedResult<V extends (...args: any[]) => Promise<any>> = Awaited<ReturnType<V>>;
 
 const valideDeps = {
-  createIntentionQuery: jest.fn((data) => Promise.resolve(data)),
-  createChangementStatutQuery: jest.fn((data) => Promise.resolve(data)),
-  findOneDataEtablissement: () =>
-    Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<
-      Deps["findOneDataEtablissement"]
-    >),
-  findOneDataFormation: async () =>
-    Promise.resolve({ cfd: "cfd" } as AwaitedResult<
-      Deps["findOneDataFormation"]
-    >),
+  createIntentionQuery: jest.fn(async (data) => Promise.resolve(data)),
+  createChangementStatutQuery: jest.fn(async (data) => Promise.resolve(data)),
+  findOneDataEtablissement: async () =>
+    Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<Deps["findOneDataEtablissement"]>),
+  findOneDataFormation: async () => Promise.resolve({ cfd: "cfd" } as AwaitedResult<Deps["findOneDataFormation"]>),
   findOneIntention: async () =>
     Promise.resolve({
       numero: "numero-id",
       codeRegion: "codeRegion",
       createdBy: "user-id",
     } as AwaitedResult<Deps["findOneIntention"]>),
-  findOneSimilarIntention: () => Promise.resolve(),
+  findOneSimilarIntention: async () => Promise.resolve(),
 } as Deps;
 
 const intention = {
@@ -79,12 +72,12 @@ describe("submitDemande usecase", () => {
   it("should throw an exception if the uai is not found", async () => {
     const deps = {
       ...valideDeps,
-      findOneDataEtablissement: () => Promise.resolve(undefined),
+      findOneDataEtablissement: async () => Promise.resolve(undefined),
     };
 
     const submitDemande = submitIntentionFactory(deps);
 
-    await expect(() =>
+    await expect(async () =>
       submitDemande({
         user: gestionnaire,
         intention: {
@@ -98,10 +91,10 @@ describe("submitDemande usecase", () => {
   it("should throw an exception if the cfd is not found", async () => {
     const submitDemande = submitIntentionFactory({
       ...valideDeps,
-      findOneDataFormation: () => Promise.resolve(undefined),
+      findOneDataFormation: async () => Promise.resolve(undefined),
     });
 
-    await expect(() =>
+    await expect(async () =>
       submitDemande({
         user: gestionnaire,
         intention: {
@@ -115,7 +108,7 @@ describe("submitDemande usecase", () => {
   it("should throw an exception if the user tries to refuse without specifying motifRefus", async () => {
     const submitDemande = submitIntentionFactory(valideDeps);
 
-    await expect(() =>
+    await expect(async () =>
       submitDemande({
         user: gestionnaire,
         intention: {
@@ -130,7 +123,7 @@ describe("submitDemande usecase", () => {
   it("should throw an exception if the user has right in his region but codeRegion is different from the etablissement's codeRegion", async () => {
     const submitDemande = submitIntentionFactory(valideDeps);
 
-    await expect(() =>
+    await expect(async () =>
       submitDemande({
         user: {
           codeRegion: "other",
@@ -150,7 +143,7 @@ describe("submitDemande usecase", () => {
   it("should create a new intention if data is valid and sent demand does not contain a numero", async () => {
     const deps = {
       ...valideDeps,
-      createIntentionQuery: jest.fn((data) => Promise.resolve(data)),
+      createIntentionQuery: jest.fn(async (data) => Promise.resolve(data)),
     };
 
     const submitDemande = submitIntentionFactory(deps);
@@ -177,7 +170,7 @@ describe("submitDemande usecase", () => {
   it("should update a intention if data is valid and sent demand contains a numero", async () => {
     const deps = {
       ...valideDeps,
-      createIntentionQuery: jest.fn((data) => Promise.resolve(data)),
+      createIntentionQuery: jest.fn(async (data) => Promise.resolve(data)),
     };
 
     const submitDemande = submitIntentionFactory(deps);

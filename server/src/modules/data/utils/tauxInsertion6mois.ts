@@ -1,47 +1,33 @@
-import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
+import type { ExpressionBuilder } from "kysely";
+import { expressionBuilder, sql } from "kysely";
 
-import { DB } from "../../../db/db";
+import type { DB } from "@/db/db";
 
 const seuil = 20;
 
-export const selectDenominateurInsertion6mois = (
-  indicateurSortieAlias: string
-) => sql<number>`
+export const selectDenominateurInsertion6mois = (indicateurSortieAlias: string) => sql<number>`
     CASE WHEN ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" IS NOT NULL
     THEN ${sql.table(indicateurSortieAlias)}."nbSortants"::FLOAT
     END`;
 
-export const selectTauxInsertion6mois = (
-  indicateurSortieAlias: string
-) => sql<number>`
-    CASE WHEN ${selectDenominateurInsertion6mois(
-      indicateurSortieAlias
-    )} >= ${seuil}
+export const selectTauxInsertion6mois = (indicateurSortieAlias: string) => sql<number>`
+    CASE WHEN ${selectDenominateurInsertion6mois(indicateurSortieAlias)} >= ${seuil}
     THEN (${sql.table(indicateurSortieAlias)}."nbInsertion6mois"::FLOAT
     / ${selectDenominateurInsertion6mois(indicateurSortieAlias)})::NUMERIC
     END`;
 
-export const selectDenominateurInsertion6moisAgg = (
-  indicateurSortieAlias: string
-) => sql<number>`
+export const selectDenominateurInsertion6moisAgg = (indicateurSortieAlias: string) => sql<number>`
     SUM(
-      CASE WHEN ${sql.table(
-        indicateurSortieAlias
-      )}."nbInsertion6mois" IS NOT NULL
+      CASE WHEN ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" IS NOT NULL
       THEN ${sql.table(indicateurSortieAlias)}."nbSortants"
       END
     )::FLOAT`;
 
-export const selectNumerateurInsertion6MoisAgg = (
-  indicateurSortieAlias: string
-) => sql<number>`SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois")`;
+export const selectNumerateurInsertion6MoisAgg = (indicateurSortieAlias: string) =>
+  sql<number>`SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois")`;
 
-export const selectTauxInsertion6moisAgg = (
-  indicateurSortieAlias: string
-) => sql<number>`
-    CASE WHEN ${selectDenominateurInsertion6moisAgg(
-      indicateurSortieAlias
-    )} >= ${seuil}
+export const selectTauxInsertion6moisAgg = (indicateurSortieAlias: string) => sql<number>`
+    CASE WHEN ${selectDenominateurInsertion6moisAgg(indicateurSortieAlias)} >= ${seuil}
     THEN (SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois")
     / ${selectDenominateurInsertion6moisAgg(indicateurSortieAlias)})::NUMERIC
     END`;
@@ -69,11 +55,7 @@ export function withInsertionReg<
     .whereRef("subIRS.codeDispositif", "=", codeDispositifRef)
     .where("subIRS.millesimeSortie", "=", millesimeSortie)
     .where("subIRS.voie", "=", "scolaire")
-    .whereRef(
-      "subIRS.codeRegion",
-      "=",
-      sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
-    )
+    .whereRef("subIRS.codeRegion", "=", sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`)
     .select([selectTauxInsertion6moisAgg("subIRS").as("sa")])
     .groupBy(["subIRS.cfd", "subIRS.codeDispositif"]);
 }

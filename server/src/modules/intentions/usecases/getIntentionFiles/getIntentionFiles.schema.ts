@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { fileTypeSchema } from "../../../core/services/fileManager/fileManager";
+import { fileTypeSchema } from "@/modules/core/services/fileManager/fileManager";
 
 export const getIntentionFilesSchema = {
   params: z.object({

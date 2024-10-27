@@ -1,7 +1,13 @@
-import { parse } from "csv-parse/sync";
-import fs from "fs";
+import fs from "node:fs";
 
-const overridesRef = fs.readFileSync(`${__dirname}/OVERRIDES.csv`, "utf-8");
+import { parse } from "csv-parse/sync";
+
+import { getStaticFilePath } from "@/utils/getStaticFilePath";
+
+const overridesRef = fs.readFileSync(
+  getStaticFilePath(`./import/usecases/importDataFormations/OVERRIDES.csv`),
+  "utf-8"
+);
 const overridesData = parse(overridesRef, {
   columns: true,
   skip_empty_lines: true,

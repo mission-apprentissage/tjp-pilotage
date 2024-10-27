@@ -1,13 +1,9 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
-import { DB } from "../db/db";
+import type { DB } from "@/db/db";
 
-const tables: Array<keyof DB> = [
-  "rome",
-  "formationRome",
-  "domaineProfessionnel",
-  "metier",
-];
+const tables: Array<keyof DB> = ["rome", "formationRome", "domaineProfessionnel", "metier"];
 
 /**
  * Ajout des dernières tables ajoutées à la base au trigger changeLog

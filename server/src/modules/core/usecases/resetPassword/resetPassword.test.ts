@@ -16,7 +16,7 @@ describe("resetPassword usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       resetPassword({
         password: correctPassword,
         repeatPassword: correctPassword,
@@ -31,7 +31,7 @@ describe("resetPassword usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       resetPassword({
         password: correctPassword,
         repeatPassword: correctPassword,
@@ -46,7 +46,7 @@ describe("resetPassword usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       resetPassword({
         password: "aaa",
         repeatPassword: "bbb",
@@ -61,7 +61,7 @@ describe("resetPassword usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       resetPassword({
         password: "azerty",
         repeatPassword: "azerty",

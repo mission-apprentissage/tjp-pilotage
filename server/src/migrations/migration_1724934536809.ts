@@ -1,4 +1,4 @@
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
@@ -10,22 +10,16 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("millesimeSortie", "varchar(9)", (c) => c.notNull())
     .addColumn("moyenneInsertionCfdRegion", "float8")
     .addColumn("moyennePoursuiteEtudeCfdRegion", "float8")
-    .addUniqueConstraint(
-      "positionFormationRegionaleQuadrant_unique_constraint",
-      ["cfd", "codeRegion", "millesimeSortie", "codeNiveauDiplome"]
-    )
-    .addForeignKeyConstraint(
-      "positionFormationRegionaleQuadrant_codeRegion_fk",
-      ["codeRegion"],
-      "region",
-      ["codeRegion"]
-    )
-    .addForeignKeyConstraint(
-      "positionFormationRegionaleQuadrant_cfd_fk",
-      ["cfd"],
-      "dataFormation",
-      ["cfd"]
-    )
+    .addUniqueConstraint("positionFormationRegionaleQuadrant_unique_constraint", [
+      "cfd",
+      "codeRegion",
+      "millesimeSortie",
+      "codeNiveauDiplome",
+    ])
+    .addForeignKeyConstraint("positionFormationRegionaleQuadrant_codeRegion_fk", ["codeRegion"], "region", [
+      "codeRegion",
+    ])
+    .addForeignKeyConstraint("positionFormationRegionaleQuadrant_cfd_fk", ["cfd"], "dataFormation", ["cfd"])
     .addForeignKeyConstraint(
       "positionFormationRegionaleQuadrant_codeNiveauDiplome_fk",
       ["codeNiveauDiplome"],

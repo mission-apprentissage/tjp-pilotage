@@ -1,10 +1,12 @@
 import { AxiosError } from "axios";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { setTimeout } from "timers/promises";
 
-import { localFilePathManager } from "../../../core/services/filePathManager/localFilePathManager";
-import { getStatsPerspectivesRecrutement } from "../../services/franceTravail/franceTravail.api";
-import { streamIt } from "../../utils/streamIt";
+import { localFilePathManager } from "@/modules/core/services/filePathManager/localFilePathManager";
+import { getStatsPerspectivesRecrutement } from "@/modules/import/services/franceTravail/franceTravail.api";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import {
   appendFranceTravailTensionFile,
   createFranceTravailTensionFile,
@@ -22,9 +24,7 @@ export const [importTensionFranceTravail] = inject(
   },
   (deps) => async () => {
     // Create new file
-    deps.createFranceTravailTensionFile(
-      deps.filePathManager.getFranceTravailIndicateurTensionStatsFilePath()
-    );
+    deps.createFranceTravailTensionFile(deps.filePathManager.getFranceTravailIndicateurTensionStatsFilePath());
 
     // Lister tous les ROMES pour lesquels il faut importer les données de tension
     const romes = (await deps.findAllRomeCodes()).map((r) => r.codeRome);
@@ -32,23 +32,17 @@ export const [importTensionFranceTravail] = inject(
     console.log(`romes ? ${romes.length}`);
 
     // Lister tous les départements qu'il existe
-    const departements = (await deps.findAllDepartements()).map(
-      (d) => d.codeDepartement
-    );
+    const departements = (await deps.findAllDepartements()).map((d) => d.codeDepartement);
 
     console.log(`departements ? ${departements.length}`);
 
     // Pour chaque ROME et chaque département, requêter les informations auprès de france travail
 
     await streamIt(
-      (departementCount) =>
-        Promise.resolve(
-          departements.slice(departementCount, departementCount + 1)
-        ),
+      async (departementCount) => Promise.resolve(departements.slice(departementCount, departementCount + 1)),
       async (codeDepartement, departementCount) => {
         await streamIt(
-          (romeCount) =>
-            Promise.resolve(romes.slice(romeCount, romeCount + 10)),
+          async (romeCount) => Promise.resolve(romes.slice(romeCount, romeCount + 10)),
           async (codeRome, romeCount) => {
             let retry = true;
             let retryCount = 0;
@@ -59,10 +53,7 @@ export const [importTensionFranceTravail] = inject(
                   `Département (${departementCount}/${departements.length}) ${codeDepartement} et rome ${codeRome} (${romeCount}/${romes.length})`
                 );
 
-                const result = await getStatsPerspectivesRecrutement(
-                  codeRome,
-                  codeDepartement
-                );
+                const result = await getStatsPerspectivesRecrutement(codeRome, codeDepartement);
 
                 if (result?.length) {
                   await deps.appendFranceTravailTensionFile(
@@ -84,9 +75,7 @@ export const [importTensionFranceTravail] = inject(
                   }
 
                   retry = false;
-                  if (
-                    e.response?.data?.message?.includes("FiltreErreurSldng")
-                  ) {
+                  if (e.response?.data?.message?.includes("FiltreErreurSldng")) {
                     console.error(
                       `ERROR [DEP=${codeDepartement},ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`
                     );

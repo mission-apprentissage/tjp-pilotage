@@ -1,7 +1,8 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { searchEtablissementPerdirSchema } from "./searchEtablissementPerdir.schema";
 import { searchEtablissementPerdirUsecase } from "./searchEtablissementPerdir.usecase";
 

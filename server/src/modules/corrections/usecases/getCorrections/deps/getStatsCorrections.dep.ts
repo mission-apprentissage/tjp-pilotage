@@ -1,10 +1,10 @@
 import { sql } from "kysely";
+import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
 
-import { RaisonCorrectionEnum } from "../../../../../../../shared/enum/raisonCorrectionEnum";
-import { kdb } from "../../../../../db/db";
-import { isDemandeSelectable } from "../../../../utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
-import { Filters } from "../getCorrections.usecase";
+import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/corrections/usecases/getCorrections/getCorrections.usecase";
+import { isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 
 export const getStatsCorrectionsQuery = async ({
   statut,
@@ -27,37 +27,17 @@ export const getStatsCorrectionsQuery = async ({
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const statsCorrections = await kdb
+  const statsCorrections = await getKbdClient
     .selectFrom("correction")
-    .leftJoin(
-      "latestDemandeView as demande",
-      "demande.numero",
-      "correction.intentionNumero"
-    )
+    .leftJoin("latestDemandeView as demande", "demande.numero", "correction.intentionNumero")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
-    .leftJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
+    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "demande.codeDispositif"
-    )
+    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("user", "user.id", "demande.createdBy")
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "dataFormation.codeNiveauDiplome"
-    )
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
@@ -67,31 +47,25 @@ export const getStatsCorrectionsQuery = async ({
     )
     .select((eb) => [
       eb.fn.count<number>("correction.id").as("nbCorrections"),
-      sql<number>`SUM(${eb.ref("correction.capaciteScolaire")}-${eb.ref(
-        "demande.capaciteScolaire"
-      )})`.as("ecartScolaire"),
-      sql<number>`SUM(${eb.ref("correction.capaciteApprentissage")}-${eb.ref(
-        "demande.capaciteApprentissage"
-      )})`.as("ecartApprentissage"),
+      sql<number>`SUM(${eb.ref("correction.capaciteScolaire")}-${eb.ref("demande.capaciteScolaire")})`.as(
+        "ecartScolaire"
+      ),
+      sql<number>`SUM(${eb.ref("correction.capaciteApprentissage")}-${eb.ref("demande.capaciteApprentissage")})`.as(
+        "ecartApprentissage"
+      ),
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("correction.raison")} = ${
-            RaisonCorrectionEnum["report"]
-          } THEN 1 ELSE 0 END
+          CASE WHEN ${eb.ref("correction.raison")} = ${RaisonCorrectionEnum["report"]} THEN 1 ELSE 0 END
         ),
       0)`.as("nbReports"),
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("correction.raison")} = ${
-            RaisonCorrectionEnum["annulation"]
-          } THEN 1 ELSE 0 END
+          CASE WHEN ${eb.ref("correction.raison")} = ${RaisonCorrectionEnum["annulation"]} THEN 1 ELSE 0 END
         ),
       0)`.as("nbAnnulations"),
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("correction.raison")} = ${
-            RaisonCorrectionEnum["modification_capacite"]
-          } THEN 1 ELSE 0 END
+          CASE WHEN ${eb.ref("correction.raison")} = ${RaisonCorrectionEnum["modification_capacite"]} THEN 1 ELSE 0 END
         ),
       0)`.as("nbModifications"),
     ])
@@ -139,17 +113,11 @@ export const getStatsCorrectionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeDepartement)
-        return eb.where(
-          "dataEtablissement.codeDepartement",
-          "in",
-          codeDepartement
-        );
+      if (codeDepartement) return eb.where("dataEtablissement.codeDepartement", "in", codeDepartement);
       return eb;
     })
     .$call((eb) => {
-      if (codeAcademie)
-        return eb.where("dataEtablissement.codeAcademie", "in", codeAcademie);
+      if (codeAcademie) return eb.where("dataEtablissement.codeAcademie", "in", codeAcademie);
       return eb;
     })
     .$call((eb) => {
@@ -158,16 +126,11 @@ export const getStatsCorrectionsQuery = async ({
     })
     .$call((eb) => {
       if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
-        return eb.where(
-          "demande.rentreeScolaire",
-          "=",
-          parseInt(rentreeScolaire)
-        );
+        return eb.where("demande.rentreeScolaire", "=", parseInt(rentreeScolaire));
       return eb;
     })
     .$call((eb) => {
-      if (typeDemande)
-        return eb.where("demande.typeDemande", "in", typeDemande);
+      if (typeDemande) return eb.where("demande.typeDemande", "in", typeDemande);
       return eb;
     })
     .$call((eb) => {
@@ -175,12 +138,7 @@ export const getStatsCorrectionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
+      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
@@ -189,20 +147,11 @@ export const getStatsCorrectionsQuery = async ({
     })
     .$call((eb) => {
       if (coloration)
-        return eb.where(
-          "demande.coloration",
-          "=",
-          coloration === "true" ? sql<true>`true` : sql<false>`false`
-        );
+        return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
       return eb;
     })
     .$call((eb) => {
-      if (amiCMA)
-        return eb.where(
-          "demande.amiCma",
-          "=",
-          amiCMA === "true" ? sql<true>`true` : sql<false>`false`
-        );
+      if (amiCMA) return eb.where("demande.amiCma", "=", amiCMA === "true" ? sql<true>`true` : sql<false>`false`);
       return eb;
     })
     .$call((eb) => {

@@ -1,4 +1,5 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 /**
  * Création de la notion de campagne pour les intentions d'ouverture/fermeture de formations
@@ -6,9 +7,7 @@ import { Kysely, sql } from "kysely";
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .createTable("campagne")
-    .addColumn("id", "uuid", (c) =>
-      c.notNull().defaultTo(db.fn("uuid_generate_v4")).unique()
-    )
+    .addColumn("id", "uuid", (c) => c.notNull().defaultTo(db.fn("uuid_generate_v4")).unique())
     .addColumn("annee", "varchar(4)", (c) => c.notNull())
     .addColumn("dateDebut", "timestamptz")
     .addColumn("dateFin", "timestamptz")

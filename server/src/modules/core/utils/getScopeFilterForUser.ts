@@ -1,17 +1,15 @@
-import { getPermissionScope, Permission } from "shared";
-import { Scope } from "shared/security/permissions";
+import type { Permission } from "shared";
+import { getPermissionScope } from "shared";
+import type { Scope } from "shared/security/permissions";
 
-import { RequestUser } from "../model/User";
+import type { RequestUser } from "@/modules/core/model/User";
 
 interface ScopeWithFilter {
   scope: Scope;
   scopeFilter: Array<string>;
 }
 
-export const getScopeFilterForUser = (
-  permission: Permission,
-  user: RequestUser
-): ScopeWithFilter => {
+export const getScopeFilterForUser = (permission: Permission, user: RequestUser): ScopeWithFilter => {
   const scope = getPermissionScope(user.role, permission)?.default;
   if (scope) {
     const scopeWithFilter: ScopeWithFilter = {
@@ -32,7 +30,5 @@ export const getScopeFilterForUser = (
 
     return scopeWithFilter;
   }
-  throw new Error(
-    `Missing scope for permission ${permission} on user ${user.id}.`
-  );
+  throw new Error(`Missing scope for permission ${permission} on user ${user.id}.`);
 };

@@ -1,4 +1,5 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema.dropView("formationView").materialized().execute();
@@ -78,11 +79,7 @@ export const up = async (db: Kysely<unknown>) => {
     .materialized()
     .execute();
 
-  await db.schema
-    .alterTable("formationEtablissement")
-    .dropConstraint("fk_formation")
-    .ifExists()
-    .execute();
+  await db.schema.alterTable("formationEtablissement").dropConstraint("fk_formation").ifExists().execute();
 };
 
 export const down = async (db: Kysely<unknown>) => {

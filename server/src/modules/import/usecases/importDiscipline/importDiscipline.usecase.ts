@@ -1,9 +1,11 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB } from "../../../../db/schema";
-import { rawDataRepository } from "../../repositories/rawData.repository";
-import { streamIt } from "../../utils/streamIt";
+import type { DB } from "@/db/schema";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { createDiscipline } from "./createDiscipline";
 
 export const [importDiscipline] = inject(
@@ -14,7 +16,7 @@ export const [importDiscipline] = inject(
   (deps) => async () => {
     let errorCount = 0;
     await streamIt(
-      (offset) =>
+      async (offset) =>
         deps.findRawDatas({
           type: "discipline",
           offset,
@@ -29,22 +31,15 @@ export const [importDiscipline] = inject(
         try {
           await deps.createDiscipline(discipline);
 
-          process.stdout.write(
-            `\r${count} disciplines ajoutées ou mises à jour`
-          );
+          process.stdout.write(`\r${count} disciplines ajoutées ou mises à jour`);
         } catch (error) {
-          console.log(
-            `An error occured while importing data`,
-            JSON.stringify(discipline, null, 2)
-          );
+          console.log(`An error occured while importing data`, JSON.stringify(discipline, null, 2));
           console.error(error);
           errorCount++;
         }
       },
       { parallel: 20 }
     );
-    process.stdout.write(
-      `${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`
-    );
+    process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
   }
 );

@@ -1,7 +1,7 @@
-import { ExpressionBuilder } from "kysely";
+import type { ExpressionBuilder } from "kysely";
 import { FIRST_ANNEE_CAMPAGNE } from "shared";
 
-import { DB } from "../../db/db";
+import type { DB } from "@/db/db";
 
 export const isInDenominateurTauxTransfo = ({
   eb,
@@ -17,10 +17,7 @@ export const isInDenominateurTauxTransfo = ({
         .case()
         .when("dataFormation.typeFamille", "in", ["specialite", "option"])
         .then(eb("constatRentree.anneeDispositif", "=", 2))
-        .when("dataFormation.typeFamille", "in", [
-          "2nde_commune",
-          "1ere_commune",
-        ])
+        .when("dataFormation.typeFamille", "in", ["2nde_commune", "1ere_commune"])
         .then(false)
         .else(eb("constatRentree.anneeDispositif", "=", 1))
         .end()

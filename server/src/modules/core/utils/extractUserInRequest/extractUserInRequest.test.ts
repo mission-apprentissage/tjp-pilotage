@@ -1,11 +1,11 @@
 import cookie from "cookie";
-import { FastifyRequest } from "fastify";
-import { sign } from "jsonwebtoken";
+import type { FastifyRequest } from "fastify";
+import jwt from "jsonwebtoken";
 
 import { extractUserInRequestFactory } from "./extractUserInRequest";
 
 const jwtSecret = "jwtSecret";
-const jwtToken = sign({ email: "test@test.fr" }, jwtSecret);
+const jwtToken = jwt.sign({ email: "test@test.fr" }, jwtSecret);
 
 describe("extractUserInRequest usecase", () => {
   it("should not set user in request if the is no token in the header", async () => {

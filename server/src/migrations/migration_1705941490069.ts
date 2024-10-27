@@ -1,17 +1,9 @@
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
-  await db.schema
-    .alterTable("formationHistorique")
-    .dropConstraint("fk_formation")
-    .ifExists()
-    .execute();
+  await db.schema.alterTable("formationHistorique").dropConstraint("fk_formation").ifExists().execute();
 
-  await db.schema
-    .alterTable("formationHistorique")
-    .dropConstraint("fk_formation2")
-    .ifExists()
-    .execute();
+  await db.schema.alterTable("formationHistorique").dropConstraint("fk_formation2").ifExists().execute();
 };
 
 export const down = async () => {

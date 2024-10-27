@@ -1,33 +1,28 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../db/db";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
 
 export const createTension = async (data: Insertable<DB["tension"]>) => {
-  return kdb
+  return getKbdClient()
     .insertInto("tension")
     .values(data)
     .onConflict((oc) => oc.doNothing())
     .execute();
 };
 
-export const createTensionDepartementRome = async (
-  data: Insertable<DB["tensionRomeDepartement"]>
-) => {
-  return kdb
+export const createTensionDepartementRome = async (data: Insertable<DB["tensionRomeDepartement"]>) => {
+  return getKbdClient()
     .insertInto("tensionRomeDepartement")
     .values(data)
-    .onConflict((oc) =>
-      oc
-        .columns(["annee", "codeDepartement", "codeRome", "codeTension"])
-        .doUpdateSet(data)
-    )
+    .onConflict((oc) => oc.columns(["annee", "codeDepartement", "codeRome", "codeTension"]).doUpdateSet(data))
     .execute();
 };
 
 export const deleteTension = async () => {
-  return kdb.deleteFrom("tension").execute();
+  return getKbdClient().deleteFrom("tension").execute();
 };
 
 export const deleteTensionDepartementRome = async () => {
-  return kdb.deleteFrom("tensionRomeDepartement").execute();
+  return getKbdClient().deleteFrom("tensionRomeDepartement").execute();
 };

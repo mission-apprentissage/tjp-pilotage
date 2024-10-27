@@ -1,17 +1,19 @@
+// @ts-nocheck -- TODO
+
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { effectifAnnee } from "../../utils/effectifAnnee";
-import { isInPerimetreIJRegion } from "../../utils/isInPerimetreIJ";
-import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
-import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
-import { selectTauxDevenirFavorableAgg } from "../../utils/tauxDevenirFavorable";
-import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
-import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
-import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
+import { getKbdClient } from "@/db/db";
+import { effectifAnnee } from "@/modules/data/utils/effectifAnnee";
+import { isInPerimetreIJRegion } from "@/modules/data/utils/isInPerimetreIJ";
+import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
+import { notAnneeCommuneIndicateurRegionSortie } from "@/modules/data/utils/notAnneeCommune";
+import { selectTauxDevenirFavorableAgg } from "@/modules/data/utils/tauxDevenirFavorable";
+import { selectTauxInsertion6moisAgg } from "@/modules/data/utils/tauxInsertion6mois";
+import { selectTauxPoursuiteAgg } from "@/modules/data/utils/tauxPoursuite";
+import { selectTauxRemplissageAgg } from "@/modules/data/utils/tauxRemplissage";
+import { cleanNull } from "@/utils/noNull";
 
 export const getRegionStats = async ({
   codeRegion,
@@ -24,7 +26,7 @@ export const getRegionStats = async ({
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
-  const informationsRegion = await kdb
+  const informationsRegion = await getKbdClient()
     .selectFrom("region")
     .where("codeRegion", "=", codeRegion)
     .select(["codeRegion", "libelleRegion"])
@@ -33,61 +35,35 @@ export const getRegionStats = async ({
       throw Boom.badRequest(`Code région invalide : ${codeRegion}`);
     });
 
-  const statsSortie = await kdb
+  const statsSortie = await getKbdClient()
     .selectFrom("indicateurRegionSortie")
-    .innerJoin(
-      "formationScolaireView as formationView",
-      "formationView.cfd",
-      "indicateurRegionSortie.cfd"
-    )
+    .innerJoin("formationScolaireView as formationView", "formationView.cfd", "indicateurRegionSortie.cfd")
     .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where(isScolaireIndicateurRegionSortie)
     .where(notAnneeCommuneIndicateurRegionSortie)
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where(
-        "formationView.codeNiveauDiplome",
-        "in",
-        codeNiveauDiplome
-      );
+      return q.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
-      selectTauxDevenirFavorableAgg("indicateurRegionSortie").as(
-        "tauxDevenirFavorable"
-      ),
+      selectTauxDevenirFavorableAgg("indicateurRegionSortie").as("tauxDevenirFavorable"),
     ])
     .executeTakeFirst();
 
   // Contient toutes les années (aussi les secondes communes)
-  const baseStatsEntree = kdb
+  const baseStatsEntree = getKbdClient()
     .selectFrom("formationScolaireView as formationView")
-    .innerJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "formationView.codeNiveauDiplome"
-    )
-    .innerJoin(
-      "formationEtablissement",
-      "formationEtablissement.cfd",
-      "formationView.cfd"
-    )
+    .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
+    .innerJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
     .innerJoin("indicateurEntree", (join) =>
       join
-        .onRef(
-          "indicateurEntree.formationEtablissementId",
-          "=",
-          "formationEtablissement.id"
-        )
+        .onRef("indicateurEntree.formationEtablissementId", "=", "formationEtablissement.id")
         .on("rentreeScolaire", "=", rentreeScolaire)
     )
-    .innerJoin(
-      "etablissement",
-      "etablissement.uai",
-      "formationEtablissement.uai"
-    )
+    .innerJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .where(isInPerimetreIJRegion)
     .where("region.codeRegion", "=", codeRegion)
@@ -112,9 +88,7 @@ export const getRegionStats = async ({
     .then(cleanNull);
 
   const statsEntree = await baseStatsEntree
-    .where("formationView.cfd", "not in", (eb) =>
-      eb.selectFrom("familleMetier").select("cfdFamille")
-    )
+    .where("formationView.cfd", "not in", (eb) => eb.selectFrom("familleMetier").select("cfdFamille"))
     .select((eb) => [
       eb.ref("region.codeRegion").as("codeRegion"),
       eb.ref("formationView.codeNiveauDiplome").as("codeNiveauDiplome"),
@@ -126,11 +100,7 @@ export const getRegionStats = async ({
       `.as("effectifEntree"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
-    .groupBy([
-      "region.codeRegion",
-      "niveauDiplome.libelleNiveauDiplome",
-      "formationView.codeNiveauDiplome",
-    ])
+    .groupBy(["region.codeRegion", "niveauDiplome.libelleNiveauDiplome", "formationView.codeNiveauDiplome"])
     .executeTakeFirst()
     .then(cleanNull);
 

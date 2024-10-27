@@ -1,37 +1,22 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 
-import { kdb } from "../../../../../db/db";
-import { RouteQueryString } from "../getDataForEtablissementMap.usecase";
+import { getKbdClient } from "@/db/db";
+import type { RouteQueryString } from "@/modules/data/usecases/getDataForEtablissementMap/getDataForEtablissementMap.usecase";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Filters extends Pick<RouteQueryString, "bbox" | "cfd"> {}
 
 export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
-  await kdb
+  await getKbdClient()
     .selectFrom("etablissement")
-    .leftJoin(
-      "formationEtablissement",
-      "formationEtablissement.uai",
-      "etablissement.uai"
-    )
-    .leftJoin(
-      "indicateurEntree",
-      "indicateurEntree.formationEtablissementId",
-      "formationEtablissement.id"
-    )
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "formationEtablissement.codeDispositif"
-    )
+    .leftJoin("formationEtablissement", "formationEtablissement.uai", "etablissement.uai")
+    .leftJoin("indicateurEntree", "indicateurEntree.formationEtablissementId", "formationEtablissement.id")
+    .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .distinct()
     .select((sb) => [
-      sql<string[]>`array_agg(distinct ${sb.ref(
-        "formationEtablissement.voie"
-      )})`.as("voies"),
-      sql<string[]>`array_agg(distinct ${sb.ref(
-        "dispositif.libelleDispositif"
-      )})`.as("libellesDispositifs"),
+      sql<string[]>`array_agg(distinct ${sb.ref("formationEtablissement.voie")})`.as("voies"),
+      sql<string[]>`array_agg(distinct ${sb.ref("dispositif.libelleDispositif")})`.as("libellesDispositifs"),
       "etablissement.uai",
       "etablissement.codeDepartement",
       "etablissement.commune",
@@ -39,9 +24,7 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       "etablissement.latitude",
       sql<string>`trim(split_part(split_part(split_part(split_part(${sb.ref(
         "etablissement.libelleEtablissement"
-      )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as(
-        "libelleEtablissement"
-      ),
+      )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as("libelleEtablissement"),
     ])
     .where((eb) =>
       eb.or([

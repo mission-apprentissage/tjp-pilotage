@@ -1,8 +1,10 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import { DiplomeProfessionnelLine } from "../../fileTypes/DiplomesProfessionnels";
-import { Offres_apprentissage } from "../../fileTypes/Offres_apprentissage";
-import { streamIt } from "../../utils/streamIt";
+import type { DiplomeProfessionnelLine } from "@/modules/import/fileTypes/DiplomesProfessionnels";
+import type { Offres_apprentissage } from "@/modules/import/fileTypes/Offres_apprentissage";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { createDiplomeProfessionnel } from "./createDiplomeProfessionnel.dep";
 import { findDiplomesProfessionnels } from "./findDiplomeProfessionnel.dep";
 import { findOffresApprentissages } from "./findOffresApprentissages";
@@ -16,16 +18,8 @@ const formatCFDDiplomeProfessionnel = (line: DiplomeProfessionnelLine) => {
 };
 
 const formatCFDOffreApprentissage = (line: Offres_apprentissage) => {
-  if (
-    !line[
-      "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)"
-    ]
-  )
-    return;
-  const cfd =
-    line[
-      "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)"
-    ];
+  if (!line["Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)"]) return;
+  const cfd = line["Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)"];
 
   if (isNaN(parseInt(cfd))) return;
   return cfd;
@@ -41,7 +35,7 @@ export const [importDiplomesProfessionnels] = inject(
     console.log("Import des diplomeProfessionnel");
     let errorCount = 0;
     await streamIt(
-      (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
+      async (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
       async (diplomeProfessionnel, count) => {
         const cfd = formatCFDDiplomeProfessionnel(diplomeProfessionnel);
         if (!cfd) {
@@ -62,20 +56,16 @@ export const [importDiplomesProfessionnels] = inject(
           console.log(e);
           errorCount++;
         }
-        process.stdout.write(
-          `\r${count} diplomeProfessionnel (scolaire) ajoutés ou mis à jour`
-        );
+        process.stdout.write(`\r${count} diplomeProfessionnel (scolaire) ajoutés ou mis à jour`);
       },
       { parallel: 20 }
     ).then(() => {
-      process.stdout.write(
-        `${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`
-      );
+      process.stdout.write(`${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`);
     });
     console.log("Import des diplomeProfessionnel (apprentissage)");
     errorCount = 0;
     await streamIt(
-      (count) => deps.findOffresApprentissages({ offset: count, limit: 60 }),
+      async (count) => deps.findOffresApprentissages({ offset: count, limit: 60 }),
       async (offreApprentissage, count) => {
         const cfd = formatCFDOffreApprentissage(offreApprentissage);
         if (!cfd) return;
@@ -88,15 +78,11 @@ export const [importDiplomesProfessionnels] = inject(
           console.log(e);
           errorCount++;
         }
-        process.stdout.write(
-          `\r${count} diplomeProfessionnel (apprentissage) ajoutés ou mis à jour`
-        );
+        process.stdout.write(`\r${count} diplomeProfessionnel (apprentissage) ajoutés ou mis à jour`);
       },
       { parallel: 20 }
     ).then(() => {
-      process.stdout.write(
-        `${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`
-      );
+      process.stdout.write(`${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`);
     });
   }
 );

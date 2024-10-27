@@ -16,7 +16,7 @@ describe("activateUser usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       activateUser({
         password: correctPassword,
         repeatPassword: correctPassword,
@@ -31,7 +31,7 @@ describe("activateUser usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       activateUser({
         password: correctPassword,
         repeatPassword: correctPassword,
@@ -46,7 +46,7 @@ describe("activateUser usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       activateUser({
         password: "aaa",
         repeatPassword: "bbb",
@@ -61,7 +61,7 @@ describe("activateUser usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       activateUser({
         password: "azerty",
         repeatPassword: "azerty",

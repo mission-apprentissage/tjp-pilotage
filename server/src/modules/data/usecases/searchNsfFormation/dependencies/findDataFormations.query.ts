@@ -1,12 +1,14 @@
+// @ts-nocheck -- TODO
+
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
-import { z } from "zod";
+import type { z } from "zod";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
-import { openForRentreeScolaire } from "../../../utils/openForRentreeScolaire";
-import { searchNsfFormationSchema } from "../searchNsfFormation.schema";
+import { getKbdClient } from "@/db/db";
+import type { searchNsfFormationSchema } from "@/modules/data/usecases/searchNsfFormation/searchNsfFormation.schema";
+import { openForRentreeScolaire } from "@/modules/data/utils/openForRentreeScolaire";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
 export const findManyInDataFormationQuery = async ({
   search,
@@ -19,13 +21,9 @@ export const findManyInDataFormationQuery = async ({
 }) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const formations = await kdb
+  const formations = await getKbdClient()
     .selectFrom("formationView")
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "formationView.codeNiveauDiplome"
-    )
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .leftJoin("familleMetier", "formationView.cfd", "familleMetier.cfd")
     .where((eb) =>
       eb.and([
@@ -63,21 +61,9 @@ export const findManyInDataFormationQuery = async ({
       }
       return q;
     })
-    .select([
-      "formationView.cfd",
-      "formationView.libelleFormation",
-      "niveauDiplome.libelleNiveauDiplome",
-    ])
-    .distinctOn([
-      "formationView.cfd",
-      "formationView.libelleFormation",
-      "niveauDiplome.libelleNiveauDiplome",
-    ])
-    .groupBy([
-      "formationView.cfd",
-      "formationView.libelleFormation",
-      "niveauDiplome.libelleNiveauDiplome",
-    ])
+    .select(["formationView.cfd", "formationView.libelleFormation", "niveauDiplome.libelleNiveauDiplome"])
+    .distinctOn(["formationView.cfd", "formationView.libelleFormation", "niveauDiplome.libelleNiveauDiplome"])
+    .groupBy(["formationView.cfd", "formationView.libelleFormation", "niveauDiplome.libelleNiveauDiplome"])
     .where((eb) => openForRentreeScolaire(eb, CURRENT_RENTREE))
     .orderBy(["formationView.libelleFormation asc"])
     .limit(limit)

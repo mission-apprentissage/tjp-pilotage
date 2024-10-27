@@ -1,20 +1,15 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .createTable("correction")
-    .addColumn("id", "uuid", (c) =>
-      c.primaryKey().defaultTo(db.fn("uuid_generate_v4")).notNull()
-    )
+    .addColumn("id", "uuid", (c) => c.primaryKey().defaultTo(db.fn("uuid_generate_v4")).notNull())
     .addColumn("intentionNumero", "varchar", (c) => c.notNull())
     .addColumn("createdBy", "uuid", (c) => c.notNull())
     .addColumn("updatedBy", "uuid", (c) => c.notNull())
-    .addColumn("createdAt", "timestamptz", (c) =>
-      c.notNull().defaultTo(sql`NOW()`)
-    )
-    .addColumn("updatedAt", "timestamptz", (c) =>
-      c.notNull().defaultTo(sql`NOW()`)
-    )
+    .addColumn("createdAt", "timestamptz", (c) => c.notNull().defaultTo(sql`NOW()`))
+    .addColumn("updatedAt", "timestamptz", (c) => c.notNull().defaultTo(sql`NOW()`))
     .addColumn("raison", "varchar")
     .addColumn("motif", "varchar")
     .addColumn("autreMotif", "varchar")
@@ -30,30 +25,15 @@ export const up = async (db: Kysely<unknown>) => {
 
   await db.schema
     .alterTable("correction")
-    .addForeignKeyConstraint(
-      "fk_correction_createdBy_user",
-      ["createdBy"],
-      "user",
-      ["id"]
-    ).execute;
+    .addForeignKeyConstraint("fk_correction_createdBy_user", ["createdBy"], "user", ["id"]).execute;
 
   await db.schema
     .alterTable("correction")
-    .addForeignKeyConstraint(
-      "fk_correction_updatedBy_user",
-      ["updatedBy"],
-      "user",
-      ["id"]
-    ).execute;
+    .addForeignKeyConstraint("fk_correction_updatedBy_user", ["updatedBy"], "user", ["id"]).execute;
 
   await db.schema
     .alterTable("correction")
-    .addForeignKeyConstraint(
-      "fk_correction_campagneId_campagne",
-      ["campagneId"],
-      "campagne",
-      ["id"]
-    )
+    .addForeignKeyConstraint("fk_correction_campagneId_campagne", ["campagneId"], "campagne", ["id"])
     .execute();
 };
 

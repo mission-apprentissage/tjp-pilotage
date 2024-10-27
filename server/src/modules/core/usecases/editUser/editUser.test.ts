@@ -46,14 +46,14 @@ describe("createUser usecase", () => {
           updateUser: jest.fn(async () => {}),
         };
         const editUser = editUserFactory(deps);
-        expect(() =>
+        expect(async () =>
           editUser({
             userId: "test",
             data: user,
             requestUser: { ...requestUser, role: "admin_region" },
           })
         ).rejects.toThrow("cannot edit user with this role");
-        expect(() =>
+        expect(async () =>
           editUser({
             userId: "test",
             data: { ...user, role: "admin_region" },
@@ -67,7 +67,7 @@ describe("createUser usecase", () => {
           updateUser: jest.fn(async () => {}),
         };
         const editUser = editUserFactory(deps);
-        expect(() =>
+        expect(async () =>
           editUser({
             userId: "test",
             data: { ...user, codeRegion: "84", role: "pilote_region" },

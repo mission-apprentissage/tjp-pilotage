@@ -1,43 +1,20 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
-import { kdb } from "../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const up = async (db: Kysely<unknown>) => {
-  await db.schema
-    .dropView("latestIntentionView")
-    .materialized()
-    .cascade()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestIntentionView").materialized().cascade().ifExists().execute();
 
-  await db.schema
-    .dropView("latestDemandeIntentionView")
-    .materialized()
-    .cascade()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestDemandeIntentionView").materialized().cascade().ifExists().execute();
 
-  await db.schema
-    .dropView("demandeIntentionView")
-    .materialized()
-    .cascade()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("demandeIntentionView").materialized().cascade().ifExists().execute();
 
-  await db.schema
-    .dropView("latestIntentionNonMaterializedView")
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestIntentionNonMaterializedView").ifExists().execute();
 
-  await db.schema
-    .dropView("latestDemandeIntentionNonMaterializedView")
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestDemandeIntentionNonMaterializedView").ifExists().execute();
 
-  await db.schema
-    .alterTable("intention")
-    .addColumn("inspecteurReferent", "varchar")
-    .execute();
+  await db.schema.alterTable("intention").addColumn("inspecteurReferent", "varchar").execute();
 
   await db.schema
     .createView("latestIntentionView")
@@ -51,10 +28,7 @@ export const up = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("intention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestIntention")
@@ -85,10 +59,7 @@ export const up = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("intention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestIntention")
@@ -110,23 +81,13 @@ export const up = async (db: Kysely<unknown>) => {
     .createIndex("latestIntentionView_index")
     .unique()
     .on("latestIntentionView")
-    .columns([
-      "id",
-      "numero",
-      "campagneId",
-      "cfd",
-      "uai",
-      "codeRegion",
-      "codeAcademie",
-      "createdBy",
-      "codeDispositif",
-    ])
+    .columns(["id", "numero", "campagneId", "cfd", "uai", "codeRegion", "codeAcademie", "createdBy", "codeDispositif"])
     .execute();
 
   await db.schema
     .createView("demandeIntentionView")
     .as(
-      kdb
+      getKbdClient()
         .selectFrom("intention")
         .select([
           "numero",
@@ -200,7 +161,7 @@ export const up = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
         .union(
-          kdb
+          getKbdClient()
             .selectFrom("demande")
             .select([
               "numero",
@@ -267,19 +228,11 @@ export const up = async (db: Kysely<unknown>) => {
               sql<boolean>`null`.as("achatEquipement"),
               sql<string>`null`.as("achatEquipementDescription"),
               sql<boolean>`null`.as("augmentationCapaciteAccueilHebergement"),
-              sql<number>`null`.as(
-                "augmentationCapaciteAccueilHebergementPlaces"
-              ),
-              sql<string>`null`.as(
-                "augmentationCapaciteAccueilHebergementPrecisions"
-              ),
+              sql<number>`null`.as("augmentationCapaciteAccueilHebergementPlaces"),
+              sql<string>`null`.as("augmentationCapaciteAccueilHebergementPrecisions"),
               sql<boolean>`null`.as("augmentationCapaciteAccueilRestauration"),
-              sql<number>`null`.as(
-                "augmentationCapaciteAccueilRestaurationPlaces"
-              ),
-              sql<string>`null`.as(
-                "augmentationCapaciteAccueilRestaurationPrecisions"
-              ),
+              sql<number>`null`.as("augmentationCapaciteAccueilRestaurationPlaces"),
+              sql<string>`null`.as("augmentationCapaciteAccueilRestaurationPrecisions"),
             ])
         )
     )
@@ -290,17 +243,7 @@ export const up = async (db: Kysely<unknown>) => {
     .createIndex("demandeIntentionView_index")
     .unique()
     .on("demandeIntentionView")
-    .columns([
-      "id",
-      "numero",
-      "campagneId",
-      "cfd",
-      "uai",
-      "codeRegion",
-      "codeAcademie",
-      "createdBy",
-      "codeDispositif",
-    ])
+    .columns(["id", "numero", "campagneId", "cfd", "uai", "codeRegion", "codeAcademie", "createdBy", "codeDispositif"])
     .execute();
 
   await db.schema
@@ -315,12 +258,7 @@ export const up = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demandeIntentionView as demandeIntention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demandeIntention"."updatedAt")`.as(
-                "lastUpdatedAt"
-              ),
-              "numero",
-            ])
+            .select([sql<number>`max("demandeIntention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandeIntention")
@@ -328,16 +266,8 @@ export const up = async (db: Kysely<unknown>) => {
         // @ts-ignore
         .leftJoin("demandeIntentionView as demandeIntention", (join) =>
           join
-            .onRef(
-              "latestDemandeIntention.numero",
-              "=",
-              "demandeIntention.numero"
-            )
-            .onRef(
-              "latestDemandeIntention.lastUpdatedAt",
-              "=",
-              "demandeIntention.updatedAt"
-            )
+            .onRef("latestDemandeIntention.numero", "=", "demandeIntention.numero")
+            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt")
         )
         // @ts-ignore
         .selectAll("demandeIntention")
@@ -359,12 +289,7 @@ export const up = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demandeIntentionView as demandeIntention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demandeIntention"."updatedAt")`.as(
-                "lastUpdatedAt"
-              ),
-              "numero",
-            ])
+            .select([sql<number>`max("demandeIntention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandeIntention")
@@ -372,16 +297,8 @@ export const up = async (db: Kysely<unknown>) => {
         // @ts-ignore
         .leftJoin("demandeIntentionView as demandeIntention", (join) =>
           join
-            .onRef(
-              "latestDemandeIntention.numero",
-              "=",
-              "demandeIntention.numero"
-            )
-            .onRef(
-              "latestDemandeIntention.lastUpdatedAt",
-              "=",
-              "demandeIntention.updatedAt"
-            )
+            .onRef("latestDemandeIntention.numero", "=", "demandeIntention.numero")
+            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt")
         )
         // @ts-ignore
         .selectAll("demandeIntention")
@@ -394,56 +311,22 @@ export const up = async (db: Kysely<unknown>) => {
     .createIndex("latestDemandeIntentionView_index")
     .unique()
     .on("latestDemandeIntentionView")
-    .columns([
-      "id",
-      "numero",
-      "campagneId",
-      "cfd",
-      "uai",
-      "codeRegion",
-      "codeAcademie",
-      "createdBy",
-      "codeDispositif",
-    ])
+    .columns(["id", "numero", "campagneId", "cfd", "uai", "codeRegion", "codeAcademie", "createdBy", "codeDispositif"])
     .execute();
 };
 
 export const down = async (db: Kysely<unknown>) => {
-  await db.schema
-    .dropView("latestIntentionView")
-    .materialized()
-    .cascade()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestIntentionView").materialized().cascade().ifExists().execute();
 
-  await db.schema
-    .dropView("latestDemandeIntentionView")
-    .materialized()
-    .cascade()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestDemandeIntentionView").materialized().cascade().ifExists().execute();
 
-  await db.schema
-    .dropView("demandeIntentionView")
-    .materialized()
-    .cascade()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("demandeIntentionView").materialized().cascade().ifExists().execute();
 
-  await db.schema
-    .dropView("latestIntentionNonMaterializedView")
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestIntentionNonMaterializedView").ifExists().execute();
 
-  await db.schema
-    .dropView("latestDemandeIntentionNonMaterializedView")
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestDemandeIntentionNonMaterializedView").ifExists().execute();
 
-  await db.schema
-    .alterTable("intention")
-    .dropColumn("inspecteurReferent")
-    .execute();
+  await db.schema.alterTable("intention").dropColumn("inspecteurReferent").execute();
 
   await db.schema
     .createView("latestIntentionView")
@@ -457,10 +340,7 @@ export const down = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("intention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestIntention")
@@ -491,10 +371,7 @@ export const down = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("intention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestIntention")
@@ -516,23 +393,13 @@ export const down = async (db: Kysely<unknown>) => {
     .createIndex("latestIntentionView_index")
     .unique()
     .on("latestIntentionView")
-    .columns([
-      "id",
-      "numero",
-      "campagneId",
-      "cfd",
-      "uai",
-      "codeRegion",
-      "codeAcademie",
-      "createdBy",
-      "codeDispositif",
-    ])
+    .columns(["id", "numero", "campagneId", "cfd", "uai", "codeRegion", "codeAcademie", "createdBy", "codeDispositif"])
     .execute();
 
   await db.schema
     .createView("demandeIntentionView")
     .as(
-      kdb
+      getKbdClient()
         .selectFrom("intention")
         .select([
           "numero",
@@ -605,7 +472,7 @@ export const down = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
         .union(
-          kdb
+          getKbdClient()
             .selectFrom("demande")
             .select([
               "numero",
@@ -671,19 +538,11 @@ export const down = async (db: Kysely<unknown>) => {
               sql<boolean>`null`.as("achatEquipement"),
               sql<string>`null`.as("achatEquipementDescription"),
               sql<boolean>`null`.as("augmentationCapaciteAccueilHebergement"),
-              sql<number>`null`.as(
-                "augmentationCapaciteAccueilHebergementPlaces"
-              ),
-              sql<string>`null`.as(
-                "augmentationCapaciteAccueilHebergementPrecisions"
-              ),
+              sql<number>`null`.as("augmentationCapaciteAccueilHebergementPlaces"),
+              sql<string>`null`.as("augmentationCapaciteAccueilHebergementPrecisions"),
               sql<boolean>`null`.as("augmentationCapaciteAccueilRestauration"),
-              sql<number>`null`.as(
-                "augmentationCapaciteAccueilRestaurationPlaces"
-              ),
-              sql<string>`null`.as(
-                "augmentationCapaciteAccueilRestaurationPrecisions"
-              ),
+              sql<number>`null`.as("augmentationCapaciteAccueilRestaurationPlaces"),
+              sql<string>`null`.as("augmentationCapaciteAccueilRestaurationPrecisions"),
             ])
         )
     )
@@ -694,17 +553,7 @@ export const down = async (db: Kysely<unknown>) => {
     .createIndex("demandeIntentionView_index")
     .unique()
     .on("demandeIntentionView")
-    .columns([
-      "id",
-      "numero",
-      "campagneId",
-      "cfd",
-      "uai",
-      "codeRegion",
-      "codeAcademie",
-      "createdBy",
-      "codeDispositif",
-    ])
+    .columns(["id", "numero", "campagneId", "cfd", "uai", "codeRegion", "codeAcademie", "createdBy", "codeDispositif"])
     .execute();
 
   await db.schema
@@ -719,12 +568,7 @@ export const down = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demandeIntentionView as demandeIntention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demandeIntention"."updatedAt")`.as(
-                "lastUpdatedAt"
-              ),
-              "numero",
-            ])
+            .select([sql<number>`max("demandeIntention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandeIntention")
@@ -732,16 +576,8 @@ export const down = async (db: Kysely<unknown>) => {
         // @ts-ignore
         .leftJoin("demandeIntentionView as demandeIntention", (join) =>
           join
-            .onRef(
-              "latestDemandeIntention.numero",
-              "=",
-              "demandeIntention.numero"
-            )
-            .onRef(
-              "latestDemandeIntention.lastUpdatedAt",
-              "=",
-              "demandeIntention.updatedAt"
-            )
+            .onRef("latestDemandeIntention.numero", "=", "demandeIntention.numero")
+            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt")
         )
         // @ts-ignore
         .selectAll("demandeIntention")
@@ -763,12 +599,7 @@ export const down = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demandeIntentionView as demandeIntention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demandeIntention"."updatedAt")`.as(
-                "lastUpdatedAt"
-              ),
-              "numero",
-            ])
+            .select([sql<number>`max("demandeIntention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandeIntention")
@@ -776,16 +607,8 @@ export const down = async (db: Kysely<unknown>) => {
         // @ts-ignore
         .leftJoin("demandeIntentionView as demandeIntention", (join) =>
           join
-            .onRef(
-              "latestDemandeIntention.numero",
-              "=",
-              "demandeIntention.numero"
-            )
-            .onRef(
-              "latestDemandeIntention.lastUpdatedAt",
-              "=",
-              "demandeIntention.updatedAt"
-            )
+            .onRef("latestDemandeIntention.numero", "=", "demandeIntention.numero")
+            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt")
         )
         // @ts-ignore
         .selectAll("demandeIntention")
@@ -798,16 +621,6 @@ export const down = async (db: Kysely<unknown>) => {
     .createIndex("latestDemandeIntentionView_index")
     .unique()
     .on("latestDemandeIntentionView")
-    .columns([
-      "id",
-      "numero",
-      "campagneId",
-      "cfd",
-      "uai",
-      "codeRegion",
-      "codeAcademie",
-      "createdBy",
-      "codeDispositif",
-    ])
+    .columns(["id", "numero", "campagneId", "cfd", "uai", "codeRegion", "codeAcademie", "createdBy", "codeDispositif"])
     .execute();
 };

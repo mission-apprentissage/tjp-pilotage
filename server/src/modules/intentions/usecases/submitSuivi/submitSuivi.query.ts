@@ -1,9 +1,10 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../db/db";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
 
 export const createSuiviQuery = async (suivi: Insertable<DB["suivi"]>) => {
-  return await kdb
+  return await getKbdClient()
     .insertInto("suivi")
     .values({
       ...suivi,

@@ -1,9 +1,11 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB } from "../../../../db/schema";
-import { dataDI } from "../../data.di";
-import { streamIt } from "../../utils/streamIt";
+import type { DB } from "@/db/schema";
+import { dataDI } from "@/modules/import/data.di";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import {
   createTension,
   createTensionDepartementRome,
@@ -35,7 +37,7 @@ export const [importTensionDepartementRome] = inject(
     const insertedTensions: Set<string> = new Set();
 
     await streamIt(
-      (offset) =>
+      async (offset) =>
         deps.findRawDatas({
           type: "tension_departement_rome",
           limit: 100,
@@ -57,9 +59,7 @@ export const [importTensionDepartementRome] = inject(
           insertedTensions.add(tensionKey);
         }
 
-        const tensionRomeDepartementData: Insertable<
-          DB["tensionRomeDepartement"]
-        > = {
+        const tensionRomeDepartementData: Insertable<DB["tensionRomeDepartement"]> = {
           codeRome: tension.codeActivite,
           codeDepartement: formatCodeDepartement(tension.codeTerritoire),
           codeTension: tension.codeNomenclature,

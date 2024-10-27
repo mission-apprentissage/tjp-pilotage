@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<any>) => {
-  await db.schema
-    .alterTable("user")
-    .addColumn("codeRegion", "varchar(2)")
-    .execute();
+  await db.schema.alterTable("user").addColumn("codeRegion", "varchar(2)").execute();
 };
 
 export const down = async (db: Kysely<any>) => {

@@ -16,6 +16,4 @@ export const TensionDepartementRomeSchema = z.object({
   valeurPrincipaleNom: z.string(),
 });
 
-export type Tension_Departement_Rome = z.infer<
-  typeof TensionDepartementRomeSchema
->;
+export type Tension_Departement_Rome = z.infer<typeof TensionDepartementRomeSchema>;

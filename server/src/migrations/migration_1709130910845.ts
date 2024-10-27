@@ -1,21 +1,13 @@
 // @ts-nocheck
 
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
-import { DB } from "../db/db";
+import type { DB } from "@/db/db";
 
 export const up = async (db: Kysely<unknown>) => {
-  await db.schema
-    .dropView("formationScolaireView")
-    .materialized()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("formationScolaireView").materialized().ifExists().execute();
 
-  await db.schema
-    .dropView("formationApprentissageView")
-    .materialized()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("formationApprentissageView").materialized().ifExists().execute();
 
   await db.schema.dropView("formationView").materialized().ifExists().execute();
   await db.schema.dropView("formationNonMaterializedView").ifExists().execute();
@@ -34,10 +26,7 @@ export const up = async (db: Kysely<unknown>) => {
                 db
                   .selectFrom("formationHistorique")
                   .distinct()
-                  .select([
-                    "formationHistorique.ancienCFD as cfd",
-                    "formationHistorique.voie",
-                  ])
+                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"])
               )
               .union(
                 db
@@ -49,11 +38,7 @@ export const up = async (db: Kysely<unknown>) => {
               .as("formations"),
           (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
         )
-        .leftJoin(
-          "diplomeProfessionnel",
-          "diplomeProfessionnel.cfd",
-          "dataFormation.cfd"
-        )
+        .leftJoin("diplomeProfessionnel", "diplomeProfessionnel.cfd", "dataFormation.cfd")
         .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
@@ -90,10 +75,7 @@ export const up = async (db: Kysely<unknown>) => {
                 db
                   .selectFrom("formationHistorique")
                   .distinct()
-                  .select([
-                    "formationHistorique.ancienCFD as cfd",
-                    "formationHistorique.voie",
-                  ])
+                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"])
               )
               .union(
                 db
@@ -105,11 +87,7 @@ export const up = async (db: Kysely<unknown>) => {
               .as("formations"),
           (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
         )
-        .leftJoin(
-          "diplomeProfessionnel",
-          "diplomeProfessionnel.cfd",
-          "dataFormation.cfd"
-        )
+        .leftJoin("diplomeProfessionnel", "diplomeProfessionnel.cfd", "dataFormation.cfd")
         .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
@@ -133,13 +111,7 @@ export const up = async (db: Kysely<unknown>) => {
     .materialized()
     .execute();
 
-  await db.schema
-    .createIndex("formationView_index")
-    .unique()
-    .on("formationView")
-    .column("id")
-    .ifNotExists()
-    .execute();
+  await db.schema.createIndex("formationView_index").unique().on("formationView").column("id").ifNotExists().execute();
 
   await db.schema
     .createView("formationScolaireView")
@@ -167,12 +139,7 @@ export const up = async (db: Kysely<unknown>) => {
           "typeFamille",
           "voie",
         ])
-        .where((eb) =>
-          eb.or([
-            eb("voie", "is", eb.val(null)),
-            eb("voie", "=", eb.val("scolaire")),
-          ])
-        )
+        .where((eb) => eb.or([eb("voie", "is", eb.val(null)), eb("voie", "=", eb.val("scolaire"))]))
     )
     .materialized()
     .execute();
@@ -210,12 +177,7 @@ export const up = async (db: Kysely<unknown>) => {
           "typeFamille",
           "voie",
         ])
-        .where((eb) =>
-          eb.and([
-            eb("voie", "is not", eb.val(null)),
-            eb("voie", "=", eb.val("apprentissage")),
-          ])
-        )
+        .where((eb) => eb.and([eb("voie", "is not", eb.val(null)), eb("voie", "=", eb.val("apprentissage"))]))
     )
     .materialized()
     .execute();
@@ -229,16 +191,8 @@ export const up = async (db: Kysely<unknown>) => {
 };
 
 export const down = async (db: Kysely<DB>) => {
-  await db.schema
-    .dropView("formationScolaireView")
-    .materialized()
-    .ifExists()
-    .execute();
-  await db.schema
-    .dropView("formationApprentissageView")
-    .materialized()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("formationScolaireView").materialized().ifExists().execute();
+  await db.schema.dropView("formationApprentissageView").materialized().ifExists().execute();
 
   await db.schema.dropView("formationView").materialized().ifExists().execute();
   await db.schema.dropView("formationNonMaterializedView").ifExists().execute();
@@ -257,10 +211,7 @@ export const down = async (db: Kysely<DB>) => {
                 db
                   .selectFrom("formationHistorique")
                   .distinct()
-                  .select([
-                    "formationHistorique.ancienCFD as cfd",
-                    "formationHistorique.voie",
-                  ])
+                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"])
               )
               .union(
                 db
@@ -272,11 +223,7 @@ export const down = async (db: Kysely<DB>) => {
               .as("formations"),
           (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
         )
-        .leftJoin(
-          "diplomeProfessionnel",
-          "diplomeProfessionnel.cfd",
-          "dataFormation.cfd"
-        )
+        .leftJoin("diplomeProfessionnel", "diplomeProfessionnel.cfd", "dataFormation.cfd")
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
           "dataFormation.cfd",
@@ -310,10 +257,7 @@ export const down = async (db: Kysely<DB>) => {
                 db
                   .selectFrom("formationHistorique")
                   .distinct()
-                  .select([
-                    "formationHistorique.ancienCFD as cfd",
-                    "formationHistorique.voie",
-                  ])
+                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"])
               )
               .union(
                 db
@@ -325,11 +269,7 @@ export const down = async (db: Kysely<DB>) => {
               .as("formations"),
           (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
         )
-        .leftJoin(
-          "diplomeProfessionnel",
-          "diplomeProfessionnel.cfd",
-          "dataFormation.cfd"
-        )
+        .leftJoin("diplomeProfessionnel", "diplomeProfessionnel.cfd", "dataFormation.cfd")
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
           "dataFormation.cfd",
@@ -349,13 +289,7 @@ export const down = async (db: Kysely<DB>) => {
     )
     .materialized()
     .execute();
-  await db.schema
-    .createIndex("formationView_index")
-    .unique()
-    .on("formationView")
-    .column("id")
-    .ifNotExists()
-    .execute();
+  await db.schema.createIndex("formationView_index").unique().on("formationView").column("id").ifNotExists().execute();
 
   await db.schema
     .createView("formationScolaireView")
@@ -377,12 +311,7 @@ export const down = async (db: Kysely<DB>) => {
           "typeFamille",
           "voie",
         ])
-        .where((eb) =>
-          eb.or([
-            eb("voie", "is", eb.val(null)),
-            eb("voie", "=", eb.val("scolaire")),
-          ])
-        )
+        .where((eb) => eb.or([eb("voie", "is", eb.val(null)), eb("voie", "=", eb.val("scolaire"))]))
     )
     .materialized()
     .execute();
@@ -412,12 +341,7 @@ export const down = async (db: Kysely<DB>) => {
           "typeFamille",
           "voie",
         ])
-        .where((eb) =>
-          eb.and([
-            eb("voie", "is not", eb.val(null)),
-            eb("voie", "=", eb.val("apprentissage")),
-          ])
-        )
+        .where((eb) => eb.and([eb("voie", "is not", eb.val(null)), eb("voie", "=", eb.val("apprentissage"))]))
     )
     .materialized()
     .execute();
