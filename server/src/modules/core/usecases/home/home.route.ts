@@ -13,7 +13,7 @@ export const homeRoute = ({ server }: { server: Server }) => {
     server.route({
       ...props,
       handler: async (_, response) => {
-        response.status(200).send({ hello: "dsf" });
+        response.status(200).send({ hello: "Orion" });
       },
     });
   });
