@@ -1,7 +1,7 @@
 import env from "env-var";
 
-const environement = env.get("PILOTAGE_ENV").required().asEnum(["local", "recette", "recette2", "production", "test"]);
-const publicUrl = env.get("PILOTAGE_PUBLIC_URL").required().asString();
+const environement = env.get("ENV").required().asEnum(["local", "recette", "recette2", "production", "test"]);
+const publicUrl = env.get("PUBLIC_URL").required().asString();
 
 // if (process.env.NODE_ENV === "test") {
 //   dotenv.config({
@@ -23,11 +23,11 @@ const config = {
     level: env.get("LOG_LEVEL").required().asString(),
   },
 
-  PILOTAGE_POSTGRES_URI: env.get("PILOTAGE_POSTGRES_URI").default("local").asString(),
-  frontUrl: env.get("PILOTAGE_PUBLIC_URL").required().asString(),
-  PILOTAGE_POSTGRES_CA: env.get("PILOTAGE_POSTGRES_CA").asString(),
-  PILOTAGE_INSERJEUNES_USERNAME: env.get("PILOTAGE_INSERJEUNES_USERNAME").required().asString(),
-  PILOTAGE_INSERJEUNES_PASSWORD: env.get("PILOTAGE_INSERJEUNES_PASSWORD").required().asString(),
+  PSQL_URI: env.get("PSQL_URI").default("local").asString(),
+  frontUrl: env.get("PUBLIC_URL").required().asString(),
+  PSQL_CA: env.get("PSQL_CA").asString(),
+  INSERJEUNES_USERNAME: env.get("INSERJEUNES_USERNAME").required().asString(),
+  INSERJEUNES_PASSWORD: env.get("INSERJEUNES_PASSWORD").required().asString(),
 
   psql: {
     host: env.get("PSQL_HOST").required().asString(),
@@ -42,37 +42,37 @@ const config = {
     logLevel: env.get("PSQL_LOG_LEVEL").required().asString(),
   },
   auth: {
-    authJwtSecret: env.get("PILOTAGE_AUTH_JWT_SECRET").required().asString(),
-    activationJwtSecret: env.get("PILOTAGE_ACTIVATION_JWT_SECRET").required().asString(),
-    resetPasswordJwtSecret: env.get("PILOTAGE_RESET_PASSWORD_JWT_SECRET").required().asString(),
+    authJwtSecret: env.get("AUTH_JWT_SECRET").required().asString(),
+    activationJwtSecret: env.get("ACTIVATION_JWT_SECRET").required().asString(),
+    resetPasswordJwtSecret: env.get("RESET_PASSWORD_JWT_SECRET").required().asString(),
   },
   dne: {
     url: env
       .get("PILOTAGE_DNE_URL")
       .default("https://hub-oidc.orion.education.fr/.well-known/openid-configuration")
       .asString(),
-    codeVerifierJwt: env.get("PILOTAGE_DNE_CODE_VERIFIER_JWT_SECRET").required().asString(),
-    clientId: env.get("PILOTAGE_DNE_CLIENT_ID").required().asString(),
-    clientSecret: env.get("PILOTAGE_DNE_CLIENT_SECRET").required().asString(),
-    redirectUri: env.get("PILOTAGE_DNE_REDIRECT_URI").required().asString(),
+    codeVerifierJwt: env.get("DNE_CODE_VERIFIER_JWT_SECRET").required().asString(),
+    clientId: env.get("DNE_CLIENT_ID").required().asString(),
+    clientSecret: env.get("DNE_CLIENT_SECRET").required().asString(),
+    redirectUri: env.get("DNE_REDIRECT_URI").required().asString(),
   },
   smtp: {
-    host: env.get("PILOTAGE_SMTP_HOST").required().asString(),
-    port: env.get("PILOTAGE_SMTP_PORT").required().asString(),
-    secure: env.get("PILOTAGE_SMTP_SECURE").asBool(),
+    host: env.get("SMTP_HOST").required().asString(),
+    port: env.get("SMTP_PORT").required().asString(),
+    secure: env.get("SMTP_SECURE").asBool(),
     auth: {
-      user: env.get("PILOTAGE_SMTP_AUTH_USER").asString(),
-      pass: env.get("PILOTAGE_SMTP_AUTH_PASS").asString(),
+      user: env.get("SMTP_AUTH_USER").asString(),
+      pass: env.get("SMTP_AUTH_PASS").asString(),
     },
-    email_from: env.get("PILOTAGE_EMAIL_FROM").required().asString(),
+    email_from: env.get("EMAIL_FROM").required().asString(),
   },
   slack: {
-    webhook: env.get("PILOTAGE_SLACK_WEBHOOK_URL").asString(),
-    token: env.get("PILOTAGE_SLACK_TOKEN").asString(),
-    signingSecret: env.get("PILOTAGE_SLACK_SIGNING_SECRET").asString(),
-    chanel: env.get("PILOTAGE_SLACK_CHANEL").asString(),
+    webhook: env.get("SLACK_WEBHOOK_URL").asString(),
+    token: env.get("SLACK_TOKEN").asString(),
+    signingSecret: env.get("SLACK_SIGNING_SECRET").asString(),
+    chanel: env.get("SLACK_CHANEL").asString(),
   },
-  host: env.get("PILOTAGE_HOST").asString(),
+  host: env.get("HOST").asString(),
   gitRevision: env.get("PILOTAGE_GIT_REVISION").asString(),
 
   sql: {
@@ -85,11 +85,11 @@ const config = {
     dbEditoId: env.get("NOTION_DB_EDITO_ID").required().asString(),
   },
   s3: {
-    region: env.get("PILOTAGE_S3_REGION").asString(),
-    endpoint: env.get("PILOTAGE_S3_ENDPOINT").asString(),
-    bucket: env.get("PILOTAGE_S3_BUCKET").asString(),
-    accessKey: env.get("PILOTAGE_S3_ACCESS_KEY").asString(),
-    secretKey: env.get("PILOTAGE_S3_SECRET_KEY").asString(),
+    region: env.get("S3_REGION").asString(),
+    endpoint: env.get("S3_ENDPOINT").asString(),
+    bucket: env.get("S3_BUCKET").asString(),
+    accessKey: env.get("S3_ACCESS_KEY").asString(),
+    secretKey: env.get("S3_SECRET_KEY").asString(),
   },
   sentry: {
     dsn: env.get("SENTRY_DSN").required().asString(),
