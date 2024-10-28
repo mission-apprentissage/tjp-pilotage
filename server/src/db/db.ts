@@ -78,7 +78,7 @@ types.setTypeParser(types.builtins.NUMERIC, (val) => parseFloat(val));
 export const connectToPgDb = async (uri: string) => {
   pool = new Pool({
     connectionString: uri,
-    ssl: config.PSQL_CA ? { rejectUnauthorized: false, ca: config.PSQL_CA } : undefined,
+    ssl: config.psql.ca ? { rejectUnauthorized: false, ca: config.psql.ca } : undefined,
   });
 
   pool.on("error", (error) => {
@@ -92,7 +92,7 @@ export const connectToPgDb = async (uri: string) => {
   kdb = new Kysely<DB>({
     dialect: new PostgresDialect({ pool }),
     log: (event) => {
-      if (event.level === config.sql.logLevel) {
+      if (event.level === config.psql.logLevel) {
         console.log(`\n====================================\n`);
         console.log(replaceQueryPlaceholders(event.query.sql, event.query.parameters as string[]));
         console.log({

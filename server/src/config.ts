@@ -22,13 +22,6 @@ const config = {
     type: env.get("LOG_TYPE").required().asString(),
     level: env.get("LOG_LEVEL").required().asString(),
   },
-
-  PSQL_URI: env.get("PSQL_URI").default("local").asString(),
-  frontUrl: env.get("PUBLIC_URL").required().asString(),
-  PSQL_CA: env.get("PSQL_CA").asString(),
-  INSERJEUNES_USERNAME: env.get("INSERJEUNES_USERNAME").required().asString(),
-  INSERJEUNES_PASSWORD: env.get("INSERJEUNES_PASSWORD").required().asString(),
-
   psql: {
     host: env.get("PSQL_HOST").required().asString(),
     port: env.get("PSQL_PORT").required().asPortNumber(),
@@ -46,11 +39,11 @@ const config = {
     activationJwtSecret: env.get("ACTIVATION_JWT_SECRET").required().asString(),
     resetPasswordJwtSecret: env.get("RESET_PASSWORD_JWT_SECRET").required().asString(),
   },
+  inserJeunes: {
+    username: env.get("INSERJEUNES_USERNAME").required().asString(),
+    password: env.get("INSERJEUNES_PASSWORD").required().asString(),
+  },
   dne: {
-    url: env
-      .get("PILOTAGE_DNE_URL")
-      .default("https://hub-oidc.orion.education.fr/.well-known/openid-configuration")
-      .asString(),
     codeVerifierJwt: env.get("DNE_CODE_VERIFIER_JWT_SECRET").required().asString(),
     clientId: env.get("DNE_CLIENT_ID").required().asString(),
     clientSecret: env.get("DNE_CLIENT_SECRET").required().asString(),
@@ -59,7 +52,6 @@ const config = {
   smtp: {
     host: env.get("SMTP_HOST").required().asString(),
     port: env.get("SMTP_PORT").required().asString(),
-    secure: env.get("SMTP_SECURE").asBool(),
     auth: {
       user: env.get("SMTP_AUTH_USER").asString(),
       pass: env.get("SMTP_AUTH_PASS").asString(),
@@ -67,17 +59,24 @@ const config = {
     email_from: env.get("EMAIL_FROM").required().asString(),
   },
   slack: {
-    webhook: env.get("SLACK_WEBHOOK_URL").asString(),
-    token: env.get("SLACK_TOKEN").asString(),
-    signingSecret: env.get("SLACK_SIGNING_SECRET").asString(),
-    chanel: env.get("SLACK_CHANEL").asString(),
+    webhook: env
+      .get("SLACK_WEBHOOK_URL")
+      .required(environement !== "local" && environement !== "test")
+      .asString(),
+    token: env
+      .get("SLACK_TOKEN")
+      .required(environement === "production")
+      .asString(),
+    signingSecret: env
+      .get("SLACK_SIGNING_SECRET")
+      .required(environement === "production")
+      .asString(),
+    channel: env
+      .get("SLACK_CHANNEL")
+      .required(environement !== "local" && environement !== "test")
+      .asString(),
   },
-  host: env.get("HOST").asString(),
-  gitRevision: env.get("PILOTAGE_GIT_REVISION").asString(),
-
-  sql: {
-    logLevel: env.get("PILOTAGE_SQL_LOG_LEVEL").asString(),
-  },
+  // gitRevision: env.get("GIT_REVISION").asString(),
   notion: {
     token: env.get("NOTION_TOKEN").required().asString(),
     dbChangelogId: env.get("NOTION_DB_CHANGELOG_ID").required().asString(),
@@ -92,11 +91,20 @@ const config = {
     secretKey: env.get("S3_SECRET_KEY").asString(),
   },
   sentry: {
-    dsn: env.get("SENTRY_DSN").required().asString(),
-    token: env.get("SENTRY_AUTH_TOKEN").required().asString(),
+    dsn: env
+      .get("SENTRY_DSN")
+      .required(environement !== "test")
+      .asString(),
+    token: env
+      .get("SENTRY_AUTH_TOKEN")
+      .required(environement !== "test")
+      .asString(),
   },
   metabase: {
-    token: env.get("METABASE_AUTH_TOKEN").required().asString(),
+    token: env
+      .get("METABASE_AUTH_TOKEN")
+      .required(environement !== "local" && environement !== "test")
+      .asString(),
   },
   franceTravail: {
     client: env.get("FRANCE_TRAVAIL_CLIENT").asString(),

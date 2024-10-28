@@ -86,7 +86,6 @@ jobs:
           yarn --cwd server test:coverage
         env:
           API_KEY: ${{ secrets.API_KEY }}
-          AUTH_PASSWORD_HASH_ROUNDS: ${{ secrets.AUTH_PASSWORD_HASH_ROUNDS }}
           PILOTAGE_AUTH_USER_JWT_SECRET: ${{ secrets.PILOTAGE_AUTH_USER_JWT_SECRET }}
           PILOTAGE_AUTH_ACTIVATION_JWT_SECRET: ${{ secrets.PILOTAGE_AUTH_ACTIVATION_JWT_SECRET }}
           PILOTAGE_AUTH_PASSWORD_JWT_SECRET: ${{ secrets.PILOTAGE_AUTH_PASSWORD_JWT_SECRET }}
