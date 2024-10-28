@@ -15,12 +15,8 @@ import { isTypeColoration } from "shared/validators/demandeValidators";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 import type { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
-import type {
-  getMotifsTypeDemande,
-  MotifCampagne,
-  MotifLabel,
-  MOTIFS_LABELS,
-} from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import type { MotifCampagne, MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import { getMotifsTypeDemande, MOTIFS_LABELS } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import type { TypeDemande } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import {
   getTypeDemandeLabel,

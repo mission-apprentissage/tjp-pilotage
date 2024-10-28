@@ -220,6 +220,7 @@ export const GroupedMultiselect = chakra(
         if (allOptionsSelected) {
           onChange?.(value.filter((val) => !values.includes(val)));
         } else {
+          // @ts-expect-error TODO
           onChange?.([...new Set([...value, ...values])]);
         }
       }

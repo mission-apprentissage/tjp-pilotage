@@ -97,7 +97,7 @@ export const shootTemplate = async <T extends keyof TemplatePayloads>({
 };
 
 function getPublicUrl(filepath: string) {
-  return `${config.frontUrl}${filepath}`;
+  return `${config.publicUrl}${filepath}`;
 }
 
 async function generateHtml({

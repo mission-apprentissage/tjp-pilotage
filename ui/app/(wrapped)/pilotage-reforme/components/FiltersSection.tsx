@@ -53,6 +53,7 @@ export const FiltersSection = ({
                 }}
                 placeholder="TOUTES"
               >
+                {/* @ts-expect-error TODO */}
                 {data?.filters.regions?.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}

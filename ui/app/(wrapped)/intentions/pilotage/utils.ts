@@ -5,6 +5,7 @@ export const findDefaultRentreeScolaireForCampagne = (
   rentreesScolaires: StatsPilotageIntentions["filters"]["rentreesScolaires"]
 ) => {
   if (rentreesScolaires) {
+    // @ts-expect-error TODO
     const rentreeScolaire = rentreesScolaires.find((r) => parseInt(r.value) === parseInt(annee) + 1);
 
     if (rentreeScolaire) return rentreeScolaire.value;

@@ -39,25 +39,34 @@ export const CommentairesEtAvisSection = ({
   };
 
   const getChangementStatutByEtape = (etape: 1 | 2 | 3) => {
-    return intention?.changementsStatut
-      ?.filter((changementStatut) => {
-        if (etape === 3 && getStepWorkflow(changementStatut.statut) === 4) return true;
-        // Si la demande a été refusée à cette étape, on l'affiche
-        if (
-          getStepWorkflow(changementStatut.statutPrecedent) === etape &&
-          changementStatut.statut === DemandeStatutEnum["refusée"]
+    return (
+      intention?.changementsStatut
+        // @ts-expect-error TODO
+        ?.filter((changementStatut) => {
+          if (etape === 3 && getStepWorkflow(changementStatut.statut) === 4) return true;
+          // Si la demande a été refusée à cette étape, on l'affiche
+          if (
+            getStepWorkflow(changementStatut.statutPrecedent) === etape &&
+            changementStatut.statut === DemandeStatutEnum["refusée"]
+          )
+            return true;
+          return getStepWorkflow(changementStatut.statut) === etape;
+        })
+        .sort(
+          // @ts-expect-error TODO
+          (a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut)
         )
-          return true;
-        return getStepWorkflow(changementStatut.statut) === etape;
-      })
-      .sort((a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut));
+    );
   };
 
   const getAvisByEtape = (etape: 1 | 2 | 3) => {
-    return intention?.avis?.filter((avis) => {
-      if (etape === 3 && getStepWorkflowAvis(avis.typeAvis) === 4) return true;
-      return getStepWorkflowAvis(avis.typeAvis) === etape;
-    });
+    return intention?.avis?.filter(
+      // @ts-expect-error TODO
+      (avis) => {
+        if (etape === 3 && getStepWorkflowAvis(avis.typeAvis) === 4) return true;
+        return getStepWorkflowAvis(avis.typeAvis) === etape;
+      }
+    );
   };
 
   const getNombreDifferentsContributeurs = (commentairesEtAvis?: Array<{ createdBy: string }>) => {

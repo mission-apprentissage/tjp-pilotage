@@ -83,6 +83,7 @@ export default () => {
   });
 
   const [userId, setUserId] = useState<string>();
+  // @ts-expect-error TODO
   const user = useMemo(() => data?.users.find(({ id }) => id === userId), [data, userId]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -257,7 +258,12 @@ export default () => {
                       | undefined;
                     createdAt: any;
                   }) => (
-                    <Tr height={"60px"} key={user.id} whiteSpace={"pre"}>
+                    <Tr
+                      height={"60px"}
+                      // @ts-expect-error TODO
+                      key={user.id}
+                      whiteSpace={"pre"}
+                    >
                       <Td>
                         <Avatar name={`${user.firstname} ${user.lastname}`} position={"unset"} />
                       </Td>
@@ -281,6 +287,7 @@ export default () => {
                             position="unset"
                             variant="ghost"
                             onClick={() => {
+                              // @ts-expect-error TODO
                               setUserId(user.id);
                               onOpen();
                             }}

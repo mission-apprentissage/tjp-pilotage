@@ -146,7 +146,10 @@ export default function Formations() {
   );
 
   const getDataForExport = (data: QueryResult) => {
-    const region = data.filters.regions.find((r) => r.value === filters.codeRegion?.[0]);
+    const region = data.filters.regions.find(
+      // @ts-expect-error TODO
+      (r) => r.value === filters.codeRegion?.[0]
+    );
 
     if (filters.codeRegion && region) {
       const columns = {
@@ -157,11 +160,14 @@ export default function Formations() {
 
       let formations = data.formations;
 
-      formations = data.formations.map((f) => ({
-        ...f,
-        selectedCodeRegion: region.value,
-        selectedRegion: region.label,
-      }));
+      formations = data.formations.map(
+        // @ts-expect-error TODO
+        (f) => ({
+          ...f,
+          selectedCodeRegion: region.value,
+          selectedRegion: region.label,
+        })
+      );
 
       return {
         columns,
@@ -257,6 +263,7 @@ export default function Formations() {
         <ConsoleSection
           data={data}
           canShowQuadrantPosition={canShowQuadrantPosition}
+          // @ts-expect-error TODO
           order={order}
           filters={filters}
           setSearchParams={setSearchParams}

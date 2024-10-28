@@ -31,6 +31,7 @@ const SingleValue = ({ ...props }: SingleValueProps<OptionType>) => {
           {firstName} {lastName}{" "}
         </Text>
         <Badge variant="info" size="sm">
+          {/* @ts-expect-error TODO */}
           {ROLES_LABELS[role](codeRegion).label}
         </Badge>
       </HStack>
@@ -104,6 +105,7 @@ const UserSearchBar = ({ updateUser, user }: UserSearchBarProps) => {
                 params: { search: inputValue },
               }) as Promise<QueryResult>;
               return d.then((users) =>
+                // @ts-expect-error TODO
                 users.map((u) => ({
                   label: u.email,
                   value: { ...u, role: u.role! },

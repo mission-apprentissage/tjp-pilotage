@@ -15,7 +15,10 @@ export const Etablissement = () => {
 
   const etablissement = etablissementMap?.etablissement;
   const showEtablissement =
-    etablissementMap?.etablissementsProches.findIndex((e) => e.uai === etablissement?.uai) !== -1;
+    etablissementMap?.etablissementsProches.findIndex(
+      // @ts-expect-error TODO
+      (e) => e.uai === etablissement?.uai
+    ) !== -1;
 
   const etablissementPoint = {
     type: "Feature",

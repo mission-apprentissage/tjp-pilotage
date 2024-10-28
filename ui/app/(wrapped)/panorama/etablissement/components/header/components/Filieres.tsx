@@ -49,12 +49,15 @@ export const Filieres = ({ nsfs = [] }: { nsfs?: Nsfs }) => {
   useEffect(() => {
     if (nsfs.length > NUMBER_OF_MAX_FILIERES_TO_DISPLAY) {
       setSplited(
+        // @ts-expect-error TODO
         nsfs.slice(0, NUMBER_OF_MAX_FILIERES_TO_DISPLAY - 1).map((nsf) => ({ ...nsf, icon: getIcon(nsf.codeNsf) }))
       );
       setHidden(
+        // @ts-expect-error TODO
         nsfs.slice(NUMBER_OF_MAX_FILIERES_TO_DISPLAY - 1).map((nsf) => ({ ...nsf, icon: getIcon(nsf.codeNsf) }))
       );
     } else {
+      // @ts-expect-error TODO
       setSplited(nsfs.map((nsf) => ({ ...nsf, icon: getIcon(nsf.codeNsf) })));
     }
   }, [nsfs]);

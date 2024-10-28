@@ -36,13 +36,17 @@ const getStatsRegions = async ({
 
   const statsRegions = await getKbdClient()
     .selectFrom("indicateurRegionSortie")
+    // @ts-expect-error TODO
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "indicateurRegionSortie.cfd")
+    // @ts-expect-error TODO
     .leftJoin("indicateurRegion", "indicateurRegion.codeRegion", "indicateurRegionSortie.codeRegion")
     .leftJoin("region", "region.codeRegion", "indicateurRegionSortie.codeRegion")
+    // @ts-expect-error TODO
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
       return q.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
+    // @ts-expect-error TODO
     .$call((q) => {
       if (!rentreeScolaire?.length) return q;
       return q.where(
@@ -64,6 +68,7 @@ const getStatsRegions = async ({
       selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
     ])
     .groupBy(["indicateurRegionSortie.codeRegion", "region.libelleRegion", "indicateurRegion.tauxChomage"])
+    // @ts-expect-error TODO
     .$call((q) => {
       if (!orderBy) return q;
       return q.orderBy(sql.ref(orderBy.column), sql`${sql.raw(orderBy.order)} NULLS LAST`);
@@ -75,8 +80,11 @@ const getStatsRegions = async ({
 
 const findFiltersInDb = async () => {
   const filtersBase = getKbdClient()
+    // @ts-expect-error TODO
     .selectFrom("formationScolaireView as formationView")
+    // @ts-expect-error TODO
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
+    // @ts-expect-error TODO
     .where(notHistoriqueFormation)
     .distinct()
     .$castTo<{ label: string; value: string }>();

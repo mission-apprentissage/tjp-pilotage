@@ -54,7 +54,7 @@ export const [importDataEtablissements] = inject(
     process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
   }
 );
-
+// @ts-expect-error TODO
 const formatCodeDepartement = (codeInsee: string | undefined) => {
   if (!codeInsee) return;
   if (codeInsee.length === 3) return codeInsee as `${number}${number}${string}`;

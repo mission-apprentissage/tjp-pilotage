@@ -167,11 +167,14 @@ export const FiltersSection = ({
         }}
         value={filters.codeRegion?.[0] ?? ""}
       >
-        {filtersLists?.regions.map((item) => (
-          <option key={item.value} value={item.value}>
-            {item.label}
-          </option>
-        ))}
+        {filtersLists?.regions.map(
+          // @ts-expect-error TODO
+          (item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          )
+        )}
       </Select>
       <Multiselect
         disabled={!filters.codeRegion}

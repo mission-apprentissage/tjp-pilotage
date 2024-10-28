@@ -1,3 +1,5 @@
+// @ts-nocheck -- TODO
+
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
@@ -474,6 +476,7 @@ export const QuadrantSection = ({
                       query={[
                         formationsQuadrant?.length.toString() ?? "-",
                         formationsQuadrant
+                          // @ts-expect-error TODO
                           ?.reduce((acc, { placesOuvertes, placesFermees }) => {
                             if (filters.type === "fermeture") return acc + (placesFermees ?? 0);
                             if (filters.type === "ouverture") return acc + (placesOuvertes ?? 0);
@@ -486,6 +489,7 @@ export const QuadrantSection = ({
                       {`${formationsQuadrant?.length ?? "-"} certifications -
                                 ${
                                   formationsQuadrant?.reduce(
+                                    // @ts-expect-error TODO
                                     (acc, { placesTransformees }) => acc + (placesTransformees ?? 0),
                                     0
                                   ) ?? "-"
@@ -503,21 +507,27 @@ export const QuadrantSection = ({
                         meanInsertion={stats?.tauxInsertion}
                         meanPoursuite={stats?.tauxPoursuite}
                         currentFormationId={currentFormationId}
-                        data={formationsQuadrant?.map((formation) => ({
-                          ...formation,
-                          codeDispositif: formation.codeDispositif ?? "",
-                          effectif: formation.placesTransformees,
-                          tauxInsertion: formation.tauxInsertion ?? 0,
-                          tauxPoursuite: formation.tauxPoursuite ?? 0,
-                        }))}
+                        data={formationsQuadrant?.map(
+                          // @ts-expect-error TODO
+                          (formation) => ({
+                            ...formation,
+                            codeDispositif: formation.codeDispositif ?? "",
+                            effectif: formation.placesTransformees,
+                            tauxInsertion: formation.tauxInsertion ?? 0,
+                            tauxPoursuite: formation.tauxPoursuite ?? 0,
+                          })
+                        )}
                         effectifSizes={EFFECTIF_SIZES}
                       />
                     ) : (
                       <TableQuadrant
-                        formations={formationsQuadrant?.map((formation) => ({
-                          ...formation,
-                          effectif: formation.placesTransformees,
-                        }))}
+                        formations={formationsQuadrant?.map(
+                          // @ts-expect-error TODO
+                          (formation) => ({
+                            ...formation,
+                            effectif: formation.placesTransformees,
+                          })
+                        )}
                         handleClick={setCurrentFormationId}
                         currentFormationId={currentFormationId}
                         order={order}

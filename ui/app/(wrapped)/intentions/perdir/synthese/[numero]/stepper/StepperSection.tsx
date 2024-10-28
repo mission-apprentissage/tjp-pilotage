@@ -98,13 +98,17 @@ const IllustrationStatut = chakra(
 
 export const StepperSection = ({ intention }: { intention: (typeof client.infer)["[GET]/intention/:numero"] }) => {
   const previousStep = getStepWorkflow(
-    (intention.changementsStatut || []).sort((a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut))[0]
-      ?.statutPrecedent
+    (intention.changementsStatut || []).sort(
+      // @ts-expect-error TODO
+      (a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut)
+    )[0]?.statutPrecedent
   );
 
   const latestTypeAvis = getTypeAvis(
-    (intention.changementsStatut || []).sort((a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut))[0]
-      ?.statutPrecedent
+    (intention.changementsStatut || []).sort(
+      // @ts-expect-error TODO
+      (a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut)
+    )[0]?.statutPrecedent
   );
 
   const isStepIncomplete = (step: number) => {

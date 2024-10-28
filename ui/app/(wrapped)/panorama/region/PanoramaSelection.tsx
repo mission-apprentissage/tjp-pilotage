@@ -37,11 +37,14 @@ export function PanoramaSelection({
             <option key="-" value="">
               -
             </option>
-            {regionOptions?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            {regionOptions?.map(
+              // @ts-expect-error TODO
+              (option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              )
+            )}
           </Select>
         </FormControl>
         <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">

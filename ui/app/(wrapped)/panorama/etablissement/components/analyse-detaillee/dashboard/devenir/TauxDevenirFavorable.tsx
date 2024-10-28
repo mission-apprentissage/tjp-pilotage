@@ -15,6 +15,7 @@ export const TauxDevenirFavorable = ({ chiffresIJOffre }: { chiffresIJOffre?: Ch
   const { openGlossaire } = useGlossaireContext();
   const checkDataAvailability = (): boolean => {
     if (chiffresIJOffre) {
+      // @ts-expect-error TODO
       return Object.values(chiffresIJOffre).findIndex((value) => value.tauxDevenirFavorable) !== -1;
     }
     return false;

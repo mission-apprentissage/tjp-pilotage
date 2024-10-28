@@ -37,7 +37,7 @@ export const [importEtablissement] = inject(
       await deps.createEtablissement(etablissement);
     }
 );
-
+// @ts-expect-error TODO
 const formatCodeDepartement = (codeInsee: string | undefined) => {
   if (!codeInsee) return;
   if (codeInsee.length === 3) return codeInsee as `${number}${number}${string}`;

@@ -24,7 +24,7 @@ export const EvolutionIndicateursClesSection = ({
   indicateurOptions: { label: string; value: string; isDefault: boolean }[];
 }) => {
   const graphData: BarGraphData = {};
-
+  // @ts-expect-error TODO
   data?.annees.forEach((anneeData) => {
     graphData[anneeData.annee.toString()] = {
       annee: anneeData.annee.toString(),

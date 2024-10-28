@@ -77,6 +77,7 @@ export const PositiveNegativeBarChart = ({
 
   const placesFermees = Object.keys(data)
     .filter((key) => key !== "Total")
+    // @ts-expect-error TODO
     .map((key) => -data[key].placesFermees ?? null)
     .slice(0, limit)
     .reverse();

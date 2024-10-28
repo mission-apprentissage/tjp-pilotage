@@ -1,5 +1,5 @@
-import type { Permission, PERMISSIONS, Role } from "shared";
 import { CODES_REGIONS_EXPE } from "shared";
+import type { Permission, PERMISSIONS, Role } from "shared/security/permissions";
 
 export const ROLES_LABELS: {
   [key in keyof typeof PERMISSIONS]: (filter?: string) => {

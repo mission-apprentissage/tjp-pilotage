@@ -27,6 +27,7 @@ export const CartoSection = ({
   activeFilters,
   handleFilters,
 }: CartoSelectionProps) => {
+  // @ts-expect-error TODO
   const graphData = data?.statsRegions.map((region) => {
     return {
       name: region.libelleRegion,

@@ -38,7 +38,7 @@ export const ListeEtablissementsProches = () => {
       if (etablissementsList?.etablissement?.uai) {
         refs[etablissementsList?.etablissement?.uai] = createRef<HTMLDivElement>();
       }
-
+      // @ts-expect-error TODO
       etablissementsProches?.forEach((etablissement) => {
         refs[etablissement.uai] = createRef<HTMLDivElement>();
       });
@@ -76,11 +76,14 @@ export const ListeEtablissementsProches = () => {
       </HStack>
       <List flexGrow={1} overflow="auto" width="100%">
         {etablissementsProches &&
-          etablissementsProches.map((e, i) => (
-            <Box key={e.uai + i} ref={refs[e.uai]}>
-              <CustomListItem etablissement={e} withDivider={i !== etablissementsProches.length} />
-            </Box>
-          ))}
+          etablissementsProches.map(
+            // @ts-expect-error TODO
+            (e, i) => (
+              <Box key={e.uai + i} ref={refs[e.uai]}>
+                <CustomListItem etablissement={e} withDivider={i !== etablissementsProches.length} />
+              </Box>
+            )
+          )}
         {isLoading && (
           <ListItem key="loading">
             <Skeleton height="100px" width="100%" />

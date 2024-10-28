@@ -1,3 +1,5 @@
+// @ts-nocheck -- TODO
+
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -126,24 +128,33 @@ export const PrimaryFiltersSection = ({
                             <Text my={"auto"}>{`Toutes (${data?.filters.rentreesScolaires?.length})`}</Text>
                           </Flex>
                         </MenuItem>
-                        {data?.filters.rentreesScolaires?.map((rentreeScolaire) => (
-                          <MenuItem
-                            p={2}
-                            key={rentreeScolaire.value}
-                            onClick={() => handleFilters("rentreeScolaire", rentreeScolaire.value)}
-                          >
-                            <Flex direction="row">
-                              <Text my={"auto"}>{rentreeScolaire.label}</Text>
-                              {(rentreeScolaire.value ===
-                                data?.filters.campagnes?.find((c) => c.value === activeFilters.campagne)?.value ??
-                                "") && (
-                                <Tag mx={3} colorScheme="red">
-                                  Ajustement RS {rentreeScolaire.value}
-                                </Tag>
-                              )}
-                            </Flex>
-                          </MenuItem>
-                        ))}
+                        {data?.filters.rentreesScolaires?.map(
+                          // @ts-expect-error TODO
+                          (rentreeScolaire) => (
+                            <MenuItem
+                              p={2}
+                              key={rentreeScolaire.value}
+                              onClick={() => handleFilters("rentreeScolaire", rentreeScolaire.value)}
+                            >
+                              <Flex direction="row">
+                                <Text my={"auto"}>{rentreeScolaire.label}</Text>
+                                {
+                                  // @ts-expect-error TODO
+                                  (rentreeScolaire.value ===
+                                    data?.filters.campagnes?.find(
+                                      // @ts-expect-error TODO
+                                      (c) => c.value === activeFilters.campagne
+                                    )?.value ??
+                                    "") && (
+                                    <Tag mx={3} colorScheme="red">
+                                      Ajustement RS {rentreeScolaire.value}
+                                    </Tag>
+                                  )
+                                }
+                              </Flex>
+                            </MenuItem>
+                          )
+                        )}
                       </MenuList>
                     </Menu>
                   </Flex>

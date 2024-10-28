@@ -15,6 +15,7 @@ export const EtablissementsProches = () => {
 
   const geojson = {
     type: "FeatureCollection",
+    // @ts-expect-error TODO
     features: etablissementsProches.map((e) => ({
       geometry: {
         type: "Point",

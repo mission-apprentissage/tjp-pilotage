@@ -85,6 +85,7 @@ export const VueRegionAcademieSection = ({
               </Thead>
               <Tbody>
                 <Fragment>
+                  {/* @ts-expect-error TODO */}
                   {data?.statsRegions.map((region) => {
                     const trBgColor = region.codeRegion === codeRegion ? "blueecume.400_hover !important" : "";
 

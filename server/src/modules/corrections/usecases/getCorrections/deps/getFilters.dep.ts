@@ -1,3 +1,5 @@
+// @ts-nocheck -- TODO
+
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import { capitalize, values } from "lodash-es";

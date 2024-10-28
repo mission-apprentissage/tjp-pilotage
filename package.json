@@ -55,7 +55,7 @@
     "typecheck": "yarn foreach:parallel run typecheck",
     "typecheck:ci": "yarn foreach:ci run typecheck",
     "vault:edit": ".bin/product vault:edit",
-    "foreach:seq": "yarn workspaces foreach -Av --exclude sirius",
+    "foreach:seq": "yarn workspaces foreach -Av --exclude orion",
     "foreach:parallel": "yarn foreach:seq -pi",
     "foreach:ci": "yarn foreach:seq -p",
     "import": "yarn import:files && yarn import:tables && yarn import:ij && yarn import:formations",

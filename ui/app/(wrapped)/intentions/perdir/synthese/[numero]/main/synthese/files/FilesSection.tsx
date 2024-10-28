@@ -51,37 +51,45 @@ export const FilesSection = ({ numero }: { numero: string }) => {
   return (
     <Flex direction={"column"} gap={2} bgColor={"blueecume.975"} p={4} h="fit-content" width={"100%"}>
       <Text fontWeight={700}>{uploadedFiles?.files.length === 1 ? "Pièce jointe" : "Pièces jointes"}</Text>
-      {uploadedFiles.files.map((file) => (
-        <Flex
-          direction={"row"}
-          key={`${file.name}`}
-          bgColor="white"
-          padding={"12px"}
-          width={"100%"}
-          whiteSpace={"nowrap"}
-          overflow={"hidden"}
-          textOverflow={"ellipsis"}
-        >
-          <Flex flex={"0 0 50px"}>
-            <Img src={"/illustrations/piece-jointe-visualization.svg"} height={"50px"} width={"auto"} />
-          </Flex>
-          <Flex direction={"column"} width="100%" justifyContent={"space-between"} minW={0}>
-            <Text
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {file.nameWithoutExtension}
-            </Text>
-            <Flex direction={"row"} justify={"space-between"} alignItems={"center"}>
-              <Text color={grey}>{`${file.extension.toLocaleUpperCase()} - ${humanFileSize(file.size)}`}</Text>
-              <Icon icon="ri:download-line" color={blue} cursor={"pointer"} onClick={async () => downloadFile(file)} />
+      {uploadedFiles.files.map(
+        // @ts-expect-error TODO
+        (file) => (
+          <Flex
+            direction={"row"}
+            key={`${file.name}`}
+            bgColor="white"
+            padding={"12px"}
+            width={"100%"}
+            whiteSpace={"nowrap"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+          >
+            <Flex flex={"0 0 50px"}>
+              <Img src={"/illustrations/piece-jointe-visualization.svg"} height={"50px"} width={"auto"} />
+            </Flex>
+            <Flex direction={"column"} width="100%" justifyContent={"space-between"} minW={0}>
+              <Text
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {file.nameWithoutExtension}
+              </Text>
+              <Flex direction={"row"} justify={"space-between"} alignItems={"center"}>
+                <Text color={grey}>{`${file.extension.toLocaleUpperCase()} - ${humanFileSize(file.size)}`}</Text>
+                <Icon
+                  icon="ri:download-line"
+                  color={blue}
+                  cursor={"pointer"}
+                  onClick={async () => downloadFile(file)}
+                />
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
-      ))}
+        )
+      )}
     </Flex>
   );
 };

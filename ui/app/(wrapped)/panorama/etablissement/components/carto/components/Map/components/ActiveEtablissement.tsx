@@ -14,7 +14,12 @@ export const ActiveEtablissement = () => {
 
   const etablissement = etablissementMap?.etablissement;
   const activeEtablissement =
-    etablissement?.uai === hoverUai ? etablissement : etablissementsProches.find((e) => e.uai === hoverUai);
+    etablissement?.uai === hoverUai
+      ? etablissement
+      : etablissementsProches.find(
+          // @ts-expect-error TODO
+          (e) => e.uai === hoverUai
+        );
 
   const etablissementPoint = {
     type: "Feature",

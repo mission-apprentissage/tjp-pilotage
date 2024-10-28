@@ -1,6 +1,5 @@
-import type { Permission } from "shared";
 import { getPermissionScope } from "shared";
-import type { Scope } from "shared/security/permissions";
+import type { Permission, Scope } from "shared/security/permissions";
 
 import type { RequestUser } from "@/modules/core/model/User";
 

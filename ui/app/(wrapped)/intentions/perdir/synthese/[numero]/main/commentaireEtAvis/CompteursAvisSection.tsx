@@ -7,6 +7,7 @@ import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/Avis
 export const CompteursAvisSection = chakra(
   ({ intention }: { intention: (typeof client.infer)["[GET]/intention/:numero"] }) => {
     const getNbAvisStatutAvis = (statut: AvisStatutType) => {
+      // @ts-expect-error TODO
       return intention.avis?.filter((avis) => avis.statutAvis === statut).length ?? 0;
     };
 

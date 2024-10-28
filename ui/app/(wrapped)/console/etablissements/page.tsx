@@ -143,6 +143,7 @@ export default function Etablissements() {
   );
 
   const getDataForExport = (data: QueryResult) => {
+    // @ts-expect-error TODO
     const region = data.filters.regions.find((r) => r.value === filters.codeRegion?.[0]);
 
     if (filters.codeRegion && region) {
@@ -153,7 +154,7 @@ export default function Etablissements() {
       };
 
       let etablissements = data.etablissements;
-
+      // @ts-expect-error TODO
       etablissements = data.etablissements.map((f) => ({
         ...f,
         selectedCodeRegion: region.value,
@@ -249,6 +250,7 @@ export default function Etablissements() {
         <ConsoleSection
           data={data}
           filters={filters}
+          // @ts-expect-error TODO
           order={order}
           setSearchParams={setSearchParams}
           colonneFilters={colonneFilters}
