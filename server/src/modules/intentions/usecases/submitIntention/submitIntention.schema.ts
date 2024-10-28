@@ -1,4 +1,5 @@
 import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
+import { unEscapeString } from "shared/utils/escapeString";
 import { z } from "zod";
 
 export const submitIntentionSchema = {
@@ -23,7 +24,10 @@ export const submitIntentionSchema = {
       capaciteApprentissageColoree: z.coerce.number().optional(),
       // Précisions
       motif: z.array(z.string()).optional(),
-      autreMotif: z.string().optional(),
+      autreMotif: z
+        .string()
+        .optional()
+        .transform((motif) => unEscapeString(motif)),
       amiCma: z.boolean().optional(),
       amiCmaValide: z.boolean().optional(),
       amiCmaValideAnnee: z.string().optional(),
@@ -72,11 +76,17 @@ export const submitIntentionSchema = {
         .optional(),
       augmentationCapaciteAccueilRestaurationPrecisions: z.string().optional(),
       // Observations / commentaires
-      commentaire: z.string().optional(),
+      commentaire: z
+        .string()
+        .optional()
+        .transform((commentaire) => unEscapeString(commentaire)),
       // Statut
       statut: DemandeStatutZodType.exclude(["supprimée"]),
       motifRefus: z.array(z.string()).optional(),
-      autreMotifRefus: z.string().optional(),
+      autreMotifRefus: z
+        .string()
+        .optional()
+        .transform((motif) => unEscapeString(motif)),
       // Autre
       numero: z.string().optional(),
       campagneId: z.string(),
