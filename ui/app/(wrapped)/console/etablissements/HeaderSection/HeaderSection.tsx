@@ -1,16 +1,16 @@
 import { Flex } from "@chakra-ui/react";
 
-import { FiltersList } from "@/app/(wrapped)/console/etablissements/types";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
 import { FORMATION_ETABLISSEMENT_COLUMNS } from "../FORMATION_ETABLISSEMENT_COLUMNS";
-import { Filters, Order } from "../types";
+import { Filters, FiltersList, Order, RequetesEnregistrees } from "../types";
 import { FiltersSection } from "./FiltersSection";
 
 export const HeaderSection = ({
   setSearchParams,
   searchParams,
   filtersList,
+  requetesEnregistrees,
 }: {
   setSearchParams: (params: {
     filters?: Partial<Filters>;
@@ -29,6 +29,7 @@ export const HeaderSection = ({
     page?: string;
   };
   filtersList?: FiltersList;
+  requetesEnregistrees?: RequetesEnregistrees;
 }) => {
   return (
     <Flex
@@ -53,6 +54,7 @@ export const HeaderSection = ({
         setSearchParams={setSearchParams}
         searchParams={searchParams}
         filtersList={filtersList}
+        requetesEnregistrees={requetesEnregistrees}
       />
     </Flex>
   );

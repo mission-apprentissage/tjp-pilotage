@@ -16,3 +16,5 @@ export type LineId = {
   codeDispositif?: string;
   cfd: string;
 };
+
+export type RequetesEnregistrees = (typeof client.infer)["[GET]/requetes"];

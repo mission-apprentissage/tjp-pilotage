@@ -1,6 +1,13 @@
 "use client";
 
-import { Button, Center, chakra, Flex, Spinner } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  chakra,
+  Flex,
+  Spinner,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -15,6 +22,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 
+import { CreateRequeteEnregistreeModal } from "./components/CreateRequeteEnregistreeEtablissementModal";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
   FORMATION_ETABLISSEMENT_COLUMNS,
@@ -104,6 +112,7 @@ const ColonneFiltersSection = chakra(
 );
 
 export default function Etablissements() {
+  const { onOpen, onClose, isOpen } = useDisclosure();
   const trackEvent = usePlausible();
   const router = useRouter();
   const queryParams = useSearchParams();
@@ -159,6 +168,10 @@ export default function Etablissements() {
       staleTime: 10000000,
     }
   );
+
+  const { data: requetesEnregistrees } = client.ref("[GET]/requetes").useQuery({
+    query: { page: "formationEtablissement" },
+  });
 
   const getDataForExport = (data: QueryResult) => {
     const region = data.filters.regions.find(
@@ -253,6 +266,7 @@ export default function Etablissements() {
         setSearchParams={setSearchParams}
         searchParams={searchParams}
         filtersList={data?.filters}
+        requetesEnregistrees={requetesEnregistrees}
       />
       <Flex direction={"row"} flex={1} position="relative" minH="0">
         <SideSection
@@ -274,6 +288,19 @@ export default function Etablissements() {
           )}
           <TableHeader
             p={4}
+            SaveFiltersButton={
+              <Flex py="2">
+                <Button
+                  variant={"externalLink"}
+                  leftIcon={<Icon icon="ri:save-3-line" />}
+                  onClick={() => {
+                    onOpen();
+                  }}
+                >
+                  Enregistrer la requête
+                </Button>
+              </Flex>
+            }
             SearchInput={
               <ConsoleSearchInput
                 placeholder="Rechercher dans les résultats"
@@ -306,6 +333,13 @@ export default function Etablissements() {
           />
         </Flex>
       </Flex>
+      {isOpen && (
+        <CreateRequeteEnregistreeModal
+          isOpen={isOpen}
+          onClose={onClose}
+          searchParams={searchParams}
+        />
+      )}
     </>
   );
 }

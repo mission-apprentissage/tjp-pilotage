@@ -18,3 +18,4 @@ export type LineId = {
   cfd: string;
   uai: string;
 };
+export type RequetesEnregistrees = (typeof client.infer)["[GET]/requetes"];

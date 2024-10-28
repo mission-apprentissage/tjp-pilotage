@@ -4,7 +4,7 @@ import { Server } from "../../../../server";
 import { searchDisciplineSchema } from "./searchDiscipline.schema";
 import { searchDisciplineUsecase } from "./searchDiscipline.usecase";
 
-export const searchDisciplineRoute = ({ server }: { server: Server }) => {
+export const searchDisciplineRoute = (server: Server) => {
   return createRoute("/discipline/search/:search", {
     method: "GET",
     schema: searchDisciplineSchema,
