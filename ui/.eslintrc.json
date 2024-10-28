@@ -13,7 +13,7 @@
       {
         "alias": {
           "@": "./ui",
-          "shared": "./shared/src"
+          "shared": "./shared"
         }
       }
     ],

@@ -93,11 +93,11 @@ const config = {
   sentry: {
     dsn: env
       .get("SENTRY_DSN")
-      .required(environement !== "test")
+      .required(environement !== "local" && environement !== "test")
       .asString(),
     token: env
       .get("SENTRY_AUTH_TOKEN")
-      .required(environement !== "test")
+      .required(environement !== "local" && environement !== "test")
       .asString(),
   },
   metabase: {

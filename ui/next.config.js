@@ -23,7 +23,7 @@ module.exports = withSentryConfig(
     project: "orion-ui",
     url: "https://sentry.incubateur.net/",
     authToken: process.env.NEXT_PUBLIC_SENTRY_AUTH_TOKEN,
-    release: process.env.NEXT_PUBLIC_SENTRY_RELEASE?.replace("/", "-").replace(" ", "-"),
+    release: process.env.NEXT_PUBLIC_VERSION,
     errorHandler: (err) => {
       console.warn(err);
     },

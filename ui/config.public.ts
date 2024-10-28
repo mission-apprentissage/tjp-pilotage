@@ -3,6 +3,9 @@ export interface PublicConfig {
     dsn: string;
     enabled: boolean;
   };
+  crisp: {
+    token: string;
+  };
   host: string;
   baseUrl: string;
   apiEndpoint: string;
@@ -20,8 +23,11 @@ function getProductionPublicConfig(): PublicConfig {
 
   return {
     sentry: {
-      dsn: "", // TODO
+      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
       enabled: true,
+    },
+    crisp: {
+      token: "cf473a68-afeb-4611-9d38-55ff6144b9b8",
     },
     host,
     baseUrl: `https://${host}`,
@@ -37,8 +43,11 @@ function getRecettePublicConfig(): PublicConfig {
 
   return {
     sentry: {
-      dsn: "", // TODO
+      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
       enabled: true,
+    },
+    crisp: {
+      token: "no-token",
     },
     host,
     baseUrl: `https://${host}`,
@@ -54,8 +63,11 @@ function getRecette2PublicConfig(): PublicConfig {
 
   return {
     sentry: {
-      dsn: "", // TODO
+      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
       enabled: true,
+    },
+    crisp: {
+      token: "no-token",
     },
     host,
     baseUrl: `https://${host}`,
@@ -70,8 +82,11 @@ function getLocalPublicConfig(): PublicConfig {
   const host = "localhost";
   return {
     sentry: {
-      dsn: "", // TODO
+      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
       enabled: false,
+    },
+    crisp: {
+      token: "no-token",
     },
     host,
     baseUrl: `http://${host}:3000`,
