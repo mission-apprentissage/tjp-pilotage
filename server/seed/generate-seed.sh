@@ -13,7 +13,7 @@ echo "Lancement de la génération de la seed"
 
 # Récupérer les informations d'identification de la base de données à partir du Vault
 
-DB_URL=$(ansible-vault view $VAULT_FILE --vault-password-file "${VAULT_PASSWORD_FILE}" | grep PILOTAGE_POSTGRES_URI | head -n 1 | awk '{print $2}' | xargs)
+DB_URL=$(ansible-vault view $VAULT_FILE --vault-password-file "${VAULT_PASSWORD_FILE}" | grep PSQL_URI | head -n 1 | awk '{print $2}' | xargs)
 SCHEMA_DUMP_FILE="seed_schema.dump"
 DATA_DUMP_FILE="seed_data.dump"
 

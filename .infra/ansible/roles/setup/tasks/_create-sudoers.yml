@@ -6,7 +6,7 @@
 - name: "Création utilisateur {{ habilitation.username }}"
   user:
     name: "{{ habilitation.username }}"
-    password: "{{ vault[env_type].PILOTAGE_HABILITATION_PASSWORD }}"
+    password: "{{ vault[env_type].HABILITATION_PASSWORD }}"
     update_password: on_create
     shell: /bin/bash
     groups: sudo,mna

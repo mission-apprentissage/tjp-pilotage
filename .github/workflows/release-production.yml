@@ -1,7 +1,7 @@
 name: Release version production
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   release:
@@ -75,7 +75,7 @@ jobs:
       # Install yarn dependencies
       - name: Run yarn Install server
         run: yarn --cwd server install --frozen-lockfile
-      
+
       # Lint
       - name: Run Lint
         run: yarn lint
@@ -85,8 +85,8 @@ jobs:
         run: |
           yarn --cwd server test:coverage
         env:
-          PILOTAGE_API_KEY: ${{ secrets.PILOTAGE_API_KEY }}
-          PILOTAGE_AUTH_PASSWORD_HASH_ROUNDS: ${{ secrets.PILOTAGE_AUTH_PASSWORD_HASH_ROUNDS }}
+          API_KEY: ${{ secrets.API_KEY }}
+          AUTH_PASSWORD_HASH_ROUNDS: ${{ secrets.AUTH_PASSWORD_HASH_ROUNDS }}
           PILOTAGE_AUTH_USER_JWT_SECRET: ${{ secrets.PILOTAGE_AUTH_USER_JWT_SECRET }}
           PILOTAGE_AUTH_ACTIVATION_JWT_SECRET: ${{ secrets.PILOTAGE_AUTH_ACTIVATION_JWT_SECRET }}
           PILOTAGE_AUTH_PASSWORD_JWT_SECRET: ${{ secrets.PILOTAGE_AUTH_PASSWORD_JWT_SECRET }}
@@ -99,7 +99,7 @@ jobs:
           directory: ./server/coverage
           name: codecov-server
           verbose: true
-      
+
   ciui:
     needs: release
     if: "!startsWith(github.event.head_commit.message, 'chore(release')"

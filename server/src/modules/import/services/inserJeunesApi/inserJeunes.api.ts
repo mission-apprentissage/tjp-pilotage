@@ -46,8 +46,8 @@ axiosRetry(instance, {
 export const login = async () => {
   const response = await instance.post("/login", undefined, {
     headers: {
-      username: config.PILOTAGE_INSERJEUNES_USERNAME,
-      password: config.PILOTAGE_INSERJEUNES_PASSWORD,
+      username: config.INSERJEUNES_USERNAME,
+      password: config.INSERJEUNES_PASSWORD,
     },
   });
   const { access_token: token } = response.data;
