@@ -1,6 +1,7 @@
 "use client";
 
 import { Box, Container, useDisclosure, VStack } from "@chakra-ui/react";
+import { usePlausible } from "next-plausible";
 import { ScopeEnum } from "shared";
 
 import { client } from "../../../../api.client";
@@ -12,12 +13,14 @@ import { DisplayTypeEnum } from "./main/displayTypeEnum";
 import { MainSection } from "./main/MainSection";
 import {
   FiltersStatsPilotageIntentions,
+  FilterTracker,
   OrderRepartitionPilotageIntentions,
   StatsPilotageIntentions,
 } from "./types";
 import { findDefaultRentreeScolaireForCampagne } from "./utils";
 
 export const PilotageNationalClient = () => {
+  const trackEvent = usePlausible();
   const [searchParams, setSearchParams] = useStateParams<{
     filters?: FiltersStatsPilotageIntentions;
     displayTypes?: Array<DisplayTypeEnum>;
@@ -42,6 +45,12 @@ export const PilotageNationalClient = () => {
     withColoration: "true",
   };
   const order = searchParams.order ?? { order: "asc" };
+
+  const filterTracker: FilterTracker = (filterName, options = {}) => {
+    trackEvent("pilotage-transformation:filtre", {
+      props: { filter_name: filterName, options },
+    });
+  };
 
   const setFilters = (filters: FiltersStatsPilotageIntentions) => {
     setSearchParams({
@@ -131,6 +140,17 @@ export const PilotageNationalClient = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const tauxTransfoDefinitionModalTracker = (open: boolean) => {
+    trackEvent("pilotage-transformation:definition-modal", {
+      props: { open },
+    });
+  };
+
+  const onOpenTauxTransfoDefinition = () => {
+    tauxTransfoDefinitionModalTracker(true);
+    onOpen();
+  };
+
   return (
     <Box bg="blueecume.950">
       <DefinitionTauxTransfoModal isOpen={isOpen} onClose={onClose} />
@@ -139,6 +159,7 @@ export const PilotageNationalClient = () => {
           <FiltersSection
             filters={filters}
             setFilters={setFilters}
+            filterTracker={filterTracker}
             data={data}
             setDefaultFilters={() => setDefaultFilters(data)}
           />
@@ -146,7 +167,8 @@ export const PilotageNationalClient = () => {
             data={data}
             filters={filters}
             setFilters={setFilters}
-            onOpenTauxTransfoDefinition={onOpen}
+            filterTracker={filterTracker}
+            onOpenTauxTransfoDefinition={onOpenTauxTransfoDefinition}
             isLoading={isLoadingStats}
           />
           <MainSection
