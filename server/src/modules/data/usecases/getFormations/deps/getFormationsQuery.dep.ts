@@ -39,7 +39,7 @@ export const getFormationsQuery = async ({
   codeNsf,
   positionQuadrant,
   search,
-  withEmptyFormations = true,
+  withEmptyFormations = "true",
   withAnneeCommune,
   order,
   orderBy,
@@ -255,7 +255,7 @@ export const getFormationsQuery = async ({
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "is not", null),
-        withEmptyFormations
+        withEmptyFormations === "true"
           ? eb.not(
               eb.exists(
                 eb
@@ -378,8 +378,7 @@ export const getFormationsQuery = async ({
       return q.where("formationView.codeNsf", "in", codeNsf);
     })
     .$call((q) => {
-      if (!withAnneeCommune || withAnneeCommune === "false")
-        return q.where(notAnneeCommune);
+      if (withAnneeCommune === "false") return q.where(notAnneeCommune);
       return q;
     })
     .$call((q) => {

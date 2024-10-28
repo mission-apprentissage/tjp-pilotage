@@ -23,7 +23,7 @@ import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 
 import { ConsoleSearchInput } from "../../../../components/ConsoleSearchInput";
-import { CreateRequeteEnregistreeModal } from "./components/CreateRequeteEnregistreeFormationModal";
+import { CreateRequeteEnregistreeModal } from "../components/CreateRequeteEnregistreeModal";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
   FORMATION_COLUMNS,
@@ -124,7 +124,6 @@ export default function Formations() {
   const searchParams: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: string;
@@ -134,7 +133,6 @@ export default function Formations() {
   const setSearchParams = (params: {
     filters?: typeof filters;
     search?: typeof search;
-    withAnneeCommune?: typeof withAnneeCommune;
     columns?: typeof columns;
     order?: typeof order;
     page?: typeof page;
@@ -145,7 +143,6 @@ export default function Formations() {
   };
 
   const filters = searchParams.filters ?? {};
-  const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
   const columns = searchParams.columns ?? [];
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
@@ -159,7 +156,6 @@ export default function Formations() {
     search,
     offset: qOffset,
     limit: qLimit,
-    withAnneeCommune: withAnneeCommune?.toString() ?? "true",
   });
 
   const { data, isFetching } = client.ref("[GET]/formations").useQuery(
@@ -260,7 +256,7 @@ export default function Formations() {
     setColonneFilters(value);
   };
 
-  const onClickSearch = () => {
+  const onSearch = () => {
     setSearchParams({
       filters: filters,
       order: order,
@@ -312,9 +308,18 @@ export default function Formations() {
             SearchInput={
               <ConsoleSearchInput
                 placeholder="Rechercher dans les résultats"
-                onChange={setSearchFormation}
+                onChange={(newValue) => {
+                  const oldValue = searchFormation;
+                  setSearchFormation(newValue);
+                  if (
+                    newValue.length > 2 ||
+                    oldValue.length > newValue.length
+                  ) {
+                    onSearch();
+                  }
+                }}
                 value={searchFormation}
-                onClick={onClickSearch}
+                onClick={onSearch}
               />
             }
             ColonneFilter={
@@ -345,9 +350,11 @@ export default function Formations() {
       </Flex>
       {isOpen && (
         <CreateRequeteEnregistreeModal
+          page={"formation"}
           isOpen={isOpen}
           onClose={onClose}
           searchParams={searchParams}
+          filtersList={data?.filters}
         />
       )}
     </>

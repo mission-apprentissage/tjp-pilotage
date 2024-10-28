@@ -22,7 +22,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 
-import { CreateRequeteEnregistreeModal } from "./components/CreateRequeteEnregistreeEtablissementModal";
+import { CreateRequeteEnregistreeModal } from "../components/CreateRequeteEnregistreeModal";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
   FORMATION_ETABLISSEMENT_COLUMNS,
@@ -119,7 +119,6 @@ export default function Etablissements() {
   const searchParams: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     order?: Partial<Order>;
     page?: string;
@@ -128,7 +127,6 @@ export default function Etablissements() {
   const setSearchParams = (params: {
     filters?: typeof filters;
     search?: typeof search;
-    withAnneeCommune?: typeof withAnneeCommune;
     columns?: typeof columns;
     order?: typeof order;
     page?: typeof page;
@@ -139,7 +137,6 @@ export default function Etablissements() {
   };
 
   const filters = searchParams.filters ?? {};
-  const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
   const columns = searchParams.columns ?? [];
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
@@ -157,7 +154,6 @@ export default function Etablissements() {
     search,
     offset: qOffset,
     limit: qLimit,
-    withAnneeCommune: withAnneeCommune?.toString() ?? "true",
   });
 
   const { data, isFetching } = client.ref("[GET]/etablissements").useQuery(
@@ -252,7 +248,7 @@ export default function Etablissements() {
     setColonneFilters(value);
   };
 
-  const onClickSearch = () => {
+  const onSearch = () => {
     setSearchParams({
       filters: filters,
       order: order,
@@ -304,9 +300,18 @@ export default function Etablissements() {
             SearchInput={
               <ConsoleSearchInput
                 placeholder="Rechercher dans les résultats"
-                onChange={setSearchFormationEtablissement}
+                onChange={(newValue) => {
+                  const oldValue = searchFormationEtablissement;
+                  setSearchFormationEtablissement(newValue);
+                  if (
+                    newValue.length > 2 ||
+                    oldValue.length > newValue.length
+                  ) {
+                    onSearch();
+                  }
+                }}
                 value={searchFormationEtablissement}
-                onClick={onClickSearch}
+                onClick={onSearch}
               />
             }
             ColonneFilter={
@@ -338,6 +343,8 @@ export default function Etablissements() {
           isOpen={isOpen}
           onClose={onClose}
           searchParams={searchParams}
+          filtersList={data?.filters}
+          page="formationEtablissement"
         />
       )}
     </>

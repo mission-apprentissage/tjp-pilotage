@@ -59,7 +59,7 @@ export const getFormationSchema = {
     codeNsf: z.array(z.string()).optional(),
     positionQuadrant: z.array(PositionQuadrantZodType).optional(),
     search: z.string().optional(),
-    withEmptyFormations: z.coerce.boolean().optional(),
+    withEmptyFormations: z.string().optional(),
     withAnneeCommune: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationLineSchema.keyof().optional(),

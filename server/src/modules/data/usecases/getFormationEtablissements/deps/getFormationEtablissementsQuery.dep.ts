@@ -341,8 +341,7 @@ export const getFormationEtablissementsQuery = async ({
       return eb;
     })
     .$call((q) => {
-      if (!withAnneeCommune || withAnneeCommune === "false")
-        return q.where(notAnneeCommune);
+      if (withAnneeCommune === "false") return q.where(notAnneeCommune);
       return q;
     })
     .$call((q) => {

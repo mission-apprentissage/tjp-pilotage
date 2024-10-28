@@ -2,7 +2,7 @@ import { client } from "@/api.client";
 
 export type Query = (typeof client.inferArgs)["[GET]/formations"]["query"];
 
-export type Filters = Query;
+export type Filters = Omit<Query, "order" | "orderBy" | "offset" | "limit">;
 
 export type Order = Pick<Query, "order" | "orderBy">;
 

@@ -42,7 +42,6 @@ export const SideSection = ({
   );
 
   const filters = searchParams.filters ?? {};
-  const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
 
   const handleFiltersContext = (
     type: keyof Filters,
@@ -97,14 +96,15 @@ export const SideSection = ({
       setSearchParams({
         page: 0,
         filters: { ...filters, ...newFilters },
-        withAnneeCommune,
       });
     });
   };
 
   const handleToggleShowAnneeCommune = (value: string) => {
     setSearchParams({
-      withAnneeCommune: value,
+      filters: {
+        withAnneeCommune: value,
+      },
     });
   };
 
@@ -115,17 +115,17 @@ export const SideSection = ({
   useEffect(() => {
     if (codeRegionFilter !== "" && !filters.codeRegion?.length) {
       filters.codeRegion = [codeRegionFilter];
-      setSearchParams({ filters: filters, withAnneeCommune });
+      setSearchParams({ filters: filters });
     }
   }, []);
 
   return (
     <Flex
-      gap={3}
+      flex={"shrink"}
       direction={"column"}
       bgColor={"bluefrance.975"}
       p={2}
-      flex={"shrink"}
+      gap={5}
     >
       {isOpen ? (
         <Button
@@ -134,6 +134,7 @@ export const SideSection = ({
           onClick={() => onToggle()}
           cursor="pointer"
           px={3}
+          mt={5}
         >
           Masquer les filtres
         </Button>
@@ -143,10 +144,11 @@ export const SideSection = ({
           rightIcon={<DoubleArrowRight />}
           onClick={() => onToggle()}
           cursor="pointer"
+          mt={5}
         />
       )}
       {isOpen && (
-        <Flex gap={4} direction={"column"} mt={5}>
+        <Flex gap={3} direction={"column"}>
           <Multiselect
             display={["none", null, "flex"]}
             onClose={filterTracker("codeNiveauDiplome")}
@@ -184,7 +186,7 @@ export const SideSection = ({
                   event.target.checked.toString() ?? "false"
                 );
               }}
-              isChecked={searchParams.withAnneeCommune !== "false"}
+              isChecked={searchParams.filters?.withAnneeCommune !== "false"}
               whiteSpace={"nowrap"}
               mx={"auto"}
             >
@@ -201,6 +203,7 @@ export const SideSection = ({
             options={filtersList?.familles}
             value={filters.cfdFamille ?? []}
             menuZIndex={3}
+            mt={5}
           >
             Famille
           </Multiselect>

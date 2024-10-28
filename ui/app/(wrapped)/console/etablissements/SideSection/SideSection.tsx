@@ -19,7 +19,6 @@ export const SideSection = ({
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     order?: Partial<Order>;
     page?: number;
@@ -27,7 +26,6 @@ export const SideSection = ({
   searchParams: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     order?: Partial<Order>;
     page?: string;
@@ -42,7 +40,6 @@ export const SideSection = ({
   );
 
   const filters = searchParams.filters ?? {};
-  const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
 
   const handleFiltersContext = (
     type: keyof Filters,
@@ -97,14 +94,15 @@ export const SideSection = ({
       setSearchParams({
         page: 0,
         filters: { ...filters, ...newFilters },
-        withAnneeCommune,
       });
     });
   };
 
   const handleToggleShowAnneeCommune = (value: string) => {
     setSearchParams({
-      withAnneeCommune: value,
+      filters: {
+        withAnneeCommune: value,
+      },
     });
   };
 
@@ -115,17 +113,17 @@ export const SideSection = ({
   useEffect(() => {
     if (codeRegionFilter !== "" && !filters.codeRegion?.length) {
       filters.codeRegion = [codeRegionFilter];
-      setSearchParams({ filters: filters, withAnneeCommune });
+      setSearchParams({ filters: filters });
     }
   }, []);
 
   return (
     <Flex
-      gap={3}
+      flex={"shrink"}
       direction={"column"}
       bgColor={"bluefrance.975"}
       p={2}
-      flex={"shrink"}
+      gap={5}
     >
       {isOpen ? (
         <Button
@@ -134,6 +132,7 @@ export const SideSection = ({
           onClick={() => onToggle()}
           cursor="pointer"
           px={3}
+          mt={5}
         >
           Masquer les filtres
         </Button>
@@ -143,23 +142,11 @@ export const SideSection = ({
           rightIcon={<DoubleArrowRight />}
           onClick={() => onToggle()}
           cursor="pointer"
+          mt={5}
         />
       )}
       {isOpen && (
-        <Flex gap={4} direction={"column"} mt={5}>
-          <Multiselect
-            disabled={!filters.codeRegion}
-            onClose={filterTracker("commune")}
-            size="md"
-            variant="newInput"
-            width="18rem"
-            onChange={(selected) => handleFilters("commune", selected)}
-            options={filtersList?.communes}
-            value={filters.commune ?? []}
-            menuZIndex={3}
-          >
-            Commune
-          </Multiselect>
+        <Flex gap={3} direction={"column"}>
           <Multiselect
             onClose={filterTracker("secteur")}
             size="md"
@@ -186,6 +173,7 @@ export const SideSection = ({
           </Multiselect>
           <Flex>
             <Checkbox
+              variant="accessible"
               mx={"auto"}
               size="lg"
               onChange={(event) => {
@@ -193,7 +181,7 @@ export const SideSection = ({
                   event.target.checked.toString() ?? "false"
                 );
               }}
-              isChecked={searchParams.withAnneeCommune !== "false"}
+              isChecked={searchParams.filters?.withAnneeCommune !== "false"}
               whiteSpace={"nowrap"}
             >
               <Text fontSize={"14px"}>2nde et 1ère communes</Text>
@@ -210,6 +198,7 @@ export const SideSection = ({
             options={filtersList?.diplomes}
             value={filters.codeNiveauDiplome ?? []}
             menuZIndex={3}
+            mt={5}
           >
             Diplôme
           </Multiselect>
