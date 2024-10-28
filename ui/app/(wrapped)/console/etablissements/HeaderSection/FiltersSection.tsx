@@ -1,19 +1,50 @@
-import { Button, Flex, Select } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import {
+  Button,
+  Divider,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Portal,
+  Select,
+  Tag,
+  Text,
+} from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import { DeleteRequeteEnregistreeButton } from "@/app/(wrapped)/console/formations/components/DeleteRequeteEnregistreeButton";
 import { CodeRegionFilterContext, UaiFilterContext } from "@/app/layoutClient";
 import { Multiselect } from "@/components/Multiselect";
 
 import { FORMATION_ETABLISSEMENT_COLUMNS } from "../FORMATION_ETABLISSEMENT_COLUMNS";
-import { Filters, FiltersList, Order } from "../types";
+import { Filters, FiltersList, Order, RequetesEnregistrees } from "../types";
+
+const REQUETES_ENREGISTREES = [
+  {
+    value: {},
+    nom: "Transition écologique",
+    couleur: "green.submitted",
+  },
+  {
+    value: {
+      positionQuadrant: [PositionQuadrantEnum["Q4"]],
+    },
+    nom: "Action prioritaire",
+    couleur: "redmarianne.625_hover",
+  },
+];
 
 export const FiltersSection = ({
   setSearchParams,
   searchParams,
   filtersList,
+  requetesEnregistrees,
 }: {
   setSearchParams: (params: {
     filters?: Partial<Filters>;
@@ -32,6 +63,7 @@ export const FiltersSection = ({
     page?: string;
   };
   filtersList?: FiltersList;
+  requetesEnregistrees?: RequetesEnregistrees;
 }) => {
   const trackEvent = usePlausible();
   const { codeRegionFilter, setCodeRegionFilter } = useContext(
@@ -125,6 +157,11 @@ export const FiltersSection = ({
     });
   };
 
+  const [requeteEnregistreeActuelle, setRequeteEnregistreeActuelle] = useState<{
+    nom: string;
+    couleur?: string;
+  }>({ nom: "Requêtes pré-sauvegardées" });
+
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("etablissements:filtre", { props: { filter_name: filterName } });
   };
@@ -145,6 +182,7 @@ export const FiltersSection = ({
         cfdFamille: [],
         cfd: [],
         codeNsf: [],
+        positionQuadrant: [],
       },
     });
   };
@@ -160,8 +198,109 @@ export const FiltersSection = ({
     }
   }, []);
 
+  const [deleteButtonToDisplay, setDeleteButtonToDisplay] =
+    useState<string>("");
+
   return (
     <Flex gap={3} wrap={"wrap"} p={4} py={8} bgColor="bluefrance.950">
+      <Menu matchWidth={true} autoSelect={false}>
+        <MenuButton
+          as={Button}
+          variant={"selectButton"}
+          rightIcon={<ChevronDownIcon />}
+          width={[null, null, "64"]}
+          size="md"
+          borderWidth="1px"
+          borderStyle="solid"
+          borderColor="grey.900"
+          bg={"white"}
+        >
+          <Flex direction="row" gap={2}>
+            {requeteEnregistreeActuelle.couleur && (
+              <Tag
+                size={"sm"}
+                bgColor={requeteEnregistreeActuelle.couleur}
+                borderRadius={"100%"}
+              />
+            )}
+            <Text my={"auto"}>{requeteEnregistreeActuelle.nom}</Text>
+          </Flex>
+        </MenuButton>
+        <Portal>
+          <MenuList py={0} borderTopRadius={0} minW={"fit-content"} zIndex={3}>
+            <Text p={2} color="grey.425">
+              Requêtes populaires
+            </Text>
+            {REQUETES_ENREGISTREES.map((requeteEnregistree) => (
+              <MenuItem
+                p={2}
+                key={requeteEnregistree.nom}
+                onClick={() => {
+                  resetFilters();
+                  setSearchParams({
+                    ...searchParams,
+                    page: 0,
+                    filters: {
+                      ...searchParams.filters,
+                      ...requeteEnregistree.value,
+                    },
+                  });
+                  setRequeteEnregistreeActuelle(requeteEnregistree);
+                }}
+                gap={2}
+              >
+                <Tag
+                  size={"sm"}
+                  bgColor={requeteEnregistree.couleur}
+                  borderRadius={"100%"}
+                />
+                <Flex direction="row">{requeteEnregistree.nom}</Flex>
+              </MenuItem>
+            ))}
+            {requetesEnregistrees && requetesEnregistrees.length > 0 && (
+              <>
+                <Divider />
+                <Text p={2} color="grey.425">
+                  Vos requêtes favoris
+                </Text>
+                {requetesEnregistrees?.map((requete) => (
+                  <MenuItem
+                    p={2}
+                    key={requete.id}
+                    onClick={() => {
+                      resetFilters();
+                      setSearchParams({
+                        ...searchParams,
+                        page: 0,
+                        filters: {
+                          ...searchParams.filters,
+                          ...requete.filtres,
+                        },
+                      });
+                      setRequeteEnregistreeActuelle(requete);
+                    }}
+                    onMouseEnter={() => setDeleteButtonToDisplay(requete.id)}
+                    onMouseLeave={() => setDeleteButtonToDisplay("")}
+                    gap={2}
+                  >
+                    <Tag
+                      size={"sm"}
+                      bgColor={requete.couleur}
+                      borderRadius={"100%"}
+                    />
+                    <Flex direction="row">{requete.nom}</Flex>
+                    {deleteButtonToDisplay === requete.id && (
+                      <DeleteRequeteEnregistreeButton
+                        requeteEnregistree={requete}
+                      />
+                    )}
+                  </MenuItem>
+                ))}
+              </>
+            )}
+          </MenuList>
+        </Portal>
+      </Menu>
       <Select
         placeholder="Toutes les régions"
         size="md"

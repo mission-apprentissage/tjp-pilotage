@@ -16,10 +16,10 @@ export const deleteSuiviFactory =
     user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
   }) => {
     const suivi = await deps.findOneSuiviQuery(id);
-    if (!suivi) throw Boom.notFound("Suivi not found");
+    if (!suivi) throw Boom.notFound("Suivi non trouvé en base");
 
     const intention = await deps.findOneDemande(suivi.intentionNumero);
-    if (!intention) throw Boom.notFound("Demande not found");
+    if (!intention) throw Boom.notFound("Demande non trouvée en base");
     const isAllowed = suivi.userId === user.id;
     if (!isAllowed) throw Boom.forbidden();
     await deps.deleteSuiviQuery(id);

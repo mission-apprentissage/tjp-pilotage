@@ -1,6 +1,13 @@
 "use client";
 
-import { Button, Center, chakra, Flex, Spinner } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  chakra,
+  Flex,
+  Spinner,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,6 +23,7 @@ import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 
 import { ConsoleSearchInput } from "../../../../components/ConsoleSearchInput";
+import { CreateRequeteEnregistreeModal } from "./components/CreateRequeteEnregistreeFormationModal";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
   FORMATION_COLUMNS,
@@ -110,6 +118,7 @@ const ColonneHeaderSection = chakra(
 );
 
 export default function Formations() {
+  const { onOpen, onClose, isOpen } = useDisclosure();
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -159,6 +168,10 @@ export default function Formations() {
     },
     { staleTime: 10000000, keepPreviousData: false }
   );
+
+  const { data: requetesEnregistrees } = client.ref("[GET]/requetes").useQuery({
+    query: { page: "formation" },
+  });
 
   const getDataForExport = (data: QueryResult) => {
     const region = data.filters.regions.find(
@@ -261,6 +274,7 @@ export default function Formations() {
         setSearchParams={setSearchParams}
         searchParams={searchParams}
         filtersList={data?.filters}
+        requetesEnregistrees={requetesEnregistrees}
       />
       <Flex direction={"row"} flex={1} position="relative" minH="0" minW={0}>
         <SideSection
@@ -282,6 +296,19 @@ export default function Formations() {
           )}
           <TableHeader
             p={4}
+            SaveFiltersButton={
+              <Flex py="2">
+                <Button
+                  variant={"externalLink"}
+                  leftIcon={<Icon icon="ri:save-3-line" />}
+                  onClick={() => {
+                    onOpen();
+                  }}
+                >
+                  Enregistrer la requête
+                </Button>
+              </Flex>
+            }
             SearchInput={
               <ConsoleSearchInput
                 placeholder="Rechercher dans les résultats"
@@ -316,6 +343,13 @@ export default function Formations() {
           />
         </Flex>
       </Flex>
+      {isOpen && (
+        <CreateRequeteEnregistreeModal
+          isOpen={isOpen}
+          onClose={onClose}
+          searchParams={searchParams}
+        />
+      )}
     </>
   );
 }
