@@ -23,7 +23,7 @@
     "noErrorTruncation": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./**/*.ts"],
   "exclude": ["**/node_modules"],
   "typeAcquisition": {
     "enable": true,

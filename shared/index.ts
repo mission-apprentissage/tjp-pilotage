@@ -1,8 +1,8 @@
 export { intentionValidators } from "./validators/intentionValidators";
 export { demandeValidators } from "./validators/demandeValidators";
-export { ScopeEnum, type Scope } from "./enum/scopeEnum";
+export { ScopeEnum, type ScopeZone } from "./enum/scopeEnum";
 export { VoieEnum, type Voie } from "./enum/voieEnum";
-export * from "./security/permissions";
+export { PERMISSIONS, type Role } from "./security/permissions";
 export * from "./security/securityUtils";
 export { CURRENT_IJ_MILLESIME } from "./time/CURRENT_IJ_MILLESIME";
 export { FIRST_ANNEE_CAMPAGNE } from "./time/FIRST_ANNEE_CAMPAGNE";

@@ -1,26 +1,18 @@
 import { AspectRatio, Box, useToken } from "@chakra-ui/react";
+import type { EChartsOption } from "echarts";
 import * as echarts from "echarts";
-import { EChartsOption } from "echarts";
-import _ from "lodash";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-} from "react";
-import { Scope, ScopeEnum } from "shared";
+import { findKey, isEqual, partial } from "lodash";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import type { ScopeZone } from "shared";
+import { ScopeEnum } from "shared";
 
-import { SelectedScope } from "@/app/(wrapped)/intentions/pilotage/types";
+import type { SelectedScope } from "@/app/(wrapped)/intentions/pilotage/types";
 import CarteFranceAcademies from "@/public/fond_carte_academies.json";
 import CarteFranceDepartements from "@/public/fond_carte_departements.json";
 import CarteFranceRegions from "@/public/fond_carte_regions.json";
 import { formatPercentage } from "@/utils/formatUtils";
 
-const useColorPalette = (
-  customColorPalette?: string[],
-  objectif?: "haut" | "bas"
-) => {
+const useColorPalette = (customColorPalette?: string[], objectif?: "haut" | "bas") => {
   const lowColorPalette = [
     useToken("colors", "pinkmacaron.950"),
     useToken("colors", "pinkmacaron.925"),
@@ -53,7 +45,7 @@ interface CartoGraphProps {
     value?: number;
     code?: string;
   }[];
-  scope?: Scope;
+  scope?: ScopeZone;
   objectif?: "haut" | "bas";
   customPiecesSteps?: number[][];
   customColorPalette?: string[];
@@ -137,9 +129,7 @@ export const CartoGraph = ({
     label: string;
     color: string;
   }[] => {
-    const data = Array.from(
-      graphData?.map((it) => it.value ?? -1) ?? []
-    ).filter((value) => value != -1);
+    const data = Array.from(graphData?.map((it) => it.value ?? -1) ?? []).filter((value) => value != -1);
     const min = Math.min(...removeMin(data));
     const max = Math.max(...removeMax(data));
     const diff = max - min;
@@ -176,19 +166,11 @@ export const CartoGraph = ({
         formatter: (params: any) => {
           if (params?.data?.value !== undefined) {
             if (params.data.parentName) {
-              return `${params.name} : ${formatPercentage(
-                params.data?.value / 100,
-                1
-              )}
+              return `${params.name} : ${formatPercentage(params.data?.value / 100, 1)}
                   <br>
-                  (<span style="font-style:italic">${
-                    params.data.parentName
-                  }</span>)`;
+                  (<span style="font-style:italic">${params.data.parentName}</span>)`;
             }
-            return `${params.name} : ${formatPercentage(
-              params.data?.value / 100,
-              1
-            )}`;
+            return `${params.name} : ${formatPercentage(params.data?.value / 100, 1)}`;
           }
           return `Aucune donnée disponible pour ${params.name}`;
         },
@@ -273,19 +255,13 @@ export const CartoGraph = ({
     if (handleClick)
       switch (scope) {
         case ScopeEnum["région"]:
-          handleClick(
-            _.findKey(REGIONS_LABEL_MAPPING, _.partial(_.isEqual, name))
-          );
+          handleClick(findKey(REGIONS_LABEL_MAPPING, partial(isEqual, name)));
           break;
         case ScopeEnum["académie"]:
-          handleClick(
-            _.findKey(ACADEMIES_LABEL_MAPPING, _.partial(_.isEqual, name))
-          );
+          handleClick(findKey(ACADEMIES_LABEL_MAPPING, partial(isEqual, name)));
           break;
         case ScopeEnum["département"]:
-          handleClick(
-            _.findKey(DEPARTEMENTS_LABEL_MAPPING, _.partial(_.isEqual, name))
-          );
+          handleClick(findKey(DEPARTEMENTS_LABEL_MAPPING, partial(isEqual, name)));
           break;
       }
   };
@@ -293,9 +269,7 @@ export const CartoGraph = ({
   const unSelectAll = useCallback(() => {
     chartRef.current?.dispatchAction({
       type: "unselect",
-      dataIndex: new Array(graphData?.length ?? 0)
-        .fill(0)
-        .map((_, index) => index),
+      dataIndex: new Array(graphData?.length ?? 0).fill(0).map((_, index) => index),
     });
   }, [chartRef, graphData]);
 
@@ -309,9 +283,9 @@ export const CartoGraph = ({
   const selectRegion = (codeRegion: string) => {
     if (!chartRef.current) return;
 
-    const regionLabelKey = Object.keys(REGIONS_LABEL_MAPPING).find(
-      (region) => region === codeRegion
-    ) as unknown as keyof typeof REGIONS_LABEL_MAPPING | undefined;
+    const regionLabelKey = Object.keys(REGIONS_LABEL_MAPPING).find((region) => region === codeRegion) as unknown as
+      | keyof typeof REGIONS_LABEL_MAPPING
+      | undefined;
 
     if (regionLabelKey) {
       const regionLabel = REGIONS_LABEL_MAPPING[regionLabelKey];
@@ -344,20 +318,11 @@ export const CartoGraph = ({
     } else {
       unSelectAll();
     }
-  }, [
-    option,
-    graphData,
-    codeRegionSelectionne,
-    chartRef,
-    handleClickOnSeries,
-    handleClickOnBlankSpace,
-  ]);
+  }, [option, graphData, codeRegionSelectionne, chartRef, handleClickOnSeries, handleClickOnBlankSpace]);
 
   useEffect(() => {
     if (selectedScope?.value) {
-      const currentIndex = graphData?.findIndex(
-        (data) => data.code === selectedScope.value
-      );
+      const currentIndex = graphData?.findIndex((data) => data.code === selectedScope.value);
 
       if (currentIndex !== -1) {
         chartRef.current?.dispatchAction({
