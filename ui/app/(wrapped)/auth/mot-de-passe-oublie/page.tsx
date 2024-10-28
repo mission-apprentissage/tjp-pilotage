@@ -1,5 +1,6 @@
-import { ForgottenPasswordForm } from "@/app/(wrapped)/auth/mot-de-passe-oublie/askResetPasswordForm";
+import { ForgottenPasswordForm } from "./askResetPasswordForm";
 
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default async function () {
   return <ForgottenPasswordForm />;
 }

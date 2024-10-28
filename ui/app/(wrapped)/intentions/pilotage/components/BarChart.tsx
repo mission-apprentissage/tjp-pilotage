@@ -1,14 +1,11 @@
 import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
-import {
-  PositionQuadrantEnum,
-  PositionQuadrantType,
-} from "shared/enum/positionQuadrantEnum";
+import type { PositionQuadrantType } from "shared/enum/positionQuadrantEnum";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import type { RepartitionPilotageIntentionsPositionQuadrant } from "@/app/(wrapped)/intentions/pilotage/types";
 import { formatPercentage } from "@/utils/formatUtils";
-
-import { RepartitionPilotageIntentionsPositionQuadrant } from "../types";
 
 export const BarChart = ({
   positionsQuadrant,
@@ -72,18 +69,14 @@ export const BarChart = ({
               <br />
               Ratio de fermetures :
               <span style="font-weight: 700;">
-                ${formatPercentage(
-                  positionsQuadrant?.[params[0]?.name as PositionQuadrantType]
-                    .ratioFermeture,
-                  1,
-                  "-"
-                )}
+                ${formatPercentage(positionsQuadrant?.[params[0]?.name as PositionQuadrantType].ratioFermeture, 1, "-")}
               </span>
               <br />
               <br />
               <div style="display: inline-block; margin-top: 5px;">
-                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[2]
-                  ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                <span style="border-radius: 100%; width:15px; height:15px; background-color:${
+                  params[2]?.color
+                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Colorations :
                   <span style="font-weight: 700;">${params[2]?.data}</span>
@@ -91,8 +84,9 @@ export const BarChart = ({
               </div>
               <br />
               <div style="display: inline-block; margin-top: 5px;">
-                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[1]
-                  ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                <span style="border-radius: 100%; width:15px; height:15px; background-color:${
+                  params[1]?.color
+                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Pl. ouvertes :
                   <span style="font-weight: 700;">${params[1]?.data}</span>
@@ -100,8 +94,9 @@ export const BarChart = ({
               </div>
               <br />
               <div style="display: inline-block; margin-top: 5px;">
-                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[0]
-                  ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                <span style="border-radius: 100%; width:15px; height:15px; background-color:${
+                  params[0]?.color
+                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Pl. fermées :
                   <span style="font-weight: 700;"> ${params[0]?.data}</span>
@@ -111,9 +106,9 @@ export const BarChart = ({
               <div style="display: inline-block; margin-top: 15px;">
                 <span>
                   Pl. transformées :
-                  <span style="font-weight: 700;"> ${positionsQuadrant?.[
-                    params[0]?.name as PositionQuadrantType
-                  ].placesTransformees}</span>
+                  <span style="font-weight: 700;"> ${
+                    positionsQuadrant?.[params[0]?.name as PositionQuadrantType].placesTransformees
+                  }</span>
                 </span>
               </div>
             </div>
@@ -164,8 +159,7 @@ export const BarChart = ({
           fontSize: 14,
           fontFamily: "Marianne",
         },
-        formatter: (value: string) =>
-          `${value.replace("Place(s) ", "Pl. ").replace("(s)", "s")}`,
+        formatter: (value: string) => `${value.replace("Place(s) ", "Pl. ").replace("(s)", "s")}`,
         data: [
           {
             name: "Coloration(s)",
@@ -213,8 +207,7 @@ export const BarChart = ({
       series: [
         {
           data: positionsQuadrantOptions.map(
-            (PositionQuadrantType) =>
-              positionsQuadrant?.[PositionQuadrantType]?.placesFermees ?? 0
+            (PositionQuadrantType) => positionsQuadrant?.[PositionQuadrantType]?.placesFermees ?? 0
           ),
           stack: "placesTransformées",
           color: bf113,
@@ -223,8 +216,7 @@ export const BarChart = ({
         },
         {
           data: positionsQuadrantOptions.map(
-            (PositionQuadrantType) =>
-              positionsQuadrant?.[PositionQuadrantType]?.placesOuvertes
+            (PositionQuadrantType) => positionsQuadrant?.[PositionQuadrantType]?.placesOuvertes
           ),
           stack: "placesTransformées",
           color: bf850_active,
@@ -233,8 +225,7 @@ export const BarChart = ({
         },
         {
           data: positionsQuadrantOptions.map(
-            (PositionQuadrantType) =>
-              positionsQuadrant?.[PositionQuadrantType]?.placesColorees
+            (PositionQuadrantType) => positionsQuadrant?.[PositionQuadrantType]?.placesColorees
           ),
           stack: "placesTransformées",
           color: bf850,

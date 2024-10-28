@@ -2,12 +2,9 @@ import { chakra } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import {
-  isTypeColoration,
-  isTypeFermeture,
-} from "../../../../../utils/typeDemandeUtils";
-import { CapaciteField } from "../../../components/CapaciteField";
-import { IntentionForms } from "../../defaultFormValues";
+import { CapaciteField } from "@/app/(wrapped)/intentions/perdir/saisie/components/CapaciteField";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
+import { isTypeColoration, isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const CapaciteApprentissageField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -18,10 +15,7 @@ export const CapaciteApprentissageField = chakra(
         watch(({ capaciteApprentissageActuelle, typeDemande }, { name }) => {
           if (name === "typeDemande") {
             setValue("capaciteApprentissage", 0);
-          } else if (
-            name === "capaciteApprentissageActuelle" &&
-            typeDemande === "coloration"
-          ) {
+          } else if (name === "capaciteApprentissageActuelle" && typeDemande === "coloration") {
             setValue("capaciteApprentissage", capaciteApprentissageActuelle);
           }
         }).unsubscribe
@@ -33,12 +27,6 @@ export const CapaciteApprentissageField = chakra(
 
     const isReadOnly = disabled || fermeture || coloration;
 
-    return (
-      <CapaciteField
-        name={"capaciteApprentissage"}
-        className={className}
-        isReadOnly={isReadOnly}
-      />
-    );
+    return <CapaciteField name={"capaciteApprentissage"} className={className} isReadOnly={isReadOnly} />;
   }
 );

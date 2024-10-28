@@ -1,15 +1,8 @@
-import {
-  Box,
-  Flex,
-  Popover,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverTrigger,
-} from "@chakra-ui/react";
+import { Box, Flex, Popover, PopoverCloseButton, PopoverContent, PopoverTrigger } from "@chakra-ui/react";
 
-import { formatPercentage } from "../../../../../utils/formatUtils";
-import { PanoramaTopFlop } from "../../types";
-import { FormationTooltipContent } from "../FormationTooltipContent";
+import { FormationTooltipContent } from "@/app/(wrapped)/panorama/components/FormationTooltipContent";
+import type { PanoramaTopFlop } from "@/app/(wrapped)/panorama/types";
+import { formatPercentage } from "@/utils/formatUtils";
 
 export const TopFlopChartItem = ({
   formation,
@@ -23,13 +16,7 @@ export const TopFlopChartItem = ({
   return (
     <Popover>
       <Flex gap="8" align="center">
-        <Box
-          flex={1}
-          textAlign="right"
-          textOverflow="ellipsis"
-          overflow="hidden"
-          whiteSpace="nowrap"
-        >
+        <Box flex={1} textAlign="right" textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
           {formation.libelleFormation}
         </Box>
         <Box flex={1}>

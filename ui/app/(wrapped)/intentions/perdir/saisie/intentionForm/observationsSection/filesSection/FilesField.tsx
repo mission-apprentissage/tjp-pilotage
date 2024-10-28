@@ -4,7 +4,7 @@ import { humanFileSize } from "shared/utils/humanFileSize";
 
 import { LinkButton } from "@/components/LinkButton";
 
-import { FileType } from "./types";
+import type { FileType } from "./types";
 
 export const FilesField = ({
   files,
@@ -24,15 +24,8 @@ export const FilesField = ({
       {files.map((file) => (
         <Flex key={file.name} direction={"column"} gap={1}>
           <Flex direction={"row"} gap={2} alignItems={"start"}>
-            <LinkButton
-              onClick={() => downloadFile(file)}
-              rightIcon={<Icon icon="ri:download-line" />}
-            >
-              <Text
-                overflow={"hidden"}
-                textOverflow={"ellipsis"}
-                whiteSpace={"nowrap"}
-              >
+            <LinkButton onClick={async () => downloadFile(file)} rightIcon={<Icon icon="ri:download-line" />}>
+              <Text overflow={"hidden"} textOverflow={"ellipsis"} whiteSpace={"nowrap"}>
                 {file.nameWithoutExtension}
               </Text>
             </LinkButton>
@@ -48,14 +41,8 @@ export const FilesField = ({
               disabled={disabled}
             />
           </Flex>
-          <Flex
-            direction="row"
-            gap={"2"}
-            fontSize={"smaller"}
-            color={greyColor}
-          >
-            <Text textTransform={"uppercase"}>{file.extension}</Text>-
-            <Text>{humanFileSize(file.size)}</Text>
+          <Flex direction="row" gap={"2"} fontSize={"smaller"} color={greyColor}>
+            <Text textTransform={"uppercase"}>{file.extension}</Text>-<Text>{humanFileSize(file.size)}</Text>
           </Flex>
         </Flex>
       ))}

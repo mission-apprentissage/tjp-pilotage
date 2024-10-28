@@ -9,5 +9,6 @@
     "zod/prefer-enum": "error",
     "n/no-missing-import": 0,
     "n/no-extraneous-import": ["error"]
-  }
+  },
+  "ignorePatterns": ["jest.config.js"]
 }

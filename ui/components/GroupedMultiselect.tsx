@@ -16,23 +16,11 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react";
-import React, {
-  ChangeEventHandler,
-  memo,
-  ReactNode,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import type { ChangeEventHandler, ReactNode } from "react";
+import React, { memo, useMemo, useRef, useState } from "react";
 import removeAccents from "remove-accents";
 
-const ButtonContent = ({
-  selected,
-  children,
-}: {
-  selected: string[];
-  children: ReactNode;
-}) => {
+const ButtonContent = ({ selected, children }: { selected: string[]; children: ReactNode }) => {
   if (!selected.length) return <>{children}</>;
   if (selected.length === 1) return <>{selected[0]}</>;
   return <>{selected.length} sélectionnés</>;
@@ -51,19 +39,14 @@ const Checkbox = ({
 }) => {
   return (
     <label style={{ display: "flex", alignItems: "center" }}>
-      <input
-        checked={checked}
-        value={value}
-        onChange={onChange}
-        hidden
-        type="checkbox"
-      />
+      <input checked={checked} value={value} onChange={onChange} hidden type="checkbox" />
       <CheckboxIcon checked={checked} />
       {children}
     </label>
   );
 };
 
+// eslint-disable-next-line react/display-name
 const InputWapper = memo(
   ({
     onChange,
@@ -199,22 +182,15 @@ export const GroupedMultiselect = chakra(
             (acc, key) => {
               const filteredOptions = groupedOptions[key].options.filter(
                 (item) =>
-                  removeAccents(item.label?.toLowerCase()).includes(
-                    removeAccents(search.toLowerCase())
-                  ) ||
-                  removeAccents(item.value?.toLowerCase()).includes(
-                    removeAccents(search.toLowerCase())
-                  )
+                  removeAccents(item.label?.toLowerCase()).includes(removeAccents(search.toLowerCase())) ||
+                  removeAccents(item.value?.toLowerCase()).includes(removeAccents(search.toLowerCase()))
               );
               if (filteredOptions.length > 0) {
                 acc[key] = filteredOptions;
               }
               return acc;
             },
-            {} as Record<
-              string,
-              { label: string; value: string; isDisabled?: boolean }[]
-            >
+            {} as Record<string, { label: string; value: string; isDisabled?: boolean }[]>
           )
         : Object.keys(groupedOptions).reduce(
             (acc, key) => {
@@ -224,32 +200,22 @@ export const GroupedMultiselect = chakra(
               }
               return acc;
             },
-            {} as Record<
-              string,
-              { label: string; value: string; isDisabled?: boolean }[]
-            >
+            {} as Record<string, { label: string; value: string; isDisabled?: boolean }[]>
           );
     };
 
-    const filteredOptions = useMemo(filterOptions, [
-      groupedOptions,
-      search,
-      map,
-    ]);
+    const filteredOptions = useMemo(filterOptions, [groupedOptions, search, map]);
     const ref = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const [limit, setLimit] = useState(150);
 
-    const showDefaultValue = () =>
-      hasDefaultValue && Object.keys(groupedOptions).length === 1;
+    const showDefaultValue = () => hasDefaultValue && Object.keys(groupedOptions).length === 1;
 
     const selectGroupOptions = (groupLabel: string) => {
       const options = groupedOptions[groupLabel].options;
       if (options) {
-        const values = options
-          .filter((option) => !option.isDisabled)
-          .map((option) => option.value);
+        const values = options.filter((option) => !option.isDisabled).map((option) => option.value);
         const allOptionsSelected = values.every((value) => map.has(value));
         if (allOptionsSelected) {
           onChange?.(value.filter((val) => !values.includes(val)));
@@ -301,9 +267,7 @@ export const GroupedMultiselect = chakra(
                 ref={inputRef}
                 placeholder="Rechercher dans la liste"
                 value={search}
-                onInput={(e) =>
-                  handleSearch((e.target as HTMLInputElement).value)
-                }
+                onInput={async (e) => handleSearch((e.target as HTMLInputElement).value)}
                 px="3"
                 py="2"
                 variant="unstyled"
@@ -318,12 +282,7 @@ export const GroupedMultiselect = chakra(
                   bgColor={"transparent"}
                 >
                   {map.size > 0 && (
-                    <Text
-                      fontSize={12}
-                      fontWeight={"normal"}
-                      color="bluefrance.113"
-                      p={2}
-                    >
+                    <Text fontSize={12} fontWeight={"normal"} color="bluefrance.113" p={2}>
                       Réinitialiser
                     </Text>
                   )}
@@ -337,25 +296,14 @@ export const GroupedMultiselect = chakra(
                   bgColor={"transparent"}
                 >
                   {map.size > 0 && (
-                    <Text
-                      fontSize={12}
-                      fontWeight={"normal"}
-                      color="bluefrance.113"
-                      p={2}
-                    >
+                    <Text fontSize={12} fontWeight={"normal"} color="bluefrance.113" p={2}>
                       Tout décocher
                     </Text>
                   )}
                 </Button>
               )}
             </Flex>
-            <Flex
-              direction="column"
-              ref={ref}
-              maxHeight={300}
-              overflow="auto"
-              sx={{ "> *": { px: "3", py: "1.5" } }}
-            >
+            <Flex direction="column" ref={ref} maxHeight={300} overflow="auto" sx={{ "> *": { px: "3", py: "1.5" } }}>
               {Object.keys(filteredOptions).map((groupLabel) => (
                 <Box key={groupLabel} p={0}>
                   <MenuGroup>
@@ -372,29 +320,27 @@ export const GroupedMultiselect = chakra(
                     >
                       {groupLabel}
                     </Tag>
-                    {filteredOptions[groupLabel].map(
-                      ({ value, label, isDisabled }) => (
-                        <MenuItemOption key={value} isDisabled={isDisabled}>
-                          <InputWapper
-                            isReadOnly={isDisabled}
-                            checked={!!map.get(value)}
-                            onChange={({ checked, label, value }) => {
-                              const newMap = new Map(map);
-                              if (checked) {
-                                newMap.set(value, label);
-                              } else {
-                                newMap.delete(value);
-                              }
-                              stateValue.current = newMap;
-                              onChange?.(Array.from(newMap.keys()));
-                            }}
-                            value={value}
-                          >
-                            {label}
-                          </InputWapper>
-                        </MenuItemOption>
-                      )
-                    )}
+                    {filteredOptions[groupLabel].map(({ value, label, isDisabled }) => (
+                      <MenuItemOption key={value} isDisabled={isDisabled}>
+                        <InputWapper
+                          isReadOnly={isDisabled}
+                          checked={!!map.get(value)}
+                          onChange={({ checked, label, value }) => {
+                            const newMap = new Map(map);
+                            if (checked) {
+                              newMap.set(value, label);
+                            } else {
+                              newMap.delete(value);
+                            }
+                            stateValue.current = newMap;
+                            onChange?.(Array.from(newMap.keys()));
+                          }}
+                          value={value}
+                        >
+                          {label}
+                        </InputWapper>
+                      </MenuItemOption>
+                    ))}
                   </MenuGroup>
                   <MenuDivider mb={0} />
                 </Box>
@@ -406,11 +352,7 @@ export const GroupedMultiselect = chakra(
               )}
               {Object.keys(filteredOptions).length > limit && (
                 <Box px="3">
-                  <Button
-                    size="sm"
-                    w="100%"
-                    onClick={() => setLimit(limit + 100)}
-                  >
+                  <Button size="sm" w="100%" onClick={() => setLimit(limit + 100)}>
                     Afficher plus
                   </Button>
                 </Box>

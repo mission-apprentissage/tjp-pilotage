@@ -1,24 +1,15 @@
-import {
-  AspectRatio,
-  Box,
-  Flex,
-  Heading,
-  Img,
-  useToken,
-  VStack,
-} from "@chakra-ui/react";
+import { AspectRatio, Box, Flex, Heading, Img, useToken, VStack } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
-import { themeDefinition } from "@/theme/theme";
-import { themeColors } from "@/theme/themeColors";
-import { formatPercentage } from "@/utils/formatUtils";
-
-import {
+import type {
   RepartitionPilotageIntentionsDomaines,
   RepartitionPilotageIntentionsNiveauxDiplome,
   RepartitionPilotageIntentionsZonesGeographiques,
-} from "../types";
+} from "@/app/(wrapped)/intentions/pilotage/types";
+import { themeDefinition } from "@/theme/theme";
+import { themeColors } from "@/theme/themeColors";
+import { formatPercentage } from "@/utils/formatUtils";
 
 export const PositiveNegativeBarChart = ({
   title,
@@ -34,14 +25,7 @@ export const PositiveNegativeBarChart = ({
 }) => {
   if (!data || !Object.keys(data).filter((key) => key !== "Total").length)
     return (
-      <VStack
-        mt={16}
-        mb={5}
-        width="100%"
-        backgroundColor={themeColors.grey[975]}
-        color={themeColors.grey[625]}
-        p={8}
-      >
+      <VStack mt={16} mb={5} width="100%" backgroundColor={themeColors.grey[975]} color={themeColors.grey[625]} p={8}>
         <Heading as="h3">Aucune donnée à afficher</Heading>
         <Heading as="h4" size="md">
           pour les filtres sélectionnés
@@ -53,14 +37,22 @@ export const PositiveNegativeBarChart = ({
     );
 
   const limit = 10;
-  const chartRef = useRef<echarts.ECharts>();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const bf113 = useToken("colors", "bluefrance.113");
-  const bf850 = useToken("colors", "bluefrance.850");
-  const bf850_active = useToken("colors", "bluefrance.850_active");
-  const grey425 = useToken("colors", "grey.425");
-  const pilotageGreen2 = useToken("colors", "pilotage.green.2");
-  const pilotageRed = useToken("colors", "pilotage.red");
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const chartRef = useRef<echarts.ECharts>(); // TODO
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const containerRef = useRef<HTMLDivElement>(null); // TODO
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const bf113 = useToken("colors", "bluefrance.113"); // TODO
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const bf850 = useToken("colors", "bluefrance.850"); // TODO
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const bf850_active = useToken("colors", "bluefrance.850_active"); // TODO
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const grey425 = useToken("colors", "grey.425"); // TODO
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const pilotageGreen2 = useToken("colors", "pilotage.green.2"); // TODO
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const pilotageRed = useToken("colors", "pilotage.red"); // TODO
 
   const getYAxisTitle = () => {
     return Object.keys(data)
@@ -104,8 +96,9 @@ export const PositiveNegativeBarChart = ({
     },
     yAxisIndex: 0,
   };
-
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const option = useMemo<echarts.EChartsOption>(
+    // TODO
     () => ({
       animationDelay: 0.5,
       responsive: true,
@@ -131,18 +124,16 @@ export const PositiveNegativeBarChart = ({
                   ? `
                 <div>
                   (taux de transformation :
-                  ${formatPercentage(
-                    data[params[0]?.name].tauxTransformation,
-                    1
-                  )})
+                  ${formatPercentage(data[params[0]?.name].tauxTransformation, 1)})
                 </div>
                 `
                   : ""
               }
               <br />
               <div style="display: inline-block; margin-top: 5px;">
-                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[0]
-                  ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                <span style="border-radius: 100%; width:15px; height:15px; background-color:${
+                  params[0]?.color
+                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Colorations :
                   <span style="font-weight: 700;">${params[0]?.data}</span>
@@ -150,8 +141,9 @@ export const PositiveNegativeBarChart = ({
               </div>
               <br />
               <div style="display: inline-block; margin-top: 5px;">
-                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[2]
-                  ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                <span style="border-radius: 100%; width:15px; height:15px; background-color:${
+                  params[2]?.color
+                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Pl. ouvertes :
                   <span style="font-weight: 700;">${params[2]?.data}</span>
@@ -159,8 +151,9 @@ export const PositiveNegativeBarChart = ({
               </div>
               <br />
               <div style="display: inline-block; margin-top: 5px;">
-                <span style="border-radius: 100%; width:15px; height:15px; background-color:${params[1]
-                  ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                <span style="border-radius: 100%; width:15px; height:15px; background-color:${
+                  params[1]?.color
+                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Pl. fermées :
                   <span style="font-weight: 700;"> ${-params[1]?.data}</span>
@@ -170,9 +163,7 @@ export const PositiveNegativeBarChart = ({
               <div style="display: inline-block; margin-top: 15px;">
                 <span>
                   Pl. transformées :
-                  <span style="font-weight: 700;"> ${
-                    data[params[0]?.name].placesTransformees
-                  }</span>
+                  <span style="font-weight: 700;"> ${data[params[0]?.name].placesTransformees}</span>
                 </span>
               </div>
             </div>
@@ -225,8 +216,7 @@ export const PositiveNegativeBarChart = ({
           fontSize: 14,
           fontFamily: "Marianne",
         },
-        formatter: (value: string) =>
-          `${value.replace("Place(s) ", "Pl. ").replace("(s)", "s")}`,
+        formatter: (value: string) => `${value.replace("Place(s) ", "Pl. ").replace("(s)", "s")}`,
         data: [
           {
             name: "Coloration(s)",
@@ -378,7 +368,9 @@ export const PositiveNegativeBarChart = ({
     [data]
   );
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useLayoutEffect(() => {
+    // TODO
     if (!containerRef.current) return;
     if (!chartRef.current) {
       chartRef.current = echarts.init(containerRef.current);

@@ -1,19 +1,10 @@
-import {
-  chakra,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-} from "@chakra-ui/react";
+import { chakra, FormControl, FormErrorMessage, FormLabel, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
+import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { toBoolean } from "@/utils/toBoolean";
-
-import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
-import { IntentionForms } from "../defaultFormValues";
 
 export const PartenaireEconomiqueField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -24,25 +15,19 @@ export const PartenaireEconomiqueField = chakra(
     } = useFormContext<IntentionForms>();
 
     const typeDemande = watch("typeDemande");
-    const visible =
-      !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
+    const visible = !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
 
     if (!visible) return null;
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.partenairesEconomiquesImpliques}
-        isRequired
-      >
+      <FormControl className={className} isInvalid={!!errors.partenairesEconomiquesImpliques} isRequired>
         <FormLabel>Des partenaires économiques sont-ils impliqués ?</FormLabel>
         <Controller
           name="partenairesEconomiquesImpliques"
           control={control}
           disabled={disabled}
           rules={{
-            validate: (value) =>
-              typeof value === "boolean" || "Le champ est obligatoire",
+            validate: (value) => typeof value === "boolean" || "Le champ est obligatoire",
           }}
           render={({ field: { onChange, value, onBlur, ref, disabled } }) => (
             <RadioGroup
@@ -63,9 +48,7 @@ export const PartenaireEconomiqueField = chakra(
           )}
         />
         {errors.partenairesEconomiquesImpliques && (
-          <FormErrorMessage>
-            {errors.partenairesEconomiquesImpliques?.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.partenairesEconomiquesImpliques?.message}</FormErrorMessage>
         )}
       </FormControl>
     );

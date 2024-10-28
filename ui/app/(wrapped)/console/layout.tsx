@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams, useSelectedLayoutSegment } from "next/navigation";
 import qs from "qs";
 
-import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 const getTabIndex = (segment: string | null) => {
   if (segment === "formations") return 0;
@@ -18,9 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const queryParams = useSearchParams();
   const filters = qs.parse(queryParams.toString())?.["filters"];
   const keptFilters = Object.fromEntries(
-    Object.entries(filters ?? {}).filter(([filter]) =>
-      ["codeRegion"].includes(filter)
-    )
+    Object.entries(filters ?? {}).filter(([filter]) => ["codeRegion"].includes(filter))
   );
   return (
     <Tabs
@@ -53,13 +51,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </Tab>
       </TabList>
       <TabPanels display="flex" flexDirection="column" flex="1" minHeight="0">
-        <Box
-          p="0"
-          display="flex"
-          flexDirection={"column"}
-          flex="1"
-          minHeight="0"
-        >
+        <Box p="0" display="flex" flexDirection={"column"} flex="1" minHeight="0">
           {children}
         </Box>
       </TabPanels>

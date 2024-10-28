@@ -1,20 +1,8 @@
-import {
-  Badge,
-  Box,
-  Flex,
-  GridItem,
-  Image,
-  Text,
-  useToken,
-} from "@chakra-ui/react";
+import { Badge, Box, Flex, GridItem, Image, Text, useToken } from "@chakra-ui/react";
 
-import { Informations } from "../types";
+import type { Informations } from "@/app/(wrapped)/panorama/etablissement/components/header/types";
 
-export const Coordonnees = ({
-  informations,
-}: {
-  informations: Informations;
-}) => {
+export const Coordonnees = ({ informations }: { informations: Informations }) => {
   const {
     secteur,
     adresse,
@@ -34,13 +22,7 @@ export const Coordonnees = ({
         {secteur === "PR" && "ÉTABLISSEMENT PRIVÉ"}
       </Text>
       <Flex>
-        <Image
-          src={`/logo_etablissement.png`}
-          height={"80px"}
-          width={"80px"}
-          alt="logo etablissement"
-          mr={"16px"}
-        />
+        <Image src={`/logo_etablissement.png`} height={"80px"} width={"80px"} alt="logo etablissement" mr={"16px"} />
         <Flex direction={"column"}>
           {adresse && <Text color={textDisabled}>{adresse}</Text>}
           <Text color={textDisabled}>

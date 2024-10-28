@@ -1,14 +1,8 @@
-import {
-  chakra,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Textarea,
-} from "@chakra-ui/react";
+import { chakra, FormControl, FormErrorMessage, FormLabel, Textarea } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const AugmentationCapaciteAccueilRestaurationPrecisionsField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -23,20 +17,14 @@ export const AugmentationCapaciteAccueilRestaurationPrecisionsField = chakra(
 
     useEffect(() => {
       if (!visible) {
-        setValue(
-          "augmentationCapaciteAccueilRestaurationPrecisions",
-          undefined
-        );
+        setValue("augmentationCapaciteAccueilRestaurationPrecisions", undefined);
       }
     }, [visible, setValue]);
 
     if (!visible) return null;
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.augmentationCapaciteAccueilRestaurationPrecisions}
-      >
+      <FormControl className={className} isInvalid={!!errors.augmentationCapaciteAccueilRestaurationPrecisions}>
         <FormLabel>Précisions ?</FormLabel>
         <Textarea
           variant="grey"
@@ -46,9 +34,7 @@ export const AugmentationCapaciteAccueilRestaurationPrecisionsField = chakra(
           })}
         />
         {errors.augmentationCapaciteAccueilRestaurationPrecisions && (
-          <FormErrorMessage>
-            {errors.augmentationCapaciteAccueilRestaurationPrecisions.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.augmentationCapaciteAccueilRestaurationPrecisions.message}</FormErrorMessage>
         )}
       </FormControl>
     );

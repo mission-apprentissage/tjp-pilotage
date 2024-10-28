@@ -1,14 +1,10 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { useDisclosure } from "@chakra-ui/hooks";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 
-import { GLOSSAIRE_ENTRIES_KEYS, GlossaireEntryKey } from "./GlossaireEntries";
-import { GlossaireEntries } from "./types";
+import type { GlossaireEntryKey } from "./GlossaireEntries";
+import { GLOSSAIRE_ENTRIES_KEYS } from "./GlossaireEntries";
+import type { GlossaireEntries } from "./types";
 
 type GlossaireContextType = {
   isOpen: boolean;
@@ -19,9 +15,7 @@ type GlossaireContextType = {
   entries: GlossaireEntries;
 };
 
-export const GlossaireContext = createContext<GlossaireContextType>(
-  {} as GlossaireContextType
-);
+export const GlossaireContext = createContext<GlossaireContextType>({} as GlossaireContextType);
 
 export function GlossaireProvider({
   children,
@@ -63,11 +57,7 @@ export function GlossaireProvider({
     [isOpen, selectedEntry, onOpenCallback, onCloseCallback, setSelectedEntry]
   );
 
-  return (
-    <GlossaireContext.Provider value={value}>
-      {children}
-    </GlossaireContext.Provider>
-  );
+  return <GlossaireContext.Provider value={value}>{children}</GlossaireContext.Provider>;
 }
 
 export const useGlossaireContext = () => useContext(GlossaireContext);

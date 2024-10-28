@@ -1,24 +1,16 @@
 import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
-import {
-  CircleLayer,
-  GeoJSONSource,
-  Layer,
-  MapGeoJSONFeature,
-  MapMouseEvent,
-  Source,
-  SymbolLayer,
-  useMap,
-} from "react-map-gl/maplibre";
+import type { CircleLayer, GeoJSONSource, MapGeoJSONFeature, MapMouseEvent, SymbolLayer } from "react-map-gl/maplibre";
+import { Layer, Source, useMap } from "react-map-gl/maplibre";
 
-import { themeDefinition } from "../../../../../../../../../theme/theme";
-import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
+import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
+import { themeDefinition } from "@/theme/theme";
+
 import { MAP_IMAGES } from "./CustomControls";
 
 export const EtablissementsProches = () => {
   const { current: map } = useMap();
-  const { etablissementsProches, hoverUai, setHoverUai } =
-    useEtablissementMapContext();
+  const { etablissementsProches, hoverUai, setHoverUai } = useEtablissementMapContext();
   const trackEvent = usePlausible();
 
   const geojson = {
@@ -75,12 +67,7 @@ export const EtablissementsProches = () => {
     id: "single-scolaire-etablissementsProches",
     type: "symbol",
     source: "etablissementsProches",
-    filter: [
-      "all",
-      ["!has", "point_count"],
-      ["in", "voies", "scolaire"],
-      ["!=", "uai", hoverUai],
-    ],
+    filter: ["all", ["!has", "point_count"], ["in", "voies", "scolaire"], ["!=", "uai", hoverUai]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE.name,
       "icon-overlap": "always",
@@ -91,12 +78,7 @@ export const EtablissementsProches = () => {
     id: "single-apprentissage-etablissementsProches",
     type: "symbol",
     source: "etablissementsProches",
-    filter: [
-      "all",
-      ["!has", "point_count"],
-      ["in", "voies", "apprentissage"],
-      ["!=", "uai", hoverUai],
-    ],
+    filter: ["all", ["!has", "point_count"], ["in", "voies", "apprentissage"], ["!=", "uai", hoverUai]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE.name,
       "icon-overlap": "always",
@@ -107,12 +89,7 @@ export const EtablissementsProches = () => {
     id: "single-scolaire-apprentissage-etablissementsProches",
     type: "symbol",
     source: "etablissementsProches",
-    filter: [
-      "all",
-      ["!has", "point_count"],
-      ["in", "voies", "apprentissage,scolaire"],
-      ["!=", "uai", hoverUai],
-    ],
+    filter: ["all", ["!has", "point_count"], ["in", "voies", "apprentissage,scolaire"], ["!=", "uai", hoverUai]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE.name,
       "icon-overlap": "always",
@@ -130,16 +107,12 @@ export const EtablissementsProches = () => {
       });
       const clusterId = features[0].properties.cluster_id;
 
-      const source = (await map.getSource(
-        "etablissementsProches"
-      )) as GeoJSONSource;
+      const source = (await map.getSource("etablissementsProches")) as GeoJSONSource;
       if (source && "getClusterExpansionZoom" in source) {
         const clusterZoom = await source.getClusterExpansionZoom(clusterId);
         map.easeTo({
           center:
-            "coordinates" in features[0].geometry
-              ? (features[0].geometry.coordinates as [number, number])
-              : [-1, -1],
+            "coordinates" in features[0].geometry ? (features[0].geometry.coordinates as [number, number]) : [-1, -1],
           zoom: clusterZoom,
         });
         trackEvent("cartographie-etablissement:interaction", {
@@ -200,12 +173,7 @@ export const EtablissementsProches = () => {
 
   return (
     <>
-      <Source
-        id="etablissementsProches"
-        type="geojson"
-        data={geojson}
-        cluster={true}
-      />
+      <Source id="etablissementsProches" type="geojson" data={geojson} cluster={true} />
       <Layer {...clusterLayer} />
       <Layer {...clusterLabelLayer} />
       <Layer {...scolaireSinglePointLayer} />

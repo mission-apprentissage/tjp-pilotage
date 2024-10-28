@@ -37,6 +37,8 @@ fileignoreconfig:
   checksum: 58922cbe6994821e59cd535a2827e1774b85c2466bd0b51cb58a2e4bd9382912
 - filename: server/tests/test_origin/services/users.service.test.js_old
   checksum: aa5435b4faf485b49d3e9362d7550432cc4a431b863e8248f5b95b18b3d3e931
+- filename: ui/app/(wrapped)/statistiques/page.tsx
+  checksum: 573be5ad333d02b3969e61ec8a4860c161af648abb752a3a22b35d5f37bc6bd1
 - filename: ui/config.public.ts
   checksum: ced0c1ea7757396482b010bd1d684de054358c901ade6c01e4992ead7ec1a385
 - filename: ui/src/config.public.ts

@@ -16,6 +16,7 @@
     "theme": "chakra-cli tokens theme/theme.ts"
   },
   "dependencies": {
+    "@chakra-ui/anatomy": "^2.3.4",
     "@chakra-ui/checkbox": "^2.3.2",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/image": "^2.1.0",

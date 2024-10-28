@@ -9,7 +9,8 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FC, MouseEventHandler, useRef } from "react";
+import type { FC, MouseEventHandler } from "react";
+import { useRef } from "react";
 
 import { ArrowIcon } from "@/components/icons/arrowIcon";
 
@@ -26,13 +27,7 @@ export const ConfirmationDelete = ({
   return (
     <>
       <Trigger onClick={onOpen} />
-      <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-        size="xl"
-        isCentered
-      >
+      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} size="xl" isCentered>
         <AlertDialogOverlay>
           <AlertDialogContent borderRadius={0}>
             <AlertDialogBody>
@@ -40,12 +35,9 @@ export const ConfirmationDelete = ({
                 <ArrowIcon mr="2" mb="1" />
                 Confirmation de suppression
               </Heading>
+              <Text mt="4">Êtes-vous sûr de vouloir supprimer la demande ?</Text>
               <Text mt="4">
-                Êtes-vous sûr de vouloir supprimer la demande ?
-              </Text>
-              <Text mt="4">
-                Cette action est irréversible, vous perdrez l’ensemble des
-                données associées à votre demande.
+                Cette action est irréversible, vous perdrez l’ensemble des données associées à votre demande.
               </Text>
             </AlertDialogBody>
 

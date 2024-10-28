@@ -7,34 +7,26 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useCallback, useContext, useEffect, useState } from "react";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
+import { CodeRegionFilterContext } from "@/app/layoutClient";
+import { GroupedMultiselect } from "@/components/GroupedMultiselect";
+import { SearchInput } from "@/components/SearchInput";
+import { TableHeader } from "@/components/TableHeader";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatExportFilename } from "@/utils/formatExportFilename";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { GroupedMultiselect } from "../../../../components/GroupedMultiselect";
-import { SearchInput } from "../../../../components/SearchInput";
-import { TableHeader } from "../../../../components/TableHeader";
-import { formatExportFilename } from "../../../../utils/formatExportFilename";
-import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDES_COLUMN";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
-import {
-  STATS_DEMANDES_COLUMNS,
-  STATS_DEMANDES_COLUMNS_DEFAULT,
-  STATS_DEMANDES_COLUMNS_OPTIONAL,
-} from "./STATS_DEMANDES_COLUMN";
-import {
-  FiltersDemandesRestitutionIntentions,
-  OrderDemandesRestitutionIntentions,
-} from "./types";
+import type { STATS_DEMANDES_COLUMNS_OPTIONAL } from "./STATS_DEMANDES_COLUMN";
+import { STATS_DEMANDES_COLUMNS, STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
+import type { FiltersDemandesRestitutionIntentions, OrderDemandesRestitutionIntentions } from "./types";
 
 const ColonneFiltersSection = chakra(
   ({
@@ -42,9 +34,7 @@ const ColonneFiltersSection = chakra(
     handleColonneFilters,
   }: {
     colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[];
-    handleColonneFilters: (
-      value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
-    ) => void;
+    handleColonneFilters: (value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]) => void;
   }) => {
     return (
       <Flex justifyContent={"start"} direction="row">
@@ -52,14 +42,8 @@ const ColonneFiltersSection = chakra(
           width={"48"}
           size="md"
           variant={"newInput"}
-          onChange={(selected) =>
-            handleColonneFilters(
-              selected as (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
-            )
-          }
-          groupedOptions={Object.entries(
-            GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL
-          ).reduce(
+          onChange={(selected) => handleColonneFilters(selected as (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[])}
+          groupedOptions={Object.entries(GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL).reduce(
             (acc, [group, { color, options }]) => {
               acc[group] = {
                 color,
@@ -70,26 +54,17 @@ const ColonneFiltersSection = chakra(
               };
               return acc;
             },
-            {} as Record<
-              string,
-              { color: string; options: { label: string; value: string }[] }
-            >
+            {} as Record<string, { color: string; options: { label: string; value: string }[] }>
           )}
-          defaultOptions={Object.entries(STATS_DEMANDES_COLUMNS_DEFAULT)?.map(
-            ([value, label]) => {
-              return {
-                label,
-                value,
-              };
-            }
-          )}
+          defaultOptions={Object.entries(STATS_DEMANDES_COLUMNS_DEFAULT)?.map(([value, label]) => {
+            return {
+              label,
+              value,
+            };
+          })}
           value={colonneFilters ?? []}
           customButton={
-            <Button
-              variant={"externalLink"}
-              leftIcon={<Icon icon={"ri:table-line"} />}
-              color="bluefrance.113"
-            >
+            <Button variant={"externalLink"} leftIcon={<Icon icon={"ri:table-line"} />} color="bluefrance.113">
               Modifier l'affichage des colonnes
             </Button>
           }
@@ -102,6 +77,7 @@ const ColonneFiltersSection = chakra(
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
 
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
   const router = useRouter();
   const queryParams = useSearchParams();
@@ -126,22 +102,17 @@ export default () => {
     page?: typeof page;
     search?: typeof search;
   }) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const trackEvent = usePlausible();
-  const filterTracker =
-    (filterName: keyof FiltersDemandesRestitutionIntentions) => () => {
-      trackEvent("restitution-demandes:filtre", {
-        props: { filter_name: filterName },
-      });
-    };
+  const filterTracker = (filterName: keyof FiltersDemandesRestitutionIntentions) => () => {
+    trackEvent("restitution-demandes:filtre", {
+      props: { filter_name: filterName },
+    });
+  };
 
-  const handleOrder = (
-    column: OrderDemandesRestitutionIntentions["orderBy"]
-  ) => {
+  const handleOrder = (column: OrderDemandesRestitutionIntentions["orderBy"]) => {
     trackEvent("restitution-demandes:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
@@ -189,9 +160,7 @@ export default () => {
     });
   };
 
-  const handleColonneFilters = (
-    value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
-  ) => {
+  const handleColonneFilters = (value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]) => {
     setSearchParams({ columns: value });
     setColonneFilters(value);
   };
@@ -216,10 +185,7 @@ export default () => {
     });
   };
 
-  const getIntentionsStatsQueryParameters = (
-    qLimit: number,
-    qOffset?: number
-  ) => ({
+  const getIntentionsStatsQueryParameters = (qLimit: number, qOffset?: number) => ({
     ...filters,
     ...order,
     search,
@@ -227,60 +193,44 @@ export default () => {
     limit: qLimit,
   });
 
-  const { data, isLoading } = client
-    .ref("[GET]/restitution-intentions/demandes")
-    .useQuery(
-      {
-        query: getIntentionsStatsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
-      },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
-
-  const { data: countData, isLoading: isLoadingCount } = client
-    .ref("[GET]/restitution-intentions/stats")
-    .useQuery(
-      {
-        query: {
-          ...filters,
-          search,
-        },
-      },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
-
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(
-    CodeRegionFilterContext
+  const { data, isLoading } = client.ref("[GET]/restitution-intentions/demandes").useQuery(
+    {
+      query: getIntentionsStatsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
+    },
+    {
+      keepPreviousData: true,
+      staleTime: 10000000,
+    }
   );
+
+  const { data: countData, isLoading: isLoadingCount } = client.ref("[GET]/restitution-intentions/stats").useQuery(
+    {
+      query: {
+        ...filters,
+        search,
+      },
+    },
+    {
+      keepPreviousData: true,
+      staleTime: 10000000,
+    }
+  );
+
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
 
   const [rentreeScolaireFilter, setRentreeScolaireFilter] = useState<string>();
 
-  const [campagneFilter, setCampagneFilter] = useState<string>(
-    CURRENT_ANNEE_CAMPAGNE
-  );
+  const [campagneFilter, setCampagneFilter] = useState<string>(CURRENT_ANNEE_CAMPAGNE);
 
-  const [colorationFilter, setColorationFilter] = useState<
-    "all" | "with" | "without"
-  >("all");
+  const [colorationFilter, setColorationFilter] = useState<"all" | "with" | "without">("all");
 
-  const [colonneFilters, setColonneFilters] = useState<
-    (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
-  >(
+  const [colonneFilters, setColonneFilters] = useState<(keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]>(
     (columns.length
       ? columns
-      : Object.keys(
-          STATS_DEMANDES_COLUMNS_DEFAULT
-        )) as (keyof typeof STATS_DEMANDES_COLUMNS_DEFAULT)[]
+      : Object.keys(STATS_DEMANDES_COLUMNS_DEFAULT)) as (keyof typeof STATS_DEMANDES_COLUMNS_DEFAULT)[]
   );
 
-  const [statutFilter, setStatutFilter] = useState<
-    Exclude<DemandeStatutType, "supprimée">[] | undefined
-  >();
+  const [statutFilter, setStatutFilter] = useState<Exclude<DemandeStatutType, "supprimée">[] | undefined>();
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 
@@ -296,10 +246,7 @@ export default () => {
     if (filters?.campagne === undefined && campagneFilter !== "") {
       filters.campagne = campagneFilter;
     }
-    if (
-      filters?.rentreeScolaire === undefined &&
-      rentreeScolaireFilter !== ""
-    ) {
+    if (filters?.rentreeScolaire === undefined && rentreeScolaireFilter !== "") {
       filters.rentreeScolaire = rentreeScolaireFilter;
     }
     if (filters?.coloration === undefined) {
@@ -320,11 +267,9 @@ export default () => {
 
   const onExportCsv = useCallback(async () => {
     trackEvent("restitution-demandes:export");
-    const data = await client
-      .ref("[GET]/restitution-intentions/demandes")
-      .query({
-        query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
-      });
+    const data = await client.ref("[GET]/restitution-intentions/demandes").query({
+      query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
+    });
     downloadCsv(
       formatExportFilename("restitution_export", filters?.codeRegion),
       data.demandes.map((demande) => ({
@@ -340,30 +285,22 @@ export default () => {
         disciplinesRecrutementRH:
           demande.discipline1RecrutementRH &&
           `${demande.discipline1RecrutementRH} ${
-            demande.discipline2RecrutementRH
-              ? `- ${demande.discipline2RecrutementRH}`
-              : ""
+            demande.discipline2RecrutementRH ? `- ${demande.discipline2RecrutementRH}` : ""
           }`,
         disciplinesReconversionRH:
           demande.discipline1ReconversionRH &&
           `${demande.discipline1ReconversionRH} ${
-            demande.discipline2ReconversionRH
-              ? `- ${demande.discipline2ReconversionRH}`
-              : ""
+            demande.discipline2ReconversionRH ? `- ${demande.discipline2ReconversionRH}` : ""
           }`,
         disciplinesFormationRH:
           demande.discipline1FormationRH &&
           `${demande.discipline1FormationRH} ${
-            demande.discipline2FormationRH
-              ? `- ${demande.discipline2FormationRH}`
-              : ""
+            demande.discipline2FormationRH ? `- ${demande.discipline2FormationRH}` : ""
           }`,
         disciplinesProfesseurAssocieRH:
           demande.discipline1ProfesseurAssocieRH &&
           `${demande.discipline1ProfesseurAssocieRH} ${
-            demande.discipline2ProfesseurAssocieRH
-              ? `- ${demande.discipline2ProfesseurAssocieRH}`
-              : ""
+            demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
           }`,
         secteur: demande.secteur === "PU" ? "Public" : "Privé",
       })),
@@ -373,11 +310,9 @@ export default () => {
 
   const onExportExcel = useCallback(async () => {
     trackEvent("restitution-demandes:export-excel");
-    const data = await client
-      .ref("[GET]/restitution-intentions/demandes")
-      .query({
-        query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
-      });
+    const data = await client.ref("[GET]/restitution-intentions/demandes").query({
+      query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
+    });
     downloadExcel(
       formatExportFilename("restitution_export", filters?.codeRegion),
       data.demandes.map((demande) => ({
@@ -393,30 +328,22 @@ export default () => {
         disciplinesRecrutementRH:
           demande.discipline1RecrutementRH &&
           `${demande.discipline1RecrutementRH} ${
-            demande.discipline2RecrutementRH
-              ? `- ${demande.discipline2RecrutementRH}`
-              : ""
+            demande.discipline2RecrutementRH ? `- ${demande.discipline2RecrutementRH}` : ""
           }`,
         disciplinesReconversionRH:
           demande.discipline1ReconversionRH &&
           `${demande.discipline1ReconversionRH} ${
-            demande.discipline2ReconversionRH
-              ? `- ${demande.discipline2ReconversionRH}`
-              : ""
+            demande.discipline2ReconversionRH ? `- ${demande.discipline2ReconversionRH}` : ""
           }`,
         disciplinesFormationRH:
           demande.discipline1FormationRH &&
           `${demande.discipline1FormationRH} ${
-            demande.discipline2FormationRH
-              ? `- ${demande.discipline2FormationRH}`
-              : ""
+            demande.discipline2FormationRH ? `- ${demande.discipline2FormationRH}` : ""
           }`,
         disciplinesProfesseurAssocieRH:
           demande.discipline1ProfesseurAssocieRH &&
           `${demande.discipline1ProfesseurAssocieRH} ${
-            demande.discipline2ProfesseurAssocieRH
-              ? `- ${demande.discipline2ProfesseurAssocieRH}`
-              : ""
+            demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
           }`,
         secteur: demande.secteur === "PU" ? "Public" : "Privé",
       })),
@@ -463,10 +390,7 @@ export default () => {
             />
           }
           ColonneFilter={
-            <ColonneFiltersSection
-              colonneFilters={colonneFilters}
-              handleColonneFilters={handleColonneFilters}
-            />
+            <ColonneFiltersSection colonneFilters={colonneFilters} handleColonneFilters={handleColonneFilters} />
           }
           onExportCsv={onExportCsv}
           onExportExcel={onExportExcel}

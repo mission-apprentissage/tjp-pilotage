@@ -1,14 +1,8 @@
-import {
-  chakra,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Textarea,
-} from "@chakra-ui/react";
+import { chakra, FormControl, FormErrorMessage, FormLabel, Textarea } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const TravauxAmenagementDescriptionField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -30,10 +24,7 @@ export const TravauxAmenagementDescriptionField = chakra(
     if (!visible) return null;
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.travauxAmenagementDescription}
-      >
+      <FormControl className={className} isInvalid={!!errors.travauxAmenagementDescription}>
         <FormLabel>Pouvez-vous décrire les travaux ?</FormLabel>
         <Textarea
           variant="grey"
@@ -43,9 +34,7 @@ export const TravauxAmenagementDescriptionField = chakra(
           })}
         />
         {errors.travauxAmenagementDescription && (
-          <FormErrorMessage>
-            {errors.travauxAmenagementDescription.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.travauxAmenagementDescription.message}</FormErrorMessage>
         )}
       </FormControl>
     );

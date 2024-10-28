@@ -1,20 +1,12 @@
-import {
-  Box,
-  HStack,
-  List,
-  ListItem,
-  Skeleton,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, HStack, List, ListItem, Skeleton, Text, VStack } from "@chakra-ui/react";
 import { InlineIcon } from "@iconify/react";
 import { createRef, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
 import { client } from "@/api.client";
+import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
+import { useEtablissementContext } from "@/app/(wrapped)/panorama/etablissement/context/etablissementContext";
 
-import { useEtablissementContext } from "../../../../context/etablissementContext";
-import { useEtablissementMapContext } from "../../context/etablissementMapContext";
 import { CustomListItem } from "./components/CustomListItem";
 
 export const ListeEtablissementsProches = () => {
@@ -22,22 +14,20 @@ export const ListeEtablissementsProches = () => {
   const { bbox, cfdFilter, activeUai } = useEtablissementMapContext();
   const { ref: containerRef, inView } = useInView({ threshold: 0.3 });
 
-  const { data: etablissementsList, isLoading } = client
-    .ref("[GET]/etablissement/:uai/map/list")
-    .useQuery({
-      params: {
-        uai,
+  const { data: etablissementsList, isLoading } = client.ref("[GET]/etablissement/:uai/map/list").useQuery({
+    params: {
+      uai,
+    },
+    query: {
+      bbox: {
+        minLat: "" + bbox.minLat,
+        maxLat: "" + bbox.maxLat,
+        minLng: "" + bbox.minLng,
+        maxLng: "" + bbox.maxLng,
       },
-      query: {
-        bbox: {
-          minLat: "" + bbox.minLat,
-          maxLat: "" + bbox.maxLat,
-          minLng: "" + bbox.minLng,
-          maxLng: "" + bbox.maxLng,
-        },
-        cfd: cfdFilter ? [cfdFilter] : undefined,
-      },
-    });
+      cfd: cfdFilter ? [cfdFilter] : undefined,
+    },
+  });
 
   const etablissementsProches = etablissementsList?.etablissementsProches;
 
@@ -46,8 +36,7 @@ export const ListeEtablissementsProches = () => {
   const initializeRefs = () => {
     if (etablissementsList) {
       if (etablissementsList?.etablissement?.uai) {
-        refs[etablissementsList?.etablissement?.uai] =
-          createRef<HTMLDivElement>();
+        refs[etablissementsList?.etablissement?.uai] = createRef<HTMLDivElement>();
       }
 
       etablissementsProches?.forEach((etablissement) => {
@@ -59,12 +48,7 @@ export const ListeEtablissementsProches = () => {
   initializeRefs();
 
   useEffect(() => {
-    if (
-      etablissementsProches &&
-      etablissementsProches.length > 0 &&
-      refs[activeUai]?.current &&
-      inView
-    ) {
+    if (etablissementsProches && etablissementsProches.length > 0 && refs[activeUai]?.current && inView) {
       refs[activeUai].current?.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
@@ -74,19 +58,13 @@ export const ListeEtablissementsProches = () => {
   }, [etablissementsList, activeUai]);
 
   return (
-    <VStack
-      width="100%"
-      height="100%"
-      justifyContent="start"
-      ref={containerRef}
-    >
+    <VStack width="100%" height="100%" justifyContent="start" ref={containerRef}>
       <HStack width="100%" justifyContent="space-between">
         {!etablissementsList ? (
           <Skeleton height="16px" width="50%" />
         ) : (
           <Text>
-            <b>{etablissementsList?.count}</b> résultat(s) dans la zone
-            sélectionnée
+            <b>{etablissementsList?.count}</b> résultat(s) dans la zone sélectionnée
           </Text>
         )}
         <HStack>
@@ -100,10 +78,7 @@ export const ListeEtablissementsProches = () => {
         {etablissementsProches &&
           etablissementsProches.map((e, i) => (
             <Box key={e.uai + i} ref={refs[e.uai]}>
-              <CustomListItem
-                etablissement={e}
-                withDivider={i !== etablissementsProches.length}
-              />
+              <CustomListItem etablissement={e} withDivider={i !== etablissementsProches.length} />
             </Box>
           ))}
         {isLoading && (

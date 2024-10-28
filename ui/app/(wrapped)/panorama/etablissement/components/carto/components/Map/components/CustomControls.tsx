@@ -2,7 +2,7 @@ import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
 import { useMap } from "react-map-gl/maplibre";
 
-import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
+import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
 
 export const MAP_IMAGES = {
   MAP_POINT_APPRENTISSAGE: {
@@ -38,7 +38,7 @@ export const CustomControls = () => {
 
   const loadImageOnMap = async (image: { path: string; name: string }) => {
     if (!map?.isStyleLoaded()) {
-      setTimeout(() => loadImageOnMap(image), 200);
+      setTimeout(async () => loadImageOnMap(image), 200);
     } else {
       const loadedImage = await map.loadImage(image.path);
       // Ensure getImage is accessible because race condition might trigger a user error
@@ -67,11 +67,7 @@ export const CustomControls = () => {
       });
 
       map.on("style.load", async () => {
-        await Promise.all(
-          Object.values(MAP_IMAGES).map(
-            async (image) => await loadImageOnMap(image)
-          )
-        );
+        await Promise.all(Object.values(MAP_IMAGES).map(async (image) => await loadImageOnMap(image)));
       });
 
       setMap(map);

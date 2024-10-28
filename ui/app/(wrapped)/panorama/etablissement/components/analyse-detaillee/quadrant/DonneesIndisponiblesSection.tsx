@@ -2,11 +2,13 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Button, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 
+import type {
+  Etablissement,
+  Formation,
+} from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { Callout } from "@/components/Callout";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-
-import { Etablissement, Formation } from "../types";
 
 export const DonneesIndisponiblesSection = ({
   dimensions,
@@ -23,13 +25,9 @@ export const DonneesIndisponiblesSection = ({
         title={"Formation hors quadrant"}
         body={
           <Text>
-            Cette formation ne peut pas être affichée sur le quadrant, car les
-            données de poursuite et d'emploi à 6 mois ne sont pas disponibles.{" "}
-            <GlossaireShortcut
-              label={"(Pourquoi ?)"}
-              textDecoration={"underline"}
-              glossaireEntryKey="quadrant"
-            />
+            Cette formation ne peut pas être affichée sur le quadrant, car les données de poursuite et d'emploi à 6 mois
+            ne sont pas disponibles.{" "}
+            <GlossaireShortcut label={"(Pourquoi ?)"} textDecoration={"underline"} glossaireEntryKey="quadrant" />
           </Text>
         }
         actionButton={
@@ -58,9 +56,8 @@ export const DonneesIndisponiblesSection = ({
         title={"Taux de poursuite d'études seul"}
         body={
           <Text fontSize={14} fontWeight={400} lineHeight={"24px"}>
-            Pour cette formation le taux de pousuite n'est pas possible, seul le
-            taux d'insertion peut être comparé à ceux des autres formations de
-            l'établissement.
+            Pour cette formation le taux de pousuite n'est pas possible, seul le taux d'insertion peut être comparé à
+            ceux des autres formations de l'établissement.
           </Text>
         }
         actionButton={
@@ -89,9 +86,8 @@ export const DonneesIndisponiblesSection = ({
         title={"Taux d'insertion seul"}
         body={
           <Text fontSize={14} fontWeight={400} lineHeight={"24px"}>
-            Pour cette formation le taux d'insertion n'est pas possible, seul le
-            taux de poursuite peut être comparé à ceux des autres formations de
-            l'établissement.
+            Pour cette formation le taux d'insertion n'est pas possible, seul le taux de poursuite peut être comparé à
+            ceux des autres formations de l'établissement.
           </Text>
         }
         actionButton={

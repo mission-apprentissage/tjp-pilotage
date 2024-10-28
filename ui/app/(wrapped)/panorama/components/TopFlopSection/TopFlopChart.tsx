@@ -1,8 +1,9 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
-import { TooltipIcon } from "../../../../../components/TooltipIcon";
-import { useGlossaireContext } from "../../../glossaire/glossaireContext";
-import { PanoramaTopFlops } from "../../types";
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import type { PanoramaTopFlops } from "@/app/(wrapped)/panorama/types";
+import { TooltipIcon } from "@/components/TooltipIcon";
+
 import { TopFlopChartItem } from "./TopFlopChartItem";
 
 export const TopFlopChart = ({
@@ -15,8 +16,7 @@ export const TopFlopChart = ({
     <Box>
       <Flex direction={"row"} justify={"start"} alignItems={"center"}>
         <Text my="32px" fontSize="medium">
-          Les dix formations présentant le{" "}
-          <strong>meilleur taux de devenir favorable</strong>
+          Les dix formations présentant le <strong>meilleur taux de devenir favorable</strong>
         </Text>
         <TooltipIcon
           ml="2"
@@ -35,8 +35,7 @@ export const TopFlopChart = ({
       </VStack>
       <Flex direction={"row"} justify={"start"} alignItems={"center"} mt={10}>
         <Text my="32px" fontSize={"medium"}>
-          Les dix formations à examiner, par{" "}
-          <strong>taux de devenir favorable</strong>
+          Les dix formations à examiner, par <strong>taux de devenir favorable</strong>
         </Text>
         <TooltipIcon
           ml="2"

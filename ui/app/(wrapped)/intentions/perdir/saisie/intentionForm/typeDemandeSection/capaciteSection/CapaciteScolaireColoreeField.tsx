@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { isTypeFermeture } from "shared/validators/demandeValidators";
 
-import { isTypeColoration } from "../../../../../utils/typeDemandeUtils";
-import { CapaciteField } from "../../../components/CapaciteField";
-import { IntentionForms } from "../../defaultFormValues";
+import { CapaciteField } from "@/app/(wrapped)/intentions/perdir/saisie/components/CapaciteField";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
+import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const CapaciteScolaireColoreeField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -26,12 +26,6 @@ export const CapaciteScolaireColoreeField = chakra(
     if (!coloration) return <></>;
     if (fermeture) return <></>;
 
-    return (
-      <CapaciteField
-        name={"capaciteScolaireColoree"}
-        className={className}
-        isReadOnly={isReadOnly}
-      />
-    );
+    return <CapaciteField name={"capaciteScolaireColoree"} className={className} isReadOnly={isReadOnly} />;
   }
 );

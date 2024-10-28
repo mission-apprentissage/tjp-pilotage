@@ -1,5 +1,5 @@
-import { client } from "@/api.client";
-import { ExportColumns } from "@/utils/downloadExport";
+import type { client } from "@/api.client";
+import type { ExportColumns } from "@/utils/downloadExport";
 
 export const DEMANDES_COLUMNS = {
   numero: "numero",
@@ -54,6 +54,4 @@ export const DEMANDES_COLUMNS = {
   discipline1RecrutementRH: "Discipline 1 recrutement",
   discipline2RecrutementRH: "Discipline 2 recrutement",
   userName: "Auteur",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/demandes"]["demandes"][number]
->;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/demandes"]["demandes"][number]>;

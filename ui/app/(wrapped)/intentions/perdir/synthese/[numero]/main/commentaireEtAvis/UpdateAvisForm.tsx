@@ -11,20 +11,21 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
-import { AvisStatutEnum, AvisStatutType } from "shared/enum/avisStatutEnum";
-import { AvisTypeEnum, AvisTypeType } from "shared/enum/avisTypeEnum";
+import type { AvisStatutType } from "shared/enum/avisStatutEnum";
+import { AvisStatutEnum } from "shared/enum/avisStatutEnum";
+import type { AvisTypeType } from "shared/enum/avisTypeEnum";
+import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 
 import { client } from "@/api.client";
 import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
 import { FonctionTag } from "@/app/(wrapped)/intentions/perdir/components/FonctionTag";
-import { AvisForm } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/actions/AvisForm";
+import { RoleVisibleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleVisibleTag";
+import type { AvisForm } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/actions/AvisForm";
 import { FONCTIONS } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/actions/FONCTIONS";
-
-import { RoleVisibleTag } from "../../../../components/RoleVisibleTag";
 
 type AvisForm = {
   id: string;
@@ -124,18 +125,13 @@ export const UpdateAvisForm = chakra(
                     value: avis,
                   }))}
                   formatOptionLabel={(option: { value: string }) => (
-                    <AvisStatutTag
-                      statutAvis={option.value as AvisStatutType}
-                      size="md"
-                    />
+                    <AvisStatutTag statutAvis={option.value as AvisStatutType} size="md" />
                   )}
                   isClearable
                 />
               )}
             />
-            {errors.statutAvis && (
-              <FormErrorMessage>{errors.statutAvis.message}</FormErrorMessage>
-            )}
+            {errors.statutAvis && <FormErrorMessage>{errors.statutAvis.message}</FormErrorMessage>}
           </FormControl>
           <FormControl isInvalid={!!errors.userFonction} isRequired>
             <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
@@ -172,15 +168,11 @@ export const UpdateAvisForm = chakra(
                     )
                   }
                   isClearable
-                  formatCreateLabel={(inputValue) =>
-                    `Créer la fonction ${inputValue}`
-                  }
+                  formatCreateLabel={(inputValue) => `Créer la fonction ${inputValue}`}
                 />
               )}
             />
-            {errors.userFonction && (
-              <FormErrorMessage>{errors.userFonction.message}</FormErrorMessage>
-            )}
+            {errors.userFonction && <FormErrorMessage>{errors.userFonction.message}</FormErrorMessage>}
           </FormControl>
           <FormControl isInvalid={!!errors.commentaire} isRequired>
             <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
@@ -208,24 +200,15 @@ export const UpdateAvisForm = chakra(
               <Flex direction={"row"} gap={3}>
                 <RoleVisibleTag
                   role={"Experts"}
-                  isChecked={
-                    !!isVisibleParTous ||
-                    avis.typeAvis != AvisTypeEnum["consultatif"]
-                  }
+                  isChecked={!!isVisibleParTous || avis.typeAvis != AvisTypeEnum["consultatif"]}
                 />
                 <RoleVisibleTag
                   role={"PERDIR"}
-                  isChecked={
-                    !!isVisibleParTous ||
-                    avis.typeAvis != AvisTypeEnum["consultatif"]
-                  }
+                  isChecked={!!isVisibleParTous || avis.typeAvis != AvisTypeEnum["consultatif"]}
                 />
                 <RoleVisibleTag
                   role={"Région"}
-                  isChecked={
-                    !!isVisibleParTous ||
-                    avis.typeAvis != AvisTypeEnum["consultatif"]
-                  }
+                  isChecked={!!isVisibleParTous || avis.typeAvis != AvisTypeEnum["consultatif"]}
                 />
               </Flex>
             </Flex>

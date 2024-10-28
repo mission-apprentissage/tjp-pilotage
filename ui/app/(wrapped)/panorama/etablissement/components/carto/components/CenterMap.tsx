@@ -2,11 +2,10 @@ import { Button, HStack, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 
-import { useEtablissementMapContext } from "../context/etablissementMapContext";
+import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
 
 export const CenterMap = () => {
-  const { map, etablissementMap, setActiveUai, setHoverUai } =
-    useEtablissementMapContext();
+  const { map, etablissementMap, setActiveUai, setHoverUai } = useEtablissementMapContext();
   const etablissement = etablissementMap?.etablissement;
   const trackEvent = usePlausible();
 

@@ -1,11 +1,8 @@
 import { createContext } from "react";
 
-import { client } from "../../../api.client";
+import type { client } from "@/api.client";
 
-export type Changelog = Exclude<
-  (typeof client.infer)["[GET]/changelog"],
-  undefined
->;
+export type Changelog = Exclude<(typeof client.infer)["[GET]/changelog"], undefined>;
 export type ChangelogEntry = Changelog[number];
 
 interface IChangelogContext {

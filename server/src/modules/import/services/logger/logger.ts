@@ -16,6 +16,8 @@ export const logResolve = (url: string) => {
   const millesime = url.split("/")[4];
   const date = new Date().toLocaleString();
 
+  // TODO
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   type === "UAI"
     ? loggerUai.log(`${date};${code};${millesime};OK;200;`)
     : loggerReg.log(`${date};${code};${millesime};OK;200;`);
@@ -37,6 +39,8 @@ export const logError = (
   const date = new Date().toLocaleString();
   if (code === "500") console.log(response);
 
+  // TODO
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   type === "UAI"
     ? loggerUai.log(
         `${date};${code};${millesime};NOK;${response.status};${response.data?.msg ?? response.data?.message}`

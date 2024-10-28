@@ -3,7 +3,7 @@ import {
   isTypeDiminution,
   isTypeFermeture,
   isTypeOuverture,
-} from "../../../utils/typeDemandeUtils";
+} from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const capaciteDoitEtreInferieure = (typeDemande: string) =>
   isTypeFermeture(typeDemande) || isTypeDiminution(typeDemande);

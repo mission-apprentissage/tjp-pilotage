@@ -1,39 +1,22 @@
-import {
-  Box,
-  Center,
-  Flex,
-  Skeleton,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+import { Box, Center, Flex, Skeleton, Table, TableContainer, Tbody, Td, Text, Thead, Tr } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 import { getPermissionScope, guardScope } from "shared";
 
 import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/GROUPED_STATS_DEMANDES_COLUMN";
-import { useAuth } from "@/utils/security/useAuth";
-
-import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
-import {
+import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
+import type {
   DemandesRestitutionIntentions,
   OrderDemandesRestitutionIntentions,
-} from "../types";
+} from "@/app/(wrapped)/intentions/restitution/types";
+import { useAuth } from "@/utils/security/useAuth";
+
 import { HeadLineContent } from "./HeadLineContent";
 import { LineContent } from "./LineContent";
 
 const Loader = () => {
   return (
-    <TableContainer
-      overflowY={"auto"}
-      flex={1}
-      position="relative"
-      bg={"white"}
-    >
+    <TableContainer overflowY={"auto"} flex={1} position="relative" bg={"white"}>
       <Table variant="simple" size={"sm"}>
         <Tbody>
           {new Array(7).fill(0).map((_, i) => (
@@ -82,11 +65,7 @@ export const ConsoleSection = ({
   const router = useRouter();
   const { auth } = useAuth();
 
-  const showFormulairePerdir = (intention: {
-    isIntention: boolean;
-    uai: string;
-    codeRegion: string;
-  }) => {
+  const showFormulairePerdir = (intention: { isIntention: boolean; uai: string; codeRegion: string }) => {
     const user = auth?.user;
     const scope = getPermissionScope(user?.role, "intentions-perdir/lecture");
     const isAllowed = guardScope(scope?.default, {
@@ -99,13 +78,9 @@ export const ConsoleSection = ({
   };
 
   const getCellColor = (column: keyof typeof STATS_DEMANDES_COLUMNS) => {
-    const groupLabel = Object.keys(GROUPED_STATS_DEMANDES_COLUMNS).find(
-      (groupLabel) => {
-        return Object.keys(
-          GROUPED_STATS_DEMANDES_COLUMNS[groupLabel].options
-        ).includes(column);
-      }
-    );
+    const groupLabel = Object.keys(GROUPED_STATS_DEMANDES_COLUMNS).find((groupLabel) => {
+      return Object.keys(GROUPED_STATS_DEMANDES_COLUMNS[groupLabel].options).includes(column);
+    });
     return GROUPED_STATS_DEMANDES_COLUMNS[groupLabel as string].cellColor;
   };
 
@@ -115,10 +90,7 @@ export const ConsoleSection = ({
       <Center>
         <Box>
           <Text>Il n'y a pas de colonnes à afficher.</Text>
-          <Text>
-            Veuillez en sélectionner dans le menu déroulant pour afficher des
-            données.
-          </Text>
+          <Text>Veuillez en sélectionner dans le menu déroulant pour afficher des données.</Text>
         </Box>
       </Center>
     );
@@ -131,19 +103,8 @@ export const ConsoleSection = ({
     );
 
   return (
-    <Flex
-      borderRadius={4}
-      border={"1px solid"}
-      borderColor="grey.900"
-      wrap={"wrap"}
-      bg={"white"}
-    >
-      <TableContainer
-        overflowY="auto"
-        flex={1}
-        position="relative"
-        borderRadius={5}
-      >
+    <Flex borderRadius={4} border={"1px solid"} borderColor="grey.900" wrap={"wrap"} bg={"white"}>
+      <TableContainer overflowY="auto" flex={1} position="relative" borderRadius={5}>
         <Table variant="simple" size={"sm"}>
           <Thead position="sticky" top="0" borderBottom={"2px solid #E2E8F0"}>
             <Tr>
@@ -157,33 +118,29 @@ export const ConsoleSection = ({
           </Thead>
           <Tbody>
             <Fragment>
-              {data?.demandes.map(
-                (demande: DemandesRestitutionIntentions["demandes"][0]) => {
-                  return (
-                    <Fragment key={`${demande.numero}`}>
-                      <Tr
-                        h="12"
-                        cursor={"pointer"}
-                        onClick={() =>
-                          router.push(
-                            `/intentions/${
-                              showFormulairePerdir(demande) ? "perdir/" : ""
-                            }synthese/${demande.numero}`
-                          )
-                        }
-                        role="group"
-                      >
-                        <LineContent
-                          demande={demande}
-                          campagne={campagne}
-                          colonneFilters={colonneFilters}
-                          getCellColor={getCellColor}
-                        />
-                      </Tr>
-                    </Fragment>
-                  );
-                }
-              )}
+              {data?.demandes.map((demande: DemandesRestitutionIntentions["demandes"][0]) => {
+                return (
+                  <Fragment key={`${demande.numero}`}>
+                    <Tr
+                      h="12"
+                      cursor={"pointer"}
+                      onClick={() =>
+                        router.push(
+                          `/intentions/${showFormulairePerdir(demande) ? "perdir/" : ""}synthese/${demande.numero}`
+                        )
+                      }
+                      role="group"
+                    >
+                      <LineContent
+                        demande={demande}
+                        campagne={campagne}
+                        colonneFilters={colonneFilters}
+                        getCellColor={getCellColor}
+                      />
+                    </Tr>
+                  </Fragment>
+                );
+              })}
             </Fragment>
           </Tbody>
         </Table>

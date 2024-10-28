@@ -13,7 +13,7 @@ import {
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const AugmentationCapaciteAccueilRestaurationPlacesField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -35,10 +35,7 @@ export const AugmentationCapaciteAccueilRestaurationPlacesField = chakra(
     if (!visible) return null;
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.augmentationCapaciteAccueilRestaurationPlaces}
-      >
+      <FormControl className={className} isInvalid={!!errors.augmentationCapaciteAccueilRestaurationPlaces}>
         <FormLabel>Combien de places ?</FormLabel>
         <Controller
           name="augmentationCapaciteAccueilRestaurationPlaces"
@@ -95,34 +92,24 @@ export const AugmentationCapaciteAccueilRestaurationPlacesField = chakra(
           )}
         />
         {errors.augmentationCapaciteAccueilRestaurationPlaces && (
-          <FormErrorMessage>
-            {errors.augmentationCapaciteAccueilRestaurationPlaces.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.augmentationCapaciteAccueilRestaurationPlaces.message}</FormErrorMessage>
         )}
       </FormControl>
     );
   }
 );
 
-export const CommentaireField = chakra(
-  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
-    const {
-      formState: { errors },
-      register,
-    } = useFormContext<IntentionForms>();
+export const CommentaireField = chakra(({ disabled, className }: { disabled?: boolean; className?: string }) => {
+  const {
+    formState: { errors },
+    register,
+  } = useFormContext<IntentionForms>();
 
-    return (
-      <FormControl className={className} isInvalid={!!errors.commentaire}>
-        <FormLabel>Commentaires / Observations sur la demande</FormLabel>
-        <Textarea
-          variant="grey"
-          height={150}
-          {...register("commentaire", { disabled })}
-        />
-        {errors.commentaire && (
-          <FormErrorMessage>{errors.commentaire.message}</FormErrorMessage>
-        )}
-      </FormControl>
-    );
-  }
-);
+  return (
+    <FormControl className={className} isInvalid={!!errors.commentaire}>
+      <FormLabel>Commentaires / Observations sur la demande</FormLabel>
+      <Textarea variant="grey" height={150} {...register("commentaire", { disabled })} />
+      {errors.commentaire && <FormErrorMessage>{errors.commentaire.message}</FormErrorMessage>}
+    </FormControl>
+  );
+});

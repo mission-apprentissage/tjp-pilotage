@@ -1,6 +1,7 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import { chakra, Placement, Tooltip } from "@chakra-ui/react";
-import { MouseEventHandler, ReactNode } from "react";
+import type { Placement } from "@chakra-ui/react";
+import { chakra, Tooltip } from "@chakra-ui/react";
+import type { MouseEventHandler, ReactNode } from "react";
 
 export const TooltipIcon = chakra(
   ({

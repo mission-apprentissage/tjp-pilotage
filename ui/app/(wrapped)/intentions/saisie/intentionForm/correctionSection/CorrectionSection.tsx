@@ -15,33 +15,26 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { createContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import {
-  RaisonCorrectionEnum,
-  RaisonCorrectionType,
-} from "shared/enum/raisonCorrectionEnum";
+import type { RaisonCorrectionType } from "shared/enum/raisonCorrectionEnum";
+import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
 
 import { client } from "@/api.client";
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
+import type { Demande } from "@/app/(wrapped)/intentions/saisie/types";
 
-import { Demande } from "../../types";
 import { AutreMotifField } from "./components/AutreMotifField";
 import { CapaciteConstanteSection } from "./components/CapaciteConstanteSection";
 import { CapaciteSection } from "./components/CapaciteSection";
 import { CommentaireField } from "./components/CommentaireField";
 import { MotifField } from "./components/MotifField";
 import { RaisonField } from "./components/RaisonField";
-import { CorrectionForms } from "./defaultFormValues";
-import { Campagne } from "./types";
+import type { CorrectionForms } from "./defaultFormValues";
+import type { Campagne } from "./types";
 
 export const CampagneContext = createContext<{
   campagne?: Campagne;
@@ -67,23 +60,14 @@ export const CorrectionSection = ({
       raison: "modification_capacite",
       coloration: demande.coloration ?? false,
       libelleColoration: demande.libelleColoration,
-      capaciteScolaireActuelle:
-        demande?.correction?.capaciteScolaireActuelle ??
-        demande.capaciteScolaireActuelle,
-      capaciteScolaire:
-        demande?.correction?.capaciteScolaire ?? demande.capaciteScolaire,
-      capaciteScolaireColoree:
-        demande?.correction?.capaciteScolaireColoree ??
-        demande.capaciteScolaireColoree,
+      capaciteScolaireActuelle: demande?.correction?.capaciteScolaireActuelle ?? demande.capaciteScolaireActuelle,
+      capaciteScolaire: demande?.correction?.capaciteScolaire ?? demande.capaciteScolaire,
+      capaciteScolaireColoree: demande?.correction?.capaciteScolaireColoree ?? demande.capaciteScolaireColoree,
       capaciteApprentissageActuelle:
-        demande?.correction?.capaciteApprentissageActuelle ??
-        demande.capaciteApprentissageActuelle,
-      capaciteApprentissage:
-        demande?.correction?.capaciteApprentissage ??
-        demande.capaciteApprentissage,
+        demande?.correction?.capaciteApprentissageActuelle ?? demande.capaciteApprentissageActuelle,
+      capaciteApprentissage: demande?.correction?.capaciteApprentissage ?? demande.capaciteApprentissage,
       capaciteApprentissageColoree:
-        demande?.correction?.capaciteApprentissageColoree ??
-        demande.capaciteApprentissageColoree,
+        demande?.correction?.capaciteApprentissageColoree ?? demande.capaciteApprentissageColoree,
       ...demande.correction,
     },
     mode: "onTouched",
@@ -120,12 +104,9 @@ export const CorrectionSection = ({
     },
   });
 
-  const isCorrectionDisabled =
-    isSuccess || isSubmitting || !!demande.correction;
+  const isCorrectionDisabled = isSuccess || isSubmitting || !!demande.correction;
 
-  const [raison, setRaison] = useState<RaisonCorrectionType>(
-    RaisonCorrectionEnum["modification_capacite"]
-  );
+  const [raison, setRaison] = useState<RaisonCorrectionType>(RaisonCorrectionEnum["modification_capacite"]);
 
   const isRaisonModificationCapacite = () => {
     return raison === RaisonCorrectionEnum["modification_capacite"];
@@ -148,11 +129,7 @@ export const CorrectionSection = ({
       }).unsubscribe
   );
   return (
-    <Flex
-      ref={correctionRef}
-      scrollMarginTop={SCROLL_OFFSET}
-      direction={"column"}
-    >
+    <Flex ref={correctionRef} scrollMarginTop={SCROLL_OFFSET} direction={"column"}>
       <FormProvider {...form}>
         <Box
           as="form"
@@ -177,30 +154,22 @@ export const CorrectionSection = ({
             <Flex direction={"column"}>
               {isRaisonModificationCapacite() ? (
                 <Text color="info.text">
-                  Vous vous apprêtez à enregistrer de nouvelles capacités sur
-                  cette demande.
+                  Vous vous apprêtez à enregistrer de nouvelles capacités sur cette demande.
                 </Text>
               ) : isRaisonAnnulation() ? (
-                <Text color="info.text">
-                  Annuler la demande indique que le projet ne sera pas mis en
-                  oeuvre.
-                </Text>
+                <Text color="info.text">Annuler la demande indique que le projet ne sera pas mis en oeuvre.</Text>
               ) : isRaisonReport() ? (
                 <Text color="info.text">
-                  Reporter la demande indique que le projet sera mis en oeuvre
-                  ultérieurement. Une nouvelle saisie ou une duplication devront
-                  avoir lieu lors d’une prochaine campagne.
+                  Reporter la demande indique que le projet sera mis en oeuvre ultérieurement. Une nouvelle saisie ou
+                  une duplication devront avoir lieu lors d’une prochaine campagne.
                 </Text>
               ) : null}
               <Text fontSize={14} color={"info.text"} mb={4}>
-                Pour rappel : ces modifications ne seront pas prises en compte
-                dans le taux de transformation affiché dans la page de pilotage.
+                Pour rappel : ces modifications ne seront pas prises en compte dans le taux de transformation affiché
+                dans la page de pilotage.
               </Text>
               <Collapse in={isRaisonModificationCapacite()} unmountOnExit>
-                <CapaciteSection
-                  demande={demande}
-                  disabled={isCorrectionDisabled}
-                />
+                <CapaciteSection demande={demande} disabled={isCorrectionDisabled} />
               </Collapse>
             </Flex>
             <MotifField campagne={campagne} disabled={isCorrectionDisabled} />
@@ -209,8 +178,7 @@ export const CorrectionSection = ({
             {!isCorrectionDisabled && (
               <>
                 <Text color="info.text" fontSize={14}>
-                  Après validation de ce formulaire, vous ne pourrez plus
-                  apporter aucune modification
+                  Après validation de ce formulaire, vous ne pourrez plus apporter aucune modification
                 </Text>
                 <Box justifyContent={"center"} ms={"auto"}>
                   <Button
@@ -235,15 +203,11 @@ export const CorrectionSection = ({
                             ...correction,
                             ...demande,
                             intentionNumero: demande.numero ?? "",
-                            capaciteScolaire:
-                              demande.capaciteScolaireActuelle ?? 0,
-                            capaciteApprentissage:
-                              demande.capaciteApprentissageActuelle ?? 0,
-                            capaciteScolaireActuelle:
-                              demande.capaciteScolaireActuelle ?? 0,
+                            capaciteScolaire: demande.capaciteScolaireActuelle ?? 0,
+                            capaciteApprentissage: demande.capaciteApprentissageActuelle ?? 0,
+                            capaciteScolaireActuelle: demande.capaciteScolaireActuelle ?? 0,
                             capaciteScolaireColoree: 0,
-                            capaciteApprentissageActuelle:
-                              demande.capaciteApprentissageActuelle ?? 0,
+                            capaciteApprentissageActuelle: demande.capaciteApprentissageActuelle ?? 0,
                             capaciteApprentissageColoree: 0,
                             motif: correction.motif,
                           },

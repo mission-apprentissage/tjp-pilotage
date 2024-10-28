@@ -1,51 +1,27 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerHeader,
-  HStack,
-} from "@chakra-ui/react";
+import { Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, HStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useMemo } from "react";
 
-import { DoubleArrowRight } from "../../../components/icons/DoubleArrowRight";
+import { DoubleArrowRight } from "@/components/icons/DoubleArrowRight";
+
 import { useGlossaireContext } from "./glossaireContext";
 import { GlossaireEntryContent } from "./GlossaireEntryContent";
 import { GlossaireListContent } from "./GlossaireListContent";
 
 export const Glossaire = () => {
-  const {
-    isOpen,
-    openGlossaire,
-    closeGlossaire,
-    selectedEntry,
-    setSelectedEntry,
-    entries,
-  } = useGlossaireContext();
+  const { isOpen, openGlossaire, closeGlossaire, selectedEntry, setSelectedEntry, entries } = useGlossaireContext();
 
   const currentContent = useMemo(() => {
     if (selectedEntry) {
       return <GlossaireEntryContent id={selectedEntry} />;
     }
 
-    return (
-      <GlossaireListContent
-        selectEntry={(e: string) => setSelectedEntry(e)}
-        initialEntries={entries}
-      />
-    );
+    return <GlossaireListContent selectEntry={(e: string) => setSelectedEntry(e)} initialEntries={entries} />;
   }, [selectedEntry, setSelectedEntry, entries]);
 
   return (
-    <Box
-      display={"flex"}
-      flexGrow={"1"}
-      justifyContent={"end"}
-      zIndex={"tooltip"}
-    >
+    <Box display={"flex"} flexGrow={"1"} justifyContent={"end"} zIndex={"tooltip"}>
       <Button
         variant={"secondary"}
         leftIcon={<QuestionOutlineIcon height={"14px"} width={"14px"} />}
@@ -55,12 +31,7 @@ export const Glossaire = () => {
       >
         Glossaire
       </Button>
-      <Drawer
-        isOpen={isOpen}
-        placement="right"
-        onClose={closeGlossaire}
-        size={"lg"}
-      >
+      <Drawer isOpen={isOpen} placement="right" onClose={closeGlossaire} size={"lg"}>
         <DrawerContent>
           <DrawerHeader>
             <HStack justifyContent={"space-between"}>

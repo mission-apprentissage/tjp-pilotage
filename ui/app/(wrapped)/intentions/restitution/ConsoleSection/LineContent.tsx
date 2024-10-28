@@ -1,24 +1,18 @@
 import { chakra, Td } from "@chakra-ui/react";
 
+import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
+import type { DemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
+import type { MotifCampagne, MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import { getMotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import type { MotifRefusLabel } from "@/app/(wrapped)/intentions/utils/motifRefusDemandeUtils";
+import { getMotifRefusLabel } from "@/app/(wrapped)/intentions/utils/motifRefusDemandeUtils";
 import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
+import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
-
-import {
-  getMotifLabel,
-  MotifCampagne,
-  MotifLabel,
-} from "../../utils/motifDemandeUtils";
-import {
-  getMotifRefusLabel,
-  MotifRefusLabel,
-} from "../../utils/motifRefusDemandeUtils";
-import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
-import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
-import { DemandesRestitutionIntentions } from "../types";
 
 const formatBooleanValue = (value?: boolean) => (value ? "Oui" : "Non");
 
@@ -52,9 +46,7 @@ const handleMotifRefusLabel = ({
 }) => {
   if (!motifsRefus || motifsRefus.length === 0) return undefined;
   const formattedMotifs = motifsRefus?.map((motif) =>
-    motif === "autre"
-      ? `Autre : ${autreMotifRefus}`
-      : getMotifRefusLabel(motif as MotifRefusLabel)
+    motif === "autre" ? `Autre : ${autreMotifRefus}` : getMotifRefusLabel(motif as MotifRefusLabel)
   );
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
 };
@@ -128,11 +120,7 @@ export const LineContent = ({
           codeDepartement: demande.codeDepartement,
         })}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"libelleRegion"}
-        bgColor={getCellColor("libelleRegion")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"libelleRegion"} bgColor={getCellColor("libelleRegion")}>
         {demande.libelleRegion}
       </ConditionalTd>
       <ConditionalTd
@@ -142,11 +130,7 @@ export const LineContent = ({
       >
         {demande.libelleAcademie}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"secteur"}
-        bgColor={getCellColor("secteur")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"secteur"} bgColor={getCellColor("secteur")}>
         {demande.secteur === "PU" ? "Public" : "Privé"}
       </ConditionalTd>
       <ConditionalTd
@@ -167,11 +151,7 @@ export const LineContent = ({
       >
         {demande.libelleFormation}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"niveauDiplome"}
-        bgColor={getCellColor("niveauDiplome")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"niveauDiplome"} bgColor={getCellColor("niveauDiplome")}>
         {demande.niveauDiplome}
       </ConditionalTd>
       <ConditionalTd
@@ -248,18 +228,10 @@ export const LineContent = ({
       >
         {demande.libelleFCIL}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"amiCma"}
-        bgColor={getCellColor("amiCma")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"amiCma"} bgColor={getCellColor("amiCma")}>
         {formatBooleanValue(demande.amiCma)}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"amiCmaValide"}
-        bgColor={getCellColor("amiCmaValide")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"amiCmaValide"} bgColor={getCellColor("amiCmaValide")}>
         {formatBooleanValue(demande.amiCmaValide)}
       </ConditionalTd>
       <ConditionalTd
@@ -276,18 +248,10 @@ export const LineContent = ({
       >
         {demande.amiCmaValideAnnee}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"filiereCmq"}
-        bgColor={getCellColor("filiereCmq")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"filiereCmq"} bgColor={getCellColor("filiereCmq")}>
         {demande.filiereCmq}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"nomCmq"}
-        bgColor={getCellColor("nomCmq")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"nomCmq"} bgColor={getCellColor("nomCmq")}>
         {demande.nomCmq}
       </ConditionalTd>
       <ConditionalTd
@@ -322,11 +286,7 @@ export const LineContent = ({
       >
         {demande.commentaire}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"numero"}
-        bgColor={getCellColor("numero")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"numero"} bgColor={getCellColor("numero")}>
         {demande.numero}
       </ConditionalTd>
       <ConditionalTd
@@ -400,11 +360,7 @@ export const LineContent = ({
       >
         {demande.nbProfesseurAssocieRH}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"nbFormationRH"}
-        bgColor={getCellColor("nbFormationRH")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"nbFormationRH"} bgColor={getCellColor("nbFormationRH")}>
         {demande.nbFormationRH}
       </ConditionalTd>
       <ConditionalTd
@@ -420,9 +376,7 @@ export const LineContent = ({
         bgColor={getCellColor("travauxAmenagementCout")}
         isNumeric
       >
-        {demande.travauxAmenagementCout !== undefined
-          ? `${demande.travauxAmenagementCout}€`
-          : "-"}
+        {demande.travauxAmenagementCout !== undefined ? `${demande.travauxAmenagementCout}€` : "-"}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -444,9 +398,7 @@ export const LineContent = ({
         bgColor={getCellColor("achatEquipementCout")}
         isNumeric
       >
-        {demande.achatEquipementCout !== undefined
-          ? `${demande.achatEquipementCout}€`
-          : "-"}
+        {demande.achatEquipementCout !== undefined ? `${demande.achatEquipementCout}€` : "-"}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -472,9 +424,7 @@ export const LineContent = ({
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilHebergementPrecisions"}
-        bgColor={getCellColor(
-          "augmentationCapaciteAccueilHebergementPrecisions"
-        )}
+        bgColor={getCellColor("augmentationCapaciteAccueilHebergementPrecisions")}
       >
         {demande.augmentationCapaciteAccueilHebergementPrecisions}
       </ConditionalTd>
@@ -495,24 +445,14 @@ export const LineContent = ({
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilRestaurationPrecisions"}
-        bgColor={getCellColor(
-          "augmentationCapaciteAccueilRestaurationPrecisions"
-        )}
+        bgColor={getCellColor("augmentationCapaciteAccueilRestaurationPrecisions")}
       >
         {demande.augmentationCapaciteAccueilRestaurationPrecisions}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"statut"}
-        bgColor={getCellColor("statut")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"statut"} bgColor={getCellColor("statut")}>
         {formatStatut(demande.statut)}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"motifRefus"}
-        bgColor={getCellColor("motifRefus")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"motifRefus"} bgColor={getCellColor("motifRefus")}>
         {handleMotifRefusLabel({
           motifsRefus: demande.motifRefus,
           autreMotifRefus: demande.autreMotifRefus,

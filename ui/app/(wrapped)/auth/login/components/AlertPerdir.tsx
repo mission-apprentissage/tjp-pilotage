@@ -4,17 +4,13 @@ import { Box, Container, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
-import { themeDefinition } from "../../../../../theme/theme";
+import { themeDefinition } from "@/theme/theme";
 
 const AlertPerdir = () => {
   const [open, setOpen] = useState(true);
 
   return (
-    <Container
-      maxW="container.lg"
-      paddingX="12px"
-      display={open ? "block" : "none"}
-    >
+    <Container maxW="container.lg" paddingX="12px" display={open ? "block" : "none"}>
       <Stack
         direction={{
           base: "column",
@@ -34,13 +30,7 @@ const AlertPerdir = () => {
           alignItems="start"
           justifyContent="space-between"
         >
-          <Icon
-            display="block"
-            color="white"
-            icon="ri:file-info-fill"
-            width="24px"
-            height="24px"
-          />
+          <Icon display="block" color="white" icon="ri:file-info-fill" width="24px" height="24px" />
           <Box
             display={{
               base: "block",
@@ -60,10 +50,9 @@ const AlertPerdir = () => {
         <Box paddingX="8px" paddingY="16px" flexGrow={1}>
           <VStack spacing="4px" alignItems="start">
             <Text fontSize="16px">
-              Chers utilisateurs, le mode connecté est réservé aux Recteurs et
-              DRAFPIC (d'autres accès seront fournis directement par les RA dans
-              quelques semaines). Les chefs d’établissement se connectent via le
-              portail Arena (enquête et pilotage).
+              Chers utilisateurs, le mode connecté est réservé aux Recteurs et DRAFPIC (d'autres accès seront fournis
+              directement par les RA dans quelques semaines). Les chefs d’établissement se connectent via le portail
+              Arena (enquête et pilotage).
             </Text>
           </VStack>
         </Box>

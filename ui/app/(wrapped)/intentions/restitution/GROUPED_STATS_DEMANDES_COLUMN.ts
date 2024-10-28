@@ -1,5 +1,6 @@
-import { themeDefinition } from "../../../../theme/theme";
-import {
+import { themeDefinition } from "@/theme/theme";
+
+import type {
   STATS_DEMANDES_COLUMNS,
   STATS_DEMANDES_COLUMNS_DEFAULT,
   STATS_DEMANDES_COLUMNS_OPTIONAL,
@@ -58,8 +59,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
       differenceCapaciteApprentissage: "Nombre de places en apprentissage",
       capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
       capaciteApprentissage: "Capacité apprentissage",
-      capaciteApprentissageColoree:
-        "Nombre de places colorées en apprentissage",
+      capaciteApprentissageColoree: "Nombre de places colorées en apprentissage",
       libelleColoration: "Libellé coloration",
       libelleFCIL: "Libellé FCIL",
       amiCma: "AMI/CMA ?",
@@ -123,18 +123,12 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
     color: themeDefinition.colors.purpleGlycine[950],
     cellColor: "#FEF3FD",
     options: {
-      augmentationCapaciteAccueilHebergement:
-        "Besoin d'augmentation de la capacité d'hébergement ?",
-      augmentationCapaciteAccueilHebergementPlaces:
-        "Nombre de places d'hébergement supplémentaires",
-      augmentationCapaciteAccueilHebergementPrecisions:
-        "Précisions sur l'augmentation de la capacité d'hébergement",
-      augmentationCapaciteAccueilRestauration:
-        "Besoin d'augmentation de la capacité de restauration ?",
-      augmentationCapaciteAccueilRestaurationPlaces:
-        "Nombre de places de restauration supplémentaires",
-      augmentationCapaciteAccueilRestaurationPrecisions:
-        "Précisions sur l'augmentation de la capacité de restauration",
+      augmentationCapaciteAccueilHebergement: "Besoin d'augmentation de la capacité d'hébergement ?",
+      augmentationCapaciteAccueilHebergementPlaces: "Nombre de places d'hébergement supplémentaires",
+      augmentationCapaciteAccueilHebergementPrecisions: "Précisions sur l'augmentation de la capacité d'hébergement",
+      augmentationCapaciteAccueilRestauration: "Besoin d'augmentation de la capacité de restauration ?",
+      augmentationCapaciteAccueilRestaurationPlaces: "Nombre de places de restauration supplémentaires",
+      augmentationCapaciteAccueilRestaurationPrecisions: "Précisions sur l'augmentation de la capacité de restauration",
     },
   },
   // Statut
@@ -188,8 +182,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
       differenceCapaciteScolaire: "Nombre de places en voie scolaire",
       differenceCapaciteApprentissage: "Nombre de places en apprentissage",
       capaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
-      capaciteApprentissageColoree:
-        "Nombre de places colorées en apprentissage",
+      capaciteApprentissageColoree: "Nombre de places colorées en apprentissage",
       libelleColoration: "Libellé coloration",
       libelleFCIL: "Libellé FCIL",
       amiCma: "AMI/CMA ?",
@@ -243,18 +236,12 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   ["hébergement et restauration"]: {
     color: themeDefinition.colors.grey[950],
     options: {
-      augmentationCapaciteAccueilHebergement:
-        "Besoin d'augmentation de la capacité d'hébergement ?",
-      augmentationCapaciteAccueilHebergementPlaces:
-        "Nombre de places d'hébergement supplémentaires",
-      augmentationCapaciteAccueilHebergementPrecisions:
-        "Précisions sur l'augmentation de la capacité d'hébergement",
-      augmentationCapaciteAccueilRestauration:
-        "Besoin d'augmentation de la capacité de restauration ?",
-      augmentationCapaciteAccueilRestaurationPlaces:
-        "Nombre de places de restauration supplémentaires",
-      augmentationCapaciteAccueilRestaurationPrecisions:
-        "Précisions sur l'augmentation de la capacité de restauration",
+      augmentationCapaciteAccueilHebergement: "Besoin d'augmentation de la capacité d'hébergement ?",
+      augmentationCapaciteAccueilHebergementPlaces: "Nombre de places d'hébergement supplémentaires",
+      augmentationCapaciteAccueilHebergementPrecisions: "Précisions sur l'augmentation de la capacité d'hébergement",
+      augmentationCapaciteAccueilRestauration: "Besoin d'augmentation de la capacité de restauration ?",
+      augmentationCapaciteAccueilRestaurationPlaces: "Nombre de places de restauration supplémentaires",
+      augmentationCapaciteAccueilRestaurationPrecisions: "Précisions sur l'augmentation de la capacité de restauration",
     },
   },
   // Statut
@@ -265,10 +252,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
       motifRefus: "Motif(s) de refus",
     },
   },
-} as Record<
-  string,
-  { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL> }
->;
+} as Record<string, { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL> }>;
 
 export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
   string,
@@ -299,8 +283,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
       differenceCapaciteScolaire: "Nombre de places en voie scolaire",
       differenceCapaciteApprentissage: "Nombre de places en apprentissage",
       capaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
-      capaciteApprentissageColoree:
-        "Nombre de places colorées en apprentissage",
+      capaciteApprentissageColoree: "Nombre de places colorées en apprentissage",
       libelleColoration: "Libellé coloration",
     },
   },
@@ -317,7 +300,4 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
       statut: "Statut",
     },
   },
-} as Record<
-  string,
-  { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_DEFAULT> }
->;
+} as Record<string, { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_DEFAULT> }>;

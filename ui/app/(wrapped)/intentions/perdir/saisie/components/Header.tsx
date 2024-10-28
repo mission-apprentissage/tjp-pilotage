@@ -1,28 +1,18 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
-import { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
+import { INTENTIONS_COLUMNS } from "@/app/(wrapped)/intentions/perdir/saisie/INTENTIONS_COLUMNS";
+import type { Campagnes, Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
+import { isSaisieDisabled } from "@/app/(wrapped)/intentions/perdir/saisie/utils/canEditIntention";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { Multiselect } from "@/components/Multiselect";
+import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
-
-import { Multiselect } from "../../../../../../components/Multiselect";
-import { SearchInput } from "../../../../../../components/SearchInput";
-import { formatExportFilename } from "../../../../../../utils/formatExportFilename";
-import { INTENTIONS_COLUMNS } from "../INTENTIONS_COLUMNS";
-import { Campagnes, Filters } from "../types";
-import { isSaisieDisabled } from "../utils/canEditIntention";
+import { formatExportFilename } from "@/utils/formatExportFilename";
 
 const EXPORT_LIMIT = 1_000_000;
 
@@ -47,10 +37,7 @@ export const Header = ({
   };
   filterTracker: (filterName: keyof Filters) => () => void;
   setSearchParams: (params: { search?: string; campagne?: string }) => void;
-  getIntentionsQueryParameters: (
-    qLimit: number,
-    qOffset?: number
-  ) => Partial<Filters>;
+  getIntentionsQueryParameters: (qLimit: number, qOffset?: number) => Partial<Filters>;
   searchIntention?: string;
   setSearchIntention: (search: string) => void;
   campagnes?: Campagnes;
@@ -82,15 +69,8 @@ export const Header = ({
             borderColor="grey.900"
           >
             <Flex direction="row">
-              <Text my={"auto"}>
-                Campagne{" "}
-                {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}
-              </Text>
-              <CampagneStatutTag
-                statut={
-                  campagnes?.find((c) => c.annee === anneeCampagne)?.statut
-                }
-              />
+              <Text my={"auto"}>Campagne {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}</Text>
+              <CampagneStatutTag statut={campagnes?.find((c) => c.annee === anneeCampagne)?.statut} />
             </Flex>
           </MenuButton>
           <MenuList py={0} borderTopRadius={0} zIndex={"dropdown"}>
@@ -126,17 +106,12 @@ export const Header = ({
         >
           <Text fontWeight={700}>Campagne de saisie 2023 terminée</Text>
           <Text fontWeight={400}>
-            La campagne de saisie 2023 est terminée, vous pourrez saisir vos
-            demandes pour la campagne de saisie 2024 d'ici le 15 avril.
+            La campagne de saisie 2023 est terminée, vous pourrez saisir vos demandes pour la campagne de saisie 2024
+            d'ici le 15 avril.
           </Text>
         </Flex>
       )}
-      <Flex
-        flexDirection={["column", null, "row"]}
-        justifyContent={"space-between"}
-        gap={2}
-        flex={1}
-      >
+      <Flex flexDirection={["column", null, "row"]} justifyContent={"space-between"} gap={2} flex={1}>
         <Flex direction={"row"} gap={2} flex={1}>
           <Box justifyContent={"start"}>
             <Multiselect
@@ -159,9 +134,7 @@ export const Header = ({
               width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) =>
-                handleFilters("codeNiveauDiplome", selected)
-              }
+              onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
               options={diplomes}
               value={activeFilters.codeNiveauDiplome ?? []}
               disabled={diplomes.length === 0}
@@ -177,10 +150,7 @@ export const Header = ({
                 query: getIntentionsQueryParameters(EXPORT_LIMIT),
               });
               downloadCsv(
-                formatExportFilename(
-                  "recueil_demandes",
-                  activeFilters.codeAcademie
-                ),
+                formatExportFilename("recueil_demandes", activeFilters.codeAcademie),
                 [
                   ...data.intentions.map((intention) => ({
                     ...intention,
@@ -206,10 +176,7 @@ export const Header = ({
                 query: getIntentionsQueryParameters(EXPORT_LIMIT),
               });
               downloadExcel(
-                formatExportFilename(
-                  "recueil_demandes",
-                  activeFilters.codeAcademie
-                ),
+                formatExportFilename("recueil_demandes", activeFilters.codeAcademie),
                 [
                   ...data.intentions.map((intention) => ({
                     ...intention,

@@ -22,7 +22,7 @@ import {
 } from "./FORMATION_ETABLISSEMENT_COLUMNS";
 import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
 import { FiltersSection } from "./HeaderSection/FiltersSection";
-import { Filters, Order } from "./types";
+import type { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
@@ -38,9 +38,7 @@ const ColonneFiltersSection = chakra(
   }: {
     colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     forcedColonnes?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-    handleColonneFilters: (
-      value: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]
-    ) => void;
+    handleColonneFilters: (value: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]) => void;
     trackEvent: (name: string, params?: Record<string, unknown>) => void;
   }) => {
     return (
@@ -49,23 +47,15 @@ const ColonneFiltersSection = chakra(
           width={"48"}
           size="md"
           variant={"newInput"}
-          onChange={(selected) =>
-            handleColonneFilters(
-              selected as (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]
-            )
-          }
-          groupedOptions={Object.entries(
-            GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL
-          ).reduce(
+          onChange={(selected) => handleColonneFilters(selected as (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[])}
+          groupedOptions={Object.entries(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL).reduce(
             (acc, [group, { color, options }]) => {
               acc[group] = {
                 color,
                 options: Object.entries(options).map(([value, label]) => ({
                   label,
                   value,
-                  isDisabled: forcedColonnes?.includes(
-                    value as keyof typeof FORMATION_ETABLISSEMENT_COLUMNS
-                  ),
+                  isDisabled: forcedColonnes?.includes(value as keyof typeof FORMATION_ETABLISSEMENT_COLUMNS),
                 })),
               };
               return acc;
@@ -78,9 +68,7 @@ const ColonneFiltersSection = chakra(
               }
             >
           )}
-          defaultOptions={Object.entries(
-            FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT
-          )?.map(([value, label]) => {
+          defaultOptions={Object.entries(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT)?.map(([value, label]) => {
             return {
               label,
               value,
@@ -124,9 +112,7 @@ export default function Etablissements() {
     order?: typeof order;
     page?: typeof page;
   }) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const filters = searchParams.filters ?? {};
@@ -136,13 +122,9 @@ export default function Etablissements() {
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
   const search = searchParams.search ?? "";
 
-  const [searchFormationEtablissement, setSearchFormationEtablissement] =
-    useState<string>(search);
+  const [searchFormationEtablissement, setSearchFormationEtablissement] = useState<string>(search);
 
-  const getEtablissementsQueryParameters = (
-    qLimit: number,
-    qOffset?: number
-  ) => ({
+  const getEtablissementsQueryParameters = (qLimit: number, qOffset?: number) => ({
     ...order,
     ...filters,
     search,
@@ -161,9 +143,7 @@ export default function Etablissements() {
   );
 
   const getDataForExport = (data: QueryResult) => {
-    const region = data.filters.regions.find(
-      (r) => r.value === filters.codeRegion?.[0]
-    );
+    const region = data.filters.regions.find((r) => r.value === filters.codeRegion?.[0]);
 
     if (filters.codeRegion && region) {
       const columns = {
@@ -200,11 +180,7 @@ export default function Etablissements() {
 
     const { columns, etablissements } = getDataForExport(data);
 
-    downloadCsv(
-      formatExportFilename("etablissement_export", filters?.codeRegion),
-      etablissements,
-      columns
-    );
+    downloadCsv(formatExportFilename("etablissement_export", filters?.codeRegion), etablissements, columns);
   };
 
   const onExportExcel = async () => {
@@ -215,26 +191,16 @@ export default function Etablissements() {
 
     const { columns, etablissements } = getDataForExport(data);
 
-    downloadExcel(
-      formatExportFilename("etablissement_export", filters?.codeRegion),
-      etablissements,
-      columns
-    );
+    downloadExcel(formatExportFilename("etablissement_export", filters?.codeRegion), etablissements, columns);
   };
 
-  const [colonneFilters, setColonneFilters] = useState<
-    (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]
-  >(
+  const [colonneFilters, setColonneFilters] = useState<(keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]>(
     (columns.length
       ? columns
-      : Object.keys(
-          FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT
-        )) as (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]
+      : Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT)) as (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]
   );
 
-  const handleColonneFilters = (
-    value: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]
-  ) => {
+  const handleColonneFilters = (value: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]) => {
     setSearchParams({ columns: value });
     setColonneFilters(value);
   };
@@ -249,20 +215,10 @@ export default function Etablissements() {
 
   return (
     <>
-      <FiltersSection
-        setSearchParams={setSearchParams}
-        searchParams={searchParams}
-        filtersLists={data?.filters}
-      />
+      <FiltersSection setSearchParams={setSearchParams} searchParams={searchParams} filtersLists={data?.filters} />
       <Flex direction="column" flex={1} position="relative" minH="0">
         {isFetching && (
-          <Center
-            height="100%"
-            width="100%"
-            position="absolute"
-            bg="rgb(255,255,255,0.8)"
-            zIndex="1"
-          >
+          <Center height="100%" width="100%" position="absolute" bg="rgb(255,255,255,0.8)" zIndex="1">
             <Spinner />
           </Center>
         )}
@@ -283,8 +239,8 @@ export default function Etablissements() {
               trackEvent={trackEvent}
             />
           }
-          onExportCsv={() => onExportCsv()}
-          onExportExcel={() => onExportExcel()}
+          onExportCsv={async () => onExportCsv()}
+          onExportExcel={async () => onExportExcel()}
           page={page}
           pageSize={PAGE_SIZE}
           count={data?.count}

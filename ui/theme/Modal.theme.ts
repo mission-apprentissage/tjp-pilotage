@@ -1,11 +1,9 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { modalAnatomy as parts } from "@chakra-ui/anatomy";
-import {
-  createMultiStyleConfigHelpers,
-  defineStyle,
-} from "@chakra-ui/styled-system";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { createMultiStyleConfigHelpers, defineStyle } from "@chakra-ui/styled-system";
 
-const { definePartsStyle, defineMultiStyleConfig } =
-  createMultiStyleConfigHelpers(parts.keys);
+const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(parts.keys);
 
 const half = defineStyle({
   width: "50vw",

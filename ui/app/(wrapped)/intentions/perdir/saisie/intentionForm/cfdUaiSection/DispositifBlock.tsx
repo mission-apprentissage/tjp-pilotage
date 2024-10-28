@@ -1,16 +1,9 @@
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  LightMode,
-  Select,
-} from "@chakra-ui/react";
+import { FormControl, FormErrorMessage, FormLabel, LightMode, Select } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { client } from "@/api.client";
-
-import { IntentionForms } from "../defaultFormValues";
+import type { client } from "@/api.client";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const DispositifBlock = ({
   disabled,
@@ -36,13 +29,7 @@ export const DispositifBlock = ({
 
   return (
     <LightMode>
-      <FormControl
-        mb="4"
-        w="100%"
-        maxW="752px"
-        isInvalid={!!errors.codeDispositif}
-        isRequired
-      >
+      <FormControl mb="4" w="100%" maxW="752px" isInvalid={!!errors.codeDispositif} isRequired>
         <FormLabel>Dispositif</FormLabel>
         <Controller
           name="codeDispositif"
@@ -69,9 +56,7 @@ export const DispositifBlock = ({
           )}
         />
 
-        {errors.codeDispositif && (
-          <FormErrorMessage>{errors.codeDispositif.message}</FormErrorMessage>
-        )}
+        {errors.codeDispositif && <FormErrorMessage>{errors.codeDispositif.message}</FormErrorMessage>}
       </FormControl>
     </LightMode>
   );

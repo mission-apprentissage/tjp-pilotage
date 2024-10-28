@@ -1,6 +1,6 @@
 import { Card, CardBody, CardHeader, Flex, Text } from "@chakra-ui/react";
 
-import { CorrectionsStats } from "../types";
+import type { CorrectionsStats } from "@/app/(wrapped)/intentions/corrections/types";
 
 const formatEcart = (value: number) => {
   if (value > 0) return <Text>{`+${value}`}</Text>;
@@ -33,7 +33,7 @@ const CountCard = ({
       <Flex direction="column">
         <Flex pb={4}>
           <Text fontSize="48" fontWeight={"extrabold"}>
-            {isEcart ? formatEcart(value ?? 0) : value ?? "0"}
+            {isEcart ? formatEcart(value ?? 0) : (value ?? "0")}
           </Text>
         </Flex>
       </Flex>
@@ -41,43 +41,16 @@ const CountCard = ({
   </Card>
 );
 
-export const CountersSection = ({
-  countData,
-}: {
-  countData?: CorrectionsStats;
-}) => {
+export const CountersSection = ({ countData }: { countData?: CorrectionsStats }) => {
   return (
-    <Flex
-      direction={"row"}
-      gap={4}
-      overflowY={"auto"}
-      pb={2}
-      flexWrap={["wrap", null, "nowrap"]}
-    >
+    <Flex direction={"row"} gap={4} overflowY={"auto"} pb={2} flexWrap={["wrap", null, "nowrap"]}>
       <Flex gap={4} width="100%">
-        <CountCard
-          label="Nombre de correction"
-          value={countData?.nbCorrections}
-        />
+        <CountCard label="Nombre de correction" value={countData?.nbCorrections} />
         <CountCard label="Nombre de reports" value={countData?.nbReports} />
-        <CountCard
-          label="Nombre d'annulation"
-          value={countData?.nbAnnulations}
-        />
-        <CountCard
-          label="Nombre de modifications"
-          value={countData?.nbModifications}
-        />
-        <CountCard
-          label="Écart capacité scolaire"
-          value={countData?.ecartScolaire}
-          isEcart
-        />
-        <CountCard
-          label="Écart capacité apprentissage"
-          value={countData?.ecartApprentissage}
-          isEcart
-        />
+        <CountCard label="Nombre d'annulation" value={countData?.nbAnnulations} />
+        <CountCard label="Nombre de modifications" value={countData?.nbModifications} />
+        <CountCard label="Écart capacité scolaire" value={countData?.ecartScolaire} isEcart />
+        <CountCard label="Écart capacité apprentissage" value={countData?.ecartApprentissage} isEcart />
       </Flex>
     </Flex>
   );

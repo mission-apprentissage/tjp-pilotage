@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { AddIcon, EditIcon } from "@chakra-ui/icons";
@@ -18,25 +19,23 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
+import type { AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, ReactPortal } from "react";
 import { useMemo, useState } from "react";
 import { hasRightOverRole } from "shared";
 
 import { client } from "@/api.client";
-import { EditUser } from "@/app/(wrapped)/admin/users/EditUser";
 import { OrderIcon } from "@/components/OrderIcon";
-import {
-  downloadCsv,
-  downloadExcel,
-  ExportColumns,
-} from "@/utils/downloadExport";
+import { TableHeader } from "@/components/TableHeader";
+import type { ExportColumns } from "@/utils/downloadExport";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatExportFilename } from "@/utils/formatExportFilename";
 import { formatDate } from "@/utils/formatUtils";
 import { GuardPermission } from "@/utils/security/GuardPermission";
+import { useAuth } from "@/utils/security/useAuth";
 import { useStateParams } from "@/utils/useFilters";
 
-import { TableHeader } from "../../../../components/TableHeader";
-import { formatExportFilename } from "../../../../utils/formatExportFilename";
-import { useAuth } from "../../../../utils/security/useAuth";
 import { CreateUser } from "./CreateUser";
+import { EditUser } from "./EditUser";
 
 const Columns = {
   email: "Email",
@@ -47,10 +46,9 @@ const Columns = {
   libelleRegion: "Région",
   uais: "Uais",
   createdAt: "Ajouté le",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/users"]["users"][number]
->;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/users"]["users"][number]>;
 
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
   const { auth } = useAuth();
   const [filters, setFilters] = useStateParams<{
@@ -85,15 +83,10 @@ export default () => {
   });
 
   const [userId, setUserId] = useState<string>();
-  const user = useMemo(
-    () => data?.users.find(({ id }) => id === userId),
-    [data, userId]
-  );
+  const user = useMemo(() => data?.users.find(({ id }) => id === userId), [data, userId]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const canEditUser = (
-    user: (typeof client.infer)["[GET]/users"]["users"][number]
-  ) => {
+  const canEditUser = (user: (typeof client.infer)["[GET]/users"]["users"][number]) => {
     return (
       auth?.user?.role &&
       user.role &&
@@ -109,18 +102,8 @@ export default () => {
       {data?.users && (
         <>
           <Flex px={4} py="2">
-            <Box
-              mt={"auto"}
-              mb={1.5}
-              as="form"
-              flex={1}
-              onSubmit={() => setFilters({ ...filters, search })}
-            >
-              <Input
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
-                placeholder="Rechercher..."
-              />
+            <Box mt={"auto"} mb={1.5} as="form" flex={1} onSubmit={() => setFilters({ ...filters, search })}>
+              <Input onChange={(e) => setSearch(e.target.value)} value={search} placeholder="Rechercher..." />
               <Button hidden type="submit" />
             </Box>
             <Button
@@ -142,45 +125,25 @@ export default () => {
               page={filters.page}
               pageSize={10}
               count={data.count}
-              onPageChange={(newPage) =>
-                setFilters({ ...filters, page: newPage })
-              }
+              onPageChange={(newPage) => setFilters({ ...filters, page: newPage })}
               onExportCsv={async () => {
                 const data = await client.ref("[GET]/users").query({
                   query: { ...filters, ...order, limit: 1000000 },
                 });
-                downloadCsv(
-                  formatExportFilename("users_export"),
-                  data.users,
-                  Columns
-                );
+                downloadCsv(formatExportFilename("users_export"), data.users, Columns);
               }}
               onExportExcel={async () => {
                 const data = await client.ref("[GET]/users").query({
                   query: { ...filters, ...order, limit: 1000000 },
                 });
-                downloadExcel(
-                  formatExportFilename("users_export"),
-                  data.users,
-                  Columns
-                );
+                downloadExcel(formatExportFilename("users_export"), data.users, Columns);
               }}
             />
           </Flex>
 
           <TableContainer overflowY="auto" flex={1}>
-            <Table
-              sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
-              size="md"
-              fontSize="14px"
-              gap="0"
-            >
-              <Thead
-                position="sticky"
-                top="0"
-                boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-                bg="white"
-              >
+            <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize="14px" gap="0">
+              <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white">
                 <Tr>
                   <Th w={0} />
                   <Th cursor="pointer" onClick={() => handleOrder("email")}>
@@ -203,10 +166,7 @@ export default () => {
                     <OrderIcon {...order} column="enabled" />
                     {Columns.enabled}
                   </Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("libelleRegion")}
-                  >
+                  <Th cursor="pointer" onClick={() => handleOrder("libelleRegion")}>
                     <OrderIcon {...order} column="libelleRegion" />
                     {Columns.libelleRegion}
                   </Th>
@@ -219,47 +179,120 @@ export default () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {data?.users.map((user) => (
-                  <Tr height={"60px"} key={user.id} whiteSpace={"pre"}>
-                    <Td>
-                      <Avatar
-                        name={`${user.firstname} ${user.lastname}`}
-                        position={"unset"}
-                      />
-                    </Td>
-                    <Td>{user.email}</Td>
-                    <Td>{user.firstname}</Td>
-                    <Td>{user.lastname}</Td>
-                    <Td>{user.role}</Td>
-                    <Td>
-                      {user.enabled ? (
-                        <Badge variant="success">Actif</Badge>
-                      ) : (
-                        <Badge variant="error">Désactivé</Badge>
-                      )}
-                    </Td>
-                    <Td>{user.libelleRegion}</Td>
-                    <Td>{user.uais}</Td>
-                    <Td>
-                      {user.createdAt && formatDate({ date: user.createdAt })}
-                    </Td>
-                    <Td isNumeric>
-                      {canEditUser(user) && (
-                        <IconButton
-                          position="unset"
-                          variant="ghost"
-                          onClick={() => {
-                            setUserId(user.id);
-                            onOpen();
-                          }}
-                          aria-label="editer"
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      )}
-                    </Td>
-                  </Tr>
-                ))}
+                {data?.users.map(
+                  (user: {
+                    id:
+                      | string
+                      | number
+                      | bigint
+                      | ((prevState: string | undefined) => string | undefined)
+                      | null
+                      | undefined;
+                    firstname:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | ReactElement<any, string | JSXElementConstructor<any>>
+                      | Iterable<ReactNode>
+                      | ReactPortal
+                      | Promise<AwaitedReactNode>
+                      | null
+                      | undefined;
+                    lastname:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | ReactElement<any, string | JSXElementConstructor<any>>
+                      | Iterable<ReactNode>
+                      | ReactPortal
+                      | Promise<AwaitedReactNode>
+                      | null
+                      | undefined;
+                    email:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | ReactElement<any, string | JSXElementConstructor<any>>
+                      | Iterable<ReactNode>
+                      | ReactPortal
+                      | Promise<AwaitedReactNode>
+                      | null
+                      | undefined;
+                    role:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | ReactElement<any, string | JSXElementConstructor<any>>
+                      | Iterable<ReactNode>
+                      | ReactPortal
+                      | Promise<AwaitedReactNode>
+                      | null
+                      | undefined;
+                    enabled: any;
+                    libelleRegion:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | ReactElement<any, string | JSXElementConstructor<any>>
+                      | Iterable<ReactNode>
+                      | ReactPortal
+                      | Promise<AwaitedReactNode>
+                      | null
+                      | undefined;
+                    uais:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | ReactElement<any, string | JSXElementConstructor<any>>
+                      | Iterable<ReactNode>
+                      | ReactPortal
+                      | Promise<AwaitedReactNode>
+                      | null
+                      | undefined;
+                    createdAt: any;
+                  }) => (
+                    <Tr height={"60px"} key={user.id} whiteSpace={"pre"}>
+                      <Td>
+                        <Avatar name={`${user.firstname} ${user.lastname}`} position={"unset"} />
+                      </Td>
+                      <Td>{user.email}</Td>
+                      <Td>{user.firstname}</Td>
+                      <Td>{user.lastname}</Td>
+                      <Td>{user.role}</Td>
+                      <Td>
+                        {user.enabled ? (
+                          <Badge variant="success">Actif</Badge>
+                        ) : (
+                          <Badge variant="error">Désactivé</Badge>
+                        )}
+                      </Td>
+                      <Td>{user.libelleRegion}</Td>
+                      <Td>{user.uais}</Td>
+                      <Td>{user.createdAt && formatDate({ date: user.createdAt })}</Td>
+                      <Td isNumeric>
+                        {canEditUser(user) && (
+                          <IconButton
+                            position="unset"
+                            variant="ghost"
+                            onClick={() => {
+                              setUserId(user.id);
+                              onOpen();
+                            }}
+                            aria-label="editer"
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        )}
+                      </Td>
+                    </Tr>
+                  )
+                )}
               </Tbody>
             </Table>
             {!data.users.length && (
@@ -268,9 +301,7 @@ export default () => {
               </Box>
             )}
           </TableContainer>
-          {user && isOpen && (
-            <EditUser isOpen={isOpen} onClose={onClose} user={user} />
-          )}
+          {user && isOpen && <EditUser isOpen={isOpen} onClose={onClose} user={user} />}
           {!user && isOpen && <CreateUser isOpen={isOpen} onClose={onClose} />}
         </>
       )}

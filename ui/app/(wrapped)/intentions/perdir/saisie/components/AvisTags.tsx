@@ -1,34 +1,21 @@
 import { HStack, Tag, Text, Tooltip, VStack } from "@chakra-ui/react";
-import { AvisStatutType } from "shared/enum/avisStatutEnum";
-import { AvisTypeType } from "shared/enum/avisTypeEnum";
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import type { AvisStatutType } from "shared/enum/avisStatutEnum";
+import type { AvisTypeType } from "shared/enum/avisTypeEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
-import {
-  getStepWorkflow,
-  getStepWorkflowAvis,
-} from "../../../utils/statutUtils";
 import {
   getAvisStatusTagBgColor,
   getAvisStatusTagTextColor,
   TagIcon,
-} from "../../components/AvisStatutTag";
-import { Avis } from "../types";
+} from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
+import type { Avis } from "@/app/(wrapped)/intentions/perdir/saisie/types";
+import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 
-export const AvisTags = ({
-  listeAvis,
-  statut,
-}: {
-  listeAvis: Avis[];
-  statut: DemandeStatutType;
-}) => {
+export const AvisTags = ({ listeAvis, statut }: { listeAvis: Avis[]; statut: DemandeStatutType }) => {
   return (
     <HStack gap={3}>
       {listeAvis
-        .filter(
-          (avis) =>
-            getStepWorkflowAvis(avis.type as AvisTypeType) ===
-            getStepWorkflow(statut)
-        )
+        .filter((avis) => getStepWorkflowAvis(avis.type as AvisTypeType) === getStepWorkflow(statut))
         .sort((a, b) => a.fonction!.localeCompare(b.fonction!))
         .map((avis) => (
           <Tooltip
@@ -36,11 +23,7 @@ export const AvisTags = ({
             label={
               <VStack alignItems={"start"}>
                 <Text>Avis {avis.statut}</Text>
-                {avis.commentaire && (
-                  <Text _firstLetter={{ textTransform: "uppercase" }}>
-                    {avis.commentaire}
-                  </Text>
-                )}
+                {avis.commentaire && <Text _firstLetter={{ textTransform: "uppercase" }}>{avis.commentaire}</Text>}
               </VStack>
             }
           >

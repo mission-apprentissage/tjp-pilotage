@@ -20,8 +20,8 @@ import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { emailRegex } from "shared";
 
-import { client } from "../../../../api.client";
-import { AuthContext } from "../authContext";
+import { client } from "@/api.client";
+import { AuthContext } from "@/app/(wrapped)/auth/authContext";
 
 export const LoginForm = () => {
   const {
@@ -54,20 +54,14 @@ export const LoginForm = () => {
   useEffect(() => {
     if (auth)
       router.replace(
-        auth.user.role === "perdir" && auth.user.uais?.[0]
-          ? `/panorama/etablissement/${auth.user.uais?.[0]}`
-          : "/"
+        auth.user.role === "perdir" && auth.user.uais?.[0] ? `/panorama/etablissement/${auth.user.uais?.[0]}` : "/"
       );
   }, [auth]);
 
   return (
     <Box maxW="360px" width="100%" mx="auto">
       <Card boxShadow="md">
-        <CardBody
-          p="6"
-          as="form"
-          onSubmit={handleSubmit((v) => login({ body: v }))}
-        >
+        <CardBody p="6" as="form" onSubmit={handleSubmit(async (v) => login({ body: v }))}>
           <Heading fontWeight="light" mb="6" textAlign="center" fontSize="2xl">
             Connexion
           </Heading>
@@ -82,9 +76,7 @@ export const LoginForm = () => {
                 },
               })}
             />
-            {!!errors.email && (
-              <FormErrorMessage>{errors.email.message}</FormErrorMessage>
-            )}
+            {!!errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
           </FormControl>
           <FormControl isInvalid={!!errors.password}>
             <FormLabel>Mot de passe</FormLabel>
@@ -94,9 +86,7 @@ export const LoginForm = () => {
                 required: "Veuillez saisir votre mot de passe",
               })}
             />
-            {!!errors.password && (
-              <FormErrorMessage>{errors.password.message}</FormErrorMessage>
-            )}
+            {!!errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
           </FormControl>
           {isError && (
             <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
@@ -104,13 +94,7 @@ export const LoginForm = () => {
             </Text>
           )}
           <Flex>
-            <Button
-              isLoading={isLoading}
-              type="submit"
-              mt="4"
-              ml="auto"
-              variant="primary"
-            >
+            <Button isLoading={isLoading} type="submit" mt="4" ml="auto" variant="primary">
               Se connecter
             </Button>
           </Flex>

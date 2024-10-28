@@ -3,10 +3,9 @@ import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
+import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
 import { TooltipIcon } from "@/components/TooltipIcon";
-
-import { DashboardCard } from "../../../DashboardCard";
-import { CounterChart } from "../../components/CounterChart";
 
 export const Capacite = ({
   capacite,
@@ -20,11 +19,7 @@ export const Capacite = ({
     if (!capacite || !capaciteAnneePrecedente) return "";
     if (capacite > capaciteAnneePrecedente) {
       return (
-        <Tooltip
-          label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
-            CURRENT_RENTREE
-          )}`}
-        >
+        <Tooltip label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}>
           <Flex>
             <Img src={"/icons/arrow_up.svg"} alt="up" />
             <Text fontWeight={"bold"} color="success.425">
@@ -35,11 +30,7 @@ export const Capacite = ({
       );
     } else if (capacite < capaciteAnneePrecedente) {
       return (
-        <Tooltip
-          label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
-            CURRENT_RENTREE
-          )}`}
-        >
+        <Tooltip label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}>
           <Flex>
             <Img src={"/icons/arrow_down.svg"} alt="down" />
             <Text fontWeight={"bold"} color="warning.525">
@@ -50,11 +41,7 @@ export const Capacite = ({
       );
     }
     return (
-      <Tooltip
-        label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
-          CURRENT_RENTREE
-        )}`}
-      >
+      <Tooltip label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}>
         <Text fontWeight={"bold"}>{`+0`}</Text>
       </Tooltip>
     );
