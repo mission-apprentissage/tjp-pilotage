@@ -25,13 +25,16 @@ export const TopFlopChart = ({
         />
       </Flex>
       <VStack alignItems="stretch" spacing="1" ml={"100px"}>
-        {topFlopFormations.top.map((item) => (
-          <TopFlopChartItem
-            key={`${item.cfd}_${item.codeDispositif}`}
-            formation={item}
-            value={item.tauxDevenirFavorable}
-          />
-        ))}
+        {topFlopFormations.top.map(
+          // @ts-expect-error TODO
+          (item) => (
+            <TopFlopChartItem
+              key={`${item.cfd}_${item.codeDispositif}`}
+              formation={item}
+              value={item.tauxDevenirFavorable}
+            />
+          )
+        )}
       </VStack>
       <Flex direction={"row"} justify={"start"} alignItems={"center"} mt={10}>
         <Text my="32px" fontSize={"medium"}>
@@ -47,14 +50,17 @@ export const TopFlopChart = ({
         {topFlopFormations.flop
           .slice()
           .reverse()
-          .map((item) => (
-            <TopFlopChartItem
-              key={`${item.cfd}_${item.codeDispositif}_`}
-              formation={item}
-              color={"grey.425"}
-              value={item.tauxDevenirFavorable}
-            />
-          ))}
+          .map(
+            // @ts-expect-error TODO
+            (item) => (
+              <TopFlopChartItem
+                key={`${item.cfd}_${item.codeDispositif}_`}
+                formation={item}
+                color={"grey.425"}
+                value={item.tauxDevenirFavorable}
+              />
+            )
+          )}
       </VStack>
     </Box>
   );

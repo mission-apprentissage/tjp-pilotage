@@ -105,9 +105,17 @@ export default function Panorama({
               }
             : stats
         }
-        libelleTerritoire={regionOptions?.find((item) => item.value === codeRegion)?.label}
+        libelleTerritoire={
+          regionOptions?.find(
+            // @ts-expect-error TODO
+            (item) => item.value === codeRegion
+          )?.label
+        }
         libelleDiplome={
-          data?.filters.diplomes?.find((item) => item.value === searchParams.codeNiveauDiplome?.[0])?.label
+          data?.filters.diplomes?.find(
+            // @ts-expect-error TODO
+            (item) => item.value === searchParams.codeNiveauDiplome?.[0]
+          )?.label
         }
       />
       <TauxInserJeunesSection

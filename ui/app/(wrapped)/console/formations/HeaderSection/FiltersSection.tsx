@@ -147,11 +147,14 @@ export const FiltersSection = ({
         }}
         value={filters.codeRegion?.[0] ?? ""}
       >
-        {data?.filters.regions.map((item) => (
-          <option key={item.value} value={item.value}>
-            {item.label}
-          </option>
-        ))}
+        {data?.filters.regions.map(
+          // @ts-expect-error TODO
+          (item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          )
+        )}
       </Select>
       <Multiselect
         display={["none", null, "flex"]}

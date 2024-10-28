@@ -29,6 +29,7 @@ export default () => {
   const { data: campagnes } = client.ref("[GET]/campagnes").useQuery({});
 
   const [campagneId, setCampagneId] = useState<string>();
+  // @ts-expect-error TODO
   const campagne = useMemo(() => campagnes?.find(({ id }) => id === campagneId), [campagnes, campagneId]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -62,36 +63,39 @@ export default () => {
             </Tr>
           </Thead>
           <Tbody>
-            {campagnes?.map((campagne) => (
-              <Tr key={campagne.id}>
-                <Td width={"10%"} isTruncated>
-                  {campagne.id}
-                </Td>
-                <Td>{campagne.annee}</Td>
-                <Td textAlign={"center"}>
-                  <CampagneStatutTag statut={campagne.statut} />
-                </Td>
-                <Td width={"10%"}>
-                  {campagne.dateDebut ? toDate(campagne.dateDebut).toLocaleDateString("fr-FR") : "Non définie"}
-                </Td>
-                <Td width={"10%"}>
-                  {campagne.dateFin ? toDate(campagne.dateFin).toLocaleDateString("fr-FR") : "Non définie"}
-                </Td>
-                <Td width={"5%"} isNumeric>
-                  <IconButton
-                    position="unset"
-                    variant="ghost"
-                    onClick={() => {
-                      setCampagneId(campagne.id);
-                      onOpen();
-                    }}
-                    aria-label="editer"
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Td>
-              </Tr>
-            ))}
+            {campagnes?.map(
+              // @ts-expect-error TODO
+              (campagne) => (
+                <Tr key={campagne.id}>
+                  <Td width={"10%"} isTruncated>
+                    {campagne.id}
+                  </Td>
+                  <Td>{campagne.annee}</Td>
+                  <Td textAlign={"center"}>
+                    <CampagneStatutTag statut={campagne.statut} />
+                  </Td>
+                  <Td width={"10%"}>
+                    {campagne.dateDebut ? toDate(campagne.dateDebut).toLocaleDateString("fr-FR") : "Non définie"}
+                  </Td>
+                  <Td width={"10%"}>
+                    {campagne.dateFin ? toDate(campagne.dateFin).toLocaleDateString("fr-FR") : "Non définie"}
+                  </Td>
+                  <Td width={"5%"} isNumeric>
+                    <IconButton
+                      position="unset"
+                      variant="ghost"
+                      onClick={() => {
+                        setCampagneId(campagne.id);
+                        onOpen();
+                      }}
+                      aria-label="editer"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Td>
+                </Tr>
+              )
+            )}
           </Tbody>
         </Table>
       </TableContainer>

@@ -89,28 +89,44 @@ export const Header = ({
                   borderColor="grey.900"
                 >
                   <Flex direction="row">
-                    <Text my={"auto"}>Campagne {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}</Text>
-                    <CampagneStatutTag statut={campagnes?.find((c) => c.annee === anneeCampagne)?.statut} />
+                    <Text my={"auto"}>
+                      Campagne{" "}
+                      {campagnes?.find(
+                        // @ts-expect-error TODO
+                        (c) => c.annee === anneeCampagne
+                      )?.annee ?? ""}
+                    </Text>
+                    <CampagneStatutTag
+                      statut={
+                        campagnes?.find(
+                          // @ts-expect-error TODO
+                          (c) => c.annee === anneeCampagne
+                        )?.statut
+                      }
+                    />
                   </Flex>
                 </MenuButton>
                 <MenuList py={0} borderTopRadius={0} zIndex={"banner"}>
-                  {campagnes?.map((campagne) => (
-                    <MenuItem
-                      p={2}
-                      key={campagne.annee}
-                      onClick={() => {
-                        setSearchParams({
-                          ...searchParams,
-                          campagne: campagne.annee,
-                        });
-                      }}
-                    >
-                      <Flex direction="row">
-                        <Text my={"auto"}>Campagne {campagne.annee}</Text>
-                        <CampagneStatutTag statut={campagne.statut} />
-                      </Flex>
-                    </MenuItem>
-                  ))}
+                  {campagnes?.map(
+                    // @ts-expect-error TODO
+                    (campagne) => (
+                      <MenuItem
+                        p={2}
+                        key={campagne.annee}
+                        onClick={() => {
+                          setSearchParams({
+                            ...searchParams,
+                            campagne: campagne.annee,
+                          });
+                        }}
+                      >
+                        <Flex direction="row">
+                          <Text my={"auto"}>Campagne {campagne.annee}</Text>
+                          <CampagneStatutTag statut={campagne.statut} />
+                        </Flex>
+                      </MenuItem>
+                    )
+                  )}
                 </MenuList>
               </Menu>
             </Flex>

@@ -1,3 +1,5 @@
+// @ts-nocheck -- TODO
+
 import { Badge } from "@chakra-ui/react";
 
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
@@ -62,6 +64,7 @@ export const NombreElevesParAnnee = ({ chiffresEntreeOffre }: { chiffresEntreeOf
       {checkDataAvailability() ? (
         <HorizontalBarChart
           title="Nombre d'élèves par année (Constat de rentrée 2023)"
+          // @ts-expect-error TODO
           data={getHorizontalBarChartData()}
         />
       ) : (

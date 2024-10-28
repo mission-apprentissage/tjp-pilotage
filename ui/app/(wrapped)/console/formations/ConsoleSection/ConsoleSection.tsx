@@ -102,50 +102,60 @@ export const ConsoleSection = ({
           getCellBgColor={getCellBgColor}
         />
         <Tbody>
-          {data?.formations.map((line) => (
-            <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
-              <Tr h="12" bg={"white"} role="group">
-                <FormationLineContent
-                  isSticky={isSticky}
-                  line={line}
-                  expended={historiqueId?.cfd === line.cfd && historiqueId.codeDispositif === line.codeDispositif}
-                  onClickExpend={() =>
-                    setHistoriqueId({
-                      cfd: line.cfd,
-                      codeDispositif: line.codeDispositif,
-                    })
-                  }
-                  onClickCollapse={() => setHistoriqueId(undefined)}
-                  canShowQuadrantPosition={canShowQuadrantPosition}
-                  colonneFilters={colonneFilters}
-                  getCellBgColor={getCellBgColor}
-                />
-              </Tr>
-              {historiqueId?.cfd === line.cfd && historiqueId.codeDispositif === line.codeDispositif && (
-                <>
-                  {historique?.map((historiqueLine) => (
-                    <Tr
-                      key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}_${historiqueLine.rentreeScolaire}`}
-                      bg={"grey.975"}
-                    >
-                      <FormationLineContent
-                        isSticky={isSticky}
-                        line={historiqueLine}
-                        canShowQuadrantPosition={canShowQuadrantPosition}
-                        colonneFilters={colonneFilters}
-                        getCellBgColor={getCellBgColor}
-                      />
-                    </Tr>
-                  ))}
-                  {historique && !historique.length && (
-                    <FormationLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
-                  )}
+          {data?.formations.map(
+            // @ts-expect-error TODO
+            (line) => (
+              <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
+                <Tr h="12" bg={"white"} role="group">
+                  <FormationLineContent
+                    isSticky={isSticky}
+                    line={line}
+                    // @ts-expect-error TODO
+                    expended={historiqueId?.cfd === line.cfd && historiqueId.codeDispositif === line.codeDispositif}
+                    onClickExpend={() =>
+                      setHistoriqueId({
+                        cfd: line.cfd,
+                        codeDispositif: line.codeDispositif,
+                      })
+                    }
+                    onClickCollapse={() => setHistoriqueId(undefined)}
+                    canShowQuadrantPosition={canShowQuadrantPosition}
+                    colonneFilters={colonneFilters}
+                    getCellBgColor={getCellBgColor}
+                  />
+                </Tr>
+                {
+                  // @ts-expect-error TODO
+                  historiqueId?.cfd === line.cfd && historiqueId.codeDispositif === line.codeDispositif && (
+                    <>
+                      {historique?.map(
+                        // @ts-expect-error TODO
+                        (historiqueLine) => (
+                          <Tr
+                            key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}_${historiqueLine.rentreeScolaire}`}
+                            bg={"grey.975"}
+                          >
+                            <FormationLineContent
+                              isSticky={isSticky}
+                              line={historiqueLine}
+                              canShowQuadrantPosition={canShowQuadrantPosition}
+                              colonneFilters={colonneFilters}
+                              getCellBgColor={getCellBgColor}
+                            />
+                          </Tr>
+                        )
+                      )}
+                      {historique && !historique.length && (
+                        <FormationLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
+                      )}
 
-                  {isFetchingHistorique && <FormationLineLoader />}
-                </>
-              )}
-            </Fragment>
-          ))}
+                      {isFetchingHistorique && <FormationLineLoader />}
+                    </>
+                  )
+                }
+              </Fragment>
+            )
+          )}
         </Tbody>
       </Table>
     </TableContainer>

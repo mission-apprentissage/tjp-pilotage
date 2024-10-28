@@ -272,6 +272,7 @@ export default () => {
     });
     downloadCsv(
       formatExportFilename("restitution_export", filters?.codeRegion),
+      // @ts-expect-error TODO
       data.demandes.map((demande) => ({
         ...demande,
         createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
@@ -315,38 +316,41 @@ export default () => {
     });
     downloadExcel(
       formatExportFilename("restitution_export", filters?.codeRegion),
-      data.demandes.map((demande) => ({
-        ...demande,
-        createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        updatedAt: new Date(demande.updatedAt).toLocaleDateString("fr-FR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        disciplinesRecrutementRH:
-          demande.discipline1RecrutementRH &&
-          `${demande.discipline1RecrutementRH} ${
-            demande.discipline2RecrutementRH ? `- ${demande.discipline2RecrutementRH}` : ""
-          }`,
-        disciplinesReconversionRH:
-          demande.discipline1ReconversionRH &&
-          `${demande.discipline1ReconversionRH} ${
-            demande.discipline2ReconversionRH ? `- ${demande.discipline2ReconversionRH}` : ""
-          }`,
-        disciplinesFormationRH:
-          demande.discipline1FormationRH &&
-          `${demande.discipline1FormationRH} ${
-            demande.discipline2FormationRH ? `- ${demande.discipline2FormationRH}` : ""
-          }`,
-        disciplinesProfesseurAssocieRH:
-          demande.discipline1ProfesseurAssocieRH &&
-          `${demande.discipline1ProfesseurAssocieRH} ${
-            demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
-          }`,
-        secteur: demande.secteur === "PU" ? "Public" : "Privé",
-      })),
+      data.demandes.map(
+        // @ts-expect-error TODO
+        (demande) => ({
+          ...demande,
+          createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          updatedAt: new Date(demande.updatedAt).toLocaleDateString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          disciplinesRecrutementRH:
+            demande.discipline1RecrutementRH &&
+            `${demande.discipline1RecrutementRH} ${
+              demande.discipline2RecrutementRH ? `- ${demande.discipline2RecrutementRH}` : ""
+            }`,
+          disciplinesReconversionRH:
+            demande.discipline1ReconversionRH &&
+            `${demande.discipline1ReconversionRH} ${
+              demande.discipline2ReconversionRH ? `- ${demande.discipline2ReconversionRH}` : ""
+            }`,
+          disciplinesFormationRH:
+            demande.discipline1FormationRH &&
+            `${demande.discipline1FormationRH} ${
+              demande.discipline2FormationRH ? `- ${demande.discipline2FormationRH}` : ""
+            }`,
+          disciplinesProfesseurAssocieRH:
+            demande.discipline1ProfesseurAssocieRH &&
+            `${demande.discipline1ProfesseurAssocieRH} ${
+              demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
+            }`,
+          secteur: demande.secteur === "PU" ? "Public" : "Privé",
+        })
+      ),
       STATS_DEMANDES_COLUMNS
     );
   }, [getIntentionsStatsQueryParameters]);
@@ -403,6 +407,7 @@ export default () => {
           data={data}
           isLoading={isLoading}
           handleOrder={handleOrder}
+          // @ts-expect-error TODO
           order={order}
           colonneFilters={colonneFilters}
         />

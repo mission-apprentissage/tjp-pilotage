@@ -115,6 +115,7 @@ export const UpdateAvisForm = chakra(
                     value
                       ? {
                           value: value,
+                          // @ts-expect-error TODO
                           label: value?.toUpperCase() ?? "",
                         }
                       : undefined
@@ -145,11 +146,13 @@ export const UpdateAvisForm = chakra(
                 <CreatableSelect
                   name={name}
                   onChange={(selected) => {
+                    // @ts-expect-error TODO
                     onChange(selected?.value);
                   }}
                   defaultValue={
                     value
                       ? {
+                          // @ts-expect-error TODO
                           value: value,
                           label: value?.toUpperCase() ?? "",
                         }

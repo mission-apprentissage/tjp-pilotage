@@ -47,15 +47,18 @@ export const ExportList = () => {
         trackEvent("panorama-etablissement-liste-carte:export");
         downloadCsv(
           formatExportFilename("etablissements_proches"),
-          etablissementsProches.map((etablissement) => ({
-            ...etablissement,
-            commune: formatCommuneLibelleWithCodeDepartement({
-              commune: etablissement.commune,
-              codeDepartement: etablissement.codeDepartement,
-            }),
-            libelleFormation: formatLibelleFormation(etablissement),
-            voie: formatArray(etablissement.voies),
-          })),
+          etablissementsProches.map(
+            // @ts-expect-error TODO
+            (etablissement) => ({
+              ...etablissement,
+              commune: formatCommuneLibelleWithCodeDepartement({
+                commune: etablissement.commune,
+                codeDepartement: etablissement.codeDepartement,
+              }),
+              libelleFormation: formatLibelleFormation(etablissement),
+              voie: formatArray(etablissement.voies),
+            })
+          ),
           {
             libelleFormation: "Formation",
             voie: "Voie",
@@ -76,15 +79,18 @@ export const ExportList = () => {
         trackEvent("panorama-etablissement-liste-carte:export-excel");
         downloadExcel(
           formatExportFilename("etablissements_proches"),
-          etablissementsProches.map((etablissement) => ({
-            ...etablissement,
-            commune: formatCommuneLibelleWithCodeDepartement({
-              commune: etablissement.commune,
-              codeDepartement: etablissement.codeDepartement,
-            }),
-            libelleFormation: formatLibelleFormation(etablissement),
-            voie: formatArray(etablissement.voies),
-          })),
+          etablissementsProches.map(
+            // @ts-expect-error TODO
+            (etablissement) => ({
+              ...etablissement,
+              commune: formatCommuneLibelleWithCodeDepartement({
+                commune: etablissement.commune,
+                codeDepartement: etablissement.codeDepartement,
+              }),
+              libelleFormation: formatLibelleFormation(etablissement),
+              voie: formatArray(etablissement.voies),
+            })
+          ),
           {
             libelleFormation: "Formation",
             voie: "Voie",

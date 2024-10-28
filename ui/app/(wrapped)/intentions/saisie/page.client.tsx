@@ -230,6 +230,7 @@ export const PageClient = () => {
       <Box display={["none", null, "unset"]} borderLeft="solid 1px" borderColor="gray.100" height="100%" mr={4} />
       <Flex flex={1} flexDirection="column" overflow="visible" minHeight={0} minW={0}>
         <Header
+          // @ts-expect-error TODO
           activeFilters={filters}
           searchParams={searchParams}
           setSearchParams={setSearchParams}

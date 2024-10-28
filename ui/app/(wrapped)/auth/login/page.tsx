@@ -1,7 +1,6 @@
 import { VStack } from "@chakra-ui/react";
 import React from "react";
 
-// import { ERROR_TYPE } from "server/src/modules/core/usecases/redirectDne/const";
 import AlertPerdir from "./components/AlertPerdir";
 import ErrorSSO from "./components/ErrorSSO";
 import { LoginForm } from "./LoginForm";

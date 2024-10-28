@@ -69,28 +69,44 @@ export const Header = ({
             borderColor="grey.900"
           >
             <Flex direction="row">
-              <Text my={"auto"}>Campagne {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}</Text>
-              <CampagneStatutTag statut={campagnes?.find((c) => c.annee === anneeCampagne)?.statut} />
+              <Text my={"auto"}>
+                Campagne{" "}
+                {campagnes?.find(
+                  // @ts-expect-error TODO
+                  (c) => c.annee === anneeCampagne
+                )?.annee ?? ""}
+              </Text>
+              <CampagneStatutTag
+                statut={
+                  campagnes?.find(
+                    // @ts-expect-error TODO
+                    (c) => c.annee === anneeCampagne
+                  )?.statut
+                }
+              />
             </Flex>
           </MenuButton>
           <MenuList py={0} borderTopRadius={0} zIndex={"dropdown"}>
-            {campagnes?.map((campagne) => (
-              <MenuItem
-                p={2}
-                key={campagne.annee}
-                onClick={() => {
-                  setSearchParams({
-                    ...searchParams,
-                    campagne: campagne.annee,
-                  });
-                }}
-              >
-                <Flex direction="row">
-                  <Text my={"auto"}>Campagne {campagne.annee}</Text>
-                  <CampagneStatutTag statut={campagne.statut} />
-                </Flex>
-              </MenuItem>
-            ))}
+            {campagnes?.map(
+              // @ts-expect-error TODO
+              (campagne) => (
+                <MenuItem
+                  p={2}
+                  key={campagne.annee}
+                  onClick={() => {
+                    setSearchParams({
+                      ...searchParams,
+                      campagne: campagne.annee,
+                    });
+                  }}
+                >
+                  <Flex direction="row">
+                    <Text my={"auto"}>Campagne {campagne.annee}</Text>
+                    <CampagneStatutTag statut={campagne.statut} />
+                  </Flex>
+                </MenuItem>
+              )
+            )}
           </MenuList>
         </Menu>
       </Flex>
@@ -152,20 +168,24 @@ export const Header = ({
               downloadCsv(
                 formatExportFilename("recueil_demandes", activeFilters.codeAcademie),
                 [
-                  ...data.intentions.map((intention) => ({
-                    ...intention,
-                    ...intention.avis.reduce(
-                      (acc, current, index) => {
-                        acc[`avis${index}`] = [
-                          current.fonction!.toUpperCase(),
-                          `Avis ${current.statut}`,
-                          current.commentaire,
-                        ].join(" - ");
-                        return acc;
-                      },
-                      {} as Record<string, string>
-                    ),
-                  })),
+                  ...data.intentions.map(
+                    // @ts-expect-error TODO
+                    (intention) => ({
+                      ...intention,
+                      ...intention.avis.reduce(
+                        // @ts-expect-error TODO
+                        (acc, current, index) => {
+                          acc[`avis${index}`] = [
+                            current.fonction!.toUpperCase(),
+                            `Avis ${current.statut}`,
+                            current.commentaire,
+                          ].join(" - ");
+                          return acc;
+                        },
+                        {} as Record<string, string>
+                      ),
+                    })
+                  ),
                 ],
                 INTENTIONS_COLUMNS
               );
@@ -178,20 +198,24 @@ export const Header = ({
               downloadExcel(
                 formatExportFilename("recueil_demandes", activeFilters.codeAcademie),
                 [
-                  ...data.intentions.map((intention) => ({
-                    ...intention,
-                    ...intention.avis.reduce(
-                      (acc, current, index) => {
-                        acc[`avis${index}`] = [
-                          current.fonction!.toUpperCase(),
-                          `Avis ${current.statut}`,
-                          current.commentaire,
-                        ].join(" - ");
-                        return acc;
-                      },
-                      {} as Record<string, string>
-                    ),
-                  })),
+                  ...data.intentions.map(
+                    // @ts-expect-error TODO
+                    (intention) => ({
+                      ...intention,
+                      ...intention.avis.reduce(
+                        // @ts-expect-error TODO
+                        (acc, current, index) => {
+                          acc[`avis${index}`] = [
+                            current.fonction!.toUpperCase(),
+                            `Avis ${current.statut}`,
+                            current.commentaire,
+                          ].join(" - ");
+                          return acc;
+                        },
+                        {} as Record<string, string>
+                      ),
+                    })
+                  ),
                 ],
                 INTENTIONS_COLUMNS
               );

@@ -15,6 +15,7 @@ export const TauxEmploi = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOf
   const { openGlossaire } = useGlossaireContext();
   const checkDataAvailability = (): boolean => {
     if (chiffresIJOffre) {
+      // @ts-expect-error TODO
       return Object.values(chiffresIJOffre).findIndex((value) => value.tauxInsertion) !== -1;
     }
     return false;

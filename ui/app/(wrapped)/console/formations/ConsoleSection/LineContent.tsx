@@ -103,6 +103,7 @@ export const FormationLineContent = ({
     >
       <Flex>
         <Flex w={"fit-content"} my={"auto"}>
+          {/* @ts-expect-error TODO */}
           {formatAnneeCommuneLibelle(line, "long", "sm")}
         </Flex>
         {line.isFormationRenovee && (

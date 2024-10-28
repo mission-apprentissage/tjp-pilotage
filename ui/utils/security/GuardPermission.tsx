@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
-import type { Permission } from "shared";
+import type { Permission } from "shared/security/permissions";
 
 import { usePermission } from "./usePermission";
 

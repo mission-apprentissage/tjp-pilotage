@@ -44,6 +44,7 @@ const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
      **/
     const delegations = uniq(
       flatten(
+        // @ts-expect-error TODO
         userInfo?.FrEduResDel?.map((del) => {
           const frEduRneResp = del.split("|")[5];
           const startDate = dayjs(del.split("|")[2], "DD/MM/YYYY");
@@ -66,7 +67,7 @@ const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
   }
   return uais;
 };
-
+// @ts-expect-error TODO
 const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
   if (userInfo.FrEduFonctAdm === "DIR" || userInfo.FrEduResDel) {
     const uais = extractUaisRep(userInfo);

@@ -10,7 +10,6 @@ export { CURRENT_RENTREE } from "./time/CURRENT_RENTREE";
 export { RENTREE_INTENTIONS } from "./time/RENTREE_INTENTIONS";
 export { MILLESIMES_IJ, MILLESIMES_IJ_REG, RENTREES_SCOLAIRES } from "./time/millesimes";
 export { emailRegex } from "./utils/emailRegex";
-export { isEmoji } from "./utils/isEmoji";
 export { isValidUrl } from "./utils/isValidUrl";
 export { MAX_FILE_SIZE, MAX_FILE_SIZE_IN_MB } from "./utils/maxFileSize";
 export { passwordRegex } from "./utils/passwordRegex";

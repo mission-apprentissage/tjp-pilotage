@@ -106,6 +106,7 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
                 <NumberDecrementStepper />
               </NumberInputStepper>
             </NumberInput>
+            {/* @ts-expect-error TODO */}
             {!!errors.annee && <FormErrorMessage>{errors.annee.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.statut} isRequired>
@@ -121,6 +122,7 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
                 </option>
               ))}
             </Select>
+            {/* @ts-expect-error TODO */}
             {!!errors.statut && <FormErrorMessage>{errors.statut.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.dateDebut} isRequired>
@@ -135,6 +137,7 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
               maxDate={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
               configs={getDatePickerConfig()}
             />
+            {/* @ts-expect-error TODO */}
             {!!errors.dateDebut && <FormErrorMessage>{errors.dateDebut.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.dateFin} isRequired>
@@ -149,6 +152,7 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
               minDate={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
               configs={getDatePickerConfig()}
             />
+            {/* @ts-expect-error TODO */}
             {!!errors.dateFin && <FormErrorMessage>{errors.dateFin.message}</FormErrorMessage>}
           </FormControl>
           {isError && (

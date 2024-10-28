@@ -1,3 +1,5 @@
+// @ts-nocheck -- TODO
+
 import { sql } from "kysely";
 import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
 

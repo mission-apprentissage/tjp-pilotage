@@ -9,70 +9,85 @@ import { QuadrantTabs } from "./QuadrantTabs";
 import { TendanceEnum } from "./TendanceRadio";
 
 const filterFormations = ({ formations, filters }: { formations?: PanoramaFormations; filters: Filters }) => {
-  return (formations ?? [])
-    .filter((formation) =>
-      filters.effectifMin && formation.effectif ? formation.effectif >= filters.effectifMin : true
-    )
-    .filter(({ effectifPrecedent, effectif }) => {
-      if (filters.effectif === TendanceEnum.tout) {
-        return true;
-      }
+  return (
+    (formations ?? [])
+      // @ts-expect-error TODO
+      .filter((formation) =>
+        filters.effectifMin && formation.effectif ? formation.effectif >= filters.effectifMin : true
+      )
+      // @ts-expect-error TODO
+      .filter(({ effectifPrecedent, effectif }) => {
+        if (filters.effectif === TendanceEnum.tout) {
+          return true;
+        }
 
-      if (filters.effectif === TendanceEnum.hausse) {
-        return effectifPrecedent !== undefined && effectif !== undefined && effectif > effectifPrecedent;
-      }
+        if (filters.effectif === TendanceEnum.hausse) {
+          return effectifPrecedent !== undefined && effectif !== undefined && effectif > effectifPrecedent;
+        }
 
-      if (filters.effectif === TendanceEnum.baisse) {
-        return effectifPrecedent !== undefined && effectif !== undefined && effectif < effectifPrecedent;
-      }
-    })
-    .filter(({ tauxPression }) => {
-      if (filters.tauxPression === TendanceEnum.tout) {
-        return true;
-      }
+        if (filters.effectif === TendanceEnum.baisse) {
+          return effectifPrecedent !== undefined && effectif !== undefined && effectif < effectifPrecedent;
+        }
+      })
+      // @ts-expect-error TODO
+      .filter(({ tauxPression }) => {
+        if (filters.tauxPression === TendanceEnum.tout) {
+          return true;
+        }
 
-      if (filters.tauxPression === TendanceEnum.hausse) {
-        return tauxPression !== undefined && tauxPression >= 1.3;
-      }
+        if (filters.tauxPression === TendanceEnum.hausse) {
+          return tauxPression !== undefined && tauxPression >= 1.3;
+        }
 
-      if (filters.tauxPression === TendanceEnum.baisse) {
-        return tauxPression !== undefined && tauxPression < 0.7;
-      }
-    })
-    .filter(({ tauxInsertion, tauxInsertionPrecedent }) => {
-      if (filters.tauxEmploi6Mois === TendanceEnum.tout) {
-        return true;
-      }
+        if (filters.tauxPression === TendanceEnum.baisse) {
+          return tauxPression !== undefined && tauxPression < 0.7;
+        }
+      })
+      // @ts-expect-error TODO
+      .filter(({ tauxInsertion, tauxInsertionPrecedent }) => {
+        if (filters.tauxEmploi6Mois === TendanceEnum.tout) {
+          return true;
+        }
 
-      if (filters.tauxEmploi6Mois === TendanceEnum.hausse) {
-        return (
-          tauxInsertionPrecedent !== undefined && tauxInsertion !== undefined && tauxInsertion > tauxInsertionPrecedent
-        );
-      }
+        if (filters.tauxEmploi6Mois === TendanceEnum.hausse) {
+          return (
+            tauxInsertionPrecedent !== undefined &&
+            tauxInsertion !== undefined &&
+            tauxInsertion > tauxInsertionPrecedent
+          );
+        }
 
-      if (filters.tauxEmploi6Mois === TendanceEnum.baisse) {
-        return (
-          tauxInsertionPrecedent !== undefined && tauxInsertion !== undefined && tauxInsertion < tauxInsertionPrecedent
-        );
-      }
-    })
-    .filter(({ tauxPoursuite, tauxPoursuitePrecedent }) => {
-      if (filters.tauxPoursuiteEtude === TendanceEnum.tout) {
-        return true;
-      }
+        if (filters.tauxEmploi6Mois === TendanceEnum.baisse) {
+          return (
+            tauxInsertionPrecedent !== undefined &&
+            tauxInsertion !== undefined &&
+            tauxInsertion < tauxInsertionPrecedent
+          );
+        }
+      })
+      // @ts-expect-error TODO
+      .filter(({ tauxPoursuite, tauxPoursuitePrecedent }) => {
+        if (filters.tauxPoursuiteEtude === TendanceEnum.tout) {
+          return true;
+        }
 
-      if (filters.tauxPoursuiteEtude === TendanceEnum.hausse) {
-        return (
-          tauxPoursuitePrecedent !== undefined && tauxPoursuite !== undefined && tauxPoursuite > tauxPoursuitePrecedent
-        );
-      }
+        if (filters.tauxPoursuiteEtude === TendanceEnum.hausse) {
+          return (
+            tauxPoursuitePrecedent !== undefined &&
+            tauxPoursuite !== undefined &&
+            tauxPoursuite > tauxPoursuitePrecedent
+          );
+        }
 
-      if (filters.tauxPoursuiteEtude === TendanceEnum.baisse) {
-        return (
-          tauxPoursuitePrecedent !== undefined && tauxPoursuite !== undefined && tauxPoursuite < tauxPoursuitePrecedent
-        );
-      }
-    });
+        if (filters.tauxPoursuiteEtude === TendanceEnum.baisse) {
+          return (
+            tauxPoursuitePrecedent !== undefined &&
+            tauxPoursuite !== undefined &&
+            tauxPoursuite < tauxPoursuitePrecedent
+          );
+        }
+      })
+  );
 };
 
 type Filters = {
@@ -98,6 +113,7 @@ const useQuadrantSection = (formations?: PanoramaFormations) => {
   const filteredFormations = useMemo(() => filterFormations({ formations, filters }), [filters, formations]);
 
   const effectifEntree: string = useMemo(
+    // @ts-expect-error TODO
     () => filteredFormations?.reduce((acc, { effectif }) => acc + (effectif ?? 0), 0).toString() ?? "-",
     [filteredFormations]
   );

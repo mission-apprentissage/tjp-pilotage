@@ -18,7 +18,10 @@ const findDefaultRentreeScolaireForCampagne = (
   rentreesScolaires: StatsPilotageIntentions["filters"]["rentreesScolaires"]
 ) => {
   if (rentreesScolaires) {
-    const rentreeScolaire = rentreesScolaires.find((r) => parseInt(r.value) === parseInt(annee) + 1);
+    const rentreeScolaire = rentreesScolaires.find(
+      // @ts-expect-error TODO
+      (r) => parseInt(r.value) === parseInt(annee) + 1
+    );
 
     if (rentreeScolaire) return rentreeScolaire.value;
   }
@@ -161,11 +164,14 @@ export const FiltersSection = ({
             }}
             placeholder="Choisir une campagne"
           >
-            {data?.filters.campagnes.map((campagne) => (
-              <option key={campagne.value} value={campagne.value}>
-                {_.capitalize(campagne.label)}
-              </option>
-            ))}
+            {data?.filters.campagnes.map(
+              // @ts-expect-error TODO
+              (campagne) => (
+                <option key={campagne.value} value={campagne.value}>
+                  {_.capitalize(campagne.label)}
+                </option>
+              )
+            )}
           </Select>
         </GridItem>
         <GridItem>
@@ -215,11 +221,14 @@ export const FiltersSection = ({
             }}
             placeholder="Tous"
           >
-            {data?.filters.regions.map((region) => (
-              <option key={region.value} value={region.value}>
-                {region.label}
-              </option>
-            ))}
+            {data?.filters.regions.map(
+              // @ts-expect-error TODO
+              (region) => (
+                <option key={region.value} value={region.value}>
+                  {region.label}
+                </option>
+              )
+            )}
           </Select>
         </GridItem>
         <GridItem>
@@ -237,11 +246,14 @@ export const FiltersSection = ({
             }}
             placeholder="Tous"
           >
-            {data?.filters.academies.map((academie) => (
-              <option key={academie.value} value={academie.value}>
-                {academie.label}
-              </option>
-            ))}
+            {data?.filters.academies.map(
+              // @ts-expect-error TODO
+              (academie) => (
+                <option key={academie.value} value={academie.value}>
+                  {academie.label}
+                </option>
+              )
+            )}
           </Select>
         </GridItem>
         <GridItem>
@@ -259,11 +271,14 @@ export const FiltersSection = ({
             }}
             placeholder="Tous"
           >
-            {data?.filters.departements.map((departement) => (
-              <option key={departement.value} value={departement.value}>
-                {departement.label}
-              </option>
-            ))}
+            {data?.filters.departements.map(
+              // @ts-expect-error TODO
+              (departement) => (
+                <option key={departement.value} value={departement.value}>
+                  {departement.label}
+                </option>
+              )
+            )}
           </Select>
         </GridItem>
         <GridItem>

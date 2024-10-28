@@ -1,9 +1,9 @@
-// eslint-disable-next-line n/no-unsupported-features/node-builtins
-import { glob } from "node:fs/promises";
 import path from "node:path";
 
 import type { Command } from "commander";
 import { parse } from "csv-parse/sync";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { glob } from "glob";
 import { mapValues } from "lodash-es";
 import type { Role } from "shared";
 import { PERMISSIONS } from "shared";
@@ -346,10 +346,11 @@ export function productCommands(cli: Command) {
     .command("files:encoding:verify")
     .description("Vérification de l'encodage des fichiers csv public")
     .action(async () => {
-      const csvPaths = getStaticFilePath("./**/*.csv");
+      const csvGlobPaths = getStaticFilePath("./**/*.csv");
+      const csvPaths = await glob(csvGlobPaths);
 
       let hasError = false;
-      for await (const entry of glob(csvPaths)) {
+      for (const entry of csvPaths) {
         try {
           await verifyFileEncoding(entry);
         } catch (error) {
@@ -357,6 +358,7 @@ export function productCommands(cli: Command) {
           logger.error(error);
         }
       }
+
       if (hasError) {
         // eslint-disable-next-line n/no-process-exit
         process.exit(1);

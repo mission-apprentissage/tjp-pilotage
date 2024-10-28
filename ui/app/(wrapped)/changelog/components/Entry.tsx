@@ -45,21 +45,24 @@ export const Entry = ({ changelogEntry }: EntryProps) => {
       <GridItem>
         <VStack flexGrow={1} alignItems="start">
           <HStack fontSize="14px" fontWeight="400">
-            {changelogEntry.types.map((type, i) => (
-              <Tag
-                key={`${entry}-${type}-${i}`}
-                backgroundColor={
-                  type.label === "Données" ? themeDefinition.colors.orange.draft : themeDefinition.colors.info[950]
-                }
-                color={
-                  type.label === "Données"
-                    ? themeDefinition.colors.yellowTournesol[407]
-                    : themeDefinition.colors.info[525]
-                }
-              >
-                {type.label.toUpperCase()}
-              </Tag>
-            ))}
+            {changelogEntry.types.map(
+              // @ts-expect-error TODO
+              (type, i) => (
+                <Tag
+                  key={`${entry}-${type}-${i}`}
+                  backgroundColor={
+                    type.label === "Données" ? themeDefinition.colors.orange.draft : themeDefinition.colors.info[950]
+                  }
+                  color={
+                    type.label === "Données"
+                      ? themeDefinition.colors.yellowTournesol[407]
+                      : themeDefinition.colors.info[525]
+                  }
+                >
+                  {type.label.toUpperCase()}
+                </Tag>
+              )
+            )}
             <Text color={themeDefinition.colors.grey["425_hover"]}>
               {changelogEntry.date.type === "string" && changelogEntry.date.value}
               {changelogEntry.date.type === "date" && generateDateString(changelogEntry.date.value)}

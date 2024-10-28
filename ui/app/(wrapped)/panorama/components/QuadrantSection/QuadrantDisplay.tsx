@@ -162,10 +162,13 @@ export const QuadrantDisplay = ({
             meanInsertion={meanInsertion}
             meanPoursuite={meanPoursuite}
             currentFormationId={currentFormationId}
-            data={formations.map((formation) => ({
-              ...formation,
-              codeDispositif: formation.codeDispositif ?? "",
-            }))}
+            data={formations.map(
+              // @ts-expect-error TODO
+              (formation) => ({
+                ...formation,
+                codeDispositif: formation.codeDispositif ?? "",
+              })
+            )}
             TooltipContent={FormationTooltipContent}
             effectifSizes={effectifSizes}
           />

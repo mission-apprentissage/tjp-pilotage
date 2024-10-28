@@ -16,6 +16,7 @@ export const TopFlopSection = ({ topFlops, isLoading }: { topFlops?: PanoramaTop
     if (!topFlops) return;
 
     const nbTopFlop = Math.min(topFlops.length, 20) / 2;
+    // @ts-expect-error TODO
     const sorted = topFlops.slice().sort((a, b) => (a.tauxDevenirFavorable < b.tauxDevenirFavorable ? 1 : -1));
     const top = sorted.slice().slice(0, Math.ceil(nbTopFlop));
     const flop = sorted.slice().reverse().slice(0, Math.floor(nbTopFlop));

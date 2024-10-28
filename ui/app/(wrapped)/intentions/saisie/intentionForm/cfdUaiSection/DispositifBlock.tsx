@@ -47,11 +47,14 @@ export const DispositifBlock = ({
                 onChange(selected.target.value);
               }}
             >
-              {options?.map(({ codeDispositif, libelleDispositif }) => (
-                <option key={codeDispositif} value={codeDispositif}>
-                  {libelleDispositif}
-                </option>
-              ))}
+              {options?.map(
+                // @ts-expect-error TODO
+                ({ codeDispositif, libelleDispositif }) => (
+                  <option key={codeDispositif} value={codeDispositif}>
+                    {libelleDispositif}
+                  </option>
+                )
+              )}
             </Select>
           )}
         />
