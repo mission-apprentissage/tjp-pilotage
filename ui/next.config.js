@@ -5,7 +5,7 @@ const path = require("path");
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const nextConfig = {
-  transpilePackages: ["shared"], // 'server'
+  transpilePackages: ["shared"],
   poweredByHeader: false,
   swcMinify: true,
   experimental: {
