@@ -16,7 +16,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@tests/*": ["./tests/*"],
-      "shared/*": ["../shared/src/*"]
+      "shared/*": ["../shared/*"]
     },
     "resolveJsonModule": true,
     "typeRoots": ["./types", "./node_modules/@types/", "../node_modules/@types/"],
@@ -43,8 +43,8 @@
     "noErrorTruncation": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["./**/*.ts", "./**/*.js", "src/server.ts"],
-  "exclude": ["**/node_modules", "coverage", "dist"],
+  "include": ["./**/*.ts", "./**/*.js"],
+  "exclude": ["**/node_modules", "coverage", "dist", "static"],
   "typeAcquisition": {
     "enable": true,
     "include": ["@types/node"]

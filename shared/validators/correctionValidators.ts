@@ -1,23 +1,18 @@
-import { Args, ZodTypeProvider } from "@http-wizard/core";
-import { Router } from "server/src/routes";
+import type { Args, ZodTypeProvider } from "@http-wizard/core";
 
+// import type { Router } from "server/src/server/routes/routes";
 import { RaisonCorrectionEnum } from "../enum/raisonCorrectionEnum";
 
-type Correction = Args<
-  Router["[POST]/correction/submit"]["schema"],
-  ZodTypeProvider
->["body"]["correction"];
+// TODO TEMPARY ANY
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Correction = Args<any["[POST]/correction/submit"]["schema"], ZodTypeProvider>["body"]["correction"];
 
-type Demande = Args<
-  Router["[POST]/demande/submit"]["schema"],
-  ZodTypeProvider
->["body"]["demande"];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Demande = Args<any["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
 
-const isRaisonAnnulation = (raison: string): boolean =>
-  raison === RaisonCorrectionEnum["annulation"];
+const isRaisonAnnulation = (raison: string): boolean => raison === RaisonCorrectionEnum["annulation"];
 
-const isRaisonReport = (raison: string): boolean =>
-  raison === RaisonCorrectionEnum["report"];
+const isRaisonReport = (raison: string): boolean => raison === RaisonCorrectionEnum["report"];
 
 const isRaisonModificationCapacite = (raison: string): boolean =>
   raison === RaisonCorrectionEnum["modification_capacite"];
@@ -58,10 +53,7 @@ export const correctionValidators: Record<
     if (!isPositiveNumber(correction.capaciteScolaire)) {
       return "La capacité scolaire doit être un nombre entier positif";
     }
-    if (
-      isRaisonAnnulation(correction.raison) ||
-      isRaisonReport(correction.raison)
-    ) {
+    if (isRaisonAnnulation(correction.raison) || isRaisonReport(correction.raison)) {
       if (correction.capaciteScolaire !== correction.capaciteScolaireActuelle) {
         return "La capacité scolaire doit être égale à la capacité scolaire actuelle dans le cas d'un report ou d'une annulation";
       }
@@ -77,10 +69,7 @@ export const correctionValidators: Record<
     if (!isPositiveNumber(correction.capaciteScolaireColoree)) {
       return "La capacité scolaire colorée doit être un nombre entier positif";
     }
-    if (
-      isRaisonAnnulation(correction.raison) ||
-      isRaisonReport(correction.raison)
-    ) {
+    if (isRaisonAnnulation(correction.raison) || isRaisonReport(correction.raison)) {
       if (correction.capaciteScolaireColoree !== 0) {
         return "La capacité scolaire colorée doit être égale à 0 dans le cas d'un report ou d'une annulation";
       }
@@ -96,14 +85,8 @@ export const correctionValidators: Record<
   capaciteApprentissage: (correction) => {
     if (!isPositiveNumber(correction.capaciteApprentissage))
       return "La capacité en apprentissage doit être un nombre entier positif";
-    if (
-      isRaisonAnnulation(correction.raison) ||
-      isRaisonReport(correction.raison)
-    ) {
-      if (
-        correction.capaciteApprentissage !==
-        correction.capaciteApprentissageActuelle
-      ) {
+    if (isRaisonAnnulation(correction.raison) || isRaisonReport(correction.raison)) {
+      if (correction.capaciteApprentissage !== correction.capaciteApprentissageActuelle) {
         return "La capacité en apprentissage doit être égale à la capacité en apprentissage actuelle dans le cas d'un report ou d'une annulation";
       }
     }
@@ -117,10 +100,7 @@ export const correctionValidators: Record<
   capaciteApprentissageColoree: (correction) => {
     if (!isPositiveNumber(correction.capaciteApprentissageColoree))
       return "La capacité en apprentissage colorée doit être un nombre entier positif";
-    if (
-      isRaisonAnnulation(correction.raison) ||
-      isRaisonReport(correction.raison)
-    ) {
+    if (isRaisonAnnulation(correction.raison) || isRaisonReport(correction.raison)) {
       if (correction.capaciteApprentissageColoree !== 0) {
         return "La capacité apprentissage colorée doit être égale à 0 dans le cas d'un report ou d'une annulation";
       }
@@ -137,8 +117,7 @@ export const correctionValidators: Record<
       correction.capaciteScolaire === demande.capaciteScolaire &&
       correction.capaciteApprentissage === demande.capaciteApprentissage &&
       correction.capaciteScolaireColoree === demande.capaciteScolaireColoree &&
-      correction.capaciteApprentissageColoree ===
-        demande.capaciteApprentissageColoree
+      correction.capaciteApprentissageColoree === demande.capaciteApprentissageColoree
     ) {
       return "Les capacités corrigées doivent être différentes des capacités avant correction dans le cas d'une modification de capacité";
     }

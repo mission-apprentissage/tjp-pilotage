@@ -115,8 +115,5 @@
     "yarn.lock": [
       "yarn dedupe"
     ]
-  },
-  "resolutions": {
-    "rollup": "4.24.0"
   }
 }

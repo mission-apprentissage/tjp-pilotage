@@ -3,14 +3,15 @@
 import { Box, Container, useDisclosure, VStack } from "@chakra-ui/react";
 import { ScopeEnum } from "shared";
 
-import { client } from "../../../../api.client";
-import { useStateParams } from "../../../../utils/useFilters";
-import { DefinitionTauxTransfoModal } from "../../components/DefinitionTauxTransfoModal";
+import { client } from "@/api.client";
+import { DefinitionTauxTransfoModal } from "@/app/(wrapped)/components/DefinitionTauxTransfoModal";
+import { useStateParams } from "@/utils/useFilters";
+
 import { FiltersSection } from "./filter/FiltersSection";
 import { HeaderSection } from "./header/HeaderSection";
 import { DisplayTypeEnum } from "./main/displayTypeEnum";
 import { MainSection } from "./main/MainSection";
-import {
+import type {
   FiltersStatsPilotageIntentions,
   OrderRepartitionPilotageIntentions,
   StatsPilotageIntentions,
@@ -29,10 +30,7 @@ export const PilotageNationalClient = () => {
         campagne: undefined,
         withColoration: "true",
       },
-      displayTypes: [
-        DisplayTypeEnum.repartition,
-        DisplayTypeEnum.zone_geographique,
-      ],
+      displayTypes: [DisplayTypeEnum.repartition, DisplayTypeEnum.zone_geographique],
     },
   });
 
@@ -53,37 +51,25 @@ export const PilotageNationalClient = () => {
   const displayRepartition = () =>
     setSearchParams({
       ...searchParams,
-      displayTypes: [
-        DisplayTypeEnum.repartition,
-        searchParams.displayTypes?.[1] ?? DisplayTypeEnum.zone_geographique,
-      ],
+      displayTypes: [DisplayTypeEnum.repartition, searchParams.displayTypes?.[1] ?? DisplayTypeEnum.zone_geographique],
     });
 
   const displayQuadrant = () =>
     setSearchParams({
       ...searchParams,
-      displayTypes: [
-        DisplayTypeEnum.quadrant,
-        searchParams.displayTypes?.[1] ?? DisplayTypeEnum.zone_geographique,
-      ],
+      displayTypes: [DisplayTypeEnum.quadrant, searchParams.displayTypes?.[1] ?? DisplayTypeEnum.zone_geographique],
     });
 
   const displayZonesGeographiques = () =>
     setSearchParams({
       ...searchParams,
-      displayTypes: [
-        searchParams.displayTypes?.[0] ?? DisplayTypeEnum.repartition,
-        DisplayTypeEnum.zone_geographique,
-      ],
+      displayTypes: [searchParams.displayTypes?.[0] ?? DisplayTypeEnum.repartition, DisplayTypeEnum.zone_geographique],
     });
 
   const displayDomaines = () =>
     setSearchParams({
       ...searchParams,
-      displayTypes: [
-        searchParams.displayTypes?.[0] ?? DisplayTypeEnum.repartition,
-        DisplayTypeEnum.domaine,
-      ],
+      displayTypes: [searchParams.displayTypes?.[0] ?? DisplayTypeEnum.repartition, DisplayTypeEnum.domaine],
     });
 
   const { data: repartitionData, isLoading: isLoadingRepartition } = client
@@ -92,27 +78,22 @@ export const PilotageNationalClient = () => {
       query: { ...filters, ...order },
     });
 
-  const { data, isLoading: isLoadingStats } = client
-    .ref("[GET]/pilotage-intentions/stats")
-    .useQuery(
-      {
-        query: { ...filters },
+  const { data, isLoading: isLoadingStats } = client.ref("[GET]/pilotage-intentions/stats").useQuery(
+    {
+      query: { ...filters },
+    },
+    {
+      onSuccess: (data) => {
+        if (!filters.campagne) {
+          setDefaultFilters(data);
+        }
       },
-      {
-        onSuccess: (data) => {
-          if (!filters.campagne) {
-            setDefaultFilters(data);
-          }
-        },
-      }
-    );
+    }
+  );
 
   const setDefaultFilters = (data: StatsPilotageIntentions | undefined) => {
     if (!data) return;
-    const rentreeScolaire = findDefaultRentreeScolaireForCampagne(
-      data.campagne.annee,
-      data.filters.rentreesScolaires
-    );
+    const rentreeScolaire = findDefaultRentreeScolaireForCampagne(data.campagne.annee, data.filters.rentreesScolaires);
 
     setFilters({
       campagne: data.campagne.annee,
@@ -150,12 +131,7 @@ export const PilotageNationalClient = () => {
             isLoading={isLoadingStats}
           />
           <MainSection
-            displayTypes={
-              searchParams.displayTypes ?? [
-                DisplayTypeEnum.repartition,
-                DisplayTypeEnum.zone_geographique,
-              ]
-            }
+            displayTypes={searchParams.displayTypes ?? [DisplayTypeEnum.repartition, DisplayTypeEnum.zone_geographique]}
             filters={filters}
             displayRepartition={displayRepartition}
             displayQuadrant={displayQuadrant}

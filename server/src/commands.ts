@@ -7,6 +7,7 @@ import HttpTerminator from "lil-http-terminator";
 
 import { productCommands } from "./commands.product";
 import config from "./config";
+import { closePgDbConnection } from "./db/db";
 import { migrateDownDB, migrateToLatest, statusMigration } from "./migrations/migrate";
 import createServer from "./server/server";
 import logger from "./services/logger";
@@ -25,6 +26,7 @@ program
   })
   .hook("postAction", async () => {
     await closeSentry();
+    await closePgDbConnection();
 
     setTimeout(() => {
       // Make sure to exit, even if we didn't close all ressources cleanly

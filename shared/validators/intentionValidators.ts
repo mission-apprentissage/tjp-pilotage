@@ -1,15 +1,12 @@
-import { Args, ZodTypeProvider } from "@http-wizard/core";
-import { Router } from "server/src/routes";
+import type { Args, ZodTypeProvider } from "@http-wizard/core";
 
+// import type { Router } from "server/src/server/routes/routes";
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
+// TODO TEMPARY ANY
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Intention = Args<any["[POST]/intention/submit"]["schema"], ZodTypeProvider>["body"]["intention"];
 
-type Intention = Args<
-  Router["[POST]/intention/submit"]["schema"],
-  ZodTypeProvider
->["body"]["intention"];
-
-export const isTypeFermeture = (typeDemande: string) =>
-  ["fermeture"].includes(typeDemande);
+export const isTypeFermeture = (typeDemande: string) => ["fermeture"].includes(typeDemande);
 
 export const isTypeOuverture = (typeDemande: string) =>
   ["ouverture_compensation", "ouverture_nette"].includes(typeDemande);
@@ -17,20 +14,16 @@ export const isTypeOuverture = (typeDemande: string) =>
 export const isTypeAugmentation = (typeDemande: string) =>
   ["augmentation_compensation", "augmentation_nette"].includes(typeDemande);
 
-export const isTypeDiminution = (typeDemande: string) =>
-  ["diminution"].includes(typeDemande);
+export const isTypeDiminution = (typeDemande: string) => ["diminution"].includes(typeDemande);
 
 export const isTypeCompensation = (typeDemande: string) =>
   ["augmentation_compensation", "ouverture_compensation"].includes(typeDemande);
 
-export const isTypeTransfert = (typeDemande: string) =>
-  ["transfert"].includes(typeDemande);
+export const isTypeTransfert = (typeDemande: string) => ["transfert"].includes(typeDemande);
 
-export const isTypeColoration = (typeDemande: string) =>
-  ["coloration"].includes(typeDemande);
+export const isTypeColoration = (typeDemande: string) => ["coloration"].includes(typeDemande);
 
-export const isTypeAjustement = (typeDemande: string) =>
-  ["ajustement"].includes(typeDemande);
+export const isTypeAjustement = (typeDemande: string) => ["ajustement"].includes(typeDemande);
 
 const isPositiveNumber = (value: number | undefined): value is number => {
   if (!Number.isInteger(value)) return false;
@@ -39,10 +32,7 @@ const isPositiveNumber = (value: number | undefined): value is number => {
   return true;
 };
 
-export const intentionValidators: Record<
-  keyof Intention | string,
-  (intention: Intention) => string | undefined
-> = {
+export const intentionValidators: Record<keyof Intention | string, (intention: Intention) => string | undefined> = {
   motif: (intention) => {
     if (!isTypeAjustement(intention.typeDemande) && !intention.motif?.length) {
       return "Le champ 'motif' est obligatoire";
@@ -71,10 +61,7 @@ export const intentionValidators: Record<
     if (!isPositiveNumber(intention.capaciteScolaireActuelle)) {
       return "La capacité scolaire actuelle doit être un nombre entier positif";
     }
-    if (
-      isTypeOuverture(intention.typeDemande) &&
-      intention.capaciteScolaireActuelle !== 0
-    ) {
+    if (isTypeOuverture(intention.typeDemande) && intention.capaciteScolaireActuelle !== 0) {
       return "La capacité scolaire actuelle devrait être à 0 dans le cas d'une ouverture";
     }
   },
@@ -92,10 +79,7 @@ export const intentionValidators: Record<
     if (!isPositiveNumber(intention.capaciteScolaire)) {
       return "La capacité scolaire doit être un nombre entier positif";
     }
-    if (
-      isTypeFermeture(intention.typeDemande) &&
-      intention.capaciteScolaire !== 0
-    ) {
+    if (isTypeFermeture(intention.typeDemande) && intention.capaciteScolaire !== 0) {
       return "La capacité scolaire devrait être à 0 dans le cas d'une fermeture";
     }
     if (
@@ -123,11 +107,9 @@ export const intentionValidators: Record<
       }
       if (
         (intention.capaciteScolaire >= intention.capaciteScolaireActuelle &&
-          intention.capaciteApprentissage >=
-            intention.capaciteApprentissageActuelle) ||
+          intention.capaciteApprentissage >= intention.capaciteApprentissageActuelle) ||
         (intention.capaciteScolaire <= intention.capaciteScolaireActuelle &&
-          intention.capaciteApprentissage <=
-            intention.capaciteApprentissageActuelle)
+          intention.capaciteApprentissage <= intention.capaciteApprentissageActuelle)
       ) {
         return "Si un transfert est effectué, la capacité scolaire ou l'apprentissage doivent être modifiée. Dans le cas d'un transfert vers l'apprentissage, la capacité en apprentissage devrait être supérieure à la capacité actuelle. Dans le cas d'un transfert vers le scolaire, la capacité scolaire devrait être supérieur à la capacité actuelle.";
       }
@@ -152,16 +134,9 @@ export const intentionValidators: Record<
     if (!isPositiveNumber(intention.capaciteScolaireColoree)) {
       return "La capacité scolaire colorée doit être un nombre entier positif";
     }
-    if (
-      !intention.coloration &&
-      !isTypeColoration(intention.typeDemande) &&
-      intention.capaciteScolaireColoree !== 0
-    )
+    if (!intention.coloration && !isTypeColoration(intention.typeDemande) && intention.capaciteScolaireColoree !== 0)
       return "La capacité scolaire colorée doit être à 0 quand on ne se trouve pas dans une situation de coloration";
-    if (
-      isTypeFermeture(intention.typeDemande) &&
-      intention.capaciteScolaireColoree !== 0
-    )
+    if (isTypeFermeture(intention.typeDemande) && intention.capaciteScolaireColoree !== 0)
       return "La capacité scolaire colorée doit être à 0 dans le cas d'une fermeture";
     if (
       isTypeColoration(intention.typeDemande) &&
@@ -188,10 +163,7 @@ export const intentionValidators: Record<
     if (!isPositiveNumber(intention.capaciteApprentissageActuelle))
       return "La capacité en apprentissage actuelle doit être un nombre entier positif";
 
-    if (
-      isTypeOuverture(intention.typeDemande) &&
-      intention.capaciteApprentissageActuelle !== 0
-    )
+    if (isTypeOuverture(intention.typeDemande) && intention.capaciteApprentissageActuelle !== 0)
       return "La capacité en apprentissage actuelle devrait être à 0 dans le cas d'une ouverture";
   },
   /**
@@ -210,10 +182,7 @@ export const intentionValidators: Record<
     if (!isPositiveNumber(intention.capaciteApprentissage))
       return "La capacité en apprentissage doit être un nombre entier positif";
 
-    if (
-      isTypeFermeture(intention.typeDemande) &&
-      intention.capaciteApprentissage !== 0
-    )
+    if (isTypeFermeture(intention.typeDemande) && intention.capaciteApprentissage !== 0)
       return "La capacité en apprentissage devrait être à 0 dans le cas d'une fermeture";
 
     if (
@@ -249,10 +218,7 @@ export const intentionValidators: Record<
   capaciteApprentissageColoree: (intention) => {
     if (!isPositiveNumber(intention.capaciteApprentissageColoree))
       return "La capacité en apprentissage colorée doit être un nombre entier positif";
-    if (
-      isTypeFermeture(intention.typeDemande) &&
-      intention.capaciteApprentissageColoree !== 0
-    )
+    if (isTypeFermeture(intention.typeDemande) && intention.capaciteApprentissageColoree !== 0)
       return "La capacité en apprentissage colorée doit être à 0 dans le cas d'une fermeture";
     if (
       !intention.coloration &&
@@ -260,17 +226,12 @@ export const intentionValidators: Record<
       intention.capaciteApprentissageColoree !== 0
     )
       return "La capacité en apprentissage colorée doit être à 0 quand on ne se trouve pas dans une situation de coloration";
-    if (
-      intention.coloration &&
-      isTypeTransfert(intention.typeDemande) &&
-      intention.capaciteApprentissageColoree === 0
-    )
+    if (intention.coloration && isTypeTransfert(intention.typeDemande) && intention.capaciteApprentissageColoree === 0)
       return "La capacité en apprentissage colorée doit être supérieure à 0 dans le cas d'un transfert vers l'apprentissage avec coloration";
     if (
       isTypeColoration(intention.typeDemande) &&
       isPositiveNumber(intention.capaciteApprentissageActuelle) &&
-      intention.capaciteApprentissageColoree >
-        intention.capaciteApprentissageActuelle
+      intention.capaciteApprentissageColoree > intention.capaciteApprentissageActuelle
     )
       return "La capacité en apprentissage colorée doit être inférieure ou égale à la capacité apprentissage actuelle dans le cas d'une coloration de formation existante";
     if (
@@ -288,16 +249,9 @@ export const intentionValidators: Record<
    * - supérieure à 0 dans le cas d'autre chose qu'une ouverture ou d'un ajustement
    */
   sommeCapaciteActuelle: (intention) => {
-    if (
-      isTypeOuverture(intention.typeDemande) ||
-      isTypeAjustement(intention.typeDemande)
-    )
-      return;
+    if (isTypeOuverture(intention.typeDemande) || isTypeAjustement(intention.typeDemande)) return;
 
-    if (
-      !intention.capaciteScolaireActuelle &&
-      !intention.capaciteApprentissageActuelle
-    )
+    if (!intention.capaciteScolaireActuelle && !intention.capaciteApprentissageActuelle)
       return "La somme des capacités actuelles doit être supérieure à 0";
   },
   /**
@@ -309,11 +263,7 @@ export const intentionValidators: Record<
    * - inférieure à la somme des capacités actuelles dans le cas d'une diminution
    */
   sommeCapacite: (intention) => {
-    if (
-      isTypeFermeture(intention.typeDemande) ||
-      isTypeColoration(intention.typeDemande)
-    )
-      return;
+    if (isTypeFermeture(intention.typeDemande) || isTypeColoration(intention.typeDemande)) return;
 
     if (!intention.capaciteApprentissage && !intention.capaciteScolaire) {
       return "La somme des capacités doit être supérieure à 0";
@@ -327,22 +277,19 @@ export const intentionValidators: Record<
       if (
         isTypeAugmentation(intention.typeDemande) &&
         intention.capaciteApprentissage + intention.capaciteScolaire <=
-          intention.capaciteApprentissageActuelle +
-            intention.capaciteScolaireActuelle
+          intention.capaciteApprentissageActuelle + intention.capaciteScolaireActuelle
       )
         return "La somme des capacités doit être supérieure à la somme des capacités actuelles dans le cas d'une augmentation";
       if (
         isTypeAjustement(intention.typeDemande) &&
         intention.capaciteApprentissage + intention.capaciteScolaire <=
-          intention.capaciteApprentissageActuelle +
-            intention.capaciteScolaireActuelle
+          intention.capaciteApprentissageActuelle + intention.capaciteScolaireActuelle
       )
         return "La somme des capacités doit être supérieure à la somme des capacités actuelles dans le cas d'un ajustement de rentrée";
       if (
         isTypeDiminution(intention.typeDemande) &&
         intention.capaciteApprentissage + intention.capaciteScolaire >=
-          intention.capaciteApprentissageActuelle +
-            intention.capaciteScolaireActuelle
+          intention.capaciteApprentissageActuelle + intention.capaciteScolaireActuelle
       )
         return "La somme des capacités doit être inférieure à la somme des capacités actuelles dans le cas d'une diminution";
     }
@@ -354,16 +301,10 @@ export const intentionValidators: Record<
    * - inférieure ou égale à la somme des capacités actuelles dans le cas d'une formation existante (non ouverture)
    */
   sommeCapaciteColoree: (intention) => {
-    if (
-      isTypeFermeture(intention.typeDemande) ||
-      (!isTypeColoration(intention.typeDemande) && !intention.coloration)
-    )
+    if (isTypeFermeture(intention.typeDemande) || (!isTypeColoration(intention.typeDemande) && !intention.coloration))
       return;
 
-    if (
-      !intention.capaciteApprentissageColoree &&
-      !intention.capaciteScolaireColoree
-    )
+    if (!intention.capaciteApprentissageColoree && !intention.capaciteScolaireColoree)
       return "La somme des capacités colorées doit être supérieure à 0";
     if (
       (isTypeOuverture(intention.typeDemande) ||
@@ -373,8 +314,7 @@ export const intentionValidators: Record<
       isPositiveNumber(intention.capaciteScolaireColoree) &&
       isPositiveNumber(intention.capaciteApprentissage) &&
       isPositiveNumber(intention.capaciteScolaire) &&
-      intention.capaciteApprentissageColoree +
-        intention.capaciteScolaireColoree >
+      intention.capaciteApprentissageColoree + intention.capaciteScolaireColoree >
         intention.capaciteApprentissage + intention.capaciteScolaire
     )
       return "La somme des capacités colorées doit être inférieure ou égale à la somme des futures capacités";
@@ -387,18 +327,13 @@ export const intentionValidators: Record<
       isPositiveNumber(intention.capaciteScolaireColoree) &&
       isPositiveNumber(intention.capaciteApprentissageActuelle) &&
       isPositiveNumber(intention.capaciteScolaireActuelle) &&
-      intention.capaciteApprentissageColoree +
-        intention.capaciteScolaireColoree >
-        intention.capaciteApprentissageActuelle +
-          intention.capaciteScolaireActuelle
+      intention.capaciteApprentissageColoree + intention.capaciteScolaireColoree >
+        intention.capaciteApprentissageActuelle + intention.capaciteScolaireActuelle
     )
       return "La somme des capacités colorées doit être inférieure ou égale à la somme des capacités actuelles";
   },
   motifRefus: (intention) => {
-    if (
-      intention.statut === DemandeStatutEnum["refusée"] &&
-      !intention.motifRefus?.length
-    ) {
+    if (intention.statut === DemandeStatutEnum["refusée"] && !intention.motifRefus?.length) {
       return "Le champ 'motif refus' est obligatoire";
     }
   },
