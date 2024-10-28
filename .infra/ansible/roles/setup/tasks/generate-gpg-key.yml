@@ -1,3 +1,0 @@
-- name: Generate GPG key
-  shell: "bash /opt/pilotage/tools/gpg/generate-gpg-key.sh"
-  register: output

@@ -37,7 +37,7 @@ const sendLogToSlack = async (info: { level: string; message: string; userId?: s
             },
             {
               type: "mrkdwn",
-              text: `*Host:* ${config.host}`,
+              text: `*Host:* ${config.publicUrl}`,
             },
             {
               type: "mrkdwn",

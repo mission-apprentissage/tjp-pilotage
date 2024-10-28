@@ -1,0 +1,26 @@
+---
+- hosts: preview
+  become: true
+  gather_facts: false
+  vars_files:
+    - "../vault/vault.yml"
+  tasks:
+    - include_tasks: ./tasks/files_copy.yml
+
+    - name: lancement preview system
+      shell:
+        chdir: /opt/app
+        cmd: docker compose -f docker-compose.preview-system.yml up -d --wait
+
+    - name: Setup MongoDB ReplicaSet
+      shell:
+        chdir: /opt/app
+        cmd: 'docker compose -f docker-compose.preview-system.yml exec -it mongodb mongosh "{{ vault[env_type].MONGODB_URI }}" --eval "try { rs.status().ok } catch (e) { if (e.code === 94) {rs.initiate();} else {throw e} }" --quiet'
+      when: env_type == 'preview'
+
+    - include_tasks: ./tasks/preview_pr.yml
+      vars:
+        build: true
+        docker_images:
+          - "ij_{{product_name}}_ui"
+          - "ij_{{product_name}}_server"

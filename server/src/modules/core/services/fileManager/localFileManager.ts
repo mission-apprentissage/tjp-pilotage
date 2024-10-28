@@ -65,7 +65,7 @@ export const localFileManagerFactory = (): FileManager => {
       }
     },
     getDownloadUrl: async (filepath: string): Promise<string> => {
-      return encodeURI(`http://${config.host}/public/upload/${filepath.replace("./public/upload/", "")}`);
+      return encodeURI(`${config.publicUrl}/public/upload/${filepath.replace("./public/upload/", "")}`);
     },
   };
 };
