@@ -1,12 +1,13 @@
 import { chakra, Flex, Skeleton } from "@chakra-ui/react";
 
-import { useScopeCode } from "../hooks";
-import {
+import { useScopeCode } from "@/app/(wrapped)/intentions/pilotage/hooks";
+import type {
   FiltersStatsPilotageIntentions,
   OrderRepartitionPilotageIntentions,
   RepartitionPilotageIntentions,
   StatsPilotageIntentions,
-} from "../types";
+} from "@/app/(wrapped)/intentions/pilotage/types";
+
 import { DisplayTypeEnum } from "./displayTypeEnum";
 import { QuadrantSection } from "./quadrant/QuadrantSection";
 import { RepartitionSection } from "./repartition/RepartitionSection";
@@ -54,9 +55,7 @@ export const MainSection = ({
   repartitionData?: RepartitionPilotageIntentions;
   filters: FiltersStatsPilotageIntentions;
   order: Partial<OrderRepartitionPilotageIntentions>;
-  setSearchParams: (params: {
-    order?: Partial<OrderRepartitionPilotageIntentions>;
-  }) => void;
+  setSearchParams: (params: { order?: Partial<OrderRepartitionPilotageIntentions> }) => void;
   isLoading?: boolean;
 }) => {
   const tabsDisplayType = displayTypes[0];
@@ -72,13 +71,7 @@ export const MainSection = ({
       {isLoading ? (
         <Loader />
       ) : (
-        <Flex
-          p={8}
-          bgColor={"white"}
-          borderBottomRadius={4}
-          borderTopRightRadius={4}
-          borderLeftWidth={1}
-        >
+        <Flex p={8} bgColor={"white"} borderBottomRadius={4} borderTopRightRadius={4} borderLeftWidth={1}>
           {tabsDisplayType === DisplayTypeEnum.repartition ? (
             <RepartitionSection
               repartitionData={repartitionData}
@@ -95,7 +88,8 @@ export const MainSection = ({
               scopeFilters={quadrantData?.filters}
               scope={{
                 type: filters.scope,
-                value: useScopeCode(filters).code,
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                value: useScopeCode(filters).code, // TODO
               }}
               repartitionData={repartitionData}
             />

@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import { Box, chakra, Flex, IconButton } from "@chakra-ui/react";
 
-import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { ExportMenuButton } from "./ExportMenuButton";
 
 export const TableHeader = chakra(
   ({
@@ -30,18 +30,13 @@ export const TableHeader = chakra(
         {SearchInput}
         <Flex ms={ColonneFilter ? "none" : "auto"}>
           {(onExportCsv || onExportExcel) && (
-            <ExportMenuButton
-              onExportCsv={onExportCsv}
-              onExportExcel={onExportExcel}
-              variant="externalLink"
-            />
+            <ExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} variant="externalLink" />
           )}
         </Flex>
         {ColonneFilter}
         <Flex ms={ColonneFilter ? "auto" : "none"} mt={"auto"}>
           <Box mx="4">
-            {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur{" "}
-            {count}
+            {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur {count}
           </Box>
           <IconButton
             isDisabled={page === 0}

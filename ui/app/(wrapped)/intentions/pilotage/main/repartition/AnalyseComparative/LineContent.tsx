@@ -4,7 +4,7 @@ const SEUIL_RATIO_FERMETURE: number = 0.33;
 
 import { Fragment } from "react";
 
-import { RepartitionPilotageIntentionsLine } from "@/app/(wrapped)/intentions/pilotage/types";
+import type { RepartitionPilotageIntentionsLine } from "@/app/(wrapped)/intentions/pilotage/types";
 import { formatLargeNumber, formatPercentage } from "@/utils/formatUtils";
 export const LineContent = chakra(
   ({
@@ -15,39 +15,22 @@ export const LineContent = chakra(
   }: {
     tdBgColor?: string;
     tdColor?: string;
-    getTauxTransfoBgColor: (
-      tauxTransformation: number | undefined
-    ) => string | undefined;
+    getTauxTransfoBgColor: (tauxTransformation: number | undefined) => string | undefined;
     line: RepartitionPilotageIntentionsLine;
   }) => {
     return (
       <>
         <Td bgColor={tdBgColor} color={tdColor} border={"none !important"}>
           <Tooltip label={line.libelle}>
-            <Text
-              textOverflow={"ellipsis"}
-              overflow={"hidden"}
-              whiteSpace={"break-spaces"}
-              noOfLines={2}
-            >
+            <Text textOverflow={"ellipsis"} overflow={"hidden"} whiteSpace={"break-spaces"} noOfLines={2}>
               {line.libelle}
             </Text>
           </Tooltip>
         </Td>
-        <Td
-          bgColor={tdBgColor}
-          border={"none !important"}
-          color={tdColor}
-          isNumeric
-        >
+        <Td bgColor={tdBgColor} border={"none !important"} color={tdColor} isNumeric>
           {formatLargeNumber(line.placesTransformees)}
         </Td>
-        <Td
-          bgColor={tdBgColor}
-          border={"none !important"}
-          color={tdColor}
-          isNumeric
-        >
+        <Td bgColor={tdBgColor} border={"none !important"} color={tdColor} isNumeric>
           {formatLargeNumber(line.effectif, "\u00A0", "-")}
         </Td>
         <Td
@@ -60,53 +43,22 @@ export const LineContent = chakra(
             {formatPercentage(line.tauxTransformation, 1, "-")}
           </Tooltip>
         </Td>
-        <Td
-          width={24}
-          maxWidth={24}
-          bgColor={tdBgColor}
-          border={"none !important"}
-          color={tdColor}
-          isNumeric
-        >
+        <Td width={24} maxWidth={24} bgColor={tdBgColor} border={"none !important"} color={tdColor} isNumeric>
           {formatLargeNumber(line.placesOuvertes)}
         </Td>
-        <Td
-          width={24}
-          maxWidth={24}
-          bgColor={tdBgColor}
-          border={"none !important"}
-          color={tdColor}
-          isNumeric
-        >
+        <Td width={24} maxWidth={24} bgColor={tdBgColor} border={"none !important"} color={tdColor} isNumeric>
           {formatLargeNumber(line.placesFermees)}
         </Td>
-        <Td
-          width={24}
-          maxWidth={24}
-          bgColor={tdBgColor}
-          border={"none !important"}
-          color={tdColor}
-          isNumeric
-        >
+        <Td width={24} maxWidth={24} bgColor={tdBgColor} border={"none !important"} color={tdColor} isNumeric>
           {formatLargeNumber(line.placesColorees)}
         </Td>
-        <Td
-          width={24}
-          maxWidth={24}
-          bgColor={tdBgColor}
-          border={"none !important"}
-          color={tdColor}
-          isNumeric
-        >
-          <Tooltip label={`${line.placesOuvertes} - ${line.placesFermees}`}>
-            {line.solde.toString()}
-          </Tooltip>
+        <Td width={24} maxWidth={24} bgColor={tdBgColor} border={"none !important"} color={tdColor} isNumeric>
+          <Tooltip label={`${line.placesOuvertes} - ${line.placesFermees}`}>{line.solde.toString()}</Tooltip>
         </Td>
         <Td
           color={tdColor}
           bgColor={
-            line.ratioFermeture !== undefined &&
-            line.ratioFermeture < SEUIL_RATIO_FERMETURE
+            line.ratioFermeture !== undefined && line.ratioFermeture < SEUIL_RATIO_FERMETURE
               ? "pilotage.red"
               : "inherit"
           }

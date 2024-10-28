@@ -1,8 +1,9 @@
 import { Text } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import { getTypeDemandeExemple } from "../../../utils/typeDemandeUtils";
-import { IntentionForms } from "../intentionForm/defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
+import { getTypeDemandeExemple } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+
 import { InfoBox } from "./InfoBox";
 
 export const Conseils = () => {
@@ -26,9 +27,8 @@ export const Conseils = () => {
           <Text mb="3" fontWeight="bold">
             Champ commentaire :{" "}
           </Text>
-          Merci de détailler les éléments de contexte du projet : développement
-          économique ou démographique du territoire, prospectives étayées,
-          partenariats noués, typologie d’élèves accueillis…
+          Merci de détailler les éléments de contexte du projet : développement économique ou démographique du
+          territoire, prospectives étayées, partenariats noués, typologie d’élèves accueillis…
         </InfoBox>
       )}
     </>

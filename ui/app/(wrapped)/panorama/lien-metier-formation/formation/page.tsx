@@ -6,19 +6,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
 
-import { client } from "@/api.client";
+import type { client } from "@/api.client";
+import { themeDefinition } from "@/theme/theme";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
-import { themeDefinition } from "../../../../../theme/theme";
-import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { AsyncFormationSearch } from "./components/AsyncFormationSearch";
 import { AsyncNsfSearch } from "./components/AsyncNsfSearch";
 import { Metabase } from "./components/Metabase";
 
-export type NsfOption =
-  (typeof client.infer)["[GET]/nsf/search/:search"][number];
+export type NsfOption = (typeof client.infer)["[GET]/nsf/search/:search"][number];
 
-export type FormationOption =
-  (typeof client.infer)["[GET]/nsf-diplome/search/:search"][number];
+export type FormationOption = (typeof client.infer)["[GET]/nsf-diplome/search/:search"][number];
 
 // test
 
@@ -26,9 +24,7 @@ const DashboardFormation = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedNsf, setSelectedNsf] = useState<NsfOption | undefined>();
-  const [selectedFormation, setSelectedFormation] = useState<
-    FormationOption | undefined
-  >();
+  const [selectedFormation, setSelectedFormation] = useState<FormationOption | undefined>();
   const trackEvent = usePlausible();
 
   useEffect(() => {
@@ -37,11 +33,7 @@ const DashboardFormation = () => {
     const formationSearchParam = searchParams.get("formation");
     const codeFormationSearchParam = searchParams.get("code_formation");
 
-    if (
-      nsfSearchParam &&
-      codeNsfSearchParam &&
-      nsfSearchParam !== selectedNsf?.label
-    ) {
+    if (nsfSearchParam && codeNsfSearchParam && nsfSearchParam !== selectedNsf?.label) {
       setSelectedNsf({
         label: nsfSearchParam,
         value: codeNsfSearchParam,
@@ -50,11 +42,7 @@ const DashboardFormation = () => {
       setSelectedNsf(undefined);
     }
 
-    if (
-      formationSearchParam &&
-      codeFormationSearchParam &&
-      formationSearchParam !== selectedFormation?.label
-    ) {
+    if (formationSearchParam && codeFormationSearchParam && formationSearchParam !== selectedFormation?.label) {
       setSelectedFormation({
         label: formationSearchParam,
         value: codeFormationSearchParam,
@@ -81,12 +69,8 @@ const DashboardFormation = () => {
     if (formation) {
       router.replace(
         createParametrizedUrl(location.pathname, {
-          domaine_formation: selectedNsf
-            ? encodeURI(selectedNsf.label)
-            : undefined,
-          code_domaine_formation: selectedNsf
-            ? encodeURI(selectedNsf.value)
-            : undefined,
+          domaine_formation: selectedNsf ? encodeURI(selectedNsf.label) : undefined,
+          code_domaine_formation: selectedNsf ? encodeURI(selectedNsf.value) : undefined,
           formation: encodeURI(formation.label),
           code_formation: encodeURI(formation.value),
         })
@@ -125,8 +109,7 @@ const DashboardFormation = () => {
   return (
     <VStack width="100%" alignItems="start" gap="16px">
       <Text>
-        À partir d’une formation, visualisez tous les débouchés métiers et
-        l’offre de formation sur le territoire
+        À partir d’une formation, visualisez tous les débouchés métiers et l’offre de formation sur le territoire
       </Text>
       <HStack alignItems="end" width="100%">
         <HStack>
@@ -155,11 +138,7 @@ const DashboardFormation = () => {
       </HStack>
       <Divider />
       {selectedFormation && (
-        <Metabase
-          domaineFormation={selectedNsf?.label}
-          formation={selectedFormation.label}
-          dashboardId={98}
-        />
+        <Metabase domaineFormation={selectedNsf?.label} formation={selectedFormation.label} dashboardId={98} />
       )}
     </VStack>
   );

@@ -1,22 +1,22 @@
 import { chakra, Tag } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { AvisStatutEnum, AvisStatutType } from "shared/enum/avisStatutEnum";
-import { AvisTypeEnum, AvisTypeType } from "shared/enum/avisTypeEnum";
+import type { AvisStatutType } from "shared/enum/avisStatutEnum";
+import { AvisStatutEnum } from "shared/enum/avisStatutEnum";
+import type { AvisTypeType } from "shared/enum/avisTypeEnum";
+import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 
-export const TagIcon = chakra(
-  ({ statutAvis }: { statutAvis: AvisStatutType }) => {
-    switch (statutAvis) {
-      case AvisStatutEnum["favorable"]:
-        return <Icon icon={"ri:thumb-up-fill"} />;
-      case AvisStatutEnum["défavorable"]:
-        return <Icon icon={"ri:thumb-down-fill"} />;
-      case AvisStatutEnum["réservé"]:
-        return <Icon icon={"ri:emotion-normal-fill"} />;
-      default:
-        return <></>;
-    }
+export const TagIcon = chakra(({ statutAvis }: { statutAvis: AvisStatutType }) => {
+  switch (statutAvis) {
+    case AvisStatutEnum["favorable"]:
+      return <Icon icon={"ri:thumb-up-fill"} />;
+    case AvisStatutEnum["défavorable"]:
+      return <Icon icon={"ri:thumb-down-fill"} />;
+    case AvisStatutEnum["réservé"]:
+      return <Icon icon={"ri:emotion-normal-fill"} />;
+    default:
+      return <></>;
   }
-);
+});
 
 export const getAvisStatusTagTextColor = (statutAvis: AvisStatutType) => {
   switch (statutAvis) {
@@ -66,10 +66,7 @@ export const AvisStatutTag = chakra(
       gap={1}
     >
       {hasIcon && <TagIcon statutAvis={statutAvis} />}
-      {typeAvis &&
-        (typeAvis != AvisTypeEnum["final"]
-          ? `Avis ${typeAvis} `
-          : `Vote ${typeAvis} `)}
+      {typeAvis && (typeAvis != AvisTypeEnum["final"] ? `Avis ${typeAvis} ` : `Vote ${typeAvis} `)}
       {statutAvis}
     </Tag>
   )

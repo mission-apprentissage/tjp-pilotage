@@ -1,6 +1,6 @@
 "use client";
 import { Box, chakra, Flex } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const InfoBlock = chakra(
   ({

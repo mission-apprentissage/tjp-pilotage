@@ -1,4 +1,4 @@
-import { AvisTypeType } from "shared/enum/avisTypeEnum";
+import type { AvisTypeType } from "shared/enum/avisTypeEnum";
 
 export const FONCTIONS = {
   préalable: ["région", "région académique"],

@@ -22,11 +22,12 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useEffect, useMemo, useState } from "react";
 
-import { Quadrant } from "../../../../../components/Quadrant";
-import { TableQuadrant } from "../../../../../components/TableQuadrant";
-import { publicConfig } from "../../../../../config.public";
-import { Order, PanoramaFormations } from "../../types";
-import { FormationTooltipContent } from "../FormationTooltipContent";
+import { FormationTooltipContent } from "@/app/(wrapped)/panorama/components/FormationTooltipContent";
+import type { Order, PanoramaFormations } from "@/app/(wrapped)/panorama/types";
+import { Quadrant } from "@/components/Quadrant";
+import { TableQuadrant } from "@/components/TableQuadrant";
+import { publicConfig } from "@/config.public";
+
 import { effectifSizes, InfoTooltipContent } from "./InfoTooltipContent";
 
 const Loader = () => (

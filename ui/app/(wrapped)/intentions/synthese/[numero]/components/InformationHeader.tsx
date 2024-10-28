@@ -1,26 +1,13 @@
-import {
-  Box,
-  CloseButton,
-  Collapse,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, CloseButton, Collapse, Stack, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { hasRole } from "shared";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { useAuth } from "@/utils/security/useAuth";
 
-export const InformationHeader = ({
-  statut,
-}: {
-  statut?: DemandeStatutType;
-}) => {
+export const InformationHeader = ({ statut }: { statut?: DemandeStatutType }) => {
   const { auth } = useAuth();
   const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
 

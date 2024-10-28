@@ -1,15 +1,16 @@
 import { Divider, Flex, Heading, Tag, Text, Tooltip } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
-import { Role } from "shared";
+import type { Role } from "shared";
 
-import { client } from "@/api.client";
+import type { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
+import type { MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import { getMotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { formatDate } from "@/utils/formatDate";
+import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 
-import { formatDepartementLibelleWithCodeDepartement } from "../../../../../../../utils/formatLibelle";
-import { getMotifLabel, MotifLabel } from "../../../../utils/motifDemandeUtils";
-import { getTypeDemandeLabel } from "../../../../utils/typeDemandeUtils";
 import { FilesSection } from "./files/FilesSection";
 
 const formatDifferenceCapacite = (difference?: number) => {
@@ -36,16 +37,10 @@ const formatArray = (values?: Array<string | number | undefined>): string => {
 
 const formatMotifArray = (values?: Array<string | undefined>): string => {
   if (!values) return "Aucun";
-  return formatArray(
-    values.map((motif) => getMotifLabel({ motif: motif as MotifLabel }))
-  );
+  return formatArray(values.map((motif) => getMotifLabel({ motif: motif as MotifLabel })));
 };
 
-export const SyntheseSection = ({
-  demande,
-}: {
-  demande: (typeof client.infer)["[GET]/demande/:numero"];
-}) => {
+export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[GET]/demande/:numero"] }) => {
   return (
     <Flex direction={"column"} gap={6} w="100%">
       <Flex direction={"row"} justify={"space-between"}>
@@ -64,13 +59,7 @@ export const SyntheseSection = ({
       <Divider />
       <Flex direction={"row"} gap={4}>
         <Flex direction={"column"} gap={6} maxW={"50%"}>
-          <Flex
-            direction={"column"}
-            gap={3}
-            bgColor={"blueecume.975"}
-            p={4}
-            h="fit-content"
-          >
+          <Flex direction={"column"} gap={3} bgColor={"blueecume.975"} p={4} h="fit-content">
             <Flex direction={"row"} gap={4}>
               <Text w={["44", "48", "52"]} fontWeight={700}>
                 Établissement
@@ -173,9 +162,7 @@ export const SyntheseSection = ({
             </Flex>
             <Flex direction={"row"} gap={4} justify={"space-between"}>
               <Text fontSize={14}>
-                {demande.commentaire && demande.commentaire.length
-                  ? demande.commentaire
-                  : "Aucune"}
+                {demande.commentaire && demande.commentaire.length ? demande.commentaire : "Aucune"}
               </Text>
             </Flex>
           </Flex>
@@ -231,9 +218,7 @@ export const SyntheseSection = ({
               Nb de places ouvertes en apprentissage
             </Heading>
             <Text fontWeight={700} fontSize={14}>
-              {formatDifferenceCapacite(
-                demande.differenceCapaciteApprentissage
-              )}
+              {formatDifferenceCapacite(demande.differenceCapaciteApprentissage)}
             </Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
@@ -281,11 +266,7 @@ export const SyntheseSection = ({
           )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={2}>
-            <Icon
-              icon="ri:parent-line"
-              color="black"
-              style={{ marginTop: "auto", marginBottom: "auto" }}
-            />
+            <Icon icon="ri:parent-line" color="black" style={{ marginTop: "auto", marginBottom: "auto" }} />
             <Heading as={"h6"} fontSize={14}>
               Besoin(s) RH exprimé(s)
             </Heading>
@@ -302,12 +283,7 @@ export const SyntheseSection = ({
               </Flex>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Discipline(s)</Text>
-                <Text>
-                  {formatArray([
-                    demande.discipline1RecrutementRH,
-                    demande.discipline2RecrutementRH,
-                  ])}
-                </Text>
+                <Text>{formatArray([demande.discipline1RecrutementRH, demande.discipline2RecrutementRH])}</Text>
               </Flex>
             </>
           )}
@@ -323,12 +299,7 @@ export const SyntheseSection = ({
               </Flex>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Discipline(s)</Text>
-                <Text>
-                  {formatArray([
-                    demande.discipline1ReconversionRH,
-                    demande.discipline2ReconversionRH,
-                  ])}
-                </Text>
+                <Text>{formatArray([demande.discipline1ReconversionRH, demande.discipline2ReconversionRH])}</Text>
               </Flex>
             </>
           )}
@@ -345,10 +316,7 @@ export const SyntheseSection = ({
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Discipline(s)</Text>
                 <Text>
-                  {formatArray([
-                    demande.discipline1ProfesseurAssocieRH,
-                    demande.discipline2ProfesseurAssocieRH,
-                  ])}
+                  {formatArray([demande.discipline1ProfesseurAssocieRH, demande.discipline2ProfesseurAssocieRH])}
                 </Text>
               </Flex>
             </>
@@ -365,12 +333,7 @@ export const SyntheseSection = ({
               </Flex>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Discipline(s)</Text>
-                <Text>
-                  {formatArray([
-                    demande.discipline1FormationRH,
-                    demande.discipline2FormationRH,
-                  ])}
-                </Text>
+                <Text>{formatArray([demande.discipline1FormationRH, demande.discipline2FormationRH])}</Text>
               </Flex>
             </>
           )}

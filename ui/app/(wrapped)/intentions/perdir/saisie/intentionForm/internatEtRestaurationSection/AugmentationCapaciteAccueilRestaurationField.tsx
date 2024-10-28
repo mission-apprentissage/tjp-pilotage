@@ -1,17 +1,8 @@
-import {
-  chakra,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-} from "@chakra-ui/react";
+import { chakra, FormControl, FormErrorMessage, FormLabel, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 import { toBoolean } from "@/utils/toBoolean";
-
-import { IntentionForms } from "../defaultFormValues";
 
 export const AugmentationCapaciteAccueilRestaurationField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -21,22 +12,16 @@ export const AugmentationCapaciteAccueilRestaurationField = chakra(
     } = useFormContext<IntentionForms>();
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.augmentationCapaciteAccueilRestauration}
-        isRequired
-      >
+      <FormControl className={className} isInvalid={!!errors.augmentationCapaciteAccueilRestauration} isRequired>
         <FormLabel>
-          Votre proposition est-elle susceptible d'augmenter les capacités
-          d'accueil du service de restauration ?
+          Votre proposition est-elle susceptible d'augmenter les capacités d'accueil du service de restauration ?
         </FormLabel>
         <Controller
           name="augmentationCapaciteAccueilRestauration"
           control={control}
           disabled={disabled}
           rules={{
-            validate: (value) =>
-              typeof value === "boolean" || "Le champ est obligatoire",
+            validate: (value) => typeof value === "boolean" || "Le champ est obligatoire",
           }}
           render={({ field: { onChange, value, onBlur, ref, disabled } }) => (
             <RadioGroup
@@ -57,9 +42,7 @@ export const AugmentationCapaciteAccueilRestaurationField = chakra(
           )}
         />
         {errors.augmentationCapaciteAccueilRestauration && (
-          <FormErrorMessage>
-            {errors.augmentationCapaciteAccueilRestauration?.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.augmentationCapaciteAccueilRestauration?.message}</FormErrorMessage>
         )}
       </FormControl>
     );

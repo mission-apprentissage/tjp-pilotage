@@ -1,22 +1,9 @@
-import {
-  Box,
-  Flex,
-  FormErrorMessage,
-  Input,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+import { Box, Flex, FormErrorMessage, Input, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import {
-  isTypeColoration,
-  isTypeFermeture,
-} from "../../../../../utils/typeDemandeUtils";
-import { IntentionForms } from "../../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
+import { isTypeColoration, isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
 import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
@@ -42,10 +29,7 @@ const ConstanteField = ({ value }: { value: string | number | undefined }) => (
   />
 );
 
-const differenceCapacité = (
-  valueA: number | undefined,
-  valueB: number | undefined = 0
-) => {
+const differenceCapacité = (valueA: number | undefined, valueB: number | undefined = 0) => {
   if (valueB === undefined || valueA === undefined) return "-";
   return valueA - valueB > 0 ? `+${valueA - valueB}` : valueA - valueB;
 };
@@ -61,10 +45,7 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
   const fermeture = isTypeFermeture(typeDemande);
   const showColoration = coloration && !fermeture;
 
-  const [capaciteScolaire, capaciteScolaireActuelle] = watch([
-    "capaciteScolaire",
-    "capaciteScolaireActuelle",
-  ]);
+  const [capaciteScolaire, capaciteScolaireActuelle] = watch(["capaciteScolaire", "capaciteScolaireActuelle"]);
   const [capaciteApprentissage, capaciteApprentissageActuelle] = watch([
     "capaciteApprentissage",
     "capaciteApprentissageActuelle",
@@ -77,10 +58,7 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
 
   const nouvellesPlacesApprentissage = (() => {
     if (isTypeColoration(typeDemande)) return "-";
-    return differenceCapacité(
-      capaciteApprentissage,
-      capaciteApprentissageActuelle
-    );
+    return differenceCapacité(capaciteApprentissage, capaciteApprentissageActuelle);
   })();
 
   return (
@@ -113,22 +91,14 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
               Capacité en voie scolaire
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteScolaireActuelleField
-                disabled={disabled}
-                maxW={240}
-                flex={1}
-              />
+              <CapaciteScolaireActuelleField disabled={disabled} maxW={240} flex={1} />
             </Td>
             <Td p={0} border={"none"}>
               <CapaciteScolaireField disabled={disabled} maxW={240} flex={1} />
             </Td>
             {showColoration && (
               <Td p={0} border={"none"}>
-                <CapaciteScolaireColoreeField
-                  disabled={disabled}
-                  maxW={240}
-                  flex={1}
-                />
+                <CapaciteScolaireColoreeField disabled={disabled} maxW={240} flex={1} />
               </Td>
             )}
             <Td p={0} border={"none"}>
@@ -140,26 +110,14 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
               Capacité en apprentissage
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageActuelleField
-                disabled={disabled}
-                maxW={240}
-                flex={1}
-              />
+              <CapaciteApprentissageActuelleField disabled={disabled} maxW={240} flex={1} />
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageField
-                disabled={disabled}
-                maxW={240}
-                flex={1}
-              />
+              <CapaciteApprentissageField disabled={disabled} maxW={240} flex={1} />
             </Td>
             {showColoration && (
               <Td p={0} border={"none"}>
-                <CapaciteApprentissageColoreeField
-                  disabled={disabled}
-                  maxW={240}
-                  flex={1}
-                />
+                <CapaciteApprentissageColoreeField disabled={disabled} maxW={240} flex={1} />
               </Td>
             )}
             <Td p={0} border={"none"}>
@@ -169,33 +127,19 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
         </Tbody>
       </Table>
       <Box>
-        {errors.capaciteScolaire && (
-          <FormErrorMessage>{errors.capaciteScolaire.message}</FormErrorMessage>
-        )}
+        {errors.capaciteScolaire && <FormErrorMessage>{errors.capaciteScolaire.message}</FormErrorMessage>}
         {errors.capaciteScolaireActuelle && (
-          <FormErrorMessage>
-            {errors.capaciteScolaireActuelle.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.capaciteScolaireActuelle.message}</FormErrorMessage>
         )}
         {errors.capaciteScolaireColoree && (
-          <FormErrorMessage>
-            {errors.capaciteScolaireColoree.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.capaciteScolaireColoree.message}</FormErrorMessage>
         )}
-        {errors.capaciteApprentissage && (
-          <FormErrorMessage>
-            {errors.capaciteApprentissage.message}
-          </FormErrorMessage>
-        )}
+        {errors.capaciteApprentissage && <FormErrorMessage>{errors.capaciteApprentissage.message}</FormErrorMessage>}
         {errors.capaciteApprentissageActuelle && (
-          <FormErrorMessage>
-            {errors.capaciteApprentissageActuelle.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.capaciteApprentissageActuelle.message}</FormErrorMessage>
         )}
         {errors.capaciteApprentissageColoree && (
-          <FormErrorMessage>
-            {errors.capaciteApprentissageColoree.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.capaciteApprentissageColoree.message}</FormErrorMessage>
         )}
       </Box>
     </Flex>

@@ -3,14 +3,13 @@
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
+import { IntentionForm } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/IntentionForm";
+import { IntentionFilesProvider } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/observationsSection/filesSection/filesContext";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { IntentionForm } from "../intentionForm/IntentionForm";
-import { IntentionFilesProvider } from "../intentionForm/observationsSection/filesSection/filesContext";
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
-  const { data: defaultCampagne } = client
-    .ref("[GET]/campagne/expe/default")
-    .useQuery({});
+  const { data: defaultCampagne } = client.ref("[GET]/campagne/expe/default").useQuery({});
 
   return (
     <GuardPermission permission="intentions-perdir/ecriture">

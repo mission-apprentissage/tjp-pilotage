@@ -38,8 +38,10 @@ const chakraRendererTheme: Components = {
   ul: ({ children }) => <UnorderedList mb={"24px"}>{children}</UnorderedList>,
   li: ({ children }) => <ListItem>{children}</ListItem>,
   blockquote: ({ children }) => {
-    const greyColor = useToken("colors", "grey.975");
-    const blueColor = useToken("colors", "bluefrance.525");
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const greyColor = useToken("colors", "grey.975"); // TODO
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const blueColor = useToken("colors", "bluefrance.525"); // TODO
     return (
       <blockquote
         style={{
@@ -55,7 +57,8 @@ const chakraRendererTheme: Components = {
     );
   },
   a: ({ children, href }) => {
-    const { setSelectedEntry } = useGlossaireContext();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { setSelectedEntry } = useGlossaireContext(); // TODO
     if (isNotionId(href)) {
       return (
         <Link

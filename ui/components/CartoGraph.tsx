@@ -263,6 +263,8 @@ export const CartoGraph = ({
         case ScopeEnum["département"]:
           handleClick(findKey(DEPARTEMENTS_LABEL_MAPPING, partial(isEqual, name)));
           break;
+        default:
+          break;
       }
   };
 

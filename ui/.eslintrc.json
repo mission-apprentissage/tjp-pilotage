@@ -23,5 +23,6 @@
     "next": {
       "rootDir": "ui"
     }
-  }
+  },
+  "ignorePatterns": ["next.config.js"]
 }

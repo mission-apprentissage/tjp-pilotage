@@ -1,21 +1,10 @@
-import {
-  Box,
-  Skeleton,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+import { Box, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { Fragment } from "react";
 
-import { OrderIcon } from "../../../../components/OrderIcon";
-import { TooltipIcon } from "../../../../components/TooltipIcon";
-import { formatPercentage } from "../../../../utils/formatUtils";
-import { Order, PilotageReformeStatsRegion } from "../types";
+import type { Order, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage-reforme/types";
+import { OrderIcon } from "@/components/OrderIcon";
+import { TooltipIcon } from "@/components/TooltipIcon";
+import { formatPercentage } from "@/utils/formatUtils";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
   libelleRegion: "Région",
@@ -67,62 +56,27 @@ export const VueRegionAcademieSection = ({
       <Text fontSize={20} fontWeight={700} lineHeight={"34px"}>
         VUE DÉTAILLÉE DES INDICATEURS PAR RÉGIONS
       </Text>
-      <Box
-        borderRadius={4}
-        border={"1px solid"}
-        borderColor="grey.900"
-        p={4}
-        mb={36}
-        bg="white"
-      >
+      <Box borderRadius={4} border={"1px solid"} borderColor="grey.900" p={4} mb={36} bg="white">
         {isLoading ? (
           <Loader />
         ) : (
           <TableContainer flex={1} position="relative">
             <Table variant="striped" size={"sm"}>
-              <Thead
-                position="sticky"
-                top="0"
-                bg="white"
-                boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-                zIndex={1}
-              >
+              <Thead position="sticky" top="0" bg="white" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" zIndex={1}>
                 <Tr>
-                  <Th
-                    cursor="pointer"
-                    pb="4"
-                    onClick={() => handleOrder("libelleRegion")}
-                  >
+                  <Th cursor="pointer" pb="4" onClick={() => handleOrder("libelleRegion")}>
                     <OrderIcon {...order} column="libelleRegion" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.libelleRegion}
                   </Th>
-                  <Th
-                    isNumeric
-                    cursor="pointer"
-                    pb="4"
-                    width="20%"
-                    onClick={() => handleOrder("tauxPoursuite")}
-                  >
+                  <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxPoursuite")}>
                     <OrderIcon {...order} column="tauxPoursuite" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuite}
                   </Th>
-                  <Th
-                    isNumeric
-                    cursor="pointer"
-                    pb="4"
-                    width="20%"
-                    onClick={() => handleOrder("tauxInsertion")}
-                  >
+                  <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxInsertion")}>
                     <OrderIcon {...order} column="tauxInsertion" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion}
                   </Th>
-                  <Th
-                    isNumeric
-                    cursor="pointer"
-                    pb="4"
-                    width="20%"
-                    onClick={() => handleOrder("tauxChomage")}
-                  >
+                  <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxChomage")}>
                     <OrderIcon {...order} column="tauxChomage" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxChomage}
                     <TooltipIcon ml="1" label="T4 2022" />
@@ -132,33 +86,17 @@ export const VueRegionAcademieSection = ({
               <Tbody>
                 <Fragment>
                   {data?.statsRegions.map((region) => {
-                    const trBgColor =
-                      region.codeRegion === codeRegion
-                        ? "blueecume.400_hover !important"
-                        : "";
+                    const trBgColor = region.codeRegion === codeRegion ? "blueecume.400_hover !important" : "";
 
-                    const tdBgColor =
-                      region.codeRegion === codeRegion
-                        ? "inherit !important"
-                        : "";
+                    const tdBgColor = region.codeRegion === codeRegion ? "inherit !important" : "";
 
-                    const trColor =
-                      region.codeRegion === codeRegion ? "white" : "inherit";
+                    const trColor = region.codeRegion === codeRegion ? "white" : "inherit";
 
-                    const color =
-                      region.codeRegion === codeRegion
-                        ? "inherit"
-                        : "bluefrance.113";
+                    const color = region.codeRegion === codeRegion ? "inherit" : "bluefrance.113";
 
                     return (
-                      <Fragment
-                        key={`${region.codeRegion}_${region.libelleRegion}`}
-                      >
-                        <Tr
-                          backgroundColor={trBgColor}
-                          color={trColor}
-                          fontWeight="700"
-                        >
+                      <Fragment key={`${region.codeRegion}_${region.libelleRegion}`}>
+                        <Tr backgroundColor={trBgColor} color={trColor} fontWeight="700">
                           <Td backgroundColor={tdBgColor} color={color}>
                             {region.libelleRegion}
                           </Td>

@@ -12,7 +12,7 @@ import {
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const TravauxAmenagementCoutField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -36,13 +36,8 @@ export const TravauxAmenagementCoutField = chakra(
     if (!visible) return null;
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.travauxAmenagementCout}
-      >
-        <FormLabel>
-          Quel est le coût estimé de ces travaux d'aménagement (en euros) ?
-        </FormLabel>
+      <FormControl className={className} isInvalid={!!errors.travauxAmenagementCout}>
+        <FormLabel>Quel est le coût estimé de ces travaux d'aménagement (en euros) ?</FormLabel>
         <NumberInput w="sm" onFocus={(e) => e.currentTarget.select()}>
           <NumberInputField
             {...register("travauxAmenagementCout", {
@@ -57,11 +52,7 @@ export const TravauxAmenagementCoutField = chakra(
             <NumberDecrementStepper />
           </NumberInputStepper>
         </NumberInput>
-        {errors.travauxAmenagementCout && (
-          <FormErrorMessage>
-            {errors.travauxAmenagementCout.message}
-          </FormErrorMessage>
-        )}
+        {errors.travauxAmenagementCout && <FormErrorMessage>{errors.travauxAmenagementCout.message}</FormErrorMessage>}
       </FormControl>
     );
   }

@@ -2,7 +2,7 @@ import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import PageClient from "./client";
 
-export default ({
+const IntentionsPerDirSynthesePage = ({
   params,
 }: {
   params: {
@@ -13,3 +13,5 @@ export default ({
     <PageClient params={params}></PageClient>
   </GuardPermission>
 );
+
+export default IntentionsPerDirSynthesePage;

@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import { Box, chakra, Flex, IconButton } from "@chakra-ui/react";
 
-import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { ExportMenuButton } from "./ExportMenuButton";
 
 export const TableFooter = chakra(
   ({
@@ -22,24 +22,14 @@ export const TableFooter = chakra(
     className?: string;
   }) => {
     return (
-      <Flex
-        align="center"
-        borderTop="1px solid"
-        borderColor="grey.900"
-        py="1.5"
-        className={className}
-      >
+      <Flex align="center" borderTop="1px solid" borderColor="grey.900" py="1.5" className={className}>
         <Flex mr="auto">
           {(onExportCsv || onExportExcel) && (
-            <ExportMenuButton
-              onExportCsv={onExportCsv}
-              onExportExcel={onExportExcel}
-            />
+            <ExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} />
           )}
         </Flex>
         <Box mr="4" ml="auto">
-          {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur{" "}
-          {count}
+          {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur {count}
         </Box>
         <IconButton
           isDisabled={page === 0}

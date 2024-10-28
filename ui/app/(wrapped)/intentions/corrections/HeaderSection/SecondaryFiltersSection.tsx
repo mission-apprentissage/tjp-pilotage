@@ -1,13 +1,12 @@
 import { Box, Button, Flex, FormLabel, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import type { Corrections, FiltersCorrections } from "@/app/(wrapped)/intentions/corrections/types";
+import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
-
-import { useGlossaireContext } from "../../../glossaire/glossaireContext";
-import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
-import { Corrections, FiltersCorrections } from "../types";
 
 export const SecondaryFiltersSection = ({
   activeFilters,
@@ -17,10 +16,7 @@ export const SecondaryFiltersSection = ({
   data,
 }: {
   activeFilters: FiltersCorrections;
-  handleFilters: (
-    type: keyof FiltersCorrections,
-    value: FiltersCorrections[keyof FiltersCorrections]
-  ) => void;
+  handleFilters: (type: keyof FiltersCorrections, value: FiltersCorrections[keyof FiltersCorrections]) => void;
   filterTracker: (filterName: keyof FiltersCorrections) => () => void;
   resetFilters: () => void;
   data?: Corrections;
@@ -74,9 +70,7 @@ export const SecondaryFiltersSection = ({
               width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) =>
-                handleFilters("codeNiveauDiplome", selected)
-              }
+              onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
               options={data?.filters.diplomes}
               value={activeFilters.codeNiveauDiplome ?? []}
               disabled={data?.filters.diplomes.length === 0}
@@ -91,9 +85,7 @@ export const SecondaryFiltersSection = ({
               width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) =>
-                handleFilters("codeDepartement", selected)
-              }
+              onChange={(selected) => handleFilters("codeDepartement", selected)}
               options={data?.filters.departements.map((departement) => ({
                 label: formatDepartementLibelleWithCodeDepartement({
                   libelleDepartement: departement.label,
@@ -130,9 +122,7 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.secteur ?? ""}
               onChange={(e) => handleFilters("secteur", e.target.value)}
-              borderBottomColor={
-                activeFilters.secteur != undefined ? "info.525" : ""
-              }
+              borderBottomColor={activeFilters.secteur != undefined ? "info.525" : ""}
               placeholder="Public / privé"
             >
               {data?.filters.secteurs?.map((option) => (
@@ -168,14 +158,12 @@ export const SecondaryFiltersSection = ({
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("typeDemande", selected)}
-              options={data?.filters.typesDemande.map(
-                (typeDemande: { value: string; label: string }) => {
-                  return {
-                    value: typeDemande.value,
-                    label: getTypeDemandeLabel(typeDemande.value),
-                  };
-                }
-              )}
+              options={data?.filters.typesDemande.map((typeDemande: { value: string; label: string }) => {
+                return {
+                  value: typeDemande.value,
+                  label: getTypeDemandeLabel(typeDemande.value),
+                };
+              })}
               value={activeFilters.typeDemande ?? []}
               disabled={data?.filters.typesDemande.length === 0}
             >
@@ -190,9 +178,7 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.voie ?? ""}
               onChange={(e) => handleFilters("voie", e.target.value)}
-              borderBottomColor={
-                activeFilters.voie != undefined ? "info.525" : ""
-              }
+              borderBottomColor={activeFilters.voie != undefined ? "info.525" : ""}
               placeholder="TOUTES"
             >
               {data?.filters.voies?.map((option) => (
@@ -210,9 +196,7 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.coloration?.toString() ?? ""}
               onChange={(e) => handleFilters("coloration", e.target.value)}
-              borderBottomColor={
-                activeFilters.coloration != undefined ? "info.525" : ""
-              }
+              borderBottomColor={activeFilters.coloration != undefined ? "info.525" : ""}
               placeholder="Oui / non"
             >
               {data?.filters.colorations?.map((option) => (
@@ -230,9 +214,7 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.amiCMA?.toString() ?? ""}
               onChange={(e) => handleFilters("amiCMA", e.target.value)}
-              borderBottomColor={
-                activeFilters.amiCMA != undefined ? "info.525" : ""
-              }
+              borderBottomColor={activeFilters.amiCMA != undefined ? "info.525" : ""}
               placeholder="Oui / non"
             >
               {data?.filters.amiCMAs?.map((option) => (

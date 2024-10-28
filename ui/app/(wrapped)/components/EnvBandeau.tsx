@@ -4,7 +4,7 @@ import { Box, Button, chakra, Stack, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
-import { publicConfig, isProduction } from "@/config.public";
+import { isProduction, publicConfig } from "@/config.public";
 import { themeDefinition } from "@/theme/theme";
 
 export const EnvBandeau = chakra(() => {

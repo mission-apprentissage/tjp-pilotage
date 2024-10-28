@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, useBreakpointValue } from "@chakra-ui/react";
-import { CSSProperties } from "react";
+import type { CSSProperties } from "react";
 
 interface HeroProps {
   children: React.ReactNode;
@@ -28,11 +28,7 @@ export const Hero = ({ children, variant = "blue" }: HeroProps) => {
   });
 
   return (
-    <Box
-      width="100%"
-      position="relative"
-      backgroundColor={`rgb(${variant === "blue" ? blue : white})`}
-    >
+    <Box width="100%" position="relative" backgroundColor={`rgb(${variant === "blue" ? blue : white})`}>
       <Box
         height="100%"
         width="100%"

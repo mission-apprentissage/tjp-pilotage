@@ -1,55 +1,30 @@
 import { Flex, Tag, Text } from "@chakra-ui/react";
 import { useId } from "react";
-import { CSSObjectWithLabel } from "react-select";
+import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
 
 export const cfdRegex = /^\d{8}$/;
 
-const OptionLabel = ({
-  option,
-}: {
-  option: (typeof client.infer)["[GET]/diplome/search/:search"][number];
-}) => {
+const OptionLabel = ({ option }: { option: (typeof client.infer)["[GET]/diplome/search/:search"][number] }) => {
   return (
     <Flex gap={2}>
       <Text textOverflow={"ellipsis"} overflow={"hidden"} w="fit-content">
         {option.label}
       </Text>
       {option.isSpecialite && (
-        <Tag
-          colorScheme={"blue"}
-          size={"md"}
-          maxHeight={4}
-          minW={"fit-content"}
-          my={"auto"}
-          textAlign={"center"}
-        >
+        <Tag colorScheme={"blue"} size={"md"} maxHeight={4} minW={"fit-content"} my={"auto"} textAlign={"center"}>
           Spécialité
         </Tag>
       )}
       {option.isOption && (
-        <Tag
-          colorScheme={"blue"}
-          size={"md"}
-          maxHeight={4}
-          minW={"fit-content"}
-          my={"auto"}
-          textAlign={"center"}
-        >
+        <Tag colorScheme={"blue"} size={"md"} maxHeight={4} minW={"fit-content"} my={"auto"} textAlign={"center"}>
           Option
         </Tag>
       )}
       {option.dateFermeture && (
-        <Tag
-          colorScheme={"red"}
-          size={"md"}
-          maxHeight={4}
-          minW={"fit-content"}
-          my={"auto"}
-          textAlign={"center"}
-        >
+        <Tag colorScheme={"red"} size={"md"} maxHeight={4} minW={"fit-content"} my={"auto"} textAlign={"center"}>
           Fermeture au {option.dateFermeture}
         </Tag>
       )}
@@ -68,9 +43,7 @@ export const CfdAutocompleteInput = ({
   defaultValue?: { value: string; label: string };
   active?: boolean;
   inError: boolean;
-  onChange: (
-    value?: (typeof client.infer)["[GET]/diplome/search/:search"][number]
-  ) => void;
+  onChange: (value?: (typeof client.infer)["[GET]/diplome/search/:search"][number]) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -79,9 +52,9 @@ export const CfdAutocompleteInput = ({
     }),
   };
 
-  const formatOptionLabel = (
-    option: (typeof client.infer)["[GET]/diplome/search/:search"][number]
-  ) => <OptionLabel option={option} />;
+  const formatOptionLabel = (option: (typeof client.infer)["[GET]/diplome/search/:search"][number]) => (
+    <OptionLabel option={option} />
+  );
 
   return (
     <AsyncSelect
@@ -112,20 +85,14 @@ export const CfdAutocompleteInput = ({
       }
       loadOptions={(search) => {
         if (search.length >= 3)
-          return client
-            .ref("[GET]/diplome/search/:search")
-            .query({ params: { search }, query: {} });
+          return client.ref("[GET]/diplome/search/:search").query({ params: { search }, query: {} });
       }}
       formatOptionLabel={formatOptionLabel}
       loadingMessage={({ inputValue }) =>
-        inputValue.length >= 3
-          ? "Recherche..."
-          : "Veuillez rentrer au moins 3 lettres"
+        inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
       }
       isClearable={true}
-      noOptionsMessage={({ inputValue }) =>
-        inputValue ? "Pas de diplôme correspondant" : "Commencez à écrire..."
-      }
+      noOptionsMessage={({ inputValue }) => (inputValue ? "Pas de diplôme correspondant" : "Commencez à écrire...")}
       placeholder="Code diplôme ou libellé"
       isDisabled={active === false}
     />

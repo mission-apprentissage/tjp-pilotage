@@ -1,16 +1,9 @@
-import {
-  Button,
-  Flex,
-  Tab,
-  TabList,
-  TabPanels,
-  Tabs,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Flex, Tab, TabList, TabPanels, Tabs, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
-import { Filters, TabFiltres } from "./TabFiltres";
+import type { Filters } from "./TabFiltres";
+import { TabFiltres } from "./TabFiltres";
 import { TabInformations } from "./TabInformations";
 
 enum QuadrantTabsEnum {
@@ -48,25 +41,13 @@ export const QuadrantTabs = ({
     >
       <TabList>
         <Tab as={Button}>
-          <Flex
-            direction={"row"}
-            justify={"center"}
-            alignItems={"center"}
-            p={3}
-            gap={2}
-          >
+          <Flex direction={"row"} justify={"center"} alignItems={"center"} p={3} gap={2}>
             <Icon icon="ri:filter-line" />
             <Text>Filtres</Text>
           </Flex>
         </Tab>
         <Tab as={Button}>
-          <Flex
-            direction={"row"}
-            justify={"center"}
-            alignItems={"center"}
-            p={3}
-            gap={2}
-          >
+          <Flex direction={"row"} justify={"center"} alignItems={"center"} p={3} gap={2}>
             <Icon icon="ri:question-line" />
             <Text>Comprendre le quadrant</Text>
           </Flex>

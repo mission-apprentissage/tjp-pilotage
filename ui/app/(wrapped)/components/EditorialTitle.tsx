@@ -1,6 +1,6 @@
 import { Box, Heading } from "@chakra-ui/react";
 
-import { themeDefinition } from "../../../theme/theme";
+import { themeDefinition } from "@/theme/theme";
 
 interface EditorialTitleProps {
   children: React.ReactNode;

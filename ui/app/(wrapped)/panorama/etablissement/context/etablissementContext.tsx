@@ -1,9 +1,8 @@
 import { createContext, useContext, useState } from "react";
 
-import { client } from "@/api.client";
+import type { client } from "@/api.client";
 
-export type AnalyseDetailleeType =
-  (typeof client.infer)["[GET]/etablissement/:uai/analyse-detaillee"];
+export type AnalyseDetailleeType = (typeof client.infer)["[GET]/etablissement/:uai/analyse-detaillee"];
 
 type EtablissementContextType = {
   uai: string;
@@ -17,17 +16,11 @@ interface EtablissementContextProps {
   value?: Partial<EtablissementContextType>;
 }
 
-export const EtablissementContext = createContext<EtablissementContextType>(
-  {} as EtablissementContextType
-);
+export const EtablissementContext = createContext<EtablissementContextType>({} as EtablissementContextType);
 
-export function EtablissementContextProvider({
-  children,
-  value,
-}: EtablissementContextProps) {
+export function EtablissementContextProvider({ children, value }: EtablissementContextProps) {
   const [uai, setUai] = useState(value?.uai ?? "");
-  const [analyseDetaillee, setAnalyseDetaillee] =
-    useState<AnalyseDetailleeType>();
+  const [analyseDetaillee, setAnalyseDetaillee] = useState<AnalyseDetailleeType>();
 
   const context = {
     uai,
@@ -36,11 +29,7 @@ export function EtablissementContextProvider({
     setAnalyseDetaillee,
   };
 
-  return (
-    <EtablissementContext.Provider value={context}>
-      {children}
-    </EtablissementContext.Provider>
-  );
+  return <EtablissementContext.Provider value={context}>{children}</EtablissementContext.Provider>;
 }
 
 export const useEtablissementContext = () => useContext(EtablissementContext);

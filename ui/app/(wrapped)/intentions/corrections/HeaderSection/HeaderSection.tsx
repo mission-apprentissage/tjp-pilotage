@@ -1,6 +1,7 @@
 import { Flex, Skeleton } from "@chakra-ui/react";
 
-import { Corrections, CorrectionsStats, FiltersCorrections } from "../types";
+import type { Corrections, CorrectionsStats, FiltersCorrections } from "@/app/(wrapped)/intentions/corrections/types";
+
 import { CountersSection } from "./CountersSection";
 import { PrimaryFiltersSection } from "./PrimaryFiltersSection";
 import { SecondaryFiltersSection } from "./SecondaryFiltersSection";
@@ -47,10 +48,7 @@ export const HeaderSection = ({
   countData,
 }: {
   activeFilters: FiltersCorrections;
-  handleFilters: (
-    type: keyof FiltersCorrections,
-    value: FiltersCorrections[keyof FiltersCorrections]
-  ) => void;
+  handleFilters: (type: keyof FiltersCorrections, value: FiltersCorrections[keyof FiltersCorrections]) => void;
   filterTracker: (filterName: keyof FiltersCorrections) => () => void;
   resetFilters: () => void;
   isLoading: boolean;

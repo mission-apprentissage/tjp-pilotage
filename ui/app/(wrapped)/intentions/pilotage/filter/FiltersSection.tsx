@@ -1,37 +1,24 @@
-import {
-  Box,
-  Button,
-  Flex,
-  FormLabel,
-  Grid,
-  GridItem,
-  Select,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, FormLabel, Grid, GridItem, Select, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { ScopeEnum } from "shared";
 
-import { TooltipIcon } from "@/components/TooltipIcon";
-import { themeDefinition } from "@/theme/theme";
-
-import { Multiselect } from "../../../../../components/Multiselect";
-import { useGlossaireContext } from "../../../glossaire/glossaireContext";
-import { getStickyNavHeight } from "../../../utils/getStickyNavOffset";
-import {
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import type {
   FiltersStatsPilotageIntentions,
   StatsPilotageIntentions,
-} from "../types";
+} from "@/app/(wrapped)/intentions/pilotage/types";
+import { getStickyNavHeight } from "@/app/(wrapped)/utils/getStickyNavOffset";
+import { Multiselect } from "@/components/Multiselect";
+import { TooltipIcon } from "@/components/TooltipIcon";
+import { themeDefinition } from "@/theme/theme";
 
 const findDefaultRentreeScolaireForCampagne = (
   annee: string,
   rentreesScolaires: StatsPilotageIntentions["filters"]["rentreesScolaires"]
 ) => {
   if (rentreesScolaires) {
-    const rentreeScolaire = rentreesScolaires.find(
-      (r) => parseInt(r.value) === parseInt(annee) + 1
-    );
+    const rentreeScolaire = rentreesScolaires.find((r) => parseInt(r.value) === parseInt(annee) + 1);
 
     if (rentreeScolaire) return rentreeScolaire.value;
   }
@@ -79,9 +66,7 @@ export const FiltersSection = ({
       );
       newFilters = {
         ...newFilters,
-        rentreeScolaire: defaultRentreeScolaire
-          ? [defaultRentreeScolaire]
-          : undefined,
+        rentreeScolaire: defaultRentreeScolaire ? [defaultRentreeScolaire] : undefined,
       };
     }
 
@@ -189,9 +174,7 @@ export const FiltersSection = ({
             size="md"
             width={"100%"}
             variant="newInput"
-            onChange={(selected) =>
-              onUpdateFilter({ key: "rentreeScolaire", selected })
-            }
+            onChange={(selected) => onUpdateFilter({ key: "rentreeScolaire", selected })}
             options={data?.filters.rentreesScolaires}
             value={filters.rentreeScolaire ?? []}
             gutter={0}
@@ -289,9 +272,7 @@ export const FiltersSection = ({
             width={"100%"}
             size="md"
             variant="newInput"
-            onChange={(selected) =>
-              onUpdateFilter({ key: "codeNiveauDiplome", selected })
-            }
+            onChange={(selected) => onUpdateFilter({ key: "codeNiveauDiplome", selected })}
             options={data?.filters.niveauxDiplome}
             value={filters.codeNiveauDiplome ?? []}
             gutter={0}
@@ -306,9 +287,7 @@ export const FiltersSection = ({
             width={"100%"}
             size="md"
             variant="newInput"
-            onChange={(selected) =>
-              onUpdateFilter({ key: "codeNsf", selected })
-            }
+            onChange={(selected) => onUpdateFilter({ key: "codeNsf", selected })}
             options={data?.filters.nsfs}
             value={filters.codeNsf ?? []}
             gutter={0}
@@ -340,9 +319,8 @@ export const FiltersSection = ({
               label={
                 <Box>
                   <Text>
-                    Dans Orion, à partir de la campagne 2024, on désigne comme
-                    “Colorations” le fait de colorer des places existantes sans
-                    augmentation de capacité.
+                    Dans Orion, à partir de la campagne 2024, on désigne comme “Colorations” le fait de colorer des
+                    places existantes sans augmentation de capacité.
                   </Text>
                   <Text mt={4}>Cliquez pour plus d'infos.</Text>
                 </Box>
@@ -373,9 +351,7 @@ export const FiltersSection = ({
             width={"100%"}
             size="md"
             variant="newInput"
-            onChange={(selected) =>
-              onUpdateFilter({ key: "secteur", selected })
-            }
+            onChange={(selected) => onUpdateFilter({ key: "secteur", selected })}
             options={data?.filters.secteurs}
             value={filters.secteur ?? []}
             gutter={0}

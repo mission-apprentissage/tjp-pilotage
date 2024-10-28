@@ -1,4 +1,5 @@
-import { hasPermission, Permission } from "shared";
+import type { Permission } from "shared";
+import { hasPermission } from "shared";
 
 import { useAuth } from "./useAuth";
 

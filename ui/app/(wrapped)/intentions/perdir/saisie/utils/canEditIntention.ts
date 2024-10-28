@@ -1,7 +1,5 @@
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 const IS_SAISIE_DISABLED = false;
 
@@ -9,10 +7,7 @@ export const isSaisieDisabled = () => {
   return IS_SAISIE_DISABLED;
 };
 
-const isSaisieAllowedForPerdir = (
-  isPerdir: boolean,
-  statut?: DemandeStatutType
-) => {
+const isSaisieAllowedForPerdir = (isPerdir: boolean, statut?: DemandeStatutType) => {
   if (!isPerdir) return true;
 
   return (

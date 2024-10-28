@@ -1,8 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { cardAnatomy } from "@chakra-ui/anatomy";
 import { createMultiStyleConfigHelpers } from "@chakra-ui/react";
 
-const { definePartsStyle, defineMultiStyleConfig } =
-  createMultiStyleConfigHelpers(cardAnatomy.keys);
+const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(cardAnatomy.keys);
 
 const baseStyle = definePartsStyle({
   container: {

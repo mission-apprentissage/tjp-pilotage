@@ -6,6 +6,7 @@ import { CODES_REGIONS_EXPE } from "shared/security/securityUtils";
 
 import { useAuth } from "@/utils/security/useAuth";
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default () => {
   const { auth } = useAuth();
   const isPerdir = hasRole({
@@ -14,10 +15,8 @@ export default () => {
   });
   // Feature flag pour les perdir de la région Occitanie (76) et AURA (84)
   // qui font partie du test
-  const FF_isPerdirPartOfExpe =
-    isPerdir && CODES_REGIONS_EXPE.includes(auth?.user.codeRegion ?? "");
+  const FF_isPerdirPartOfExpe = isPerdir && CODES_REGIONS_EXPE.includes(auth?.user.codeRegion ?? "");
 
-  FF_isPerdirPartOfExpe
-    ? redirect("/intentions/perdir")
-    : redirect("/intentions/saisie");
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  FF_isPerdirPartOfExpe ? redirect("/intentions/perdir") : redirect("/intentions/saisie");
 };

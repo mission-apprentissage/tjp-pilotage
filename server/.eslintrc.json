@@ -35,5 +35,6 @@
     "node": {
       "allowModules": []
     }
-  }
+  },
+  "ignorePatterns": ["test/jest.config.js", "test/jest-integration.config.js"]
 }

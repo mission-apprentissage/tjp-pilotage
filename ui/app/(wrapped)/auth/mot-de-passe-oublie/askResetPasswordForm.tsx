@@ -17,9 +17,9 @@ import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { emailRegex } from "shared";
 
-import { client } from "../../../../api.client";
-import { getErrorMessage } from "../../../../utils/apiError";
-import { AuthContext } from "../authContext";
+import { client } from "@/api.client";
+import { AuthContext } from "@/app/(wrapped)/auth/authContext";
+import { getErrorMessage } from "@/utils/apiError";
 
 export const ForgottenPasswordForm = () => {
   const {
@@ -53,11 +53,7 @@ export const ForgottenPasswordForm = () => {
   return (
     <Box flex="1">
       <Card boxShadow="md" maxW="360px" mt="20" width="100%" mx="auto">
-        <CardBody
-          p="6"
-          as="form"
-          onSubmit={handleSubmit((v) => login({ body: v }))}
-        >
+        <CardBody p="6" as="form" onSubmit={handleSubmit(async (v) => login({ body: v }))}>
           <Heading fontWeight="light" mb="6" textAlign="center" fontSize="2xl">
             Mot de passe oublié
           </Heading>
@@ -72,9 +68,7 @@ export const ForgottenPasswordForm = () => {
                 },
               })}
             />
-            {!!errors.email && (
-              <FormErrorMessage>{errors.email.message}</FormErrorMessage>
-            )}
+            {!!errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
           </FormControl>
           {isError && (
             <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
@@ -82,13 +76,7 @@ export const ForgottenPasswordForm = () => {
             </Text>
           )}
           <Flex>
-            <Button
-              isLoading={isLoading}
-              type="submit"
-              mt="4"
-              ml="auto"
-              variant="primary"
-            >
+            <Button isLoading={isLoading} type="submit" mt="4" ml="auto" variant="primary">
               Envoyer
             </Button>
           </Flex>

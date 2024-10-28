@@ -1,7 +1,5 @@
 import { extendBaseTheme, theme as chakraTheme } from "@chakra-ui/react";
 
-import { themeColors } from "@/theme/themeColors";
-
 import { badgeTheme } from "./Badge.theme";
 import { breadcrumbTheme } from "./Breadcrumb.theme";
 import { buttonTheme } from "./Button.theme";
@@ -17,6 +15,7 @@ import { tableTheme } from "./Table.theme";
 import { tabsTheme } from "./Tabs.theme";
 import { tagTheme } from "./Tag.theme";
 import { textareaTheme } from "./Textarea.theme";
+import { themeColors } from "./themeColors";
 import { tooltipTheme } from "./Tooltip.theme";
 
 export const themeDefinition = {

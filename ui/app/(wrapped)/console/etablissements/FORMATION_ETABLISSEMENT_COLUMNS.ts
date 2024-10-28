@@ -1,5 +1,5 @@
-import { client } from "@/api.client";
-import { ExportColumns } from "@/utils/downloadExport";
+import type { client } from "@/api.client";
+import type { ExportColumns } from "@/utils/downloadExport";
 
 export const FORMATION_ETABLISSEMENT_COLUMNS = {
   // Rentrée scolaire
@@ -42,16 +42,11 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   tauxPoursuite: "Tx de poursuite d'études régional",
   positionQuadrant: "Position dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
-  tauxInsertionEtablissement:
-    "Tx d'emploi 6 mois de la formation dans l'établissement",
-  tauxPoursuiteEtablissement:
-    "Tx de poursuite d'études de la formation dans l'établissement",
-  tauxDevenirFavorableEtablissement:
-    "Tx de devenir favorable de la formation dans l'établissement",
+  tauxInsertionEtablissement: "Tx d'emploi 6 mois de la formation dans l'établissement",
+  tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
+  tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]
->;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]>;
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   // Rentrée scolaire
@@ -88,16 +83,11 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   tauxPoursuite: "Tx de poursuite d'études régional",
   positionQuadrant: "Position dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
-  tauxInsertionEtablissement:
-    "Tx d'emploi 6 mois de la formation dans l'établissement",
-  tauxPoursuiteEtablissement:
-    "Tx de poursuite d'études de la formation dans l'établissement",
-  tauxDevenirFavorableEtablissement:
-    "Tx de devenir favorable de la formation dans l'établissement",
+  tauxInsertionEtablissement: "Tx d'emploi 6 mois de la formation dans l'établissement",
+  tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
+  tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]
->;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]>;
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   // Rentrée scolaire
@@ -121,13 +111,8 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   tauxPoursuite: "Tx de poursuite d'études régional",
   positionQuadrant: "Position dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
-  tauxInsertionEtablissement:
-    "Tx d'emploi 6 mois de la formation dans l'établissement",
-  tauxPoursuiteEtablissement:
-    "Tx de poursuite d'études de la formation dans l'établissement",
-  tauxDevenirFavorableEtablissement:
-    "Tx de devenir favorable de la formation dans l'établissement",
+  tauxInsertionEtablissement: "Tx d'emploi 6 mois de la formation dans l'établissement",
+  tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
+  tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]
->;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]>;

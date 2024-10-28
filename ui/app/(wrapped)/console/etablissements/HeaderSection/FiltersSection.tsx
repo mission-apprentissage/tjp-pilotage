@@ -4,11 +4,10 @@ import { usePlausible } from "next-plausible";
 import { useContext, useEffect } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 
+import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
+import type { Filters, FiltersList, Order } from "@/app/(wrapped)/console/etablissements/types";
 import { CodeRegionFilterContext, UaiFilterContext } from "@/app/layoutClient";
 import { Multiselect } from "@/components/Multiselect";
-
-import { FORMATION_ETABLISSEMENT_COLUMNS } from "../FORMATION_ETABLISSEMENT_COLUMNS";
-import { Filters, FiltersList, Order } from "../types";
 
 export const FiltersSection = ({
   setSearchParams,
@@ -34,28 +33,18 @@ export const FiltersSection = ({
   filtersLists?: FiltersList;
 }) => {
   const trackEvent = usePlausible();
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(
-    CodeRegionFilterContext
-  );
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
 
   const { uaiFilter, setUaiFilter } = useContext(UaiFilterContext);
 
   const filters = searchParams.filters ?? {};
   const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
-  const handleFiltersContext = (
-    type: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
-    if (type === "uai" && value != null)
-      setUaiFilter((value as string[])[0] ?? "");
-    if (type === "codeRegion" && value != null)
-      setCodeRegionFilter((value as string[])[0] ?? "");
+  const handleFiltersContext = (type: keyof Filters, value: Filters[keyof Filters]) => {
+    if (type === "uai" && value != null) setUaiFilter((value as string[])[0] ?? "");
+    if (type === "codeRegion" && value != null) setCodeRegionFilter((value as string[])[0] ?? "");
   };
 
-  const handleFilters = (
-    type: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
+  const handleFilters = (type: keyof Filters, value: Filters[keyof Filters]) => {
     handleFiltersContext(type, value);
 
     let newFilters: Partial<Filters> = {
@@ -291,16 +280,12 @@ export const FiltersSection = ({
         <Checkbox
           size="lg"
           onChange={(event) => {
-            handleToggleShowAnneeCommune(
-              event.target.checked.toString() ?? "false"
-            );
+            handleToggleShowAnneeCommune(event.target.checked.toString() ?? "false");
           }}
           isChecked={searchParams.withAnneeCommune !== "false"}
           whiteSpace={"nowrap"}
         >
-          <Text fontSize={"14px"}>
-            Afficher les secondes et premières communes
-          </Text>
+          <Text fontSize={"14px"}>Afficher les secondes et premières communes</Text>
         </Checkbox>
       </Flex>
       <Button

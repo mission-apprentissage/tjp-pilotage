@@ -1,6 +1,6 @@
 import { Badge, Box } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { Scope } from "shared/security/permissions";
+import type { Scope } from "shared/security/permissions";
 
 // Compteur pour id unique
 let i = 0;
@@ -20,13 +20,7 @@ const formatScopeLabel = (scope: Scope) => {
   }
 };
 
-const PermissionBadge = ({
-  rights,
-  scope,
-}: {
-  rights: string[];
-  scope: Scope;
-}) => {
+const PermissionBadge = ({ rights, scope }: { rights: string[]; scope: Scope }) => {
   const icons = [];
   const getVariant = () => {
     switch (scope) {

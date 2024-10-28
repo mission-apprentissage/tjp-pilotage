@@ -12,7 +12,7 @@ import {
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const AugmentationCapaciteAccueilHebergementPlacesField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -34,10 +34,7 @@ export const AugmentationCapaciteAccueilHebergementPlacesField = chakra(
     if (!visible) return null;
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.augmentationCapaciteAccueilHebergementPlaces}
-      >
+      <FormControl className={className} isInvalid={!!errors.augmentationCapaciteAccueilHebergementPlaces}>
         <FormLabel>Combien de places ?</FormLabel>
         <Controller
           name="augmentationCapaciteAccueilHebergementPlaces"
@@ -94,9 +91,7 @@ export const AugmentationCapaciteAccueilHebergementPlacesField = chakra(
           )}
         />
         {errors.augmentationCapaciteAccueilHebergementPlaces && (
-          <FormErrorMessage>
-            {errors.augmentationCapaciteAccueilHebergementPlaces.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.augmentationCapaciteAccueilHebergementPlaces.message}</FormErrorMessage>
         )}
       </FormControl>
     );

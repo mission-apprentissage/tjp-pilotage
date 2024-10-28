@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { CSSObjectWithLabel } from "react-select";
+import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 import { hasRole } from "shared";
 
@@ -17,9 +17,7 @@ export const UaiAutocomplete = ({
   defaultValue?: { value: string; label?: string; commune?: string };
   disabled?: boolean;
   inError: boolean;
-  onChange: (
-    value?: (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][number]
-  ) => void;
+  onChange: (value?: (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][number]) => void;
 }) => {
   const { auth } = useAuth();
   const selectStyle = {
@@ -56,15 +54,11 @@ export const UaiAutocomplete = ({
             .query({ params: { search: inputValue }, query: {} });
       }}
       loadingMessage={({ inputValue }) =>
-        inputValue.length >= 3
-          ? "Recherche..."
-          : "Veuillez rentrer au moins 3 lettres"
+        inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
       }
       isClearable={true}
       noOptionsMessage={({ inputValue }) =>
-        inputValue
-          ? "Pas d'établissement correspondant à votre UAI"
-          : "Commencez à écrire..."
+        inputValue ? "Pas d'établissement correspondant à votre UAI" : "Commencez à écrire..."
       }
       placeholder="UAI, nom de l'établissement ou commune"
       isDisabled={disabled}

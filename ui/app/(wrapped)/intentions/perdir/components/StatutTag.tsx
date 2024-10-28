@@ -1,10 +1,8 @@
 import { chakra, Tag } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import React from "react";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
 
@@ -73,12 +71,7 @@ export const StatutTag = chakra(
     };
 
     return (
-      <Tag
-        className={className}
-        size={size}
-        color={getColor(statut)}
-        bgColor={getBgColor(statut)}
-      >
+      <Tag className={className} size={size} color={getColor(statut)} bgColor={getBgColor(statut)}>
         {hasIcon && <TagIcon statut={statut} />}
         {formatStatut(statut)}
       </Tag>

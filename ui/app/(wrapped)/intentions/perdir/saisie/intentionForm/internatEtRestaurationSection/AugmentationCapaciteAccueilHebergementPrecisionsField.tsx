@@ -1,14 +1,8 @@
-import {
-  chakra,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Textarea,
-} from "@chakra-ui/react";
+import { chakra, FormControl, FormErrorMessage, FormLabel, Textarea } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const AugmentationCapaciteAccueilHebergementPrecisionsField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -30,10 +24,7 @@ export const AugmentationCapaciteAccueilHebergementPrecisionsField = chakra(
     if (!visible) return null;
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.augmentationCapaciteAccueilHebergementPrecisions}
-      >
+      <FormControl className={className} isInvalid={!!errors.augmentationCapaciteAccueilHebergementPrecisions}>
         <FormLabel>Précisions ?</FormLabel>
         <Textarea
           variant="grey"
@@ -43,9 +34,7 @@ export const AugmentationCapaciteAccueilHebergementPrecisionsField = chakra(
           })}
         />
         {errors.augmentationCapaciteAccueilHebergementPrecisions && (
-          <FormErrorMessage>
-            {errors.augmentationCapaciteAccueilHebergementPrecisions.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.augmentationCapaciteAccueilHebergementPrecisions.message}</FormErrorMessage>
         )}
       </FormControl>
     );

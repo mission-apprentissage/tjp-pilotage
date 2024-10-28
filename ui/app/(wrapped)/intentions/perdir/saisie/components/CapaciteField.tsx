@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "../intentionForm/defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 export const CapaciteField = ({
   name,
   className,

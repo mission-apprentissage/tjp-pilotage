@@ -1149,7 +1149,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/anatomy@npm:2.3.4":
+"@chakra-ui/anatomy@npm:2.3.4, @chakra-ui/anatomy@npm:^2.3.4":
   version: 2.3.4
   resolution: "@chakra-ui/anatomy@npm:2.3.4"
   checksum: 8a9e34c55487c71516ec059891fe3adfb1f9673ecb8f0e932a536616b8c39c07101d15f10ad76fdb7d1bdbaaab7e63e669960dbd69ee451201c1e59e00535be4
@@ -23374,6 +23374,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ui@workspace:ui"
   dependencies:
+    "@chakra-ui/anatomy": ^2.3.4
     "@chakra-ui/checkbox": ^2.3.2
     "@chakra-ui/cli": ^2.4.1
     "@chakra-ui/icons": ^2.1.1

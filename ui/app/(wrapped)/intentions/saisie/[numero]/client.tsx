@@ -4,11 +4,11 @@ import { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 
 import { client } from "@/api.client";
+import { IntentionSpinner } from "@/app/(wrapped)/intentions/saisie/components/IntentionSpinner";
+import { IntentionForm } from "@/app/(wrapped)/intentions/saisie/intentionForm/IntentionForm";
+import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
 
-import { IntentionSpinner } from "../components/IntentionSpinner";
-import { IntentionForm } from "../intentionForm/IntentionForm";
-import { isSaisieDisabled } from "../utils/isSaisieDisabled";
-
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default ({
   params: { numero },
 }: {
@@ -24,8 +24,7 @@ export default ({
       onError: (error: unknown) => {
         if (isAxiosError(error) && error.response?.data?.message) {
           console.error(error);
-          if (error.response?.status === 404)
-            push(`/intentions/saisie?notfound=${numero}`);
+          if (error.response?.status === 404) push(`/intentions/saisie?notfound=${numero}`);
         }
       },
     }

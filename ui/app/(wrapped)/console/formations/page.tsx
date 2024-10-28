@@ -17,13 +17,10 @@ import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
-import {
-  FORMATION_COLUMNS,
-  FORMATION_COLUMNS_DEFAULT,
-} from "./FORMATION_COLUMNS";
+import { FORMATION_COLUMNS, FORMATION_COLUMNS_DEFAULT } from "./FORMATION_COLUMNS";
 import { GROUPED_FORMATION_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_COLUMNS";
 import { FiltersSection } from "./HeaderSection/FiltersSection";
-import { Filters, Order } from "./types";
+import type { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
@@ -50,12 +47,8 @@ const ColonneFiltersSection = chakra(
           width={"48"}
           size="md"
           variant={"newInput"}
-          onChange={(selected) =>
-            handleColonneFilters(selected as (keyof typeof FORMATION_COLUMNS)[])
-          }
-          groupedOptions={Object.entries(
-            GROUPED_FORMATION_COLUMNS_OPTIONAL
-          ).reduce(
+          onChange={(selected) => handleColonneFilters(selected as (keyof typeof FORMATION_COLUMNS)[])}
+          groupedOptions={Object.entries(GROUPED_FORMATION_COLUMNS_OPTIONAL).reduce(
             (acc, [group, { color, options }]) => {
               acc[group] = {
                 color,
@@ -63,13 +56,10 @@ const ColonneFiltersSection = chakra(
                   .map(([value, label]) => ({
                     label,
                     value,
-                    isDisabled: forcedColonnes?.includes(
-                      value as keyof typeof FORMATION_COLUMNS
-                    ),
+                    isDisabled: forcedColonnes?.includes(value as keyof typeof FORMATION_COLUMNS),
                   }))
                   .filter(({ label }) => {
-                    if (!canShowQuadrantPosition)
-                      return label !== FORMATION_COLUMNS.positionQuadrant;
+                    if (!canShowQuadrantPosition) return label !== FORMATION_COLUMNS.positionQuadrant;
                     return true;
                   }),
               };
@@ -83,14 +73,12 @@ const ColonneFiltersSection = chakra(
               }
             >
           )}
-          defaultOptions={Object.entries(FORMATION_COLUMNS_DEFAULT)?.map(
-            ([value, label]) => {
-              return {
-                label,
-                value,
-              };
-            }
-          )}
+          defaultOptions={Object.entries(FORMATION_COLUMNS_DEFAULT)?.map(([value, label]) => {
+            return {
+              label,
+              value,
+            };
+          })}
           value={colonneFilters ?? []}
           customButton={
             <Button
@@ -129,9 +117,7 @@ export default function Formations() {
     order?: typeof order;
     page?: typeof page;
   }) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const filters = searchParams.filters ?? {};
@@ -160,9 +146,7 @@ export default function Formations() {
   );
 
   const getDataForExport = (data: QueryResult) => {
-    const region = data.filters.regions.find(
-      (r) => r.value === filters.codeRegion?.[0]
-    );
+    const region = data.filters.regions.find((r) => r.value === filters.codeRegion?.[0]);
 
     if (filters.codeRegion && region) {
       const columns = {
@@ -199,15 +183,9 @@ export default function Formations() {
 
     const { columns, formations } = getDataForExport(data);
 
-    const filteredColumns = canShowQuadrantPosition
-      ? columns
-      : _.omit(columns, "positionQuadrant");
+    const filteredColumns = canShowQuadrantPosition ? columns : _.omit(columns, "positionQuadrant");
 
-    downloadCsv(
-      formatExportFilename("formation_export", filters?.codeRegion),
-      formations,
-      filteredColumns
-    );
+    downloadCsv(formatExportFilename("formation_export", filters?.codeRegion), formations, filteredColumns);
   };
 
   const onExportExcel = async () => {
@@ -218,27 +196,15 @@ export default function Formations() {
 
     const { columns, formations } = getDataForExport(data);
 
-    const filteredColumns = canShowQuadrantPosition
-      ? columns
-      : _.omit(columns, "positionQuadrant");
+    const filteredColumns = canShowQuadrantPosition ? columns : _.omit(columns, "positionQuadrant");
 
-    downloadExcel(
-      formatExportFilename("formation_export", filters?.codeRegion),
-      formations,
-      filteredColumns
-    );
+    downloadExcel(formatExportFilename("formation_export", filters?.codeRegion), formations, filteredColumns);
   };
 
   const canShowQuadrantPosition = filters.codeRegion?.length === 1;
 
-  const [colonneFilters, setColonneFilters] = useState<
-    (keyof typeof FORMATION_COLUMNS)[]
-  >(
-    (columns.length
-      ? columns
-      : Object.keys(
-          FORMATION_COLUMNS_DEFAULT
-        )) as (keyof typeof FORMATION_COLUMNS)[]
+  const [colonneFilters, setColonneFilters] = useState<(keyof typeof FORMATION_COLUMNS)[]>(
+    (columns.length ? columns : Object.keys(FORMATION_COLUMNS_DEFAULT)) as (keyof typeof FORMATION_COLUMNS)[]
   );
 
   const handleColonneFilters = (value: (keyof typeof FORMATION_COLUMNS)[]) => {
@@ -256,20 +222,10 @@ export default function Formations() {
 
   return (
     <>
-      <FiltersSection
-        setSearchParams={setSearchParams}
-        searchParams={searchParams}
-        data={data}
-      />
+      <FiltersSection setSearchParams={setSearchParams} searchParams={searchParams} data={data} />
       <Flex direction="column" flex={1} position="relative" minH="0">
         {isFetching && (
-          <Center
-            height="100%"
-            width="100%"
-            position="absolute"
-            bg="rgb(255,255,255,0.8)"
-            zIndex="1"
-          >
+          <Center height="100%" width="100%" position="absolute" bg="rgb(255,255,255,0.8)" zIndex="1">
             <Spinner />
           </Center>
         )}
@@ -291,8 +247,8 @@ export default function Formations() {
               canShowQuadrantPosition={canShowQuadrantPosition}
             />
           }
-          onExportCsv={() => onExportCsv()}
-          onExportExcel={() => onExportExcel()}
+          onExportCsv={async () => onExportCsv()}
+          onExportExcel={async () => onExportExcel()}
           page={page}
           pageSize={PAGE_SIZE}
           count={data?.count}

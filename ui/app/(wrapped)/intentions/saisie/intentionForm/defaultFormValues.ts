@@ -1,4 +1,4 @@
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 export const defaultIntentionForms: PartialIntentionForms = {};
 

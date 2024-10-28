@@ -1,22 +1,10 @@
-import {
-  chakra,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Textarea,
-} from "@chakra-ui/react";
+import { chakra, FormControl, FormErrorMessage, FormLabel, Textarea } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import { CorrectionForms } from "../defaultFormValues";
+import type { CorrectionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/defaultFormValues";
 
 export const CommentaireField = chakra(
-  ({
-    disabled = false,
-    className,
-  }: {
-    disabled?: boolean;
-    className?: string;
-  }) => {
+  ({ disabled = false, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       register,
@@ -31,9 +19,7 @@ export const CommentaireField = chakra(
           {...register("commentaire", { disabled })}
           placeholder="Merci de détailler les éléments de contexte de la correction"
         />
-        {errors.commentaire && (
-          <FormErrorMessage>{errors.commentaire.message}</FormErrorMessage>
-        )}
+        {errors.commentaire && <FormErrorMessage>{errors.commentaire.message}</FormErrorMessage>}
       </FormControl>
     );
   }

@@ -1,5 +1,5 @@
-import { client } from "@/api.client";
-import { ExportColumns } from "@/utils/downloadExport";
+import type { client } from "@/api.client";
+import type { ExportColumns } from "@/utils/downloadExport";
 
 export const STATS_DEMANDES_COLUMNS = {
   // établissement
@@ -72,18 +72,12 @@ export const STATS_DEMANDES_COLUMNS = {
   achatEquipementCout: "Coût des achats d'équipement",
   achatEquipementDescription: "Description des achats d'équipement",
   // Hébergement
-  augmentationCapaciteAccueilHebergement:
-    "Besoin d'augmentation de la capacité d'hébergement ?",
-  augmentationCapaciteAccueilHebergementPlaces:
-    "Nombre de places d'hébergement supplémentaires",
-  augmentationCapaciteAccueilHebergementPrecisions:
-    "Précisions sur l'augmentation de la capacité d'hébergement",
-  augmentationCapaciteAccueilRestauration:
-    "Besoin d'augmentation de la capacité de restauration ?",
-  augmentationCapaciteAccueilRestaurationPlaces:
-    "Nombre de places de restauration supplémentaires",
-  augmentationCapaciteAccueilRestaurationPrecisions:
-    "Précisions sur l'augmentation de la capacité de restauration",
+  augmentationCapaciteAccueilHebergement: "Besoin d'augmentation de la capacité d'hébergement ?",
+  augmentationCapaciteAccueilHebergementPlaces: "Nombre de places d'hébergement supplémentaires",
+  augmentationCapaciteAccueilHebergementPrecisions: "Précisions sur l'augmentation de la capacité d'hébergement",
+  augmentationCapaciteAccueilRestauration: "Besoin d'augmentation de la capacité de restauration ?",
+  augmentationCapaciteAccueilRestaurationPlaces: "Nombre de places de restauration supplémentaires",
+  augmentationCapaciteAccueilRestaurationPrecisions: "Précisions sur l'augmentation de la capacité de restauration",
   // Statut
   statut: "Statut",
   motifRefus: "Motif(s) de refus",
@@ -98,9 +92,7 @@ export const STATS_DEMANDES_COLUMNS = {
   }
 >;
 
-export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<
-  typeof STATS_DEMANDES_COLUMNS
-> = {
+export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<typeof STATS_DEMANDES_COLUMNS> = {
   // établissement
   libelleEtablissement: "Établissement",
   commune: "Commune",
@@ -152,27 +144,19 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<
   achatEquipementCout: "Coût des achats d'équipement",
   achatEquipementDescription: "Description des achats d'équipement",
   // Hébergement
-  augmentationCapaciteAccueilHebergement:
-    "Besoin d'augmentation de la capacité d'hébergement ?",
-  augmentationCapaciteAccueilHebergementPlaces:
-    "Nombre de places d'hébergement supplémentaires",
-  augmentationCapaciteAccueilHebergementPrecisions:
-    "Précisions sur l'augmentation de la capacité d'hébergement",
-  augmentationCapaciteAccueilRestauration:
-    "Besoin d'augmentation de la capacité de restauration ?",
-  augmentationCapaciteAccueilRestaurationPlaces:
-    "Nombre de places de restauration supplémentaires",
-  augmentationCapaciteAccueilRestaurationPrecisions:
-    "Précisions sur l'augmentation de la capacité de restauration",
+  augmentationCapaciteAccueilHebergement: "Besoin d'augmentation de la capacité d'hébergement ?",
+  augmentationCapaciteAccueilHebergementPlaces: "Nombre de places d'hébergement supplémentaires",
+  augmentationCapaciteAccueilHebergementPrecisions: "Précisions sur l'augmentation de la capacité d'hébergement",
+  augmentationCapaciteAccueilRestauration: "Besoin d'augmentation de la capacité de restauration ?",
+  augmentationCapaciteAccueilRestaurationPlaces: "Nombre de places de restauration supplémentaires",
+  augmentationCapaciteAccueilRestaurationPrecisions: "Précisions sur l'augmentation de la capacité de restauration",
   // Statut
   statut: "Statut",
   motifRefus: "Motif(s) de refus",
   autreMotifRefus: "Autre motif de refus",
 } as Partial<typeof STATS_DEMANDES_COLUMNS>;
 
-export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<
-  typeof STATS_DEMANDES_COLUMNS_OPTIONAL
-> = {
+export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL> = {
   libelleEtablissement: "Établissement",
   commune: "Commune",
   libelleNsf: "Domaine de formation (NSF)",

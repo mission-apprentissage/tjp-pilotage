@@ -1,30 +1,21 @@
 import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
-import {
-  CircleLayer,
-  Layer,
-  MapGeoJSONFeature,
-  MapMouseEvent,
-  Source,
-  SymbolLayer,
-  useMap,
-} from "react-map-gl/maplibre";
+import type { CircleLayer, MapGeoJSONFeature, MapMouseEvent, SymbolLayer } from "react-map-gl/maplibre";
+import { Layer, Source, useMap } from "react-map-gl/maplibre";
 
-import { themeDefinition } from "../../../../../../../../../theme/theme";
-import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
+import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
+import { themeDefinition } from "@/theme/theme";
+
 import { MAP_IMAGES } from "./CustomControls";
 
 export const Etablissement = () => {
   const { current: map } = useMap();
-  const { etablissementMap, hoverUai, setActiveUai, setHoverUai } =
-    useEtablissementMapContext();
+  const { etablissementMap, hoverUai, setActiveUai, setHoverUai } = useEtablissementMapContext();
   const trackEvent = usePlausible();
 
   const etablissement = etablissementMap?.etablissement;
   const showEtablissement =
-    etablissementMap?.etablissementsProches.findIndex(
-      (e) => e.uai === etablissement?.uai
-    ) !== -1;
+    etablissementMap?.etablissementsProches.findIndex((e) => e.uai === etablissement?.uai) !== -1;
 
   const etablissementPoint = {
     type: "Feature",
@@ -76,11 +67,7 @@ export const Etablissement = () => {
     id: "single-scolaire-apprentissage-etablissement",
     type: "symbol",
     source: "etablissement",
-    filter: [
-      "all",
-      ["in", "voies", "apprentissage,scolaire"],
-      ["!=", "uai", hoverUai],
-    ],
+    filter: ["all", ["in", "voies", "apprentissage,scolaire"], ["!=", "uai", hoverUai]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE.name,
       "icon-overlap": "always",
@@ -88,11 +75,7 @@ export const Etablissement = () => {
   };
 
   const flyToEtablissement = () => {
-    if (
-      etablissementMap !== undefined &&
-      etablissement !== undefined &&
-      map !== undefined
-    ) {
+    if (etablissementMap !== undefined && etablissement !== undefined && map !== undefined) {
       map.flyTo({
         center: {
           lng: etablissement.longitude,

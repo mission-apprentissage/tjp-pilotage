@@ -1,4 +1,4 @@
-import { DatepickerConfigs } from "chakra-dayzed-datepicker";
+import type { DatepickerConfigs } from "chakra-dayzed-datepicker";
 
 const DATE_PICKER_CONFIG = {
   dateFormat: "dd/MM/yyyy",

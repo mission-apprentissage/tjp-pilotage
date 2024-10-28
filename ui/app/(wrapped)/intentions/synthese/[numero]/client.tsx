@@ -13,6 +13,7 @@ import { InformationHeader } from "./components/InformationHeader";
 import { SyntheseSpinner } from "./components/SyntheseSpinner";
 import { MainSection } from "./main/MainSection";
 
+// eslint-disable-next-line react/display-name, import/no-anonymous-default-export
 export default ({
   params: { numero },
 }: {

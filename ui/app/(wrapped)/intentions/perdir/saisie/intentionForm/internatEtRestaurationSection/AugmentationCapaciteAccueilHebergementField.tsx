@@ -1,17 +1,8 @@
-import {
-  chakra,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-} from "@chakra-ui/react";
+import { chakra, FormControl, FormErrorMessage, FormLabel, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 import { toBoolean } from "@/utils/toBoolean";
-
-import { IntentionForms } from "../defaultFormValues";
 
 export const AugmentationCapaciteAccueilHebergementField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -21,22 +12,16 @@ export const AugmentationCapaciteAccueilHebergementField = chakra(
     } = useFormContext<IntentionForms>();
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.augmentationCapaciteAccueilHebergement}
-        isRequired
-      >
+      <FormControl className={className} isInvalid={!!errors.augmentationCapaciteAccueilHebergement} isRequired>
         <FormLabel>
-          Votre proposition est-elle susceptible d'augmenter les capacités
-          d'accueil du service d'hébergement ?
+          Votre proposition est-elle susceptible d'augmenter les capacités d'accueil du service d'hébergement ?
         </FormLabel>
         <Controller
           name="augmentationCapaciteAccueilHebergement"
           control={control}
           disabled={disabled}
           rules={{
-            validate: (value) =>
-              typeof value === "boolean" || "Le champ est obligatoire",
+            validate: (value) => typeof value === "boolean" || "Le champ est obligatoire",
           }}
           render={({ field: { onChange, value, onBlur, ref, disabled } }) => (
             <RadioGroup
@@ -57,9 +42,7 @@ export const AugmentationCapaciteAccueilHebergementField = chakra(
           )}
         />
         {errors.augmentationCapaciteAccueilHebergement && (
-          <FormErrorMessage>
-            {errors.augmentationCapaciteAccueilHebergement?.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.augmentationCapaciteAccueilHebergement?.message}</FormErrorMessage>
         )}
       </FormControl>
     );

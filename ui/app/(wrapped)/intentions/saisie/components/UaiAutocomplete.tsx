@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { CSSObjectWithLabel } from "react-select";
+import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
@@ -15,9 +15,7 @@ export const UaiAutocomplete = ({
   defaultValue?: { value: string; label?: string; commune?: string };
   active?: boolean;
   inError: boolean;
-  onChange: (
-    value?: (typeof client.infer)["[GET]/etablissement/search/:search"][number]
-  ) => void;
+  onChange: (value?: (typeof client.infer)["[GET]/etablissement/search/:search"][number]) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -46,20 +44,14 @@ export const UaiAutocomplete = ({
       }
       loadOptions={(inputValue: string) => {
         if (inputValue.length >= 3)
-          return client
-            .ref("[GET]/etablissement/search/:search")
-            .query({ params: { search: inputValue }, query: {} });
+          return client.ref("[GET]/etablissement/search/:search").query({ params: { search: inputValue }, query: {} });
       }}
       loadingMessage={({ inputValue }) =>
-        inputValue.length >= 3
-          ? "Recherche..."
-          : "Veuillez rentrer au moins 3 lettres"
+        inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
       }
       isClearable={true}
       noOptionsMessage={({ inputValue }) =>
-        inputValue
-          ? "Pas d'établissement correspondant"
-          : "Commencez à écrire..."
+        inputValue ? "Pas d'établissement correspondant" : "Commencez à écrire..."
       }
       placeholder="UAI, nom de l'établissement ou commune"
       isDisabled={active === false}

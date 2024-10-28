@@ -1,10 +1,9 @@
 import { Box, FormControl, FormLabel, LightMode } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { client } from "@/api.client";
-
-import { UaiAutocomplete } from "../../components/UaiAutocomplete";
-import { IntentionForms } from "../defaultFormValues";
+import type { client } from "@/api.client";
+import { UaiAutocomplete } from "@/app/(wrapped)/intentions/perdir/saisie/components/UaiAutocomplete";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const UaiBlock = ({
   disabled,
@@ -13,11 +12,7 @@ export const UaiBlock = ({
 }: {
   disabled: boolean;
   formMetadata?: (typeof client.infer)["[GET]/intention/:numero"]["metadata"];
-  setUaiInfo: (
-    uaiInfo:
-      | (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][number]
-      | undefined
-  ) => void;
+  setUaiInfo: (uaiInfo: (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][number] | undefined) => void;
 }) => {
   const {
     formState: { errors },

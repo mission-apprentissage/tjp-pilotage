@@ -1,21 +1,12 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  HStack,
-  Img,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, HStack, Img, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import type { StatsFormations } from "@/app/(wrapped)/panorama/types";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { formatNumber, formatPercentage } from "@/utils/formatUtils";
 
-import { useGlossaireContext } from "../../../glossaire/glossaireContext";
-import { StatsFormations } from "../../types";
 import { StatCard } from "./StatCard";
 
 export const IndicateursSection = ({
@@ -53,30 +44,18 @@ export const IndicateursSection = ({
         </Box>
         <Flex direction={"row"} mt={"8px"}>
           <Flex style={{ textWrap: "pretty" }}>
-            Retrouvez ici les principaux indicateurs sur votre territoire (Voie
-            scolaire, Chiffres {CURRENT_RENTREE}).{" "}
+            Retrouvez ici les principaux indicateurs sur votre territoire (Voie scolaire, Chiffres {CURRENT_RENTREE}).{" "}
           </Flex>
         </Flex>
-        <Img
-          alignSelf={"end"}
-          src="/design_search.svg"
-          objectFit="cover"
-          width={"auto"}
-          height={"100%"}
-          mt={"1rem"}
-        />
+        <Img alignSelf={"end"} src="/design_search.svg" objectFit="cover" width={"auto"} height={"100%"} mt={"1rem"} />
       </Flex>
       <SimpleGrid spacing={3} columns={[1, 3, 3]} flex={2}>
         <StatCard
-          label={`Nombre de formations dans votre ${
-            typeTerritoire === "region" ? "région" : "département"
-          }`}
+          label={`Nombre de formations dans votre ${typeTerritoire === "region" ? "région" : "département"}`}
           value={stats?.nbFormations ?? "-"}
         />
         <StatCard
-          label={`Nombre total d’élèves dans votre ${
-            typeTerritoire === "region" ? "région" : "département"
-          }`}
+          label={`Nombre total d’élèves dans votre ${typeTerritoire === "region" ? "région" : "département"}`}
           value={stats?.effectifTotal ? stats.effectifTotal : "-"}
           sub={
             stats?.effectifEntree ? (
@@ -90,9 +69,7 @@ export const IndicateursSection = ({
                   color="grey.425"
                   tooltip={
                     <Box>
-                      <Text>
-                        Effectifs en entrée en première année de formation.
-                      </Text>
+                      <Text>Effectifs en entrée en première année de formation.</Text>
                       <Text>Cliquez pour plus d'infos.</Text>
                     </Box>
                   }
@@ -105,9 +82,7 @@ export const IndicateursSection = ({
               ml="1"
               label={
                 <Box display="inline">
-                  <Text>
-                    Nombre total d’élèves, toutes années de formation confondues
-                  </Text>
+                  <Text>Nombre total d’élèves, toutes années de formation confondues</Text>
                   <Text>Cliquez pour plus d'infos.</Text>
                 </Box>
               }
@@ -116,29 +91,16 @@ export const IndicateursSection = ({
           }
         />
         <StatCard
-          label={`Taux de remplissage dans votre ${
-            typeTerritoire === "region" ? "région" : "département"
-          }`}
-          value={
-            stats?.tauxRemplissage
-              ? formatNumber(stats.tauxRemplissage * 100, 0)
-              : undefined
-          }
-          tooltip={
-            stats?.tauxRemplissage
-              ? formatPercentage(stats?.tauxRemplissage, 2)
-              : "-"
-          }
+          label={`Taux de remplissage dans votre ${typeTerritoire === "region" ? "région" : "département"}`}
+          value={stats?.tauxRemplissage ? formatNumber(stats.tauxRemplissage * 100, 0) : undefined}
+          tooltip={stats?.tauxRemplissage ? formatPercentage(stats?.tauxRemplissage, 2) : "-"}
           type={"percentage"}
           glossaire={
             <TooltipIcon
               ml="1"
               label={
                 <Box>
-                  <Text>
-                    Le ratio entre l’effectif d’entrée en formation et sa
-                    capacité.
-                  </Text>
+                  <Text>Le ratio entre l’effectif d’entrée en formation et sa capacité.</Text>
                   <Text>Cliquez pour plus d'infos.</Text>
                 </Box>
               }
@@ -148,16 +110,8 @@ export const IndicateursSection = ({
         />
         <StatCard
           label={`Taux de devenir favorable dans votre région`}
-          value={
-            stats?.tauxDevenirFavorable
-              ? formatNumber(stats.tauxDevenirFavorable * 100, 0)
-              : undefined
-          }
-          tooltip={
-            stats?.tauxDevenirFavorable
-              ? formatPercentage(stats?.tauxDevenirFavorable, 2)
-              : "-"
-          }
+          value={stats?.tauxDevenirFavorable ? formatNumber(stats.tauxDevenirFavorable * 100, 0) : undefined}
+          tooltip={stats?.tauxDevenirFavorable ? formatPercentage(stats?.tauxDevenirFavorable, 2) : "-"}
           type={"percentage"}
           glossaire={
             <TooltipIcon
@@ -165,9 +119,8 @@ export const IndicateursSection = ({
               label={
                 <Box display="inline">
                   <Text>
-                    (nombre d'élèves inscrits en formation + nombre d'élèves en
-                    emploi) / nombre d'élèves en entrée en dernière année de
-                    formation.
+                    (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
+                    dernière année de formation.
                   </Text>
                   <Text>Cliquez pour plus d'infos.</Text>
                 </Box>
@@ -178,26 +131,15 @@ export const IndicateursSection = ({
         />
         <StatCard
           label="Taux de poursuite d'études dans votre région"
-          value={
-            stats?.tauxPoursuite
-              ? formatNumber(stats.tauxPoursuite * 100, 0)
-              : undefined
-          }
-          tooltip={
-            stats?.tauxPoursuite
-              ? formatPercentage(stats?.tauxPoursuite, 2)
-              : "-"
-          }
+          value={stats?.tauxPoursuite ? formatNumber(stats.tauxPoursuite * 100, 0) : undefined}
+          tooltip={stats?.tauxPoursuite ? formatPercentage(stats?.tauxPoursuite, 2) : "-"}
           type={"percentage"}
           glossaire={
             <TooltipIcon
               ml="1"
               label={
                 <Box>
-                  <Text>
-                    Tout élève inscrit à N+1 (réorientation et redoublement
-                    compris).
-                  </Text>
+                  <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
                   <Text>Cliquez pour plus d'infos.</Text>
                 </Box>
               }
@@ -207,26 +149,15 @@ export const IndicateursSection = ({
         />
         <StatCard
           label="Taux d'emploi à 6 mois dans votre région"
-          value={
-            stats?.tauxInsertion
-              ? formatNumber(stats.tauxInsertion * 100, 0)
-              : undefined
-          }
-          tooltip={
-            stats?.tauxInsertion
-              ? formatPercentage(stats?.tauxInsertion, 2)
-              : "-"
-          }
+          value={stats?.tauxInsertion ? formatNumber(stats.tauxInsertion * 100, 0) : undefined}
+          tooltip={stats?.tauxInsertion ? formatPercentage(stats?.tauxInsertion, 2) : "-"}
           type={"percentage"}
           glossaire={
             <TooltipIcon
               ml="1"
               label={
                 <Box>
-                  <Text>
-                    La part de ceux qui sont en emploi 6 mois après leur sortie
-                    d’études.
-                  </Text>
+                  <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’études.</Text>
                   <Text>Cliquez pour plus d'infos.</Text>
                 </Box>
               }

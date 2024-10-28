@@ -19,23 +19,20 @@ import { usePlausible } from "next-plausible";
 import { ScopeEnum } from "shared";
 
 import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage/main/displayTypeEnum";
-import { ExportMenuButton } from "@/components/ExportMenuButton";
-import { Legend } from "@/components/Legend";
-import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
-
-import {
+import type {
   FiltersStatsPilotageIntentions,
   OrderRepartitionPilotageIntentions,
   RepartitionPilotageIntentionsDomaines,
   RepartitionPilotageIntentionsZonesGeographiques,
-} from "../../../types";
+} from "@/app/(wrapped)/intentions/pilotage/types";
+import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { Legend } from "@/components/Legend";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+
 import { HeadlineContent } from "./HeadlineContent";
 import { LineContent } from "./LineContent";
 
-const compareFilters = (
-  lineCode: string,
-  filterCode?: string | Array<string>
-) => {
+const compareFilters = (lineCode: string, filterCode?: string | Array<string>) => {
   if (typeof filterCode === "string") {
     return lineCode === filterCode;
   } else if (Array.isArray(filterCode)) {
@@ -53,10 +50,7 @@ const AnalyseComparativeTabsSection = chakra(
     isZoneGeographiqueSelected: boolean;
     isDomaineSelected: boolean;
     setDisplayType: (
-      displayType: Extract<
-        DisplayTypeEnum,
-        DisplayTypeEnum.zone_geographique | DisplayTypeEnum.domaine
-      >
+      displayType: Extract<DisplayTypeEnum, DisplayTypeEnum.zone_geographique | DisplayTypeEnum.domaine>
     ) => void;
   }) => {
     const getTabIndex = () => {
@@ -68,39 +62,16 @@ const AnalyseComparativeTabsSection = chakra(
       <Flex justify={"center"}>
         <Tabs isLazy={true} index={getTabIndex()} variant="blue-border">
           <TabList>
-            <Tab
-              onClick={() => setDisplayType(DisplayTypeEnum.zone_geographique)}
-              color={"black"}
-            >
-              <Flex
-                direction={"row"}
-                justify={"center"}
-                alignItems={"center"}
-                p={3}
-                gap={2}
-              >
+            <Tab onClick={() => setDisplayType(DisplayTypeEnum.zone_geographique)} color={"black"}>
+              <Flex direction={"row"} justify={"center"} alignItems={"center"} p={3} gap={2}>
                 <Icon icon="ri:map-pin-line" />
-                <Text fontWeight={isZoneGeographiqueSelected ? 700 : 400}>
-                  Par zone géographique
-                </Text>
+                <Text fontWeight={isZoneGeographiqueSelected ? 700 : 400}>Par zone géographique</Text>
               </Flex>
             </Tab>
-            <Tab
-              as={Button}
-              onClick={() => setDisplayType(DisplayTypeEnum.domaine)}
-              color={"black"}
-            >
-              <Flex
-                direction={"row"}
-                justify={"center"}
-                alignItems={"center"}
-                p={3}
-                gap={2}
-              >
+            <Tab as={Button} onClick={() => setDisplayType(DisplayTypeEnum.domaine)} color={"black"}>
+              <Flex direction={"row"} justify={"center"} alignItems={"center"} p={3} gap={2}>
                 <Icon icon="ri:archive-drawer-line" />
-                <Text fontWeight={isDomaineSelected ? 700 : 400}>
-                  Par domaine (NSF)
-                </Text>
+                <Text fontWeight={isDomaineSelected ? 700 : 400}>Par domaine (NSF)</Text>
               </Flex>
             </Tab>
           </TabList>
@@ -123,9 +94,7 @@ export const AnalyseComparativeSection = ({
   zonesGeographiques?: RepartitionPilotageIntentionsZonesGeographiques;
   domaines?: RepartitionPilotageIntentionsDomaines;
   order: Partial<OrderRepartitionPilotageIntentions>;
-  setSearchParams: (params: {
-    order?: Partial<OrderRepartitionPilotageIntentions>;
-  }) => void;
+  setSearchParams: (params: { order?: Partial<OrderRepartitionPilotageIntentions> }) => void;
   filters?: Partial<FiltersStatsPilotageIntentions>;
   displayType: DisplayTypeEnum;
   displayZonesGeographiques: () => void;
@@ -134,10 +103,7 @@ export const AnalyseComparativeSection = ({
   const trackEvent = usePlausible();
 
   const setDisplayType = (
-    displayType: Extract<
-      DisplayTypeEnum,
-      DisplayTypeEnum.zone_geographique | DisplayTypeEnum.domaine
-    >
+    displayType: Extract<DisplayTypeEnum, DisplayTypeEnum.zone_geographique | DisplayTypeEnum.domaine>
   ) => {
     trackEvent("pilotage-transformation:analyse-comparative-tabs", {
       props: { type: displayType },
@@ -162,13 +128,11 @@ export const AnalyseComparativeSection = ({
     }
   };
 
-  const isZoneGeographiqueSelected =
-    displayType === DisplayTypeEnum.zone_geographique;
+  const isZoneGeographiqueSelected = displayType === DisplayTypeEnum.zone_geographique;
 
   const isDomaineSelected = displayType === DisplayTypeEnum.domaine;
 
-  const dataToDisplay =
-    (isZoneGeographiqueSelected ? zonesGeographiques : domaines) ?? {};
+  const dataToDisplay = (isZoneGeographiqueSelected ? zonesGeographiques : domaines) ?? {};
 
   const customPalette = [
     useToken("colors", "pilotage.red !important"),
@@ -200,9 +164,7 @@ export const AnalyseComparativeSection = ({
     if (indicateur > 0.06) return customPalette[5];
   };
 
-  const handleOrder = (
-    column: OrderRepartitionPilotageIntentions["orderBy"]
-  ) => {
+  const handleOrder = (column: OrderRepartitionPilotageIntentions["orderBy"]) => {
     trackEvent("formations:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
@@ -226,9 +188,7 @@ export const AnalyseComparativeSection = ({
           color={"bluefrance.113"}
           onExportCsv={async () => {
             downloadCsv(
-              `analyse_comparative_${
-                isZoneGeographiqueSelected ? filters?.scope : "domaine"
-              }`,
+              `analyse_comparative_${isZoneGeographiqueSelected ? filters?.scope : "domaine"}`,
               Object.values(dataToDisplay),
               {
                 libelle: "Libellé",
@@ -246,9 +206,7 @@ export const AnalyseComparativeSection = ({
           }}
           onExportExcel={async () => {
             downloadExcel(
-              `analyse_comparative_${
-                isZoneGeographiqueSelected ? filters?.scope : "domaine"
-              }`,
+              `analyse_comparative_${isZoneGeographiqueSelected ? filters?.scope : "domaine"}`,
               Object.values(dataToDisplay),
               {
                 libelle: "Libellé",
@@ -276,12 +234,7 @@ export const AnalyseComparativeSection = ({
       <Flex direction={"column"}>
         <Flex maxH={"650"} overflowY="auto" position="relative">
           <Table>
-            <Thead
-              position={"sticky"}
-              top={0}
-              bgColor="white"
-              boxShadow={"0px 2px 1px 1px black;"}
-            >
+            <Thead position={"sticky"} top={0} bgColor="white" boxShadow={"0px 2px 1px 1px black;"}>
               <HeadlineContent
                 filters={filters}
                 order={order}
@@ -294,25 +247,15 @@ export const AnalyseComparativeSection = ({
                 .filter((key) => key !== "Total")
                 .map((key) => {
                   const item = dataToDisplay[key];
-                  const filterValue = isZoneGeographiqueSelected
-                    ? filters![getScopeKey()]
-                    : filters!["codeNsf"];
+                  const filterValue = isZoneGeographiqueSelected ? filters![getScopeKey()] : filters!["codeNsf"];
 
-                  const trBgColor = compareFilters(item.code, filterValue)
-                    ? "blueecume.400_hover !important"
-                    : "";
+                  const trBgColor = compareFilters(item.code, filterValue) ? "blueecume.400_hover !important" : "";
 
-                  const tdBgColor = compareFilters(item.code, filterValue)
-                    ? "inherit !important"
-                    : "";
+                  const tdBgColor = compareFilters(item.code, filterValue) ? "inherit !important" : "";
 
-                  const trColor = compareFilters(item.code, filterValue)
-                    ? "white"
-                    : "inherit";
+                  const trColor = compareFilters(item.code, filterValue) ? "white" : "inherit";
 
-                  const color = compareFilters(item.code, filterValue)
-                    ? "inherit"
-                    : "black";
+                  const color = compareFilters(item.code, filterValue) ? "inherit" : "black";
 
                   return (
                     <Tr key={key} bgColor={trBgColor} color={trColor}>
@@ -334,10 +277,7 @@ export const AnalyseComparativeSection = ({
                 bottom={-0.5}
                 bgColor="white"
               >
-                <LineContent
-                  getTauxTransfoBgColor={getTauxTransfoBgColor}
-                  line={dataToDisplay["Total"]}
-                />
+                <LineContent getTauxTransfoBgColor={getTauxTransfoBgColor} line={dataToDisplay["Total"]} />
               </Tr>
             </Tbody>
           </Table>
@@ -349,10 +289,7 @@ export const AnalyseComparativeSection = ({
           </Flex>
           <Flex direction={"row"} gap={4}>
             <Text my={"auto"}>Ratio de fermetures</Text>
-            <Legend
-              elements={[{ label: "< 33%", color: customPalette[0] }]}
-              my={"auto"}
-            />
+            <Legend elements={[{ label: "< 33%", color: customPalette[0] }]} my={"auto"} />
           </Flex>
         </Flex>
       </Flex>

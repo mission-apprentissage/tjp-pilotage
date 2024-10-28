@@ -4,7 +4,7 @@ import { humanFileSize } from "shared/utils/humanFileSize";
 
 import { client } from "@/api.client";
 
-import { FileType } from "./types";
+import type { FileType } from "./types";
 
 const useFilesSection = (numero: string) => {
   const toast = useToast();
@@ -14,12 +14,10 @@ const useFilesSection = (numero: string) => {
 
   const downloadFile = async (file: FileType) => {
     try {
-      const { url } = await client
-        .ref("[GET]/intention/:numero/files/url")
-        .query({
-          params: { numero: numero },
-          query: { filename: file.name },
-        });
+      const { url } = await client.ref("[GET]/intention/:numero/files/url").query({
+        params: { numero: numero },
+        query: { filename: file.name },
+      });
 
       if (url) {
         const link = document.createElement("a");
@@ -44,25 +42,15 @@ const useFilesSection = (numero: string) => {
 
 export const FilesSection = ({ numero }: { numero: string }) => {
   const [grey, blue] = useToken("colors", ["grey.425", "bluefrance.113"]);
-  const { isLoadingFiles, uploadedFiles, downloadFile } =
-    useFilesSection(numero);
+  const { isLoadingFiles, uploadedFiles, downloadFile } = useFilesSection(numero);
 
   if (isLoadingFiles || !uploadedFiles?.files?.length) {
     return null;
   }
 
   return (
-    <Flex
-      direction={"column"}
-      gap={2}
-      bgColor={"blueecume.975"}
-      p={4}
-      h="fit-content"
-      width={"100%"}
-    >
-      <Text fontWeight={700}>
-        {uploadedFiles?.files.length === 1 ? "Pièce jointe" : "Pièces jointes"}
-      </Text>
+    <Flex direction={"column"} gap={2} bgColor={"blueecume.975"} p={4} h="fit-content" width={"100%"}>
+      <Text fontWeight={700}>{uploadedFiles?.files.length === 1 ? "Pièce jointe" : "Pièces jointes"}</Text>
       {uploadedFiles.files.map((file) => (
         <Flex
           direction={"row"}
@@ -75,18 +63,9 @@ export const FilesSection = ({ numero }: { numero: string }) => {
           textOverflow={"ellipsis"}
         >
           <Flex flex={"0 0 50px"}>
-            <Img
-              src={"/illustrations/piece-jointe-visualization.svg"}
-              height={"50px"}
-              width={"auto"}
-            />
+            <Img src={"/illustrations/piece-jointe-visualization.svg"} height={"50px"} width={"auto"} />
           </Flex>
-          <Flex
-            direction={"column"}
-            width="100%"
-            justifyContent={"space-between"}
-            minW={0}
-          >
+          <Flex direction={"column"} width="100%" justifyContent={"space-between"} minW={0}>
             <Text
               style={{
                 overflow: "hidden",
@@ -96,22 +75,9 @@ export const FilesSection = ({ numero }: { numero: string }) => {
             >
               {file.nameWithoutExtension}
             </Text>
-            <Flex
-              direction={"row"}
-              justify={"space-between"}
-              alignItems={"center"}
-            >
-              <Text
-                color={grey}
-              >{`${file.extension.toLocaleUpperCase()} - ${humanFileSize(
-                file.size
-              )}`}</Text>
-              <Icon
-                icon="ri:download-line"
-                color={blue}
-                cursor={"pointer"}
-                onClick={() => downloadFile(file)}
-              />
+            <Flex direction={"row"} justify={"space-between"} alignItems={"center"}>
+              <Text color={grey}>{`${file.extension.toLocaleUpperCase()} - ${humanFileSize(file.size)}`}</Text>
+              <Icon icon="ri:download-line" color={blue} cursor={"pointer"} onClick={async () => downloadFile(file)} />
             </Flex>
           </Flex>
         </Flex>

@@ -34,44 +34,33 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
+import type { MotifCorrectionCampagne } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
+import { MOTIFS_CORRECTION_LABELS } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
 import { feature } from "@/utils/feature";
 import { usePermission } from "@/utils/security/usePermission";
 
-import {
-  MotifCorrectionCampagne,
-  MOTIFS_CORRECTION_LABELS,
-} from "../../utils/motifCorrectionUtils";
-
 export const CorrectionDemandeButton = chakra(
-  ({
-    demande,
-  }: {
-    demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0];
-  }) => {
+  ({ demande }: { demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0] }) => {
     const toast = useToast();
     const queryClient = useQueryClient();
     const router = useRouter();
     const bluefrance113 = useToken("colors", "bluefrance.113");
-    const [isCorrected, setIsCorrected] = useState<boolean>(
-      !!demande.correction
-    );
+    const [isCorrected, setIsCorrected] = useState<boolean>(!!demande.correction);
 
-    const { mutateAsync: submitCorrection } = client
-      .ref("[POST]/correction/submit")
-      .useMutation({
-        onSuccess: (_body) => {
-          queryClient.invalidateQueries(["[GET]/demandes/"]);
-          let message: string | null = null;
-          message = "Correction enregistrée avec succès";
+    const { mutateAsync: submitCorrection } = client.ref("[POST]/correction/submit").useMutation({
+      onSuccess: (_body) => {
+        queryClient.invalidateQueries(["[GET]/demandes/"]);
+        let message: string | null = null;
+        message = "Correction enregistrée avec succès";
 
-          if (message) {
-            toast({
-              variant: "left-accent",
-              title: message,
-            });
-          }
-        },
-      });
+        if (message) {
+          toast({
+            variant: "left-accent",
+            title: message,
+          });
+        }
+      },
+    });
 
     const {
       isOpen: isOpenModalAnnulation,
@@ -79,11 +68,7 @@ export const CorrectionDemandeButton = chakra(
       onClose: onCloseModalAnnulation,
     } = useDisclosure();
 
-    const {
-      isOpen: isOpenModalReport,
-      onOpen: onOpenModalReport,
-      onClose: onCloseModalReport,
-    } = useDisclosure();
+    const { isOpen: isOpenModalReport, onOpen: onOpenModalReport, onClose: onCloseModalReport } = useDisclosure();
 
     const formReport = useForm<{
       motif: string;
@@ -103,16 +88,10 @@ export const CorrectionDemandeButton = chakra(
 
     const [reportDemandeStep, setReportDemandeStep] = useState<1 | 2>(1);
 
-    const [annulationDemandeStep, setAnnulationDemandeStep] = useState<1 | 2>(
-      1
-    );
+    const [annulationDemandeStep, setAnnulationDemandeStep] = useState<1 | 2>(1);
 
-    const getMotifCorrectionLabel = (
-      campagne: string = CURRENT_ANNEE_CAMPAGNE
-    ) => {
-      return Object.entries(
-        MOTIFS_CORRECTION_LABELS[campagne as MotifCorrectionCampagne]
-      ).map(([value, label]) => ({
+    const getMotifCorrectionLabel = (campagne: string = CURRENT_ANNEE_CAMPAGNE) => {
+      return Object.entries(MOTIFS_CORRECTION_LABELS[campagne as MotifCorrectionCampagne]).map(([value, label]) => ({
         value,
         label,
       }));
@@ -121,9 +100,7 @@ export const CorrectionDemandeButton = chakra(
     const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
 
     const showCorrectionButton =
-      feature.correction &&
-      demande.statut === DemandeStatutEnum["demande validée"] &&
-      hasPermissionSubmitIntention;
+      feature.correction && demande.statut === DemandeStatutEnum["demande validée"] && hasPermissionSubmitIntention;
 
     return (
       <>
@@ -133,9 +110,7 @@ export const CorrectionDemandeButton = chakra(
               <Button
                 ms={2}
                 disabled={isCorrected}
-                rightIcon={
-                  <Icon icon="ri:arrow-down-s-line" color={bluefrance113} />
-                }
+                rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
                 bgColor={"transparent"}
                 border={"1px solid"}
                 borderColor={bluefrance113}
@@ -155,9 +130,7 @@ export const CorrectionDemandeButton = chakra(
               <MenuButton
                 ms={2}
                 as={Button}
-                rightIcon={
-                  <Icon icon="ri:arrow-down-s-line" color={bluefrance113} />
-                }
+                rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
                 bgColor={"transparent"}
                 border={"1px solid"}
                 borderColor={bluefrance113}
@@ -179,17 +152,11 @@ export const CorrectionDemandeButton = chakra(
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    router.push(
-                      `/intentions/saisie/${demande.numero}?correction=true`
-                    );
+                    router.push(`/intentions/saisie/${demande.numero}?correction=true`);
                   }}
                 >
                   <Flex direction={"row"} h={"100%"} gap={2}>
-                    <Icon
-                      icon="ri:scales-3-line"
-                      color={bluefrance113}
-                      width={"18px"}
-                    />
+                    <Icon icon="ri:scales-3-line" color={bluefrance113} width={"18px"} />
                     <Text color={bluefrance113}>Rectifier les capacités</Text>
                   </Flex>
                 </MenuItem>
@@ -203,11 +170,7 @@ export const CorrectionDemandeButton = chakra(
                   }}
                 >
                   <Flex direction={"row"} h={"100%"} gap={2}>
-                    <Icon
-                      icon="ri:corner-up-left-line"
-                      color={bluefrance113}
-                      width={"18px"}
-                    />
+                    <Icon icon="ri:corner-up-left-line" color={bluefrance113} width={"18px"} />
                     <Text color={bluefrance113}>Reporter la demande</Text>
                   </Flex>
                 </MenuItem>
@@ -221,11 +184,7 @@ export const CorrectionDemandeButton = chakra(
                   }}
                 >
                   <Flex direction={"row"} h={"100%"} gap={2}>
-                    <Icon
-                      icon="ri:close-line"
-                      color={bluefrance113}
-                      width={"18px"}
-                    />
+                    <Icon icon="ri:close-line" color={bluefrance113} width={"18px"} />
                     <Text color={bluefrance113}>Annuler la demande</Text>
                   </Flex>
                 </MenuItem>
@@ -250,9 +209,8 @@ export const CorrectionDemandeButton = chakra(
               </ModalHeader>
               <ModalBody>
                 <Text>
-                  Reporter la demande indique que le projet sera mis en oeuvre
-                  ultérieurement. Une nouvelle saisie ou une duplication devront
-                  avoir lieu lors d’une prochaine campagne.
+                  Reporter la demande indique que le projet sera mis en oeuvre ultérieurement. Une nouvelle saisie ou
+                  une duplication devront avoir lieu lors d’une prochaine campagne.
                 </Text>
               </ModalBody>
               <ModalFooter>
@@ -291,13 +249,10 @@ export const CorrectionDemandeButton = chakra(
                         ...demande,
                         intentionNumero: demande.numero,
                         capaciteScolaire: demande.capaciteScolaireActuelle ?? 0,
-                        capaciteApprentissage:
-                          demande.capaciteApprentissageActuelle ?? 0,
-                        capaciteScolaireActuelle:
-                          demande.capaciteScolaireActuelle ?? 0,
+                        capaciteApprentissage: demande.capaciteApprentissageActuelle ?? 0,
+                        capaciteScolaireActuelle: demande.capaciteScolaireActuelle ?? 0,
                         capaciteScolaireColoree: 0,
-                        capaciteApprentissageActuelle:
-                          demande.capaciteApprentissageActuelle ?? 0,
+                        capaciteApprentissageActuelle: demande.capaciteApprentissageActuelle ?? 0,
                         capaciteApprentissageColoree: 0,
                         raison: "report",
                         motif: correction.motif,
@@ -316,8 +271,7 @@ export const CorrectionDemandeButton = chakra(
                 <ModalBody>
                   <FormControl isRequired>
                     <FormLabel mb={4}>
-                      Pour quel motif êtes vous amené à modifier les capacités
-                      de cette demande ?
+                      Pour quel motif êtes vous amené à modifier les capacités de cette demande ?
                     </FormLabel>
                     <Select
                       {...formReport.register("motif", {
@@ -332,15 +286,11 @@ export const CorrectionDemandeButton = chakra(
                       ))}
                     </Select>
                     {!!formReport.formState.errors.motif && (
-                      <FormErrorMessage>
-                        {formReport.formState.errors.motif.message}
-                      </FormErrorMessage>
+                      <FormErrorMessage>{formReport.formState.errors.motif.message}</FormErrorMessage>
                     )}
                   </FormControl>
                   <FormControl>
-                    <FormLabel>
-                      Commentaires / Observations sur la correction
-                    </FormLabel>
+                    <FormLabel>Commentaires / Observations sur la correction</FormLabel>
                     <Textarea
                       variant="grey"
                       height={150}
@@ -349,8 +299,7 @@ export const CorrectionDemandeButton = chakra(
                     />
                   </FormControl>
                   <Text my={4} color={"info.text"}>
-                    Après validation de ce formulaire, vous ne pourrez plus
-                    apporter aucune modification
+                    Après validation de ce formulaire, vous ne pourrez plus apporter aucune modification
                   </Text>
                 </ModalBody>
                 <ModalFooter>
@@ -389,10 +338,7 @@ export const CorrectionDemandeButton = chakra(
                 Annuler la demande
               </ModalHeader>
               <ModalBody>
-                <Text>
-                  Annuler la demande indique que le projet ne sera pas mis en
-                  oeuvre.
-                </Text>
+                <Text>Annuler la demande indique que le projet ne sera pas mis en oeuvre.</Text>
               </ModalBody>
               <ModalFooter>
                 <Flex direction="row">
@@ -430,13 +376,10 @@ export const CorrectionDemandeButton = chakra(
                         ...demande,
                         intentionNumero: demande.numero,
                         capaciteScolaire: demande.capaciteScolaireActuelle ?? 0,
-                        capaciteApprentissage:
-                          demande.capaciteApprentissageActuelle ?? 0,
-                        capaciteScolaireActuelle:
-                          demande.capaciteScolaireActuelle ?? 0,
+                        capaciteApprentissage: demande.capaciteApprentissageActuelle ?? 0,
+                        capaciteScolaireActuelle: demande.capaciteScolaireActuelle ?? 0,
                         capaciteScolaireColoree: 0,
-                        capaciteApprentissageActuelle:
-                          demande.capaciteApprentissageActuelle ?? 0,
+                        capaciteApprentissageActuelle: demande.capaciteApprentissageActuelle ?? 0,
                         capaciteApprentissageColoree: 0,
                         raison: "annulation",
                         motif: correction.motif,
@@ -455,8 +398,7 @@ export const CorrectionDemandeButton = chakra(
                 <ModalBody gap={6}>
                   <FormControl isRequired>
                     <FormLabel mb={4}>
-                      Pour quel motif êtes vous amené à modifier les capacités
-                      de cette demande ?
+                      Pour quel motif êtes vous amené à modifier les capacités de cette demande ?
                     </FormLabel>
                     <Select
                       {...formAnnulation.register("motif", {
@@ -473,9 +415,7 @@ export const CorrectionDemandeButton = chakra(
                     </Select>
                   </FormControl>
                   <FormControl>
-                    <FormLabel>
-                      Commentaires / Observations sur la correction
-                    </FormLabel>
+                    <FormLabel>Commentaires / Observations sur la correction</FormLabel>
                     <Textarea
                       variant="grey"
                       height={150}
@@ -484,8 +424,7 @@ export const CorrectionDemandeButton = chakra(
                     />
                   </FormControl>
                   <Text my={4} color={"info.text"}>
-                    Après validation de ce formulaire, vous ne pourrez plus
-                    apporter aucune modification
+                    Après validation de ce formulaire, vous ne pourrez plus apporter aucune modification
                   </Text>
                 </ModalBody>
                 <ModalFooter>

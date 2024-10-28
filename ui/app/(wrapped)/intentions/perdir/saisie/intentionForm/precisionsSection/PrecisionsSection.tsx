@@ -1,15 +1,15 @@
 import { Divider, Flex, Heading } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { RefObject } from "react";
+import type { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
-import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
+import { QuestionBlock } from "@/app/(wrapped)/intentions/perdir/saisie/components/QuestionBlock";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
+import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/perdir/SCROLL_OFFSETS";
+import type { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
+import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
-import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
-import { SCROLL_OFFSET } from "../../../SCROLL_OFFSETS";
-import { QuestionBlock } from "../../components/QuestionBlock";
-import { IntentionForms } from "../defaultFormValues";
 import { AmiCmaEnCoursValidationField } from "./AmiCmaEnCoursValidationField";
 import { AmiCmaField } from "./AmiCmaField";
 import { AmiCmaValideAnneeField } from "./AmiCmaValideAnneeField";
@@ -33,30 +33,20 @@ export const PrecisionsSection = ({
 }) => {
   const { watch } = useFormContext<IntentionForms>();
 
-  const [typeDemande, amiCma, partenairesEconomiquesImpliques, cmqImplique] =
-    watch([
-      "typeDemande",
-      "amiCma",
-      "partenairesEconomiquesImpliques",
-      "cmqImplique",
-    ]);
+  const [typeDemande, amiCma, partenairesEconomiquesImpliques, cmqImplique] = watch([
+    "typeDemande",
+    "amiCma",
+    "partenairesEconomiquesImpliques",
+    "cmqImplique",
+  ]);
 
-  const sectionsAmiCmaPartenairesEcoCMQVisibles =
-    !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
+  const sectionsAmiCmaPartenairesEcoCMQVisibles = !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
 
   return (
-    <Flex
-      ref={motifsEtPrecisionsRef}
-      scrollMarginTop={SCROLL_OFFSET}
-      direction={"column"}
-    >
+    <Flex ref={motifsEtPrecisionsRef} scrollMarginTop={SCROLL_OFFSET} direction={"column"}>
       <Heading as="h2" fontSize="xl" display={"flex"}>
         <Flex direction={"row"} gap={3}>
-          <Icon
-            icon="ri:list-unordered"
-            color="black"
-            style={{ marginTop: "auto" }}
-          />
+          <Icon icon="ri:list-unordered" color="black" style={{ marginTop: "auto" }} />
           Motifs de votre demande et précisions complémentaires
         </Flex>
       </Heading>

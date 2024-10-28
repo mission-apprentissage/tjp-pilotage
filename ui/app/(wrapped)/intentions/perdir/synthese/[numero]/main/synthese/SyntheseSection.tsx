@@ -1,25 +1,15 @@
-import {
-  Divider,
-  Flex,
-  Heading,
-  Img,
-  Tag,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react";
+import { Divider, Flex, Heading, Img, Tag, Text, Tooltip } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { Role } from "shared";
+import type { Role } from "shared";
 
-import { client } from "@/api.client";
+import type { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
+import type { MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import { getMotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { formatArray, formatBoolean, formatDate } from "@/utils/formatUtils";
 
-import { formatDepartementLibelleWithCodeDepartement } from "../../../../../../../../utils/formatLibelle";
-import {
-  getMotifLabel,
-  MotifLabel,
-} from "../../../../../utils/motifDemandeUtils";
-import { getTypeDemandeLabel } from "../../../../../utils/typeDemandeUtils";
 import { FilesSection } from "./files/FilesSection";
 
 const formatDifferenceCapacite = (difference?: number) => {
@@ -30,16 +20,10 @@ const formatDifferenceCapacite = (difference?: number) => {
 
 const formatMotifArray = (values?: Array<string | undefined>): string => {
   if (!values) return "Aucun";
-  return formatArray(
-    values.map((motif) => getMotifLabel({ motif: motif as MotifLabel }))
-  );
+  return formatArray(values.map((motif) => getMotifLabel({ motif: motif as MotifLabel })));
 };
 
-export const SyntheseSection = ({
-  intention,
-}: {
-  intention: (typeof client.infer)["[GET]/intention/:numero"];
-}) => {
+export const SyntheseSection = ({ intention }: { intention: (typeof client.infer)["[GET]/intention/:numero"] }) => {
   return (
     <Flex direction={"column"} gap={6} w="100%">
       <Flex direction={"row"} justify={"space-between"}>
@@ -58,13 +42,7 @@ export const SyntheseSection = ({
       <Divider />
       <Flex direction={"row"} gap={4}>
         <Flex direction={"column"} gap={6} maxW={"50%"}>
-          <Flex
-            direction={"column"}
-            gap={3}
-            bgColor={"blueecume.975"}
-            p={4}
-            h="fit-content"
-          >
+          <Flex direction={"column"} gap={3} bgColor={"blueecume.975"} p={4} h="fit-content">
             <Flex direction={"row"} gap={4}>
               <Text w={["44", "48", "52"]} fontWeight={700}>
                 Établissement
@@ -177,9 +155,7 @@ export const SyntheseSection = ({
             </Flex>
             <Flex direction={"row"} gap={4} justify={"space-between"}>
               <Text fontSize={14}>
-                {intention.commentaire && intention.commentaire.length
-                  ? intention.commentaire
-                  : "Aucune"}
+                {intention.commentaire && intention.commentaire.length ? intention.commentaire : "Aucune"}
               </Text>
             </Flex>
           </Flex>
@@ -235,9 +211,7 @@ export const SyntheseSection = ({
               Nb de places ouvertes en apprentissage
             </Heading>
             <Text fontWeight={700} fontSize={14}>
-              {formatDifferenceCapacite(
-                intention.differenceCapaciteApprentissage
-              )}
+              {formatDifferenceCapacite(intention.differenceCapaciteApprentissage)}
             </Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
@@ -292,25 +266,15 @@ export const SyntheseSection = ({
               </Flex>
             </Flex>
           )}
-          {intention.partenairesEconomiquesImpliques &&
-            intention.partenaireEconomique1 && (
-              <Flex direction={"row"} gap={4} justify={"space-between"}>
-                <Text>Partenaire(s) économique(s) impliqué(s)</Text>
-                <Text>
-                  {formatArray([
-                    intention.partenaireEconomique1,
-                    intention.partenaireEconomique2,
-                  ])}
-                </Text>
-              </Flex>
-            )}
+          {intention.partenairesEconomiquesImpliques && intention.partenaireEconomique1 && (
+            <Flex direction={"row"} gap={4} justify={"space-between"}>
+              <Text>Partenaire(s) économique(s) impliqué(s)</Text>
+              <Text>{formatArray([intention.partenaireEconomique1, intention.partenaireEconomique2])}</Text>
+            </Flex>
+          )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={2}>
-            <Icon
-              icon="ri:parent-line"
-              color="black"
-              style={{ marginTop: "auto", marginBottom: "auto" }}
-            />
+            <Icon icon="ri:parent-line" color="black" style={{ marginTop: "auto", marginBottom: "auto" }} />
             <Heading as={"h6"} fontSize={14}>
               Besoin(s) RH exprimé(s)
             </Heading>
@@ -328,13 +292,7 @@ export const SyntheseSection = ({
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Discipline(s)</Text>
                 <Text>
-                  {formatArray(
-                    [
-                      intention.discipline1RecrutementRH,
-                      intention.discipline2RecrutementRH,
-                    ],
-                    true
-                  )}
+                  {formatArray([intention.discipline1RecrutementRH, intention.discipline2RecrutementRH], true)}
                 </Text>
               </Flex>
             </>
@@ -352,13 +310,7 @@ export const SyntheseSection = ({
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Discipline(s)</Text>
                 <Text>
-                  {formatArray(
-                    [
-                      intention.discipline1ReconversionRH,
-                      intention.discipline2ReconversionRH,
-                    ],
-                    true
-                  )}
+                  {formatArray([intention.discipline1ReconversionRH, intention.discipline2ReconversionRH], true)}
                 </Text>
               </Flex>
             </>
@@ -377,10 +329,7 @@ export const SyntheseSection = ({
                 <Text>Discipline(s)</Text>
                 <Text>
                   {formatArray(
-                    [
-                      intention.discipline1ProfesseurAssocieRH,
-                      intention.discipline2ProfesseurAssocieRH,
-                    ],
+                    [intention.discipline1ProfesseurAssocieRH, intention.discipline2ProfesseurAssocieRH],
                     true
                   )}
                 </Text>
@@ -399,25 +348,13 @@ export const SyntheseSection = ({
               </Flex>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Discipline(s)</Text>
-                <Text>
-                  {formatArray(
-                    [
-                      intention.discipline1FormationRH,
-                      intention.discipline2FormationRH,
-                    ],
-                    true
-                  )}
-                </Text>
+                <Text>{formatArray([intention.discipline1FormationRH, intention.discipline2FormationRH], true)}</Text>
               </Flex>
             </>
           )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={2}>
-            <Img
-              src={"/icons/travauxEtEquipements.svg"}
-              alt=""
-              style={{ marginTop: "auto", marginBottom: "auto" }}
-            />
+            <Img src={"/icons/travauxEtEquipements.svg"} alt="" style={{ marginTop: "auto", marginBottom: "auto" }} />
             <Heading as={"h6"} fontSize={14}>
               Travaux et équipements
             </Heading>
@@ -456,56 +393,40 @@ export const SyntheseSection = ({
           )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={2}>
-            <Icon
-              icon="ri:restaurant-line"
-              color="black"
-              style={{ marginTop: "auto", marginBottom: "auto" }}
-            />
+            <Icon icon="ri:restaurant-line" color="black" style={{ marginTop: "auto", marginBottom: "auto" }} />
             <Heading as={"h6"} fontSize={14}>
               Internat et restauration
             </Heading>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text>Augmentation de la capacité d'accueil en restauration ?</Text>
-            <Text>
-              {formatBoolean(intention.augmentationCapaciteAccueilRestauration)}
-            </Text>
+            <Text>{formatBoolean(intention.augmentationCapaciteAccueilRestauration)}</Text>
           </Flex>
           {intention.augmentationCapaciteAccueilRestauration && (
             <>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Nombre de places supplémentaires en restauration</Text>
-                <Text>
-                  {intention.augmentationCapaciteAccueilRestaurationPlaces}
-                </Text>
+                <Text>{intention.augmentationCapaciteAccueilRestaurationPlaces}</Text>
               </Flex>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Précisions</Text>
-                <Text>
-                  {intention.augmentationCapaciteAccueilRestaurationPrecisions}
-                </Text>
+                <Text>{intention.augmentationCapaciteAccueilRestaurationPrecisions}</Text>
               </Flex>
             </>
           )}
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text>Augmentation de la capacité d'accueil en hébergement ?</Text>
-            <Text>
-              {formatBoolean(intention.augmentationCapaciteAccueilHebergement)}
-            </Text>
+            <Text>{formatBoolean(intention.augmentationCapaciteAccueilHebergement)}</Text>
           </Flex>
           {intention.augmentationCapaciteAccueilHebergement && (
             <>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Nombre de places supplémentaires en hébergement</Text>
-                <Text>
-                  {intention.augmentationCapaciteAccueilHebergementPlaces}
-                </Text>
+                <Text>{intention.augmentationCapaciteAccueilHebergementPlaces}</Text>
               </Flex>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Précisions</Text>
-                <Text>
-                  {intention.augmentationCapaciteAccueilHebergementPrecisions}
-                </Text>
+                <Text>{intention.augmentationCapaciteAccueilHebergementPrecisions}</Text>
               </Flex>
             </>
           )}

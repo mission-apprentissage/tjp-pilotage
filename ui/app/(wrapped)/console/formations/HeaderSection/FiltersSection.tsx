@@ -4,11 +4,10 @@ import { usePlausible } from "next-plausible";
 import { useContext, useEffect } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 
+import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
+import type { Filters, Formations, Order } from "@/app/(wrapped)/console/formations/types";
 import { CodeRegionFilterContext } from "@/app/layoutClient";
 import { Multiselect } from "@/components/Multiselect";
-
-import { FORMATION_COLUMNS } from "../FORMATION_COLUMNS";
-import { Filters, Formations, Order } from "../types";
 
 export const FiltersSection = ({
   setSearchParams,
@@ -35,25 +34,16 @@ export const FiltersSection = ({
 }) => {
   const trackEvent = usePlausible();
 
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(
-    CodeRegionFilterContext
-  );
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
 
   const filters = searchParams.filters ?? {};
   const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
 
-  const handleFiltersContext = (
-    type: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
-    if (type === "codeRegion" && value != null)
-      setCodeRegionFilter((value as string[])[0] ?? "");
+  const handleFiltersContext = (type: keyof Filters, value: Filters[keyof Filters]) => {
+    if (type === "codeRegion" && value != null) setCodeRegionFilter((value as string[])[0] ?? "");
   };
 
-  const handleFilters = (
-    type: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
+  const handleFilters = (type: keyof Filters, value: Filters[keyof Filters]) => {
     handleFiltersContext(type, value);
 
     let newFilters: Partial<Filters> = {
@@ -258,16 +248,12 @@ export const FiltersSection = ({
           size="lg"
           variant="accessible"
           onChange={(event) => {
-            handleToggleShowAnneeCommune(
-              event.target.checked.toString() ?? "false"
-            );
+            handleToggleShowAnneeCommune(event.target.checked.toString() ?? "false");
           }}
           isChecked={searchParams.withAnneeCommune !== "false"}
           whiteSpace={"nowrap"}
         >
-          <Text fontSize={"14px"}>
-            Afficher les secondes et premières communes
-          </Text>
+          <Text fontSize={"14px"}>Afficher les secondes et premières communes</Text>
         </Checkbox>
       </Flex>
       <Button

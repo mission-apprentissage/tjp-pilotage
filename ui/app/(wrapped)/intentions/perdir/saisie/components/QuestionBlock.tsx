@@ -1,16 +1,8 @@
 import { Box, chakra, Flex } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const QuestionBlock = chakra(
-  ({
-    children,
-    className,
-    active = false,
-  }: {
-    children: ReactNode;
-    className?: string;
-    active?: boolean;
-  }) => {
+  ({ children, className, active = false }: { children: ReactNode; className?: string; active?: boolean }) => {
     return (
       <Box
         className={className}

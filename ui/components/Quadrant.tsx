@@ -13,18 +13,10 @@ import {
   usePopper,
   useToken,
 } from "@chakra-ui/react";
+import type { EChartsOption } from "echarts";
 import * as echarts from "echarts";
-import { EChartsOption } from "echarts";
-import {
-  FC,
-  forwardRef,
-  ReactNode,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import type { FC, ReactNode } from "react";
+import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 const quadrantLabelStyle = {
@@ -79,10 +71,7 @@ export const Quadrant = function <
   const itemInactiveColor = useToken("colors", "quadrantItemColor.inactive");
 
   const currentFormation = ((): F | undefined =>
-    data.find(
-      (formation) =>
-        currentFormationId === `${formation.cfd}_${formation.codeDispositif}`
-    ))();
+    data.find((formation) => currentFormationId === `${formation.cfd}_${formation.codeDispositif}`))();
 
   const popperInstance = usePopper({
     modifiers: [
@@ -117,24 +106,15 @@ export const Quadrant = function <
       getBoundingClientRect: () => {
         const containerRect = containerRef.current?.getBoundingClientRect();
         if (!containerRect) return new DOMRect();
-        return new DOMRect(
-          displayedDetail.x + containerRect.x - 10,
-          displayedDetail.y + containerRect.y - 10,
-          20,
-          20
-        );
+        return new DOMRect(displayedDetail.x + containerRect.x - 10, displayedDetail.y + containerRect.y - 10, 20, 20);
       },
     });
   }, [displayedDetail]);
 
   const series = data.map((formation) => ({
     value: [
-      dimensions?.includes("tauxPoursuite")
-        ? formation.tauxPoursuite * 100
-        : 50,
-      dimensions?.includes("tauxInsertion")
-        ? formation.tauxInsertion * 100
-        : 50,
+      dimensions?.includes("tauxPoursuite") ? formation.tauxPoursuite * 100 : 50,
+      dimensions?.includes("tauxInsertion") ? formation.tauxInsertion * 100 : 50,
     ],
     name: `${formation.cfd}_${formation.codeDispositif}`,
   }));
@@ -159,22 +139,10 @@ export const Quadrant = function <
   const repartitionsQuadrants =
     meanInsertion && meanPoursuite
       ? {
-          q1: data.filter(
-            (item) =>
-              item.positionQuadrant === PositionQuadrantEnum.Q1 && item.effectif
-          ).length,
-          q2: data.filter(
-            (item) =>
-              item.positionQuadrant === PositionQuadrantEnum.Q2 && item.effectif
-          ).length,
-          q3: data.filter(
-            (item) =>
-              item.positionQuadrant === PositionQuadrantEnum.Q3 && item.effectif
-          ).length,
-          q4: data.filter(
-            (item) =>
-              item.positionQuadrant === PositionQuadrantEnum.Q4 && item.effectif
-          ).length,
+          q1: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q1 && item.effectif).length,
+          q2: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q2 && item.effectif).length,
+          q3: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q3 && item.effectif).length,
+          q4: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q4 && item.effectif).length,
         }
       : undefined;
 
@@ -244,11 +212,7 @@ export const Quadrant = function <
             color: ({ dataIndex }) => {
               const formation = data[dataIndex];
               if (!formation) return "";
-              if (
-                currentFormationId ===
-                `${formation.cfd}_${formation.codeDispositif}`
-              )
-                return itemActiveColor;
+              if (currentFormationId === `${formation.cfd}_${formation.codeDispositif}`) return itemActiveColor;
               return itemInactiveColor;
             },
           },
@@ -266,10 +230,7 @@ export const Quadrant = function <
             }
 
             const size = effectifSizes.find(
-              ({ max, min }) =>
-                effectif &&
-                (!min || effectif >= min) &&
-                (!max || effectif <= max)
+              ({ max, min }) => effectif && (!min || effectif >= min) && (!max || effectif <= max)
             )?.size;
 
             return size ?? 0;
@@ -299,8 +260,7 @@ export const Quadrant = function <
                         coord: [0, 0],
                         itemStyle: {
                           color:
-                            dimensions?.includes("tauxPoursuite") &&
-                            dimensions?.includes("tauxInsertion")
+                            dimensions?.includes("tauxPoursuite") && dimensions?.includes("tauxInsertion")
                               ? redColor
                               : greyColor,
                         },
@@ -317,8 +277,7 @@ export const Quadrant = function <
                         coord: [moyennes.poursuite, moyennes.insertion],
                         itemStyle: {
                           color:
-                            dimensions?.includes("tauxPoursuite") &&
-                            dimensions?.includes("tauxInsertion")
+                            dimensions?.includes("tauxPoursuite") && dimensions?.includes("tauxInsertion")
                               ? greenColor
                               : greyColor,
                         },
@@ -370,10 +329,7 @@ export const Quadrant = function <
     }
     chartRef.current.setOption(option);
 
-    const selectFormationHandler = (event: {
-      dataIndex: number;
-      data: { value: [number, number] };
-    }) => {
+    const selectFormationHandler = (event: { dataIndex: number; data: { value: [number, number] } }) => {
       onClick?.(data[event.dataIndex]);
       displayTooltip(data[event.dataIndex]);
     };
@@ -391,19 +347,8 @@ export const Quadrant = function <
   }, [currentFormation]);
 
   return (
-    <Box
-      position="relative"
-      className={className}
-      overflow="visible !important"
-    >
-      <Box
-        ref={containerRef}
-        position="absolute"
-        right="0"
-        top="0"
-        left="0"
-        bottom="0"
-      ></Box>
+    <Box position="relative" className={className} overflow="visible !important">
+      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0"></Box>
 
       {InfoTootipContent && (
         <InfoTooltip>
@@ -430,36 +375,29 @@ export const Quadrant = function <
   );
 };
 
-export const FormationTooltipWrapper = forwardRef<
-  HTMLDivElement,
-  { children: ReactNode; clickOutside: () => void }
->(({ clickOutside, children, ...props }, ref) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  useOutsideClick({
-    ref: cardRef,
-    handler: clickOutside,
-  });
+// eslint-disable-next-line react/display-name
+export const FormationTooltipWrapper = forwardRef<HTMLDivElement, { children: ReactNode; clickOutside: () => void }>(
+  ({ clickOutside, children, ...props }, ref) => {
+    const cardRef = useRef<HTMLDivElement>(null);
+    useOutsideClick({
+      ref: cardRef,
+      handler: clickOutside,
+    });
 
-  return (
-    <Box zIndex={10} ref={ref} {...props}>
-      <Card width={"280px"} ref={cardRef}>
-        <CardBody p="4">{children}</CardBody>
-      </Card>
-    </Box>
-  );
-});
+    return (
+      <Box zIndex={10} ref={ref} {...props}>
+        <Card width={"280px"} ref={cardRef}>
+          <CardBody p="4">{children}</CardBody>
+        </Card>
+      </Box>
+    );
+  }
+);
 
 const InfoTooltip = ({ children }: { children: ReactNode }) => (
   <Popover>
     <PopoverTrigger>
-      <QuestionIcon
-        color="info.525"
-        position="absolute"
-        right="20px"
-        top="25px"
-        fontSize="20px"
-        cursor="pointer"
-      />
+      <QuestionIcon color="info.525" position="absolute" right="20px" top="25px" fontSize="20px" cursor="pointer" />
     </PopoverTrigger>
     <PopoverContent _focusVisible={{ outline: "none" }} p="3">
       <PopoverCloseButton />

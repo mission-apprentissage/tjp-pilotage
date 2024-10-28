@@ -18,52 +18,32 @@ import {
 import { Icon } from "@iconify/react";
 import { isAxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { escapeString } from "shared/utils/escapeString";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { client } from "@/api.client";
+import { Conseils } from "@/app/(wrapped)/intentions/perdir/saisie/components/Conseils";
+import { MenuFormulaire } from "@/app/(wrapped)/intentions/perdir/saisie/components/MenuFormulaire";
+import type { Campagne } from "@/app/(wrapped)/intentions/perdir/saisie/types";
+import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/intentions/perdir/SCROLL_OFFSETS";
+import { getStepWorkflow } from "@/app/(wrapped)/intentions/utils/statutUtils";
+import { isTypeAjustement, isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
 import { useAuth } from "@/utils/security/useAuth";
 
-import { getStepWorkflow } from "../../../utils/statutUtils";
-import {
-  isTypeAjustement,
-  isTypeFermeture,
-} from "../../../utils/typeDemandeUtils";
-import { SCROLL_OFFSET, STICKY_OFFSET } from "../../SCROLL_OFFSETS";
-import { Conseils } from "../components/Conseils";
-import { MenuFormulaire } from "../components/MenuFormulaire";
-import { Campagne } from "../types";
+import { CampagneContext } from "./CampagneContext";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
-import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
+import type { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
 import { InformationsBlock } from "./InformationsBlock";
 import { useIntentionFilesContext } from "./observationsSection/filesSection/filesContext";
-
-export const CampagneContext = createContext<{
-  campagne?: Campagne;
-  setCampagne: Dispatch<SetStateAction<Campagne>>;
-}>({
-  campagne: undefined,
-  setCampagne: () => {},
-});
 
 export const IntentionForm = ({
   disabled = true,
@@ -103,8 +83,7 @@ export const IntentionForm = ({
       let message = undefined;
       switch (body.statut) {
         case DemandeStatutEnum["brouillon"]:
-          message =
-            "Votre demande a bien été enregistrée en tant que brouillon";
+          message = "Votre demande a bien été enregistrée en tant que brouillon";
           break;
         case DemandeStatutEnum["proposition"]:
           message = "Votre proposition a bien été enregistrée";
@@ -139,9 +118,7 @@ export const IntentionForm = ({
     },
   });
 
-  const [isFCIL, setIsFCIL] = useState<boolean>(
-    formMetadata?.formation?.isFCIL ?? false
-  );
+  const [isFCIL, setIsFCIL] = useState<boolean>(formMetadata?.formation?.isFCIL ?? false);
 
   const isDisabledForPerdir =
     hasRole({
@@ -153,15 +130,9 @@ export const IntentionForm = ({
 
   const isActionsDisabled = isSuccess || isSubmitting || isDisabledForPerdir;
 
-  const isFormDisabled =
-    disabled || form.formState.disabled || isDisabledForPerdir;
+  const isFormDisabled = disabled || form.formState.disabled || isDisabledForPerdir;
 
-  const isCFDUaiSectionValid = ({
-    cfd,
-    codeDispositif,
-    libelleFCIL,
-    uai,
-  }: Partial<IntentionForms>): boolean => {
+  const isCFDUaiSectionValid = ({ cfd, codeDispositif, libelleFCIL, uai }: Partial<IntentionForms>): boolean => {
     if (isFCIL) return !!(cfd && codeDispositif && libelleFCIL && uai);
     return !!(cfd && codeDispositif && uai);
   };
@@ -210,17 +181,12 @@ export const IntentionForm = ({
 
   const typeDemande = form.watch("typeDemande");
   const isTypeDemandeNotFermetureOuDiminution =
-    !!typeDemande &&
-    !isTypeFermeture(typeDemande) &&
-    !isTypeDiminution(typeDemande);
+    !!typeDemande && !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
 
   const getStatutSubmit = (
     statutActuel?: Exclude<DemandeStatutType, "supprimée">
   ): Exclude<DemandeStatutType, "supprimée"> => {
-    if (
-      hasRole({ user: auth?.user, role: "perdir" }) ||
-      hasRole({ user: auth?.user, role: "expert_region" })
-    ) {
+    if (hasRole({ user: auth?.user, role: "perdir" }) || hasRole({ user: auth?.user, role: "expert_region" })) {
       return DemandeStatutEnum["proposition"];
     }
     if (isTypeAjustement(typeDemande)) {
@@ -234,16 +200,10 @@ export const IntentionForm = ({
     statut: Exclude<DemandeStatutType, "supprimée">,
     statutPrecedent?: Exclude<DemandeStatutType, "supprimée">
   ): string => {
-    if (
-      statut === DemandeStatutEnum["projet de demande"] ||
-      statut === DemandeStatutEnum["demande validée"]
-    ) {
+    if (statut === DemandeStatutEnum["projet de demande"] || statut === DemandeStatutEnum["demande validée"]) {
       return "Valider mon projet de demande";
     }
-    if (
-      !statutPrecedent ||
-      statutPrecedent === DemandeStatutEnum["brouillon"]
-    ) {
+    if (!statutPrecedent || statutPrecedent === DemandeStatutEnum["brouillon"]) {
       return "Enregistrer ma proposition";
     }
     if (statut === DemandeStatutEnum["proposition"]) {
@@ -252,13 +212,8 @@ export const IntentionForm = ({
     return "Enregistrer ma proposition";
   };
 
-  const canSubmitBrouillon = (
-    statut?: Exclude<DemandeStatutType, "supprimée">
-  ): boolean => {
-    if (
-      hasRole({ user: auth?.user, role: "perdir" }) ||
-      hasRole({ user: auth?.user, role: "expert_region" })
-    ) {
+  const canSubmitBrouillon = (statut?: Exclude<DemandeStatutType, "supprimée">): boolean => {
+    if (hasRole({ user: auth?.user, role: "perdir" }) || hasRole({ user: auth?.user, role: "expert_region" })) {
       return statut === undefined || statut === DemandeStatutEnum["brouillon"];
     }
     return false;
@@ -325,17 +280,10 @@ export const IntentionForm = ({
               <Box>
                 <Grid templateColumns={"repeat(3, 1fr)"} columnGap={8}>
                   <GridItem>
-                    <Box
-                      position="sticky"
-                      z-index="sticky"
-                      top={STICKY_OFFSET}
-                      textAlign={"start"}
-                    >
+                    <Box position="sticky" z-index="sticky" top={STICKY_OFFSET} textAlign={"start"}>
                       <MenuFormulaire
                         refs={anchorsRefs}
-                        isTypeDemandeNotFermetureOuDiminution={
-                          isTypeDemandeNotFermetureOuDiminution
-                        }
+                        isTypeDemandeNotFermetureOuDiminution={isTypeDemandeNotFermetureOuDiminution}
                       />
                       <Box position="relative">
                         <Conseils />
@@ -359,11 +307,7 @@ export const IntentionForm = ({
                       </Box>
                     </Box>
                   </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    ref={step2Ref}
-                    scrollMarginTop={SCROLL_OFFSET}
-                  >
+                  <GridItem colSpan={2} ref={step2Ref} scrollMarginTop={SCROLL_OFFSET}>
                     <InformationsBlock
                       refs={anchorsRefs}
                       formId={formId}
@@ -374,10 +318,7 @@ export const IntentionForm = ({
                           {canSubmitBrouillon() && (
                             <Button
                               isDisabled={
-                                disabled ||
-                                isActionsDisabled ||
-                                campagne?.statut !==
-                                  CampagneStatutEnum["en cours"]
+                                disabled || isActionsDisabled || campagne?.statut !== CampagneStatutEnum["en cours"]
                               }
                               isLoading={isSubmitting}
                               variant="draft"
@@ -388,17 +329,10 @@ export const IntentionForm = ({
                                       numero: formId,
                                       ...values,
                                       statut: DemandeStatutEnum["brouillon"],
-                                      campagneId:
-                                        values.campagneId ?? campagne?.id,
-                                      commentaire: escapeString(
-                                        values.commentaire
-                                      ),
-                                      autreMotif: escapeString(
-                                        values.autreMotif
-                                      ),
-                                      autreMotifRefus: escapeString(
-                                        values.autreMotifRefus
-                                      ),
+                                      campagneId: values.campagneId ?? campagne?.id,
+                                      commentaire: escapeString(values.commentaire),
+                                      autreMotif: escapeString(values.autreMotif),
+                                      autreMotifRefus: escapeString(values.autreMotifRefus),
                                     },
                                   },
                                 })
@@ -410,10 +344,7 @@ export const IntentionForm = ({
                           )}
                           <Button
                             isDisabled={
-                              disabled ||
-                              isActionsDisabled ||
-                              campagne?.statut !==
-                                CampagneStatutEnum["en cours"]
+                              disabled || isActionsDisabled || campagne?.statut !== CampagneStatutEnum["en cours"]
                             }
                             isLoading={isSubmitting}
                             variant="primary"
@@ -424,25 +355,17 @@ export const IntentionForm = ({
                                     numero: formId,
                                     ...values,
                                     statut: getStatutSubmit(values.statut),
-                                    campagneId:
-                                      values.campagneId ?? campagne?.id,
-                                    commentaire: escapeString(
-                                      values.commentaire
-                                    ),
+                                    campagneId: values.campagneId ?? campagne?.id,
+                                    commentaire: escapeString(values.commentaire),
                                     autreMotif: escapeString(values.autreMotif),
-                                    autreMotifRefus: escapeString(
-                                      values.autreMotifRefus
-                                    ),
+                                    autreMotifRefus: escapeString(values.autreMotifRefus),
                                   },
                                 },
                               })
                             )}
                             leftIcon={<CheckIcon />}
                           >
-                            {getLabelSubmit(
-                              getStatutSubmit(defaultValues.statut),
-                              defaultValues.statut
-                            )}
+                            {getLabelSubmit(getStatutSubmit(defaultValues.statut), defaultValues.statut)}
                           </Button>
                         </Flex>
                       }

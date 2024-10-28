@@ -1,17 +1,11 @@
-import { ToastId, useToast, UseToastOptions } from "@chakra-ui/react";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import type { ToastId, UseToastOptions } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
+import type { ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 import { client } from "@/api.client";
 
-import { FileType } from "./types";
+import type { FileType } from "./types";
 
 type IntentionFilesContext = {
   deleteFile: (file: FileType) => void;
@@ -37,9 +31,7 @@ const mapFileToFileType = (file: File): FileType => {
   } as FileType;
 };
 
-export const IntentionFilesContext = createContext<IntentionFilesContext>(
-  {} as IntentionFilesContext
-);
+export const IntentionFilesContext = createContext<IntentionFilesContext>({} as IntentionFilesContext);
 
 const useGetFiles = (numero: string | undefined) => {
   const { isLoading: isLoadingFiles, data: uploadedFiles } = client
@@ -59,10 +51,7 @@ const useUploadFiles = (numberOfFiles: number) => {
       onSuccess: () => {
         const toastContent: UseToastOptions = {
           status: "success",
-          title:
-            numberOfFiles > 1
-              ? "Fichiers envoyés avec succès"
-              : "Fichier envoyé avec succès",
+          title: numberOfFiles > 1 ? "Fichiers envoyés avec succès" : "Fichier envoyé avec succès",
           variant: "left-accent",
         };
         if (toastIdRef.current) {
@@ -91,10 +80,7 @@ const useUploadFiles = (numberOfFiles: number) => {
       onMutate: () => {
         const toastContent: UseToastOptions = {
           status: "info",
-          title:
-            numberOfFiles > 1
-              ? "Envoi des fichiers en cours"
-              : "Envoi du fichier en cours",
+          title: numberOfFiles > 1 ? "Envoi des fichiers en cours" : "Envoi du fichier en cours",
           variant: "left-accent",
         };
 
@@ -120,9 +106,7 @@ const useDeleteFiles = (numberOfFiles: number) => {
         const toastContent: UseToastOptions = {
           status: "success",
           title:
-            numberOfFiles > 1
-              ? "Les fichiers ont correctement été supprimé"
-              : "Le fichier a correctement été supprimé",
+            numberOfFiles > 1 ? "Les fichiers ont correctement été supprimé" : "Le fichier a correctement été supprimé",
           variant: "left-accent",
         };
 
@@ -152,10 +136,7 @@ const useDeleteFiles = (numberOfFiles: number) => {
       onMutate: () => {
         const toastContent: UseToastOptions = {
           status: "info",
-          title:
-            numberOfFiles > 1
-              ? "Suppression des fichiers en cours"
-              : "Suppression du fichier en cours",
+          title: numberOfFiles > 1 ? "Suppression des fichiers en cours" : "Suppression du fichier en cours",
           variant: "left-accent",
         };
 
@@ -173,13 +154,7 @@ const useDeleteFiles = (numberOfFiles: number) => {
   };
 };
 
-export const IntentionFilesProvider = ({
-  children,
-  numero,
-}: {
-  readonly children: ReactNode;
-  numero?: string;
-}) => {
+export const IntentionFilesProvider = ({ children, numero }: { readonly children: ReactNode; numero?: string }) => {
   const toast = useToast();
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [deletedFiles, setDeletedFiles] = useState<FileType[]>([]);
@@ -223,12 +198,10 @@ export const IntentionFilesProvider = ({
       let fileUrl = undefined;
 
       if (numero && file.isUploaded) {
-        const { url } = await client
-          .ref("[GET]/intention/:numero/files/url")
-          .query({
-            params: { numero: numero },
-            query: { filename: file.name },
-          });
+        const { url } = await client.ref("[GET]/intention/:numero/files/url").query({
+          params: { numero: numero },
+          query: { filename: file.name },
+        });
         fileUrl = url;
       } else {
         const fileToDownload = newFiles.find((f) => f.name === file.name);
@@ -257,10 +230,7 @@ export const IntentionFilesProvider = ({
   };
 
   useEffect(() => {
-    setFiles([
-      ...(uploadedFiles?.files ?? []),
-      ...newFiles.map(mapFileToFileType),
-    ]);
+    setFiles([...(uploadedFiles?.files ?? []), ...newFiles.map(mapFileToFileType)]);
   }, [uploadedFiles, newFiles]);
 
   const value = useMemo(
@@ -275,23 +245,10 @@ export const IntentionFilesProvider = ({
       isDeletingFiles,
       downloadFile,
     }),
-    [
-      files,
-      deleteFile,
-      newFiles,
-      addNewFiles,
-      isLoadingFiles,
-      isUploadingFiles,
-      isDeletingFiles,
-      downloadFile,
-    ]
+    [files, deleteFile, newFiles, addNewFiles, isLoadingFiles, isUploadingFiles, isDeletingFiles, downloadFile]
   );
 
-  return (
-    <IntentionFilesContext.Provider value={value}>
-      {children}
-    </IntentionFilesContext.Provider>
-  );
+  return <IntentionFilesContext.Provider value={value}>{children}</IntentionFilesContext.Provider>;
 };
 
 export const useIntentionFilesContext = () => useContext(IntentionFilesContext);

@@ -1,4 +1,5 @@
-import { forwardRef, Link, LinkProps } from "@chakra-ui/react";
+import type { LinkProps } from "@chakra-ui/react";
+import { forwardRef, Link } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
 export type ShortLinkProps = LinkProps & {
@@ -21,23 +22,9 @@ export const ShortLink = forwardRef<ShortLinkProps, "a">(
       ref={ref}
       {...rest}
     >
-      {iconLeft && (
-        <Icon
-          icon={iconLeft}
-          height={"16px"}
-          width={"16px"}
-          style={{ marginRight: "8px" }}
-        />
-      )}
+      {iconLeft && <Icon icon={iconLeft} height={"16px"} width={"16px"} style={{ marginRight: "8px" }} />}
       {label}
-      {iconRight && (
-        <Icon
-          icon={iconRight}
-          height={"16px"}
-          width={"16px"}
-          style={{ marginLeft: "8px" }}
-        />
-      )}
+      {iconRight && <Icon icon={iconRight} height={"16px"} width={"16px"} style={{ marginLeft: "8px" }} />}
     </Link>
   )
 );

@@ -1,24 +1,10 @@
 import { DownloadIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuButtonProps,
-  MenuItem,
-  MenuList,
-  Spinner,
-} from "@chakra-ui/react";
+import type { MenuButtonProps } from "@chakra-ui/react";
+import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Spinner } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
-const ExportButton = ({
-  onExport,
-  type = "csv",
-}: {
-  onExport?: () => Promise<void>;
-  type?: "csv" | "excel";
-}) => {
+const ExportButton = ({ onExport, type = "csv" }: { onExport?: () => Promise<void>; type?: "csv" | "excel" }) => {
   if (!onExport) return null;
   return type === "csv" ? (
     <MenuItem onClick={onExport} fontSize="14px" fontWeight={500} gap={2} p={2}>
@@ -78,22 +64,12 @@ export const ExportMenuButton = ({
 
   return (
     <Menu gutter={0}>
-      <MenuButton
-        as={Button}
-        variant={variant}
-        size="md"
-        leftIcon={<DownloadIcon />}
-        {...rest}
-      >
-        <Flex minW={20}>
-          {isQueryLoading ? <Spinner mr="2" size="sm" /> : "Exporter"}
-        </Flex>
+      <MenuButton as={Button} variant={variant} size="md" leftIcon={<DownloadIcon />} {...rest}>
+        <Flex minW={20}>{isQueryLoading ? <Spinner mr="2" size="sm" /> : "Exporter"}</Flex>
       </MenuButton>
       <MenuList p={0} zIndex={"tooltip"}>
         {onExportCsv && <ExportButton onExport={handleExportCsv} />}
-        {onExportExcel && (
-          <ExportButton onExport={handleExportExcel} type={"excel"} />
-        )}
+        {onExportExcel && <ExportButton onExport={handleExportExcel} type={"excel"} />}
       </MenuList>
     </Menu>
   );

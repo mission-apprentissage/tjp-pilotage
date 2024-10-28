@@ -1,13 +1,11 @@
 import { createContext, useContext, useState } from "react";
-import { MapRef } from "react-map-gl/maplibre";
+import type { MapRef } from "react-map-gl/maplibre";
 
-import { client } from "@/api.client";
+import type { client } from "@/api.client";
 
-type EtablissementMapType =
-  (typeof client.infer)["[GET]/etablissement/:uai/map"];
+type EtablissementMapType = (typeof client.infer)["[GET]/etablissement/:uai/map"];
 
-type EtablissementListType =
-  (typeof client.infer)["[GET]/etablissement/:uai/map/list"];
+type EtablissementListType = (typeof client.infer)["[GET]/etablissement/:uai/map/list"];
 
 interface Bbox {
   minLat: number;
@@ -41,23 +39,17 @@ interface EtablissementMapContextProps {
   value?: Partial<EtablissementMapContextType>;
 }
 
-export const EtablissementMapContext =
-  createContext<EtablissementMapContextType>({} as EtablissementMapContextType);
+export const EtablissementMapContext = createContext<EtablissementMapContextType>({} as EtablissementMapContextType);
 
-export function EtablissementMapContextProvider({
-  children,
-  value,
-}: EtablissementMapContextProps) {
+export function EtablissementMapContextProvider({ children, value }: EtablissementMapContextProps) {
   const [bbox, setBbox] = useState({
     minLat: value?.bbox?.minLat || 0,
     minLng: value?.bbox?.minLng || 0,
     maxLat: value?.bbox?.maxLat || 0,
     maxLng: value?.bbox?.maxLng || 0,
   });
-  const [etablissementMap, setEtablissementMap] =
-    useState<EtablissementMapType>();
-  const [etablissementList, setEtablissementList] =
-    useState<EtablissementListType>();
+  const [etablissementMap, setEtablissementMap] = useState<EtablissementMapType>();
+  const [etablissementList, setEtablissementList] = useState<EtablissementListType>();
   const [map, setMap] = useState<MapRef>();
   const [cfdFilter, setCfdFilter] = useState("");
   const [activeUai, setActiveUai] = useState<string>("");
@@ -81,12 +73,7 @@ export function EtablissementMapContextProvider({
     setHoverUai,
   };
 
-  return (
-    <EtablissementMapContext.Provider value={context}>
-      {children}
-    </EtablissementMapContext.Provider>
-  );
+  return <EtablissementMapContext.Provider value={context}>{children}</EtablissementMapContext.Provider>;
 }
 
-export const useEtablissementMapContext = () =>
-  useContext(EtablissementMapContext);
+export const useEtablissementMapContext = () => useContext(EtablissementMapContext);
