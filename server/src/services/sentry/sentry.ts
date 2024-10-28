@@ -5,6 +5,7 @@ import config from "@/config";
 
 function getOptions(): Sentry.NodeOptions {
   return {
+    dsn: config.sentry.dsn,
     tracesSampleRate: config.env === "production" ? 0.1 : 1.0,
     tracePropagationTargets: [/^https:\/\/[^/]*\.inserjeunes\.beta\.gouv\.fr/],
     profilesSampleRate: config.env === "production" ? 0.1 : 1.0,

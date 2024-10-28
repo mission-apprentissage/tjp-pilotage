@@ -8,15 +8,18 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Crisp } from "crisp-sdk-web";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
-import { createContext, Dispatch, SetStateAction, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { createContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import { Auth, AuthContext } from "@/app/(wrapped)/auth/authContext";
+import { publicConfig } from "@/config.public";
+import { theme } from "@/theme/theme";
 
-import { publicConfig } from "../config.public";
-import { theme } from "../theme/theme";
-import { Changelog, ChangelogContext } from "./(wrapped)/changelog/changelogContext";
+import type { Auth } from "./(wrapped)/auth/authContext";
+import { AuthContext } from "./(wrapped)/auth/authContext";
+import type { Changelog } from "./(wrapped)/changelog/changelogContext";
+import { ChangelogContext } from "./(wrapped)/changelog/changelogContext";
 import { GlossaireProvider } from "./(wrapped)/glossaire/glossaireContext";
-import { GlossaireEntries } from "./(wrapped)/glossaire/types";
+import type { GlossaireEntries } from "./(wrapped)/glossaire/types";
 
 interface RootLayoutClientProps {
   readonly children: React.ReactNode;
@@ -27,8 +30,8 @@ interface RootLayoutClientProps {
 
 const useCrisp = () => {
   useEffect(() => {
-    const token = process.env.NEXT_PUBLIC_CRISP_TOKEN;
-    if (process.env.NEXT_PUBLIC_ENV === "production" && token) {
+    const token = publicConfig.crisp.token;
+    if (publicConfig.env === "production" && token) {
       Crisp.configure(token);
     } else {
       console.log("Crisp disabled");
@@ -52,7 +55,7 @@ const useTracking = () => {
       localStorage.setItem("notracking", "true");
     }
   }, [param]);
-  if (process.env.NEXT_PUBLIC_ENV !== "production") return false;
+  if (publicConfig.env !== "production") return false;
   return !noTracking.current;
 };
 

@@ -8,7 +8,7 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
-  checksum: 59c4b7e919a76d606042666306bfb575dc4e144b4572f61ac22678d082883dc0
+  checksum: 015dab22b90d5cd4d024cf1b1f2bea61a46d1f363df39dc72cce3ec88d1cc2b0
 - filename: README.md
   checksum: 00ac991f0b2746c5a5ffa14e2b3c5427b739c0d952aa3730efe1f234ac1fc3ca
 - filename: server/.env.test
@@ -37,6 +37,8 @@ fileignoreconfig:
   checksum: 58922cbe6994821e59cd535a2827e1774b85c2466bd0b51cb58a2e4bd9382912
 - filename: server/tests/test_origin/services/users.service.test.js_old
   checksum: aa5435b4faf485b49d3e9362d7550432cc4a431b863e8248f5b95b18b3d3e931
+- filename: ui/config.public.ts
+  checksum: ced0c1ea7757396482b010bd1d684de054358c901ade6c01e4992ead7ec1a385
 - filename: ui/src/config.public.ts
   checksum: b13b0a1f3d9590d335062a88e76609c40ba790129e481f7e5c25fbdab6840617
 - filename: ui/src/utils/generateUri.ts

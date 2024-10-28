@@ -1,21 +1,15 @@
-# PILOTAGE
-
-### Pré-requis
-
-- Docker 19+
-- Docker-compose 1.27+
-
-### Démarrage
-
-Pour lancer l'application :
-
-```sh
-make install
-make start
-```
-
-Cette commande démarre les containers définis dans le fichier `docker-compose.yml` et `docker-compose.override.yml`
-
-L'application est ensuite accessible à l'url [http://localhost](http://localhost)
-
 ![](https://avatars1.githubusercontent.com/u/63645182?s=200&v=4)
+
+# Orion
+
+## Fiche Produit
+
+**TODO**
+
+## Documentation
+
+- [Développement](./docs/developpement/developpement.md)
+- [Déploiement](./docs/deploy.md)
+- [Vault](./docs/Vault.md)
+- [Infrastructure](./docs/infrastructure.md)
+- [Sécurité](./docs/securite.md)
