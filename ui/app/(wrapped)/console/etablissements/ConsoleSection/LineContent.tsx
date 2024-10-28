@@ -85,7 +85,7 @@ export const EtablissementLineContent = ({
   ) => string;
 }) => (
   <>
-    <Td pr="0" py="1">
+    <Td pr="0" py="1" _groupHover={{ bgColor: "blueecume.850 !important" }}>
       {onClickExpend && (
         <IconButton
           transform={expended ? "rotate(180deg)" : ""}

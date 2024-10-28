@@ -15,7 +15,7 @@ export const FiltresFormationSchema = z.object({
   rentreeScolaire: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
   positionQuadrant: z.array(PositionQuadrantZodType).optional(),
-  withEmptyFormations: z.coerce.boolean().optional(),
+  withEmptyFormations: z.string().optional(),
   withAnneeCommune: z.string().optional(),
   search: z.string().optional(),
 });

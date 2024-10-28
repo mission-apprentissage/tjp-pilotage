@@ -36,11 +36,10 @@ export const HeaderSection = ({
       direction={"column"}
       boxShadow={"0px 1px 4px 0px #00000026"}
       zIndex={1}
+      p={4}
+      gap={6}
     >
       <Breadcrumb
-        p={4}
-        boxShadow={"0px 1px 4px 0px #00000026"}
-        zIndex={1}
         pages={[
           { title: "Accueil", to: "/" },
           {

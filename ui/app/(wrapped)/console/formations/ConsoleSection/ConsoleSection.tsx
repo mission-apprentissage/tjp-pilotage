@@ -71,7 +71,7 @@ export const ConsoleSection = ({
             rentreeScolaire: RENTREES_SCOLAIRES.filter(
               (rentree) => rentree !== CURRENT_RENTREE
             ),
-            withEmptyFormations: false,
+            withEmptyFormations: "false",
           },
         })
       ).formations;

@@ -19,7 +19,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { client } from "@/api.client";
-import { RequetesEnregistrees } from "@/app/(wrapped)/console/formations/types";
+
+import { RequetesEnregistrees } from "./types";
+
 export const DeleteRequeteEnregistreeButton = ({
   requeteEnregistree,
 }: {
