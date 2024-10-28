@@ -1,9 +1,10 @@
 import "./globals.css";
 
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 
-import { client } from "../api.client";
+import { client } from "@/api.client";
+
 import RootLayoutClient from "./layoutClient";
 
 export const metadata: Metadata = {

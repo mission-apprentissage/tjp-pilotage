@@ -28,4 +28,4 @@ echo "NEXT_PUBLIC_API_PORT=5001" >> "${ROOT_DIR}/ui/.env"
 yarn
 yarn services:start
 # yarn build:dev
-yarn cli db:init
+# yarn cli db:init
