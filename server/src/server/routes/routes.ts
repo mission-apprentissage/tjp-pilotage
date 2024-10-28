@@ -7,9 +7,7 @@ import { registerGlossaireModule } from "@/modules/glossaire";
 import { registerIntentionsExpeModule } from "@/modules/intentions";
 import type { Server } from "@/server/server";
 
-type RegisterRoutes = (opts: { server: Server }) => void;
-
-export const registerRoutes: RegisterRoutes = ({ server }) => {
+export const registerRoutes = ({ server }: { server: Server }) => {
   return {
     ...registerCoreModule({ server }),
     ...registerFormationModule({ server }),

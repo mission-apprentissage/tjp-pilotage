@@ -1,10 +1,9 @@
 import type { Args, ZodTypeProvider } from "@http-wizard/core";
+import type { Router } from "server/src/server/routes/routes";
 
-// import type { Router } from "server/src/server/routes/routes";
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
-// TODO TEMPARY ANY
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Demande = Args<any["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
+
+type Demande = Args<Router["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
 
 export const isTypeFermeture = (typeDemande: string) => ["fermeture"].includes(typeDemande);
 

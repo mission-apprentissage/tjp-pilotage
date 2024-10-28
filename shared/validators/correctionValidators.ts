@@ -1,14 +1,11 @@
 import type { Args, ZodTypeProvider } from "@http-wizard/core";
+import type { Router } from "server/src/server/routes/routes";
 
-// import type { Router } from "server/src/server/routes/routes";
 import { RaisonCorrectionEnum } from "../enum/raisonCorrectionEnum";
 
-// TODO TEMPARY ANY
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Correction = Args<any["[POST]/correction/submit"]["schema"], ZodTypeProvider>["body"]["correction"];
+type Correction = Args<Router["[POST]/correction/submit"]["schema"], ZodTypeProvider>["body"]["correction"];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Demande = Args<any["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
+type Demande = Args<Router["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
 
 const isRaisonAnnulation = (raison: string): boolean => raison === RaisonCorrectionEnum["annulation"];
 
