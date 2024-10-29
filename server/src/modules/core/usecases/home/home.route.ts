@@ -12,7 +12,7 @@ export const homeRoute = ({ server }: { server: Server }) => {
         200: z.object({
           name: z.string(),
           version: z.string(),
-          env: z.enum(["local", "recette", "recette2", "production", "test"]),
+          env: z.enum(["local", "recette", "recette2", "recettenext", "production", "test"]),
         }),
       },
     },
