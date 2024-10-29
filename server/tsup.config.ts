@@ -1,12 +1,14 @@
 import fs from "node:fs";
-import { basename } from "node:path";
+import { basename, dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { defineConfig } from "tsup";
 
 export default defineConfig((options) => {
   const isDev = options.env?.NODE_ENV !== "production";
   const isWatched = options.env?.TSUP_WATCH === "true";
-  const migrationFiles = fs.readdirSync("./src/migrations");
+  const dir = dirname(fileURLToPath(import.meta.url));
+  const migrationFiles = fs.readdirSync(join(dir, "src/migrations"));
 
   const entry: Record<string, string> = {
     index: "src/index.ts",
