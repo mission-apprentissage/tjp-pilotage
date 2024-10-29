@@ -8,11 +8,9 @@
     "npm": "please-use-yarn"
   },
   "scripts": {
-    "dev": "NEXT_PUBLIC_VERSION=$npm_package_version next dev",
-    "build": "NEXT_PUBLIC_VERSION=$npm_package_version next build",
-    "start": "NEXT_PUBLIC_VERSION=$npm_package_version next start",
-    "docker-dev": "yarn dev",
-    "typecheck": "NODE_OPTIONS='--max-old-space-size=8192' tsc",
+    "dev": "next dev",
+    "build": "next build --no-lint",
+    "typecheck": "NODE_OPTIONS='--max-old-space-size=8192' tsc -noEmit",
     "theme": "chakra-cli tokens theme/theme.ts"
   },
   "dependencies": {

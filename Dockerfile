@@ -1,52 +1,134 @@
-FROM node:18-alpine AS deps
-RUN apk add --no-cache libc6-compat
+# Temporary solution freeze NodeJs version https://github.com/vercel/next.js/discussions/69326
+# https://github.com/vercel/next.js/issues/69150
+FROM node:22.6-slim AS builder_root
 WORKDIR /app
-COPY . .
+RUN yarn set version 3.3.1
+COPY .yarn /app/.yarn
+COPY package.json package.json
+COPY yarn.lock yarn.lock
+COPY .yarnrc.yml .yarnrc.yml
+COPY ui/package.json ui/package.json
+COPY server/package.json server/package.json
+COPY shared/package.json shared/package.json
 
-RUN yarn workspaces focus --all --production
+RUN --mount=type=cache,target=/app/.yarn/cache yarn install --immutable
+
+FROM builder_root AS root
+WORKDIR /app
+
+##############################################################
+######################    SERVER    ##########################
+##############################################################
 
 # Rebuild the source code only when needed
-FROM node:18-alpine AS builder
+FROM root AS builder_server
 WORKDIR /app
 
-COPY --from=deps /app/. .
+COPY ./server ./server
+COPY ./shared ./shared
 
-ARG NEXT_PUBLIC_ENV
-ARG NEXT_PUBLIC_BASE_URL
-ARG NEXT_PUBLIC_SERVER_URL
-ARG NEXT_PUBLIC_APP_CONTAINER_URL
-ARG PILOTAGE_GIT_REVISION
-ARG NEXT_PUBLIC_CRISP_TOKEN
-ARG NEXT_PUBLIC_SENTRY_DSN
-ARG NEXT_PUBLIC_SENTRY_AUTH_TOKEN
-ARG NEXT_PUBLIC_SENTRY_RELEASE
+RUN yarn workspace server build
+# Removing dev dependencies
+RUN --mount=type=cache,target=/app/.yarn/cache yarn workspaces focus --all --production
 
-# Map arguments to react-scripts env variables
-ENV NEXT_PUBLIC_ENV=$NEXT_PUBLIC_ENV
-ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
-ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL
-ENV NEXT_PUBLIC_APP_CONTAINER_URL=$NEXT_PUBLIC_APP_CONTAINER_URL
-ENV NEXT_PUBLIC_CRISP_TOKEN=$NEXT_PUBLIC_CRISP_TOKEN
-ENV NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN
-ENV NEXT_PUBLIC_SENTRY_AUTH_TOKEN=$NEXT_PUBLIC_SENTRY_AUTH_TOKEN
-ENV NEXT_PUBLIC_SENTRY_RELEASE=$NEXT_PUBLIC_SENTRY_RELEASE
-
-# Git revision for slack logs
-ENV PILOTAGE_GIT_REVISION=$PILOTAGE_GIT_REVISION
-
-ENV NEXT_TELEMETRY_DISABLED 1
-
-RUN yarn workspaces foreach -p run build
+RUN mkdir -p /app/shared/node_modules && mkdir -p /app/server/node_modules
 
 # Production image, copy all the files and run next
-FROM node:18-alpine AS runner
-RUN apk add --no-cache parallel
+FROM node:22-slim AS server
 WORKDIR /app
 
-ENV NODE_ENV production
+RUN apt-get update && apt-get install -y ca-certificates curl && update-ca-certificates && apt-get clean
 
-COPY --from=builder /app/. .
+ENV NODE_ENV=production
+
+ARG PUBLIC_PRODUCT_NAME
+ENV PUBLIC_PRODUCT_NAME=$PUBLIC_PRODUCT_NAME
+
+ARG PUBLIC_VERSION
+ENV PUBLIC_VERSION=$PUBLIC_VERSION
+
+COPY --from=builder_server /app/server ./server
+COPY --from=builder_server /app/shared ./shared
+COPY --from=builder_server /app/node_modules ./node_modules
+COPY --from=builder_server /app/server/node_modules ./server/node_modules
+COPY --from=builder_server /app/shared/node_modules ./shared/node_modules
+COPY ./server/static /app/server/static
 
 EXPOSE 5000
+WORKDIR /app/server
+ENV NODE_OPTIONS=--max_old_space_size=2048
+CMD ["node", "dist/index.js", "start"]
+
+
+##############################################################
+######################      UI      ##########################
+##############################################################
+
+# Rebuild the source code only when needed
+FROM root AS builder_ui
+WORKDIR /app
+COPY ./ui ./ui
+COPY ./shared ./shared
+
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
+ENV NEXT_TELEMETRY_DISABLED 1
+
+ARG PUBLIC_REPO_NAME
+ENV NEXT_PUBLIC_PRODUCT_REPO=$PUBLIC_REPO_NAME
+
+ARG PUBLIC_PRODUCT_NAME
+ENV NEXT_PUBLIC_PRODUCT_NAME=$PUBLIC_PRODUCT_NAME
+
+ARG PUBLIC_VERSION
+ENV NEXT_PUBLIC_VERSION=$PUBLIC_VERSION
+
+ARG PUBLIC_ENV
+ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
+
+RUN yarn workspace ui build
+# RUN --mount=type=cache,target=/app/ui/.next/cache yarn --cwd ui build
+
+# Production image, copy all the files and run next
+FROM node:22-slim AS ui
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y ca-certificates curl && update-ca-certificates && apt-get clean
+
+ENV NODE_ENV=production
+# Uncomment the following line in case you want to disable telemetry during runtime.
+ENV NEXT_TELEMETRY_DISABLED 1
+
+ARG PUBLIC_REPO_NAME
+ENV NEXT_PUBLIC_PRODUCT_REPO=$PUBLIC_REPO_NAME
+
+ARG PUBLIC_PRODUCT_NAME
+ENV NEXT_PUBLIC_PRODUCT_NAME=$PUBLIC_PRODUCT_NAME
+
+ARG PUBLIC_VERSION
+ENV NEXT_PUBLIC_VERSION=$PUBLIC_VERSION
+
+ARG PUBLIC_ENV
+ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# You only need to copy next.config.mjs if you are NOT using the default configuration
+COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/next.config.mjs /app/
+COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/public /app/ui/public
+COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/package.json /app/ui/package.json
+
+# Automatically leverage output traces to reduce image size 
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/.next/standalone /app/
+COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/.next/static /app/ui/.next/static
+
+USER nextjs
+
 EXPOSE 3000
-CMD parallel --ungroup --halt-on-error 2 ::: "yarn workspace server start" "yarn workspace ui start"
+
+ENV PORT=3000
+
+CMD ["node", "ui/server"]
