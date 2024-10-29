@@ -13,6 +13,10 @@ fileignoreconfig:
   checksum: 00ac991f0b2746c5a5ffa14e2b3c5427b739c0d952aa3730efe1f234ac1fc3ca
 - filename: server/.env.test
   checksum: df4e0dd70085c1ab9d996395796f6b0bd879653f9866c55ff276579aff84a4ba
+- filename: server/seed/seed_data.dump
+  checksum: 452618bdc789fb23f1564bcffe4489fb13c56228d69c35d54c5f578b3c0b588c
+- filename: server/seed/seed_schema.dump
+  checksum: 4cd84efc97c7cf20dcd91d24eef98ffd5335a2b4fee049516b51909ed67de667
 - filename: server/tests/test_origin/controllers/campagnes.controller.test.js_old
   checksum: 546c306130034fdce2c4165b1f31656dfa883bc8808f0e8b1fa5a5461da1cb08
 - filename: server/tests/test_origin/controllers/users.controller.test.js_old

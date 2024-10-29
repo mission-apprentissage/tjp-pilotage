@@ -6,6 +6,7 @@ import { ScopeEnum } from "shared";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type {
   FiltersStatsPilotageIntentions,
+  FilterTracker,
   StatsPilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { getStickyNavHeight } from "@/app/(wrapped)/utils/getStickyNavOffset";
@@ -33,12 +34,14 @@ export const FiltersSection = ({
   filters,
   setFilters,
   setDefaultFilters,
+  filterTracker,
   data,
 }: {
   filters: FiltersStatsPilotageIntentions;
   setFilters: (filters: FiltersStatsPilotageIntentions) => void;
   setDefaultFilters: () => void;
   data: StatsPilotageIntentions | undefined;
+  filterTracker: FilterTracker;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const onUpdateFilter = <T,>({
@@ -49,6 +52,8 @@ export const FiltersSection = ({
     selected: T | T[] | null;
   }) => {
     let value = undefined;
+
+    filterTracker(key, { value });
 
     if (selected instanceof Array) {
       value = selected as Array<T>;

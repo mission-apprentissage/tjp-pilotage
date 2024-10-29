@@ -5,6 +5,7 @@ import { ScopeEnum } from "shared";
 import { useScopeCode } from "@/app/(wrapped)/intentions/pilotage/hooks";
 import type {
   FiltersStatsPilotageIntentions,
+  FilterTracker,
   StatsPilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { CartoGraph } from "@/components/CartoGraph";
@@ -21,6 +22,7 @@ export const CartoSection = ({
   handleFilters,
   data,
   isLoading,
+  filterTracker,
 }: {
   indicateur: IndicateurType;
   handleIndicateurChange: (indicateur: string) => void;
@@ -33,6 +35,7 @@ export const CartoSection = ({
   handleFilters: (filters: Partial<FiltersStatsPilotageIntentions>) => void;
   data: StatsPilotageIntentions | undefined;
   isLoading?: boolean;
+  filterTracker: FilterTracker;
 }) => {
   const { code: scopeCode } = useScopeCode(filters);
 
@@ -97,13 +100,26 @@ export const CartoSection = ({
   }, [data, filters, indicateur]);
 
   const handleClickOnTerritoire = useCallback(
-    (code: string | undefined) =>
-      handleFilters({
+    (code: string | undefined) => {
+      switch (filters.scope) {
+        case ScopeEnum["région"]:
+          filterTracker("codeRegion", { value: code, context: "carto" });
+          break;
+        case ScopeEnum["académie"]:
+          filterTracker("codeAcademie", { value: code, context: "carto" });
+          break;
+        case ScopeEnum["département"]:
+          filterTracker("codeDepartement", { value: code, context: "carto" });
+          break;
+      }
+
+      return handleFilters({
         scope: filters.scope,
         codeRegion: filters.scope !== ScopeEnum["région"] ? undefined : code,
         codeAcademie: filters.scope !== ScopeEnum["académie"] ? undefined : code,
         codeDepartement: filters.scope !== ScopeEnum["département"] ? undefined : code,
-      }),
+      });
+    },
     [handleFilters, filters, scopeCode]
   );
 

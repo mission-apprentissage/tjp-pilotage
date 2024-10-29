@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import type {
   FiltersStatsPilotageIntentions,
+  FilterTracker,
   StatsPilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 
@@ -15,12 +16,14 @@ export const HeaderSection = ({
   filters,
   setFilters,
   onOpenTauxTransfoDefinition,
+  filterTracker,
   isLoading,
 }: {
   data?: StatsPilotageIntentions;
   filters: FiltersStatsPilotageIntentions;
   setFilters: (filters: FiltersStatsPilotageIntentions) => void;
   onOpenTauxTransfoDefinition: () => void;
+  filterTracker: FilterTracker;
   isLoading?: boolean;
 }) => {
   const [indicateur, setIndicateur] = useState<IndicateurType>("tauxTransformation");
@@ -62,6 +65,7 @@ export const HeaderSection = ({
             filters={filters}
             data={data}
             handleFilters={(f) => setFilters({ ...filters, ...f })}
+            filterTracker={filterTracker}
             isLoading={isLoading}
           />
         </Flex>
