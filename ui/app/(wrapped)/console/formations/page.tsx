@@ -256,11 +256,11 @@ export default function Formations() {
     setColonneFilters(value);
   };
 
-  const onSearch = () => {
+  const onSearch = (searchValue?: string) => {
     setSearchParams({
       filters: filters,
       order: order,
-      search: searchFormation,
+      search: searchValue ?? searchFormation,
     });
   };
 
@@ -315,7 +315,7 @@ export default function Formations() {
                     newValue.length > 2 ||
                     oldValue.length > newValue.length
                   ) {
-                    onSearch();
+                    onSearch(newValue);
                   }
                 }}
                 value={searchFormation}

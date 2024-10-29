@@ -76,7 +76,7 @@ export const FilterTags = chakra(
     if (!filters) return <></>;
 
     return (
-      <Flex gap={3} minH={6}>
+      <Flex gap={3} minH={9}>
         {Object.values(flattenFilters(filters))
           .filter(({ value }) => value)
           .map(({ key, value }) => {
@@ -100,11 +100,15 @@ export const FilterTags = chakra(
                       size="xs"
                       onClick={() => {
                         const filterValue = filters[key as keyof Filters];
-                        if (filterValue && Array.isArray(filterValue)) {
+                        if (
+                          filterValue &&
+                          Array.isArray(filterValue) &&
+                          filterValue.length > 1
+                        ) {
                           setSearchParams({
                             filters: {
-                              [key]: filterValue.filter((v) => v !== value),
                               ...filters,
+                              [key]: filterValue.filter((v) => v !== value),
                             },
                           });
                           return;
