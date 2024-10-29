@@ -94,7 +94,7 @@
     "lint-staged": "^15.2.10",
     "node-talisman": "^1.29.11",
     "prettier": "^3.3.3",
-    "semantic-release": "22.0.9",
+    "semantic-release": "22.0.12",
     "semantic-release-slack-bot": "4.0.2",
     "typescript": "^5.6.3"
   },
