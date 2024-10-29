@@ -115,8 +115,8 @@ ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# You only need to copy next.config.mjs if you are NOT using the default configuration
-COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/next.config.mjs /app/
+# You only need to copy next.config.js if you are NOT using the default configuration
+COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/next.config.js /app/
 COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/public /app/ui/public
 COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/package.json /app/ui/package.json
 
