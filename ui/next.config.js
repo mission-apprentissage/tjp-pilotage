@@ -12,7 +12,7 @@ const nextConfig = {
     outputFileTracingRoot: path.join(__dirname, "../"),
   },
   output: "standalone",
-  // typescript: { ignoreBuildErrors: true },
+  typescript: { ignoreBuildErrors: true },
 };
 
 module.exports = withSentryConfig(

@@ -1187,7 +1187,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/cli@npm:^2.4.1":
+"@chakra-ui/cli@npm:^2.5.5":
   version: 2.5.5
   resolution: "@chakra-ui/cli@npm:2.5.5"
   dependencies:
@@ -1257,7 +1257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/icons@npm:^2.1.1":
+"@chakra-ui/icons@npm:^2.2.4":
   version: 2.2.4
   resolution: "@chakra-ui/icons@npm:2.2.4"
   peerDependencies:
@@ -1297,7 +1297,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/next-js@npm:^2.2.0":
+"@chakra-ui/next-js@npm:^2.4.2":
   version: 2.4.2
   resolution: "@chakra-ui/next-js@npm:2.4.2"
   dependencies:
@@ -1403,7 +1403,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/react@npm:^2.8.2":
+"@chakra-ui/react@npm:^2.10.3":
   version: 2.10.3
   resolution: "@chakra-ui/react@npm:2.10.3"
   dependencies:
@@ -1940,7 +1940,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:^11.11.1, @emotion/react@npm:^11.8.1":
+"@emotion/react@npm:^11.13.3, @emotion/react@npm:^11.8.1":
   version: 11.13.3
   resolution: "@emotion/react@npm:11.13.3"
   dependencies:
@@ -1981,7 +1981,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/styled@npm:^11.11.0":
+"@emotion/styled@npm:^11.13.0":
   version: 11.13.0
   resolution: "@emotion/styled@npm:11.13.0"
   dependencies:
@@ -2663,7 +2663,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@http-wizard/react-query@npm:^1.3.16":
+"@http-wizard/react-query@npm:^1.3.20":
   version: 1.3.20
   resolution: "@http-wizard/react-query@npm:1.3.20"
   peerDependencies:
@@ -4692,7 +4692,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/nextjs@npm:^8.34.0":
+"@sentry/nextjs@npm:^8.35.0":
   version: 8.35.0
   resolution: "@sentry/nextjs@npm:8.35.0"
   dependencies:
@@ -5798,7 +5798,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^4.29.3":
+"@tanstack/react-query@npm:^4.36.1":
   version: 4.36.1
   resolution: "@tanstack/react-query@npm:4.36.1"
   dependencies:
@@ -6386,12 +6386,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.11.6":
-  version: 20.17.1
-  resolution: "@types/node@npm:20.17.1"
+"@types/node@npm:^20.17.2":
+  version: 20.17.2
+  resolution: "@types/node@npm:20.17.2"
   dependencies:
     undici-types: ~6.19.2
-  checksum: 22bc7f32533985c2f33aa4642776c1096a3ca43133ff5783f0b3fe049dc968def7871da8f5d27634d4651ce6bcf4abe31c9d38c4a9a5d0b78118edc8d47c30ce
+  checksum: 3e9be67728001fb2a0ba730d8e909559fb09b992443d8d9cc9009be717cb44c673f52a734d5802a67ff50c8ddd8ef7d9eba40e9d2a82a73098e081d2625260e6
   languageName: node
   linkType: hard
 
@@ -6480,7 +6480,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:*, @types/qs@npm:^6.9.11, @types/qs@npm:^6.9.7":
+"@types/qs@npm:*, @types/qs@npm:^6.9.16, @types/qs@npm:^6.9.7":
   version: 6.9.16
   resolution: "@types/qs@npm:6.9.16"
   checksum: 2e8918150c12735630f7ee16b770c72949274938c30306025f68aaf977227f41fe0c698ed93db1099e04916d582ac5a1faf7e3c7061c8d885d9169f59a184b6c
@@ -6494,7 +6494,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.2.18":
+"@types/react-dom@npm:^18.3.1":
   version: 18.3.1
   resolution: "@types/react-dom@npm:18.3.1"
   dependencies:
@@ -6512,7 +6512,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.2.48":
+"@types/react@npm:*, @types/react@npm:^18.3.12":
   version: 18.3.12
   resolution: "@types/react@npm:18.3.12"
   dependencies:
@@ -9535,7 +9535,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crisp-sdk-web@npm:^1.0.22":
+"crisp-sdk-web@npm:^1.0.25":
   version: 1.0.25
   resolution: "crisp-sdk-web@npm:1.0.25"
   checksum: 5f2b804a477a84c4059e70b1e406d59d056277af1a6e8b0a9a4e94a261da8a53ad3be5b2484769c05b3979f6a5470e0edfe94c53b3c1feb0dd06562510a50880
@@ -10251,7 +10251,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"echarts@npm:^5.4.2":
+"echarts@npm:^5.5.1":
   version: 5.5.1
   resolution: "echarts@npm:5.5.1"
   dependencies:
@@ -12143,7 +12143,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^10.9.1":
+"framer-motion@npm:^10.18.0":
   version: 10.18.0
   resolution: "framer-motion@npm:10.18.0"
   dependencies:
@@ -13199,7 +13199,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iframe-resizer@npm:^4.4.0":
+"iframe-resizer@npm:^4.4.5":
   version: 4.4.5
   resolution: "iframe-resizer@npm:4.4.5"
   checksum: fa2493daba2df7578866aeb5fceabcf2129da9327abd7d26b4f16e9e7109eddcb97a8ba7ea6e94b043705f13bcbe6ae307e67cc48c24f7bd9d948d491a150163
@@ -16099,7 +16099,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"maplibre-gl@npm:^4.1.0":
+"maplibre-gl@npm:^4.7.1":
   version: 4.7.1
   resolution: "maplibre-gl@npm:4.7.1"
   dependencies:
@@ -17750,7 +17750,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:^14.2.15":
+"next@npm:^14.2.16":
   version: 14.2.16
   resolution: "next@npm:14.2.16"
   dependencies:
@@ -19834,7 +19834,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.13.0, qs@npm:^6.11.1":
+"qs@npm:6.13.0, qs@npm:^6.11.1, qs@npm:^6.13.0":
   version: 6.13.0
   resolution: "qs@npm:6.13.0"
   dependencies:
@@ -19957,15 +19957,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:18.2.0":
-  version: 18.2.0
-  resolution: "react-dom@npm:18.2.0"
+"react-dom@npm:18.3.1":
+  version: 18.3.1
+  resolution: "react-dom@npm:18.3.1"
   dependencies:
     loose-envify: ^1.1.0
-    scheduler: ^0.23.0
+    scheduler: ^0.23.2
   peerDependencies:
-    react: ^18.2.0
-  checksum: 7d323310bea3a91be2965f9468d552f201b1c27891e45ddc2d6b8f717680c95a75ae0bc1e3f5cf41472446a2589a75aed4483aee8169287909fcd59ad149e8cc
+    react: ^18.3.1
+  checksum: 298954ecd8f78288dcaece05e88b570014d8f6dce5db6f66e6ee91448debeb59dcd31561dddb354eee47e6c1bb234669459060deb238ed0213497146e555a0b9
   languageName: node
   linkType: hard
 
@@ -19996,7 +19996,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.47.0":
+"react-hook-form@npm:^7.53.1":
   version: 7.53.1
   resolution: "react-hook-form@npm:7.53.1"
   peerDependencies:
@@ -20040,7 +20040,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-intersection-observer@npm:^9.8.1":
+"react-intersection-observer@npm:^9.13.1":
   version: 9.13.1
   resolution: "react-intersection-observer@npm:9.13.1"
   peerDependencies:
@@ -20223,7 +20223,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-select@npm:^5.8.0":
+"react-select@npm:^5.8.2":
   version: 5.8.2
   resolution: "react-select@npm:5.8.2"
   dependencies:
@@ -20310,12 +20310,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.2.0":
-  version: 18.2.0
-  resolution: "react@npm:18.2.0"
+"react@npm:18.3.1":
+  version: 18.3.1
+  resolution: "react@npm:18.3.1"
   dependencies:
     loose-envify: ^1.1.0
-  checksum: 88e38092da8839b830cda6feef2e8505dec8ace60579e46aa5490fc3dc9bba0bd50336507dc166f43e3afc1c42939c09fe33b25fae889d6f402721dcd78fca1b
+  checksum: a27bcfa8ff7c15a1e50244ad0d0c1cb2ad4375eeffefd266a64889beea6f6b64c4966c9b37d14ee32d6c9fcd5aa6ba183b6988167ab4d127d13e7cb5b386a376
   languageName: node
   linkType: hard
 
@@ -21145,7 +21145,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.23.0":
+"scheduler@npm:^0.23.2":
   version: 0.23.2
   resolution: "scheduler@npm:0.23.2"
   dependencies:
@@ -23438,54 +23438,54 @@ __metadata:
   dependencies:
     "@chakra-ui/anatomy": ^2.3.4
     "@chakra-ui/checkbox": ^2.3.2
-    "@chakra-ui/cli": ^2.4.1
-    "@chakra-ui/icons": ^2.1.1
+    "@chakra-ui/cli": ^2.5.5
+    "@chakra-ui/icons": ^2.2.4
     "@chakra-ui/image": ^2.1.0
     "@chakra-ui/layout": ^2.3.1
-    "@chakra-ui/next-js": ^2.2.0
-    "@chakra-ui/react": ^2.8.2
+    "@chakra-ui/next-js": ^2.4.2
+    "@chakra-ui/react": ^2.10.3
     "@chakra-ui/system": ^2.6.2
     "@chakra-ui/table": ^2.1.0
-    "@emotion/react": ^11.11.1
-    "@emotion/styled": ^11.11.0
-    "@http-wizard/core": ^1.3.16
-    "@http-wizard/react-query": ^1.3.16
+    "@emotion/react": ^11.13.3
+    "@emotion/styled": ^11.13.0
+    "@http-wizard/core": ^1.3.20
+    "@http-wizard/react-query": ^1.3.20
     "@iconify/react": ^4.1.1
     "@json2csv/formatters": ^7.0.6
     "@json2csv/plainjs": ^7.0.6
     "@notionhq/client": ^2.2.15
-    "@sentry/nextjs": ^8.34.0
-    "@tanstack/react-query": ^4.29.3
+    "@sentry/nextjs": ^8.35.0
+    "@tanstack/react-query": ^4.36.1
     "@tsconfig/next": ^2.0.3
     "@types/iframe-resizer": ^3.5.13
-    "@types/node": ^20.11.6
-    "@types/qs": ^6.9.11
-    "@types/react": ^18.2.48
-    "@types/react-dom": ^18.2.18
+    "@types/node": ^20.17.2
+    "@types/qs": ^6.9.16
+    "@types/react": ^18.3.12
+    "@types/react-dom": ^18.3.1
     axios: ^1.7.7
     chakra-dayzed-datepicker: ^0.2.10
     chakra-ui-markdown-renderer: ^4.1.0
-    crisp-sdk-web: ^1.0.22
+    crisp-sdk-web: ^1.0.25
     date-fns: ^3.6.0
     dayzed: ^3.2.3
     dotenv: ^16.4.5
-    echarts: ^5.4.2
-    framer-motion: ^10.9.1
-    iframe-resizer: ^4.4.0
+    echarts: ^5.5.1
+    framer-motion: ^10.18.0
+    iframe-resizer: ^4.4.5
     lodash: ^4.17.21
-    maplibre-gl: ^4.1.0
-    next: ^14.2.15
+    maplibre-gl: ^4.7.1
+    next: ^14.2.16
     next-plausible: ^3.12.2
     notion-client: ^6.16.0
-    qs: ^6.11.1
-    react: 18.2.0
-    react-dom: 18.2.0
-    react-hook-form: ^7.47.0
-    react-intersection-observer: ^9.8.1
+    qs: ^6.13.0
+    react: 18.3.1
+    react-dom: 18.3.1
+    react-hook-form: ^7.53.1
+    react-intersection-observer: ^9.13.1
     react-map-gl: ^7.1.7
     react-markdown: ^9.0.1
     react-notion-x: ^6.16.0
-    react-select: ^5.8.0
+    react-select: ^5.8.2
     remove-accents: ^0.5.0
     shared: "workspace:^"
     type-fest: ^4.26.1

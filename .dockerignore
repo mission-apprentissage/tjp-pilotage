@@ -15,6 +15,7 @@
 /ui/.env
 /ui/.next
 /ui/.eslintrc.js
+/ui/next-env.d.ts
 
 !/package.json
 !/.yarn/cache
@@ -35,3 +36,6 @@
 **/logs
 **/*.test.ts
 !**/tsconfig.json
+
+**/tsconfig.tsbuildinfo
+
