@@ -114,10 +114,10 @@ jobs:
     concurrency:
       group: "deploy-${{ github.workflow }}-${{ github.ref }}"
     needs: ["release"]
-    name: Deploy ${{ needs.release.outputs.VERSION }} on recette
+    name: Deploy ${{ needs.release.outputs.VERSION }} on recettenext
     uses: "./.github/workflows/_deploy.yml"
     with:
-      environment: recette
+      environment: recettenext
       app_version: ${{ needs.release.outputs.VERSION }}
     secrets:
       DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
