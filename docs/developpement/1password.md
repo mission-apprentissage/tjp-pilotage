@@ -2,7 +2,7 @@
 
 ## Accès
 
-Pour récupérer les secrets, vous devez avoir accès au vault 1password `mna-vault-passwords-common`. Rapprochez vous de l'équipe transverse pour y avoir accès.
+Pour récupérer les secrets, vous devez avoir accès au vault 1password `vault-passwords-common`. Rapprochez vous de l'équipe transverse pour y avoir accès.
 
 ## 1Password CLI
 
