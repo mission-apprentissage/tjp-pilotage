@@ -22,7 +22,7 @@ export const UaiForm = ({
     }),
   };
 
-  const { data: defaultEtablissementSearchValues, isLoading } = client
+  const { isLoading } = client
     .ref("[GET]/etablissement/:uai")
     .useQuery({ params: { uai: uai } });
 
@@ -44,12 +44,6 @@ export const UaiForm = ({
               IndicatorSeparator: () => null,
             }}
             onChange={(selected) => selected && onUaiChanged(selected.value)}
-            defaultValue={
-              defaultEtablissementSearchValues &&
-              ({
-                ...defaultEtablissementSearchValues,
-              } as (typeof client.infer)["[GET]/etablissement/search/:search"][0])
-            }
             loadOptions={(inputValue: string) => {
               if (inputValue.length >= 3)
                 return client.ref("[GET]/etablissement/search/:search").query({
