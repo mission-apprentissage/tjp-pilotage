@@ -25,7 +25,8 @@ echo "NEXT_PUBLIC_PRODUCT_REPO=\"${REPO_NAME}\"" >> "${ROOT_DIR}/ui/.env"
 echo "NEXT_PUBLIC_API_PORT=5001" >> "${ROOT_DIR}/ui/.env"
 
 
-# yarn
-# yarn services:start
-# yarn build:dev
+yarn
+yarn services:start
+yarn build
+yarn migrations:latest
 # yarn cli db:init
