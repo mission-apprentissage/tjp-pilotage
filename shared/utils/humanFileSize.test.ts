@@ -8,10 +8,7 @@ describe("Utils: human readable file size", () => {
     ${12 * 1024}               | ${"12.3 KB"}
     ${12 * 1024 * 1024}        | ${"12.6 MB"}
     ${12 * 1024 * 1024 * 1024} | ${"12.9 GB"}
-  `(
-    `Convert the byte size $size into a human readable size $text`,
-    ({ size, text }) => {
-      expect(humanFileSize(size)).toBe(text);
-    }
-  );
+  `(`Convert the byte size $size into a human readable size $text`, ({ size, text }) => {
+    expect(humanFileSize(size)).toBe(text);
+  });
 });

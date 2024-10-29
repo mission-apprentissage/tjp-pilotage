@@ -37,6 +37,16 @@ fileignoreconfig:
   checksum: 58922cbe6994821e59cd535a2827e1774b85c2466bd0b51cb58a2e4bd9382912
 - filename: server/tests/test_origin/services/users.service.test.js_old
   checksum: aa5435b4faf485b49d3e9362d7550432cc4a431b863e8248f5b95b18b3d3e931
+- filename: ui/app/(wrapped)/cgu/page.tsx
+  checksum: d42601745f99f191e3fb865ed61ef829e4c7e82a5d157a544deb8f4986717fef
+- filename: ui/app/(wrapped)/documentation/page.tsx
+  checksum: 50bc89c2ce7e01f8b8ff7381b44abb68ed2979230dc7252009e2e77b85c11558
+- filename: ui/app/(wrapped)/mentions-legales/page.tsx
+  checksum: 9d41bf20ab3cb269091a285eefeae595ecfd38dad78dbda7859eef31e69e7bc7
+- filename: ui/app/(wrapped)/politique-de-confidentialite/page.tsx
+  checksum: ac6c8496ea10747f9e89cb79f4c46845cddfcd5e032e81c3bc8d4cf43934b576
+- filename: ui/app/(wrapped)/ressources/page.tsx
+  checksum: 58aeb5ee51ef187a6f97a6dc73922767bd177c600164ffd7076391a87f372ebe
 - filename: ui/app/(wrapped)/statistiques/page.tsx
   checksum: 573be5ad333d02b3969e61ec8a4860c161af648abb752a3a22b35d5f37bc6bd1
 - filename: ui/config.public.ts

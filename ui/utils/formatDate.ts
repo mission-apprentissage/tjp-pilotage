@@ -11,10 +11,7 @@ export const formatDate = ({
   dateTimeSeparator?: string;
 }) => {
   if (!date) return "";
-  if (!dateTimeSeparator)
-    return new Date(date).toLocaleString("fr-FR", options);
-  const [datePart, timePart] = new Date(date)
-    .toLocaleString("fr-FR", options)
-    .split(" ");
+  if (!dateTimeSeparator) return new Date(date).toLocaleString("fr-FR", options);
+  const [datePart, timePart] = new Date(date).toLocaleString("fr-FR", options).split(" ");
   return `${datePart}${dateTimeSeparator}${timePart ?? ""}`;
 };

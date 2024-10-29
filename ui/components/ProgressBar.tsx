@@ -13,12 +13,7 @@ const ProgressBar = ({
 }) => {
   return (
     <Flex flexDirection={"column"} width="100%">
-      <Flex
-        w="100%"
-        bgColor="gray.100"
-        justifyContent={"space-between"}
-        borderRadius={"4px"}
-      >
+      <Flex w="100%" bgColor="gray.100" justifyContent={"space-between"} borderRadius={"4px"}>
         <Flex
           w={`${percentage < 100 ? percentage : 100}%`}
           bgColor={colorScheme}
@@ -28,14 +23,7 @@ const ProgressBar = ({
           borderLeftRadius={"inherit"}
           borderRightRadius={percentage >= 100 ? "inherit" : "none"}
         >
-          <Text
-            textOverflow={"hidden"}
-            whiteSpace={"nowrap"}
-            lineHeight="12px"
-            my="auto"
-            fontSize="10px"
-            ps={1}
-          >
+          <Text textOverflow={"hidden"} whiteSpace={"nowrap"} lineHeight="12px" my="auto" fontSize="10px" ps={1}>
             {leftLabel}
           </Text>
         </Flex>
@@ -48,14 +36,7 @@ const ProgressBar = ({
           borderLeftRadius={percentage === 0 ? "inherit" : "none"}
           borderRightRadius={percentage >= 100 ? "inherit" : "none"}
         >
-          <Text
-            textOverflow={"hidden"}
-            whiteSpace={"nowrap"}
-            lineHeight="12px"
-            my="auto"
-            fontSize="10px"
-            pe={1}
-          >
+          <Text textOverflow={"hidden"} whiteSpace={"nowrap"} lineHeight="12px" my="auto" fontSize="10px" pe={1}>
             {rightLabel}
           </Text>
         </Flex>

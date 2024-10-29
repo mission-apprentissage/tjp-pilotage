@@ -22,10 +22,7 @@ export const TabsSection = ({
   const isQuadrantSelected = displayType === DisplayTypeEnum.quadrant;
 
   const setDisplayType = (
-    displayType: Extract<
-      DisplayTypeEnum,
-      DisplayTypeEnum.quadrant | DisplayTypeEnum.repartition
-    >
+    displayType: Extract<DisplayTypeEnum, DisplayTypeEnum.quadrant | DisplayTypeEnum.repartition>
   ) => {
     trackEvent("pilotage-transformation:quadrant-repartition-tabs", {
       props: { type: displayType },
@@ -58,26 +55,11 @@ export const TabsSection = ({
           _hover={{ bg: "bluefrance.975_hover" }}
           bg={"bluefrance.975"}
         >
-          <Flex
-            direction={"column"}
-            justify={"center"}
-            alignItems={"center"}
-            mx={"80px"}
-          >
+          <Flex direction={"column"} justify={"center"} alignItems={"center"} mx={"80px"}>
             {isRepartitionSelected ? (
-              <Img
-                src={`/icons/repartition_selected.svg`}
-                alt="quadrant"
-                w={"32px"}
-                h={"32px"}
-              />
+              <Img src={`/icons/repartition_selected.svg`} alt="quadrant" w={"32px"} h={"32px"} />
             ) : (
-              <Img
-                src={`/icons/repartition.svg`}
-                alt="quadrant"
-                w={"32px"}
-                h={"32px"}
-              />
+              <Img src={`/icons/repartition.svg`} alt="quadrant" w={"32px"} h={"32px"} />
             )}
             <Text
               fontWeight={isRepartitionSelected ? 700 : 400}
@@ -96,31 +78,13 @@ export const TabsSection = ({
           _hover={{ bg: "bluefrance.975_hover" }}
           bg={"bluefrance.975"}
         >
-          <Flex
-            direction={"column"}
-            justify={"center"}
-            alignItems={"center"}
-            mx={"80px"}
-          >
+          <Flex direction={"column"} justify={"center"} alignItems={"center"} mx={"80px"}>
             {isQuadrantSelected ? (
-              <Img
-                src={`/icons/quadrant_selected.svg`}
-                alt="quadrant"
-                w={"32px"}
-                h={"32px"}
-              />
+              <Img src={`/icons/quadrant_selected.svg`} alt="quadrant" w={"32px"} h={"32px"} />
             ) : (
-              <Img
-                src={`/icons/quadrant.svg`}
-                alt="quadrant"
-                w={"32px"}
-                h={"32px"}
-              />
+              <Img src={`/icons/quadrant.svg`} alt="quadrant" w={"32px"} h={"32px"} />
             )}
-            <Text
-              fontWeight={isQuadrantSelected ? 700 : 400}
-              color={isQuadrantSelected ? "bluefrance.113" : "black"}
-            >
+            <Text fontWeight={isQuadrantSelected ? 700 : 400} color={isQuadrantSelected ? "bluefrance.113" : "black"}>
               Quadrant
             </Text>
           </Flex>

@@ -34,13 +34,7 @@ export const InfoCard = ({
       <CardBody>
         <Flex direction={"column"} justify={"space-between"} height={"100%"}>
           <Flex align="center">
-            <Flex
-              direction="column"
-              align="flex-start"
-              mr="4"
-              flex={1}
-              height="100%"
-            >
+            <Flex direction="column" align="flex-start" mr="4" flex={1} height="100%">
               <Heading as="h4" fontSize={20}>
                 {title}
               </Heading>
@@ -49,12 +43,7 @@ export const InfoCard = ({
               </Text>
               {Array.isArray(links) && (
                 <Menu>
-                  <MenuButton
-                    mt={4}
-                    as={Button}
-                    variant="primary"
-                    rightIcon={<ChevronDownIcon />}
-                  >
+                  <MenuButton mt={4} as={Button} variant="primary" rightIcon={<ChevronDownIcon />}>
                     Accéder à l'information
                   </MenuButton>
                   <MenuList>
@@ -75,11 +64,7 @@ export const InfoCard = ({
                 </Menu>
               )}
             </Flex>
-            <Img
-              width={["70px", null, "160px"]}
-              src={img}
-              objectFit="contain"
-            />
+            <Img width={["70px", null, "160px"]} src={img} objectFit="contain" />
           </Flex>
           <Flex direction={"row"} justify={"space-between"} mt={"auto"}>
             {!Array.isArray(links) && (
