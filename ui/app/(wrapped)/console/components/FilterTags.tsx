@@ -100,6 +100,7 @@ export const FilterTags = chakra(
                       size="xs"
                       onClick={() => {
                         const filterValue = filters[key as keyof Filters];
+                        // If filterValue is an array and has more than one value, remove the value from the array
                         if (
                           filterValue &&
                           Array.isArray(filterValue) &&

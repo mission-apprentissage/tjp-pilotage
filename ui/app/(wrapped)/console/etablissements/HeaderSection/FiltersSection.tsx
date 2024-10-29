@@ -182,6 +182,7 @@ export const FiltersSection = ({
         positionQuadrant: [],
       },
     });
+    setRequeteEnregistreeActuelle({ nom: "Requêtes favoris" });
   };
 
   useEffect(() => {

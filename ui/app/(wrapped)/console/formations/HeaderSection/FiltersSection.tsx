@@ -130,6 +130,11 @@ export const FiltersSection = ({
     });
   };
 
+  const [requeteEnregistreeActuelle, setRequeteEnregistreeActuelle] = useState<{
+    nom: string;
+    couleur?: string;
+  }>({ nom: "Requêtes favoris" });
+
   const resetFilters = () => {
     setSearchParams({
       filters: {
@@ -147,12 +152,8 @@ export const FiltersSection = ({
       },
       search: "",
     });
+    setRequeteEnregistreeActuelle({ nom: "Requêtes favoris" });
   };
-
-  const [requeteEnregistreeActuelle, setRequeteEnregistreeActuelle] = useState<{
-    nom: string;
-    couleur?: string;
-  }>({ nom: "Requêtes favoris" });
 
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("formations:filtre", { props: { filter_name: filterName } });

@@ -23,6 +23,7 @@ import {
   Tag,
   Text,
   UnorderedList,
+  useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -79,6 +80,7 @@ export const CreateRequeteEnregistreeModal = ({
   };
   filtersList?: FiltersList;
 }) => {
+  const toast = useToast();
   const { auth } = useAuth();
   const {
     watch,
@@ -108,6 +110,11 @@ export const CreateRequeteEnregistreeModal = ({
     isError,
   } = client.ref("[POST]/requete/enregistrement").useMutation({
     onSuccess: () => {
+      toast({
+        variant: "left-accent",
+        status: "success",
+        title: "La requête favori a bien été enregistrée",
+      });
       queryClient.invalidateQueries(["[GET]/requetes"]);
       onClose();
     },
