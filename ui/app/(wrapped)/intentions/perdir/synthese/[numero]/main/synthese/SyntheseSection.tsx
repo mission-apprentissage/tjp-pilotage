@@ -4,7 +4,7 @@ import type { Role } from "shared";
 
 import type { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
-import type { MotifLabel, MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import type { MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getMotifLabel, hasMotifAutre } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
