@@ -47,6 +47,7 @@ const Columns = {
   libelleRegion: "Région",
   uais: "Uais",
   createdAt: "Ajouté le",
+  fonction: "Fonction",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/users"]["users"][number]
 >;
@@ -199,6 +200,10 @@ export default () => {
                     <OrderIcon {...order} column="role" />
                     {Columns.role}
                   </Th>
+                  <Th cursor="pointer" onClick={() => handleOrder("fonction")}>
+                    <OrderIcon {...order} column="role" />
+                    {Columns.fonction}
+                  </Th>
                   <Th cursor="pointer" onClick={() => handleOrder("enabled")}>
                     <OrderIcon {...order} column="enabled" />
                     {Columns.enabled}
@@ -231,6 +236,7 @@ export default () => {
                     <Td>{user.firstname}</Td>
                     <Td>{user.lastname}</Td>
                     <Td>{user.role}</Td>
+                    <Td>{user.fonction ?? "-"}</Td>
                     <Td>
                       {user.enabled ? (
                         <Badge variant="success">Actif</Badge>

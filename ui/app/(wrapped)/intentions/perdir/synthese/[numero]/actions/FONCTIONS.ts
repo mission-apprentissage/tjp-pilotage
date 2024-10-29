@@ -1,4 +1,5 @@
 import { AvisTypeType } from "shared/enum/avisTypeEnum";
+import { UserFonction } from "shared/enum/userFonction";
 
 export const FONCTIONS = {
   préalable: ["région", "région académique"],
@@ -16,4 +17,4 @@ export const FONCTIONS = {
     "recteur",
   ],
   final: ["région", "CSA", "recteur"],
-} as Record<AvisTypeType, string[]>;
+} as Record<AvisTypeType, UserFonction[]>;

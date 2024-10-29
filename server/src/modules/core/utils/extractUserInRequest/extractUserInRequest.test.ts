@@ -50,6 +50,7 @@ describe("extractUserInRequest usecase", () => {
         enabled: false,
         sub: undefined,
         lastSeenAt: undefined,
+        fonction: undefined,
       }),
     });
 
@@ -77,6 +78,7 @@ describe("extractUserInRequest usecase", () => {
         enabled: true,
         sub: undefined,
         lastSeenAt: undefined,
+        fonction: undefined,
       }),
     });
 

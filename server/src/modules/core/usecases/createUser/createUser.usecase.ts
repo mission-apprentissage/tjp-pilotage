@@ -26,7 +26,7 @@ export const [createUser, createUserFactory] = inject(
       body: BodySchema;
       requestUser?: RequestUser;
     }) => {
-      const { email, firstname, lastname, role, codeRegion } = body;
+      const { email, firstname, lastname, role, codeRegion, fonction } = body;
 
       if (!email.match(emailRegex))
         throw Boom.badRequest(`L'email est invalide`);
@@ -55,6 +55,7 @@ export const [createUser, createUserFactory] = inject(
         role,
         codeRegion,
         enabled: true,
+        fonction,
       });
       const activationToken = jwt.sign(
         { email },

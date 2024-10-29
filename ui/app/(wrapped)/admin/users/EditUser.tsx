@@ -17,9 +17,11 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
+import _ from "lodash";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { getHierarchy, Role } from "shared";
+import { UserFonctionEnum } from "shared/enum/userFonction";
 import { z } from "zod";
 
 import { client } from "../../../../api.client";
@@ -165,12 +167,28 @@ export const EditUser = ({
               <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>
             )}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.enabled}>
-            <Checkbox {...register("enabled")} isRequired={false}>
-              Compte actif
-            </Checkbox>
-            {!!errors.enabled && (
-              <FormErrorMessage>{errors.enabled.message}</FormErrorMessage>
+
+          <FormControl mb="4" isInvalid={!!errors.fonction}>
+            <FormLabel>Fonction de l'utilisateur</FormLabel>
+            <Select {...register("fonction")}>
+              {<option value="">Aucune</option>}
+              {Object.keys(UserFonctionEnum)?.map((userFonction) => (
+                <option key={userFonction} value={userFonction}>
+                  {_.capitalize(userFonction)}
+                </option>
+              ))}
+            </Select>
+
+            <FormControl my="4" isInvalid={!!errors.enabled}>
+              <Checkbox {...register("enabled")} isRequired={false}>
+                Compte actif
+              </Checkbox>
+              {!!errors.enabled && (
+                <FormErrorMessage>{errors.enabled.message}</FormErrorMessage>
+              )}
+            </FormControl>
+            {!!errors.fonction && (
+              <FormErrorMessage>{errors.fonction.message}</FormErrorMessage>
             )}
           </FormControl>
           {isError && (
