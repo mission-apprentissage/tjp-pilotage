@@ -2,11 +2,7 @@ import { Box, Button, Flex, GridItem, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 
-export const DonneesIncompletes = ({
-  isMissingDatas,
-}: {
-  isMissingDatas: boolean;
-}) => {
+export const DonneesIncompletes = ({ isMissingDatas }: { isMissingDatas: boolean }) => {
   if (!isMissingDatas) {
     return null;
   }
@@ -21,18 +17,10 @@ export const DonneesIncompletes = ({
       padding={"16px 28px"}
       mt={"32px"}
     >
-      <Flex
-        direction={"row"}
-        width={"100%"}
-        justifyContent={"space-between"}
-        alignItems={"center"}
-      >
+      <Flex direction={"row"} width={"100%"} justifyContent={"space-between"} alignItems={"center"}>
         <Box>
           <Text fontWeight={"bold"}>Données incomplètes</Text>
-          <Text>
-            Certaines données ne sont pas encore disponibles pour les formations
-            de cet établissement
-          </Text>
+          <Text>Certaines données ne sont pas encore disponibles pour les formations de cet établissement</Text>
         </Box>
 
         <Link
@@ -44,12 +32,7 @@ export const DonneesIncompletes = ({
         >
           <Button color="bluefrance.113">
             Voir pourquoi
-            <Icon
-              icon="ri:arrow-right-line"
-              width={"16px"}
-              height={"16px"}
-              style={{ marginLeft: "8px" }}
-            />
+            <Icon icon="ri:arrow-right-line" width={"16px"} height={"16px"} style={{ marginLeft: "8px" }} />
           </Button>
         </Link>
       </Flex>

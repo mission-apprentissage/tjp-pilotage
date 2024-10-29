@@ -28,12 +28,7 @@ export const SearchInput = ({
         bgColor={"white"}
         borderRightRadius={0}
       />
-      <Button
-        bgColor={"bluefrance.113"}
-        size={"md"}
-        onClick={() => onClick()}
-        borderLeftRadius={0}
-      >
+      <Button bgColor={"bluefrance.113"} size={"md"} onClick={() => onClick()} borderLeftRadius={0}>
         <Search2Icon color="white" />
       </Button>
     </Flex>

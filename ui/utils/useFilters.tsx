@@ -25,9 +25,7 @@ export function useStateParams<F extends object>({
       router.replace(
         createParametrizedUrl(
           location.pathname,
-          prefix
-            ? { ...params, [prefix]: mergedFilters }
-            : { ...params, ...mergedFilters }
+          prefix ? { ...params, [prefix]: mergedFilters } : { ...params, ...mergedFilters }
         ),
         { scroll: false }
       );

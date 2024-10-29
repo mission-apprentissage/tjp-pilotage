@@ -45,30 +45,15 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
       <VStack
         zIndex="overlay"
         spacing="0"
-        divider={
-          <Box
-            width="100%"
-            borderBottom="1px solid"
-            borderBottomColor="grey.900"
-          />
-        }
+        divider={<Box width="100%" borderBottom="1px solid" borderBottomColor="grey.900" />}
         align={"start"}
         borderBottom={`1px solid ${greyColor}`}
       >
         <Flex align="center" as={Container} py={2} maxWidth={"container.xl"}>
           <HStack as={Link} spacing={1} align="center" href="/">
             <Flex direction={"row"} gap={6}>
-              <Img
-                height="70px"
-                src="/logo_gouvernement.svg"
-                alt="Logo république Française"
-              />
-              <Img
-                height="60px"
-                src="/logo_orion.svg"
-                alt="Logo Orion"
-                my={"auto"}
-              />
+              <Img height="70px" src="/logo_gouvernement.svg" alt="Logo république Française" />
+              <Img height="60px" src="/logo_orion.svg" alt="Logo Orion" my={"auto"} />
             </Flex>
             <Heading as={"h1"} size={"md"}>
               <Box as="span" display={["none", null, "unset"]}>
@@ -92,13 +77,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
             )}
             {!!auth && (
               <Menu isLazy autoSelect={false} placement="bottom-end">
-                <MenuButton
-                  ml="auto"
-                  as={Button}
-                  fontWeight="light"
-                  color="bluefrance.113"
-                  variant="ghost"
-                >
+                <MenuButton ml="auto" as={Button} fontWeight="light" color="bluefrance.113" variant="ghost">
                   <Box as="span" display={["none", null, "unset"]}>
                     Bienvenue,{" "}
                   </Box>

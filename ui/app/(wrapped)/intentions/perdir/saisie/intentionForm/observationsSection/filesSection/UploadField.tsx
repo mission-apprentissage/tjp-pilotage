@@ -60,17 +60,12 @@ export const UploadField = ({
         Ajouter des fichiers
       </Text>
       <Text color={greyColor} mt={"16px"}>
-        Taille maximale de {MAX_FILE_SIZE_IN_MB} Mo. Formats supportés : .jpg,
-        .jpeg, .png, .pdf, .doc, .docx Plusieurs fichiers possibles.
+        Taille maximale de {MAX_FILE_SIZE_IN_MB} Mo. Formats supportés : .jpg, .jpeg, .png, .pdf, .doc, .docx Plusieurs
+        fichiers possibles.
       </Text>
-      <Text color={greyColor}>
-        Vous pouvez ajouter des fichiers pour étayer votre demande
-      </Text>
+      <Text color={greyColor}>Vous pouvez ajouter des fichiers pour étayer votre demande</Text>
       <Flex direction={"row"} alignItems={"center"} mt={4}>
-        <InputGroup
-          onClick={() => fileInputRef.current?.click()}
-          width={"auto"}
-        >
+        <InputGroup onClick={() => fileInputRef.current?.click()} width={"auto"}>
           <input
             type={"file"}
             multiple={true}

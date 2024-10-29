@@ -25,25 +25,17 @@ export const HorizontalBarChart = ({
   const marianneFont = useToken("fonts", "body");
 
   const getDelta = (valueName?: string) => {
-    const current = data[CURRENT_RENTREE]?.find(
-      (data) => data.label === valueName
-    )?.value;
+    const current = data[CURRENT_RENTREE]?.find((data) => data.label === valueName)?.value;
     const previous = data[getRentreeScolairePrecedente(CURRENT_RENTREE)]?.find(
       (data) => data.label === valueName
     )?.value;
     if (current && previous) {
       if (current > previous) {
-        return `{arrowUp|}{deltaUp|+${
-          current - previous
-        } vs ${getRentreeScolairePrecedente(CURRENT_RENTREE)}}`;
+        return `{arrowUp|}{deltaUp|+${current - previous} vs ${getRentreeScolairePrecedente(CURRENT_RENTREE)}}`;
       } else if (current < previous) {
-        return ` {arrowDown|}{deltaDown|-${
-          previous - current
-        } vs ${getRentreeScolairePrecedente(CURRENT_RENTREE)}}`;
+        return ` {arrowDown|}{deltaDown|-${previous - current} vs ${getRentreeScolairePrecedente(CURRENT_RENTREE)}}`;
       }
-      return `{noDelta| +0 vs ${getRentreeScolairePrecedente(
-        CURRENT_RENTREE
-      )}}`;
+      return `{noDelta| +0 vs ${getRentreeScolairePrecedente(CURRENT_RENTREE)}}`;
     }
     return "";
   };
@@ -66,10 +58,7 @@ export const HorizontalBarChart = ({
           type: "shadow",
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        formatter: (params: any) =>
-          `${params?.name} : ${params?.data} élève${
-            params?.data > 1 ? "s" : ""
-          }`,
+        formatter: (params: any) => `${params?.name} : ${params?.data} élève${params?.data > 1 ? "s" : ""}`,
       },
       toolbox: {
         feature: {

@@ -12,11 +12,8 @@ export const formatDate = ({
   dateTimeSeparator?: string;
 }) => {
   if (!date) return "";
-  if (!dateTimeSeparator)
-    return new Date(date).toLocaleString("fr-FR", options);
-  const [datePart, timePart] = new Date(date)
-    .toLocaleString("fr-FR", options)
-    .split(" ");
+  if (!dateTimeSeparator) return new Date(date).toLocaleString("fr-FR", options);
+  const [datePart, timePart] = new Date(date).toLocaleString("fr-FR", options).split(" ");
   return `${datePart}${dateTimeSeparator}${timePart ?? ""}`;
 };
 
@@ -25,14 +22,10 @@ export const formatBoolean = (value?: boolean) => {
   return "Non";
 };
 
-export const formatArray = (
-  values?: Array<string | number | undefined>,
-  capitalize: boolean = false
-): string => {
+export const formatArray = (values?: Array<string | number | undefined>, capitalize: boolean = false): string => {
   if (!values) return "Aucun(e)";
   if (capitalize) {
-    if (values.length === 1 && values[0])
-      return _.capitalize(values[0].toString());
+    if (values.length === 1 && values[0]) return _.capitalize(values[0].toString());
     return _.capitalize(
       values
         .filter((value) => value)
@@ -44,21 +37,13 @@ export const formatArray = (
   return values.filter((value) => value).join(", ");
 };
 
-export const formatNumber = (
-  value?: number,
-  numberOfDigits: number = 0
-): number => {
+export const formatNumber = (value?: number, numberOfDigits: number = 0): number => {
   if (!value) return 0;
   return Number.parseFloat(value.toFixed(numberOfDigits));
 };
 
-export const formatPercentage = (
-  value?: number,
-  numberOfDigits: number = 0,
-  nullValue: string = "0 %"
-): string => {
-  if (value === undefined || value === null || Number.isNaN(value))
-    return nullValue;
+export const formatPercentage = (value?: number, numberOfDigits: number = 0, nullValue: string = "0 %"): string => {
+  if (value === undefined || value === null || Number.isNaN(value)) return nullValue;
   return new Intl.NumberFormat("fr-FR", {
     style: "percent",
     maximumFractionDigits: numberOfDigits,
