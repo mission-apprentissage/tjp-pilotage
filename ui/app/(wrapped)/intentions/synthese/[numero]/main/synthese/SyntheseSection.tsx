@@ -5,8 +5,8 @@ import type { Role } from "shared";
 
 import type { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
-import type { MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
-import { getMotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import type { MotifLabel, MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import { getMotifLabel, hasMotifAutre } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { formatDate } from "@/utils/formatDate";
 import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
@@ -37,7 +37,10 @@ const formatArray = (values?: Array<string | number | undefined>): string => {
 
 const formatMotifArray = (values?: Array<string | undefined>): string => {
   if (!values) return "Aucun";
-  return formatArray(values.map((motif) => getMotifLabel({ motif: motif as MotifLabel })));
+  // Filtrer le motifs autre pour les ajouter différemment sur la synthèse
+  return formatArray(
+    values.filter((motif) => !hasMotifAutre([motif])).map((motif) => getMotifLabel({ motif: motif as MotifLabel }))
+  );
 };
 
 export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[GET]/demande/:numero"] }) => {
@@ -162,7 +165,7 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
             </Flex>
             <Flex direction={"row"} gap={4} justify={"space-between"}>
               <Text fontSize={14}>
-                {demande.commentaire && demande.commentaire.length ? demande.commentaire : "Aucune"}
+                {demande.commentaire && demande.commentaire.length ? demande.commentaire.replace("\n", "-") : "Aucune"}
               </Text>
             </Flex>
           </Flex>
@@ -242,6 +245,11 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text fontSize={14}>{formatMotifArray(demande.motif)}</Text>
           </Flex>
+          {hasMotifAutre(demande.motif) && (
+            <Flex direction={"row"} gap={4} justify={"space-between"}>
+              <Text fontSize={14}>Autre motif : {demande.autreMotif!}</Text>
+            </Flex>
+          )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Heading as={"h6"} fontSize={14}>

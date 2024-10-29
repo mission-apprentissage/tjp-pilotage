@@ -4,8 +4,8 @@ import type { Role } from "shared";
 
 import type { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
-import type { MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
-import { getMotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import type { MotifLabel, MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import { getMotifLabel, hasMotifAutre } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { formatArray, formatBoolean, formatDate } from "@/utils/formatUtils";
@@ -20,7 +20,9 @@ const formatDifferenceCapacite = (difference?: number) => {
 
 const formatMotifArray = (values?: Array<string | undefined>): string => {
   if (!values) return "Aucun";
-  return formatArray(values.map((motif) => getMotifLabel({ motif: motif as MotifLabel })));
+  return formatArray(
+    values.filter((motif) => !hasMotifAutre([motif])).map((motif) => getMotifLabel({ motif: motif as MotifLabel }))
+  );
 };
 
 export const SyntheseSection = ({ intention }: { intention: (typeof client.infer)["[GET]/intention/:numero"] }) => {
@@ -235,6 +237,11 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text fontSize={14}>{formatMotifArray(intention.motif)}</Text>
           </Flex>
+          {hasMotifAutre(intention.motif) && (
+            <Flex direction={"row"} gap={4} justify={"space-between"}>
+              <Text fontSize={14}>Autre motif : {intention.autreMotif!}</Text>
+            </Flex>
+          )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Heading as={"h6"} fontSize={14}>

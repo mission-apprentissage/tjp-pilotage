@@ -53,3 +53,8 @@ export type FiltersFormationsPilotageIntentionsQuery = Omit<FormationsPilotageIn
 export type FormationsPilotageIntentions = (typeof client.infer)["[GET]/pilotage-intentions/formations"];
 
 export type OrderFormationsPilotageIntentions = Pick<FormationsPilotageIntentionsQuery, "order" | "orderBy">;
+
+export type FilterTracker = (
+  filterName: keyof FiltersStatsPilotageIntentions,
+  options?: { value?: unknown; context?: string }
+) => void;
