@@ -51,7 +51,6 @@ export const FiltersSection = ({
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: number;
@@ -59,7 +58,6 @@ export const FiltersSection = ({
   searchParams: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: string;
@@ -74,7 +72,6 @@ export const FiltersSection = ({
   );
 
   const filters = searchParams.filters ?? {};
-  const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
 
   const handleFiltersContext = (
     type: keyof Filters,
@@ -129,7 +126,6 @@ export const FiltersSection = ({
       setSearchParams({
         page: 0,
         filters: { ...filters, ...newFilters },
-        withAnneeCommune,
       });
     });
   };
@@ -165,7 +161,7 @@ export const FiltersSection = ({
   useEffect(() => {
     if (codeRegionFilter !== "" && !filters.codeRegion?.length) {
       filters.codeRegion = [codeRegionFilter];
-      setSearchParams({ filters: filters, withAnneeCommune });
+      setSearchParams({ filters: filters });
     }
   }, []);
 

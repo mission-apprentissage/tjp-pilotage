@@ -80,7 +80,6 @@ export const HeadLineContent = ({
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     order?: Partial<Order>;
     page?: number;
   }) => void;
