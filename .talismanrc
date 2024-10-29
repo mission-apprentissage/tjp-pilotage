@@ -8,15 +8,15 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
-  checksum: 015dab22b90d5cd4d024cf1b1f2bea61a46d1f363df39dc72cce3ec88d1cc2b0
+  checksum: b966a81c9d595775892fce521e447f1a77963e5a4a41769b9cf19feda827f0eb
 - filename: README.md
   checksum: 00ac991f0b2746c5a5ffa14e2b3c5427b739c0d952aa3730efe1f234ac1fc3ca
 - filename: server/.env.test
   checksum: df4e0dd70085c1ab9d996395796f6b0bd879653f9866c55ff276579aff84a4ba
 - filename: server/seed/seed_data.dump
-  checksum: 452618bdc789fb23f1564bcffe4489fb13c56228d69c35d54c5f578b3c0b588c
+  checksum: f47ffbd2ecfa5b8d9e7535ddb62ba2fbe9d1fdce1a4c8b67c4e7c1dd15e889cc
 - filename: server/seed/seed_schema.dump
-  checksum: 4cd84efc97c7cf20dcd91d24eef98ffd5335a2b4fee049516b51909ed67de667
+  checksum: 8eb032b7bc0013ec5dbba6e69fc07a74a5c1ea8c95ff619281106498c263b691
 - filename: server/tests/test_origin/controllers/campagnes.controller.test.js_old
   checksum: 546c306130034fdce2c4165b1f31656dfa883bc8808f0e8b1fa5a5461da1cb08
 - filename: server/tests/test_origin/controllers/users.controller.test.js_old
