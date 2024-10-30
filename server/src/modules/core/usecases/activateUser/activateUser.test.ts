@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { describe, expect, it, vi } from "vitest";
 
 import { activateUserFactory } from "./activateUser.usecase";
 
@@ -72,7 +73,7 @@ describe("activateUser usecase", () => {
 
   it("should set password", async () => {
     const deps = {
-      updateUserQuery: jest.fn(async () => {}),
+      updateUserQuery: vi.fn(async () => {}),
       jwtSecret,
     };
 

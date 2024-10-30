@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest";
+
 import { hashPassword } from "@/modules/core/utils/passwordUtils";
 
 import { loginFactory } from "./login.usecase";

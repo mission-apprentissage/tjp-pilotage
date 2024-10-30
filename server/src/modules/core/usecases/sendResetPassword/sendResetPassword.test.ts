@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from "vitest";
+
 import { sendResetPasswordFactory } from "./sendResetPassword.usecase";
 
 const jwtSecret = "jwtSecret";
@@ -45,7 +47,7 @@ describe("sendResetPassword usecase", () => {
     const deps = {
       jwtSecret,
       findUserQuery: async () => user,
-      shootTemplate: jest.fn(async () => {}),
+      shootTemplate: vi.fn(async () => {}),
     };
 
     const sendResetPassword = sendResetPasswordFactory(deps);
