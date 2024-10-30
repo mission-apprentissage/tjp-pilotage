@@ -87,7 +87,6 @@ export async function bind(app: Server) {
   });
 
   if (config.env === "local") {
-    // TODO
     app.register(fastifyStatic, {
       root: getStaticDirPath(),
       prefix: "/public/",
@@ -124,58 +123,3 @@ export default async (): Promise<Server> => {
 
   return bind(app);
 };
-
-// server.setErrorHandler((error, _, reply) => {
-//   handleErrorCb?.(error);
-
-//   if ("details" in error && error.details instanceof ZodError) {
-//     logger.error(error.message, {
-//       error,
-//       details: error.details.errors,
-//     });
-//     reply.status(500).send({ error: "internal error", statusCode: 500 });
-//     return;
-//   }
-
-//   if (Boom.isBoom(error)) {
-//     reply.status(error.output.statusCode).send({ ...error.output.payload, ...error.data });
-//     if (error.output.statusCode >= 500) {
-//       logger.error(error.message, { error, data: error.data });
-//     }
-//     return;
-//   }
-
-//   if (error.statusCode === 413) {
-//     reply.status(413).send({
-//       error: "Payload Too Large",
-//       message: `The max allowed payload size is of ${MAX_FILE_SIZE_IN_MB} MB`,
-//       statusCode: 413,
-//     });
-//     return;
-//   }
-
-//   if (!error.statusCode || error.statusCode >= 500) {
-//     logger.error(error.message, { error });
-//     reply.status(500).send({ error: "internal error", statusCode: 500 });
-//     return;
-//   }
-
-//   if (error.statusCode && error.statusCode < 500) {
-//     reply.status(error.statusCode).send({
-//       statusCode: error.statusCode,
-//       message: error.message,
-//       error: error.name,
-//     });
-//     return;
-//   }
-
-//   if (config.env === "local") {
-//     reply.status(500).send({
-//       error: error.name,
-//       statusCode: 500,
-//       message: error.message,
-//     });
-//     return;
-//   }
-//   reply.status(500).send({ error: "internal error", statusCode: 500 });
-// });

@@ -13,6 +13,9 @@ export default defineWorkspace([
       setupFiles: ["./tests/setup.ts"],
       globalSetup: ["./tests/globalSetup.ts"],
       clearMocks: true,
+      sequence: {
+        hooks: "stack",
+      },
     },
     resolve: {
       alias: {

@@ -16,20 +16,16 @@ export const startAndConnectPg = async () => {
   const dbUri = config.psql.uri.replace("VITEST_POOL_ID", workerId);
   const testDb = `orion-test-${workerId}`;
 
-  try {
-    await createdb(testDb, config.psql);
+  await createdb(testDb, config.psql);
 
-    await seed(testDb);
+  await seed(testDb);
 
-    await connectToPgDb(dbUri);
+  await connectToPgDb(dbUri);
 
-    await migrateToLatest(true, false);
-    console.log("Migration terminée");
-    console.log("Rafraichissement des vues matérialisées");
-    await refreshViews();
-  } catch (error) {
-    console.error(error);
-  }
+  await migrateToLatest(true, false);
+  console.log("Migration terminée");
+  console.log("Rafraichissement des vues matérialisées");
+  await refreshViews();
 };
 
 export const stopPg = async () => {
@@ -44,7 +40,7 @@ export const usePg = (clearStep: "beforeEach" | "beforeAll" = "beforeEach") => {
     }
 
     return async () => stopPg();
-  });
+  }, 30_000);
 
   beforeEach(async () => {
     if (clearStep === "beforeEach") {
@@ -74,10 +70,11 @@ const seed = async (dbname: string) => {
     { cwd: join(dir, "../..") }
   );
 
-  if (execSchema.error) {
-    console.error(execSchema.error);
-    throw new Error("Erreur lors de la restauration de la seed : " + execSchema.error);
+  if (execSchema.status || execSchema.error) {
+    console.error(execSchema.stderr.toString());
+    throw new Error("Erreur lors de la restauration du schema : " + execSchema.stderr.toString());
   }
+
   const execData = spawnSync(
     "docker",
     [
@@ -94,8 +91,8 @@ const seed = async (dbname: string) => {
     { cwd: join(dir, "../..") }
   );
 
-  if (execData.error) {
-    console.error(execData.error);
-    throw new Error("Erreur lors de la restauration de la seed : " + execData.error);
+  if (execData.status || execData.error) {
+    console.error(execData.stderr.toString());
+    throw new Error("Erreur lors de la restauration du data : " + execData.stderr.toString());
   }
 };
