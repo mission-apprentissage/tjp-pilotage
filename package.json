@@ -96,7 +96,9 @@
     "prettier": "^3.3.3",
     "semantic-release": "22.0.12",
     "semantic-release-slack-bot": "4.0.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^2.0.5"
   },
   "prettier": {
     "printWidth": 120,

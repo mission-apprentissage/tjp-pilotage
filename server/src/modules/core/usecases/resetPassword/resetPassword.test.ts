@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { describe, expect, it, vi } from "vitest";
 
 import { resetPasswordFactory } from "./resetPassword.usecase";
 
@@ -72,7 +73,7 @@ describe("resetPassword usecase", () => {
 
   it("should set password", async () => {
     const deps = {
-      setPasswordQuery: jest.fn(async () => {}),
+      setPasswordQuery: vi.fn(async () => {}),
       jwtSecret,
     };
 

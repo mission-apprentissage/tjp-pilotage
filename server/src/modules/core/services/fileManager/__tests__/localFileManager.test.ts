@@ -1,6 +1,7 @@
 import path from "node:path";
 
 import * as fs from "fs";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { FileManager, FileType } from "@/modules/core/services/fileManager/fileManager";
 import { localFileManagerFactory } from "@/modules/core/services/fileManager/localFileManager";
@@ -15,7 +16,7 @@ describe("Core Service: Local file manager", () => {
   });
 
   afterEach(async () => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
 
     await fileFixture.thenDeleteFile(fileFixture.givenAnIntentionId(), "test.txt");
     await fileFixture.thenDeleteFile(fileFixture.givenAnIntentionId(), "test-1.txt");

@@ -1,6 +1,7 @@
 import "@/config";
 
 import Boom from "@hapi/boom";
+import { describe, expect, it, vi } from "vitest";
 
 import type { getPageAsMarkdown, getPageProperties } from "@/modules/core/services/notion/notion";
 import type { dependencies } from "@/modules/glossaire/usecases/getGlossaireEntry/dependencies";
@@ -50,8 +51,8 @@ describe("Feature: Getting a Glossaire Entry", () => {
           "Erreur lors de la récupération des informations de la page Notion avec l'id : " + currentPageId
         );
       },
-      jest.fn(),
-      jest.fn()
+      vi.fn(),
+      vi.fn()
     );
 
     await currentFixture.whenGetGlossaireEntry(currentPageId);
@@ -69,7 +70,7 @@ describe("Feature: Getting a Glossaire Entry", () => {
       async () => {
         return "## Test";
       },
-      jest.fn(),
+      vi.fn(),
       () => {
         return {
           id: currentPageId,

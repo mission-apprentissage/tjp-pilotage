@@ -1,4 +1,5 @@
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { describe, expect, it, vi } from "vitest";
 
 import { submitDemandeFactory } from "./submitDemande.usecase";
 
@@ -7,7 +8,7 @@ type Deps = Parameters<typeof submitDemandeFactory>[0];
 type AwaitedResult<V extends (...args: any[]) => Promise<any>> = Awaited<ReturnType<V>>;
 
 const valideDeps = {
-  createDemandeQuery: jest.fn(async (data) => Promise.resolve(data)),
+  createDemandeQuery: vi.fn(async (data) => Promise.resolve(data)),
   findOneDataEtablissement: async () =>
     Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<Deps["findOneDataEtablissement"]>),
   findOneDataFormation: async () => Promise.resolve({ cfd: "cfd" } as AwaitedResult<Deps["findOneDataFormation"]>),
@@ -128,7 +129,7 @@ describe("submitDemande usecase", () => {
   it("should create a new demande if data is valid and sent demand does not contain a numero", async () => {
     const deps = {
       ...valideDeps,
-      createDemandeQuery: jest.fn(async (data) => Promise.resolve(data)),
+      createDemandeQuery: vi.fn(async (data) => Promise.resolve(data)),
     };
 
     const submitDemande = submitDemandeFactory(deps);
@@ -155,7 +156,7 @@ describe("submitDemande usecase", () => {
   it("should update a demande if data is valid and sent demand contains a numero", async () => {
     const deps = {
       ...valideDeps,
-      createDemandeQuery: jest.fn(async (data) => Promise.resolve(data)),
+      createDemandeQuery: vi.fn(async (data) => Promise.resolve(data)),
     };
 
     const submitDemande = submitDemandeFactory(deps);

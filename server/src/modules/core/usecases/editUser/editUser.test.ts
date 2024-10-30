@@ -1,5 +1,6 @@
-import { editUserFactory } from "./editUser.usecase";
+import { describe, expect, it, vi } from "vitest";
 
+import { editUserFactory } from "./editUser.usecase";
 const user = {
   email: "test@test.fr",
   firstname: "firstname",
@@ -23,7 +24,7 @@ describe("createUser usecase", () => {
     describe("admin", () => {
       it("should edit the user", async () => {
         const deps = {
-          updateUser: jest.fn(async () => {}),
+          updateUser: vi.fn(async () => {}),
         };
         const editUser = editUserFactory(deps);
         await editUser({ userId: "test", data: user, requestUser });
@@ -34,7 +35,7 @@ describe("createUser usecase", () => {
     describe("admin_region", () => {
       it("should edit the user with the right role within the same region", async () => {
         const deps = {
-          updateUser: jest.fn(async () => {}),
+          updateUser: vi.fn(async () => {}),
         };
         const editUser = editUserFactory(deps);
         await editUser({ userId: "test", data: user, requestUser });
@@ -43,7 +44,7 @@ describe("createUser usecase", () => {
 
       it("should throw an error if the user has a role that requestUser cannot modify", async () => {
         const deps = {
-          updateUser: jest.fn(async () => {}),
+          updateUser: vi.fn(async () => {}),
         };
         const editUser = editUserFactory(deps);
         expect(async () =>
@@ -64,7 +65,7 @@ describe("createUser usecase", () => {
 
       it("should throw an error if the user already exist", async () => {
         const deps = {
-          updateUser: jest.fn(async () => {}),
+          updateUser: vi.fn(async () => {}),
         };
         const editUser = editUserFactory(deps);
         expect(async () =>
