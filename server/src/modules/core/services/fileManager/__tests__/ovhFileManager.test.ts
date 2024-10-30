@@ -1,8 +1,10 @@
-import "aws-sdk-client-mock-jest";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import "aws-sdk-client-mock-vitest";
 
 import type { ListObjectsV2CommandOutput } from "@aws-sdk/client-s3";
 import { ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { mockClient } from "aws-sdk-client-mock";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { FileType } from "@/modules/core/services/fileManager/fileManager";
 import { ovhFileManagerFactory } from "@/modules/core/services/fileManager/ovhFileManager";
@@ -16,7 +18,7 @@ describe("Ovh file manager", () => {
   beforeEach(() => {
     fileFixture = fileManagerFixture(s3ClientMock as unknown as S3Client);
     s3ClientMock.reset();
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it("should list that no files are linked to the demande", async () => {

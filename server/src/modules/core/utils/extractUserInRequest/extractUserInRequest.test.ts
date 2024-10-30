@@ -1,6 +1,7 @@
 import cookie from "cookie";
 import type { FastifyRequest } from "fastify";
 import jwt from "jsonwebtoken";
+import { describe, expect, it } from "vitest";
 
 import { extractUserInRequestFactory } from "./extractUserInRequest";
 

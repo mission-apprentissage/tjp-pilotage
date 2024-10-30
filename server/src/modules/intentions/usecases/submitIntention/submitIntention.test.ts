@@ -1,4 +1,5 @@
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { describe, expect, it, vi } from "vitest";
 
 import { submitIntentionFactory } from "./submitIntention.usecase";
 
@@ -7,8 +8,8 @@ type Deps = Parameters<typeof submitIntentionFactory>[0];
 type AwaitedResult<V extends (...args: any[]) => Promise<any>> = Awaited<ReturnType<V>>;
 
 const valideDeps = {
-  createIntentionQuery: jest.fn(async (data) => Promise.resolve(data)),
-  createChangementStatutQuery: jest.fn(async (data) => Promise.resolve(data)),
+  createIntentionQuery: vi.fn(async (data) => Promise.resolve(data)),
+  createChangementStatutQuery: vi.fn(async (data) => Promise.resolve(data)),
   findOneDataEtablissement: async () =>
     Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<Deps["findOneDataEtablissement"]>),
   findOneDataFormation: async () => Promise.resolve({ cfd: "cfd" } as AwaitedResult<Deps["findOneDataFormation"]>),
@@ -143,7 +144,7 @@ describe("submitDemande usecase", () => {
   it("should create a new intention if data is valid and sent demand does not contain a numero", async () => {
     const deps = {
       ...valideDeps,
-      createIntentionQuery: jest.fn(async (data) => Promise.resolve(data)),
+      createIntentionQuery: vi.fn(async (data) => Promise.resolve(data)),
     };
 
     const submitDemande = submitIntentionFactory(deps);
@@ -170,7 +171,7 @@ describe("submitDemande usecase", () => {
   it("should update a intention if data is valid and sent demand contains a numero", async () => {
     const deps = {
       ...valideDeps,
-      createIntentionQuery: jest.fn(async (data) => Promise.resolve(data)),
+      createIntentionQuery: vi.fn(async (data) => Promise.resolve(data)),
     };
 
     const submitDemande = submitIntentionFactory(deps);

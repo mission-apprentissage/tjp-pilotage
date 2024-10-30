@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import type { FilePathManager } from "@/modules/core/services/filePathManager/filePathManager";
 import { localFilePathManagerFactory } from "@/modules/core/services/filePathManager/localFilePathManager";
 
@@ -9,7 +11,7 @@ describe("Core Service: Local file path manager", () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it("should generate a path for a given intention id", () => {

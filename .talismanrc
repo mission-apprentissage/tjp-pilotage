@@ -17,6 +17,10 @@ fileignoreconfig:
   checksum: f47ffbd2ecfa5b8d9e7535ddb62ba2fbe9d1fdce1a4c8b67c4e7c1dd15e889cc
 - filename: server/seed/seed_schema.dump
   checksum: 8eb032b7bc0013ec5dbba6e69fc07a74a5c1ea8c95ff619281106498c263b691
+- filename: server/src/modules/core/usecases/login/__tests__/login.test.ts
+  checksum: 28cdc80f0d836857ee9a802bff5a72a3ff3addad70a31b1ad4b7e98bc8db447c
+- filename: server/src/modules/core/usecases/redirectDne/redirectDne.test.ts
+  checksum: 97116750d964c12ae4a0ffe9f5477d66526bf2f2e8ac8719ee399dc88faf7ae5
 - filename: server/tests/test_origin/controllers/campagnes.controller.test.js_old
   checksum: 546c306130034fdce2c4165b1f31656dfa883bc8808f0e8b1fa5a5461da1cb08
 - filename: server/tests/test_origin/controllers/users.controller.test.js_old
