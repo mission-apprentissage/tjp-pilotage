@@ -41,8 +41,8 @@ jobs:
       - name: start postgres service
         run: docker compose up -d --wait postgres
 
-      # - name: test
-      #   run: yarn test:ci
+      - name: test
+        run: yarn test:ci
 
       - name: prettier
         run: yarn prettier:check
