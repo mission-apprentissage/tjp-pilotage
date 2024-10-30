@@ -71,7 +71,7 @@ function getRecette2PublicConfig(): PublicConfig {
     },
     host,
     baseUrl: `https://${host}`,
-    env: "recette",
+    env: "recette2",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
     productMeta: getProductMeta(),
