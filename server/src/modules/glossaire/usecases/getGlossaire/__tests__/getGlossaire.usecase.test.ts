@@ -1,4 +1,5 @@
 import type { PageObjectResponse, QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
+import { beforeEach, describe, expect, it } from "vitest";
 
 import config from "@/config";
 import { mapNotionDatabaseRowToGlossaireEntry } from "@/modules/glossaire/usecases/getGlossaire/dependencies";

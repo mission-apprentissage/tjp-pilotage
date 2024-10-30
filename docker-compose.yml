@@ -9,6 +9,8 @@ services:
       - "127.0.0.1:5432:5432"
     volumes:
       - pilotage_postgres_data:/var/lib/postgresql/data:z
+      - ./server/seed/seed_schema.dump:/seed_schema.dump
+      - ./server/seed/seed_data.dump:/seed_data.dump
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U postgres -d postgres'"]
       interval: 10s
