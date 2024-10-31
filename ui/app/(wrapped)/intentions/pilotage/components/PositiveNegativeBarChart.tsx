@@ -89,9 +89,9 @@ export const PositiveNegativeBarChart = ({
     .slice(0, limit)
     .reverse();
 
-  const placesColoreesTransformees = Object.keys(data)
+  const placesColorees = Object.keys(data)
     .filter((key) => key !== "Total")
-    .map((key) => data[key].placesColoreesTransformees)
+    .map((key) => data[key].placesColorees)
     .slice(0, limit)
     .reverse();
 
@@ -339,7 +339,7 @@ export const PositiveNegativeBarChart = ({
       ],
       series: [
         {
-          data: placesColoreesTransformees,
+          data: placesColorees,
           position: "right",
           color: bf850,
           itemStyle: {

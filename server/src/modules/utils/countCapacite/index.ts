@@ -1,0 +1,76 @@
+export {
+  countDifferenceCapaciteScolaire,
+  countDifferenceCapaciteScolaireColoree,
+  countDifferenceCapaciteScolaireCorrection,
+  countDifferenceCapaciteScolaireIntention,
+  countDifferenceCapaciteApprentissage,
+  countDifferenceCapaciteApprentissageColoree,
+  countDifferenceCapaciteApprentissageCorrection,
+  countDifferenceCapaciteApprentissageIntention,
+} from "./countDifferenceCapacite";
+
+export {
+  countPlacesOuvertesScolaire,
+  countPlacesOuvertesScolaireQ1,
+  countPlacesOuvertesScolaireQ2,
+  countPlacesOuvertesScolaireQ1Q2,
+  countPlacesOuvertesScolaireTransitionEcologique,
+  countPlacesOuvertesApprentissage,
+  countPlacesOuvertesApprentissageQ1,
+  countPlacesOuvertesApprentissageQ2,
+  countPlacesOuvertesApprentissageQ1Q2,
+  countPlacesOuvertesApprentissageTransitionEcologique,
+  countPlacesOuvertes,
+  countPlacesOuvertesQ1,
+  countPlacesOuvertesQ2,
+  countPlacesOuvertesQ1Q2,
+  countPlacesOuvertesTransitionEcologique,
+} from "./countPlacesOuvertes";
+
+export {
+  countPlacesFermeesScolaire,
+  countPlacesFermeesScolaireQ3,
+  countPlacesFermeesScolaireQ4,
+  countPlacesFermeesScolaireQ3Q4,
+  countPlacesFermeesApprentissage,
+  countPlacesFermeesApprentissageQ3,
+  countPlacesFermeesApprentissageQ4,
+  countPlacesFermeesApprentissageQ3Q4,
+  countPlacesFermees,
+  countPlacesFermeesQ3,
+  countPlacesFermeesQ4,
+  countPlacesFermeesQ3Q4,
+} from "./countPlacesFermees";
+
+export {
+  countPlacesColoreesOuvertesScolaire,
+  countPlacesColoreesFermeesScolaire,
+  countPlacesColoreesScolaire,
+  countPlacesColoreesOuvertesApprentissage,
+  countPlacesColoreesFermeesApprentissage,
+  countPlacesColoreesApprentissage,
+  countPlacesColoreesOuvertes,
+  countPlacesColoreesFermees,
+  countPlacesColoreesOuvertesQ3,
+  countPlacesColoreesOuvertesQ4,
+  countPlacesColoreesOuvertesQ3Q4,
+  countPlacesColorees,
+  countPlacesColoreesQ4,
+} from "./countPlacesColorees";
+
+export {
+  countPlacesTransformeesScolaire,
+  countPlacesColoreesTransformeesScolaire,
+  countPlacesColoreesTransformeesScolaireQ4,
+  countPlacesNonColoreesTransformeesScolaire,
+  countPlacesTransformeesApprentissage,
+  countPlacesColoreesTransformeesApprentissage,
+  countPlacesColoreesTransformeesApprentissageQ4,
+  countPlacesNonColoreesTransformeesApprentissage,
+  countPlacesColoreesTransformees,
+  countPlacesColoreesTransformeesQ4,
+  countPlacesTransformees,
+  countPlacesTransformeesParCampagne,
+  countPlacesNonColoreesTransformees,
+  getTauxTransformation,
+} from "./countPlacesTransformees";

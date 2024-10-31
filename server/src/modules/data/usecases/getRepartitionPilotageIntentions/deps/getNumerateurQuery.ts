@@ -69,9 +69,7 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
       eb.fn
         .coalesce("placesColoreesFermees", eb.val(0))
         .as("placesColoreesFermees"),
-      eb.fn
-        .coalesce("placesColoreesTransformees", eb.val(0))
-        .as("placesColoreesTransformees"),
+      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
     ])
     .where("demandes.codeNsf", "is not", null)

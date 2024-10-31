@@ -234,8 +234,7 @@ export const BarChart = ({
         {
           data: positionsQuadrantOptions.map(
             (PositionQuadrantType) =>
-              positionsQuadrant?.[PositionQuadrantType]
-                ?.placesColoreesTransformees
+              positionsQuadrant?.[PositionQuadrantType]?.placesColorees
           ),
           stack: "placesTransformées",
           color: bf850,
