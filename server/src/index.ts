@@ -1,13 +1,5 @@
-import { config } from "dotenv";
+import "./main";
 
-config({ path: ".env" });
-config({ path: ".env.local", override: true });
+import { initSentry } from "./services/sentry/sentry";
 
-import("./services/sentry/sentry.js")
-  .then(async ({ initSentry }) => {
-    initSentry();
-  })
-  .then(async () => {
-    // Dynamic import to start server after env are loaded
-    return import("./main.js");
-  });
+initSentry();
