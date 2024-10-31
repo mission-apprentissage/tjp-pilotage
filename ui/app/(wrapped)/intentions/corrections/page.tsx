@@ -17,7 +17,10 @@ import { Loading } from "../../../../components/Loading";
 import { SearchInput } from "../../../../components/SearchInput";
 import { TableHeader } from "../../../../components/TableHeader";
 import { feature } from "../../../../utils/feature";
-import { CodeRegionFilterContext } from "../../../layoutClient";
+import {
+  CodeDepartementFilterContext,
+  CodeRegionFilterContext,
+} from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
   CORRECTIONS_COLUMNS,
@@ -121,6 +124,14 @@ export default () => {
     );
   };
 
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(
+    CodeRegionFilterContext
+  );
+
+  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(
+    CodeDepartementFilterContext
+  );
+
   const trackEvent = usePlausible();
   const filterTracker = (filterName: keyof FiltersCorrections) => () => {
     trackEvent("restitution-correction:filtre", {
@@ -150,6 +161,9 @@ export default () => {
       switch (type) {
         case "codeRegion":
           setCodeRegionFilter((value as string[])[0] ?? "");
+          break;
+        case "codeDepartement":
+          setCodeDepartementFilter((value as string[])[0] ?? "");
           break;
       }
   };
@@ -209,10 +223,6 @@ export default () => {
     }
   );
 
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(
-    CodeRegionFilterContext
-  );
-
   const [colonneFilters, setColonneFilters] = useState<
     (keyof typeof CORRECTIONS_COLUMNS_OPTIONAL)[]
   >(
@@ -230,9 +240,17 @@ export default () => {
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeRegionFilter !== ""
+      codeRegionFilter
     ) {
       filters.codeRegion = [codeRegionFilter];
+    }
+    if (
+      filters?.codeRegion === undefined &&
+      filters?.codeAcademie === undefined &&
+      filters?.codeDepartement === undefined &&
+      codeDepartementFilter
+    ) {
+      filters.codeDepartement = [codeDepartementFilter];
     }
     setSearchParams({ filters: filters });
   };

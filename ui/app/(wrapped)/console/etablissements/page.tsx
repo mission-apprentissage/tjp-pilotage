@@ -12,9 +12,14 @@ import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 
 import { client } from "@/api.client";
+import {
+  CodeDepartementFilterContext,
+  CodeRegionFilterContext,
+  UaisFilterContext,
+} from "@/app/layoutClient";
 import { ConsoleSearchInput } from "@/components/ConsoleSearchInput";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";
@@ -156,7 +161,7 @@ export default function Etablissements() {
     limit: qLimit,
   });
 
-  const { data, isFetching } = client.ref("[GET]/etablissements").useQuery(
+  const { data, isLoading } = client.ref("[GET]/etablissements").useQuery(
     {
       query: getEtablissementsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
@@ -256,32 +261,133 @@ export default function Etablissements() {
     });
   };
 
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(
+    CodeRegionFilterContext
+  );
+
+  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(
+    CodeDepartementFilterContext
+  );
+
+  const { uaisFilter } = useContext(UaisFilterContext);
+
+  const filterTracker = (filterName: keyof Filters) => () => {
+    trackEvent("etablissements:filtre", { props: { filter_name: filterName } });
+  };
+
+  const handleFiltersContext = (
+    type: keyof Filters,
+    value: Filters[keyof Filters]
+  ) => {
+    if (type === "codeRegion" && value != null)
+      setCodeRegionFilter((value as string[])[0] ?? "");
+
+    if (type === "codeDepartement" && value != null)
+      setCodeDepartementFilter((value as string[])[0] ?? "");
+  };
+
+  const handleFilters = (
+    type: keyof Filters,
+    value: Filters[keyof Filters]
+  ) => {
+    handleFiltersContext(type, value);
+
+    let newFilters: Partial<Filters> = {
+      [type]: value,
+    };
+
+    // Valeurs par défaut pour les codes
+    switch (type) {
+      case "codeRegion":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeAcademie: undefined,
+            codeDepartement: undefined,
+            commune: undefined,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "codeAcademie":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeDepartement: undefined,
+            commune: undefined,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "codeDepartement":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            commune: undefined,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "commune":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "secteur":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            uai: [],
+          };
+        }
+        break;
+    }
+
+    filterTracker(type)();
+    setSearchParams({
+      page: 0,
+      filters: { ...filters, ...newFilters },
+    });
+  };
+
+  useEffect(() => {
+    if (codeRegionFilter && !filters.codeRegion?.length) {
+      filters.codeRegion = [codeRegionFilter];
+      setSearchParams({ filters: filters });
+    }
+    if (codeDepartementFilter && !filters.codeDepartement?.length) {
+      filters.codeDepartement = [codeDepartementFilter];
+      setSearchParams({ filters: filters });
+    }
+    if (uaisFilter && uaisFilter.length && !filters.uai?.length) {
+      filters.uai = uaisFilter;
+      setSearchParams({ filters: filters });
+    }
+  }, []);
+
   return (
     <>
       <HeaderSection
         setSearchParams={setSearchParams}
         searchParams={searchParams}
+        handleFilters={handleFilters}
         filtersList={data?.filters}
         requetesEnregistrees={requetesEnregistrees}
       />
       <Flex direction={"row"} flex={1} position="relative" minH="0">
         <SideSection
-          setSearchParams={setSearchParams}
           searchParams={searchParams}
           filtersList={data?.filters}
+          handleFilters={handleFilters}
         />
         <Flex direction="column" flex={1} position="relative" minW={0}>
-          {isFetching && (
-            <Center
-              height="100%"
-              width="100%"
-              position="absolute"
-              bg="rgb(255,255,255,0.8)"
-              zIndex="1"
-            >
-              <Spinner />
-            </Center>
-          )}
           <TableHeader
             p={4}
             SaveFiltersButton={
@@ -329,6 +435,17 @@ export default function Etablissements() {
             count={data?.count}
             onPageChange={(newPage) => setSearchParams({ page: newPage })}
           />
+          {isLoading && (
+            <Center
+              height="100%"
+              width="100%"
+              position="absolute"
+              bg="rgb(255,255,255,0.8)"
+              zIndex="1"
+            >
+              <Spinner />
+            </Center>
+          )}
           <ConsoleSection
             data={data}
             filters={filters}

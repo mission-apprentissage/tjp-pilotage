@@ -2,10 +2,12 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
+import { useContext } from "react";
 
 import { client } from "@/api.client";
+import { CodeRegionFilterContext } from "@/app/layoutClient";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
-import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { FiltersSection } from "../../components/FiltersSection";
 import { IndicateursSection } from "../../components/IndicateursSection/IndicateursSection";
 import { InfoSection } from "../../components/InfoSection";
@@ -26,6 +28,7 @@ export default function Panorama({
   const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(
     queryParams.toString()
   );
+  const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
 
   const setSearchParams = (params: Partial<FiltersPanoramaFormation>) => {
     router.replace(
@@ -57,6 +60,7 @@ export default function Panorama({
   };
 
   const onCodeRegionChanged = (codeRegion: string) => {
+    setCodeRegionFilter(codeRegion);
     router.push(`/panorama/region/${codeRegion}?${qs.stringify(searchParams)}`);
   };
 

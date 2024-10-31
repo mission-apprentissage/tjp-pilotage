@@ -1,6 +1,18 @@
 import { CloseIcon } from "@chakra-ui/icons";
-import { chakra, Flex, IconButton, Tag } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  chakra,
+  IconButton,
+  Tag,
+  Text,
+  Tooltip,
+  Wrap,
+} from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
+import { useState } from "react";
 
+import { useAuth } from "../../../../utils/security/useAuth";
 import { Filters, FiltersList } from "./types";
 
 enum FILTRES_KEYS {
@@ -9,7 +21,7 @@ enum FILTRES_KEYS {
   "codeDepartement" = "departements",
   "commune" = "communes",
   "secteur" = "secteurs",
-  "uai" = "uais",
+  "uai" = "etablissements",
   "codeNiveauDiplome" = "diplomes",
   "codeDispositif" = "dispositifs",
   "codeNsf" = "libellesNsf",
@@ -22,14 +34,18 @@ export const FilterTags = chakra(
   ({
     filters,
     filtersList,
-    setSearchParams,
+    handleFilters,
     isEditable = false,
   }: {
     filters?: Partial<Filters>;
     filtersList?: FiltersList;
-    setSearchParams?: (params: { filters?: Partial<Filters> }) => void;
+    handleFilters?: (
+      type: keyof Filters,
+      value: Filters[keyof Filters]
+    ) => void;
     isEditable?: boolean;
   }) => {
+    const { auth } = useAuth();
     /**
      *  Flatten filters object to array of { key, value }
      *
@@ -55,77 +71,111 @@ export const FilterTags = chakra(
       );
     };
 
-    const getFilterValue = (key: string, value: string | Array<string>) => {
-      if (typeof value === "string") {
-        return filtersList?.[
-          FILTRES_KEYS[key as keyof typeof FILTRES_KEYS] as keyof FiltersList
-        ]?.find((filter) => filter.value === value)?.label;
-      }
-      return value
-        .map(
-          (v) =>
-            filtersList?.[
-              FILTRES_KEYS[
-                key as keyof typeof FILTRES_KEYS
-              ] as keyof FiltersList
-            ]?.find((filter) => filter.value === v)?.label
-        )
-        .join(", ");
+    const getFilterValue = ({ key, value }: { key: string; value: string }) => {
+      return filtersList?.[
+        FILTRES_KEYS[key as keyof typeof FILTRES_KEYS] as keyof FiltersList
+      ]?.find((filter) => filter.value === value)?.label;
     };
 
-    if (!filters) return <></>;
+    const shouldShowUserIcon = ({
+      key,
+      value,
+    }: {
+      key: string;
+      value: string;
+    }) =>
+      (key === "uai" && auth?.user?.uais?.includes(value)) ||
+      (key === "codeRegion" && auth?.user?.codeRegion === value);
+
+    const [shouldShowAllFilters, setShouldShowAllFilters] =
+      useState<boolean>(false);
+
+    if (!filters) return <Box h={9} />;
 
     return (
-      <Flex gap={3} minH={9}>
-        {Object.values(flattenFilters(filters))
-          .filter(({ value }) => value)
-          .map(({ key, value }) => {
-            return (
-              getFilterValue(key, value) && (
-                <Tag
-                  key={`${key}-${value}`}
-                  size="lg"
-                  bgColor="bluefrance.525"
-                  color={"white"}
-                  borderRadius={12}
-                  w={"fit-content"}
-                  h={"fit-content"}
-                  gap={1}
-                >
-                  {getFilterValue(key, value)}
-                  {isEditable && setSearchParams && (
-                    <IconButton
-                      aria-label="Supprimer le filtre"
-                      variant={"unstyled"}
-                      size="xs"
-                      onClick={() => {
-                        const filterValue = filters[key as keyof Filters];
-                        // If filterValue is an array and has more than one value, remove the value from the array
-                        if (
-                          filterValue &&
-                          Array.isArray(filterValue) &&
-                          filterValue.length > 1
-                        ) {
-                          setSearchParams({
-                            filters: {
-                              ...filters,
-                              [key]: filterValue.filter((v) => v !== value),
-                            },
-                          });
-                          return;
-                        }
-                        setSearchParams({
-                          filters: { ...filters, [key]: undefined },
-                        });
-                      }}
-                      icon={<CloseIcon />}
-                    />
-                  )}
-                </Tag>
-              )
-            );
-          })}
-      </Flex>
+      <Box minH={9}>
+        <Wrap spacing={2}>
+          {Object.values(flattenFilters(filters))
+            .filter(({ value }) => value)
+            .slice(0, shouldShowAllFilters ? undefined : 5)
+            .map(({ key, value }) => {
+              return (
+                getFilterValue({ key, value }) && (
+                  <Tooltip
+                    key={`${key}-${value}`}
+                    label={getFilterValue({ key, value })}
+                  >
+                    <Tag
+                      size="lg"
+                      bgColor={
+                        shouldShowUserIcon({ key, value })
+                          ? "blueecume.925"
+                          : "bluefrance.525"
+                      }
+                      color={
+                        shouldShowUserIcon({ key, value })
+                          ? "bluefrance.113"
+                          : "white"
+                      }
+                      borderRadius={12}
+                      w={"fit-content"}
+                      h={"fit-content"}
+                      gap={1}
+                    >
+                      {shouldShowUserIcon({ key, value }) && (
+                        <Icon icon="ri:user-line" width={16} height={16} />
+                      )}
+                      <Text
+                        maxW={56}
+                        whiteSpace="nowrap"
+                        textOverflow="ellipsis"
+                        overflowX="clip"
+                      >
+                        {getFilterValue({ key, value })}
+                      </Text>
+                      {isEditable && handleFilters && (
+                        <IconButton
+                          aria-label="Supprimer le filtre"
+                          variant={"unstyled"}
+                          size="xs"
+                          onClick={() => {
+                            const filterValue = filters[key as keyof Filters];
+                            // If filterValue is an array and has more than one value, remove the value from the array
+                            if (
+                              filterValue &&
+                              Array.isArray(filterValue) &&
+                              filterValue.length > 1
+                            ) {
+                              handleFilters(
+                                key as keyof Filters,
+                                filterValue.filter((v) => v !== value)
+                              );
+                              return;
+                            }
+                            handleFilters(key as keyof Filters, undefined);
+                          }}
+                          icon={<CloseIcon />}
+                        />
+                      )}
+                    </Tag>
+                  </Tooltip>
+                )
+              );
+            })}
+          {Object.values(flattenFilters(filters)).length > 5 &&
+            !shouldShowAllFilters && (
+              <Button
+                variant="link"
+                color="bluefrance.525"
+                onClick={() => setShouldShowAllFilters(true)}
+                ms={4}
+                my={"auto"}
+              >
+                Voir tous ({Object.values(flattenFilters(filters)).length})
+              </Button>
+            )}
+        </Wrap>
+      </Box>
     );
   }
 );

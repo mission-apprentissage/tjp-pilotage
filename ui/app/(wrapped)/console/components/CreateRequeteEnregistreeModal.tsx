@@ -27,6 +27,7 @@ import {
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { format } from "date-fns";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -92,6 +93,9 @@ export const CreateRequeteEnregistreeModal = ({
   } = useForm<
     (typeof client.inferArgs)["[POST]/requete/enregistrement"]["body"]
   >({
+    defaultValues: {
+      couleur: "blueecume.850",
+    },
     shouldUseNativeValidation: false,
   });
 
@@ -134,8 +138,11 @@ export const CreateRequeteEnregistreeModal = ({
         <>
           <ModalContent
             as="form"
-            onSubmit={handleSubmit((form) =>
-              createRequeteEnregistree({
+            onSubmit={handleSubmit((form) => {
+              if (!form.nom) {
+                form.nom = `Recherche du ${format(new Date(), "dd/MM/yyyy")}`;
+              }
+              return createRequeteEnregistree({
                 body: {
                   ...form,
                   page,
@@ -144,58 +151,51 @@ export const CreateRequeteEnregistreeModal = ({
                     search: searchParams?.search,
                   },
                 },
-              })
-            )}
+              });
+            })}
           >
-            <ModalHeader>Enregistrer les filtres actuels en favori</ModalHeader>
+            <ModalHeader>Enregistrer la requête</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <FormControl mb="4" isInvalid={!!errors.nom} isRequired>
-                <FormLabel>Nom</FormLabel>
+              <FormControl mb="4" isInvalid={!!errors.nom}>
+                <FormLabel>Nom de la requête</FormLabel>
                 <Input
                   {...register("nom")}
-                  width={"64"}
-                  placeholder="Nom de la requête"
+                  width={350}
+                  placeholder="Saisir un nom court et facilement identifiable"
                 />
                 {!!errors.nom && (
                   <FormErrorMessage>{errors.nom.message}</FormErrorMessage>
                 )}
               </FormControl>
               <FormControl mb="4" isInvalid={!!errors.couleur} isRequired>
-                <FormLabel>Couleur</FormLabel>
+                <FormLabel>Badge</FormLabel>
                 <Menu gutter={0} matchWidth={true} autoSelect={false}>
                   <MenuButton
                     as={Button}
                     variant={"selectButton"}
                     rightIcon={<ChevronDownIcon />}
-                    width={"64"}
+                    width={350}
                     size="md"
                     borderWidth="1px"
                     borderStyle="solid"
                     borderColor="grey.900"
                     bg={"white"}
                   >
-                    {couleur ? (
-                      <Flex direction="row" gap={2}>
-                        <Tag
-                          size={"sm"}
-                          colorScheme={couleur}
-                          bgColor={couleur}
-                          borderRadius={"100%"}
-                        />
-                        <Text my={"auto"}>
-                          {
-                            COULEURS_DISPONIBLES.find(
-                              (c) => c.value === couleur
-                            )?.label
-                          }
-                        </Text>
-                      </Flex>
-                    ) : (
-                      <Flex direction="row">
-                        <Text my={"auto"}>Couleur</Text>
-                      </Flex>
-                    )}
+                    <Flex direction="row" gap={2}>
+                      <Tag
+                        size={"sm"}
+                        colorScheme={couleur}
+                        bgColor={couleur}
+                        borderRadius={"100%"}
+                      />
+                      <Text my={"auto"}>
+                        {
+                          COULEURS_DISPONIBLES.find((c) => c.value === couleur)
+                            ?.label
+                        }
+                      </Text>
+                    </Flex>
                   </MenuButton>
                   <MenuList py={0} borderTopRadius={0}>
                     {COULEURS_DISPONIBLES.map((couleur) => (
