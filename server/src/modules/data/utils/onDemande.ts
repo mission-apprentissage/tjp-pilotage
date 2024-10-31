@@ -6,11 +6,11 @@ import { DemandeStatutType } from "../../../../../shared/enum/demandeStatutEnum"
 import { DemandeTypeEnum } from "../../../../../shared/enum/demandeTypeEnum";
 import { DB } from "../../../db/db";
 import {
+  countPlacesColorees,
   countPlacesColoreesFermees,
   countPlacesColoreesOuvertes,
   countPlacesColoreesOuvertesQ4,
-  countPlacesColoreesTransformees,
-  countPlacesColoreesTransformeesQ4,
+  countPlacesColoreesQ4,
   countPlacesFermees,
   countPlacesFermeesApprentissage,
   countPlacesFermeesApprentissageQ4,
@@ -142,12 +142,8 @@ export const genericOnDemandes = ({
       eb.fn
         .sum<number>(countPlacesOuvertesTransitionEcologique(eb))
         .as("placesOuvertesTransformationEcologique"),
-      eb.fn
-        .sum<number>(countPlacesColoreesTransformees(eb))
-        .as("placesColoreesTransformees"),
-      eb.fn
-        .sum<number>(countPlacesColoreesTransformeesQ4(eb))
-        .as("placesColoreesTransformeesQ4"),
+      eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
+      eb.fn.sum<number>(countPlacesColoreesQ4(eb)).as("placesColoreesQ4"),
       eb.fn
         .sum<number>(countPlacesColoreesOuvertes(eb))
         .as("placesColoreesOuvertes"),

@@ -77,10 +77,10 @@ export const HeadlineContent = chakra(
         <Th
           isNumeric
           cursor={"pointer"}
-          onClick={() => handleOrder("placesColoreesTransformees")}
+          onClick={() => handleOrder("placesColorees")}
         >
           <>
-            <OrderIcon {...order} column="placesColoreesTransformees" />
+            <OrderIcon {...order} column="placesColorees" />
             <Tooltip label={"Places colorées"}>dont colorations</Tooltip>
           </>
         </Th>

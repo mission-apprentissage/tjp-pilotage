@@ -8,9 +8,9 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import {
-  countPlacesColoreesTransformees,
-  countPlacesColoreesTransformeesApprentissage,
-  countPlacesColoreesTransformeesScolaire,
+  countPlacesColorees,
+  countPlacesColoreesApprentissage,
+  countPlacesColoreesScolaire,
   countPlacesFermees,
   countPlacesFermeesApprentissage,
   countPlacesFermeesScolaire,
@@ -159,15 +159,15 @@ const getStatsRestitutionIntentionsQuery = async ({
     .select((eb) =>
       jsonBuildObject({
         total: eb.fn.coalesce(
-          eb.fn.sum<number>(countPlacesColoreesTransformees(eb)),
+          eb.fn.sum<number>(countPlacesColorees(eb)),
           eb.val(0)
         ),
         scolaire: eb.fn.coalesce(
-          eb.fn.sum<number>(countPlacesColoreesTransformeesScolaire(eb)),
+          eb.fn.sum<number>(countPlacesColoreesScolaire(eb)),
           eb.val(0)
         ),
         apprentissage: eb.fn.coalesce(
-          eb.fn.sum<number>(countPlacesColoreesTransformeesApprentissage(eb)),
+          eb.fn.sum<number>(countPlacesColoreesApprentissage(eb)),
           eb.val(0)
         ),
       }).as("coloration")

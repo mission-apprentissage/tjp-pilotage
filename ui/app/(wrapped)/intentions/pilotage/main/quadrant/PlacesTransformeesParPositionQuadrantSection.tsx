@@ -54,7 +54,7 @@ const getStatsPositionQuadrant = (
   statsPositionQuadrant["Places ouvertes"] =
     positionsQuadrant?.[positionQuadrant]?.placesOuvertes ?? 0;
   statsPositionQuadrant["Colorations"] =
-    positionsQuadrant?.[positionQuadrant]?.placesColoreesTransformees ?? 0;
+    positionsQuadrant?.[positionQuadrant]?.placesColorees ?? 0;
   statsPositionQuadrant["Places transformées"] =
     positionsQuadrant?.[positionQuadrant]?.placesTransformees ?? 0;
   statsPositionQuadrant["Solde"] =

@@ -79,10 +79,7 @@ const groupByResult = ({ numerateur, denominateur, groupBy }: Repartition) => {
         demandeGrouped,
         "placesNonColoreesTransformees"
       );
-      const sommePlacesColoreesTransformees = _.sumBy(
-        demandeGrouped,
-        "placesColoreesTransformees"
-      );
+      const sommePlacesColorees = _.sumBy(demandeGrouped, "placesColorees");
       const sommePlacesColoreesOuvertes = _.sumBy(
         demandeGrouped,
         "placesColoreesOuvertes"
@@ -109,7 +106,7 @@ const groupByResult = ({ numerateur, denominateur, groupBy }: Repartition) => {
         placesNonColoreesTransformees: sommePlacesNonColoreesTransformees,
         placesColoreesOuvertes: sommePlacesColoreesOuvertes,
         placesColoreesFermees: sommePlacesColoreesFermees,
-        placesColoreesTransformees: sommePlacesColoreesTransformees,
+        placesColorees: sommePlacesColorees,
         placesTransformees: sommePlacesTransformees,
         solde: sommeSolde,
       };
@@ -136,7 +133,7 @@ const calculateTotal = (
     placesNonColoreesTransformees: 0,
     placesColoreesOuvertes: 0,
     placesColoreesFermees: 0,
-    placesColoreesTransformees: 0,
+    placesColorees: 0,
     placesTransformees: 0,
     solde: 0,
     tauxTransformation: undefined,
@@ -151,7 +148,7 @@ const calculateTotal = (
     total.placesNonColoreesTransformees += stats.placesNonColoreesTransformees;
     total.placesColoreesOuvertes += stats.placesColoreesOuvertes;
     total.placesColoreesFermees += stats.placesColoreesFermees;
-    total.placesColoreesTransformees += stats.placesColoreesTransformees;
+    total.placesColorees += stats.placesColorees;
     total.placesTransformees += stats.placesTransformees;
     total.solde += stats.solde;
   });
