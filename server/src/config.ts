@@ -1,4 +1,8 @@
+import { config as dotenvConfig } from "dotenv";
 import env from "env-var";
+
+dotenvConfig({ path: ".env" });
+dotenvConfig({ path: ".env.local", override: true });
 
 const environement = env.get("ENV").required().asEnum(["local", "recette", "recette2", "production", "test"]);
 const publicUrl = env.get("PUBLIC_URL").required().asString();

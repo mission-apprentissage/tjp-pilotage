@@ -102,6 +102,8 @@ export const connectToPgDb = async (uri: string) => {
       }
     },
   });
+
+  return kdb;
 };
 
 export const ensureInitialization = () => {

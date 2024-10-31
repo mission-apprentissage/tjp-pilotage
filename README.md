@@ -6,6 +6,12 @@
 
 **TODO**
 
+## Lancer la stack
+
+- yarn (Installation de packages)
+- Vérifier que le daemon docker tourne bien
+- yarn dev (Lancement des containers docker + des app ui et server)
+
 ## Documentation
 
 - [Développement](./docs/developpement/developpement.md)
