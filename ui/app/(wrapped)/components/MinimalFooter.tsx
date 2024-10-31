@@ -69,7 +69,7 @@ export const MinimalFooter = () => {
         </Box>
         <Box>
           <Link href="mailto:orion@inserjeunes.beta.gouv.fr">
-            Nous contacter : orion@inserjeunes.beta.gouv.fr
+            Nous contacter
           </Link>
         </Box>
         <Box>

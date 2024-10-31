@@ -7,11 +7,13 @@ import { Filters, FiltersList, Order, RequetesEnregistrees } from "../types";
 import { FiltersSection } from "./FiltersSection";
 
 export const HeaderSection = ({
+  handleFilters,
   setSearchParams,
   searchParams,
   filtersList,
   requetesEnregistrees,
 }: {
+  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
@@ -48,6 +50,7 @@ export const HeaderSection = ({
         ]}
       />
       <FiltersSection
+        handleFilters={handleFilters}
         setSearchParams={setSearchParams}
         searchParams={searchParams}
         filtersList={filtersList}

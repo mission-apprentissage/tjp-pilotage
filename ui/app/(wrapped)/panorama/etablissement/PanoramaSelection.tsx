@@ -12,7 +12,8 @@ import {
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
-import { UaiFilterContext } from "../../../layoutClient";
+import { UaisFilterContext } from "@/app/layoutClient";
+
 import { UaiForm } from "./UaiForm";
 
 export function PanoramaSelection({
@@ -21,16 +22,13 @@ export function PanoramaSelection({
   readonly wrongUai?: string;
 }) {
   const router = useRouter();
-  const { uaiFilter, setUaiFilter } = useContext(UaiFilterContext);
+  const { uaisFilter } = useContext(UaisFilterContext);
 
   useEffect(() => {
-    if (uaiFilter !== "") {
-      router.push(`/panorama/etablissement/${uaiFilter}`);
-    }
+    if (uaisFilter) onUaiChanged(uaisFilter[0]);
   }, []);
 
-  const handleSubmit = (uai: string) => {
-    setUaiFilter(uai);
+  const onUaiChanged = (uai: string) => {
     router.push(`/panorama/etablissement/${uai}`);
   };
 
@@ -46,8 +44,8 @@ export function PanoramaSelection({
     >
       <Flex align="center" direction="column">
         <UaiForm
-          uai={uaiFilter}
-          onUaiChanged={handleSubmit}
+          uai={uaisFilter?.[0]}
+          onUaiChanged={onUaiChanged}
           inError={!!wrongUai}
         />
         <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">

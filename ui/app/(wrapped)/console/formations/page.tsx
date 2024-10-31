@@ -13,9 +13,13 @@ import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { client } from "@/api.client";
+import {
+  CodeDepartementFilterContext,
+  CodeRegionFilterContext,
+} from "@/app/layoutClient";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -264,9 +268,91 @@ export default function Formations() {
     });
   };
 
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(
+    CodeRegionFilterContext
+  );
+
+  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(
+    CodeDepartementFilterContext
+  );
+
+  const handleFiltersContext = (
+    type: keyof Filters,
+    value: Filters[keyof Filters]
+  ) => {
+    if (type === "codeRegion" && value != null)
+      setCodeRegionFilter((value as string[])[0] ?? "");
+
+    if (type === "codeDepartement" && value != null)
+      setCodeDepartementFilter((value as string[])[0] ?? "");
+  };
+
+  const filterTracker = (filterName: keyof Filters) => () => {
+    trackEvent("formations:filtre", { props: { filter_name: filterName } });
+  };
+
+  const handleFilters = (
+    type: keyof Filters,
+    value: Filters[keyof Filters]
+  ) => {
+    handleFiltersContext(type, value);
+
+    let newFilters: Partial<Filters> = {
+      [type]: value,
+    };
+
+    // Valeurs par défaut pour les codes
+    switch (type) {
+      case "codeRegion":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeAcademie: undefined,
+            codeDepartement: undefined,
+            commune: undefined,
+          };
+        }
+        break;
+      case "codeAcademie":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeDepartement: undefined,
+            commune: undefined,
+          };
+        }
+        break;
+      case "codeDepartement":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            commune: undefined,
+          };
+        }
+        break;
+    }
+    filterTracker(type);
+    setSearchParams({
+      page: 0,
+      filters: { ...filters, ...newFilters },
+    });
+  };
+
+  useEffect(() => {
+    if (codeRegionFilter && !filters.codeRegion?.length) {
+      filters.codeRegion = [codeRegionFilter];
+      setSearchParams({ filters: filters });
+    }
+    if (codeDepartementFilter && !filters.codeDepartement?.length) {
+      filters.codeDepartement = [codeDepartementFilter];
+      setSearchParams({ filters: filters });
+    }
+  }, []);
+
   return (
     <>
       <HeaderSection
+        handleFilters={handleFilters}
         setSearchParams={setSearchParams}
         searchParams={searchParams}
         filtersList={data?.filters}
@@ -274,7 +360,7 @@ export default function Formations() {
       />
       <Flex direction={"row"} flex={1} position="relative" minH="0" minW={0}>
         <SideSection
-          setSearchParams={setSearchParams}
+          handleFilters={handleFilters}
           searchParams={searchParams}
           filtersList={data?.filters}
         />

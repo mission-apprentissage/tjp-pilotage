@@ -11,16 +11,14 @@ import {
   Select,
   Tag,
   Text,
+  Wrap,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { usePlausible } from "next-plausible";
-import { useContext, useEffect, useState } from "react";
-import { unstable_batchedUpdates } from "react-dom";
+import { useState } from "react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { FilterTags } from "@/app/(wrapped)/console/components/FilterTags";
 import { RequetesEnregistrees } from "@/app/(wrapped)/console/formations/types";
-import { CodeRegionFilterContext } from "@/app/layoutClient";
 import { Multiselect } from "@/components/Multiselect";
 
 import { DeleteRequeteEnregistreeButton } from "../../components/DeleteRequeteEnregistreeButton";
@@ -43,11 +41,13 @@ const REQUETES_ENREGISTREES = [
 ];
 
 export const FiltersSection = ({
+  handleFilters,
   setSearchParams,
   searchParams,
   filtersList,
   requetesEnregistrees,
 }: {
+  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
@@ -65,80 +65,15 @@ export const FiltersSection = ({
   filtersList?: FiltersList;
   requetesEnregistrees?: RequetesEnregistrees;
 }) => {
-  const trackEvent = usePlausible();
-
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(
-    CodeRegionFilterContext
-  );
-
-  const filters = searchParams.filters ?? {};
-
-  const handleFiltersContext = (
-    type: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
-    if (type === "codeRegion" && value != null)
-      setCodeRegionFilter((value as string[])[0] ?? "");
-  };
-
-  const handleFilters = (
-    type: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
-    handleFiltersContext(type, value);
-
-    let newFilters: Partial<Filters> = {
-      [type]: value,
-    };
-
-    // Valeurs par défaut pour les codes
-    switch (type) {
-      case "codeRegion":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            codeAcademie: undefined,
-            codeDepartement: undefined,
-            commune: undefined,
-          };
-        }
-        break;
-      case "codeAcademie":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            codeDepartement: undefined,
-            commune: undefined,
-          };
-        }
-        break;
-      case "codeDepartement":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            commune: undefined,
-          };
-        }
-        break;
-    }
-
-    unstable_batchedUpdates(() => {
-      setSearchParams({
-        page: 0,
-        filters: { ...filters, ...newFilters },
-      });
-    });
-  };
-
   const [requeteEnregistreeActuelle, setRequeteEnregistreeActuelle] = useState<{
     nom: string;
     couleur?: string;
-  }>({ nom: "Requêtes favoris" });
+  }>({ nom: "Requêtes favorites" });
 
   const resetFilters = () => {
     setSearchParams({
       filters: {
-        ...filters,
+        ...searchParams.filters,
         codeRegion: [],
         codeAcademie: [],
         codeDepartement: [],
@@ -152,26 +87,15 @@ export const FiltersSection = ({
       },
       search: "",
     });
-    setRequeteEnregistreeActuelle({ nom: "Requêtes favoris" });
+    setRequeteEnregistreeActuelle({ nom: "Requêtes favorites" });
   };
-
-  const filterTracker = (filterName: keyof Filters) => () => {
-    trackEvent("formations:filtre", { props: { filter_name: filterName } });
-  };
-
-  useEffect(() => {
-    if (codeRegionFilter !== "" && !filters.codeRegion?.length) {
-      filters.codeRegion = [codeRegionFilter];
-      setSearchParams({ filters: filters });
-    }
-  }, []);
 
   const [deleteButtonToDisplay, setDeleteButtonToDisplay] =
     useState<string>("");
 
   return (
     <Flex direction={"column"} gap={4} wrap={"wrap"}>
-      <Flex gap={3}>
+      <Wrap spacing={3}>
         <Menu matchWidth={true} autoSelect={false}>
           <MenuButton
             as={Button}
@@ -205,7 +129,7 @@ export const FiltersSection = ({
               {requetesEnregistrees && requetesEnregistrees.length > 0 && (
                 <>
                   <Text p={2} color="grey.425">
-                    Vos requêtes favoris
+                    Vos requêtes favorites
                   </Text>
                   {requetesEnregistrees?.map((requete) => (
                     <MenuItem
@@ -269,22 +193,11 @@ export const FiltersSection = ({
           placeholder="Toutes les régions"
           size="md"
           variant="newInput"
-          width="20rem"
+          width="15rem"
           onChange={(e) => {
-            handleFiltersContext("codeRegion", [e.target.value]);
-            setSearchParams({
-              page: 0,
-              filters: {
-                ...filters,
-                codeAcademie: undefined,
-                codeDepartement: undefined,
-                commune: undefined,
-                codeRegion:
-                  e.target.value === "" ? undefined : [e.target.value],
-              },
-            });
+            handleFilters("codeRegion", [e.target.value]);
           }}
-          value={filters.codeRegion?.[0] ?? ""}
+          value={searchParams.filters?.codeRegion?.[0] ?? ""}
         >
           {filtersList?.regions.map((item) => (
             <option key={item.value} value={item.value}>
@@ -294,42 +207,37 @@ export const FiltersSection = ({
         </Select>
         <Multiselect
           display={["none", null, "flex"]}
-          disabled={!filters.codeRegion}
-          onClose={filterTracker("codeAcademie")}
+          disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width="20rem"
+          width="15rem"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={filtersList?.academies}
-          value={filters.codeAcademie ?? []}
+          value={searchParams.filters?.codeAcademie ?? []}
           menuZIndex={3}
         >
           Académie
         </Multiselect>
         <Multiselect
-          display={["none", null, "flex"]}
-          disabled={!filters.codeRegion}
-          onClose={filterTracker("codeDepartement")}
+          disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width="20rem"
+          width="15rem"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={filtersList?.departements}
-          value={filters.codeDepartement ?? []}
+          value={searchParams.filters?.codeDepartement ?? []}
           menuZIndex={3}
         >
           Département
         </Multiselect>
         <Multiselect
-          display={["none", null, "flex"]}
-          disabled={!filters.codeRegion}
-          onClose={filterTracker("commune")}
+          disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width="20rem"
+          width="15rem"
           onChange={(selected) => handleFilters("commune", selected)}
           options={filtersList?.communes}
-          value={filters.commune ?? []}
+          value={searchParams.filters?.commune ?? []}
           menuZIndex={3}
         >
           Commune
@@ -343,9 +251,9 @@ export const FiltersSection = ({
         >
           Réinitialiser les filtres
         </Button>
-      </Flex>
+      </Wrap>
       <FilterTags
-        setSearchParams={setSearchParams}
+        handleFilters={handleFilters}
         filters={searchParams?.filters}
         filtersList={filtersList}
         isEditable={true}

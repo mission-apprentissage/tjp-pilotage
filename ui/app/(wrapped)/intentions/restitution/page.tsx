@@ -22,7 +22,10 @@ import { GroupedMultiselect } from "../../../../components/GroupedMultiselect";
 import { SearchInput } from "../../../../components/SearchInput";
 import { TableHeader } from "../../../../components/TableHeader";
 import { formatExportFilename } from "../../../../utils/formatExportFilename";
-import { CodeRegionFilterContext } from "../../../layoutClient";
+import {
+  CodeDepartementFilterContext,
+  CodeRegionFilterContext,
+} from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDES_COLUMN";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
@@ -164,6 +167,9 @@ export default () => {
         case "codeRegion":
           setCodeRegionFilter((value as string[])[0] ?? "");
           break;
+        case "codeDepartement":
+          setCodeDepartementFilter((value as string[])[0] ?? "");
+          break;
         case "rentreeScolaire":
           setRentreeScolaireFilter((value as string[])[0] ?? "");
           break;
@@ -258,6 +264,10 @@ export default () => {
     CodeRegionFilterContext
   );
 
+  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(
+    CodeDepartementFilterContext
+  );
+
   const [rentreeScolaireFilter, setRentreeScolaireFilter] = useState<string>();
 
   const [campagneFilter, setCampagneFilter] = useState<string>(
@@ -289,9 +299,17 @@ export default () => {
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeRegionFilter !== ""
+      codeRegionFilter
     ) {
       filters.codeRegion = [codeRegionFilter];
+    }
+    if (
+      filters?.codeRegion === undefined &&
+      filters?.codeAcademie === undefined &&
+      filters?.codeDepartement === undefined &&
+      codeDepartementFilter
+    ) {
+      filters.codeDepartement = [codeDepartementFilter];
     }
     if (filters?.campagne === undefined && campagneFilter !== "") {
       filters.campagne = campagneFilter;
