@@ -1,11 +1,11 @@
-import { client } from "@/api.client";
+import { serverClient } from "@/api.client";
 
 import { ActivateAccountError } from "./ActivateAccountError";
 import { ActivateAccountForm } from "./ActivateAccountForm";
 
 export default async function ({ searchParams: { activationToken } }: { searchParams: { activationToken: string } }) {
   try {
-    await client.ref("[GET]/auth/check-activation-token").query({
+    await serverClient.ref("[GET]/auth/check-activation-token").query({
       query: { activationToken },
     });
 
