@@ -10,6 +10,16 @@ import { publicConfig } from "./config.public";
 export const client = createQueryClient<any, ZodTypeProvider>({
   instance: axios.create({
     baseURL: publicConfig.apiEndpoint,
-    withCredentials: publicConfig.env === "local" ? false : true,
+    withCredentials: true,
+  }),
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const serverClient = createQueryClient<any, ZodTypeProvider>({
+  instance: axios.create({
+    // mandatory because localhost maps to ::1 (IPv6) with nodejs but api server insn't
+    // mapped to ::1 but only IPv4 127.0.0.1
+    baseURL: publicConfig.apiEndpoint.replace("localhost", "127.0.0.1"),
+    withCredentials: true,
   }),
 });
