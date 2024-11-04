@@ -21,6 +21,8 @@ import qs from "qs";
 import { MAX_FILE_SIZE } from "shared";
 
 import config from "@/config";
+import { extractUserInRequest } from "@/modules/core";
+import { userLastSeenAt } from "@/modules/core/utils/lastSeenAt/userLastSeenAt";
 import { initSentryFastify } from "@/services/sentry/sentry.fastify";
 import { getStaticDirPath } from "@/utils/getStaticFilePath";
 
@@ -93,9 +95,8 @@ export async function bind(app: Server) {
     });
   }
 
-  // app.addHook("onRequest", extractUserInRequest);
-  // app.addHook("onRequest", userLastSeenAt);
-  // app.register(loggerContextPlugin);
+  app.addHook("onRequest", extractUserInRequest);
+  app.addHook("onRequest", userLastSeenAt);
 
   app.register(
     async (instance: Server) => {

@@ -79,7 +79,7 @@ function getRecette2PublicConfig(): PublicConfig {
 }
 
 function getLocalPublicConfig(): PublicConfig {
-  const host = "localhost";
+  const host = "127.0.0.1";
   return {
     sentry: {
       dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
