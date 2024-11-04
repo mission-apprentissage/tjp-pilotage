@@ -50,11 +50,10 @@ interface LayoutProps {
 
 async function Layout({ children }: LayoutProps) {
   const auth = await fetchAuth();
-  console.log("auth in layout", auth);
-  //   const changelog = await fetchChangelog();
-  //   const glossaire = await fetchGlossaire();
+  const changelog = await fetchChangelog();
+  const glossaire = await fetchGlossaire();
   return (
-    <RootLayoutClient auth={auth || undefined} changelog={[]} glossaire={[]}>
+    <RootLayoutClient auth={auth || undefined} changelog={changelog || []} glossaire={glossaire || []}>
       {children}
     </RootLayoutClient>
   );

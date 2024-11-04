@@ -4,14 +4,14 @@ import type { ReactNode } from "react";
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 
-export const formatAnneeCommuneLibelle = async (
+export const formatAnneeCommuneLibelle = (
   formation: {
     libelleFormation?: string;
     typeFamille?: string;
   },
   labelSize?: "short" | "long",
   size?: "xs" | "sm" | "md"
-) => {
+): React.ReactNode => {
   switch (formation.typeFamille) {
     case "2nde_commune":
       return format2ndeCommuneLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
