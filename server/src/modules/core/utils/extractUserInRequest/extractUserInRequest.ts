@@ -13,6 +13,7 @@ import { findUserQuery } from "./findUserQuery.dep";
 export const [extractUserInRequest, extractUserInRequestFactory] = inject(
   { jwtSecret: config.auth.authJwtSecret, findUserQuery },
   (deps) => async (request: FastifyRequest) => {
+    console.log(request.cookies);
     const token = request.cookies["Authorization"];
     if (!token) return;
     try {
@@ -36,6 +37,7 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
 declare module "fastify" {
   interface FastifyRequest {
     user?: RequestUser;
+    cookies: { [cookieName: string]: string | undefined };
   }
 }
 
