@@ -1,5 +1,4 @@
 import * as Sentry from "@sentry/node";
-import cookie from "cookie";
 import type { FastifyRequest } from "fastify";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
@@ -14,12 +13,11 @@ import { findUserQuery } from "./findUserQuery.dep";
 export const [extractUserInRequest, extractUserInRequestFactory] = inject(
   { jwtSecret: config.auth.authJwtSecret, findUserQuery },
   (deps) => async (request: FastifyRequest) => {
-    const token = cookie.parse(request.headers.cookie ?? "").Authorization;
+    const token = request.cookies["Authorization"];
     if (!token) return;
     try {
       const decoded = jwt.verify(token, deps.jwtSecret) as { email: string } | undefined;
       if (!decoded) return;
-
       const user = await deps.findUserQuery({ email: decoded.email });
 
       if (user?.id) {

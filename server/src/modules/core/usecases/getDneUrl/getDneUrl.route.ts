@@ -1,5 +1,4 @@
 import { createRoute } from "@http-wizard/core";
-import cookie from "cookie";
 
 import type { Server } from "@/server/server";
 
@@ -15,14 +14,16 @@ export const getDneAuthorizationUrlRoute = (server: Server) => {
       ...props,
       handler: async (_, response) => {
         const { url, codeVerifierJwt } = await getDneUrl();
-        const cookies = cookie.serialize("dne-code-verifier", codeVerifierJwt, {
-          maxAge: 240 * 60 * 1000,
-          httpOnly: true,
-          sameSite: "lax",
-          secure: true,
-          path: "/",
-        });
-        response.status(200).header("set-cookie", cookies).send({ url });
+        response
+          .status(200)
+          .setCookie("dne-code-verifier", codeVerifierJwt, {
+            maxAge: 240 * 60 * 1000,
+            httpOnly: true,
+            sameSite: "lax",
+            secure: true,
+            path: "/",
+          })
+          .send({ url });
       },
     });
   });

@@ -1,4 +1,4 @@
-import cookie from "cookie";
+import { fastifyCookie } from "@fastify/cookie";
 import type { FastifyRequest } from "fastify";
 import jwt from "jsonwebtoken";
 import { describe, expect, it } from "vitest";
@@ -7,6 +7,7 @@ import { extractUserInRequestFactory } from "./extractUserInRequest";
 
 const jwtSecret = "jwtSecret";
 const jwtToken = jwt.sign({ email: "test@test.fr" }, jwtSecret);
+const { serialize } = fastifyCookie;
 
 describe("extractUserInRequest usecase", () => {
   it("should not set user in request if the is no token in the header", async () => {
@@ -28,7 +29,7 @@ describe("extractUserInRequest usecase", () => {
     });
 
     const request = {
-      headers: { cookie: cookie.serialize("Authorization", "wrongToken") },
+      headers: { cookie: serialize("Authorization", "wrongToken") },
     } as FastifyRequest;
 
     await extractUserInRequest(request);
@@ -55,7 +56,7 @@ describe("extractUserInRequest usecase", () => {
     });
 
     const request = {
-      headers: { cookie: cookie.serialize("Authorization", jwtToken) },
+      headers: { cookie: serialize("Authorization", jwtToken) },
     } as FastifyRequest;
 
     await extractUserInRequest(request);
@@ -82,7 +83,7 @@ describe("extractUserInRequest usecase", () => {
     });
 
     const request = {
-      headers: { cookie: cookie.serialize("Authorization", jwtToken) },
+      headers: { cookie: serialize("Authorization", jwtToken) },
     } as FastifyRequest;
 
     await extractUserInRequest(request);
