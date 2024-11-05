@@ -17,7 +17,7 @@ const UserSchema = z.object({
 export const getUsersSchema = {
   querystring: z.object({
     offset: z.coerce.number().optional(),
-    limit: z.coerce.number().optional(),
+    limit: z.coerce.number().default(10000000).optional(),
     search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: UserSchema.keyof().optional(),

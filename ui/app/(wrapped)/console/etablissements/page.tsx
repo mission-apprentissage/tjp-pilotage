@@ -38,7 +38,6 @@ import { HeaderSection } from "./HeaderSection/HeaderSection";
 import { SideSection } from "./SideSection/SideSection";
 import { Filters, Order } from "./types";
 const PAGE_SIZE = 30;
-const EXPORT_LIMIT = 1_000_000;
 
 type QueryResult = (typeof client.infer)["[GET]/etablissements"];
 
@@ -151,7 +150,7 @@ export default function Etablissements() {
     useState<string>(search);
 
   const getEtablissementsQueryParameters = (
-    qLimit: number,
+    qLimit?: number,
     qOffset?: number
   ) => ({
     ...order,
@@ -206,31 +205,37 @@ export default function Etablissements() {
     };
   };
 
-  const onExportCsv = async () => {
-    trackEvent("formations:export");
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("etablissements:export");
     const data = await client.ref("[GET]/etablissements").query({
-      query: getEtablissementsQueryParameters(EXPORT_LIMIT),
+      query: isFiltered ? getEtablissementsQueryParameters() : {},
     });
 
     const { columns, etablissements } = getDataForExport(data);
 
     downloadCsv(
-      formatExportFilename("etablissement_export", filters?.codeRegion),
+      formatExportFilename(
+        "etablissement_export",
+        isFiltered ? filters : undefined
+      ),
       etablissements,
       columns
     );
   };
 
-  const onExportExcel = async () => {
-    const data = await client.ref("[GET]/etablissements").query({
-      query: getEtablissementsQueryParameters(EXPORT_LIMIT),
-    });
+  const onExportExcel = async (isFiltered?: boolean) => {
     trackEvent("etablissements:export-excel");
+    const data = await client.ref("[GET]/etablissements").query({
+      query: isFiltered ? getEtablissementsQueryParameters() : {},
+    });
 
     const { columns, etablissements } = getDataForExport(data);
 
     downloadExcel(
-      formatExportFilename("etablissement_export", filters?.codeRegion),
+      formatExportFilename(
+        "etablissement_export",
+        isFiltered ? filters : undefined
+      ),
       etablissements,
       columns
     );
@@ -428,8 +433,8 @@ export default function Etablissements() {
                 trackEvent={trackEvent}
               />
             }
-            onExportCsv={() => onExportCsv()}
-            onExportExcel={() => onExportExcel()}
+            onExportCsv={onExportCsv}
+            onExportExcel={onExportExcel}
             page={page}
             pageSize={PAGE_SIZE}
             count={data?.count}
