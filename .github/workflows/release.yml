@@ -63,8 +63,9 @@ jobs:
         run: echo "VERSION=$(git describe --tags --abbrev=0 | cut -c2-)" >> "$GITHUB_OUTPUT"
 
       - name: bump and release
+        # git lfs fetch --all is necessary because you have to ensure every lfs file is downloaded in order to push deletion / modification through tags
         run: |
-          git lfs pull
+          git lfs fetch --all
           yarn release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
