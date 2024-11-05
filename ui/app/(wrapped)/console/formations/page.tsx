@@ -39,7 +39,6 @@ import { SideSection } from "./SideSection/SideSection";
 import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
-const EXPORT_LIMIT = 1_000_000;
 
 type QueryResult = (typeof client.infer)["[GET]/formations"];
 
@@ -154,7 +153,7 @@ export default function Formations() {
 
   const [searchFormation, setSearchFormation] = useState<string>(search);
 
-  const getFormationsQueryParameters = (qLimit: number, qOffset?: number) => ({
+  const getFormationsQueryParameters = (qLimit?: number, qOffset?: number) => ({
     ...filters,
     ...order,
     search,
@@ -205,10 +204,10 @@ export default function Formations() {
     };
   };
 
-  const onExportCsv = async () => {
+  const onExportCsv = async (isFiltered?: boolean) => {
     trackEvent("formations:export");
     const data = await client.ref("[GET]/formations").query({
-      query: getFormationsQueryParameters(EXPORT_LIMIT),
+      query: isFiltered ? getFormationsQueryParameters() : {},
     });
 
     const { columns, formations } = getDataForExport(data);
@@ -218,15 +217,18 @@ export default function Formations() {
       : _.omit(columns, "positionQuadrant");
 
     downloadCsv(
-      formatExportFilename("formation_export", filters?.codeRegion),
+      formatExportFilename(
+        "formation_export",
+        isFiltered ? filters : undefined
+      ),
       formations,
       filteredColumns
     );
   };
 
-  const onExportExcel = async () => {
+  const onExportExcel = async (isFiltered?: boolean) => {
     const data = await client.ref("[GET]/formations").query({
-      query: getFormationsQueryParameters(EXPORT_LIMIT),
+      query: isFiltered ? getFormationsQueryParameters() : {},
     });
     trackEvent("formations:export-excel");
 
@@ -237,7 +239,10 @@ export default function Formations() {
       : _.omit(columns, "positionQuadrant");
 
     downloadExcel(
-      formatExportFilename("formation_export", filters?.codeRegion),
+      formatExportFilename(
+        "formation_export",
+        isFiltered ? filters : undefined
+      ),
       formations,
       filteredColumns
     );
@@ -417,8 +422,8 @@ export default function Formations() {
                 canShowQuadrantPosition={canShowQuadrantPosition}
               />
             }
-            onExportCsv={() => onExportCsv()}
-            onExportExcel={() => onExportExcel()}
+            onExportCsv={onExportCsv}
+            onExportExcel={onExportExcel}
             page={page}
             pageSize={PAGE_SIZE}
             count={data?.count}

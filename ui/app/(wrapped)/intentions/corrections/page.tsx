@@ -277,6 +277,56 @@ export default () => {
     return <Loading />;
   }
 
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("restitution-correction:export");
+    const data = await client.ref("[GET]/corrections").query({
+      query: isFiltered
+        ? getCorrectionsQueryParameters(EXPORT_LIMIT)
+        : { limit: EXPORT_LIMIT },
+    });
+    downloadCsv(
+      "corrections_export",
+      data.corrections.map((correction) => ({
+        ...correction,
+        createdAt: new Date(correction.createdAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        updatedAt: new Date(correction.updatedAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        secteur: correction.secteur === "PU" ? "Public" : "Privé",
+      })),
+      CORRECTIONS_COLUMNS
+    );
+  };
+
+  const onExportExcel = async (isFiltered?: boolean) => {
+    trackEvent("restitution-correction:export-excel");
+    const data = await client.ref("[GET]/corrections").query({
+      query: isFiltered
+        ? getCorrectionsQueryParameters(EXPORT_LIMIT)
+        : { limit: EXPORT_LIMIT },
+    });
+    downloadExcel(
+      "corrections_export",
+      data.corrections.map((correction) => ({
+        ...correction,
+        createdAt: new Date(correction.createdAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        updatedAt: new Date(correction.updatedAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        secteur: correction.secteur === "PU" ? "Public" : "Privé",
+      })),
+      CORRECTIONS_COLUMNS
+    );
+  };
+
   return (
     <GuardPermission permission="restitution-intentions/lecture">
       <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20} flex={1}>
@@ -304,62 +354,8 @@ export default () => {
               handleColonneFilters={handleColonneFilters}
             />
           }
-          onExportCsv={async () => {
-            trackEvent("restitution-correction:export");
-            const data = await client.ref("[GET]/corrections").query({
-              query: getCorrectionsQueryParameters(EXPORT_LIMIT),
-            });
-            downloadCsv(
-              "corrections_export",
-              data.corrections.map((correction) => ({
-                ...correction,
-                createdAt: new Date(correction.createdAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                updatedAt: new Date(correction.updatedAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                secteur: correction.secteur === "PU" ? "Public" : "Privé",
-              })),
-              CORRECTIONS_COLUMNS
-            );
-          }}
-          onExportExcel={async () => {
-            trackEvent("restitution-correction:export-excel");
-            const data = await client.ref("[GET]/corrections").query({
-              query: getCorrectionsQueryParameters(EXPORT_LIMIT),
-            });
-            downloadExcel(
-              "corrections_export",
-              data.corrections.map((correction) => ({
-                ...correction,
-                createdAt: new Date(correction.createdAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                updatedAt: new Date(correction.updatedAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                secteur: correction.secteur === "PU" ? "Public" : "Privé",
-              })),
-              CORRECTIONS_COLUMNS
-            );
-          }}
+          onExportCsv={onExportCsv}
+          onExportExcel={onExportExcel}
           page={page}
           pageSize={PAGE_SIZE}
           count={data?.count}

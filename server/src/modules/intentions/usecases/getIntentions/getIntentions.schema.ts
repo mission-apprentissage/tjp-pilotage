@@ -126,7 +126,7 @@ export const getIntentionsSchema = {
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: IntentionsItem.keyof().optional(),
     offset: z.coerce.number().optional(),
-    limit: z.coerce.number().optional(),
+    limit: z.coerce.number().default(10000000).optional(),
     campagne: z.string().optional(),
     codeAcademie: z.array(z.string()).optional(),
     codeNiveauDiplome: z.array(z.string()).optional(),

@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, LinkIcon } from "@chakra-ui/icons";
 import {
   Alert,
   AlertDescription,
@@ -9,6 +9,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  ListItem,
   Menu,
   MenuButton,
   MenuItem,
@@ -130,6 +131,15 @@ export const CreateRequeteEnregistreeModal = ({
   });
 
   const couleur = watch("couleur");
+
+  const copyUrlToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast({
+      variant: "left-accent",
+      status: "success",
+      title: "URL copiée dans le presse-papier",
+    });
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
@@ -261,22 +271,44 @@ export const CreateRequeteEnregistreeModal = ({
           <ModalContent>
             <ModalHeader>Enregistrer les filtres actuels en favori</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>
-              Veuillez-vous connecter pour enregistrer vos filtres.
+            <ModalBody gap={3}>
+              <Text mb={2}>
+                Cette fonctionnalité est réservée aux utilisateurs connectés
+                afin de :
+              </Text>
+              <UnorderedList spacing={3} mb={2}>
+                <ListItem ms={2}>
+                  <strong>Sauvegarder une requête</strong> (filtres saisies et
+                  résultats) pour la retrouver facilement
+                </ListItem>
+                <ListItem ms={2}>
+                  <strong>Exporter les données</strong> spécifiques à une
+                  requête et non toutes les données
+                </ListItem>
+              </UnorderedList>
+              <Text>
+                Connectez-vous pour accéder à la fonctionnalité, sinon vous
+                pouvez copier-coller l'URL d'accès direct à votre recherche.
+              </Text>
             </ModalBody>
 
-            <ModalFooter>
-              <Button
-                fontWeight="light"
-                as={NextLink}
-                ml="auto"
-                color="bluefrance.113"
-                href="/auth/login"
-                variant="ghost"
-              >
-                <LoginIcon mr="2" />
-                Se connecter
-              </Button>
+            <ModalFooter mt={1}>
+              <Flex w={"100%"} justifyContent={"space-between"}>
+                <Button
+                  fontWeight="light"
+                  as={NextLink}
+                  color="bluefrance.113"
+                  href="/auth/login"
+                  variant="ghost"
+                >
+                  <LoginIcon mr="2" />
+                  Se connecter
+                </Button>
+                <Button variant="primary" onClick={copyUrlToClipboard}>
+                  <LinkIcon mr="2" />
+                  Copier l'URL
+                </Button>
+              </Flex>
             </ModalFooter>
           </ModalContent>
         </>

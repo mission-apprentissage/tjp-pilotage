@@ -125,7 +125,7 @@ export const FiltersSchema = z.object({
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: DemandeSchema.keyof().optional(),
   offset: z.coerce.number().optional(),
-  limit: z.coerce.number().optional(),
+  limit: z.coerce.number().default(10000000).optional(),
   search: z.string().optional(),
 });
 

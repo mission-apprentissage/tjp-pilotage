@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import { Box, chakra, Flex, IconButton } from "@chakra-ui/react";
 
-import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 
 export const TableHeader = chakra(
   ({
@@ -20,8 +20,8 @@ export const TableHeader = chakra(
     page: number;
     count?: number;
     onPageChange: (page: number) => void;
-    onExportCsv?: () => Promise<void>;
-    onExportExcel?: () => Promise<void>;
+    onExportCsv?: (isFiltered?: boolean) => Promise<void>;
+    onExportExcel?: (isFiltered?: boolean) => Promise<void>;
     className?: string;
     SaveFiltersButton?: React.ReactNode;
     ColonneFilter?: React.ReactNode;
@@ -32,7 +32,7 @@ export const TableHeader = chakra(
         {SearchInput}
         <Flex ms={ColonneFilter ? "none" : "auto"}>
           {(onExportCsv || onExportExcel) && (
-            <ExportMenuButton
+            <AdvancedExportMenuButton
               onExportCsv={onExportCsv}
               onExportExcel={onExportExcel}
               variant="externalLink"

@@ -6,7 +6,7 @@ import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   DemandeStatutEnum,
   DemandeStatutType,
@@ -14,14 +14,14 @@ import {
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
+import { GroupedMultiselect } from "@/components/GroupedMultiselect";
+import { SearchInput } from "@/components/SearchInput";
+import { TableHeader } from "@/components/TableHeader";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatExportFilename } from "@/utils/formatExportFilename";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { GroupedMultiselect } from "../../../../components/GroupedMultiselect";
-import { SearchInput } from "../../../../components/SearchInput";
-import { TableHeader } from "../../../../components/TableHeader";
-import { formatExportFilename } from "../../../../utils/formatExportFilename";
 import {
   CodeDepartementFilterContext,
   CodeRegionFilterContext,
@@ -103,7 +103,6 @@ const ColonneFiltersSection = chakra(
 );
 
 const PAGE_SIZE = 30;
-const EXPORT_LIMIT = 1_000_000;
 
 export default () => {
   const router = useRouter();
@@ -223,7 +222,7 @@ export default () => {
   };
 
   const getIntentionsStatsQueryParameters = (
-    qLimit: number,
+    qLimit?: number,
     qOffset?: number
   ) => ({
     ...filters,
@@ -336,15 +335,18 @@ export default () => {
     setSearchParams({ filters: filters });
   };
 
-  const onExportCsv = useCallback(async () => {
+  const onExportCsv = async (isFiltered?: boolean) => {
     trackEvent("restitution-demandes:export");
     const data = await client
       .ref("[GET]/restitution-intentions/demandes")
       .query({
-        query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
+        query: isFiltered ? getIntentionsStatsQueryParameters() : {},
       });
     downloadCsv(
-      formatExportFilename("restitution_export", filters?.codeRegion),
+      formatExportFilename(
+        "restitution_export",
+        isFiltered ? filters : undefined
+      ),
       data.demandes.map((demande) => ({
         ...demande,
         createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
@@ -387,17 +389,20 @@ export default () => {
       })),
       STATS_DEMANDES_COLUMNS
     );
-  }, [getIntentionsStatsQueryParameters]);
+  };
 
-  const onExportExcel = useCallback(async () => {
+  const onExportExcel = async (isFiltered?: boolean) => {
     trackEvent("restitution-demandes:export-excel");
     const data = await client
       .ref("[GET]/restitution-intentions/demandes")
       .query({
-        query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
+        query: isFiltered ? getIntentionsStatsQueryParameters() : {},
       });
     downloadExcel(
-      formatExportFilename("restitution_export", filters?.codeRegion),
+      formatExportFilename(
+        "restitution_export",
+        isFiltered ? filters : undefined
+      ),
       data.demandes.map((demande) => ({
         ...demande,
         createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
@@ -440,7 +445,7 @@ export default () => {
       })),
       STATS_DEMANDES_COLUMNS
     );
-  }, [getIntentionsStatsQueryParameters]);
+  };
 
   useEffect(() => {
     setDefaultFilters();
