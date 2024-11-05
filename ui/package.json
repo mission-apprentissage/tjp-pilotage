@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --no-lint",
+    "start": "node .next/standalone/ui/server.js",
     "typecheck": "NODE_OPTIONS='--max-old-space-size=8192' tsc -noEmit",
     "theme": "chakra-cli tokens theme/theme.ts"
   },
