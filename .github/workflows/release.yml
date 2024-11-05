@@ -21,6 +21,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: true
+          lfs: true
+
+      - name: Checkout lfs
+        run: git lfs pull
 
       - uses: actions/setup-node@v3
         with:
@@ -59,7 +63,9 @@ jobs:
         run: echo "VERSION=$(git describe --tags --abbrev=0 | cut -c2-)" >> "$GITHUB_OUTPUT"
 
       - name: bump and release
-        run: yarn release
+        run: |
+          git lfs pull
+          yarn release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
