@@ -79,6 +79,6 @@
 *.woff      binary
 *.woff2     binary
 # Databases
-.infra/files/configs/mongodb/seed.gpg filter=lfs diff=lfs merge=lfs -text
-server/seed/seed_data.dump filter=lfs diff=lfs merge=lfs -text
-server/seed/seed_schema.dump filter=lfs diff=lfs merge=lfs -text
+#.infra/files/configs/mongodb/seed.gpg filter=lfs diff=lfs merge=lfs -text
+#*.dump filter=lfs diff=lfs merge=lfs -text
+
