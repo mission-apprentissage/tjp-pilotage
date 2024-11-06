@@ -40,11 +40,6 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - name: lfs pull
-        run: git lfs pull
 
       - uses: actions/setup-node@v4
         with:

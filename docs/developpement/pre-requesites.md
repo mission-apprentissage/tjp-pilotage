@@ -26,10 +26,6 @@ Installez [Ansible 2.7+](https://docs.ansible.com/ansible/latest/installation_gu
 
 [Suivre la documentation dédié](./1password.md)
 
-## Git LFS
-
-[Installez git-lfs](https://git-lfs.com/)
-
 ## Yq
 
 [Installez yq](https://github.com/mikefarah/yq)
