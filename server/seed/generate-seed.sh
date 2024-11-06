@@ -6,8 +6,9 @@ echo "Chemin de VAULT_PASSWORD_CLIENT : $VAULT_PASSWORD_CLIENT"
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly ANSIBLE_DIR="${SCRIPT_DIR}/../../.infra/ansible"
-readonly VAULT_FILE="${1:-${ANSIBLE_DIR}/roles/setup/vars/main/vault.yml}"
-readonly VAULT_PASSWORD_FILE="${SCRIPT_DIR}/../../.infra/scripts/vault/get-vault-password-client.sh"
+readonly INFRA_DIR="${SCRIPT_DIR}/../../.infra/vault"
+readonly VAULT_FILE="${1:-${INFRA_DIR}/vault.yml}"
+readonly VAULT_PASSWORD_FILE="${SCRIPT_DIR}/../../.bin/scripts/get-vault-password-client.sh"
 
 echo "Lancement de la génération de la seed"
 
