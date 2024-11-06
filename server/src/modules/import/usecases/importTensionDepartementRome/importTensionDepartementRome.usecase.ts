@@ -7,7 +7,6 @@ import { streamIt } from "../../utils/streamIt";
 import {
   createTension,
   createTensionDepartementRome,
-  deleteTension,
   deleteTensionDepartementRome,
 } from "./importTensionDepartementRome.dep";
 
@@ -19,16 +18,13 @@ export const [importTensionDepartementRome] = inject(
     findRawDatas: dataDI.rawDataRepository.findRawDatas,
     createTension,
     createTensionDepartementRome,
-    deleteTension,
     deleteTensionDepartementRome,
   },
   (deps) => async () => {
-    console.log(`Suppression des tensions`);
-    await deleteTension();
-    console.log(`Suppression des tensions departement/rome`);
+    console.log(`Suppression des tensions département/rome`);
     await deleteTensionDepartementRome();
 
-    console.log(`\nImport des données de tension departement/rome`);
+    console.log(`\nImport des données de tension département/rome`);
 
     let tensionCount = 0;
 
@@ -38,7 +34,7 @@ export const [importTensionDepartementRome] = inject(
       (offset) =>
         deps.findRawDatas({
           type: "tension_departement_rome",
-          limit: 100,
+          limit: 1000,
           offset,
         }),
       async (tension) => {
@@ -78,7 +74,9 @@ export const [importTensionDepartementRome] = inject(
         }
 
         tensionCount++;
-        process.stdout.write(`\r${tensionCount} tension ajoutées`);
+        process.stdout.write(
+          `\r${tensionCount} tensions départementales ajoutées`
+        );
       },
       {
         parallel: 20,

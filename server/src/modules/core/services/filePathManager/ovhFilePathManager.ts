@@ -5,8 +5,11 @@ export const ovhFilePathManagerFactory = (): FilePathManager => {
     getIntentionFilePath: (id: string, filename: string = "") => {
       return `intentions/${id}/${filename}`;
     },
-    getFranceTravailIndicateurTensionStatsFilePath: () => {
+    getFranceTravailIndicateurTensionDepartementStatsFilePath: () => {
       return "files/tension_departement_rome.csv";
+    },
+    getFranceTravailIndicateurTensionRegionStatsFilePath: () => {
+      return "files/tension_region_rome.csv";
     },
   };
 };

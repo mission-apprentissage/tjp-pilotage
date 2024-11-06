@@ -844,6 +844,14 @@ export interface TensionRomeDepartement {
   valeur: number;
 }
 
+export interface TensionRomeRegion {
+  codeRome: string;
+  codeRegion: string;
+  codeTension: string;
+  annee: string;
+  valeur: number;
+}
+
 export interface User {
   id: Generated<string>;
   email: string;
@@ -906,5 +914,6 @@ export interface DB {
   tauxIJNiveauDiplomeRegion: TauxIJNiveauDiplomeRegion;
   tension: Tension;
   tensionRomeDepartement: TensionRomeDepartement;
+  tensionRomeRegion: TensionRomeRegion;
   user: User;
 }

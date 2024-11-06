@@ -33,8 +33,10 @@ import {
   importRawFile,
 } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
+import { importTensionDepartementFranceTravail } from "./modules/import/usecases/importTensionDepartementFranceTravail/importTensionDepartementFranceTravail.usecase";
 import { importTensionDepartementRome } from "./modules/import/usecases/importTensionDepartementRome/importTensionDepartementRome.usecase";
-import { importTensionFranceTravail } from "./modules/import/usecases/importTensionFranceTravail/importTensionFranceTravail.usecase";
+import { importTensionRegionFranceTravail } from "./modules/import/usecases/importTensionRegionFranceTravail/importTensionRegionFranceTravail.usecase";
+import { importTensionRegionRome } from "./modules/import/usecases/importTensionRegionRome/importTensionRegionRome.usecase";
 import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
 import { writeErrorLogs } from "./modules/import/utils/writeErrorLogs";
 
@@ -270,6 +272,10 @@ cli
         type: "tension_departement_rome",
         schema: Schemas.tension_departement_rome,
       }),
+      ...getImports({
+        type: "tension_region_rome",
+        schema: Schemas.tension_region_rome,
+      }),
     };
 
     await writeErrorLogs({
@@ -320,6 +326,7 @@ cli
       importLienEmploiFormation,
       importDiscipline,
       importTensionDepartementRome,
+      importTensionRegionRome,
       refreshViews,
     };
 
@@ -361,9 +368,23 @@ cli
 
 cli
   .command("importTensionFranceTravail")
-  .description("Import des données de tension depuis France Travail")
-  .action(async () => {
-    await importTensionFranceTravail();
+  .argument("[usecase]")
+  .description(
+    "Import des données de tension (région/département) depuis France Travail"
+  )
+  .action(async (usecaseName: string) => {
+    const usecases = {
+      importTensionDepartementFranceTravail,
+      importTensionRegionFranceTravail,
+    };
+
+    if (usecaseName) {
+      await usecases[usecaseName as keyof typeof usecases]();
+    } else {
+      for (const usecase of Object.values(usecases)) {
+        await usecase();
+      }
+    }
   });
 
 cli
