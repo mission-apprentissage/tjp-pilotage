@@ -4,12 +4,11 @@
 
 ## Fiche Produit
 
-**TODO**
-
 ## Documentation
 
 - [Développement](./docs/developpement/developpement.md)
 - [Déploiement](./docs/deploy.md)
+- [Tests](./docs/tests.md)
 - [Vault](./docs/Vault.md)
 - [Infrastructure](./docs/infrastructure.md)
 - [Sécurité](./docs/securite.md)
