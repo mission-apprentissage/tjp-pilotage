@@ -24,10 +24,6 @@ export const createTensionDepartementRome = async (
     .execute();
 };
 
-export const deleteTension = async () => {
-  return kdb.deleteFrom("tension").execute();
-};
-
 export const deleteTensionDepartementRome = async () => {
   return kdb.deleteFrom("tensionRomeDepartement").execute();
 };
