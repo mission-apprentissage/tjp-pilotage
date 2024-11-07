@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 // Based on : https://orion.inserjeunes.beta.gouv.fr/metabase/question/515-taux-ij-par-region-niveau-et-millesime?millesime=2021_2022&code_region=&diplome=&filiere=&voie=scolaire
 
 import { sql } from "kysely";

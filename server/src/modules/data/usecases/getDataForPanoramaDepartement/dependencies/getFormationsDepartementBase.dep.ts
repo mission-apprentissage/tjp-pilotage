@@ -1,4 +1,3 @@
-// @ts-nocheck -- TODO
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { getMillesimePrecedent } from "shared/utils/getMillesime";
@@ -26,11 +25,8 @@ export const getFormationsDepartementBase = ({
   orderBy,
 }: Filters) =>
   getKbdClient()
-    // @ts-expect-error
     .selectFrom("formationScolaireView as formationView")
-    // @ts-expect-error
     .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
-    // @ts-expect-error
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .leftJoin("dispositif", "formationEtablissement.codeDispositif", "dispositif.codeDispositif")
     .leftJoin("indicateurEntree", (join) =>

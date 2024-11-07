@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { CURRENT_IJ_MILLESIME } from "shared";
 
 import type { Filters } from "@/modules/data/usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.schema";

@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";

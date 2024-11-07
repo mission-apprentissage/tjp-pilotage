@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { sql } from "kysely";
 import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
 
@@ -29,7 +27,7 @@ export const getStatsCorrectionsQuery = async ({
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const statsCorrections = await getKbdClient
+  const statsCorrections = await getKbdClient()
     .selectFrom("correction")
     .leftJoin("latestDemandeView as demande", "demande.numero", "correction.intentionNumero")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")

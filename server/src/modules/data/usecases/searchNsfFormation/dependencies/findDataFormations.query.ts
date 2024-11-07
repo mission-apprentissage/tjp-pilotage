@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 import type { z } from "zod";

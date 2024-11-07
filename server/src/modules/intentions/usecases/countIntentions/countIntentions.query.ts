@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { sql } from "kysely";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { z } from "zod";
