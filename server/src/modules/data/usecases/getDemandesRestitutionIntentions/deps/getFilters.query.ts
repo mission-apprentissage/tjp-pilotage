@@ -148,7 +148,6 @@ export const getFilters = async ({
     .execute();
 
   const filtersBase = getKbdClient()
-    // @ts-expect-error
     .selectFrom("latestDemandeIntentionView as demande")
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")

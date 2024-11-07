@@ -31,7 +31,6 @@ const getFormationEtablissementsFactory =
     return {
       count,
       filters,
-      // @ts-expect-error TODO
       etablissements: etablissements.map((etablissement) => ({
         ...etablissement,
         formationRenovee: formationsRenoveesEnseignees.includes(etablissement.formationRenovee ?? "")

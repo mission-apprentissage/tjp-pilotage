@@ -23,7 +23,6 @@ export const getDemandesRestitutionIntentionsRoute = ({ server }: { server: Serv
           ...filters,
           user: request.user,
         });
-        // @ts-expect-error TODO
         response.status(200).send(result);
       },
     });
