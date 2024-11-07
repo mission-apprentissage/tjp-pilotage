@@ -1,5 +1,6 @@
-import { passwordRegex } from "shared";
 import { z } from "zod";
+
+import { passwordRegex } from "../../../utils/passwordRegex";
 export const activateUserSchema = {
   body: z.object({
     password: z.string().regex(new RegExp(passwordRegex)),

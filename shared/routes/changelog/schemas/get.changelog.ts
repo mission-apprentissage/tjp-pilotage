@@ -11,7 +11,7 @@ export const changelogEntrySchema = z.object({
   deployed: z.boolean(),
   types: z.array(typeSchema),
   date: z.object({
-    type: z.union([z.literal("date"), z.literal("string")]),
+    type: z.literal("date").or(z.literal("string")),
     value: z.string(),
   }),
   description: z.string(),
