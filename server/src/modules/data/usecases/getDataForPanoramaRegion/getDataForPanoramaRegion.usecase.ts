@@ -27,13 +27,10 @@ export const getDataForPanoramaRegionFactory =
     ]);
 
     return {
-      formations: formations.map(
-        // @ts-expect-error TODO
-        (formation) => ({
-          ...formation,
-          positionQuadrant: deps.getPositionQuadrant(formation, statsSortie),
-        })
-      ),
+      formations: formations.map((formation) => ({
+        ...formation,
+        positionQuadrant: deps.getPositionQuadrant(formation, statsSortie),
+      })),
       topFlops,
       filters,
       tauxInsertion,

@@ -5,15 +5,12 @@ export const getFilters = async ({ codeDepartement }: { codeDepartement?: string
   const filtersBase = getKbdClient()
     .selectFrom("niveauDiplome")
     .leftJoin(
-      // @ts-expect-error
       "formationScolaireView as formationView",
       "formationView.codeNiveauDiplome",
       "niveauDiplome.codeNiveauDiplome"
     )
-    // @ts-expect-error
     .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
     .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
-    // @ts-expect-error
     .$call((eb) => {
       if (!codeDepartement) return eb;
       return eb.where("etablissement.codeDepartement", "=", codeDepartement);
