@@ -1,4 +1,3 @@
-// @ts-nocheck -- TODO
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";

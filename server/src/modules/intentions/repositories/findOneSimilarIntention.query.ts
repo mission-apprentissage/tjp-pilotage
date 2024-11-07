@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { getKbdClient } from "@/db/db";
 import { cleanNull } from "@/utils/noNull";
 

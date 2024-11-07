@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "shared";

@@ -9,61 +9,51 @@ import { sleep } from "@/utils/asyncUtils";
 import type { DB as DBSchema } from "./schema";
 
 // gestion du typage des vues matérialisée inspirée de https://github.com/RobinBlomberg/kysely-codegen/issues/72
-export interface FormationMaterializedView extends Omit<DBSchema, "formationNonMaterializedView"> {
-  formationView: {
-    [K in keyof DBSchema["formationNonMaterializedView"]]: NonNullable<DBSchema["formationNonMaterializedView"][K]>;
-  };
-}
-export interface FormationScolaireMaterializedView extends Omit<DBSchema, "formationNonMaterializedView"> {
-  formationScolaireView: {
-    [K in keyof DBSchema["formationNonMaterializedView"]]: NonNullable<DBSchema["formationNonMaterializedView"][K]>;
-  };
-}
-
-export interface FormationApprentissageMaterializedView extends Omit<DBSchema, "formationNonMaterializedView"> {
-  formationApprentissageView: {
-    [K in keyof DBSchema["formationNonMaterializedView"]]: NonNullable<DBSchema["formationNonMaterializedView"][K]>;
-  };
-}
-export interface LatestDemandeMaterializedView extends Omit<DBSchema, "latestDemandeNonMaterializedView"> {
-  latestDemandeView: {
-    [K in keyof DBSchema["latestDemandeNonMaterializedView"]]: NonNullable<
-      DBSchema["latestDemandeNonMaterializedView"][K]
-    >;
-  };
-}
-
-export interface LatestIntentionMaterializedView extends Omit<DBSchema, "latestIntentionNonMaterializedView"> {
-  latestIntentionView: {
-    [K in keyof DBSchema["latestIntentionNonMaterializedView"]]: NonNullable<
-      DBSchema["latestIntentionNonMaterializedView"][K]
-    >;
-  };
-}
-export interface LatestDemandeIntentionMaterializedView
-  extends Omit<DBSchema, "latestDemandeIntentionNonMaterializedView"> {
-  latestDemandeIntentionView: {
-    [K in keyof DBSchema["latestDemandeIntentionNonMaterializedView"]]: NonNullable<
-      DBSchema["latestDemandeIntentionNonMaterializedView"][K]
-    >;
-  };
-}
-export interface DemandeIntentionMaterializedView extends Omit<DBSchema, "demandeIntentionNonMaterializedView"> {
+export interface DB
+  extends Omit<
+    DBSchema,
+    | "demandeIntentionNonMaterializedView"
+    | "latestDemandeIntentionNonMaterializedView"
+    | "latestIntentionNonMaterializedView"
+    | "latestDemandeNonMaterializedView"
+    | "formationNonMaterializedView"
+  > {
   demandeIntentionView: {
     [K in keyof DBSchema["demandeIntentionNonMaterializedView"]]: NonNullable<
       DBSchema["demandeIntentionNonMaterializedView"][K]
     >;
   };
-}
 
-export type DB =
-  | FormationMaterializedView
-  | FormationScolaireMaterializedView
-  | FormationApprentissageMaterializedView
-  | LatestDemandeMaterializedView
-  | LatestIntentionMaterializedView
-  | LatestDemandeIntentionMaterializedView
-  | DemandeIntentionMaterializedView;
+  latestDemandeIntentionView: {
+    [K in keyof DBSchema["latestDemandeIntentionNonMaterializedView"]]: NonNullable<
+      DBSchema["latestDemandeIntentionNonMaterializedView"][K]
+    >;
+  };
+
+  latestIntentionView: {
+    [K in keyof DBSchema["latestIntentionNonMaterializedView"]]: NonNullable<
+      DBSchema["latestIntentionNonMaterializedView"][K]
+    >;
+  };
+
+  latestDemandeView: {
+    [K in keyof DBSchema["latestDemandeNonMaterializedView"]]: NonNullable<
+      DBSchema["latestDemandeNonMaterializedView"][K]
+    >;
+  };
+
+  formationApprentissageView: {
+    [K in keyof DBSchema["formationNonMaterializedView"]]: NonNullable<DBSchema["formationNonMaterializedView"][K]>;
+  };
+
+  formationScolaireView: {
+    [K in keyof DBSchema["formationNonMaterializedView"]]: NonNullable<DBSchema["formationNonMaterializedView"][K]>;
+  };
+
+  formationView: {
+    [K in keyof DBSchema["formationNonMaterializedView"]]: NonNullable<DBSchema["formationNonMaterializedView"][K]>;
+  };
+}
 
 let kdb: Kysely<DB> | null = null;
 let pool: pg.Pool | null = null;

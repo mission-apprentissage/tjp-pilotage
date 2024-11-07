@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";

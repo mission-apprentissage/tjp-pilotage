@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import type { MILLESIMES_IJ } from "shared";

@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import type { ExpressionBuilder } from "kysely";
 
 import type { DB } from "@/db/db";

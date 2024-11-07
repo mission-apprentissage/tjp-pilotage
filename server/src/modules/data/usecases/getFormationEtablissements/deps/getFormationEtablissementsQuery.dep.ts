@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";

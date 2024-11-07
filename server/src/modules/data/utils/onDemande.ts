@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { expressionBuilder, sql } from "kysely";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";

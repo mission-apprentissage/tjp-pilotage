@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { sql } from "kysely";
 import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 

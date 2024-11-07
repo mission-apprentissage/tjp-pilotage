@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
