@@ -1,11 +1,13 @@
-import * as he from "he";
+import he from "he";
+
+const { encode, decode } = he;
 
 export function escapeString(string: string | undefined) {
   if (typeof string === "undefined") {
     return undefined;
   }
 
-  return he.encode(string);
+  return encode(string);
 }
 
 export function unEscapeString(string: string | undefined) {
@@ -13,5 +15,5 @@ export function unEscapeString(string: string | undefined) {
     return undefined;
   }
 
-  return he.decode(string);
+  return decode(string);
 }
