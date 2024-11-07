@@ -1,13 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { API_ROUTES } from "shared/routes";
+import { activateUserSchema } from "shared/routes/auth/schemas/post.auth.activate";
 
 import type { Server } from "@/server/server";
 
-import { activateUserSchema } from "./activateUser.schema";
 import { activateUser } from "./activateUser.usecase";
 
+const route = API_ROUTES["POST"]["/auth/activate"];
+
 export const activateUserRoute = (server: Server) => {
-  return createRoute("/auth/activate", {
-    method: "POST",
+  return createRoute(route.path, {
+    method: route.method,
     schema: activateUserSchema,
   }).handle((props) => {
     server.route({

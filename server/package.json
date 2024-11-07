@@ -85,6 +85,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@sinclair/typebox": "^0.33.18",
     "@tsconfig/node22": "^22.0.0",
     "@types/cookie": "^0.5.1",
     "@types/ejs": "^3.1.5",
