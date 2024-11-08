@@ -54,10 +54,9 @@ export const countPlacesFermeesScolaire = ({
 }) =>
   eb
     .case()
-    // si type demande = coloration => pas de fermeture de places
     .when("typeDemande", "=", DemandeTypeEnum["coloration"])
     .then(eb.val(0))
-    // si diminution des places globales + diminution des places colorées => max de diminution
+    // si diminution des places globales + diminution des places colorées => max de diminution (aucun cas en prod)
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteScolaire(eb)} < 0`,
@@ -78,7 +77,7 @@ export const countPlacesFermeesScolaire = ({
         .else(0)
         .end()
     )
-    // si augmentation des places globales + diminution des places colorées => aucune diminution des places
+    // si augmentation des places globales + diminution des places colorées => 0
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteScolaire(eb)} >= 0`,
@@ -86,7 +85,7 @@ export const countPlacesFermeesScolaire = ({
       ])
     )
     .then(eb.val(0))
-    // si diminution des places globales + augmentation des places colorées => diminution globale
+    // si diminution des places globales + augmentation des places colorées => somme des 2 transfo
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteScolaire(eb)} < 0`,
@@ -98,7 +97,7 @@ export const countPlacesFermeesScolaire = ({
         ABS(${countDifferenceCapaciteScolaire(eb)})
       `
     )
-    // si augmentation des places globales + augmentation des places colorées => aucune diminution de places
+    // si augmentation des places globales + augmentation des places colorées => 0
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteScolaire(eb)} >= 0`,
@@ -147,10 +146,9 @@ export const countPlacesFermeesApprentissage = ({
 }) =>
   eb
     .case()
-    // si type demande = coloration => pas de fermeture de places
     .when("typeDemande", "=", DemandeTypeEnum["coloration"])
     .then(eb.val(0))
-    // si diminution des places globales + diminution des places colorées => max de diminution
+    // si diminution des places globales + diminution des places colorées => max de diminution (aucun cas en prod)
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} < 0`,
@@ -171,7 +169,7 @@ export const countPlacesFermeesApprentissage = ({
         .else(0)
         .end()
     )
-    // si augmentation des places globales + diminution des places colorées => aucune diminution des places
+    // si augmentation des places globales + diminution des places colorées => 0
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} >= 0`,
@@ -179,7 +177,7 @@ export const countPlacesFermeesApprentissage = ({
       ])
     )
     .then(eb.val(0))
-    // si diminution des places globales + augmentation des places colorées => diminution globale
+    // si diminution des places globales + augmentation des places colorées => somme des 2 transfo
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} < 0`,
@@ -191,7 +189,7 @@ export const countPlacesFermeesApprentissage = ({
         ABS(${countDifferenceCapaciteApprentissage(eb)})
       `
     )
-    // si augmentation des places globales + augmentation des places colorées => aucune diminution de places
+    // si augmentation des places globales + augmentation des places colorées => 0
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} >= 0`,

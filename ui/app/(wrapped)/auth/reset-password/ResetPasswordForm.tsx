@@ -13,8 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { passwordRegex } from "shared/utils/passwordRegex";
 
-import { passwordRegex } from "../../../../../shared/utils/passwordRegex";
 import { client } from "../../../../api.client";
 
 export const ResetPasswordForm = ({
