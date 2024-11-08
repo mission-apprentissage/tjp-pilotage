@@ -145,7 +145,6 @@ const getRegionData = async (filters: Filters) => {
         .coalesce("placesColoreesFermees", eb.val(0))
         .as("placesColoreesFermees"),
       eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
-      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
       eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
       eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
@@ -309,7 +308,6 @@ const getDepartementData = async (filters: Filters) => {
       eb.fn
         .coalesce("placesColoreesFermees", eb.val(0))
         .as("placesColoreesFermees"),
-      eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
       eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
       eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),

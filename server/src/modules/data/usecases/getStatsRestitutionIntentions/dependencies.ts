@@ -3,14 +3,16 @@ import { jsonBuildObject } from "kysely/helpers/postgres";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { z } from "zod";
 
-import { DemandeTypeEnum } from "../../../../../../shared/enum/demandeTypeEnum";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import {
-  countPlacesColorees,
-  countPlacesColoreesApprentissage,
-  countPlacesColoreesScolaire,
+  countPlacesColoreesFermees,
+  countPlacesColoreesFermeesApprentissage,
+  countPlacesColoreesFermeesScolaire,
+  countPlacesColoreesOuvertes,
+  countPlacesColoreesOuvertesApprentissage,
+  countPlacesColoreesOuvertesScolaire,
   countPlacesFermees,
   countPlacesFermeesApprentissage,
   countPlacesFermeesScolaire,
@@ -130,12 +132,24 @@ const getStatsRestitutionIntentionsQuery = async ({
           eb.fn.sum<number>(countPlacesOuvertes(eb)),
           eb.val(0)
         ),
+        colorationTotal: eb.fn.coalesce(
+          eb.fn.sum<number>(countPlacesColoreesOuvertes(eb)),
+          eb.val(0)
+        ),
         scolaire: eb.fn.coalesce(
           eb.fn.sum<number>(countPlacesOuvertesScolaire(eb)),
           eb.val(0)
         ),
+        colorationScolaire: eb.fn.coalesce(
+          eb.fn.sum<number>(countPlacesColoreesOuvertesScolaire(eb)),
+          eb.val(0)
+        ),
         apprentissage: eb.fn.coalesce(
           eb.fn.sum<number>(countPlacesOuvertesApprentissage(eb)),
+          eb.val(0)
+        ),
+        colorationApprentissage: eb.fn.coalesce(
+          eb.fn.sum<number>(countPlacesColoreesOuvertesApprentissage(eb)),
           eb.val(0)
         ),
       }).as("ouvertures")
@@ -146,31 +160,27 @@ const getStatsRestitutionIntentionsQuery = async ({
           eb.fn.sum<number>(countPlacesFermees(eb)),
           eb.val(0)
         ),
+        colorationTotal: eb.fn.coalesce(
+          eb.fn.sum<number>(countPlacesColoreesFermees(eb)),
+          eb.val(0)
+        ),
         scolaire: eb.fn.coalesce(
           eb.fn.sum<number>(countPlacesFermeesScolaire(eb)),
+          eb.val(0)
+        ),
+        colorationScolaire: eb.fn.coalesce(
+          eb.fn.sum<number>(countPlacesColoreesFermeesScolaire(eb)),
           eb.val(0)
         ),
         apprentissage: eb.fn.coalesce(
           eb.fn.sum<number>(countPlacesFermeesApprentissage(eb)),
           eb.val(0)
         ),
+        colorationApprentissage: eb.fn.coalesce(
+          eb.fn.sum<number>(countPlacesColoreesFermeesApprentissage(eb)),
+          eb.val(0)
+        ),
       }).as("fermetures")
-    )
-    .select((eb) =>
-      jsonBuildObject({
-        total: eb.fn.coalesce(
-          eb.fn.sum<number>(countPlacesColorees(eb)),
-          eb.val(0)
-        ),
-        scolaire: eb.fn.coalesce(
-          eb.fn.sum<number>(countPlacesColoreesScolaire(eb)),
-          eb.val(0)
-        ),
-        apprentissage: eb.fn.coalesce(
-          eb.fn.sum<number>(countPlacesColoreesApprentissage(eb)),
-          eb.val(0)
-        ),
-      }).as("coloration")
     )
     .select((eb) =>
       jsonBuildObject({
@@ -363,20 +373,11 @@ const getStatsRestitutionIntentionsQuery = async ({
     })
     .$call((eb) => {
       if (coloration)
-        switch (coloration) {
-          case "with":
-            return eb.where("demande.coloration", "=", true);
-          case "without":
-            return eb.where((w) =>
-              w.or([
-                w("demande.coloration", "=", false),
-                w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"]),
-              ])
-            );
-          case "all":
-          default:
-            return eb;
-        }
+        return eb.where(
+          "demande.coloration",
+          "=",
+          coloration === "true" ? sql<true>`true` : sql<false>`false`
+        );
       return eb;
     })
     .$call((eb) => {

@@ -11,7 +11,6 @@ import {
 import {
   countPlacesColoreesFermeesApprentissage,
   countPlacesColoreesFermeesScolaire,
-  countPlacesColoreesOuvertes,
   countPlacesColoreesOuvertesApprentissage,
   countPlacesColoreesOuvertesScolaire,
 } from "./countPlacesColorees";
@@ -124,6 +123,15 @@ export const countPlacesColoreesTransformeesQ4 = ({
 
 // PLACES TRANSFORMÉES COLORÉES ET NON COLORÉES
 
+export const countPlacesTransformeesCampagne2023 = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+}) =>
+  sql<number>`
+    ${countPlacesOuvertes(eb)} +
+    ${countPlacesFermeesScolaire(eb)}
+  `;
 export const countPlacesTransformeesScolaire = ({
   eb,
 }: {
@@ -255,29 +263,6 @@ export const countPlacesTransformees = ({
     ${countPlacesColoreesTransformees(eb)}
   `;
 
-// En 2023, les places transformées sont les places ouvertes + les places fermées scolaires
-// les places colorées ne sont pas comptabilisées tout comme les places fermées en apprentissage
-const countPlacesTransformeesCampagne2023 = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) =>
-  sql<number>`
-    ${countPlacesOuvertes(eb)} +
-    ${countPlacesFermeesScolaire(eb)}
-  `;
-
-// En 2024, les places transformées sont les places ouvertes et fermées + les places colorées ouvertes
-// les places colorées fermées ne sont pas comptabilisées
-const countPlacesTransformeesCampagne2024 = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) => sql<number>`
-    ${countPlacesNonColoreesTransformees(eb)} +
-    ${countPlacesColoreesOuvertes(eb)}
-  `;
-
 export const countPlacesTransformeesParCampagne = ({
   eb,
 }: {
@@ -287,8 +272,6 @@ export const countPlacesTransformeesParCampagne = ({
     .case()
     .when("campagne.annee", "=", "2023")
     .then(countPlacesTransformeesCampagne2023(eb))
-    .when("campagne.annee", "=", "2024")
-    .then(countPlacesTransformeesCampagne2024(eb))
     .else(countPlacesTransformees(eb))
     .end();
 

@@ -7,9 +7,9 @@ import { z } from "zod";
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import {
-  countPlacesColorees,
   countPlacesColoreesFermees,
   countPlacesColoreesOuvertes,
+  countPlacesColoreesTransformees,
   countPlacesFermees,
   countPlacesOuvertes,
   countPlacesTransformeesParCampagne,
@@ -223,7 +223,7 @@ export const getFormationsPilotageIntentionsQuery = ({
         case "fermeture":
           return wb(countPlacesFermees(wb), ">", 0);
         case "coloration":
-          return wb(countPlacesColorees(wb), ">", 0);
+          return wb(countPlacesColoreesTransformees(wb), ">", 0);
         default:
           return wb.val(true);
       }

@@ -1,6 +1,6 @@
 import { sql } from "kysely";
+import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
 
-import { RaisonCorrectionEnum } from "../../../../../../../shared/enum/raisonCorrectionEnum";
 import { kdb } from "../../../../../db/db";
 import { isDemandeSelectable } from "../../../../utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";

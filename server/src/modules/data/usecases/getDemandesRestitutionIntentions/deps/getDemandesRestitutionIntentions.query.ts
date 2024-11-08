@@ -4,7 +4,6 @@ import { CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { z } from "zod";
 
-import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { RequestUser } from "../../../../core/model/User";
@@ -310,20 +309,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     })
     .$call((eb) => {
       if (coloration)
-        switch (coloration) {
-          case "with":
-            return eb.where("demande.coloration", "=", true);
-          case "without":
-            return eb.where((w) =>
-              w.or([
-                w("demande.coloration", "=", false),
-                w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"]),
-              ])
-            );
-          case "all":
-          default:
-            return eb;
-        }
+        return eb.where(
+          "demande.coloration",
+          "=",
+          coloration === "true" ? sql<true>`true` : sql<false>`false`
+        );
       return eb;
     })
     .$call((eb) => {

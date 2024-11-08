@@ -19,9 +19,9 @@ export const countPlacesColoreesOuvertesScolaire = ({
     count: eb
       .case()
       // si diminution des places colorées => 0
-      .when(sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} <= 0`)
+      .when(sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} < 0`)
       .then(eb.val(0))
-      // si diminution des places globales + augmentation des places colorées => somme des augmentations
+      // si diminution des places globales + augmentation des places colorées => 0
       .when(
         eb.and([
           sql<boolean>`${countDifferenceCapaciteScolaire(eb)} < 0`,
@@ -29,7 +29,7 @@ export const countPlacesColoreesOuvertesScolaire = ({
         ])
       )
       .then(sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`)
-      // si augmentation des places globales + augmentation des places colorées => nombre de places colorées si supérieur à l'augmentation de capacité
+      // si augmentation des places globales + augmentation des places colorées => max de augmentation
       .when(
         eb.and([
           sql<boolean>`${countDifferenceCapaciteScolaire(eb)} >= 0`,
@@ -47,7 +47,7 @@ export const countPlacesColoreesOuvertesScolaire = ({
             )
           )
           .then(sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`)
-          .else(eb.val(0))
+          .else(0)
           .end()
       )
       .else(eb.val(0))
@@ -63,9 +63,6 @@ export const countPlacesColoreesFermeesScolaire = ({
     eb,
     count: eb
       .case()
-      // si augmentation des places colorées => 0
-      .when(sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} > 0`)
-      .then(eb.val(0))
       // si diminution des places globales + diminution des places colorées => nombre de places colorées si supérieur à l'augmentation de capacité
       .when(
         eb.and([
@@ -84,10 +81,10 @@ export const countPlacesColoreesFermeesScolaire = ({
             )
           )
           .then(sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`)
-          .else(eb.val(0))
+          .else(0)
           .end()
       )
-      // si augmentation des places globales + diminution des places colorées => somme des diminutions
+      // si augmentation des places globales + diminution des places colorées => nombre de places colorées
       .when(
         eb.and([
           sql<boolean>`${countDifferenceCapaciteScolaire(eb)} >= 0`,
@@ -95,6 +92,9 @@ export const countPlacesColoreesFermeesScolaire = ({
         ])
       )
       .then(sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`)
+      // si augmentation des places colorées => 0
+      .when(sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} >= 0`)
+      .then(eb.val(0))
       .else(eb.val(0))
       .end(),
   });
@@ -111,7 +111,7 @@ export const countPlacesColoreesOuvertesScolaireQ3 = ({
     .case()
     .when(inQ3(eb))
     .then(countPlacesColoreesOuvertesScolaire(eb))
-    .else(eb.val(0))
+    .else(0)
     .end();
 
 export const countPlacesColoreesOuvertesScolaireQ4 = ({
@@ -126,7 +126,7 @@ export const countPlacesColoreesOuvertesScolaireQ4 = ({
     .case()
     .when(inQ4(eb))
     .then(countPlacesColoreesOuvertesScolaire(eb))
-    .else(eb.val(0))
+    .else(0)
     .end();
 
 export const countPlacesColoreesOuvertesScolaireQ3Q4 = ({
@@ -141,7 +141,7 @@ export const countPlacesColoreesOuvertesScolaireQ3Q4 = ({
     .case()
     .when(inQ3Q4(eb))
     .then(countPlacesColoreesOuvertesScolaire(eb))
-    .else(eb.val(0))
+    .else(0)
     .end();
 
 export const countPlacesColoreesOuvertesApprentissage = ({
@@ -158,7 +158,7 @@ export const countPlacesColoreesOuvertesApprentissage = ({
         sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} < 0`
       )
       .then(eb.val(0))
-      // si diminution des places globales + augmentation des places colorées => somme des augmentations
+      // si diminution des places globales + augmentation des places colorées => 0
       .when(
         eb.and([
           sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} < 0`,
@@ -168,7 +168,7 @@ export const countPlacesColoreesOuvertesApprentissage = ({
       .then(
         sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`
       )
-      // si augmentation des places globales + augmentation des places colorées => nombre de places colorées si supérieur à l'augmentation de capacité
+      // si augmentation des places globales + augmentation des places colorées => max de augmentation
       .when(
         eb.and([
           sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} >= 0`,
@@ -190,7 +190,7 @@ export const countPlacesColoreesOuvertesApprentissage = ({
           .then(
             sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`
           )
-          .else(eb.val(0))
+          .else(0)
           .end()
       )
       .else(eb.val(0))
@@ -228,7 +228,7 @@ export const countPlacesColoreesFermeesApprentissage = ({
           .then(
             sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`
           )
-          .else(eb.val(0))
+          .else(0)
           .end()
       )
       // si augmentation des places globales + diminution des places colorées => nombre de places colorées
@@ -262,7 +262,7 @@ export const countPlacesColoreesOuvertesApprentissageQ3 = ({
     .case()
     .when(inQ3(eb))
     .then(countPlacesColoreesOuvertesApprentissage(eb))
-    .else(eb.val(0))
+    .else(0)
     .end();
 
 export const countPlacesColoreesOuvertesApprentissageQ4 = ({
@@ -277,7 +277,7 @@ export const countPlacesColoreesOuvertesApprentissageQ4 = ({
     .case()
     .when(inQ4(eb))
     .then(countPlacesColoreesOuvertesApprentissage(eb))
-    .else(eb.val(0))
+    .else(0)
     .end();
 
 export const countPlacesColoreesOuvertesApprentissageQ3Q4 = ({
@@ -292,7 +292,7 @@ export const countPlacesColoreesOuvertesApprentissageQ3Q4 = ({
     .case()
     .when(inQ3Q4(eb))
     .then(countPlacesColoreesOuvertesApprentissage(eb))
-    .else(eb.val(0))
+    .else(0)
     .end();
 
 export const countPlacesColoreesOuvertes = ({
@@ -435,5 +435,4 @@ export const countPlacesColoreesQ4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb.case().when(inQ4(eb)).then(countPlacesColorees(eb)).else(eb.val(0)).end();
+}) => eb.case().when(inQ4(eb)).then(countPlacesColorees(eb)).else(0).end();

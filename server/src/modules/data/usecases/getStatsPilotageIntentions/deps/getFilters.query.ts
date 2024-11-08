@@ -1,8 +1,8 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
-import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../../utils/isDemandeSelectable";
