@@ -207,7 +207,7 @@ export const SyntheseSection = ({
           </Flex>
           {demande.coloration && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text>Complément du libellé</Text>
+              <Text>Libellé de la coloration</Text>
               <Text fontSize={14}>{demande.libelleColoration}</Text>
             </Flex>
           )}
@@ -224,12 +224,16 @@ export const SyntheseSection = ({
             <Text>Capacité actuelle</Text>
             <Text fontSize={14}>{demande.capaciteScolaireActuelle}</Text>
           </Flex>
+          <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
+            <Text>- Dont place(s) colorée(s)</Text>
+            <Text>{demande.capaciteScolaireColoreeActuelle}</Text>
+          </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text>Nouvelle capacité</Text>
             <Text fontSize={14}>{demande.capaciteScolaire}</Text>
           </Flex>
-          <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Dont place(s) colorée(s)</Text>
+          <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
+            <Text>- Dont place(s) colorée(s)</Text>
             <Text>{demande.capaciteScolaireColoree}</Text>
           </Flex>
           <Divider my={3} borderColor={"grey.900"} />
@@ -247,12 +251,16 @@ export const SyntheseSection = ({
             <Text>Capacité actuelle</Text>
             <Text fontSize={14}>{demande.capaciteApprentissageActuelle}</Text>
           </Flex>
+          <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
+            <Text>- Dont place(s) colorée(s)</Text>
+            <Text>{demande.capaciteApprentissageColoreeActuelle}</Text>
+          </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text>Nouvelle capacité</Text>
             <Text fontSize={14}>{demande.capaciteApprentissage}</Text>
           </Flex>
-          <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Dont place(s) colorée(s)</Text>
+          <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
+            <Text>- Dont place(s) colorée(s)</Text>
             <Text>{demande.capaciteApprentissageColoree}</Text>
           </Flex>
           <Divider my={3} borderColor={"grey.900"} />
