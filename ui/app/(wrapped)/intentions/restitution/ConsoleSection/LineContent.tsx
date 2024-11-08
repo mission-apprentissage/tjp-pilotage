@@ -216,19 +216,19 @@ export const LineContent = ({
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
-        colonne={"capaciteScolaireColoree"}
+        colonne={"differenceCapaciteScolaireColoree"}
         isNumeric
         bgColor={getCellColor("capaciteScolaireColoree")}
       >
-        {demande.capaciteScolaireColoree ?? 0}
+        {demande.differenceCapaciteScolaireColoree ?? 0}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
-        colonne={"capaciteApprentissageColoree"}
+        colonne={"differenceCapaciteApprentissageColoree"}
         isNumeric
-        bgColor={getCellColor("capaciteApprentissageColoree")}
+        bgColor={getCellColor("differenceCapaciteApprentissageColoree")}
       >
-        {demande.capaciteApprentissageColoree ?? 0}
+        {demande.differenceCapaciteApprentissageColoree ?? 0}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

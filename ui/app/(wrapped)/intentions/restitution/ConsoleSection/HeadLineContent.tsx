@@ -196,23 +196,23 @@ export const HeadLineContent = ({
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
-        colonne={"capaciteScolaireColoree"}
+        colonne={"differenceCapaciteScolaireColoree"}
         onClick={handleOrder}
         isNumeric
-        bgColor={getCellColor("capaciteScolaireColoree")}
+        bgColor={getCellColor("differenceCapaciteScolaireColoree")}
       >
-        <OrderIcon {...order} column="capaciteScolaireColoree" />
-        {STATS_DEMANDES_COLUMNS.capaciteScolaireColoree}
+        <OrderIcon {...order} column="differenceCapaciteScolaireColoree" />
+        {STATS_DEMANDES_COLUMNS.differenceCapaciteScolaireColoree}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
-        colonne={"capaciteApprentissageColoree"}
+        colonne={"differenceCapaciteApprentissageColoree"}
         onClick={handleOrder}
         isNumeric
-        bgColor={getCellColor("capaciteApprentissageColoree")}
+        bgColor={getCellColor("differenceCapaciteApprentissageColoree")}
       >
-        <OrderIcon {...order} column="capaciteApprentissageColoree" />
-        {STATS_DEMANDES_COLUMNS.capaciteApprentissageColoree}
+        <OrderIcon {...order} column="differenceCapaciteApprentissageColoree" />
+        {STATS_DEMANDES_COLUMNS.differenceCapaciteApprentissageColoree}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}

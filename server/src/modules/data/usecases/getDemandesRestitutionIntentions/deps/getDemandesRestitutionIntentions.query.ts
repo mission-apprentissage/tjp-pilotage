@@ -10,7 +10,9 @@ import { RequestUser } from "../../../../core/model/User";
 import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
 import {
   countDifferenceCapaciteApprentissage,
+  countDifferenceCapaciteApprentissageColoree,
   countDifferenceCapaciteScolaire,
+  countDifferenceCapaciteScolaireColoree,
 } from "../../../../utils/countCapacite";
 import { isDemandeNotDeleted } from "../../../../utils/isDemandeSelectable";
 import { isRestitutionIntentionVisible } from "../../../../utils/isRestitutionIntentionVisible";
@@ -169,6 +171,12 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as(
         "differenceCapaciteApprentissage"
+      ),
+      countDifferenceCapaciteScolaireColoree(eb).as(
+        "differenceCapaciteScolaireColoree"
+      ),
+      countDifferenceCapaciteApprentissageColoree(eb).as(
+        "differenceCapaciteApprentissageColoree"
       ),
       sql<string>`count(*) over()`.as("count"),
       selectTauxInsertion6mois("indicateurRegionSortie").as(
