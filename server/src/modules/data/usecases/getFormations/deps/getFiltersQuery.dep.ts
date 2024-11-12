@@ -205,7 +205,12 @@ export const getFiltersQuery = async ({
     .where("familleMetier.cfdFamille", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCfd(eb), inCodeDiplome(eb), inCodeDispositif(eb)]),
+        eb.and([
+          inCfd(eb),
+          inCodeDiplome(eb),
+          inCodeDispositif(eb),
+          inDomaine(eb),
+        ]),
         cfdFamille
           ? eb("familleMetier.cfdFamille", "in", cfdFamille)
           : sql<boolean>`false`,
@@ -215,7 +220,13 @@ export const getFiltersQuery = async ({
 
   const formationFilters = await base
     .select([
-      sql`CONCAT("formationView"."libelleFormation", ' (', "niveauDiplome"."libelleNiveauDiplome", ')')
+      sql`
+      CONCAT(
+        "formationView"."libelleFormation",
+        ' (',
+        "niveauDiplome"."libelleNiveauDiplome",
+        ')'
+      )
       `.as("label"),
       "formationView.cfd as value",
     ])

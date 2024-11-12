@@ -46,6 +46,8 @@ export const FiltersSection = ({
   searchParams,
   filtersList,
   requetesEnregistrees,
+  requeteEnregistreeActuelle,
+  setRequeteEnregistreeActuelle,
 }: {
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   setSearchParams: (params: {
@@ -64,12 +66,13 @@ export const FiltersSection = ({
   };
   filtersList?: FiltersList;
   requetesEnregistrees?: RequetesEnregistrees;
-}) => {
-  const trackEvent = usePlausible();
-  const [requeteEnregistreeActuelle, setRequeteEnregistreeActuelle] = useState<{
+  requeteEnregistreeActuelle: { nom: string; couleur?: string };
+  setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: {
     nom: string;
     couleur?: string;
-  }>({ nom: "Requêtes favorites" });
+  }) => void;
+}) => {
+  const trackEvent = usePlausible();
 
   const resetFilters = () => {
     trackEvent("etablissements:filtre", { props: { filter_name: "reset" } });

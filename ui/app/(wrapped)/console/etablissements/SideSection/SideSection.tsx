@@ -1,4 +1,11 @@
-import { Button, Checkbox, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  Button,
+  Checkbox,
+  Divider,
+  Flex,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 import { DoubleArrowLeft } from "@/components/icons/DoubleArrowLeft";
 import { DoubleArrowRight } from "@/components/icons/DoubleArrowRight";
@@ -71,6 +78,31 @@ export const SideSection = ({
           >
             Établissement
           </Multiselect>
+          <Divider />
+          <Multiselect
+            size="md"
+            variant="newInput"
+            width="18rem"
+            onChange={(selected) =>
+              handleFilters("codeNiveauDiplome", selected)
+            }
+            options={filtersList?.diplomes}
+            value={searchParams.filters?.codeNiveauDiplome ?? []}
+            menuZIndex={3}
+          >
+            Diplôme
+          </Multiselect>
+          <Multiselect
+            size="md"
+            variant="newInput"
+            width="18rem"
+            onChange={(selected) => handleFilters("codeDispositif", selected)}
+            options={filtersList?.dispositifs}
+            value={searchParams.filters?.codeDispositif ?? []}
+            menuZIndex={3}
+          >
+            Dispositif
+          </Multiselect>
           <Flex>
             <Checkbox
               variant="accessible"
@@ -88,30 +120,17 @@ export const SideSection = ({
               <Text fontSize={"14px"}>2nde et 1ère communes</Text>
             </Checkbox>
           </Flex>
+          <Divider />
           <Multiselect
             size="md"
             variant="newInput"
             width="18rem"
-            onChange={(selected) =>
-              handleFilters("codeNiveauDiplome", selected)
-            }
-            options={filtersList?.diplomes}
-            value={searchParams.filters?.codeNiveauDiplome ?? []}
-            menuZIndex={3}
-            mt={5}
-          >
-            Diplôme
-          </Multiselect>
-          <Multiselect
-            size="md"
-            variant="newInput"
-            width="18rem"
-            onChange={(selected) => handleFilters("codeDispositif", selected)}
-            options={filtersList?.dispositifs}
-            value={searchParams.filters?.codeDispositif ?? []}
+            onChange={(selected) => handleFilters("codeNsf", selected)}
+            options={filtersList?.libellesNsf}
+            value={searchParams.filters?.codeNsf ?? []}
             menuZIndex={3}
           >
-            Dispositif
+            Domaine de formation (NSF)
           </Multiselect>
           <Multiselect
             size="md"
@@ -134,17 +153,6 @@ export const SideSection = ({
             menuZIndex={3}
           >
             Formation
-          </Multiselect>
-          <Multiselect
-            size="md"
-            variant="newInput"
-            width="18rem"
-            onChange={(selected) => handleFilters("codeNsf", selected)}
-            options={filtersList?.libellesNsf}
-            value={searchParams.filters?.codeNsf ?? []}
-            menuZIndex={3}
-          >
-            Domaine de formation (NSF)
           </Multiselect>
           <Multiselect
             size="md"

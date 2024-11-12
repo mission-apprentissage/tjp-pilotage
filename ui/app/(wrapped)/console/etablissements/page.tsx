@@ -149,6 +149,11 @@ export default function Etablissements() {
   const [searchFormationEtablissement, setSearchFormationEtablissement] =
     useState<string>(search);
 
+  const [requeteEnregistreeActuelle, setRequeteEnregistreeActuelle] = useState<{
+    nom: string;
+    couleur?: string;
+  }>({ nom: "Requêtes favorites" });
+
   const getEtablissementsQueryParameters = (
     qLimit?: number,
     qOffset?: number
@@ -360,6 +365,7 @@ export default function Etablissements() {
       page: 0,
       filters: { ...filters, ...newFilters },
     });
+    setRequeteEnregistreeActuelle({ nom: "Requêtes favorites" });
   };
 
   useEffect(() => {
@@ -385,6 +391,8 @@ export default function Etablissements() {
         handleFilters={handleFilters}
         filtersList={data?.filters}
         requetesEnregistrees={requetesEnregistrees}
+        requeteEnregistreeActuelle={requeteEnregistreeActuelle}
+        setRequeteEnregistreeActuelle={setRequeteEnregistreeActuelle}
       />
       <Flex direction={"row"} flex={1} position="relative" minH="0">
         <SideSection

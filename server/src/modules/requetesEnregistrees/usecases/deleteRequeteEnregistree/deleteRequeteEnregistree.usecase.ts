@@ -1,6 +1,5 @@
 import Boom from "@hapi/boom";
 
-import { logger } from "../../../../logger";
 import { RequestUser } from "../../../core/model/User";
 import { findOneRequeteEnregistreeQuery } from "../../repositories/findOneRequeteEnregistree.query";
 import { deleteRequeteEnregistreeQuery } from "./deps/deleteRequeteEnregistree.dep";
@@ -26,10 +25,6 @@ export const deleteRequeteEnregistreeFactory =
     const isAllowed = requeteEnregistree.userId === user.id;
     if (!isAllowed) throw Boom.forbidden();
     await deps.deleteRequeteEnregistreeQuery(id);
-    logger.info("Requête enregistrée supprimée", {
-      id,
-      requeteEnregistree: requeteEnregistree,
-    });
   };
 
 export const deleteRequeteEnregistreeUsecase =
