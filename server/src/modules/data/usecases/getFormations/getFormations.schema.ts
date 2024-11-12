@@ -1,6 +1,8 @@
 import { PositionQuadrantZodType } from "shared/enum/positionQuadrantEnum";
 import { z } from "zod";
 
+import { MAX_LIMIT } from "../../../../../../shared/utils/maxLimit";
+
 const OptionSchema = z.object({
   label: z.coerce.string(),
   value: z.coerce.string(),
@@ -64,7 +66,7 @@ export const getFormationSchema = {
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationLineSchema.keyof().optional(),
     offset: z.coerce.number().optional(),
-    limit: z.coerce.number().default(10000000).optional(),
+    limit: z.coerce.number().default(MAX_LIMIT).optional(),
   }),
   response: {
     200: z.object({
