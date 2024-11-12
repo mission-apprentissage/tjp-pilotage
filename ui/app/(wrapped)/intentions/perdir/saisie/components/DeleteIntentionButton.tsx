@@ -63,14 +63,14 @@ export const DeleteIntentionButton = chakra(
 
     return (
       <>
-        <Tooltip label="Supprimer la intention" closeOnScroll={true}>
+        <Tooltip label="Supprimer la demande" closeOnScroll={true}>
           <IconButton
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               onOpen();
             }}
-            aria-label="Supprimer la intention"
+            aria-label="Supprimer la demande"
             color={"bluefrance.113"}
             bgColor={"transparent"}
             icon={

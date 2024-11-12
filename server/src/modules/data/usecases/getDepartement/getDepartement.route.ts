@@ -4,7 +4,7 @@ import { Server } from "../../../../server";
 import { getDepartementStats } from "./getDepartement.query";
 import { getDepartementSchema } from "./getDepartement.schema";
 
-export const getDepartementRoute = ({ server }: { server: Server }) => {
+export const getDepartementRoute = (server: Server) => {
   return createRoute("/departement/:codeDepartement", {
     method: "GET",
     schema: getDepartementSchema,

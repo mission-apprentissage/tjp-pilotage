@@ -4,7 +4,7 @@ import { Server } from "../../../../server";
 import { searchNsfFormationSchema } from "./searchNsfFormation.schema";
 import { searchDiplome } from "./searchNsfFormation.usecase";
 
-export const searchNsfDiplomeRoute = ({ server }: { server: Server }) => {
+export const searchNsfDiplomeRoute = (server: Server) => {
   return createRoute("/nsf-diplome/search/:search", {
     method: "GET",
     schema: searchNsfFormationSchema,
