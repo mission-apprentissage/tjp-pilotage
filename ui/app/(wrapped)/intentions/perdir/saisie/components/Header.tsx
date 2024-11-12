@@ -13,21 +13,20 @@ import { usePlausible } from "next-plausible";
 import { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
+import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
-import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { Multiselect } from "@/components/Multiselect";
+import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatExportFilename } from "@/utils/formatExportFilename";
 
-import { Multiselect } from "../../../../../../components/Multiselect";
-import { SearchInput } from "../../../../../../components/SearchInput";
-import { formatExportFilename } from "../../../../../../utils/formatExportFilename";
 import { INTENTIONS_COLUMNS } from "../INTENTIONS_COLUMNS";
 import { Campagnes, Filters } from "../types";
 import { isSaisieDisabled } from "../utils/canEditIntention";
 
-const EXPORT_LIMIT = 1_000_000;
-
 export const Header = ({
-  searchParams,
+  activeFilters,
+  filterTracker,
   setSearchParams,
   getIntentionsQueryParameters,
   searchIntention,
@@ -37,18 +36,12 @@ export const Header = ({
   handleFilters,
   diplomes,
   academies,
-  filterTracker,
-  activeFilters,
 }: {
   activeFilters: Filters;
-  searchParams: {
-    search?: string;
-    campagne?: string;
-  };
   filterTracker: (filterName: keyof Filters) => () => void;
-  setSearchParams: (params: { search?: string; campagne?: string }) => void;
+  setSearchParams: (params: { filters: Partial<Filters> }) => void;
   getIntentionsQueryParameters: (
-    qLimit: number,
+    qLimit?: number,
     qOffset?: number
   ) => Partial<Filters>;
   searchIntention?: string;
@@ -63,11 +56,66 @@ export const Header = ({
   academies: OptionSchema[];
 }) => {
   const trackEvent = usePlausible();
-  const anneeCampagne = searchParams.campagne ?? campagne?.annee;
+  const anneeCampagne = activeFilters.campagne ?? campagne?.annee;
 
   const onClickSearchIntention = () => {
-    setSearchParams({ search: searchIntention });
+    setSearchParams({ filters: { search: searchIntention } });
   };
+
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("saisie_intentions_perdir:export");
+    const data = await client.ref("[GET]/intentions").query({
+      query: isFiltered ? getIntentionsQueryParameters() : {},
+    });
+    downloadCsv(
+      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : {}),
+      [
+        ...data.intentions.map((intention) => ({
+          ...intention,
+          ...intention.avis.reduce(
+            (acc, current, index) => {
+              acc[`avis${index}`] = [
+                current.fonction!.toUpperCase(),
+                `Avis ${current.statut}`,
+                current.commentaire,
+              ].join(" - ");
+              return acc;
+            },
+            {} as Record<string, string>
+          ),
+        })),
+      ],
+      INTENTIONS_COLUMNS
+    );
+  };
+
+  const onExportExcel = async (isFiltered?: boolean) => {
+    trackEvent("saisie_intentions_perdir:export-excel");
+    const data = await client.ref("[GET]/intentions").query({
+      query: isFiltered ? getIntentionsQueryParameters() : {},
+    });
+    downloadExcel(
+      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : {}),
+      [
+        ...data.intentions.map((intention) => ({
+          ...intention,
+          ...intention.avis.reduce(
+            (acc, current, index) => {
+              acc[`avis${index}`] = [
+                current.fonction!.toUpperCase(),
+                `Avis ${current.statut}`,
+                current.commentaire,
+              ].join(" - ");
+              return acc;
+            },
+            {} as Record<string, string>
+          ),
+        })),
+      ],
+      INTENTIONS_COLUMNS
+    );
+  };
+
   return (
     <Flex gap={2} mb={2}>
       <Flex direction={"column"} gap={1}>
@@ -100,8 +148,7 @@ export const Header = ({
                 key={campagne.annee}
                 onClick={() => {
                   setSearchParams({
-                    ...searchParams,
-                    campagne: campagne.annee,
+                    filters: { ...activeFilters, campagne: campagne.annee },
                   });
                 }}
               >
@@ -170,65 +217,9 @@ export const Header = ({
               Diplôme: Tous ({diplomes.length ?? 0})
             </Multiselect>
           </Box>
-          <ExportMenuButton
-            onExportCsv={async () => {
-              trackEvent("saisie_intentions_perdir:export");
-              const data = await client.ref("[GET]/intentions").query({
-                query: getIntentionsQueryParameters(EXPORT_LIMIT),
-              });
-              downloadCsv(
-                formatExportFilename(
-                  "recueil_demandes",
-                  activeFilters.codeAcademie
-                ),
-                [
-                  ...data.intentions.map((intention) => ({
-                    ...intention,
-                    ...intention.avis.reduce(
-                      (acc, current, index) => {
-                        acc[`avis${index}`] = [
-                          current.fonction!.toUpperCase(),
-                          `Avis ${current.statut}`,
-                          current.commentaire,
-                        ].join(" - ");
-                        return acc;
-                      },
-                      {} as Record<string, string>
-                    ),
-                  })),
-                ],
-                INTENTIONS_COLUMNS
-              );
-            }}
-            onExportExcel={async () => {
-              trackEvent("saisie_intentions_perdir:export-excel");
-              const data = await client.ref("[GET]/intentions").query({
-                query: getIntentionsQueryParameters(EXPORT_LIMIT),
-              });
-              downloadExcel(
-                formatExportFilename(
-                  "recueil_demandes",
-                  activeFilters.codeAcademie
-                ),
-                [
-                  ...data.intentions.map((intention) => ({
-                    ...intention,
-                    ...intention.avis.reduce(
-                      (acc, current, index) => {
-                        acc[`avis${index}`] = [
-                          current.fonction!.toUpperCase(),
-                          `Avis ${current.statut}`,
-                          current.commentaire,
-                        ].join(" - ");
-                        return acc;
-                      },
-                      {} as Record<string, string>
-                    ),
-                  })),
-                ],
-                INTENTIONS_COLUMNS
-              );
-            }}
+          <AdvancedExportMenuButton
+            onExportCsv={onExportCsv}
+            onExportExcel={onExportExcel}
             variant="externalLink"
           />
         </Flex>

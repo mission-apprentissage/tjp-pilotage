@@ -5,11 +5,7 @@ import { hasPermissionHandler } from "../../../core";
 import { getPilotageReformeStatsRegionsSchema } from "./getPilotageReformeStatsRegions.schema";
 import { getPilotageReformeStatsRegions } from "./getPilotageReformeStatsRegions.usecase";
 
-export const getPilotageReformeStatsRegionsRoute = ({
-  server,
-}: {
-  server: Server;
-}) => {
+export const getPilotageReformeStatsRegionsRoute = (server: Server) => {
   return createRoute("/pilotage-reforme/stats/regions", {
     method: "GET",
     schema: getPilotageReformeStatsRegionsSchema,

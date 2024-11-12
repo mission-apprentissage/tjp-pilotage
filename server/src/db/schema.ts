@@ -806,6 +806,16 @@ export interface Region {
   libelleRegion: string;
 }
 
+export interface RequeteEnregistree {
+  id: Generated<string>;
+  userId: string;
+  nom: string;
+  couleur: string;
+  page: string;
+  filtres: Json;
+  createdAt: Generated<Timestamp | null>;
+}
+
 export interface Rome {
   codeRome: string;
   libelleRome: string;
@@ -916,6 +926,7 @@ export interface DB {
   positionFormationRegionaleQuadrant: PositionFormationRegionaleQuadrant;
   rawData: RawData;
   region: Region;
+  requeteEnregistree: RequeteEnregistree;
   rome: Rome;
   suivi: Suivi;
   tauxIJNiveauDiplomeRegion: TauxIJNiveauDiplomeRegion;

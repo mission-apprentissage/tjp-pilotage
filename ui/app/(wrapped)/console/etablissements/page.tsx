@@ -1,31 +1,43 @@
 "use client";
 
-import { Button, Center, chakra, Flex, Spinner } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  chakra,
+  Flex,
+  Spinner,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 
 import { client } from "@/api.client";
+import {
+  CodeDepartementFilterContext,
+  CodeRegionFilterContext,
+  UaisFilterContext,
+} from "@/app/layoutClient";
+import { ConsoleSearchInput } from "@/components/ConsoleSearchInput";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
-import { SearchInput } from "@/components/SearchInput";
 import { TableHeader } from "@/components/TableHeader";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 
+import { CreateRequeteEnregistreeModal } from "../components/CreateRequeteEnregistreeModal";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
   FORMATION_ETABLISSEMENT_COLUMNS,
   FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
 } from "./FORMATION_ETABLISSEMENT_COLUMNS";
 import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
-import { FiltersSection } from "./HeaderSection/FiltersSection";
+import { HeaderSection } from "./HeaderSection/HeaderSection";
+import { SideSection } from "./SideSection/SideSection";
 import { Filters, Order } from "./types";
-
 const PAGE_SIZE = 30;
-const EXPORT_LIMIT = 1_000_000;
 
 type QueryResult = (typeof client.infer)["[GET]/etablissements"];
 
@@ -104,13 +116,13 @@ const ColonneFiltersSection = chakra(
 );
 
 export default function Etablissements() {
+  const { onOpen, onClose, isOpen } = useDisclosure();
   const trackEvent = usePlausible();
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     order?: Partial<Order>;
     page?: string;
@@ -119,7 +131,6 @@ export default function Etablissements() {
   const setSearchParams = (params: {
     filters?: typeof filters;
     search?: typeof search;
-    withAnneeCommune?: typeof withAnneeCommune;
     columns?: typeof columns;
     order?: typeof order;
     page?: typeof page;
@@ -130,7 +141,6 @@ export default function Etablissements() {
   };
 
   const filters = searchParams.filters ?? {};
-  const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
   const columns = searchParams.columns ?? [];
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
@@ -139,8 +149,13 @@ export default function Etablissements() {
   const [searchFormationEtablissement, setSearchFormationEtablissement] =
     useState<string>(search);
 
+  const [requeteEnregistreeActuelle, setRequeteEnregistreeActuelle] = useState<{
+    nom: string;
+    couleur?: string;
+  }>({ nom: "Requêtes favorites" });
+
   const getEtablissementsQueryParameters = (
-    qLimit: number,
+    qLimit?: number,
     qOffset?: number
   ) => ({
     ...order,
@@ -148,10 +163,9 @@ export default function Etablissements() {
     search,
     offset: qOffset,
     limit: qLimit,
-    withAnneeCommune: withAnneeCommune?.toString() ?? "true",
   });
 
-  const { data, isFetching } = client.ref("[GET]/etablissements").useQuery(
+  const { data, isLoading } = client.ref("[GET]/etablissements").useQuery(
     {
       query: getEtablissementsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
@@ -159,6 +173,10 @@ export default function Etablissements() {
       staleTime: 10000000,
     }
   );
+
+  const { data: requetesEnregistrees } = client.ref("[GET]/requetes").useQuery({
+    query: { page: "formationEtablissement" },
+  });
 
   const getDataForExport = (data: QueryResult) => {
     const region = data.filters.regions.find(
@@ -192,31 +210,37 @@ export default function Etablissements() {
     };
   };
 
-  const onExportCsv = async () => {
-    trackEvent("formations:export");
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("etablissements:export");
     const data = await client.ref("[GET]/etablissements").query({
-      query: getEtablissementsQueryParameters(EXPORT_LIMIT),
+      query: isFiltered ? getEtablissementsQueryParameters() : {},
     });
 
     const { columns, etablissements } = getDataForExport(data);
 
     downloadCsv(
-      formatExportFilename("etablissement_export", filters?.codeRegion),
+      formatExportFilename(
+        "etablissement_export",
+        isFiltered ? filters : undefined
+      ),
       etablissements,
       columns
     );
   };
 
-  const onExportExcel = async () => {
-    const data = await client.ref("[GET]/etablissements").query({
-      query: getEtablissementsQueryParameters(EXPORT_LIMIT),
-    });
+  const onExportExcel = async (isFiltered?: boolean) => {
     trackEvent("etablissements:export-excel");
+    const data = await client.ref("[GET]/etablissements").query({
+      query: isFiltered ? getEtablissementsQueryParameters() : {},
+    });
 
     const { columns, etablissements } = getDataForExport(data);
 
     downloadExcel(
-      formatExportFilename("etablissement_export", filters?.codeRegion),
+      formatExportFilename(
+        "etablissement_export",
+        isFiltered ? filters : undefined
+      ),
       etablissements,
       columns
     );
@@ -239,7 +263,7 @@ export default function Etablissements() {
     setColonneFilters(value);
   };
 
-  const onClickSearch = () => {
+  const onSearch = () => {
     setSearchParams({
       filters: filters,
       order: order,
@@ -247,57 +271,212 @@ export default function Etablissements() {
     });
   };
 
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(
+    CodeRegionFilterContext
+  );
+
+  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(
+    CodeDepartementFilterContext
+  );
+
+  const { uaisFilter } = useContext(UaisFilterContext);
+
+  const filterTracker = (filterName: keyof Filters) => () => {
+    trackEvent("etablissements:filtre", { props: { filter_name: filterName } });
+  };
+
+  const handleFiltersContext = (
+    type: keyof Filters,
+    value: Filters[keyof Filters]
+  ) => {
+    if (type === "codeRegion" && value != null)
+      setCodeRegionFilter((value as string[])[0] ?? "");
+
+    if (type === "codeDepartement" && value != null)
+      setCodeDepartementFilter((value as string[])[0] ?? "");
+  };
+
+  const handleFilters = (
+    type: keyof Filters,
+    value: Filters[keyof Filters]
+  ) => {
+    handleFiltersContext(type, value);
+
+    let newFilters: Partial<Filters> = {
+      [type]: value,
+    };
+
+    // Valeurs par défaut pour les codes
+    switch (type) {
+      case "codeRegion":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeAcademie: undefined,
+            codeDepartement: undefined,
+            commune: undefined,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "codeAcademie":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeDepartement: undefined,
+            commune: undefined,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "codeDepartement":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            commune: undefined,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "commune":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            secteur: [],
+            uai: [],
+          };
+        }
+        break;
+      case "secteur":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            uai: [],
+          };
+        }
+        break;
+    }
+
+    filterTracker(type)();
+    setSearchParams({
+      page: 0,
+      filters: { ...filters, ...newFilters },
+    });
+    setRequeteEnregistreeActuelle({ nom: "Requêtes favorites" });
+  };
+
+  useEffect(() => {
+    if (codeRegionFilter && !filters.codeRegion?.length) {
+      filters.codeRegion = [codeRegionFilter];
+      setSearchParams({ filters: filters });
+    }
+    if (codeDepartementFilter && !filters.codeDepartement?.length) {
+      filters.codeDepartement = [codeDepartementFilter];
+      setSearchParams({ filters: filters });
+    }
+    if (uaisFilter && uaisFilter.length && !filters.uai?.length) {
+      filters.uai = uaisFilter;
+      setSearchParams({ filters: filters });
+    }
+  }, []);
+
   return (
     <>
-      <FiltersSection
+      <HeaderSection
         setSearchParams={setSearchParams}
         searchParams={searchParams}
-        filtersLists={data?.filters}
+        handleFilters={handleFilters}
+        filtersList={data?.filters}
+        requetesEnregistrees={requetesEnregistrees}
+        requeteEnregistreeActuelle={requeteEnregistreeActuelle}
+        setRequeteEnregistreeActuelle={setRequeteEnregistreeActuelle}
       />
-      <Flex direction="column" flex={1} position="relative" minH="0">
-        {isFetching && (
-          <Center
-            height="100%"
-            width="100%"
-            position="absolute"
-            bg="rgb(255,255,255,0.8)"
-            zIndex="1"
-          >
-            <Spinner />
-          </Center>
-        )}
-        <TableHeader
-          SearchInput={
-            <SearchInput
-              placeholder="Rechercher un établissement, un domaine, une commune..."
-              onChange={setSearchFormationEtablissement}
-              value={searchFormationEtablissement}
-              onClick={onClickSearch}
-            />
-          }
-          ColonneFilter={
-            <ColonneFiltersSection
-              colonneFilters={colonneFilters}
-              handleColonneFilters={handleColonneFilters}
-              forcedColonnes={["libelleEtablissement", "libelleFormation"]}
-              trackEvent={trackEvent}
-            />
-          }
-          onExportCsv={() => onExportCsv()}
-          onExportExcel={() => onExportExcel()}
-          page={page}
-          pageSize={PAGE_SIZE}
-          count={data?.count}
-          onPageChange={(newPage) => setSearchParams({ page: newPage })}
+      <Flex direction={"row"} flex={1} position="relative" minH="0">
+        <SideSection
+          searchParams={searchParams}
+          filtersList={data?.filters}
+          handleFilters={handleFilters}
         />
-        <ConsoleSection
-          data={data}
-          filters={filters}
-          order={order}
-          setSearchParams={setSearchParams}
-          colonneFilters={colonneFilters}
-        />
+        <Flex direction="column" flex={1} position="relative" minW={0}>
+          <TableHeader
+            p={4}
+            SaveFiltersButton={
+              <Flex py="2">
+                <Button
+                  variant={"externalLink"}
+                  leftIcon={<Icon icon="ri:save-3-line" />}
+                  onClick={() => {
+                    onOpen();
+                  }}
+                >
+                  Enregistrer la requête
+                </Button>
+              </Flex>
+            }
+            SearchInput={
+              <ConsoleSearchInput
+                placeholder="Rechercher dans les résultats"
+                onChange={(newValue) => {
+                  const oldValue = searchFormationEtablissement;
+                  setSearchFormationEtablissement(newValue);
+                  if (
+                    newValue.length > 2 ||
+                    oldValue.length > newValue.length
+                  ) {
+                    onSearch();
+                  }
+                }}
+                value={searchFormationEtablissement}
+                onClick={onSearch}
+              />
+            }
+            ColonneFilter={
+              <ColonneFiltersSection
+                colonneFilters={colonneFilters}
+                handleColonneFilters={handleColonneFilters}
+                forcedColonnes={["libelleEtablissement", "libelleFormation"]}
+                trackEvent={trackEvent}
+              />
+            }
+            onExportCsv={onExportCsv}
+            onExportExcel={onExportExcel}
+            page={page}
+            pageSize={PAGE_SIZE}
+            count={data?.count}
+            onPageChange={(newPage) => setSearchParams({ page: newPage })}
+          />
+          {isLoading && (
+            <Center
+              height="100%"
+              width="100%"
+              position="absolute"
+              bg="rgb(255,255,255,0.8)"
+              zIndex="1"
+            >
+              <Spinner />
+            </Center>
+          )}
+          <ConsoleSection
+            data={data}
+            filters={filters}
+            order={order}
+            setSearchParams={setSearchParams}
+            colonneFilters={colonneFilters}
+          />
+        </Flex>
       </Flex>
+      {isOpen && (
+        <CreateRequeteEnregistreeModal
+          isOpen={isOpen}
+          onClose={onClose}
+          searchParams={searchParams}
+          filtersList={data?.filters}
+          page="formationEtablissement"
+        />
+      )}
     </>
   );
 }

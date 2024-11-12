@@ -6,7 +6,7 @@ import { hasPermissionHandler } from "../../../core";
 import { submitIntentionSchema } from "./submitIntention.schema";
 import { submitIntentionUsecase } from "./submitIntention.usecase";
 
-export const submitIntentionRoute = ({ server }: { server: Server }) => {
+export const submitIntentionRoute = (server: Server) => {
   return createRoute("/intention/submit", {
     method: "POST",
     schema: submitIntentionSchema,

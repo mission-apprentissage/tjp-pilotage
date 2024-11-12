@@ -38,7 +38,8 @@ export const [submitChangementStatutUsecase, submitChangementStatutFactory] =
         const intentionData = await findOneIntention(
           changementStatut.intentionNumero
         );
-        if (!intentionData) throw Boom.notFound("Intention not found");
+        if (!intentionData)
+          throw Boom.notFound("Intention non trouvée en base");
 
         const isAllowed = guardScope(scope?.default, {
           region: () => user.codeRegion === intentionData.codeRegion,

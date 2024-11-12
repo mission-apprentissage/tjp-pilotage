@@ -4,11 +4,7 @@ import { Server } from "../../../../server";
 import { getMetabaseDashboardUrlSchema } from "./generateMetabaseDashboardUrl.schema";
 import { getMetabaseDashboardUrl } from "./generateMetabaseDashboardUrl.usecase";
 
-export const generateMetabaseDashboardUrlRoute = ({
-  server,
-}: {
-  server: Server;
-}) => {
+export const generateMetabaseDashboardUrlRoute = (server: Server) => {
   return createRoute("/generate-metabase-dashboard-url", {
     method: "POST",
     schema: getMetabaseDashboardUrlSchema,

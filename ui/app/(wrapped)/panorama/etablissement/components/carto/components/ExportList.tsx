@@ -10,8 +10,6 @@ import { formatArray } from "@/utils/formatUtils";
 import { useEtablissementContext } from "../../../context/etablissementContext";
 import { useEtablissementMapContext } from "../context/etablissementMapContext";
 
-const EXPORT_LIMIT = 1_000_000;
-
 const formatLibelleFormation = (etablissement: {
   libellesDispositifs: string[];
   libelleFormation: string;
@@ -43,71 +41,75 @@ export const ExportList = () => {
           maxLng: "" + bbox.maxLng,
         },
         cfd: cfdFilter ? [cfdFilter] : undefined,
-        limit: EXPORT_LIMIT,
       },
     });
 
   const etablissementsProches = etablissementsList?.etablissementsProches;
+
+  const onExportCsv = async () => {
+    if (!etablissementsProches) return;
+    trackEvent("panorama-etablissement-liste-carte:export");
+    downloadCsv(
+      formatExportFilename("etablissements_proches"),
+      etablissementsProches.map((etablissement) => ({
+        ...etablissement,
+        commune: formatCommuneLibelleWithCodeDepartement({
+          commune: etablissement.commune,
+          codeDepartement: etablissement.codeDepartement,
+        }),
+        libelleFormation: formatLibelleFormation(etablissement),
+        voie: formatArray(etablissement.voies),
+      })),
+      {
+        libelleFormation: "Formation",
+        voie: "Voie",
+        uai: "UAI",
+        libelleEtablissement: "Libellé établissement",
+        commune: "Commune",
+        distance: "Distance (en km)",
+        effectif: "Effectif",
+        tauxInsertion: "Taux d'insertion à 6 mois",
+        tauxPoursuite: "Taux de poursuite d'études",
+        libelleAcademie: "Académie",
+        libelleRegion: "Région",
+      }
+    );
+  };
+
+  const onExportExcel = async () => {
+    if (!etablissementsProches) return;
+    trackEvent("panorama-etablissement-liste-carte:export-excel");
+    downloadExcel(
+      formatExportFilename("etablissements_proches"),
+      etablissementsProches.map((etablissement) => ({
+        ...etablissement,
+        commune: formatCommuneLibelleWithCodeDepartement({
+          commune: etablissement.commune,
+          codeDepartement: etablissement.codeDepartement,
+        }),
+        libelleFormation: formatLibelleFormation(etablissement),
+        voie: formatArray(etablissement.voies),
+      })),
+      {
+        libelleFormation: "Formation",
+        voie: "Voie",
+        uai: "UAI",
+        libelleEtablissement: "Libellé établissement",
+        commune: "Commune",
+        distance: "Distance (en km)",
+        effectif: "Effectif",
+        tauxInsertion: "Taux d'insertion à 6 mois",
+        tauxPoursuite: "Taux de poursuite d'études",
+        libelleAcademie: "Académie",
+        libelleRegion: "Région",
+      }
+    );
+  };
+
   return (
     <ExportMenuButton
-      onExportCsv={async () => {
-        if (!etablissementsProches) return;
-        trackEvent("panorama-etablissement-liste-carte:export");
-        downloadCsv(
-          formatExportFilename("etablissements_proches"),
-          etablissementsProches.map((etablissement) => ({
-            ...etablissement,
-            commune: formatCommuneLibelleWithCodeDepartement({
-              commune: etablissement.commune,
-              codeDepartement: etablissement.codeDepartement,
-            }),
-            libelleFormation: formatLibelleFormation(etablissement),
-            voie: formatArray(etablissement.voies),
-          })),
-          {
-            libelleFormation: "Formation",
-            voie: "Voie",
-            uai: "UAI",
-            libelleEtablissement: "Libellé établissement",
-            commune: "Commune",
-            distance: "Distance (en km)",
-            effectif: "Effectif",
-            tauxInsertion: "Taux d'insertion à 6 mois",
-            tauxPoursuite: "Taux de poursuite d'études",
-            libelleAcademie: "Académie",
-            libelleRegion: "Région",
-          }
-        );
-      }}
-      onExportExcel={async () => {
-        if (!etablissementsProches) return;
-        trackEvent("panorama-etablissement-liste-carte:export-excel");
-        downloadExcel(
-          formatExportFilename("etablissements_proches"),
-          etablissementsProches.map((etablissement) => ({
-            ...etablissement,
-            commune: formatCommuneLibelleWithCodeDepartement({
-              commune: etablissement.commune,
-              codeDepartement: etablissement.codeDepartement,
-            }),
-            libelleFormation: formatLibelleFormation(etablissement),
-            voie: formatArray(etablissement.voies),
-          })),
-          {
-            libelleFormation: "Formation",
-            voie: "Voie",
-            uai: "UAI",
-            libelleEtablissement: "Libellé établissement",
-            commune: "Commune",
-            distance: "Distance (en km)",
-            effectif: "Effectif",
-            tauxInsertion: "Taux d'insertion à 6 mois",
-            tauxPoursuite: "Taux de poursuite d'études",
-            libelleAcademie: "Académie",
-            libelleRegion: "Région",
-          }
-        );
-      }}
+      onExportCsv={onExportCsv}
+      onExportExcel={onExportExcel}
       variant="solid"
       isQueryLoading={isLoading}
     />
