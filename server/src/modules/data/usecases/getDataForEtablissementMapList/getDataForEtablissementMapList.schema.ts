@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { MAX_LIMIT } from "../../../../../../shared/utils/maxLimit";
+
 export const EtablissementSchema = z.object({
   libelleFormation: z.string(),
   uai: z.string(),
@@ -31,7 +33,7 @@ export const getDataForEtablissementMapListSchema = {
       minLng: z.string(),
       maxLng: z.string(),
     }),
-    limit: z.coerce.number().optional(),
+    limit: z.coerce.number().default(MAX_LIMIT).optional(),
   }),
   response: {
     200: z.object({

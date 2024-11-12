@@ -2,6 +2,8 @@ import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { OptionSchema } from "shared/schema/optionSchema";
 import { z } from "zod";
 
+import { MAX_LIMIT } from "../../../../../../shared/utils/maxLimit";
+
 const CorrectionItem = z.object({
   intentionNumero: z.string().optional(),
   // Établissement
@@ -74,7 +76,7 @@ export const FiltersSchema = z.object({
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: CorrectionItem.keyof().optional(),
   offset: z.coerce.number().optional(),
-  limit: z.coerce.number().optional(),
+  limit: z.coerce.number().default(MAX_LIMIT).optional(),
   search: z.string().optional(),
 });
 
