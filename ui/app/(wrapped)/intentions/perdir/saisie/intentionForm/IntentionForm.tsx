@@ -63,11 +63,14 @@ export const IntentionForm = ({
   const { push } = useRouter();
   const pathname = usePathname();
   const { handleFiles } = useIntentionFilesContext();
+
+  const { setCampagne } = useContext(CampagneContext);
+  const campagneValue = useMemo(() => ({ campagne, setCampagne }), [campagne]);
+
   const form = useForm<IntentionForms>({
     defaultValues,
     mode: "onTouched",
     reValidateMode: "onChange",
-    disabled: campagne?.statut !== CampagneStatutEnum["en cours"],
   });
 
   const { getValues, handleSubmit } = form;
@@ -130,7 +133,8 @@ export const IntentionForm = ({
 
   const isActionsDisabled = isSuccess || isSubmitting || isDisabledForPerdir;
 
-  const isFormDisabled = disabled || form.formState.disabled || isDisabledForPerdir;
+  const isFormDisabled =
+    disabled || campagneValue.campagne?.statut !== CampagneStatutEnum["en cours"] || isDisabledForPerdir;
 
   const isCFDUaiSectionValid = ({ cfd, codeDispositif, libelleFCIL, uai }: Partial<IntentionForms>): boolean => {
     if (isFCIL) return !!(cfd && codeDispositif && libelleFCIL && uai);
@@ -158,10 +162,6 @@ export const IntentionForm = ({
   };
 
   const statutComponentRef = useRef<HTMLDivElement>(null);
-
-  const { setCampagne } = useContext(CampagneContext);
-
-  const campagneValue = useMemo(() => ({ campagne, setCampagne }), [campagne]);
 
   const typeDemandeRef = useRef<HTMLDivElement>(null);
   const motifsEtPrecisionsRef = useRef<HTMLDivElement>(null);
