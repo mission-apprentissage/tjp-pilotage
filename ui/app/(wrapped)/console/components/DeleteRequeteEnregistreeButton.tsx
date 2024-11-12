@@ -42,7 +42,7 @@ export const DeleteRequeteEnregistreeButton = ({
         toast({
           variant: "left-accent",
           status: "success",
-          title: "La requête favori a bien été supprimée",
+          title: "La requête favorite a bien été supprimée",
         });
         // Wait until view is updated before invalidating queries
         setTimeout(() => {

@@ -118,7 +118,7 @@ export const CreateRequeteEnregistreeModal = ({
       toast({
         variant: "left-accent",
         status: "success",
-        title: "La requête favori a bien été enregistrée",
+        title: "La requête favorite a bien été enregistrée",
       });
       queryClient.invalidateQueries(["[GET]/requetes"]);
       onClose();

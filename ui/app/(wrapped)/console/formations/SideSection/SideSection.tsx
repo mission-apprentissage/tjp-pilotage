@@ -1,4 +1,11 @@
-import { Button, Checkbox, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  Button,
+  Checkbox,
+  Divider,
+  Flex,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 import { DoubleArrowLeft } from "@/components/icons/DoubleArrowLeft";
 import { DoubleArrowRight } from "@/components/icons/DoubleArrowRight";
@@ -90,6 +97,18 @@ export const SideSection = ({
               <Text fontSize={"14px"}>2nde et 1ère communes</Text>
             </Checkbox>
           </Flex>
+          <Divider />
+          <Multiselect
+            size="md"
+            variant="newInput"
+            width="18rem"
+            onChange={(selected) => handleFilters("codeNsf", selected)}
+            options={filtersList?.libellesNsf}
+            value={searchParams.filters?.codeNsf ?? []}
+            menuZIndex={3}
+          >
+            Domaine de formation (NSF)
+          </Multiselect>
           <Multiselect
             size="md"
             variant="newInput"
@@ -98,8 +117,6 @@ export const SideSection = ({
             options={filtersList?.familles}
             value={searchParams.filters?.cfdFamille ?? []}
             menuZIndex={3}
-            mt={5}
-            placement="bottom-start"
           >
             Famille
           </Multiselect>
@@ -113,17 +130,6 @@ export const SideSection = ({
             menuZIndex={3}
           >
             Formation
-          </Multiselect>
-          <Multiselect
-            size="md"
-            variant="newInput"
-            width="18rem"
-            onChange={(selected) => handleFilters("codeNsf", selected)}
-            options={filtersList?.libellesNsf}
-            value={searchParams.filters?.codeNsf ?? []}
-            menuZIndex={3}
-          >
-            Domaine de formation (NSF)
           </Multiselect>
           <Multiselect
             size="md"

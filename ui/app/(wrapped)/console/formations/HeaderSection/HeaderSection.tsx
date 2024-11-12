@@ -12,6 +12,8 @@ export const HeaderSection = ({
   searchParams,
   filtersList,
   requetesEnregistrees,
+  requeteEnregistreeActuelle,
+  setRequeteEnregistreeActuelle,
 }: {
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   setSearchParams: (params: {
@@ -30,6 +32,11 @@ export const HeaderSection = ({
   };
   filtersList?: FiltersList;
   requetesEnregistrees?: RequetesEnregistrees;
+  requeteEnregistreeActuelle: { nom: string; couleur?: string };
+  setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: {
+    nom: string;
+    couleur?: string;
+  }) => void;
 }) => {
   return (
     <Flex
@@ -55,6 +62,8 @@ export const HeaderSection = ({
         searchParams={searchParams}
         filtersList={filtersList}
         requetesEnregistrees={requetesEnregistrees}
+        requeteEnregistreeActuelle={requeteEnregistreeActuelle}
+        setRequeteEnregistreeActuelle={setRequeteEnregistreeActuelle}
       />
     </Flex>
   );

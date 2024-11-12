@@ -46,6 +46,8 @@ export const FiltersSection = ({
   searchParams,
   filtersList,
   requetesEnregistrees,
+  requeteEnregistreeActuelle,
+  setRequeteEnregistreeActuelle,
 }: {
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   setSearchParams: (params: {
@@ -64,12 +66,12 @@ export const FiltersSection = ({
   };
   filtersList?: FiltersList;
   requetesEnregistrees?: RequetesEnregistrees;
-}) => {
-  const [requeteEnregistreeActuelle, setRequeteEnregistreeActuelle] = useState<{
+  requeteEnregistreeActuelle: { nom: string; couleur?: string };
+  setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: {
     nom: string;
     couleur?: string;
-  }>({ nom: "Requêtes favorites" });
-
+  }) => void;
+}) => {
   const resetFilters = () => {
     setSearchParams({
       filters: {

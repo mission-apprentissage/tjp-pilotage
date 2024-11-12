@@ -124,6 +124,7 @@ export const ConsoleSection = ({
                 <FormationLineContent
                   isSticky={isSticky}
                   line={line}
+                  filters={filters}
                   expended={
                     historiqueId?.cfd === line.cfd &&
                     historiqueId.codeDispositif === line.codeDispositif
@@ -153,6 +154,7 @@ export const ConsoleSection = ({
                           line={historiqueLine}
                           canShowQuadrantPosition={canShowQuadrantPosition}
                           colonneFilters={colonneFilters}
+                          filters={filters}
                           getCellBgColor={getCellBgColor}
                         />
                       </Tr>
