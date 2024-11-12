@@ -21,6 +21,7 @@ import { FilterTags } from "@/app/(wrapped)/console/components/FilterTags";
 import { RequetesEnregistrees } from "@/app/(wrapped)/console/formations/types";
 import { Multiselect } from "@/components/Multiselect";
 
+import { feature } from "../../../../../utils/feature";
 import { DeleteRequeteEnregistreeButton } from "../../components/DeleteRequeteEnregistreeButton";
 import { FORMATION_COLUMNS } from "../FORMATION_COLUMNS";
 import { Filters, FiltersList, Order } from "../types";
@@ -164,30 +165,34 @@ export const FiltersSection = ({
                   <Divider />
                 </>
               )}
-              <Text p={2} color="grey.425">
-                Requêtes suggérées
-              </Text>
-              {REQUETES_ENREGISTREES.map((requeteEnregistree) => (
-                <MenuItem
-                  p={2}
-                  key={requeteEnregistree.nom}
-                  onClick={() => {
-                    setSearchParams({
-                      page: 0,
-                      filters: requeteEnregistree.filtres,
-                    });
-                    setRequeteEnregistreeActuelle(requeteEnregistree);
-                  }}
-                  gap={2}
-                >
-                  <Tag
-                    size={"sm"}
-                    bgColor={requeteEnregistree.couleur}
-                    borderRadius={"100%"}
-                  />
-                  <Flex direction="row">{requeteEnregistree.nom}</Flex>
-                </MenuItem>
-              ))}
+              {feature.requetesSuggerees && (
+                <>
+                  <Text p={2} color="grey.425">
+                    Requêtes suggérées
+                  </Text>
+                  {REQUETES_ENREGISTREES.map((requeteEnregistree) => (
+                    <MenuItem
+                      p={2}
+                      key={requeteEnregistree.nom}
+                      onClick={() => {
+                        setSearchParams({
+                          page: 0,
+                          filters: requeteEnregistree.filtres,
+                        });
+                        setRequeteEnregistreeActuelle(requeteEnregistree);
+                      }}
+                      gap={2}
+                    >
+                      <Tag
+                        size={"sm"}
+                        bgColor={requeteEnregistree.couleur}
+                        borderRadius={"100%"}
+                      />
+                      <Flex direction="row">{requeteEnregistree.nom}</Flex>
+                    </MenuItem>
+                  ))}
+                </>
+              )}
             </MenuList>
           </Portal>
         </Menu>
