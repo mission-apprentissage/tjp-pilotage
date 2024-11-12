@@ -5,8 +5,14 @@ export const localFilePathManagerFactory = (): FilePathManager => {
     getIntentionFilePath: (id: string, filename: string = "") => {
       return `./public/upload/${id}/${filename}`;
     },
+    getFranceTravailIndicateurTensionDepartementStatsFilePath: () => {
+      return "./public/files/tension_rome_departement.csv";
+    },
+    getFranceTravailIndicateurTensionRegionStatsFilePath: () => {
+      return "./public/files/tension_rome_region.csv";
+    },
     getFranceTravailIndicateurTensionStatsFilePath: () => {
-      return "./public/files/tension_departement_rome.csv";
+      return "./public/files/tension_rome.csv";
     },
   };
 };

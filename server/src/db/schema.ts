@@ -846,9 +846,24 @@ export interface Tension {
   libelleTension: string;
 }
 
+export interface TensionRome {
+  codeRome: string;
+  codeTension: string;
+  annee: string;
+  valeur: number;
+}
+
 export interface TensionRomeDepartement {
   codeRome: string;
   codeDepartement: string;
+  codeTension: string;
+  annee: string;
+  valeur: number;
+}
+
+export interface TensionRomeRegion {
+  codeRome: string;
+  codeRegion: string;
   codeTension: string;
   annee: string;
   valeur: number;
@@ -916,6 +931,8 @@ export interface DB {
   suivi: Suivi;
   tauxIJNiveauDiplomeRegion: TauxIJNiveauDiplomeRegion;
   tension: Tension;
+  tensionRome: TensionRome;
   tensionRomeDepartement: TensionRomeDepartement;
+  tensionRomeRegion: TensionRomeRegion;
   user: User;
 }
