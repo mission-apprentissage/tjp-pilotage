@@ -18,24 +18,25 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
+import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 import { hasRightOverRole } from "shared";
 
 import { client } from "@/api.client";
 import { EditUser } from "@/app/(wrapped)/admin/users/EditUser";
 import { OrderIcon } from "@/components/OrderIcon";
+import { TableHeader } from "@/components/TableHeader";
 import {
   downloadCsv,
   downloadExcel,
   ExportColumns,
 } from "@/utils/downloadExport";
+import { formatExportFilename } from "@/utils/formatExportFilename";
 import { formatDate } from "@/utils/formatUtils";
 import { GuardPermission } from "@/utils/security/GuardPermission";
+import { useAuth } from "@/utils/security/useAuth";
 import { useStateParams } from "@/utils/useFilters";
 
-import { TableHeader } from "../../../../components/TableHeader";
-import { formatExportFilename } from "../../../../utils/formatExportFilename";
-import { useAuth } from "../../../../utils/security/useAuth";
 import { CreateUser } from "./CreateUser";
 
 const Columns = {
@@ -52,6 +53,7 @@ const Columns = {
 >;
 
 export default () => {
+  const trackEvent = usePlausible();
   const { auth } = useAuth();
   const [filters, setFilters] = useStateParams<{
     page: number;
@@ -104,6 +106,30 @@ export default () => {
     );
   };
 
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("etablissements:export");
+    const data = await client.ref("[GET]/users").query({
+      query: isFiltered ? { ...filters, ...order } : {},
+    });
+    downloadCsv(
+      formatExportFilename("users_export", isFiltered ? filters : undefined),
+      data.users,
+      Columns
+    );
+  };
+
+  const onExportExcel = async (isFiltered?: boolean) => {
+    trackEvent("etablissements:export-excel");
+    const data = await client.ref("[GET]/users").query({
+      query: isFiltered ? { ...filters, ...order } : {},
+    });
+    downloadExcel(
+      formatExportFilename("users_export", isFiltered ? filters : undefined),
+      data.users,
+      Columns
+    );
+  };
+
   return (
     <GuardPermission permission="users/lecture">
       {data?.users && (
@@ -145,26 +171,8 @@ export default () => {
               onPageChange={(newPage) =>
                 setFilters({ ...filters, page: newPage })
               }
-              onExportCsv={async () => {
-                const data = await client.ref("[GET]/users").query({
-                  query: { ...filters, ...order, limit: 1000000 },
-                });
-                downloadCsv(
-                  formatExportFilename("users_export"),
-                  data.users,
-                  Columns
-                );
-              }}
-              onExportExcel={async () => {
-                const data = await client.ref("[GET]/users").query({
-                  query: { ...filters, ...order, limit: 1000000 },
-                });
-                downloadExcel(
-                  formatExportFilename("users_export"),
-                  data.users,
-                  Columns
-                );
-              }}
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
             />
           </Flex>
 

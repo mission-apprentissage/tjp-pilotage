@@ -5,7 +5,7 @@ import { hasPermissionHandler } from "../../../core";
 import { submitSuiviSchema } from "./submitSuivi.schema";
 import { submitSuiviUsecase } from "./submitSuivi.usecase";
 
-export const submitSuiviRoute = ({ server }: { server: Server }) => {
+export const submitSuiviRoute = (server: Server) => {
   return createRoute("/demande/suivi", {
     method: "POST",
     schema: submitSuiviSchema,

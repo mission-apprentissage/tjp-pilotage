@@ -13,22 +13,19 @@ import { usePlausible } from "next-plausible";
 import { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
+import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
-import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { Multiselect } from "@/components/Multiselect";
 import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatExportFilename } from "@/utils/formatExportFilename";
 
-import { Multiselect } from "../../../../../components/Multiselect";
-import { formatExportFilename } from "../../../../../utils/formatExportFilename";
 import { DEMANDES_COLUMNS } from "../DEMANDES_COLUMNS";
 import { Campagnes, Filters } from "../types";
 import { isSaisieDisabled } from "../utils/isSaisieDisabled";
 
-const EXPORT_LIMIT = 1_000_000;
-
 export const Header = ({
   activeFilters,
-  searchParams,
   setSearchParams,
   getDemandesQueryParameters,
   searchDemande,
@@ -41,13 +38,9 @@ export const Header = ({
   handleFilters,
 }: {
   activeFilters: Filters;
-  searchParams: {
-    search?: string;
-    campagne?: string;
-  };
-  setSearchParams: (params: { search?: string; campagne?: string }) => void;
+  setSearchParams: (params: { filters: Partial<Filters> }) => void;
   getDemandesQueryParameters: (
-    qLimit: number,
+    qLimit?: number,
     qOffset?: number
   ) => Partial<Filters>;
   searchDemande?: string;
@@ -63,10 +56,40 @@ export const Header = ({
   academies: OptionSchema[];
 }) => {
   const trackEvent = usePlausible();
-  const anneeCampagne = searchParams.campagne ?? campagne?.annee;
+  const anneeCampagne = activeFilters.campagne ?? campagne?.annee;
 
   const onClickSearchDemande = () => {
-    setSearchParams({ search: searchDemande });
+    setSearchParams({ filters: { search: searchDemande } });
+  };
+
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("saisie_demandes:export");
+    const data = await client.ref("[GET]/demandes").query({
+      query: isFiltered ? getDemandesQueryParameters() : {},
+    });
+    downloadCsv(
+      formatExportFilename(
+        "recueil_demandes",
+        isFiltered ? activeFilters : undefined
+      ),
+      data.demandes,
+      DEMANDES_COLUMNS
+    );
+  };
+
+  const onExportExcel = async (isFiltered?: boolean) => {
+    trackEvent("saisie_demandes:export-excel");
+    const data = await client.ref("[GET]/demandes").query({
+      query: isFiltered ? getDemandesQueryParameters() : {},
+    });
+    downloadExcel(
+      formatExportFilename(
+        "recueil_demandes",
+        isFiltered ? activeFilters : undefined
+      ),
+      data.demandes,
+      DEMANDES_COLUMNS
+    );
   };
   return (
     <Flex gap={2} mb={2}>
@@ -122,8 +145,10 @@ export const Header = ({
                       key={campagne.annee}
                       onClick={() => {
                         setSearchParams({
-                          ...searchParams,
-                          campagne: campagne.annee,
+                          filters: {
+                            ...activeFilters,
+                            campagne: campagne.annee,
+                          },
                         });
                       }}
                     >
@@ -170,35 +195,9 @@ export const Header = ({
               </Multiselect>
             </Box>
 
-            <ExportMenuButton
-              onExportCsv={async () => {
-                trackEvent("saisie_demandes:export");
-                const data = await client.ref("[GET]/demandes").query({
-                  query: getDemandesQueryParameters(EXPORT_LIMIT),
-                });
-                downloadCsv(
-                  formatExportFilename(
-                    "recueil_demandes",
-                    activeFilters.codeAcademie
-                  ),
-                  data.demandes,
-                  DEMANDES_COLUMNS
-                );
-              }}
-              onExportExcel={async () => {
-                trackEvent("saisie_demandes:export-excel");
-                const data = await client.ref("[GET]/demandes").query({
-                  query: getDemandesQueryParameters(EXPORT_LIMIT),
-                });
-                downloadExcel(
-                  formatExportFilename(
-                    "recueil_demandes",
-                    activeFilters.codeAcademie
-                  ),
-                  data.demandes,
-                  DEMANDES_COLUMNS
-                );
-              }}
+            <AdvancedExportMenuButton
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
               variant="externalLink"
             />
           </Flex>
