@@ -2,6 +2,7 @@ import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -35,7 +36,7 @@ import { Filters } from "../getFormationEtablissements.usecase";
 
 export const getFormationEtablissementsQuery = async ({
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   rentreeScolaire = [CURRENT_RENTREE],
   millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
@@ -321,6 +322,10 @@ export const getFormationEtablissementsQuery = async ({
                   )}),
                   ' ',
                   unaccent(${eb.ref("nsf.libelleNsf")}),
+                  ' ',
+                  unaccent(${eb.ref("formationView.cpc")}),
+                  ' ',
+                  unaccent(${eb.ref("formationView.cpcSecteur")}),
                   ' ',
                   unaccent(${eb.ref("etablissement.libelleEtablissement")}),
                   ' ',
