@@ -2,6 +2,7 @@ import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 import { z } from "zod";
 
 import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
@@ -50,7 +51,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   campagne,
   positionQuadrant,
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   order = "desc",
   orderBy = "createdAt",
   search,

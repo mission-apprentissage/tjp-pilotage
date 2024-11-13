@@ -135,7 +135,7 @@ export const Multiselect = chakra(
     size,
     hasDefaultValue = true,
     variant = "input",
-    menuZIndex,
+    menuZIndex = "dropdown",
     gutter,
     placement,
   }: {

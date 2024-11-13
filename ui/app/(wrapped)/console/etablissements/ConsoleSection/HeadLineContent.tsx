@@ -111,7 +111,7 @@ export const HeadLineContent = ({
       position="sticky"
       top="0"
       boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-      zIndex={2}
+      zIndex={"docked"}
     >
       <Tr bg={"white"}>
         <Th />
