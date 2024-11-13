@@ -49,8 +49,8 @@ import type { Rome } from "@/modules/import/fileTypes/Rome";
 import { RomeSchema } from "@/modules/import/fileTypes/Rome";
 import type { StructureDenseignement } from "@/modules/import/fileTypes/Structures_denseignement";
 import { StructureDenseignementSchema } from "@/modules/import/fileTypes/Structures_denseignement";
-import type { Tension_Departement_Rome } from "@/modules/import/fileTypes/Tension_Departement_rome";
-import { TensionDepartementRomeSchema } from "@/modules/import/fileTypes/Tension_Departement_rome";
+import type { Tension_Rome } from "@/modules/import/fileTypes/Tension_Rome";
+import { TensionRomeSchema } from "@/modules/import/fileTypes/Tension_Rome";
 import type { VFormationDiplomeLine } from "@/modules/import/fileTypes/VFormationDiplome";
 import { VFormationDiplomeSchema } from "@/modules/import/fileTypes/VFormationDiplome";
 import type { IjRegionData } from "@/modules/import/services/inserJeunesApi/formatRegionData";
@@ -84,7 +84,9 @@ export const Schemas = {
   metier: MetierSchema,
   certif_info: CertifInfoSchema,
   discipline: DisciplineSchema,
-  tension_departement_rome: TensionDepartementRomeSchema,
+  tension_rome_departement: TensionRomeSchema,
+  tension_rome_region: TensionRomeSchema,
+  tension_rome: TensionRomeSchema,
 };
 
 export type LineTypes = {
@@ -117,7 +119,9 @@ export type LineTypes = {
   metier: Metier;
   certif_info: Certif_Info;
   discipline: Discipline;
-  tension_departement_rome: Tension_Departement_Rome;
+  tension_rome_departement: Tension_Rome;
+  tension_rome_region: Tension_Rome;
+  tension_rome: Tension_Rome;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

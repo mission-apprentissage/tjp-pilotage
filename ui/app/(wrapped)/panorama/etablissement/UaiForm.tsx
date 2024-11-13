@@ -9,7 +9,7 @@ export const UaiForm = ({
   onUaiChanged,
   inError,
 }: {
-  uai: string;
+  uai?: string;
   onUaiChanged: (value: string) => void;
   inError: boolean;
 }) => {
@@ -22,7 +22,7 @@ export const UaiForm = ({
     }),
   };
 
-  const { isLoading } = client.ref("[GET]/etablissement/:uai").useQuery({ params: { uai: uai } });
+  const { isLoading } = client.ref("[GET]/etablissement/:uai").useQuery({ params: { uai: uai ?? "" } });
 
   return (
     <FormControl margin="auto" maxW="400px" as="form">

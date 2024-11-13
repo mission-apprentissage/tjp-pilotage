@@ -5,7 +5,7 @@ import type { Server } from "@/server/server";
 import { searchDomaineProfessionnelSchema } from "./searchDomaineProfessionnel.schema";
 import { searchDomaineProfessionnel } from "./searchDomaineProfessionnel.usecase";
 
-export const searchDomaineProfessionnelRoute = ({ server }: { server: Server }) => {
+export const searchDomaineProfessionnelRoute = (server: Server) => {
   return createRoute("/domaine-professionnel/search/:search", {
     method: "GET",
     schema: searchDomaineProfessionnelSchema,

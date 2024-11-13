@@ -7,6 +7,7 @@ import { client } from "@/api.client";
 import { INTENTIONS_COLUMNS } from "@/app/(wrapped)/intentions/perdir/saisie/INTENTIONS_COLUMNS";
 import type { Campagnes, Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
 import { isSaisieDisabled } from "@/app/(wrapped)/intentions/perdir/saisie/utils/canEditIntention";
+import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { Multiselect } from "@/components/Multiselect";
@@ -14,10 +15,9 @@ import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 
-const EXPORT_LIMIT = 1_000_000;
-
 export const Header = ({
-  searchParams,
+  activeFilters,
+  filterTracker,
   setSearchParams,
   getIntentionsQueryParameters,
   searchIntention,
@@ -27,17 +27,11 @@ export const Header = ({
   handleFilters,
   diplomes,
   academies,
-  filterTracker,
-  activeFilters,
 }: {
   activeFilters: Filters;
-  searchParams: {
-    search?: string;
-    campagne?: string;
-  };
   filterTracker: (filterName: keyof Filters) => () => void;
-  setSearchParams: (params: { search?: string; campagne?: string }) => void;
-  getIntentionsQueryParameters: (qLimit: number, qOffset?: number) => Partial<Filters>;
+  setSearchParams: (params: { filters: Partial<Filters> }) => void;
+  getIntentionsQueryParameters: (qLimit?: number, qOffset?: number) => Partial<Filters>;
   searchIntention?: string;
   setSearchIntention: (search: string) => void;
   campagnes?: Campagnes;
@@ -50,11 +44,70 @@ export const Header = ({
   academies: OptionSchema[];
 }) => {
   const trackEvent = usePlausible();
-  const anneeCampagne = searchParams.campagne ?? campagne?.annee;
+  const anneeCampagne = activeFilters.campagne ?? campagne?.annee;
 
   const onClickSearchIntention = () => {
-    setSearchParams({ search: searchIntention });
+    setSearchParams({ filters: { search: searchIntention } });
   };
+
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("saisie_intentions_perdir:export");
+    const data = await client.ref("[GET]/intentions").query({
+      query: isFiltered ? getIntentionsQueryParameters() : {},
+    });
+    downloadCsv(
+      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : {}),
+      [
+        // @ts-expect-error TODO
+        ...data.intentions.map((intention) => ({
+          ...intention,
+          ...intention.avis.reduce(
+            // @ts-expect-error TODO
+            (acc, current, index) => {
+              acc[`avis${index}`] = [
+                current.fonction!.toUpperCase(),
+                `Avis ${current.statut}`,
+                current.commentaire,
+              ].join(" - ");
+              return acc;
+            },
+            {} as Record<string, string>
+          ),
+        })),
+      ],
+      INTENTIONS_COLUMNS
+    );
+  };
+
+  const onExportExcel = async (isFiltered?: boolean) => {
+    trackEvent("saisie_intentions_perdir:export-excel");
+    const data = await client.ref("[GET]/intentions").query({
+      query: isFiltered ? getIntentionsQueryParameters() : {},
+    });
+    downloadExcel(
+      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : {}),
+      [
+        // @ts-expect-error TODO
+        ...data.intentions.map((intention) => ({
+          ...intention,
+          ...intention.avis.reduce(
+            // @ts-expect-error TODO
+            (acc, current, index) => {
+              acc[`avis${index}`] = [
+                current.fonction!.toUpperCase(),
+                `Avis ${current.statut}`,
+                current.commentaire,
+              ].join(" - ");
+              return acc;
+            },
+            {} as Record<string, string>
+          ),
+        })),
+      ],
+      INTENTIONS_COLUMNS
+    );
+  };
+
   return (
     <Flex gap={2} mb={2}>
       <Flex direction={"column"} gap={1}>
@@ -87,26 +140,23 @@ export const Header = ({
             </Flex>
           </MenuButton>
           <MenuList py={0} borderTopRadius={0} zIndex={"dropdown"}>
-            {campagnes?.map(
-              // @ts-expect-error TODO
-              (campagne) => (
-                <MenuItem
-                  p={2}
-                  key={campagne.annee}
-                  onClick={() => {
-                    setSearchParams({
-                      ...searchParams,
-                      campagne: campagne.annee,
-                    });
-                  }}
-                >
-                  <Flex direction="row">
-                    <Text my={"auto"}>Campagne {campagne.annee}</Text>
-                    <CampagneStatutTag statut={campagne.statut} />
-                  </Flex>
-                </MenuItem>
-              )
-            )}
+            {/* @ts-expect-error TODO */}
+            {campagnes?.map((campagne) => (
+              <MenuItem
+                p={2}
+                key={campagne.annee}
+                onClick={() => {
+                  setSearchParams({
+                    filters: { ...activeFilters, campagne: campagne.annee },
+                  });
+                }}
+              >
+                <Flex direction="row">
+                  <Text my={"auto"}>Campagne {campagne.annee}</Text>
+                  <CampagneStatutTag statut={campagne.statut} />
+                </Flex>
+              </MenuItem>
+            ))}
           </MenuList>
         </Menu>
       </Flex>
@@ -159,69 +209,7 @@ export const Header = ({
               Diplôme: Tous ({diplomes.length ?? 0})
             </Multiselect>
           </Box>
-          <ExportMenuButton
-            onExportCsv={async () => {
-              trackEvent("saisie_intentions_perdir:export");
-              const data = await client.ref("[GET]/intentions").query({
-                query: getIntentionsQueryParameters(EXPORT_LIMIT),
-              });
-              downloadCsv(
-                formatExportFilename("recueil_demandes", activeFilters.codeAcademie),
-                [
-                  ...data.intentions.map(
-                    // @ts-expect-error TODO
-                    (intention) => ({
-                      ...intention,
-                      ...intention.avis.reduce(
-                        // @ts-expect-error TODO
-                        (acc, current, index) => {
-                          acc[`avis${index}`] = [
-                            current.fonction!.toUpperCase(),
-                            `Avis ${current.statut}`,
-                            current.commentaire,
-                          ].join(" - ");
-                          return acc;
-                        },
-                        {} as Record<string, string>
-                      ),
-                    })
-                  ),
-                ],
-                INTENTIONS_COLUMNS
-              );
-            }}
-            onExportExcel={async () => {
-              trackEvent("saisie_intentions_perdir:export-excel");
-              const data = await client.ref("[GET]/intentions").query({
-                query: getIntentionsQueryParameters(EXPORT_LIMIT),
-              });
-              downloadExcel(
-                formatExportFilename("recueil_demandes", activeFilters.codeAcademie),
-                [
-                  ...data.intentions.map(
-                    // @ts-expect-error TODO
-                    (intention) => ({
-                      ...intention,
-                      ...intention.avis.reduce(
-                        // @ts-expect-error TODO
-                        (acc, current, index) => {
-                          acc[`avis${index}`] = [
-                            current.fonction!.toUpperCase(),
-                            `Avis ${current.statut}`,
-                            current.commentaire,
-                          ].join(" - ");
-                          return acc;
-                        },
-                        {} as Record<string, string>
-                      ),
-                    })
-                  ),
-                ],
-                INTENTIONS_COLUMNS
-              );
-            }}
-            variant="externalLink"
-          />
+          <AdvancedExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} variant="externalLink" />
         </Flex>
 
         <SearchInput

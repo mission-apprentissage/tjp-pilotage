@@ -27,11 +27,10 @@ export const ConsoleSection = ({
 }: {
   data?: Etablissements;
   filters: Partial<Filters>;
-  order: Order;
+  order: Partial<Order>;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     order?: Partial<Order>;
     page?: number;

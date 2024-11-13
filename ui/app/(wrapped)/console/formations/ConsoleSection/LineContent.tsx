@@ -4,7 +4,7 @@ import NextLink from "next/link";
 import { CURRENT_RENTREE } from "shared";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
-import type { Line } from "@/app/(wrapped)/console/formations/types";
+import type { Filters, Line } from "@/app/(wrapped)/console/formations/types";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -51,6 +51,7 @@ export const FormationLineContent = ({
   expended = false,
   canShowQuadrantPosition,
   isSticky,
+  filters,
   colonneFilters,
   getCellBgColor,
 }: {
@@ -60,11 +61,12 @@ export const FormationLineContent = ({
   expended?: boolean;
   canShowQuadrantPosition?: boolean;
   isSticky?: boolean;
+  filters?: Partial<Filters>;
   colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
   getCellBgColor: (column: keyof typeof FORMATION_COLUMNS) => string;
 }) => (
   <>
-    <Td pr="0" py="1">
+    <Td pr="0" py="1" _groupHover={{ bgColor: "blueecume.850 !important" }}>
       {onClickExpend && (
         <IconButton
           transform={expended ? "rotate(180deg)" : ""}
@@ -173,6 +175,7 @@ export const FormationLineContent = ({
         as={NextLink}
         href={createParametrizedUrl("/console/etablissements", {
           filters: {
+            ...filters,
             cfd: [line.cfd],
             codeDispositif: line.codeDispositif ? [line.codeDispositif] : undefined,
           },

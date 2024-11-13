@@ -18,9 +18,7 @@ export function PanoramaSelection({
   const { codeDepartementFilter, setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
 
   useEffect(() => {
-    if (codeDepartementFilter != "") {
-      router.push(`/panorama/departement/${codeDepartementFilter}?${qs.stringify(DEFAULT_SEARCH_PARAMS)}`);
-    }
+    if (codeDepartementFilter) onCodeDepartementChanged(codeDepartementFilter);
   }, []);
 
   const onCodeDepartementChanged = (codeDepartement: string) => {

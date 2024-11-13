@@ -5,7 +5,7 @@ import type { Server } from "@/server/server";
 import { searchMetierSchema } from "./searchMetier.schema";
 import { searchMetier } from "./searchMetier.usecase";
 
-export const searchMetierRoute = ({ server }: { server: Server }) => {
+export const searchMetierRoute = (server: Server) => {
   return createRoute("/metier/search/:search", {
     method: "GET",
     schema: searchMetierSchema,

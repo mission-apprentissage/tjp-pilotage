@@ -4,7 +4,7 @@ import { z } from "zod";
 import config from "@/config";
 import type { Server } from "@/server/server";
 
-export const homeRoute = ({ server }: { server: Server }) => {
+export const homeRoute = (server: Server) => {
   return createRoute("/healthcheck", {
     method: "GET",
     schema: {
