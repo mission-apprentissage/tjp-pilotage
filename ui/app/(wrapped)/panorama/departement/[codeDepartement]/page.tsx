@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
+import { useContext } from "react";
 
 import { client } from "@/api.client";
 import { FiltersSection } from "@/app/(wrapped)/panorama/components/FiltersSection";
@@ -10,6 +11,7 @@ import { InfoSection } from "@/app/(wrapped)/panorama/components/InfoSection";
 import { QuadrantSection } from "@/app/(wrapped)/panorama/components/QuadrantSection/QuadrantSection";
 import { TopFlopSection } from "@/app/(wrapped)/panorama/components/TopFlopSection/TopFlopSection";
 import type { FiltersPanoramaFormation, OrderPanoramaFormation } from "@/app/(wrapped)/panorama/types";
+import { CodeDepartementFilterContext } from "@/app/layoutClient";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 export default function Panorama({
@@ -22,6 +24,7 @@ export default function Panorama({
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(queryParams.toString());
+  const { setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
 
   const setSearchParams = (params: FiltersPanoramaFormation) => {
     router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
@@ -51,6 +54,8 @@ export default function Panorama({
   };
 
   const onCodeDepartementChanged = (codeDepartement: string) => {
+    setCodeDepartementFilter(codeDepartement);
+
     router.push(`/panorama/departement/${codeDepartement}?${qs.stringify(searchParams)}`);
   };
 

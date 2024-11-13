@@ -1,10 +1,9 @@
 "use client";
 import { ChevronDownIcon, RepeatIcon } from "@chakra-ui/icons";
-import type { PositionProps } from "@chakra-ui/react";
+import type { PlacementWithLogical, PositionProps } from "@chakra-ui/react";
 import { Box, Button, chakra, Flex, Input, Menu, MenuButton, MenuList, Portal, Text } from "@chakra-ui/react";
 import type { ChangeEventHandler, ReactNode } from "react";
 import { memo, useMemo, useRef, useState } from "react";
-import { unstable_batchedUpdates } from "react-dom";
 import removeAccents from "remove-accents";
 
 const ButtonContent = ({ selected, children }: { selected: string[]; children: ReactNode }) => {
@@ -109,6 +108,7 @@ export const Multiselect = chakra(
     variant = "input",
     menuZIndex,
     gutter,
+    placement,
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
@@ -122,6 +122,7 @@ export const Multiselect = chakra(
     variant?: string;
     menuZIndex?: PositionProps["zIndex"];
     gutter?: number;
+    placement?: PlacementWithLogical;
   }) => {
     const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
 
@@ -170,10 +171,8 @@ export const Multiselect = chakra(
       <Menu
         isLazy={true}
         onOpen={() => {
-          unstable_batchedUpdates(() => {
-            prepareOptions();
-            handleSearch("");
-          });
+          prepareOptions();
+          handleSearch("");
           setTimeout(() => inputRef.current?.focus(), 100);
         }}
         onClose={() => {
@@ -182,6 +181,7 @@ export const Multiselect = chakra(
         }}
         closeOnSelect={false}
         gutter={gutter}
+        placement={placement}
       >
         <MenuButton
           as={Button}

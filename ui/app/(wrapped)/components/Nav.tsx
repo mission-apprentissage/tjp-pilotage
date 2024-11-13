@@ -9,7 +9,7 @@ import { useContext } from "react";
 import { hasPermission, hasRole, isUserInRegionsExperimentation } from "shared";
 
 import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
-import { UaiFilterContext } from "@/app/layoutClient";
+import { UaisFilterContext } from "@/app/layoutClient";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { feature } from "@/utils/feature";
 import { useAuth } from "@/utils/security/useAuth";
@@ -142,7 +142,7 @@ const NavMenuButton = chakra(
 
 export const Nav = () => {
   const { auth } = useAuth();
-  const { uaiFilter } = useContext(UaiFilterContext);
+  const { uaisFilter } = useContext(UaisFilterContext);
   const hasIntentionsMenu =
     hasPermission(auth?.user.role, "intentions/lecture") ||
     hasPermission(auth?.user.role, "intentions-perdir/lecture") ||
@@ -235,10 +235,10 @@ export const Nav = () => {
           <MenuItem p="0">
             <NavMenuLink
               href={
-                uaiFilter
+                uaisFilter
                   ? createParametrizedUrl("/console/etablissements", {
                       filters: {
-                        uai: [uaiFilter],
+                        uai: uaisFilter,
                       },
                     })
                   : "/console/etablissements"

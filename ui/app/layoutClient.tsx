@@ -60,27 +60,27 @@ const useTracking = () => {
 };
 
 export const CodeRegionFilterContext = createContext<{
-  codeRegionFilter: string;
-  setCodeRegionFilter: Dispatch<SetStateAction<string>>;
+  codeRegionFilter?: string;
+  setCodeRegionFilter: Dispatch<SetStateAction<string | undefined>>;
 }>({
   codeRegionFilter: "",
   setCodeRegionFilter: () => {},
 });
 
 export const CodeDepartementFilterContext = createContext<{
-  codeDepartementFilter: string;
-  setCodeDepartementFilter: Dispatch<SetStateAction<string>>;
+  codeDepartementFilter?: string;
+  setCodeDepartementFilter: Dispatch<SetStateAction<string | undefined>>;
 }>({
   codeDepartementFilter: "",
   setCodeDepartementFilter: () => {},
 });
 
-export const UaiFilterContext = createContext<{
-  uaiFilter: string;
-  setUaiFilter: Dispatch<SetStateAction<string>>;
+export const UaisFilterContext = createContext<{
+  uaisFilter?: Array<string>;
+  setUaisFilter: Dispatch<SetStateAction<Array<string> | undefined>>;
 }>({
-  uaiFilter: "",
-  setUaiFilter: () => {},
+  uaisFilter: [],
+  setUaisFilter: () => {},
 });
 
 export default function RootLayoutClient({
@@ -104,11 +104,13 @@ export default function RootLayoutClient({
 
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
   const [changelog, setChangelog] = useState<Changelog>(initialChangelog);
-  const [codeRegionFilter, setCodeRegionFilter] = useState<string>(auth?.user.codeRegion ?? "");
-  const [uaiFilter, setUaiFilter] = useState("");
+
+  const [codeRegionFilter, setCodeRegionFilter] = useState<string | undefined>(auth?.user.codeRegion);
+  const [uaisFilter, setUaisFilter] = useState<Array<string> | undefined>(auth?.user.uais);
 
   const codeRegionFilterValue = useMemo(() => ({ codeRegionFilter, setCodeRegionFilter }), [codeRegionFilter]);
-  const uaiFilterValue = useMemo(() => ({ uaiFilter, setUaiFilter }), [uaiFilter]);
+
+  const uaisFilterValue = useMemo(() => ({ uaisFilter, setUaisFilter }), [uaisFilter]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef<number>(0);
@@ -140,7 +142,7 @@ export default function RootLayoutClient({
           <CacheProvider>
             <ChakraProvider theme={theme}>
               <AuthContext.Provider value={{ auth, setAuth }}>
-                <UaiFilterContext.Provider value={uaiFilterValue}>
+                <UaisFilterContext.Provider value={uaisFilterValue}>
                   <CodeRegionFilterContext.Provider value={codeRegionFilterValue}>
                     <GlossaireProvider initialEntries={initialGlossaire}>
                       <ChangelogContext.Provider value={{ changelog, setChangelog }}>
@@ -157,7 +159,7 @@ export default function RootLayoutClient({
                       </ChangelogContext.Provider>
                     </GlossaireProvider>
                   </CodeRegionFilterContext.Provider>
-                </UaiFilterContext.Provider>
+                </UaisFilterContext.Provider>
               </AuthContext.Provider>
             </ChakraProvider>
           </CacheProvider>

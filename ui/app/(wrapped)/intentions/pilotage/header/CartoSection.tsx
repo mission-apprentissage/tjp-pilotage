@@ -137,6 +137,22 @@ export const CartoSection = ({
       </Box>
     );
 
+  const onExportCsv = async () => {
+    downloadCsv(`visualisation_territoriale_${indicateur}_${filters.scope}`, getGraphData(), {
+      name: "Nom",
+      value: indicateur,
+      code: "Code",
+    });
+  };
+
+  const onExportExcel = async () => {
+    downloadExcel(`visualisation_territoriale_${indicateur}_${filters.scope}`, getGraphData(), {
+      name: "Nom",
+      value: indicateur,
+      code: "Code",
+    });
+  };
+
   return (
     <Box flex={1} borderRadius={4} border={"1px solid"} borderColor="grey.900" bg="white" p={3}>
       {isLoading || !filters.campagne || !filters.rentreeScolaire ? (
@@ -167,23 +183,7 @@ export const CartoSection = ({
             </Flex>
           </Flex>
           <Flex justifyContent="start" zIndex={1} position={"relative"}>
-            <ExportMenuButton
-              onExportCsv={async () => {
-                downloadCsv(`visualisation_territoriale_${indicateur}_${filters.scope}`, getGraphData(), {
-                  name: "Nom",
-                  value: indicateur,
-                  code: "Code",
-                });
-              }}
-              onExportExcel={async () => {
-                downloadExcel(`visualisation_territoriale_${indicateur}_${filters.scope}`, getGraphData(), {
-                  name: "Nom",
-                  value: indicateur,
-                  code: "Code",
-                });
-              }}
-              variant="ghost"
-            />
+            <ExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} variant="ghost" />
           </Flex>
           <Box mt={"-60px"}>
             <CartoGraph

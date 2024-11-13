@@ -37,6 +37,7 @@ export const getFormationEtablissementsQuery = async ({
   uai,
   secteur,
   codeNsf,
+  positionQuadrant,
   withAnneeCommune,
   search,
   order,
@@ -253,7 +254,7 @@ export const getFormationEtablissementsQuery = async ({
       return eb;
     })
     .$call((q) => {
-      if (!withAnneeCommune || withAnneeCommune === "false") return q.where(notAnneeCommune);
+      if (withAnneeCommune === "false") return q.where(notAnneeCommune);
       return q;
     })
     .$call((q) => {
@@ -304,6 +305,10 @@ export const getFormationEtablissementsQuery = async ({
     .$call((q) => {
       if (!codeNsf) return q;
       return q.where("formationView.codeNsf", "in", codeNsf);
+    })
+    .$call((eb) => {
+      if (!positionQuadrant) return eb;
+      return eb.where("positionQuadrant", "in", positionQuadrant);
     })
     .where(isInPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))

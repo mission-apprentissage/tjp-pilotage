@@ -21,7 +21,7 @@ export const [submitSuiviUsecase, submitSuiviFactory] = inject(
       intentionNumero: string;
     }) => {
       const intentionData = await findOneIntention(intentionNumero);
-      if (!intentionData) throw Boom.notFound("Intention not found");
+      if (!intentionData) throw Boom.notFound("Intention non trouvée en base");
 
       const createdSuivi = await deps.createSuiviQuery({
         intentionNumero,

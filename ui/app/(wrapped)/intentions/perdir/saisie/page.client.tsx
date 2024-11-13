@@ -67,16 +67,13 @@ export const PageClient = () => {
 
   const [searchParams, setSearchParams] = useStateParams<{
     filters?: Partial<Filters>;
-    search?: string;
     order?: Partial<Order>;
     page?: string;
-    campagne?: string;
     action?: Exclude<DemandeStatutType, "supprimée">;
     notfound?: string;
   }>({
     defaultValues: {
       filters: {},
-      search: "",
       order: { order: "asc" },
       page: "0",
     },
@@ -85,9 +82,9 @@ export const PageClient = () => {
   const hasEditIntentionPermission = usePermission("intentions-perdir/ecriture");
 
   const filters = searchParams.filters ?? {};
-  const search = searchParams.search ?? "";
+  const search = searchParams.filters?.search ?? "";
   const order = searchParams.order ?? { order: "asc" };
-  const campagne = searchParams.campagne;
+  const campagne = searchParams.filters?.campagne;
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
   const notFound = searchParams.notfound;
 
@@ -131,13 +128,11 @@ export const PageClient = () => {
     });
   };
 
-  const getIntentionsQueryParameters = (qLimit: number, qOffset?: number) => ({
+  const getIntentionsQueryParameters = (qLimit?: number, qOffset?: number) => ({
     ...searchParams.filters,
-    search,
     ...order,
     offset: qOffset,
     limit: qLimit,
-    campagne,
   });
 
   const { data, isLoading } = client.ref("[GET]/intentions").useQuery(
@@ -241,7 +236,7 @@ export const PageClient = () => {
         isRecapView
         campagne={data?.campagne}
         handleFilters={handleFilters}
-        searchParams={searchParams}
+        activeFilters={filters}
       />
       <Box display={["none", null, "unset"]} borderLeft="solid 1px" borderColor="gray.100" height="100%" mr={4} />
       <Flex flex={1} flexDirection="column" overflow="visible" minHeight={0} minW={0}>
@@ -252,7 +247,6 @@ export const PageClient = () => {
             <Header
               // @ts-expect-error TODO
               activeFilters={filters}
-              searchParams={searchParams}
               setSearchParams={setSearchParams}
               getIntentionsQueryParameters={getIntentionsQueryParameters}
               searchIntention={searchIntention}

@@ -27,7 +27,7 @@ export const [submitIntentionAccessLogUsecase, submitIntentionAccessLogFactory] 
       intention: Intention;
     }) => {
       const intentionData = await findOneIntention(intention.numero);
-      if (!intentionData) throw Boom.notFound("Intention not found");
+      if (!intentionData) throw Boom.notFound("Intention non trouvée en base");
 
       const newIntentionAccessLog = {
         intentionNumero: intentionData.numero,

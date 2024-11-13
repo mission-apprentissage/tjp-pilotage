@@ -1,3 +1,5 @@
+import { PositionQuadrantZodType } from "shared/enum/positionQuadrantEnum";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 import { z } from "zod";
 
 const OptionSchema = z.object({
@@ -56,13 +58,14 @@ export const getFormationSchema = {
     cfdFamille: z.array(z.string()).optional(),
     rentreeScolaire: z.array(z.string()).optional(),
     codeNsf: z.array(z.string()).optional(),
+    positionQuadrant: z.array(PositionQuadrantZodType).optional(),
     search: z.string().optional(),
-    withEmptyFormations: z.coerce.boolean().optional(),
+    withEmptyFormations: z.string().optional(),
     withAnneeCommune: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationLineSchema.keyof().optional(),
     offset: z.coerce.number().optional(),
-    limit: z.coerce.number().optional(),
+    limit: z.coerce.number().default(MAX_LIMIT).optional(),
   }),
   response: {
     200: z.object({
@@ -77,6 +80,7 @@ export const getFormationSchema = {
         familles: z.array(OptionSchema),
         formations: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),
+        positionsQuadrant: z.array(OptionSchema),
       }),
       formations: z.array(FormationLineSchema),
     }),

@@ -12,7 +12,7 @@ const glossaireCache = new NodeCache({
   stdTTL: config.env === "production" ? UNE_MINUTE_EN_SECONDES : undefined,
 });
 
-export const registerGlossaireModule = ({ server }: { server: Server }) => ({
+export const registerGlossaireModule = (server: Server) => ({
   ...getGlossaireRoute({ server, cache: glossaireCache }),
   ...getGlossaireEntryRoute({ server, cache: glossaireCache }),
 });

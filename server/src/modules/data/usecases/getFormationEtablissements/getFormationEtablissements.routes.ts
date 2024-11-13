@@ -5,7 +5,7 @@ import type { Server } from "@/server/server";
 import { getFormationEtablissementsSchema } from "./getFormationEtablissements.schema";
 import { getFormationEtablissements } from "./getFormationEtablissements.usecase";
 
-export const getFormationEtablissementsRoutes = ({ server }: { server: Server }) => {
+export const getFormationEtablissementsRoutes = (server: Server) => {
   return createRoute("/etablissements", {
     method: "GET",
     schema: getFormationEtablissementsSchema,

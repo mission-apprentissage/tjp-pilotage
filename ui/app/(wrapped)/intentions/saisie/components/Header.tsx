@@ -7,6 +7,7 @@ import { client } from "@/api.client";
 import { DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/saisie/DEMANDES_COLUMNS";
 import type { Campagnes, Filters } from "@/app/(wrapped)/intentions/saisie/types";
 import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
+import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { Multiselect } from "@/components/Multiselect";
@@ -14,11 +15,8 @@ import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 
-const EXPORT_LIMIT = 1_000_000;
-
 export const Header = ({
   activeFilters,
-  searchParams,
   setSearchParams,
   getDemandesQueryParameters,
   searchDemande,
@@ -31,12 +29,8 @@ export const Header = ({
   handleFilters,
 }: {
   activeFilters: Filters;
-  searchParams: {
-    search?: string;
-    campagne?: string;
-  };
-  setSearchParams: (params: { search?: string; campagne?: string }) => void;
-  getDemandesQueryParameters: (qLimit: number, qOffset?: number) => Partial<Filters>;
+  setSearchParams: (params: { filters: Partial<Filters> }) => void;
+  getDemandesQueryParameters: (qLimit?: number, qOffset?: number) => Partial<Filters>;
   searchDemande?: string;
   setSearchDemande: (search: string) => void;
   campagnes?: Campagnes;
@@ -50,10 +44,34 @@ export const Header = ({
   academies: OptionSchema[];
 }) => {
   const trackEvent = usePlausible();
-  const anneeCampagne = searchParams.campagne ?? campagne?.annee;
+  const anneeCampagne = activeFilters.campagne ?? campagne?.annee;
 
   const onClickSearchDemande = () => {
-    setSearchParams({ search: searchDemande });
+    setSearchParams({ filters: { search: searchDemande } });
+  };
+
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("saisie_demandes:export");
+    const data = await client.ref("[GET]/demandes").query({
+      query: isFiltered ? getDemandesQueryParameters() : {},
+    });
+    downloadCsv(
+      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : undefined),
+      data.demandes,
+      DEMANDES_COLUMNS
+    );
+  };
+
+  const onExportExcel = async (isFiltered?: boolean) => {
+    trackEvent("saisie_demandes:export-excel");
+    const data = await client.ref("[GET]/demandes").query({
+      query: isFiltered ? getDemandesQueryParameters() : {},
+    });
+    downloadExcel(
+      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : undefined),
+      data.demandes,
+      DEMANDES_COLUMNS
+    );
   };
   return (
     <Flex gap={2} mb={2}>
@@ -107,26 +125,26 @@ export const Header = ({
                   </Flex>
                 </MenuButton>
                 <MenuList py={0} borderTopRadius={0} zIndex={"banner"}>
-                  {campagnes?.map(
-                    // @ts-expect-error TODO
-                    (campagne) => (
-                      <MenuItem
-                        p={2}
-                        key={campagne.annee}
-                        onClick={() => {
-                          setSearchParams({
-                            ...searchParams,
+                  {/* @ts-expect-error TODO */}
+                  {campagnes?.map((campagne) => (
+                    <MenuItem
+                      p={2}
+                      key={campagne.annee}
+                      onClick={() => {
+                        setSearchParams({
+                          filters: {
+                            ...activeFilters,
                             campagne: campagne.annee,
-                          });
-                        }}
-                      >
-                        <Flex direction="row">
-                          <Text my={"auto"}>Campagne {campagne.annee}</Text>
-                          <CampagneStatutTag statut={campagne.statut} />
-                        </Flex>
-                      </MenuItem>
-                    )
-                  )}
+                          },
+                        });
+                      }}
+                    >
+                      <Flex direction="row">
+                        <Text my={"auto"}>Campagne {campagne.annee}</Text>
+                        <CampagneStatutTag statut={campagne.statut} />
+                      </Flex>
+                    </MenuItem>
+                  ))}
                 </MenuList>
               </Menu>
             </Flex>
@@ -162,31 +180,7 @@ export const Header = ({
               </Multiselect>
             </Box>
 
-            <ExportMenuButton
-              onExportCsv={async () => {
-                trackEvent("saisie_demandes:export");
-                const data = await client.ref("[GET]/demandes").query({
-                  query: getDemandesQueryParameters(EXPORT_LIMIT),
-                });
-                downloadCsv(
-                  formatExportFilename("recueil_demandes", activeFilters.codeAcademie),
-                  data.demandes,
-                  DEMANDES_COLUMNS
-                );
-              }}
-              onExportExcel={async () => {
-                trackEvent("saisie_demandes:export-excel");
-                const data = await client.ref("[GET]/demandes").query({
-                  query: getDemandesQueryParameters(EXPORT_LIMIT),
-                });
-                downloadExcel(
-                  formatExportFilename("recueil_demandes", activeFilters.codeAcademie),
-                  data.demandes,
-                  DEMANDES_COLUMNS
-                );
-              }}
-              variant="externalLink"
-            />
+            <AdvancedExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} variant="externalLink" />
           </Flex>
 
           <SearchInput

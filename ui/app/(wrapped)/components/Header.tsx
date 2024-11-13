@@ -24,17 +24,24 @@ import { useContext } from "react";
 
 import { client } from "@/api.client";
 import { AuthContext } from "@/app/(wrapped)/auth/authContext";
+import { CodeDepartementFilterContext, CodeRegionFilterContext, UaisFilterContext } from "@/app/layoutClient";
 
 import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
 export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const { auth, setAuth } = useContext(AuthContext);
+  const { setUaisFilter } = useContext(UaisFilterContext);
+  const { setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
+  const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
   const queryClient = useQueryClient();
 
   const logout = async () => {
     await client.ref("[POST]/auth/logout").query({});
     setAuth(undefined);
+    setUaisFilter(undefined);
+    setCodeDepartementFilter(undefined);
+    setCodeRegionFilter(undefined);
     queryClient.clear();
   };
 

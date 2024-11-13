@@ -30,8 +30,8 @@ import { importPositionsQuadrant } from "./modules/import/usecases/importPositio
 import type { ImportFileError } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
-import { importTensionDepartementRome } from "./modules/import/usecases/importTensionDepartementRome/importTensionDepartementRome.usecase";
 import { importTensionFranceTravail } from "./modules/import/usecases/importTensionFranceTravail/importTensionFranceTravail.usecase";
+import { importTensionRome } from "./modules/import/usecases/importTensionRome/importTensionRome.usecase";
 import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
 import { verifyFileEncoding } from "./modules/import/utils/verifyFileEncoding";
 import { writeErrorLogs } from "./modules/import/utils/writeErrorLogs";
@@ -236,8 +236,16 @@ export function productCommands(cli: Command) {
         ...getImports({ type: "certif_info", schema: Schemas.certif_info }),
         ...getImports({ type: "discipline", schema: Schemas.discipline }),
         ...getImports({
-          type: "tension_departement_rome",
-          schema: Schemas.tension_departement_rome,
+          type: "tension_rome",
+          schema: Schemas.tension_rome,
+        }),
+        ...getImports({
+          type: "tension_rome_region",
+          schema: Schemas.tension_rome_region,
+        }),
+        ...getImports({
+          type: "tension_rome_departement",
+          schema: Schemas.tension_rome_departement,
         }),
       };
 
@@ -288,7 +296,7 @@ export function productCommands(cli: Command) {
         importIndicateursDepartement,
         importLienEmploiFormation,
         importDiscipline,
-        importTensionDepartementRome,
+        importTensionRome,
         refreshViews,
       };
 
@@ -330,9 +338,11 @@ export function productCommands(cli: Command) {
 
   cli
     .command("importTensionFranceTravail")
-    .description("Import des données de tension depuis France Travail")
-    .action(async () => {
-      await importTensionFranceTravail();
+    .description("Import des données de tension (national/régional/départemental) depuis France Travail")
+    .argument("[maille]")
+    .usage("maille: national | region | departement")
+    .action(async (maille: string) => {
+      await importTensionFranceTravail(maille);
     });
 
   cli

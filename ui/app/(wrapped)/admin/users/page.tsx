@@ -19,6 +19,7 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
+import { usePlausible } from "next-plausible";
 import type { AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, ReactPortal } from "react";
 import { useMemo, useState } from "react";
 import { hasRightOverRole } from "shared";
@@ -50,6 +51,7 @@ const Columns = {
 
 // eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
+  const trackEvent = usePlausible();
   const { auth } = useAuth();
   const [filters, setFilters] = useStateParams<{
     page: number;
@@ -98,6 +100,22 @@ export default () => {
     );
   };
 
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("etablissements:export");
+    const data = await client.ref("[GET]/users").query({
+      query: isFiltered ? { ...filters, ...order } : {},
+    });
+    downloadCsv(formatExportFilename("users_export", isFiltered ? filters : undefined), data.users, Columns);
+  };
+
+  const onExportExcel = async (isFiltered?: boolean) => {
+    trackEvent("etablissements:export-excel");
+    const data = await client.ref("[GET]/users").query({
+      query: isFiltered ? { ...filters, ...order } : {},
+    });
+    downloadExcel(formatExportFilename("users_export", isFiltered ? filters : undefined), data.users, Columns);
+  };
+
   return (
     <GuardPermission permission="users/lecture">
       {data?.users && (
@@ -127,18 +145,8 @@ export default () => {
               pageSize={10}
               count={data.count}
               onPageChange={(newPage) => setFilters({ ...filters, page: newPage })}
-              onExportCsv={async () => {
-                const data = await client.ref("[GET]/users").query({
-                  query: { ...filters, ...order, limit: 1000000 },
-                });
-                downloadCsv(formatExportFilename("users_export"), data.users, Columns);
-              }}
-              onExportExcel={async () => {
-                const data = await client.ref("[GET]/users").query({
-                  query: { ...filters, ...order, limit: 1000000 },
-                });
-                downloadExcel(formatExportFilename("users_export"), data.users, Columns);
-              }}
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
             />
           </Flex>
 

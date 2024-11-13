@@ -21,9 +21,9 @@ import { sendResetPasswordRoute } from "./usecases/sendResetPassword/sendResetPa
 import { whoAmIRoute } from "./usecases/whoAmI/whoAmI.route";
 export { extractUserInRequest } from "./utils/extractUserInRequest/extractUserInRequest";
 
-export const registerCoreModule = ({ server }: { server: Server }) => {
+export const registerCoreModule = (server: Server) => {
   return {
-    ...homeRoute({ server }),
+    ...homeRoute(server),
     ...activateUserRoute(server),
     ...checkActivationTokenRoute(server),
     ...loginRoute(server),
@@ -39,7 +39,7 @@ export const registerCoreModule = ({ server }: { server: Server }) => {
     ...getCampagnesRoute(server),
     ...editCampagneRoute(server),
     ...createCampagneRoute(server),
-    ...generateMetabaseDashboardUrlRoute({ server }),
+    ...generateMetabaseDashboardUrlRoute(server),
     ...searchUserRoute(server),
     ...isMaintenanceRoute(server),
   };

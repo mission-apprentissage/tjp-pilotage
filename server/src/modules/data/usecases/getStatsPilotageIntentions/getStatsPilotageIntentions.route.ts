@@ -6,7 +6,7 @@ import type { Server } from "@/server/server";
 import { getStatsPilotageIntentionsSchema } from "./getStatsPilotageIntentions.schema";
 import { getStatsPilotageIntentionsUsecase } from "./getStatsPilotageIntentions.usecase";
 
-export const getStatsPilotageIntentionsRoute = ({ server }: { server: Server }) => {
+export const getStatsPilotageIntentionsRoute = (server: Server) => {
   return createRoute("/pilotage-intentions/stats", {
     method: "GET",
     schema: getStatsPilotageIntentionsSchema,

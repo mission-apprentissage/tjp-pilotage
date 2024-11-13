@@ -28,11 +28,10 @@ export const ConsoleSection = ({
 }: {
   data?: Formations;
   filters: Partial<Filters>;
-  order: Order;
+  order: Partial<Order>;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: number;
@@ -59,7 +58,7 @@ export const ConsoleSection = ({
             order: "desc",
             orderBy: "rentreeScolaire",
             rentreeScolaire: RENTREES_SCOLAIRES.filter((rentree) => rentree !== CURRENT_RENTREE),
-            withEmptyFormations: false,
+            withEmptyFormations: "false",
           },
         })
       ).formations;
@@ -102,60 +101,54 @@ export const ConsoleSection = ({
           getCellBgColor={getCellBgColor}
         />
         <Tbody>
-          {data?.formations.map(
-            // @ts-expect-error TODO
-            (line) => (
-              <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
-                <Tr h="12" bg={"white"} role="group">
-                  <FormationLineContent
-                    isSticky={isSticky}
-                    line={line}
-                    // @ts-expect-error TODO
-                    expended={historiqueId?.cfd === line.cfd && historiqueId.codeDispositif === line.codeDispositif}
-                    onClickExpend={() =>
-                      setHistoriqueId({
-                        cfd: line.cfd,
-                        codeDispositif: line.codeDispositif,
-                      })
-                    }
-                    onClickCollapse={() => setHistoriqueId(undefined)}
-                    canShowQuadrantPosition={canShowQuadrantPosition}
-                    colonneFilters={colonneFilters}
-                    getCellBgColor={getCellBgColor}
-                  />
-                </Tr>
-                {
-                  // @ts-expect-error TODO
-                  historiqueId?.cfd === line.cfd && historiqueId.codeDispositif === line.codeDispositif && (
-                    <>
-                      {historique?.map(
-                        // @ts-expect-error TODO
-                        (historiqueLine) => (
-                          <Tr
-                            key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}_${historiqueLine.rentreeScolaire}`}
-                            bg={"grey.975"}
-                          >
-                            <FormationLineContent
-                              isSticky={isSticky}
-                              line={historiqueLine}
-                              canShowQuadrantPosition={canShowQuadrantPosition}
-                              colonneFilters={colonneFilters}
-                              getCellBgColor={getCellBgColor}
-                            />
-                          </Tr>
-                        )
-                      )}
-                      {historique && !historique.length && (
-                        <FormationLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
-                      )}
+          {/* @ts-expect-error TODO */}
+          {data?.formations.map((line) => (
+            <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
+              <Tr h="12" bg={"white"} role="group">
+                <FormationLineContent
+                  isSticky={isSticky}
+                  line={line}
+                  filters={filters}
+                  expended={historiqueId?.cfd === line.cfd && historiqueId?.codeDispositif === line.codeDispositif}
+                  onClickExpend={() =>
+                    setHistoriqueId({
+                      cfd: line.cfd,
+                      codeDispositif: line.codeDispositif,
+                    })
+                  }
+                  onClickCollapse={() => setHistoriqueId(undefined)}
+                  canShowQuadrantPosition={canShowQuadrantPosition}
+                  colonneFilters={colonneFilters}
+                  getCellBgColor={getCellBgColor}
+                />
+              </Tr>
+              {historiqueId?.cfd === line.cfd && historiqueId?.codeDispositif === line.codeDispositif && (
+                <>
+                  {/* @ts-expect-error TODO */}
+                  {historique?.map((historiqueLine) => (
+                    <Tr
+                      key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}_${historiqueLine.rentreeScolaire}`}
+                      bg={"grey.975"}
+                    >
+                      <FormationLineContent
+                        isSticky={isSticky}
+                        line={historiqueLine}
+                        canShowQuadrantPosition={canShowQuadrantPosition}
+                        colonneFilters={colonneFilters}
+                        filters={filters}
+                        getCellBgColor={getCellBgColor}
+                      />
+                    </Tr>
+                  ))}
+                  {historique && !historique.length && (
+                    <FormationLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
+                  )}
 
-                      {isFetchingHistorique && <FormationLineLoader />}
-                    </>
-                  )
-                }
-              </Fragment>
-            )
-          )}
+                  {isFetchingHistorique && <FormationLineLoader />}
+                </>
+              )}
+            </Fragment>
+          ))}
         </Tbody>
       </Table>
     </TableContainer>
