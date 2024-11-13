@@ -2,9 +2,9 @@ import { AxiosError } from "axios";
 import { inject } from "injecti";
 import { setTimeout } from "timers/promises";
 
-import { localFilePathManager } from "../../../../core/services/filePathManager/localFilePathManager";
-import { getStatsPerspectivesRecrutementRegion } from "../../../services/franceTravail/franceTravail.api";
-import { streamIt } from "../../../utils/streamIt";
+import { localFilePathManager } from "../../../core/services/filePathManager/localFilePathManager";
+import { getStatsPerspectivesRecrutementRegion } from "../../services/franceTravail/franceTravail.api";
+import { streamIt } from "../../utils/streamIt";
 import {
   appendFranceTravailTensionFile,
   createFranceTravailTensionFile,

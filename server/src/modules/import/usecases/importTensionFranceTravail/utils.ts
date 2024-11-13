@@ -1,8 +1,8 @@
 import fs from "fs";
 import { sql } from "kysely";
 
-import { kdb } from "../../../../../db/db";
-import { FranceTravailStatsPerspectiveRecrutementValeurParPeriode } from "../../../services/franceTravail/franceTravailResponse";
+import { kdb } from "../../../../db/db";
+import { FranceTravailStatsPerspectiveRecrutementValeurParPeriode } from "../../services/franceTravail/franceTravailResponse";
 
 export const findAllRomeCodes = (filter?: string) =>
   kdb

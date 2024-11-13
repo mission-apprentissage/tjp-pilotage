@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import { Role } from "shared";
 import { Scope } from "shared/security/permissions";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
@@ -8,7 +9,7 @@ import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 
 export const findUsers = async ({
   offset,
-  limit,
+  limit = MAX_LIMIT,
   search,
   orderBy,
   scope,

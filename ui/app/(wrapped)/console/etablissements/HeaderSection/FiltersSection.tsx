@@ -224,7 +224,6 @@ export const FiltersSection = ({
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={filtersList?.academies}
           value={searchParams.filters?.codeAcademie ?? []}
-          menuZIndex={3}
         >
           Académie
         </Multiselect>
@@ -236,7 +235,6 @@ export const FiltersSection = ({
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={filtersList?.departements}
           value={searchParams.filters?.codeDepartement ?? []}
-          menuZIndex={3}
         >
           Département
         </Multiselect>
@@ -248,7 +246,6 @@ export const FiltersSection = ({
           onChange={(selected) => handleFilters("commune", selected)}
           options={filtersList?.communes}
           value={searchParams.filters?.commune ?? []}
-          menuZIndex={3}
         >
           Commune
         </Multiselect>
