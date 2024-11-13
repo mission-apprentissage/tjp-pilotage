@@ -12,6 +12,7 @@ import { CartoGraph } from "@/components/CartoGraph";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatPercentageWithoutSign } from "@/utils/formatUtils";
+
 export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 
 export const CartoSection = ({
