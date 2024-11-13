@@ -86,8 +86,8 @@ jobs:
         uses: docker/scout-action@v1
         with:
           command: quickview,cves,recommendations,compare
-          image: ghcr.io/mission-apprentissage/ij_sirius_server:${{ needs.release.outputs.VERSION }}
-          to: ghcr.io/mission-apprentissage/ij_sirius_server:${{ needs.release.outputs.PREV_VERSION }}
+          image: ghcr.io/mission-apprentissage/ij_orion_server:${{ needs.release.outputs.VERSION }}
+          to: ghcr.io/mission-apprentissage/ij_orion_server:${{ needs.release.outputs.PREV_VERSION }}
           sarif-file: sarif-server.output.json
 
       - name: Server Docker Upload SARIF result
@@ -100,8 +100,8 @@ jobs:
         uses: docker/scout-action@v1
         with:
           command: quickview,cves,recommendations,compare
-          image: ghcr.io/mission-apprentissage/ij_sirius_ui:${{ needs.release.outputs.VERSION }}-production
-          to: ghcr.io/mission-apprentissage/ij_sirius_ui:${{ needs.release.outputs.PREV_VERSION }}-production
+          image: ghcr.io/mission-apprentissage/ij_orion_ui:${{ needs.release.outputs.VERSION }}-production
+          to: ghcr.io/mission-apprentissage/ij_orion_ui:${{ needs.release.outputs.PREV_VERSION }}-production
           sarif-file: sarif-ui.output.json
 
       - name: UI Docker Upload SARIF result
