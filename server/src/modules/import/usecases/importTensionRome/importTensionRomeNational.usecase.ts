@@ -1,9 +1,9 @@
 import { inject } from "injecti";
 import { Insertable } from "kysely";
 
-import { DB } from "../../../../../db/schema";
-import { dataDI } from "../../../data.di";
-import { streamIt } from "../../../utils/streamIt";
+import { DB } from "../../../../db/schema";
+import { dataDI } from "../../data.di";
+import { streamIt } from "../../utils/streamIt";
 import { createTension, createTensionRome, deleteTensionRome } from "./utils";
 
 export const [importTensionRomeNational] = inject(
@@ -14,10 +14,10 @@ export const [importTensionRomeNational] = inject(
     deleteTensionRome,
   },
   (deps) => async () => {
-    console.log(`Suppression des tensions rome...\n`);
+    console.log(`Suppression des tensions nationales par rome...\n`);
     await deleteTensionRome();
 
-    console.log(`Import des données de tension rome...\n`);
+    console.log(`Import des données de tension nationales par rome...\n`);
 
     let tensionCount = 0;
 
@@ -64,7 +64,7 @@ export const [importTensionRomeNational] = inject(
         }
 
         tensionCount++;
-        process.stdout.write(`\r${tensionCount} tensions régionales ajoutées`);
+        process.stdout.write(`\r${tensionCount} tensions nationales ajoutées`);
       },
       {
         parallel: 20,

@@ -1,30 +1,27 @@
 import { inject } from "injecti";
 import { Insertable } from "kysely";
 
-import { DB } from "../../../../../db/schema";
-import { dataDI } from "../../../data.di";
-import { streamIt } from "../../../utils/streamIt";
+import { DB } from "../../../../db/schema";
+import { dataDI } from "../../data.di";
+import { streamIt } from "../../utils/streamIt";
 import {
   createTension,
-  createTensionRomeDepartement,
-  deleteTensionRomeDepartement,
+  createTensionRomeRegion,
+  deleteTensionRomeRegion,
 } from "./utils";
 
-const formatCodeDepartement = (codeDepartement: string) =>
-  codeDepartement.length > 2 ? codeDepartement : `0${codeDepartement}`;
-
-export const [importTensionRomeDepartement] = inject(
+export const [importTensionRomeRegion] = inject(
   {
     findRawDatas: dataDI.rawDataRepository.findRawDatas,
     createTension,
-    createTensionRomeDepartement,
-    deleteTensionRomeDepartement,
+    createTensionRomeRegion,
+    deleteTensionRomeRegion,
   },
   (deps) => async () => {
-    console.log(`Suppression des tensions rome/département...\n`);
-    await deleteTensionRomeDepartement();
+    console.log(`Suppression des données de tension par rome...`);
+    await deleteTensionRomeRegion();
 
-    console.log(`Import des données de tension rome/département...\n`);
+    console.log(`Import des données de tension régionales par rome...\n`);
 
     let tensionCount = 0;
 
@@ -33,7 +30,7 @@ export const [importTensionRomeDepartement] = inject(
     await streamIt(
       (offset) =>
         deps.findRawDatas({
-          type: "tension_rome_departement",
+          type: "tension_rome_region",
           limit: 1000,
           offset,
         }),
@@ -53,18 +50,16 @@ export const [importTensionRomeDepartement] = inject(
           insertedTensions.add(tensionKey);
         }
 
-        const tensionRomeDepartementData: Insertable<
-          DB["tensionRomeDepartement"]
-        > = {
+        const tensionRomeRegionData: Insertable<DB["tensionRomeRegion"]> = {
           codeRome: tension.codeActivite,
-          codeDepartement: formatCodeDepartement(tension.codeTerritoire),
+          codeRegion: tension.codeTerritoire,
           codeTension: tension.codeNomenclature,
           annee: tension.codePeriode,
           valeur: Number(tension.valeurPrincipaleNom),
         };
 
         try {
-          await createTensionRomeDepartement(tensionRomeDepartementData);
+          await createTensionRomeRegion(tensionRomeRegionData);
         } catch (e) {
           if (typeof e === "object" && e && "detail" in e) {
             console.error(`\rErreur : ${e.detail}`);
@@ -74,9 +69,7 @@ export const [importTensionRomeDepartement] = inject(
         }
 
         tensionCount++;
-        process.stdout.write(
-          `\r${tensionCount} tensions départementales ajoutées`
-        );
+        process.stdout.write(`\r${tensionCount} tensions régionales ajoutées`);
       },
       {
         parallel: 20,
