@@ -49,7 +49,6 @@ export const SideSection = ({
             onChange={(selected) => handleFilters("secteur", selected)}
             options={filtersList?.secteurs}
             value={searchParams.filters?.secteur ?? []}
-            menuZIndex={3}
           >
             Secteur
           </Multiselect>
@@ -60,7 +59,6 @@ export const SideSection = ({
             onChange={(selected) => handleFilters("uai", selected)}
             options={filtersList?.etablissements}
             value={searchParams.filters?.uai ?? []}
-            menuZIndex={3}
           >
             Établissement
           </Multiselect>
@@ -72,7 +70,6 @@ export const SideSection = ({
             onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
             options={filtersList?.diplomes}
             value={searchParams.filters?.codeNiveauDiplome ?? []}
-            menuZIndex={3}
           >
             Diplôme
           </Multiselect>
@@ -83,7 +80,6 @@ export const SideSection = ({
             onChange={(selected) => handleFilters("codeDispositif", selected)}
             options={filtersList?.dispositifs}
             value={searchParams.filters?.codeDispositif ?? []}
-            menuZIndex={3}
           >
             Dispositif
           </Multiselect>
@@ -109,7 +105,6 @@ export const SideSection = ({
             onChange={(selected) => handleFilters("codeNsf", selected)}
             options={filtersList?.libellesNsf}
             value={searchParams.filters?.codeNsf ?? []}
-            menuZIndex={3}
           >
             Domaine de formation (NSF)
           </Multiselect>
@@ -120,7 +115,6 @@ export const SideSection = ({
             onChange={(selected) => handleFilters("cfdFamille", selected)}
             options={filtersList?.familles}
             value={searchParams.filters?.cfdFamille ?? []}
-            menuZIndex={3}
           >
             Famille
           </Multiselect>
@@ -131,7 +125,6 @@ export const SideSection = ({
             onChange={(selected) => handleFilters("cfd", selected)}
             options={filtersList?.formations}
             value={searchParams.filters?.cfd ?? []}
-            menuZIndex={3}
           >
             Formation
           </Multiselect>
@@ -142,7 +135,6 @@ export const SideSection = ({
             onChange={(selected) => handleFilters("positionQuadrant", selected)}
             options={filtersList?.positionsQuadrant}
             value={searchParams.filters?.positionQuadrant ?? []}
-            menuZIndex={10000}
           >
             Position dans le quadrant
           </Multiselect>

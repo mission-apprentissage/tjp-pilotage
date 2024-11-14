@@ -4,6 +4,7 @@ import type { MILLESIMES_IJ } from "shared";
 import { CURRENT_RENTREE } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
@@ -48,7 +49,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   campagne,
   positionQuadrant,
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   order = "desc",
   orderBy = "createdAt",
   search,

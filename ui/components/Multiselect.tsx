@@ -106,7 +106,7 @@ export const Multiselect = chakra(
     size,
     hasDefaultValue = true,
     variant = "input",
-    menuZIndex,
+    menuZIndex = "dropdown",
     gutter,
     placement,
   }: {
@@ -132,6 +132,7 @@ export const Multiselect = chakra(
           return [val, (stateValue.current?.get?.(val) || options.find(({ value }) => val === value)?.label) ?? val];
         })
       );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value, options, stateValue.current]);
 
     const [search, setSearch] = useState("");
@@ -159,6 +160,7 @@ export const Multiselect = chakra(
         : preparedOptions;
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const filteredOptions = useMemo(filterOptions, [preparedOptions, search, map]);
     const ref = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);

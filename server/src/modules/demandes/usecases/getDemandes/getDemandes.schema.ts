@@ -1,6 +1,5 @@
 import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { OptionSchema } from "shared/schema/optionSchema";
-import { MAX_LIMIT } from "shared/utils/maxLimit";
 import { z } from "zod";
 
 const DemandeItem = z.object({
@@ -79,7 +78,7 @@ export const getDemandesSchema = {
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: DemandeItem.keyof().optional(),
     offset: z.coerce.number().optional(),
-    limit: z.coerce.number().default(MAX_LIMIT).optional(),
+    limit: z.coerce.number().optional(),
     campagne: z.string().optional(),
     codeAcademie: z.array(z.string()).optional(),
     codeNiveauDiplome: z.array(z.string()).optional(),

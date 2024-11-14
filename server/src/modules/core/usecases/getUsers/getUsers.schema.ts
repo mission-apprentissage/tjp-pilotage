@@ -1,6 +1,5 @@
 import type { Role } from "shared";
 import { PERMISSIONS } from "shared";
-import { MAX_LIMIT } from "shared/utils/maxLimit";
 import { z } from "zod";
 
 const UserSchema = z.object({
@@ -19,7 +18,7 @@ const UserSchema = z.object({
 export const getUsersSchema = {
   querystring: z.object({
     offset: z.coerce.number().optional(),
-    limit: z.coerce.number().default(MAX_LIMIT).optional(),
+    limit: z.coerce.number().optional(),
     search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: UserSchema.keyof().optional(),
