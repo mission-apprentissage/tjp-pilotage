@@ -99,7 +99,7 @@ export const HeadLineContent = ({
     });
   };
   return (
-    <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" zIndex={2}>
+    <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" zIndex={"docked"}>
       <Tr bg={"white"}>
         <Th />
         <ConditionalTh colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} colonne="rentreeScolaire">

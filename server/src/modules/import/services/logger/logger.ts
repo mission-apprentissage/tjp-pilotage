@@ -1,9 +1,7 @@
 import fs from "node:fs";
-import path from "node:path";
 
+import { logspath } from "@/basepath";
 import { __dirname } from "@/utils/esmUtils";
-
-export const logspath = path.join(__dirname(import.meta.url), "../../logs");
 
 type Logs = string[];
 let logsReg: Logs = [];

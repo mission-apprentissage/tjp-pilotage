@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/data/usecases/getFormations/getFormations.usecase";
@@ -22,7 +23,7 @@ import { cleanNull } from "@/utils/noNull";
 
 export const getFormationsQuery = async ({
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   rentreeScolaire = [CURRENT_RENTREE],
   millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
@@ -43,7 +44,7 @@ export const getFormationsQuery = async ({
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const query = getKbdClient()
+  const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")
     .leftJoin("formationEtablissement", (join) =>
       join
@@ -253,9 +254,9 @@ export const getFormationsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("nsf.libelleNsf")}),
                   ' ',
-                  unaccent(${eb.ref("etablissement.libelleEtablissement")}),
+                  unaccent(${eb.ref("formationView.cpc")}),
                   ' ',
-                  unaccent(${eb.ref("etablissement.commune")})
+                  unaccent(${eb.ref("formationView.cpcSecteur")})
                 )`,
                 "ilike",
                 `%${search_word}%`
@@ -322,13 +323,12 @@ export const getFormationsQuery = async ({
     .orderBy("formationView.cfd", "asc")
     .orderBy("nbEtablissement", "asc")
     .offset(offset)
-    .limit(limit);
-
-  const res = await query.execute();
+    .limit(limit)
+    .execute();
 
   return {
-    count: res[0]?.count ?? 0,
-    formations: res.map((formation) =>
+    count: result[0]?.count ?? 0,
+    formations: result.map((formation) =>
       cleanNull({
         ...formation,
         isFormationRenovee: !!formation.isFormationRenovee,

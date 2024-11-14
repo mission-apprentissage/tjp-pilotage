@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import type { Role } from "shared";
 import type { Scope } from "shared/security/permissions";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
@@ -8,7 +9,7 @@ import { cleanNull } from "@/utils/noNull";
 
 export const findUsers = async ({
   offset,
-  limit,
+  limit = MAX_LIMIT,
   search,
   orderBy,
   scope,

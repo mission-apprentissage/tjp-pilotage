@@ -15,6 +15,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Portal,
   useToken,
   VStack,
 } from "@chakra-ui/react";
@@ -50,7 +51,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   return (
     <>
       <VStack
-        zIndex="overlay"
+        zIndex="docked"
         spacing="0"
         divider={<Box width="100%" borderBottom="1px solid" borderBottomColor="grey.900" />}
         align={"start"}
@@ -91,11 +92,13 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
                   {auth.user.email}
                   <ChevronDownIcon ml="2" />
                 </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={logout} icon={<LoginIcon />}>
-                    Se déconnecter
-                  </MenuItem>
-                </MenuList>
+                <Portal>
+                  <MenuList zIndex={"dropdown"}>
+                    <MenuItem onClick={logout} icon={<LoginIcon />}>
+                      Se déconnecter
+                    </MenuItem>
+                  </MenuList>
+                </Portal>
               </Menu>
             )}
           </Box>
@@ -107,7 +110,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
           position="sticky"
           top={0}
           left={0}
-          zIndex="banner"
+          zIndex="docked"
           backgroundColor="white"
         >
           <Container maxWidth={"container.xl"} px={0}>

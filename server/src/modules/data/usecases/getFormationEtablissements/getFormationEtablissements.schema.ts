@@ -1,6 +1,5 @@
 import { PositionQuadrantZodType } from "shared/enum/positionQuadrantEnum";
 import { SecteurZodType } from "shared/enum/secteurEnum";
-import { MAX_LIMIT } from "shared/utils/maxLimit";
 import { z } from "zod";
 
 const OptionSchema = z.object({
@@ -87,7 +86,7 @@ const FiltersSchema = z.object({
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: FormationEtablissementLineSchema.keyof().optional(),
   offset: z.coerce.number().optional(),
-  limit: z.coerce.number().default(MAX_LIMIT).optional(),
+  limit: z.coerce.number().optional(),
 });
 
 export const getFormationEtablissementsSchema = {
