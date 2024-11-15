@@ -1,9 +1,40 @@
 import { ExpressionBuilder, ExpressionWrapper, RawBuilder, sql } from "kysely";
+import { FIRST_ANNEE_CAMPAGNE } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { DB } from "../../db/db";
+
+export const exceptionColoration = ({
+  eb,
+  count,
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  count:
+    | RawBuilder<number>
+    | ExpressionWrapper<DB, "demande" | "campagne", number>;
+}) =>
+  eb
+    .case()
+    .when("demande.typeDemande", "=", DemandeTypeEnum.coloration)
+    .then(0)
+    .else(count)
+    .end();
+
+export const exceptionColorationIntention = ({
+  eb,
+  count,
+}: {
+  eb: ExpressionBuilder<DB, "intention">;
+  count: RawBuilder<number>;
+}) =>
+  eb
+    .case()
+    .when("intention.typeDemande", "=", DemandeTypeEnum.coloration)
+    .then(0)
+    .else(count)
+    .end();
 
 const inQ1 = (
   eb: ExpressionBuilder<DB, "positionFormationRegionaleQuadrant">
@@ -341,6 +372,7 @@ export const countPlacesFermeesQ3 = ({
     eb,
     count: eb.case().when(inQ3(eb)).then(countPlacesFermees(eb)).else(0).end(),
   });
+
 export const countPlacesFermeesQ4 = ({
   eb,
 }: {
@@ -350,6 +382,25 @@ export const countPlacesFermeesQ4 = ({
     eb,
     count: eb.case().when(inQ4(eb)).then(countPlacesFermees(eb)).else(0).end(),
   });
+
+export const countPlacesFermeesQ4ParCampagne = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<
+    DB,
+    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
+  >;
+}) =>
+  exceptionColoration({
+    eb,
+    count: eb
+      .case()
+      .when(inQ4(eb))
+      .then(countPlacesFermeesParCampagne(eb))
+      .else(0)
+      .end(),
+  });
+
 export const countPlacesFermeesQ3Q4 = ({
   eb,
 }: {
@@ -785,36 +836,6 @@ export const countPlacesColoreesCorrection = ({
     ${countPlacesColoreesApprentissageCorrection(eb)}
   `;
 
-export const exceptionColoration = ({
-  eb,
-  count,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-  count:
-    | RawBuilder<number>
-    | ExpressionWrapper<DB, "demande" | "campagne", number>;
-}) =>
-  eb
-    .case()
-    .when("demande.typeDemande", "=", DemandeTypeEnum.coloration)
-    .then(0)
-    .else(count)
-    .end();
-
-export const exceptionColorationIntention = ({
-  eb,
-  count,
-}: {
-  eb: ExpressionBuilder<DB, "intention">;
-  count: RawBuilder<number>;
-}) =>
-  eb
-    .case()
-    .when("intention.typeDemande", "=", DemandeTypeEnum.coloration)
-    .then(0)
-    .else(count)
-    .end();
-
 export const countPlacesTransformeesCampagne2023 = ({
   eb,
 }: {
@@ -836,6 +857,18 @@ export const countPlacesTransformees = ({
     ${countPlacesColorees(eb)}
   `;
 
+export const countPlacesFermeesParCampagne = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande" | "campagne">;
+}) =>
+  eb
+    .case()
+    .when("campagne.annee", "=", FIRST_ANNEE_CAMPAGNE)
+    .then(countPlacesFermeesScolaire(eb))
+    .else(countPlacesFermees(eb))
+    .end();
+
 export const countPlacesTransformeesParCampagne = ({
   eb,
 }: {
@@ -843,7 +876,7 @@ export const countPlacesTransformeesParCampagne = ({
 }) =>
   eb
     .case()
-    .when("campagne.annee", "=", "2023")
+    .when("campagne.annee", "=", FIRST_ANNEE_CAMPAGNE)
     .then(countPlacesTransformeesCampagne2023(eb))
     .else(countPlacesTransformees(eb))
     .end();
@@ -858,7 +891,7 @@ export const getTauxTransformation = ({
   campagne?: string;
 }) => {
   switch (campagne) {
-    case "2023":
+    case FIRST_ANNEE_CAMPAGNE:
       return sql<number>`
         ${sql.table(demandeAlias)}.placesTransformees::INTEGER /
         ${sql.table(effectifAlias)}.effectif::INTEGER
