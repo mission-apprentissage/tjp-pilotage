@@ -1,5 +1,6 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -204,7 +205,12 @@ export const getFiltersQuery = async ({
     .where("familleMetier.cfdFamille", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCfd(eb), inCodeDiplome(eb), inCodeDispositif(eb)]),
+        eb.and([
+          inCfd(eb),
+          inCodeDiplome(eb),
+          inCodeDispositif(eb),
+          inDomaine(eb),
+        ]),
         cfdFamille
           ? eb("familleMetier.cfdFamille", "in", cfdFamille)
           : sql<boolean>`false`,
@@ -214,7 +220,13 @@ export const getFiltersQuery = async ({
 
   const formationFilters = await base
     .select([
-      sql`CONCAT("formationView"."libelleFormation", ' (', "niveauDiplome"."libelleNiveauDiplome", ')')
+      sql`
+      CONCAT(
+        "formationView"."libelleFormation",
+        ' (',
+        "niveauDiplome"."libelleNiveauDiplome",
+        ')'
+      )
       `.as("label"),
       "formationView.cfd as value",
     ])
@@ -248,5 +260,15 @@ export const getFiltersQuery = async ({
     familles: familleFilters.map(cleanNull),
     formations: formationFilters.map(cleanNull),
     libellesNsf: libelleNsfFilters.map(cleanNull),
+    positionsQuadrant: [
+      { label: PositionQuadrantEnum["Q1"], value: PositionQuadrantEnum["Q1"] },
+      { label: PositionQuadrantEnum["Q2"], value: PositionQuadrantEnum["Q2"] },
+      { label: PositionQuadrantEnum["Q3"], value: PositionQuadrantEnum["Q3"] },
+      { label: PositionQuadrantEnum["Q4"], value: PositionQuadrantEnum["Q4"] },
+      {
+        label: PositionQuadrantEnum["Hors quadrant"],
+        value: PositionQuadrantEnum["Hors quadrant"],
+      },
+    ],
   };
 };

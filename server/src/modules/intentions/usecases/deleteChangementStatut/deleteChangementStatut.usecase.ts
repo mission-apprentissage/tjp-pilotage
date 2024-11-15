@@ -27,7 +27,7 @@ export const deleteChangementStatutFactory =
     const intention = await deps.findOneIntention(
       changementStatut.intentionNumero
     );
-    if (!intention) throw Boom.notFound("Intention not found");
+    if (!intention) throw Boom.notFound("Intention non trouvée en base");
 
     const scope = getPermissionScope(
       user.role,

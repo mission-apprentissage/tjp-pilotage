@@ -1,5 +1,5 @@
 import { useContext } from "react";
 
-import { ChangelogContext } from "@/app/(wrapped)/changelog/changelogContext";
+import { ChangelogContext } from "./changelogContext";
 
 export const useChangelog = () => useContext(ChangelogContext);

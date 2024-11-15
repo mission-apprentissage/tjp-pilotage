@@ -12,13 +12,14 @@ import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
 import { CartoGraph } from "@/components/CartoGraph";
-import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatPercentageWithoutSign } from "@/utils/formatUtils";
 
+import { ExportMenuButton } from "../../../../../components/ExportMenuButton";
 import { useScopeCode } from "../hooks";
 import {
   FiltersStatsPilotageIntentions,
+  FilterTracker,
   StatsPilotageIntentions,
 } from "../types";
 export type IndicateurType = "tauxTransformation" | "ratioFermeture";
@@ -31,6 +32,7 @@ export const CartoSection = ({
   handleFilters,
   data,
   isLoading,
+  filterTracker,
 }: {
   indicateur: IndicateurType;
   handleIndicateurChange: (indicateur: string) => void;
@@ -43,6 +45,7 @@ export const CartoSection = ({
   handleFilters: (filters: Partial<FiltersStatsPilotageIntentions>) => void;
   data: StatsPilotageIntentions | undefined;
   isLoading?: boolean;
+  filterTracker: FilterTracker;
 }) => {
   const { code: scopeCode } = useScopeCode(filters);
 
@@ -107,15 +110,28 @@ export const CartoSection = ({
   }, [data, filters, indicateur]);
 
   const handleClickOnTerritoire = useCallback(
-    (code: string | undefined) =>
-      handleFilters({
+    (code: string | undefined) => {
+      switch (filters.scope) {
+        case ScopeEnum["région"]:
+          filterTracker("codeRegion", { value: code, context: "carto" });
+          break;
+        case ScopeEnum["académie"]:
+          filterTracker("codeAcademie", { value: code, context: "carto" });
+          break;
+        case ScopeEnum["département"]:
+          filterTracker("codeDepartement", { value: code, context: "carto" });
+          break;
+      }
+
+      return handleFilters({
         scope: filters.scope,
         codeRegion: filters.scope !== ScopeEnum["région"] ? undefined : code,
         codeAcademie:
           filters.scope !== ScopeEnum["académie"] ? undefined : code,
         codeDepartement:
           filters.scope !== ScopeEnum["département"] ? undefined : code,
-      }),
+      });
+    },
     [handleFilters, filters, scopeCode]
   );
 
@@ -142,6 +158,30 @@ export const CartoSection = ({
         </Center>
       </Box>
     );
+
+  const onExportCsv = async () => {
+    downloadCsv(
+      `visualisation_territoriale_${indicateur}_${filters.scope}`,
+      getGraphData(),
+      {
+        name: "Nom",
+        value: indicateur,
+        code: "Code",
+      }
+    );
+  };
+
+  const onExportExcel = async () => {
+    downloadExcel(
+      `visualisation_territoriale_${indicateur}_${filters.scope}`,
+      getGraphData(),
+      {
+        name: "Nom",
+        value: indicateur,
+        code: "Code",
+      }
+    );
+  };
 
   return (
     <Box
@@ -183,28 +223,8 @@ export const CartoSection = ({
           </Flex>
           <Flex justifyContent="start" zIndex={1} position={"relative"}>
             <ExportMenuButton
-              onExportCsv={async () => {
-                downloadCsv(
-                  `visualisation_territoriale_${indicateur}_${filters.scope}`,
-                  getGraphData(),
-                  {
-                    name: "Nom",
-                    value: indicateur,
-                    code: "Code",
-                  }
-                );
-              }}
-              onExportExcel={async () => {
-                downloadExcel(
-                  `visualisation_territoriale_${indicateur}_${filters.scope}`,
-                  getGraphData(),
-                  {
-                    name: "Nom",
-                    value: indicateur,
-                    code: "Code",
-                  }
-                );
-              }}
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
               variant="ghost"
             />
           </Flex>

@@ -4,7 +4,7 @@ import { Server } from "../../../../server";
 import { getHeaderEtablissementSchema } from "./getHeaderEtablissement.schema";
 import { getHeaderEtablissement } from "./getHeaderEtablissement.usecase";
 
-export const getHeaderEtablissementRoute = ({ server }: { server: Server }) => {
+export const getHeaderEtablissementRoute = (server: Server) => {
   return createRoute("/etablissement/:uai/header", {
     method: "GET",
     schema: getHeaderEtablissementSchema,

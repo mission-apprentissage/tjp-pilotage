@@ -23,7 +23,7 @@ import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { FORMATION_COLUMNS } from "../FORMATION_COLUMNS";
-import { Line } from "../types";
+import { Filters, Line } from "../types";
 
 const ConditionalTd = chakra(
   ({
@@ -64,6 +64,7 @@ export const FormationLineContent = ({
   expended = false,
   canShowQuadrantPosition,
   isSticky,
+  filters,
   colonneFilters,
   getCellBgColor,
 }: {
@@ -73,11 +74,12 @@ export const FormationLineContent = ({
   expended?: boolean;
   canShowQuadrantPosition?: boolean;
   isSticky?: boolean;
+  filters?: Partial<Filters>;
   colonneFilters: (keyof typeof FORMATION_COLUMNS)[];
   getCellBgColor: (column: keyof typeof FORMATION_COLUMNS) => string;
 }) => (
   <>
-    <Td pr="0" py="1">
+    <Td pr="0" py="1" _groupHover={{ bgColor: "blueecume.850 !important" }}>
       {onClickExpend && (
         <IconButton
           transform={expended ? "rotate(180deg)" : ""}
@@ -234,6 +236,7 @@ export const FormationLineContent = ({
         as={NextLink}
         href={createParametrizedUrl("/console/etablissements", {
           filters: {
+            ...filters,
             cfd: [line.cfd],
             codeDispositif: line.codeDispositif
               ? [line.codeDispositif]

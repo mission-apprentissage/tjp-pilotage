@@ -18,6 +18,9 @@ export const themeColors = {
     faded: "#E2E7F8",
   },
   blueecume: {
+    247: "#2F4077",
+    "247_hover": "#4e68bb",
+    "247_active": "#667DCF",
     400: "#465F9D",
     "400_hover": "#6f89d1",
     "400_active": "#8b9eda",

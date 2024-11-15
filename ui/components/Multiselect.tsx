@@ -9,6 +9,7 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  PlacementWithLogical,
   Portal,
   PositionProps,
   Text,
@@ -21,7 +22,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { unstable_batchedUpdates } from "react-dom";
 import removeAccents from "remove-accents";
 
 const ButtonContent = ({
@@ -135,8 +135,9 @@ export const Multiselect = chakra(
     size,
     hasDefaultValue = true,
     variant = "input",
-    menuZIndex,
+    menuZIndex = "dropdown",
     gutter,
+    placement,
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
@@ -150,6 +151,7 @@ export const Multiselect = chakra(
     variant?: string;
     menuZIndex?: PositionProps["zIndex"];
     gutter?: number;
+    placement?: PlacementWithLogical;
   }) => {
     const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
 
@@ -213,10 +215,8 @@ export const Multiselect = chakra(
       <Menu
         isLazy={true}
         onOpen={() => {
-          unstable_batchedUpdates(() => {
-            prepareOptions();
-            handleSearch("");
-          });
+          prepareOptions();
+          handleSearch("");
           setTimeout(() => inputRef.current?.focus(), 100);
         }}
         onClose={() => {
@@ -225,6 +225,7 @@ export const Multiselect = chakra(
         }}
         closeOnSelect={false}
         gutter={gutter}
+        placement={placement}
       >
         <MenuButton
           as={Button}
