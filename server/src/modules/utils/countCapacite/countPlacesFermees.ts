@@ -1,4 +1,5 @@
 import { ExpressionBuilder, sql } from "kysely";
+import { FIRST_ANNEE_CAMPAGNE } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
 import { DB } from "../../../db/db";
@@ -30,6 +31,21 @@ export const countPlacesFermeesQ4 = ({
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) => eb.case().when(inQ4(eb)).then(countPlacesFermees(eb)).else(0).end();
+
+export const countPlacesFermeesQ4ParCampagne = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<
+    DB,
+    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
+  >;
+}) =>
+  eb
+    .case()
+    .when(inQ4(eb))
+    .then(countPlacesFermeesParCampagne(eb))
+    .else(0)
+    .end();
 
 export const countPlacesFermeesQ3Q4 = ({
   eb,
@@ -106,6 +122,18 @@ export const countPlacesFermeesScolaire = ({
       ])
     )
     .then(eb.val(0))
+    .end();
+
+export const countPlacesFermeesParCampagne = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande" | "campagne">;
+}) =>
+  eb
+    .case()
+    .when("campagne.annee", "=", FIRST_ANNEE_CAMPAGNE)
+    .then(countPlacesFermeesScolaire(eb))
+    .else(countPlacesFermees(eb))
     .end();
 
 export const countPlacesFermeesScolaireCorrection = ({

@@ -6,7 +6,7 @@ import { hasPermissionHandler } from "../../../core";
 import { submitDemandeSchema } from "./submitDemande.schema";
 import { submitDemande } from "./submitDemande.usecase";
 
-export const submitDemandeRoute = ({ server }: { server: Server }) => {
+export const submitDemandeRoute = (server: Server) => {
   return createRoute("/demande/submit", {
     method: "POST",
     schema: submitDemandeSchema,

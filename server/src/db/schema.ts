@@ -818,6 +818,16 @@ export interface Region {
   libelleRegion: string;
 }
 
+export interface RequeteEnregistree {
+  id: Generated<string>;
+  userId: string;
+  nom: string;
+  couleur: string;
+  page: string;
+  filtres: Json;
+  createdAt: Generated<Timestamp | null>;
+}
+
 export interface Rome {
   codeRome: string;
   libelleRome: string;
@@ -848,9 +858,24 @@ export interface Tension {
   libelleTension: string;
 }
 
+export interface TensionRome {
+  codeRome: string;
+  codeTension: string;
+  annee: string;
+  valeur: number;
+}
+
 export interface TensionRomeDepartement {
   codeRome: string;
   codeDepartement: string;
+  codeTension: string;
+  annee: string;
+  valeur: number;
+}
+
+export interface TensionRomeRegion {
+  codeRome: string;
+  codeRegion: string;
   codeTension: string;
   annee: string;
   valeur: number;
@@ -913,10 +938,13 @@ export interface DB {
   positionFormationRegionaleQuadrant: PositionFormationRegionaleQuadrant;
   rawData: RawData;
   region: Region;
+  requeteEnregistree: RequeteEnregistree;
   rome: Rome;
   suivi: Suivi;
   tauxIJNiveauDiplomeRegion: TauxIJNiveauDiplomeRegion;
   tension: Tension;
+  tensionRome: TensionRome;
   tensionRomeDepartement: TensionRomeDepartement;
+  tensionRomeRegion: TensionRomeRegion;
   user: User;
 }

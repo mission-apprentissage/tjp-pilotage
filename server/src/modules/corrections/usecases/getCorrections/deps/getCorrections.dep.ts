@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -35,7 +36,7 @@ export const getCorrectionsQuery = async ({
   voie,
   campagne,
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   order = "desc",
   orderBy = "createdAt",
   search,

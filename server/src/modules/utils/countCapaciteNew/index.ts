@@ -37,9 +37,11 @@ export {
   countPlacesFermeesApprentissageQ4,
   countPlacesFermeesApprentissageQ3Q4,
   countPlacesFermees,
+  countPlacesFermeesParCampagne,
   countPlacesFermeesQ3,
   countPlacesFermeesQ4,
   countPlacesFermeesQ3Q4,
+  countPlacesFermeesQ4ParCampagne,
 } from "./countPlacesFermees";
 
 export {

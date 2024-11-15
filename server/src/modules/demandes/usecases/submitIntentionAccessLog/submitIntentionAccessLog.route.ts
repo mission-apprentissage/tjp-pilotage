@@ -4,11 +4,7 @@ import { Server } from "../../../../server";
 import { submitIntentionAccessLogSchema } from "./submitIntentionAccessLog.schema";
 import { submitIntentionAccessLogUsecase } from "./submitIntentionAccessLog.usecase";
 
-export const submitIntentionAccessLogRoute = ({
-  server,
-}: {
-  server: Server;
-}) => {
+export const submitIntentionAccessLogRoute = (server: Server) => {
   return createRoute("/demande/access/submit", {
     method: "POST",
     schema: submitIntentionAccessLogSchema,

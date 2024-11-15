@@ -72,10 +72,7 @@ import {
   StructureDenseignement,
   StructureDenseignementSchema,
 } from "../fileTypes/Structures_denseignement";
-import {
-  Tension_Departement_Rome,
-  TensionDepartementRomeSchema,
-} from "../fileTypes/Tension_Departement_rome";
+import { Tension_Rome, TensionRomeSchema } from "../fileTypes/Tension_Rome";
 import {
   VFormationDiplomeLine,
   VFormationDiplomeSchema,
@@ -111,7 +108,9 @@ export const Schemas = {
   metier: MetierSchema,
   certif_info: CertifInfoSchema,
   discipline: DisciplineSchema,
-  tension_departement_rome: TensionDepartementRomeSchema,
+  tension_rome_departement: TensionRomeSchema,
+  tension_rome_region: TensionRomeSchema,
+  tension_rome: TensionRomeSchema,
 };
 
 export type LineTypes = {
@@ -144,7 +143,9 @@ export type LineTypes = {
   metier: Metier;
   certif_info: Certif_Info;
   discipline: Discipline;
-  tension_departement_rome: Tension_Departement_Rome;
+  tension_rome_departement: Tension_Rome;
+  tension_rome_region: Tension_Rome;
+  tension_rome: Tension_Rome;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

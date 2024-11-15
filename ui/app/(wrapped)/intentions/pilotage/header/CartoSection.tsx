@@ -12,10 +12,10 @@ import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
 import { CartoGraph } from "@/components/CartoGraph";
-import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatPercentageWithoutSign } from "@/utils/formatUtils";
 
+import { ExportMenuButton } from "../../../../../components/ExportMenuButton";
 import { useScopeCode } from "../hooks";
 import {
   FiltersStatsPilotageIntentions,
@@ -159,6 +159,30 @@ export const CartoSection = ({
       </Box>
     );
 
+  const onExportCsv = async () => {
+    downloadCsv(
+      `visualisation_territoriale_${indicateur}_${filters.scope}`,
+      getGraphData(),
+      {
+        name: "Nom",
+        value: indicateur,
+        code: "Code",
+      }
+    );
+  };
+
+  const onExportExcel = async () => {
+    downloadExcel(
+      `visualisation_territoriale_${indicateur}_${filters.scope}`,
+      getGraphData(),
+      {
+        name: "Nom",
+        value: indicateur,
+        code: "Code",
+      }
+    );
+  };
+
   return (
     <Box
       flex={1}
@@ -199,28 +223,8 @@ export const CartoSection = ({
           </Flex>
           <Flex justifyContent="start" zIndex={1} position={"relative"}>
             <ExportMenuButton
-              onExportCsv={async () => {
-                downloadCsv(
-                  `visualisation_territoriale_${indicateur}_${filters.scope}`,
-                  getGraphData(),
-                  {
-                    name: "Nom",
-                    value: indicateur,
-                    code: "Code",
-                  }
-                );
-              }}
-              onExportExcel={async () => {
-                downloadExcel(
-                  `visualisation_territoriale_${indicateur}_${filters.scope}`,
-                  getGraphData(),
-                  {
-                    name: "Nom",
-                    value: indicateur,
-                    code: "Code",
-                  }
-                );
-              }}
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
               variant="ghost"
             />
           </Flex>

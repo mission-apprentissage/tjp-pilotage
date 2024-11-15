@@ -33,8 +33,12 @@ import {
   importRawFile,
 } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
-import { importTensionDepartementRome } from "./modules/import/usecases/importTensionDepartementRome/importTensionDepartementRome.usecase";
-import { importTensionFranceTravail } from "./modules/import/usecases/importTensionFranceTravail/importTensionFranceTravail.usecase";
+import { importTensionFranceTravailDepartement } from "./modules/import/usecases/importTensionFranceTravail/importTensionFranceTravailDepartement.usecase";
+import { importTensionFranceTravailNational } from "./modules/import/usecases/importTensionFranceTravail/importTensionFranceTravailNational.usecase";
+import { importTensionFranceTravailRegion } from "./modules/import/usecases/importTensionFranceTravail/importTensionFranceTravailRegion.usecase";
+import { importTensionRomeDepartement } from "./modules/import/usecases/importTensionRome/importTensionRomeDepartement.usecase";
+import { importTensionRomeNational } from "./modules/import/usecases/importTensionRome/importTensionRomeNational.usecase";
+import { importTensionRomeRegion } from "./modules/import/usecases/importTensionRome/importTensionRomeRegion.usecase";
 import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
 import { writeErrorLogs } from "./modules/import/utils/writeErrorLogs";
 
@@ -267,8 +271,16 @@ cli
       ...getImports({ type: "certif_info", schema: Schemas.certif_info }),
       ...getImports({ type: "discipline", schema: Schemas.discipline }),
       ...getImports({
-        type: "tension_departement_rome",
-        schema: Schemas.tension_departement_rome,
+        type: "tension_rome",
+        schema: Schemas.tension_rome,
+      }),
+      ...getImports({
+        type: "tension_rome_region",
+        schema: Schemas.tension_rome_region,
+      }),
+      ...getImports({
+        type: "tension_rome_departement",
+        schema: Schemas.tension_rome_departement,
       }),
     };
 
@@ -319,7 +331,9 @@ cli
       importIndicateursDepartement,
       importLienEmploiFormation,
       importDiscipline,
-      importTensionDepartementRome,
+      importTensionRomeNational,
+      importTensionRomeRegion,
+      importTensionRomeDepartement,
       refreshViews,
     };
 
@@ -361,9 +375,24 @@ cli
 
 cli
   .command("importTensionFranceTravail")
-  .description("Import des données de tension depuis France Travail")
-  .action(async () => {
-    await importTensionFranceTravail();
+  .description(
+    "Import des données de tension (national/régional/départemental) depuis France Travail"
+  )
+  .argument("[usecase]")
+  .action(async (usecaseName: string) => {
+    const usecases = {
+      importTensionFranceTravailNational,
+      importTensionFranceTravailRegion,
+      importTensionFranceTravailDepartement,
+    };
+
+    if (usecaseName) {
+      await usecases[usecaseName as keyof typeof usecases]();
+    } else {
+      for (const usecase of Object.values(usecases)) {
+        await usecase();
+      }
+    }
   });
 
 cli

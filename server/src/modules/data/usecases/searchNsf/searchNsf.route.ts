@@ -4,7 +4,7 @@ import { Server } from "../../../../server";
 import { searchNsfSchema } from "./searchNsf.schema";
 import { searchNsfUsecase } from "./searchNsf.usecase";
 
-export const searchNsfRoute = ({ server }: { server: Server }) => {
+export const searchNsfRoute = (server: Server) => {
   return createRoute("/nsf/search/:search", {
     method: "GET",
     schema: searchNsfSchema,
