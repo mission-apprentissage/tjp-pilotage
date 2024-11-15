@@ -30,7 +30,7 @@ export const [
       intention: Intention;
     }) => {
       const demandeData = await findOneDemande(intention.numero);
-      if (!demandeData) throw Boom.notFound("Demande not found");
+      if (!demandeData) throw Boom.notFound("Demande non trouvée en base");
 
       const newIntentionAccessLog = {
         intentionNumero: demandeData.numero,

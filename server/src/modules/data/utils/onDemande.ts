@@ -6,15 +6,15 @@ import { DemandeStatutType } from "../../../../../shared/enum/demandeStatutEnum"
 import { DemandeTypeEnum } from "../../../../../shared/enum/demandeTypeEnum";
 import { DB } from "../../../db/db";
 import {
+  countPlacesColorees,
   countPlacesColoreesFermees,
   countPlacesColoreesOuvertes,
   countPlacesColoreesOuvertesQ4,
-  countPlacesColoreesTransformees,
-  countPlacesColoreesTransformeesQ4,
-  countPlacesFermees,
+  countPlacesColoreesQ4,
   countPlacesFermeesApprentissage,
   countPlacesFermeesApprentissageQ4,
-  countPlacesFermeesQ4,
+  countPlacesFermeesParCampagne,
+  countPlacesFermeesQ4ParCampagne,
   countPlacesFermeesScolaire,
   countPlacesFermeesScolaireQ4,
   countPlacesNonColoreesTransformees,
@@ -133,21 +133,19 @@ export const genericOnDemandes = ({
         .sum<number>(countPlacesFermeesApprentissageQ4(eb))
         .as("placesFermeesApprentissageQ4"),
       eb.fn.sum<number>(countPlacesOuvertes(eb)).as("placesOuvertes"),
-      eb.fn.sum<number>(countPlacesFermees(eb)).as("placesFermees"),
+      eb.fn.sum<number>(countPlacesFermeesParCampagne(eb)).as("placesFermees"),
       eb.fn.sum<number>(countPlacesOuvertesQ1(eb)).as("placesOuvertesQ1"),
-      eb.fn.sum<number>(countPlacesFermeesQ4(eb)).as("placesFermeesQ4"),
+      eb.fn
+        .sum<number>(countPlacesFermeesQ4ParCampagne(eb))
+        .as("placesFermeesQ4"),
       eb.fn
         .sum<number>(countPlacesNonColoreesTransformees(eb))
         .as("placesNonColoreesTransformees"),
       eb.fn
         .sum<number>(countPlacesOuvertesTransitionEcologique(eb))
         .as("placesOuvertesTransformationEcologique"),
-      eb.fn
-        .sum<number>(countPlacesColoreesTransformees(eb))
-        .as("placesColorees"),
-      eb.fn
-        .sum<number>(countPlacesColoreesTransformeesQ4(eb))
-        .as("placesColoreesQ4"),
+      eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
+      eb.fn.sum<number>(countPlacesColoreesQ4(eb)).as("placesColoreesQ4"),
       eb.fn
         .sum<number>(countPlacesColoreesOuvertes(eb))
         .as("placesColoreesOuvertes"),

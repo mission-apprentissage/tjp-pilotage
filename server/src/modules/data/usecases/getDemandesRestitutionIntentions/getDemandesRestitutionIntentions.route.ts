@@ -6,11 +6,7 @@ import { hasPermissionHandler } from "../../../core";
 import { getDemandesRestitutionIntentionsSchema } from "./getDemandesRestitutionIntentions.schema";
 import { getDemandesRestitutionIntentionsUsecase } from "./getDemandesRestitutionIntentions.usecase";
 
-export const getDemandesRestitutionIntentionsRoute = ({
-  server,
-}: {
-  server: Server;
-}) => {
+export const getDemandesRestitutionIntentionsRoute = (server: Server) => {
   return createRoute("/restitution-intentions/demandes", {
     method: "GET",
     schema: getDemandesRestitutionIntentionsSchema,

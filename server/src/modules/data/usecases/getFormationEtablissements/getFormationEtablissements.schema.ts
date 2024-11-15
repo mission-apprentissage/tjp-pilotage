@@ -1,3 +1,4 @@
+import { PositionQuadrantZodType } from "shared/enum/positionQuadrantEnum";
 import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
 
@@ -66,27 +67,30 @@ const FormationEtablissementLineSchema = z.object({
   dateFermeture: z.string().optional(),
 });
 
+const FiltersSchema = z.object({
+  cfd: z.array(z.string()).optional(),
+  codeRegion: z.array(z.string()).optional(),
+  codeAcademie: z.array(z.string()).optional(),
+  codeDepartement: z.array(z.string()).optional(),
+  commune: z.array(z.string()).optional(),
+  codeNiveauDiplome: z.array(z.string()).optional(),
+  codeDispositif: z.array(z.string()).optional(),
+  cfdFamille: z.array(z.string()).optional(),
+  rentreeScolaire: z.array(z.string()).optional(),
+  secteur: z.array(SecteurZodType).optional(),
+  uai: z.array(z.string()).optional(),
+  codeNsf: z.array(z.string()).optional(),
+  positionQuadrant: z.array(PositionQuadrantZodType).optional(),
+  withAnneeCommune: z.string().optional(),
+  search: z.string().optional(),
+  order: z.enum(["asc", "desc"]).optional(),
+  orderBy: FormationEtablissementLineSchema.keyof().optional(),
+  offset: z.coerce.number().optional(),
+  limit: z.coerce.number().optional(),
+});
+
 export const getFormationEtablissementsSchema = {
-  querystring: z.object({
-    cfd: z.array(z.string()).optional(),
-    codeRegion: z.array(z.string()).optional(),
-    codeAcademie: z.array(z.string()).optional(),
-    codeDepartement: z.array(z.string()).optional(),
-    commune: z.array(z.string()).optional(),
-    codeNiveauDiplome: z.array(z.string()).optional(),
-    codeDispositif: z.array(z.string()).optional(),
-    cfdFamille: z.array(z.string()).optional(),
-    rentreeScolaire: z.array(z.string()).optional(),
-    secteur: z.array(SecteurZodType).optional(),
-    uai: z.array(z.string()).optional(),
-    codeNsf: z.array(z.string()).optional(),
-    withAnneeCommune: z.string().optional(),
-    search: z.string().optional(),
-    order: z.enum(["asc", "desc"]).optional(),
-    orderBy: FormationEtablissementLineSchema.keyof().optional(),
-    offset: z.coerce.number().optional(),
-    limit: z.coerce.number().optional(),
-  }),
+  querystring: FiltersSchema,
   response: {
     200: z.object({
       count: z.coerce.number(),
@@ -102,6 +106,7 @@ export const getFormationEtablissementsSchema = {
         etablissements: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),
         secteurs: z.array(OptionSchema),
+        positionsQuadrant: z.array(OptionSchema),
       }),
       etablissements: z.array(FormationEtablissementLineSchema),
     }),

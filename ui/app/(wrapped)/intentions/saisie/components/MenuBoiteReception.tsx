@@ -21,37 +21,22 @@ export const MenuBoiteReception = ({
   hasPermissionSubmitIntention,
   campagne,
   handleFilters,
-  searchParams,
+  activeFilters,
 }: {
   isRecapView?: boolean;
   hasPermissionSubmitIntention: boolean;
   campagne?: { annee: string; statut: string };
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-  searchParams: {
-    filters?: Partial<Filters>;
-    campagne?: string;
-    search?: string;
-  };
+  activeFilters: Filters;
 }) => {
   const statut =
-    searchParams.filters?.statut === undefined
-      ? "none"
-      : searchParams.filters?.statut;
-  const anneeCampagne = searchParams.campagne ?? campagne?.annee;
+    activeFilters?.statut === undefined ? "none" : activeFilters?.statut;
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
   const isDisabled =
     !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
-  const search = searchParams.search;
-  const codeAcademie = searchParams.filters?.codeAcademie;
-  const codeNiveauDiplome = searchParams.filters?.codeNiveauDiplome;
 
   const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery({
-    query: {
-      anneeCampagne,
-      codeAcademie,
-      codeNiveauDiplome,
-      search,
-    },
+    query: activeFilters,
   });
 
   const bluefrance113 = useToken("colors", "bluefrance.113");

@@ -17,10 +17,10 @@ export const deleteAvisFactory =
     user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
   }) => {
     const avis = await deps.findOneAvisQuery(id);
-    if (!avis) throw Boom.notFound("Avis not found");
+    if (!avis) throw Boom.notFound("Avis non trouvé en base");
 
     const intention = await deps.findOneIntention(avis.intentionNumero);
-    if (!intention) throw Boom.notFound("Intention not found");
+    if (!intention) throw Boom.notFound("Intention non trouvée en base");
 
     const scope = getPermissionScope(
       user.role,

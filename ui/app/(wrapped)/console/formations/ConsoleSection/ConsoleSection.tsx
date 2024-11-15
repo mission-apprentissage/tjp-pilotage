@@ -40,7 +40,6 @@ export const ConsoleSection = ({
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: number;
@@ -71,7 +70,7 @@ export const ConsoleSection = ({
             rentreeScolaire: RENTREES_SCOLAIRES.filter(
               (rentree) => rentree !== CURRENT_RENTREE
             ),
-            withEmptyFormations: false,
+            withEmptyFormations: "false",
           },
         })
       ).formations;
@@ -125,6 +124,7 @@ export const ConsoleSection = ({
                 <FormationLineContent
                   isSticky={isSticky}
                   line={line}
+                  filters={filters}
                   expended={
                     historiqueId?.cfd === line.cfd &&
                     historiqueId.codeDispositif === line.codeDispositif
@@ -154,6 +154,7 @@ export const ConsoleSection = ({
                           line={historiqueLine}
                           canShowQuadrantPosition={canShowQuadrantPosition}
                           colonneFilters={colonneFilters}
+                          filters={filters}
                           getCellBgColor={getCellBgColor}
                         />
                       </Tr>

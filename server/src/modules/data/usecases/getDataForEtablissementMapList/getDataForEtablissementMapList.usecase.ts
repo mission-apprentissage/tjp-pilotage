@@ -40,7 +40,7 @@ export const getDataForEtablissementMapListFactory =
     });
 
     if (!etablissementData) {
-      throw Boom.notFound("Etablissement not found");
+      throw Boom.notFound("Établissement non trouvé en base");
     }
 
     const etablissement = await deps.getEtablissement({
