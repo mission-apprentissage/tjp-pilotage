@@ -107,27 +107,19 @@ export default () => {
   };
 
   const onExportCsv = async (isFiltered?: boolean) => {
-    trackEvent("etablissements:export");
+    trackEvent("users:export");
     const data = await client.ref("[GET]/users").query({
       query: isFiltered ? { ...filters, ...order } : {},
     });
-    downloadCsv(
-      formatExportFilename("users_export", isFiltered ? filters : undefined),
-      data.users,
-      Columns
-    );
+    downloadCsv(formatExportFilename("users_export"), data.users, Columns);
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
-    trackEvent("etablissements:export-excel");
+    trackEvent("users:export-excel");
     const data = await client.ref("[GET]/users").query({
       query: isFiltered ? { ...filters, ...order } : {},
     });
-    downloadExcel(
-      formatExportFilename("users_export", isFiltered ? filters : undefined),
-      data.users,
-      Columns
-    );
+    downloadExcel(formatExportFilename("users_export"), data.users, Columns);
   };
 
   return (
@@ -272,7 +264,7 @@ export default () => {
             </Table>
             {!data.users.length && (
               <Box p={6} textAlign="center" color="gray">
-                Aucunes données
+                Aucune donnée
               </Box>
             )}
           </TableContainer>
