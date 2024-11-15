@@ -85,7 +85,54 @@ export const login = async () => {
   return access_token;
 };
 
-export const getStatsPerspectivesRecrutement = async (
+export const getStatsPerspectivesRecrutement = async (codeRome: string) => {
+  const response =
+    await instance.post<FranceTravailStatsPerspectiveRecrutementResponse>(
+      `/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-perspective-employeur`,
+      {
+        codeTypeTerritoire: "NAT",
+        codeTerritoire: "FR",
+        codeTypeActivite: "ROME",
+        codeActivite: codeRome,
+        codeTypePeriode: "ANNEE",
+        codeTypeNomenclature: "TYPE_TENSION",
+      },
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
+
+  return response.data?.listeValeursParPeriode;
+};
+
+export const getStatsPerspectivesRecrutementRegion = async (
+  codeRome: string,
+  codeRegion: string
+) => {
+  const response =
+    await instance.post<FranceTravailStatsPerspectiveRecrutementResponse>(
+      `/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-perspective-employeur`,
+      {
+        codeTypeTerritoire: "REG",
+        codeTerritoire: codeRegion,
+        codeTypeActivite: "ROME",
+        codeActivite: codeRome,
+        codeTypePeriode: "ANNEE",
+        codeTypeNomenclature: "TYPE_TENSION",
+      },
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
+
+  return response.data?.listeValeursParPeriode;
+};
+
+export const getStatsPerspectivesRecrutementDepartement = async (
   codeRome: string,
   codeDepartement: string
 ) => {

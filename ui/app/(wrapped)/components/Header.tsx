@@ -15,6 +15,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Portal,
   useToken,
   VStack,
 } from "@chakra-ui/react";
@@ -24,17 +25,28 @@ import { useContext } from "react";
 
 import { client } from "@/api.client";
 import { AuthContext } from "@/app/(wrapped)/auth/authContext";
+import {
+  CodeDepartementFilterContext,
+  CodeRegionFilterContext,
+  UaisFilterContext,
+} from "@/app/layoutClient";
 
 import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
 export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const { auth, setAuth } = useContext(AuthContext);
+  const { setUaisFilter } = useContext(UaisFilterContext);
+  const { setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
+  const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
   const queryClient = useQueryClient();
 
   const logout = async () => {
     await client.ref("[POST]/auth/logout").query({});
     setAuth(undefined);
+    setUaisFilter(undefined);
+    setCodeDepartementFilter(undefined);
+    setCodeRegionFilter(undefined);
     queryClient.clear();
   };
 
@@ -43,7 +55,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   return (
     <>
       <VStack
-        zIndex="overlay"
+        zIndex="docked"
         spacing="0"
         divider={
           <Box
@@ -105,11 +117,13 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
                   {auth.user.email}
                   <ChevronDownIcon ml="2" />
                 </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={logout} icon={<LoginIcon />}>
-                    Se déconnecter
-                  </MenuItem>
-                </MenuList>
+                <Portal>
+                  <MenuList zIndex={"dropdown"}>
+                    <MenuItem onClick={logout} icon={<LoginIcon />}>
+                      Se déconnecter
+                    </MenuItem>
+                  </MenuList>
+                </Portal>
               </Menu>
             )}
           </Box>
@@ -121,7 +135,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
           position="sticky"
           top={0}
           left={0}
-          zIndex="banner"
+          zIndex="docked"
           backgroundColor="white"
         >
           <Container maxWidth={"container.xl"} px={0}>

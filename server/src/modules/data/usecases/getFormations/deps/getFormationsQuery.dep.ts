@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -25,7 +26,7 @@ import { Filters } from "../getFormations.usecase";
 
 export const getFormationsQuery = async ({
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   rentreeScolaire = [CURRENT_RENTREE],
   millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
@@ -37,15 +38,16 @@ export const getFormationsQuery = async ({
   cfd,
   cfdFamille,
   codeNsf,
+  positionQuadrant,
   search,
-  withEmptyFormations = true,
+  withEmptyFormations = "true",
   withAnneeCommune,
   order,
   orderBy,
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const query = kdb
+  const result = await kdb
     .selectFrom("formationScolaireView as formationView")
     .leftJoin("formationEtablissement", (join) =>
       join
@@ -144,6 +146,10 @@ export const getFormationsQuery = async ({
             .end()
             .as("positionQuadrant")
         )
+        .$call((eb) => {
+          if (!positionQuadrant) return eb;
+          return eb.where("positionQuadrant", "in", positionQuadrant);
+        })
         .groupBy("positionQuadrant");
     })
     .select((eb) => [
@@ -250,7 +256,7 @@ export const getFormationsQuery = async ({
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "is not", null),
-        withEmptyFormations
+        withEmptyFormations === "true"
           ? eb.not(
               eb.exists(
                 eb
@@ -308,9 +314,9 @@ export const getFormationsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("nsf.libelleNsf")}),
                   ' ',
-                  unaccent(${eb.ref("etablissement.libelleEtablissement")}),
+                  unaccent(${eb.ref("formationView.cpc")}),
                   ' ',
-                  unaccent(${eb.ref("etablissement.commune")})
+                  unaccent(${eb.ref("formationView.cpcSecteur")})
                 )`,
                 "ilike",
                 `%${search_word}%`
@@ -373,8 +379,7 @@ export const getFormationsQuery = async ({
       return q.where("formationView.codeNsf", "in", codeNsf);
     })
     .$call((q) => {
-      if (!withAnneeCommune || withAnneeCommune === "false")
-        return q.where(notAnneeCommune);
+      if (withAnneeCommune === "false") return q.where(notAnneeCommune);
       return q;
     })
     .$call((q) => {
@@ -389,13 +394,12 @@ export const getFormationsQuery = async ({
     .orderBy("formationView.cfd", "asc")
     .orderBy("nbEtablissement", "asc")
     .offset(offset)
-    .limit(limit);
-
-  const res = await query.execute();
+    .limit(limit)
+    .execute();
 
   return {
-    count: res[0]?.count ?? 0,
-    formations: res.map((formation) =>
+    count: result[0]?.count ?? 0,
+    formations: result.map((formation) =>
       cleanNull({
         ...formation,
         isFormationRenovee: !!formation.isFormationRenovee,

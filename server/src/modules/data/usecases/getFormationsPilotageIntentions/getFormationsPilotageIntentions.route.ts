@@ -5,11 +5,7 @@ import { hasPermissionHandler } from "../../../core";
 import { getFormationsPilotageIntentionsSchema } from "./getFormationsPilotageIntentions.schema";
 import { getFormationsPilotageIntentionsUsecase } from "./getFormationsPilotageIntentions.usecase";
 
-export const getFormationsPilotageIntentionsRoute = ({
-  server,
-}: {
-  server: Server;
-}) => {
+export const getFormationsPilotageIntentionsRoute = (server: Server) => {
   return createRoute("/pilotage-intentions/formations", {
     method: "GET",
     schema: getFormationsPilotageIntentionsSchema,

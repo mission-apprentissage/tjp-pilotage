@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { ScopeEnum } from "shared";
+import z from "zod";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -10,7 +11,12 @@ import {
 } from "../../../utils/isInPerimetreIJ";
 import { genericOnConstatRentree } from "../../../utils/onConstatDeRentree";
 import { genericOnDemandes } from "../../../utils/onDemande";
-import { Filters } from "../getStatsPilotageIntentions.usecase";
+import { getStatsPilotageIntentionsSchema } from "../getStatsPilotageIntentions.schema";
+
+export interface Filters
+  extends z.infer<typeof getStatsPilotageIntentionsSchema.querystring> {
+  campagne: string;
+}
 
 const getNationalData = async (filters: Filters) => {
   return kdb

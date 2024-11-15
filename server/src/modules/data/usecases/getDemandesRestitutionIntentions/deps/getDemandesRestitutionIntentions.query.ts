@@ -1,10 +1,14 @@
 import { sql } from "kysely";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
-import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
+import { jsonBuildObject } from "kysely/helpers/postgres";
+import { CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
+import { z } from "zod";
 
 import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
+import { RequestUser } from "../../../../core/model/User";
 import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
 import {
   countDifferenceCapaciteApprentissage,
@@ -15,11 +19,18 @@ import { isRestitutionIntentionVisible } from "../../../../utils/isRestitutionIn
 import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
 import { isScolaireIndicateurRegionSortie } from "../../../utils/isScolaire";
 import { nbEtablissementFormationRegion } from "../../../utils/nbEtablissementFormationRegion";
+import { selectPositionQuadrant } from "../../../utils/positionFormationRegionaleQuadrant";
 import { selectTauxDevenirFavorable } from "../../../utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "../../../utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "../../../utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "../../../utils/tauxPression";
-import { Filters } from "../getDemandesRestitutionIntentions.usecase";
+import { FiltersSchema } from "../getDemandesRestitutionIntentions.schema";
+
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+  campagne: string;
+}
 
 export const getDemandesRestitutionIntentionsQuery = async ({
   statut,
@@ -36,12 +47,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   codeAcademie,
   uai,
   user,
-  millesimeSortie = CURRENT_IJ_MILLESIME,
   voie,
   campagne,
   positionQuadrant,
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   order = "desc",
   orderBy = "createdAt",
   search,
@@ -88,7 +98,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
           "=",
           "demande.codeDispositif"
         )
-        .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+        .on(
+          "indicateurRegionSortie.millesimeSortie",
+          "=",
+          getMillesimeFromCampagne(campagne)
+        )
         .on(isScolaireIndicateurRegionSortie)
     )
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
@@ -110,14 +124,30 @@ export const getDemandesRestitutionIntentionsQuery = async ({
             eb.ref("dataEtablissement.codeRegion")
           ),
           eb(
-            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
+            "positionFormationRegionaleQuadrant.millesimeSortie",
             "=",
-            eb.val(
-              getMillesimeFromRentreeScolaire({
-                rentreeScolaire: CURRENT_RENTREE,
-                offset: 0,
-              })
-            )
+            getMillesimeFromCampagne(campagne)
+          ),
+        ])
+      )
+    )
+    .leftJoin("tauxIJNiveauDiplomeRegion", (join) =>
+      join.on((eb) =>
+        eb.and([
+          eb(
+            eb.ref("tauxIJNiveauDiplomeRegion.codeRegion"),
+            "=",
+            eb.ref("dataEtablissement.codeRegion")
+          ),
+          eb(
+            eb.ref("tauxIJNiveauDiplomeRegion.codeNiveauDiplome"),
+            "=",
+            eb.ref("dataFormation.codeNiveauDiplome")
+          ),
+          eb(
+            eb.ref("tauxIJNiveauDiplomeRegion.millesimeSortie"),
+            "=",
+            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie")
           ),
         ])
       )
@@ -158,6 +188,25 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
+      selectPositionQuadrant(eb).as("positionQuadrant"),
+      jsonBuildObject({
+        moyenneInsertionCfdRegion: eb.ref(
+          "positionFormationRegionaleQuadrant.moyenneInsertionCfdRegion"
+        ),
+        moyennePoursuiteEtudeCfdRegion: eb.ref(
+          "positionFormationRegionaleQuadrant.moyennePoursuiteEtudeCfdRegion"
+        ),
+        millesimeSortie: eb.ref(
+          "positionFormationRegionaleQuadrant.millesimeSortie"
+        ),
+      }).as("positionFormationRegionaleQuadrant"),
+      jsonBuildObject({
+        tauxInsertion6mois: eb.ref(
+          "tauxIJNiveauDiplomeRegion.tauxInsertion6mois"
+        ),
+        tauxPoursuite: eb.ref("tauxIJNiveauDiplomeRegion.tauxPoursuite"),
+        millesimeSortie: eb.ref("tauxIJNiveauDiplomeRegion.millesimeSortie"),
+      }).as("tauxIJNiveauDiplomeRegion"),
     ])
     .$call((eb) => {
       if (search)

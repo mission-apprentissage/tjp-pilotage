@@ -21,27 +21,17 @@ export const MenuBoiteReception = ({
   hasPermissionSubmitIntention,
   campagne,
   handleFilters,
-  searchParams,
+  activeFilters,
 }: {
   isRecapView?: boolean;
   hasPermissionSubmitIntention: boolean;
   campagne?: { annee: string; statut: string };
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-  searchParams: {
-    filters?: Partial<Filters>;
-    campagne?: string;
-    search?: string;
-  };
+  activeFilters: Filters;
 }) => {
   const statut =
-    searchParams.filters?.statut === undefined
-      ? "none"
-      : searchParams.filters?.statut;
-  const anneeCampagne = searchParams.campagne ?? campagne?.annee;
+    activeFilters.statut === undefined ? "none" : activeFilters.statut;
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
-  const search = searchParams.search;
-  const codeAcademie = searchParams.filters?.codeAcademie;
-  const codeNiveauDiplome = searchParams.filters?.codeNiveauDiplome;
 
   const isDisabled =
     !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
@@ -50,10 +40,7 @@ export const MenuBoiteReception = ({
     .ref("[GET]/intentions/count")
     .useQuery({
       query: {
-        anneeCampagne,
-        codeAcademie,
-        codeNiveauDiplome,
-        search,
+        ...activeFilters,
       },
     });
 

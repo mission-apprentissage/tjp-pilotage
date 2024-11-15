@@ -5,7 +5,7 @@ import { hasPermissionHandler } from "../../../core";
 import { submitAvisSchema } from "./submitAvis.schema";
 import { submitAvisUsecase } from "./submitAvis.usecase";
 
-export const submitAvisRoute = ({ server }: { server: Server }) => {
+export const submitAvisRoute = (server: Server) => {
   return createRoute("/intention/avis/submit", {
     method: "POST",
     schema: submitAvisSchema,

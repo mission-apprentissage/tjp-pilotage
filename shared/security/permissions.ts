@@ -9,6 +9,8 @@ export type Permission = KeyOfUnion<
 
 export const PERMISSIONS = {
   admin: {
+    "enregistrement-requete/lecture": { default: "national" },
+    "enregistrement-requete/ecriture": { default: "national" },
     "pilotage_reforme/lecture": { default: "national" },
     "intentions/lecture": { default: "national", draft: "national" },
     "intentions/ecriture": { default: "national" },
@@ -26,6 +28,8 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "national" },
   },
   pilote: {
+    "enregistrement-requete/lecture": { default: "national" },
+    "enregistrement-requete/ecriture": { default: "national" },
     "intentions/lecture": { default: "national", draft: "national" },
     "pilotage_reforme/lecture": { default: "national" },
     "restitution-intentions/lecture": { default: "national" },
@@ -35,6 +39,8 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "national" },
   },
   admin_region: {
+    "enregistrement-requete/lecture": { default: "national" },
+    "enregistrement-requete/ecriture": { default: "national" },
     "intentions/lecture": { default: "national", draft: "national" },
     "intentions/ecriture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "national" },
@@ -49,6 +55,8 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "region" },
   },
   region: {
+    "enregistrement-requete/lecture": { default: "national" },
+    "enregistrement-requete/ecriture": { default: "national" },
     "intentions/lecture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "region" },
     "pilotage-intentions/lecture": { default: "national" },
@@ -58,6 +66,8 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "region" },
   },
   pilote_region: {
+    "enregistrement-requete/lecture": { default: "national" },
+    "enregistrement-requete/ecriture": { default: "national" },
     "intentions/lecture": { default: "national", draft: "national" },
     "intentions/ecriture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "national" },
@@ -70,6 +80,8 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "region" },
   },
   gestionnaire_region: {
+    "enregistrement-requete/lecture": { default: "national" },
+    "enregistrement-requete/ecriture": { default: "national" },
     "intentions/lecture": { default: "region", draft: "region" },
     "intentions/ecriture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "region" },
@@ -82,6 +94,8 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "region" },
   },
   expert_region: {
+    "enregistrement-requete/lecture": { default: "national" },
+    "enregistrement-requete/ecriture": { default: "national" },
     "intentions/lecture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "region" },
     "pilotage-intentions/lecture": { default: "national" },
@@ -91,6 +105,8 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "region" },
   },
   perdir: {
+    "enregistrement-requete/lecture": { default: "national" },
+    "enregistrement-requete/ecriture": { default: "national" },
     "intentions/lecture": { default: "uai", draft: "uai" },
     "intentions-perdir/lecture": { default: "uai", draft: "uai" },
     "intentions-perdir/ecriture": { default: "uai", draft: "uai" },
@@ -100,6 +116,8 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "uai" },
   },
   invite: {
+    "enregistrement-requete/lecture": { default: "national" },
+    "enregistrement-requete/ecriture": { default: "national" },
     "intentions/lecture": { default: "role", draft: "role" },
     "restitution-intentions/lecture": { default: "role" },
     "intentions-perdir/lecture": { default: "region", draft: "region" },

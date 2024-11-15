@@ -3,7 +3,12 @@ import { client } from "@/api.client";
 export type Query = (typeof client.inferArgs)["[GET]/intentions"]["query"];
 export type Filters = Pick<
   Query,
-  "statut" | "suivies" | "campagne" | "codeAcademie" | "codeNiveauDiplome"
+  | "statut"
+  | "suivies"
+  | "campagne"
+  | "codeAcademie"
+  | "codeNiveauDiplome"
+  | "search"
 >;
 export type Order = Pick<Query, "order" | "orderBy">;
 

@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -18,7 +19,7 @@ export const getDemandes = async ({
   codeAcademie,
   codeNiveauDiplome,
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   order,
   orderBy,
   campagne,

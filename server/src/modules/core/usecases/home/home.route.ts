@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { Server } from "../../../../server";
 
-export const homeRoute = ({ server }: { server: Server }) => {
+export const homeRoute = (server: Server) => {
   return createRoute("/", {
     method: "GET",
     schema: {
