@@ -7,8 +7,8 @@ export const [getUsers] = inject(
   { findUsers },
   (deps) =>
     async ({
-      offset = 0,
-      limit = 30,
+      offset,
+      limit,
       search,
       orderBy,
       scope,

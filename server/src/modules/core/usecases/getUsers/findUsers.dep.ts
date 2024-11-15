@@ -8,15 +8,15 @@ import { cleanNull } from "../../../../utils/noNull";
 import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 
 export const findUsers = async ({
-  offset,
+  offset = 0,
   limit = MAX_LIMIT,
   search,
   orderBy,
   scope,
   scopeFilter,
 }: {
-  offset: number;
-  limit: number;
+  offset?: number;
+  limit?: number;
   search?: string;
   orderBy?: { order: "asc" | "desc"; column: string };
   scope: Scope;
