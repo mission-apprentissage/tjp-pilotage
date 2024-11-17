@@ -5,14 +5,15 @@ import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 import { z } from "zod";
 
-import { DemandeTypeEnum } from "../../../../../../../shared/enum/demandeTypeEnum";
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { RequestUser } from "../../../../core/model/User";
 import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
 import {
   countDifferenceCapaciteApprentissage,
+  countDifferenceCapaciteApprentissageColoree,
   countDifferenceCapaciteScolaire,
+  countDifferenceCapaciteScolaireColoree,
 } from "../../../../utils/countCapacite";
 import { isDemandeNotDeleted } from "../../../../utils/isDemandeSelectable";
 import { isRestitutionIntentionVisible } from "../../../../utils/isRestitutionIntentionVisible";
@@ -172,6 +173,12 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       countDifferenceCapaciteApprentissage(eb).as(
         "differenceCapaciteApprentissage"
       ),
+      countDifferenceCapaciteScolaireColoree(eb).as(
+        "differenceCapaciteScolaireColoree"
+      ),
+      countDifferenceCapaciteApprentissageColoree(eb).as(
+        "differenceCapaciteApprentissageColoree"
+      ),
       sql<string>`count(*) over()`.as("count"),
       selectTauxInsertion6mois("indicateurRegionSortie").as(
         "tauxInsertionRegional"
@@ -311,20 +318,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     })
     .$call((eb) => {
       if (coloration)
-        switch (coloration) {
-          case "with":
-            return eb.where("demande.coloration", "=", true);
-          case "without":
-            return eb.where((w) =>
-              w.or([
-                w("demande.coloration", "=", false),
-                w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"]),
-              ])
-            );
-          case "all":
-          default:
-            return eb;
-        }
+        return eb.where(
+          "demande.coloration",
+          "=",
+          coloration === "true" ? sql<true>`true` : sql<false>`false`
+        );
       return eb;
     })
     .$call((eb) => {

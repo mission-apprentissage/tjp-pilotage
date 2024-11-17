@@ -1,4 +1,5 @@
 import {
+  Box,
   Card,
   CardBody,
   CardHeader,
@@ -6,79 +7,113 @@ import {
   Flex,
   Img,
   Text,
-  useToken,
 } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
 
 import { StatsRestitutionIntentions } from "../types";
 
 const CountCard = ({
   label,
-  icon,
   iconSrc,
   subLabel,
   value,
 }: {
   label: string;
-  icon?: React.ReactNode;
   iconSrc?: string;
   subLabel?: string;
   value?: {
     total?: number;
+    colorationTotal?: number;
     scolaire?: number;
+    colorationScolaire?: number;
     apprentissage?: number;
-    coloration?: number;
+    colorationApprentissage?: number;
   };
 }) => (
-  <Card minW={[null, null, "52"]} flex={1} bgColor="white" borderRadius={5}>
+  <Card minW={[null, null, "56"]} flex={1} bgColor="white" borderRadius={5}>
     <CardHeader px={3} pt={2} pb={1}>
       <Flex flexDirection="column" minH="42px">
         <Flex>
+          <Flex direction={"column"}>
+            <Text fontSize="lg" fontWeight="bold" lineHeight={"20px"}>
+              {label}
+            </Text>
+            <Text fontSize="sm">{subLabel}</Text>
+            {value?.colorationTotal !== undefined && (
+              <Text
+                fontSize="12"
+                lineHeight={"20px"}
+                fontWeight={400}
+                color="grey.425"
+              >
+                (dont coloration)
+              </Text>
+            )}
+          </Flex>
           {iconSrc && (
-            <Img src={`/icons/${iconSrc}.svg`} height="20px" me={2}></Img>
+            <Img src={`/icons/${iconSrc}.svg`} height="30px" ms={"auto"} />
           )}
-          {icon}
-          <Text fontSize="lg" fontWeight="bold" lineHeight={"20px"}>
-            {label}
-          </Text>
         </Flex>
-        <Text fontSize="sm">{subLabel}</Text>
       </Flex>
     </CardHeader>
     <CardBody pb={3} pt={0} px={3}>
       <Flex flexDirection="column">
-        <Flex pb={4}>
-          <Text fontSize="36" fontWeight={"extrabold"}>
+        <Flex direction={"row"} justify={"space-between"} py={4}>
+          {value?.colorationTotal !== undefined && (
+            <Text
+              mt={"auto"}
+              fontSize={18}
+              lineHeight={"20px"}
+              fontWeight={400}
+              color="grey.425"
+            >
+              ({value?.colorationTotal})
+            </Text>
+          )}
+          <Text
+            fontSize={36}
+            fontWeight={700}
+            mt={"auto"}
+            lineHeight={"32px"}
+            ms={"auto"}
+          >
             {value?.total ? value?.total : "0"}
           </Text>
         </Flex>
         <Flex flexDirection="column" justifyContent={"end"}>
           <Flex justify={"space-between"} pb="2" mt={"auto"}>
-            <Text
-              justifyContent="start"
-              fontSize="12"
-              fontWeight="bold"
-              lineHeight={"4"}
-            >
-              {`${value?.scolaire ? value?.scolaire : 0} `}
-            </Text>
             <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
               scolaire
             </Text>
+            <Flex>
+              {value?.colorationScolaire !== undefined && (
+                <Text fontSize={12} fontWeight={400} color="grey.425" me={3}>
+                  ({value?.colorationScolaire})
+                </Text>
+              )}
+              <Box minW={9}>
+                <Text textAlign="end" fontSize={12} fontWeight={"bold"}>
+                  {value?.scolaire ? value?.scolaire : "0"}
+                </Text>
+              </Box>
+            </Flex>
           </Flex>
           <Divider />
           <Flex justify={"space-between"} pt="2">
-            <Text
-              justifyContent="start"
-              fontSize="12"
-              fontWeight="bold"
-              lineHeight={"4"}
-            >
-              {`${value?.apprentissage ? value?.apprentissage : 0} `}
-            </Text>
             <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
               apprentissage
             </Text>
+            <Flex>
+              {value?.colorationApprentissage !== undefined && (
+                <Text fontSize={12} fontWeight={400} color="grey.425" me={3}>
+                  ({value?.colorationApprentissage})
+                </Text>
+              )}
+              <Box minW={9}>
+                <Text textAlign="end" fontSize={12} fontWeight={"bold"}>
+                  {value?.apprentissage ? value?.apprentissage : "0"}
+                </Text>
+              </Box>
+            </Flex>
           </Flex>
         </Flex>
       </Flex>
@@ -91,8 +126,6 @@ export const CountersSection = ({
 }: {
   countData?: StatsRestitutionIntentions;
 }) => {
-  const colorationColor = useToken("colors", "purpleGlycine.850_active");
-
   return (
     <Flex
       flexDirection={"row"}
@@ -104,26 +137,13 @@ export const CountersSection = ({
       <Flex gap={4} width="100%">
         <CountCard
           label="Places ouvertes"
-          value={countData?.ouvertures}
           iconSrc={"places_ouvertes"}
+          value={countData?.ouvertures}
         />
         <CountCard
           label="Places fermées"
           iconSrc={"places_fermees"}
           value={countData?.fermetures}
-        />
-        <CountCard
-          label="Colorations"
-          subLabel="Pl. ouvertes + existantes"
-          icon={
-            <Icon
-              icon="ri:account-pin-box-fill"
-              height="22px"
-              color={colorationColor}
-              style={{ marginRight: "0.5rem" }}
-            />
-          }
-          value={countData?.coloration}
         />
       </Flex>
       <Flex gap={4} width="100%">

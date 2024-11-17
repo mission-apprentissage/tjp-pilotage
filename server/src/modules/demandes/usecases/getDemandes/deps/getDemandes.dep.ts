@@ -112,6 +112,32 @@ export const getDemandes = async ({
           DemandeStatutEnum["supprimée"]
         )
         .as("numeroDemandeImportee"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "demande.createdBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
+              "user.lastname"
+            )})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+          .where("demande.createdBy", "is not", null)
+      ).as("createdBy"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "demande.updatedBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
+              "user.lastname"
+            )})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+          .where("demande.updatedBy", "is not", null)
+      ).as("updatedBy"),
     ])
     .select((eb) =>
       eb

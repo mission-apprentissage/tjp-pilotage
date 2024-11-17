@@ -178,9 +178,6 @@ export default () => {
         case "statut":
           setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
           break;
-        case "coloration":
-          setColorationFilter(value as "all" | "with" | "without");
-          break;
       }
   };
 
@@ -273,10 +270,6 @@ export default () => {
     CURRENT_ANNEE_CAMPAGNE
   );
 
-  const [colorationFilter, setColorationFilter] = useState<
-    "all" | "with" | "without"
-  >("all");
-
   const [colonneFilters, setColonneFilters] = useState<
     (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
   >(
@@ -318,9 +311,6 @@ export default () => {
       rentreeScolaireFilter !== ""
     ) {
       filters.rentreeScolaire = rentreeScolaireFilter;
-    }
-    if (filters?.coloration === undefined) {
-      filters.coloration = colorationFilter;
     }
 
     if (filters?.statut === undefined) {

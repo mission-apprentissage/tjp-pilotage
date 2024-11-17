@@ -7,7 +7,9 @@ import { z } from "zod";
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import {
-  countPlacesColorees,
+  countPlacesColoreesFermees,
+  countPlacesColoreesOuvertes,
+  countPlacesColoreesTransformees,
   countPlacesFermees,
   countPlacesOuvertes,
   countPlacesTransformeesParCampagne,
@@ -196,7 +198,12 @@ export const getFormationsPilotageIntentionsQuery = ({
       selectNbEtablissements(eb).as("nbEtablissements"),
       eb.fn.sum<number>(countPlacesOuvertes(eb)).as("placesOuvertes"),
       eb.fn.sum<number>(countPlacesFermees(eb)).as("placesFermees"),
-      eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
+      eb.fn
+        .sum<number>(countPlacesColoreesOuvertes(eb))
+        .as("placesColoreesOuvertes"),
+      eb.fn
+        .sum<number>(countPlacesColoreesFermees(eb))
+        .as("placesColoreesFermees"),
       eb.fn
         .sum<number>(countPlacesTransformeesParCampagne(eb))
         .as("placesTransformees"),
@@ -216,7 +223,7 @@ export const getFormationsPilotageIntentionsQuery = ({
         case "fermeture":
           return wb(countPlacesFermees(wb), ">", 0);
         case "coloration":
-          return wb(countPlacesColorees(wb), ">", 0);
+          return wb(countPlacesColoreesTransformees(wb), ">", 0);
         default:
           return wb.val(true);
       }

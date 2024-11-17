@@ -3,8 +3,11 @@ import { z } from "zod";
 
 const CountCapaciteStatsDemandesSchema = z.object({
   total: z.number(),
+  colorationTotal: z.number().optional(),
   scolaire: z.number(),
+  colorationScolaire: z.number().optional(),
   apprentissage: z.number(),
+  colorationApprentissage: z.number().optional(),
 });
 
 export const FiltersSchema = z.object({
@@ -34,7 +37,6 @@ export const getStatsRestitutionIntentionsSchema = {
       total: CountCapaciteStatsDemandesSchema,
       ouvertures: CountCapaciteStatsDemandesSchema,
       fermetures: CountCapaciteStatsDemandesSchema,
-      coloration: CountCapaciteStatsDemandesSchema,
       certifSpecialisation: CountCapaciteStatsDemandesSchema,
       FCILs: CountCapaciteStatsDemandesSchema,
     }),

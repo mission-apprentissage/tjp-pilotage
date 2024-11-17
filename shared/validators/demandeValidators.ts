@@ -150,12 +150,40 @@ export const demandeValidators: Record<
   },
   /**
    *
-   * La capacité scolaire colorée doit être :
+   * La capacité scolaire colorée actuelle doit être :
+   * - un nombre entier positif
+   * - à 0 quand on ne se trouve pas dans une situation de coloration (formation existante ou non)
+   * - à 0 dans le cas d'une ouverture
+   * - inférieure ou égale à la capacité scolaire actuelle
+   */
+  capaciteScolaireColoreeActuelle: (demande) => {
+    if (!isPositiveNumber(demande.capaciteScolaireColoreeActuelle)) {
+      return "La capacité scolaire colorée actuelle doit être un nombre entier positif";
+    }
+    if (
+      !demande.coloration &&
+      !isTypeColoration(demande.typeDemande) &&
+      demande.capaciteScolaireColoreeActuelle !== 0
+    )
+      return "La capacité scolaire colorée actuelle doit être à 0 quand on ne se trouve pas dans une situation de coloration";
+    if (
+      isTypeOuverture(demande.typeDemande) &&
+      demande.capaciteScolaireColoreeActuelle !== 0
+    )
+      return "La capacité scolaire colorée actuelle doit être à 0 dans le cas d'une ouverture";
+    if (
+      isPositiveNumber(demande.capaciteScolaireActuelle) &&
+      demande.capaciteScolaireColoreeActuelle > demande.capaciteScolaireActuelle
+    )
+      return "La capacité scolaire colorée actuelle doit être inférieure ou égale à la capacité scolaire actuelle";
+  },
+  /**
+   *
+   * La future capacité scolaire colorée doit être :
    * - un nombre entier positif
    * - à 0 quand on ne se trouve pas dans une situation de coloration (formation existante ou non)
    * - à 0 dans le cas d'une fermeture
-   * - inférieure ou égale à la capacité scolaire totale dans le cas d'une coloration de formation existante
-   * - inférieure ou égale à la capacité scolaire actuelle dans le cas d'une coloration de formation existante
+   * - inférieure ou égale à la future capacité scolaire
    */
   capaciteScolaireColoree: (demande) => {
     if (!isPositiveNumber(demande.capaciteScolaireColoree)) {
@@ -166,26 +194,18 @@ export const demandeValidators: Record<
       !isTypeColoration(demande.typeDemande) &&
       demande.capaciteScolaireColoree !== 0
     )
-      return "La capacité scolaire colorée doit être à 0 quand on ne se trouve pas dans une situation de coloration";
+      return "La future capacité scolaire colorée doit être à 0 quand on ne se trouve pas dans une situation de coloration";
     if (
       isTypeFermeture(demande.typeDemande) &&
       demande.capaciteScolaireColoree !== 0
     )
-      return "La capacité scolaire colorée doit être à 0 dans le cas d'une fermeture";
+      return "La future capacité scolaire colorée doit être à 0 dans le cas d'une fermeture";
     if (
-      isTypeColoration(demande.typeDemande) &&
-      isPositiveNumber(demande.capaciteScolaireActuelle) &&
-      demande.capaciteScolaireColoree > demande.capaciteScolaireActuelle
-    )
-      return "La capacité scolaire colorée doit être inférieure ou égale à la capacité scolaire actuelle dans le cas d'une coloration de formation existante";
-    if (
-      !isTypeColoration(demande.typeDemande) &&
       isPositiveNumber(demande.capaciteScolaire) &&
       isPositiveNumber(demande.capaciteScolaireColoree) &&
-      demande.coloration &&
       demande.capaciteScolaireColoree > demande.capaciteScolaire
     )
-      return "La capacité scolaire colorée doit être inférieure ou égale à la future capacité scolaire";
+      return "La future capacité scolaire colorée doit être inférieure ou égale à la future capacité scolaire";
   },
   /**
    *
@@ -248,48 +268,62 @@ export const demandeValidators: Record<
   },
   /**
    *
-   * La capacité en apprentissage colorée doit être :
+   * La capacité en apprentissage colorée actuelle doit être :
+   * - un nombre entier positif
+   * - à 0 quand on ne se trouve pas dans une situation de coloration (formation existante ou non)
+   * - à 0 dans le cas d'une ouverture
+   * - inférieure ou égale à la capacité en apprentissage actuelle
+   */
+  capaciteApprentissageColoreeActuelle: (demande) => {
+    if (!isPositiveNumber(demande.capaciteApprentissageColoreeActuelle)) {
+      return "La capacité en apprentissage colorée actuelle doit être un nombre entier positif";
+    }
+    if (
+      !demande.coloration &&
+      !isTypeColoration(demande.typeDemande) &&
+      demande.capaciteApprentissageColoreeActuelle !== 0
+    )
+      return "La capacité en apprentissage colorée actuelle doit être à 0 quand on ne se trouve pas dans une situation de coloration";
+    if (
+      isTypeOuverture(demande.typeDemande) &&
+      demande.capaciteApprentissageColoreeActuelle !== 0
+    )
+      return "La capacité en apprentissage colorée actuelle doit être à 0 dans le cas d'une ouverture";
+    if (
+      isPositiveNumber(demande.capaciteApprentissageActuelle) &&
+      demande.capaciteApprentissageColoreeActuelle >
+        demande.capaciteApprentissageActuelle
+    )
+      return "La capacité en apprentissage colorée actuelle doit être inférieure ou égale à la capacité en apprentissage actuelle";
+  },
+  /**
+   *
+   * La future capacité en apprentissage colorée doit être :
    * - un nombre entier positif
    * - à 0 dans le cas d'une fermeture
    * - à 0 quand on ne se trouve pas dans une situation de coloration (formation existante ou non)
-   * - supérieure à 0 dans le cas d'un transfert vers l'apprentissage avec coloration
-   * - inférieure ou égale à la capacité en apprentissage actuelle dans le cas d'une coloration de formation existante
+   * - inférieure ou égale à la future capacité en apprentissage
    */
   capaciteApprentissageColoree: (demande) => {
     if (!isPositiveNumber(demande.capaciteApprentissageColoree))
-      return "La capacité en apprentissage colorée doit être un nombre entier positif";
+      return "La future capacité en apprentissage colorée doit être un nombre entier positif";
     if (
       isTypeFermeture(demande.typeDemande) &&
       demande.capaciteApprentissageColoree !== 0
     )
-      return "La capacité en apprentissage colorée doit être à 0 dans le cas d'une fermeture";
+      return "La future capacité en apprentissage colorée doit être à 0 dans le cas d'une fermeture";
     if (
       !demande.coloration &&
       !isTypeColoration(demande.typeDemande) &&
       demande.capaciteApprentissageColoree !== 0
     )
-      return "La capacité en apprentissage colorée doit être à 0 quand on ne se trouve pas dans une situation de coloration";
+      return "La future capacité en apprentissage colorée doit être à 0 quand on ne se trouve pas dans une situation de coloration";
     if (
-      demande.coloration &&
-      isTypeTransfert(demande.typeDemande) &&
-      demande.capaciteApprentissageColoree === 0
-    )
-      return "La capacité en apprentissage colorée doit être supérieure à 0 dans le cas d'un transfert vers l'apprentissage avec coloration";
-    if (
-      isTypeColoration(demande.typeDemande) &&
-      isPositiveNumber(demande.capaciteApprentissageActuelle) &&
-      demande.capaciteApprentissageColoree >
-        demande.capaciteApprentissageActuelle
-    )
-      return "La capacité en apprentissage colorée doit être inférieure ou égale à la capacité apprentissage actuelle dans le cas d'une coloration de formation existante";
-    if (
-      !isTypeColoration(demande.typeDemande) &&
       isPositiveNumber(demande.capaciteApprentissage) &&
       isPositiveNumber(demande.capaciteApprentissageColoree) &&
-      demande.coloration &&
       demande.capaciteApprentissageColoree > demande.capaciteApprentissage
     )
-      return "La capacité en apprentissage colorée doit être inférieure ou égale à la future capacité en apprentissage";
+      return "La future capacité en apprentissage colorée doit être inférieure ou égale à la future capacité en apprentissage";
   },
   /**
    *
@@ -357,27 +391,28 @@ export const demandeValidators: Record<
     }
   },
   /**
-   * La somme des capacités colorées doit être :
-   * - supérieure à 0 dans le cas d'une coloration qui n'est pas une fermeture
-   * - inférieure ou égale à la somme des capacités dans le cas d'une ouverture
-   * - inférieure ou égale à la somme des capacités actuelles dans le cas d'une formation existante (non ouverture)
+   * La somme des capacités colorées actuelles doit être :
+   * - inférieure ou égale à la somme des capacités actuelles
+   */
+  sommeCapaciteColoreeActuelle: (demande) => {
+    if (
+      isPositiveNumber(demande.capaciteApprentissageColoreeActuelle) &&
+      isPositiveNumber(demande.capaciteScolaireColoreeActuelle) &&
+      isPositiveNumber(demande.capaciteApprentissageActuelle) &&
+      isPositiveNumber(demande.capaciteScolaireActuelle) &&
+      demande.capaciteApprentissageColoreeActuelle +
+        demande.capaciteScolaireColoreeActuelle >
+        demande.capaciteApprentissageActuelle + demande.capaciteScolaireActuelle
+    )
+      return "La somme des capacités colorées actuelles doit être inférieure ou égale à la somme des capacités actuelles";
+  },
+  /**
+   * La somme des futures capacités colorées doit être :
+   * - inférieure ou égale à la somme des futures capacités
+   * - supérieur ou égale à 0 dans le cas d'une coloration
    */
   sommeCapaciteColoree: (demande) => {
     if (
-      isTypeFermeture(demande.typeDemande) ||
-      (!isTypeColoration(demande.typeDemande) && !demande.coloration)
-    )
-      return;
-
-    if (
-      !demande.capaciteApprentissageColoree &&
-      !demande.capaciteScolaireColoree
-    )
-      return "La somme des capacités colorées doit être supérieure à 0";
-    if (
-      (isTypeOuverture(demande.typeDemande) ||
-        isTypeAugmentation(demande.typeDemande) ||
-        isTypeAjustement(demande.typeDemande)) &&
       isPositiveNumber(demande.capaciteApprentissageColoree) &&
       isPositiveNumber(demande.capaciteScolaireColoree) &&
       isPositiveNumber(demande.capaciteApprentissage) &&
@@ -385,20 +420,15 @@ export const demandeValidators: Record<
       demande.capaciteApprentissageColoree + demande.capaciteScolaireColoree >
         demande.capaciteApprentissage + demande.capaciteScolaire
     )
-      return "La somme des capacités colorées doit être inférieure ou égale à la somme des capacités actuelles";
-
+      return "La somme des futures capacités colorées doit être inférieure ou égale à la somme des futures capacités";
     if (
-      !isTypeOuverture(demande.typeDemande) &&
-      !isTypeAugmentation(demande.typeDemande) &&
-      !isTypeAjustement(demande.typeDemande) &&
+      (isTypeColoration(demande.typeDemande) || demande.coloration) &&
       isPositiveNumber(demande.capaciteApprentissageColoree) &&
       isPositiveNumber(demande.capaciteScolaireColoree) &&
-      isPositiveNumber(demande.capaciteApprentissageActuelle) &&
-      isPositiveNumber(demande.capaciteScolaireActuelle) &&
-      demande.capaciteApprentissageColoree + demande.capaciteScolaireColoree >
-        demande.capaciteApprentissageActuelle + demande.capaciteScolaireActuelle
+      demande.capaciteApprentissageColoree + demande.capaciteScolaireColoree ===
+        0
     )
-      return "La somme des capacités colorées doit être inférieure ou égale à la somme des capacités actuelles";
+      return "La somme des futures capacités colorées doit être supérieure ou égale à 0 dans le cas d'une coloration";
   },
   compensation: (demande) => {
     if (!isTypeCompensation(demande.typeDemande)) return;

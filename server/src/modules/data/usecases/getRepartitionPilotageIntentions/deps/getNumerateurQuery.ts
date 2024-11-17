@@ -50,7 +50,6 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
       "region.codeRegion",
       "region.libelleRegion",
       "positionQuadrant",
-      // "cfd",
       "nsf.codeNsf",
       "nsf.libelleNsf",
       "niveauDiplome.codeNiveauDiplome",
@@ -61,6 +60,15 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
       "departement.libelleDepartement",
       eb.fn.coalesce("placesOuvertes", eb.val(0)).as("placesOuvertes"),
       eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
+      eb.fn
+        .coalesce("placesNonColoreesTransformees", eb.val(0))
+        .as("placesNonColoreesTransformees"),
+      eb.fn
+        .coalesce("placesColoreesOuvertes", eb.val(0))
+        .as("placesColoreesOuvertes"),
+      eb.fn
+        .coalesce("placesColoreesFermees", eb.val(0))
+        .as("placesColoreesFermees"),
       eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
     ])

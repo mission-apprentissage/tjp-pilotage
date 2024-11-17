@@ -5,24 +5,28 @@ import { z } from "zod";
 export const submitDemandeSchema = {
   body: z.object({
     demande: z.object({
-      numero: z.string().optional(),
       uai: z.string(),
       cfd: z.string(),
       codeDispositif: z.string(),
       libelleFCIL: z.string().optional(),
+      // Type de demande
       rentreeScolaire: z.coerce.number(),
       typeDemande: z.string(),
-      compensationUai: z.string().optional(),
-      compensationCfd: z.string().optional(),
-      compensationCodeDispositif: z.string().optional(),
-      compensationRentreeScolaire: z.coerce.number().optional(),
-      motif: z.array(z.string()).optional(),
-      autreMotif: z
-        .string()
-        .optional()
-        .transform((motif) => unEscapeString(motif)),
-      libelleColoration: z.string().optional(),
       coloration: z.boolean(),
+      libelleColoration: z.string().optional(),
+      // Capacité
+      mixte: z.boolean().optional(),
+      capaciteScolaireActuelle: z.coerce.number().optional(),
+      capaciteScolaire: z.coerce.number().optional(),
+      capaciteScolaireColoreeActuelle: z.coerce.number().optional(),
+      capaciteScolaireColoree: z.coerce.number().optional(),
+      capaciteApprentissageActuelle: z.coerce.number().optional(),
+      capaciteApprentissage: z.coerce.number().optional(),
+      capaciteApprentissageColoreeActuelle: z.coerce.number().optional(),
+      capaciteApprentissageColoree: z.coerce.number().optional(),
+      // Précisions
+      motif: z.array(z.string()).optional(),
+      autreMotif: z.string().optional(),
       amiCma: z.boolean().optional(),
       amiCmaValide: z.boolean().optional(),
       amiCmaValideAnnee: z.string().optional(),
@@ -32,19 +36,12 @@ export const submitDemandeSchema = {
         .string()
         .optional()
         .transform((commentaire) => unEscapeString(commentaire)),
-      mixte: z.boolean().optional(),
-      capaciteScolaireActuelle: z.coerce.number().optional(),
-      capaciteScolaire: z.coerce.number().optional(),
-      capaciteScolaireColoree: z.coerce.number().optional(),
-      capaciteApprentissageActuelle: z.coerce.number().optional(),
-      capaciteApprentissage: z.coerce.number().optional(),
-      capaciteApprentissageColoree: z.coerce.number().optional(),
-      statut: DemandeStatutZodType.exclude(["supprimée"]),
-      motifRefus: z.array(z.string()).optional(),
-      autreMotifRefus: z
-        .string()
-        .optional()
-        .transform((motif) => unEscapeString(motif)),
+      // Compensation
+      compensationUai: z.string().optional(),
+      compensationCfd: z.string().optional(),
+      compensationCodeDispositif: z.string().optional(),
+      compensationRentreeScolaire: z.coerce.number().optional(),
+      // RH
       recrutementRH: z.boolean().optional(),
       nbRecrutementRH: z.coerce.number().optional(),
       discipline1RecrutementRH: z.string().optional(),
@@ -61,6 +58,15 @@ export const submitDemandeSchema = {
       nbFormationRH: z.coerce.number().optional(),
       discipline1FormationRH: z.string().optional(),
       discipline2FormationRH: z.string().optional(),
+      // Statut
+      statut: DemandeStatutZodType.exclude(["supprimée"]),
+      motifRefus: z.array(z.string()).optional(),
+      autreMotifRefus: z
+        .string()
+        .optional()
+        .transform((motif) => unEscapeString(motif)),
+      // Autre
+      numero: z.string().optional(),
       campagneId: z.string(),
     }),
   }),

@@ -5,8 +5,7 @@ import {
   FastifyRequestType,
 } from "fastify/types/type-provider";
 import { hasPermission } from "shared";
-
-import { Permission } from "../../../../../shared/security/permissions";
+import { Permission } from "shared/security/permissions";
 
 export const hasPermissionHandler =
   <P extends Permission>(permission: P) =>

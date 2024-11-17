@@ -40,9 +40,11 @@ const IntentionsItem = z.object({
   mixte: z.boolean().optional(),
   capaciteScolaireActuelle: z.coerce.number().optional(),
   capaciteScolaire: z.coerce.number().optional(),
+  capaciteScolaireColoreeActuelle: z.coerce.number().optional(),
   capaciteScolaireColoree: z.coerce.number().optional(),
   capaciteApprentissageActuelle: z.coerce.number().optional(),
   capaciteApprentissage: z.coerce.number().optional(),
+  capaciteApprentissageColoreeActuelle: z.coerce.number().optional(),
   capaciteApprentissageColoree: z.coerce.number().optional(),
   // Précisions
   motif: z.array(z.string()),
@@ -93,17 +95,17 @@ const IntentionsItem = z.object({
   // Observations / commentaires
   commentaire: z.string().optional(),
   // Statut
-  statut: DemandeStatutZodType,
+  statut: DemandeStatutZodType.exclude(["supprimée"]),
   motifRefus: z.array(z.string()).optional(),
   autreMotifRefus: z.string().optional(),
   lastChangementStatutCommentaire: z.string().optional(),
   // Autre
   numero: z.string(),
+  campagneId: z.string(),
   userName: z.string().optional(),
   numeroDemandeImportee: z.string().optional(),
-  updatedAt: z.string(),
   createdAt: z.string(),
-  campagneId: z.string(),
+  updatedAt: z.string(),
   createdBy: UserSchema,
   updatedBy: UserSchema.optional(),
   suiviId: z.string().optional(),
