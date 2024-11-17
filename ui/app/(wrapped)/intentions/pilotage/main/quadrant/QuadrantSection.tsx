@@ -249,7 +249,8 @@ export const QuadrantSection = ({
                   tauxTransformation: "Taux de transformation",
                   placesOuvertes: "Places ouvertes",
                   placesFermees: "Places fermées",
-                  placesColorees: "Colorations",
+                  placesColoreesOuvertes: "Places colorées ouvertes",
+                  placesColoreesFermees: "Places colorées fermées",
                   solde: "Solde",
                   ratioFermeture: "Ratio de fermeture",
                 }
@@ -267,7 +268,8 @@ export const QuadrantSection = ({
                   tauxTransformation: "Taux de transformation",
                   placesOuvertes: "Places ouvertes",
                   placesFermees: "Places fermées",
-                  placesColorees: "Colorations",
+                  placesColoreesOuvertes: "Places colorées ouvertes",
+                  placesColoreesFermees: "Places colorées fermées",
                   solde: "Solde",
                   ratioFermeture: "Ratio de fermeture",
                 }
@@ -676,8 +678,16 @@ export const QuadrantSection = ({
                       <InfoBlock
                         flex={1}
                         fontSize={12}
-                        label={"Colorations"}
-                        value={formation?.placesColorees ?? 0}
+                        label={"Pl. colorées ouvertes"}
+                        value={formation?.placesColoreesOuvertes ?? 0}
+                      />
+                    )}
+                    {(!filters.type || filters.type === "fermeture") && (
+                      <InfoBlock
+                        flex={1}
+                        fontSize={12}
+                        label={"Pl. colorées fermées"}
+                        value={formation?.placesColoreesFermees ?? 0}
                       />
                     )}
                   </Flex>

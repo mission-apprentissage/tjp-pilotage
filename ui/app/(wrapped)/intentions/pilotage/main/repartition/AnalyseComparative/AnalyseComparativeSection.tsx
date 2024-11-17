@@ -243,7 +243,8 @@ export const AnalyseComparativeSection = ({
                 tauxTransformation: "Taux de transformation",
                 placesOuvertes: "Places ouvertes",
                 placesFermees: "Places fermées",
-                placesColorees: "Colorations",
+                placesColoreesOuvertes: "Places colorées ouvertes",
+                placesColoreesFermees: "Places colorées fermées",
                 solde: "Solde",
                 ratioFermeture: "Ratio de fermeture",
               }
@@ -266,7 +267,8 @@ export const AnalyseComparativeSection = ({
                 tauxTransformation: "Taux de transformation",
                 placesOuvertes: "Places ouvertes",
                 placesFermees: "Places fermées",
-                placesColorees: "Colorations",
+                placesColoreesOuvertes: "Places colorées ouvertes",
+                placesColoreesFermees: "Places colorées fermées",
                 solde: "Solde",
                 ratioFermeture: "Ratio de fermeture",
               }

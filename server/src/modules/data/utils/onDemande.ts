@@ -7,6 +7,9 @@ import { DemandeTypeEnum } from "../../../../../shared/enum/demandeTypeEnum";
 import { DB } from "../../../db/db";
 import {
   countPlacesColorees,
+  countPlacesColoreesFermees,
+  countPlacesColoreesOuvertes,
+  countPlacesColoreesOuvertesQ4,
   countPlacesColoreesQ4,
   countPlacesFermeesApprentissage,
   countPlacesFermeesApprentissageQ4,
@@ -14,6 +17,7 @@ import {
   countPlacesFermeesQ4ParCampagne,
   countPlacesFermeesScolaire,
   countPlacesFermeesScolaireQ4,
+  countPlacesNonColoreesTransformees,
   countPlacesOuvertes,
   countPlacesOuvertesApprentissage,
   countPlacesOuvertesApprentissageQ1,
@@ -135,10 +139,22 @@ export const genericOnDemandes = ({
         .sum<number>(countPlacesFermeesQ4ParCampagne(eb))
         .as("placesFermeesQ4"),
       eb.fn
+        .sum<number>(countPlacesNonColoreesTransformees(eb))
+        .as("placesNonColoreesTransformees"),
+      eb.fn
         .sum<number>(countPlacesOuvertesTransitionEcologique(eb))
         .as("placesOuvertesTransformationEcologique"),
       eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
       eb.fn.sum<number>(countPlacesColoreesQ4(eb)).as("placesColoreesQ4"),
+      eb.fn
+        .sum<number>(countPlacesColoreesOuvertes(eb))
+        .as("placesColoreesOuvertes"),
+      eb.fn
+        .sum<number>(countPlacesColoreesFermees(eb))
+        .as("placesColoreesFermees"),
+      eb.fn
+        .sum<number>(countPlacesColoreesOuvertesQ4(eb))
+        .as("placesColoreesOuvertesQ4"),
       eb.fn
         .sum<number>(countPlacesTransformeesParCampagne(eb))
         .as("placesTransformees"),

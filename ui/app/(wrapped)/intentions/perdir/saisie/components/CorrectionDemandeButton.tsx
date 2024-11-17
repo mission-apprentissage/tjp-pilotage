@@ -290,15 +290,17 @@ export const CorrectionDemandeButton = chakra(
                       correction: {
                         ...intention,
                         intentionNumero: intention.numero,
-                        capaciteScolaire:
-                          intention.capaciteScolaireActuelle ?? 0,
-                        capaciteApprentissage:
-                          intention.capaciteApprentissageActuelle ?? 0,
                         capaciteScolaireActuelle:
                           intention.capaciteScolaireActuelle ?? 0,
-                        capaciteScolaireColoree: 0,
+                        capaciteScolaire:
+                          intention.capaciteScolaireActuelle ?? 0,
                         capaciteApprentissageActuelle:
                           intention.capaciteApprentissageActuelle ?? 0,
+                        capaciteApprentissage:
+                          intention.capaciteApprentissageActuelle ?? 0,
+                        capaciteScolaireColoreeActuelle: 0,
+                        capaciteScolaireColoree: 0,
+                        capaciteApprentissageColoreeActuelle: 0,
                         capaciteApprentissageColoree: 0,
                         raison: "report",
                         motif: correction.motif,
@@ -430,15 +432,17 @@ export const CorrectionDemandeButton = chakra(
                       correction: {
                         ...intention,
                         intentionNumero: intention.numero,
-                        capaciteScolaire:
-                          intention.capaciteScolaireActuelle ?? 0,
-                        capaciteApprentissage:
-                          intention.capaciteApprentissageActuelle ?? 0,
                         capaciteScolaireActuelle:
                           intention.capaciteScolaireActuelle ?? 0,
-                        capaciteScolaireColoree: 0,
+                        capaciteScolaire:
+                          intention.capaciteScolaireActuelle ?? 0,
                         capaciteApprentissageActuelle:
                           intention.capaciteApprentissageActuelle ?? 0,
+                        capaciteApprentissage:
+                          intention.capaciteApprentissageActuelle ?? 0,
+                        capaciteScolaireColoreeActuelle: 0,
+                        capaciteScolaireColoree: 0,
+                        capaciteApprentissageColoreeActuelle: 0,
                         capaciteApprentissageColoree: 0,
                         raison: "annulation",
                         motif: correction.motif,

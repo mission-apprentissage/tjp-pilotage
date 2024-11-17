@@ -143,4 +143,37 @@ export const correctionValidators: Record<
       return "Les capacités corrigées doivent être différentes des capacités avant correction dans le cas d'une modification de capacité";
     }
   },
+  /**
+   * La somme des capacités colorées actuelles doit être :
+   * - inférieure ou égale à la somme des capacités actuelles
+   */
+  sommeCapaciteColoreeActuelle: (correction) => {
+    if (
+      isPositiveNumber(correction.capaciteApprentissageColoreeActuelle) &&
+      isPositiveNumber(correction.capaciteScolaireColoreeActuelle) &&
+      isPositiveNumber(correction.capaciteApprentissageActuelle) &&
+      isPositiveNumber(correction.capaciteScolaireActuelle) &&
+      correction.capaciteApprentissageColoreeActuelle +
+        correction.capaciteScolaireColoreeActuelle >
+        correction.capaciteApprentissageActuelle +
+          correction.capaciteScolaireActuelle
+    )
+      return "La somme des capacités colorées actuelles doit être inférieure ou égale à la somme des capacités actuelles";
+  },
+  /**
+   * La somme des futures capacités colorées doit être :
+   * - inférieure ou égale à la somme des futures capacités
+   */
+  sommeCapaciteColoree: (correction) => {
+    if (
+      isPositiveNumber(correction.capaciteApprentissageColoree) &&
+      isPositiveNumber(correction.capaciteScolaireColoree) &&
+      isPositiveNumber(correction.capaciteApprentissage) &&
+      isPositiveNumber(correction.capaciteScolaire) &&
+      correction.capaciteApprentissageColoree +
+        correction.capaciteScolaireColoree >
+        correction.capaciteApprentissage + correction.capaciteScolaire
+    )
+      return "La somme des futures capacités colorées doit être inférieure ou égale à la somme des futures capacités";
+  },
 };

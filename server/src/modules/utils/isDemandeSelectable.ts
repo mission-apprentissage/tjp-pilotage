@@ -5,6 +5,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { DB } from "../../db/db";
 import { RequestUser } from "../core/model/User";
+
 export const isDemandeSelectable =
   ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "demande">) => {

@@ -19022,9 +19022,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-select@npm:^5.8.0":
-  version: 5.8.0
-  resolution: "react-select@npm:5.8.0"
+"react-select@npm:^5.8.1":
+  version: 5.8.1
+  resolution: "react-select@npm:5.8.1"
   dependencies:
     "@babel/runtime": ^7.12.0
     "@emotion/cache": ^11.4.0
@@ -19038,7 +19038,7 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: c8398cc0aefb5ee5438b6176c86676e2d3fed7457c16b0769f423a0da0ae431a7df25c2cadf13b709700882b8ebd80a58b1e557fec3e22ad3cbf60164ca9e745
+  checksum: 6eebb4b0b4a818edef04d907b2b6ea0e82e067654a0c6c8f01b8e5fdefd978aa6ee59d8a5d23fca4b907c0a0878b53923bf4f844351372cf55b622dcc9195d4e
   languageName: node
   linkType: hard
 
@@ -22061,7 +22061,7 @@ __metadata:
     react-map-gl: ^7.1.7
     react-markdown: ^9.0.1
     react-notion-x: ^6.16.0
-    react-select: ^5.8.0
+    react-select: ^5.8.1
     remove-accents: ^0.5.0
     server: "*"
     shared: "*"

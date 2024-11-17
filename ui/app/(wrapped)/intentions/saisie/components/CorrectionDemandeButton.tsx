@@ -295,9 +295,11 @@ export const CorrectionDemandeButton = chakra(
                           demande.capaciteApprentissageActuelle ?? 0,
                         capaciteScolaireActuelle:
                           demande.capaciteScolaireActuelle ?? 0,
+                        capaciteScolaireColoreeActuelle: 0,
                         capaciteScolaireColoree: 0,
                         capaciteApprentissageActuelle:
                           demande.capaciteApprentissageActuelle ?? 0,
+                        capaciteApprentissageColoreeActuelle: 0,
                         capaciteApprentissageColoree: 0,
                         raison: "report",
                         motif: correction.motif,
@@ -434,9 +436,11 @@ export const CorrectionDemandeButton = chakra(
                           demande.capaciteApprentissageActuelle ?? 0,
                         capaciteScolaireActuelle:
                           demande.capaciteScolaireActuelle ?? 0,
+                        capaciteScolaireColoreeActuelle: 0,
                         capaciteScolaireColoree: 0,
                         capaciteApprentissageActuelle:
                           demande.capaciteApprentissageActuelle ?? 0,
+                        capaciteApprentissageColoreeActuelle: 0,
                         capaciteApprentissageColoree: 0,
                         raison: "annulation",
                         motif: correction.motif,
