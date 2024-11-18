@@ -123,7 +123,6 @@ export const CfdAutocompleteInput = ({
           : "Veuillez rentrer au moins 3 lettres"
       }
       isClearable={true}
-      isSearchable={false}
       noOptionsMessage={({ inputValue }) =>
         inputValue ? "Pas de diplôme correspondant" : "Commencez à écrire..."
       }
