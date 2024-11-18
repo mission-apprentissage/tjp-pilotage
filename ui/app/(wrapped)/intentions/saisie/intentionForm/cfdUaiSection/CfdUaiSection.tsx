@@ -180,7 +180,7 @@ export const CfdUaiSection = ({
           formMetaData={formMetadata}
           setDispositifs={setDispositifs}
           setIsFCIL={setIsFCIL}
-          disabled={disabled || !active}
+          active={active && !disabled}
         />
         <DispositifBlock options={dispositifs} active={active && !disabled} />
         {isFCIL && <LibelleFCILField active={active}></LibelleFCILField>}
@@ -189,7 +189,7 @@ export const CfdUaiSection = ({
             <Box mb="auto" w="100%" maxW="752px">
               <UaiBlock
                 formMetadata={formMetadata}
-                disabled={disabled || !active}
+                active={active && !disabled}
                 setUaiInfo={setUaiInfo}
               />
             </Box>
