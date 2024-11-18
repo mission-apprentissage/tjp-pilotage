@@ -16,14 +16,14 @@ export const CfdBlock = ({
   setDispositifs,
   setIsFCIL,
   formMetaData,
-  disabled,
+  active,
 }: {
   setDispositifs: (
     info?: (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"]
   ) => void;
   setIsFCIL: (isFcil: boolean) => void;
   formMetaData?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
-  disabled: boolean;
+  active: boolean;
 }) => {
   const {
     formState: { errors },
@@ -57,7 +57,7 @@ export const CfdBlock = ({
                       }
                     : undefined
                 }
-                disabled={disabled}
+                active={active}
                 onChange={(selected) => {
                   onChange(selected?.value);
                   setDispositifs(selected?.dispositifs);
