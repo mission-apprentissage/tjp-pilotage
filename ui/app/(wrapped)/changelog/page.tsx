@@ -3,7 +3,6 @@
 import { Container, Text, VStack } from "@chakra-ui/react";
 
 import { EditorialTitle } from "@/app/(wrapped)/components/EditorialTitle";
-import { LandingFooter } from "@/app/(wrapped)/components/LandingFooter";
 
 import { Entry } from "./components/Entry";
 import { EntryLoader } from "./components/EntryLoader";
@@ -62,7 +61,6 @@ export default function Changelog() {
           </VStack>
         </VStack>
       </Container>
-      <LandingFooter />
     </>
   );
 }

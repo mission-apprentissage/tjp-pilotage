@@ -50,9 +50,11 @@ const IntentionSchema = z.object({
   mixte: z.boolean().optional(),
   capaciteScolaireActuelle: z.coerce.number().optional(),
   capaciteScolaire: z.coerce.number().optional(),
+  capaciteScolaireColoreeActuelle: z.coerce.number().optional(),
   capaciteScolaireColoree: z.coerce.number().optional(),
   capaciteApprentissageActuelle: z.coerce.number().optional(),
   capaciteApprentissage: z.coerce.number().optional(),
+  capaciteApprentissageColoreeActuelle: z.coerce.number().optional(),
   capaciteApprentissageColoree: z.coerce.number().optional(),
   // Précisions
   motif: z.array(z.string()),

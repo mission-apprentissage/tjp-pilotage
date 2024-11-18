@@ -24,6 +24,7 @@ export default () => {
   const { data: defaultCampagne } = client.ref("[GET]/demande/campagne/default").useQuery({});
 
   if (isLoading && !!numero) return <IntentionSpinner />;
+
   return (
     <GuardPermission permission="intentions/ecriture">
       {numero ? (
@@ -49,6 +50,7 @@ export default () => {
           disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
           defaultValues={{
             campagneId: defaultCampagne?.id,
+            rentreeScolaire: defaultCampagne?.annee ? Number.parseInt(defaultCampagne?.annee) + 1 : undefined,
           }}
           formMetadata={{}}
           campagne={defaultCampagne}

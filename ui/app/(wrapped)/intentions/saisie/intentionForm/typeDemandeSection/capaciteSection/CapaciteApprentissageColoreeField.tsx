@@ -24,7 +24,6 @@ export const CapaciteApprentissageColoreeField = chakra(
     const coloration = isTypeColoration(typeDemande) || watch("coloration");
     const isReadOnly = disabled || fermeture || !coloration;
     if (!coloration) return <></>;
-    if (fermeture) return <></>;
 
     return <CapaciteField name={"capaciteApprentissageColoree"} className={className} isReadOnly={isReadOnly} />;
   }
