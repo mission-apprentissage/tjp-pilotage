@@ -71,13 +71,13 @@ const groupByResult = ({ numerateur, denominateur, groupBy }: Repartition) => {
       const totalEffectifs = sumBy(effectifGrouped, "effectif");
 
       // Somme des places
-      const sommePlacesOuvertes = _.sumBy(demandeGrouped, "placesOuvertes");
-      const sommePlacesFermees = _.sumBy(demandeGrouped, "placesFermees");
-      const sommePlacesNonColoreesTransformees = _.sumBy(demandeGrouped, "placesNonColoreesTransformees");
-      const sommePlacesColorees = _.sumBy(demandeGrouped, "placesColorees");
-      const sommePlacesColoreesOuvertes = _.sumBy(demandeGrouped, "placesColoreesOuvertes");
-      const sommePlacesColoreesFermees = _.sumBy(demandeGrouped, "placesColoreesFermees");
-      const sommePlacesTransformees = _.sumBy(demandeGrouped, "placesTransformees");
+      const sommePlacesOuvertes = sumBy(demandeGrouped, "placesOuvertes");
+      const sommePlacesFermees = sumBy(demandeGrouped, "placesFermees");
+      const sommePlacesNonColoreesTransformees = sumBy(demandeGrouped, "placesNonColoreesTransformees");
+      const sommePlacesColorees = sumBy(demandeGrouped, "placesColorees");
+      const sommePlacesColoreesOuvertes = sumBy(demandeGrouped, "placesColoreesOuvertes");
+      const sommePlacesColoreesFermees = sumBy(demandeGrouped, "placesColoreesFermees");
+      const sommePlacesTransformees = sumBy(demandeGrouped, "placesTransformees");
       const sommeSolde = sommePlacesOuvertes - sommePlacesFermees;
       const libelle = get(effectifGrouped[0], groupBy.libelle) ?? get(demandeGrouped[0], groupBy.libelle);
 
