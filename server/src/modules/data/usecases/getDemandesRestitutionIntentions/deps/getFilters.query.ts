@@ -362,16 +362,12 @@ export const getFilters = async ({
     ],
     colorations: [
       {
-        label: "Toutes demandes (avec et sans places colorées)",
-        value: "all",
+        label: "Avec",
+        value: "true",
       },
       {
-        label: "Uniquement les ouvertures/fermetures (sans les colorations de places existantes)",
-        value: "without",
-      },
-      {
-        label: "Uniquement les demandes avec places colorées (ouvertures/fermetures/existantes)",
-        value: "with",
+        label: "Sans",
+        value: "false",
       },
     ],
     compensations: [

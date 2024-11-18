@@ -94,6 +94,8 @@ export interface Correction {
   capaciteScolaireColoree: number | null;
   capaciteApprentissageColoree: number | null;
   campagneId: string;
+  capaciteScolaireColoreeActuelle: Generated<number | null>;
+  capaciteApprentissageColoreeActuelle: Generated<number | null>;
 }
 
 export interface DataEtablissement {
@@ -235,6 +237,8 @@ export interface Demande {
   discipline2FormationRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
+  capaciteScolaireColoreeActuelle: Generated<number | null>;
+  capaciteApprentissageColoreeActuelle: Generated<number | null>;
 }
 
 export interface DemandeIntentionNonMaterializedView {
@@ -263,9 +267,11 @@ export interface DemandeIntentionNonMaterializedView {
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
   capaciteScolaireColoree: number | null;
+  capaciteScolaireColoreeActuelle: number | null;
   capaciteApprentissage: number | null;
   capaciteApprentissageActuelle: number | null;
   capaciteApprentissageColoree: number | null;
+  capaciteApprentissageColoreeActuelle: number | null;
   mixte: boolean | null;
   updatedAt: Timestamp | null;
   libelleFCIL: string | null;
@@ -545,6 +551,8 @@ export interface Intention {
   inspecteurReferent: string | null;
   achatEquipementCout: number | null;
   travauxAmenagementCout: number | null;
+  capaciteScolaireColoreeActuelle: Generated<number | null>;
+  capaciteApprentissageColoreeActuelle: Generated<number | null>;
 }
 
 export interface IntentionAccessLog {
@@ -580,9 +588,11 @@ export interface LatestDemandeIntentionNonMaterializedView {
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
   capaciteScolaireColoree: number | null;
+  capaciteScolaireColoreeActuelle: number | null;
   capaciteApprentissage: number | null;
   capaciteApprentissageActuelle: number | null;
   capaciteApprentissageColoree: number | null;
+  capaciteApprentissageColoreeActuelle: number | null;
   mixte: boolean | null;
   updatedAt: Timestamp | null;
   libelleFCIL: string | null;
@@ -687,6 +697,8 @@ export interface LatestDemandeNonMaterializedView {
   discipline2FormationRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
+  capaciteScolaireColoreeActuelle: number | null;
+  capaciteApprentissageColoreeActuelle: number | null;
 }
 
 export interface LatestIntentionNonMaterializedView {

@@ -5,7 +5,7 @@ import { useSelectedLayoutSegments } from "next/navigation";
 import { LandingFooter } from "./LandingFooter";
 import { MinimalFooter } from "./MinimalFooter";
 
-const LANDING_FOOTER_SEGMENTS = ["panorama", "pilotage", "pilotage-reforme", "ressources"];
+const LANDING_FOOTER_SEGMENTS = ["panorama", "pilotage", "pilotage-reforme", "ressources", "changelog"];
 
 export const Footer = () => {
   const segments = useSelectedLayoutSegments();

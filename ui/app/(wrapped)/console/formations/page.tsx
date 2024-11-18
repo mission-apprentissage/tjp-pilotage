@@ -17,6 +17,7 @@ import { TableHeader } from "@/components/TableHeader";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
+import { formatArray } from "@/utils/formatUtils";
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { FORMATION_COLUMNS, FORMATION_COLUMNS_DEFAULT } from "./FORMATION_COLUMNS";
@@ -159,33 +160,76 @@ export default function Formations() {
       (r) => r.value === filters.codeRegion?.[0]
     );
 
-    if (filters.codeRegion && region) {
-      const columns = {
-        ...FORMATION_COLUMNS,
-        selectedCodeRegion: "Code Région sélectionné",
-        selectedRegion: "Région sélectionnée",
-      };
+    const academies = data.filters.academies.filter(
+      // @ts-expect-error TODO
+      (a) => filters.codeAcademie?.includes(a.value) ?? false
+    );
 
-      let formations = data.formations;
+    const departements = data.filters.departements.filter(
+      // @ts-expect-error TODO
+      (d) => filters.codeDepartement?.includes(d.value) ?? false
+    );
 
-      formations = data.formations.map(
-        // @ts-expect-error TODO
-        (f) => ({
-          ...f,
-          selectedCodeRegion: region.value,
-          selectedRegion: region.label,
-        })
-      );
+    const regionsColumns = {
+      selectedCodeRegion: "Code Région sélectionné",
+      selectedRegion: "Région sélectionnée",
+    };
+    const academiesColumns = {
+      selectedCodeAcademie: "Code Académie sélectionné",
+      selectedAcademie: "Académie sélectionnée",
+    };
+    const departementsColumns = {
+      selectedCodeDepartement: "Code Département sélectionné",
+      selectedDepartement: "Departement sélectionnée",
+    };
 
-      return {
-        columns,
-        formations,
-      };
-    }
+    const columns = {
+      ...FORMATION_COLUMNS,
+      ...(filters.codeRegion && region ? regionsColumns : {}),
+      ...(filters.codeAcademie && academies ? academiesColumns : {}),
+      ...(filters.codeDepartement && departements ? departementsColumns : {}),
+    };
+
+    let formations = data.formations;
+
+    // @ts-expect-error TODO
+    formations = data.formations.map((f) => ({
+      ...f,
+      ...(filters.codeRegion && region
+        ? {
+            selectedCodeRegion: region.value,
+            selectedRegion: region.label,
+          }
+        : {}),
+      ...(filters.codeAcademie && academies
+        ? {
+            selectedCodeAcademie: formatArray(
+              // @ts-expect-error TODO
+              academies.map((academie) => academie.value)
+            ),
+            selectedAcademie: formatArray(
+              // @ts-expect-error TODO
+              academies.map((academie) => academie.label)
+            ),
+          }
+        : {}),
+      ...(filters.codeDepartement && departements
+        ? {
+            selectedCodeDepartement: formatArray(
+              // @ts-expect-error TODO
+              departements.map((departement) => departement.value)
+            ),
+            selectedDepartement: formatArray(
+              // @ts-expect-error TODO
+              departements.map((departement) => departement.label)
+            ),
+          }
+        : {}),
+    }));
 
     return {
-      columns: { ...FORMATION_COLUMNS },
-      formations: data.formations,
+      columns,
+      formations,
     };
   };
 
@@ -310,6 +354,7 @@ export default function Formations() {
       filters.codeDepartement = [codeDepartementFilter];
       setSearchParams({ filters: filters });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -16,7 +16,8 @@ const FormationTransformationStatsSchema = z.object({
   effectif: z.coerce.number(),
   placesOuvertes: z.coerce.number(),
   placesFermees: z.coerce.number(),
-  placesColorees: z.coerce.number(),
+  placesColoreesOuvertes: z.coerce.number(),
+  placesColoreesFermees: z.coerce.number(),
   placesTransformees: z.coerce.number(),
   positionQuadrant: z.string().optional(),
   continuum: z

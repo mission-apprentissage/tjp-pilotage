@@ -2,12 +2,14 @@ import { Box, Flex, FormErrorMessage, Input, Table, Tbody, Td, Th, Thead, Tr } f
 import { useFormContext } from "react-hook-form";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-import { isTypeColoration, isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
+import { CapaciteApprentissageColoreeActuelleField } from "./CapaciteApprentissageColoreeActuelleField";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
 import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
 import { CapaciteScolaireActuelleField } from "./CapaciteScolaireActuelleField";
+import { CapaciteScolaireColoreeActuelleField } from "./CapaciteScolaireColoreeActuelleField";
 import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
 import { CapaciteScolaireField } from "./CapaciteScolaireField";
 import { ColorationField } from "./ColorationField";
@@ -42,8 +44,6 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
 
   const coloration = watch("coloration");
   const typeDemande = watch("typeDemande");
-  const fermeture = isTypeFermeture(typeDemande);
-  const showColoration = coloration && !fermeture;
 
   const [capaciteScolaire, capaciteScolaireActuelle] = watch(["capaciteScolaire", "capaciteScolaireActuelle"]);
   const [capaciteApprentissage, capaciteApprentissageActuelle] = watch([
@@ -75,10 +75,15 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
             <Th textAlign={"end"} p={2} pe={0}>
               Nouvelle capacité
             </Th>
-            {showColoration && (
-              <Th textAlign={"end"} p={2} pe={0}>
-                Dont colorée
-              </Th>
+            {coloration && (
+              <>
+                <Th textAlign={"end"} p={2} pe={0}>
+                  Capacité colorée actuelle
+                </Th>
+                <Th textAlign={"end"} p={2} pe={0}>
+                  Nouvelle capacité colorée
+                </Th>
+              </>
             )}
             <Th textAlign={"end"} p={2} pe={0}>
               Écart
@@ -96,10 +101,15 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
             <Td p={0} border={"none"}>
               <CapaciteScolaireField disabled={disabled} maxW={240} flex={1} />
             </Td>
-            {showColoration && (
-              <Td p={0} border={"none"}>
-                <CapaciteScolaireColoreeField disabled={disabled} maxW={240} flex={1} />
-              </Td>
+            {coloration && (
+              <>
+                <Td p={0} border={"none"}>
+                  <CapaciteScolaireColoreeActuelleField disabled={disabled} maxW={240} flex={1} />
+                </Td>
+                <Td p={0} border={"none"}>
+                  <CapaciteScolaireColoreeField disabled={disabled} maxW={240} flex={1} />
+                </Td>
+              </>
             )}
             <Td p={0} border={"none"}>
               <ConstanteField value={nouvellesPlacesScolaire} />
@@ -115,10 +125,15 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
             <Td p={0} border={"none"}>
               <CapaciteApprentissageField disabled={disabled} maxW={240} flex={1} />
             </Td>
-            {showColoration && (
-              <Td p={0} border={"none"}>
-                <CapaciteApprentissageColoreeField disabled={disabled} maxW={240} flex={1} />
-              </Td>
+            {coloration && (
+              <>
+                <Td p={0} border={"none"}>
+                  <CapaciteApprentissageColoreeActuelleField disabled={disabled} maxW={240} flex={1} />
+                </Td>
+                <Td p={0} border={"none"}>
+                  <CapaciteApprentissageColoreeField disabled={disabled} maxW={240} flex={1} />
+                </Td>
+              </>
             )}
             <Td p={0} border={"none"}>
               <ConstanteField value={nouvellesPlacesApprentissage} />

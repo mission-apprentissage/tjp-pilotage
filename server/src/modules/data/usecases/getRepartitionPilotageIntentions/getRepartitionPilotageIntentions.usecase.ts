@@ -71,10 +71,13 @@ const groupByResult = ({ numerateur, denominateur, groupBy }: Repartition) => {
       const totalEffectifs = sumBy(effectifGrouped, "effectif");
 
       // Somme des places
-      const sommePlacesOuvertes = sumBy(demandeGrouped, "placesOuvertes");
-      const sommePlacesFermees = sumBy(demandeGrouped, "placesFermees");
-      const sommePlacesColorees = sumBy(demandeGrouped, "placesColorees");
-      const sommePlacesTransformees = sumBy(demandeGrouped, "placesTransformees");
+      const sommePlacesOuvertes = _.sumBy(demandeGrouped, "placesOuvertes");
+      const sommePlacesFermees = _.sumBy(demandeGrouped, "placesFermees");
+      const sommePlacesNonColoreesTransformees = _.sumBy(demandeGrouped, "placesNonColoreesTransformees");
+      const sommePlacesColorees = _.sumBy(demandeGrouped, "placesColorees");
+      const sommePlacesColoreesOuvertes = _.sumBy(demandeGrouped, "placesColoreesOuvertes");
+      const sommePlacesColoreesFermees = _.sumBy(demandeGrouped, "placesColoreesFermees");
+      const sommePlacesTransformees = _.sumBy(demandeGrouped, "placesTransformees");
       const sommeSolde = sommePlacesOuvertes - sommePlacesFermees;
       const libelle = get(effectifGrouped[0], groupBy.libelle) ?? get(demandeGrouped[0], groupBy.libelle);
 
@@ -84,6 +87,9 @@ const groupByResult = ({ numerateur, denominateur, groupBy }: Repartition) => {
         effectif: totalEffectifs,
         placesOuvertes: sommePlacesOuvertes,
         placesFermees: sommePlacesFermees,
+        placesNonColoreesTransformees: sommePlacesNonColoreesTransformees,
+        placesColoreesOuvertes: sommePlacesColoreesOuvertes,
+        placesColoreesFermees: sommePlacesColoreesFermees,
         placesColorees: sommePlacesColorees,
         placesTransformees: sommePlacesTransformees,
         solde: sommeSolde,
@@ -106,6 +112,9 @@ const calculateTotal = (statsRepartition: z.infer<typeof StatsSchema>[]): z.infe
     effectif: 0,
     placesOuvertes: 0,
     placesFermees: 0,
+    placesNonColoreesTransformees: 0,
+    placesColoreesOuvertes: 0,
+    placesColoreesFermees: 0,
     placesColorees: 0,
     placesTransformees: 0,
     solde: 0,
@@ -118,6 +127,9 @@ const calculateTotal = (statsRepartition: z.infer<typeof StatsSchema>[]): z.infe
     total.effectif += stats.effectif;
     total.placesOuvertes += stats.placesOuvertes;
     total.placesFermees += stats.placesFermees;
+    total.placesNonColoreesTransformees += stats.placesNonColoreesTransformees;
+    total.placesColoreesOuvertes += stats.placesColoreesOuvertes;
+    total.placesColoreesFermees += stats.placesColoreesFermees;
     total.placesColorees += stats.placesColorees;
     total.placesTransformees += stats.placesTransformees;
     total.solde += stats.solde;

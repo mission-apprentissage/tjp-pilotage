@@ -101,7 +101,7 @@ export default () => {
   };
 
   const onExportCsv = async (isFiltered?: boolean) => {
-    trackEvent("etablissements:export");
+    trackEvent("users:export");
     const data = await client.ref("[GET]/users").query({
       query: isFiltered ? { ...filters, ...order } : {},
     });
@@ -109,7 +109,7 @@ export default () => {
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
-    trackEvent("etablissements:export-excel");
+    trackEvent("users:export-excel");
     const data = await client.ref("[GET]/users").query({
       query: isFiltered ? { ...filters, ...order } : {},
     });
@@ -312,7 +312,7 @@ export default () => {
             </Table>
             {!data.users.length && (
               <Box p={6} textAlign="center" color="gray">
-                Aucunes données
+                Aucune donnée
               </Box>
             )}
           </TableContainer>
