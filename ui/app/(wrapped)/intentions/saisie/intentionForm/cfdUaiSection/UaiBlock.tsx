@@ -7,11 +7,11 @@ import { UaiAutocomplete } from "../../components/UaiAutocomplete";
 import { IntentionForms } from "../defaultFormValues";
 
 export const UaiBlock = ({
-  active,
+  disabled,
   formMetadata,
   setUaiInfo,
 }: {
-  active: boolean;
+  disabled: boolean;
   formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
   setUaiInfo: (
     uaiInfo:
@@ -36,7 +36,7 @@ export const UaiBlock = ({
             render={({ field: { onChange, value, name } }) => (
               <UaiAutocomplete
                 name={name}
-                active={active}
+                disabled={disabled}
                 inError={!!errors.uai}
                 defaultValue={
                   formMetadata?.etablissement?.libelleEtablissement && value
