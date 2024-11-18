@@ -307,6 +307,7 @@ export const SecondaryFiltersSection = ({
               borderBottomColor={activeFilters.coloration != undefined ? "info.525" : ""}
               placeholder="Avec / sans"
             >
+              {/* @ts-expect-error TODO */}
               {data?.filters.colorations?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
