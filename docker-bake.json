@@ -13,6 +13,9 @@
     "recette": {
       "targets": ["server", "ui-recette"]
     },
+    "recette1new": {
+      "targets": ["server", "ui-recette1new"]
+    },
     "recette2": {
       "targets": ["server", "ui-recette2"]
     },
@@ -50,7 +53,7 @@
     "ui": {
       "inherits": ["common"],
       "matrix": {
-        "ENV": ["production", "recette", "recette2", "local"]
+        "ENV": ["production", "recette", "recette1new", "recette2", "local"]
       },
       "name": "ui-${ENV}",
       "args": {
