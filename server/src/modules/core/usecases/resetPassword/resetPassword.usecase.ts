@@ -24,7 +24,10 @@ export const [resetPassword, resetPasswordFactory] = inject(
       repeatPassword: string;
       resetPasswordToken: string;
     }) => {
-      if (!resetPasswordToken) throw Boom.unauthorized("missing token");
+      if (!resetPasswordToken)
+        throw Boom.unauthorized(
+          "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début."
+        );
 
       let decryptedToken: { email: string };
       try {
@@ -32,17 +35,21 @@ export const [resetPassword, resetPasswordFactory] = inject(
           email: string;
         };
       } catch {
-        throw Boom.unauthorized("wrong token");
+        throw Boom.unauthorized(
+          "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début."
+        );
       }
 
       const email = decryptedToken.email.toLowerCase();
 
       if (password !== repeatPassword) {
-        throw Boom.badRequest("different passwords");
+        throw Boom.badRequest("Mot de passe non identiques.");
       }
 
       if (!password.match(passwordRegex)) {
-        throw Boom.badRequest("password unsafe");
+        throw Boom.badRequest(
+          "Le mot de passe doit contenir entre 8 et 15 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)"
+        );
       }
 
       const hashedPassword = hashPassword(password);
