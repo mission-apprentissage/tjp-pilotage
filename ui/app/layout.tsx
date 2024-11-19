@@ -5,14 +5,28 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 
 import { serverClient } from "@/api.client";
+import { getMetadata } from "@/utils/handleMetadata";
 
 import RootLayoutClient from "./layoutClient";
 
-export const metadata: Metadata = {
-  title: "Orion",
-  robots: "none",
-  description: "Pilotage de la carte des formations",
+type Props = {
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
+
+export async function generateMetadata(
+  _: Props,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  state: any
+): Promise<Metadata> {
+  const { title, description } = getMetadata(state);
+
+  return {
+    title,
+    description,
+    robots: "none",
+  };
+}
 
 const fetchAuth = async () => {
   const headersList = Object.fromEntries(headers().entries());

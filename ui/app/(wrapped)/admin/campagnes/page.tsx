@@ -15,6 +15,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { toDate } from "date-fns";
+import Head from "next/head";
 import { useMemo, useState } from "react";
 
 import { client } from "@/api.client";
