@@ -5,7 +5,17 @@ import { useSelectedLayoutSegments } from "next/navigation";
 import { LandingFooter } from "./LandingFooter";
 import { MinimalFooter } from "./MinimalFooter";
 
-const LANDING_FOOTER_SEGMENTS = ["panorama", "pilotage", "pilotage-reforme", "ressources", "changelog"];
+const LANDING_FOOTER_SEGMENTS = [
+  "panorama",
+  "pilotage",
+  "pilotage-reforme",
+  "ressources",
+  "changelog",
+  "declaration-accessibilite",
+  "politique-de-confidentialite",
+  "cgu",
+  "mentions-legales",
+];
 
 export const Footer = () => {
   const segments = useSelectedLayoutSegments();
