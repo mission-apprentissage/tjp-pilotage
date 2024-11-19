@@ -11,6 +11,7 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
+import { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { passwordRegex } from "shared/utils/passwordRegex";
@@ -31,6 +32,7 @@ export const ResetPasswordForm = ({ resetPasswordToken }: { resetPasswordToken: 
 
   const {
     mutate: activateAccount,
+    error,
     isError,
     isLoading,
   } = client.ref("[POST]/auth/reset-password").useMutation({
@@ -54,7 +56,7 @@ export const ResetPasswordForm = ({ resetPasswordToken }: { resetPasswordToken: 
               pattern: {
                 value: new RegExp(passwordRegex),
                 message:
-                  "Le mot de passe doit contenir au moins 8 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)",
+                  "Le mot de passe doit contenir entre 8 et 15 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)",
               },
             })}
           />
@@ -75,10 +77,15 @@ export const ResetPasswordForm = ({ resetPasswordToken }: { resetPasswordToken: 
           />
           {!!errors.repeatPassword && <FormErrorMessage>{errors.repeatPassword.message}</FormErrorMessage>}
         </FormControl>
-        {isError && (
-          <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
-            Erreur lors de la réinitialisation du mot de passe
-          </Text>
+        {isError && isAxiosError(error) && (
+          <>
+            <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
+              Erreur lors de la réinitialisation du mot de passe :
+            </Text>
+            <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
+              {error.response?.data?.message}
+            </Text>
+          </>
         )}
         <Flex>
           <Button isLoading={isLoading} type="submit" mt="4" ml="auto" variant="primary">
