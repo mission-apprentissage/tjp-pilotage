@@ -9,7 +9,7 @@ export interface PublicConfig {
   host: string;
   baseUrl: string;
   apiEndpoint: string;
-  env: "local" | "recette" | "recette2" | "production";
+  env: "local" | "recette" | "recette1new" | "recette2" | "production";
   version: string;
   productMeta: {
     brandName: "orion";
@@ -52,6 +52,26 @@ function getRecettePublicConfig(): PublicConfig {
     host,
     baseUrl: `https://${host}`,
     env: "recette",
+    apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
+    productMeta: getProductMeta(),
+  };
+}
+
+function getRecette1newPublicConfig(): PublicConfig {
+  const host = "recette-1-new.orion.inserjeunes.incubateur.net";
+
+  return {
+    sentry: {
+      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
+      enabled: true,
+    },
+    crisp: {
+      token: "no-token",
+    },
+    host,
+    baseUrl: `https://${host}`,
+    env: "recette1new",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
     productMeta: getProductMeta(),
@@ -128,6 +148,7 @@ function getEnv(): PublicConfig["env"] {
   switch (env) {
     case "production":
     case "recette":
+    case "recette1new":
     case "recette2":
     case "local":
       return env;
@@ -142,6 +163,8 @@ function getPublicConfig(): PublicConfig {
       return getProductionPublicConfig();
     case "recette":
       return getRecettePublicConfig();
+    case "recette1new":
+      return getRecette1newPublicConfig();
     case "recette2":
       return getRecette2PublicConfig();
     case "local":
