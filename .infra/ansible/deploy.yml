@@ -51,7 +51,7 @@
       async: 18000
       poll: 10
 
-    - name: Lancement de l'application {{env_type}}
+    - name: Lancement de l'application {{env_name}}
       shell:
         chdir: /opt/app
         cmd: "/opt/app/tools/update-stack.sh"
