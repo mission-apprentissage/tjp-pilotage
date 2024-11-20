@@ -68,8 +68,7 @@ services:
 
   metabase:
     <<: *default
-    image: metabase/metabase:v0.46.6.4
-    # metabase/metabase:v0.49.11
+    image: metabase/metabase:v0.49.11
     deploy:
       <<: *deploy-default
       resources:
@@ -81,7 +80,6 @@ services:
       MB_SITE_URL: "{{dns_name}}/metabase"
       MB_DB_TYPE: postgres
       MB_DB_CONNECTION_URI: "{{vault[env_name].METABASE_DB_URI}}"
-      MB_ENCRYPTION_SECRET_KEY: "{{vault[env_name].METABASE_ENCRYPTION_SECRET_KEY}}"
       MB_EMAIL_FROM_ADDRESS: "{{vault.METABASE_EMAIL_FROM_ADDRESS}}"
       MB_EMAIL_FROM_NAME: "{{vault.METABASE_EMAIL_FROM_NAME}}"
       MB_PASSWORD_COMPLEXITY: strong
