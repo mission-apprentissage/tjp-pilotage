@@ -19,6 +19,9 @@
     "recette2": {
       "targets": ["server", "ui-recette2"]
     },
+    "preproduction": {
+      "targets": ["server", "ui-preproduction"]
+    },
     "local": {
       "targets": ["server", "ui-local"]
     }
