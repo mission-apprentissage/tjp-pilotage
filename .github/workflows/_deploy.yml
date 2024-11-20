@@ -8,6 +8,7 @@ on:
         required: true
         options:
           - production
+          - preproduction
           - recette
           - recette1new
           - recette2
