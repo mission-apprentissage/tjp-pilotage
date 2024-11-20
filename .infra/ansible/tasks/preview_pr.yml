@@ -97,7 +97,7 @@
 
     - name: "[{{ pr_number }}] Preview URL"
       debug:
-        msg: "{{ vault[env_type].PUBLIC_URL }}"
+        msg: "{{ vault[env_name].PUBLIC_URL }}"
 
 - name: "[{{ pr_number }}] Uninstalling preview"
   when: pr_state != 'open'
@@ -122,7 +122,7 @@
 
     - name: "[{{ pr_number }}] Remove database"
       shell:
-        cmd: docker run --rm -i --network ij_network mongo:6.0.2-focal mongosh "{{ vault[env_type].MONGODB_URI }}" --eval "db.dropDatabase()"
+        cmd: docker run --rm -i --network ij_network mongo:6.0.2-focal mongosh "{{ vault[env_name].MONGODB_URI }}" --eval "db.dropDatabase()"
 
     - name: "[{{ pr_number }}] Removing preview directory"
       shell:

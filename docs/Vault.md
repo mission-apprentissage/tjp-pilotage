@@ -41,8 +41,8 @@ vault:
     APP_ENV: "recette"
 ```
 
-Pour référencer cette variable dans un fichier, il faut utiliser la syntaxe `{{ vault[env_type].APP_ENV }}`
-La variable `env_type` qui est définie dans le fichier `env.ini` sera automatiquement valorisée en fonction de
+Pour référencer cette variable dans un fichier, il faut utiliser la syntaxe `{{ vault[env_name].APP_ENV }}`
+La variable `env_name` qui est définie dans le fichier `env.ini` sera automatiquement valorisée en fonction de
 l'environnement cible.
 
 ## Gestion des accès
