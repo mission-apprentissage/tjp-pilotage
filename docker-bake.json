@@ -53,7 +53,7 @@
     "ui": {
       "inherits": ["common"],
       "matrix": {
-        "ENV": ["production", "recette", "recette1new", "recette2", "local"]
+        "ENV": ["production", "preproduction", "recette", "recette1new", "recette2", "local"]
       },
       "name": "ui-${ENV}",
       "args": {

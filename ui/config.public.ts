@@ -9,7 +9,7 @@ export interface PublicConfig {
   host: string;
   baseUrl: string;
   apiEndpoint: string;
-  env: "local" | "recette" | "recette1new" | "recette2" | "production";
+  env: "local" | "recette" | "recette1new" | "recette2" | "production" | "preproduction";
   version: string;
   productMeta: {
     brandName: "orion";
@@ -20,6 +20,26 @@ export interface PublicConfig {
 
 function getProductionPublicConfig(): PublicConfig {
   const host = "orion.inserjeunes.beta.gouv.fr";
+
+  return {
+    sentry: {
+      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
+      enabled: true,
+    },
+    crisp: {
+      token: "cf473a68-afeb-4611-9d38-55ff6144b9b8",
+    },
+    host,
+    baseUrl: `https://${host}`,
+    env: "production",
+    apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
+    productMeta: getProductMeta(),
+  };
+}
+
+function getPreproductionPublicConfig(): PublicConfig {
+  const host = "preprod.orion.inserjeunes.incubateur.net";
 
   return {
     sentry: {
@@ -147,6 +167,7 @@ function getEnv(): PublicConfig["env"] {
   const env = process.env.NEXT_PUBLIC_ENV;
   switch (env) {
     case "production":
+    case "preproduction":
     case "recette":
     case "recette1new":
     case "recette2":
@@ -160,6 +181,8 @@ function getEnv(): PublicConfig["env"] {
 function getPublicConfig(): PublicConfig {
   switch (getEnv()) {
     case "production":
+      return getPreproductionPublicConfig();
+    case "preproduction":
       return getProductionPublicConfig();
     case "recette":
       return getRecettePublicConfig();
