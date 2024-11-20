@@ -181,9 +181,9 @@ function getEnv(): PublicConfig["env"] {
 function getPublicConfig(): PublicConfig {
   switch (getEnv()) {
     case "production":
-      return getPreproductionPublicConfig();
-    case "preproduction":
       return getProductionPublicConfig();
+    case "preproduction":
+      return getPreproductionPublicConfig();
     case "recette":
       return getRecettePublicConfig();
     case "recette1new":
