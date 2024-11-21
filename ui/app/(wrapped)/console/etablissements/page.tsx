@@ -32,7 +32,7 @@ const PAGE_SIZE = 30;
 
 type QueryResult = (typeof client.infer)["[GET]/etablissements"];
 
-const ColonneFiltersSection = chakra(
+const ColonneFilterSection = chakra(
   ({
     colonneFilters,
     forcedColonnes,
@@ -85,7 +85,7 @@ const ColonneFiltersSection = chakra(
               color="bluefrance.113"
               onClick={() => trackEvent("etablissements:affichage-colonnes")}
             >
-              Modifier l'affichage des colonnes
+              Modifier les colonnes
             </Button>
           }
         />
@@ -406,10 +406,11 @@ export default function Etablissements() {
                 }}
                 value={searchFormationEtablissement}
                 onClick={onSearch}
+                width={{ base: "15rem", ["2xl"]: "25rem" }}
               />
             }
             ColonneFilter={
-              <ColonneFiltersSection
+              <ColonneFilterSection
                 colonneFilters={colonneFilters}
                 handleColonneFilters={handleColonneFilters}
                 forcedColonnes={["libelleEtablissement", "libelleFormation"]}
