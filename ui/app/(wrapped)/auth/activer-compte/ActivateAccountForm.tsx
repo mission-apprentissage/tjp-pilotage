@@ -57,7 +57,7 @@ export const ActivateAccountForm = ({ activationToken }: { activationToken: stri
               pattern: {
                 value: new RegExp(passwordRegex),
                 message:
-                  "Le mot de passe doit contenir au moins 8 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)",
+                  "Le mot de passe doit contenir entre 8 et 15 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)",
               },
             })}
           />
