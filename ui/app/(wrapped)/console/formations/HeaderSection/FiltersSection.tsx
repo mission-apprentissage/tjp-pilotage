@@ -18,11 +18,17 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
-import { DeleteRequeteEnregistreeButton } from "../../components/DeleteRequeteEnregistreeButton";
-import { CreateRequeteEnregistreeModal } from "../../components/CreateRequeteEnregistreeModal";
-import { FilterTags } from "../../components/FilterTags";
-import type { FORMATION_COLUMNS } from "../FORMATION_COLUMNS";
-import type { Filters, FiltersList, Formations, Order, RequetesEnregistrees } from "../types";
+import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
+import { DeleteRequeteEnregistreeButton } from "@/app/(wrapped)/console/components/DeleteRequeteEnregistreeButton";
+import { FilterTags } from "@/app/(wrapped)/console/components/FilterTags";
+import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
+import type {
+  Filters,
+  FiltersList,
+  Formations,
+  Order,
+  RequetesEnregistrees,
+} from "@/app/(wrapped)/console/formations/types";
 import { Multiselect } from "@/components/Multiselect";
 import { feature } from "@/utils/feature";
 
