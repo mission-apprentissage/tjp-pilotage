@@ -18,10 +18,10 @@ import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
-import { DeleteRequeteEnregistreeButton } from "../../components/DeleteRequeteEnregistreeButton";
-import { FilterTags } from "../../components/FilterTags";
-import type { FORMATION_ETABLISSEMENT_COLUMNS } from "../FORMATION_ETABLISSEMENT_COLUMNS";
-import type { Filters, FiltersList, Order, RequetesEnregistrees } from "../types";
+import { DeleteRequeteEnregistreeButton } from "@/app/(wrapped)/console/components/DeleteRequeteEnregistreeButton";
+import { FilterTags } from "@/app/(wrapped)/console/components/FilterTags";
+import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
+import type { Filters, FiltersList, Order, RequetesEnregistrees } from "@/app/(wrapped)/console/etablissements/types";
 import { Multiselect } from "@/components/Multiselect";
 import { feature } from "@/utils/feature";
 
