@@ -1,5 +1,5 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
-import { Box, chakra, Flex, IconButton } from "@chakra-ui/react";
+import { chakra, Flex, IconButton, Text } from "@chakra-ui/react";
 
 import { AdvancedExportMenuButton } from "./AdvancedExportMenuButton";
 
@@ -28,7 +28,7 @@ export const TableHeader = chakra(
     SearchInput?: React.ReactNode;
   }) => {
     return (
-      <Flex align="center" py="1.5" px={0} className={className} gap={4}>
+      <Flex align="center" py="1.5" px={0} className={className} gap={2} maxW={"100%"} overflowY={"hidden"}>
         {SearchInput}
         <Flex ms={ColonneFilter ? "none" : "auto"}>
           {(onExportCsv || onExportExcel) && (
@@ -37,10 +37,10 @@ export const TableHeader = chakra(
         </Flex>
         {SaveFiltersButton}
         {ColonneFilter}
-        <Flex ms={ColonneFilter ? "auto" : "none"} mt={"auto"}>
-          <Box mx="4">
+        <Flex ms={ColonneFilter ? "auto" : "none"} minW={"fit-content"}>
+          <Text mx="4" my="auto">
             {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur {count}
-          </Box>
+          </Text>
           <IconButton
             isDisabled={page === 0}
             onClick={() => onPageChange(page - 1)}

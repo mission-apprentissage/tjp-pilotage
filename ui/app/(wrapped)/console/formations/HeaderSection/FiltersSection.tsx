@@ -11,12 +11,14 @@ import {
   Select,
   Tag,
   Text,
+  useDisclosure,
   Wrap,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
 import { DeleteRequeteEnregistreeButton } from "@/app/(wrapped)/console/components/DeleteRequeteEnregistreeButton";
 import { FilterTags } from "@/app/(wrapped)/console/components/FilterTags";
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
@@ -74,6 +76,7 @@ export const FiltersSection = ({
   requeteEnregistreeActuelle: { nom: string; couleur?: string };
   setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: { nom: string; couleur?: string }) => void;
 }) => {
+  const { onOpen, onClose, isOpen } = useDisclosure();
   const resetFilters = () => {
     setSearchParams({
       filters: {
@@ -96,22 +99,32 @@ export const FiltersSection = ({
 
   const [deleteButtonToDisplay, setDeleteButtonToDisplay] = useState<string>("");
 
+  const hasRequetesEnregistrees = requetesEnregistrees && requetesEnregistrees.length > 0;
+
   return (
     <Flex direction={"column"} gap={4} wrap={"wrap"}>
       <Wrap spacing={3}>
-        <Menu matchWidth={true} autoSelect={false}>
+        <Menu autoSelect={false} gutter={3}>
           <MenuButton
             as={Button}
             variant={"selectButton"}
             rightIcon={<ChevronDownIcon />}
-            width={[null, null, "64"]}
+            width={"15rem"}
             size="md"
             borderWidth="1px"
             borderStyle="solid"
             borderColor="grey.900"
             bg={"white"}
+            opacity={hasRequetesEnregistrees ? 1 : 0.5}
+            cursor={hasRequetesEnregistrees ? "pointer" : "not-allowed"}
+            onClick={(e) => {
+              if (!hasRequetesEnregistrees) {
+                onOpen();
+                e.preventDefault();
+              }
+            }}
           >
-            <Flex direction="row" gap={2}>
+            <Flex direction="row" gap={2} overflow={"hidden"} whiteSpace="nowrap">
               {requeteEnregistreeActuelle.couleur && (
                 <Tag size={"sm"} bgColor={requeteEnregistreeActuelle.couleur} borderRadius={"100%"} />
               )}
@@ -119,7 +132,7 @@ export const FiltersSection = ({
             </Flex>
           </MenuButton>
           <Portal>
-            <MenuList py={0} borderTopRadius={0} minW={"fit-content"} zIndex={3}>
+            <MenuList py={0} borderColor="grey.900" borderTopRadius={0} minW={"fit-content"} zIndex={3}>
               {requetesEnregistrees && requetesEnregistrees.length > 0 && (
                 <>
                   <Text p={2} color="grey.425">
@@ -142,7 +155,9 @@ export const FiltersSection = ({
                       gap={2}
                     >
                       <Tag size={"sm"} bgColor={requete.couleur} borderRadius={"100%"} />
-                      <Flex direction="row">{requete.nom}</Flex>
+                      <Flex direction="row" whiteSpace={"nowrap"}>
+                        {requete.nom}
+                      </Flex>
                       {deleteButtonToDisplay === requete.id && (
                         <DeleteRequeteEnregistreeButton requeteEnregistree={requete} />
                       )}
@@ -182,7 +197,7 @@ export const FiltersSection = ({
           placeholder="Toutes les régions"
           size="md"
           variant="newInput"
-          width="15rem"
+          width="14rem"
           onChange={(e) => {
             handleFilters("codeRegion", [e.target.value]);
           }}
@@ -200,7 +215,7 @@ export const FiltersSection = ({
           disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width="15rem"
+          width="14rem"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={filtersList?.academies}
           value={searchParams.filters?.codeAcademie ?? []}
@@ -211,7 +226,7 @@ export const FiltersSection = ({
           disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width="15rem"
+          width="14rem"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={filtersList?.departements}
           value={searchParams.filters?.codeDepartement ?? []}
@@ -222,7 +237,7 @@ export const FiltersSection = ({
           disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width="15rem"
+          width="14rem"
           onChange={(selected) => handleFilters("commune", selected)}
           options={filtersList?.communes}
           value={searchParams.filters?.commune ?? []}
@@ -245,6 +260,23 @@ export const FiltersSection = ({
         filtersList={filtersList}
         isEditable={true}
       />
+      {isOpen && (
+        <CreateRequeteEnregistreeModal
+          page={"formation"}
+          isOpen={isOpen}
+          onClose={onClose}
+          searchParams={searchParams}
+          filtersList={filtersList}
+          altText={
+            <>
+              <Text>Vous n'avez pas encore de requête favorite enregistrée.</Text>
+              <Text fontWeight={400} color="grey.450" fontSize={15}>
+                En enregistrer une vous permettra de retrouver rapidement vos recherches.
+              </Text>
+            </>
+          }
+        />
+      )}
     </Flex>
   );
 };

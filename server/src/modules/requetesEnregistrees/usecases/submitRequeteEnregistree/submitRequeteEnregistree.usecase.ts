@@ -23,6 +23,17 @@ export const [submitRequeteEnregistreeUsecase, submitRequeteEnregistreeFactory] 
       user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
       requeteEnregistree: RequeteEnregistree;
     }) => {
+      const requeteEnregistreeVide = Object.keys(requeteEnregistree.filtres).length === 0;
+
+      if (requeteEnregistreeVide) {
+        throw Boom.badRequest("Requête enregistrée vide", {
+          errors: {
+            empty_requete:
+              "La requête enregistrée ne peut pas être vide. Choisissez des filtres pour enregistrer une requête.",
+          },
+        });
+      }
+
       const requeteEnregistreeExistante = await findOneSimilarRequeteEnregistreeQuery({
         ...requeteEnregistree,
         userId: user.id,

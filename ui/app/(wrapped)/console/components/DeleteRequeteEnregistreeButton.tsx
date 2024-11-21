@@ -45,7 +45,7 @@ export const DeleteRequeteEnregistreeButton = ({
       // Wait until view is updated before invalidating queries
       setTimeout(() => {
         queryClient.invalidateQueries({
-          queryKey: ["[GET]/requetesEnregistrees"],
+          queryKey: ["[GET]/requetes"],
         });
         setIsDeleting(false);
         onClose();
