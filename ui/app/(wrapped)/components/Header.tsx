@@ -109,7 +109,6 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
           boxShadow="0 2px 3px rgba(0,0,18,0.16)"
           position="sticky"
           top={0}
-          left={0}
           zIndex="docked"
           backgroundColor="white"
         >

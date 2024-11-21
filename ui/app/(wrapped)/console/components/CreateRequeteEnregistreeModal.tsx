@@ -30,7 +30,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { format } from "date-fns";
 import NextLink from "next/link";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { client } from "@/api.client";
@@ -72,6 +72,7 @@ export const CreateRequeteEnregistreeModal = ({
   onClose,
   searchParams,
   filtersList,
+  altText,
 }: {
   page: TypePage;
   isOpen: boolean;
@@ -81,6 +82,7 @@ export const CreateRequeteEnregistreeModal = ({
     search?: string;
   };
   filtersList?: FiltersList;
+  altText?: ReactNode;
 }) => {
   const toast = useToast();
   const { auth } = useAuth();
@@ -159,7 +161,9 @@ export const CreateRequeteEnregistreeModal = ({
               });
             })}
           >
-            <ModalHeader>Enregistrer la requête</ModalHeader>
+            <ModalHeader>
+              {altText ? altText : "Enregistrer la requête"}
+            </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <FormControl mb="4" isInvalid={!!errors.nom}>
