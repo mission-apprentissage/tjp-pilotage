@@ -1,4 +1,6 @@
 import { setMaxListeners } from "node:events";
+import { writeFileSync } from "node:fs";
+import path from "node:path";
 
 import { captureException } from "@sentry/node";
 import { program } from "commander";
@@ -11,6 +13,7 @@ import { migrateDownDB, migrateToLatest, migrateUp, statusMigration } from "./mi
 import createServer from "./server/server";
 import logger from "./services/logger";
 import { closeSentry } from "./services/sentry/sentry";
+import { __dirname } from "./utils/esmUtils";
 
 program
   .configureHelp({
@@ -136,6 +139,21 @@ program
   .argument("[numberOfMigrations]", "number of migrations to rollback [default: 1]")
   .action(async (numberOfMigrations = 1) => {
     await migrateDownDB(numberOfMigrations);
+  });
+
+program
+  .command("migrations:create")
+  .description("Run migrations create")
+  .action(() => {
+    writeFileSync(
+      path.join(__dirname(), "../src", `migrations/migration_${new Date().getTime()}.ts`),
+      `import type { Kysely } from "kysely";
+
+export const up = async (db: Kysely<unknown>) => {};
+
+export const down = async (db: Kysely<unknown>) => {};
+`
+    );
   });
 
 productCommands(program);
