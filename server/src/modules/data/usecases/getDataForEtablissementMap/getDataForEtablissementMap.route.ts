@@ -5,7 +5,7 @@ import type { Server } from "@/server/server";
 import { getDataForEtablissementMapSchema } from "./getDataForEtablissementMap.schema";
 import { getDataForEtablissementMap } from "./getDataForEtablissementMap.usecase";
 
-export const getDataForEtablissementMapRoute = ({ server }: { server: Server }) => {
+export const getDataForEtablissementMapRoute = (server: Server) => {
   return createRoute("/etablissement/:uai/map", {
     method: "GET",
     schema: getDataForEtablissementMapSchema,

@@ -33,7 +33,6 @@ export const getDataForPanoramaDepartementFactory =
     ]);
 
     return {
-      // @ts-expect-error TODO
       formations: formations.map((formation) => ({
         ...formation,
         positionQuadrant: deps.getPositionQuadrant(formation, statsSortie),

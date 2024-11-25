@@ -13,15 +13,12 @@ export const getFormationsRenoveesEnseigneesQuery = async ({
   return await getKbdClient()
     .selectFrom("formationHistorique")
     .innerJoin("formationEtablissement", "formationEtablissement.cfd", "formationHistorique.cfd")
-    // @ts-expect-error
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "formationHistorique.cfd")
-    // @ts-expect-error
     .where("formationView.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(rentreeScolaire[0])}`)
     .select("formationHistorique.cfd")
     .where(isScolaireFormationHistorique)
     .distinct()
     .execute()
-    // @ts-expect-error
     .then((res) => res.map((r) => r.cfd));
 };
 
@@ -32,14 +29,11 @@ export const getFormationsRenoveesRentreeScolaireQuery = async ({
 }) => {
   return await getKbdClient()
     .selectFrom("formationHistorique")
-    // @ts-expect-error
     .leftJoin("formationView", "formationView.cfd", "formationHistorique.cfd")
-    // @ts-expect-error
     .where("formationView.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(rentreeScolaire[0])}`)
     .select("formationHistorique.cfd")
     .where(isScolaireFormationHistorique)
     .distinct()
     .execute()
-    // @ts-expect-error
     .then((res) => res.map((r) => r.cfd));
 };

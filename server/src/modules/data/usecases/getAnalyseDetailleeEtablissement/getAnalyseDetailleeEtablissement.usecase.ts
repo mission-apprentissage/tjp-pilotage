@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import type { z } from "zod";
 
 import { getStatsSortieParRegionsQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";

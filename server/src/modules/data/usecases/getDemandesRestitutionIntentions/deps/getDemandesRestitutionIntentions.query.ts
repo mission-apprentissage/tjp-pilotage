@@ -1,11 +1,9 @@
-// @ts-nocheck -- TODO
-
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import type { MILLESIMES_IJ } from "shared";
 import { CURRENT_RENTREE } from "shared";
-import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
@@ -19,7 +17,12 @@ import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6moi
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
-import { countDifferenceCapaciteApprentissage, countDifferenceCapaciteScolaire } from "@/modules/utils/countCapacite";
+import {
+  countDifferenceCapaciteApprentissage,
+  countDifferenceCapaciteApprentissageColoree,
+  countDifferenceCapaciteScolaire,
+  countDifferenceCapaciteScolaireColoree,
+} from "@/modules/utils/countCapacite";
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
 import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
@@ -50,7 +53,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   campagne,
   positionQuadrant,
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   order = "desc",
   orderBy = "createdAt",
   search,
@@ -121,6 +124,8 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       "dataFormation.typeFamille",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
+      countDifferenceCapaciteScolaireColoree(eb).as("differenceCapaciteScolaireColoree"),
+      countDifferenceCapaciteApprentissageColoree(eb).as("differenceCapaciteApprentissageColoree"),
       sql<string>`count(*) over()`.as("count"),
       selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertionRegional"),
       selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteRegional"),
@@ -228,17 +233,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     })
     .$call((eb) => {
       if (coloration)
-        switch (coloration) {
-          case "with":
-            return eb.where("demande.coloration", "=", true);
-          case "without":
-            return eb.where((w) =>
-              w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
-            );
-          case "all":
-          default:
-            return eb;
-        }
+        return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
       return eb;
     })
     .$call((eb) => {

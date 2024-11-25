@@ -1,7 +1,6 @@
-// @ts-nocheck -- TODO
-
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/corrections/usecases/getCorrections/getCorrections.usecase";
@@ -34,7 +33,7 @@ export const getCorrectionsQuery = async ({
   voie,
   campagne,
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   order = "desc",
   orderBy = "createdAt",
   search,
@@ -68,12 +67,17 @@ export const getCorrectionsQuery = async ({
     )
     .leftJoin("user", "user.id", "demande.createdBy")
     .select((eb) => [
+      eb.fn.count<number>("correction.id").over().as("count"),
       "demande.uai",
       "demande.cfd",
       "demande.codeDispositif",
       "demande.codeRegion",
-      sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("userName"),
-      sql<string>`count(*) over()`.as("count"),
+      sql<string>`
+        CONCAT(
+          ${eb.ref("user.firstname")},
+          ' ',
+          ${eb.ref("user.lastname")}
+        )`.as("userName"),
       "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
       "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
       "dataFormation.libelleFormation",
@@ -88,7 +92,6 @@ export const getCorrectionsQuery = async ({
       "academie.libelleAcademie",
       "academie.codeAcademie as codeAcademie",
       "dataFormation.typeFamille",
-      sql<string>`count(*) over()`.as("count"),
       selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertionRegional"),
       selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteRegional"),
       selectTauxDevenirFavorable("indicateurRegionSortie").as("tauxDevenirFavorableRegional"),
@@ -100,10 +103,25 @@ export const getCorrectionsQuery = async ({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
-      sql<number>`${eb.ref("correction.capaciteScolaire")}-${eb.ref("demande.capaciteScolaire")}`.as("ecartScolaire"),
-      sql<number>`${eb.ref("correction.capaciteApprentissage")}-${eb.ref("demande.capaciteApprentissage")}`.as(
-        "ecartApprentissage"
-      ),
+      eb.fn
+        .coalesce(
+          sql<number>`
+            ${eb.ref("correction.capaciteScolaire")} -
+            ${eb.ref("demande.capaciteScolaire")}
+          `,
+          eb.val(0)
+        )
+        .as("ecartScolaire"),
+
+      eb.fn
+        .coalesce(
+          sql<number>`
+            ${eb.ref("correction.capaciteApprentissage")} -
+            ${eb.ref("demande.capaciteApprentissage")}
+          `,
+          eb.val(0)
+        )
+        .as("ecartApprentissage"),
       "correction.capaciteScolaire as capaciteScolaireCorrigee",
       "correction.capaciteApprentissage as capaciteApprentissageCorrigee",
       "correction.intentionNumero",
@@ -245,6 +263,6 @@ export const getCorrectionsQuery = async ({
       })
     ),
     campagnes: campagnes.map(cleanNull),
-    count: parseInt(corrections[0]?.count) || 0,
+    count: corrections[0]?.count || 0,
   };
 };

@@ -2,8 +2,6 @@ import Boom from "@hapi/boom";
 import { APIErrorCode, Client, isNotionClientError } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
 
-import logger from "@/services/logger";
-
 export const notionClient = new Client({
   auth: process.env.NOTION_TOKEN,
 });
@@ -20,11 +18,6 @@ const withNotionErrorHandling =
     try {
       return await callback(...args);
     } catch (error) {
-      logger.error("Erreur lors de l'appel à Notion", {
-        error: error as Error,
-        ...args,
-      });
-
       if (isNotionClientError(error)) {
         switch (error.code) {
           case APIErrorCode.ObjectNotFound:
@@ -34,7 +27,10 @@ const withNotionErrorHandling =
           case APIErrorCode.RateLimited:
             throw Boom.tooManyRequests("Trop de requêtes Notion");
           default:
-            throw Boom.badImplementation("Erreur inattendue lors de la communication avec Notion");
+            throw Boom.badImplementation("Erreur inattendue lors de la communication avec Notion", {
+              error: error as Error,
+              ...args,
+            });
         }
       }
 

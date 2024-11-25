@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { sql } from "kysely";
 import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
 
@@ -29,7 +27,7 @@ export const getStatsCorrectionsQuery = async ({
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const statsCorrections = await getKbdClient
+  const statsCorrections = await getKbdClient()
     .selectFrom("correction")
     .leftJoin("latestDemandeView as demande", "demande.numero", "correction.intentionNumero")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
@@ -49,27 +47,54 @@ export const getStatsCorrectionsQuery = async ({
     )
     .select((eb) => [
       eb.fn.count<number>("correction.id").as("nbCorrections"),
-      sql<number>`SUM(${eb.ref("correction.capaciteScolaire")}-${eb.ref("demande.capaciteScolaire")})`.as(
-        "ecartScolaire"
-      ),
-      sql<number>`SUM(${eb.ref("correction.capaciteApprentissage")}-${eb.ref("demande.capaciteApprentissage")})`.as(
-        "ecartApprentissage"
-      ),
-      sql<number>`COALESCE(
-        SUM(
-          CASE WHEN ${eb.ref("correction.raison")} = ${RaisonCorrectionEnum["report"]} THEN 1 ELSE 0 END
-        ),
-      0)`.as("nbReports"),
-      sql<number>`COALESCE(
-        SUM(
-          CASE WHEN ${eb.ref("correction.raison")} = ${RaisonCorrectionEnum["annulation"]} THEN 1 ELSE 0 END
-        ),
-      0)`.as("nbAnnulations"),
-      sql<number>`COALESCE(
-        SUM(
-          CASE WHEN ${eb.ref("correction.raison")} = ${RaisonCorrectionEnum["modification_capacite"]} THEN 1 ELSE 0 END
-        ),
-      0)`.as("nbModifications"),
+      eb.fn
+        .coalesce(
+          eb.fn.sum<number>(
+            sql<number>`${eb.ref("correction.capaciteScolaire")}-${eb.ref("demande.capaciteScolaire")}`
+          ),
+          eb.val(0)
+        )
+        .as("ecartScolaire"),
+      eb.fn
+        .coalesce(
+          eb.fn.sum<number>(
+            sql<number>`
+            ${eb.ref("correction.capaciteApprentissage")} -
+            ${eb.ref("demande.capaciteApprentissage")}
+          `
+          ),
+          eb.val(0)
+        )
+        .as("ecartApprentissage"),
+      eb.fn
+        .coalesce(
+          eb.fn.sum<number>(
+            eb.case().when("correction.raison", "=", RaisonCorrectionEnum["report"]).then(1).else(0).end()
+          ),
+          eb.val(0)
+        )
+        .as("nbReports"),
+      eb.fn
+        .coalesce(
+          eb.fn.sum<number>(
+            eb.case().when("correction.raison", "=", RaisonCorrectionEnum["annulation"]).then(1).else(0).end()
+          ),
+          eb.val(0)
+        )
+        .as("nbAnnulations"),
+      eb.fn
+        .coalesce(
+          eb.fn.sum<number>(
+            eb
+              .case()
+              .when("correction.raison", "=", RaisonCorrectionEnum["modification_capacite"])
+              .then(1)
+              .else(0)
+              .end()
+          ),
+          eb.val(0)
+        )
+        .as("nbModifications"),
     ])
     .$call((eb) => {
       if (search)
@@ -164,17 +189,19 @@ export const getStatsCorrectionsQuery = async ({
       if (voie === "apprentissage") {
         return eb.where(
           ({ eb: ebw }) =>
-            sql<boolean>`abs(${ebw.ref(
-              "demande.capaciteApprentissage"
-            )} - ${ebw.ref("demande.capaciteApprentissageActuelle")}) > 1`
+            sql<boolean>`ABS(
+              ${ebw.ref("demande.capaciteApprentissage")} -
+              ${ebw.ref("demande.capaciteApprentissageActuelle")}
+            ) > 1`
         );
       }
       if (voie === "scolaire") {
         return eb.where(
           ({ eb: ebw }) =>
-            sql<boolean>`abs(${ebw.ref("demande.capaciteScolaire")} - ${ebw.ref(
-              "demande.capaciteScolaireActuelle"
-            )}) > 1`
+            sql<boolean>`ABS(
+              ${ebw.ref("demande.capaciteScolaire")} -
+              ${ebw.ref("demande.capaciteScolaireActuelle")}
+            ) > 1`
         );
       }
       return eb;

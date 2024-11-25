@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
@@ -109,11 +107,13 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
         libelleFCIL: null,
         autreMotif: null,
         commentaire: null,
-        capaciteScolaire: 0,
         capaciteScolaireActuelle: 0,
+        capaciteScolaire: 0,
+        capaciteScolaireColoreeActuelle: 0,
         capaciteScolaireColoree: 0,
-        capaciteApprentissage: 0,
         capaciteApprentissageActuelle: 0,
+        capaciteApprentissage: 0,
+        capaciteApprentissageColoreeActuelle: 0,
         capaciteApprentissageColoree: 0,
         mixte: false,
         ...intention,

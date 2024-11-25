@@ -4,7 +4,7 @@ import { z } from "zod";
 import config from "@/config";
 import type { Server } from "@/server/server";
 
-export const homeRoute = ({ server }: { server: Server }) => {
+export const homeRoute = (server: Server) => {
   return createRoute("/healthcheck", {
     method: "GET",
     schema: {
@@ -12,7 +12,7 @@ export const homeRoute = ({ server }: { server: Server }) => {
         200: z.object({
           name: z.string(),
           version: z.string(),
-          env: z.enum(["local", "recette", "recette2", "production", "test"]),
+          env: z.enum(["local", "recette", "recette1new", "recette2", "production", "preproduction", "test"]),
         }),
       },
     },

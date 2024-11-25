@@ -2,9 +2,14 @@ import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { OptionSchema } from "shared/schema/optionSchema";
 import { z } from "zod";
 
+const UserSchema = z.object({
+  fullname: z.string().optional(),
+  id: z.string().optional(),
+  role: z.string().optional(),
+});
+
 const DemandeItem = z.object({
-  numero: z.string(),
-  cfd: z.string().optional(),
+  // Formation
   libelleFormation: z.string().optional(),
   libelleEtablissement: z.string().optional(),
   codeDepartement: z.string().optional(),
@@ -14,40 +19,41 @@ const DemandeItem = z.object({
   codeRegion: z.string(),
   libelleRegion: z.string().optional(),
   libelleDispositif: z.string().optional(),
-  libelleFCIL: z.string().optional(),
   uai: z.string().optional(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  createdBy: z.string(),
-  statut: DemandeStatutZodType.exclude(["supprimée"]),
+  cfd: z.string().optional(),
+  codeDispositif: z.string().optional(),
+  libelleFCIL: z.string().optional(),
+  // Type de demande
+  rentreeScolaire: z.coerce.number().optional(),
   typeDemande: z.string().optional(),
+  coloration: z.boolean().optional(),
+  libelleColoration: z.string().optional(),
+  // Capacités
+  mixte: z.boolean().optional(),
+  capaciteScolaireActuelle: z.coerce.number().optional(),
+  capaciteScolaire: z.coerce.number().optional(),
+  capaciteScolaireColoreeActuelle: z.coerce.number().optional(),
+  capaciteScolaireColoree: z.coerce.number().optional(),
+  capaciteApprentissageActuelle: z.coerce.number().optional(),
+  capaciteApprentissage: z.coerce.number().optional(),
+  capaciteApprentissageColoreeActuelle: z.coerce.number().optional(),
+  capaciteApprentissageColoree: z.coerce.number().optional(),
+  // Compensation
   compensationCfd: z.string().optional(),
   compensationCodeDispositif: z.string().optional(),
   compensationUai: z.string().optional(),
   compensationRentreeScolaire: z.coerce.number().optional(),
   numeroCompensation: z.string().optional(),
   typeCompensation: z.string().optional(),
-  codeDispositif: z.string().optional(),
-  rentreeScolaire: z.coerce.number().optional(),
+  // Précisions
   motif: z.array(z.string()).optional(),
   autreMotif: z.string().optional(),
-  libelleColoration: z.string().optional(),
-  coloration: z.boolean().optional(),
   amiCma: z.boolean().optional(),
   amiCmaValide: z.boolean().optional(),
   amiCmaValideAnnee: z.string().optional(),
   amiCmaEnCoursValidation: z.boolean().optional(),
   poursuitePedagogique: z.boolean().optional(),
-  commentaire: z.string().optional(),
-  mixte: z.boolean().optional(),
-  capaciteScolaireActuelle: z.coerce.number().optional(),
-  capaciteScolaire: z.coerce.number().optional(),
-  capaciteScolaireColoree: z.coerce.number().optional(),
-  capaciteApprentissageActuelle: z.coerce.number().optional(),
-  capaciteApprentissage: z.coerce.number().optional(),
-  capaciteApprentissageColoree: z.coerce.number().optional(),
-  userName: z.string().optional(),
-  numeroDemandeImportee: z.string().optional(),
+  // RH
   recrutementRH: z.boolean().optional(),
   nbRecrutementRH: z.coerce.number().optional(),
   discipline1RecrutementRH: z.string().optional(),
@@ -64,9 +70,22 @@ const DemandeItem = z.object({
   nbFormationRH: z.coerce.number().optional(),
   discipline1FormationRH: z.string().optional(),
   discipline2FormationRH: z.string().optional(),
+  // Observations / commentaires
+  commentaire: z.string().optional(),
+  // Statut
+  statut: DemandeStatutZodType.exclude(["supprimée"]),
+  // Autre
+  numero: z.string(),
+  campagneId: z.string(),
+  userName: z.string().optional(),
+  numeroDemandeImportee: z.string().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  createdBy: UserSchema,
+  updatedBy: UserSchema.optional(),
+  suiviId: z.string().optional(),
   canEdit: z.boolean(),
   correction: z.string().optional(),
-  suiviId: z.string().optional(),
   alreadyAccessed: z.boolean(),
 });
 

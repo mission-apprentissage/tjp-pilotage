@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
@@ -26,7 +24,7 @@ export const [submitAvisUsecase, submitAvisFactory] = inject(
       const scope = getPermissionScope(user.role, "intentions-perdir-avis/ecriture");
 
       const intentionData = await findOneIntention(avis.intentionNumero);
-      if (!intentionData) throw Boom.notFound("Intention not found");
+      if (!intentionData) throw Boom.notFound("Intention non trouvée en base");
 
       const isAllowed = guardScope(scope?.default, {
         region: () => user.codeRegion === intentionData.codeRegion,

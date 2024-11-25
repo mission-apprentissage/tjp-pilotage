@@ -1,14 +1,12 @@
-import path from "node:path";
-
 import type { Command } from "commander";
 import { parse } from "csv-parse/sync";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { glob } from "glob";
 import { mapValues } from "lodash-es";
+import path from "path";
 import type { Role } from "shared";
 import { PERMISSIONS } from "shared";
 import { z } from "zod";
 
+import { basepath } from "./basepath";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
 import type { LineTypes } from "./modules/import/repositories/rawData.repository";
 import { Schemas } from "./modules/import/repositories/rawData.repository";
@@ -30,13 +28,14 @@ import { importPositionsQuadrant } from "./modules/import/usecases/importPositio
 import type { ImportFileError } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
-import { importTensionDepartementRome } from "./modules/import/usecases/importTensionDepartementRome/importTensionDepartementRome.usecase";
-import { importTensionFranceTravail } from "./modules/import/usecases/importTensionFranceTravail/importTensionFranceTravail.usecase";
+import { importTensionFranceTravailDepartement } from "./modules/import/usecases/importTensionFranceTravail/importTensionFranceTravailDepartement.usecase";
+import { importTensionFranceTravailNational } from "./modules/import/usecases/importTensionFranceTravail/importTensionFranceTravailNational.usecase";
+import { importTensionFranceTravailRegion } from "./modules/import/usecases/importTensionFranceTravail/importTensionFranceTravailRegion.usecase";
+import { importTensionRomeDepartement } from "./modules/import/usecases/importTensionRome/importTensionRomeDepartement.usecase";
+import { importTensionRomeNational } from "./modules/import/usecases/importTensionRome/importTensionRomeNational.usecase";
+import { importTensionRomeRegion } from "./modules/import/usecases/importTensionRome/importTensionRomeRegion.usecase";
 import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
-import { verifyFileEncoding } from "./modules/import/utils/verifyFileEncoding";
 import { writeErrorLogs } from "./modules/import/utils/writeErrorLogs";
-import logger from "./services/logger";
-import { getStaticDirPath, getStaticFilePath } from "./utils/getStaticFilePath";
 
 export function productCommands(cli: Command) {
   cli
@@ -119,9 +118,7 @@ export function productCommands(cli: Command) {
         year?: string;
         schema: Zod.Schema<unknown>;
       }) => {
-        const filePath = year
-          ? `${getStaticDirPath()}/files/${year}/${type}_${year}.csv`
-          : `${getStaticDirPath()}/files/${type}.csv`;
+        const filePath = year ? `${basepath}/files/${year}/${type}_${year}.csv` : `${basepath}/files/${type}.csv`;
         return await importRawFile({
           type: year ? `${type}_${year}` : type,
           path: filePath,
@@ -236,8 +233,16 @@ export function productCommands(cli: Command) {
         ...getImports({ type: "certif_info", schema: Schemas.certif_info }),
         ...getImports({ type: "discipline", schema: Schemas.discipline }),
         ...getImports({
-          type: "tension_departement_rome",
-          schema: Schemas.tension_departement_rome,
+          type: "tension_rome",
+          schema: Schemas.tension_rome,
+        }),
+        ...getImports({
+          type: "tension_rome_region",
+          schema: Schemas.tension_rome_region,
+        }),
+        ...getImports({
+          type: "tension_rome_departement",
+          schema: Schemas.tension_rome_departement,
         }),
       };
 
@@ -288,7 +293,9 @@ export function productCommands(cli: Command) {
         importIndicateursDepartement,
         importLienEmploiFormation,
         importDiscipline,
-        importTensionDepartementRome,
+        importTensionRomeNational,
+        importTensionRomeRegion,
+        importTensionRomeDepartement,
         refreshViews,
       };
 
@@ -330,9 +337,22 @@ export function productCommands(cli: Command) {
 
   cli
     .command("importTensionFranceTravail")
-    .description("Import des données de tension depuis France Travail")
-    .action(async () => {
-      await importTensionFranceTravail();
+    .description("Import des données de tension (national/régional/départemental) depuis France Travail")
+    .argument("[usecase]")
+    .action(async (usecaseName: string) => {
+      const usecases = {
+        importTensionFranceTravailNational,
+        importTensionFranceTravailRegion,
+        importTensionFranceTravailDepartement,
+      };
+
+      if (usecaseName) {
+        await usecases[usecaseName as keyof typeof usecases]();
+      } else {
+        for (const usecase of Object.values(usecases)) {
+          await usecase();
+        }
+      }
     });
 
   cli
@@ -340,28 +360,5 @@ export function productCommands(cli: Command) {
     .description("Calcul des positions quadrants")
     .action(async () => {
       await importPositionsQuadrant();
-    });
-
-  cli
-    .command("files:encoding:verify")
-    .description("Vérification de l'encodage des fichiers csv public")
-    .action(async () => {
-      const csvGlobPaths = getStaticFilePath("./**/*.csv");
-      const csvPaths = await glob(csvGlobPaths);
-
-      let hasError = false;
-      for (const entry of csvPaths) {
-        try {
-          await verifyFileEncoding(entry);
-        } catch (error) {
-          hasError = true;
-          logger.error(error);
-        }
-      }
-
-      if (hasError) {
-        // eslint-disable-next-line n/no-process-exit
-        process.exit(1);
-      }
     });
 }

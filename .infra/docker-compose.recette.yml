@@ -35,7 +35,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: docker.json.{{product_name}}.{{env_type}}.smtp
+        tag: docker.json.{{product_name}}.{{env_name}}.smtp
         fluentd-async: "true"
 
   postgres:
@@ -49,10 +49,10 @@ services:
       - /opt/app/data/postgres:/var/lib/postgresql/data:z
     environment:
       # - POSTGRES_DB=postgres
-      - POSTGRES_PASSWORD={{ vault[env_type].PSQL_PWD }}
+      - POSTGRES_PASSWORD={{ vault[env_name].PSQL_PWD }}
     logging:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: docker.json.{{product_name}}.{{env_type}}.postgres
+        tag: docker.json.{{product_name}}.{{env_name}}.postgres
         fluentd-async: "true"

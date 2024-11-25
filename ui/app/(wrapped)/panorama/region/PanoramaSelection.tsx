@@ -18,9 +18,7 @@ export function PanoramaSelection({
   const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
 
   useEffect(() => {
-    if (codeRegionFilter != "") {
-      router.push(`/panorama/region/${codeRegionFilter}?${qs.stringify(DEFAULT_SEARCH_PARAMS)}`);
-    }
+    if (codeRegionFilter) onCodeRegionChanged(codeRegionFilter);
   }, []);
 
   const onCodeRegionChanged = (codeRegion: string) => {

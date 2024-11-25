@@ -1,21 +1,22 @@
 import { sql } from "kysely";
 import type { Role } from "shared";
 import type { Scope } from "shared/security/permissions";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
 export const findUsers = async ({
-  offset,
-  limit,
+  offset = 0,
+  limit = MAX_LIMIT,
   search,
   orderBy,
   scope,
   scopeFilter,
 }: {
-  offset: number;
-  limit: number;
+  offset?: number;
+  limit?: number;
   search?: string;
   orderBy?: { order: "asc" | "desc"; column: string };
   scope: Scope;

@@ -1,10 +1,7 @@
-// @ts-nocheck
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Kysely } from "kysely";
 
-import type { DB } from "@/db/db";
-
-export const up = async (db: Kysely<DB>) => {
+export const up = async (db: Kysely<any>) => {
   await db.schema.dropView("formationScolaireView").materialized().ifExists().execute();
 
   await db.schema.dropView("formationApprentissageView").materialized().ifExists().execute();
@@ -178,7 +175,7 @@ export const up = async (db: Kysely<DB>) => {
     .execute();
 };
 
-export const down = async (db: Kysely<DB>) => {
+export const down = async (db: Kysely<any>) => {
   await db.schema.dropView("formationScolaireView").materialized().ifExists().execute();
   await db.schema.dropView("formationApprentissageView").materialized().ifExists().execute();
 

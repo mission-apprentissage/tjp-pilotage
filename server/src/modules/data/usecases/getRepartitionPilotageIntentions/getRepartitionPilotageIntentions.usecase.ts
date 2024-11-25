@@ -73,7 +73,10 @@ const groupByResult = ({ numerateur, denominateur, groupBy }: Repartition) => {
       // Somme des places
       const sommePlacesOuvertes = sumBy(demandeGrouped, "placesOuvertes");
       const sommePlacesFermees = sumBy(demandeGrouped, "placesFermees");
+      const sommePlacesNonColoreesTransformees = sumBy(demandeGrouped, "placesNonColoreesTransformees");
       const sommePlacesColorees = sumBy(demandeGrouped, "placesColorees");
+      const sommePlacesColoreesOuvertes = sumBy(demandeGrouped, "placesColoreesOuvertes");
+      const sommePlacesColoreesFermees = sumBy(demandeGrouped, "placesColoreesFermees");
       const sommePlacesTransformees = sumBy(demandeGrouped, "placesTransformees");
       const sommeSolde = sommePlacesOuvertes - sommePlacesFermees;
       const libelle = get(effectifGrouped[0], groupBy.libelle) ?? get(demandeGrouped[0], groupBy.libelle);
@@ -84,6 +87,9 @@ const groupByResult = ({ numerateur, denominateur, groupBy }: Repartition) => {
         effectif: totalEffectifs,
         placesOuvertes: sommePlacesOuvertes,
         placesFermees: sommePlacesFermees,
+        placesNonColoreesTransformees: sommePlacesNonColoreesTransformees,
+        placesColoreesOuvertes: sommePlacesColoreesOuvertes,
+        placesColoreesFermees: sommePlacesColoreesFermees,
         placesColorees: sommePlacesColorees,
         placesTransformees: sommePlacesTransformees,
         solde: sommeSolde,
@@ -106,6 +112,9 @@ const calculateTotal = (statsRepartition: z.infer<typeof StatsSchema>[]): z.infe
     effectif: 0,
     placesOuvertes: 0,
     placesFermees: 0,
+    placesNonColoreesTransformees: 0,
+    placesColoreesOuvertes: 0,
+    placesColoreesFermees: 0,
     placesColorees: 0,
     placesTransformees: 0,
     solde: 0,
@@ -118,6 +127,9 @@ const calculateTotal = (statsRepartition: z.infer<typeof StatsSchema>[]): z.infe
     total.effectif += stats.effectif;
     total.placesOuvertes += stats.placesOuvertes;
     total.placesFermees += stats.placesFermees;
+    total.placesNonColoreesTransformees += stats.placesNonColoreesTransformees;
+    total.placesColoreesOuvertes += stats.placesColoreesOuvertes;
+    total.placesColoreesFermees += stats.placesColoreesFermees;
     total.placesColorees += stats.placesColorees;
     total.placesTransformees += stats.placesTransformees;
     total.solde += stats.solde;

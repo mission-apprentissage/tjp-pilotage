@@ -1,8 +1,7 @@
-// @ts-nocheck -- TODO
-
 import { sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
@@ -21,7 +20,7 @@ export const getDemandes = async ({
   codeAcademie,
   codeNiveauDiplome,
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   order,
   orderBy,
   campagne,
@@ -88,6 +87,28 @@ export const getDemandes = async ({
         .select("allDemandeImportee.numero")
         .where("allDemandeImportee.statut", "<>", DemandeStatutEnum["supprimée"])
         .as("numeroDemandeImportee"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "demande.createdBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+          .where("demande.createdBy", "is not", null)
+      ).as("createdBy"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "demande.updatedBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+          .where("demande.updatedBy", "is not", null)
+      ).as("updatedBy"),
     ])
     .select((eb) =>
       eb

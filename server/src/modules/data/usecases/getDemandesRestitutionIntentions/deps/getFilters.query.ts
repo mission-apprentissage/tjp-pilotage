@@ -148,7 +148,6 @@ export const getFilters = async ({
     .execute();
 
   const filtersBase = getKbdClient()
-    // @ts-expect-error
     .selectFrom("latestDemandeIntentionView as demande")
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
@@ -363,16 +362,12 @@ export const getFilters = async ({
     ],
     colorations: [
       {
-        label: "Toutes demandes (avec et sans places colorées)",
-        value: "all",
+        label: "Avec",
+        value: "true",
       },
       {
-        label: "Uniquement les ouvertures/fermetures (sans les colorations de places existantes)",
-        value: "without",
-      },
-      {
-        label: "Uniquement les demandes avec places colorées (ouvertures/fermetures/existantes)",
-        value: "with",
+        label: "Sans",
+        value: "false",
       },
     ],
     compensations: [

@@ -100,7 +100,7 @@ export async function bind(app: Server) {
 
   app.register(
     async (instance: Server) => {
-      registerRoutes({ server: instance });
+      registerRoutes(instance);
     },
     { prefix: "/api" }
   );

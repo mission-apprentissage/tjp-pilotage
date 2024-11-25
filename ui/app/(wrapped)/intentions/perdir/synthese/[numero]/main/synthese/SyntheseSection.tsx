@@ -182,7 +182,7 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
           </Flex>
           {intention.coloration && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text>Complément du libellé</Text>
+              <Text>Libellé de la coloration</Text>
               <Text fontSize={14}>{intention.libelleColoration}</Text>
             </Flex>
           )}
@@ -199,12 +199,16 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
             <Text>Capacité actuelle</Text>
             <Text fontSize={14}>{intention.capaciteScolaireActuelle}</Text>
           </Flex>
+          <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
+            <Text>- Dont place(s) colorée(s)</Text>
+            <Text>{intention.capaciteScolaireColoreeActuelle}</Text>
+          </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text>Nouvelle capacité</Text>
             <Text fontSize={14}>{intention.capaciteScolaire}</Text>
           </Flex>
-          <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Dont place(s) colorée(s)</Text>
+          <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
+            <Text>- Dont place(s) colorée(s)</Text>
             <Text>{intention.capaciteScolaireColoree}</Text>
           </Flex>
           <Divider my={3} borderColor={"grey.900"} />
@@ -220,12 +224,16 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
             <Text>Capacité actuelle</Text>
             <Text fontSize={14}>{intention.capaciteApprentissageActuelle}</Text>
           </Flex>
+          <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
+            <Text>- Dont place(s) colorée(s)</Text>
+            <Text>{intention.capaciteApprentissageColoreeActuelle}</Text>
+          </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text>Nouvelle capacité</Text>
             <Text fontSize={14}>{intention.capaciteApprentissage}</Text>
           </Flex>
-          <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Dont place(s) colorée(s)</Text>
+          <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
+            <Text>- Dont place(s) colorée(s)</Text>
             <Text>{intention.capaciteApprentissageColoree}</Text>
           </Flex>
           <Divider my={3} borderColor={"grey.900"} />

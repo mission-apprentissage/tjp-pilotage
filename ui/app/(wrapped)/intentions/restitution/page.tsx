@@ -6,13 +6,13 @@ import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
-import { CodeRegionFilterContext } from "@/app/layoutClient";
+import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { SearchInput } from "@/components/SearchInput";
 import { TableHeader } from "@/components/TableHeader";
@@ -75,7 +75,6 @@ const ColonneFiltersSection = chakra(
 );
 
 const PAGE_SIZE = 30;
-const EXPORT_LIMIT = 1_000_000;
 
 // eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
@@ -135,6 +134,9 @@ export default () => {
         case "codeRegion":
           setCodeRegionFilter((value as string[])[0] ?? "");
           break;
+        case "codeDepartement":
+          setCodeDepartementFilter((value as string[])[0] ?? "");
+          break;
         case "rentreeScolaire":
           setRentreeScolaireFilter((value as string[])[0] ?? "");
           break;
@@ -143,9 +145,6 @@ export default () => {
           break;
         case "statut":
           setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
-          break;
-        case "coloration":
-          setColorationFilter(value as "all" | "with" | "without");
           break;
       }
   };
@@ -185,7 +184,7 @@ export default () => {
     });
   };
 
-  const getIntentionsStatsQueryParameters = (qLimit: number, qOffset?: number) => ({
+  const getIntentionsStatsQueryParameters = (qLimit?: number, qOffset?: number) => ({
     ...filters,
     ...order,
     search,
@@ -218,11 +217,11 @@ export default () => {
 
   const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
 
+  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
+
   const [rentreeScolaireFilter, setRentreeScolaireFilter] = useState<string>();
 
   const [campagneFilter, setCampagneFilter] = useState<string>(CURRENT_ANNEE_CAMPAGNE);
-
-  const [colorationFilter, setColorationFilter] = useState<"all" | "with" | "without">("all");
 
   const [colonneFilters, setColonneFilters] = useState<(keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]>(
     (columns.length
@@ -239,18 +238,23 @@ export default () => {
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeRegionFilter !== ""
+      codeRegionFilter
     ) {
       filters.codeRegion = [codeRegionFilter];
+    }
+    if (
+      filters?.codeRegion === undefined &&
+      filters?.codeAcademie === undefined &&
+      filters?.codeDepartement === undefined &&
+      codeDepartementFilter
+    ) {
+      filters.codeDepartement = [codeDepartementFilter];
     }
     if (filters?.campagne === undefined && campagneFilter !== "") {
       filters.campagne = campagneFilter;
     }
     if (filters?.rentreeScolaire === undefined && rentreeScolaireFilter !== "") {
       filters.rentreeScolaire = rentreeScolaireFilter;
-    }
-    if (filters?.coloration === undefined) {
-      filters.coloration = colorationFilter;
     }
 
     if (filters?.statut === undefined) {
@@ -265,13 +269,13 @@ export default () => {
     setSearchParams({ filters: filters });
   };
 
-  const onExportCsv = useCallback(async () => {
+  const onExportCsv = async (isFiltered?: boolean) => {
     trackEvent("restitution-demandes:export");
     const data = await client.ref("[GET]/restitution-intentions/demandes").query({
-      query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
+      query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
     downloadCsv(
-      formatExportFilename("restitution_export", filters?.codeRegion),
+      formatExportFilename("restitution_export", isFiltered ? filters : undefined),
       // @ts-expect-error TODO
       data.demandes.map((demande) => ({
         ...demande,
@@ -307,53 +311,51 @@ export default () => {
       })),
       STATS_DEMANDES_COLUMNS
     );
-  }, [getIntentionsStatsQueryParameters]);
+  };
 
-  const onExportExcel = useCallback(async () => {
+  const onExportExcel = async (isFiltered?: boolean) => {
     trackEvent("restitution-demandes:export-excel");
     const data = await client.ref("[GET]/restitution-intentions/demandes").query({
-      query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
+      query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
     downloadExcel(
-      formatExportFilename("restitution_export", filters?.codeRegion),
-      data.demandes.map(
-        // @ts-expect-error TODO
-        (demande) => ({
-          ...demande,
-          createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          updatedAt: new Date(demande.updatedAt).toLocaleDateString("fr-FR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          disciplinesRecrutementRH:
-            demande.discipline1RecrutementRH &&
-            `${demande.discipline1RecrutementRH} ${
-              demande.discipline2RecrutementRH ? `- ${demande.discipline2RecrutementRH}` : ""
-            }`,
-          disciplinesReconversionRH:
-            demande.discipline1ReconversionRH &&
-            `${demande.discipline1ReconversionRH} ${
-              demande.discipline2ReconversionRH ? `- ${demande.discipline2ReconversionRH}` : ""
-            }`,
-          disciplinesFormationRH:
-            demande.discipline1FormationRH &&
-            `${demande.discipline1FormationRH} ${
-              demande.discipline2FormationRH ? `- ${demande.discipline2FormationRH}` : ""
-            }`,
-          disciplinesProfesseurAssocieRH:
-            demande.discipline1ProfesseurAssocieRH &&
-            `${demande.discipline1ProfesseurAssocieRH} ${
-              demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
-            }`,
-          secteur: demande.secteur === "PU" ? "Public" : "Privé",
-        })
-      ),
+      formatExportFilename("restitution_export", isFiltered ? filters : undefined),
+      // @ts-expect-error TODO
+      data.demandes.map((demande) => ({
+        ...demande,
+        createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        updatedAt: new Date(demande.updatedAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        disciplinesRecrutementRH:
+          demande.discipline1RecrutementRH &&
+          `${demande.discipline1RecrutementRH} ${
+            demande.discipline2RecrutementRH ? `- ${demande.discipline2RecrutementRH}` : ""
+          }`,
+        disciplinesReconversionRH:
+          demande.discipline1ReconversionRH &&
+          `${demande.discipline1ReconversionRH} ${
+            demande.discipline2ReconversionRH ? `- ${demande.discipline2ReconversionRH}` : ""
+          }`,
+        disciplinesFormationRH:
+          demande.discipline1FormationRH &&
+          `${demande.discipline1FormationRH} ${
+            demande.discipline2FormationRH ? `- ${demande.discipline2FormationRH}` : ""
+          }`,
+        disciplinesProfesseurAssocieRH:
+          demande.discipline1ProfesseurAssocieRH &&
+          `${demande.discipline1ProfesseurAssocieRH} ${
+            demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
+          }`,
+        secteur: demande.secteur === "PU" ? "Public" : "Privé",
+      })),
       STATS_DEMANDES_COLUMNS
     );
-  }, [getIntentionsStatsQueryParameters]);
+  };
 
   useEffect(() => {
     setDefaultFilters();

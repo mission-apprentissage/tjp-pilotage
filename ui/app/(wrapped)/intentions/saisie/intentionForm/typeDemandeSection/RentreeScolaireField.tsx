@@ -44,7 +44,6 @@ export const RentreeScolaireField = ({
     () =>
       watch(({ rentreeScolaire, typeDemande }, { name }) => {
         if (name !== "rentreeScolaire") return;
-
         // Le type de demande ajustement est possible uniquement pour la rentrée scolaire actuelle
         if (rentreeScolaire === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE)) {
           setValue("typeDemande", "ajustement");

@@ -1,4 +1,3 @@
-// @ts-nocheck -- TODO
 import { CURRENT_IJ_MILLESIME } from "shared";
 
 import { getKbdClient } from "@/db/db";
@@ -18,9 +17,7 @@ const getStatsSortieBase = ({
 }) => {
   const statsSortie = getKbdClient()
     .selectFrom("indicateurRegionSortie")
-    // @ts-expect-error
     .innerJoin("formationScolaireView as formationView", "formationView.cfd", "indicateurRegionSortie.cfd")
-    // @ts-expect-error
     .where((w) => {
       if (!codeRegion) return w.val(true);
       if (Array.isArray(codeRegion)) return w("indicateurRegionSortie.codeRegion", "in", codeRegion);

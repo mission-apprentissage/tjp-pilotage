@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { createRoute } from "@http-wizard/core";
 import { getPermissionScope, guardScope } from "shared";
 

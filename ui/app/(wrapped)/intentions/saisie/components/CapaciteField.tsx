@@ -17,9 +17,11 @@ export const CapaciteField = ({
   name:
     | "capaciteScolaireActuelle"
     | "capaciteScolaire"
+    | "capaciteScolaireColoreeActuelle"
     | "capaciteScolaireColoree"
     | "capaciteApprentissageActuelle"
     | "capaciteApprentissage"
+    | "capaciteApprentissageColoreeActuelle"
     | "capaciteApprentissageColoree";
   className?: string;
   isReadOnly: boolean;

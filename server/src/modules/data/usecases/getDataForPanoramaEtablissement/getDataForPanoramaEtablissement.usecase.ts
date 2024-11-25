@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { getStatsSortieParRegionsQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant";
 
