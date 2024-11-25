@@ -143,7 +143,7 @@ export const FiltersSection = ({
       width="100vw"
       position={"sticky"}
       top={getStickyNavHeight()}
-      zIndex={"sticky"}
+      zIndex={"docked"}
       bgColor="blueecume.950"
       boxShadow={`0px 1px 0px 0px ${themeDefinition.colors.grey[850]}`}
       justify={"center"}
@@ -189,7 +189,6 @@ export const FiltersSection = ({
             options={data?.filters.rentreesScolaires}
             value={filters.rentreeScolaire ?? []}
             gutter={0}
-            menuZIndex={"sticky"}
           >
             Rentrée scolaire
           </Multiselect>
@@ -296,7 +295,6 @@ export const FiltersSection = ({
             options={data?.filters.niveauxDiplome}
             value={filters.codeNiveauDiplome ?? []}
             gutter={0}
-            menuZIndex={"sticky"}
           >
             Tous
           </Multiselect>
@@ -311,7 +309,6 @@ export const FiltersSection = ({
             options={data?.filters.nsfs}
             value={filters.codeNsf ?? []}
             gutter={0}
-            menuZIndex={"sticky"}
           >
             Tous
           </Multiselect>
@@ -326,7 +323,6 @@ export const FiltersSection = ({
             options={data?.filters.statuts}
             value={filters.statut ?? []}
             gutter={0}
-            menuZIndex={"sticky"}
           >
             Tous
           </Multiselect>
@@ -375,7 +371,6 @@ export const FiltersSection = ({
             options={data?.filters.secteurs}
             value={filters.secteur ?? []}
             gutter={0}
-            menuZIndex={"sticky"}
           >
             Tous
           </Multiselect>

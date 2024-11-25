@@ -1,9 +1,8 @@
-// @ts-nocheck -- TODO
-
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/data/usecases/getFormationEtablissements/getFormationEtablissements.usecase";
@@ -25,7 +24,7 @@ import { cleanNull } from "@/utils/noNull";
 
 export const getFormationEtablissementsQuery = async ({
   offset = 0,
-  limit = 20,
+  limit = MAX_LIMIT,
   rentreeScolaire = [CURRENT_RENTREE],
   millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
@@ -39,6 +38,7 @@ export const getFormationEtablissementsQuery = async ({
   uai,
   secteur,
   codeNsf,
+  positionQuadrant,
   withAnneeCommune,
   search,
   order,
@@ -236,6 +236,10 @@ export const getFormationEtablissementsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("nsf.libelleNsf")}),
                   ' ',
+                  unaccent(${eb.ref("formationView.cpc")}),
+                  ' ',
+                  unaccent(${eb.ref("formationView.cpcSecteur")}),
+                  ' ',
                   unaccent(${eb.ref("etablissement.libelleEtablissement")}),
                   ' ',
                   unaccent(${eb.ref("etablissement.commune")}),
@@ -255,7 +259,7 @@ export const getFormationEtablissementsQuery = async ({
       return eb;
     })
     .$call((q) => {
-      if (!withAnneeCommune || withAnneeCommune === "false") return q.where(notAnneeCommune);
+      if (withAnneeCommune === "false") return q.where(notAnneeCommune);
       return q;
     })
     .$call((q) => {
@@ -306,6 +310,10 @@ export const getFormationEtablissementsQuery = async ({
     .$call((q) => {
       if (!codeNsf) return q;
       return q.where("formationView.codeNsf", "in", codeNsf);
+    })
+    .$call((eb) => {
+      if (!positionQuadrant) return eb;
+      return eb.where("positionQuadrant", "in", positionQuadrant);
     })
     .where(isInPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))

@@ -7,13 +7,13 @@ import { client } from "@/api.client";
 export const UaiAutocomplete = ({
   name,
   defaultValue,
-  active,
+  disabled,
   inError,
   onChange,
 }: {
   name: string;
   defaultValue?: { value: string; label?: string; commune?: string };
-  active?: boolean;
+  disabled?: boolean;
   inError: boolean;
   onChange: (value?: (typeof client.infer)["[GET]/etablissement/search/:search"][number]) => void;
 }) => {
@@ -54,7 +54,7 @@ export const UaiAutocomplete = ({
         inputValue ? "Pas d'établissement correspondant" : "Commencez à écrire..."
       }
       placeholder="UAI, nom de l'établissement ou commune"
-      isDisabled={active === false}
+      isDisabled={disabled}
     />
   );
 };

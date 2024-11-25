@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import type { Insertable } from "kysely";
 import { omit } from "lodash-es";
 

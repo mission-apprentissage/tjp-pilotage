@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { getKbdClient } from "@/db/db";

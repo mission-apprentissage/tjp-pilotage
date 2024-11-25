@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import Boom from "@hapi/boom";
 import { getPermissionScope, guardScope } from "shared";
 

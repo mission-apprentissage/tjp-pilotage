@@ -69,11 +69,10 @@ export const HeadLineContent = ({
   colonneFilters,
   getCellBgColor,
 }: {
-  order: Order;
+  order: Partial<Order>;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     order?: Partial<Order>;
     page?: number;
   }) => void;

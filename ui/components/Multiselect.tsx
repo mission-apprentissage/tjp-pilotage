@@ -1,10 +1,9 @@
 "use client";
 import { ChevronDownIcon, RepeatIcon } from "@chakra-ui/icons";
-import type { PositionProps } from "@chakra-ui/react";
+import type { PlacementWithLogical, PositionProps } from "@chakra-ui/react";
 import { Box, Button, chakra, Flex, Input, Menu, MenuButton, MenuList, Portal, Text } from "@chakra-ui/react";
 import type { ChangeEventHandler, ReactNode } from "react";
 import { memo, useMemo, useRef, useState } from "react";
-import { unstable_batchedUpdates } from "react-dom";
 import removeAccents from "remove-accents";
 
 const ButtonContent = ({ selected, children }: { selected: string[]; children: ReactNode }) => {
@@ -107,8 +106,9 @@ export const Multiselect = chakra(
     size,
     hasDefaultValue = true,
     variant = "input",
-    menuZIndex,
+    menuZIndex = "dropdown",
     gutter,
+    placement,
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
@@ -122,6 +122,7 @@ export const Multiselect = chakra(
     variant?: string;
     menuZIndex?: PositionProps["zIndex"];
     gutter?: number;
+    placement?: PlacementWithLogical;
   }) => {
     const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
 
@@ -131,6 +132,7 @@ export const Multiselect = chakra(
           return [val, (stateValue.current?.get?.(val) || options.find(({ value }) => val === value)?.label) ?? val];
         })
       );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value, options, stateValue.current]);
 
     const [search, setSearch] = useState("");
@@ -158,6 +160,7 @@ export const Multiselect = chakra(
         : preparedOptions;
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const filteredOptions = useMemo(filterOptions, [preparedOptions, search, map]);
     const ref = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -170,10 +173,8 @@ export const Multiselect = chakra(
       <Menu
         isLazy={true}
         onOpen={() => {
-          unstable_batchedUpdates(() => {
-            prepareOptions();
-            handleSearch("");
-          });
+          prepareOptions();
+          handleSearch("");
           setTimeout(() => inputRef.current?.focus(), 100);
         }}
         onClose={() => {
@@ -182,6 +183,7 @@ export const Multiselect = chakra(
         }}
         closeOnSelect={false}
         gutter={gutter}
+        placement={placement}
       >
         <MenuButton
           as={Button}

@@ -41,6 +41,7 @@ export const createIntentionQuery = ({
         "motifRefus",
         "autreMotifRefus",
         "typeDemande",
+        "isIntention",
       ]) as Insertable<DB["intention"]>),
       id: generateId(),
       numero: generateShortId(),

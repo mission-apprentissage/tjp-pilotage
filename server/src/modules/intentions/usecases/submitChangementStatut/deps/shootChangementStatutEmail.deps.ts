@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import Boom from "@hapi/boom";
 import type { Role } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";

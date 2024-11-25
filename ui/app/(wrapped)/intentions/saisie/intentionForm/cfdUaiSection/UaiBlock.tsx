@@ -6,11 +6,11 @@ import { UaiAutocomplete } from "@/app/(wrapped)/intentions/saisie/components/Ua
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
 export const UaiBlock = ({
-  active,
+  disabled,
   formMetadata,
   setUaiInfo,
 }: {
-  active: boolean;
+  disabled: boolean;
   formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
   setUaiInfo: (uaiInfo: (typeof client.infer)["[GET]/etablissement/search/:search"][number] | undefined) => void;
 }) => {
@@ -31,7 +31,7 @@ export const UaiBlock = ({
             render={({ field: { onChange, value, name } }) => (
               <UaiAutocomplete
                 name={name}
-                active={active}
+                disabled={disabled}
                 inError={!!errors.uai}
                 defaultValue={
                   formMetadata?.etablissement?.libelleEtablissement && value

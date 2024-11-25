@@ -5,7 +5,7 @@ import type { Server } from "@/server/server";
 import { getDepartements } from "./getDepartements.query";
 import { getDepartementsSchema } from "./getDepartements.schema";
 
-export const getDepartementsRoute = ({ server }: { server: Server }) => {
+export const getDepartementsRoute = (server: Server) => {
   return createRoute("/departements", {
     method: "GET",
     schema: getDepartementsSchema,

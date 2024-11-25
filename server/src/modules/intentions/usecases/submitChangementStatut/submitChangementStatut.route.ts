@@ -6,7 +6,7 @@ import type { Server } from "@/server/server";
 import { submitChangementStatutSchema } from "./submitChangementStatut.schema";
 import { submitChangementStatutUsecase } from "./submitChangementStatut.usecase";
 
-export const submitChangementStatutRoute = ({ server }: { server: Server }) => {
+export const submitChangementStatutRoute = (server: Server) => {
   return createRoute("/intention/statut/submit", {
     method: "POST",
     schema: submitChangementStatutSchema,

@@ -42,7 +42,6 @@ export const GROUPED_FORMATION_COLUMNS: Record<
     cellColor: "inherit",
     options: {
       nbEtablissement: "Nombre d'établissements",
-      capacite: "Capacité",
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
       effectif3: "Effectif en année 3",
@@ -107,7 +106,6 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
     cellColor: "inherit",
     options: {
       nbEtablissement: "Nombre d'établissements",
-      capacite: "Capacité",
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
       effectif3: "Effectif en année 3",
@@ -166,7 +164,6 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
     cellColor: "inherit",
     options: {
       nbEtablissement: "Nombre d'établissements",
-      capacite: "Capacité",
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
       effectif3: "Effectif en année 3",

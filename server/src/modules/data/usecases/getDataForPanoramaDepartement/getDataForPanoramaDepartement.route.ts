@@ -5,7 +5,7 @@ import type { Server } from "@/server/server";
 import { getDataForPanoramaDepartementSchema } from "./getDataForPanoramaDepartement.schema";
 import { getDataForPanoramaDepartement } from "./getDataForPanoramaDepartement.usecase";
 
-export const getDataForPanoramaDepartementRoute = ({ server }: { server: Server }) => {
+export const getDataForPanoramaDepartementRoute = (server: Server) => {
   return createRoute("/panorama/stats/departement", {
     method: "GET",
     schema: getDataForPanoramaDepartementSchema,

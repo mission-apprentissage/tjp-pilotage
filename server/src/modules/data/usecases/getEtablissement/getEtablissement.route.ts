@@ -5,7 +5,7 @@ import type { Server } from "@/server/server";
 import { getEtablissementSchema } from "./getEtablissement.schema";
 import { getEtablissement } from "./getEtablissement.usecase";
 
-export const getEtablissementRoute = ({ server }: { server: Server }) => {
+export const getEtablissementRoute = (server: Server) => {
   return createRoute("/etablissement/:uai", {
     method: "GET",
     schema: getEtablissementSchema,

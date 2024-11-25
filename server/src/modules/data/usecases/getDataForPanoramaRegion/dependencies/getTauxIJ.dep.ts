@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import type { z } from "zod";
 

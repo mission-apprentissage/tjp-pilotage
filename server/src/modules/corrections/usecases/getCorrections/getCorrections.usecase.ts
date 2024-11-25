@@ -36,7 +36,6 @@ const getCorrectionsFactory =
     ]);
 
     return {
-      // @ts-expect-error TODO
       corrections: corrections.map((correction) =>
         cleanNull({
           ...correction,

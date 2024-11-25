@@ -8,7 +8,9 @@ on:
         required: true
         options:
           - production
+          - preproduction
           - recette
+          - recette1new
           - recette2
       app_version:
         description: app version

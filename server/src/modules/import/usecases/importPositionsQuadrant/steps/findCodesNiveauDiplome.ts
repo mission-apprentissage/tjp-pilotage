@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { getKbdClient } from "@/db/db";
 
 export const findCodesNiveauDiplome = async () =>

@@ -16,10 +16,10 @@ curl -sS --retry 5 --retry-all-errors https://{{dns_name}}/metabase/api/setup \
 --data-raw "{
     \"token\": \"$TOKEN\",
     \"user\": {
-        \"password_confirm\": \"{{ vault[env_type].METABASE_ADMIN_PASS }}\",
-        \"password\": \"{{ vault[env_type].METABASE_ADMIN_PASS }}\",
+        \"password_confirm\": \"{{ vault[env_name].METABASE_ADMIN_PASS }}\",
+        \"password\": \"{{ vault[env_name].METABASE_ADMIN_PASS }}\",
         \"site_name\": \"{{product_name}}\",
-        \"email\": \"{{ vault[env_type].METABASE_ADMIN_EMAIL }}\",
+        \"email\": \"{{ vault[env_name].METABASE_ADMIN_EMAIL }}\",
         \"last_name\": null,
         \"first_name\": null
     },
@@ -36,11 +36,11 @@ curl -sS --retry 5 --retry-all-errors https://{{dns_name}}/metabase/api/setup \
             \"advanced-options\": false,
             \"schema-filters-type\": \"all\",
             \"ssl-mode\": \"allow\",
-            \"host\": \"{{ vault[env_type].PSQL_METABASE_HOST }}\",
-            \"port\": {{ vault[env_type].PSQL_METABASE_PORT }},
-            \"dbname\": \"{{ vault[env_type].PSQL_METABASE_DB }}\",
-            \"user\": \"{{ vault[env_type].PSQL_METABASE_USER }}\",
-            \"password\": \"{{ vault[env_type].PSQL_METABASE_PASSWORD }}\",
+            \"host\": \"{{ vault[env_name].PSQL_METABASE_HOST }}\",
+            \"port\": {{ vault[env_name].PSQL_METABASE_PORT }},
+            \"dbname\": \"{{ vault[env_name].PSQL_METABASE_DB }}\",
+            \"user\": \"{{ vault[env_name].PSQL_METABASE_USER }}\",
+            \"password\": \"{{ vault[env_name].PSQL_METABASE_PASSWORD }}\",
             \"tunnel-enabled\": false
         },
         \"name\": \"PSQL\",

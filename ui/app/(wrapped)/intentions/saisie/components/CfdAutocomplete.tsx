@@ -35,13 +35,13 @@ const OptionLabel = ({ option }: { option: (typeof client.infer)["[GET]/diplome/
 export const CfdAutocompleteInput = ({
   name,
   defaultValue,
-  active,
+  disabled,
   inError,
   onChange,
 }: {
   name: string;
   defaultValue?: { value: string; label: string };
-  active?: boolean;
+  disabled?: boolean;
   inError: boolean;
   onChange: (value?: (typeof client.infer)["[GET]/diplome/search/:search"][number]) => void;
 }) => {
@@ -94,7 +94,7 @@ export const CfdAutocompleteInput = ({
       isClearable={true}
       noOptionsMessage={({ inputValue }) => (inputValue ? "Pas de diplôme correspondant" : "Commencez à écrire...")}
       placeholder="Code diplôme ou libellé"
-      isDisabled={active === false}
+      isDisabled={disabled}
     />
   );
 };
