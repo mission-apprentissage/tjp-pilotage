@@ -1,5 +1,4 @@
 import { setMaxListeners } from "node:events";
-import { writeFileSync } from "node:fs";
 
 import { captureException } from "@sentry/node";
 import { program } from "commander";
@@ -17,7 +16,7 @@ program
   .configureHelp({
     sortSubcommands: true,
   })
-  .hook("preAction", (_, actionCommand) => {
+  .hook("preAction", async (_, actionCommand) => {
     const command = actionCommand.name();
     // on définit le module du logger en global pour distinguer les logs des jobs
     if (command !== "start") {
@@ -139,21 +138,6 @@ program
   .action(async (numberOfMigrations = 1) => {
     await migrateDownDB(numberOfMigrations);
   });
-
-program
-  .command("migrations:create")
-  .description("Run migrations create")
-  .action(() =>
-    writeFileSync(
-      `${__dirname}/migrations/migration_${new Date().getTime()}.ts`,
-      `import { Kysely } from "kysely";
-
-     export const up = async (db: Kysely<unknown>) => {};
-
-     export const down = async (db: Kysely<unknown>) => {};
-    `
-    )
-  );
 
 productCommands(program);
 

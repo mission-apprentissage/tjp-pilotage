@@ -33,7 +33,7 @@
     "migrations:status": "yarn cli migrations:status",
     "migrations:latest": "yarn cli migrations:latest",
     "migrations:up": "yarn cli migrations:up",
-    "migrations:create": "yarn cli migrations:create",
+    "migrations:create": "yarn workspace server migrations:create",
     "server:dev": "yarn workspace server dev",
     "ui:dev": "yarn workspace ui dev",
     "services:start": "docker compose up --remove-orphans -d --wait",
