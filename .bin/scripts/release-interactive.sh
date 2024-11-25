@@ -51,8 +51,20 @@ generate_next_patch_version() {
     # echo "$major.$minor.$patch$((patch + 1))"
     echo "$major.$minor.$patch-$pre_release_channel.$((pre_release_number + 1))"
   else
-    echo "$major.$minor.$((patch + 1))" # Nouvelle version de correctif
+    echo "$major.$minor.$patch-rc.1" # Nouvelle version de correctif
   fi
+}
+
+check_git_tag_exists() {
+    local tag="v$1"
+    local remote="${2:-origin}" # Default remote is 'origin'
+
+    # Check if tag exists remotely
+    if git ls-remote --tags "$remote" | grep -q "refs/tags/$tag"; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 select_version() {
@@ -86,6 +98,11 @@ select_version() {
 }
 
 NEXT_VERSION=$(select_version)
+
+if check_git_tag_exists $NEXT_VERSION; then
+    echo "Tag 'v$NEXT_VERSION' already exists on remote, aborting..."
+    exit 1;
+fi
 
 echo -e '\n'
 read -p "Do you need to login to ghcr.io registry? [y/N]" RES_LOGIN
