@@ -7,7 +7,7 @@ import HttpTerminator from "lil-http-terminator";
 import { productCommands } from "./commands.product";
 import config from "./config";
 import { closePgDbConnection } from "./db/db";
-import { migrateDownDB, migrateToLatest, statusMigration } from "./migrations/migrate";
+import { migrateDownDB, migrateToLatest, migrateUp, statusMigration } from "./migrations/migrate";
 import createServer from "./server/server";
 import logger from "./services/logger";
 import { closeSentry } from "./services/sentry/sentry";
@@ -107,12 +107,11 @@ program
     }
   });
 
-// TODO migrateToLatest(true)
 program
   .command("migrations:up")
   .description("Run migrations up")
   .action(async () => {
-    await migrateToLatest();
+    await migrateUp();
   });
 
 program

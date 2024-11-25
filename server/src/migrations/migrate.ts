@@ -40,6 +40,29 @@ export const statusMigration = async () => {
   return pendingMigrations.length;
 };
 
+export async function migrateUp() {
+  const migrator = makeMigrator();
+  const { error, results } = await migrator.migrateUp();
+
+  results?.forEach((it) => {
+    if (it.status === "Success") {
+      console.log(`migration "${it.migrationName}" was executed successfully (UP)`); // a lot of log
+    } else if (it.status === "Error") {
+      console.error(`failed to execute migration "${it.migrationName}" (UP)`);
+    }
+  });
+
+  if (!results?.length) {
+    console.log("already up to date !");
+  }
+
+  if (error) {
+    console.error("failed to migrate up");
+    console.error(error);
+    process.exit(1);
+  }
+}
+
 export async function migrateToLatest(keepAlive?: boolean, exitProcessInSuccess = true) {
   const migrator = makeMigrator();
 
@@ -47,17 +70,15 @@ export async function migrateToLatest(keepAlive?: boolean, exitProcessInSuccess 
 
   results?.forEach((it) => {
     if (it.status === "Success") {
-      // console.log(`migration "${it.migrationName}" was executed successfully (UP)`); // a lot of log
-      if (exitProcessInSuccess) process.exit(0);
+      console.log(`migration "${it.migrationName}" was executed successfully (UP)`); // a lot of log
     } else if (it.status === "Error") {
       console.error(`failed to execute migration "${it.migrationName}" (UP)`);
-      process.exit(1);
     }
   });
 
   if (!results?.length) {
     console.log("already up to date !");
-    if (exitProcessInSuccess) process.exit(0);
+    if (exitProcessInSuccess) process.exit(1);
   }
 
   if (error) {
