@@ -1,15 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getCorrectionsSchema } from "./getCorrections.schema";
 import { getCorrectionsUsecase } from "./getCorrections.usecase";
 
+const ROUTE = ROUTES["[GET]/corrections"];
+
 export const getCorrectionsRoute = (server: Server) => {
-  return createRoute("/corrections", {
-    method: "GET",
-    schema: getCorrectionsSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

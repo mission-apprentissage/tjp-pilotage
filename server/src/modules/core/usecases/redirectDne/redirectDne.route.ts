@@ -1,22 +1,24 @@
 import { createRoute } from "@http-wizard/core";
 import type { FastifyRequest } from "fastify";
+import { ROUTES } from "shared/routes/routes";
 
 import { getDneUrl } from "@/modules/core/usecases/getDneUrl/getDneUrl.usecase";
 import type { Server } from "@/server/server";
 import logger from "@/services/logger";
 
 import { ERROR_TYPE } from "./const";
-import { redirectDneSchema } from "./redirectDne.schema";
 import { redirectDne } from "./redirectDne.usecase";
+
+const ROUTE = ROUTES["[GET]/dne_connect"];
 
 interface RedirectDNEQueryString {
   code?: string;
 }
 
 export const redirectDneRoute = (server: Server) => {
-  return createRoute("/dne_connect", {
-    method: "GET",
-    schema: redirectDneSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

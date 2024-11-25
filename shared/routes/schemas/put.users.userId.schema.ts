@@ -1,6 +1,7 @@
-import type { Role } from "shared";
-import { PERMISSIONS } from "shared";
 import { z } from "zod";
+
+import type { Role } from "../../security/permissions";
+import { PERMISSIONS } from "../../security/permissions";
 
 const BodySchema = z.object({
   firstname: z.string().min(1),

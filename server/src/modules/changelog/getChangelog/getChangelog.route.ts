@@ -1,16 +1,16 @@
 import { createRoute } from "@http-wizard/core";
-import { API_ROUTES } from "shared/routes/index";
+import { ROUTES } from "shared/routes/routes";
 
 import type { Server } from "@/server/server";
 
 import { getChangelog } from "./getChangelog.usecase";
 
-const route = API_ROUTES.GET["/changelog"];
+export const ROUTE = ROUTES["[GET]/changelog"];
 
 export const getChangelogRoute = (server: Server) => {
-  return createRoute(route.path, {
-    method: route.method,
-    schema: route.schema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
