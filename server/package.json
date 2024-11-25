@@ -12,7 +12,6 @@
   },
   "scripts": {
     "cli": "node dist/index.js",
-    "migrations:create": "node scripts/createMigration.cjs",
     "build:dev": "tsup-node",
     "dev": "tsup-node --env.TSUP_WATCH true",
     "build": "tsup-node --env.NODE_ENV production",
