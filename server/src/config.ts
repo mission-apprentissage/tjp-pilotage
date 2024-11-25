@@ -3,7 +3,7 @@ import env from "env-var";
 const environement = env
   .get("ENV")
   .required()
-  .asEnum(["local", "recette", "recette1new", "recette2", "production", "preproduction", "test"]);
+  .asEnum(["local", "recette1", "recette2", "production", "preproduction", "test"]);
 const publicUrl = env.get("PUBLIC_URL").required().asString();
 
 // if (process.env.NODE_ENV === "test") {
