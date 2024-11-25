@@ -17,20 +17,12 @@ export type SchemaZod = {
   response: Record<number, z.Schema>;
 };
 
-export interface IRoute<TMethod> {
-  path: string;
+export interface IRoute {
+  url: string;
   method: TMethod;
   schema: SchemaTypeBox | SchemaZod;
 }
 
-export interface IModuleRoutesDefinition {
-  GET?: Record<string, IRoute<"GET">>;
-  HEAD?: Record<string, IRoute<"HEAD">>;
-  OPTIONS?: Record<string, IRoute<"OPTIONS">>;
-  TRACE?: Record<string, IRoute<"TRACE">>;
-  PUT?: Record<string, IRoute<"PUT">>;
-  DELETE?: Record<string, IRoute<"DELETE">>;
-  POST?: Record<string, IRoute<"POST">>;
-  PATCH?: Record<string, IRoute<"PATCH">>;
-  CONNECT?: Record<string, IRoute<"CONNECT">>;
+export interface IRoutesDefinition {
+  [url: string]: IRoute;
 }

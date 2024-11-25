@@ -1,14 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import type { Server } from "@/server/server";
 
-import { resetPasswordSchema } from "./resetPassword.schema";
 import { resetPassword } from "./resetPassword.usecase";
 
+const ROUTE = ROUTES["[POST]/auth/reset-password"];
+
 export const resetPasswordRoute = (server: Server) => {
-  return createRoute("/auth/reset-password", {
-    method: "POST",
-    schema: resetPasswordSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

@@ -1,15 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { submitCorrectionSchema } from "./submitCorrection.schema";
 import { submitCorrectionUsecase } from "./submitCorrection.usecase";
 
+const ROUTE = ROUTES["[POST]/correction/submit"];
+
 export const submitCorrectionRoute = (server: Server) => {
-  return createRoute("/correction/submit", {
-    method: "POST",
-    schema: submitCorrectionSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

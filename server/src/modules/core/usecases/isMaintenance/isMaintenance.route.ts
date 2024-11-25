@@ -1,14 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import type { Server } from "@/server/server";
 
-import { isMaintenanceSchema } from "./isMaintenance.schema";
 import { isMaintenanceUsecase } from "./isMaintenance.usecase";
 
+const ROUTE = ROUTES["[GET]/maintenance"];
+
 export const isMaintenanceRoute = (server: Server) => {
-  return createRoute("/maintenance", {
-    method: "GET",
-    schema: isMaintenanceSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

@@ -1,6 +1,7 @@
-import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
-import { OptionSchema } from "shared/schema/optionSchema";
 import { z } from "zod";
+
+import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { OptionSchema } from "../../schema/optionSchema";
 
 const CorrectionItem = z.object({
   intentionNumero: z.string().optional(),

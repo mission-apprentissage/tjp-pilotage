@@ -1,16 +1,16 @@
 import { createRoute } from "@http-wizard/core";
-import { API_ROUTES } from "shared/routes";
+import { ROUTES } from "shared/routes/routes";
 
 import type { Server } from "@/server/server";
 
 import { checkActivationToken } from "./checkActivationToken.usecase";
 
-const route = API_ROUTES.GET["/auth/check-activation-token"];
+const ROUTE = ROUTES["[GET]/auth/check-activation-token"];
 
 export const checkActivationTokenRoute = (server: Server) => {
-  return createRoute(route.path, {
-    method: route.method,
-    schema: route.schema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
