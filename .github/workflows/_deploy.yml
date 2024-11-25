@@ -9,8 +9,7 @@ on:
         options:
           - production
           - preproduction
-          - recette
-          - recette1new
+          - recette1
           - recette2
       app_version:
         description: app version

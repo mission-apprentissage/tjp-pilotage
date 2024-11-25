@@ -109,18 +109,17 @@ jobs:
         with:
           sarif_file: sarif-ui.output.json
           category: Docker UI
-
-  deploy:
-    concurrency:
-      group: "deploy-${{ github.workflow }}-${{ github.ref }}"
-    needs: ["release"]
-    name: Deploy ${{ needs.release.outputs.VERSION }} on recette1new
-    uses: "./.github/workflows/_deploy.yml"
-    with:
-      environment: recette1new
-      app_version: ${{ needs.release.outputs.VERSION }}
-    secrets:
-      DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-      DEPLOY_PASS: ${{ secrets.DEPLOY_PASS }}
-      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-      VAULT_PWD: ${{ secrets.VAULT_PWD }}
+#   deploy:
+#     concurrency:
+#       group: "deploy-${{ github.workflow }}-${{ github.ref }}"
+#     needs: ["release"]
+#     name: Deploy ${{ needs.release.outputs.VERSION }} on recette1
+#     uses: "./.github/workflows/_deploy.yml"
+#     with:
+#       environment: recette1
+#       app_version: ${{ needs.release.outputs.VERSION }}
+#     secrets:
+#       DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+#       DEPLOY_PASS: ${{ secrets.DEPLOY_PASS }}
+#       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#       VAULT_PWD: ${{ secrets.VAULT_PWD }}
