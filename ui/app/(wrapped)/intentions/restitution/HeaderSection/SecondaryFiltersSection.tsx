@@ -108,16 +108,13 @@ export const SecondaryFiltersSection = ({
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("codeDepartement", selected)}
-              options={data?.filters.departements.map(
-                // @ts-expect-error TODO
-                (departement) => ({
-                  label: formatDepartementLibelleWithCodeDepartement({
-                    libelleDepartement: departement.label,
-                    codeDepartement: departement.value,
-                  }),
-                  value: departement.value,
-                })
-              )}
+              options={data?.filters.departements.map((departement) => ({
+                label: formatDepartementLibelleWithCodeDepartement({
+                  libelleDepartement: departement.label,
+                  codeDepartement: departement.value,
+                }),
+                value: departement.value,
+              }))}
               value={activeFilters.codeDepartement ?? []}
               disabled={data?.filters.departements.length === 0}
             >
@@ -150,14 +147,11 @@ export const SecondaryFiltersSection = ({
               borderBottomColor={activeFilters.secteur != undefined ? "info.525" : ""}
               placeholder="Public / privé"
             >
-              {data?.filters.secteurs?.map(
-                // @ts-expect-error TODO
-                (option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                )
-              )}
+              {data?.filters.secteurs?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </Select>
           </Box>
         </Flex>
@@ -209,14 +203,11 @@ export const SecondaryFiltersSection = ({
               borderBottomColor={activeFilters.voie != undefined ? "info.525" : ""}
               placeholder="Toutes"
             >
-              {data?.filters.voies?.map(
-                // @ts-expect-error TODO
-                (option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                )
-              )}
+              {data?.filters.voies?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </Select>
           </Box>
           {feature.showColorationFilter && (
@@ -240,37 +231,32 @@ export const SecondaryFiltersSection = ({
                         query={["Toutes demandes", "ouvertures/fermetures", "demandes avec places colorées"]}
                         styles={{ fontWeight: "bold" }}
                       >
-                        {data?.filters.colorations?.find(
-                          // @ts-expect-error TODO
-                          (c) => c.value === activeFilters.coloration
-                        )?.label ?? "Toutes demandes"}
+                        {data?.filters.colorations?.find((c) => c.value === activeFilters.coloration)?.label ??
+                          "Toutes demandes"}
                       </Highlight>
                     </Text>
                   </Flex>
                 </MenuButton>
                 <MenuList py={0} borderRadius={4}>
-                  {data?.filters.colorations?.map(
-                    // @ts-expect-error TODO
-                    (option) => (
-                      <MenuItem
-                        p={2}
-                        key={option.value}
-                        onClick={() => handleFilters("coloration", option.value)}
-                        borderRadius={4}
-                      >
-                        <Flex direction="row">
-                          <Text my={"auto"}>
-                            <Highlight
-                              query={["Toutes demandes", "ouvertures/fermetures", "demandes avec places colorées"]}
-                              styles={{ fontWeight: "bold" }}
-                            >
-                              {option.label}
-                            </Highlight>
-                          </Text>
-                        </Flex>
-                      </MenuItem>
-                    )
-                  )}
+                  {data?.filters.colorations?.map((option) => (
+                    <MenuItem
+                      p={2}
+                      key={option.value}
+                      onClick={() => handleFilters("coloration", option.value)}
+                      borderRadius={4}
+                    >
+                      <Flex direction="row">
+                        <Text my={"auto"}>
+                          <Highlight
+                            query={["Toutes demandes", "ouvertures/fermetures", "demandes avec places colorées"]}
+                            styles={{ fontWeight: "bold" }}
+                          >
+                            {option.label}
+                          </Highlight>
+                        </Text>
+                      </Flex>
+                    </MenuItem>
+                  ))}
                 </MenuList>
               </Menu>
             </Box>
@@ -286,14 +272,11 @@ export const SecondaryFiltersSection = ({
               borderBottomColor={activeFilters.amiCMA != undefined ? "info.525" : ""}
               placeholder="Oui / non"
             >
-              {data?.filters.amiCMAs?.map(
-                // @ts-expect-error TODO
-                (option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                )
-              )}
+              {data?.filters.amiCMAs?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </Select>
           </Box>
           <Box justifyContent={"start"}>
@@ -307,7 +290,6 @@ export const SecondaryFiltersSection = ({
               borderBottomColor={activeFilters.coloration != undefined ? "info.525" : ""}
               placeholder="Avec / sans"
             >
-              {/* @ts-expect-error TODO */}
               {data?.filters.colorations?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}

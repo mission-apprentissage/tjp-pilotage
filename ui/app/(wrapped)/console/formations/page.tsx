@@ -155,20 +155,11 @@ export default function Formations() {
   });
 
   const getDataForExport = (data: QueryResult) => {
-    const region = data.filters.regions.find(
-      // @ts-expect-error TODO
-      (r) => r.value === filters.codeRegion?.[0]
-    );
+    const region = data.filters.regions.find((r) => r.value === filters.codeRegion?.[0]);
 
-    const academies = data.filters.academies.filter(
-      // @ts-expect-error TODO
-      (a) => filters.codeAcademie?.includes(a.value) ?? false
-    );
+    const academies = data.filters.academies.filter((a) => filters.codeAcademie?.includes(a.value) ?? false);
 
-    const departements = data.filters.departements.filter(
-      // @ts-expect-error TODO
-      (d) => filters.codeDepartement?.includes(d.value) ?? false
-    );
+    const departements = data.filters.departements.filter((d) => filters.codeDepartement?.includes(d.value) ?? false);
 
     const regionsColumns = {
       selectedCodeRegion: "Code Région sélectionné",
@@ -192,7 +183,6 @@ export default function Formations() {
 
     let formations = data.formations;
 
-    // @ts-expect-error TODO
     formations = data.formations.map((f) => ({
       ...f,
       ...(filters.codeRegion && region
@@ -203,26 +193,14 @@ export default function Formations() {
         : {}),
       ...(filters.codeAcademie && academies
         ? {
-            selectedCodeAcademie: formatArray(
-              // @ts-expect-error TODO
-              academies.map((academie) => academie.value)
-            ),
-            selectedAcademie: formatArray(
-              // @ts-expect-error TODO
-              academies.map((academie) => academie.label)
-            ),
+            selectedCodeAcademie: formatArray(academies.map((academie) => academie.value)),
+            selectedAcademie: formatArray(academies.map((academie) => academie.label)),
           }
         : {}),
       ...(filters.codeDepartement && departements
         ? {
-            selectedCodeDepartement: formatArray(
-              // @ts-expect-error TODO
-              departements.map((departement) => departement.value)
-            ),
-            selectedDepartement: formatArray(
-              // @ts-expect-error TODO
-              departements.map((departement) => departement.label)
-            ),
+            selectedCodeDepartement: formatArray(departements.map((departement) => departement.value)),
+            selectedDepartement: formatArray(departements.map((departement) => departement.label)),
           }
         : {}),
     }));
