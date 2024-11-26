@@ -1,6 +1,7 @@
-import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
-import { unEscapeString } from "shared/utils/escapeString";
 import { z } from "zod";
+
+import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { unEscapeString } from "../../utils/escapeString";
 
 export const submitChangementStatutSchema = {
   body: z.object({

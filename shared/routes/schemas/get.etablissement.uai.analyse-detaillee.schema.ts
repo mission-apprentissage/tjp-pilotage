@@ -1,5 +1,6 @@
-import { voie } from "shared/enum/voieEnum";
 import { z } from "zod";
+
+import { voie } from "../../enum/voieEnum";
 
 const EtablissementSchema = z.object({
   uai: z.string(),

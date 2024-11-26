@@ -1,5 +1,6 @@
-import { PositionQuadrantZodType } from "shared/enum/positionQuadrantEnum";
 import { z } from "zod";
+
+import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
 
 const OptionSchema = z.object({
   label: z.coerce.string(),

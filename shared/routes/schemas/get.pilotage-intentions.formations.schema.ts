@@ -1,6 +1,7 @@
-import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
-import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
+
+import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { SecteurZodType } from "../../enum/secteurEnum";
 
 const FormationTransformationStatsSchema = z.object({
   libelleFormation: z.string().optional(),

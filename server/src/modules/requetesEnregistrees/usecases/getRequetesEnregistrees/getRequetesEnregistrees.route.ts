@@ -1,15 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
 import { getRequetesEnregistrees } from "./getRequetesEnregistrees.query";
-import { getRequetesEnregistreesSchema } from "./getRequetesEnregistrees.schema";
+
+const ROUTE = ROUTES["[GET]/requetes"];
 
 export const getRequetesEnregistreesRoute = (server: Server) => {
-  return createRoute("/requetes", {
-    method: "GET",
-    schema: getRequetesEnregistreesSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

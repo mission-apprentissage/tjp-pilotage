@@ -1,14 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import type { Server } from "@/server/server";
 
-import { searchDiplomeSchema } from "./searchDiplome.schema";
 import { searchDiplome } from "./searchDiplome.usecase";
 
+const ROUTE = ROUTES["[GET]/diplome/search/:search"];
+
 export const searchDiplomeRoute = (server: Server) => {
-  return createRoute("/diplome/search/:search", {
-    method: "GET",
-    schema: searchDiplomeSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

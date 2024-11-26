@@ -1,5 +1,6 @@
-import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
+
+import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 
 const UserSchema = z.object({
   fullname: z.string().optional(),

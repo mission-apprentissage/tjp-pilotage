@@ -2,6 +2,7 @@ import Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
+import type { submitAvisSchema } from "shared/routes/schemas/post.intention.avis.submit.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
@@ -9,7 +10,6 @@ import { findOneIntention } from "@/modules/intentions/repositories/findOneInten
 import { updateIntentionWithHistory } from "@/modules/intentions/repositories/updateIntentionWithHistory.query";
 
 import { createAvisQuery } from "./deps/createAvis.query";
-import type { submitAvisSchema } from "./submitAvis.schema";
 
 type Avis = z.infer<typeof submitAvisSchema.body>["avis"];
 

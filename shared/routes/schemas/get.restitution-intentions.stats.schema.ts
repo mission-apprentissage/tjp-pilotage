@@ -1,5 +1,6 @@
-import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
+
+import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 
 const CountCapaciteStatsDemandesSchema = z.object({
   total: z.number(),

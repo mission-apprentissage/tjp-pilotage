@@ -1,14 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import type { Server } from "@/server/server";
 
-import { submitIntentionAccessLogSchema } from "./submitIntentionAccessLog.schema";
 import { submitIntentionAccessLogUsecase } from "./submitIntentionAccessLog.usecase";
 
+const ROUTE = ROUTES["[POST]/demande/access/submit"];
+
 export const submitIntentionAccessLogRoute = (server: Server) => {
-  return createRoute("/demande/access/submit", {
-    method: "POST",
-    schema: submitIntentionAccessLogSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

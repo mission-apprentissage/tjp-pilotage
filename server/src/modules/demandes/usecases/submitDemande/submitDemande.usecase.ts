@@ -3,6 +3,7 @@ import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { demandeValidators, getPermissionScope, guardScope } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { submitDemandeSchema } from "shared/routes/schemas/post.demande.submit.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
@@ -15,7 +16,6 @@ import logger from "@/services/logger";
 import { cleanNull } from "@/utils/noNull";
 
 import { createDemandeQuery } from "./createDemandeQuery.dep";
-import type { submitDemandeSchema } from "./submitDemande.schema";
 
 type Demande = z.infer<typeof submitDemandeSchema.body>["demande"];
 

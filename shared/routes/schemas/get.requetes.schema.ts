@@ -1,9 +1,10 @@
-import { PageRequeteEnregistreeZodType } from "shared/enum/pageRequeteEnregistreeEnum";
-import { PositionQuadrantZodType } from "shared/enum/positionQuadrantEnum";
-import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
 
-const FiltresFormationSchema = z.object({
+import { PageRequeteEnregistreeZodType } from "../../enum/pageRequeteEnregistreeEnum";
+import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
+import { SecteurZodType } from "../../enum/secteurEnum";
+
+export const FiltresFormationSchema = z.object({
   cfd: z.array(z.string()).optional(),
   codeRegion: z.array(z.string()).optional(),
   codeAcademie: z.array(z.string()).optional(),
@@ -15,12 +16,12 @@ const FiltresFormationSchema = z.object({
   rentreeScolaire: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
   positionQuadrant: z.array(PositionQuadrantZodType).optional(),
-  withEmptyFormations: z.coerce.boolean().optional(),
+  withEmptyFormations: z.string().optional(),
   withAnneeCommune: z.string().optional(),
   search: z.string().optional(),
 });
 
-const FiltresFormationEtablissementSchema = z.object({
+export const FiltresFormationEtablissementSchema = z.object({
   cfd: z.array(z.string()).optional(),
   codeRegion: z.array(z.string()).optional(),
   codeAcademie: z.array(z.string()).optional(),
@@ -38,17 +39,19 @@ const FiltresFormationEtablissementSchema = z.object({
   search: z.string().optional(),
 });
 
-export const submitRequeteEnregistreeSchema = {
-  body: z.object({
+export const getRequetesEnregistreesSchema = {
+  querystring: z.object({
     page: PageRequeteEnregistreeZodType,
-    nom: z.string(),
-    couleur: z.string(),
-    filtres: z.union([FiltresFormationSchema, FiltresFormationEtablissementSchema]),
   }),
   response: {
-    200: z.object({
-      id: z.string(),
-      userId: z.string(),
-    }),
+    200: z.array(
+      z.object({
+        id: z.string(),
+        nom: z.string(),
+        couleur: z.string(),
+        userId: z.string(),
+        filtres: z.union([FiltresFormationSchema, FiltresFormationEtablissementSchema]),
+      })
+    ),
   },
 };

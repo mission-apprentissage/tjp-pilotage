@@ -1,4 +1,5 @@
-import type { FileType } from "@/modules/core/services/fileManager/fileManager";
+import type { FileType } from "shared/files/types";
+
 import { fileManager } from "@/modules/core/services/fileManager/fileManager";
 import { filePathManager } from "@/modules/core/services/filePathManager/filePathManager";
 

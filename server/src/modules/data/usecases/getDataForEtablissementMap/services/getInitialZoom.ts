@@ -1,8 +1,7 @@
 import { computeDestinationPoint, getRhumbLineBearing } from "geolib";
 import { pick } from "lodash-es";
+import type { EtablissementSchema } from "shared/routes/schemas/get.etablissement.uai.map.schema";
 import type { z } from "zod";
-
-import type { EtablissementSchema } from "@/modules/data/usecases/getDataForEtablissementMap/getDataForEtablissementMap.schema";
 
 interface BoundingBox {
   latMin: number;

@@ -1,16 +1,18 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { deleteIntentionSchema } from "./deleteIntention.schema";
 import { deleteIntentionUsecase } from "./deleteIntention.usecase";
 
+const ROUTE = ROUTES["[DELETE]/intention/:numero"];
+
 export const deleteIntentionRoute = (server: Server) => {
-  return createRoute("/intention/:numero", {
-    method: "DELETE",
-    schema: deleteIntentionSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { fileTypeSchema } from "@/modules/core/services/fileManager/fileManager";
+import { fileTypeSchema } from "../../files/types";
 
 export const deleteIntentionFilesSchema = {
   params: z.object({ numero: z.string() }),

@@ -1,5 +1,6 @@
-import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
+
+import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 
 const EtablissementMetadataSchema = z
   .object({
@@ -26,12 +27,14 @@ const FormationMetadataSchema = z
 const MetadataSchema = z.object({
   etablissement: EtablissementMetadataSchema,
   formation: FormationMetadataSchema,
+  etablissementCompensation: EtablissementMetadataSchema,
+  formationCompensation: FormationMetadataSchema,
 });
 
-const IntentionSchema = z.object({
+const DemandeSchema = z.object({
   numero: z.string(),
   createdAt: z.string(),
-  statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
+  statut: DemandeStatutZodType.optional(),
   uai: z.string(),
   cfd: z.string(),
   codeDispositif: z.string(),
@@ -60,10 +63,10 @@ const IntentionSchema = z.object({
   autreMotifRefus: z.string().optional(),
 });
 
-export const importIntentionSchema = {
+export const importDemandeSchema = {
   params: z.object({ numero: z.string() }),
   response: {
-    200: IntentionSchema.partial().merge(
+    200: DemandeSchema.partial().merge(
       z.object({
         metadata: MetadataSchema,
       })

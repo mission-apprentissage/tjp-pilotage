@@ -1,10 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { uniqWith } from "lodash-es";
+import type { searchNsfFormationSchema } from "shared/routes/schemas/get.nsf-diplome.search.search.schema";
 import type { z } from "zod";
 
 import { findManyInDataFormationQuery } from "./dependencies/findDataFormations.query";
-import type { searchNsfFormationSchema } from "./searchNsfFormation.schema";
 
 type Option = z.infer<(typeof searchNsfFormationSchema.response)[200]>[number];
 type Formation = {

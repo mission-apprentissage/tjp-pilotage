@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { countDemandesSchema } from "shared/routes/schemas/get.demandes.count.schema";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
@@ -7,8 +8,6 @@ import type { RequestUser } from "@/modules/core/model/User";
 import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
-
-import type { countDemandesSchema } from "./countDemandes.schema";
 
 export interface Filters extends z.infer<typeof countDemandesSchema.querystring> {
   user: RequestUser;
