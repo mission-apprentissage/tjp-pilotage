@@ -98,19 +98,20 @@ export const FiltersSection = ({
   return (
     <Flex direction={"column"} gap={4} wrap={"wrap"}>
       <Wrap spacing={3}>
-        <Menu matchWidth={true} autoSelect={false}>
+        <Menu matchWidth={true} autoSelect={false} gutter={3}>
           <MenuButton
             as={Button}
             variant={"selectButton"}
             rightIcon={<ChevronDownIcon />}
-            width={[null, null, "64"]}
+            width={"15rem"}
             size="md"
             borderWidth="1px"
             borderStyle="solid"
             borderColor="grey.900"
             bg={"white"}
+            isDisabled={!requetesEnregistrees || !requetesEnregistrees.length}
           >
-            <Flex direction="row" gap={2}>
+            <Flex direction="row" gap={2} overflow={"hidden"} whiteSpace="nowrap">
               {requeteEnregistreeActuelle.couleur && (
                 <Tag size={"sm"} bgColor={requeteEnregistreeActuelle.couleur} borderRadius={"100%"} />
               )}
@@ -118,7 +119,7 @@ export const FiltersSection = ({
             </Flex>
           </MenuButton>
           <Portal>
-            <MenuList py={0} borderTopRadius={0} minW={"fit-content"} zIndex={3}>
+            <MenuList py={0} borderColor="grey.900" borderTopRadius={0} minW={"fit-content"} zIndex={3}>
               {requetesEnregistrees && requetesEnregistrees.length > 0 && (
                 <>
                   <Text p={2} color="grey.425">
@@ -141,7 +142,9 @@ export const FiltersSection = ({
                       gap={2}
                     >
                       <Tag size={"sm"} bgColor={requete.couleur} borderRadius={"100%"} />
-                      <Flex direction="row">{requete.nom}</Flex>
+                      <Flex direction="row" whiteSpace={"nowrap"}>
+                        {requete.nom}
+                      </Flex>
                       {deleteButtonToDisplay === requete.id && (
                         <DeleteRequeteEnregistreeButton requeteEnregistree={requete} />
                       )}
@@ -181,7 +184,7 @@ export const FiltersSection = ({
           placeholder="Toutes les régions"
           size="md"
           variant="newInput"
-          width={"15rem"}
+          width="14rem"
           onChange={(e) => {
             handleFilters("codeRegion", [e.target.value]);
           }}
@@ -198,7 +201,7 @@ export const FiltersSection = ({
           disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width={"15rem"}
+          width="14rem"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={filtersList?.academies}
           value={searchParams.filters?.codeAcademie ?? []}
@@ -209,7 +212,7 @@ export const FiltersSection = ({
           disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width={"15rem"}
+          width="14rem"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={filtersList?.departements}
           value={searchParams.filters?.codeDepartement ?? []}
@@ -220,7 +223,7 @@ export const FiltersSection = ({
           disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width="15rem"
+          width="14rem"
           onChange={(selected) => handleFilters("commune", selected)}
           options={filtersList?.communes}
           value={searchParams.filters?.commune ?? []}
