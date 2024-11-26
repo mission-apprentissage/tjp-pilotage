@@ -30,7 +30,7 @@ const PAGE_SIZE = 30;
 
 type QueryResult = (typeof client.infer)["[GET]/formations"];
 
-const ColonneHeaderSection = chakra(
+const ColonneFilterSection = chakra(
   ({
     colonneFilters,
     forcedColonnes,
@@ -90,7 +90,7 @@ const ColonneHeaderSection = chakra(
               color="bluefrance.113"
               onClick={() => trackEvent("formations:affichage-colonnes")}
             >
-              Modifier l'affichage des colonnes
+              Modifier les colonnes
             </Button>
           }
         />
@@ -403,10 +403,11 @@ export default function Formations() {
                 }}
                 value={searchFormation}
                 onClick={onSearch}
+                width={{ base: "15rem", ["2xl"]: "25rem" }}
               />
             }
             ColonneFilter={
-              <ColonneHeaderSection
+              <ColonneFilterSection
                 colonneFilters={colonneFilters}
                 handleColonneFilters={handleColonneFilters}
                 forcedColonnes={["libelleFormation"]}

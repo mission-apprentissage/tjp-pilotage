@@ -1,8 +1,6 @@
 import { Box, Container, Heading, Link, ListItem, Text, UnorderedList, VStack } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-import { LandingFooter } from "@/app/(wrapped)/components/LandingFooter";
-
 export default function DeclarationAccessibilite() {
   return (
     <>
@@ -144,7 +142,6 @@ export default function DeclarationAccessibilite() {
           </Text>
         </VStack>
       </Container>
-      <LandingFooter />
     </>
   );
 }

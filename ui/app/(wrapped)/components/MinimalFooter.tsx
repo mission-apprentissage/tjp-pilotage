@@ -13,20 +13,14 @@ export const MinimalFooter = () => {
       borderTop="1px"
       borderTopColor={"grey.900"}
       backgroundColor={"white"}
-      padding={{
-        base: "16px",
-        md: "20px 100px 20px 100px",
-      }}
-      zIndex={10}
+      padding={4}
+      zIndex={"docked"}
     >
       <HStack
         width="100%"
         fontSize="11px"
         color={"grey.425"}
-        gap={{
-          base: "4px 4px",
-          md: "4px",
-        }}
+        gap={2}
         divider={<StackDivider borderColor={"grey.900"} />}
         wrap="wrap"
         justifyContent={"center"}
