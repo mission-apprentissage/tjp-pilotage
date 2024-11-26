@@ -36,6 +36,7 @@ import { importTensionRomeNational } from "./modules/import/usecases/importTensi
 import { importTensionRomeRegion } from "./modules/import/usecases/importTensionRome/importTensionRomeRegion.usecase";
 import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
 import { writeErrorLogs } from "./modules/import/utils/writeErrorLogs";
+import { __dirname } from "./utils/esmUtils";
 
 export function productCommands(cli: Command) {
   cli
@@ -108,7 +109,8 @@ export function productCommands(cli: Command) {
   cli
     .command("importFiles")
     .argument("[filename]")
-    .action(async (filename: string) => {
+    .action(async (filename?: string) => {
+      console.log(filename);
       const getImport = async ({
         type,
         year,
@@ -119,6 +121,7 @@ export function productCommands(cli: Command) {
         schema: Zod.Schema<unknown>;
       }) => {
         const filePath = year ? `${basepath}/files/${year}/${type}_${year}.csv` : `${basepath}/files/${type}.csv`;
+        console.log(filePath);
         return await importRawFile({
           type: year ? `${type}_${year}` : type,
           path: filePath,
@@ -247,7 +250,7 @@ export function productCommands(cli: Command) {
       };
 
       await writeErrorLogs({
-        path: path.join(__dirname, "import_files_report.csv"),
+        path: path.join(__dirname(), "import_files_report.csv"),
         withHeader: true,
       });
 
@@ -255,7 +258,7 @@ export function productCommands(cli: Command) {
         const actionErrors = await actions[filename as keyof typeof actions]();
         if (actionErrors.length > 0) {
           await writeErrorLogs({
-            path: path.join(__dirname, "import_files_report.csv"),
+            path: path.join(__dirname(), "import_files_report.csv"),
             errors: actionErrors,
             withHeader: false,
           });
@@ -266,7 +269,7 @@ export function productCommands(cli: Command) {
 
           if (actionErrors.length > 0) {
             await writeErrorLogs({
-              path: path.join(__dirname, "import_files_report.csv"),
+              path: path.join(__dirname(), "import_files_report.csv"),
               errors: actionErrors,
               withHeader: false,
             });

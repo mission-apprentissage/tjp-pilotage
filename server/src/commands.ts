@@ -1,5 +1,6 @@
 import { setMaxListeners } from "node:events";
 import { writeFileSync } from "node:fs";
+import path from "node:path";
 
 import { captureException } from "@sentry/node";
 import { program } from "commander";
@@ -8,16 +9,17 @@ import HttpTerminator from "lil-http-terminator";
 import { productCommands } from "./commands.product";
 import config from "./config";
 import { closePgDbConnection } from "./db/db";
-import { migrateDownDB, migrateToLatest, statusMigration } from "./migrations/migrate";
+import { migrateDownDB, migrateToLatest, migrateUp, statusMigration } from "./migrations/migrate";
 import createServer from "./server/server";
 import logger from "./services/logger";
 import { closeSentry } from "./services/sentry/sentry";
+import { __dirname } from "./utils/esmUtils";
 
 program
   .configureHelp({
     sortSubcommands: true,
   })
-  .hook("preAction", (_, actionCommand) => {
+  .hook("preAction", async (_, actionCommand) => {
     const command = actionCommand.name();
     // on définit le module du logger en global pour distinguer les logs des jobs
     if (command !== "start") {
@@ -108,12 +110,11 @@ program
     }
   });
 
-// TODO migrateToLatest(true)
 program
   .command("migrations:up")
   .description("Run migrations up")
   .action(async () => {
-    await migrateToLatest();
+    await migrateUp();
   });
 
 program
@@ -143,17 +144,17 @@ program
 program
   .command("migrations:create")
   .description("Run migrations create")
-  .action(() =>
+  .action(() => {
     writeFileSync(
-      `${__dirname}/migrations/migration_${new Date().getTime()}.ts`,
-      `import { Kysely } from "kysely";
+      path.join(__dirname(), "../src", `migrations/migration_${new Date().getTime()}.ts`),
+      `import type { Kysely } from "kysely";
 
-     export const up = async (db: Kysely<unknown>) => {};
+export const up = async (db: Kysely<unknown>) => {};
 
-     export const down = async (db: Kysely<unknown>) => {};
-    `
-    )
-  );
+export const down = async (db: Kysely<unknown>) => {};
+`
+    );
+  });
 
 productCommands(program);
 
