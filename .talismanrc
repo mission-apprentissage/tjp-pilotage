@@ -4,7 +4,7 @@ fileignoreconfig:
 - filename: .infra/ansible/tasks/preview_pr.yml
   checksum: 97cf0bebbc85d48b68230b00b448ec5868c2962e8ac7a176321e3b770829efb9
 - filename: .infra/files/configs/mailpit/auth
-  checksum: 0b0a9c7bad5e1ec13d14c563d22c56c2cbcb2572fa40a4b2c5a11d6ca60eb8d1
+  checksum: d8fa3a6949506347e44ace335c240b5b974e92990facba4f1e1da3cb2855e33f
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
