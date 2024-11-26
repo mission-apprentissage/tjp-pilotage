@@ -1,11 +1,9 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { EtablissementSchema } from "../getDataForEtablissementMap.schema";
-import { EtablissementWithDistance } from "../getDataForEtablissementMap.usecase";
+import type { EtablissementSchema } from "@/modules/data/usecases/getDataForEtablissementMap/getDataForEtablissementMap.schema";
+import type { EtablissementWithDistance } from "@/modules/data/usecases/getDataForEtablissementMap/getDataForEtablissementMap.usecase";
 
-export function formatEtablissement(
-  etablissement: EtablissementWithDistance
-): z.infer<typeof EtablissementSchema> {
+export function formatEtablissement(etablissement: EtablissementWithDistance): z.infer<typeof EtablissementSchema> {
   return {
     uai: etablissement.uai,
     latitude: etablissement.latitude || +Infinity,
@@ -14,8 +12,7 @@ export function formatEtablissement(
     codeDepartement: etablissement.codeDepartement || "",
     libelleEtablissement: etablissement.libelleEtablissement || "",
     commune: etablissement.commune || "",
-    libellesDispositifs:
-      etablissement.libellesDispositifs.map((l) => (l === null ? "" : l)) || [],
+    libellesDispositifs: etablissement.libellesDispositifs.map((l) => (l === null ? "" : l)) || [],
     distance: etablissement.distance,
   };
 }

@@ -1,4 +1,4 @@
-import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export const getPageIcon = (page: PageObjectResponse): string | undefined => {
   if (page.icon?.type === "emoji") {

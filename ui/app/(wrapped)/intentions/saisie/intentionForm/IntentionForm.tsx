@@ -17,43 +17,25 @@ import {
 import { Icon } from "@iconify/react";
 import { isAxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { escapeString } from "shared/utils/escapeString";
 
 import { client } from "@/api.client";
+import { Conseils } from "@/app/(wrapped)/intentions/saisie/components/Conseils";
+import { MenuFormulaire } from "@/app/(wrapped)/intentions/saisie/components/MenuFormulaire";
+import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
+import type { Campagne, Demande } from "@/app/(wrapped)/intentions/saisie/types";
 import { isTypeAjustement } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
-import { Conseils } from "../components/Conseils";
-import { MenuFormulaire } from "../components/MenuFormulaire";
-import { SCROLL_OFFSET, STICKY_OFFSET } from "../SCROLL_OFFSETS";
-import { Campagne, Demande } from "../types";
+import { CampagneContext } from "./CampagneContext";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
-import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
+import type { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
 import { InformationsBlock } from "./InformationsBlock";
-
-export const CampagneContext = createContext<{
-  campagne?: Campagne;
-  setCampagne: Dispatch<SetStateAction<Campagne>>;
-}>({
-  campagne: undefined,
-  setCampagne: () => {},
-});
 
 export const IntentionForm = ({
   disabled = true,
@@ -73,11 +55,14 @@ export const IntentionForm = ({
   const toast = useToast();
   const { push } = useRouter();
   const pathname = usePathname();
+
+  const { setCampagne } = useContext(CampagneContext);
+  const campagneValue = useMemo(() => ({ campagne, setCampagne }), [campagne]);
+
   const form = useForm<IntentionForms>({
     defaultValues,
     mode: "onTouched",
     reValidateMode: "onChange",
-    disabled: campagne?.statut !== CampagneStatutEnum["en cours"],
   });
 
   const { getValues, handleSubmit } = form;
@@ -129,18 +114,11 @@ export const IntentionForm = ({
 
   const isActionsDisabled = isSuccess || isSubmitting;
 
-  const [isFCIL, setIsFCIL] = useState<boolean>(
-    formMetadata?.formation?.isFCIL ?? false
-  );
+  const [isFCIL, setIsFCIL] = useState<boolean>(formMetadata?.formation?.isFCIL ?? false);
 
-  const isFormDisabled = disabled || form.formState.disabled;
+  const isFormDisabled = disabled || campagneValue.campagne?.statut !== CampagneStatutEnum["en cours"];
 
-  const isCFDUaiSectionValid = ({
-    cfd,
-    codeDispositif,
-    libelleFCIL,
-    uai,
-  }: Partial<IntentionForms>): boolean => {
+  const isCFDUaiSectionValid = ({ cfd, codeDispositif, libelleFCIL, uai }: Partial<IntentionForms>): boolean => {
     if (isFCIL) return !!(cfd && codeDispositif && libelleFCIL && uai);
     return !!(cfd && codeDispositif && uai);
   };
@@ -154,8 +132,7 @@ export const IntentionForm = ({
   const getStatutSubmit = (
     demande: (typeof client.inferArgs)["[POST]/demande/submit"]["body"]["demande"]
   ): Exclude<DemandeStatutType, "supprimée"> => {
-    if (isTypeAjustement(demande.typeDemande))
-      return DemandeStatutEnum["demande validée"];
+    if (isTypeAjustement(demande.typeDemande)) return DemandeStatutEnum["demande validée"];
     if (formId) return demande.statut;
     return DemandeStatutEnum["projet de demande"];
   };
@@ -175,11 +152,6 @@ export const IntentionForm = ({
   };
 
   const statusComponentRef = useRef<HTMLDivElement>(null);
-
-  const { setCampagne } = useContext(CampagneContext);
-
-  const campagneValue = useMemo(() => ({ campagne, setCampagne }), [campagne]);
-
   const typeDemandeRef = useRef<HTMLDivElement>(null);
   const motifsEtPrecisionsRef = useRef<HTMLDivElement>(null);
   const ressourcesHumainesRef = useRef<HTMLDivElement>(null);
@@ -259,12 +231,7 @@ export const IntentionForm = ({
               <Box ref={step2Ref}>
                 <Grid templateColumns={"repeat(3, 1fr)"} columnGap={8}>
                   <GridItem>
-                    <Box
-                      position="sticky"
-                      z-index="sticky"
-                      top={STICKY_OFFSET}
-                      textAlign={"start"}
-                    >
+                    <Box position="sticky" z-index="sticky" top={STICKY_OFFSET} textAlign={"start"}>
                       <MenuFormulaire refs={anchorsRefs} />
                       <Box position="relative">
                         <Conseils />
@@ -299,10 +266,7 @@ export const IntentionForm = ({
                         <Box justifyContent={"center"} ref={statusComponentRef}>
                           <Button
                             isDisabled={
-                              disabled ||
-                              isActionsDisabled ||
-                              campagne?.statut !==
-                                CampagneStatutEnum["en cours"]
+                              disabled || isActionsDisabled || campagne?.statut !== CampagneStatutEnum["en cours"]
                             }
                             isLoading={isSubmitting}
                             variant="primary"
@@ -313,24 +277,17 @@ export const IntentionForm = ({
                                     numero: formId,
                                     ...values,
                                     statut: getStatutSubmit(values),
-                                    campagneId:
-                                      values.campagneId ?? campagne?.id,
-                                    commentaire: escapeString(
-                                      values.commentaire
-                                    ),
+                                    campagneId: values.campagneId ?? campagne?.id,
+                                    commentaire: escapeString(values.commentaire),
                                     autreMotif: escapeString(values.autreMotif),
-                                    autreMotifRefus: escapeString(
-                                      values.autreMotifRefus
-                                    ),
+                                    autreMotifRefus: escapeString(values.autreMotifRefus),
                                   },
                                 },
                               })
                             )}
                             leftIcon={<CheckIcon />}
                           >
-                            {formId
-                              ? "Sauvegarder les modifications"
-                              : "Enregistrer le projet de demande"}
+                            {formId ? "Sauvegarder les modifications" : "Enregistrer le projet de demande"}
                           </Button>
                         </Box>
                       }

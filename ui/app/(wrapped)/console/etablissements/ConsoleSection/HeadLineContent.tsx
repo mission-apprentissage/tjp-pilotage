@@ -1,15 +1,14 @@
 import { Box, chakra, Text, Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
-import { CSSProperties } from "react";
+import type { CSSProperties } from "react";
 
+import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
+import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
+import type { Filters, Order } from "@/app/(wrapped)/console/etablissements/types";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
-
-import { ETABLISSEMENT_COLUMN_WIDTH } from "../ETABLISSEMENT_COLUMN_WIDTH";
-import { FORMATION_ETABLISSEMENT_COLUMNS } from "../FORMATION_ETABLISSEMENT_COLUMNS";
-import { Filters, Order } from "../types";
 
 const ConditionalTh = chakra(
   ({
@@ -27,9 +26,7 @@ const ConditionalTh = chakra(
     children: React.ReactNode;
     colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     colonne: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS;
-    getCellBgColor: (
-      column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS
-    ) => string;
+    getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
     onClick?: (column: Order["orderBy"]) => void;
     isNumeric?: boolean;
   }) => {
@@ -45,10 +42,7 @@ const ConditionalTh = chakra(
           onClick={() => onClick && onClick(colonne as Order["orderBy"])}
           bgColor={getCellBgColor(colonne)}
         >
-          <Tooltip
-            label={FORMATION_ETABLISSEMENT_COLUMNS[colonne]}
-            placement="top"
-          >
+          <Tooltip label={FORMATION_ETABLISSEMENT_COLUMNS[colonne]} placement="top">
             <Box
               fontSize={12}
               fontWeight={700}
@@ -76,7 +70,7 @@ export const HeadLineContent = ({
   colonneFilters,
   getCellBgColor,
 }: {
-  order: Order;
+  order: Partial<Order>;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
@@ -86,9 +80,7 @@ export const HeadLineContent = ({
   isFirstColumnSticky?: boolean;
   isSecondColumnSticky?: boolean;
   colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-  getCellBgColor: (
-    column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS
-  ) => string;
+  getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const trackEvent = usePlausible();
@@ -107,19 +99,10 @@ export const HeadLineContent = ({
     });
   };
   return (
-    <Thead
-      position="sticky"
-      top="0"
-      boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-      zIndex={"docked"}
-    >
+    <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" zIndex={"docked"}>
       <Tr bg={"white"}>
         <Th />
-        <ConditionalTh
-          colonneFilters={colonneFilters}
-          getCellBgColor={getCellBgColor}
-          colonne="rentreeScolaire"
-        >
+        <ConditionalTh colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} colonne="rentreeScolaire">
           {FORMATION_ETABLISSEMENT_COLUMNS.rentreeScolaire}
         </ConditionalTh>
         <ConditionalTh
@@ -202,9 +185,7 @@ export const HeadLineContent = ({
           left={{ lg: "unset", xl: 300 - 1 }}
           boxShadow={{
             lg: "none",
-            xl: isSecondColumnSticky
-              ? "inset -2px 0px 0px 0px #E2E8F0"
-              : "none",
+            xl: isSecondColumnSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
           }}
         >
           <OrderIcon {...order} column="libelleFormation" />
@@ -384,8 +365,7 @@ export const HeadLineContent = ({
             label={
               <Box>
                 <Text>
-                  Le ratio entre le nombre de premiers voeux et la capacité de
-                  la formation au niveau régional.
+                  Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.
                 </Text>
                 <Text>Cliquez pour plus d'infos.</Text>
                 <TauxPressionScale />
@@ -407,10 +387,7 @@ export const HeadLineContent = ({
             ml="1"
             label={
               <Box>
-                <Text>
-                  Le ratio entre l’effectif d’entrée en formation et sa
-                  capacité.
-                </Text>
+                <Text>Le ratio entre l’effectif d’entrée en formation et sa capacité.</Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>
             }
@@ -431,9 +408,8 @@ export const HeadLineContent = ({
             label={
               <Box>
                 <Text>
-                  Positionnement du point de la formation dans le quadrant par
-                  rapport aux moyennes régionales des taux d'emploi et de
-                  poursuite d'études appliquées au niveau de diplôme.
+                  Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux
+                  d'emploi et de poursuite d'études appliquées au niveau de diplôme.
                 </Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>
@@ -454,10 +430,7 @@ export const HeadLineContent = ({
             ml="1"
             label={
               <Box>
-                <Text>
-                  La part de ceux qui sont en emploi 6 mois après leur sortie
-                  d’étude.
-                </Text>
+                <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>
             }
@@ -477,10 +450,7 @@ export const HeadLineContent = ({
             ml="1"
             label={
               <Box>
-                <Text>
-                  Tout élève inscrit à N+1 (réorientation et redoublement
-                  compris).
-                </Text>
+                <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>
             }
@@ -501,9 +471,8 @@ export const HeadLineContent = ({
             label={
               <Box>
                 <Text>
-                  (nombre d'élèves inscrits en formation + nombre d'élèves en
-                  emploi) / nombre d'élèves en entrée en dernière année de
-                  formation.
+                  (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
+                  dernière année de formation.
                 </Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>
@@ -524,10 +493,7 @@ export const HeadLineContent = ({
             ml="1"
             label={
               <Box>
-                <Text>
-                  La part de ceux qui sont en emploi 6 mois après leur sortie
-                  d’étude.
-                </Text>
+                <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>
             }
@@ -547,10 +513,7 @@ export const HeadLineContent = ({
             ml="1"
             label={
               <Box>
-                <Text>
-                  Tout élève inscrit à N+1 (réorientation et redoublement
-                  compris).
-                </Text>
+                <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>
             }
@@ -570,10 +533,7 @@ export const HeadLineContent = ({
             ml="1"
             label={
               <Box>
-                <Text>
-                  Tout élève inscrit à N+1 (réorientation et redoublement
-                  compris).
-                </Text>
+                <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>
             }
@@ -595,10 +555,8 @@ export const HeadLineContent = ({
             label={
               <Box>
                 <Text>
-                  Capacité de l'établissement à insérer, en prenant en compte le
-                  profil social des élèves et le taux de chômage de la zone
-                  d'emploi, comparativement au taux de référence
-                  d’établissements similaires.
+                  Capacité de l'établissement à insérer, en prenant en compte le profil social des élèves et le taux de
+                  chômage de la zone d'emploi, comparativement au taux de référence d’établissements similaires.
                 </Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>

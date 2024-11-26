@@ -1,6 +1,6 @@
-import { PageRequeteEnregistreeType } from "shared/enum/pageRequeteEnregistreeEnum";
+import type { PageRequeteEnregistreeType } from "shared/enum/pageRequeteEnregistreeEnum";
 
-import { kdb } from "../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const findOneSimilarRequeteEnregistreeQuery = async ({
   nom,
@@ -13,7 +13,7 @@ export const findOneSimilarRequeteEnregistreeQuery = async ({
   userId: string;
   page: PageRequeteEnregistreeType;
 }) => {
-  return await kdb
+  return await getKbdClient()
     .selectFrom("requeteEnregistree")
     .selectAll()
     .where((w) =>

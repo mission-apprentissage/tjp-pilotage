@@ -1,4 +1,4 @@
-import { GeoJSONFeature } from "./geoJsonFeature";
+import type { GeoJSONFeature } from "./geoJsonFeature";
 
 export interface BANResponse {
   type: "FeatureCollection";

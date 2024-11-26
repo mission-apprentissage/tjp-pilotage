@@ -2,10 +2,12 @@ import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { PageClient } from "./page.client";
 
-export default () => {
+const SaisiePage = () => {
   return (
     <GuardPermission permission="intentions/lecture">
       <PageClient />
     </GuardPermission>
   );
 };
+
+export default SaisiePage;

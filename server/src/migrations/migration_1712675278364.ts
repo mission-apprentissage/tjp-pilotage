@@ -1,12 +1,10 @@
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .createTable("domaineProfessionnel")
     .addColumn("codeDomaineProfessionnel", "varchar(3)", (cb) => cb.notNull())
-    .addUniqueConstraint("codeDomaineProfessionnel_unique", [
-      "codeDomaineProfessionnel",
-    ])
+    .addUniqueConstraint("codeDomaineProfessionnel_unique", ["codeDomaineProfessionnel"])
     .addColumn("libelleDomaineProfessionnel", "varchar", (cb) => cb.notNull())
     .execute();
 };

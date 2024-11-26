@@ -1,15 +1,14 @@
-import { Args, ZodTypeProvider } from "@http-wizard/core";
-import { Router } from "server/src/routes";
+// @ts-nocheck -- TODO  Not all code paths return a value.
 
+import type { Args, ZodTypeProvider } from "@http-wizard/core";
+
+// import type { Router } from "server/src/server/routes/routes";
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
 
-type Demande = Args<
-  Router["[POST]/demande/submit"]["schema"],
-  ZodTypeProvider
->["body"]["demande"];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Demande = Args<any["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
 
-export const isTypeFermeture = (typeDemande: string) =>
-  ["fermeture"].includes(typeDemande);
+export const isTypeFermeture = (typeDemande: string) => ["fermeture"].includes(typeDemande);
 
 export const isTypeOuverture = (typeDemande: string) =>
   ["ouverture_compensation", "ouverture_nette"].includes(typeDemande);
@@ -17,20 +16,16 @@ export const isTypeOuverture = (typeDemande: string) =>
 export const isTypeAugmentation = (typeDemande: string) =>
   ["augmentation_compensation", "augmentation_nette"].includes(typeDemande);
 
-export const isTypeDiminution = (typeDemande: string) =>
-  ["diminution"].includes(typeDemande);
+export const isTypeDiminution = (typeDemande: string) => ["diminution"].includes(typeDemande);
 
 export const isTypeCompensation = (typeDemande: string) =>
   ["augmentation_compensation", "ouverture_compensation"].includes(typeDemande);
 
-export const isTypeTransfert = (typeDemande: string) =>
-  ["transfert"].includes(typeDemande);
+export const isTypeTransfert = (typeDemande: string) => ["transfert"].includes(typeDemande);
 
-export const isTypeColoration = (typeDemande: string) =>
-  ["coloration"].includes(typeDemande);
+export const isTypeColoration = (typeDemande: string) => ["coloration"].includes(typeDemande);
 
-export const isTypeAjustement = (typeDemande: string) =>
-  ["ajustement"].includes(typeDemande);
+export const isTypeAjustement = (typeDemande: string) => ["ajustement"].includes(typeDemande);
 
 const isPositiveNumber = (value: number | undefined): value is number => {
   if (!Number.isInteger(value)) return false;
@@ -39,10 +34,7 @@ const isPositiveNumber = (value: number | undefined): value is number => {
   return true;
 };
 
-export const demandeValidators: Record<
-  keyof Demande | string,
-  (demande: Demande) => string | undefined
-> = {
+export const demandeValidators: Record<keyof Demande | string, (demande: Demande) => string | undefined> = {
   motif: (demande) => {
     if (!isTypeAjustement(demande.typeDemande) && !demande.motif?.length) {
       return "Le champ 'motif' est obligatoire";
@@ -76,10 +68,7 @@ export const demandeValidators: Record<
     if (!isPositiveNumber(demande.capaciteScolaireActuelle)) {
       return "La capacité scolaire actuelle doit être un nombre entier positif";
     }
-    if (
-      isTypeOuverture(demande.typeDemande) &&
-      demande.capaciteScolaireActuelle !== 0
-    ) {
+    if (isTypeOuverture(demande.typeDemande) && demande.capaciteScolaireActuelle !== 0) {
       return "La capacité scolaire actuelle devrait être à 0 dans le cas d'une ouverture";
     }
   },
@@ -97,10 +86,7 @@ export const demandeValidators: Record<
     if (!isPositiveNumber(demande.capaciteScolaire)) {
       return "La capacité scolaire doit être un nombre entier positif";
     }
-    if (
-      isTypeFermeture(demande.typeDemande) &&
-      demande.capaciteScolaire !== 0
-    ) {
+    if (isTypeFermeture(demande.typeDemande) && demande.capaciteScolaire !== 0) {
       return "La capacité scolaire devrait être à 0 dans le cas d'une fermeture";
     }
     if (
@@ -132,11 +118,9 @@ export const demandeValidators: Record<
       }
       if (
         (demande.capaciteScolaire >= demande.capaciteScolaireActuelle &&
-          demande.capaciteApprentissage >=
-            demande.capaciteApprentissageActuelle) ||
+          demande.capaciteApprentissage >= demande.capaciteApprentissageActuelle) ||
         (demande.capaciteScolaire <= demande.capaciteScolaireActuelle &&
-          demande.capaciteApprentissage <=
-            demande.capaciteApprentissageActuelle)
+          demande.capaciteApprentissage <= demande.capaciteApprentissageActuelle)
       ) {
         return "Si un transfert est effectué, la capacité scolaire ou l'apprentissage doivent être modifiée. Dans le cas d'un transfert vers l'apprentissage, la capacité en apprentissage devrait être supérieure à la capacité actuelle. Dans le cas d'un transfert vers le scolaire, la capacité scolaire devrait être supérieur à la capacité actuelle.";
       }
@@ -160,16 +144,9 @@ export const demandeValidators: Record<
     if (!isPositiveNumber(demande.capaciteScolaireColoreeActuelle)) {
       return "La capacité scolaire colorée actuelle doit être un nombre entier positif";
     }
-    if (
-      !demande.coloration &&
-      !isTypeColoration(demande.typeDemande) &&
-      demande.capaciteScolaireColoreeActuelle !== 0
-    )
+    if (!demande.coloration && !isTypeColoration(demande.typeDemande) && demande.capaciteScolaireColoreeActuelle !== 0)
       return "La capacité scolaire colorée actuelle doit être à 0 quand on ne se trouve pas dans une situation de coloration";
-    if (
-      isTypeOuverture(demande.typeDemande) &&
-      demande.capaciteScolaireColoreeActuelle !== 0
-    )
+    if (isTypeOuverture(demande.typeDemande) && demande.capaciteScolaireColoreeActuelle !== 0)
       return "La capacité scolaire colorée actuelle doit être à 0 dans le cas d'une ouverture";
     if (
       isPositiveNumber(demande.capaciteScolaireActuelle) &&
@@ -189,16 +166,9 @@ export const demandeValidators: Record<
     if (!isPositiveNumber(demande.capaciteScolaireColoree)) {
       return "La capacité scolaire colorée doit être un nombre entier positif";
     }
-    if (
-      !demande.coloration &&
-      !isTypeColoration(demande.typeDemande) &&
-      demande.capaciteScolaireColoree !== 0
-    )
+    if (!demande.coloration && !isTypeColoration(demande.typeDemande) && demande.capaciteScolaireColoree !== 0)
       return "La future capacité scolaire colorée doit être à 0 quand on ne se trouve pas dans une situation de coloration";
-    if (
-      isTypeFermeture(demande.typeDemande) &&
-      demande.capaciteScolaireColoree !== 0
-    )
+    if (isTypeFermeture(demande.typeDemande) && demande.capaciteScolaireColoree !== 0)
       return "La future capacité scolaire colorée doit être à 0 dans le cas d'une fermeture";
     if (
       isPositiveNumber(demande.capaciteScolaire) &&
@@ -217,10 +187,7 @@ export const demandeValidators: Record<
     if (!isPositiveNumber(demande.capaciteApprentissageActuelle))
       return "La capacité en apprentissage actuelle doit être un nombre entier positif";
 
-    if (
-      isTypeOuverture(demande.typeDemande) &&
-      demande.capaciteApprentissageActuelle !== 0
-    )
+    if (isTypeOuverture(demande.typeDemande) && demande.capaciteApprentissageActuelle !== 0)
       return "La capacité en apprentissage actuelle devrait être à 0 dans le cas d'une ouverture";
   },
   /**
@@ -239,10 +206,7 @@ export const demandeValidators: Record<
     if (!isPositiveNumber(demande.capaciteApprentissage))
       return "La capacité en apprentissage doit être un nombre entier positif";
 
-    if (
-      isTypeFermeture(demande.typeDemande) &&
-      demande.capaciteApprentissage !== 0
-    )
+    if (isTypeFermeture(demande.typeDemande) && demande.capaciteApprentissage !== 0)
       return "La capacité en apprentissage devrait être à 0 dans le cas d'une fermeture";
 
     if (
@@ -284,15 +248,11 @@ export const demandeValidators: Record<
       demande.capaciteApprentissageColoreeActuelle !== 0
     )
       return "La capacité en apprentissage colorée actuelle doit être à 0 quand on ne se trouve pas dans une situation de coloration";
-    if (
-      isTypeOuverture(demande.typeDemande) &&
-      demande.capaciteApprentissageColoreeActuelle !== 0
-    )
+    if (isTypeOuverture(demande.typeDemande) && demande.capaciteApprentissageColoreeActuelle !== 0)
       return "La capacité en apprentissage colorée actuelle doit être à 0 dans le cas d'une ouverture";
     if (
       isPositiveNumber(demande.capaciteApprentissageActuelle) &&
-      demande.capaciteApprentissageColoreeActuelle >
-        demande.capaciteApprentissageActuelle
+      demande.capaciteApprentissageColoreeActuelle > demande.capaciteApprentissageActuelle
     )
       return "La capacité en apprentissage colorée actuelle doit être inférieure ou égale à la capacité en apprentissage actuelle";
   },
@@ -307,16 +267,9 @@ export const demandeValidators: Record<
   capaciteApprentissageColoree: (demande) => {
     if (!isPositiveNumber(demande.capaciteApprentissageColoree))
       return "La future capacité en apprentissage colorée doit être un nombre entier positif";
-    if (
-      isTypeFermeture(demande.typeDemande) &&
-      demande.capaciteApprentissageColoree !== 0
-    )
+    if (isTypeFermeture(demande.typeDemande) && demande.capaciteApprentissageColoree !== 0)
       return "La future capacité en apprentissage colorée doit être à 0 dans le cas d'une fermeture";
-    if (
-      !demande.coloration &&
-      !isTypeColoration(demande.typeDemande) &&
-      demande.capaciteApprentissageColoree !== 0
-    )
+    if (!demande.coloration && !isTypeColoration(demande.typeDemande) && demande.capaciteApprentissageColoree !== 0)
       return "La future capacité en apprentissage colorée doit être à 0 quand on ne se trouve pas dans une situation de coloration";
     if (
       isPositiveNumber(demande.capaciteApprentissage) &&
@@ -331,16 +284,9 @@ export const demandeValidators: Record<
    * - supérieure à 0 dans le cas d'autre chose qu'une ouverture
    */
   sommeCapaciteActuelle: (demande) => {
-    if (
-      isTypeOuverture(demande.typeDemande) ||
-      isTypeAjustement(demande.typeDemande)
-    )
-      return;
+    if (isTypeOuverture(demande.typeDemande) || isTypeAjustement(demande.typeDemande)) return;
 
-    if (
-      !demande.capaciteScolaireActuelle &&
-      !demande.capaciteApprentissageActuelle
-    )
+    if (!demande.capaciteScolaireActuelle && !demande.capaciteApprentissageActuelle)
       return "La somme des capacités actuelles doit être supérieure à 0";
   },
   /**
@@ -352,11 +298,7 @@ export const demandeValidators: Record<
    * - inférieure à la somme des capacités actuelles dans le cas d'une diminution
    */
   sommeCapacite: (demande) => {
-    if (
-      isTypeFermeture(demande.typeDemande) ||
-      isTypeColoration(demande.typeDemande)
-    )
-      return;
+    if (isTypeFermeture(demande.typeDemande) || isTypeColoration(demande.typeDemande)) return;
 
     if (!demande.capaciteApprentissage && !demande.capaciteScolaire) {
       return "La somme des capacités doit être supérieure à 0";
@@ -370,22 +312,19 @@ export const demandeValidators: Record<
       if (
         isTypeAugmentation(demande.typeDemande) &&
         demande.capaciteApprentissage + demande.capaciteScolaire <=
-          demande.capaciteApprentissageActuelle +
-            demande.capaciteScolaireActuelle
+          demande.capaciteApprentissageActuelle + demande.capaciteScolaireActuelle
       )
         return "La somme des capacités doit être supérieure à la somme des capacités actuelles dans le cas d'une augmentation";
       if (
         isTypeAjustement(demande.typeDemande) &&
         demande.capaciteApprentissage + demande.capaciteScolaire <=
-          demande.capaciteApprentissageActuelle +
-            demande.capaciteScolaireActuelle
+          demande.capaciteApprentissageActuelle + demande.capaciteScolaireActuelle
       )
         return "La somme des capacités doit être supérieure à la somme des capacités actuelles dans le cas d'un ajustement de rentrée";
       if (
         isTypeDiminution(demande.typeDemande) &&
         demande.capaciteApprentissage + demande.capaciteScolaire >=
-          demande.capaciteApprentissageActuelle +
-            demande.capaciteScolaireActuelle
+          demande.capaciteApprentissageActuelle + demande.capaciteScolaireActuelle
       )
         return "La somme des capacités doit être inférieure à la somme des capacités actuelles dans le cas d'une diminution";
     }
@@ -400,8 +339,7 @@ export const demandeValidators: Record<
       isPositiveNumber(demande.capaciteScolaireColoreeActuelle) &&
       isPositiveNumber(demande.capaciteApprentissageActuelle) &&
       isPositiveNumber(demande.capaciteScolaireActuelle) &&
-      demande.capaciteApprentissageColoreeActuelle +
-        demande.capaciteScolaireColoreeActuelle >
+      demande.capaciteApprentissageColoreeActuelle + demande.capaciteScolaireColoreeActuelle >
         demande.capaciteApprentissageActuelle + demande.capaciteScolaireActuelle
     )
       return "La somme des capacités colorées actuelles doit être inférieure ou égale à la somme des capacités actuelles";
@@ -425,27 +363,19 @@ export const demandeValidators: Record<
       (isTypeColoration(demande.typeDemande) || demande.coloration) &&
       isPositiveNumber(demande.capaciteApprentissageColoree) &&
       isPositiveNumber(demande.capaciteScolaireColoree) &&
-      demande.capaciteApprentissageColoree + demande.capaciteScolaireColoree ===
-        0
+      demande.capaciteApprentissageColoree + demande.capaciteScolaireColoree === 0
     )
       return "La somme des futures capacités colorées doit être supérieure ou égale à 0 dans le cas d'une coloration";
   },
   compensation: (demande) => {
     if (!isTypeCompensation(demande.typeDemande)) return;
-    if (!demande.compensationCfd)
-      return "Le diplôme de compensation est obligatoire";
-    if (!demande.compensationCodeDispositif)
-      return "Le dispositif de compensation est obligatoire";
-    if (!demande.compensationUai)
-      return "L'établissement de compensation est obligatoire";
-    if (!demande.compensationRentreeScolaire)
-      return "La rentrée scolaire de compensation est obligatoire";
+    if (!demande.compensationCfd) return "Le diplôme de compensation est obligatoire";
+    if (!demande.compensationCodeDispositif) return "Le dispositif de compensation est obligatoire";
+    if (!demande.compensationUai) return "L'établissement de compensation est obligatoire";
+    if (!demande.compensationRentreeScolaire) return "La rentrée scolaire de compensation est obligatoire";
   },
   motifRefus: (demande) => {
-    if (
-      demande.statut === DemandeStatutEnum["refusée"] &&
-      !demande.motifRefus?.length
-    ) {
+    if (demande.statut === DemandeStatutEnum["refusée"] && !demande.motifRefus?.length) {
       return "Le champ 'motif refus' est obligatoire";
     }
   },

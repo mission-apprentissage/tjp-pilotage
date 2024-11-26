@@ -1,9 +1,6 @@
-import { themeDefinition } from "../../../../theme/theme";
-import {
-  FORMATION_COLUMNS,
-  FORMATION_COLUMNS_DEFAULT,
-  FORMATION_COLUMNS_OPTIONAL,
-} from "./FORMATION_COLUMNS";
+import { themeDefinition } from "@/theme/theme";
+
+import type { FORMATION_COLUMNS, FORMATION_COLUMNS_DEFAULT, FORMATION_COLUMNS_OPTIONAL } from "./FORMATION_COLUMNS";
 
 export const GROUPED_FORMATION_COLUMNS: Record<
   string,

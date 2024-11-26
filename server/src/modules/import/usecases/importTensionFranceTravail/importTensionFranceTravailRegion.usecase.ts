@@ -2,9 +2,10 @@ import { AxiosError } from "axios";
 import { inject } from "injecti";
 import { setTimeout } from "timers/promises";
 
-import { localFilePathManager } from "../../../core/services/filePathManager/localFilePathManager";
-import { getStatsPerspectivesRecrutementRegion } from "../../services/franceTravail/franceTravail.api";
-import { streamIt } from "../../utils/streamIt";
+import { localFilePathManager } from "@/modules/core/services/filePathManager/localFilePathManager";
+import { getStatsPerspectivesRecrutementRegion } from "@/modules/import/services/franceTravail/franceTravail.api";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import {
   appendFranceTravailTensionFile,
   createFranceTravailTensionFile,
@@ -22,9 +23,7 @@ export const [importTensionFranceTravailRegion] = inject(
   },
   (deps) => async () => {
     // Create new file
-    deps.createFranceTravailTensionFile(
-      deps.filePathManager.getFranceTravailIndicateurTensionRegionStatsFilePath()
-    );
+    deps.createFranceTravailTensionFile(deps.filePathManager.getFranceTravailIndicateurTensionRegionStatsFilePath());
 
     // Lister tous les ROMES pour lesquels il faut importer les données de tension
     const romes = (await deps.findAllRomeCodes()).map((r) => r.codeRome);
@@ -39,12 +38,10 @@ export const [importTensionFranceTravailRegion] = inject(
     // Pour chaque ROME et chaque région, requêter les informations auprès de france travail
 
     await streamIt(
-      (regionCount) =>
-        Promise.resolve(regions.slice(regionCount, regionCount + 1)),
+      async (regionCount) => Promise.resolve(regions.slice(regionCount, regionCount + 1)),
       async (codeRegion, regionCount) => {
         await streamIt(
-          (romeCount) =>
-            Promise.resolve(romes.slice(romeCount, romeCount + 10)),
+          async (romeCount) => Promise.resolve(romes.slice(romeCount, romeCount + 10)),
           async (codeRome, romeCount) => {
             let retry = true;
             let retryCount = 0;
@@ -55,10 +52,7 @@ export const [importTensionFranceTravailRegion] = inject(
                   `Région (${regionCount}/${regions.length}) ${codeRegion} et rome ${codeRome} (${romeCount}/${romes.length})`
                 );
 
-                const result = await getStatsPerspectivesRecrutementRegion(
-                  codeRome,
-                  codeRegion
-                );
+                const result = await getStatsPerspectivesRecrutementRegion(codeRome, codeRegion);
 
                 if (result?.length) {
                   await deps.appendFranceTravailTensionFile(
@@ -80,9 +74,7 @@ export const [importTensionFranceTravailRegion] = inject(
                   }
 
                   retry = false;
-                  if (
-                    e.response?.data?.message?.includes("FiltreErreurSldng")
-                  ) {
+                  if (e.response?.data?.message?.includes("FiltreErreurSldng")) {
                     console.error(
                       `ERROR [REG=${codeRegion},ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`
                     );

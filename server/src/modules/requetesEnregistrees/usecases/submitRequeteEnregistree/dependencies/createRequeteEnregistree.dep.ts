@@ -1,11 +1,10 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../../db/db";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
 
-export const createRequeteEnregistree = async (
-  requeteEnregistree: Insertable<DB["requeteEnregistree"]>
-) => {
-  return await kdb
+export const createRequeteEnregistree = async (requeteEnregistree: Insertable<DB["requeteEnregistree"]>) => {
+  return await getKbdClient()
     .insertInto("requeteEnregistree")
     .values({
       ...requeteEnregistree,

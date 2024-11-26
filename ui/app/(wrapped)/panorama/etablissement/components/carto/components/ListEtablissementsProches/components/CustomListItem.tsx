@@ -1,23 +1,13 @@
-import {
-  Badge,
-  Box,
-  Divider,
-  HStack,
-  ListItem,
-  Text,
-  Tooltip,
-  VStack,
-} from "@chakra-ui/react";
+import { Badge, Box, Divider, HStack, ListItem, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { InlineIcon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
-import { client } from "@/api.client";
+import type { client } from "@/api.client";
+import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
+import { themeDefinition } from "@/theme/theme";
 import { formatNumber, formatPercentage } from "@/utils/formatUtils";
-
-import { themeDefinition } from "../../../../../../../../../theme/theme";
-import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
 
 interface CustomListItemProps {
   etablissement: (typeof client.infer)["[GET]/etablissement/:uai/map/list"]["etablissementsProches"][number];
@@ -56,14 +46,9 @@ const formatDepartement = (departement: string) => {
   return departement;
 };
 
-export const CustomListItem = ({
-  etablissement,
-  withDivider,
-  children,
-}: CustomListItemProps) => {
+export const CustomListItem = ({ etablissement, withDivider, children }: CustomListItemProps) => {
   const trackEvent = usePlausible();
-  const { hoverUai, setHoverUai, map, activeUai, setActiveUai } =
-    useEtablissementMapContext();
+  const { hoverUai, setHoverUai, map, activeUai, setActiveUai } = useEtablissementMapContext();
   const [hover, setHover] = useState(false);
 
   const flyToEtablissement = () => {
@@ -111,9 +96,7 @@ export const CustomListItem = ({
   const tooltipLabelTauxEmploi = (() => {
     if (etablissement.tauxInsertion !== undefined) {
       if (isScolaire) {
-        return `Taux d'emploi à 6mois (Millesime ${CURRENT_IJ_MILLESIME.split(
-          "_"
-        ).join("+")})`;
+        return `Taux d'emploi à 6mois (Millesime ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
       }
     }
 
@@ -127,9 +110,7 @@ export const CustomListItem = ({
   const tooltipLabelTauxPoursuite = (() => {
     if (etablissement.tauxPoursuite !== undefined) {
       if (isScolaire) {
-        return `Taux de poursuite d'étude (Millesime ${CURRENT_IJ_MILLESIME.split(
-          "_"
-        ).join("+")})`;
+        return `Taux de poursuite d'étude (Millesime ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
       }
     }
 
@@ -177,28 +158,18 @@ export const CustomListItem = ({
                 _hover={{ textDecoration: "underline" }}
                 onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
-                onClick={() =>
-                  window.open(
-                    `/panorama/etablissement/${etablissement.uai}`,
-                    "_blank"
-                  )
-                }
+                onClick={() => window.open(`/panorama/etablissement/${etablissement.uai}`, "_blank")}
               >
                 {etablissement.libelleEtablissement}
               </Text>
               {hover && <InlineIcon icon="ri:arrow-right-line" />}
             </HStack>
             <HStack flexWrap="wrap" justifyContent="flex-end">
-              {formatDispositifs(etablissement.libellesDispositifs).map(
-                (libelle) => (
-                  <Badge
-                    key={`${etablissement.uai}-${libelle}`}
-                    variant="neutral"
-                  >
-                    {libelle}
-                  </Badge>
-                )
-              )}
+              {formatDispositifs(etablissement.libellesDispositifs).map((libelle) => (
+                <Badge key={`${etablissement.uai}-${libelle}`} variant="neutral">
+                  {libelle}
+                </Badge>
+              ))}
               {children}
             </HStack>
           </HStack>
@@ -209,40 +180,33 @@ export const CustomListItem = ({
               divider={<Divider orientation="vertical" h="12px" w="1px" />}
             >
               <Text>
-                {etablissement.commune} (
-                {formatDepartement(etablissement.codeDepartement)})
+                {etablissement.commune} ({formatDepartement(etablissement.codeDepartement)})
               </Text>
               <Text>{formatDistance(etablissement.distance)}</Text>
-              {etablissement.secteur && (
-                <Text>{formatSecteur(etablissement.secteur)}</Text>
-              )}
+              {etablissement.secteur && <Text>{formatSecteur(etablissement.secteur)}</Text>}
             </HStack>
           </HStack>
           <HStack width="100%" justifyContent="space-between">
             <HStack width="100%" justifyContent="space-between">
               <HStack gap="8px">
-                {etablissement.voies.map((voie) =>
-                  voie === "scolaire" ? (
-                    <Badge variant="info" key={`${etablissement.uai}-${voie}`}>
-                      <Box display="inline" mr="4px">
-                        <InlineIcon
-                          icon="ri:briefcase-5-line"
-                          color={themeDefinition.colors.info.text}
-                        />
-                      </Box>
-                      {voie}
-                    </Badge>
-                  ) : (
-                    <Badge variant="new" key={`${etablissement.uai}-${voie}`}>
-                      <Box display="inline" mr="4px">
-                        <InlineIcon
-                          icon="ri:hotel-line"
-                          color={themeDefinition.colors.yellowTournesol[407]}
-                        />
-                      </Box>
-                      {voie}
-                    </Badge>
-                  )
+                {etablissement.voies.map(
+                  // @ts-expect-error TODO
+                  (voie) =>
+                    voie === "scolaire" ? (
+                      <Badge variant="info" key={`${etablissement.uai}-${voie}`}>
+                        <Box display="inline" mr="4px">
+                          <InlineIcon icon="ri:briefcase-5-line" color={themeDefinition.colors.info.text} />
+                        </Box>
+                        {voie}
+                      </Badge>
+                    ) : (
+                      <Badge variant="new" key={`${etablissement.uai}-${voie}`}>
+                        <Box display="inline" mr="4px">
+                          <InlineIcon icon="ri:hotel-line" color={themeDefinition.colors.yellowTournesol[407]} />
+                        </Box>
+                        {voie}
+                      </Badge>
+                    )
                 )}
               </HStack>
               <HStack
@@ -254,20 +218,14 @@ export const CustomListItem = ({
                 <Tooltip label={tooltipLabelEffectif}>
                   <HStack gap="4px" width="30px">
                     <InlineIcon icon="ri:group-line" />
-                    <Text>
-                      {etablissement.effectif !== undefined
-                        ? etablissement.effectif
-                        : "--"}
-                    </Text>
+                    <Text>{etablissement.effectif !== undefined ? etablissement.effectif : "--"}</Text>
                   </HStack>
                 </Tooltip>
                 <Tooltip label={tooltipLabelTauxEmploi}>
                   <HStack gap="4px" width="40px">
                     <InlineIcon icon="ri:briefcase-line" />
                     <Text>
-                      {etablissement.tauxInsertion !== undefined
-                        ? formatPercentage(etablissement.tauxInsertion)
-                        : "--"}
+                      {etablissement.tauxInsertion !== undefined ? formatPercentage(etablissement.tauxInsertion) : "--"}
                     </Text>
                   </HStack>
                 </Tooltip>
@@ -275,9 +233,7 @@ export const CustomListItem = ({
                   <HStack gap="4px" width="40px">
                     <InlineIcon icon="ri:book-open-line" />
                     <Text>
-                      {etablissement.tauxPoursuite !== undefined
-                        ? formatPercentage(etablissement.tauxPoursuite)
-                        : "--"}
+                      {etablissement.tauxPoursuite !== undefined ? formatPercentage(etablissement.tauxPoursuite) : "--"}
                     </Text>
                   </HStack>
                 </Tooltip>

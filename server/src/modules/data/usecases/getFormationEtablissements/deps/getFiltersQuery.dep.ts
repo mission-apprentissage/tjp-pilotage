@@ -1,16 +1,18 @@
-import { ExpressionBuilder, sql } from "kysely";
+import type { ExpressionBuilder } from "kysely";
+import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
-import { DB, kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getFormationEtablissements/getFormationEtablissements.usecase";
 import {
   isInPerimetreIJAcademie,
   isInPerimetreIJDepartement,
   isInPerimetreIJRegion,
-} from "../../../utils/isInPerimetreIJ";
-import { notHistoriqueUnlessCoExistant } from "../../../utils/notHistorique";
-import { Filters } from "../getFormationEtablissements.usecase";
+} from "@/modules/data/utils/isInPerimetreIJ";
+import { notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
+import { cleanNull } from "@/utils/noNull";
 
 export const getFiltersQuery = async ({
   codeRegion,
@@ -26,45 +28,21 @@ export const getFiltersQuery = async ({
   codeNsf,
   rentreeScolaire = [CURRENT_RENTREE],
 }: Partial<Filters>) => {
-  const base = kdb
+  const base = getKbdClient()
     .selectFrom("formationScolaireView as formationView")
-    .leftJoin(
-      "formationEtablissement",
-      "formationEtablissement.cfd",
-      "formationView.cfd"
-    )
+    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
     .leftJoin("dataFormation", "dataFormation.cfd", "formationView.cfd")
     .innerJoin("indicateurEntree", (join) =>
       join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurEntree.formationEtablissementId"
-        )
+        .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
         .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
     )
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "formationEtablissement.codeDispositif"
-    )
+    .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "formationView.codeNiveauDiplome"
-    )
-    .leftJoin(
-      "etablissement",
-      "etablissement.uai",
-      "formationEtablissement.uai"
-    )
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
+    .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "etablissement.codeDepartement"
-    )
+    .leftJoin("departement", "departement.codeDepartement", "etablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
     .distinct()
@@ -93,10 +71,7 @@ export const getFiltersQuery = async ({
 
   const inCfdFamille = (eb: ExpressionBuilder<DB, "familleMetier">) => {
     if (!cfdFamille) return sql<true>`true`;
-    return eb.or([
-      eb("familleMetier.cfd", "in", cfdFamille),
-      eb("familleMetier.cfdFamille", "in", cfdFamille),
-    ]);
+    return eb.or([eb("familleMetier.cfd", "in", cfdFamille), eb("familleMetier.cfdFamille", "in", cfdFamille)]);
   };
 
   const inCfd = (eb: ExpressionBuilder<DB, "formationView">) => {
@@ -109,9 +84,7 @@ export const getFiltersQuery = async ({
     return eb("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
   };
 
-  const inCodeDispositif = (
-    eb: ExpressionBuilder<DB, "formationEtablissement">
-  ) => {
+  const inCodeDispositif = (eb: ExpressionBuilder<DB, "formationEtablissement">) => {
     if (!codeDispositif) return sql<true>`true`;
     return eb("formationEtablissement.codeDispositif", "in", codeDispositif);
   };
@@ -133,124 +106,80 @@ export const getFiltersQuery = async ({
     .execute();
 
   const academieFilters = await base
-    .select([
-      "academie.libelleAcademie as label",
-      "academie.codeAcademie as value",
-    ])
+    .select(["academie.libelleAcademie as label", "academie.codeAcademie as value"])
     .where("academie.codeAcademie", "is not", null)
     .where(isInPerimetreIJAcademie)
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb)]),
-        codeAcademie
-          ? eb("academie.codeAcademie", "in", codeAcademie)
-          : sql<boolean>`false`,
+        codeAcademie ? eb("academie.codeAcademie", "in", codeAcademie) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
   const departementFilters = await base
-    .select([
-      "departement.libelleDepartement as label",
-      "departement.codeDepartement as value",
-    ])
+    .select(["departement.libelleDepartement as label", "departement.codeDepartement as value"])
     .where("departement.codeDepartement", "is not", null)
     .where(isInPerimetreIJDepartement)
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb), inCodeAcademie(eb)]),
-        codeDepartement
-          ? eb("departement.codeDepartement", "in", codeDepartement)
-          : sql<boolean>`false`,
+        codeDepartement ? eb("departement.codeDepartement", "in", codeDepartement) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
   const communeFilters = await base
-    .select([
-      "etablissement.commune as label",
-      "etablissement.commune as value",
-    ])
+    .select(["etablissement.commune as label", "etablissement.commune as value"])
     .where("etablissement.commune", "is not", null)
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCodeDepartement(eb)]),
-        commune
-          ? eb("etablissement.commune", "in", commune)
-          : sql<boolean>`false`,
+        commune ? eb("etablissement.commune", "in", commune) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
   const etablissementFilters = await base
-    .select([
-      "etablissement.libelleEtablissement as label",
-      "etablissement.uai as value",
-    ])
+    .select(["etablissement.libelleEtablissement as label", "etablissement.uai as value"])
     .where("etablissement.uai", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([
-          inCodeRegion(eb),
-          inCodeAcademie(eb),
-          inCodeDepartement(eb),
-          inCommune(eb),
-          inSecteur(eb),
-        ]),
+        eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCodeDepartement(eb), inCommune(eb), inSecteur(eb)]),
         uai ? eb("etablissement.uai", "in", uai) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
   const diplomeFilters = await base
-    .select([
-      "niveauDiplome.libelleNiveauDiplome as label",
-      "niveauDiplome.codeNiveauDiplome as value",
-    ])
+    .select(["niveauDiplome.libelleNiveauDiplome as label", "niveauDiplome.codeNiveauDiplome as value"])
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
     .where((eb) => {
       return eb.or([
         eb.and([inCfdFamille(eb), inCfd(eb), inCodeDispositif(eb)]),
-        codeNiveauDiplome
-          ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome)
-          : sql<boolean>`false`,
+        codeNiveauDiplome ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
   const dispositifFilters = await base
-    .select([
-      "dispositif.libelleDispositif as label",
-      "dispositif.codeDispositif as value",
-    ])
+    .select(["dispositif.libelleDispositif as label", "dispositif.codeDispositif as value"])
     .where("dispositif.codeDispositif", "is not", null)
     .where((eb) => {
       return eb.or([
         eb.and([inCfdFamille(eb), inCfd(eb), inCodeDiplome(eb)]),
-        codeNiveauDiplome
-          ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome)
-          : sql<boolean>`false`,
+        codeNiveauDiplome ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
   const familleFilters = await base
-    .select([
-      "familleMetier.libelleFamille as label",
-      "familleMetier.cfdFamille as value",
-    ])
+    .select(["familleMetier.libelleFamille as label", "familleMetier.cfdFamille as value"])
     .where("familleMetier.cfdFamille", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([
-          inCfd(eb),
-          inCodeDiplome(eb),
-          inCodeDispositif(eb),
-          inDomaine(eb),
-        ]),
-        cfdFamille
-          ? eb("familleMetier.cfdFamille", "in", cfdFamille)
-          : sql<boolean>`false`,
+        eb.and([inCfd(eb), inCodeDiplome(eb), inCodeDispositif(eb), inDomaine(eb)]),
+        cfdFamille ? eb("familleMetier.cfdFamille", "in", cfdFamille) : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -270,12 +199,7 @@ export const getFiltersQuery = async ({
     .where("formationView.cfd", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([
-          inCfdFamille(eb),
-          inCodeDiplome(eb),
-          inCodeDispositif(eb),
-          inDomaine(eb),
-        ]),
+        eb.and([inCfdFamille(eb), inCodeDiplome(eb), inCodeDispositif(eb), inDomaine(eb)]),
         cfd ? eb("formationView.cfd", "in", cfd) : sql<boolean>`false`,
       ]);
     })

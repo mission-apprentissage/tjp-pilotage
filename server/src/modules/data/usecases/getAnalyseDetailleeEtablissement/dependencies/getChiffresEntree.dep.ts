@@ -1,19 +1,20 @@
 import { expressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 
-import { DB } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { getRentreeScolaire } from "../../../services/getRentreeScolaire";
-import { capaciteAnnee } from "../../../utils/capaciteAnnee";
-import { effectifAnnee } from "../../../utils/effectifAnnee";
-import { premiersVoeuxAnnee } from "../../../utils/premiersVoeuxAnnee";
+import type { DB } from "@/db/db";
+import { getRentreeScolaire } from "@/modules/data/services/getRentreeScolaire";
+import { capaciteAnnee } from "@/modules/data/utils/capaciteAnnee";
+import { effectifAnnee } from "@/modules/data/utils/effectifAnnee";
+import { premiersVoeuxAnnee } from "@/modules/data/utils/premiersVoeuxAnnee";
 import {
   selectTauxPression,
   withTauxPressionDep,
   withTauxPressionNat,
   withTauxPressionReg,
-} from "../../../utils/tauxPression";
-import { selectTauxRemplissage } from "../../../utils/tauxRemplissage";
+} from "@/modules/data/utils/tauxPression";
+import { selectTauxRemplissage } from "@/modules/data/utils/tauxRemplissage";
+import { cleanNull } from "@/utils/noNull";
+
 import { getBase } from "./base.dep";
 export const getChiffresEntree = async ({
   uai,
@@ -28,11 +29,7 @@ export const getChiffresEntree = async ({
 
   return getBase({ uai })
     .innerJoin("indicateurEntree as ie", (join) =>
-      join.onRef(
-        "ie.formationEtablissementId",
-        "=",
-        "formationEtablissement.id"
-      )
+      join.onRef("ie.formationEtablissementId", "=", "formationEtablissement.id")
     )
     .where("ie.rentreeScolaire", "in", [
       rentreeScolaire,
@@ -46,16 +43,12 @@ export const getChiffresEntree = async ({
         COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
-      eb.fn
-        .coalesce("ie.rentreeScolaire", sql<string>`${rentreeScolaire}`)
-        .as("rentreeScolaire"),
+      eb.fn.coalesce("ie.rentreeScolaire", sql<string>`${rentreeScolaire}`).as("rentreeScolaire"),
       "voie",
       "dataEtablissement.uai",
       "dataFormation.cfd",
       "formationEtablissement.codeDispositif",
-      sql<number>`EXTRACT('year' FROM ${eb.ref(
-        "dataFormation.dateOuverture"
-      )})`.as("dateOuverture"),
+      sql<number>`EXTRACT('year' FROM ${eb.ref("dataFormation.dateOuverture")})`.as("dateOuverture"),
       sql<string[]>`COALESCE(${eb.ref("ie.effectifs")}, '[]')`.as("effectifs"),
       premiersVoeuxAnnee({ alias: "ie" }).as("premiersVoeux"),
       capaciteAnnee({ alias: "ie" }).as("capacite"),
@@ -91,12 +84,7 @@ export const getChiffresEntree = async ({
     ])
     .distinct()
     .$call((q) => {
-      if (codeNiveauDiplome?.length)
-        return q.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
+      if (codeNiveauDiplome?.length) return q.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return q;
     })
     .groupBy([

@@ -1,5 +1,5 @@
-import { kdb } from "../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const deleteRawData = async ({ type }: { type: string }) => {
-  return await kdb.deleteFrom("rawData").where("type", "=", type).execute();
+  return await getKbdClient().deleteFrom("rawData").where("type", "=", type).execute();
 };

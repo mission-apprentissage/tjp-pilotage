@@ -1,18 +1,20 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
 import { correctionValidators } from "shared/validators/correctionValidators";
-import { z } from "zod";
+import type { z } from "zod";
 
-import { logger } from "../../../../logger";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../../core/model/User";
-import { getCurrentCampagneQuery } from "../../../demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
-import { findOneDemande } from "../../../demandes/repositories/findOneDemande.query";
-import { submitDemandeSchema } from "../../../demandes/usecases/submitDemande/submitDemande.schema";
+import type { RequestUser } from "@/modules/core/model/User";
+import { getCurrentCampagneQuery } from "@/modules/demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
+import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+import type { submitDemandeSchema } from "@/modules/demandes/usecases/submitDemande/submitDemande.schema";
+import logger from "@/services/logger";
+import { cleanNull } from "@/utils/noNull";
+
 import { createCorrectionQuery } from "./deps/createCorrection.query";
 import { getCorrectionByIntentionNumeroQuery } from "./deps/getCorrectionByIntentionNumero.query";
-import { submitCorrectionSchema } from "./submitCorrection.schema";
+import type { submitCorrectionSchema } from "./submitCorrection.schema";
 
 type Correction = z.infer<typeof submitCorrectionSchema.body>["correction"];
 type Demande = z.infer<typeof submitDemandeSchema.body>["demande"];
@@ -35,13 +37,7 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
     getCorrectionByIntentionNumeroQuery,
   },
   (deps) =>
-    async ({
-      correction,
-      user,
-    }: {
-      correction: Correction;
-      user: Pick<RequestUser, "id" | "codeRegion" | "role">;
-    }) => {
+    async ({ correction, user }: { correction: Correction; user: Pick<RequestUser, "id" | "codeRegion" | "role"> }) => {
       const [demande, campagne, correctionExistante] = await Promise.all([
         deps.findOneDemande(correction.intentionNumero),
         deps.getCurrentCampagneQuery(),
@@ -49,23 +45,18 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
       ]);
 
       if (!campagne) {
-        throw Boom.badData(
-          "Aucune campagne en cours dans laquelle importer la demande",
-          {
-            errors: {
-              aucune_campagne_en_cours:
-                "Aucune campagne en cours dans laquelle importer la demande.",
-            },
-          }
-        );
+        throw Boom.badData("Aucune campagne en cours dans laquelle importer la demande", {
+          errors: {
+            aucune_campagne_en_cours: "Aucune campagne en cours dans laquelle importer la demande.",
+          },
+        });
       }
 
       if (!demande) {
         throw Boom.badRequest("Aucune demande correspondant au numéro fourni", {
           errors: {
             numero: correction.intentionNumero,
-            aucune_demande_correspondante:
-              "Aucune demande correspondant au numéro fourni.",
+            aucune_demande_correspondante: "Aucune demande correspondant au numéro fourni.",
           },
         });
       }
@@ -86,10 +77,7 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
 
       if (!isAllowed) throw Boom.forbidden();
 
-      const errors = validateCorrection(
-        cleanNull(correction),
-        cleanNull(demande) as Demande
-      );
+      const errors = validateCorrection(cleanNull(correction), cleanNull(demande) as Demande);
       if (errors) {
         logger.info("Correction incorrecte", {
           errors,

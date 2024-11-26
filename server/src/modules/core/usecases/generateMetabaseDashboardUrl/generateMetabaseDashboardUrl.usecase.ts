@@ -1,8 +1,9 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 
-import { config } from "../../../../../config/config";
-import { getDneClient } from "../../services/dneClient/dneClient";
+import config from "@/config";
+import { getDneClient } from "@/modules/core/services/dneClient/dneClient";
 
 export const [getMetabaseDashboardUrl, getMetabaseDashboardUrlFactory] = inject(
   {
@@ -10,15 +11,8 @@ export const [getMetabaseDashboardUrl, getMetabaseDashboardUrlFactory] = inject(
     signJwt: jwt.sign,
   },
   (deps) =>
-    async ({
-      dashboard,
-      filters,
-    }: {
-      dashboard: number;
-      filters: { [key: string]: string | null };
-    }) => {
-      const METABASE_SITE_URL =
-        "https://orion.inserjeunes.beta.gouv.fr/metabase";
+    async ({ dashboard, filters }: { dashboard: number; filters: { [key: string]: string | null } }) => {
+      const METABASE_SITE_URL = "https://orion.inserjeunes.beta.gouv.fr/metabase";
       const METABASE_SECRET_KEY = config.metabase.token;
 
       const payload = {

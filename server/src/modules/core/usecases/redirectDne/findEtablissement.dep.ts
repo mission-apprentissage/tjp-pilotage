@@ -1,7 +1,7 @@
-import { kdb } from "../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
-export const findEtablissement = ({ uais }: { uais: string[] }) =>
-  kdb
+export const findEtablissement = async ({ uais }: { uais: string[] }) =>
+  getKbdClient()
     .selectFrom("dataEtablissement")
     .select(["uai", "codeRegion"])
     .where("uai", "in", uais)

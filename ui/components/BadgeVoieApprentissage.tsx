@@ -1,5 +1,5 @@
 import { Badge } from "@chakra-ui/react";
-import { Voie } from "shared";
+import type { Voie } from "shared";
 
 export const BadgeVoieApprentissage = ({
   voie,

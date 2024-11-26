@@ -1,14 +1,7 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../db/db";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
 
-export const getSimilarCampagne = async ({
-  data,
-}: {
-  data: Insertable<DB["campagne"]>;
-}) =>
-  await kdb
-    .selectFrom("campagne")
-    .selectAll()
-    .where("campagne.annee", "=", data.annee)
-    .executeTakeFirst();
+export const getSimilarCampagne = async ({ data }: { data: Insertable<DB["campagne"]> }) =>
+  await getKbdClient().selectFrom("campagne").selectAll().where("campagne.annee", "=", data.annee).executeTakeFirst();

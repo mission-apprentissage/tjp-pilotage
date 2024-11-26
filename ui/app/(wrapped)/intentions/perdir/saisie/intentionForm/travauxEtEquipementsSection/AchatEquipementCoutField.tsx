@@ -12,7 +12,7 @@ import {
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const AchatEquipementCoutField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -36,13 +36,8 @@ export const AchatEquipementCoutField = chakra(
     if (!visible) return null;
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.achatEquipementCout}
-      >
-        <FormLabel>
-          Quel est le coût estimé de ces achats d'équipement (en euros) ?
-        </FormLabel>
+      <FormControl className={className} isInvalid={!!errors.achatEquipementCout}>
+        <FormLabel>Quel est le coût estimé de ces achats d'équipement (en euros) ?</FormLabel>
         <NumberInput w="sm" onFocus={(e) => e.currentTarget.select()}>
           <NumberInputField
             {...register("achatEquipementCout", {
@@ -57,11 +52,7 @@ export const AchatEquipementCoutField = chakra(
             <NumberDecrementStepper />
           </NumberInputStepper>
         </NumberInput>
-        {errors.achatEquipementCout && (
-          <FormErrorMessage>
-            {errors.achatEquipementCout.message}
-          </FormErrorMessage>
-        )}
+        {errors.achatEquipementCout && <FormErrorMessage>{errors.achatEquipementCout.message}</FormErrorMessage>}
       </FormControl>
     );
   }

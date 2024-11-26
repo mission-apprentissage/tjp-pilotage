@@ -1,17 +1,9 @@
-import {
-  Button,
-  Checkbox,
-  Divider,
-  Flex,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Button, Checkbox, Divider, Flex, Text, useDisclosure } from "@chakra-ui/react";
 
+import type { Filters, FiltersList } from "@/app/(wrapped)/console/formations/types";
 import { DoubleArrowLeft } from "@/components/icons/DoubleArrowLeft";
 import { DoubleArrowRight } from "@/components/icons/DoubleArrowRight";
 import { Multiselect } from "@/components/Multiselect";
-
-import { Filters, FiltersList } from "../types";
 
 export const SideSection = ({
   handleFilters,
@@ -27,13 +19,7 @@ export const SideSection = ({
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
 
   return (
-    <Flex
-      flex={"shrink"}
-      direction={"column"}
-      bgColor={"bluefrance.975"}
-      p={2}
-      gap={5}
-    >
+    <Flex flex={"shrink"} direction={"column"} bgColor={"bluefrance.975"} p={2} gap={5}>
       {isOpen ? (
         <Button
           variant="externalLink"
@@ -60,9 +46,7 @@ export const SideSection = ({
             size="md"
             variant="newInput"
             width="18rem"
-            onChange={(selected) =>
-              handleFilters("codeNiveauDiplome", selected)
-            }
+            onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
             options={filtersList?.diplomes}
             value={searchParams.filters?.codeNiveauDiplome ?? []}
           >
@@ -83,10 +67,7 @@ export const SideSection = ({
               size="lg"
               variant="accessible"
               onChange={(event) => {
-                handleFilters(
-                  "withAnneeCommune",
-                  event.target.checked?.toString() ?? "false"
-                );
+                handleFilters("withAnneeCommune", event.target.checked?.toString() ?? "false");
               }}
               isChecked={searchParams.filters?.withAnneeCommune !== "false"}
               whiteSpace={"nowrap"}

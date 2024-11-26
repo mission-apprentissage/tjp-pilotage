@@ -1,9 +1,7 @@
-import { kdb } from "../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
-export const getCodeRegionFromAcademieQuery = (
-  codeAcademie: string | string[]
-) => {
-  return kdb
+export const getCodeRegionFromAcademieQuery = (codeAcademie: string | string[]) => {
+  return getKbdClient()
     .selectFrom("academie")
     .where((w) => {
       if (Array.isArray(codeAcademie)) {

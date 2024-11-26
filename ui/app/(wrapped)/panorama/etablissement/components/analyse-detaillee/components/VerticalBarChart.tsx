@@ -4,7 +4,7 @@ import { useLayoutEffect, useMemo, useRef } from "react";
 import { CURRENT_IJ_MILLESIME } from "shared";
 import { getMillesime } from "shared/utils/getMillesime";
 
-import { formatMillesime } from "../formatData";
+import { formatMillesime } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 
 export const VerticalBarChart = ({
   title,
@@ -24,12 +24,8 @@ export const VerticalBarChart = ({
   const be850 = useToken("colors", "bluefrance.850");
 
   const colors: Record<string, string> = {
-    [formatMillesime(
-      getMillesime({ millesimeSortie: CURRENT_IJ_MILLESIME, offset: -2 })
-    )]: be850,
-    [formatMillesime(
-      getMillesime({ millesimeSortie: CURRENT_IJ_MILLESIME, offset: -1 })
-    )]: be850a,
+    [formatMillesime(getMillesime({ millesimeSortie: CURRENT_IJ_MILLESIME, offset: -2 }))]: be850,
+    [formatMillesime(getMillesime({ millesimeSortie: CURRENT_IJ_MILLESIME, offset: -1 }))]: be850a,
     [formatMillesime(CURRENT_IJ_MILLESIME)]: bf113,
   };
 

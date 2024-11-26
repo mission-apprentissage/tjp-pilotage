@@ -2,31 +2,20 @@ import { Flex } from "@chakra-ui/react";
 import { hasRole } from "shared";
 import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 
-import { client } from "@/api.client";
-import {
-  getTypeAvis,
-  isChangementStatutAvisDisabled,
-} from "@/app/(wrapped)/intentions/utils/statutUtils";
+import type { client } from "@/api.client";
+import { STICKY_OFFSET } from "@/app/(wrapped)/intentions/perdir/SCROLL_OFFSETS";
+import { getTypeAvis, isChangementStatutAvisDisabled } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { STICKY_OFFSET } from "../../../SCROLL_OFFSETS";
 import { AvisForm } from "./AvisForm";
 import { ChangementStatutForm } from "./ChangementStatutForm";
 
-export const ActionsSection = ({
-  intention,
-}: {
-  intention: (typeof client.infer)["[GET]/intention/:numero"];
-}) => {
+export const ActionsSection = ({ intention }: { intention: (typeof client.infer)["[GET]/intention/:numero"] }) => {
   const { auth } = useAuth();
-  const hasPermissionModificationStatut = usePermission(
-    "intentions-perdir-statut/ecriture"
-  );
+  const hasPermissionModificationStatut = usePermission("intentions-perdir-statut/ecriture");
 
-  const hasPermissionEmissionAvis = usePermission(
-    "intentions-perdir-avis/ecriture"
-  );
+  const hasPermissionEmissionAvis = usePermission("intentions-perdir-avis/ecriture");
 
   /**
    * Les user région ne peuvent pas donner d'avis consultatif
@@ -48,12 +37,8 @@ export const ActionsSection = ({
 
   return (
     <Flex direction={"column"} gap={6} top={STICKY_OFFSET} position={"sticky"}>
-      {hasPermissionEmissionAvis && canSubmitAvis() && (
-        <AvisForm intention={intention} />
-      )}
-      {hasPermissionModificationStatut && (
-        <ChangementStatutForm intention={intention} />
-      )}
+      {hasPermissionEmissionAvis && canSubmitAvis() && <AvisForm intention={intention} />}
+      {hasPermissionModificationStatut && <ChangementStatutForm intention={intention} />}
     </Flex>
   );
 };

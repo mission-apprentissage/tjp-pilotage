@@ -16,13 +16,9 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { passwordRegex } from "shared/utils/passwordRegex";
 
-import { client } from "../../../../api.client";
+import { client } from "@/api.client";
 
-export const ActivateAccountForm = ({
-  activationToken,
-}: {
-  activationToken: string;
-}) => {
+export const ActivateAccountForm = ({ activationToken }: { activationToken: string }) => {
   const {
     register,
     handleSubmit,
@@ -40,9 +36,7 @@ export const ActivateAccountForm = ({
     isLoading,
   } = useMutation({
     mutationFn: handleSubmit(async (values) => {
-      await client
-        .ref("[POST]/auth/activate")
-        .query({ body: { ...values, activationToken } });
+      await client.ref("[POST]/auth/activate").query({ body: { ...values, activationToken } });
       router.replace("/auth/activer-compte/confirmation");
     }),
   });
@@ -53,9 +47,7 @@ export const ActivateAccountForm = ({
         <Heading fontWeight="light" mb="6" textAlign="center" fontSize="2xl">
           Activation du compte
         </Heading>
-        <Text mb="6">
-          Pour activer votre compte, veuillez choisir un mot de passe.
-        </Text>
+        <Text mb="6">Pour activer votre compte, veuillez choisir un mot de passe.</Text>
         <FormControl mb="4" isInvalid={!!errors.password}>
           <FormLabel>Mot de passe</FormLabel>
           <Input
@@ -65,13 +57,11 @@ export const ActivateAccountForm = ({
               pattern: {
                 value: new RegExp(passwordRegex),
                 message:
-                  "Le mot de passe doit contenir au moins 8 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)",
+                  "Le mot de passe doit contenir entre 8 et 15 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)",
               },
             })}
           />
-          {!!errors.password && (
-            <FormErrorMessage>{errors.password.message}</FormErrorMessage>
-          )}
+          {!!errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
         </FormControl>
         <FormControl isInvalid={!!errors.repeatPassword}>
           <FormLabel>Confirmer le mot de passe</FormLabel>
@@ -86,9 +76,7 @@ export const ActivateAccountForm = ({
               },
             })}
           />
-          {!!errors.repeatPassword && (
-            <FormErrorMessage>{errors.repeatPassword.message}</FormErrorMessage>
-          )}
+          {!!errors.repeatPassword && <FormErrorMessage>{errors.repeatPassword.message}</FormErrorMessage>}
         </FormControl>
         {isError && (
           <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
@@ -96,13 +84,7 @@ export const ActivateAccountForm = ({
           </Text>
         )}
         <Flex>
-          <Button
-            isLoading={isLoading}
-            type="submit"
-            mt="4"
-            ml="auto"
-            variant="primary"
-          >
+          <Button isLoading={isLoading} type="submit" mt="4" ml="auto" variant="primary">
             Envoyer
           </Button>
         </Flex>

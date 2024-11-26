@@ -1,9 +1,6 @@
 import { AvisStatutZodType } from "shared/enum/avisStatutEnum";
 import { AvisTypeZodType } from "shared/enum/avisTypeEnum";
-import {
-  DemandeStatutEnum,
-  DemandeStatutZodType,
-} from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum, DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 const UserSchema = z.object({
@@ -137,9 +134,7 @@ const IntentionSchema = z.object({
       intentionNumero: z.string(),
       createdBy: z.string(),
       userRole: z.string().optional(),
-      statutPrecedent: DemandeStatutZodType.exclude([
-        DemandeStatutEnum["supprimée"],
-      ]).optional(),
+      statutPrecedent: DemandeStatutZodType.exclude([DemandeStatutEnum["supprimée"]]).optional(),
       statut: DemandeStatutZodType.exclude([DemandeStatutEnum["supprimée"]]),
       updatedAt: z.string(),
       userFullName: z.string(),

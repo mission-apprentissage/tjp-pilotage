@@ -1,23 +1,17 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { kdb } from "../../../../../db/db";
-import { DB } from "../../../../../db/schema";
+import { getKbdClient } from "@/db/db";
+import type { DB } from "@/db/schema";
 
 export const insertPositionFormationRegionaleQuadrant = async (
   positionQuadrant: Insertable<DB["positionFormationRegionaleQuadrant"]>
 ) => {
-  return kdb
+  return getKbdClient()
     .insertInto("positionFormationRegionaleQuadrant")
     .values(positionQuadrant)
     .onConflict((cb) =>
       cb
-        .columns([
-          "codeRegion",
-          "cfd",
-          "millesimeSortie",
-          "codeNiveauDiplome",
-          "codeDispositif",
-        ])
+        .columns(["codeRegion", "cfd", "millesimeSortie", "codeNiveauDiplome", "codeDispositif"])
         .doUpdateSet(positionQuadrant)
     )
     .execute();

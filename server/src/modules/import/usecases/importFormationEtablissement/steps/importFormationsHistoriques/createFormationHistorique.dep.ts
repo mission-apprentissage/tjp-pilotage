@@ -1,7 +1,8 @@
-import { Insertable } from "kysely";
-import _ from "lodash";
+import type { Insertable } from "kysely";
+import { omit } from "lodash-es";
 
-import { DB, kdb } from "../../../../../../db/db";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
 
 export const createFormationHistorique = async (
   ancienneFormation: Insertable<DB["formation"]> & {
@@ -14,25 +15,21 @@ export const createFormationHistorique = async (
     ancienCFD: ancienneFormation.codeFormationDiplome,
     voie: ancienneFormation.voie,
   };
-  kdb.transaction().execute(async (t) => {
-    await t
-      .insertInto("formation")
-      .values(_.omit(ancienneFormation, ["nouveauCFD", "voie"]))
-      .onConflict((oc) =>
-        oc
-          .column("codeFormationDiplome")
-          .doUpdateSet(_.omit(ancienneFormation, ["nouveauCFD", "voie"]))
-      )
-      .execute();
+  getKbdClient()
+    .transaction()
+    .execute(async (t) => {
+      await t
+        .insertInto("formation")
+        .values(omit(ancienneFormation, ["nouveauCFD", "voie"]))
+        .onConflict((oc) =>
+          oc.column("codeFormationDiplome").doUpdateSet(omit(ancienneFormation, ["nouveauCFD", "voie"]))
+        )
+        .execute();
 
-    await t
-      .insertInto("formationHistorique")
-      .values(formationHistorique)
-      .onConflict((oc) =>
-        oc
-          .columns(["ancienCFD", "cfd", "voie"])
-          .doUpdateSet(formationHistorique)
-      )
-      .execute();
-  });
+      await t
+        .insertInto("formationHistorique")
+        .values(formationHistorique)
+        .onConflict((oc) => oc.columns(["ancienCFD", "cfd", "voie"]).doUpdateSet(formationHistorique))
+        .execute();
+    });
 };

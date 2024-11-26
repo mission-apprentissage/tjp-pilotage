@@ -1,4 +1,4 @@
-import { kdb } from "../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const findTauxIJRegionaux = async ({
   millesimeSortie,
@@ -9,7 +9,7 @@ export const findTauxIJRegionaux = async ({
   codeNiveauDiplome: string;
   codeRegion: string;
 }) => {
-  return kdb
+  return getKbdClient()
     .selectFrom("tauxIJNiveauDiplomeRegion")
     .select(["tauxInsertion6mois", "tauxPoursuite"])
     .where((wb) =>

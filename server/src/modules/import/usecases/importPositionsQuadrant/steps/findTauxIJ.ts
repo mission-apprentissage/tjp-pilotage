@@ -3,12 +3,12 @@
 import { sql } from "kysely";
 import { VoieEnum } from "shared";
 
-import { kdb } from "../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 import {
   selectDenominateurTauxDevenir,
   selectEffectifIJ,
   selectSortants,
-} from "../utils";
+} from "@/modules/import/usecases/importPositionsQuadrant/utils";
 
 export const findTauxIJ = async ({
   millesimeSortie,
@@ -19,29 +19,17 @@ export const findTauxIJ = async ({
   codeRegion?: string | undefined;
   codeNiveauDiplome?: string | undefined;
 }) =>
-  await kdb
+  await getKbdClient()
     .selectFrom("formationView")
     .leftJoin("indicateurRegionSortie", (join) =>
       join.on((eb) =>
         eb.and([
-          eb(
-            eb.ref("indicateurRegionSortie.cfd"),
-            "=",
-            eb.ref("formationView.cfd")
-          ),
-          eb(
-            eb.ref("indicateurRegionSortie.voie"),
-            "=",
-            eb.ref("formationView.voie")
-          ),
+          eb(eb.ref("indicateurRegionSortie.cfd"), "=", eb.ref("formationView.cfd")),
+          eb(eb.ref("indicateurRegionSortie.voie"), "=", eb.ref("formationView.voie")),
         ])
       )
     )
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "formationView.codeNiveauDiplome"
-    )
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .select((sb) => [
       sb
         .case()
@@ -65,18 +53,10 @@ export const findTauxIJ = async ({
         .as("tauxPoursuite"),
       sb
         .case()
-        .when(
-          sql<number>`${sb.fn.sum<number>(
-            selectDenominateurTauxDevenir(sb)
-          )}::FLOAT`,
-          ">=",
-          20
-        )
+        .when(sql<number>`${sb.fn.sum<number>(selectDenominateurTauxDevenir(sb))}::FLOAT`, ">=", 20)
         .then(
           sql<number>`100 * ${sb.fn.sum<number>(
-            sql<number>`${sb.ref("nbPoursuiteEtudes")} + ${sb.ref(
-              "nbInsertion6mois"
-            )}::FLOAT`
+            sql<number>`${sb.ref("nbPoursuiteEtudes")} + ${sb.ref("nbInsertion6mois")}::FLOAT`
           )} / ${sb.fn.sum<number>(selectDenominateurTauxDevenir(sb))}::FLOAT`
         )
         .end()
@@ -88,26 +68,16 @@ export const findTauxIJ = async ({
       "formationView.codeNiveauDiplome",
       "formationView.voie",
     ])
-    .where((eb) =>
-      eb(eb.ref("formationView.voie"), "=", eb.val(VoieEnum.scolaire))
-    )
+    .where((eb) => eb(eb.ref("formationView.voie"), "=", eb.val(VoieEnum.scolaire)))
     .$call((q) => {
       if (millesimeSortie) {
-        return q.where(
-          "indicateurRegionSortie.millesimeSortie",
-          "=",
-          millesimeSortie
-        );
+        return q.where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie);
       }
       return q;
     })
     .$call((q) => {
       if (codeNiveauDiplome) {
-        return q.where(
-          "niveauDiplome.codeNiveauDiplome",
-          "=",
-          codeNiveauDiplome
-        );
+        return q.where("niveauDiplome.codeNiveauDiplome", "=", codeNiveauDiplome);
       }
       return q;
     })

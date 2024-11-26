@@ -1,17 +1,6 @@
 import { DownloadIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  Divider,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuButtonProps,
-  MenuList,
-  Radio,
-  RadioGroup,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import type { MenuButtonProps } from "@chakra-ui/react";
+import { Button, Divider, Flex, Menu, MenuButton, MenuList, Radio, RadioGroup, Spinner, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
 type AdvancedExportMenuButtonProps = MenuButtonProps & {
@@ -69,16 +58,8 @@ export const AdvancedExportMenuButton = ({
 
   return (
     <Menu gutter={0}>
-      <MenuButton
-        as={Button}
-        variant={variant}
-        size="md"
-        leftIcon={<DownloadIcon />}
-        {...rest}
-      >
-        <Flex minW={20}>
-          {isQueryLoading ? <Spinner mr="2" size="sm" /> : "Exporter"}
-        </Flex>
+      <MenuButton as={Button} variant={variant} size="md" leftIcon={<DownloadIcon />} {...rest}>
+        <Flex minW={20}>{isQueryLoading ? <Spinner mr="2" size="sm" /> : "Exporter"}</Flex>
       </MenuButton>
       <MenuList zIndex={1000}>
         <Flex direction={"column"} gap={2} px={3} pt={1}>
@@ -111,11 +92,7 @@ export const AdvancedExportMenuButton = ({
           </RadioGroup>
           <Divider />
           <Flex>
-            <Button
-              variant={"primary"}
-              onClick={() => handleExport()}
-              mx={"auto"}
-            >
+            <Button variant={"primary"} onClick={async () => handleExport()} mx={"auto"}>
               Exporter
             </Button>
           </Flex>

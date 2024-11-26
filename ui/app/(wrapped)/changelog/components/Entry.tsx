@@ -1,7 +1,7 @@
 import { Grid, GridItem, HStack, Tag, Text, VStack } from "@chakra-ui/react";
 
-import { themeDefinition } from "../../../../theme/theme";
-import { ChangelogEntry } from "../changelogContext";
+import type { ChangelogEntry } from "@/app/(wrapped)/changelog/changelogContext";
+import { themeDefinition } from "@/theme/theme";
 
 interface EntryProps {
   changelogEntry: ChangelogEntry;
@@ -10,20 +10,7 @@ interface EntryProps {
 // This is to ensure each react list element has a unique ID
 let entry = 0;
 
-const mois = [
-  "Jan.",
-  "Fev.",
-  "Mars",
-  "Avril",
-  "Mai",
-  "Juin",
-  "Juil.",
-  "Aout",
-  "Sept.",
-  "Oct.",
-  "Nov.",
-  "Dec.",
-];
+const mois = ["Jan.", "Fev.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Aout", "Sept.", "Oct.", "Nov.", "Dec."];
 const generateDateString = (str: string) => {
   const date = new Date(str);
   const day = date.getDate();
@@ -58,28 +45,27 @@ export const Entry = ({ changelogEntry }: EntryProps) => {
       <GridItem>
         <VStack flexGrow={1} alignItems="start">
           <HStack fontSize="14px" fontWeight="400">
-            {changelogEntry.types.map((type, i) => (
-              <Tag
-                key={`${entry}-${type}-${i}`}
-                backgroundColor={
-                  type.label === "Données"
-                    ? themeDefinition.colors.orange.draft
-                    : themeDefinition.colors.info[950]
-                }
-                color={
-                  type.label === "Données"
-                    ? themeDefinition.colors.yellowTournesol[407]
-                    : themeDefinition.colors.info[525]
-                }
-              >
-                {type.label.toUpperCase()}
-              </Tag>
-            ))}
+            {changelogEntry.types.map(
+              // @ts-expect-error TODO
+              (type, i) => (
+                <Tag
+                  key={`${entry}-${type}-${i}`}
+                  backgroundColor={
+                    type.label === "Données" ? themeDefinition.colors.orange.draft : themeDefinition.colors.info[950]
+                  }
+                  color={
+                    type.label === "Données"
+                      ? themeDefinition.colors.yellowTournesol[407]
+                      : themeDefinition.colors.info[525]
+                  }
+                >
+                  {type.label.toUpperCase()}
+                </Tag>
+              )
+            )}
             <Text color={themeDefinition.colors.grey["425_hover"]}>
-              {changelogEntry.date.type === "string" &&
-                changelogEntry.date.value}
-              {changelogEntry.date.type === "date" &&
-                generateDateString(changelogEntry.date.value)}
+              {changelogEntry.date.type === "string" && changelogEntry.date.value}
+              {changelogEntry.date.type === "date" && generateDateString(changelogEntry.date.value)}
             </Text>
           </HStack>
           <Text fontSize="16px" fontWeight={400}>

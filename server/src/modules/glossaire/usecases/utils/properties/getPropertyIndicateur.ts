@@ -1,11 +1,10 @@
-import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
-import { GlossaireEntryIndicator } from "../../getGlossaireEntry/getGlossaireEntry.schema";
+import type { GlossaireEntryIndicator } from "@/modules/glossaire/usecases/getGlossaireEntry/getGlossaireEntry.schema";
+
 import { PROPERTIES } from "./properties";
 
-export const getPropertyIndicateur = (
-  page: PageObjectResponse
-): GlossaireEntryIndicator | undefined => {
+export const getPropertyIndicateur = (page: PageObjectResponse): GlossaireEntryIndicator | undefined => {
   const property = page.properties[PROPERTIES.INDICATEUR];
 
   if (!property || property?.type !== "select") {

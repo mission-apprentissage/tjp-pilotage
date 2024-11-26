@@ -1,44 +1,15 @@
-const mainConfig = {
-  branches: ["main", { name: "develop", channel: "beta", prerelease: "beta" }],
-  repositoryUrl: "https://github.com/mission-apprentissage/tjp-pilotage.git",
+module.exports = {
+  branches: ["next", { name: "hotfix", channel: "hotfix", prerelease: "hotfix" }],
   plugins: [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     [
-      "@semantic-release/changelog",
-      {
-        changelogFile: "CHANGELOG.md",
-      },
-    ],
-    "@semantic-release/npm",
-    [
       "@semantic-release/exec",
       {
-        prepareCmd: "./git-hooks/prepare-release.sh ${nextRelease.version}",
-      },
-    ],
-    [
-      "@semantic-release/git",
-      {
-        assets: [
-          "ui/package.json",
-          "server/package.json",
-          "ui/CHANGELOG.md",
-          "CHANGELOG.md",
-          "package.json",
-        ],
-        message:
-          // eslint-disable-next-line no-template-curly-in-string
-          "chore(release): bump ${nextRelease.version}",
+        prepareCmd: `.bin/product release:app \${nextRelease.version} push`,
       },
     ],
     "@semantic-release/github",
-    [
-      "@semantic-release/exec",
-      {
-        publishCmd: "git checkout -- package.json",
-      },
-    ],
     [
       "semantic-release-slack-bot",
       {
@@ -49,25 +20,3 @@ const mainConfig = {
     ],
   ],
 };
-
-const { execSync } = require("child_process");
-const { createHash } = require("crypto");
-
-const branch = execSync("git branch --show-current").toString().trimEnd("\n");
-const channel = createHash("md5").update(branch).digest("hex");
-
-const localConfig = {
-  branches: [
-    "main",
-    { name: "develop", channel: "beta", prerelease: "beta" },
-    {
-      name: branch,
-      channel,
-      prerelease: channel,
-    },
-  ],
-  repositoryUrl: "https://github.com/mission-apprentissage/tjp-pilotage.git",
-  plugins: ["@semantic-release/commit-analyzer"],
-};
-
-module.exports = process.env.LOCAL_RELEASE ? localConfig : mainConfig;

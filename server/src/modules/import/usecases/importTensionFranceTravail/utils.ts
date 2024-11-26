@@ -1,11 +1,11 @@
 import fs from "fs";
 import { sql } from "kysely";
 
-import { kdb } from "../../../../db/db";
-import { FranceTravailStatsPerspectiveRecrutementValeurParPeriode } from "../../services/franceTravail/franceTravailResponse";
+import { getKbdClient } from "@/db/db";
+import type { FranceTravailStatsPerspectiveRecrutementValeurParPeriode } from "@/modules/import/services/franceTravail/franceTravailResponse";
 
-export const findAllRomeCodes = (filter?: string) =>
-  kdb
+export const findAllRomeCodes = async (filter?: string) =>
+  getKbdClient()
     .selectFrom("rome")
     .select("codeRome")
     .$call((q) => {
@@ -19,12 +19,10 @@ export const findAllRomeCodes = (filter?: string) =>
     .distinct()
     .execute();
 
-export const findAllRegions = (filter?: string) =>
-  kdb
+export const findAllRegions = async (filter?: string) =>
+  getKbdClient()
     .selectFrom("region")
-    .where((eb) =>
-      eb.and([eb("region.codeRegion", "not in", ["00", "99", "06"])])
-    )
+    .where((eb) => eb.and([eb("region.codeRegion", "not in", ["00", "99", "06"])]))
     .$call((q) => {
       if (!filter) {
         return q;
@@ -37,8 +35,8 @@ export const findAllRegions = (filter?: string) =>
     .distinct()
     .execute();
 
-export const findAllDepartements = (filter?: string) =>
-  kdb
+export const findAllDepartements = async (filter?: string) =>
+  getKbdClient()
     .selectFrom("departement")
     .where((eb) => eb.and([eb("departement.codeRegion", "not in", ["00"])]))
     .$call((q) => {
@@ -51,9 +49,7 @@ export const findAllDepartements = (filter?: string) =>
     .select(({ ref }) => [
       sql<string>`CASE WHEN LEFT(${ref(
         "codeDepartement"
-      )}, 1) = '0' THEN RIGHT(${ref("codeDepartement")}, 2) ELSE ${ref(
-        "codeDepartement"
-      )} END`.as("codeDepartement"),
+      )}, 1) = '0' THEN RIGHT(${ref("codeDepartement")}, 2) ELSE ${ref("codeDepartement")} END`.as("codeDepartement"),
     ])
     .orderBy("codeDepartement", "asc")
     .distinct()

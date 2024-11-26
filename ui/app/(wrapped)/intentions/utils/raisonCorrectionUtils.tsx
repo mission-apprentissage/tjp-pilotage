@@ -1,8 +1,7 @@
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 export type RaisonCorrectionCampagne = keyof typeof RAISONS_CORRECTION_LABELS;
-export type RaisonCorrectionLabel =
-  keyof (typeof RAISONS_CORRECTION_LABELS)[RaisonCorrectionCampagne];
+export type RaisonCorrectionLabel = keyof (typeof RAISONS_CORRECTION_LABELS)[RaisonCorrectionCampagne];
 
 export const RAISONS_CORRECTION_LABELS = {
   "2023": {

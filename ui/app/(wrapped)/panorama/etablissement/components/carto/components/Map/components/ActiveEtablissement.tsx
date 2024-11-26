@@ -1,37 +1,31 @@
 import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
-import {
-  Layer,
-  MapGeoJSONFeature,
-  MapMouseEvent,
-  Source,
-  SymbolLayer,
-  useMap,
-} from "react-map-gl/maplibre";
+import type { MapGeoJSONFeature, MapMouseEvent, SymbolLayer } from "react-map-gl/maplibre";
+import { Layer, Source, useMap } from "react-map-gl/maplibre";
 
-import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
+import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
+
 import { MAP_IMAGES } from "./CustomControls";
 
 export const ActiveEtablissement = () => {
   const { current: map } = useMap();
-  const { etablissementMap, hoverUai, etablissementsProches, setActiveUai } =
-    useEtablissementMapContext();
+  const { etablissementMap, hoverUai, etablissementsProches, setActiveUai } = useEtablissementMapContext();
   const trackEvent = usePlausible();
 
   const etablissement = etablissementMap?.etablissement;
   const activeEtablissement =
     etablissement?.uai === hoverUai
       ? etablissement
-      : etablissementsProches.find((e) => e.uai === hoverUai);
+      : etablissementsProches.find(
+          // @ts-expect-error TODO
+          (e) => e.uai === hoverUai
+        );
 
   const etablissementPoint = {
     type: "Feature",
     geometry: {
       type: "Point",
-      coordinates: [
-        activeEtablissement?.longitude,
-        activeEtablissement?.latitude,
-      ],
+      coordinates: [activeEtablissement?.longitude, activeEtablissement?.latitude],
     },
     properties: {
       uai: activeEtablissement?.uai,
@@ -67,11 +61,7 @@ export const ActiveEtablissement = () => {
     id: "single-scolaire-apprentissage-activeEtablissement-inverted",
     type: "symbol",
     source: "activeEtablissement",
-    filter: [
-      "all",
-      ["in", "voies", "apprentissage,scolaire"],
-      ["==", "uai", hoverUai],
-    ],
+    filter: ["all", ["in", "voies", "apprentissage,scolaire"], ["==", "uai", hoverUai]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE_INVERTED.name,
       "icon-overlap": "always",
@@ -127,11 +117,7 @@ export const ActiveEtablissement = () => {
 
   return (
     <>
-      <Source
-        id="activeEtablissement"
-        type="geojson"
-        data={etablissementPoint}
-      />
+      <Source id="activeEtablissement" type="geojson" data={etablissementPoint} />
       {/**
        * We have to set a key to each layers to force re-rendere when the hoverUai changes
        */}

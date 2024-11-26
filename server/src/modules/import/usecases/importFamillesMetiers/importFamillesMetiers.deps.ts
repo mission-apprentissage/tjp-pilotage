@@ -1,16 +1,11 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../db/db";
-import { NMefLine } from "../../fileTypes/NMef";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import type { NMefLine } from "@/modules/import/fileTypes/NMef";
 
-const findFamillesMetiers = async ({
-  offset = 0,
-  limit,
-}: {
-  offset?: number;
-  limit?: number;
-}) =>
-  kdb
+const findFamillesMetiers = async ({ offset = 0, limit }: { offset?: number; limit?: number }) =>
+  getKbdClient()
     .selectFrom("familleMetier")
     .select(["cfdFamille", "libelleFamille", "codeMinistereTutelle"])
     .distinct()
@@ -21,22 +16,16 @@ const findFamillesMetiers = async ({
     })
     .execute();
 
-const createFamillesMetiers = async (
-  famillesMetier: Insertable<DB["familleMetier"]>
-) =>
-  kdb
+const createFamillesMetiers = async (famillesMetier: Insertable<DB["familleMetier"]>) =>
+  getKbdClient()
     .insertInto("familleMetier")
     .values(famillesMetier)
     .onConflict((oc) => oc.column("cfd").doUpdateSet(famillesMetier))
     .execute();
 
-const findNMef = async ({
-  mefstat,
-}: {
-  mefstat: string;
-}): Promise<NMefLine> => {
+const findNMef = async ({ mefstat }: { mefstat: string }): Promise<NMefLine> => {
   return (
-    await kdb
+    await getKbdClient()
       .selectFrom("rawData")
       .selectAll("rawData")
       .where("type", "=", "nMef")

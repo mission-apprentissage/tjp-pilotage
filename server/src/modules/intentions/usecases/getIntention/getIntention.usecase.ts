@@ -1,4 +1,5 @@
-import { Filters, getIntentionQuery } from "./getIntention.query";
+import type { Filters } from "./getIntention.query";
+import { getIntentionQuery } from "./getIntention.query";
 
 const getIntentionFactory =
   (

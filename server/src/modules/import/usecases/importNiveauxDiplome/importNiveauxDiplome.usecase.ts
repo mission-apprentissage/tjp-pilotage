@@ -1,12 +1,9 @@
-import { NNiveauFormationDiplome } from "../../fileTypes/NNiveauFormationDiplome";
-import { streamIt } from "../../utils/streamIt";
+import type { NNiveauFormationDiplome } from "@/modules/import/fileTypes/NNiveauFormationDiplome";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { dependencies } from "./dependencies";
 
-const toNiveauDiplome = ({
-  nNiveauDiplome,
-}: {
-  nNiveauDiplome: NNiveauFormationDiplome;
-}) => {
+const toNiveauDiplome = ({ nNiveauDiplome }: { nNiveauDiplome: NNiveauFormationDiplome }) => {
   return {
     codeNiveauDiplome: nNiveauDiplome.NIVEAU_FORMATION_DIPLOME,
     libelleNiveauDiplome: nNiveauDiplome.LIBELLE_COURT,
@@ -20,7 +17,7 @@ export const importNiveauxDiplomeFactory =
   }) =>
   async () => {
     await streamIt(
-      (count) => findNNiveauDiplomes({ offset: count, limit: 30 }),
+      async (count) => findNNiveauDiplomes({ offset: count, limit: 30 }),
       async (nNiveauDiplome) => {
         const niveauDiplome = toNiveauDiplome({ nNiveauDiplome });
         await createNiveauDiplome(niveauDiplome);

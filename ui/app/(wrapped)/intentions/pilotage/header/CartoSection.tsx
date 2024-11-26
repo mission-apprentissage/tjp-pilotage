@@ -1,27 +1,18 @@
-import {
-  Box,
-  Center,
-  Flex,
-  Highlight,
-  Select,
-  Skeleton,
-  Text,
-  useToken,
-} from "@chakra-ui/react";
+import { Box, Center, Flex, Highlight, Select, Skeleton, Text, useToken } from "@chakra-ui/react";
 import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
-import { CartoGraph } from "@/components/CartoGraph";
-import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
-import { formatPercentageWithoutSign } from "@/utils/formatUtils";
-
-import { ExportMenuButton } from "../../../../../components/ExportMenuButton";
-import { useScopeCode } from "../hooks";
-import {
+import { useScopeCode } from "@/app/(wrapped)/intentions/pilotage/hooks";
+import type {
   FiltersStatsPilotageIntentions,
   FilterTracker,
   StatsPilotageIntentions,
-} from "../types";
+} from "@/app/(wrapped)/intentions/pilotage/types";
+import { CartoGraph } from "@/components/CartoGraph";
+import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatPercentageWithoutSign } from "@/utils/formatUtils";
+
 export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 
 export const CartoSection = ({
@@ -63,12 +54,7 @@ export const CartoSection = ({
       case "tauxTransformation":
         return customPalette;
       case "ratioFermeture":
-        return [
-          customPalette[0],
-          customPalette[1],
-          customPalette[2],
-          customPalette[4],
-        ];
+        return [customPalette[0], customPalette[1], customPalette[2], customPalette[4]];
     }
   };
 
@@ -99,12 +85,17 @@ export const CartoSection = ({
     }
 
     return Object.values(data?.all).map((territoire) => ({
+      // @ts-expect-error TODO
       name: territoire.libelle,
+      // @ts-expect-error TODO
       parentName: territoire.libelleAcademie,
       value:
+        // @ts-expect-error TODO
         territoire.effectif || indicateur != "tauxTransformation"
-          ? formatPercentageWithoutSign(territoire[indicateur], 1)
+          ? // @ts-expect-error TODO
+            formatPercentageWithoutSign(territoire[indicateur], 1)
           : undefined,
+      // @ts-expect-error TODO
       code: territoire.code,
     }));
   }, [data, filters, indicateur]);
@@ -126,10 +117,8 @@ export const CartoSection = ({
       return handleFilters({
         scope: filters.scope,
         codeRegion: filters.scope !== ScopeEnum["région"] ? undefined : code,
-        codeAcademie:
-          filters.scope !== ScopeEnum["académie"] ? undefined : code,
-        codeDepartement:
-          filters.scope !== ScopeEnum["département"] ? undefined : code,
+        codeAcademie: filters.scope !== ScopeEnum["académie"] ? undefined : code,
+        codeDepartement: filters.scope !== ScopeEnum["département"] ? undefined : code,
       });
     },
     [handleFilters, filters, scopeCode]
@@ -137,20 +126,10 @@ export const CartoSection = ({
 
   if (!Object.keys(ScopeEnum).includes(filters.scope))
     return (
-      <Box
-        flex={1}
-        borderRadius={4}
-        border={"1px solid"}
-        borderColor="grey.900"
-        bg="white"
-        p={3}
-      >
+      <Box flex={1} borderRadius={4} border={"1px solid"} borderColor="grey.900" bg="white" p={3}>
         <Center flex={1} flexDirection={"column"} h={"100%"} gap={4}>
           <Text>
-            <Highlight
-              query={filters.scope}
-              styles={{ fontWeight: 700, textDecoration: "underline" }}
-            >
+            <Highlight query={filters.scope} styles={{ fontWeight: 700, textDecoration: "underline" }}>
               {`Granularité "${filters.scope}" non gérée.`}
             </Highlight>
           </Text>
@@ -160,38 +139,23 @@ export const CartoSection = ({
     );
 
   const onExportCsv = async () => {
-    downloadCsv(
-      `visualisation_territoriale_${indicateur}_${filters.scope}`,
-      getGraphData(),
-      {
-        name: "Nom",
-        value: indicateur,
-        code: "Code",
-      }
-    );
+    downloadCsv(`visualisation_territoriale_${indicateur}_${filters.scope}`, getGraphData(), {
+      name: "Nom",
+      value: indicateur,
+      code: "Code",
+    });
   };
 
   const onExportExcel = async () => {
-    downloadExcel(
-      `visualisation_territoriale_${indicateur}_${filters.scope}`,
-      getGraphData(),
-      {
-        name: "Nom",
-        value: indicateur,
-        code: "Code",
-      }
-    );
+    downloadExcel(`visualisation_territoriale_${indicateur}_${filters.scope}`, getGraphData(), {
+      name: "Nom",
+      value: indicateur,
+      code: "Code",
+    });
   };
 
   return (
-    <Box
-      flex={1}
-      borderRadius={4}
-      border={"1px solid"}
-      borderColor="grey.900"
-      bg="white"
-      p={3}
-    >
+    <Box flex={1} borderRadius={4} border={"1px solid"} borderColor="grey.900" bg="white" p={3}>
       {isLoading || !filters.campagne || !filters.rentreeScolaire ? (
         <Skeleton opacity="0.3" height="100%" />
       ) : (
@@ -208,9 +172,7 @@ export const CartoSection = ({
                 bg={"grey.150"}
                 onChange={(e) => handleIndicateurChange(e.target.value)}
                 value={indicateur}
-                borderBottomColor={
-                  typeof indicateur !== "undefined" ? "info.525" : ""
-                }
+                borderBottomColor={typeof indicateur !== "undefined" ? "info.525" : ""}
                 cursor={"pointer"}
               >
                 {indicateurOptions.map((option) => (
@@ -222,11 +184,7 @@ export const CartoSection = ({
             </Flex>
           </Flex>
           <Flex justifyContent="start" zIndex={1} position={"relative"}>
-            <ExportMenuButton
-              onExportCsv={onExportCsv}
-              onExportExcel={onExportExcel}
-              variant="ghost"
-            />
+            <ExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} variant="ghost" />
           </Flex>
           <Box mt={"-60px"}>
             <CartoGraph

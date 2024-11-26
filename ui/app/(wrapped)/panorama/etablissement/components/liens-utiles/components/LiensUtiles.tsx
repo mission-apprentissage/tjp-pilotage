@@ -1,9 +1,9 @@
 import { Box, Divider, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
 
-import { InfoCard } from "../../../../components/InfoCard";
-import { AnalyseDetailleeType } from "../../../context/etablissementContext";
-import { Filters } from "../../analyse-detaillee/types";
+import { InfoCard } from "@/app/(wrapped)/panorama/components/InfoCard";
+import type { Filters } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
+import type { AnalyseDetailleeType } from "@/app/(wrapped)/panorama/etablissement/context/etablissementContext";
 
 const lienDares: Record<string, string> = {
   84: "https://dares.travail-emploi.gouv.fr/publication/auvergne-rhone-alpes-quelles-difficultes-de-recrutement-dici-2030",
@@ -22,19 +22,11 @@ const lienDares: Record<string, string> = {
 };
 
 function formatCodeDepartement(codeDepartement: string): string {
-  return codeDepartement?.startsWith("0")
-    ? codeDepartement.substring(1)
-    : codeDepartement;
+  return codeDepartement?.startsWith("0") ? codeDepartement.substring(1) : codeDepartement;
 }
 
-export const LiensUtiles = ({
-  analyseDetaillee,
-}: {
-  analyseDetaillee: AnalyseDetailleeType;
-}) => {
-  const codeDepartement = formatCodeDepartement(
-    analyseDetaillee.etablissement.codeDepartement
-  );
+export const LiensUtiles = ({ analyseDetaillee }: { analyseDetaillee: AnalyseDetailleeType }) => {
+  const codeDepartement = formatCodeDepartement(analyseDetaillee.etablissement.codeDepartement);
   const codeRegion = analyseDetaillee.etablissement.codeRegion;
 
   const trackEvent = usePlausible();
@@ -52,8 +44,8 @@ export const LiensUtiles = ({
       </Text>
       <Divider width="48px" />
       <Box>
-        Les enjeux de demain pour mieux anticiper les formations insérantes :
-        accédez ici à une multitude d'informations pour enrichir vos analyses.
+        Les enjeux de demain pour mieux anticiper les formations insérantes : accédez ici à une multitude d'informations
+        pour enrichir vos analyses.
       </Box>
       <Box pb={12} mt={2} as="section">
         <SimpleGrid spacing={6} columns={[1, null, 2]}>

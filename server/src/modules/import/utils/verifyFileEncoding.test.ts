@@ -1,4 +1,5 @@
 import path from "path";
+import { describe, expect, it } from "vitest";
 
 import { verifyFileEncoding } from "./verifyFileEncoding";
 
@@ -12,9 +13,7 @@ describe("verifyFileEncoding", () => {
     expect(res).toBe(true);
   });
   it("should detect UTF-8 BOM", async () => {
-    const res = await verifyFileEncoding(
-      path.join(__dirname, UTF8_BOM_FILE_PATH)
-    );
+    const res = await verifyFileEncoding(path.join(__dirname, UTF8_BOM_FILE_PATH));
     expect(res).toBe(true);
   });
   it("should throw if not utf8", async () => {

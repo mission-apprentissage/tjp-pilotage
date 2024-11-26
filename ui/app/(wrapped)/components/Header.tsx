@@ -25,11 +25,7 @@ import { useContext } from "react";
 
 import { client } from "@/api.client";
 import { AuthContext } from "@/app/(wrapped)/auth/authContext";
-import {
-  CodeDepartementFilterContext,
-  CodeRegionFilterContext,
-  UaisFilterContext,
-} from "@/app/layoutClient";
+import { CodeDepartementFilterContext, CodeRegionFilterContext, UaisFilterContext } from "@/app/layoutClient";
 
 import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
@@ -57,30 +53,15 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
       <VStack
         zIndex="docked"
         spacing="0"
-        divider={
-          <Box
-            width="100%"
-            borderBottom="1px solid"
-            borderBottomColor="grey.900"
-          />
-        }
+        divider={<Box width="100%" borderBottom="1px solid" borderBottomColor="grey.900" />}
         align={"start"}
         borderBottom={`1px solid ${greyColor}`}
       >
         <Flex align="center" as={Container} py={2} maxWidth={"container.xl"}>
           <HStack as={Link} spacing={1} align="center" href="/">
             <Flex direction={"row"} gap={6}>
-              <Img
-                height="70px"
-                src="/logo_gouvernement.svg"
-                alt="Logo république Française"
-              />
-              <Img
-                height="60px"
-                src="/logo_orion.svg"
-                alt="Logo Orion"
-                my={"auto"}
-              />
+              <Img height="70px" src="/logo_gouvernement.svg" alt="Logo république Française" />
+              <Img height="60px" src="/logo_orion.svg" alt="Logo Orion" my={"auto"} />
             </Flex>
             <Heading as={"h1"} size={"md"}>
               <Box as="span" display={["none", null, "unset"]}>
@@ -104,13 +85,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
             )}
             {!!auth && (
               <Menu isLazy autoSelect={false} placement="bottom-end">
-                <MenuButton
-                  ml="auto"
-                  as={Button}
-                  fontWeight="light"
-                  color="bluefrance.113"
-                  variant="ghost"
-                >
+                <MenuButton ml="auto" as={Button} fontWeight="light" color="bluefrance.113" variant="ghost">
                   <Box as="span" display={["none", null, "unset"]}>
                     Bienvenue,{" "}
                   </Box>
@@ -130,14 +105,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
         </Flex>
       </VStack>
       {!isMaintenance && (
-        <Box
-          boxShadow="0 2px 3px rgba(0,0,18,0.16)"
-          position="sticky"
-          top={0}
-          left={0}
-          zIndex="docked"
-          backgroundColor="white"
-        >
+        <Box boxShadow="0 2px 3px rgba(0,0,18,0.16)" position="sticky" top={0} zIndex="docked" backgroundColor="white">
           <Container maxWidth={"container.xl"} px={0}>
             <Nav />
           </Container>

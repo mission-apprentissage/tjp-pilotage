@@ -4,10 +4,4 @@ import { getEtablissement } from "./getEtablissement.dep";
 import { getFilters } from "./getFilters.dep";
 import { getFormations } from "./getFormations.dep";
 
-export {
-  getEtablissement,
-  getChiffresEntree,
-  getChiffresIj,
-  getFilters,
-  getFormations,
-};
+export { getEtablissement, getChiffresEntree, getChiffresIj, getFilters, getFormations };

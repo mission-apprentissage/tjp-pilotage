@@ -1,8 +1,9 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB } from "../../../../db/db";
-import { dataDI } from "../../data.di";
-import { streamIt } from "../../utils/streamIt";
+import type { DB } from "@/db/db";
+import { dataDI } from "@/modules/import/data.di";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { importLienEmploiFormation as importLienEmploiFormationDeps } from "./importLienEmploiFormation.deps";
 
 export const importLienEmploiFormationFactory =
@@ -31,7 +32,7 @@ export const importLienEmploiFormationFactory =
     console.log(`Import des domaines professionnels`);
     let domainesProfessionnels = 0;
     await streamIt(
-      (countDomaineProfessionnel) =>
+      async (countDomaineProfessionnel) =>
         findRawDatas({
           type: "domaine_professionnel",
           offset: countDomaineProfessionnel,
@@ -46,9 +47,7 @@ export const importLienEmploiFormationFactory =
         await createDomaineProfessionnel(data);
 
         domainesProfessionnels++;
-        process.stdout.write(
-          `\r${domainesProfessionnels} domaines professionnels ajoutés`
-        );
+        process.stdout.write(`\r${domainesProfessionnels} domaines professionnels ajoutés`);
       },
       { parallel: 20 }
     );
@@ -56,7 +55,7 @@ export const importLienEmploiFormationFactory =
     console.log(`\nImport des fiches ROME`);
     let rome = 0;
     await streamIt(
-      (countRome) =>
+      async (countRome) =>
         findRawDatas({
           type: "rome",
           offset: countRome,
@@ -67,9 +66,7 @@ export const importLienEmploiFormationFactory =
           codeRome: item.code_rome,
           libelleRome: item.libelle_rome,
           codeDomaineProfessionnel: item.code_rome.substring(0, 3),
-          transitionEcologique: item.transition_eco?.includes(
-            "Emploi stratégique pour la Transition écologique"
-          ),
+          transitionEcologique: item.transition_eco?.includes("Emploi stratégique pour la Transition écologique"),
           transitionNumerique: item.transition_num?.includes("O"),
           transitionDemographique: item.transition_demo?.includes("O"),
         };
@@ -85,7 +82,7 @@ export const importLienEmploiFormationFactory =
     console.log(`\nImport des métiers`);
     let metiers = 0;
     await streamIt(
-      (countMetier) =>
+      async (countMetier) =>
         findRawDatas({
           type: "metier",
           offset: countMetier,
@@ -109,7 +106,7 @@ export const importLienEmploiFormationFactory =
     console.log(`\nImport des formationsRome`);
     let formationRomeCount = 0;
     await streamIt(
-      (diplomeProCfd) =>
+      async (diplomeProCfd) =>
         selectDiplomeProCfd({
           offset: diplomeProCfd,
           limit: 10000,
@@ -141,7 +138,7 @@ export const importLienEmploiFormationFactory =
 
               try {
                 await createFormationRome(data);
-              } catch (err) {
+              } catch (_err) {
                 console.log(
                   `\nProblème en ajoutant le couple CFD ${data.cfd} / ROME ${data.codeRome}. Il est probable que le CFD ou le code ROME n'existe pas dans notre base.`
                 );

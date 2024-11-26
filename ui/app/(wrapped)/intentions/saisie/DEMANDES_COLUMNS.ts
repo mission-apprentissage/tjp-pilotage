@@ -1,5 +1,5 @@
-import { client } from "@/api.client";
-import { ExportColumns } from "@/utils/downloadExport";
+import type { client } from "@/api.client";
+import type { ExportColumns } from "@/utils/downloadExport";
 
 export const DEMANDES_COLUMNS = {
   numero: "numero",
@@ -37,8 +37,7 @@ export const DEMANDES_COLUMNS = {
   capaciteScolaireColoree: "Future capacité colorée en voie scolaire",
   capaciteApprentissageActuelle: "Capacité actuelle en apprentissage",
   capaciteApprentissage: "Future capacité en apprentissage",
-  capaciteApprentissageColoreeActuelle:
-    "Capacité colorée actuelle en apprentissage",
+  capaciteApprentissageColoreeActuelle: "Capacité colorée actuelle en apprentissage",
   capaciteApprentissageColoree: "Future capacité colorée en apprentissage",
   formationRH: "Formation(s) ?",
   nbFormationRH: "Nombre de formations",
@@ -57,6 +56,4 @@ export const DEMANDES_COLUMNS = {
   discipline1RecrutementRH: "Discipline 1 recrutement",
   discipline2RecrutementRH: "Discipline 2 recrutement",
   userName: "Auteur",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/demandes"]["demandes"][number]
->;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/demandes"]["demandes"][number]>;

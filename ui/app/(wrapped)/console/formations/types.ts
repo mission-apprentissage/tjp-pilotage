@@ -1,4 +1,4 @@
-import { client } from "@/api.client";
+import type { client } from "@/api.client";
 
 export type Query = (typeof client.inferArgs)["[GET]/formations"]["query"];
 
@@ -9,8 +9,7 @@ export type Order = Pick<Query, "order" | "orderBy">;
 export type Formations = (typeof client.infer)["[GET]/formations"];
 export type FiltersList = Formations["filters"];
 
-export type Line =
-  (typeof client.infer)["[GET]/formations"]["formations"][number];
+export type Line = (typeof client.infer)["[GET]/formations"]["formations"][number];
 
 export type LineId = {
   codeDispositif?: string;

@@ -1,16 +1,16 @@
-import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
-import { config } from "../../../../../config/config";
-import * as notion from "../../../core/services/notion/notion";
-import { PROPERTIES } from "../utils/properties/properties";
+import config from "@/config";
+import * as notion from "@/modules/core/services/notion/notion";
+import { PROPERTIES } from "@/modules/glossaire/usecases/utils/properties/properties";
+
 import { dependencies } from "./dependencies";
 
 export const getGlossaireFactory =
   (
     deps = {
       getDatabaseRows: notion.getDatabaseRows,
-      mapNotionDatabaseRowToGlossaireEntry:
-        dependencies.mapNotionDatabaseRowToGlossaireEntry,
+      mapNotionDatabaseRowToGlossaireEntry: dependencies.mapNotionDatabaseRowToGlossaireEntry,
       config,
     }
   ) =>
@@ -24,9 +24,7 @@ export const getGlossaireFactory =
 
     const database = await deps.getDatabaseRows(dbId, filters);
 
-    const entries = deps.mapNotionDatabaseRowToGlossaireEntry(
-      database.results as PageObjectResponse[]
-    );
+    const entries = deps.mapNotionDatabaseRowToGlossaireEntry(database.results as PageObjectResponse[]);
 
     return entries.sort((a, b) => a.title?.localeCompare(b.title ?? "") ?? 0);
   };

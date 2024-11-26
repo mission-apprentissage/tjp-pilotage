@@ -1,13 +1,7 @@
 import { Box, chakra, Flex, Text } from "@chakra-ui/react";
 
 export const Legend = chakra(
-  ({
-    elements,
-    className,
-  }: {
-    elements: { label: string; color: string }[];
-    className?: string;
-  }) => {
+  ({ elements, className }: { elements: { label: string; color: string }[]; className?: string }) => {
     return (
       <Flex className={className} mt={4} ms={2}>
         {elements.map((element, index) => (

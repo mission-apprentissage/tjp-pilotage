@@ -1,7 +1,7 @@
-import { kdb } from "../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const findOneRequeteEnregistreeQuery = async (id: string) => {
-  return await kdb
+  return await getKbdClient()
     .selectFrom("requeteEnregistree")
     .selectAll()
     .where("requeteEnregistree.id", "=", id)

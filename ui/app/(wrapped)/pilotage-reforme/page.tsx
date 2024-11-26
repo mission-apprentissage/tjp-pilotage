@@ -7,15 +7,15 @@ import qs from "qs";
 import { useState } from "react";
 
 import { client } from "@/api.client";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { withAuth } from "@/utils/security/withAuth";
 
-import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
-import { withAuth } from "../../../utils/security/withAuth";
 import { CartoSection } from "./components/CartoSection";
 import { EvolutionIndicateursClesSection } from "./components/EvolutionIndicateursClesSection";
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
 import { VueRegionAcademieSection } from "./components/VueRegionAcademieSection";
-import { Filters, FiltersRegions, IndicateurType, Order } from "./types";
+import type { Filters, FiltersRegions, IndicateurType, Order } from "./types";
 
 export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   const router = useRouter();
@@ -28,13 +28,8 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   const filters = searchParams.filters ?? {};
   const order = searchParams.order ?? { order: "asc" };
 
-  const setSearchParams = (params: {
-    filters?: typeof filters;
-    order?: typeof order;
-  }) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+  const setSearchParams = (params: { filters?: typeof filters; order?: typeof order }) => {
+    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const trackEvent = usePlausible();
@@ -59,28 +54,23 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
     });
   };
 
-  const handleFilters = (
-    type: keyof Filters | keyof FiltersRegions,
-    value: Filters[keyof Filters]
-  ) => {
+  const handleFilters = (type: keyof Filters | keyof FiltersRegions, value: Filters[keyof Filters]) => {
     setSearchParams({
       filters: { ...filters, [type]: value },
     });
   };
 
-  const { data, isLoading } = client
-    .ref("[GET]/pilotage-reforme/stats")
-    .useQuery(
-      {
-        query: {
-          ...filters,
-        },
+  const { data, isLoading } = client.ref("[GET]/pilotage-reforme/stats").useQuery(
+    {
+      query: {
+        ...filters,
       },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
+    },
+    {
+      keepPreviousData: true,
+      staleTime: 10000000,
+    }
+  );
 
   const { data: dataRegions, isLoading: isLoadingRegions } = client
     .ref("[GET]/pilotage-reforme/stats/regions")
@@ -115,14 +105,14 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   const [indicateur, setIndicateur] = useState<IndicateurType>("tauxInsertion");
 
   const handleIndicateurChange = (indicateur: string): void => {
-    if (indicateur === "tauxInsertion" || indicateur === "tauxPoursuite")
-      setIndicateur(indicateur);
+    if (indicateur === "tauxInsertion" || indicateur === "tauxPoursuite") setIndicateur(indicateur);
   };
 
   return (
     <Box bg="blueecume.950">
       <Container maxWidth={"container.xl"} py="4">
         <FiltersSection
+          // @ts-expect-error TODO
           activeFilters={filters}
           handleFilters={handleFilters}
           filterTracker={filterTracker}
@@ -149,6 +139,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
               indicateur={indicateur}
               handleIndicateurChange={handleIndicateurChange}
               indicateurOptions={indicateurOptions}
+              // @ts-expect-error TODO
               activeFilters={filters}
               handleFilters={handleFilters}
             ></CartoSection>
@@ -156,6 +147,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
           <SimpleGrid spacing={5} columns={[1]} mt={14}>
             <VueRegionAcademieSection
               data={dataRegions}
+              // @ts-expect-error TODO
               order={order}
               isLoading={isLoadingRegions}
               handleOrder={handleOrder}

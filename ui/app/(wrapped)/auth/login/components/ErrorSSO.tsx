@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Container,
-  Heading,
-  HStack,
-  Link,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Container, Heading, HStack, Link, Stack, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
@@ -17,11 +8,7 @@ const ErrorSSO = () => {
   const [open, setOpen] = useState(true);
 
   return (
-    <Container
-      maxW="container.lg"
-      paddingX="12px"
-      display={open ? "block" : "none"}
-    >
+    <Container maxW="container.lg" paddingX="12px" display={open ? "block" : "none"}>
       <Stack
         direction={{
           base: "column",
@@ -41,13 +28,7 @@ const ErrorSSO = () => {
           alignItems="start"
           justifyContent="space-between"
         >
-          <Icon
-            display="block"
-            color="white"
-            icon="ri:error-warning-fill"
-            width="24px"
-            height="24px"
-          />
+          <Icon display="block" color="white" icon="ri:error-warning-fill" width="24px" height="24px" />
           <Box
             display={{
               base: "block",
@@ -70,14 +51,10 @@ const ErrorSSO = () => {
               Error lors de la connexion avec Arena
             </Heading>
             <Text fontSize="16px">
-              Orion utilise les services de la DNE pour vous fournir une
-              connexion unique et sécurisée. Nous n’avons pas réussi à établir
-              une connexion au portail Arena pour vous permettre d’accéder à
-              Orion. Merci de ré-essayer ultérieurement ou de
-              <Link href="mailto:orion@inserjeunes.beta.gouv.fr">
-                contacter le support
-              </Link>{" "}
-              si le problème persiste.
+              Orion utilise les services de la DNE pour vous fournir une connexion unique et sécurisée. Nous n’avons pas
+              réussi à établir une connexion au portail Arena pour vous permettre d’accéder à Orion. Merci de ré-essayer
+              ultérieurement ou de
+              <Link href="mailto:orion@inserjeunes.beta.gouv.fr">contacter le support</Link> si le problème persiste.
             </Text>
           </VStack>
         </Box>

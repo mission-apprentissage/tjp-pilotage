@@ -1,10 +1,10 @@
 import { CURRENT_IJ_MILLESIME } from "shared";
 
-import { kdb } from "../../../../db/db";
-import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
-import { notAnneeCommune } from "../../utils/notAnneeCommune";
-import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
-import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
+import { getKbdClient } from "@/db/db";
+import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
+import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
+import { selectTauxInsertion6moisAgg } from "@/modules/data/utils/tauxInsertion6mois";
+import { selectTauxPoursuiteAgg } from "@/modules/data/utils/tauxPoursuite";
 
 const getStatsSortieBase = ({
   codeRegion,
@@ -15,26 +15,17 @@ const getStatsSortieBase = ({
   millesimeSortie?: string;
   codeNiveauDiplome?: string[];
 }) => {
-  const statsSortie = kdb
+  const statsSortie = getKbdClient()
     .selectFrom("indicateurRegionSortie")
-    .innerJoin(
-      "formationScolaireView as formationView",
-      "formationView.cfd",
-      "indicateurRegionSortie.cfd"
-    )
+    .innerJoin("formationScolaireView as formationView", "formationView.cfd", "indicateurRegionSortie.cfd")
     .where((w) => {
       if (!codeRegion) return w.val(true);
-      if (Array.isArray(codeRegion))
-        return w("indicateurRegionSortie.codeRegion", "in", codeRegion);
+      if (Array.isArray(codeRegion)) return w("indicateurRegionSortie.codeRegion", "in", codeRegion);
       return w("indicateurRegionSortie.codeRegion", "=", codeRegion);
     })
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where(
-        "formationView.codeNiveauDiplome",
-        "in",
-        codeNiveauDiplome
-      );
+      return q.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where(isScolaireIndicateurRegionSortie)
@@ -91,14 +82,8 @@ export const getStatsSortieParRegionsEtNiveauDiplomeQuery = async ({
     codeNiveauDiplome,
     millesimeSortie,
   })
-    .select([
-      "indicateurRegionSortie.codeRegion",
-      "formationView.codeNiveauDiplome",
-    ])
-    .groupBy([
-      "indicateurRegionSortie.codeRegion",
-      "formationView.codeNiveauDiplome",
-    ])
+    .select(["indicateurRegionSortie.codeRegion", "formationView.codeNiveauDiplome"])
+    .groupBy(["indicateurRegionSortie.codeRegion", "formationView.codeNiveauDiplome"])
     .execute();
 
   return statsSortie.reduce(
@@ -110,10 +95,7 @@ export const getStatsSortieParRegionsEtNiveauDiplomeQuery = async ({
       };
       return acc;
     },
-    {} as Record<
-      string,
-      Record<string, { tauxInsertion: number; tauxPoursuite: number }>
-    >
+    {} as Record<string, Record<string, { tauxInsertion: number; tauxPoursuite: number }>>
   );
 };
 

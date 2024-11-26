@@ -1,31 +1,32 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
-import { CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
+import type { MILLESIMES_IJ } from "shared";
+import { CURRENT_RENTREE } from "shared";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
-import { z } from "zod";
+import type { z } from "zod";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { RequestUser } from "../../../../core/model/User";
-import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
+import { getKbdClient } from "@/db/db";
+import type { RequestUser } from "@/modules/core/model/User";
+import type { FiltersSchema } from "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.schema";
+import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
+import { nbEtablissementFormationRegion } from "@/modules/data/utils/nbEtablissementFormationRegion";
+import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
+import { selectTauxDevenirFavorable } from "@/modules/data/utils/tauxDevenirFavorable";
+import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
+import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
+import { selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
+import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteApprentissageColoree,
   countDifferenceCapaciteScolaire,
   countDifferenceCapaciteScolaireColoree,
-} from "../../../../utils/countCapacite";
-import { isDemandeNotDeleted } from "../../../../utils/isDemandeSelectable";
-import { isRestitutionIntentionVisible } from "../../../../utils/isRestitutionIntentionVisible";
-import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
-import { isScolaireIndicateurRegionSortie } from "../../../utils/isScolaire";
-import { nbEtablissementFormationRegion } from "../../../utils/nbEtablissementFormationRegion";
-import { selectPositionQuadrant } from "../../../utils/positionFormationRegionaleQuadrant";
-import { selectTauxDevenirFavorable } from "../../../utils/tauxDevenirFavorable";
-import { selectTauxInsertion6mois } from "../../../utils/tauxInsertion6mois";
-import { selectTauxPoursuite } from "../../../utils/tauxPoursuite";
-import { selectTauxPressionParFormationEtParRegionDemande } from "../../../utils/tauxPression";
-import { FiltersSchema } from "../getDemandesRestitutionIntentions.schema";
+} from "@/modules/utils/countCapacite";
+import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
+import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
 export interface Filters extends z.infer<typeof FiltersSchema> {
   user: RequestUser;
@@ -58,7 +59,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   search,
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
-  const demandes = await kdb
+  const demandes = await getKbdClient()
     .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
@@ -69,82 +70,34 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "demande.codeDispositif"
-    )
+    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "dataFormation.codeNiveauDiplome"
-    )
+    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
+    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .leftJoin("indicateurRegionSortie", (join) =>
       join
         .onRef("indicateurRegionSortie.cfd", "=", "demande.cfd")
         .onRef("indicateurRegionSortie.codeRegion", "=", "demande.codeRegion")
-        .onRef(
-          "indicateurRegionSortie.codeDispositif",
-          "=",
-          "demande.codeDispositif"
-        )
-        .on(
-          "indicateurRegionSortie.millesimeSortie",
-          "=",
-          getMillesimeFromCampagne(campagne)
-        )
+        .onRef("indicateurRegionSortie.codeDispositif", "=", "demande.codeDispositif")
+        .on("indicateurRegionSortie.millesimeSortie", "=", getMillesimeFromCampagne(campagne))
         .on(isScolaireIndicateurRegionSortie)
     )
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join.on((eb) =>
         eb.and([
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.cfd"),
-            "=",
-            eb.ref("demande.cfd")
-          ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
-            "=",
-            eb.ref("demande.codeDispositif")
-          ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
-            "=",
-            eb.ref("dataEtablissement.codeRegion")
-          ),
-          eb(
-            "positionFormationRegionaleQuadrant.millesimeSortie",
-            "=",
-            getMillesimeFromCampagne(campagne)
-          ),
+          eb(eb.ref("positionFormationRegionaleQuadrant.cfd"), "=", eb.ref("demande.cfd")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeDispositif"), "=", eb.ref("demande.codeDispositif")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
+          eb("positionFormationRegionaleQuadrant.millesimeSortie", "=", getMillesimeFromCampagne(campagne)),
         ])
       )
     )
     .leftJoin("tauxIJNiveauDiplomeRegion", (join) =>
       join.on((eb) =>
         eb.and([
-          eb(
-            eb.ref("tauxIJNiveauDiplomeRegion.codeRegion"),
-            "=",
-            eb.ref("dataEtablissement.codeRegion")
-          ),
-          eb(
-            eb.ref("tauxIJNiveauDiplomeRegion.codeNiveauDiplome"),
-            "=",
-            eb.ref("dataFormation.codeNiveauDiplome")
-          ),
+          eb(eb.ref("tauxIJNiveauDiplomeRegion.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
+          eb(eb.ref("tauxIJNiveauDiplomeRegion.codeNiveauDiplome"), "=", eb.ref("dataFormation.codeNiveauDiplome")),
           eb(
             eb.ref("tauxIJNiveauDiplomeRegion.millesimeSortie"),
             "=",
@@ -170,23 +123,13 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       "academie.codeAcademie as codeAcademie",
       "dataFormation.typeFamille",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
-      countDifferenceCapaciteApprentissage(eb).as(
-        "differenceCapaciteApprentissage"
-      ),
-      countDifferenceCapaciteScolaireColoree(eb).as(
-        "differenceCapaciteScolaireColoree"
-      ),
-      countDifferenceCapaciteApprentissageColoree(eb).as(
-        "differenceCapaciteApprentissageColoree"
-      ),
+      countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
+      countDifferenceCapaciteScolaireColoree(eb).as("differenceCapaciteScolaireColoree"),
+      countDifferenceCapaciteApprentissageColoree(eb).as("differenceCapaciteApprentissageColoree"),
       sql<string>`count(*) over()`.as("count"),
-      selectTauxInsertion6mois("indicateurRegionSortie").as(
-        "tauxInsertionRegional"
-      ),
+      selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertionRegional"),
       selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteRegional"),
-      selectTauxDevenirFavorable("indicateurRegionSortie").as(
-        "tauxDevenirFavorableRegional"
-      ),
+      selectTauxDevenirFavorable("indicateurRegionSortie").as("tauxDevenirFavorableRegional"),
       selectTauxPressionParFormationEtParRegionDemande({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
@@ -197,20 +140,12 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       }).as("nbEtablissement"),
       selectPositionQuadrant(eb).as("positionQuadrant"),
       jsonBuildObject({
-        moyenneInsertionCfdRegion: eb.ref(
-          "positionFormationRegionaleQuadrant.moyenneInsertionCfdRegion"
-        ),
-        moyennePoursuiteEtudeCfdRegion: eb.ref(
-          "positionFormationRegionaleQuadrant.moyennePoursuiteEtudeCfdRegion"
-        ),
-        millesimeSortie: eb.ref(
-          "positionFormationRegionaleQuadrant.millesimeSortie"
-        ),
+        moyenneInsertionCfdRegion: eb.ref("positionFormationRegionaleQuadrant.moyenneInsertionCfdRegion"),
+        moyennePoursuiteEtudeCfdRegion: eb.ref("positionFormationRegionaleQuadrant.moyennePoursuiteEtudeCfdRegion"),
+        millesimeSortie: eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
       }).as("positionFormationRegionaleQuadrant"),
       jsonBuildObject({
-        tauxInsertion6mois: eb.ref(
-          "tauxIJNiveauDiplomeRegion.tauxInsertion6mois"
-        ),
+        tauxInsertion6mois: eb.ref("tauxIJNiveauDiplomeRegion.tauxInsertion6mois"),
         tauxPoursuite: eb.ref("tauxIJNiveauDiplomeRegion.tauxPoursuite"),
         millesimeSortie: eb.ref("tauxIJNiveauDiplomeRegion.millesimeSortie"),
       }).as("tauxIJNiveauDiplomeRegion"),
@@ -252,11 +187,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     })
     .$call((eb) => {
       if (positionQuadrant)
-        return eb.where(
-          "positionFormationRegionaleQuadrant.positionQuadrant",
-          "=",
-          positionQuadrant
-        );
+        return eb.where("positionFormationRegionaleQuadrant.positionQuadrant", "=", positionQuadrant);
       return eb;
     })
     .$call((eb) => {
@@ -268,17 +199,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeDepartement)
-        return eb.where(
-          "dataEtablissement.codeDepartement",
-          "in",
-          codeDepartement
-        );
+      if (codeDepartement) return eb.where("dataEtablissement.codeDepartement", "in", codeDepartement);
       return eb;
     })
     .$call((eb) => {
-      if (codeAcademie)
-        return eb.where("dataEtablissement.codeAcademie", "in", codeAcademie);
+      if (codeAcademie) return eb.where("dataEtablissement.codeAcademie", "in", codeAcademie);
       return eb;
     })
     .$call((eb) => {
@@ -287,16 +212,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     })
     .$call((eb) => {
       if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
-        return eb.where(
-          "demande.rentreeScolaire",
-          "=",
-          parseInt(rentreeScolaire)
-        );
+        return eb.where("demande.rentreeScolaire", "=", parseInt(rentreeScolaire));
       return eb;
     })
     .$call((eb) => {
-      if (typeDemande)
-        return eb.where("demande.typeDemande", "in", typeDemande);
+      if (typeDemande) return eb.where("demande.typeDemande", "in", typeDemande);
       return eb;
     })
     .$call((eb) => {
@@ -304,12 +224,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
+      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
@@ -318,20 +233,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     })
     .$call((eb) => {
       if (coloration)
-        return eb.where(
-          "demande.coloration",
-          "=",
-          coloration === "true" ? sql<true>`true` : sql<false>`false`
-        );
+        return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
       return eb;
     })
     .$call((eb) => {
-      if (amiCMA)
-        return eb.where(
-          "demande.amiCma",
-          "=",
-          amiCMA === "true" ? sql<true>`true` : sql<false>`false`
-        );
+      if (amiCMA) return eb.where("demande.amiCma", "=", amiCMA === "true" ? sql<true>`true` : sql<false>`false`);
       return eb;
     })
     .$call((eb) => {
@@ -361,10 +267,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     })
     .$call((q) => {
       if (!orderBy || !order) return q;
-      return q.orderBy(
-        sql`${sql.ref(orderBy)}`,
-        sql`${sql.raw(order)} NULLS LAST`
-      );
+      return q.orderBy(sql`${sql.ref(orderBy)}`, sql`${sql.raw(order)} NULLS LAST`);
     })
     .where(isDemandeNotDeleted)
     .where(isRestitutionIntentionVisible({ user }))

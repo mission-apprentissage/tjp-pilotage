@@ -22,14 +22,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { client } from "@/api.client";
-import { IntentionSpinner } from "@/app/(wrapped)/intentions/perdir/saisie/components/IntentionSpinner";
+
+import { IntentionSpinner } from "./IntentionSpinner";
 
 export const DeleteIntentionButton = chakra(
-  ({
-    intention,
-  }: {
-    intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0];
-  }) => {
+  ({ intention }: { intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0] }) => {
     const toast = useToast();
     const queryClient = useQueryClient();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,29 +34,27 @@ export const DeleteIntentionButton = chakra(
 
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const { mutate: deleteIntention } = client
-      .ref("[DELETE]/intention/:numero")
-      .useMutation({
-        onMutate: () => {
-          setIsDeleting(true);
-        },
-        onSuccess: (_body) => {
-          toast({
-            variant: "left-accent",
-            status: "success",
-            title: "La intention a bien été supprimée",
+    const { mutate: deleteIntention } = client.ref("[DELETE]/intention/:numero").useMutation({
+      onMutate: () => {
+        setIsDeleting(true);
+      },
+      onSuccess: (_body) => {
+        toast({
+          variant: "left-accent",
+          status: "success",
+          title: "La intention a bien été supprimée",
+        });
+        // Wait until view is updated before invalidating queries
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: ["[GET]/intentions"] });
+          queryClient.invalidateQueries({
+            queryKey: ["[GET]/intentions/count"],
           });
-          // Wait until view is updated before invalidating queries
-          setTimeout(() => {
-            queryClient.invalidateQueries({ queryKey: ["[GET]/intentions"] });
-            queryClient.invalidateQueries({
-              queryKey: ["[GET]/intentions/count"],
-            });
-            setIsDeleting(false);
-            onClose();
-          }, 500);
-        },
-      });
+          setIsDeleting(false);
+          onClose();
+        }, 500);
+      },
+    });
 
     return (
       <>
@@ -73,13 +68,7 @@ export const DeleteIntentionButton = chakra(
             aria-label="Supprimer la demande"
             color={"bluefrance.113"}
             bgColor={"transparent"}
-            icon={
-              <Icon
-                icon="ri:delete-bin-line"
-                width={"24px"}
-                color={bluefrance113}
-              />
-            }
+            icon={<Icon icon="ri:delete-bin-line" width={"24px"} color={bluefrance113} />}
           />
         </Tooltip>
         <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
@@ -102,12 +91,7 @@ export const DeleteIntentionButton = chakra(
               </Center>
             ) : (
               <ModalFooter>
-                <Button
-                  colorScheme="blue"
-                  mr={3}
-                  variant={"secondary"}
-                  onClick={() => onClose()}
-                >
+                <Button colorScheme="blue" mr={3} variant={"secondary"} onClick={() => onClose()}>
                   Annuler
                 </Button>
 

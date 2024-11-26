@@ -1,9 +1,11 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { MILLESIMES_IJ_REG } from "shared";
 
-import { regionAcademiqueMapping } from "../../../../domain/regionAcademiqueMapping";
-import { rawDataRepository } from "../../../../repositories/rawData.repository";
-import { inserJeunesApi } from "../../../../services/inserJeunesApi/inserJeunes.api";
+import { regionAcademiqueMapping } from "@/modules/import/domain/regionAcademiqueMapping";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
+import { inserJeunesApi } from "@/modules/import/services/inserJeunesApi/inserJeunes.api";
+
 import { createIndicateurRegionSortie } from "./createIndicateurRegionSortie.dep";
 import { findAnciennesFormation } from "./findAnciennesFormation.dep";
 import { findIndicateurRegionSortie } from "./findIndicateurRegionSortie.dep";
@@ -16,15 +18,7 @@ export const [importIndicateursRegionSortie] = inject(
     getRegionData: inserJeunesApi.getRegionData,
   },
   (deps) =>
-    async ({
-      cfd,
-      codeDispositif,
-      mefstat,
-    }: {
-      cfd: string;
-      codeDispositif: string;
-      mefstat: string;
-    }) => {
+    async ({ cfd, codeDispositif, mefstat }: { cfd: string; codeDispositif: string; mefstat: string }) => {
       for (const [_crij, codeRegion] of Object.entries(regionAcademiqueMapping))
         for (const millesimeSortie of MILLESIMES_IJ_REG) {
           const ijRegData = await deps.findRawData({

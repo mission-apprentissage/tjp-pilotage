@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { CSSObjectWithLabel } from "react-select";
+import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
@@ -15,9 +15,7 @@ export const CampusAutocompleteInput = ({
   defaultValue?: { value: string; label?: string };
   active?: boolean;
   inError: boolean;
-  onChange: (
-    value?: (typeof client.infer)["[GET]/campus/search/:search"][number]
-  ) => void;
+  onChange: (value?: (typeof client.infer)["[GET]/campus/search/:search"][number]) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -53,20 +51,14 @@ export const CampusAutocompleteInput = ({
         } as (typeof client.infer)["[GET]/campus/search/:search"][number])
       }
       loadOptions={(inputValue: string) =>
-        client
-          .ref("[GET]/campus/search/:search")
-          .query({ params: { search: inputValue } })
+        client.ref("[GET]/campus/search/:search").query({ params: { search: inputValue } })
       }
       defaultOptions
       loadingMessage={({ inputValue }) =>
-        inputValue.length >= 1
-          ? "Recherche..."
-          : "Veuillez rentrer au moins 1 lettre"
+        inputValue.length >= 1 ? "Recherche..." : "Veuillez rentrer au moins 1 lettre"
       }
       isClearable={true}
-      noOptionsMessage={({ inputValue }) =>
-        inputValue ? "Pas de campus correspondant" : "Commencez à écrire..."
-      }
+      noOptionsMessage={({ inputValue }) => (inputValue ? "Pas de campus correspondant" : "Commencez à écrire...")}
       placeholder="Nom"
       isDisabled={active === false}
     />

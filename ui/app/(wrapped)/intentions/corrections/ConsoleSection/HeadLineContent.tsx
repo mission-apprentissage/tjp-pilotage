@@ -1,12 +1,11 @@
 import { Box, chakra, Th, Tooltip } from "@chakra-ui/react";
-import { CSSProperties } from "react";
+import type { CSSProperties } from "react";
 
+import { CORRECTIONS_COLUMNS } from "@/app/(wrapped)/intentions/corrections/CORRECTIONS_COLUMN";
+import type { OrderCorrections } from "@/app/(wrapped)/intentions/corrections/types";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
-
-import { CORRECTIONS_COLUMNS } from "../CORRECTIONS_COLUMN";
-import { OrderCorrections } from "../types";
 
 const ConditionalTh = chakra(
   ({
@@ -37,9 +36,7 @@ const ConditionalTh = chakra(
             p={2}
             cursor={onClick ? "pointer" : "default"}
             whiteSpace="nowrap"
-            onClick={() =>
-              onClick && onClick(colonne as OrderCorrections["orderBy"])
-            }
+            onClick={() => onClick && onClick(colonne as OrderCorrections["orderBy"])}
             fontSize={12}
             fontWeight={700}
             lineHeight={"20px"}
@@ -222,10 +219,7 @@ export const HeadLineContent = ({
           ml="1"
           label={
             <>
-              <Box>
-                Le ratio entre le nombre de premiers voeux et la capacité de la
-                formation au niveau régional.
-              </Box>
+              <Box>Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.</Box>
               <TauxPressionScale />
             </>
           }
@@ -242,10 +236,7 @@ export const HeadLineContent = ({
       >
         <OrderIcon {...order} column="nbEtablissement" />
         {CORRECTIONS_COLUMNS.nbEtablissement}
-        <TooltipIcon
-          ml="1"
-          label="Le nombre d'établissement dispensant la formation dans la région."
-        />
+        <TooltipIcon ml="1" label="Le nombre d'établissement dispensant la formation dans la région." />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}

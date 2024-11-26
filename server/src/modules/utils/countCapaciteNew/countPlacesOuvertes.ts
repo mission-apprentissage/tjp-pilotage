@@ -1,7 +1,9 @@
-import { ExpressionBuilder, sql } from "kysely";
+import type { ExpressionBuilder } from "kysely";
+import { sql } from "kysely";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
-import { DB } from "../../../db/db";
+import type { DB } from "@/db/db";
+
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteApprentissageColoree,
@@ -25,31 +27,15 @@ export const countPlacesOuvertesScolaireTransitionEcologique = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "rome">;
-}) =>
-  eb
-    .case()
-    .when(inTransitionEcologique(eb))
-    .then(countPlacesOuvertesScolaire(eb))
-    .else(0)
-    .end();
+}) => eb.case().when(inTransitionEcologique(eb)).then(countPlacesOuvertesScolaire(eb)).else(0).end();
 
 export const countPlacesOuvertesApprentissageTransitionEcologique = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "rome">;
-}) =>
-  eb
-    .case()
-    .when(inTransitionEcologique(eb))
-    .then(countPlacesOuvertesApprentissage(eb))
-    .else(0)
-    .end();
+}) => eb.case().when(inTransitionEcologique(eb)).then(countPlacesOuvertesApprentissage(eb)).else(0).end();
 
-export const countPlacesOuvertes = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) => sql<number>`
+export const countPlacesOuvertes = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) => sql<number>`
     ${countPlacesOuvertesScolaire(eb)} +
     ${countPlacesOuvertesApprentissage(eb)}
   `;
@@ -72,21 +58,13 @@ export const countPlacesOuvertesQ1Q2 = ({
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) => eb.case().when(inQ1Q2(eb)).then(countPlacesOuvertes(eb)).else(0).end();
 
-export const countPlacesOuvertesCorrection = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "correction" | "demande">;
-}) =>
+export const countPlacesOuvertesCorrection = ({ eb }: { eb: ExpressionBuilder<DB, "correction" | "demande"> }) =>
   sql<number>`
     ${countPlacesOuvertesScolaireCorrection(eb)} +
     ${countPlacesOuvertesApprentissageCorrection(eb)}
   `;
 
-export const countPlacesOuvertesScolaire = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) =>
+export const countPlacesOuvertesScolaire = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
   eb
     .case()
     .when("typeDemande", "=", DemandeTypeEnum["coloration"])
@@ -146,27 +124,19 @@ export const countPlacesOuvertesScolaireQ1 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb.case().when(inQ1(eb)).then(countPlacesOuvertesScolaire(eb)).else(0).end();
+}) => eb.case().when(inQ1(eb)).then(countPlacesOuvertesScolaire(eb)).else(0).end();
 
 export const countPlacesOuvertesScolaireQ2 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb.case().when(inQ2(eb)).then(countPlacesOuvertesScolaire(eb)).else(0).end();
+}) => eb.case().when(inQ2(eb)).then(countPlacesOuvertesScolaire(eb)).else(0).end();
 
 export const countPlacesOuvertesScolaireQ1Q2 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb
-    .case()
-    .when(inQ1Q2(eb))
-    .then(countPlacesOuvertesScolaire(eb))
-    .else(0)
-    .end();
+}) => eb.case().when(inQ1Q2(eb)).then(countPlacesOuvertesScolaire(eb)).else(0).end();
 
 export const countPlacesOuvertesScolaireCorrection = ({
   eb,
@@ -178,11 +148,7 @@ export const countPlacesOuvertesScolaireCorrection = ({
     ${eb.ref("correction.capaciteScolaireActuelle")}
   )`;
 
-export const countPlacesOuvertesApprentissage = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) =>
+export const countPlacesOuvertesApprentissage = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
   eb
     .case()
     .when("typeDemande", "=", DemandeTypeEnum["coloration"])
@@ -242,37 +208,19 @@ export const countPlacesOuvertesApprentissageQ1 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb
-    .case()
-    .when(inQ1(eb))
-    .then(countPlacesOuvertesApprentissage(eb))
-    .else(0)
-    .end();
+}) => eb.case().when(inQ1(eb)).then(countPlacesOuvertesApprentissage(eb)).else(0).end();
 
 export const countPlacesOuvertesApprentissageQ2 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb
-    .case()
-    .when(inQ2(eb))
-    .then(countPlacesOuvertesApprentissage(eb))
-    .else(0)
-    .end();
+}) => eb.case().when(inQ2(eb)).then(countPlacesOuvertesApprentissage(eb)).else(0).end();
 
 export const countPlacesOuvertesApprentissageQ1Q2 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb
-    .case()
-    .when(inQ1Q2(eb))
-    .then(countPlacesOuvertesScolaire(eb))
-    .else(0)
-    .end();
+}) => eb.case().when(inQ1Q2(eb)).then(countPlacesOuvertesScolaire(eb)).else(0).end();
 
 export const countPlacesOuvertesApprentissageCorrection = ({
   eb,

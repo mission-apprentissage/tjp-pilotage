@@ -1,16 +1,12 @@
 import { sql } from "kysely";
-import {
-  jsonArrayFrom,
-  jsonBuildObject,
-  jsonObjectFrom,
-} from "kysely/helpers/postgres";
+import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
+import { getKbdClient } from "@/db/db";
+import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { cleanNull } from "@/utils/noNull";
 
 export const getIntentionWithMetadata = async (id: string) => {
-  const demande = await kdb
+  const demande = await getKbdClient()
     .selectFrom("demandeIntentionView as intention")
     .selectAll("intention")
     .select((eb) => [
@@ -25,26 +21,14 @@ export const getIntentionWithMetadata = async (id: string) => {
         formation: jsonObjectFrom(
           eb
             .selectFrom("dataFormation")
-            .leftJoin(
-              "niveauDiplome",
-              "niveauDiplome.codeNiveauDiplome",
-              "dataFormation.codeNiveauDiplome"
-            )
+            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
             .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref(
-                "dataFormation.libelleFormation"
-              )},
-            ' (',${ebDataFormation.ref(
-              "niveauDiplome.libelleNiveauDiplome"
-            )},')',
-            ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as(
-                "libelleFormation"
+              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
+            ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
+            ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
+              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+                "isFCIL"
               ),
-              sql<boolean>`${ebDataFormation(
-                "dataFormation.codeNiveauDiplome",
-                "in",
-                ["381", "481", "581"]
-              )}`.as("isFCIL"),
             ])
             .select((eb) =>
               jsonArrayFrom(
@@ -53,18 +37,10 @@ export const getIntentionWithMetadata = async (id: string) => {
                   .select(["libelleDispositif", "codeDispositif"])
                   .leftJoin("rawData", (join) =>
                     join
-                      .onRef(
-                        sql`"data"->>'DISPOSITIF_FORMATION'`,
-                        "=",
-                        "dispositif.codeDispositif"
-                      )
+                      .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
                       .on("rawData.type", "=", "nMef")
                   )
-                  .whereRef(
-                    sql`"data"->>'FORMATION_DIPLOME'`,
-                    "=",
-                    "dataFormation.cfd"
-                  )
+                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
@@ -79,9 +55,8 @@ export const getIntentionWithMetadata = async (id: string) => {
 
   const codeDispositif =
     demande?.codeDispositif &&
-    demande.metadata.formation?.dispositifs.find(
-      (item) => item.codeDispositif === demande?.codeDispositif
-    )?.codeDispositif;
+    demande.metadata.formation?.dispositifs.find((item) => item.codeDispositif === demande?.codeDispositif)
+      ?.codeDispositif;
 
   return (
     demande &&

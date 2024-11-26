@@ -1,8 +1,6 @@
-import {
-  fileManager,
-  FileType,
-} from "../../../core/services/fileManager/fileManager";
-import { filePathManager } from "../../../core/services/filePathManager/filePathManager";
+import type { FileType } from "@/modules/core/services/fileManager/fileManager";
+import { fileManager } from "@/modules/core/services/fileManager/fileManager";
+import { filePathManager } from "@/modules/core/services/filePathManager/filePathManager";
 
 const deleteIntentionFilesFactory =
   (
@@ -13,14 +11,9 @@ const deleteIntentionFilesFactory =
   ) =>
   async ({ numero, files }: { numero: string; files: FileType[] }) => {
     for await (const file of files) {
-      const filePath = deps.filePathManager.getIntentionFilePath(
-        numero,
-        file.name
-      );
+      const filePath = deps.filePathManager.getIntentionFilePath(numero, file.name);
 
-      console.log(
-        `Suppression du fichier ${file.name} pour l'intention ${numero} depuis ${filePath}`
-      );
+      console.log(`Suppression du fichier ${file.name} pour l'intention ${numero} depuis ${filePath}`);
 
       await deps.fileManager.deleteFile(filePath);
     }

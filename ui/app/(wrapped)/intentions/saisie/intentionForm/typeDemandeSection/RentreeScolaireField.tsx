@@ -16,8 +16,8 @@ import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
-import { Campagne } from "../../types";
-import { IntentionForms } from "../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import type { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
 
 export const RentreeScolaireField = ({
   disabled,
@@ -35,8 +35,7 @@ export const RentreeScolaireField = ({
   } = useFormContext<IntentionForms>();
 
   const rentreeScolaireOptions = [0, 1, 2, 3, 4, 5].map(
-    (offsetRentree: number) =>
-      parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) + offsetRentree
+    (offsetRentree: number) => parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) + offsetRentree
   );
 
   const rentreeScolaire = watch("rentreeScolaire");
@@ -46,10 +45,7 @@ export const RentreeScolaireField = ({
       watch(({ rentreeScolaire, typeDemande }, { name }) => {
         if (name !== "rentreeScolaire") return;
         // Le type de demande ajustement est possible uniquement pour la rentrée scolaire actuelle
-        if (
-          rentreeScolaire ===
-          parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE)
-        ) {
+        if (rentreeScolaire === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE)) {
           setValue("typeDemande", "ajustement");
         } else if (typeDemande === "ajustement") {
           setValue("typeDemande", "");
@@ -58,11 +54,7 @@ export const RentreeScolaireField = ({
   );
 
   return (
-    <FormControl
-      className={className}
-      isInvalid={!!errors.rentreeScolaire}
-      isRequired
-    >
+    <FormControl className={className} isInvalid={!!errors.rentreeScolaire} isRequired>
       <FormLabel>Rentrée scolaire</FormLabel>
       <Menu gutter={0} matchWidth={true} autoSelect={false}>
         <MenuButton
@@ -79,8 +71,7 @@ export const RentreeScolaireField = ({
         >
           <Flex direction="row">
             <Text ms={2}>{rentreeScolaire}</Text>
-            {rentreeScolaire ===
-              parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) && (
+            {rentreeScolaire === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) && (
               <Tag mx={3} colorScheme="red">
                 Ajustement RS {rentreeScolaire}
               </Tag>
@@ -96,8 +87,7 @@ export const RentreeScolaireField = ({
             >
               <Flex direction="row" w="100%">
                 <Text ms={2}>{rentreeScolaireOption}</Text>
-                {rentreeScolaireOption ===
-                  parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) && (
+                {rentreeScolaireOption === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) && (
                   <Tag mx={3} colorScheme="red">
                     Ajustement RS {rentreeScolaireOption}
                   </Tag>
@@ -107,9 +97,7 @@ export const RentreeScolaireField = ({
           ))}
         </MenuList>
       </Menu>
-      {errors.rentreeScolaire && (
-        <FormErrorMessage>{errors.rentreeScolaire.message}</FormErrorMessage>
-      )}
+      {errors.rentreeScolaire && <FormErrorMessage>{errors.rentreeScolaire.message}</FormErrorMessage>}
     </FormControl>
   );
 };

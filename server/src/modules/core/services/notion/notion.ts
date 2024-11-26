@@ -27,19 +27,15 @@ const withNotionErrorHandling =
           case APIErrorCode.RateLimited:
             throw Boom.tooManyRequests("Trop de requêtes Notion");
           default:
-            throw Boom.badImplementation(
-              "Erreur inattendue lors de la communication avec Notion",
-              {
-                error: error as Error,
-                ...args,
-              }
-            );
+            throw Boom.badImplementation("Erreur inattendue lors de la communication avec Notion", {
+              error: error as Error,
+              ...args,
+            });
         }
       }
 
       throw Boom.badImplementation(
-        "Erreur lors de l'appel à Notion avec les parametres suivants " +
-          JSON.stringify(args)
+        "Erreur lors de l'appel à Notion avec les parametres suivants " + JSON.stringify(args)
       );
     }
   };

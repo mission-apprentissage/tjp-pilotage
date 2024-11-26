@@ -1,14 +1,12 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB } from "../../../../db/schema";
-import { dataDI } from "../../data.di";
-import { streamIt } from "../../utils/streamIt";
-import {
-  createTension,
-  createTensionRomeDepartement,
-  deleteTensionRomeDepartement,
-} from "./utils";
+import type { DB } from "@/db/schema";
+import { dataDI } from "@/modules/import/data.di";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
+import { createTension, createTensionRomeDepartement, deleteTensionRomeDepartement } from "./utils";
 
 const formatCodeDepartement = (codeDepartement: string) =>
   codeDepartement.length > 2 ? codeDepartement : `0${codeDepartement}`;
@@ -21,9 +19,7 @@ export const [importTensionRomeDepartement] = inject(
     deleteTensionRomeDepartement,
   },
   (deps) => async () => {
-    console.log(
-      `Suppression des données de tension départementales par rome...\n`
-    );
+    console.log(`Suppression des données de tension départementales par rome...\n`);
     await deleteTensionRomeDepartement();
 
     console.log(`Import des données de tension départementales par rome...\n`);
@@ -33,7 +29,7 @@ export const [importTensionRomeDepartement] = inject(
     const insertedTensions: Set<string> = new Set();
 
     await streamIt(
-      (offset) =>
+      async (offset) =>
         deps.findRawDatas({
           type: "tension_rome_departement",
           limit: 1000,
@@ -55,9 +51,7 @@ export const [importTensionRomeDepartement] = inject(
           insertedTensions.add(tensionKey);
         }
 
-        const tensionRomeDepartementData: Insertable<
-          DB["tensionRomeDepartement"]
-        > = {
+        const tensionRomeDepartementData: Insertable<DB["tensionRomeDepartement"]> = {
           codeRome: tension.codeActivite,
           codeDepartement: formatCodeDepartement(tension.codeTerritoire),
           codeTension: tension.codeNomenclature,
@@ -76,9 +70,7 @@ export const [importTensionRomeDepartement] = inject(
         }
 
         tensionCount++;
-        process.stdout.write(
-          `\r${tensionCount} tensions départementales ajoutées`
-        );
+        process.stdout.write(`\r${tensionCount} tensions départementales ajoutées`);
       },
       {
         parallel: 20,

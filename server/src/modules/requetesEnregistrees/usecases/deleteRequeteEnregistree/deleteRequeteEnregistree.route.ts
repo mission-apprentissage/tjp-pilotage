@@ -1,8 +1,9 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
-import { RequestUser } from "../../../core/model/User";
+import type { RequestUser } from "@/modules/core/model/User";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { deleteRequeteEnregistreeSchema } from "./deleteRequeteEnregistree.schema";
 import { deleteRequeteEnregistreeUsecase } from "./deleteRequeteEnregistree.usecase";
 

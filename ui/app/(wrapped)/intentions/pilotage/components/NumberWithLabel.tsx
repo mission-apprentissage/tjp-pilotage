@@ -2,10 +2,7 @@ import { Box, Flex, HStack, Icon as ChakraIcon, Text } from "@chakra-ui/react";
 
 import { ProgressBar } from "@/components/ProgressBar";
 import { themeDefinition } from "@/theme/theme";
-import {
-  formatPercentage,
-  formatPercentageWithoutSign,
-} from "@/utils/formatUtils";
+import { formatPercentage, formatPercentageWithoutSign } from "@/utils/formatUtils";
 
 const DrapeauFrancaisIcon = ({ ...props }) => (
   <ChakraIcon boxSize={4} {...props}>
@@ -19,16 +16,8 @@ const DrapeauFrancaisIcon = ({ ...props }) => (
     >
       <rect x="0.951111" width="20" height="13" fill="url(#pattern0)" />
       <defs>
-        <pattern
-          id="pattern0"
-          patternContentUnits="objectBoundingBox"
-          width="1"
-          height="1"
-        >
-          <use
-            xlinkHref="#image0_2362_2536"
-            transform="matrix(0.00446964 0 0 0.00666667 -0.00283401 0)"
-          />
+        <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+          <use xlinkHref="#image0_2362_2536" transform="matrix(0.00446964 0 0 0.00666667 -0.00283401 0)" />
         </pattern>
         <image
           id="image0_2362_2536"
@@ -59,14 +48,7 @@ export const NumberWithLabel = ({
   round?: number;
 }) => {
   return (
-    <Flex
-      direction={"column"}
-      alignItems="start"
-      justifyContent="start"
-      minWidth="200px"
-      w={"100%"}
-      gap={4}
-    >
+    <Flex direction={"column"} alignItems="start" justifyContent="start" minWidth="200px" w={"100%"} gap={4}>
       <HStack>
         {icon}
         <Text fontSize="14px" fontWeight="700" lineHeight="20px">
@@ -74,29 +56,14 @@ export const NumberWithLabel = ({
         </Text>
       </HStack>
       <Flex flex={1} direction={"column"} gap="16px" width="100%">
-        <Text
-          fontSize="32px"
-          lineHeight="40px"
-          fontWeight="700"
-          color={"grey.50"}
-        >
+        <Text fontSize="32px" lineHeight="40px" fontWeight="700" color={"grey.50"}>
           {formatPercentage(percentage, round, "- %")}
         </Text>
         {objective && (
           <Box width="100%">
-            <ProgressBar
-              percentage={formatPercentageWithoutSign(
-                percentage ? percentage / objective : undefined,
-                1
-              )}
-            />
+            <ProgressBar percentage={formatPercentageWithoutSign(percentage ? percentage / objective : undefined, 1)} />
             <Text color={themeDefinition.colors.grey[425]}>
-              {formatPercentage(
-                percentage ? percentage / objective : undefined,
-                1,
-                "- %"
-              )}{" "}
-              de l'objectif
+              {formatPercentage(percentage ? percentage / objective : undefined, 1, "- %")} de l'objectif
             </Text>
           </Box>
         )}
@@ -108,18 +75,10 @@ export const NumberWithLabel = ({
             <Text
               fontSize="14px"
               lineHeight="20px"
-              color={
-                (percentage ? percentage - nationalPercentage > 0 : false)
-                  ? "success.425"
-                  : "error.425"
-              }
+              color={(percentage ? percentage - nationalPercentage > 0 : false) ? "success.425" : "error.425"}
               mb={"auto"}
             >
-              {`${
-                (percentage ? percentage - nationalPercentage > 0 : false)
-                  ? "+"
-                  : ""
-              }${formatPercentageWithoutSign(
+              {`${(percentage ? percentage - nationalPercentage > 0 : false) ? "+" : ""}${formatPercentageWithoutSign(
                 percentage ? percentage - nationalPercentage : undefined,
                 1
               )} pts`}

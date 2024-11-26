@@ -3,14 +3,15 @@ import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
-import { isAllowedToSeePreviousCampagnes } from "../../../../utils/isAllowedToSeePreviousCampagnes";
-import { isDemandeCampagneEnCours } from "../../../../utils/isDemandeCampagneEnCours";
-import { isDemandeSelectable } from "../../../../utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
-import { Filters } from "./getFilters.dep";
+import { getKbdClient } from "@/db/db";
+import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { isAllowedToSeePreviousCampagnes } from "@/modules/utils/isAllowedToSeePreviousCampagnes";
+import { isDemandeCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
+import { isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
+
+import type { Filters } from "./getFilters.dep";
 
 export const getDemandes = async ({
   statut,
@@ -26,32 +27,16 @@ export const getDemandes = async ({
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const demandes = await kdb
+  const demandes = await getKbdClient()
     .selectFrom("latestDemandeView as demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
-    .leftJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
+    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "demande.codeDispositif"
-    )
+    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("user", "user.id", "demande.createdBy")
-    .leftJoin("suivi", (join) =>
-      join
-        .onRef("suivi.intentionNumero", "=", "demande.numero")
-        .on("userId", "=", user.id)
-    )
+    .leftJoin("suivi", (join) => join.onRef("suivi.intentionNumero", "=", "demande.numero").on("userId", "=", user.id))
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
@@ -67,9 +52,7 @@ export const getDemandes = async ({
     .selectAll("demande")
     .select((eb) => [
       "suivi.id as suiviId",
-      sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
-        "user.lastname"
-      )})`.as("userName"),
+      sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("userName"),
       sql<boolean>`(
         "intentionAccessLog"."id" is not null
          or "demande"."updatedBy" = ${user.id}
@@ -87,11 +70,7 @@ export const getDemandes = async ({
           .selectFrom(["demande as demandeCompensee"])
           .whereRef("demandeCompensee.cfd", "=", "demande.compensationCfd")
           .whereRef("demandeCompensee.uai", "=", "demande.compensationUai")
-          .whereRef(
-            "demandeCompensee.codeDispositif",
-            "=",
-            "demande.compensationCodeDispositif"
-          )
+          .whereRef("demandeCompensee.codeDispositif", "=", "demande.compensationCodeDispositif")
           .select(["demandeCompensee.numero", "demandeCompensee.typeDemande"])
           .limit(1)
       ).as("demandeCompensee"),
@@ -106,20 +85,14 @@ export const getDemandes = async ({
             .as("allDemandeImportee")
         )
         .select("allDemandeImportee.numero")
-        .where(
-          "allDemandeImportee.statut",
-          "<>",
-          DemandeStatutEnum["supprimée"]
-        )
+        .where("allDemandeImportee.statut", "<>", DemandeStatutEnum["supprimée"])
         .as("numeroDemandeImportee"),
       jsonObjectFrom(
         eb
           .selectFrom("user")
           .whereRef("user.id", "=", "demande.createdBy")
           .select((eb) => [
-            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
-              "user.lastname"
-            )})`.as("fullname"),
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
           ])
@@ -130,9 +103,7 @@ export const getDemandes = async ({
           .selectFrom("user")
           .whereRef("user.id", "=", "demande.updatedBy")
           .select((eb) => [
-            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
-              "user.lastname"
-            )})`.as("fullname"),
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
           ])
@@ -182,23 +153,14 @@ export const getDemandes = async ({
     })
     .$call((q) => {
       if (!orderBy || !order) return q;
-      return q.orderBy(
-        sql`${sql.ref(orderBy)}`,
-        sql`${sql.raw(order)} NULLS LAST`
-      );
+      return q.orderBy(sql`${sql.ref(orderBy)}`, sql`${sql.raw(order)} NULLS LAST`);
     })
     .$call((eb) => {
-      if (codeAcademie)
-        return eb.where("academie.codeAcademie", "in", codeAcademie);
+      if (codeAcademie) return eb.where("academie.codeAcademie", "in", codeAcademie);
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
+      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .orderBy("updatedAt desc")
@@ -207,7 +169,7 @@ export const getDemandes = async ({
     .limit(limit)
     .execute();
 
-  const campagnes = await kdb
+  const campagnes = await getKbdClient()
     .selectFrom("campagne")
     .selectAll()
     .where(isAllowedToSeePreviousCampagnes({ user }))

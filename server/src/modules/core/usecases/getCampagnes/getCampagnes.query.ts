@@ -1,8 +1,8 @@
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
 export const getCampagnes = async () => {
-  return kdb
+  return getKbdClient()
     .selectFrom("campagne")
     .selectAll()
     .orderBy("annee desc")

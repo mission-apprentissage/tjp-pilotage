@@ -1,9 +1,9 @@
 import { Issuer } from "openid-client";
 
-import { config } from "../../../../../config/config";
+import config from "@/config";
 
 export const getDneClient = async () => {
-  const dneIssuer = await Issuer.discover(config.dne.url);
+  const dneIssuer = await Issuer.discover("https://hub-oidc.orion.education.fr/.well-known/openid-configuration");
 
   const client = new dneIssuer.Client({
     client_id: config.dne.clientId,

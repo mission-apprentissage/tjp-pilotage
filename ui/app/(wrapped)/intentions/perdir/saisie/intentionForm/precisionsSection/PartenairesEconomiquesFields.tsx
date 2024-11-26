@@ -1,19 +1,11 @@
 import { AddIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  chakra,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-} from "@chakra-ui/react";
+import { Button, chakra, Flex, FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
-import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
-import { IntentionForms } from "../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
+import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const PartenairesEconomiquesFields = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -24,24 +16,15 @@ export const PartenairesEconomiquesFields = chakra(
       setValue,
     } = useFormContext<IntentionForms>();
 
-    const [
-      typeDemande,
-      partenairesEconomiquesImpliques,
-      partenaireEconomique2,
-    ] = watch([
+    const [typeDemande, partenairesEconomiquesImpliques, partenaireEconomique2] = watch([
       "typeDemande",
       "partenairesEconomiquesImpliques",
       "partenaireEconomique2",
     ]);
 
-    const visible =
-      partenairesEconomiquesImpliques &&
-      !isTypeFermeture(typeDemande) &&
-      !isTypeDiminution(typeDemande);
+    const visible = partenairesEconomiquesImpliques && !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
 
-    const [hasDoublePartenaire, setHasDoublePartenaire] = useState<boolean>(
-      !!partenaireEconomique2
-    );
+    const [hasDoublePartenaire, setHasDoublePartenaire] = useState<boolean>(!!partenaireEconomique2);
 
     useEffect(() => {
       if (!visible) {
@@ -60,12 +43,7 @@ export const PartenairesEconomiquesFields = chakra(
 
     return (
       <Flex flex={1}>
-        <FormControl
-          className={className}
-          isInvalid={
-            !!errors.partenaireEconomique1 || !!errors.partenaireEconomique2
-          }
-        >
+        <FormControl className={className} isInvalid={!!errors.partenaireEconomique1 || !!errors.partenaireEconomique2}>
           <Flex direction={"row"} gap={2}>
             <Flex direction={"column"}>
               <FormLabel>Partenaire n°1</FormLabel>
@@ -92,26 +70,13 @@ export const PartenairesEconomiquesFields = chakra(
                 />
               </Flex>
             ) : (
-              <Button
-                w={56}
-                leftIcon={<AddIcon />}
-                onClick={() => setHasDoublePartenaire(true)}
-                mt={"auto"}
-              >
+              <Button w={56} leftIcon={<AddIcon />} onClick={() => setHasDoublePartenaire(true)} mt={"auto"}>
                 Ajouter un partenaire
               </Button>
             )}
           </Flex>
-          {errors.partenaireEconomique1 && (
-            <FormErrorMessage>
-              {errors.partenaireEconomique1.message}
-            </FormErrorMessage>
-          )}
-          {errors.partenaireEconomique2 && (
-            <FormErrorMessage>
-              {errors.partenaireEconomique2.message}
-            </FormErrorMessage>
-          )}
+          {errors.partenaireEconomique1 && <FormErrorMessage>{errors.partenaireEconomique1.message}</FormErrorMessage>}
+          {errors.partenaireEconomique2 && <FormErrorMessage>{errors.partenaireEconomique2.message}</FormErrorMessage>}
         </FormControl>
       </Flex>
     );

@@ -1,6 +1,6 @@
 import { GridItem, Heading } from "@chakra-ui/react";
 
-import { Informations } from "../types";
+import type { Informations } from "@/app/(wrapped)/panorama/etablissement/components/header/types";
 
 export const Libelle = ({ informations }: { informations: Informations }) => {
   return (

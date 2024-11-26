@@ -2,12 +2,9 @@ import { chakra } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import {
-  isTypeColoration,
-  isTypeOuverture,
-} from "../../../../../utils/typeDemandeUtils";
-import { CapaciteField } from "../../../components/CapaciteField";
-import { IntentionForms } from "../../defaultFormValues";
+import { CapaciteField } from "@/app/(wrapped)/intentions/perdir/saisie/components/CapaciteField";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
+import { isTypeColoration, isTypeOuverture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const CapaciteScolaireColoreeActuelleField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -27,12 +24,6 @@ export const CapaciteScolaireColoreeActuelleField = chakra(
     const isReadOnly = disabled || ouverture || !coloration;
     if (!coloration) return <></>;
 
-    return (
-      <CapaciteField
-        name={"capaciteScolaireColoreeActuelle"}
-        className={className}
-        isReadOnly={isReadOnly}
-      />
-    );
+    return <CapaciteField name={"capaciteScolaireColoreeActuelle"} className={className} isReadOnly={isReadOnly} />;
   }
 );

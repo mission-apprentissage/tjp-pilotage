@@ -14,16 +14,17 @@ import {
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { ReactNode, RefObject, useEffect } from "react";
+import type { ReactNode, RefObject } from "react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { client } from "@/api.client";
+import { SectionBlock } from "@/app/(wrapped)/intentions/perdir/saisie/components/SectionBlock";
+import type { Campagne } from "@/app/(wrapped)/intentions/perdir/saisie/types";
+import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
-import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
-import { SectionBlock } from "../components/SectionBlock";
-import { Campagne } from "../types";
-import { IntentionForms } from "./defaultFormValues";
+import type { IntentionForms } from "./defaultFormValues";
 import { InternatEtRestaurationSection } from "./internatEtRestaurationSection/InternatEtRestaurationSection";
 import { ObservationsSection } from "./observationsSection/ObservationsSection";
 import { PrecisionsSection } from "./precisionsSection/PrecisionsSection";
@@ -60,12 +61,7 @@ export const InformationsBlock = ({
   useEffect(
     () =>
       watch(({ typeDemande }, { name }) => {
-        if (
-          name != "typeDemande" ||
-          (typeDemande &&
-            !isTypeFermeture(typeDemande) &&
-            !isTypeDiminution(typeDemande))
-        )
+        if (name != "typeDemande" || (typeDemande && !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande)))
           return;
         setValue("amiCma", undefined);
         setValue("amiCmaValide", undefined);
@@ -85,10 +81,7 @@ export const InformationsBlock = ({
         setValue("augmentationCapaciteAccueilHebergementPrecisions", undefined);
         setValue("augmentationCapaciteAccueilRestauration", undefined);
         setValue("augmentationCapaciteAccueilRestaurationPlaces", undefined);
-        setValue(
-          "augmentationCapaciteAccueilRestaurationPrecisions",
-          undefined
-        );
+        setValue("augmentationCapaciteAccueilRestaurationPrecisions", undefined);
         setValue("recrutementRH", undefined);
         setValue("nbRecrutementRH", undefined);
         setValue("discipline1RecrutementRH", undefined);
@@ -105,38 +98,23 @@ export const InformationsBlock = ({
   );
 
   const typeDemande = watch("typeDemande");
-  const sectionsTravauxInternatEtRestaurationVisible =
-    !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
+  const sectionsTravauxInternatEtRestaurationVisible = !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
 
   return (
     <Flex direction="column" gap={6} mt={6}>
       <SectionBlock>
-        <TypeDemandeSection
-          typeDemandeRef={refs["typeDemande"]}
-          disabled={disabled}
-          campagne={campagne}
-        />
+        <TypeDemandeSection typeDemandeRef={refs["typeDemande"]} disabled={disabled} campagne={campagne} />
       </SectionBlock>
       <SectionBlock>
-        <PrecisionsSection
-          motifsEtPrecisionsRef={refs["motifsEtPrecisions"]}
-          disabled={disabled}
-          campagne={campagne}
-        />
+        <PrecisionsSection motifsEtPrecisionsRef={refs["motifsEtPrecisions"]} disabled={disabled} campagne={campagne} />
       </SectionBlock>
       <SectionBlock>
-        <RHSection
-          ressourcesHumainesRef={refs["ressourcesHumaines"]}
-          disabled={disabled}
-        />
+        <RHSection ressourcesHumainesRef={refs["ressourcesHumaines"]} disabled={disabled} />
       </SectionBlock>
       {sectionsTravauxInternatEtRestaurationVisible && (
         <>
           <SectionBlock>
-            <TravauxEtEquipementsSection
-              travauxEtEquipementsRef={refs["travauxEtEquipements"]}
-              disabled={disabled}
-            />
+            <TravauxEtEquipementsSection travauxEtEquipementsRef={refs["travauxEtEquipements"]} disabled={disabled} />
           </SectionBlock>
           <SectionBlock>
             <InternatEtRestaurationSection
@@ -147,10 +125,7 @@ export const InformationsBlock = ({
         </>
       )}
       <SectionBlock>
-        <ObservationsSection
-          commentaireEtPiecesJointesRef={refs["commentaireEtPiecesJointes"]}
-          disabled={disabled}
-        />
+        <ObservationsSection commentaireEtPiecesJointesRef={refs["commentaireEtPiecesJointes"]} disabled={disabled} />
       </SectionBlock>
       <SectionBlock>
         <Flex justifyContent={"space-between"} flexDir={"row"}>
@@ -178,9 +153,8 @@ export const InformationsBlock = ({
           </ModalHeader>
           <ModalBody>
             <Text mb={4}>
-              Cette action est irréversible, elle supprime définitivement la
-              demande et l’ensemble des données associées. Il est conseillé de
-              réserver cette action à une erreur de saisie ou un doublon.
+              Cette action est irréversible, elle supprime définitivement la demande et l’ensemble des données
+              associées. Il est conseillé de réserver cette action à une erreur de saisie ou un doublon.
             </Text>
           </ModalBody>
           <ModalFooter>

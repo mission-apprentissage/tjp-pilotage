@@ -1,10 +1,12 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
 
-import { RequestUser } from "../../../core/model/User";
-import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import { findOneDemande } from "../../repositories/findOneDemande.query";
+import type { RequestUser } from "@/modules/core/model/User";
+import { getCurrentCampagneQuery } from "@/modules/demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
+import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+
 import { createDemandeQuery } from "./dependencies/createDemande.dep";
 import { getDemandeWithMetadata } from "./dependencies/getDemandeWithMetadata";
 import { hasAlreadyBeenImported } from "./dependencies/hasAlreadyBeenImported";
@@ -18,13 +20,7 @@ export const [importDemande, importDemandeFactory] = inject(
     hasAlreadyBeenImported,
   },
   (deps) =>
-    async ({
-      numero,
-      user,
-    }: {
-      user: Pick<RequestUser, "id" | "codeRegion" | "role">;
-      numero: string;
-    }) => {
+    async ({ numero, user }: { user: Pick<RequestUser, "id" | "codeRegion" | "role">; numero: string }) => {
       const [demande, campagne, alreadyImportedDemande] = await Promise.all([
         deps.findOneDemande(numero),
         deps.getCurrentCampagneQuery(),
@@ -41,23 +37,18 @@ export const [importDemande, importDemandeFactory] = inject(
       }
 
       if (!campagne) {
-        throw Boom.badData(
-          "Aucune campagne en cours dans laquelle importer la demande",
-          {
-            errors: {
-              aucune_campagne_en_cours:
-                "Aucune campagne en cours dans laquelle importer la demande.",
-            },
-          }
-        );
+        throw Boom.badData("Aucune campagne en cours dans laquelle importer la demande", {
+          errors: {
+            aucune_campagne_en_cours: "Aucune campagne en cours dans laquelle importer la demande.",
+          },
+        });
       }
 
       if (!demande) {
         throw Boom.badRequest("Aucune demande correspondant au numéro fourni", {
           errors: {
             numero: numero,
-            aucune_demande_correspondante:
-              "Aucune demande correspondant au numéro fourni.",
+            aucune_demande_correspondante: "Aucune demande correspondant au numéro fourni.",
           },
         });
       }

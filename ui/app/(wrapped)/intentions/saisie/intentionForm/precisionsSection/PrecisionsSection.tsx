@@ -1,12 +1,13 @@
 import { Divider, Flex, Heading } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { RefObject } from "react";
+import type { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { QuestionBlock } from "../../components/QuestionBlock";
-import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
-import { Campagne } from "../../types";
-import { IntentionForms } from "../defaultFormValues";
+import { QuestionBlock } from "@/app/(wrapped)/intentions/saisie/components/QuestionBlock";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
+import type { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
+
 import { AmiCmaEnCoursValidationField } from "./AmiCmaEnCoursValidationField";
 import { AmiCmaField } from "./AmiCmaField";
 import { AmiCmaValideAnneeField } from "./AmiCmaValideAnneeField";
@@ -28,18 +29,10 @@ export const PrecisionsSection = ({
   const amiCma = watch("amiCma");
 
   return (
-    <Flex
-      ref={motifsEtPrecisionsRef}
-      scrollMarginTop={SCROLL_OFFSET}
-      direction={"column"}
-    >
+    <Flex ref={motifsEtPrecisionsRef} scrollMarginTop={SCROLL_OFFSET} direction={"column"}>
       <Heading as="h2" fontSize="xl" display={"flex"}>
         <Flex direction={"row"} gap={3}>
-          <Icon
-            icon="ri:list-unordered"
-            color="black"
-            style={{ marginTop: "auto" }}
-          />
+          <Icon icon="ri:list-unordered" color="black" style={{ marginTop: "auto" }} />
           Motifs de votre demande et précisions complémentaires
         </Flex>
       </Heading>

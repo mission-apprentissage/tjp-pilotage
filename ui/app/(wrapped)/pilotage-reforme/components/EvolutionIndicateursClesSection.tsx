@@ -1,8 +1,10 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 import _ from "lodash";
 
-import { IndicateurType, PilotageReformeStats } from "../types";
-import { BarGraph, BarGraphData } from "./BarGraph";
+import type { IndicateurType, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
+
+import type { BarGraphData } from "./BarGraph";
+import { BarGraph } from "./BarGraph";
 
 export const EvolutionIndicateursClesSection = ({
   data,
@@ -22,7 +24,7 @@ export const EvolutionIndicateursClesSection = ({
   indicateurOptions: { label: string; value: string; isDefault: boolean }[];
 }) => {
   const graphData: BarGraphData = {};
-
+  // @ts-expect-error TODO
   data?.annees.forEach((anneeData) => {
     graphData[anneeData.annee.toString()] = {
       annee: anneeData.annee.toString(),
@@ -32,27 +34,14 @@ export const EvolutionIndicateursClesSection = ({
     };
   });
 
-  const getLibelleRegion = (
-    regions?: Array<{ label: string; value: string }>,
-    codeRegion?: string
-  ) => {
+  const getLibelleRegion = (regions?: Array<{ label: string; value: string }>, codeRegion?: string) => {
     return _.find(regions, (region) => region.value === codeRegion)?.label;
   };
 
-  const libelleRegion = isFiltered
-    ? getLibelleRegion(data?.filters?.regions, codeRegion)
-    : "";
+  const libelleRegion = isFiltered ? getLibelleRegion(data?.filters?.regions, codeRegion) : "";
 
   return (
-    <Box
-      borderRadius={4}
-      border={"1px solid"}
-      borderColor="grey.900"
-      bg="white"
-      p={3}
-      height={"328"}
-      mt={8}
-    >
+    <Box borderRadius={4} border={"1px solid"} borderColor="grey.900" bg="white" p={3} height={"328"} mt={8}>
       {isLoading ? (
         <Skeleton opacity="0.3" height="100%" />
       ) : (
@@ -76,11 +65,7 @@ export const EvolutionIndicateursClesSection = ({
               ))}
             </Select>
           </Flex>
-          <BarGraph
-            graphData={graphData}
-            isFiltered={isFiltered}
-            libelleRegion={libelleRegion}
-          />
+          <BarGraph graphData={graphData} isFiltered={isFiltered} libelleRegion={libelleRegion} />
         </Box>
       )}
     </Box>

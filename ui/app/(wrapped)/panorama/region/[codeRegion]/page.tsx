@@ -5,16 +5,15 @@ import qs from "qs";
 import { useContext } from "react";
 
 import { client } from "@/api.client";
+import { FiltersSection } from "@/app/(wrapped)/panorama/components/FiltersSection";
+import { IndicateursSection } from "@/app/(wrapped)/panorama/components/IndicateursSection/IndicateursSection";
+import { InfoSection } from "@/app/(wrapped)/panorama/components/InfoSection";
+import { QuadrantSection } from "@/app/(wrapped)/panorama/components/QuadrantSection/QuadrantSection";
+import { TauxInserJeunesSection } from "@/app/(wrapped)/panorama/components/TauxInserJeunesSection/TauxInserJeunesSection";
+import { TopFlopSection } from "@/app/(wrapped)/panorama/components/TopFlopSection/TopFlopSection";
+import type { FiltersPanoramaFormation, OrderPanoramaFormation } from "@/app/(wrapped)/panorama/types";
 import { CodeRegionFilterContext } from "@/app/layoutClient";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-
-import { FiltersSection } from "../../components/FiltersSection";
-import { IndicateursSection } from "../../components/IndicateursSection/IndicateursSection";
-import { InfoSection } from "../../components/InfoSection";
-import { QuadrantSection } from "../../components/QuadrantSection/QuadrantSection";
-import { TauxInserJeunesSection } from "../../components/TauxInserJeunesSection/TauxInserJeunesSection";
-import { TopFlopSection } from "../../components/TopFlopSection/TopFlopSection";
-import { FiltersPanoramaFormation, OrderPanoramaFormation } from "../../types";
 
 export default function Panorama({
   params: { codeRegion },
@@ -25,15 +24,11 @@ export default function Panorama({
 }) {
   const router = useRouter();
   const queryParams = useSearchParams();
-  const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(
-    queryParams.toString()
-  );
+  const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(queryParams.toString());
   const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
 
   const setSearchParams = (params: Partial<FiltersPanoramaFormation>) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const handleOrder = (column: OrderPanoramaFormation["orderBy"]) => {
@@ -83,17 +78,15 @@ export default function Panorama({
     }
   );
 
-  const { data, isLoading } = client
-    .ref("[GET]/panorama/stats/region")
-    .useQuery(
-      {
-        query: {
-          codeRegion,
-          ...searchParams,
-        },
+  const { data, isLoading } = client.ref("[GET]/panorama/stats/region").useQuery(
+    {
+      query: {
+        codeRegion,
+        ...searchParams,
       },
-      { keepPreviousData: true, staleTime: 10000000 }
-    );
+    },
+    { keepPreviousData: true, staleTime: 10000000 }
+  );
 
   return (
     <>
@@ -117,10 +110,14 @@ export default function Panorama({
             : stats
         }
         libelleTerritoire={
-          regionOptions?.find((item) => item.value === codeRegion)?.label
+          regionOptions?.find(
+            // @ts-expect-error TODO
+            (item) => item.value === codeRegion
+          )?.label
         }
         libelleDiplome={
           data?.filters.diplomes?.find(
+            // @ts-expect-error TODO
             (item) => item.value === searchParams.codeNiveauDiplome?.[0]
           )?.label
         }
@@ -136,9 +133,7 @@ export default function Panorama({
         quadrantFormations={data?.formations}
         isLoading={isLoading}
         order={{ order: searchParams.order, orderBy: searchParams.orderBy }}
-        handleOrder={(column?: string) =>
-          handleOrder(column as OrderPanoramaFormation["orderBy"])
-        }
+        handleOrder={(column?: string) => handleOrder(column as OrderPanoramaFormation["orderBy"])}
         codeRegion={codeRegion}
         codeNiveauDiplome={searchParams.codeNiveauDiplome?.[0]}
         codeNsf={searchParams.codeNsf?.[0]}

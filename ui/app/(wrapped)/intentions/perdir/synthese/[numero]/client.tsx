@@ -9,19 +9,20 @@ import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
-import { EditoSection } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/actions/EditoSection";
+import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { useAuth } from "@/utils/security/useAuth";
 
-import { isChangementStatutAvisDisabled } from "../../../utils/statutUtils";
 import { ActionsSection } from "./actions/ActionsSection";
+import { EditoSection } from "./actions/EditoSection";
 import { InformationHeader } from "./components/InformationHeader";
 import { SyntheseSpinner } from "./components/SyntheseSpinner";
 import { DisplayTypeEnum } from "./main/displayTypeEnum";
 import { MainSection } from "./main/MainSection";
 import { StepperSection } from "./stepper/StepperSection";
 
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default ({
   params: { numero },
 }: {
@@ -38,29 +39,22 @@ export default ({
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const setSearchParams = (params: { displayType?: DisplayTypeEnum }) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
   };
-  const { data: intention, isLoading } = client
-    .ref("[GET]/intention/:numero")
-    .useQuery(
-      { params: { numero: numero } },
-      {
-        cacheTime: 0,
-        onError: (error: unknown) => {
-          if (isAxiosError(error) && error.response?.data?.message) {
-            console.error(error);
-            if (error.response?.status === 404)
-              router.push(`/intentions/perdir/saisie?notfound=${numero}`);
-          }
-        },
-      }
-    );
+  const { data: intention, isLoading } = client.ref("[GET]/intention/:numero").useQuery(
+    { params: { numero: numero } },
+    {
+      cacheTime: 0,
+      onError: (error: unknown) => {
+        if (isAxiosError(error) && error.response?.data?.message) {
+          console.error(error);
+          if (error.response?.status === 404) router.push(`/intentions/perdir/saisie?notfound=${numero}`);
+        }
+      },
+    }
+  );
 
-  const { mutate: submitIntentionAccessLog } = client
-    .ref("[POST]/intention/access/submit")
-    .useMutation({});
+  const { mutate: submitIntentionAccessLog } = client.ref("[POST]/intention/access/submit").useMutation({});
 
   useEffect(() => {
     submitIntentionAccessLog({ body: { intention: { numero: numero } } });
@@ -78,8 +72,7 @@ export default ({
       displayType: DisplayTypeEnum.commentairesEtAvis,
     });
 
-  const isCampagneEnCours =
-    intention?.campagne?.statut === CampagneStatutEnum["en cours"];
+  const isCampagneEnCours = intention?.campagne?.statut === CampagneStatutEnum["en cours"];
 
   if (isLoading) return <SyntheseSpinner />;
   if (!intention) return null;
@@ -87,14 +80,7 @@ export default ({
   return (
     <Flex width={"100%"} bg="blueecume.925" direction="column">
       <InformationHeader statut={intention.statut} />
-      <Flex
-        align="center"
-        as={Container}
-        direction="column"
-        maxWidth={"container.xl"}
-        pt={4}
-        pb={20}
-      >
+      <Flex align="center" as={Container} direction="column" maxWidth={"container.xl"} pt={4} pb={20}>
         <Breadcrumb
           textAlign={"start"}
           py={2}
@@ -115,19 +101,11 @@ export default ({
           <Flex direction={"column"} gap={8}>
             <StepperSection intention={intention} />
             <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
-              <GridItem
-                colSpan={
-                  isChangementStatutAvisDisabled(intention.statut) && !isPerdir
-                    ? 4
-                    : 3
-                }
-              >
+              <GridItem colSpan={isChangementStatutAvisDisabled(intention.statut) && !isPerdir ? 4 : 3}>
                 <MainSection
                   isCampagneEnCours={isCampagneEnCours}
                   intention={intention}
-                  displayType={
-                    searchParams.displayType ?? DisplayTypeEnum.synthese
-                  }
+                  displayType={searchParams.displayType ?? DisplayTypeEnum.synthese}
                   displaySynthese={displaySynthese}
                   displayCommentairesEtAvis={displayCommentairesEtAvis}
                 />

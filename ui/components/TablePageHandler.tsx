@@ -18,8 +18,7 @@ export const TablePageHandler = chakra(
     return (
       <Flex className={className}>
         <Box mr="4" ml="auto">
-          {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur{" "}
-          {count}
+          {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur {count}
         </Box>
         <IconButton
           isDisabled={page === 0}

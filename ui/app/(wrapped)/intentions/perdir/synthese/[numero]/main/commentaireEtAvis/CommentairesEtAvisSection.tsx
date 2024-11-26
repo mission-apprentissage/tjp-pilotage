@@ -1,49 +1,28 @@
-import {
-  Box,
-  chakra,
-  Divider,
-  Flex,
-  Heading,
-  Highlight,
-  Text,
-} from "@chakra-ui/react";
+import { Box, chakra, Divider, Flex, Heading, Highlight, Text } from "@chakra-ui/react";
 import _ from "lodash";
 import { Fragment } from "react";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { client } from "@/api.client";
-
+import type { client } from "@/api.client";
+import type { Avis, ChangementStatut } from "@/app/(wrapped)/intentions/perdir/types";
 import {
   getOrderStatut,
   getStepWorkflow,
   getStepWorkflowAvis,
   isStepWorkflowEnabled,
-} from "../../../../../utils/statutUtils";
-import { Avis, ChangementStatut } from "../../../../types";
+} from "@/app/(wrapped)/intentions/utils/statutUtils";
+
 import { AvisSection } from "./AvisSection";
 import { CommentaireSection } from "./CommentaireSection";
 import { CompteursAvisSection } from "./CompteursAvisSection";
 
-const StepIcon = chakra(
-  ({ className, numero }: { className?: string; numero: number }) => (
-    <Box
-      className={className}
-      w="32px"
-      h="28px"
-      borderRadius={"100%"}
-      bgColor={"blueecume.925"}
-    >
-      <Text
-        textAlign={"center"}
-        fontSize={"18px"}
-        fontWeight={700}
-        color={"bluefrance.113"}
-      >
-        {numero}
-      </Text>
-    </Box>
-  )
-);
+const StepIcon = chakra(({ className, numero }: { className?: string; numero: number }) => (
+  <Box className={className} w="32px" h="28px" borderRadius={"100%"} bgColor={"blueecume.925"}>
+    <Text textAlign={"center"} fontSize={"18px"} fontWeight={700} color={"bluefrance.113"}>
+      {numero}
+    </Text>
+  </Box>
+));
 
 export const CommentairesEtAvisSection = ({
   intention,
@@ -54,47 +33,45 @@ export const CommentairesEtAvisSection = ({
     const changementsStatut = getChangementStatutByEtape(etape);
     const avis = getAvisByEtape(etape);
     if (changementsStatut === undefined && avis === undefined) return [];
-    if (avis === undefined)
-      return _.orderBy(changementsStatut, (item) => item.updatedAt, "desc");
-    if (changementsStatut === undefined)
-      return _.orderBy(avis, (item) => item.updatedAt, "desc");
-    return _.orderBy(
-      [...changementsStatut, ...avis],
-      (item) => item.updatedAt,
-      "desc"
-    );
+    if (avis === undefined) return _.orderBy(changementsStatut, (item) => item.updatedAt, "desc");
+    if (changementsStatut === undefined) return _.orderBy(avis, (item) => item.updatedAt, "desc");
+    return _.orderBy([...changementsStatut, ...avis], (item) => item.updatedAt, "desc");
   };
 
   const getChangementStatutByEtape = (etape: 1 | 2 | 3) => {
-    return intention?.changementsStatut
-      ?.filter((changementStatut) => {
-        if (etape === 3 && getStepWorkflow(changementStatut.statut) === 4)
-          return true;
-        // Si la demande a été refusée à cette étape, on l'affiche
-        if (
-          getStepWorkflow(changementStatut.statutPrecedent) === etape &&
-          changementStatut.statut === DemandeStatutEnum["refusée"]
+    return (
+      intention?.changementsStatut
+        // @ts-expect-error TODO
+        ?.filter((changementStatut) => {
+          if (etape === 3 && getStepWorkflow(changementStatut.statut) === 4) return true;
+          // Si la demande a été refusée à cette étape, on l'affiche
+          if (
+            getStepWorkflow(changementStatut.statutPrecedent) === etape &&
+            changementStatut.statut === DemandeStatutEnum["refusée"]
+          )
+            return true;
+          return getStepWorkflow(changementStatut.statut) === etape;
+        })
+        .sort(
+          // @ts-expect-error TODO
+          (a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut)
         )
-          return true;
-        return getStepWorkflow(changementStatut.statut) === etape;
-      })
-      .sort((a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut));
+    );
   };
 
   const getAvisByEtape = (etape: 1 | 2 | 3) => {
-    return intention?.avis?.filter((avis) => {
-      if (etape === 3 && getStepWorkflowAvis(avis.typeAvis) === 4) return true;
-      return getStepWorkflowAvis(avis.typeAvis) === etape;
-    });
+    return intention?.avis?.filter(
+      // @ts-expect-error TODO
+      (avis) => {
+        if (etape === 3 && getStepWorkflowAvis(avis.typeAvis) === 4) return true;
+        return getStepWorkflowAvis(avis.typeAvis) === etape;
+      }
+    );
   };
 
-  const getNombreDifferentsContributeurs = (
-    commentairesEtAvis?: Array<{ createdBy: string }>
-  ) => {
+  const getNombreDifferentsContributeurs = (commentairesEtAvis?: Array<{ createdBy: string }>) => {
     if (!commentairesEtAvis) return 0;
-    return _.uniq(
-      commentairesEtAvis.map((commentaireEtAvis) => commentaireEtAvis.createdBy)
-    ).length;
+    return _.uniq(commentairesEtAvis.map((commentaireEtAvis) => commentaireEtAvis.createdBy)).length;
   };
 
   const etapes = [
@@ -135,25 +112,19 @@ export const CommentairesEtAvisSection = ({
                   <Text fontSize={18} fontWeight={700} lineHeight={"21px"}>
                     {etape.label}
                   </Text>
-                  <Text
-                    fontSize={14}
-                    fontWeight={400}
-                    lineHeight={"24px"}
-                    color={"grey.200"}
-                  >
+                  <Text fontSize={14} fontWeight={400} lineHeight={"24px"} color={"grey.200"}>
                     <Highlight
                       query={[
                         etape.commentairesEtAvis?.length.toString() ?? "",
-                        getNombreDifferentsContributeurs(
-                          etape.commentairesEtAvis
-                        ).toString(),
+                        getNombreDifferentsContributeurs(etape.commentairesEtAvis).toString(),
                       ]}
                       styles={{
                         fontWeight: 700,
                       }}
                     >
-                      {`${etape.commentairesEtAvis
-                        ?.length} changement(s) de statut ou avis par ${getNombreDifferentsContributeurs(
+                      {`${
+                        etape.commentairesEtAvis?.length
+                      } changement(s) de statut ou avis par ${getNombreDifferentsContributeurs(
                         etape.commentairesEtAvis
                       )} contributeur(s)`}
                     </Highlight>
@@ -169,10 +140,7 @@ export const CommentairesEtAvisSection = ({
                         statut={intention.statut}
                       />
                     ) : (
-                      <AvisSection
-                        avis={commentaireEtAvis as Avis}
-                        statut={intention.statut}
-                      />
+                      <AvisSection avis={commentaireEtAvis as Avis} statut={intention.statut} />
                     )}
                   </Fragment>
                 ))}

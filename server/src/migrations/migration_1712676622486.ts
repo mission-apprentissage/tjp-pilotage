@@ -1,4 +1,4 @@
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
@@ -7,12 +7,9 @@ export const up = async (db: Kysely<unknown>) => {
     .addPrimaryKeyConstraint("codeRome_pk", ["codeRome"])
     .addColumn("libelleRome", "varchar", (cb) => cb.notNull())
     .addColumn("codeDomaineProfessionnel", "varchar(3)", (cb) => cb.notNull())
-    .addForeignKeyConstraint(
-      "codeDomaineProfessionnel_fk",
-      ["codeDomaineProfessionnel"],
-      "domaineProfessionnel",
-      ["codeDomaineProfessionnel"]
-    )
+    .addForeignKeyConstraint("codeDomaineProfessionnel_fk", ["codeDomaineProfessionnel"], "domaineProfessionnel", [
+      "codeDomaineProfessionnel",
+    ])
     .execute();
 };
 

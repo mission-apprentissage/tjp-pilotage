@@ -2,7 +2,7 @@ import { Badge, Flex, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
 import { GlossaireIcon } from "./GlossaireIcon";
-import { GlossaireEntryContent } from "./types";
+import type { GlossaireEntryContent } from "./types";
 
 const highlightText = (text?: string, highlight?: string) => {
   if (!text) {
@@ -21,11 +21,7 @@ const highlightText = (text?: string, highlight?: string) => {
 
   const end = start + highlight.length;
 
-  return [
-    text.slice(0, start),
-    <strong key={`${text}_match`}>{text.slice(start, end)}</strong>,
-    text.slice(end),
-  ];
+  return [text.slice(0, start), <strong key={`${text}_match`}>{text.slice(start, end)}</strong>, text.slice(end)];
 };
 
 export const GlossaireListContentItem = ({
@@ -56,6 +52,7 @@ export const GlossaireListContentItem = ({
         {entry.indicator?.name && (
           <Badge
             variant={
+              // @ts-expect-error TODO
               {
                 green: "success",
                 blue: "info",

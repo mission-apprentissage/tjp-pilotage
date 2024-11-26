@@ -2,13 +2,11 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 import { Skeleton } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import MapGLMap, {
-  NavigationControl,
-  ScaleControl,
-} from "react-map-gl/maplibre";
+import MapGLMap, { NavigationControl, ScaleControl } from "react-map-gl/maplibre";
 
-import { client } from "../../../../../../../../api.client";
-import { useEtablissementMapContext } from "../../context/etablissementMapContext";
+import { client } from "@/api.client";
+import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
+
 import { ActiveEtablissement } from "./components/ActiveEtablissement";
 import { CustomControls } from "./components/CustomControls";
 import { Etablissement } from "./components/Etablissement";
@@ -28,21 +26,18 @@ const AVAILABLE_STYLES = [
 
 export function Map({ uai, height, width }: MapProps) {
   const [style] = useState(AVAILABLE_STYLES[0]);
-  const { etablissementMap, setEtablissementMap, cfdFilter } =
-    useEtablissementMapContext();
+  const { etablissementMap, setEtablissementMap, cfdFilter } = useEtablissementMapContext();
 
-  const { data: etablissement, isLoading } = client
-    .ref("[GET]/etablissement/:uai/map")
-    .useQuery({
-      params: {
-        uai,
-      },
-      query: {
-        cfd: cfdFilter ? [cfdFilter] : undefined,
-        mapHeight: height,
-        mapWidth: width,
-      },
-    });
+  const { data: etablissement, isLoading } = client.ref("[GET]/etablissement/:uai/map").useQuery({
+    params: {
+      uai,
+    },
+    query: {
+      cfd: cfdFilter ? [cfdFilter] : undefined,
+      mapHeight: height,
+      mapWidth: width,
+    },
+  });
 
   useEffect(() => {
     if (!isLoading && etablissement) {

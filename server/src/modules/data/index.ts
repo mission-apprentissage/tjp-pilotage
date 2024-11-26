@@ -1,4 +1,5 @@
-import { Server } from "../../server";
+import type { Server } from "@/server/server";
+
 import { getAnalyseDetailleeEtablissementRoute } from "./usecases/getAnalyseDetailleeEtablissement/getAnalyseDetailleeEtablissement.route";
 import { getDataForEtablissementMapRoute } from "./usecases/getDataForEtablissementMap/getDataForEtablissementMap.route";
 import { getDataForEtablissementMapListRoute } from "./usecases/getDataForEtablissementMapList/getDataForEtablissementMapList.route";

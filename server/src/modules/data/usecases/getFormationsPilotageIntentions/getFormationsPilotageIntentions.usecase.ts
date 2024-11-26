@@ -1,7 +1,8 @@
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
-import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import { getStatsSortieQuery } from "../../queries/getStatsSortie/getStatsSortie";
+import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
+import { getStatsSortieQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
+
 import {
   getCodeRegionFromAcademieQuery,
   getCodeRegionFromDepartementQuery,
@@ -9,7 +10,7 @@ import {
   getFormationsPilotageIntentionsQuery,
   getRegionStatsQuery,
 } from "./deps";
-import { Filters } from "./deps/getFormationsPilotageIntentions.dep";
+import type { Filters } from "./deps/getFormationsPilotageIntentions.dep";
 
 interface ActiveFilters extends Omit<Filters, "campagne"> {
   campagne?: string;
@@ -33,16 +34,16 @@ const getQuadrantPilotageIntentionsFactory =
     let codeRegion = activeFilters.codeRegion;
 
     if (!codeRegion && activeFilters.codeDepartement) {
-      const { codeRegion: departementCodeRegion } =
-        await getCodeRegionFromDepartementQuery(activeFilters.codeDepartement);
+      const { codeRegion: departementCodeRegion } = await getCodeRegionFromDepartementQuery(
+        activeFilters.codeDepartement
+      );
       if (departementCodeRegion) {
         codeRegion = departementCodeRegion;
       }
     }
 
     if (!codeRegion && activeFilters.codeAcademie) {
-      const { codeRegion: academieCodeRegion } =
-        await getCodeRegionFromAcademieQuery(activeFilters.codeAcademie);
+      const { codeRegion: academieCodeRegion } = await getCodeRegionFromAcademieQuery(activeFilters.codeAcademie);
       if (academieCodeRegion) {
         codeRegion = academieCodeRegion;
       }
@@ -68,5 +69,4 @@ const getQuadrantPilotageIntentionsFactory =
       })),
     };
   };
-export const getFormationsPilotageIntentionsUsecase =
-  getQuadrantPilotageIntentionsFactory();
+export const getFormationsPilotageIntentionsUsecase = getQuadrantPilotageIntentionsFactory();

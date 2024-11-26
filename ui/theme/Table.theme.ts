@@ -1,8 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { tableAnatomy } from "@chakra-ui/anatomy";
 import { createMultiStyleConfigHelpers } from "@chakra-ui/react";
 
-const { definePartsStyle, defineMultiStyleConfig } =
-  createMultiStyleConfigHelpers(tableAnatomy.keys);
+const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(tableAnatomy.keys);
 
 const sm = definePartsStyle({
   th: { px: 4, textTransform: "unset", fontSize: "12" },

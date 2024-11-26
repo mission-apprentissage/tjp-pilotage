@@ -13,7 +13,7 @@ import {
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "../../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const NbProfesseurAssocieRHField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -36,10 +36,7 @@ export const NbProfesseurAssocieRHField = chakra(
     if (!visible) return null;
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.nbProfesseurAssocieRH}
-      >
+      <FormControl className={className} isInvalid={!!errors.nbProfesseurAssocieRH}>
         <FormLabel>Combien de professeurs associés ?</FormLabel>
         <Controller
           name="nbProfesseurAssocieRH"
@@ -95,15 +92,10 @@ export const NbProfesseurAssocieRHField = chakra(
             </NumberInput>
           )}
         />
-        {errors.nbProfesseurAssocieRH && (
-          <FormErrorMessage>
-            {errors.nbProfesseurAssocieRH.message}
-          </FormErrorMessage>
-        )}
+        {errors.nbProfesseurAssocieRH && <FormErrorMessage>{errors.nbProfesseurAssocieRH.message}</FormErrorMessage>}
         <FormHelperText>
-          Si le besoin en recrutement est inférieur à 1 ETP veuillez saisir 1,
-          et préciser la quotité (0.2 ETP par ex) dans le champ
-          "commentaires/observations"
+          Si le besoin en recrutement est inférieur à 1 ETP veuillez saisir 1, et préciser la quotité (0.2 ETP par ex)
+          dans le champ "commentaires/observations"
         </FormHelperText>
       </FormControl>
     );

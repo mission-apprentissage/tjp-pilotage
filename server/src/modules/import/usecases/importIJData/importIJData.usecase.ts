@@ -1,9 +1,11 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { RENTREES_SCOLAIRES } from "shared";
 
-import { streamIt } from "../../utils/streamIt";
-import { getCfdDispositifs } from "../getCfdRentrees/getCfdDispositifs.dep";
-import { getCfdRentrees } from "../getCfdRentrees/getCfdRentrees.usecase";
+import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";
+import { getCfdRentrees } from "@/modules/import/usecases/getCfdRentrees/getCfdRentrees.usecase";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { findDiplomesProfessionnels } from "./findDiplomesProfessionnels.dep";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
 import { findFormationsHistoriques } from "./findFormationsHistoriques.dep";
@@ -37,12 +39,9 @@ export const [importIJData] = inject(
       console.log("--- fetch IJ regions");
       await deps.fetchIjReg();
       console.log("--- end fetch IJ regions");
-      console.log(
-        "--- recueil des UAI à partir des CFD des diplomes professionnels"
-      );
+      console.log("--- recueil des UAI à partir des CFD des diplomes professionnels");
       await streamIt(
-        (count) =>
-          deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
+        (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
         async (item) => {
           const cfd = item.cfd;
           const voie = item.voie;
@@ -52,15 +51,11 @@ export const [importIJData] = inject(
             await importIJDataForEtablissement({ cfd: ancienCfd, voie });
           }
           await importIJDataForEtablissement({ cfd, voie });
-          process.stdout.write(
-            `\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`
-          );
+          process.stdout.write(`\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`);
         },
         { parallel: 20 }
       );
-      console.log(
-        "\n--- end recueil des UAI à partir des CFD des diplomes professionnels"
-      );
+      console.log("\n--- end recueil des UAI à partir des CFD des diplomes professionnels");
 
       console.log("--- recueil des UAI à partir des CFD des familles métiers");
       await streamIt(
@@ -74,15 +69,11 @@ export const [importIJData] = inject(
           }
           await importIJDataForEtablissement({ cfd });
 
-          process.stdout.write(
-            `\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`
-          );
+          process.stdout.write(`\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`);
         },
         { parallel: 20 }
       );
-      console.log(
-        "\n--- end recueil des UAI à partir des CFD des familles métiers"
-      );
+      console.log("\n--- end recueil des UAI à partir des CFD des familles métiers");
 
       console.log("--- construction batchs");
       const batchs: Array<Array<string>> = [];
@@ -99,9 +90,7 @@ export const [importIJData] = inject(
       console.log("--- fetch des données IJ pour les UAIs");
       for (let i = 0; i < batchs.length; i++) {
         console.log(`-- START : batch ${i + 1} / ${batchs.length}`);
-        await Promise.all(
-          batchs[i].map(async (uai) => await deps.fetchIJ({ uai }))
-        );
+        await Promise.all(batchs[i].map(async (uai) => await deps.fetchIJ({ uai })));
         console.log(`-- END : batch ${i + 1} / ${batchs.length}`);
       }
       console.log("--- end fetch des données IJ pour les UAIs");
@@ -118,13 +107,7 @@ export const [importIJDataForEtablissement] = inject(
     fetchIJ,
   },
   (deps) => {
-    return async ({
-      cfd,
-      voie = "scolaire",
-    }: {
-      cfd: string;
-      voie?: string;
-    }) => {
+    return async ({ cfd, voie = "scolaire" }: { cfd: string; voie?: string }) => {
       if (voie === "apprentissage") {
         const uais = await deps.findUAIsApprentissage({ cfd });
         if (!uais) return;

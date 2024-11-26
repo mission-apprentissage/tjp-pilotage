@@ -2,7 +2,8 @@
 
 import { Container, Text, VStack } from "@chakra-ui/react";
 
-import { EditorialTitle } from "../components/EditorialTitle";
+import { EditorialTitle } from "@/app/(wrapped)/components/EditorialTitle";
+
 import { Entry } from "./components/Entry";
 import { EntryLoader } from "./components/EntryLoader";
 import { useChangelog } from "./useChangelog";
@@ -14,7 +15,9 @@ export default function Changelog() {
 
   const updates =
     changelog?.filter(
+      // @ts-expect-error TODO
       (changelogEntry) =>
+        // @ts-expect-error TODO
         changelogEntry.types.findIndex((t) => t.label === "BANDEAU") === -1 &&
         changelogEntry.deployed &&
         changelogEntry.show
@@ -22,7 +25,9 @@ export default function Changelog() {
 
   const incoming =
     changelog?.filter(
+      // @ts-expect-error TODO
       (changelogEntry) =>
+        // @ts-expect-error TODO
         changelogEntry.types.findIndex((t) => t.label === "BANDEAU") === -1 &&
         !changelogEntry.deployed &&
         changelogEntry.show
@@ -38,15 +43,9 @@ export default function Changelog() {
               {isLoading && <EntryLoader />}
               {!isLoading &&
                 updates.length > 0 &&
-                updates.map((changelogEntry) => (
-                  <Entry
-                    key={changelogEntry.title}
-                    changelogEntry={changelogEntry}
-                  />
-                ))}
-              {updates.length === 0 && !isLoading && (
-                <Text>Aucune donnée de mise à jour disponible.</Text>
-              )}
+                // @ts-expect-error TODO
+                updates.map((changelogEntry) => <Entry key={changelogEntry.title} changelogEntry={changelogEntry} />)}
+              {updates.length === 0 && !isLoading && <Text>Aucune donnée de mise à jour disponible.</Text>}
             </VStack>
           </VStack>
           <VStack spacing="48px" width="100%">
@@ -55,15 +54,9 @@ export default function Changelog() {
               {isLoading && <EntryLoader />}
               {!isLoading &&
                 incoming.length > 0 &&
-                incoming.map((changelogEntry) => (
-                  <Entry
-                    key={changelogEntry.title}
-                    changelogEntry={changelogEntry}
-                  />
-                ))}
-              {incoming.length === 0 && !isLoading && (
-                <Text>Aucune donnée de mise à jour disponible.</Text>
-              )}
+                // @ts-expect-error TODO
+                incoming.map((changelogEntry) => <Entry key={changelogEntry.title} changelogEntry={changelogEntry} />)}
+              {incoming.length === 0 && !isLoading && <Text>Aucune donnée de mise à jour disponible.</Text>}
             </VStack>
           </VStack>
         </VStack>

@@ -6,18 +6,14 @@ import { useEffect, useMemo, useState } from "react";
 import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
-import {
-  BadgeTypeFamille,
-  TypeFamilleKeys,
-} from "@/components/BadgeTypeFamille";
+import type { AnalyseDetaillee } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
+import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
+import { useEtablissementContext } from "@/app/(wrapped)/panorama/etablissement/context/etablissementContext";
+import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
+import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { themeDefinition } from "@/theme/theme";
 
-import { useEtablissementContext } from "../../../context/etablissementContext";
-import { AnalyseDetaillee } from "../../analyse-detaillee/types";
-import { useEtablissementMapContext } from "../context/etablissementMapContext";
-
-type TCfdSearchResult =
-  (typeof client.infer)["[GET]/diplome/search/:search"][number];
+type TCfdSearchResult = (typeof client.infer)["[GET]/diplome/search/:search"][number];
 
 interface Option {
   label: string;
@@ -29,14 +25,10 @@ interface Option {
   is2ndeCommune: boolean;
 }
 
-const formatOffreToCfdSearchResult = (
-  offre: AnalyseDetaillee["formations"][number] | undefined
-): TCfdSearchResult => ({
+const formatOffreToCfdSearchResult = (offre: AnalyseDetaillee["formations"][number] | undefined): TCfdSearchResult => ({
   value: offre?.cfd ? offre?.cfd : "",
   label: offre?.libelleFormation
-    ? `${offre?.libelleFormation} (${
-        offre?.libelleDispositif ?? ""
-      }) (${offre?.cfd})`
+    ? `${offre?.libelleFormation} (${offre?.libelleDispositif ?? ""}) (${offre?.cfd})`
     : "",
   // Hard set à false ici, parce que nous n'en aurons pas besoin pour le filtre ici
   isSpecialite: false,
@@ -50,9 +42,7 @@ const formatOffreToCfdSearchResult = (
   cfd: offre?.cfd || "",
 });
 
-const formatSearchResultToOption = (
-  cfdSearchResult: TCfdSearchResult
-): Option => ({
+const formatSearchResultToOption = (cfdSearchResult: TCfdSearchResult): Option => ({
   label: `${cfdSearchResult.libelleNiveauDiplome} ${cfdSearchResult.libelleFormation} (${cfdSearchResult.cfd})`,
   value: cfdSearchResult.value,
   isSpecialite: cfdSearchResult.isSpecialite,
@@ -66,8 +56,7 @@ export const CfdSelect = () => {
   const offre = useSearchParams().get("offre");
   const { analyseDetaillee } = useEtablissementContext();
   const { setCfdFilter } = useEtablissementMapContext();
-  const analyseDetailleeOffre =
-    analyseDetaillee && offre ? analyseDetaillee?.formations[offre] : undefined;
+  const analyseDetailleeOffre = analyseDetaillee && offre ? analyseDetaillee?.formations[offre] : undefined;
   const [selected, setSelected] = useState<Option>();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const trackEvent = usePlausible();
@@ -86,10 +75,7 @@ export const CfdSelect = () => {
   const isDefaultSelected = analyseDetailleeOffre?.cfd === selected?.value;
 
   const defaultValue: Option = useMemo(
-    () =>
-      formatSearchResultToOption(
-        formatOffreToCfdSearchResult(analyseDetailleeOffre)
-      ),
+    () => formatSearchResultToOption(formatOffreToCfdSearchResult(analyseDetailleeOffre)),
     [offre, analyseDetailleeOffre]
   );
 
@@ -102,18 +88,12 @@ export const CfdSelect = () => {
   useEffect(() => {
     if (analyseDetailleeOffre) {
       setCfdFilter(analyseDetailleeOffre.cfd);
-      setSelected(
-        formatSearchResultToOption(
-          formatOffreToCfdSearchResult(analyseDetailleeOffre)
-        )
-      );
+      setSelected(formatSearchResultToOption(formatOffreToCfdSearchResult(analyseDetailleeOffre)));
     }
   }, [analyseDetailleeOffre]);
 
   const loadOptions = async (search: string) => {
-    const cfdAnalyseDetaillee = Object.values(
-      analyseDetaillee?.formations ?? {}
-    ).map(formatOffreToCfdSearchResult);
+    const cfdAnalyseDetaillee = Object.values(analyseDetaillee?.formations ?? {}).map(formatOffreToCfdSearchResult);
 
     const searchResults = _.uniqBy(
       cfdAnalyseDetaillee.filter(
@@ -128,8 +108,7 @@ export const CfdSelect = () => {
       .query({ params: { search }, query: {} });
 
     const filteredQueryResult = queryResult.filter(
-      (result) =>
-        searchResults.findIndex((local) => local.value === result.value) === -1
+      (result) => searchResults.findIndex((local) => local.value === result.value) === -1
     );
 
     return [
@@ -138,17 +117,13 @@ export const CfdSelect = () => {
         options: searchResults.map(formatSearchResultToOption),
       },
       {
-        label: `AUTRES (${filteredQueryResult.length}${
-          filteredQueryResult.length === 20 && "+"
-        })`,
+        label: `AUTRES (${filteredQueryResult.length}${filteredQueryResult.length === 20 && "+"})`,
         options: filteredQueryResult.map(formatSearchResultToOption),
       },
     ];
   };
 
-  const getFormationTypeFamille = (
-    option: Option
-  ): TypeFamilleKeys | undefined => {
+  const getFormationTypeFamille = (option: Option): TypeFamilleKeys | undefined => {
     if (option.isSpecialite) {
       return "specialite";
     }
@@ -193,23 +168,14 @@ export const CfdSelect = () => {
               return (
                 <Flex gap="4px">
                   <Text>{option.label} </Text>
-                  <BadgeTypeFamille
-                    typeFamille={getFormationTypeFamille(option)}
-                    labelSize="short"
-                  >
-                    {option.dateFermeture !== undefined
-                      ? option.dateFermeture
-                      : undefined}
+                  <BadgeTypeFamille typeFamille={getFormationTypeFamille(option)} labelSize="short">
+                    {option.dateFermeture !== undefined ? option.dateFermeture : undefined}
                   </BadgeTypeFamille>
                 </Flex>
               );
             }}
-            loadingMessage={({ inputValue }) =>
-              `${inputValue} est en cours de recherche...`
-            }
-            noOptionsMessage={({ inputValue }) =>
-              `${inputValue} n'a donné aucun résultat.`
-            }
+            loadingMessage={({ inputValue }) => `${inputValue} est en cours de recherche...`}
+            noOptionsMessage={({ inputValue }) => `${inputValue} n'a donné aucun résultat.`}
             placeholder="Code diplôme ou libellé"
             isDisabled={!analyseDetaillee}
             controlShouldRenderValue={!isMenuOpen}
@@ -227,9 +193,7 @@ export const CfdSelect = () => {
                 ...baseStyles,
                 borderWidth: isDefaultSelected ? "2px" : "1px",
                 borderType: "solid",
-                borderColor: isDefaultSelected
-                  ? themeDefinition.colors.info[525]
-                  : baseStyles.borderColor,
+                borderColor: isDefaultSelected ? themeDefinition.colors.info[525] : baseStyles.borderColor,
               }),
             }}
           />

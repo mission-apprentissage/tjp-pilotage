@@ -24,14 +24,13 @@ import { GuardPermission } from "@/utils/security/GuardPermission";
 import { CreateCampagne } from "./CreateCampagne";
 import { EditCampagne } from "./EditCampagne";
 
+// eslint-disable-next-line react/display-name, import/no-anonymous-default-export
 export default () => {
   const { data: campagnes } = client.ref("[GET]/campagnes").useQuery({});
 
   const [campagneId, setCampagneId] = useState<string>();
-  const campagne = useMemo(
-    () => campagnes?.find(({ id }) => id === campagneId),
-    [campagnes, campagneId]
-  );
+  // @ts-expect-error TODO
+  const campagne = useMemo(() => campagnes?.find(({ id }) => id === campagneId), [campagnes, campagneId]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -50,18 +49,8 @@ export default () => {
         </Button>
       </Flex>
       <TableContainer overflowY="auto" flex={1}>
-        <Table
-          sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
-          size="md"
-          fontSize="14px"
-          gap="0"
-        >
-          <Thead
-            position="sticky"
-            top="0"
-            boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-            bg="white"
-          >
+        <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize="14px" gap="0">
+          <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white">
             <Tr>
               <Th width={"10%"}>Id</Th>
               <Th>Année</Th>
@@ -74,49 +63,44 @@ export default () => {
             </Tr>
           </Thead>
           <Tbody>
-            {campagnes?.map((campagne) => (
-              <Tr key={campagne.id}>
-                <Td width={"10%"} isTruncated>
-                  {campagne.id}
-                </Td>
-                <Td>{campagne.annee}</Td>
-                <Td textAlign={"center"}>
-                  <CampagneStatutTag statut={campagne.statut} />
-                </Td>
-                <Td width={"10%"}>
-                  {campagne.dateDebut
-                    ? toDate(campagne.dateDebut).toLocaleDateString("fr-FR")
-                    : "Non définie"}
-                </Td>
-                <Td width={"10%"}>
-                  {campagne.dateFin
-                    ? toDate(campagne.dateFin).toLocaleDateString("fr-FR")
-                    : "Non définie"}
-                </Td>
-                <Td width={"5%"} isNumeric>
-                  <IconButton
-                    position="unset"
-                    variant="ghost"
-                    onClick={() => {
-                      setCampagneId(campagne.id);
-                      onOpen();
-                    }}
-                    aria-label="editer"
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Td>
-              </Tr>
-            ))}
+            {campagnes?.map(
+              // @ts-expect-error TODO
+              (campagne) => (
+                <Tr key={campagne.id}>
+                  <Td width={"10%"} isTruncated>
+                    {campagne.id}
+                  </Td>
+                  <Td>{campagne.annee}</Td>
+                  <Td textAlign={"center"}>
+                    <CampagneStatutTag statut={campagne.statut} />
+                  </Td>
+                  <Td width={"10%"}>
+                    {campagne.dateDebut ? toDate(campagne.dateDebut).toLocaleDateString("fr-FR") : "Non définie"}
+                  </Td>
+                  <Td width={"10%"}>
+                    {campagne.dateFin ? toDate(campagne.dateFin).toLocaleDateString("fr-FR") : "Non définie"}
+                  </Td>
+                  <Td width={"5%"} isNumeric>
+                    <IconButton
+                      position="unset"
+                      variant="ghost"
+                      onClick={() => {
+                        setCampagneId(campagne.id);
+                        onOpen();
+                      }}
+                      aria-label="editer"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Td>
+                </Tr>
+              )
+            )}
           </Tbody>
         </Table>
       </TableContainer>
-      {campagne && isOpen && (
-        <EditCampagne isOpen={isOpen} onClose={onClose} campagne={campagne} />
-      )}
-      {!campagne && isOpen && (
-        <CreateCampagne isOpen={isOpen} onClose={onClose} />
-      )}
+      {campagne && isOpen && <EditCampagne isOpen={isOpen} onClose={onClose} campagne={campagne} />}
+      {!campagne && isOpen && <CreateCampagne isOpen={isOpen} onClose={onClose} />}
     </GuardPermission>
   );
 };

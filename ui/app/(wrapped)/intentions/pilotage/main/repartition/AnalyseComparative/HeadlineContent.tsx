@@ -1,6 +1,6 @@
 import { chakra, Th, Tooltip, Tr } from "@chakra-ui/react";
 
-import {
+import type {
   FiltersStatsPilotageIntentions,
   OrderRepartitionPilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
@@ -14,9 +14,7 @@ export const HeadlineContent = chakra(
     isZoneGeographiqueSelected,
   }: {
     order: Partial<OrderRepartitionPilotageIntentions>;
-    handleOrder: (
-      column: OrderRepartitionPilotageIntentions["orderBy"]
-    ) => void;
+    handleOrder: (column: OrderRepartitionPilotageIntentions["orderBy"]) => void;
     filters?: Partial<FiltersStatsPilotageIntentions>;
     isZoneGeographiqueSelected: boolean;
   }) => {
@@ -26,59 +24,33 @@ export const HeadlineContent = chakra(
           <OrderIcon {...order} column="libelle" />
           {isZoneGeographiqueSelected ? filters?.scope : "Domaine"}
         </Th>
-        <Th
-          isNumeric
-          cursor={"pointer"}
-          onClick={() => handleOrder("placesTransformees")}
-        >
+        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("placesTransformees")}>
           <OrderIcon {...order} column="placesTransformees" />
           Places transformées
         </Th>
-        <Th
-          isNumeric
-          cursor={"pointer"}
-          onClick={() => handleOrder("effectif")}
-        >
+        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("effectif")}>
           <OrderIcon {...order} column="effectif" />
           Effectif en entrée
         </Th>
-        <Th
-          isNumeric
-          cursor={"pointer"}
-          onClick={() => handleOrder("tauxTransformation")}
-        >
+        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("tauxTransformation")}>
           <>
             <OrderIcon {...order} column="tauxTransformation" />
-            <Tooltip label={"Places transformées / effectif"}>
-              Taux de transformation
-            </Tooltip>
+            <Tooltip label={"Places transformées / effectif"}>Taux de transformation</Tooltip>
           </>
         </Th>
-        <Th
-          isNumeric
-          cursor={"pointer"}
-          onClick={() => handleOrder("placesOuvertes")}
-        >
+        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("placesOuvertes")}>
           <>
             <OrderIcon {...order} column="placesOuvertes" />
             <Tooltip label={"Places ouvertes"}>dont ouvertures</Tooltip>
           </>
         </Th>
-        <Th
-          isNumeric
-          cursor={"pointer"}
-          onClick={() => handleOrder("placesFermees")}
-        >
+        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("placesFermees")}>
           <>
             <OrderIcon {...order} column="placesFermees" />
             <Tooltip label={"Places fermées"}>dont fermetures</Tooltip>
           </>
         </Th>
-        <Th
-          isNumeric
-          cursor={"pointer"}
-          onClick={() => handleOrder("placesColorees")}
-        >
+        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("placesColorees")}>
           <>
             <OrderIcon {...order} column="placesColorees" />
             <Tooltip label={"Places colorées"}>dont colorations</Tooltip>
@@ -90,16 +62,10 @@ export const HeadlineContent = chakra(
             <Tooltip label={"Places ouvertes - places fermées"}>solde</Tooltip>
           </>
         </Th>
-        <Th
-          isNumeric
-          cursor={"pointer"}
-          onClick={() => handleOrder("ratioFermeture")}
-        >
+        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("ratioFermeture")}>
           <>
             <OrderIcon {...order} column="ratioFermeture" />
-            <Tooltip label={"Places fermées / places transformées"}>
-              ratio fermetures
-            </Tooltip>
+            <Tooltip label={"Places fermées / places transformées"}>ratio fermetures</Tooltip>
           </>
         </Th>
       </Tr>

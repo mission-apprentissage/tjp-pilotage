@@ -1,7 +1,8 @@
-import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
+import type { ExpressionBuilder } from "kysely";
+import { expressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 
-import { DB } from "../../../db/db";
+import type { DB } from "@/db/db";
 
 export function hasContinuum<
   EB extends
@@ -23,31 +24,16 @@ export function hasContinuum<
   return jsonObjectFrom(
     eb
       .selectFrom("indicateurRegionSortie as subIRS")
-      .innerJoin(
-        "dataFormation as subFormation",
-        "subFormation.cfd",
-        "subIRS.cfdContinuum"
-      )
+      .innerJoin("dataFormation as subFormation", "subFormation.cfd", "subIRS.cfdContinuum")
       .whereRef("subIRS.cfd", "=", cfdRef)
       .whereRef("subIRS.codeDispositif", "=", codeDispositifRef)
-      .whereRef(
-        "subIRS.codeRegion",
-        "=",
-        sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
-      )
+      .whereRef("subIRS.codeRegion", "=", sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`)
       .where("subIRS.millesimeSortie", "=", millesimeSortie)
       .where("subIRS.voie", "=", "scolaire")
       .where("subIRS.cfdContinuum", "is not", null)
-      .select([
-        "subIRS.cfdContinuum as cfd",
-        "subFormation.libelleFormation as libelleFormation",
-      ])
+      .select(["subIRS.cfdContinuum as cfd", "subFormation.libelleFormation as libelleFormation"])
       .$narrowType<{ cfd: string; libelleFormation: string }>()
-      .groupBy([
-        "subIRS.codeRegion",
-        "subIRS.cfdContinuum",
-        "subFormation.libelleFormation",
-      ])
+      .groupBy(["subIRS.codeRegion", "subIRS.cfdContinuum", "subFormation.libelleFormation"])
       .limit(1)
   );
 }

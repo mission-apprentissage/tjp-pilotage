@@ -1,8 +1,5 @@
-import { kdb } from "../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const deleteAvisQuery = async (id: string) => {
-  return await kdb
-    .deleteFrom("avis")
-    .where("avis.id", "=", id)
-    .executeTakeFirstOrThrow();
+  return await getKbdClient().deleteFrom("avis").where("avis.id", "=", id).executeTakeFirstOrThrow();
 };

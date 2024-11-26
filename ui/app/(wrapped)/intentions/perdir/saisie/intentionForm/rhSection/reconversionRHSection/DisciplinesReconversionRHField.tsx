@@ -1,17 +1,10 @@
 import { AddIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  chakra,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-} from "@chakra-ui/react";
+import { Button, chakra, Flex, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
 import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { DisciplineAutocompleteInput } from "../../../components/DisciplineAutoComplete";
-import { IntentionForms } from "../../defaultFormValues";
+import { DisciplineAutocompleteInput } from "@/app/(wrapped)/intentions/perdir/saisie/components/DisciplineAutoComplete";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const DisciplinesReconversionRHField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -24,19 +17,14 @@ export const DisciplinesReconversionRHField = chakra(
     const visible = watch("reconversionRH");
     const discipline2ReconversionRH = watch("discipline2ReconversionRH");
 
-    const [hasDoubleDiscipline, setHasDoubleDiscipline] = useState<boolean>(
-      !!discipline2ReconversionRH
-    );
+    const [hasDoubleDiscipline, setHasDoubleDiscipline] = useState<boolean>(!!discipline2ReconversionRH);
     if (!visible) return null;
 
     return (
       <Flex flex={1}>
         <FormControl
           className={className}
-          isInvalid={
-            !!errors.discipline1ReconversionRH ||
-            !!errors.discipline2ReconversionRH
-          }
+          isInvalid={!!errors.discipline1ReconversionRH || !!errors.discipline2ReconversionRH}
         >
           <FormLabel>Dans quelle(s) discipline(s) ?</FormLabel>
           <Flex direction={"row"} gap={2}>
@@ -74,24 +62,16 @@ export const DisciplinesReconversionRHField = chakra(
                 )}
               />
             ) : (
-              <Button
-                w={56}
-                leftIcon={<AddIcon />}
-                onClick={() => setHasDoubleDiscipline(true)}
-              >
+              <Button w={56} leftIcon={<AddIcon />} onClick={() => setHasDoubleDiscipline(true)}>
                 Ajouter une discipline
               </Button>
             )}
           </Flex>
           {errors.discipline1ReconversionRH && (
-            <FormErrorMessage>
-              {errors.discipline1ReconversionRH.message}
-            </FormErrorMessage>
+            <FormErrorMessage>{errors.discipline1ReconversionRH.message}</FormErrorMessage>
           )}
           {errors.discipline2ReconversionRH && (
-            <FormErrorMessage>
-              {errors.discipline2ReconversionRH.message}
-            </FormErrorMessage>
+            <FormErrorMessage>{errors.discipline2ReconversionRH.message}</FormErrorMessage>
           )}
         </FormControl>
       </Flex>

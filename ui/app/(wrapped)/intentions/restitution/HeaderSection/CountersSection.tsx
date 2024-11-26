@@ -1,15 +1,6 @@
-import {
-  Box,
-  Card,
-  CardBody,
-  CardHeader,
-  Divider,
-  Flex,
-  Img,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Card, CardBody, CardHeader, Divider, Flex, Img, Text } from "@chakra-ui/react";
 
-import { StatsRestitutionIntentions } from "../types";
+import type { StatsRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 
 const CountCard = ({
   label,
@@ -39,19 +30,12 @@ const CountCard = ({
             </Text>
             <Text fontSize="sm">{subLabel}</Text>
             {value?.colorationTotal !== undefined && (
-              <Text
-                fontSize="12"
-                lineHeight={"20px"}
-                fontWeight={400}
-                color="grey.425"
-              >
+              <Text fontSize="12" lineHeight={"20px"} fontWeight={400} color="grey.425">
                 (dont coloration)
               </Text>
             )}
           </Flex>
-          {iconSrc && (
-            <Img src={`/icons/${iconSrc}.svg`} height="30px" ms={"auto"} />
-          )}
+          {iconSrc && <Img src={`/icons/${iconSrc}.svg`} height="30px" ms={"auto"} />}
         </Flex>
       </Flex>
     </CardHeader>
@@ -59,23 +43,11 @@ const CountCard = ({
       <Flex flexDirection="column">
         <Flex direction={"row"} justify={"space-between"} py={4}>
           {value?.colorationTotal !== undefined && (
-            <Text
-              mt={"auto"}
-              fontSize={18}
-              lineHeight={"20px"}
-              fontWeight={400}
-              color="grey.425"
-            >
+            <Text mt={"auto"} fontSize={18} lineHeight={"20px"} fontWeight={400} color="grey.425">
               ({value?.colorationTotal})
             </Text>
           )}
-          <Text
-            fontSize={36}
-            fontWeight={700}
-            mt={"auto"}
-            lineHeight={"32px"}
-            ms={"auto"}
-          >
+          <Text fontSize={36} fontWeight={700} mt={"auto"} lineHeight={"32px"} ms={"auto"}>
             {value?.total ? value?.total : "0"}
           </Text>
         </Flex>
@@ -121,30 +93,12 @@ const CountCard = ({
   </Card>
 );
 
-export const CountersSection = ({
-  countData,
-}: {
-  countData?: StatsRestitutionIntentions;
-}) => {
+export const CountersSection = ({ countData }: { countData?: StatsRestitutionIntentions }) => {
   return (
-    <Flex
-      flexDirection={"row"}
-      gap={4}
-      overflowY={"auto"}
-      pb={2}
-      flexWrap={["wrap", null, "nowrap"]}
-    >
+    <Flex flexDirection={"row"} gap={4} overflowY={"auto"} pb={2} flexWrap={["wrap", null, "nowrap"]}>
       <Flex gap={4} width="100%">
-        <CountCard
-          label="Places ouvertes"
-          iconSrc={"places_ouvertes"}
-          value={countData?.ouvertures}
-        />
-        <CountCard
-          label="Places fermées"
-          iconSrc={"places_fermees"}
-          value={countData?.fermetures}
-        />
+        <CountCard label="Places ouvertes" iconSrc={"places_ouvertes"} value={countData?.ouvertures} />
+        <CountCard label="Places fermées" iconSrc={"places_fermees"} value={countData?.fermetures} />
       </Flex>
       <Flex gap={4} width="100%">
         <CountCard
@@ -153,12 +107,7 @@ export const CountersSection = ({
           subLabel="Places ouvertes"
           value={countData?.certifSpecialisation}
         />
-        <CountCard
-          label="FCIL"
-          iconSrc={"places_fcil"}
-          subLabel="Places ouvertes"
-          value={countData?.FCILs}
-        />
+        <CountCard label="FCIL" iconSrc={"places_fcil"} subLabel="Places ouvertes" value={countData?.FCILs} />
       </Flex>
     </Flex>
   );

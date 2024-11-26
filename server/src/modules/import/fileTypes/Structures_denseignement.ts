@@ -18,6 +18,4 @@ export const StructureDenseignementSchema = z.object({
   '"région (COG)"': z.string().optional(),
 });
 
-export type StructureDenseignement = z.infer<
-  typeof StructureDenseignementSchema
->;
+export type StructureDenseignement = z.infer<typeof StructureDenseignementSchema>;

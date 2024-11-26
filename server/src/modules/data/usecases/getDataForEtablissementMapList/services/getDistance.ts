@@ -1,9 +1,9 @@
 import { getDistance as getGeoDistance } from "geolib";
 
-import {
+import type {
   Etablissement,
   EtablissementWithDistance,
-} from "../getDataForEtablissementMapList.usecase";
+} from "@/modules/data/usecases/getDataForEtablissementMapList/getDataForEtablissementMapList.usecase";
 
 interface FilterByDistanceParams {
   etablissement: Etablissement;
@@ -22,13 +22,7 @@ export function getDistance({
 }: FilterByDistanceParams): Array<EtablissementWithDistance> {
   const etablissementsWithDistance = etablissements
     .map((e) => {
-      if (
-        !e?.latitude ||
-        !e?.longitude ||
-        !etablissement.latitude ||
-        !etablissement.longitude
-      )
-        return;
+      if (!e?.latitude || !e?.longitude || !etablissement.latitude || !etablissement.longitude) return;
 
       // get distance in metters
       const distance = getGeoDistance(

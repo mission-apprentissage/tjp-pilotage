@@ -15,17 +15,16 @@ import {
 import { Icon } from "@iconify/react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
-import { Multiselect } from "@/components/Multiselect";
-import { TooltipIcon } from "@/components/TooltipIcon";
-
-import { feature } from "../../../../../utils/feature";
-import { formatDepartementLibelleWithCodeDepartement } from "../../../../../utils/formatLibelle";
-import { useGlossaireContext } from "../../../glossaire/glossaireContext";
-import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
-import {
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import type {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,
-} from "../types";
+} from "@/app/(wrapped)/intentions/restitution/types";
+import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import { Multiselect } from "@/components/Multiselect";
+import { TooltipIcon } from "@/components/TooltipIcon";
+import { feature } from "@/utils/feature";
+import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 
 export const SecondaryFiltersSection = ({
   activeFilters,
@@ -39,9 +38,7 @@ export const SecondaryFiltersSection = ({
     type: keyof FiltersDemandesRestitutionIntentions,
     value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
   ) => void;
-  filterTracker: (
-    filterName: keyof FiltersDemandesRestitutionIntentions
-  ) => () => void;
+  filterTracker: (filterName: keyof FiltersDemandesRestitutionIntentions) => () => void;
   resetFilters: () => void;
   data?: DemandesRestitutionIntentions;
 }) => {
@@ -95,9 +92,7 @@ export const SecondaryFiltersSection = ({
               width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) =>
-                handleFilters("codeNiveauDiplome", selected)
-              }
+              onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
               options={data?.filters.diplomes}
               value={activeFilters.codeNiveauDiplome ?? []}
               disabled={data?.filters.diplomes.length === 0}
@@ -112,16 +107,17 @@ export const SecondaryFiltersSection = ({
               width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) =>
-                handleFilters("codeDepartement", selected)
-              }
-              options={data?.filters.departements.map((departement) => ({
-                label: formatDepartementLibelleWithCodeDepartement({
-                  libelleDepartement: departement.label,
-                  codeDepartement: departement.value,
-                }),
-                value: departement.value,
-              }))}
+              onChange={(selected) => handleFilters("codeDepartement", selected)}
+              options={data?.filters.departements.map(
+                // @ts-expect-error TODO
+                (departement) => ({
+                  label: formatDepartementLibelleWithCodeDepartement({
+                    libelleDepartement: departement.label,
+                    codeDepartement: departement.value,
+                  }),
+                  value: departement.value,
+                })
+              )}
               value={activeFilters.codeDepartement ?? []}
               disabled={data?.filters.departements.length === 0}
             >
@@ -151,16 +147,17 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.secteur ?? ""}
               onChange={(e) => handleFilters("secteur", e.target.value)}
-              borderBottomColor={
-                activeFilters.secteur != undefined ? "info.525" : ""
-              }
+              borderBottomColor={activeFilters.secteur != undefined ? "info.525" : ""}
               placeholder="Public / privé"
             >
-              {data?.filters.secteurs?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
+              {data?.filters.secteurs?.map(
+                // @ts-expect-error TODO
+                (option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                )
+              )}
             </Select>
           </Box>
         </Flex>
@@ -189,14 +186,12 @@ export const SecondaryFiltersSection = ({
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("typeDemande", selected)}
-              options={data?.filters.typesDemande.map(
-                (typeDemande: { value: string; label: string }) => {
-                  return {
-                    value: typeDemande.value,
-                    label: getTypeDemandeLabel(typeDemande.value),
-                  };
-                }
-              )}
+              options={data?.filters.typesDemande.map((typeDemande: { value: string; label: string }) => {
+                return {
+                  value: typeDemande.value,
+                  label: getTypeDemandeLabel(typeDemande.value),
+                };
+              })}
               value={activeFilters.typeDemande ?? []}
               disabled={data?.filters.typesDemande.length === 0}
             >
@@ -211,16 +206,17 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.voie ?? ""}
               onChange={(e) => handleFilters("voie", e.target.value)}
-              borderBottomColor={
-                activeFilters.voie != undefined ? "info.525" : ""
-              }
+              borderBottomColor={activeFilters.voie != undefined ? "info.525" : ""}
               placeholder="Toutes"
             >
-              {data?.filters.voies?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
+              {data?.filters.voies?.map(
+                // @ts-expect-error TODO
+                (option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                )
+              )}
             </Select>
           </Box>
           {feature.showColorationFilter && (
@@ -239,20 +235,13 @@ export const SecondaryFiltersSection = ({
                   bg={"white"}
                 >
                   <Flex direction="row">
-                    <Text
-                      my={"auto"}
-                      textOverflow={"ellipsis"}
-                      overflow={"hidden"}
-                    >
+                    <Text my={"auto"} textOverflow={"ellipsis"} overflow={"hidden"}>
                       <Highlight
-                        query={[
-                          "Toutes demandes",
-                          "ouvertures/fermetures",
-                          "demandes avec places colorées",
-                        ]}
+                        query={["Toutes demandes", "ouvertures/fermetures", "demandes avec places colorées"]}
                         styles={{ fontWeight: "bold" }}
                       >
                         {data?.filters.colorations?.find(
+                          // @ts-expect-error TODO
                           (c) => c.value === activeFilters.coloration
                         )?.label ?? "Toutes demandes"}
                       </Highlight>
@@ -260,29 +249,28 @@ export const SecondaryFiltersSection = ({
                   </Flex>
                 </MenuButton>
                 <MenuList py={0} borderRadius={4}>
-                  {data?.filters.colorations?.map((option) => (
-                    <MenuItem
-                      p={2}
-                      key={option.value}
-                      onClick={() => handleFilters("coloration", option.value)}
-                      borderRadius={4}
-                    >
-                      <Flex direction="row">
-                        <Text my={"auto"}>
-                          <Highlight
-                            query={[
-                              "Toutes demandes",
-                              "ouvertures/fermetures",
-                              "demandes avec places colorées",
-                            ]}
-                            styles={{ fontWeight: "bold" }}
-                          >
-                            {option.label}
-                          </Highlight>
-                        </Text>
-                      </Flex>
-                    </MenuItem>
-                  ))}
+                  {data?.filters.colorations?.map(
+                    // @ts-expect-error TODO
+                    (option) => (
+                      <MenuItem
+                        p={2}
+                        key={option.value}
+                        onClick={() => handleFilters("coloration", option.value)}
+                        borderRadius={4}
+                      >
+                        <Flex direction="row">
+                          <Text my={"auto"}>
+                            <Highlight
+                              query={["Toutes demandes", "ouvertures/fermetures", "demandes avec places colorées"]}
+                              styles={{ fontWeight: "bold" }}
+                            >
+                              {option.label}
+                            </Highlight>
+                          </Text>
+                        </Flex>
+                      </MenuItem>
+                    )
+                  )}
                 </MenuList>
               </Menu>
             </Box>
@@ -295,16 +283,17 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.amiCMA?.toString() ?? ""}
               onChange={(e) => handleFilters("amiCMA", e.target.value)}
-              borderBottomColor={
-                activeFilters.amiCMA != undefined ? "info.525" : ""
-              }
+              borderBottomColor={activeFilters.amiCMA != undefined ? "info.525" : ""}
               placeholder="Oui / non"
             >
-              {data?.filters.amiCMAs?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
+              {data?.filters.amiCMAs?.map(
+                // @ts-expect-error TODO
+                (option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                )
+              )}
             </Select>
           </Box>
           <Box justifyContent={"start"}>
@@ -315,11 +304,10 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.coloration?.toString() ?? ""}
               onChange={(e) => handleFilters("coloration", e.target.value)}
-              borderBottomColor={
-                activeFilters.coloration != undefined ? "info.525" : ""
-              }
+              borderBottomColor={activeFilters.coloration != undefined ? "info.525" : ""}
               placeholder="Avec / sans"
             >
+              {/* @ts-expect-error TODO */}
               {data?.filters.colorations?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -334,12 +322,8 @@ export const SecondaryFiltersSection = ({
               size="md"
               variant={"newInput"}
               value={activeFilters.positionQuadrant?.toString() ?? ""}
-              onChange={(e) =>
-                handleFilters("positionQuadrant", e.target.value)
-              }
-              borderBottomColor={
-                activeFilters.positionQuadrant != undefined ? "info.525" : ""
-              }
+              onChange={(e) => handleFilters("positionQuadrant", e.target.value)}
+              borderBottomColor={activeFilters.positionQuadrant != undefined ? "info.525" : ""}
               placeholder="Toutes"
             >
               {[

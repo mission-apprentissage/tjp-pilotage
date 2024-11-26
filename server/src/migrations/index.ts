@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 import * as migration_1693472638401 from "./migration_1693472638401";
 import * as migration_1693472638402 from "./migration_1693472638402";

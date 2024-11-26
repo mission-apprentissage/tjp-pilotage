@@ -1,5 +1,5 @@
 import { Card, CardBody, chakra, Flex, Text, Tooltip } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const StatCard = chakra(
   ({

@@ -1,7 +1,7 @@
-import _ from "lodash";
+import { chunk } from "lodash-es";
 import { Readable, Writable } from "stream";
 import { pipeline } from "stream/promises";
-export const streamIt = <T>(
+export const streamIt = async <T>(
   load: (count: number) => Promise<T[]>,
   write: (chunk: T, writeCount: number) => Promise<void>,
   { parallel = 1 } = {},
@@ -16,7 +16,7 @@ export const streamIt = <T>(
       const data = await load(count);
       count += data.length;
       if (data.length) {
-        const chunks = _.chunk(data, parallel);
+        const chunks = chunk(data, parallel);
         chunks.forEach((chunk) => {
           readable.push(chunk);
         });

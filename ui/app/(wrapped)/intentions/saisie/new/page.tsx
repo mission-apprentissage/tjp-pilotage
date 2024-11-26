@@ -4,10 +4,11 @@ import { useSearchParams } from "next/navigation";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
+import { IntentionSpinner } from "@/app/(wrapped)/intentions/saisie/components/IntentionSpinner";
+import { IntentionForm } from "@/app/(wrapped)/intentions/saisie/intentionForm/IntentionForm";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { IntentionSpinner } from "../components/IntentionSpinner";
-import { IntentionForm } from "../intentionForm/IntentionForm";
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
   const queryParams = useSearchParams();
   const numero = queryParams.get("numero");
@@ -20,9 +21,7 @@ export default () => {
     }
   );
 
-  const { data: defaultCampagne } = client
-    .ref("[GET]/demande/campagne/default")
-    .useQuery({});
+  const { data: defaultCampagne } = client.ref("[GET]/demande/campagne/default").useQuery({});
 
   if (isLoading && !!numero) return <IntentionSpinner />;
 
@@ -31,9 +30,7 @@ export default () => {
       {numero ? (
         data && (
           <IntentionForm
-            disabled={
-              defaultCampagne?.statut !== CampagneStatutEnum["en cours"]
-            }
+            disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
             defaultValues={{
               cfd: data?.compensationCfd,
               codeDispositif: data?.compensationCodeDispositif,
@@ -53,9 +50,7 @@ export default () => {
           disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
           defaultValues={{
             campagneId: defaultCampagne?.id,
-            rentreeScolaire: defaultCampagne?.annee
-              ? Number.parseInt(defaultCampagne?.annee) + 1
-              : undefined,
+            rentreeScolaire: defaultCampagne?.annee ? Number.parseInt(defaultCampagne?.annee) + 1 : undefined,
           }}
           formMetadata={{}}
           campagne={defaultCampagne}

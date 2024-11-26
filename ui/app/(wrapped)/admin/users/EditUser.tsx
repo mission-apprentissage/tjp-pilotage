@@ -1,3 +1,5 @@
+// @ts-nocheck -- TODO
+
 import {
   Alert,
   AlertDescription,
@@ -19,11 +21,12 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { getHierarchy, Role } from "shared";
+import type { Role } from "shared";
+import { getHierarchy } from "shared";
 import { z } from "zod";
 
-import { client } from "../../../../api.client";
-import { useAuth } from "../../../../utils/security/useAuth";
+import { client } from "@/api.client";
+import { useAuth } from "@/utils/security/useAuth";
 
 export const EditUser = ({
   isOpen,
@@ -76,9 +79,7 @@ export const EditUser = ({
   const filteredRegions = (() => {
     if (!regions) return [];
     if (isAdminRegion) {
-      return regions.filter(
-        (region) => region.value === auth?.user?.codeRegion
-      );
+      return regions.filter((region) => region.value === auth?.user?.codeRegion);
     }
     return regions;
   })();
@@ -103,14 +104,10 @@ export const EditUser = ({
             <Input
               type="email"
               {...register("email", {
-                validate: (v) =>
-                  z.string().email().safeParse(v).success ||
-                  "Veuillez saisir un email valide",
+                validate: (v) => z.string().email().safeParse(v).success || "Veuillez saisir un email valide",
               })}
             />
-            {!!errors.email && (
-              <FormErrorMessage>{errors.email.message}</FormErrorMessage>
-            )}
+            {!!errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.firstname} isRequired>
             <FormLabel>Prénom</FormLabel>
@@ -119,9 +116,7 @@ export const EditUser = ({
                 required: "Veuillez saisir un prénom",
               })}
             />
-            {!!errors.firstname && (
-              <FormErrorMessage>{errors.firstname.message}</FormErrorMessage>
-            )}
+            {!!errors.firstname && <FormErrorMessage>{errors.firstname.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.lastname} isRequired>
             <FormLabel>Nom</FormLabel>
@@ -130,9 +125,7 @@ export const EditUser = ({
                 required: "Veuillez saisir un nom",
               })}
             />
-            {!!errors.lastname && (
-              <FormErrorMessage>{errors.lastname.message}</FormErrorMessage>
-            )}
+            {!!errors.lastname && <FormErrorMessage>{errors.lastname.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.role} isRequired>
             <FormLabel>Role</FormLabel>
@@ -147,9 +140,7 @@ export const EditUser = ({
                 </option>
               ))}
             </Select>
-            {!!errors.role && (
-              <FormErrorMessage>{errors.role.message}</FormErrorMessage>
-            )}
+            {!!errors.role && <FormErrorMessage>{errors.role.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.codeRegion}>
             <FormLabel>Code région</FormLabel>
@@ -161,17 +152,13 @@ export const EditUser = ({
                 </option>
               ))}
             </Select>
-            {!!errors.codeRegion && (
-              <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>
-            )}
+            {!!errors.codeRegion && <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.enabled}>
             <Checkbox {...register("enabled")} isRequired={false}>
               Compte actif
             </Checkbox>
-            {!!errors.enabled && (
-              <FormErrorMessage>{errors.enabled.message}</FormErrorMessage>
-            )}
+            {!!errors.enabled && <FormErrorMessage>{errors.enabled.message}</FormErrorMessage>}
           </FormControl>
           {isError && (
             <Alert status="error">

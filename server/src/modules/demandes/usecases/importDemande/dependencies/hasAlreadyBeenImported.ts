@@ -1,10 +1,10 @@
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { kdb } from "../../../../../db/db";
-import { isDemandeCampagneEnCours } from "../../../../utils/isDemandeCampagneEnCours";
+import { getKbdClient } from "@/db/db";
+import { isDemandeCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
 
 export const hasAlreadyBeenImported = async ({ numero }: { numero: string }) =>
-  kdb
+  getKbdClient()
     .selectFrom(({ selectFrom }) =>
       selectFrom("latestDemandeView as demande")
         .where(isDemandeCampagneEnCours)

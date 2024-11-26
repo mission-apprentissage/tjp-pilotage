@@ -1,15 +1,4 @@
-import {
-  Box,
-  Flex,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -54,19 +43,13 @@ export const TableQuadrant = ({
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const getTdColor = (formation: Formation) => {
-    if (
-      currentFormationId &&
-      `${formation.cfd}_${formation.codeDispositif}` === currentFormationId
-    )
+    if (currentFormationId && `${formation.cfd}_${formation.codeDispositif}` === currentFormationId)
       return "white !important";
     return "";
   };
 
   const getTrBgColor = (formation: Formation) => {
-    if (
-      currentFormationId &&
-      `${formation.cfd}_${formation.codeDispositif}` === currentFormationId
-    )
+    if (currentFormationId && `${formation.cfd}_${formation.codeDispositif}` === currentFormationId)
       return "blueecume.400_hover !important";
     switch (formation.positionQuadrant) {
       case PositionQuadrantEnum.Q1:
@@ -79,12 +62,7 @@ export const TableQuadrant = ({
   };
   return (
     <Flex direction="column" flex={1} position="relative" minH="0">
-      <TableContainer
-        overflowY="auto"
-        flex={1}
-        position="relative"
-        width="100%"
-      >
+      <TableContainer overflowY="auto" flex={1} position="relative" width="100%">
         <Table variant="simple" size={"sm"} mb={"auto"}>
           <Thead
             bgColor="blueecume.400_active"
@@ -102,9 +80,7 @@ export const TableQuadrant = ({
                 cursor={handleOrder ? "pointer" : "default"}
                 onClick={() => handleOrder && handleOrder("libelleFormation")}
               >
-                {handleOrder && (
-                  <OrderIcon {...order} column="libelleFormation" />
-                )}
+                {handleOrder && <OrderIcon {...order} column="libelleFormation" />}
                 FORMATION
               </Th>
               <Th
@@ -122,8 +98,7 @@ export const TableQuadrant = ({
                   label={
                     <Box>
                       <Text>
-                        Le ratio entre le nombre de premiers voeux et la
-                        capacité de la formation au niveau régional.
+                        Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.
                       </Text>
                       <Text>Cliquez pour plus d'infos.</Text>
                       <TauxPressionScale />
@@ -146,10 +121,7 @@ export const TableQuadrant = ({
                   ml="1"
                   label={
                     <Box>
-                      <Text>
-                        La part de ceux qui sont en emploi 6 mois après leur
-                        sortie d’étude.
-                      </Text>
+                      <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
                       <Text>Cliquez pour plus d'infos.</Text>
                     </Box>
                   }
@@ -170,10 +142,7 @@ export const TableQuadrant = ({
                   ml="1"
                   label={
                     <Box>
-                      <Text>
-                        Tout élève inscrit à N+1 (réorientation et redoublement
-                        compris).
-                      </Text>
+                      <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
                       <Text>Cliquez pour plus d'infos.</Text>
                     </Box>
                   }
@@ -188,24 +157,16 @@ export const TableQuadrant = ({
               .map((f) => ({
                 ...f,
                 libelle: formations.some(
-                  (formation) =>
-                    formation.cfd === f.cfd &&
-                    formation.codeDispositif !== f.codeDispositif
+                  (formation) => formation.cfd === f.cfd && formation.codeDispositif !== f.codeDispositif
                 )
-                  ? f.libelleFormation?.replace(
-                      `(${f.libelleNiveauDiplome})`,
-                      `(${f.libelleDispositif})`
-                    )
+                  ? f.libelleFormation?.replace(`(${f.libelleNiveauDiplome})`, `(${f.libelleDispositif})`)
                   : f.libelleFormation,
               }))
               .map((formation, index) => (
                 <Tr
                   key={`${formation.cfd}-${index}`}
                   bgColor={getTrBgColor(formation)}
-                  onClick={() =>
-                    handleClick &&
-                    handleClick(`${formation.cfd}_${formation.codeDispositif}`)
-                  }
+                  onClick={() => handleClick && handleClick(`${formation.cfd}_${formation.codeDispositif}`)}
                   cursor={handleClick ? "pointer" : "default"}
                 >
                   <Td whiteSpace="normal" color={getTdColor(formation)}>
@@ -214,29 +175,17 @@ export const TableQuadrant = ({
                   <Td textAlign={"center"}>
                     <TableBadge
                       sx={getTauxPressionStyle(
-                        formation.tauxPression !== undefined
-                          ? formation?.tauxPression
-                          : undefined
+                        formation.tauxPression !== undefined ? formation?.tauxPression : undefined
                       )}
                     >
-                      {formation.tauxPression !== undefined
-                        ? formatNumber(formation?.tauxPression, 2)
-                        : "-"}
+                      {formation.tauxPression !== undefined ? formatNumber(formation?.tauxPression, 2) : "-"}
                     </TableBadge>
                   </Td>
                   <Td color={getTdColor(formation)} maxW="20%">
-                    <GraphWrapper
-                      maxW="120px"
-                      value={formation.tauxInsertion}
-                      continuum={formation.continuum}
-                    />
+                    <GraphWrapper maxW="120px" value={formation.tauxInsertion} continuum={formation.continuum} />
                   </Td>
                   <Td color={getTdColor(formation)} maxW="20%">
-                    <GraphWrapper
-                      maxW="120px"
-                      value={formation.tauxPoursuite}
-                      continuum={formation.continuum}
-                    />
+                    <GraphWrapper maxW="120px" value={formation.tauxPoursuite} continuum={formation.continuum} />
                   </Td>
                 </Tr>
               ))}

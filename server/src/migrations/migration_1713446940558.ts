@@ -1,4 +1,5 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema.dropView("latestDemandeView").ifExists().execute();
@@ -15,10 +16,7 @@ export const up = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demande" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandes")
@@ -49,10 +47,7 @@ export const up = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demande" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandes")
@@ -74,17 +69,7 @@ export const up = async (db: Kysely<unknown>) => {
     .createIndex("latestDemandeView_index")
     .unique()
     .on("latestDemandeView")
-    .columns([
-      "id",
-      "numero",
-      "campagneId",
-      "cfd",
-      "uai",
-      "codeRegion",
-      "codeAcademie",
-      "createurId",
-      "codeDispositif",
-    ])
+    .columns(["id", "numero", "campagneId", "cfd", "uai", "codeRegion", "codeAcademie", "createurId", "codeDispositif"])
     .execute();
 
   await sql`
@@ -104,23 +89,14 @@ export const up = async (db: Kysely<unknown>) => {
 };
 
 export const down = async (db: Kysely<unknown>) => {
-  await sql`DROP TRIGGER IF EXISTS update_demande_refresh_materialized_view_t ON ${sql.table(
-    "demande"
-  )}`.execute(db);
+  await sql`DROP TRIGGER IF EXISTS update_demande_refresh_materialized_view_t ON ${sql.table("demande")}`.execute(db);
   await sql`DROP FUNCTION IF EXISTS refresh_latest_demande_view()`.execute(db);
 
   await db.schema.dropIndex("latestDemandeView_index").ifExists().execute();
 
-  await db.schema
-    .dropView("latestDemandeView")
-    .materialized()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestDemandeView").materialized().ifExists().execute();
 
-  await db.schema
-    .dropView("latestDemandeNonMaterializedView")
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestDemandeNonMaterializedView").ifExists().execute();
 
   await db.schema
     .createView("latestDemandeView")
@@ -134,10 +110,7 @@ export const down = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demande" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandes")

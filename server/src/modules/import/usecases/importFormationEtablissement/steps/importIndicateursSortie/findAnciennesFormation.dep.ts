@@ -1,14 +1,8 @@
-import { kdb } from "../../../../../../db/db";
-import { cleanNull } from "../../../../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
-export const findAnciennesFormation = ({
-  cfd,
-  voie,
-}: {
-  cfd: string;
-  voie: string;
-}) =>
-  kdb
+export const findAnciennesFormation = ({ cfd, voie }: { cfd: string; voie: string }) =>
+  getKbdClient()
     .selectFrom("formationHistorique")
     .selectAll()
     .where("cfd", "=", cfd)

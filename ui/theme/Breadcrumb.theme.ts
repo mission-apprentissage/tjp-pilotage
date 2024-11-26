@@ -1,8 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { breadcrumbAnatomy } from "@chakra-ui/anatomy";
 import { createMultiStyleConfigHelpers } from "@chakra-ui/react";
 
-const { definePartsStyle, defineMultiStyleConfig } =
-  createMultiStyleConfigHelpers(breadcrumbAnatomy.keys);
+const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(breadcrumbAnatomy.keys);
 
 const baseStyle = definePartsStyle({
   container: { color: "grey.425" },

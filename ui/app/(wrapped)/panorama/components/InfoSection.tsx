@@ -19,16 +19,8 @@ const lienDares: Record<string, string> = {
   93: "https://dares.travail-emploi.gouv.fr/publication/paca-quelles-difficultes-de-recrutement-dici-2030",
 };
 
-export const InfoSection = ({
-  codeRegion,
-  codeDepartement,
-}: {
-  codeRegion?: string;
-  codeDepartement?: string;
-}) => {
-  codeDepartement = codeDepartement?.startsWith("0")
-    ? codeDepartement.substring(1)
-    : codeDepartement;
+export const InfoSection = ({ codeRegion, codeDepartement }: { codeRegion?: string; codeDepartement?: string }) => {
+  codeDepartement = codeDepartement?.startsWith("0") ? codeDepartement.substring(1) : codeDepartement;
 
   const trackEvent = usePlausible();
 
@@ -59,8 +51,7 @@ export const InfoSection = ({
         <Box>
           Les enjeux de demain pour mieux anticiper les formations insérantes.
           <br />
-          Trouvez ici une multitude d’informations pour venir enrichir vos
-          analyses.
+          Trouvez ici une multitude d’informations pour venir enrichir vos analyses.
         </Box>
       </Box>
 

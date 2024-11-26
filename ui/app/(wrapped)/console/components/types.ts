@@ -1,16 +1,14 @@
-import { client } from "@/api.client";
-
-import {
+import type { client } from "@/api.client";
+import type {
   Filters as FiltersEtablissement,
   FiltersList as FiltersListEtablissement,
-} from "../etablissements/types";
-import {
+} from "@/app/(wrapped)/console/etablissements/types";
+import type {
   Filters as FiltersFormation,
   FiltersList as FiltersListFormation,
-} from "../formations/types";
+} from "@/app/(wrapped)/console/formations/types";
 
-export type TypePage =
-  (typeof client.inferArgs)["[POST]/requete/enregistrement"]["body"]["page"];
+export type TypePage = (typeof client.inferArgs)["[POST]/requete/enregistrement"]["body"]["page"];
 
 export type RequetesEnregistrees = (typeof client.infer)["[GET]/requetes"];
 

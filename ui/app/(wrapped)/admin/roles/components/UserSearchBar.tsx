@@ -1,13 +1,14 @@
 import { Badge, HStack, Skeleton, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useEffect } from "react";
-import { components, CSSObjectWithLabel, SingleValueProps } from "react-select";
+import type { CSSObjectWithLabel, SingleValueProps } from "react-select";
+import { components } from "react-select";
 import AsyncSelect from "react-select/async";
 
-import { client } from "../../../../../api.client";
-import { themeDefinition } from "../../../../../theme/theme";
-import { useAuth } from "../../../../../utils/security/useAuth";
-import { ROLES_LABELS } from "../const";
+import { client } from "@/api.client";
+import { ROLES_LABELS } from "@/app/(wrapped)/admin/roles/const";
+import { themeDefinition } from "@/theme/theme";
+import { useAuth } from "@/utils/security/useAuth";
 
 export type QueryResult = (typeof client.infer)["[GET]/user/search/:search"];
 export type User = QueryResult[number];
@@ -30,6 +31,7 @@ const SingleValue = ({ ...props }: SingleValueProps<OptionType>) => {
           {firstName} {lastName}{" "}
         </Text>
         <Badge variant="info" size="sm">
+          {/* @ts-expect-error TODO */}
           {ROLES_LABELS[role](codeRegion).label}
         </Badge>
       </HStack>
@@ -86,30 +88,24 @@ const UserSearchBar = ({ updateUser, user }: UserSearchBarProps) => {
                 justifyContent="center"
                 cursor="pointer"
               >
-                <Icon
-                  icon="ri:search-line"
-                  color="white"
-                  height="18px"
-                  width="18px"
-                ></Icon>
+                <Icon icon="ri:search-line" color="white" height="18px" width="18px"></Icon>
               </HStack>
             ),
             IndicatorSeparator: () => null,
             SingleValue,
           }}
-          onChange={(selected) =>
-            selected && updateUser((selected as OptionType).value)
-          }
+          onChange={(selected) => selected && updateUser((selected as OptionType).value)}
           defaultValue={{
             label: user.email,
             value: user,
           }}
-          loadOptions={(inputValue: string) => {
+          loadOptions={async (inputValue: string) => {
             if (inputValue.length >= 3) {
               const d = client.ref("[GET]/user/search/:search").query({
                 params: { search: inputValue },
               }) as Promise<QueryResult>;
               return d.then((users) =>
+                // @ts-expect-error TODO
                 users.map((u) => ({
                   label: u.email,
                   value: { ...u, role: u.role! },
@@ -118,15 +114,11 @@ const UserSearchBar = ({ updateUser, user }: UserSearchBarProps) => {
             }
           }}
           loadingMessage={({ inputValue }) =>
-            inputValue.length >= 3
-              ? "Recherche..."
-              : "Veuillez rentrer au moins 3 lettres"
+            inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
           }
           isClearable={true}
           noOptionsMessage={({ inputValue }) =>
-            inputValue
-              ? "Pas d'utilisateur correspondant"
-              : "Commencez à écrire..."
+            inputValue ? "Pas d'utilisateur correspondant" : "Commencez à écrire..."
           }
           placeholder="Email de l'utilisateur"
           isMulti={false}

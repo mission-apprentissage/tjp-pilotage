@@ -1,8 +1,9 @@
 import { CURRENT_IJ_MILLESIME } from "shared";
 
-import { cleanNull } from "../../../../../utils/noNull";
-import { withTauxDevenirFavorableReg } from "../../../utils/tauxDevenirFavorable";
-import { Filters } from "../getDataForPanoramaRegion.schema";
+import type { Filters } from "@/modules/data/usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.schema";
+import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
+import { cleanNull } from "@/utils/noNull";
+
 import { getFormationsRegionBase } from "./getFormationsRegionBase.dep";
 
 export const getTopFlopFormationsRegion = async (filters: Filters) =>

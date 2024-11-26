@@ -1,27 +1,16 @@
 import { chakra, Flex, Grid, GridItem, Img, Text } from "@chakra-ui/react";
-import { AvisTypeEnum, AvisTypeType } from "shared/enum/avisTypeEnum";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { AvisTypeType } from "shared/enum/avisTypeEnum";
+import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { client } from "@/api.client";
-import {
-  getOrderStatut,
-  getStepWorkflow,
-  getTypeAvis,
-} from "@/app/(wrapped)/intentions/utils/statutUtils";
+import type { client } from "@/api.client";
+import { getOrderStatut, getStepWorkflow, getTypeAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 
 import { Step } from "./Step";
 
 const IllustrationStatut = chakra(
-  ({
-    statut,
-    latestTypeAvis,
-  }: {
-    statut?: DemandeStatutType;
-    latestTypeAvis?: AvisTypeType;
-  }) => {
+  ({ statut, latestTypeAvis }: { statut?: DemandeStatutType; latestTypeAvis?: AvisTypeType }) => {
     switch (statut) {
       case DemandeStatutEnum["demande validée"]:
         return (
@@ -39,9 +28,7 @@ const IllustrationStatut = chakra(
             <Text color={"success.425"} fontWeight={700}>
               Demande validée
             </Text>
-            <Text>
-              La demande a été validée à l'issue de la concertation finale
-            </Text>
+            <Text>La demande a été validée à l'issue de la concertation finale</Text>
           </Flex>
         );
       case DemandeStatutEnum["refusée"]:
@@ -65,8 +52,8 @@ const IllustrationStatut = chakra(
               {latestTypeAvis === AvisTypeEnum["préalable"]
                 ? "de revue de la proposition"
                 : latestTypeAvis === AvisTypeEnum["consultatif"]
-                ? "d'instruction"
-                : "de vote"}
+                  ? "d'instruction"
+                  : "de vote"}
             </Text>
           </Flex>
         );
@@ -86,9 +73,7 @@ const IllustrationStatut = chakra(
             <Text color={"error.425"} fontWeight={700}>
               Dossier incomplet
             </Text>
-            <Text>
-              Le dossier doit être complété pour passer en phase d'instruction
-            </Text>
+            <Text>Le dossier doit être complété pour passer en phase d'instruction</Text>
           </Flex>
         );
       case DemandeStatutEnum["brouillon"]:
@@ -102,9 +87,7 @@ const IllustrationStatut = chakra(
       default:
         return (
           <Img
-            src={`/illustrations/step-${getStepWorkflow(
-              statut
-            )}-workflow-intentions.svg`}
+            src={`/illustrations/step-${getStepWorkflow(statut)}-workflow-intentions.svg`}
             alt="Illustration de l'étape en cours"
             m={"auto"}
           />
@@ -113,19 +96,17 @@ const IllustrationStatut = chakra(
   }
 );
 
-export const StepperSection = ({
-  intention,
-}: {
-  intention: (typeof client.infer)["[GET]/intention/:numero"];
-}) => {
+export const StepperSection = ({ intention }: { intention: (typeof client.infer)["[GET]/intention/:numero"] }) => {
   const previousStep = getStepWorkflow(
     (intention.changementsStatut || []).sort(
+      // @ts-expect-error TODO
       (a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut)
     )[0]?.statutPrecedent
   );
 
   const latestTypeAvis = getTypeAvis(
     (intention.changementsStatut || []).sort(
+      // @ts-expect-error TODO
       (a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut)
     )[0]?.statutPrecedent
   );
@@ -135,19 +116,12 @@ export const StepperSection = ({
       case 1:
         return (
           intention?.statut === DemandeStatutEnum["dossier incomplet"] ||
-          (intention?.statut === DemandeStatutEnum["refusée"] &&
-            previousStep === 1)
+          (intention?.statut === DemandeStatutEnum["refusée"] && previousStep === 1)
         );
       case 2:
-        return (
-          intention?.statut === DemandeStatutEnum["refusée"] &&
-          previousStep === 2
-        );
+        return intention?.statut === DemandeStatutEnum["refusée"] && previousStep === 2;
       case 3:
-        return (
-          intention?.statut === DemandeStatutEnum["refusée"] &&
-          previousStep === 3
-        );
+        return intention?.statut === DemandeStatutEnum["refusée"] && previousStep === 3;
       default:
         return false;
     }
@@ -184,10 +158,7 @@ export const StepperSection = ({
           />
         </GridItem>
         <GridItem>
-          <IllustrationStatut
-            statut={intention.statut}
-            latestTypeAvis={latestTypeAvis}
-          />
+          <IllustrationStatut statut={intention.statut} latestTypeAvis={latestTypeAvis} />
         </GridItem>
       </Grid>
     </Flex>

@@ -1,13 +1,15 @@
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import jwt from "jsonwebtoken";
-import _ from "lodash";
-import { UserinfoResponse } from "openid-client";
+import { flatten, uniq } from "lodash-es";
+import type { UserinfoResponse } from "openid-client";
 
-import { config } from "../../../../../config/config";
-import { logger } from "../../../../logger";
-import { getDneClient } from "../../services/dneClient/dneClient";
+import config from "@/config";
+import { getDneClient } from "@/modules/core/services/dneClient/dneClient";
+import logger from "@/services/logger";
+
 import { createUserInDB } from "./createUser.dep";
 import { findEtablissement } from "./findEtablissement.dep";
 import { findUserQuery } from "./findUserQuery.dep";
@@ -40,8 +42,9 @@ const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
      * délégations.
      * frEduRneResp est au format suivant : FrEduRneResp=UAI$UAJ$PU$N$T3$LP$320
      **/
-    const delegations = _.uniq(
-      _.flatten(
+    const delegations = uniq(
+      flatten(
+        // @ts-expect-error TODO
         userInfo?.FrEduResDel?.map((del) => {
           const frEduRneResp = del.split("|")[5];
           const startDate = dayjs(del.split("|")[2], "DD/MM/YYYY");
@@ -50,9 +53,7 @@ const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
 
           if (startDate.isBefore(now) && endDate.isAfter(now)) {
             const frEduRnes = frEduRneResp.replace("FrEduRneResp=", "");
-            return frEduRnes
-              .split(";")
-              .map((frEduRne) => frEduRne.split("$")[0]);
+            return frEduRnes.split(";").map((frEduRne) => frEduRne.split("$")[0]);
           }
         })
       ).filter((del) => {
@@ -66,7 +67,7 @@ const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
   }
   return uais;
 };
-
+// @ts-expect-error TODO
 const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
   if (userInfo.FrEduFonctAdm === "DIR" || userInfo.FrEduResDel) {
     const uais = extractUaisRep(userInfo);
@@ -88,7 +89,7 @@ const decodeCodeVerifierJwt = (token: string, secret: string) => {
     if (decoded.code_verifier) {
       return decoded.code_verifier;
     }
-  } catch (e) {
+  } catch (_e) {
     throw new Error("wrong codeVerifierJwt");
   }
   throw new Error("missing codeVerifierJwt");
@@ -104,17 +105,8 @@ export const [redirectDne, redirectDneFactory] = inject(
     findEtablissement,
   },
   (deps) =>
-    async ({
-      codeVerifierJwt,
-      url,
-    }: {
-      codeVerifierJwt: string;
-      url: string;
-    }) => {
-      const code_verifier = decodeCodeVerifierJwt(
-        codeVerifierJwt,
-        deps.codeVerifierJwtSecret
-      );
+    async ({ codeVerifierJwt, url }: { codeVerifierJwt: string; url: string }) => {
+      const code_verifier = decodeCodeVerifierJwt(codeVerifierJwt, deps.codeVerifierJwtSecret);
 
       if (!code_verifier) throw new Error("missing code_verifier");
 
@@ -125,9 +117,7 @@ export const [redirectDne, redirectDneFactory] = inject(
       });
       if (!tokenSet.access_token) throw new Error("missing access_token");
 
-      const userinfo = await client.userinfo<ExtraUserInfo>(
-        tokenSet.access_token
-      );
+      const userinfo = await client.userinfo<ExtraUserInfo>(tokenSet.access_token);
 
       const email = userinfo.email?.toLowerCase();
       if (!email) {
@@ -150,32 +140,24 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       const attributes = getUserRoleAttributes(userinfo);
       if (!attributes) {
-        logger.error(
-          "Error (SSO) : Il manque les droits perdir pour l'utilisateur",
-          {
-            error: new Error("missing rights"),
-            userinfo,
-            email,
-          }
-        );
+        logger.error("Error (SSO) : Il manque les droits perdir pour l'utilisateur", {
+          error: new Error("missing rights"),
+          userinfo,
+          email,
+        });
         throw new Error("missing right attributes");
       }
 
-      const etablissement =
-        attributes.uais &&
-        (await deps.findEtablissement({ uais: attributes.uais }));
+      const etablissement = attributes.uais && (await deps.findEtablissement({ uais: attributes.uais }));
 
       if (!etablissement?.codeRegion) {
-        logger.error(
-          "Error (SSO): Il manque le code région pour l'établissement",
-          {
-            error: new Error("missing codeRegion"),
-            userinfo,
-            email,
-            attributes,
-            etablissement,
-          }
-        );
+        logger.error("Error (SSO): Il manque le code région pour l'établissement", {
+          error: new Error("missing codeRegion"),
+          userinfo,
+          email,
+          attributes,
+          etablissement,
+        });
         throw new Error("missing codeRegion");
       }
 

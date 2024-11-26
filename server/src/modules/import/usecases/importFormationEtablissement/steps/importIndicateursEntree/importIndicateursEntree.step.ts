@@ -1,11 +1,13 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import {
+import type {
   AnneeDispositif,
   AnneeEnseignement,
-} from "../../../getCfdRentrees/getCfdRentrees.usecase";
-import { getIndicateursAffelnet } from "../getIndicateurAffelnet/getIndicateurAffelnet.step";
-import { getIndicateursParcoursSup } from "../getIndicateursParcoursSup/getIndicateursParcoursSup.step";
+} from "@/modules/import/usecases/getCfdRentrees/getCfdRentrees.usecase";
+import { getIndicateursAffelnet } from "@/modules/import/usecases/importFormationEtablissement/steps/getIndicateurAffelnet/getIndicateurAffelnet.step";
+import { getIndicateursParcoursSup } from "@/modules/import/usecases/importFormationEtablissement/steps/getIndicateursParcoursSup/getIndicateursParcoursSup.step";
+
 import { createIndicateurEntree } from "./createIndicateurEntree.dep";
 import { findAnneeCommune, findSpecialite } from "./findFamilleMetier";
 import { findHistorique } from "./findHistorique";

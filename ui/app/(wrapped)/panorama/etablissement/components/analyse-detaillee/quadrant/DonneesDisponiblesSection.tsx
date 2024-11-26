@@ -1,7 +1,11 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 
-import { ChiffresEntree, Formation } from "../types";
+import type {
+  ChiffresEntree,
+  Formation,
+} from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
+
 import { ProgressBar } from "./ProgressBar";
 
 export const DonneesDisponiblesSection = ({
@@ -17,15 +21,9 @@ export const DonneesDisponiblesSection = ({
 }) => {
   const getEffectifsPercentage = () => {
     const percentage =
-      ((filteredFormations?.reduce(
-        (acc, formation) => acc + (formation?.effectif ?? 0),
-        0
-      ) ?? 0) /
+      ((filteredFormations?.reduce((acc, formation) => acc + (formation?.effectif ?? 0), 0) ?? 0) /
         (formations?.reduce(
-          (acc, formation) =>
-            acc +
-            (chiffresEntree?.[formation.offre]?.[CURRENT_RENTREE]
-              ?.effectifEntree ?? 0),
+          (acc, formation) => acc + (chiffresEntree?.[formation.offre]?.[CURRENT_RENTREE]?.effectifEntree ?? 0),
           0
         ) ?? 0)) *
       100;
@@ -48,13 +46,9 @@ export const DonneesDisponiblesSection = ({
       </Text>
       <Box>
         <ProgressBar
-          percentage={
-            ((filteredFormations?.length ?? 0) / formations.length) * 100
-          }
+          percentage={((filteredFormations?.length ?? 0) / formations.length) * 100}
           leftLabel={"Formations"}
-          rightLabel={`${filteredFormations?.length ?? 0} / ${
-            formations.length
-          }`}
+          rightLabel={`${filteredFormations?.length ?? 0} / ${formations.length}`}
         />
       </Box>
       <Box>
@@ -62,16 +56,10 @@ export const DonneesDisponiblesSection = ({
           percentage={getEffectifsPercentage()}
           leftLabel={"Effectifs"}
           rightLabel={`${
-            filteredFormations?.reduce(
-              (acc, formation) => acc + (formation?.effectif ?? 0),
-              0
-            ) ?? "-"
+            filteredFormations?.reduce((acc, formation) => acc + (formation?.effectif ?? 0), 0) ?? "-"
           } / ${
             formations?.reduce(
-              (acc, formation) =>
-                acc +
-                (chiffresEntree?.[formation.offre]?.[CURRENT_RENTREE]
-                  ?.effectifEntree ?? 0),
+              (acc, formation) => acc + (chiffresEntree?.[formation.offre]?.[CURRENT_RENTREE]?.effectifEntree ?? 0),
               0
             ) ?? "-"
           }`}

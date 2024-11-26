@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<any>) => {
   await db.schema
@@ -10,9 +10,7 @@ export const up = async (db: Kysely<any>) => {
 
   await db.schema
     .alterTable("indicateurRegionSortie")
-    .addColumn("cfdContinuum", "varchar(8)", (c) =>
-      c.references("formation.codeFormationDiplome")
-    )
+    .addColumn("cfdContinuum", "varchar(8)", (c) => c.references("formation.codeFormationDiplome"))
     .execute();
 
   await db.schema
@@ -28,13 +26,7 @@ export const down = async (db: Kysely<any>) => {
     .alterColumn("codeNiveauDiplome", (c) => c.dropNotNull())
     .execute();
 
-  await db.schema
-    .alterTable("indicateurRegionSortie")
-    .dropColumn("cfdContinuum")
-    .execute();
+  await db.schema.alterTable("indicateurRegionSortie").dropColumn("cfdContinuum").execute();
 
-  await db.schema
-    .alterTable("demande")
-    .dropConstraint("fk_demande_user")
-    .execute();
+  await db.schema.alterTable("demande").dropConstraint("fk_demande_user").execute();
 };

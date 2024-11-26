@@ -14,19 +14,20 @@ import {
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ReactNode, RefObject, useEffect } from "react";
+import type { ReactNode, RefObject } from "react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
+import { SectionBlock } from "@/app/(wrapped)/intentions/saisie/components/SectionBlock";
+import type { Campagne, Demande } from "@/app/(wrapped)/intentions/saisie/types";
+import { isTypeAjustement } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { feature } from "@/utils/feature";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { isTypeAjustement } from "../../utils/typeDemandeUtils";
-import { SectionBlock } from "../components/SectionBlock";
-import { CorrectionSection } from "../intentionForm/correctionSection/CorrectionSection";
-import { Campagne, Demande } from "../types";
-import { IntentionForms } from "./defaultFormValues";
+import { CorrectionSection } from "./correctionSection/CorrectionSection";
+import type { IntentionForms } from "./defaultFormValues";
 import { ObservationsSection } from "./observationsSection/ObservationsSection";
 import { PrecisionsSection } from "./precisionsSection/PrecisionsSection";
 import { RHSection } from "./rhSection/RHSection";
@@ -90,31 +91,17 @@ export const InformationsBlock = ({
       </SectionBlock>
       {showCorrection && (
         <SectionBlock borderColor={"red"} borderWidth={"1px"}>
-          <CorrectionSection
-            correctionRef={refs["correction"]}
-            demande={demande}
-            campagne={campagne}
-          />
+          <CorrectionSection correctionRef={refs["correction"]} demande={demande} campagne={campagne} />
         </SectionBlock>
       )}
       <SectionBlock>
-        <PrecisionsSection
-          motifsEtPrecisionsRef={refs["motifsEtPrecisions"]}
-          campagne={campagne}
-          disabled={disabled}
-        />
+        <PrecisionsSection motifsEtPrecisionsRef={refs["motifsEtPrecisions"]} campagne={campagne} disabled={disabled} />
       </SectionBlock>
       <SectionBlock>
-        <RHSection
-          ressourcesHumainesRef={refs["ressourcesHumaines"]}
-          disabled={disabled}
-        />
+        <RHSection ressourcesHumainesRef={refs["ressourcesHumaines"]} disabled={disabled} />
       </SectionBlock>
       <SectionBlock>
-        <ObservationsSection
-          commentaireEtPiecesJointesRef={refs["commentaireEtPiecesJointes"]}
-          disabled={disabled}
-        />
+        <ObservationsSection commentaireEtPiecesJointesRef={refs["commentaireEtPiecesJointes"]} disabled={disabled} />
       </SectionBlock>
       {formId && (
         <>
@@ -144,14 +131,12 @@ export const InformationsBlock = ({
                   </ModalHeader>
                   <ModalBody>
                     <Text mb={4}>
-                      Cette action est irréversible, elle supprime
-                      définitivement la demande et l’ensemble des données
-                      associées. Il est conseillé de réserver cette action à une
-                      erreur de saisie ou un doublon.
+                      Cette action est irréversible, elle supprime définitivement la demande et l’ensemble des données
+                      associées. Il est conseillé de réserver cette action à une erreur de saisie ou un doublon.
                     </Text>
                     <Text>
-                      Si vous souhaitez refuser la demande, vous pouvez la
-                      conserver et modifier son statut en “Demande refusée”.
+                      Si vous souhaitez refuser la demande, vous pouvez la conserver et modifier son statut en “Demande
+                      refusée”.
                     </Text>
                   </ModalBody>
 

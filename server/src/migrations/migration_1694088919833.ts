@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 export const up = async (db: Kysely<any>) => {
   await db.schema
@@ -60,10 +61,7 @@ export const up = async (db: Kysely<any>) => {
     ])
     .execute();
 
-  await db.schema
-    .createType("typeFamille")
-    .asEnum(["2nde_commune", "specialite"])
-    .execute();
+  await db.schema.createType("typeFamille").asEnum(["2nde_commune", "specialite"]).execute();
 
   await db.schema
     .createTable("dataEtablissement")
@@ -75,15 +73,9 @@ export const up = async (db: Kysely<any>) => {
     .addColumn("codePostal", "varchar(5)")
     .addColumn("codeMinistereTutuelle", "varchar(2)")
     .addColumn("secteur", "varchar(2)")
-    .addColumn("codeDepartement", "varchar(3)", (c) =>
-      c.references("departement.codeDepartement")
-    )
-    .addColumn("codeAcademie", "varchar(2)", (c) =>
-      c.references("academie.codeAcademie")
-    )
-    .addColumn("codeRegion", "varchar(2)", (c) =>
-      c.references("region.codeRegion")
-    )
+    .addColumn("codeDepartement", "varchar(3)", (c) => c.references("departement.codeDepartement"))
+    .addColumn("codeAcademie", "varchar(2)", (c) => c.references("academie.codeAcademie"))
+    .addColumn("codeRegion", "varchar(2)", (c) => c.references("region.codeRegion"))
     .addColumn("typeUai", sql`"typeUai"`, (c) => c.notNull())
     .execute();
 

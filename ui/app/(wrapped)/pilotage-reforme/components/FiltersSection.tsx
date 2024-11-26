@@ -1,7 +1,7 @@
 import { Box, Flex, FormLabel, Select, Skeleton } from "@chakra-ui/react";
 
-import { Multiselect } from "../../../../components/Multiselect";
-import { Filters, PilotageReformeStats } from "../types";
+import type { Filters, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
+import { Multiselect } from "@/components/Multiselect";
 
 export const FiltersSection = ({
   activeFilters,
@@ -32,9 +32,7 @@ export const FiltersSection = ({
                 width={["12rem", null, "72"]}
                 size="md"
                 variant="newInput"
-                onChange={(selected) =>
-                  handleFilters("codeNiveauDiplome", selected)
-                }
+                onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
                 options={data?.filters.diplomes}
                 value={activeFilters.codeNiveauDiplome ?? []}
               >
@@ -47,9 +45,7 @@ export const FiltersSection = ({
                 width={["12rem", null, "72"]}
                 size="md"
                 variant="newInput"
-                borderBottomColor={
-                  activeFilters.codeRegion != undefined ? "info.525" : ""
-                }
+                borderBottomColor={activeFilters.codeRegion != undefined ? "info.525" : ""}
                 value={activeFilters.codeRegion ?? ""}
                 onChange={(e) => {
                   handleFilters("codeRegion", e.target.value);
@@ -57,6 +53,7 @@ export const FiltersSection = ({
                 }}
                 placeholder="TOUTES"
               >
+                {/* @ts-expect-error TODO */}
                 {data?.filters.regions?.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
