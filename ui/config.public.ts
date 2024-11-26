@@ -9,7 +9,7 @@ export interface PublicConfig {
   host: string;
   baseUrl: string;
   apiEndpoint: string;
-  env: "local" | "recette" | "recette1new" | "recette2" | "production" | "preproduction";
+  env: "local" | "recette1" | "recette2" | "production";
   version: string;
   productMeta: {
     brandName: "orion";
@@ -38,27 +38,7 @@ function getProductionPublicConfig(): PublicConfig {
   };
 }
 
-function getPreproductionPublicConfig(): PublicConfig {
-  const host = "preprod.orion.inserjeunes.incubateur.net";
-
-  return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
-    crisp: {
-      token: "cf473a68-afeb-4611-9d38-55ff6144b9b8",
-    },
-    host,
-    baseUrl: `https://${host}`,
-    env: "production",
-    apiEndpoint: `https://${host}/api`,
-    version: getVersion(),
-    productMeta: getProductMeta(),
-  };
-}
-
-function getRecettePublicConfig(): PublicConfig {
+function getRecette1PublicConfig(): PublicConfig {
   const host = "recette-1.orion.inserjeunes.incubateur.net";
 
   return {
@@ -71,27 +51,7 @@ function getRecettePublicConfig(): PublicConfig {
     },
     host,
     baseUrl: `https://${host}`,
-    env: "recette",
-    apiEndpoint: `https://${host}/api`,
-    version: getVersion(),
-    productMeta: getProductMeta(),
-  };
-}
-
-function getRecette1newPublicConfig(): PublicConfig {
-  const host = "recette-1-new.orion.inserjeunes.incubateur.net";
-
-  return {
-    sentry: {
-      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
-      enabled: true,
-    },
-    crisp: {
-      token: "no-token",
-    },
-    host,
-    baseUrl: `https://${host}`,
-    env: "recette1new",
+    env: "recette1",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
     productMeta: getProductMeta(),
@@ -167,9 +127,7 @@ function getEnv(): PublicConfig["env"] {
   const env = process.env.NEXT_PUBLIC_ENV;
   switch (env) {
     case "production":
-    case "preproduction":
-    case "recette":
-    case "recette1new":
+    case "recette1":
     case "recette2":
     case "local":
       return env;
@@ -182,12 +140,8 @@ function getPublicConfig(): PublicConfig {
   switch (getEnv()) {
     case "production":
       return getProductionPublicConfig();
-    case "preproduction":
-      return getPreproductionPublicConfig();
-    case "recette":
-      return getRecettePublicConfig();
-    case "recette1new":
-      return getRecette1newPublicConfig();
+    case "recette1":
+      return getRecette1PublicConfig();
     case "recette2":
       return getRecette2PublicConfig();
     case "local":

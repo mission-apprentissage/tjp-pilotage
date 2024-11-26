@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build --no-lint",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' next build --no-lint",
     "typecheck": "NODE_OPTIONS='--max-old-space-size=8192' tsc -noEmit",
     "theme": "chakra-cli tokens theme/theme.ts"
   },
