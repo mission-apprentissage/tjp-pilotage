@@ -7,19 +7,9 @@ on:
         description: Version de l'application en release candidate (eg. v0.0.2-rc.14)
         type: string
         required: true
-      source_branch:
-        description: Branche source
-        type: string
-        required: true
-        default: develop
 
   workflow_call:
     inputs:
-      source_branch:
-        description: Branche source
-        type: string
-        required: false
-        default: develop
       app_version:
         description: Version cible de l'application
         type: string
