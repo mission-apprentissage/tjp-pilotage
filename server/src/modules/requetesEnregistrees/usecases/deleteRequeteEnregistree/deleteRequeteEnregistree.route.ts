@@ -1,16 +1,18 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { deleteRequeteEnregistreeSchema } from "./deleteRequeteEnregistree.schema";
 import { deleteRequeteEnregistreeUsecase } from "./deleteRequeteEnregistree.usecase";
 
+const ROUTE = ROUTES["[DELETE]/requeteEnregistree/:id"];
+
 export const deleteRequeteEnregistreeRoute = (server: Server) => {
-  return createRoute("/requeteEnregistree/:id", {
-    method: "DELETE",
-    schema: deleteRequeteEnregistreeSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

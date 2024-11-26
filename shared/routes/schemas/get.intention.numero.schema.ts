@@ -1,7 +1,8 @@
-import { AvisStatutZodType } from "shared/enum/avisStatutEnum";
-import { AvisTypeZodType } from "shared/enum/avisTypeEnum";
-import { DemandeStatutEnum, DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
+
+import { AvisStatutZodType } from "../../enum/avisStatutEnum";
+import { AvisTypeZodType } from "../../enum/avisTypeEnum";
+import { DemandeStatutEnum, DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 
 const UserSchema = z.object({
   fullname: z.string().optional(),

@@ -1,12 +1,11 @@
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
+import type { searchDiplomeSchema } from "shared/routes/schemas/get.diplome.search.search.schema";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
-
-import type { searchDiplomeSchema } from "./searchDiplome.schema";
 
 export const findManyInDataFormationQuery = async ({
   search,

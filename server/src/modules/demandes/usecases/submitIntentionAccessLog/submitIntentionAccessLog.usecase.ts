@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
+import type { submitIntentionAccessLogSchema } from "shared/routes/schemas/post.demande.access.submit.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
@@ -8,7 +9,6 @@ import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.q
 import { updateDemandeWithHistory } from "@/modules/demandes/repositories/updateDemandeWithHistory.query";
 
 import { createIntentionAccessLog } from "./deps/createIntentionAccessLog.query";
-import type { submitIntentionAccessLogSchema } from "./submitIntentionAccessLog.schema";
 
 type Intention = z.infer<typeof submitIntentionAccessLogSchema.body>["intention"];
 

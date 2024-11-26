@@ -1,9 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
+import type { searchMetierSchema } from "shared/routes/schemas/get.metier.search.search.schema";
 import type { z } from "zod";
 
 import { findMetierQuery } from "./dependencies/findMetier.query";
-import type { searchMetierSchema } from "./searchMetier.schema";
 
 type Option = z.infer<(typeof searchMetierSchema.response)[200]>[number];
 

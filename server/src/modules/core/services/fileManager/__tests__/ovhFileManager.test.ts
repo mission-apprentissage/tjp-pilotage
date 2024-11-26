@@ -4,9 +4,9 @@ import "aws-sdk-client-mock-vitest";
 import type { ListObjectsV2CommandOutput } from "@aws-sdk/client-s3";
 import { ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { mockClient } from "aws-sdk-client-mock";
+import type { FileType } from "shared/files/types";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { FileType } from "@/modules/core/services/fileManager/fileManager";
 import { ovhFileManagerFactory } from "@/modules/core/services/fileManager/ovhFileManager";
 import { ovhFilePathManagerFactory } from "@/modules/core/services/filePathManager/ovhFilePathManager";
 

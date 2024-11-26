@@ -1,15 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { submitRequeteEnregistreeSchema } from "./submitRequeteEnregistree.schema";
 import { submitRequeteEnregistreeUsecase } from "./submitRequeteEnregistree.usecase";
 
+const ROUTE = ROUTES["[POST]/requete/enregistrement"];
+
 export const submitRequeteEnregistreeRoute = (server: Server) => {
-  return createRoute("/requete/enregistrement", {
-    method: "POST",
-    schema: submitRequeteEnregistreeSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

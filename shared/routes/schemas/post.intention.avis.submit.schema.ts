@@ -1,7 +1,8 @@
-import { AvisStatutZodType } from "shared/enum/avisStatutEnum";
-import { AvisTypeZodType } from "shared/enum/avisTypeEnum";
-import { unEscapeString } from "shared/utils/escapeString";
 import { z } from "zod";
+
+import { AvisStatutZodType } from "../../enum/avisStatutEnum";
+import { AvisTypeZodType } from "../../enum/avisTypeEnum";
+import { unEscapeString } from "../../utils/escapeString";
 
 export const submitAvisSchema = {
   body: z.object({

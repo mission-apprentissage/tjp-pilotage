@@ -1,15 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getPilotageReformeStatsRegionsSchema } from "./getPilotageReformeStatsRegions.schema";
 import { getPilotageReformeStatsRegions } from "./getPilotageReformeStatsRegions.usecase";
 
+const ROUTE = ROUTES["[GET]/pilotage-reforme/stats/regions"];
+
 export const getPilotageReformeStatsRegionsRoute = (server: Server) => {
-  return createRoute("/pilotage-reforme/stats/regions", {
-    method: "GET",
-    schema: getPilotageReformeStatsRegionsSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

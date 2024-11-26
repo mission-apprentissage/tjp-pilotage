@@ -1,16 +1,18 @@
 import { createRoute } from "@http-wizard/core";
 import { getPermissionScope, guardScope } from "shared";
+import { ROUTES } from "shared/routes/routes";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getIntentionsSchema } from "./getIntentions.schema";
 import { getIntentionsUsecase } from "./getIntentions.usecase";
 
+const ROUTE = ROUTES["[GET]/intentions"];
+
 export const getIntentionsRoute = (server: Server) => {
-  return createRoute("/intentions", {
-    method: "GET",
-    schema: getIntentionsSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

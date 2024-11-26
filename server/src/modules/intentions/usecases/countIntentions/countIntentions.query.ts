@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { countIntentionsSchema } from "shared/routes/schemas/get.intentions.count.schema";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
@@ -11,8 +12,6 @@ import {
 } from "@/modules/utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
-
-import type { countIntentionsSchema } from "./countIntentions.schema";
 
 export interface Filters extends z.infer<typeof countIntentionsSchema.querystring> {
   user: RequestUser;

@@ -1,8 +1,8 @@
 import { sql } from "kysely";
+import type { getDataForEtablissementMapListSchema } from "shared/routes/schemas/get.etablissement.uai.map.list.schema";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { getDataForEtablissementMapListSchema } from "@/modules/data/usecases/getDataForEtablissementMapList/getDataForEtablissementMapList.schema";
 import { effectifAnnee } from "@/modules/data/utils/effectifAnnee";
 import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";

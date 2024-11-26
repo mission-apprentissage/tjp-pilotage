@@ -1,8 +1,8 @@
-import { ScopeEnum } from "shared";
-import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
-import { scope } from "shared/enum/scopeEnum";
-import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
+
+import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { scope, ScopeEnum } from "../../enum/scopeEnum";
+import { SecteurZodType } from "../../enum/secteurEnum";
 
 export const StatsSchema = z.object({
   libelle: z.string(),

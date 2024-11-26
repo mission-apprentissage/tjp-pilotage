@@ -1,5 +1,6 @@
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
+
+import { DemandeStatutEnum } from "../../enum/demandeStatutEnum";
 
 export const countIntentionsSchema = {
   querystring: z.object({
