@@ -189,24 +189,22 @@ export const CustomListItem = ({ etablissement, withDivider, children }: CustomL
           <HStack width="100%" justifyContent="space-between">
             <HStack width="100%" justifyContent="space-between">
               <HStack gap="8px">
-                {etablissement.voies.map(
-                  // @ts-expect-error TODO
-                  (voie) =>
-                    voie === "scolaire" ? (
-                      <Badge variant="info" key={`${etablissement.uai}-${voie}`}>
-                        <Box display="inline" mr="4px">
-                          <InlineIcon icon="ri:briefcase-5-line" color={themeDefinition.colors.info.text} />
-                        </Box>
-                        {voie}
-                      </Badge>
-                    ) : (
-                      <Badge variant="new" key={`${etablissement.uai}-${voie}`}>
-                        <Box display="inline" mr="4px">
-                          <InlineIcon icon="ri:hotel-line" color={themeDefinition.colors.yellowTournesol[407]} />
-                        </Box>
-                        {voie}
-                      </Badge>
-                    )
+                {etablissement.voies.map((voie) =>
+                  voie === "scolaire" ? (
+                    <Badge variant="info" key={`${etablissement.uai}-${voie}`}>
+                      <Box display="inline" mr="4px">
+                        <InlineIcon icon="ri:briefcase-5-line" color={themeDefinition.colors.info.text} />
+                      </Box>
+                      {voie}
+                    </Badge>
+                  ) : (
+                    <Badge variant="new" key={`${etablissement.uai}-${voie}`}>
+                      <Box display="inline" mr="4px">
+                        <InlineIcon icon="ri:hotel-line" color={themeDefinition.colors.yellowTournesol[407]} />
+                      </Box>
+                      {voie}
+                    </Badge>
+                  )
                 )}
               </HStack>
               <HStack

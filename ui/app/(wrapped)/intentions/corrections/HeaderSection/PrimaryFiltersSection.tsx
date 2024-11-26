@@ -59,19 +59,12 @@ export const PrimaryFiltersSection = ({
                       >
                         <Flex direction="row">
                           <Text my={"auto"}>
-                            {data?.filters.campagnes?.find(
-                              // @ts-expect-error TODO
-                              (c) => c.value === activeFilters.campagne
-                            )?.value ?? `TOUTES (${data?.filters.campagnes?.length ?? 0})`}
+                            {data?.filters.campagnes?.find((c) => c.value === activeFilters.campagne)?.value ??
+                              `TOUTES (${data?.filters.campagnes?.length ?? 0})`}
                           </Text>
                           {activeFilters.campagne && (
                             <CampagneStatutTag
-                              statut={
-                                data?.filters.campagnes?.find(
-                                  // @ts-expect-error TODO
-                                  (c) => c.value === activeFilters.campagne
-                                )?.statut
-                              }
+                              statut={data?.filters.campagnes?.find((c) => c.value === activeFilters.campagne)?.statut}
                             />
                           )}
                         </Flex>
@@ -82,21 +75,18 @@ export const PrimaryFiltersSection = ({
                             <Text my={"auto"}>{`TOUTES (${data?.filters.campagnes?.length ?? 0})`}</Text>
                           </Flex>
                         </MenuItem>
-                        {data?.filters.campagnes?.map(
-                          // @ts-expect-error TODO
-                          (campagne) => (
-                            <MenuItem
-                              p={2}
-                              key={campagne.value}
-                              onClick={() => handleFilters("campagne", campagne.value)}
-                            >
-                              <Flex direction="row">
-                                <Text my={"auto"}>Campagne {campagne.value}</Text>
-                                <CampagneStatutTag statut={campagne.statut} />
-                              </Flex>
-                            </MenuItem>
-                          )
-                        )}
+                        {data?.filters.campagnes?.map((campagne) => (
+                          <MenuItem
+                            p={2}
+                            key={campagne.value}
+                            onClick={() => handleFilters("campagne", campagne.value)}
+                          >
+                            <Flex direction="row">
+                              <Text my={"auto"}>Campagne {campagne.value}</Text>
+                              <CampagneStatutTag statut={campagne.statut} />
+                            </Flex>
+                          </MenuItem>
+                        ))}
                       </MenuList>
                     </Menu>
                   </Flex>
@@ -118,10 +108,8 @@ export const PrimaryFiltersSection = ({
                       >
                         <Flex direction="row">
                           <Text my={"auto"}>
-                            {data?.filters.rentreesScolaires?.find(
-                              // @ts-expect-error TODO
-                              (c) => c.value === activeFilters.rentreeScolaire
-                            )?.value ?? `TOUTES (${data?.filters.rentreesScolaires?.length ?? 0})`}
+                            {data?.filters.rentreesScolaires?.find((c) => c.value === activeFilters.rentreeScolaire)
+                              ?.value ?? `TOUTES (${data?.filters.rentreesScolaires?.length ?? 0})`}
                           </Text>
                         </Flex>
                       </MenuButton>
@@ -131,33 +119,23 @@ export const PrimaryFiltersSection = ({
                             <Text my={"auto"}>{`TOUTES (${data?.filters.rentreesScolaires?.length ?? 0})`}</Text>
                           </Flex>
                         </MenuItem>
-                        {data?.filters.rentreesScolaires?.map(
-                          // @ts-expect-error TODO
-                          (rentreeScolaire) => (
-                            <MenuItem
-                              p={2}
-                              key={rentreeScolaire.value}
-                              onClick={() => handleFilters("rentreeScolaire", rentreeScolaire.value)}
-                            >
-                              <Flex direction="row">
-                                <Text my={"auto"}>{rentreeScolaire.label}</Text>
-                                {
-                                  // @ts-expect-error TODO
-                                  (rentreeScolaire.value ===
-                                    data?.filters.campagnes?.find(
-                                      // @ts-expect-error TODO
-                                      (c) => c.value === activeFilters.campagne
-                                    )?.value ??
-                                    "") && (
-                                    <Tag mx={3} colorScheme="red">
-                                      Ajustement RS {rentreeScolaire.value}
-                                    </Tag>
-                                  )
-                                }
-                              </Flex>
-                            </MenuItem>
-                          )
-                        )}
+                        {data?.filters.rentreesScolaires?.map((rentreeScolaire) => (
+                          <MenuItem
+                            p={2}
+                            key={rentreeScolaire.value}
+                            onClick={() => handleFilters("rentreeScolaire", rentreeScolaire.value)}
+                          >
+                            <Flex direction="row">
+                              <Text my={"auto"}>{rentreeScolaire.label}</Text>
+                              {rentreeScolaire.value ===
+                                data?.filters.campagnes?.find((c) => c.value === activeFilters.campagne)?.value && (
+                                <Tag mx={3} colorScheme="red">
+                                  Ajustement RS {rentreeScolaire.value}
+                                </Tag>
+                              )}
+                            </Flex>
+                          </MenuItem>
+                        ))}
                       </MenuList>
                     </Menu>
                   </Flex>

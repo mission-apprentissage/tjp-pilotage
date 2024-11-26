@@ -31,7 +31,6 @@ const SingleValue = ({ ...props }: SingleValueProps<OptionType>) => {
           {firstName} {lastName}{" "}
         </Text>
         <Badge variant="info" size="sm">
-          {/* @ts-expect-error TODO */}
           {ROLES_LABELS[role](codeRegion).label}
         </Badge>
       </HStack>
@@ -101,17 +100,17 @@ const UserSearchBar = ({ updateUser, user }: UserSearchBarProps) => {
           }}
           loadOptions={async (inputValue: string) => {
             if (inputValue.length >= 3) {
-              const d = client.ref("[GET]/user/search/:search").query({
+              const users = await client.ref("[GET]/user/search/:search").query({
                 params: { search: inputValue },
-              }) as Promise<QueryResult>;
-              return d.then((users) =>
-                // @ts-expect-error TODO
-                users.map((u) => ({
-                  label: u.email,
-                  value: { ...u, role: u.role! },
-                }))
-              );
+              });
+
+              return users.map((u) => ({
+                label: u.email,
+                value: { ...u, role: u.role! },
+              }));
             }
+
+            return [];
           }}
           loadingMessage={({ inputValue }) =>
             inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"

@@ -58,11 +58,9 @@ export const Header = ({
     downloadCsv(
       formatExportFilename("recueil_demandes", isFiltered ? activeFilters : {}),
       [
-        // @ts-expect-error TODO
         ...data.intentions.map((intention) => ({
           ...intention,
           ...intention.avis.reduce(
-            // @ts-expect-error TODO
             (acc, current, index) => {
               acc[`avis${index}`] = [
                 current.fonction!.toUpperCase(),
@@ -87,11 +85,9 @@ export const Header = ({
     downloadExcel(
       formatExportFilename("recueil_demandes", isFiltered ? activeFilters : {}),
       [
-        // @ts-expect-error TODO
         ...data.intentions.map((intention) => ({
           ...intention,
           ...intention.avis.reduce(
-            // @ts-expect-error TODO
             (acc, current, index) => {
               acc[`avis${index}`] = [
                 current.fonction!.toUpperCase(),
@@ -122,25 +118,11 @@ export const Header = ({
             borderColor="grey.900"
           >
             <Flex direction="row">
-              <Text my={"auto"}>
-                Campagne{" "}
-                {campagnes?.find(
-                  // @ts-expect-error TODO
-                  (c) => c.annee === anneeCampagne
-                )?.annee ?? ""}
-              </Text>
-              <CampagneStatutTag
-                statut={
-                  campagnes?.find(
-                    // @ts-expect-error TODO
-                    (c) => c.annee === anneeCampagne
-                  )?.statut
-                }
-              />
+              <Text my={"auto"}>Campagne {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}</Text>
+              <CampagneStatutTag statut={campagnes?.find((c) => c.annee === anneeCampagne)?.statut} />
             </Flex>
           </MenuButton>
           <MenuList py={0} borderTopRadius={0} zIndex={"dropdown"}>
-            {/* @ts-expect-error TODO */}
             {campagnes?.map((campagne) => (
               <MenuItem
                 p={2}

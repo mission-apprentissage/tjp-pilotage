@@ -52,7 +52,6 @@ export const GlossaireListContentItem = ({
         {entry.indicator?.name && (
           <Badge
             variant={
-              // @ts-expect-error TODO
               {
                 green: "success",
                 blue: "info",

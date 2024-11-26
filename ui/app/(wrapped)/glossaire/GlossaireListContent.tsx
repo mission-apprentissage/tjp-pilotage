@@ -15,7 +15,6 @@ const useGlossaireList = (initialEntries: GlossaireEntries) => {
   useEffect(() => {
     setEntries(() =>
       initialEntries.filter(
-        // @ts-expect-error TODO
         (entry) => searchValue === "" || entry?.title?.toLowerCase().trim().includes(searchValue.toLowerCase().trim())
       )
     );
@@ -61,17 +60,9 @@ export const GlossaireListContent = ({
         />
       </InputGroup>
       <VStack divider={<StackDivider borderColor="grey.950" />} spacing={0} cursor={"pointer"}>
-        {(entries ?? []).map(
-          // @ts-expect-error TODO
-          (entry) => (
-            <GlossaireListContentItem
-              key={entry.id}
-              entry={entry}
-              selectEntry={selectEntry}
-              searchValue={searchValue}
-            />
-          )
-        )}
+        {(entries ?? []).map((entry) => (
+          <GlossaireListContentItem key={entry.id} entry={entry} selectEntry={selectEntry} searchValue={searchValue} />
+        ))}
       </VStack>
     </>
   );

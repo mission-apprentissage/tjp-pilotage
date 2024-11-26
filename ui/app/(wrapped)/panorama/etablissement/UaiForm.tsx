@@ -41,7 +41,6 @@ export const UaiForm = ({
               DropdownIndicator: () => null,
               IndicatorSeparator: () => null,
             }}
-            // @ts-expect-error TODO
             onChange={(selected) => selected && onUaiChanged(selected.value)}
             loadOptions={(inputValue: string) => {
               if (inputValue.length >= 3)

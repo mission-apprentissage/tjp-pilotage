@@ -21,13 +21,9 @@ export const TauxPression = ({
       return (
         Object.values(chiffresEntreeOffre).findIndex(
           (value) =>
-            // @ts-expect-error TODO
             value.tauxPression &&
-            // @ts-expect-error TODO
             value.tauxPressionNational &&
-            // @ts-expect-error TODO
             value.tauxPressionRegional &&
-            // @ts-expect-error TODO
             value.tauxPressionDepartemental
         ) !== -1
       );
@@ -43,18 +39,14 @@ export const TauxPression = ({
   } => {
     if (chiffresEntreeOffre) {
       return {
-        // @ts-expect-error TODO
         établissement: Object.values(chiffresEntreeOffre).map((value) => formatAbsoluteOrUndefined(value.tauxPression)),
         départemental: Object.values(chiffresEntreeOffre).map((value) =>
-          // @ts-expect-error TODO
           formatAbsoluteOrUndefined(value.tauxPressionDepartemental)
         ),
         régional: Object.values(chiffresEntreeOffre).map((value) =>
-          // @ts-expect-error TODO
           formatAbsoluteOrUndefined(value.tauxPressionRegional)
         ),
         national: Object.values(chiffresEntreeOffre).map((value) =>
-          // @ts-expect-error TODO
           formatAbsoluteOrUndefined(value.tauxPressionNational)
         ),
       };

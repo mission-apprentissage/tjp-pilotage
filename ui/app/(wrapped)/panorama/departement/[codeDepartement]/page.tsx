@@ -109,10 +109,8 @@ export default function Panorama({
               }
             : stats
         }
-        // @ts-expect-error TODO
         libelleTerritoire={departementsOptions?.find((item) => item.value === codeDepartement)?.label}
         libelleDiplome={
-          // @ts-expect-error TODO
           data?.filters.diplomes?.find((item) => item.value === searchParams.codeNiveauDiplome?.[0])?.label
         }
         typeTerritoire={"departement"}

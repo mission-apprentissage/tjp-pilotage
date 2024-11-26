@@ -85,7 +85,6 @@ export default () => {
   });
 
   const [userId, setUserId] = useState<string>();
-  // @ts-expect-error TODO
   const user = useMemo(() => data?.users.find(({ id }) => id === userId), [data, userId]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -188,126 +187,38 @@ export default () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {data?.users.map(
-                  (user: {
-                    id:
-                      | string
-                      | number
-                      | bigint
-                      | ((prevState: string | undefined) => string | undefined)
-                      | null
-                      | undefined;
-                    firstname:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | Iterable<ReactNode>
-                      | ReactPortal
-                      | Promise<AwaitedReactNode>
-                      | null
-                      | undefined;
-                    lastname:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | Iterable<ReactNode>
-                      | ReactPortal
-                      | Promise<AwaitedReactNode>
-                      | null
-                      | undefined;
-                    email:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | Iterable<ReactNode>
-                      | ReactPortal
-                      | Promise<AwaitedReactNode>
-                      | null
-                      | undefined;
-                    role:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | Iterable<ReactNode>
-                      | ReactPortal
-                      | Promise<AwaitedReactNode>
-                      | null
-                      | undefined;
-                    enabled: any;
-                    libelleRegion:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | Iterable<ReactNode>
-                      | ReactPortal
-                      | Promise<AwaitedReactNode>
-                      | null
-                      | undefined;
-                    uais:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | Iterable<ReactNode>
-                      | ReactPortal
-                      | Promise<AwaitedReactNode>
-                      | null
-                      | undefined;
-                    createdAt: any;
-                  }) => (
-                    <Tr
-                      height={"60px"}
-                      // @ts-expect-error TODO
-                      key={user.id}
-                      whiteSpace={"pre"}
-                    >
-                      <Td>
-                        <Avatar name={`${user.firstname} ${user.lastname}`} position={"unset"} />
-                      </Td>
-                      <Td>{user.email}</Td>
-                      <Td>{user.firstname}</Td>
-                      <Td>{user.lastname}</Td>
-                      <Td>{user.role}</Td>
-                      <Td>
-                        {user.enabled ? (
-                          <Badge variant="success">Actif</Badge>
-                        ) : (
-                          <Badge variant="error">Désactivé</Badge>
-                        )}
-                      </Td>
-                      <Td>{user.libelleRegion}</Td>
-                      <Td>{user.uais}</Td>
-                      <Td>{user.createdAt && formatDate({ date: user.createdAt })}</Td>
-                      <Td isNumeric>
-                        {canEditUser(user) && (
-                          <IconButton
-                            position="unset"
-                            variant="ghost"
-                            onClick={() => {
-                              // @ts-expect-error TODO
-                              setUserId(user.id);
-                              onOpen();
-                            }}
-                            aria-label="editer"
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        )}
-                      </Td>
-                    </Tr>
-                  )
-                )}
+                {data?.users.map((user) => (
+                  <Tr height={"60px"} key={user.id} whiteSpace={"pre"}>
+                    <Td>
+                      <Avatar name={`${user.firstname} ${user.lastname}`} position={"unset"} />
+                    </Td>
+                    <Td>{user.email}</Td>
+                    <Td>{user.firstname}</Td>
+                    <Td>{user.lastname}</Td>
+                    <Td>{user.role}</Td>
+                    <Td>
+                      {user.enabled ? <Badge variant="success">Actif</Badge> : <Badge variant="error">Désactivé</Badge>}
+                    </Td>
+                    <Td>{user.libelleRegion}</Td>
+                    <Td>{user.uais}</Td>
+                    <Td>{user.createdAt && formatDate({ date: user.createdAt })}</Td>
+                    <Td isNumeric>
+                      {canEditUser(user) && (
+                        <IconButton
+                          position="unset"
+                          variant="ghost"
+                          onClick={() => {
+                            setUserId(user.id);
+                            onOpen();
+                          }}
+                          aria-label="editer"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      )}
+                    </Td>
+                  </Tr>
+                ))}
               </Tbody>
             </Table>
             {!data.users.length && (

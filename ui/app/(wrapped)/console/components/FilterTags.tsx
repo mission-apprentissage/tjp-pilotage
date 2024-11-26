@@ -62,7 +62,6 @@ export const FilterTags = chakra(
 
     const getFilterValue = ({ key, value }: { key: string; value: string }) => {
       return filtersList?.[FILTRES_KEYS[key as keyof typeof FILTRES_KEYS] as keyof FiltersList]?.find(
-        // @ts-expect-error TODO
         (filter) => filter.value === value
       )?.label;
     };

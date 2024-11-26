@@ -68,13 +68,13 @@ function setDefaultVoieFilter(filters: Filters, data?: AnalyseDetaillee) {
   if (!data?.formations) {
     return [];
   }
-  // @ts-expect-error TODO
+
   const hasAnyScolaireFormation = Object.values(data.formations).some((f) => f.voie === VoieEnum.scolaire);
 
   if (hasAnyScolaireFormation) {
     return [VoieEnum.scolaire];
   }
-  // @ts-expect-error TODO
+
   const hasAnyApprentissageFormation = Object.values(data.formations).some((f) => f.voie === VoieEnum.apprentissage);
 
   if (hasAnyApprentissageFormation) {
@@ -87,12 +87,9 @@ function filterFormations(data: AnalyseDetaillee, filters: Filters) {
   const { codeNiveauDiplome, voie } = filters;
   return Object.values(data.formations ?? {}).reduce((acc, f) => {
     if (
-      // @ts-expect-error TODO
       ((codeNiveauDiplome ?? []).length === 0 || codeNiveauDiplome?.includes(f.codeNiveauDiplome)) &&
-      // @ts-expect-error TODO
       ((voie ?? []).length === 0 || voie?.includes("all") || voie?.includes(f.voie))
     ) {
-      // @ts-expect-error TODO
       acc[f.offre] = f;
     }
     return acc;
@@ -196,7 +193,7 @@ export const useAnalyseDetaillee = () => {
     ...filteredDatas,
     filters: {
       diplomes: filteredDatas?.filters?.diplomes ?? [],
-      // @ts-expect-error TODO
+
       voies: uniq(Object.values(data?.formations ?? {}).map((f) => f.voie)),
     },
     isLoading,

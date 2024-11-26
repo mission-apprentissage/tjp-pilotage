@@ -105,65 +105,55 @@ export const ConsoleSection = ({
           getCellBgColor={getCellBgColor}
         />
         <Tbody>
-          {data?.etablissements.map(
-            // @ts-expect-error TODO
-            (line) => (
-              <Fragment key={`${line.uai}_${line.codeDispositif}_${line.cfd}`}>
-                <Tr h="12" bg={"white"} role="group">
-                  <EtablissementLineContent
-                    isFirstColumnSticky={isFirstColumnSticky}
-                    isSecondColumnSticky={isSecondColumnSticky}
-                    line={line}
-                    expended={
-                      historiqueId?.cfd === line.cfd &&
-                      // @ts-expect-error TODO
-                      historiqueId.codeDispositif === line.codeDispositif &&
-                      // @ts-expect-error TODO
-                      historiqueId.uai === line.uai
-                    }
-                    onClickExpend={() =>
-                      setHistoriqueId({
-                        cfd: line.cfd,
-                        codeDispositif: line.codeDispositif,
-                        uai: line.uai,
-                      })
-                    }
-                    onClickCollapse={() => setHistoriqueId(undefined)}
-                    colonneFilters={colonneFilters}
-                    getCellBgColor={getCellBgColor}
-                  />
-                </Tr>
-                {historiqueId?.cfd === line.cfd &&
-                  // @ts-expect-error TODO
-                  historiqueId.codeDispositif === line.codeDispositif &&
-                  // @ts-expect-error TODO
-                  historiqueId.uai === line.uai && (
-                    <>
-                      {historiqueData?.map(
-                        // @ts-expect-error TODO
-                        (historiqueLine) => (
-                          <Tr key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`} bg={"grey.975"}>
-                            <EtablissementLineContent
-                              isFirstColumnSticky={isFirstColumnSticky}
-                              isSecondColumnSticky={isSecondColumnSticky}
-                              line={historiqueLine}
-                              colonneFilters={colonneFilters}
-                              getCellBgColor={getCellBgColor}
-                            />
-                          </Tr>
-                        )
-                      )}
+          {data?.etablissements.map((line) => (
+            <Fragment key={`${line.uai}_${line.codeDispositif}_${line.cfd}`}>
+              <Tr h="12" bg={"white"} role="group">
+                <EtablissementLineContent
+                  isFirstColumnSticky={isFirstColumnSticky}
+                  isSecondColumnSticky={isSecondColumnSticky}
+                  line={line}
+                  expended={
+                    historiqueId?.cfd === line.cfd &&
+                    historiqueId.codeDispositif === line.codeDispositif &&
+                    historiqueId.uai === line.uai
+                  }
+                  onClickExpend={() =>
+                    setHistoriqueId({
+                      cfd: line.cfd,
+                      codeDispositif: line.codeDispositif,
+                      uai: line.uai,
+                    })
+                  }
+                  onClickCollapse={() => setHistoriqueId(undefined)}
+                  colonneFilters={colonneFilters}
+                  getCellBgColor={getCellBgColor}
+                />
+              </Tr>
+              {historiqueId?.cfd === line.cfd &&
+                historiqueId.codeDispositif === line.codeDispositif &&
+                historiqueId.uai === line.uai && (
+                  <>
+                    {historiqueData?.map((historiqueLine) => (
+                      <Tr key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`} bg={"grey.975"}>
+                        <EtablissementLineContent
+                          isFirstColumnSticky={isFirstColumnSticky}
+                          isSecondColumnSticky={isSecondColumnSticky}
+                          line={historiqueLine}
+                          colonneFilters={colonneFilters}
+                          getCellBgColor={getCellBgColor}
+                        />
+                      </Tr>
+                    ))}
 
-                      {historiqueData && !historiqueData.length && (
-                        <EtablissementLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
-                      )}
+                    {historiqueData && !historiqueData.length && (
+                      <EtablissementLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
+                    )}
 
-                      {isFetchingHistoriqueData && <EtablissementLineLoader />}
-                    </>
-                  )}
-              </Fragment>
-            )
-          )}
+                    {isFetchingHistoriqueData && <EtablissementLineLoader />}
+                  </>
+                )}
+            </Fragment>
+          ))}
         </Tbody>
       </Table>
     </TableContainer>
