@@ -1,9 +1,9 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { getNormalizedSearch } from "../../../../utils/normalizeSearch";
-import { searchMetierSchema } from "../searchMetier.schema";
+import { getKbdClient } from "@/db/db";
+import type { searchMetierSchema } from "@/modules/data/usecases/searchMetier/searchMetier.schema";
+import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
 export const findMetierQuery = async ({
   search,
@@ -15,16 +15,12 @@ export const findMetierQuery = async ({
   limit?: number;
 }) => {
   const cleanSearch = getNormalizedSearch(search);
-  const formations = await kdb
+  const formations = await getKbdClient()
     .selectFrom("metier")
     .leftJoin("rome", "rome.codeRome", "metier.codeRome")
     .$call((q) => {
       if (filters.codeDomaineProfessionnel) {
-        return q.where(
-          "rome.codeDomaineProfessionnel",
-          "=",
-          filters.codeDomaineProfessionnel
-        );
+        return q.where("rome.codeDomaineProfessionnel", "=", filters.codeDomaineProfessionnel);
       }
 
       return q;

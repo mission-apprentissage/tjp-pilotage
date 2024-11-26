@@ -1,8 +1,9 @@
 import { CURRENT_IJ_MILLESIME } from "shared";
 
-import { cleanNull } from "../../../../../utils/noNull";
-import { withInsertionReg } from "../../../utils/tauxInsertion6mois";
-import { Filters } from "../getDataForPanoramaRegion.schema";
+import type { Filters } from "@/modules/data/usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.schema";
+import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
+import { cleanNull } from "@/utils/noNull";
+
 import { getFormationsRegionBase } from "./getFormationsRegionBase.dep";
 
 export const getFormationsRegion = async (filters: Filters) =>

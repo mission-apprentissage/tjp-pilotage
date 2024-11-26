@@ -1,6 +1,6 @@
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
-import { TypeDemande } from "./typeDemandeUtils";
+import type { TypeDemande } from "./typeDemandeUtils";
 
 export type MotifCampagne = keyof typeof MOTIFS_LABELS;
 export type MotifLabel = keyof (typeof MOTIFS_LABELS)[MotifCampagne];
@@ -13,8 +13,7 @@ export const MOTIFS_LABELS = {
     taux_poursuite_insatisfaisant: "Taux de poursuite insatisfaisant",
     besoin_recrutement_local: "Besoins recrutements avérés localement",
     ouverture_plus_inserante: "Ouverture d’une formation plus insérante",
-    repartition_autres_etablissements:
-      "Répartition des élèves sur d’autres établissements",
+    repartition_autres_etablissements: "Répartition des élèves sur d’autres établissements",
     transfert_apprentissage: "Transfert vers l’apprentissage",
     recrutements_baisse: "Recrutements en baisse",
     capacite_trop_élevée_territoire: "Capacité trop élevée sur le territoire",
@@ -37,8 +36,7 @@ export const MOTIFS_LABELS = {
     besoins_economiques_locaux: "Besoins économiques avérés localement",
     besoins_economiques_en_baisse: "Besoins économiques en baisse",
     ouverture_plus_inserante: "Ouverture d’une formation plus insérante",
-    repartition_autres_etablissements:
-      "Répartition des élèves sur d’autres établissements",
+    repartition_autres_etablissements: "Répartition des élèves sur d’autres établissements",
     recrutements_baisse: "Recrutements en baisse",
     capacite_trop_élevée_territoire: "Capacité trop élevée sur le territoire",
     nombre_eleves_en_baisse: "Baisse du nombre d'élèves dans la formation",
@@ -52,14 +50,11 @@ export const MOTIFS_LABELS = {
     sauvegarde_metier_rare: "Sauvegarde métier rare",
     effectif_faible_scolaire: "Effectif trop faible en voie scolaire",
     mixite_peu_attractive: "Mixité peu attractive",
-    insertion_professionnelle_insuffisante:
-      "Insertion professionnelle insuffisante",
+    insertion_professionnelle_insuffisante: "Insertion professionnelle insuffisante",
     formation_situation_fragilite: "Formation en situation de fragilité",
     disponibilite_fonciere_insuffisante: "Disponibilité foncière insuffisante",
-    perspective_insertion_professionnelle:
-      "Perspectives d’insertion professionnelle",
-    mise_en_place_partenariat:
-      "Mise en place ou poursuite d’un partenariat (préciser en commentaire)",
+    perspective_insertion_professionnelle: "Perspectives d’insertion professionnelle",
+    mise_en_place_partenariat: "Mise en place ou poursuite d’un partenariat (préciser en commentaire)",
     favorise_attractivite_formation: "Favorise l’attractivité de la formation",
     projet_specifique_local: "Projet spécifique local",
     ajustement_rentree: "Ajustement de rentrée",
@@ -113,10 +108,7 @@ const motifsColoration = [
 
 const motifsAjustement = ["ajustement_rentree"] as MotifLabel[];
 
-const motifsTriggerAutre = [
-  "autre",
-  "mise_en_place_partenariat",
-] as MotifLabel[];
+const motifsTriggerAutre = ["autre", "mise_en_place_partenariat"] as MotifLabel[];
 
 const motifs: Record<TypeDemande, MotifLabel[]> = {
   ouverture_nette: motifsOuverture,
@@ -139,14 +131,11 @@ export const getMotifLabel = ({
 };
 
 export const getMotifs = () => motifs;
-export const getMotifsCampagne = (
-  campagne: MotifCampagne = CURRENT_ANNEE_CAMPAGNE
-): MotifLabel[] => {
+export const getMotifsCampagne = (campagne: MotifCampagne = CURRENT_ANNEE_CAMPAGNE): MotifLabel[] => {
   const motifsCampagne = MOTIFS_LABELS[campagne];
   return Object.keys(motifsCampagne) as MotifLabel[];
 };
-export const getMotifsTypeDemande = (typeDemande: TypeDemande): MotifLabel[] =>
-  getMotifs()[typeDemande];
+export const getMotifsTypeDemande = (typeDemande: TypeDemande): MotifLabel[] => getMotifs()[typeDemande];
 export const getLabelsMotifsOuverture = () => motifsOuverture;
 export const getLabelsMotifsFermeture = () => motifsFermeture;
 export const getLabelsMotifsTransfert = () => motifsTransfert;
@@ -157,7 +146,6 @@ export const getMotifsTriggerAutre = () => motifsTriggerAutre;
 export const hasMotifAutre = (values?: Array<string | undefined>) => {
   return values?.filter(
     (motif) =>
-      MOTIFS_LABELS[2023][motif! as MotifLabel] !== undefined ||
-      MOTIFS_LABELS[2024][motif! as MotifLabel] !== undefined
+      MOTIFS_LABELS[2023][motif! as MotifLabel] !== undefined || MOTIFS_LABELS[2024][motif! as MotifLabel] !== undefined
   );
 };

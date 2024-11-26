@@ -1,8 +1,8 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 
-import { CartoGraph } from "../../../../components/CartoGraph";
-import { formatNumber } from "../../../../utils/formatUtils";
-import { Filters, IndicateurType, PilotageReformeStatsRegion } from "../types";
+import type { Filters, IndicateurType, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage-reforme/types";
+import { CartoGraph } from "@/components/CartoGraph";
+import { formatNumber } from "@/utils/formatUtils";
 
 interface CartoSelectionProps {
   data?: PilotageReformeStatsRegion;
@@ -27,6 +27,7 @@ export const CartoSection = ({
   activeFilters,
   handleFilters,
 }: CartoSelectionProps) => {
+  // @ts-expect-error TODO
   const graphData = data?.statsRegions.map((region) => {
     return {
       name: region.libelleRegion,
@@ -35,21 +36,12 @@ export const CartoSection = ({
   });
 
   const handleClickOnRegion = (codeRegion: string | undefined) => {
-    if (activeFilters.codeRegion && activeFilters.codeRegion === codeRegion)
-      handleFilters("codeRegion", undefined);
+    if (activeFilters.codeRegion && activeFilters.codeRegion === codeRegion) handleFilters("codeRegion", undefined);
     else handleFilters("codeRegion", codeRegion);
   };
 
   return (
-    <Box
-      flex={1}
-      borderRadius={4}
-      border={"1px solid"}
-      borderColor="grey.900"
-      bg="white"
-      p={3}
-      mt={12}
-    >
+    <Box flex={1} borderRadius={4} border={"1px solid"} borderColor="grey.900" bg="white" p={3} mt={12}>
       {isLoading ? (
         <Skeleton opacity="0.3" height="100%" />
       ) : (

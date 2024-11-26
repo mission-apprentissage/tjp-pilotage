@@ -1,42 +1,22 @@
 import { Flex, HStack, Text } from "@chakra-ui/react";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { getStepWorkflow } from "../../../utils/statutUtils";
+import { getStepWorkflow } from "@/app/(wrapped)/intentions/utils/statutUtils";
 
-export const ProgressSteps = ({
-  statut,
-}: {
-  readonly statut: DemandeStatutType;
-}) => {
+export const ProgressSteps = ({ statut }: { readonly statut: DemandeStatutType }) => {
   return (
-    <HStack
-      w={"200px"}
-      gap={0}
-      bgColor={"info.950"}
-      borderRadius={"0.25rem"}
-      height={"21px"}
-    >
+    <HStack w={"200px"} gap={0} bgColor={"info.950"} borderRadius={"0.25rem"} height={"21px"}>
       {getStepWorkflow(statut) === 1 && (
         <Flex width={"100%"} justify={"center"} height={"100%"}>
           <Flex
             h={"100%"}
-            bgColor={
-              statut === DemandeStatutEnum["dossier incomplet"]
-                ? "orangeTerreBattue.850"
-                : "bluefrance.525"
-            }
+            bgColor={statut === DemandeStatutEnum["dossier incomplet"] ? "orangeTerreBattue.850" : "bluefrance.525"}
             justify={"center"}
             p={"0.25rem 0.5rem"}
             grow={0}
             borderLeftRadius={"0.25rem"}
-            color={
-              statut === DemandeStatutEnum["dossier incomplet"]
-                ? "warning.425"
-                : "white"
-            }
+            color={statut === DemandeStatutEnum["dossier incomplet"] ? "warning.425" : "white"}
             alignItems={"center"}
           >
             <Text fontWeight={"bold"}>Phase 1</Text>
@@ -46,19 +26,8 @@ export const ProgressSteps = ({
       )}
       {getStepWorkflow(statut) === 2 && (
         <Flex width={"100%"} justify={"center"} height={"100%"}>
-          <Flex
-            h={"100%"}
-            bgColor={"blueecume.850"}
-            grow={1}
-            borderLeftRadius={"0.25rem"}
-          />
-          <Flex
-            h={"100%"}
-            bgColor={"bluefrance.525"}
-            justify={"center"}
-            p={"0.25rem 0.5rem"}
-            alignItems={"center"}
-          >
+          <Flex h={"100%"} bgColor={"blueecume.850"} grow={1} borderLeftRadius={"0.25rem"} />
+          <Flex h={"100%"} bgColor={"bluefrance.525"} justify={"center"} p={"0.25rem 0.5rem"} alignItems={"center"}>
             <Text fontWeight={"bold"} color="white">
               Phase 2
             </Text>
@@ -68,12 +37,7 @@ export const ProgressSteps = ({
       )}
       {getStepWorkflow(statut) === 3 && (
         <Flex width={"100%"} justify={"center"} height={"100%"}>
-          <Flex
-            h={"100%"}
-            bgColor={"blueecume.850"}
-            grow={2}
-            borderLeftRadius={"0.25rem"}
-          />
+          <Flex h={"100%"} bgColor={"blueecume.850"} grow={2} borderLeftRadius={"0.25rem"} />
           <Flex
             h={"100%"}
             bgColor={"bluefrance.525"}

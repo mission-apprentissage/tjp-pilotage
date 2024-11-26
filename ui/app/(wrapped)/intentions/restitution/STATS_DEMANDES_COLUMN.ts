@@ -1,5 +1,5 @@
-import { client } from "@/api.client";
-import { ExportColumns } from "@/utils/downloadExport";
+import type { client } from "@/api.client";
+import type { ExportColumns } from "@/utils/downloadExport";
 
 export const STATS_DEMANDES_COLUMNS = {
   // établissement
@@ -26,19 +26,16 @@ export const STATS_DEMANDES_COLUMNS = {
   autreMotif: "Autre motif",
   rentreeScolaire: "RS",
   differenceCapaciteScolaire: "Nombre de places en voie scolaire",
-  differenceCapaciteScolaireColoree:
-    "Nombre de places colorées en voie scolaire",
+  differenceCapaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
   differenceCapaciteApprentissage: "Nombre de places en apprentissage",
-  differenceCapaciteApprentissageColoree:
-    "Nombre de places colorées en apprentissage",
+  differenceCapaciteApprentissageColoree: "Nombre de places colorées en apprentissage",
   capaciteScolaireActuelle: "Capacité en voie scolaire actuelle",
   capaciteScolaire: "Future capacité en voie scolaire",
   capaciteApprentissageActuelle: "Capacité en apprentissage actuelle",
   capaciteApprentissage: "Future capacité en apprentissage",
   capaciteScolaireColoreeActuelle: "Capacité colorée actuelle en voie scolaire",
   capaciteScolaireColoree: "Future capacité colorée en voie scolaire",
-  capaciteApprentissageColoreeActuelle:
-    "Capacité colorée actuelle en apprentissage",
+  capaciteApprentissageColoreeActuelle: "Capacité colorée actuelle en apprentissage",
   capaciteApprentissageColoree: "Future capacité colorée en apprentissage",
   libelleColoration: "Libellé coloration",
   libelleFCIL: "Libellé FCIL",
@@ -79,18 +76,12 @@ export const STATS_DEMANDES_COLUMNS = {
   achatEquipementCout: "Coût des achats d'équipement",
   achatEquipementDescription: "Description des achats d'équipement",
   // Hébergement
-  augmentationCapaciteAccueilHebergement:
-    "Besoin d'augmentation de la capacité d'hébergement ?",
-  augmentationCapaciteAccueilHebergementPlaces:
-    "Nombre de places d'hébergement supplémentaires",
-  augmentationCapaciteAccueilHebergementPrecisions:
-    "Précisions sur l'augmentation de la capacité d'hébergement",
-  augmentationCapaciteAccueilRestauration:
-    "Besoin d'augmentation de la capacité de restauration ?",
-  augmentationCapaciteAccueilRestaurationPlaces:
-    "Nombre de places de restauration supplémentaires",
-  augmentationCapaciteAccueilRestaurationPrecisions:
-    "Précisions sur l'augmentation de la capacité de restauration",
+  augmentationCapaciteAccueilHebergement: "Besoin d'augmentation de la capacité d'hébergement ?",
+  augmentationCapaciteAccueilHebergementPlaces: "Nombre de places d'hébergement supplémentaires",
+  augmentationCapaciteAccueilHebergementPrecisions: "Précisions sur l'augmentation de la capacité d'hébergement",
+  augmentationCapaciteAccueilRestauration: "Besoin d'augmentation de la capacité de restauration ?",
+  augmentationCapaciteAccueilRestaurationPlaces: "Nombre de places de restauration supplémentaires",
+  augmentationCapaciteAccueilRestaurationPrecisions: "Précisions sur l'augmentation de la capacité de restauration",
   // Statut
   statut: "Statut",
   motifRefus: "Motif(s) de refus",
@@ -105,9 +96,7 @@ export const STATS_DEMANDES_COLUMNS = {
   }
 >;
 
-export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<
-  typeof STATS_DEMANDES_COLUMNS
-> = {
+export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<typeof STATS_DEMANDES_COLUMNS> = {
   // établissement
   libelleEtablissement: "Établissement",
   commune: "Commune",
@@ -123,11 +112,9 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<
   typeDemande: "Type de demande",
   motif: "Motif(s) de la demande",
   differenceCapaciteScolaire: "Nombre de places en voie scolaire",
-  differenceCapaciteScolaireColoree:
-    "Nombre de places colorées en voie scolaire",
+  differenceCapaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
   differenceCapaciteApprentissage: "Nombre de places en apprentissage",
-  differenceCapaciteApprentissageColoree:
-    "Nombre de places colorées en apprentissage",
+  differenceCapaciteApprentissageColoree: "Nombre de places colorées en apprentissage",
   libelleColoration: "Libellé coloration",
   libelleFCIL: "Libellé FCIL",
   amiCma: "AMI/CMA ?",
@@ -161,27 +148,19 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<
   achatEquipementCout: "Coût des achats d'équipement",
   achatEquipementDescription: "Description des achats d'équipement",
   // Hébergement
-  augmentationCapaciteAccueilHebergement:
-    "Besoin d'augmentation de la capacité d'hébergement ?",
-  augmentationCapaciteAccueilHebergementPlaces:
-    "Nombre de places d'hébergement supplémentaires",
-  augmentationCapaciteAccueilHebergementPrecisions:
-    "Précisions sur l'augmentation de la capacité d'hébergement",
-  augmentationCapaciteAccueilRestauration:
-    "Besoin d'augmentation de la capacité de restauration ?",
-  augmentationCapaciteAccueilRestaurationPlaces:
-    "Nombre de places de restauration supplémentaires",
-  augmentationCapaciteAccueilRestaurationPrecisions:
-    "Précisions sur l'augmentation de la capacité de restauration",
+  augmentationCapaciteAccueilHebergement: "Besoin d'augmentation de la capacité d'hébergement ?",
+  augmentationCapaciteAccueilHebergementPlaces: "Nombre de places d'hébergement supplémentaires",
+  augmentationCapaciteAccueilHebergementPrecisions: "Précisions sur l'augmentation de la capacité d'hébergement",
+  augmentationCapaciteAccueilRestauration: "Besoin d'augmentation de la capacité de restauration ?",
+  augmentationCapaciteAccueilRestaurationPlaces: "Nombre de places de restauration supplémentaires",
+  augmentationCapaciteAccueilRestaurationPrecisions: "Précisions sur l'augmentation de la capacité de restauration",
   // Statut
   statut: "Statut",
   motifRefus: "Motif(s) de refus",
   autreMotifRefus: "Autre motif de refus",
 } as Partial<typeof STATS_DEMANDES_COLUMNS>;
 
-export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<
-  typeof STATS_DEMANDES_COLUMNS_OPTIONAL
-> = {
+export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL> = {
   libelleEtablissement: "Établissement",
   commune: "Commune",
   libelleNsf: "Domaine de formation (NSF)",
@@ -189,11 +168,9 @@ export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<
   niveauDiplome: "Diplôme",
   typeDemande: "Type de demande",
   differenceCapaciteScolaire: "Nombre de places en voie scolaire",
-  differenceCapaciteScolaireColoree:
-    "Nombre de places colorées en voie scolaire",
+  differenceCapaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
   differenceCapaciteApprentissage: "Nombre de places en apprentissage",
-  differenceCapaciteApprentissageColoree:
-    "Nombre de places colorées en apprentissage",
+  differenceCapaciteApprentissageColoree: "Nombre de places colorées en apprentissage",
   libelleColoration: "Libellé coloration",
   positionQuadrant: "Position dans le quadrant",
   statut: "Statut",

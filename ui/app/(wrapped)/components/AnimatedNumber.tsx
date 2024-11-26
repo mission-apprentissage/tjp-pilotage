@@ -20,11 +20,7 @@ const formatNumber = (number: number) => {
   const numberText = "" + number;
   return numberText
     .split("")
-    .reduce(
-      (p, c, i) =>
-        (numberText.length - i) % 3 === 0 && i != 0 ? p + " " + c : p + c,
-      ""
-    );
+    .reduce((p, c, i) => ((numberText.length - i) % 3 === 0 && i != 0 ? p + " " + c : p + c), "");
 };
 
 export const AnimatedNumber = ({
@@ -51,19 +47,11 @@ export const AnimatedNumber = ({
       const wholeRemainder = toNumber - fromNumber;
       const intervalWithinDuration = wholeRemainder / duration;
       previousAnimationFrame.current = Date.now();
-      setNumber(
-        Math.floor(
-          (previousAnimationFrame.current - startedAt.current) *
-            intervalWithinDuration
-        )
-      );
+      setNumber(Math.floor((previousAnimationFrame.current - startedAt.current) * intervalWithinDuration));
       animate(fromNumber, toNumber);
     });
 
-    if (
-      animationFrame.current !== -1 &&
-      duration < Date.now() - startedAt.current
-    ) {
+    if (animationFrame.current !== -1 && duration < Date.now() - startedAt.current) {
       setNumber(toNumber);
       cancelAnimationFrame(animationFrame.current);
     }

@@ -1,7 +1,8 @@
 import NodeCache from "node-cache";
 
-import { config } from "../../../config/config";
-import { Server } from "../../server";
+import config from "@/config";
+import type { Server } from "@/server/server";
+
 import { getGlossaireRoute } from "./usecases/getGlossaire/getGlossaire.route";
 import { getGlossaireEntryRoute } from "./usecases/getGlossaireEntry/getGlossaireEntry.route";
 

@@ -1,9 +1,9 @@
 import { CheckIcon } from "@chakra-ui/icons";
 import { Button, chakra, Flex, FormControl, Textarea } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { FormProvider, useForm } from "react-hook-form";
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
@@ -41,8 +41,9 @@ export const UpdateChangementStatutForm = chakra(
       formState: { errors },
     } = form;
 
-    const { isLoading: isSubmitting, mutateAsync: submitChangementStatut } =
-      client.ref("[POST]/intention/statut/submit").useMutation({
+    const { isLoading: isSubmitting, mutateAsync: submitChangementStatut } = client
+      .ref("[POST]/intention/statut/submit")
+      .useMutation({
         onSuccess: (_body) => {
           queryClient.invalidateQueries(["[GET]/intention/:numero"]);
           setIsModifying(false);

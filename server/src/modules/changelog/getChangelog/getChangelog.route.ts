@@ -1,6 +1,7 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../server";
+import type { Server } from "@/server/server";
+
 import { getChangelogSchema } from "./getChangelog.schema";
 import { getChangelog } from "./getChangelog.usecase";
 
@@ -11,7 +12,7 @@ export const getChangelogRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      handler: async (request, response) => {
+      handler: async (_, response) => {
         const changelog = await getChangelog();
         response.code(200).send(changelog);
       },

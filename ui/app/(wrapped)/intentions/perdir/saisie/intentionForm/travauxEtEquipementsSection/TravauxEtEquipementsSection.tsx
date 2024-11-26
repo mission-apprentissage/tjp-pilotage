@@ -1,7 +1,8 @@
 import { Divider, Flex, Heading, Img } from "@chakra-ui/react";
-import { RefObject } from "react";
+import type { RefObject } from "react";
 
-import { SCROLL_OFFSET } from "../../../SCROLL_OFFSETS";
+import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/perdir/SCROLL_OFFSETS";
+
 import { AchatEquipementCoutField } from "./AchatEquipementCoutField";
 import { AchatEquipementDescriptionField } from "./AchatEquipementDescriptionField";
 import { AchatEquipementField } from "./AchatEquipementField";
@@ -17,11 +18,7 @@ export const TravauxEtEquipementsSection = ({
   travauxEtEquipementsRef: RefObject<HTMLDivElement>;
 }) => {
   return (
-    <Flex
-      ref={travauxEtEquipementsRef}
-      scrollMarginTop={SCROLL_OFFSET}
-      direction={"column"}
-    >
+    <Flex ref={travauxEtEquipementsRef} scrollMarginTop={SCROLL_OFFSET} direction={"column"}>
       <Heading as="h2" fontSize="xl" display={"flex"}>
         <Flex direction={"row"} gap={3}>
           <Img src={"/icons/travauxEtEquipements.svg"} alt="" />

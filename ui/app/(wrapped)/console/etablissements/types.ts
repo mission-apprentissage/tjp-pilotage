@@ -1,9 +1,8 @@
-import { client } from "@/api.client";
+import type { client } from "@/api.client";
 
 export type Query = (typeof client.inferArgs)["[GET]/etablissements"]["query"];
 
-export type Line =
-  (typeof client.infer)["[GET]/etablissements"]["etablissements"][number];
+export type Line = (typeof client.infer)["[GET]/etablissements"]["etablissements"][number];
 
 export type Etablissements = (typeof client.infer)["[GET]/etablissements"];
 

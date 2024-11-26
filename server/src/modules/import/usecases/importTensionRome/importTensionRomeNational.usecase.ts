@@ -1,9 +1,10 @@
 import { inject } from "injecti";
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB } from "../../../../db/schema";
-import { dataDI } from "../../data.di";
-import { streamIt } from "../../utils/streamIt";
+import type { DB } from "@/db/schema";
+import { dataDI } from "@/modules/import/data.di";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { createTension, createTensionRome, deleteTensionRome } from "./utils";
 
 export const [importTensionRomeNational] = inject(
@@ -24,7 +25,7 @@ export const [importTensionRomeNational] = inject(
     const insertedTensions: Set<string> = new Set();
 
     await streamIt(
-      (offset) =>
+      async (offset) =>
         deps.findRawDatas({
           type: "tension_rome",
           limit: 1000,

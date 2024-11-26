@@ -1,0 +1,85 @@
+fileignoreconfig:
+- filename: .infra/ansible/roles/setup/vars/main/vault.yml
+  checksum: 09990a1239c96bc89535cb2bbd21f2034c6879adf67272fdc8957faf893e2636
+- filename: .infra/ansible/tasks/preview_pr.yml
+  checksum: 97cf0bebbc85d48b68230b00b448ec5868c2962e8ac7a176321e3b770829efb9
+- filename: .infra/files/configs/mailpit/auth
+  checksum: d8fa3a6949506347e44ace335c240b5b974e92990facba4f1e1da3cb2855e33f
+- filename: .infra/files/configs/mongodb/seed.gpg
+  checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
+- filename: .infra/vault/vault.yml
+  checksum: 0263b7f9e3e45d676f8ed5c98eeded31b5cd61f92930ae284e0e9dace1c21a7c
+- filename: README.md
+  checksum: 00ac991f0b2746c5a5ffa14e2b3c5427b739c0d952aa3730efe1f234ac1fc3ca
+- filename: server/.env.test
+  checksum: df4e0dd70085c1ab9d996395796f6b0bd879653f9866c55ff276579aff84a4ba
+- filename: server/seed/seed_data.dump
+  checksum: f47ffbd2ecfa5b8d9e7535ddb62ba2fbe9d1fdce1a4c8b67c4e7c1dd15e889cc
+- filename: server/seed/seed_schema.dump
+  checksum: 8eb032b7bc0013ec5dbba6e69fc07a74a5c1ea8c95ff619281106498c263b691
+- filename: server/src/modules/core/usecases/login/__tests__/login.test.ts
+  checksum: 28cdc80f0d836857ee9a802bff5a72a3ff3addad70a31b1ad4b7e98bc8db447c
+- filename: server/src/modules/core/usecases/redirectDne/redirectDne.test.ts
+  checksum: 97116750d964c12ae4a0ffe9f5477d66526bf2f2e8ac8719ee399dc88faf7ae5
+- filename: server/tests/test_origin/controllers/campagnes.controller.test.js_old
+  checksum: 546c306130034fdce2c4165b1f31656dfa883bc8808f0e8b1fa5a5461da1cb08
+- filename: server/tests/test_origin/controllers/users.controller.test.js_old
+  checksum: b328997825d477c33f324712e797f73997edac508fdde26f84317e951bb59da7
+- filename: server/tests/test_origin/dao/campagnes.dao.test.js_old
+  checksum: 5b74f89ed617f1e62f763941b73f458cf1e35855141a1fe6a3e8757a9448cc72
+- filename: server/tests/test_origin/dao/etablissements.dao.test.js_old
+  checksum: 29c159edbb9641f4320f495fda27542c8796895dfacf333970940c7a56c70a36
+- filename: server/tests/test_origin/dao/formations.dao.test.js_old
+  checksum: cf131562890ca44d326b5eaa68a9de9620cbfaba1e1b32235ee95cc8930e2e65
+- filename: server/tests/test_origin/dao/questionnaires.dao.test.js_old
+  checksum: 69fbfafcc18c2f3887e260a807d56b87272e9d540f6035281466024c8cfeac9f
+- filename: server/tests/test_origin/dao/temoignages.dao.test.js_old
+  checksum: 3d80e3c4c905a292cb535598c250f45c094c6669420baadb0ffff624b653521a
+- filename: server/tests/test_origin/db/createUser.test.js_old
+  checksum: b8836541984a07ede4613845c570aa50013fffce6816811b00c7c671bbb931a2
+- filename: server/tests/test_origin/integration/campagnes/deleteCampagnes.test.js_old
+  checksum: 61124dc8dbb829b248f5724508b3dd1b70b567dc1e95ebd86f4a3725458d0e6a
+- filename: server/tests/test_origin/integration/campagnes/getOneCampagne.test.js_old
+  checksum: e3686baa62c464ddde1e37dd5d636681b2d06c0647d40fc2f8c1664ffce8c3bf
+- filename: server/tests/test_origin/integration/temoignages/deleteTemoignage.test.js_old
+  checksum: 58922cbe6994821e59cd535a2827e1774b85c2466bd0b51cb58a2e4bd9382912
+- filename: server/tests/test_origin/services/users.service.test.js_old
+  checksum: aa5435b4faf485b49d3e9362d7550432cc4a431b863e8248f5b95b18b3d3e931
+- filename: ui/app/(wrapped)/cgu/page.tsx
+  checksum: d42601745f99f191e3fb865ed61ef829e4c7e82a5d157a544deb8f4986717fef
+- filename: ui/app/(wrapped)/documentation/page.tsx
+  checksum: 50bc89c2ce7e01f8b8ff7381b44abb68ed2979230dc7252009e2e77b85c11558
+- filename: ui/app/(wrapped)/mentions-legales/page.tsx
+  checksum: 9d41bf20ab3cb269091a285eefeae595ecfd38dad78dbda7859eef31e69e7bc7
+- filename: ui/app/(wrapped)/politique-de-confidentialite/page.tsx
+  checksum: ac6c8496ea10747f9e89cb79f4c46845cddfcd5e032e81c3bc8d4cf43934b576
+- filename: ui/app/(wrapped)/ressources/page.tsx
+  checksum: 58aeb5ee51ef187a6f97a6dc73922767bd177c600164ffd7076391a87f372ebe
+- filename: ui/app/(wrapped)/statistiques/page.tsx
+  checksum: 573be5ad333d02b3969e61ec8a4860c161af648abb752a3a22b35d5f37bc6bd1
+- filename: ui/config.public.ts
+  checksum: 5a6c64c078366fc4c259fcf660abb66e4db3ffbc8365fdad5d3c05cad54d99dc
+- filename: ui/src/config.public.ts
+  checksum: b13b0a1f3d9590d335062a88e76609c40ba790129e481f7e5c25fbdab6840617
+- filename: ui/src/utils/generateUri.ts
+  checksum: 505911d86f3b3f4a9337504a691132dba83dec4a950f9ff0e8bf76f5787ab325
+scopeconfig:
+- scope: node
+custom_patterns:
+- (?s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
+allowed_patterns:
+- key
+- Key
+- secret
+- SECRET
+- password
+- Password
+- pass
+- apiKey
+- ApiKey
+- api_key
+- '@mail.com'
+- '@exemple.fr'
+- '@inserjeunes.beta.gouv.fr'
+threshold: medium
+version: "1.0"

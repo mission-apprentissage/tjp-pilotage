@@ -1,14 +1,15 @@
 import ejs from "ejs";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import _ from "lodash";
+import { omit } from "lodash-es";
 import mjml from "mjml";
 import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
 import path from "path";
 
-import { config } from "../../../../../config/config";
-import { basepath } from "../../../../basepath";
+import config from "@/config";
+import { getStaticDirPath } from "@/utils/getStaticFilePath";
 
 export type TemplatePayloads = {
   reset_password: {
@@ -53,9 +54,7 @@ export type TemplatePayloads = {
 
 function createTransporter(smtp: SMTPTransport & { secure: boolean }) {
   const needsAuthentication = !!smtp.auth?.user;
-  const transporter = nodemailer.createTransport(
-    needsAuthentication ? smtp : _.omit(smtp, ["auth"])
-  );
+  const transporter = nodemailer.createTransport(needsAuthentication ? smtp : omit(smtp, ["auth"]));
   transporter.use("compile", htmlToText());
   return transporter;
 }
@@ -64,15 +63,7 @@ export const [shootEmail] = inject(
   //@ts-ignore
   { transporter: createTransporter({ ...config.smtp, secure: false }) },
   (deps) =>
-    async ({
-      to,
-      subject,
-      html,
-    }: {
-      to: string;
-      subject: string;
-      html: string;
-    }) => {
+    async ({ to, subject, html }: { to: string; subject: string; html: string }) => {
       const { messageId } = await deps.transporter.sendMail({
         from: config.smtp.email_from,
         to,
@@ -99,14 +90,14 @@ export const shootTemplate = async <T extends keyof TemplatePayloads>({
     to,
     data,
     subject,
-    templateFile: path.join(basepath, `/mails/${template}.mjml.ejs`),
+    templateFile: path.join(getStaticDirPath(), `/mails/${template}.mjml.ejs`),
   });
 
   await shootEmail({ html, subject, to });
 };
 
 function getPublicUrl(filepath: string) {
-  return `${config.frontUrl}${filepath}`;
+  return `${config.publicUrl}${filepath}`;
 }
 
 async function generateHtml({

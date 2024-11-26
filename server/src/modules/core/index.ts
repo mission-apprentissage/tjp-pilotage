@@ -1,4 +1,5 @@
-import { Server } from "../../server";
+import type { Server } from "@/server/server";
+
 import { activateUserRoute } from "./usecases/activateUser/activateUser.route";
 import { checkActivationTokenRoute } from "./usecases/checkActivationToken/checkActivationToken.route";
 import { createCampagneRoute } from "./usecases/createCampagne/createCampagne.route";
@@ -44,5 +45,4 @@ export const registerCoreModule = (server: Server) => {
   };
 };
 
-export { hasPermissionHandler } from "./utils/hasPermission";
 export { shootTemplate } from "./services/mailer/mailer";

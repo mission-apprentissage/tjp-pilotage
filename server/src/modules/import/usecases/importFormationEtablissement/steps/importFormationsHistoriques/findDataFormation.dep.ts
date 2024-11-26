@@ -1,8 +1,8 @@
-import { kdb } from "../../../../../../db/db";
-import { cleanNull } from "../../../../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
 export const findDataFormation = async (cfd: string) =>
-  kdb
+  getKbdClient()
     .selectFrom("dataFormation")
     .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
     .selectAll()

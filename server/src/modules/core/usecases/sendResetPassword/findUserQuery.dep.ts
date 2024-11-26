@@ -1,8 +1,8 @@
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
 export const findUserQuery = async ({ email }: { email: string }) => {
-  const user = await kdb
+  const user = await getKbdClient()
     .selectFrom("user")
     .where("user.email", "=", email)
     .where("enabled", "=", true)

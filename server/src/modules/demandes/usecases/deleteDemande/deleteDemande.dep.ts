@@ -1,8 +1,8 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { Demande } from "../../../../db/schema";
-import { updateDemandeWithHistory } from "../../repositories/updateDemandeWithHistory.query";
+import type { Demande } from "@/db/schema";
+import { updateDemandeWithHistory } from "@/modules/demandes/repositories/updateDemandeWithHistory.query";
 
 export const deleteDemandeQuery = async (demande?: Insertable<Demande>) => {
   if (demande)

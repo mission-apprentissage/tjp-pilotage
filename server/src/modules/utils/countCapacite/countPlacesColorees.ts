@@ -1,6 +1,8 @@
-import { ExpressionBuilder, sql } from "kysely";
+import type { ExpressionBuilder } from "kysely";
+import { sql } from "kysely";
 
-import { DB } from "../../../db/db";
+import type { DB } from "@/db/db";
+
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteApprentissageColoree,
@@ -9,11 +11,7 @@ import {
 } from "./countDifferenceCapacite";
 import { exceptionCampagne2023, inQ3, inQ3Q4, inQ4 } from "./utils";
 
-export const countPlacesColoreesOuvertesScolaire = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande" | "campagne">;
-}) =>
+export const countPlacesColoreesOuvertesScolaire = ({ eb }: { eb: ExpressionBuilder<DB, "demande" | "campagne"> }) =>
   exceptionCampagne2023({
     eb,
     count: eb
@@ -54,11 +52,7 @@ export const countPlacesColoreesOuvertesScolaire = ({
       .end(),
   });
 
-export const countPlacesColoreesFermeesScolaire = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande" | "campagne">;
-}) =>
+export const countPlacesColoreesFermeesScolaire = ({ eb }: { eb: ExpressionBuilder<DB, "demande" | "campagne"> }) =>
   exceptionCampagne2023({
     eb,
     count: eb
@@ -102,47 +96,20 @@ export const countPlacesColoreesFermeesScolaire = ({
 export const countPlacesColoreesOuvertesScolaireQ3 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
-}) =>
-  eb
-    .case()
-    .when(inQ3(eb))
-    .then(countPlacesColoreesOuvertesScolaire(eb))
-    .else(eb.val(0))
-    .end();
+  eb: ExpressionBuilder<DB, "demande" | "campagne" | "positionFormationRegionaleQuadrant">;
+}) => eb.case().when(inQ3(eb)).then(countPlacesColoreesOuvertesScolaire(eb)).else(eb.val(0)).end();
 
 export const countPlacesColoreesOuvertesScolaireQ4 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
-}) =>
-  eb
-    .case()
-    .when(inQ4(eb))
-    .then(countPlacesColoreesOuvertesScolaire(eb))
-    .else(eb.val(0))
-    .end();
+  eb: ExpressionBuilder<DB, "demande" | "campagne" | "positionFormationRegionaleQuadrant">;
+}) => eb.case().when(inQ4(eb)).then(countPlacesColoreesOuvertesScolaire(eb)).else(eb.val(0)).end();
 
 export const countPlacesColoreesOuvertesScolaireQ3Q4 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
-}) =>
-  eb
-    .case()
-    .when(inQ3Q4(eb))
-    .then(countPlacesColoreesOuvertesScolaire(eb))
-    .else(eb.val(0))
-    .end();
+  eb: ExpressionBuilder<DB, "demande" | "campagne" | "positionFormationRegionaleQuadrant">;
+}) => eb.case().when(inQ3Q4(eb)).then(countPlacesColoreesOuvertesScolaire(eb)).else(eb.val(0)).end();
 
 export const countPlacesColoreesOuvertesApprentissage = ({
   eb,
@@ -154,9 +121,7 @@ export const countPlacesColoreesOuvertesApprentissage = ({
     count: eb
       .case()
       // si diminution des places colorées => 0
-      .when(
-        sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} < 0`
-      )
+      .when(sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} < 0`)
       .then(eb.val(0))
       // si diminution des places globales + augmentation des places colorées => somme des augmentations
       .when(
@@ -165,9 +130,7 @@ export const countPlacesColoreesOuvertesApprentissage = ({
           sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} >= 0`,
         ])
       )
-      .then(
-        sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`
-      )
+      .then(sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`)
       // si augmentation des places globales + augmentation des places colorées => nombre de places colorées si supérieur à l'augmentation de capacité
       .when(
         eb.and([
@@ -187,9 +150,7 @@ export const countPlacesColoreesOuvertesApprentissage = ({
               `
             )
           )
-          .then(
-            sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`
-          )
+          .then(sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`)
           .else(eb.val(0))
           .end()
       )
@@ -225,9 +186,7 @@ export const countPlacesColoreesFermeesApprentissage = ({
               `
             )
           )
-          .then(
-            sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`
-          )
+          .then(sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`)
           .else(eb.val(0))
           .end()
       )
@@ -238,13 +197,9 @@ export const countPlacesColoreesFermeesApprentissage = ({
           sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} < 0`,
         ])
       )
-      .then(
-        sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`
-      )
+      .then(sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`)
       // si augmentation des places colorées => 0
-      .when(
-        sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} >= 0`
-      )
+      .when(sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} >= 0`)
       .then(eb.val(0))
       .else(eb.val(0))
       .end(),
@@ -253,53 +208,22 @@ export const countPlacesColoreesFermeesApprentissage = ({
 export const countPlacesColoreesOuvertesApprentissageQ3 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
-}) =>
-  eb
-    .case()
-    .when(inQ3(eb))
-    .then(countPlacesColoreesOuvertesApprentissage(eb))
-    .else(eb.val(0))
-    .end();
+  eb: ExpressionBuilder<DB, "demande" | "campagne" | "positionFormationRegionaleQuadrant">;
+}) => eb.case().when(inQ3(eb)).then(countPlacesColoreesOuvertesApprentissage(eb)).else(eb.val(0)).end();
 
 export const countPlacesColoreesOuvertesApprentissageQ4 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
-}) =>
-  eb
-    .case()
-    .when(inQ4(eb))
-    .then(countPlacesColoreesOuvertesApprentissage(eb))
-    .else(eb.val(0))
-    .end();
+  eb: ExpressionBuilder<DB, "demande" | "campagne" | "positionFormationRegionaleQuadrant">;
+}) => eb.case().when(inQ4(eb)).then(countPlacesColoreesOuvertesApprentissage(eb)).else(eb.val(0)).end();
 
 export const countPlacesColoreesOuvertesApprentissageQ3Q4 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
-}) =>
-  eb
-    .case()
-    .when(inQ3Q4(eb))
-    .then(countPlacesColoreesOuvertesApprentissage(eb))
-    .else(eb.val(0))
-    .end();
+  eb: ExpressionBuilder<DB, "demande" | "campagne" | "positionFormationRegionaleQuadrant">;
+}) => eb.case().when(inQ3Q4(eb)).then(countPlacesColoreesOuvertesApprentissage(eb)).else(eb.val(0)).end();
 
-export const countPlacesColoreesOuvertes = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) =>
+export const countPlacesColoreesOuvertes = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
   sql<number>`
     ${countPlacesColoreesOuvertesScolaire(eb)} +
     ${countPlacesColoreesOuvertesApprentissage(eb)}
@@ -355,11 +279,7 @@ export const countPlacesColoreesOuvertesApprentissageCorrection = ({
       ${eb.ref("correction.capaciteApprentissageColoreeActuelle")}
     )`;
 
-export const countPlacesColoreesOuvertesCorrection = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "correction">;
-}) =>
+export const countPlacesColoreesOuvertesCorrection = ({ eb }: { eb: ExpressionBuilder<DB, "correction"> }) =>
   sql<number>`
     ${countPlacesColoreesOuvertesScolaireCorrection(eb)} +
     ${countPlacesColoreesOuvertesApprentissageCorrection(eb)}
@@ -367,11 +287,7 @@ export const countPlacesColoreesOuvertesCorrection = ({
 
 // PLACES COLORÉES FERMÉES
 
-export const countPlacesColoreesFermees = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) =>
+export const countPlacesColoreesFermees = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
   sql<number>`
     ${countPlacesColoreesFermeesScolaire(eb)} +
     ${countPlacesColoreesFermeesApprentissage(eb)}
@@ -401,31 +317,19 @@ export const countPlacesColoreesFermeesApprentissageCorrection = ({
     )
   )`;
 
-export const countPlacesColoreesScolaire = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) =>
+export const countPlacesColoreesScolaire = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
   sql<number>`
     ${countPlacesColoreesOuvertesScolaire(eb)} +
     ${countPlacesColoreesFermeesScolaire(eb)}
   `;
 
-export const countPlacesColoreesApprentissage = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) =>
+export const countPlacesColoreesApprentissage = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
   sql<number>`
     ${countPlacesColoreesOuvertesApprentissage(eb)} +
     ${countPlacesColoreesFermeesApprentissage(eb)}
   `;
 
-export const countPlacesColorees = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) =>
+export const countPlacesColorees = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
   sql<number>`
     ${countPlacesColoreesScolaire(eb)} +
     ${countPlacesColoreesApprentissage(eb)}
@@ -435,5 +339,4 @@ export const countPlacesColoreesQ4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb.case().when(inQ4(eb)).then(countPlacesColorees(eb)).else(eb.val(0)).end();
+}) => eb.case().when(inQ4(eb)).then(countPlacesColorees(eb)).else(eb.val(0)).end();

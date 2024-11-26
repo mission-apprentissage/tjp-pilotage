@@ -12,44 +12,30 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Role } from "shared";
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import type { Role } from "shared";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
+import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
+import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import type { ChangementStatut } from "@/app/(wrapped)/intentions/perdir/types";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { formatDate } from "@/utils/formatUtils";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { RoleTag } from "../../../../components/RoleTag";
-import { StatutTag } from "../../../../components/StatutTag";
-import { ChangementStatut } from "../../../../types";
 import { UpdateChangementStatutForm } from "./UpdateChangementStatutForm";
 
 export const CommentaireSection = chakra(
-  ({
-    changementStatut,
-    statut,
-  }: {
-    changementStatut: ChangementStatut;
-    statut: DemandeStatutType;
-  }) => {
-    const hasPermissionModificationStatut = usePermission(
-      "intentions-perdir-statut/ecriture"
-    );
+  ({ changementStatut, statut }: { changementStatut: ChangementStatut; statut: DemandeStatutType }) => {
+    const hasPermissionModificationStatut = usePermission("intentions-perdir-statut/ecriture");
     const [isModifying, setIsModifying] = useState(false);
     const queryClient = useQueryClient();
 
-    const {
-      isOpen: isOpenUpdateChangementStatut,
-      onToggle: onToggleUpdateChangementStatut,
-    } = useDisclosure({
+    const { isOpen: isOpenUpdateChangementStatut, onToggle: onToggleUpdateChangementStatut } = useDisclosure({
       defaultIsOpen: true,
     });
 
-    const {
-      isLoading: isDeleting,
-      mutateAsync: submitDeleteChangementStatutCommentaire,
-    } = useMutation({
+    const { isLoading: isDeleting, mutateAsync: submitDeleteChangementStatutCommentaire } = useMutation({
       mutationFn: async () => {
         await client.ref("[POST]/intention/statut/submit").query({
           body: {
@@ -69,12 +55,7 @@ export const CommentaireSection = chakra(
 
     return (
       <SlideFade in={isOpenUpdateChangementStatut} offsetX="50px" reverse>
-        <Box
-          borderLeftColor={"grey.900"}
-          borderLeftWidth={"0.5px"}
-          pl={6}
-          my={5}
-        >
+        <Box borderLeftColor={"grey.900"} borderLeftWidth={"0.5px"} pl={6} my={5}>
           <Flex direction={"column"} gap={2} p={2}>
             <Flex direction={"column"} gap={4}>
               <Flex direction={"row"} gap={2}>
@@ -101,22 +82,13 @@ export const CommentaireSection = chakra(
                     <RoleTag role={changementStatut.userRole as Role} />
                   </Flex>
                   <Text fontSize={12} fontWeight={400} lineHeight={"20px"}>
-                    <Highlight
-                      query={changementStatut.userFullName}
-                      styles={{ color: "bluefrance.113" }}
-                    >
+                    <Highlight query={changementStatut.userFullName} styles={{ color: "bluefrance.113" }}>
                       {`Statut modifié par ${changementStatut.userFullName}`}
                     </Highlight>
                   </Text>
                 </Flex>
               </Flex>
-              <Text
-                fontSize={12}
-                fontWeight={400}
-                lineHeight={"20px"}
-                fontStyle={"italic"}
-                color="grey.425"
-              >
+              <Text fontSize={12} fontWeight={400} lineHeight={"20px"} fontStyle={"italic"} color="grey.425">
                 {`Publié le ${formatDate({
                   date: changementStatut.updatedAt,
                   options: {
@@ -135,21 +107,11 @@ export const CommentaireSection = chakra(
                 onToggleUpdateChangementStatut={onToggleUpdateChangementStatut}
               />
             ) : changementStatut.commentaire ? (
-              <Text
-                fontSize={16}
-                fontWeight={500}
-                lineHeight={"24px"}
-                color={"grey.50"}
-              >
+              <Text fontSize={16} fontWeight={500} lineHeight={"24px"} color={"grey.50"}>
                 « {changementStatut.commentaire} »
               </Text>
             ) : (
-              <Text
-                fontSize={16}
-                fontWeight={500}
-                lineHeight={"24px"}
-                color={"grey.900"}
-              >
+              <Text fontSize={16} fontWeight={500} lineHeight={"24px"} color={"grey.900"}>
                 Pas d'observation renseignée
               </Text>
             )}

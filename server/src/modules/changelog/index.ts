@@ -1,4 +1,5 @@
-import { Server } from "../../server";
+import type { Server } from "@/server/server";
+
 import { getChangelogRoute } from "./getChangelog/getChangelog.route";
 
 export const registerChangelogModule = (server: Server) => {

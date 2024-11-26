@@ -22,11 +22,12 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useEffect, useMemo, useState } from "react";
 
-import { Quadrant } from "../../../../../components/Quadrant";
-import { TableQuadrant } from "../../../../../components/TableQuadrant";
-import { publicConfig } from "../../../../../config.public";
-import { Order, PanoramaFormations } from "../../types";
-import { FormationTooltipContent } from "../FormationTooltipContent";
+import { FormationTooltipContent } from "@/app/(wrapped)/panorama/components/FormationTooltipContent";
+import type { Order, PanoramaFormations } from "@/app/(wrapped)/panorama/types";
+import { Quadrant } from "@/components/Quadrant";
+import { TableQuadrant } from "@/components/TableQuadrant";
+import { publicConfig } from "@/config.public";
+
 import { effectifSizes, InfoTooltipContent } from "./InfoTooltipContent";
 
 const Loader = () => (
@@ -54,9 +55,8 @@ const EmptyCadran = () => {
         Aucune donnée à afficher pour les filtres sélectionnés
       </Text>
       <Text fontSize={"16px"} style={{ textWrap: "pretty" }}>
-        Aucune formation ne correspond à votre sélection, ou alors la donnée ne
-        peut pas être affichée pour des raisons statistiques (effectif inférieur
-        à 20, nouveau code formation, ...){" "}
+        Aucune formation ne correspond à votre sélection, ou alors la donnée ne peut pas être affichée pour des raisons
+        statistiques (effectif inférieur à 20, nouveau code formation, ...){" "}
       </Text>
       <Img src="/search.svg" alt="illustration de recherche" />
     </Flex>
@@ -76,17 +76,13 @@ const useQuadrantDisplay = ({
 }) => {
   const segment = useSelectedLayoutSegment();
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
-  const [exportPath, setExportPath] = useState<URL>(
-    new URL("/console/formations", publicConfig.baseUrl)
-  );
+  const [exportPath, setExportPath] = useState<URL>(new URL("/console/formations", publicConfig.baseUrl));
   const toggleTypeVue = () => {
     if (typeVue === "quadrant") setTypeVue("tableau");
     else setTypeVue("quadrant");
   };
   const trackEvent = usePlausible();
-  const [currentFormationId, setCurrentFormationId] = useState<
-    string | undefined
-  >();
+  const [currentFormationId, setCurrentFormationId] = useState<string | undefined>();
 
   useEffect(() => {
     const consoleUrl = new URL("/console/formations", publicConfig.baseUrl);
@@ -96,10 +92,7 @@ const useQuadrantDisplay = ({
     }
 
     if (codeDepartement) {
-      consoleUrl.searchParams.set(
-        "filters[codeDepartement][0]",
-        codeDepartement
-      );
+      consoleUrl.searchParams.set("filters[codeDepartement][0]", codeDepartement);
     }
 
     if (codeNiveauDiplome) {
@@ -149,13 +142,7 @@ export const QuadrantDisplay = ({
   codeDepartement?: string;
   effectifEntree?: string;
 }) => {
-  const {
-    typeVue,
-    toggleTypeVue,
-    currentFormationId,
-    setCurrentFormationId,
-    exportPath,
-  } = useQuadrantDisplay({
+  const { typeVue, toggleTypeVue, currentFormationId, setCurrentFormationId, exportPath } = useQuadrantDisplay({
     codeDepartement,
     codeRegion,
     codeNiveauDiplome,
@@ -171,16 +158,17 @@ export const QuadrantDisplay = ({
       if (typeVue === "quadrant") {
         return (
           <Quadrant
-            onClick={({ cfd, codeDispositif }) =>
-              setCurrentFormationId(`${cfd}_${codeDispositif}`)
-            }
+            onClick={({ cfd, codeDispositif }) => setCurrentFormationId(`${cfd}_${codeDispositif}`)}
             meanInsertion={meanInsertion}
             meanPoursuite={meanPoursuite}
             currentFormationId={currentFormationId}
-            data={formations.map((formation) => ({
-              ...formation,
-              codeDispositif: formation.codeDispositif ?? "",
-            }))}
+            data={formations.map(
+              // @ts-expect-error TODO
+              (formation) => ({
+                ...formation,
+                codeDispositif: formation.codeDispositif ?? "",
+              })
+            )}
             TooltipContent={FormationTooltipContent}
             effectifSizes={effectifSizes}
           />
@@ -193,9 +181,7 @@ export const QuadrantDisplay = ({
           handleClick={setCurrentFormationId}
           currentFormationId={currentFormationId}
           order={order}
-          handleOrder={(column?: string) =>
-            handleOrder(column as Order["orderBy"])
-          }
+          handleOrder={(column?: string) => handleOrder(column as Order["orderBy"])}
         />
       );
     }
@@ -215,27 +201,15 @@ export const QuadrantDisplay = ({
 
   return (
     <Box flex={1}>
-      <Flex
-        justify="space-between"
-        flexDir={["column", null, "row"]}
-        alignItems={"center"}
-      >
+      <Flex justify="space-between" flexDir={["column", null, "row"]} alignItems={"center"}>
         <Flex gap={0.5}>
           <Popover>
             <PopoverTrigger>
-              <Button
-                variant={"ghost"}
-                color={"bluefrance.113"}
-                leftIcon={<Icon icon="ri:eye-line" />}
-              >
+              <Button variant={"ghost"} color={"bluefrance.113"} leftIcon={<Icon icon="ri:eye-line" />}>
                 Légende
               </Button>
             </PopoverTrigger>
-            <PopoverContent
-              _focusVisible={{ outline: "none" }}
-              p="3"
-              w={"fit-content"}
-            >
+            <PopoverContent _focusVisible={{ outline: "none" }} p="3" w={"fit-content"}>
               <PopoverCloseButton />
               <InfoTooltipContent />
             </PopoverContent>
@@ -264,8 +238,7 @@ export const QuadrantDisplay = ({
             label={
               <Box>
                 <Text>
-                  L'export de données sur les formations est accessible depuis
-                  la console Orion uniquement. <br />
+                  L'export de données sur les formations est accessible depuis la console Orion uniquement. <br />
                   <br />
                   <strong>Cliquer pour exporter depuis la console.</strong>
                 </Text>
@@ -287,8 +260,7 @@ export const QuadrantDisplay = ({
           </Tooltip>
         </Flex>
         <Text color="grey.50" fontSize="sm" textAlign="center">
-          <strong>{formations?.length ?? "-"}</strong> formations -{" "}
-          <strong>{effectifEntree}</strong> effectif en entrée
+          <strong>{formations?.length ?? "-"}</strong> formations - <strong>{effectifEntree}</strong> effectif en entrée
         </Text>
       </Flex>
       <AspectRatio ratio={1} mt={2}>

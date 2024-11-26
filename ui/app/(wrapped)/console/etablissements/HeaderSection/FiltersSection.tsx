@@ -18,13 +18,12 @@ import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import { DeleteRequeteEnregistreeButton } from "@/app/(wrapped)/console/components/DeleteRequeteEnregistreeButton";
+import { FilterTags } from "@/app/(wrapped)/console/components/FilterTags";
+import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
+import type { Filters, FiltersList, Order, RequetesEnregistrees } from "@/app/(wrapped)/console/etablissements/types";
 import { Multiselect } from "@/components/Multiselect";
 import { feature } from "@/utils/feature";
-
-import { DeleteRequeteEnregistreeButton } from "../../components/DeleteRequeteEnregistreeButton";
-import { FilterTags } from "../../components/FilterTags";
-import { FORMATION_ETABLISSEMENT_COLUMNS } from "../FORMATION_ETABLISSEMENT_COLUMNS";
-import { Filters, FiltersList, Order, RequetesEnregistrees } from "../types";
 
 const REQUETES_ENREGISTREES = [
   {
@@ -68,10 +67,7 @@ export const FiltersSection = ({
   filtersList?: FiltersList;
   requetesEnregistrees?: RequetesEnregistrees;
   requeteEnregistreeActuelle: { nom: string; couleur?: string };
-  setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: {
-    nom: string;
-    couleur?: string;
-  }) => void;
+  setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: { nom: string; couleur?: string }) => void;
 }) => {
   const trackEvent = usePlausible();
 
@@ -97,47 +93,39 @@ export const FiltersSection = ({
     setRequeteEnregistreeActuelle({ nom: "Requêtes favorites" });
   };
 
-  const [deleteButtonToDisplay, setDeleteButtonToDisplay] =
-    useState<string>("");
+  const [deleteButtonToDisplay, setDeleteButtonToDisplay] = useState<string>("");
 
   return (
     <Flex direction={"column"} gap={4} wrap={"wrap"}>
       <Wrap spacing={3}>
-        <Menu matchWidth={true} autoSelect={false}>
+        <Menu matchWidth={true} autoSelect={false} gutter={3}>
           <MenuButton
             as={Button}
             variant={"selectButton"}
             rightIcon={<ChevronDownIcon />}
-            width={[null, null, "64"]}
+            width={"15rem"}
             size="md"
             borderWidth="1px"
             borderStyle="solid"
             borderColor="grey.900"
             bg={"white"}
+            isDisabled={!requetesEnregistrees || !requetesEnregistrees.length}
           >
-            <Flex direction="row" gap={2}>
+            <Flex direction="row" gap={2} overflow={"hidden"} whiteSpace="nowrap">
               {requeteEnregistreeActuelle.couleur && (
-                <Tag
-                  size={"sm"}
-                  bgColor={requeteEnregistreeActuelle.couleur}
-                  borderRadius={"100%"}
-                />
+                <Tag size={"sm"} bgColor={requeteEnregistreeActuelle.couleur} borderRadius={"100%"} />
               )}
               <Text my={"auto"}>{requeteEnregistreeActuelle.nom}</Text>
             </Flex>
           </MenuButton>
           <Portal>
-            <MenuList
-              py={0}
-              borderTopRadius={0}
-              minW={"fit-content"}
-              zIndex={3}
-            >
+            <MenuList py={0} borderColor="grey.900" borderTopRadius={0} minW={"fit-content"} zIndex={3}>
               {requetesEnregistrees && requetesEnregistrees.length > 0 && (
                 <>
                   <Text p={2} color="grey.425">
                     Vos requêtes favorites
                   </Text>
+                  {/*  @ts-expect-error TODO */}
                   {requetesEnregistrees?.map((requete) => (
                     <MenuItem
                       p={2}
@@ -153,16 +141,12 @@ export const FiltersSection = ({
                       onMouseLeave={() => setDeleteButtonToDisplay("")}
                       gap={2}
                     >
-                      <Tag
-                        size={"sm"}
-                        bgColor={requete.couleur}
-                        borderRadius={"100%"}
-                      />
-                      <Flex direction="row">{requete.nom}</Flex>
+                      <Tag size={"sm"} bgColor={requete.couleur} borderRadius={"100%"} />
+                      <Flex direction="row" whiteSpace={"nowrap"}>
+                        {requete.nom}
+                      </Flex>
                       {deleteButtonToDisplay === requete.id && (
-                        <DeleteRequeteEnregistreeButton
-                          requeteEnregistree={requete}
-                        />
+                        <DeleteRequeteEnregistreeButton requeteEnregistree={requete} />
                       )}
                     </MenuItem>
                   ))}
@@ -187,11 +171,7 @@ export const FiltersSection = ({
                       }}
                       gap={2}
                     >
-                      <Tag
-                        size={"sm"}
-                        bgColor={requeteEnregistree.couleur}
-                        borderRadius={"100%"}
-                      />
+                      <Tag size={"sm"} bgColor={requeteEnregistree.couleur} borderRadius={"100%"} />
                       <Flex direction="row">{requeteEnregistree.nom}</Flex>
                     </MenuItem>
                   ))}
@@ -204,12 +184,13 @@ export const FiltersSection = ({
           placeholder="Toutes les régions"
           size="md"
           variant="newInput"
-          width={"15rem"}
+          width="14rem"
           onChange={(e) => {
             handleFilters("codeRegion", [e.target.value]);
           }}
           value={searchParams.filters?.codeRegion?.[0] ?? ""}
         >
+          {/* @ts-expect-error TODO */}
           {filtersList?.regions.map((item) => (
             <option key={item.value} value={item.value}>
               {item.label}
@@ -220,7 +201,7 @@ export const FiltersSection = ({
           disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width={"15rem"}
+          width="14rem"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={filtersList?.academies}
           value={searchParams.filters?.codeAcademie ?? []}
@@ -231,7 +212,7 @@ export const FiltersSection = ({
           disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width={"15rem"}
+          width="14rem"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={filtersList?.departements}
           value={searchParams.filters?.codeDepartement ?? []}
@@ -242,7 +223,7 @@ export const FiltersSection = ({
           disabled={!searchParams.filters?.codeRegion}
           size="md"
           variant="newInput"
-          width="15rem"
+          width="14rem"
           onChange={(selected) => handleFilters("commune", selected)}
           options={filtersList?.communes}
           value={searchParams.filters?.commune ?? []}

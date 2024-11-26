@@ -10,8 +10,7 @@ describe("getRentreeScolaire", () => {
     it("Should work for any millesime between 2020 and 2050", () => {
       for (let i = 2020; i < 2050; i++) {
         const rentreeScolaire = `${i}`;
-        const rentreeScolairePrecedente =
-          getRentreeScolairePrecedente(rentreeScolaire);
+        const rentreeScolairePrecedente = getRentreeScolairePrecedente(rentreeScolaire);
         expect(rentreeScolairePrecedente).toEqual(`${i - 1}`);
       }
     });
@@ -21,8 +20,7 @@ describe("getRentreeScolaire", () => {
     it("Should work for any rentree scolaire between 2020 and 2050", () => {
       for (let i = 2020; i < 2050; i++) {
         const rentreeScolaire = `${i}`;
-        const rentreeScolaireSuivante =
-          getRentreeScolaireSuivante(rentreeScolaire);
+        const rentreeScolaireSuivante = getRentreeScolaireSuivante(rentreeScolaire);
         expect(rentreeScolaireSuivante).toEqual(`${i + 1}`);
       }
     });

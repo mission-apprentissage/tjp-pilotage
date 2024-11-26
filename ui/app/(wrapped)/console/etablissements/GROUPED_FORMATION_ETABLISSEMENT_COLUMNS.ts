@@ -1,5 +1,6 @@
-import { themeDefinition } from "../../../../theme/theme";
-import {
+import { themeDefinition } from "@/theme/theme";
+
+import type {
   FORMATION_ETABLISSEMENT_COLUMNS,
   FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
   FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL,
@@ -80,12 +81,9 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",
       tauxDevenirFavorable: "Taux de devenir favorable régional",
-      tauxInsertionEtablissement:
-        "Taux d'emploi 6 mois de la formation dans l'établissement",
-      tauxPoursuiteEtablissement:
-        "Taux de poursuite d'études de la formation dans l'établissement",
-      tauxDevenirFavorableEtablissement:
-        "Taux de devenir favorable de la formation dans l'établissement",
+      tauxInsertionEtablissement: "Taux d'emploi 6 mois de la formation dans l'établissement",
+      tauxPoursuiteEtablissement: "Taux de poursuite d'études de la formation dans l'établissement",
+      tauxDevenirFavorableEtablissement: "Taux de devenir favorable de la formation dans l'établissement",
       valeurAjoutee: "Valeur ajoutée",
     },
   },
@@ -166,12 +164,9 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",
       tauxDevenirFavorable: "Taux de devenir favorable régional",
-      tauxInsertionEtablissement:
-        "Taux d'emploi 6 mois de la formation dans l'établissement",
-      tauxPoursuiteEtablissement:
-        "Taux de poursuite d'études de la formation dans l'établissement",
-      tauxDevenirFavorableEtablissement:
-        "Taux de devenir favorable de la formation dans l'établissement",
+      tauxInsertionEtablissement: "Taux d'emploi 6 mois de la formation dans l'établissement",
+      tauxPoursuiteEtablissement: "Taux de poursuite d'études de la formation dans l'établissement",
+      tauxDevenirFavorableEtablissement: "Taux de devenir favorable de la formation dans l'établissement",
       valeurAjoutee: "Valeur ajoutée",
     },
   },
@@ -241,12 +236,9 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT: Record<
       tauxInsertion: "Taux d'emploi 6 mois régional",
       tauxPoursuite: "Taux de poursuite d'études régional",
       tauxDevenirFavorable: "Taux de devenir favorable régional",
-      tauxInsertionEtablissement:
-        "Taux d'emploi 6 mois de la formation dans l'établissement",
-      tauxPoursuiteEtablissement:
-        "Taux de poursuite d'études de la formation dans l'établissement",
-      tauxDevenirFavorableEtablissement:
-        "Taux de devenir favorable de la formation dans l'établissement",
+      tauxInsertionEtablissement: "Taux d'emploi 6 mois de la formation dans l'établissement",
+      tauxPoursuiteEtablissement: "Taux de poursuite d'études de la formation dans l'établissement",
+      tauxDevenirFavorableEtablissement: "Taux de devenir favorable de la formation dans l'établissement",
       valeurAjoutee: "Valeur ajoutée",
     },
   },

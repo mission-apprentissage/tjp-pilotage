@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { CSSObjectWithLabel } from "react-select";
+import type { CSSObjectWithLabel } from "react-select";
 import AsyncCreatableSelect from "react-select/async-creatable";
 
 import { client } from "@/api.client";
@@ -15,9 +15,7 @@ export const FiliereAutoCompleteInput = ({
   defaultValue?: { value: string; label?: string };
   active?: boolean;
   inError: boolean;
-  onChange: (
-    value?: (typeof client.infer)["[GET]/filiere/search/:search"][number]
-  ) => void;
+  onChange: (value?: (typeof client.infer)["[GET]/filiere/search/:search"][number]) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -53,15 +51,11 @@ export const FiliereAutoCompleteInput = ({
         } as (typeof client.infer)["[GET]/filiere/search/:search"][number])
       }
       loadOptions={(inputValue: string) =>
-        client
-          .ref("[GET]/filiere/search/:search")
-          .query({ params: { search: inputValue } })
+        client.ref("[GET]/filiere/search/:search").query({ params: { search: inputValue } })
       }
       defaultOptions
       isClearable={true}
-      noOptionsMessage={({ inputValue }) =>
-        inputValue ? "Pas de filière correspondante" : "Commencez à écrire..."
-      }
+      noOptionsMessage={({ inputValue }) => (inputValue ? "Pas de filière correspondante" : "Commencez à écrire...")}
       placeholder="Filière"
       isDisabled={active === false}
       formatCreateLabel={(inputValue) => `Créer la filière "${inputValue}"`}

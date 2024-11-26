@@ -55,8 +55,7 @@ export const getDataForPanoramaDepartementSchema = {
   },
 };
 
-export interface Filters
-  extends z.infer<typeof getDataForPanoramaDepartementSchema.querystring> {
+export interface Filters extends z.infer<typeof getDataForPanoramaDepartementSchema.querystring> {
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }

@@ -1,25 +1,24 @@
 import * as Sentry from "@sentry/node";
-import cookie from "cookie";
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 
-import { config } from "../../../../../config/config";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../model/User";
+import config from "@/config";
+import type { RequestUser } from "@/modules/core/model/User";
+import { cleanNull } from "@/utils/noNull";
+
 import { findUserQuery } from "./findUserQuery.dep";
 
 export const [extractUserInRequest, extractUserInRequestFactory] = inject(
   { jwtSecret: config.auth.authJwtSecret, findUserQuery },
   (deps) => async (request: FastifyRequest) => {
-    const token = cookie.parse(request.headers.cookie ?? "").Authorization;
+    console.log(request.cookies);
+    const token = request.cookies["Authorization"];
     if (!token) return;
     try {
-      const decoded = jwt.verify(token, deps.jwtSecret) as
-        | { email: string }
-        | undefined;
+      const decoded = jwt.verify(token, deps.jwtSecret) as { email: string } | undefined;
       if (!decoded) return;
-
       const user = await deps.findUserQuery({ email: decoded.email });
 
       if (user?.id) {
@@ -29,7 +28,7 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
 
       if (!user?.enabled) return;
       request.user = cleanNull(user) as RequestUser;
-    } catch (e) {
+    } catch (_e) {
       return;
     }
   }
@@ -38,6 +37,7 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
 declare module "fastify" {
   interface FastifyRequest {
     user?: RequestUser;
+    cookies: { [cookieName: string]: string | undefined };
   }
 }
 

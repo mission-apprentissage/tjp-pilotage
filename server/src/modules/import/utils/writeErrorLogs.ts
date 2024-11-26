@@ -1,10 +1,8 @@
 import fs from "fs/promises";
-import { ZodError } from "zod";
+import type { ZodError } from "zod";
 
-import {
-  ImportFileError,
-  ImportFileErrorType,
-} from "../usecases/importRawFile/importRawFile.usecase";
+import type { ImportFileError } from "@/modules/import/usecases/importRawFile/importRawFile.usecase";
+import { ImportFileErrorType } from "@/modules/import/usecases/importRawFile/importRawFile.usecase";
 
 const COLUMNS = ["path", "type", "line", "field", "message"];
 const DELIMITER = ";";
@@ -28,23 +26,11 @@ export const writeErrorLogs = async ({
       const rows: string[][] = [];
       switch (error.type) {
         case ImportFileErrorType.FILE:
-          rows.push([
-            error.path,
-            ImportFileErrorType.FILE,
-            "",
-            "",
-            error.error.message,
-          ]);
+          rows.push([error.path, ImportFileErrorType.FILE, "", "", error.error.message]);
           break;
         case ImportFileErrorType.LINE:
           for (const issue of zodError.issues) {
-            rows.push([
-              error.path,
-              ImportFileErrorType.LINE,
-              "" + error.line,
-              issue.path.join(","),
-              issue.message,
-            ]);
+            rows.push([error.path, ImportFileErrorType.LINE, "" + error.line, issue.path.join(","), issue.message]);
           }
           break;
       }

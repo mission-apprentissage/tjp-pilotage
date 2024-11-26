@@ -1,10 +1,10 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
-import { getDateRentreeScolaire } from "../../services/getRentreeScolaire";
+import { getKbdClient } from "@/db/db";
+import { getDateRentreeScolaire } from "@/modules/data/services/getRentreeScolaire";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
 export const searchEtablissementQuery = async ({
   search,
@@ -17,33 +17,19 @@ export const searchEtablissementQuery = async ({
 }) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const etablissements = await kdb
+  const etablissements = await getKbdClient()
     .selectFrom("dataEtablissement")
-    .select([
-      "dataEtablissement.uai",
-      "dataEtablissement.libelleEtablissement",
-      "dataEtablissement.commune",
-    ])
+    .select(["dataEtablissement.uai", "dataEtablissement.libelleEtablissement", "dataEtablissement.commune"])
     .distinct()
     .where((eb) =>
       eb.and([
-        eb("dataEtablissement.typeUai", "in", [
-          "CLG",
-          "EREA",
-          "EXP",
-          "LP",
-          "LYC",
-          "SEP",
-          "TSGE",
-        ]),
+        eb("dataEtablissement.typeUai", "in", ["CLG", "EREA", "EXP", "LP", "LYC", "SEP", "TSGE"]),
         eb.or([
           eb("dataEtablissement.uai", "ilike", `${search}%`),
           eb.and(
             search_array.map((search_word) =>
               eb(
-                sql`concat(unaccent(${eb.ref(
-                  "dataEtablissement.libelleEtablissement"
-                )}),
+                sql`concat(unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
                   ' ',${eb.ref("dataEtablissement.commune")})`,
                 "ilike",
                 `%${search_word}%`
@@ -66,19 +52,11 @@ export const searchEtablissementQuery = async ({
             .on((on) =>
               on.or([
                 on("etablissement.dateFermeture", "is", null),
-                on(
-                  "etablissement.dateFermeture",
-                  ">",
-                  sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`
-                ),
+                on("etablissement.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
               ])
             )
         )
-        .innerJoin(
-          "formationEtablissement",
-          "formationEtablissement.uai",
-          "etablissement.uai"
-        );
+        .innerJoin("formationEtablissement", "formationEtablissement.uai", "etablissement.uai");
     })
     .limit(20)
     .execute();

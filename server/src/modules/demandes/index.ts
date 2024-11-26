@@ -1,4 +1,5 @@
-import { Server } from "../../server";
+import type { Server } from "@/server/server";
+
 import { countDemandesRoute } from "./usecases/countDemandes/countDemandes.route";
 import { deleteDemandeRoute } from "./usecases/deleteDemande/deleteDemande.route";
 import { deleteSuiviRoute } from "./usecases/deleteSuivi/deleteSuivi.route";

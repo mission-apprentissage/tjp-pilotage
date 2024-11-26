@@ -1,8 +1,4 @@
-import { kdb } from "../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const findMillesimesSortie = async () =>
-  await kdb
-    .selectFrom("indicateurSortie")
-    .distinct()
-    .select(["millesimeSortie"])
-    .execute();
+  await getKbdClient().selectFrom("indicateurSortie").distinct().select(["millesimeSortie"]).execute();

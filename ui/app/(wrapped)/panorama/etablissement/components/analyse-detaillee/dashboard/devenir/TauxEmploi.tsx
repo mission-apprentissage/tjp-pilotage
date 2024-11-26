@@ -1,27 +1,22 @@
 import { Badge, Box, Text } from "@chakra-ui/react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
+import { VerticalBarChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/VerticalBarChart";
+import {
+  formatMillesime,
+  formatTaux,
+} from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
+import type { ChiffresIJOffre } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
+import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
-import { DashboardCard } from "../../../DashboardCard";
-import { CounterChart } from "../../components/CounterChart";
-import { VerticalBarChart } from "../../components/VerticalBarChart";
-import { formatMillesime, formatTaux } from "../../formatData";
-import { ChiffresIJOffre } from "../../types";
-
-export const TauxEmploi = ({
-  chiffresIJOffre,
-}: {
-  chiffresIJOffre?: ChiffresIJOffre;
-}) => {
+export const TauxEmploi = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOffre }) => {
   const { openGlossaire } = useGlossaireContext();
   const checkDataAvailability = (): boolean => {
     if (chiffresIJOffre) {
-      return (
-        Object.values(chiffresIJOffre).findIndex(
-          (value) => value.tauxInsertion
-        ) !== -1
-      );
+      // @ts-expect-error TODO
+      return Object.values(chiffresIJOffre).findIndex((value) => value.tauxInsertion) !== -1;
     }
     return false;
   };
@@ -46,10 +41,7 @@ export const TauxEmploi = ({
           ml="1"
           label={
             <Box>
-              <Text>
-                La part de ceux qui sont en emploi 6 mois après leur sortie
-                d’étude.
-              </Text>
+              <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
               <Text>Cliquez pour plus d'infos.</Text>
             </Box>
           }
@@ -63,10 +55,7 @@ export const TauxEmploi = ({
       }
     >
       {checkDataAvailability() ? (
-        <VerticalBarChart
-          title="Taux d'emploi à 6 mois"
-          data={getVerticalBarChartData()}
-        />
+        <VerticalBarChart title="Taux d'emploi à 6 mois" data={getVerticalBarChartData()} />
       ) : (
         <CounterChart />
       )}

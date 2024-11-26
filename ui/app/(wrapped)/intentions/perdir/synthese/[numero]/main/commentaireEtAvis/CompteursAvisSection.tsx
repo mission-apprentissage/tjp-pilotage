@@ -1,30 +1,19 @@
 import { chakra, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
-import { AvisStatutType } from "shared/enum/avisStatutEnum";
+import type { AvisStatutType } from "shared/enum/avisStatutEnum";
 
-import { client } from "@/api.client";
-
-import { AvisStatutTag } from "../../../../components/AvisStatutTag";
+import type { client } from "@/api.client";
+import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
 
 export const CompteursAvisSection = chakra(
-  ({
-    intention,
-  }: {
-    intention: (typeof client.infer)["[GET]/intention/:numero"];
-  }) => {
+  ({ intention }: { intention: (typeof client.infer)["[GET]/intention/:numero"] }) => {
     const getNbAvisStatutAvis = (statut: AvisStatutType) => {
-      return (
-        intention.avis?.filter((avis) => avis.statutAvis === statut).length ?? 0
-      );
+      // @ts-expect-error TODO
+      return intention.avis?.filter((avis) => avis.statutAvis === statut).length ?? 0;
     };
 
     return (
       <Flex direction={"row"}>
-        <Grid
-          templateColumns={"repeat(3, 1fr)"}
-          gap={6}
-          flex={1}
-          width={"100%"}
-        >
+        <Grid templateColumns={"repeat(3, 1fr)"} gap={6} flex={1} width={"100%"}>
           <GridItem>
             <Flex
               direction={"column"}

@@ -4,17 +4,15 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { CURRENT_RENTREE } from "shared";
 
-import { Callout } from "../../../../../../../components/Callout";
-import {
+import type {
   ChiffresEntreeOffre,
   ChiffresEntreeOffreRentree,
   ChiffresIJOffre,
   Formation,
-} from "../types";
+} from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
+import { Callout } from "@/components/Callout";
 
-const isAnyDataMissingOfChiffresEntreeOffre = (
-  chiffresEntreeOffre?: ChiffresEntreeOffreRentree
-) =>
+const isAnyDataMissingOfChiffresEntreeOffre = (chiffresEntreeOffre?: ChiffresEntreeOffreRentree) =>
   !chiffresEntreeOffre ||
   typeof chiffresEntreeOffre.premiersVoeux === "undefined" ||
   typeof chiffresEntreeOffre.tauxPression === "undefined" ||
@@ -25,16 +23,9 @@ const isAnyDataMissingOfChiffresEntreeOffre = (
   typeof chiffresEntreeOffre.tauxPressionNational === "undefined" ||
   typeof chiffresEntreeOffre.tauxRemplissage === "undefined";
 
-const isAnyDataMissingOfChiffresIJ = (
-  formation?: Formation,
-  chiffresIJOffre?: ChiffresIJOffre
-) => {
+const isAnyDataMissingOfChiffresIJ = (formation?: Formation, chiffresIJOffre?: ChiffresIJOffre) => {
   if (!chiffresIJOffre) {
-    if (
-      formation &&
-      (formation.typeFamille === "2nde_commune" ||
-        formation.typeFamille === "1ere_commune")
-    ) {
+    if (formation && (formation.typeFamille === "2nde_commune" || formation.typeFamille === "1ere_commune")) {
       return false;
     }
     return true;
@@ -42,8 +33,11 @@ const isAnyDataMissingOfChiffresIJ = (
 
   return Object.values(chiffresIJOffre).reduce((acc, value) => {
     if (
+      // @ts-expect-error TODO
       typeof value.tauxInsertion === "undefined" ||
+      // @ts-expect-error TODO
       typeof value.tauxPoursuite === "undefined" ||
+      // @ts-expect-error TODO
       typeof value.tauxDevenirFavorable === "undefined"
     ) {
       return true;
@@ -52,10 +46,7 @@ const isAnyDataMissingOfChiffresIJ = (
   }, false);
 };
 
-const isAnyDataMissingOfEffectifs = (
-  formation?: Formation,
-  chiffresEntreeOffre?: ChiffresEntreeOffreRentree
-) => {
+const isAnyDataMissingOfEffectifs = (formation?: Formation, chiffresEntreeOffre?: ChiffresEntreeOffreRentree) => {
   if (!formation || !chiffresEntreeOffre) {
     return true;
   }
@@ -87,9 +78,7 @@ const isAnyDataMissingOfEffectifs = (
     return typeof chiffresEntreeOffre.effectifAnnee1 === "undefined";
   }
 
-  if (
-    Math.abs(chiffresEntreeOffre.dateOuverture - Number(CURRENT_RENTREE)) === 1
-  ) {
+  if (Math.abs(chiffresEntreeOffre.dateOuverture - Number(CURRENT_RENTREE)) === 1) {
     if ((chiffresEntreeOffre.effectifs ?? []).length >= 2) {
       return (
         typeof chiffresEntreeOffre.effectifAnnee2 === "undefined" &&
@@ -99,7 +88,7 @@ const isAnyDataMissingOfEffectifs = (
       return typeof chiffresEntreeOffre.effectifAnnee1 === "undefined";
     }
   }
-
+  // @ts-expect-error TODO
   return chiffresEntreeOffre.effectifs?.some((f) => f === null);
 };
 
@@ -117,13 +106,8 @@ export const InformationDonneeIncompletes = ({
   const isAnyDataMissing = useMemo(
     () =>
       isAnyDataMissingOfChiffresIJ(formation, chiffresIJOffre) ||
-      isAnyDataMissingOfChiffresEntreeOffre(
-        chiffresEntreeOffre?.[CURRENT_RENTREE]
-      ) ||
-      isAnyDataMissingOfEffectifs(
-        formation,
-        chiffresEntreeOffre?.[CURRENT_RENTREE]
-      ),
+      isAnyDataMissingOfChiffresEntreeOffre(chiffresEntreeOffre?.[CURRENT_RENTREE]) ||
+      isAnyDataMissingOfEffectifs(formation, chiffresEntreeOffre?.[CURRENT_RENTREE]),
     [formation, chiffresIJOffre, chiffresEntreeOffre]
   );
 
@@ -135,10 +119,7 @@ export const InformationDonneeIncompletes = ({
     <Callout
       body={
         <Flex gap={1}>
-          <Text>
-            L'établissement ne dispose pas de certaines données pour cette
-            formation
-          </Text>
+          <Text>L'établissement ne dispose pas de certaines données pour cette formation</Text>
           <Link
             href="https://aide.orion.inserjeunes.beta.gouv.fr/fr/article/pourquoi-certaines-donnees-sont-indisponibles-dans-orion-puqea5/"
             target="_blank"
@@ -151,12 +132,7 @@ export const InformationDonneeIncompletes = ({
         <Link href={`/panorama/region/${codeRegion}`} passHref target="_blank">
           <Button color="bluefrance.113">
             Consulter les données régionales de la formation
-            <Icon
-              icon="ri:arrow-right-line"
-              width={"16px"}
-              height={"16px"}
-              style={{ marginLeft: "8px" }}
-            />
+            <Icon icon="ri:arrow-right-line" width={"16px"} height={"16px"} style={{ marginLeft: "8px" }} />
           </Button>
         </Link>
       }

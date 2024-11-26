@@ -1,10 +1,10 @@
 import { createRoute } from "@http-wizard/core";
-import cookie from "cookie";
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 
-import { logger } from "../../../../logger";
-import { Server } from "../../../../server";
-import { getDneUrl } from "../getDneUrl/getDneUrl.usecase";
+import { getDneUrl } from "@/modules/core/usecases/getDneUrl/getDneUrl.usecase";
+import type { Server } from "@/server/server";
+import logger from "@/services/logger";
+
 import { ERROR_TYPE } from "./const";
 import { redirectDneSchema } from "./redirectDne.schema";
 import { redirectDne } from "./redirectDne.usecase";
@@ -20,14 +20,9 @@ export const redirectDneRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      handler: async (
-        request: FastifyRequest<{ Querystring: RedirectDNEQueryString }>,
-        response
-      ) => {
+      handler: async (request: FastifyRequest<{ Querystring: RedirectDNEQueryString }>, response) => {
         try {
-          const codeVerifierJwt = cookie.parse(request.headers.cookie ?? "")[
-            "dne-code-verifier"
-          ];
+          const codeVerifierJwt = request.cookies["dne-code-verifier"];
 
           /**
            * Lors d'une séquence d'authentification initiée par le portail Orion,
@@ -41,46 +36,38 @@ export const redirectDneRoute = (server: Server) => {
            * sur cette même url, avec cette fois-ci le code en paramètre d'url.
            */
           if (request.query.code === undefined) {
-            const { url, codeVerifierJwt: tmpCodeVerifierJwt } =
-              await getDneUrl();
-            const cookies = cookie.serialize(
-              "dne-code-verifier",
-              tmpCodeVerifierJwt,
-              {
-                maxAge: 240 * 60 * 1000,
-                httpOnly: true,
-                sameSite: "lax",
-                secure: true,
-                path: "/",
-              }
-            );
+            const { url, codeVerifierJwt: tmpCodeVerifierJwt } = await getDneUrl();
 
             /**
              * Return est obligatoire ici pour interrompre l'exécution de la fonction
              * et empêcher la séquence d'authentification d'être exécutée en entière.
              */
             return response
-              .header("set-cookie", cookies)
-              .redirect(302, url)
+              .setCookie("dne-code-verifier", tmpCodeVerifierJwt, {
+                maxAge: 240 * 60 * 1000,
+                httpOnly: true,
+                sameSite: "lax",
+                secure: true,
+                path: "/",
+              })
+              .redirect(url, 302)
               .send();
           }
 
           const { token, user } = await redirectDne({
-            codeVerifierJwt,
+            codeVerifierJwt: codeVerifierJwt as string,
             url: request.url,
           });
 
-          const cookies = cookie.serialize("Authorization", token, {
-            maxAge: 30 * 24 * 3600000,
-            httpOnly: true,
-            sameSite: "lax",
-            secure: true,
-            path: "/",
-          });
-
           response
-            .header("set-cookie", cookies)
-            .redirect(302, `/panorama/etablissement/${user.uais[0]}`)
+            .setCookie("Authorization", token, {
+              maxAge: 30 * 24 * 3600000,
+              httpOnly: true,
+              sameSite: "lax",
+              secure: true,
+              path: "/",
+            })
+            .redirect(`/panorama/etablissement/${user.uais[0]}`, 302)
             .send();
         } catch (error) {
           logger.error("echec dne redirect", { error: error as Error });

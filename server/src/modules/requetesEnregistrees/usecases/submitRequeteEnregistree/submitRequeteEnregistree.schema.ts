@@ -43,10 +43,7 @@ export const submitRequeteEnregistreeSchema = {
     page: PageRequeteEnregistreeZodType,
     nom: z.string(),
     couleur: z.string(),
-    filtres: z.union([
-      FiltresFormationSchema,
-      FiltresFormationEtablissementSchema,
-    ]),
+    filtres: z.union([FiltresFormationSchema, FiltresFormationEtablissementSchema]),
   }),
   response: {
     200: z.object({

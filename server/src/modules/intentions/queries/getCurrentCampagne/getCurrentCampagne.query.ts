@@ -1,10 +1,10 @@
 import Boom from "@hapi/boom";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
-import { kdb } from "../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 const getLatestCampagne = async () =>
-  kdb
+  getKbdClient()
     .selectFrom("campagne")
     .selectAll()
     .orderBy("annee", "desc")
@@ -18,12 +18,12 @@ const getLatestCampagne = async () =>
     });
 
 export const getCurrentCampagneQuery = async () => {
-  return kdb
+  return getKbdClient()
     .selectFrom("campagne")
     .selectAll()
     .where("statut", "=", CampagneStatutEnum["en cours"])
     .executeTakeFirstOrThrow()
-    .catch(() => {
+    .catch(async () => {
       // Si aucune campagne en cours, on renvoie la dernière campagne
       return getLatestCampagne();
     });

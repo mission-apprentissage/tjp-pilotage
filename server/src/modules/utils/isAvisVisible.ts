@@ -1,8 +1,9 @@
-import { ExpressionBuilder, sql } from "kysely";
+import type { ExpressionBuilder } from "kysely";
+import { sql } from "kysely";
 import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 
-import { DB } from "../../db/db";
-import { RequestUser } from "../core/model/User";
+import type { DB } from "@/db/db";
+import type { RequestUser } from "@/modules/core/model/User";
 
 /**
  * Un avis est visible :

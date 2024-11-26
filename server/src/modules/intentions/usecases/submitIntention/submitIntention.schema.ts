@@ -68,14 +68,10 @@ export const submitIntentionSchema = {
       achatEquipementDescription: z.string().optional(),
       // Internat et restauration
       augmentationCapaciteAccueilHebergement: z.boolean().optional(),
-      augmentationCapaciteAccueilHebergementPlaces: z.coerce
-        .number()
-        .optional(),
+      augmentationCapaciteAccueilHebergementPlaces: z.coerce.number().optional(),
       augmentationCapaciteAccueilHebergementPrecisions: z.string().optional(),
       augmentationCapaciteAccueilRestauration: z.boolean().optional(),
-      augmentationCapaciteAccueilRestaurationPlaces: z.coerce
-        .number()
-        .optional(),
+      augmentationCapaciteAccueilRestaurationPlaces: z.coerce.number().optional(),
       augmentationCapaciteAccueilRestaurationPrecisions: z.string().optional(),
       // Observations / commentaires
       commentaire: z

@@ -27,9 +27,10 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { format } from "date-fns";
 import NextLink from "next/link";
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -37,7 +38,7 @@ import { client } from "@/api.client";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { FilterTags } from "./FilterTags";
-import { Filters, FiltersList, TypePage } from "./types";
+import type { Filters, FiltersList, TypePage } from "./types";
 
 const COULEURS_DISPONIBLES = [
   {
@@ -72,6 +73,7 @@ export const CreateRequeteEnregistreeModal = ({
   onClose,
   searchParams,
   filtersList,
+  altText,
 }: {
   page: TypePage;
   isOpen: boolean;
@@ -81,6 +83,7 @@ export const CreateRequeteEnregistreeModal = ({
     search?: string;
   };
   filtersList?: FiltersList;
+  altText?: ReactNode;
 }) => {
   const toast = useToast();
   const { auth } = useAuth();
@@ -91,19 +94,14 @@ export const CreateRequeteEnregistreeModal = ({
     formState: { errors },
     reset,
     handleSubmit,
-  } = useForm<
-    (typeof client.inferArgs)["[POST]/requete/enregistrement"]["body"]
-  >({
+  } = useForm<(typeof client.inferArgs)["[POST]/requete/enregistrement"]["body"]>({
     defaultValues: {
       couleur: "blueecume.850",
     },
     shouldUseNativeValidation: false,
   });
 
-  useEffect(
-    () => reset(undefined, { keepDefaultValues: true }),
-    [isOpen, reset]
-  );
+  useEffect(() => reset(undefined, { keepDefaultValues: true }), [isOpen, reset]);
 
   const queryClient = useQueryClient();
 
@@ -164,19 +162,13 @@ export const CreateRequeteEnregistreeModal = ({
               });
             })}
           >
-            <ModalHeader>Enregistrer la requête</ModalHeader>
+            <ModalHeader>{altText ? altText : "Enregistrer la requête"}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <FormControl mb="4" isInvalid={!!errors.nom}>
                 <FormLabel>Nom de la requête</FormLabel>
-                <Input
-                  {...register("nom")}
-                  width={350}
-                  placeholder="Saisir un nom court et facilement identifiable"
-                />
-                {!!errors.nom && (
-                  <FormErrorMessage>{errors.nom.message}</FormErrorMessage>
-                )}
+                <Input {...register("nom")} width={350} placeholder="Saisir un nom court et facilement identifiable" />
+                {!!errors.nom && <FormErrorMessage>{errors.nom.message as string}</FormErrorMessage>}
               </FormControl>
               <FormControl mb="4" isInvalid={!!errors.couleur} isRequired>
                 <FormLabel>Badge</FormLabel>
@@ -193,49 +185,24 @@ export const CreateRequeteEnregistreeModal = ({
                     bg={"white"}
                   >
                     <Flex direction="row" gap={2}>
-                      <Tag
-                        size={"sm"}
-                        colorScheme={couleur}
-                        bgColor={couleur}
-                        borderRadius={"100%"}
-                      />
-                      <Text my={"auto"}>
-                        {
-                          COULEURS_DISPONIBLES.find((c) => c.value === couleur)
-                            ?.label
-                        }
-                      </Text>
+                      <Tag size={"sm"} colorScheme={couleur} bgColor={couleur} borderRadius={"100%"} />
+                      <Text my={"auto"}>{COULEURS_DISPONIBLES.find((c) => c.value === couleur)?.label}</Text>
                     </Flex>
                   </MenuButton>
                   <MenuList py={0} borderTopRadius={0}>
                     {COULEURS_DISPONIBLES.map((couleur) => (
-                      <MenuItem
-                        p={2}
-                        key={couleur.value}
-                        onClick={() => setValue("couleur", couleur.value)}
-                        gap={2}
-                      >
-                        <Tag
-                          size={"sm"}
-                          colorScheme={couleur.value}
-                          bgColor={couleur.value}
-                          borderRadius={"100%"}
-                        />
+                      <MenuItem p={2} key={couleur.value} onClick={() => setValue("couleur", couleur.value)} gap={2}>
+                        <Tag size={"sm"} colorScheme={couleur.value} bgColor={couleur.value} borderRadius={"100%"} />
                         <Flex direction="row">{couleur.label}</Flex>
                       </MenuItem>
                     ))}
                   </MenuList>
                 </Menu>
-                {!!errors.couleur && (
-                  <FormErrorMessage>{errors.couleur.message}</FormErrorMessage>
-                )}
+                {!!errors.couleur && <FormErrorMessage>{errors.couleur.message as string}</FormErrorMessage>}
               </FormControl>
               <Flex direction={"column"} gap={3}>
                 <Text fontWeight={700}>Filtres actifs :</Text>
-                <FilterTags
-                  filters={searchParams?.filters}
-                  filtersList={filtersList}
-                />
+                <FilterTags filters={searchParams?.filters} filtersList={filtersList} />
               </Flex>
               {isError && (
                 <Alert status="error">
@@ -246,21 +213,14 @@ export const CreateRequeteEnregistreeModal = ({
                       ))}
                     </UnorderedList>
                   ) : (
-                    <AlertDescription>
-                      Erreur lors de la création
-                    </AlertDescription>
+                    <AlertDescription>Erreur lors de la création</AlertDescription>
                   )}
                 </Alert>
               )}
             </ModalBody>
 
             <ModalFooter>
-              <Button
-                variant="primary"
-                ml={3}
-                isLoading={isLoading}
-                type="submit"
-              >
+              <Button variant="primary" ml={3} isLoading={isLoading} type="submit">
                 Envoyer
               </Button>
             </ModalFooter>
@@ -272,35 +232,24 @@ export const CreateRequeteEnregistreeModal = ({
             <ModalHeader>Enregistrer les filtres actuels en favori</ModalHeader>
             <ModalCloseButton />
             <ModalBody gap={3}>
-              <Text mb={2}>
-                Cette fonctionnalité est réservée aux utilisateurs connectés
-                afin de :
-              </Text>
+              <Text mb={2}>Cette fonctionnalité est réservée aux utilisateurs connectés afin de :</Text>
               <UnorderedList spacing={3} mb={2}>
                 <ListItem ms={2}>
-                  <strong>Sauvegarder une requête</strong> (filtres saisies et
-                  résultats) pour la retrouver facilement
+                  <strong>Sauvegarder une requête</strong> (filtres saisies et résultats) pour la retrouver facilement
                 </ListItem>
                 <ListItem ms={2}>
-                  <strong>Exporter les données</strong> spécifiques à une
-                  requête et non toutes les données
+                  <strong>Exporter les données</strong> spécifiques à une requête et non toutes les données
                 </ListItem>
               </UnorderedList>
               <Text>
-                Connectez-vous pour accéder à la fonctionnalité, sinon vous
-                pouvez copier-coller l'URL d'accès direct à votre recherche.
+                Connectez-vous pour accéder à la fonctionnalité, sinon vous pouvez copier-coller l'URL d'accès direct à
+                votre recherche.
               </Text>
             </ModalBody>
 
             <ModalFooter mt={1}>
               <Flex w={"100%"} justifyContent={"space-between"}>
-                <Button
-                  fontWeight="light"
-                  as={NextLink}
-                  color="bluefrance.113"
-                  href="/auth/login"
-                  variant="ghost"
-                >
+                <Button fontWeight="light" as={NextLink} color="bluefrance.113" href="/auth/login" variant="ghost">
                   <LoginIcon mr="2" />
                   Se connecter
                 </Button>

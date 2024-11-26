@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<any>) => {
   await db.schema
@@ -23,10 +23,7 @@ export const up = async (db: Kysely<any>) => {
 };
 
 export const down = async (db: Kysely<any>) => {
-  await db.schema
-    .alterTable("demande")
-    .dropConstraint("demande_compensation_unique_constraint")
-    .execute();
+  await db.schema.alterTable("demande").dropConstraint("demande_compensation_unique_constraint").execute();
 
   await db.schema
     .alterTable("demande")

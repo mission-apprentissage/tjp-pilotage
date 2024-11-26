@@ -1,7 +1,9 @@
-import { FastifyRequestType } from "fastify/types/type-provider";
+import type { FastifyRequestType } from "fastify/types/type-provider";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import { RequestUser } from "../../model/User";
+import type { RequestUser } from "@/modules/core/model/User";
+
 import { updateUserLastSeenAt } from "./updateUserLastSeenAt.dep";
 
 declare module "fastify" {
@@ -20,9 +22,7 @@ const [userLastSeenAt, userLastSeenAtFactory] = inject(
   {
     updateUserLastSeenAt: updateUserLastSeenAt,
   },
-  (deps: {
-    updateUserLastSeenAt: (props: { email: string }) => Promise<void>;
-  }) =>
+  (deps: { updateUserLastSeenAt: (props: { email: string }) => Promise<void> }) =>
     async (request: FastifyRequestType) => {
       if (!request.user) return;
       await deps.updateUserLastSeenAt({ email: request.user.email });

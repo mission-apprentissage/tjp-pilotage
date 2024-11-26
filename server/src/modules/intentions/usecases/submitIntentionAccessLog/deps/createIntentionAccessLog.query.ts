@@ -1,19 +1,16 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../../db/db";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
 
-export const createIntentionAccessLog = async (
-  intentionAccessLog: Insertable<DB["intentionAccessLog"]>
-) => {
-  return await kdb
+export const createIntentionAccessLog = async (intentionAccessLog: Insertable<DB["intentionAccessLog"]>) => {
+  return await getKbdClient()
     .insertInto("intentionAccessLog")
     .values({
       ...intentionAccessLog,
       updatedAt: new Date(),
     })
-    .onConflict((oc) =>
-      oc.columns(["intentionNumero", "userId"]).doUpdateSet(intentionAccessLog)
-    )
+    .onConflict((oc) => oc.columns(["intentionNumero", "userId"]).doUpdateSet(intentionAccessLog))
     .returningAll()
     .executeTakeFirstOrThrow();
 };

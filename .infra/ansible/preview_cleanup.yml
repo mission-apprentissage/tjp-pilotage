@@ -1,0 +1,34 @@
+---
+- hosts: preview
+  become: true
+  gather_facts: false
+  vars_files:
+    - "../vault/vault.yml"
+  tasks:
+    - name: List projects
+      ansible.builtin.find:
+        paths: /opt/app/projects
+        file_type: directory
+      register: projects
+
+    - include_tasks: ./tasks/preview_pr.yml
+      loop: "{{ projects.files | map(attribute='path')| map('basename') | list }}"
+      loop_control:
+        loop_var: pr_number
+      vars:
+        build: false
+        docker_images:
+          - "ij_{{product_name}}_ui"
+          - "ij_{{product_name}}_server"
+
+    - name: Prune Docker Containers
+      shell:
+        cmd: docker container prune --force
+
+    - name: Prune Docker Images
+      shell:
+        cmd: docker image prune --all --force
+
+    - name: Prune Docker Volumes
+      shell:
+        cmd: docker volume prune

@@ -1,0 +1,69 @@
+{
+  "variable": {
+    "PRODUCT_NAME": {},
+    "REPO_NAME": {},
+    "VERSION": {},
+    "CHANNEL": {},
+    "DEPS_ID": {}
+  },
+  "group": {
+    "production": {
+      "targets": ["server", "ui-production"]
+    },
+    "recette1": {
+      "targets": ["server", "ui-recette1"]
+    },
+    "recette2": {
+      "targets": ["server", "ui-recette2"]
+    },
+    "local": {
+      "targets": ["server", "ui-local"]
+    }
+  },
+  "target": {
+    "common": {
+      "args": {
+        "PUBLIC_VERSION": "${VERSION}",
+        "PUBLIC_PRODUCT_NAME": "${PRODUCT_NAME}",
+        "PUBLIC_REPO_NAME": "${REPO_NAME}"
+      },
+      "dockerfile": "Dockerfile",
+      "platforms": ["linux/amd64"],
+      "labels": {
+        "org.opencontainers.image.source": "https://github.com/mission-apprentissage/${REPO_NAME}",
+        "org.opencontainers.image.licenses": "MIT"
+      },
+      "cache-from": ["type=gha,scope=${DEPS_ID}"],
+      "cache-to": ["type=gha,mode=max,scope=${DEPS_ID}"]
+    },
+    "server": {
+      "inherits": ["common"],
+      "tags": [
+        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_server:${VERSION}",
+        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_server:${CHANNEL}"
+      ],
+      "labels": {
+        "org.opencontainers.image.description": "Server"
+      },
+      "target": "server"
+    },
+    "ui": {
+      "inherits": ["common"],
+      "matrix": {
+        "ENV": ["production", "recette1", "recette2", "local"]
+      },
+      "name": "ui-${ENV}",
+      "args": {
+        "PUBLIC_ENV": "${ENV}"
+      },
+      "tags": [
+        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_ui:${VERSION}-${ENV}",
+        "ghcr.io/mission-apprentissage/ij_${PRODUCT_NAME}_ui:${CHANNEL}-${ENV}"
+      ],
+      "labels": {
+        "org.opencontainers.image.description": "Ui"
+      },
+      "target": "ui"
+    }
+  }
+}

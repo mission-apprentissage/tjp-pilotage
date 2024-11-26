@@ -1,24 +1,39 @@
 import "./globals.css";
 
-import { Metadata } from "next";
+import type { AxiosError } from "axios";
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 
-import { client } from "../api.client";
+import { serverClient } from "@/api.client";
+import { getMetadata } from "@/utils/handleMetadata";
+
 import RootLayoutClient from "./layoutClient";
 
-export const metadata: Metadata = {
-  title: "Orion",
-  robots: "none",
-  description: "Pilotage de la carte des formations",
+type Props = {
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
+
+export async function generateMetadata(
+  _: Props,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  state: any
+): Promise<Metadata> {
+  const { title, description } = getMetadata(state);
+
+  return {
+    title,
+    description,
+    robots: "none",
+  };
+}
 
 const fetchAuth = async () => {
   const headersList = Object.fromEntries(headers().entries());
   try {
-    return await client
-      .ref("[GET]/auth/whoAmI")
-      .query({}, { headers: headersList });
+    return await serverClient.ref("[GET]/auth/whoAmI").query({}, { headers: headersList });
   } catch (e) {
+    console.log("nooo", (e as AxiosError).code);
     return undefined;
   }
 };
@@ -26,10 +41,9 @@ const fetchAuth = async () => {
 const fetchChangelog = async () => {
   const headersList = Object.fromEntries(headers().entries());
   try {
-    return await client
-      .ref("[GET]/changelog")
-      .query({}, { headers: headersList });
+    return await serverClient.ref("[GET]/changelog").query({}, { headers: headersList });
   } catch (e) {
+    console.log(e);
     return undefined;
   }
 };
@@ -37,10 +51,9 @@ const fetchChangelog = async () => {
 const fetchGlossaire = async () => {
   const headersList = Object.fromEntries(headers().entries());
   try {
-    return await client
-      .ref("[GET]/glossaire")
-      .query({}, { headers: headersList });
+    return await serverClient.ref("[GET]/glossaire").query({}, { headers: headersList });
   } catch (e) {
+    console.log(e);
     return undefined;
   }
 };
@@ -54,11 +67,7 @@ async function Layout({ children }: LayoutProps) {
   const changelog = await fetchChangelog();
   const glossaire = await fetchGlossaire();
   return (
-    <RootLayoutClient
-      auth={auth || undefined}
-      changelog={changelog || []}
-      glossaire={glossaire || []}
-    >
+    <RootLayoutClient auth={auth || undefined} changelog={changelog || []} glossaire={glossaire || []}>
       {children}
     </RootLayoutClient>
   );

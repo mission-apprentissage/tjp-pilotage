@@ -1,6 +1,7 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
+import type { Server } from "@/server/server";
+
 import { getFormationSchema } from "./getFormations.schema";
 import { getFormations } from "./getFormations.usecase";
 

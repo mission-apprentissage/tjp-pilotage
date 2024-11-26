@@ -1,4 +1,5 @@
-import { Server } from "../../server";
+import type { Server } from "@/server/server";
+
 import { getCorrectionsRoute } from "./usecases/getCorrections/getCorrections.route";
 import { submitCorrectionRoute } from "./usecases/submitCorrection/submitCorrection.route";
 

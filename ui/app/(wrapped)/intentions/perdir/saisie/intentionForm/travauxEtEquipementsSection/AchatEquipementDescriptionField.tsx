@@ -1,14 +1,8 @@
-import {
-  chakra,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Textarea,
-} from "@chakra-ui/react";
+import { chakra, FormControl, FormErrorMessage, FormLabel, Textarea } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "../defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 
 export const AchatEquipementDescriptionField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -30,10 +24,7 @@ export const AchatEquipementDescriptionField = chakra(
     if (!visible) return null;
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.achatEquipementDescription}
-      >
+      <FormControl className={className} isInvalid={!!errors.achatEquipementDescription}>
         <FormLabel>Pouvez-vous précisez le(s)quel(s) ?</FormLabel>
         <Textarea
           variant="grey"
@@ -43,9 +34,7 @@ export const AchatEquipementDescriptionField = chakra(
           })}
         />
         {errors.achatEquipementDescription && (
-          <FormErrorMessage>
-            {errors.achatEquipementDescription.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.achatEquipementDescription.message}</FormErrorMessage>
         )}
       </FormControl>
     );

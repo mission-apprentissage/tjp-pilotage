@@ -1,9 +1,8 @@
 import { Container, Flex, Select } from "@chakra-ui/react";
 
+import type { FiltersPanoramaFormation } from "@/app/(wrapped)/panorama/types";
+import { getStickyNavHeight } from "@/app/(wrapped)/utils/getStickyNavOffset";
 import { Multiselect } from "@/components/Multiselect";
-
-import { getStickyNavHeight } from "../../utils/getStickyNavOffset";
-import { FiltersPanoramaFormation } from "../types";
 
 export const FiltersSection = ({
   handleFilters,

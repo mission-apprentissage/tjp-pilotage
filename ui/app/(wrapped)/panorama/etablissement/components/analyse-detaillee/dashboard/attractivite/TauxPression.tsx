@@ -1,12 +1,11 @@
 import { Box, Text, useToken } from "@chakra-ui/react";
 
+import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
+import { LineChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/LineChart";
+import { formatAbsoluteOrUndefined } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
+import type { ChiffresEntreeOffre } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
+import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
-
-import { DashboardCard } from "../../../DashboardCard";
-import { CounterChart } from "../../components/CounterChart";
-import { LineChart } from "../../components/LineChart";
-import { formatAbsoluteOrUndefined } from "../../formatData";
-import { ChiffresEntreeOffre } from "../../types";
 
 const CODE_NIVEAU_DIPLOME_BTS = "320";
 
@@ -22,9 +21,13 @@ export const TauxPression = ({
       return (
         Object.values(chiffresEntreeOffre).findIndex(
           (value) =>
+            // @ts-expect-error TODO
             value.tauxPression &&
+            // @ts-expect-error TODO
             value.tauxPressionNational &&
+            // @ts-expect-error TODO
             value.tauxPressionRegional &&
+            // @ts-expect-error TODO
             value.tauxPressionDepartemental
         ) !== -1
       );
@@ -40,16 +43,18 @@ export const TauxPression = ({
   } => {
     if (chiffresEntreeOffre) {
       return {
-        établissement: Object.values(chiffresEntreeOffre).map((value) =>
-          formatAbsoluteOrUndefined(value.tauxPression)
-        ),
+        // @ts-expect-error TODO
+        établissement: Object.values(chiffresEntreeOffre).map((value) => formatAbsoluteOrUndefined(value.tauxPression)),
         départemental: Object.values(chiffresEntreeOffre).map((value) =>
+          // @ts-expect-error TODO
           formatAbsoluteOrUndefined(value.tauxPressionDepartemental)
         ),
         régional: Object.values(chiffresEntreeOffre).map((value) =>
+          // @ts-expect-error TODO
           formatAbsoluteOrUndefined(value.tauxPressionRegional)
         ),
         national: Object.values(chiffresEntreeOffre).map((value) =>
+          // @ts-expect-error TODO
           formatAbsoluteOrUndefined(value.tauxPressionNational)
         ),
       };
@@ -88,20 +93,13 @@ export const TauxPression = ({
 
   return (
     <DashboardCard
-      label={
-        codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS
-          ? "Taux de demande"
-          : "Taux de pression"
-      }
+      label={codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? "Taux de demande" : "Taux de pression"}
       tooltip={
         codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? (
           <GlossaireShortcut
             tooltip={
               <Box>
-                <Text>
-                  Le ratio entre le nombre de voeux et la capacité de la
-                  formation dans l'établissement.
-                </Text>
+                <Text>Le ratio entre le nombre de voeux et la capacité de la formation dans l'établissement.</Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>
             }
@@ -112,8 +110,7 @@ export const TauxPression = ({
             tooltip={
               <Box>
                 <Text>
-                  Le ratio entre le nombre de premiers voeux et la capacité de
-                  la formation dans l'établissement.
+                  Le ratio entre le nombre de premiers voeux et la capacité de la formation dans l'établissement.
                 </Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>
@@ -125,11 +122,7 @@ export const TauxPression = ({
     >
       {chiffresEntreeOffre && checkDataAvailability() ? (
         <LineChart
-          title={
-            codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS
-              ? "Taux de demande"
-              : "Taux de pression"
-          }
+          title={codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? "Taux de demande" : "Taux de pression"}
           data={getData()}
           categories={getCategories()}
           colors={colors}

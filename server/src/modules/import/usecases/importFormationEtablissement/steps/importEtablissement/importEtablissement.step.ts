@@ -1,12 +1,15 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { Insertable, Selectable } from "kysely";
+import type { Insertable, Selectable } from "kysely";
 import { DateTime } from "luxon";
 
-import { DB } from "../../../../../../db/db";
-import { LyceesACCELine } from "../../../../fileTypes/LyceesACCELine";
+import type { DB } from "@/db/db";
+import type { LyceesACCELine } from "@/modules/import/fileTypes/LyceesACCELine";
+
 import { createEtablissement } from "./createEtablissement.dep";
 import { findDepartement } from "./findDepartement.dep";
-import { EtablissementGeoloc, findEtablissementGeoloc } from "./findGeoloc.dep";
+import type { EtablissementGeoloc } from "./findGeoloc.dep";
+import { findEtablissementGeoloc } from "./findGeoloc.dep";
 import { findLyceeACCE } from "./findLyceeAcce.dep";
 
 export const [importEtablissement] = inject(
@@ -19,11 +22,8 @@ export const [importEtablissement] = inject(
     async ({ uai }: { uai: string }) => {
       const lyceeACCE = await deps.findLyceeACCE({ uai });
 
-      const codeDepartement = formatCodeDepartement(
-        lyceeACCE?.departement_insee_3
-      );
-      const departement =
-        codeDepartement && (await deps.findDepartement({ codeDepartement }));
+      const codeDepartement = formatCodeDepartement(lyceeACCE?.departement_insee_3);
+      const departement = codeDepartement && (await deps.findDepartement({ codeDepartement }));
 
       const geoloc = await findEtablissementGeoloc({ uai, lyceeACCE });
 
@@ -37,12 +37,11 @@ export const [importEtablissement] = inject(
       await deps.createEtablissement(etablissement);
     }
 );
-
+// @ts-expect-error TODO
 const formatCodeDepartement = (codeInsee: string | undefined) => {
   if (!codeInsee) return;
   if (codeInsee.length === 3) return codeInsee as `${number}${number}${string}`;
-  if (codeInsee.length === 2)
-    return `0${codeInsee}` as `${number}${number}${string}`;
+  if (codeInsee.length === 2) return `0${codeInsee}` as `${number}${number}${string}`;
 };
 
 const toEtablissement = ({
@@ -65,9 +64,7 @@ const toEtablissement = ({
     natureUAI: lyceeACCE?.nature_uai,
     libelleEtablissement: lyceeACCE?.appellation_officielle,
     secteur: lyceeACCE?.secteur_public_prive,
-    dateOuverture:
-      lyceeACCE &&
-      DateTime.fromFormat(lyceeACCE.date_ouverture, "dd/LL/yyyy").toJSDate(),
+    dateOuverture: lyceeACCE && DateTime.fromFormat(lyceeACCE.date_ouverture, "dd/LL/yyyy").toJSDate(),
     dateFermeture: lyceeACCE?.date_fermeture
       ? DateTime.fromFormat(lyceeACCE.date_fermeture, "dd/LL/yyyy").toJSDate()
       : null,

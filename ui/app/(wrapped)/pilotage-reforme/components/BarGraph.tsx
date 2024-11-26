@@ -2,7 +2,7 @@ import { Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
-import { formatNumber } from "../../../../utils/formatUtils";
+import { formatNumber } from "@/utils/formatUtils";
 
 export type BarGraphData = {
   [key: string]: {
@@ -29,18 +29,14 @@ export const BarGraph = function <F extends BarGraphData>({
 
   const getXAxisData = () => {
     if (graphData !== undefined) {
-      return Object.keys(graphData).map(
-        (annee) => graphData[annee].libelleAnnee
-      );
+      return Object.keys(graphData).map((annee) => graphData[annee].libelleAnnee);
     }
     return [];
   };
 
   const getNationalSerieData = () => {
     if (graphData !== undefined) {
-      return Object.keys(graphData).map((annee) =>
-        formatNumber(graphData[annee].nationale)
-      );
+      return Object.keys(graphData).map((annee) => formatNumber(graphData[annee].nationale));
     }
 
     return [];
@@ -48,9 +44,7 @@ export const BarGraph = function <F extends BarGraphData>({
 
   const getFilteredSerieData = () => {
     if (isFiltered && graphData !== undefined) {
-      return Object.keys(graphData).map((annee) =>
-        formatNumber(graphData[annee].filtered)
-      );
+      return Object.keys(graphData).map((annee) => formatNumber(graphData[annee].filtered));
     }
 
     return [];
@@ -152,15 +146,7 @@ export const BarGraph = function <F extends BarGraphData>({
 
   return (
     <Box position="relative" overflow="visible !important">
-      <Box
-        ref={containerRef}
-        position="absolute"
-        right="0"
-        top="0"
-        left="0"
-        bottom="0"
-        height={280}
-      ></Box>
+      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0" height={280}></Box>
     </Box>
   );
 };

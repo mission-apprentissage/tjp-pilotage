@@ -1,10 +1,12 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { passwordRegex } from "shared/utils/passwordRegex";
 
-import { config } from "../../../../../config/config";
-import { hashPassword } from "../../utils/passwordUtils";
+import config from "@/config";
+import { hashPassword } from "@/modules/core/utils/passwordUtils";
+
 import { setPasswordQuery } from "./setPasswordQuery.dep";
 
 export const [resetPassword, resetPasswordFactory] = inject(
@@ -22,25 +24,32 @@ export const [resetPassword, resetPasswordFactory] = inject(
       repeatPassword: string;
       resetPasswordToken: string;
     }) => {
-      if (!resetPasswordToken) throw Boom.unauthorized("missing token");
+      if (!resetPasswordToken)
+        throw Boom.unauthorized(
+          "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début."
+        );
 
       let decryptedToken: { email: string };
       try {
-        decryptedToken = verify(resetPasswordToken, deps.jwtSecret) as {
+        decryptedToken = jwt.verify(resetPasswordToken, deps.jwtSecret) as {
           email: string;
         };
       } catch {
-        throw Boom.unauthorized("wrong token");
+        throw Boom.unauthorized(
+          "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début."
+        );
       }
 
       const email = decryptedToken.email.toLowerCase();
 
       if (password !== repeatPassword) {
-        throw Boom.badRequest("different passwords");
+        throw Boom.badRequest("Mot de passe non identiques.");
       }
 
       if (!password.match(passwordRegex)) {
-        throw Boom.badRequest("password unsafe");
+        throw Boom.badRequest(
+          "Le mot de passe doit contenir entre 8 et 15 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)"
+        );
       }
 
       const hashedPassword = hashPassword(password);

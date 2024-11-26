@@ -2,20 +2,17 @@ import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { isScolaireIndicateurRegionSortie } from "../../../../data/utils/isScolaire";
-import { nbEtablissementFormationRegion } from "../../../../data/utils/nbEtablissementFormationRegion";
-import { selectTauxDevenirFavorable } from "../../../../data/utils/tauxDevenirFavorable";
-import { selectTauxInsertion6mois } from "../../../../data/utils/tauxInsertion6mois";
-import { selectTauxPoursuite } from "../../../../data/utils/tauxPoursuite";
-import { selectTauxPressionParFormationEtParRegionDemande } from "../../../../data/utils/tauxPression";
-import {
-  isDemandeNotDeleted,
-  isDemandeSelectable,
-} from "../../../../utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
-import { Filters } from "../getCorrections.usecase";
+import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/corrections/usecases/getCorrections/getCorrections.usecase";
+import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
+import { nbEtablissementFormationRegion } from "@/modules/data/utils/nbEtablissementFormationRegion";
+import { selectTauxDevenirFavorable } from "@/modules/data/utils/tauxDevenirFavorable";
+import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
+import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
+import { selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
+import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
 export const getCorrectionsQuery = async ({
   statut,
@@ -43,13 +40,9 @@ export const getCorrectionsQuery = async ({
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const corrections = await kdb
+  const corrections = await getKbdClient()
     .selectFrom("correction")
-    .innerJoin(
-      "latestDemandeView as demande",
-      "demande.numero",
-      "correction.intentionNumero"
-    )
+    .innerJoin("latestDemandeView as demande", "demande.numero", "correction.intentionNumero")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
@@ -59,36 +52,16 @@ export const getCorrectionsQuery = async ({
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "demande.codeDispositif"
-    )
+    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "dataFormation.codeNiveauDiplome"
-    )
+    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
+    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .leftJoin("indicateurRegionSortie", (join) =>
       join
         .onRef("indicateurRegionSortie.cfd", "=", "demande.cfd")
         .onRef("indicateurRegionSortie.codeRegion", "=", "demande.codeRegion")
-        .onRef(
-          "indicateurRegionSortie.codeDispositif",
-          "=",
-          "demande.codeDispositif"
-        )
+        .onRef("indicateurRegionSortie.codeDispositif", "=", "demande.codeDispositif")
         .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
         .on(isScolaireIndicateurRegionSortie)
     )
@@ -119,13 +92,9 @@ export const getCorrectionsQuery = async ({
       "academie.libelleAcademie",
       "academie.codeAcademie as codeAcademie",
       "dataFormation.typeFamille",
-      selectTauxInsertion6mois("indicateurRegionSortie").as(
-        "tauxInsertionRegional"
-      ),
+      selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertionRegional"),
       selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteRegional"),
-      selectTauxDevenirFavorable("indicateurRegionSortie").as(
-        "tauxDevenirFavorableRegional"
-      ),
+      selectTauxDevenirFavorable("indicateurRegionSortie").as("tauxDevenirFavorableRegional"),
       selectTauxPressionParFormationEtParRegionDemande({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
@@ -207,17 +176,11 @@ export const getCorrectionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeDepartement)
-        return eb.where(
-          "dataEtablissement.codeDepartement",
-          "in",
-          codeDepartement
-        );
+      if (codeDepartement) return eb.where("dataEtablissement.codeDepartement", "in", codeDepartement);
       return eb;
     })
     .$call((eb) => {
-      if (codeAcademie)
-        return eb.where("dataEtablissement.codeAcademie", "in", codeAcademie);
+      if (codeAcademie) return eb.where("dataEtablissement.codeAcademie", "in", codeAcademie);
       return eb;
     })
     .$call((eb) => {
@@ -226,16 +189,11 @@ export const getCorrectionsQuery = async ({
     })
     .$call((eb) => {
       if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
-        return eb.where(
-          "demande.rentreeScolaire",
-          "=",
-          parseInt(rentreeScolaire)
-        );
+        return eb.where("demande.rentreeScolaire", "=", parseInt(rentreeScolaire));
       return eb;
     })
     .$call((eb) => {
-      if (typeDemande)
-        return eb.where("demande.typeDemande", "in", typeDemande);
+      if (typeDemande) return eb.where("demande.typeDemande", "in", typeDemande);
       return eb;
     })
     .$call((eb) => {
@@ -243,12 +201,7 @@ export const getCorrectionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
+      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
@@ -257,20 +210,11 @@ export const getCorrectionsQuery = async ({
     })
     .$call((eb) => {
       if (coloration)
-        return eb.where(
-          "demande.coloration",
-          "=",
-          coloration === "true" ? sql<true>`true` : sql<false>`false`
-        );
+        return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
       return eb;
     })
     .$call((eb) => {
-      if (amiCMA)
-        return eb.where(
-          "demande.amiCma",
-          "=",
-          amiCMA === "true" ? sql<true>`true` : sql<false>`false`
-        );
+      if (amiCMA) return eb.where("demande.amiCma", "=", amiCMA === "true" ? sql<true>`true` : sql<false>`false`);
       return eb;
     })
     .$call((eb) => {
@@ -300,10 +244,7 @@ export const getCorrectionsQuery = async ({
     })
     .$call((q) => {
       if (!orderBy || !order) return q;
-      return q.orderBy(
-        sql`${sql.ref(orderBy)}`,
-        sql`${sql.raw(order)} NULLS LAST`
-      );
+      return q.orderBy(sql`${sql.ref(orderBy)}`, sql`${sql.raw(order)} NULLS LAST`);
     })
     .where(isDemandeSelectable({ user }))
     .where(isDemandeNotDeleted)
@@ -311,11 +252,7 @@ export const getCorrectionsQuery = async ({
     .limit(limit)
     .execute();
 
-  const campagnes = await kdb
-    .selectFrom("campagne")
-    .selectAll()
-    .orderBy("annee desc")
-    .execute();
+  const campagnes = await getKbdClient().selectFrom("campagne").selectAll().orderBy("annee desc").execute();
 
   return {
     corrections: corrections.map((correction) =>

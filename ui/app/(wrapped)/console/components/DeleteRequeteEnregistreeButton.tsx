@@ -20,7 +20,7 @@ import { useState } from "react";
 
 import { client } from "@/api.client";
 
-import { RequetesEnregistrees } from "./types";
+import type { RequetesEnregistrees } from "./types";
 
 export const DeleteRequeteEnregistreeButton = ({
   requeteEnregistree,
@@ -32,28 +32,26 @@ export const DeleteRequeteEnregistreeButton = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [isDeleting, setIsDeleting] = useState(false);
-  const { mutate: deleteRequeteEnregistree } = client
-    .ref("[DELETE]/requeteEnregistree/:id")
-    .useMutation({
-      onMutate: () => {
-        setIsDeleting(true);
-      },
-      onSuccess: (_body) => {
-        toast({
-          variant: "left-accent",
-          status: "success",
-          title: "La requête favorite a bien été supprimée",
+  const { mutate: deleteRequeteEnregistree } = client.ref("[DELETE]/requeteEnregistree/:id").useMutation({
+    onMutate: () => {
+      setIsDeleting(true);
+    },
+    onSuccess: (_body) => {
+      toast({
+        variant: "left-accent",
+        status: "success",
+        title: "La requête favorite a bien été supprimée",
+      });
+      // Wait until view is updated before invalidating queries
+      setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: ["[GET]/requetes"],
         });
-        // Wait until view is updated before invalidating queries
-        setTimeout(() => {
-          queryClient.invalidateQueries({
-            queryKey: ["[GET]/requetesEnregistrees"],
-          });
-          setIsDeleting(false);
-          onClose();
-        }, 500);
-      },
-    });
+        setIsDeleting(false);
+        onClose();
+      }, 500);
+    },
+  });
 
   return (
     <>
@@ -72,16 +70,13 @@ export const DeleteRequeteEnregistreeButton = ({
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>
-            Confirmer la suppression de la requête favori
-          </ModalHeader>
+          <ModalHeader>Confirmer la suppression de la requête favori</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Alert status="warning" mb={4}>
               <AlertDescription>
-                Vous êtes sur le point de supprimer la requête favori{" "}
-                <Text as="strong">{requeteEnregistree.nom}</Text>. Cette action
-                est irréversible.
+                Vous êtes sur le point de supprimer la requête favori <Text as="strong">{requeteEnregistree.nom}</Text>.
+                Cette action est irréversible.
               </AlertDescription>
             </Alert>
           </ModalBody>

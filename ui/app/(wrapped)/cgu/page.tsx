@@ -6,9 +6,7 @@ export const revalidate = 60;
 
 const fetchData = async () => {
   const notion = new NotionAPI();
-  const recordMap = await notion.getPage(
-    "Conditions-G-n-rales-d-Utilisation-new-fb5e055b1884443f91b23fa73e318d88"
-  );
+  const recordMap = await notion.getPage("Conditions-G-n-rales-d-Utilisation-new-fb5e055b1884443f91b23fa73e318d88");
   return recordMap;
 };
 

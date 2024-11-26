@@ -1,8 +1,8 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { Intention } from "../../../../db/schema";
-import { updateIntentionWithHistory } from "../../repositories/updateIntentionWithHistory.query";
+import type { Intention } from "@/db/schema";
+import { updateIntentionWithHistory } from "@/modules/intentions/repositories/updateIntentionWithHistory.query";
 
 export const deleteIntentionQuery = async ({
   intention,

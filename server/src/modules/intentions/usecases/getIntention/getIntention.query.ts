@@ -1,36 +1,30 @@
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
-import {
-  jsonArrayFrom,
-  jsonBuildObject,
-  jsonObjectFrom,
-} from "kysely/helpers/postgres";
+import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { z } from "zod";
+import type { z } from "zod";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../../core/model/User";
-import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
-import { castAvisStatut } from "../../../utils/castStatutAvis";
-import { castAvisType } from "../../../utils/castTypeAvis";
+import { getKbdClient } from "@/db/db";
+import type { RequestUser } from "@/modules/core/model/User";
+import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { castAvisStatut } from "@/modules/utils/castStatutAvis";
+import { castAvisType } from "@/modules/utils/castTypeAvis";
 import {
   countDifferenceCapaciteApprentissageIntention,
   countDifferenceCapaciteScolaireIntention,
-} from "../../../utils/countCapacite";
-import { isAvisVisible } from "../../../utils/isAvisVisible";
-import {
-  isIntentionNotDeleted,
-  isIntentionSelectable,
-} from "../../../utils/isDemandeSelectable";
-import { getIntentionSchema } from "./getIntention.schema";
+} from "@/modules/utils/countCapacite";
+import { isAvisVisible } from "@/modules/utils/isAvisVisible";
+import { isIntentionNotDeleted, isIntentionSelectable } from "@/modules/utils/isDemandeSelectable";
+import { cleanNull } from "@/utils/noNull";
+
+import type { getIntentionSchema } from "./getIntention.schema";
 
 export interface Filters extends z.infer<typeof getIntentionSchema.params> {
   user: RequestUser;
 }
 
 export const getIntentionQuery = async ({ numero, user }: Filters) => {
-  const intention = await kdb
+  const intention = await getKbdClient()
     .selectFrom("latestDemandeIntentionView as intention")
     .leftJoin("changementStatut", (join) =>
       join
@@ -38,22 +32,12 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         .onRef("changementStatut.statut", "=", "intention.statut")
     )
     .innerJoin("user", "user.id", "intention.createdBy")
-    .innerJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "intention.codeDispositif"
-    )
+    .innerJoin("dispositif", "dispositif.codeDispositif", "intention.codeDispositif")
     .innerJoin("dataFormation", "dataFormation.cfd", "intention.cfd")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "intention.uai")
-    .innerJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
+    .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("suivi", (join) =>
-      join
-        .onRef("suivi.intentionNumero", "=", "intention.numero")
-        .on("userId", "=", user.id)
+      join.onRef("suivi.intentionNumero", "=", "intention.numero").on("userId", "=", user.id)
     )
     .selectAll("intention")
     .select((eb) => [
@@ -63,9 +47,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
           .selectFrom("user")
           .whereRef("user.id", "=", "intention.createdBy")
           .select((eb) => [
-            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
-              "user.lastname"
-            )})`.as("fullname"),
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
           ])
@@ -75,19 +57,13 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
           .selectFrom("user")
           .whereRef("user.id", "=", "intention.updatedBy")
           .select((eb) => [
-            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
-              "user.lastname"
-            )})`.as("fullname"),
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
           ])
       ).as("updatedBy"),
       jsonObjectFrom(
-        eb
-          .selectFrom("campagne")
-          .selectAll("campagne")
-          .whereRef("campagne.id", "=", "intention.campagneId")
-          .limit(1)
+        eb.selectFrom("campagne").selectAll("campagne").whereRef("campagne.id", "=", "intention.campagneId").limit(1)
       ).as("campagne"),
       jsonBuildObject({
         etablissement: jsonObjectFrom(
@@ -100,26 +76,14 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         formation: jsonObjectFrom(
           eb
             .selectFrom("dataFormation")
-            .leftJoin(
-              "niveauDiplome",
-              "niveauDiplome.codeNiveauDiplome",
-              "dataFormation.codeNiveauDiplome"
-            )
+            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
             .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref(
-                "dataFormation.libelleFormation"
-              )},
-              ' (',${ebDataFormation.ref(
-                "niveauDiplome.libelleNiveauDiplome"
-              )},')',
-              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as(
-                "libelleFormation"
+              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
+              ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
+              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
+              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+                "isFCIL"
               ),
-              sql<boolean>`${ebDataFormation(
-                "dataFormation.codeNiveauDiplome",
-                "in",
-                ["381", "481", "581"]
-              )}`.as("isFCIL"),
             ])
             .select((eb) =>
               jsonArrayFrom(
@@ -128,18 +92,10 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
                   .select(["libelleDispositif", "codeDispositif"])
                   .leftJoin("rawData", (join) =>
                     join
-                      .onRef(
-                        sql`"data"->>'DISPOSITIF_FORMATION'`,
-                        "=",
-                        "dispositif.codeDispositif"
-                      )
+                      .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
                       .on("rawData.type", "=", "nMef")
                   )
-                  .whereRef(
-                    sql`"data"->>'FORMATION_DIPLOME'`,
-                    "=",
-                    "dataFormation.cfd"
-                  )
+                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
@@ -148,12 +104,8 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         ),
       }).as("metadata"),
       "changementStatut.commentaire as commentaireStatut",
-      countDifferenceCapaciteScolaireIntention(eb).as(
-        "differenceCapaciteScolaire"
-      ),
-      countDifferenceCapaciteApprentissageIntention(eb).as(
-        "differenceCapaciteApprentissage"
-      ),
+      countDifferenceCapaciteScolaireIntention(eb).as("differenceCapaciteScolaire"),
+      countDifferenceCapaciteApprentissageIntention(eb).as("differenceCapaciteApprentissage"),
       "dispositif.libelleDispositif as libelleDispositif",
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
@@ -174,58 +126,41 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       });
     });
 
-  const changementsStatut = await kdb
+  const changementsStatut = await getKbdClient()
     .selectFrom("changementStatut")
     .innerJoin("user", "user.id", "changementStatut.createdBy")
     .where((w) =>
       w.and([
         w("changementStatut.intentionNumero", "=", numero),
         w("changementStatut.statut", "<>", DemandeStatutEnum["supprimée"]),
-        w(
-          "changementStatut.statutPrecedent",
-          "<>",
-          DemandeStatutEnum["supprimée"]
-        ),
+        w("changementStatut.statutPrecedent", "<>", DemandeStatutEnum["supprimée"]),
       ])
     )
-    .distinctOn([
-      "changementStatut.updatedAt",
-      "changementStatut.statut",
-      "changementStatut.statutPrecedent",
-    ])
+    .distinctOn(["changementStatut.updatedAt", "changementStatut.statut", "changementStatut.statutPrecedent"])
     .orderBy("changementStatut.updatedAt", "desc")
     .selectAll("changementStatut")
     .select((eb) => [
       "user.id as createdBy",
       "user.role as userRole",
-      sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref(
-        "user.lastname"
-      )})`.as("userFullName"),
+      sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref("user.lastname")})`.as("userFullName"),
     ])
     .execute();
 
-  const avis = await kdb
+  const avis = await getKbdClient()
     .selectFrom("avis")
     .innerJoin("user", "user.id", "avis.createdBy")
     .leftJoin("user as updatedByUser", "updatedByUser.id", "avis.updatedBy")
     .where("avis.intentionNumero", "=", numero)
-    .distinctOn([
-      "avis.updatedAt",
-      "avis.typeAvis",
-      "avis.statutAvis",
-      "avis.createdBy",
-    ])
+    .distinctOn(["avis.updatedAt", "avis.typeAvis", "avis.statutAvis", "avis.createdBy"])
     .orderBy("avis.updatedAt", "desc")
     .selectAll("avis")
     .select((eb) => [
       "user.id as createdBy",
       "user.role as userRole",
-      sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref(
-        "user.lastname"
-      )})`.as("userFullName"),
-      sql<string>`CONCAT(${eb.ref("updatedByUser.firstname")},' ',${eb.ref(
-        "updatedByUser.lastname"
-      )})`.as("updatedByFullName"),
+      sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref("user.lastname")})`.as("userFullName"),
+      sql<string>`CONCAT(${eb.ref("updatedByUser.firstname")},' ',${eb.ref("updatedByUser.lastname")})`.as(
+        "updatedByFullName"
+      ),
     ])
     .where(isAvisVisible({ user }))
     .execute();
@@ -248,9 +183,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       changementsStatut: changementsStatut.map((changementStatut) => ({
         ...changementStatut,
         statut: castDemandeStatutWithoutSupprimee(changementStatut.statut),
-        statutPrecedent: castDemandeStatutWithoutSupprimee(
-          changementStatut.statutPrecedent
-        ),
+        statutPrecedent: castDemandeStatutWithoutSupprimee(changementStatut.statutPrecedent),
         updatedAt: changementStatut.updatedAt?.toISOString(),
       })),
       avis: avis.map((avis) => ({

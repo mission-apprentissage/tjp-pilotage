@@ -1,9 +1,7 @@
-import { kdb } from "../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
-export const getCodeRegionFromDepartementQuery = (
-  codeDepartement: string | string[]
-) => {
-  return kdb
+export const getCodeRegionFromDepartementQuery = async (codeDepartement: string | string[]) => {
+  return getKbdClient()
     .selectFrom("departement")
     .where((w) => {
       if (Array.isArray(codeDepartement)) {

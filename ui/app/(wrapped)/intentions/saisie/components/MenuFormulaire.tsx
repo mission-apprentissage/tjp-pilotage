@@ -1,12 +1,8 @@
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { RefObject } from "react";
+import type { RefObject } from "react";
 
-export const MenuFormulaire = ({
-  refs,
-}: {
-  refs: Record<string, RefObject<HTMLDivElement>>;
-}) => {
+export const MenuFormulaire = ({ refs }: { refs: Record<string, RefObject<HTMLDivElement>> }) => {
   const jumpToAnchor = (anchor: string) => {
     refs[anchor]?.current?.scrollIntoView({ behavior: "smooth" });
   };

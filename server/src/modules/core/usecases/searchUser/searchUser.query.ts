@@ -1,9 +1,9 @@
-import { Role } from "shared";
-import { Scope } from "shared/security/permissions";
+import type { Role } from "shared";
+import type { Scope } from "shared/security/permissions";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { getNormalizedSearch } from "../../../utils/normalizeSearch";
+import { getKbdClient } from "@/db/db";
+import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
 export const searchUserQuery = async ({
   search,
@@ -14,7 +14,7 @@ export const searchUserQuery = async ({
   scope: Scope;
   scopeFilter: Array<string>;
 }) => {
-  const users = await kdb
+  const users = await getKbdClient()
     .selectFrom("user")
     .selectAll()
     .where("email", "ilike", `%${getNormalizedSearch(search).trim()}%`)

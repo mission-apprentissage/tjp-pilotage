@@ -9,27 +9,21 @@ interface DashboardProps {
   dashboardId: number;
 }
 
-const Metabase = ({
-  domaineFormation,
-  formation,
-  dashboardId,
-}: DashboardProps) => {
+const Metabase = ({ domaineFormation, formation, dashboardId }: DashboardProps) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const { data } = client
-    .ref("[POST]/generate-metabase-dashboard-url")
-    .useQuery(
-      {
-        body: {
-          dashboard: dashboardId,
-          filters: {
-            domaine_formation: domaineFormation ?? null,
-            formation,
-            rome: null,
-          },
+  const { data } = client.ref("[POST]/generate-metabase-dashboard-url").useQuery(
+    {
+      body: {
+        dashboard: dashboardId,
+        filters: {
+          domaine_formation: domaineFormation ?? null,
+          formation,
+          rome: null,
         },
       },
-      { staleTime: 10000000, keepPreviousData: true }
-    );
+    },
+    { staleTime: 10000000, keepPreviousData: true }
+  );
 
   const onIFrameLoad = () => {
     if (iframeRef?.current) {
@@ -41,14 +35,7 @@ const Metabase = ({
     return <></>;
   }
 
-  return (
-    <iframe
-      ref={iframeRef}
-      src={data?.url}
-      width="100%"
-      onLoad={onIFrameLoad}
-    />
-  );
+  return <iframe ref={iframeRef} src={data?.url} width="100%" onLoad={onIFrameLoad} />;
 };
 
 export { Metabase };

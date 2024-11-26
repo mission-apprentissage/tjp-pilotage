@@ -1,22 +1,14 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { getStatsSortieParRegionsQuery } from "../../queries/getStatsSortie/getStatsSortie";
-import { getPositionQuadrant } from "../../services/getPositionQuadrant";
-import {
-  getChiffresEntree,
-  getChiffresIj,
-  getEtablissement,
-  getFilters,
-  getFormations,
-} from "./dependencies";
-import { FormationSchema } from "./getAnalyseDetailleeEtablissement.schema";
+import { getStatsSortieParRegionsQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
+import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant";
+
+import { getChiffresEntree, getChiffresIj, getEtablissement, getFilters, getFormations } from "./dependencies";
+import type { FormationSchema } from "./getAnalyseDetailleeEtablissement.schema";
 
 type Formation = z.infer<typeof FormationSchema>;
 
-function formatLibelleFormation(
-  formations: Formation[],
-  formation: Formation
-): string {
+function formatLibelleFormation(formations: Formation[], formation: Formation): string {
   const formationWithSameLibelle = formations.filter(
     (f) =>
       f.libelleFormation === formation.libelleFormation &&
@@ -49,14 +41,7 @@ export const getAnalyseDetailleeEtablissementFactory =
     }
   ) =>
   async (activeFilters: { uai: string }) => {
-    const [
-      formations,
-      etablissement,
-      chiffresEntree,
-      chiffresIJ,
-      filters,
-      statsSortie,
-    ] = await Promise.all([
+    const [formations, etablissement, chiffresEntree, chiffresIJ, filters, statsSortie] = await Promise.all([
       deps.getFormations(activeFilters),
       deps.getEtablissement(activeFilters),
       deps.getChiffresEntree(activeFilters),
@@ -94,10 +79,7 @@ export const getAnalyseDetailleeEtablissementFactory =
       };
     });
 
-    const chiffresEntreeObject: Record<
-      string,
-      Record<string, (typeof chiffresEntree)[number]>
-    > = {};
+    const chiffresEntreeObject: Record<string, Record<string, (typeof chiffresEntree)[number]>> = {};
 
     chiffresEntree.forEach((chiffres) => {
       if (!chiffresEntreeObject[chiffres.offre]) {
@@ -115,5 +97,4 @@ export const getAnalyseDetailleeEtablissementFactory =
       filters,
     };
   };
-export const getAnalyseDetailleeEtablissement =
-  getAnalyseDetailleeEtablissementFactory();
+export const getAnalyseDetailleeEtablissement = getAnalyseDetailleeEtablissementFactory();

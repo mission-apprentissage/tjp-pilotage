@@ -1,18 +1,11 @@
 "use client";
 
-import {
-  Box,
-  Container,
-  Tab,
-  TabList,
-  TabPanels,
-  Tabs,
-} from "@chakra-ui/react";
+import { Box, Container, Tab, TabList, TabPanels, Tabs } from "@chakra-ui/react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
-import { Breadcrumb } from "../../../components/Breadcrumb";
+import { Breadcrumb } from "@/components/Breadcrumb";
 
 const getTabIndex = (segment: string | null) => {
   if (segment === "region") return 0;
@@ -21,11 +14,7 @@ const getTabIndex = (segment: string | null) => {
   if (segment === "lien-metier-formation") return 3;
 };
 
-export default function PanoramaLayout({
-  children,
-}: {
-  readonly children: ReactNode;
-}) {
+export default function PanoramaLayout({ children }: { readonly children: ReactNode }) {
   const segment = useSelectedLayoutSegment();
   const tabIndex = getTabIndex(segment);
 
@@ -90,13 +79,7 @@ export default function PanoramaLayout({
           </Tab>
         </TabList>
         <TabPanels display="flex" flexDirection="column" flex="1" minHeight="0">
-          <Box
-            p="0"
-            display="flex"
-            flexDirection={"column"}
-            flex="1"
-            minHeight="0"
-          >
+          <Box p="0" display="flex" flexDirection={"column"} flex="1" minHeight="0">
             {children}
           </Box>
         </TabPanels>

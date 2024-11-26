@@ -1,17 +1,11 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   // Drop view to enable altering the view column "statut" type
-  await db.schema
-    .dropView("latestDemandeView")
-    .materialized()
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestDemandeView").materialized().ifExists().execute();
 
-  await db.schema
-    .dropView("latestDemandeNonMaterializedView")
-    .ifExists()
-    .execute();
+  await db.schema.dropView("latestDemandeNonMaterializedView").ifExists().execute();
 
   await db.executeQuery(
     sql`
@@ -53,10 +47,7 @@ export const up = async (db: Kysely<unknown>) => {
   //   )
   //   .execute();
 
-  await db.schema
-    .alterTable("demande")
-    .addColumn("amiCmaEnCoursValidation", "boolean")
-    .execute();
+  await db.schema.alterTable("demande").addColumn("amiCmaEnCoursValidation", "boolean").execute();
 
   await db.schema
     .createTable("intention")
@@ -73,16 +64,10 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("amiCma", "boolean")
     .addColumn("commentaire", "varchar")
     .addColumn("statut", sql`"demandeStatut"`, (c) => c.notNull())
-    .addColumn("codeRegion", "varchar(2)", (c) =>
-      c.references("region.codeRegion")
-    )
-    .addColumn("codeAcademie", "varchar(2)", (c) =>
-      c.references("academie.codeAcademie")
-    )
+    .addColumn("codeRegion", "varchar(2)", (c) => c.references("region.codeRegion"))
+    .addColumn("codeAcademie", "varchar(2)", (c) => c.references("academie.codeAcademie"))
     .addColumn("createurId", "uuid", (c) => c.notNull())
-    .addColumn("createdAt", "timestamptz", (c) =>
-      c.notNull().defaultTo(sql`NOW()`)
-    )
+    .addColumn("createdAt", "timestamptz", (c) => c.notNull().defaultTo(sql`NOW()`))
     .addColumn("capaciteScolaire", "integer")
     .addColumn("capaciteScolaireActuelle", "integer")
     .addColumn("capaciteScolaireColoree", "integer")
@@ -135,19 +120,11 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("augmentationCapaciteAccueilRestaurationPrecisions", "varchar")
     .execute();
 
-  await db.schema
-    .alterTable("intention")
-    .addPrimaryKeyConstraint("intention_pkey", ["id"])
-    .execute();
+  await db.schema.alterTable("intention").addPrimaryKeyConstraint("intention_pkey", ["id"]).execute();
 
   await db.schema
     .alterTable("intention")
-    .addForeignKeyConstraint(
-      "intention_campagneId_fk",
-      ["campagneId"],
-      "campagne",
-      ["id"]
-    )
+    .addForeignKeyConstraint("intention_campagneId_fk", ["campagneId"], "campagne", ["id"])
     .execute();
 
   await db.schema
@@ -163,9 +140,7 @@ export const up = async (db: Kysely<unknown>) => {
 
   await db.schema
     .alterTable("intention")
-    .addForeignKeyConstraint("fk_intention_user", ["createurId"], "user", [
-      "id",
-    ])
+    .addForeignKeyConstraint("fk_intention_user", ["createurId"], "user", ["id"])
     .execute();
 
   await db.schema
@@ -180,10 +155,7 @@ export const up = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("intention" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestIntention")
@@ -210,10 +182,7 @@ export const down = async (db: Kysely<unknown>) => {
   // Drop view to enable altering the view column "statut" type
   await db.schema.dropView("latestDemandeView").execute();
 
-  await db.schema
-    .alterTable("demande")
-    .dropColumn("amiCmaEnCoursValidation")
-    .execute();
+  await db.schema.alterTable("demande").dropColumn("amiCmaEnCoursValidation").execute();
 
   await db.executeQuery(
     sql`
@@ -234,10 +203,7 @@ export const down = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demande" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"),
-              "numero",
-            ])
+            .select([sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandes")

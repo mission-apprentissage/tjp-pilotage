@@ -1,18 +1,11 @@
 import { Badge, Box, Text } from "@chakra-ui/react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
+import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
-import { DashboardCard } from "../../../DashboardCard";
-import { CounterChart } from "../../components/CounterChart";
-
-export const Effectifs = ({
-  effectifEntree,
-  capacite,
-}: {
-  effectifEntree?: number;
-  capacite?: number;
-}) => {
+export const Effectifs = ({ effectifEntree, capacite }: { effectifEntree?: number; capacite?: number }) => {
   const { openGlossaire } = useGlossaireContext();
   const getCompareData = () => {
     if (!effectifEntree || !capacite) return "";

@@ -1,9 +1,5 @@
-import { kdb } from "../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const findOneSuiviQuery = async (id: string) => {
-  return await kdb
-    .selectFrom("suivi")
-    .selectAll()
-    .where("suivi.id", "=", id)
-    .executeTakeFirst();
+  return await getKbdClient().selectFrom("suivi").selectAll().where("suivi.id", "=", id).executeTakeFirst();
 };

@@ -3,9 +3,7 @@ export type Role = keyof typeof PERMISSIONS;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type KeyOfUnion<T> = T extends any ? keyof T : never;
-export type Permission = KeyOfUnion<
-  (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
->;
+export type Permission = KeyOfUnion<(typeof PERMISSIONS)[keyof typeof PERMISSIONS]>;
 
 export const PERMISSIONS = {
   admin: {
@@ -145,13 +143,7 @@ export const HIERARCHY: {
     scope: "national",
   },
   admin_region: {
-    sub: [
-      "gestionnaire_region",
-      "pilote_region",
-      "expert_region",
-      "region",
-      "invite",
-    ],
+    sub: ["gestionnaire_region", "pilote_region", "expert_region", "region", "invite"],
     scope: "region",
   },
   region: {

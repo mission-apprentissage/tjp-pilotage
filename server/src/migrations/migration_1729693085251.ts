@@ -1,4 +1,4 @@
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
@@ -12,28 +12,16 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("createdAt", "timestamp", (c) => c.defaultTo(db.fn("now")))
     .execute();
 
+  await db.schema.alterTable("requeteEnregistree").addPrimaryKeyConstraint("requeteEnregistree_pkey", ["id"]).execute();
+
   await db.schema
     .alterTable("requeteEnregistree")
-    .addPrimaryKeyConstraint("requeteEnregistree_pkey", ["id"])
+    .addForeignKeyConstraint("requeteEnregistree_userId_fk", ["userId"], "user", ["id"])
     .execute();
 
   await db.schema
     .alterTable("requeteEnregistree")
-    .addForeignKeyConstraint(
-      "requeteEnregistree_userId_fk",
-      ["userId"],
-      "user",
-      ["id"]
-    )
-    .execute();
-
-  await db.schema
-    .alterTable("requeteEnregistree")
-    .addUniqueConstraint("requeteEnregistree_unique_constraint", [
-      "userId",
-      "nom",
-      "page",
-    ])
+    .addUniqueConstraint("requeteEnregistree_unique_constraint", ["userId", "nom", "page"])
     .execute();
 };
 

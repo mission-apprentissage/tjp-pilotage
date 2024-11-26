@@ -1,8 +1,9 @@
 import { createRoute } from "@http-wizard/core";
 import { getPermissionScope, guardScope } from "shared";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { getIntentionsSchema } from "./getIntentions.schema";
 import { getIntentionsUsecase } from "./getIntentions.usecase";
 
@@ -24,10 +25,7 @@ export const getIntentionsRoute = (server: Server) => {
           search,
         });
 
-        const scope = getPermissionScope(
-          user.role,
-          "intentions-perdir/ecriture"
-        );
+        const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
 
         response.status(200).send({
           ...result,

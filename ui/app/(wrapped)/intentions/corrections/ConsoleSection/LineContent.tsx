@@ -1,33 +1,25 @@
 import { chakra, Tag, Td } from "@chakra-ui/react";
 
+import type { CORRECTIONS_COLUMNS } from "@/app/(wrapped)/intentions/corrections/CORRECTIONS_COLUMN";
+import type { Corrections } from "@/app/(wrapped)/intentions/corrections/types";
+import type {
+  MotifCorrectionCampagne,
+  MotifCorrectionLabel,
+} from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
+import { getMotifCorrectionLabel } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
+import type {
+  RaisonCorrectionCampagne,
+  RaisonCorrectionLabel,
+} from "@/app/(wrapped)/intentions/utils/raisonCorrectionUtils";
+import { getRaisonCorrectionLabel } from "@/app/(wrapped)/intentions/utils/raisonCorrectionUtils";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
+import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { formatNumber } from "../../../../../utils/formatUtils";
-import {
-  getMotifCorrectionLabel,
-  MotifCorrectionCampagne,
-  MotifCorrectionLabel,
-} from "../../utils/motifCorrectionUtils";
-import {
-  getRaisonCorrectionLabel,
-  RaisonCorrectionCampagne,
-  RaisonCorrectionLabel,
-} from "../../utils/raisonCorrectionUtils";
-import { CORRECTIONS_COLUMNS } from "../CORRECTIONS_COLUMN";
-import { Corrections } from "../types";
-
 const formatEcart = (value: number) => {
-  if (value > 0)
-    return (
-      <Tag
-        size={"lg"}
-        color="success.425"
-        bgColor={"success.950"}
-      >{`+${value}`}</Tag>
-    );
+  if (value > 0) return <Tag size={"lg"} color="success.425" bgColor={"success.950"}>{`+${value}`}</Tag>;
   if (value === 0) return <Tag size={"lg"}>{value}</Tag>;
   return (
     <Tag size={"lg"} color="error.425" bgColor={"error.950"}>
@@ -36,13 +28,7 @@ const formatEcart = (value: number) => {
   );
 };
 
-const handleRaisonLabel = ({
-  raison,
-  campagne,
-}: {
-  raison?: string;
-  campagne?: string;
-}) => {
+const handleRaisonLabel = ({ raison, campagne }: { raison?: string; campagne?: string }) => {
   return getRaisonCorrectionLabel({
     raison: raison as RaisonCorrectionLabel,
     campagne: campagne as RaisonCorrectionCampagne,
@@ -134,11 +120,7 @@ export const LineContent = ({
           codeDepartement: correction.codeDepartement,
         })}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"libelleRegion"}
-        bgColor={getCellColor("libelleRegion")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"libelleRegion"} bgColor={getCellColor("libelleRegion")}>
         {correction.libelleRegion}
       </ConditionalTd>
       <ConditionalTd
@@ -148,11 +130,7 @@ export const LineContent = ({
       >
         {correction.libelleAcademie}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"secteur"}
-        bgColor={getCellColor("secteur")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"secteur"} bgColor={getCellColor("secteur")}>
         {correction.secteur === "PU" ? "Public" : "Privé"}
       </ConditionalTd>
       <ConditionalTd
@@ -173,11 +151,7 @@ export const LineContent = ({
       >
         {correction.libelleFormation}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"niveauDiplome"}
-        bgColor={getCellColor("niveauDiplome")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"niveauDiplome"} bgColor={getCellColor("niveauDiplome")}>
         {correction.niveauDiplome}
       </ConditionalTd>
       <ConditionalTd
@@ -211,9 +185,7 @@ export const LineContent = ({
         bgColor={getCellColor("tauxPressionRegional")}
       >
         <TableBadge sx={getTauxPressionStyle(correction.tauxPressionRegional)}>
-          {typeof correction.tauxPressionRegional !== "undefined"
-            ? formatNumber(correction.tauxPressionRegional)
-            : "-"}
+          {typeof correction.tauxPressionRegional !== "undefined" ? formatNumber(correction.tauxPressionRegional) : "-"}
         </TableBadge>
       </ConditionalTd>
       <ConditionalTd
@@ -298,11 +270,7 @@ export const LineContent = ({
       >
         {correction.libelleColoration}
       </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"commentaire"}
-        bgColor={getCellColor("commentaire")}
-      >
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"commentaire"} bgColor={getCellColor("commentaire")}>
         {correction.commentaire}
       </ConditionalTd>
     </>

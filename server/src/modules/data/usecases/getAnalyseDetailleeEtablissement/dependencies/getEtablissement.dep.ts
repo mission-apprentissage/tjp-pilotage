@@ -1,11 +1,11 @@
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
 export const getEtablissement = async ({ uai }: { uai: string }) =>
-  kdb
+  getKbdClient()
     .selectFrom("dataEtablissement")
     .where("dataEtablissement.uai", "=", uai)
     .where("codeRegion", "is not", null)
@@ -13,9 +13,7 @@ export const getEtablissement = async ({ uai }: { uai: string }) =>
     .where("codeDepartement", "is not", null)
     .select((eb) => [
       "dataEtablissement.uai",
-      sql<string>`coalesce(${eb.ref(
-        "libelleEtablissement"
-      )}, 'Sans libellé')`.as("libelleEtablissement"),
+      sql<string>`coalesce(${eb.ref("libelleEtablissement")}, 'Sans libellé')`.as("libelleEtablissement"),
       "codeRegion",
       "codeAcademie",
       "codeDepartement",

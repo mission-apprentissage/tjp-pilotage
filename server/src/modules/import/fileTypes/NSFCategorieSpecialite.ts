@@ -12,6 +12,4 @@ export const NSFCategorieSpecialiteSchema = z.object({
   N_COMMENTAIRE: z.string(),
 });
 
-export type NSF_Categorie_Specialite = z.infer<
-  typeof NSFCategorieSpecialiteSchema
->;
+export type NSF_Categorie_Specialite = z.infer<typeof NSFCategorieSpecialiteSchema>;

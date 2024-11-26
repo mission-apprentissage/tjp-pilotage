@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Button,
-  Center,
-  chakra,
-  Flex,
-  Spinner,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Button, Center, chakra, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,34 +9,28 @@ import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 
 import { client } from "@/api.client";
-import {
-  CodeDepartementFilterContext,
-  CodeRegionFilterContext,
-} from "@/app/layoutClient";
+import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
+import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
+import { ConsoleSearchInput } from "@/components/ConsoleSearchInput";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
+import { formatArray } from "@/utils/formatUtils";
 
-import { ConsoleSearchInput } from "../../../../components/ConsoleSearchInput";
-import { formatArray } from "../../../../utils/formatUtils";
-import { CreateRequeteEnregistreeModal } from "../components/CreateRequeteEnregistreeModal";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
-import {
-  FORMATION_COLUMNS,
-  FORMATION_COLUMNS_DEFAULT,
-} from "./FORMATION_COLUMNS";
+import { FORMATION_COLUMNS, FORMATION_COLUMNS_DEFAULT } from "./FORMATION_COLUMNS";
 import { GROUPED_FORMATION_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_COLUMNS";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import { SideSection } from "./SideSection/SideSection";
-import { Filters, Order } from "./types";
+import type { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
 
 type QueryResult = (typeof client.infer)["[GET]/formations"];
 
-const ColonneHeaderSection = chakra(
+const ColonneFilterSection = chakra(
   ({
     colonneFilters,
     forcedColonnes,
@@ -63,12 +50,8 @@ const ColonneHeaderSection = chakra(
           width={"48"}
           size="md"
           variant={"newInput"}
-          onChange={(selected) =>
-            handleColonneFilters(selected as (keyof typeof FORMATION_COLUMNS)[])
-          }
-          groupedOptions={Object.entries(
-            GROUPED_FORMATION_COLUMNS_OPTIONAL
-          ).reduce(
+          onChange={(selected) => handleColonneFilters(selected as (keyof typeof FORMATION_COLUMNS)[])}
+          groupedOptions={Object.entries(GROUPED_FORMATION_COLUMNS_OPTIONAL).reduce(
             (acc, [group, { color, options }]) => {
               acc[group] = {
                 color,
@@ -76,13 +59,10 @@ const ColonneHeaderSection = chakra(
                   .map(([value, label]) => ({
                     label,
                     value,
-                    isDisabled: forcedColonnes?.includes(
-                      value as keyof typeof FORMATION_COLUMNS
-                    ),
+                    isDisabled: forcedColonnes?.includes(value as keyof typeof FORMATION_COLUMNS),
                   }))
                   .filter(({ label }) => {
-                    if (!canShowQuadrantPosition)
-                      return label !== FORMATION_COLUMNS.positionQuadrant;
+                    if (!canShowQuadrantPosition) return label !== FORMATION_COLUMNS.positionQuadrant;
                     return true;
                   }),
               };
@@ -96,14 +76,12 @@ const ColonneHeaderSection = chakra(
               }
             >
           )}
-          defaultOptions={Object.entries(FORMATION_COLUMNS_DEFAULT)?.map(
-            ([value, label]) => {
-              return {
-                label,
-                value,
-              };
-            }
-          )}
+          defaultOptions={Object.entries(FORMATION_COLUMNS_DEFAULT)?.map(([value, label]) => {
+            return {
+              label,
+              value,
+            };
+          })}
           value={colonneFilters ?? []}
           customButton={
             <Button
@@ -112,7 +90,7 @@ const ColonneHeaderSection = chakra(
               color="bluefrance.113"
               onClick={() => trackEvent("formations:affichage-colonnes")}
             >
-              Modifier l'affichage des colonnes
+              Modifier les colonnes
             </Button>
           }
         />
@@ -141,9 +119,7 @@ export default function Formations() {
     order?: typeof order;
     page?: typeof page;
   }) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const filters = searchParams.filters ?? {};
@@ -180,14 +156,17 @@ export default function Formations() {
 
   const getDataForExport = (data: QueryResult) => {
     const region = data.filters.regions.find(
+      // @ts-expect-error TODO
       (r) => r.value === filters.codeRegion?.[0]
     );
 
     const academies = data.filters.academies.filter(
+      // @ts-expect-error TODO
       (a) => filters.codeAcademie?.includes(a.value) ?? false
     );
 
     const departements = data.filters.departements.filter(
+      // @ts-expect-error TODO
       (d) => filters.codeDepartement?.includes(d.value) ?? false
     );
 
@@ -213,6 +192,7 @@ export default function Formations() {
 
     let formations = data.formations;
 
+    // @ts-expect-error TODO
     formations = data.formations.map((f) => ({
       ...f,
       ...(filters.codeRegion && region
@@ -224,9 +204,11 @@ export default function Formations() {
       ...(filters.codeAcademie && academies
         ? {
             selectedCodeAcademie: formatArray(
+              // @ts-expect-error TODO
               academies.map((academie) => academie.value)
             ),
             selectedAcademie: formatArray(
+              // @ts-expect-error TODO
               academies.map((academie) => academie.label)
             ),
           }
@@ -234,9 +216,11 @@ export default function Formations() {
       ...(filters.codeDepartement && departements
         ? {
             selectedCodeDepartement: formatArray(
+              // @ts-expect-error TODO
               departements.map((departement) => departement.value)
             ),
             selectedDepartement: formatArray(
+              // @ts-expect-error TODO
               departements.map((departement) => departement.label)
             ),
           }
@@ -257,12 +241,10 @@ export default function Formations() {
 
     const { columns, formations } = getDataForExport(data);
 
-    const filteredColumns = canShowQuadrantPosition
-      ? columns
-      : _.omit(columns, "positionQuadrant");
+    const filteredColumns = canShowQuadrantPosition ? columns : _.omit(columns, "positionQuadrant");
 
     downloadCsv(
-      formatExportFilename("formation_export"),
+      formatExportFilename("formation_export", isFiltered ? filters : undefined),
       formations,
       filteredColumns
     );
@@ -276,12 +258,10 @@ export default function Formations() {
 
     const { columns, formations } = getDataForExport(data);
 
-    const filteredColumns = canShowQuadrantPosition
-      ? columns
-      : _.omit(columns, "positionQuadrant");
+    const filteredColumns = canShowQuadrantPosition ? columns : _.omit(columns, "positionQuadrant");
 
     downloadExcel(
-      formatExportFilename("formation_export"),
+      formatExportFilename("formation_export", isFiltered ? filters : undefined),
       formations,
       filteredColumns
     );
@@ -289,14 +269,8 @@ export default function Formations() {
 
   const canShowQuadrantPosition = filters.codeRegion?.length === 1;
 
-  const [colonneFilters, setColonneFilters] = useState<
-    (keyof typeof FORMATION_COLUMNS)[]
-  >(
-    (columns.length
-      ? columns
-      : Object.keys(
-          FORMATION_COLUMNS_DEFAULT
-        )) as (keyof typeof FORMATION_COLUMNS)[]
+  const [colonneFilters, setColonneFilters] = useState<(keyof typeof FORMATION_COLUMNS)[]>(
+    (columns.length ? columns : Object.keys(FORMATION_COLUMNS_DEFAULT)) as (keyof typeof FORMATION_COLUMNS)[]
   );
 
   const handleColonneFilters = (value: (keyof typeof FORMATION_COLUMNS)[]) => {
@@ -312,33 +286,21 @@ export default function Formations() {
     });
   };
 
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(
-    CodeRegionFilterContext
-  );
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
 
-  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(
-    CodeDepartementFilterContext
-  );
+  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
 
-  const handleFiltersContext = (
-    type: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
-    if (type === "codeRegion" && value != null)
-      setCodeRegionFilter((value as string[])[0] ?? "");
+  const handleFiltersContext = (type: keyof Filters, value: Filters[keyof Filters]) => {
+    if (type === "codeRegion" && value != null) setCodeRegionFilter((value as string[])[0] ?? "");
 
-    if (type === "codeDepartement" && value != null)
-      setCodeDepartementFilter((value as string[])[0] ?? "");
+    if (type === "codeDepartement" && value != null) setCodeDepartementFilter((value as string[])[0] ?? "");
   };
 
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("formations:filtre", { props: { filter_name: filterName } });
   };
 
-  const handleFilters = (
-    type: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
+  const handleFilters = (type: keyof Filters, value: Filters[keyof Filters]) => {
     handleFiltersContext(type, value);
 
     let newFilters: Partial<Filters> = {
@@ -392,6 +354,7 @@ export default function Formations() {
       filters.codeDepartement = [codeDepartementFilter];
       setSearchParams({ filters: filters });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -406,20 +369,10 @@ export default function Formations() {
         setRequeteEnregistreeActuelle={setRequeteEnregistreeActuelle}
       />
       <Flex direction={"row"} flex={1} position="relative" minH="0" minW={0}>
-        <SideSection
-          handleFilters={handleFilters}
-          searchParams={searchParams}
-          filtersList={data?.filters}
-        />
+        <SideSection handleFilters={handleFilters} searchParams={searchParams} filtersList={data?.filters} />
         <Flex direction="column" flex={1} position="relative" minW={0}>
           {isFetching && (
-            <Center
-              height="100%"
-              width="100%"
-              position="absolute"
-              bg="rgb(255,255,255,0.8)"
-              zIndex="1"
-            >
+            <Center height="100%" width="100%" position="absolute" bg="rgb(255,255,255,0.8)" zIndex="1">
               <Spinner />
             </Center>
           )}
@@ -444,19 +397,17 @@ export default function Formations() {
                 onChange={(newValue) => {
                   const oldValue = searchFormation;
                   setSearchFormation(newValue);
-                  if (
-                    newValue.length > 2 ||
-                    oldValue.length > newValue.length
-                  ) {
+                  if (newValue.length > 2 || oldValue.length > newValue.length) {
                     onSearch(newValue);
                   }
                 }}
                 value={searchFormation}
                 onClick={onSearch}
+                width={{ base: "15rem", ["2xl"]: "25rem" }}
               />
             }
             ColonneFilter={
-              <ColonneHeaderSection
+              <ColonneFilterSection
                 colonneFilters={colonneFilters}
                 handleColonneFilters={handleColonneFilters}
                 forcedColonnes={["libelleFormation"]}

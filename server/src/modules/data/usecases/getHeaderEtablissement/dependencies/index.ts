@@ -4,10 +4,4 @@ import { getInformations } from "./getInformations.deps";
 import { getNsfs } from "./getNsfs.deps";
 import { getValeurAjoutee } from "./getValeurAjoutee.deps";
 
-export {
-  getEtablissement,
-  getIndicateurs,
-  getInformations,
-  getNsfs,
-  getValeurAjoutee,
-};
+export { getEtablissement, getIndicateurs, getInformations, getNsfs, getValeurAjoutee };

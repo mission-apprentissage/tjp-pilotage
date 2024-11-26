@@ -1,8 +1,10 @@
-import { ExpressionBuilder, sql } from "kysely";
+import type { ExpressionBuilder } from "kysely";
+import { sql } from "kysely";
 import { FIRST_ANNEE_CAMPAGNE } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
-import { DB } from "../../../db/db";
+import type { DB } from "@/db/db";
+
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteApprentissageColoree,
@@ -11,11 +13,7 @@ import {
 } from "./countDifferenceCapacite";
 import { inQ3, inQ3Q4, inQ4 } from "./utils";
 
-export const countPlacesFermees = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) => sql<number>`
+export const countPlacesFermees = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) => sql<number>`
     ${countPlacesFermeesScolaire(eb)} +
     ${countPlacesFermeesApprentissage(eb)}
   `;
@@ -35,17 +33,8 @@ export const countPlacesFermeesQ4 = ({
 export const countPlacesFermeesQ4ParCampagne = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "demande" | "campagne" | "positionFormationRegionaleQuadrant"
-  >;
-}) =>
-  eb
-    .case()
-    .when(inQ4(eb))
-    .then(countPlacesFermeesParCampagne(eb))
-    .else(0)
-    .end();
+  eb: ExpressionBuilder<DB, "demande" | "campagne" | "positionFormationRegionaleQuadrant">;
+}) => eb.case().when(inQ4(eb)).then(countPlacesFermeesParCampagne(eb)).else(0).end();
 
 export const countPlacesFermeesQ3Q4 = ({
   eb,
@@ -53,21 +42,13 @@ export const countPlacesFermeesQ3Q4 = ({
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) => eb.case().when(inQ3Q4(eb)).then(countPlacesFermees(eb)).else(0).end();
 
-export const countPlacesFermeesCorrection = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "correction" | "demande">;
-}) =>
+export const countPlacesFermeesCorrection = ({ eb }: { eb: ExpressionBuilder<DB, "correction" | "demande"> }) =>
   sql<number>`
     ${countPlacesFermeesScolaireCorrection(eb)} +
     ${countPlacesFermeesApprentissageCorrection(eb)}
   `;
 
-export const countPlacesFermeesScolaire = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) =>
+export const countPlacesFermeesScolaire = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
   eb
     .case()
     // si type demande = coloration => pas de fermeture de places
@@ -124,11 +105,7 @@ export const countPlacesFermeesScolaire = ({
     .then(eb.val(0))
     .end();
 
-export const countPlacesFermeesParCampagne = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande" | "campagne">;
-}) =>
+export const countPlacesFermeesParCampagne = ({ eb }: { eb: ExpressionBuilder<DB, "demande" | "campagne"> }) =>
   eb
     .case()
     .when("campagne.annee", "=", FIRST_ANNEE_CAMPAGNE)
@@ -151,28 +128,21 @@ export const countPlacesFermeesScolaireQ3 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb.case().when(inQ3(eb)).then(countPlacesFermeesScolaire(eb)).else(0).end();
+}) => eb.case().when(inQ3(eb)).then(countPlacesFermeesScolaire(eb)).else(0).end();
 
 export const countPlacesFermeesScolaireQ4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb.case().when(inQ4(eb)).then(countPlacesFermeesScolaire(eb)).else(0).end();
+}) => eb.case().when(inQ4(eb)).then(countPlacesFermeesScolaire(eb)).else(0).end();
 
 export const countPlacesFermeesScolaireQ3Q4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb.case().when(inQ3Q4(eb)).then(countPlacesFermeesScolaire(eb)).else(0).end();
+}) => eb.case().when(inQ3Q4(eb)).then(countPlacesFermeesScolaire(eb)).else(0).end();
 
-export const countPlacesFermeesApprentissage = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) =>
+export const countPlacesFermeesApprentissage = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
   eb
     .case()
     // si type demande = coloration => pas de fermeture de places
@@ -244,34 +214,16 @@ export const countPlacesFermeesApprentissageQ3 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb
-    .case()
-    .when(inQ3(eb))
-    .then(countPlacesFermeesApprentissage(eb))
-    .else(0)
-    .end();
+}) => eb.case().when(inQ3(eb)).then(countPlacesFermeesApprentissage(eb)).else(0).end();
 
 export const countPlacesFermeesApprentissageQ4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb
-    .case()
-    .when(inQ4(eb))
-    .then(countPlacesFermeesApprentissage(eb))
-    .else(0)
-    .end();
+}) => eb.case().when(inQ4(eb)).then(countPlacesFermeesApprentissage(eb)).else(0).end();
 
 export const countPlacesFermeesApprentissageQ3Q4 = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) =>
-  eb
-    .case()
-    .when(inQ3Q4(eb))
-    .then(countPlacesFermeesApprentissage(eb))
-    .else(0)
-    .end();
+}) => eb.case().when(inQ3Q4(eb)).then(countPlacesFermeesApprentissage(eb)).else(0).end();

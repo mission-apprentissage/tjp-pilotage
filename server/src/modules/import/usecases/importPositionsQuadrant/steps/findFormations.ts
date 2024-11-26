@@ -1,11 +1,9 @@
-import { kdb } from "../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const findFormations = async ({ offset = 0 }: { offset: number }) =>
-  await kdb
+  await getKbdClient()
     .selectFrom("formationScolaireView")
-    .leftJoin("region", (join) =>
-      join.on((eb) => eb(eb.val("true"), "=", eb.val("true")))
-    )
+    .leftJoin("region", (join) => join.on((eb) => eb(eb.val("true"), "=", eb.val("true"))))
     .select([
       "formationScolaireView.cfd",
       "formationScolaireView.codeNiveauDiplome",

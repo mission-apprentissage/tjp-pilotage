@@ -1,4 +1,3 @@
-import { kdb } from "../../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
-export const findRegions = async () =>
-  await kdb.selectFrom("region").select(["codeRegion"]).execute();
+export const findRegions = async () => await getKbdClient().selectFrom("region").select(["codeRegion"]).execute();

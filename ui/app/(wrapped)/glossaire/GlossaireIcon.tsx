@@ -1,7 +1,8 @@
 import { Image } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { isEmoji } from "shared";
 import { isValidUrl } from "shared/utils/isValidUrl";
+
+import { isEmoji } from "@/utils/isEmoji";
 
 export const GlossaireIcon = ({
   icon,
@@ -13,15 +14,7 @@ export const GlossaireIcon = ({
   marginRight?: string;
 }) => {
   if (isValidUrl(icon)) {
-    return (
-      <Image
-        boxSize={size}
-        objectFit="cover"
-        src={icon}
-        alt="Icon du glossaire"
-        marginRight={marginRight}
-      />
-    );
+    return <Image boxSize={size} objectFit="cover" src={icon} alt="Icon du glossaire" marginRight={marginRight} />;
   }
 
   if (isEmoji(icon)) {
@@ -41,7 +34,5 @@ export const GlossaireIcon = ({
     );
   }
 
-  return (
-    <Icon icon={icon} height={size} width={size} style={{ marginRight }} />
-  );
+  return <Icon icon={icon} height={size} width={size} style={{ marginRight }} />;
 };

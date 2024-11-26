@@ -1,25 +1,22 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../db/db";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
 
-const createDomaineProfessionnel = async (
-  domaineProfessionnel: Insertable<DB["domaineProfessionnel"]>
-) => {
-  return kdb
+const createDomaineProfessionnel = async (domaineProfessionnel: Insertable<DB["domaineProfessionnel"]>) => {
+  return getKbdClient()
     .insertInto("domaineProfessionnel")
     .values(domaineProfessionnel)
-    .onConflict((oc) =>
-      oc.column("codeDomaineProfessionnel").doUpdateSet(domaineProfessionnel)
-    )
+    .onConflict((oc) => oc.column("codeDomaineProfessionnel").doUpdateSet(domaineProfessionnel))
     .execute();
 };
 
 const deleteDomaineProfessionnel = async () => {
-  return kdb.deleteFrom("domaineProfessionnel").execute();
+  return getKbdClient().deleteFrom("domaineProfessionnel").execute();
 };
 
 const createRome = async (rome: Insertable<DB["rome"]>) => {
-  return kdb
+  return getKbdClient()
     .insertInto("rome")
     .values(rome)
     .onConflict((oc) => oc.column("codeRome").doUpdateSet(rome))
@@ -27,11 +24,11 @@ const createRome = async (rome: Insertable<DB["rome"]>) => {
 };
 
 const deleteRome = async () => {
-  return kdb.deleteFrom("rome").execute();
+  return getKbdClient().deleteFrom("rome").execute();
 };
 
 const createMetier = async (data: Insertable<DB["metier"]>) => {
-  return kdb
+  return getKbdClient()
     .insertInto("metier")
     .values(data)
     .onConflict((oc) => oc.column("codeMetier").doUpdateSet(data))
@@ -39,17 +36,11 @@ const createMetier = async (data: Insertable<DB["metier"]>) => {
 };
 
 const deleteMetier = async () => {
-  return kdb.deleteFrom("metier").execute();
+  return getKbdClient().deleteFrom("metier").execute();
 };
 
-const selectDiplomeProCfd = async ({
-  offset = 0,
-  limit,
-}: {
-  offset?: number;
-  limit: number;
-}) => {
-  return kdb
+const selectDiplomeProCfd = async ({ offset = 0, limit }: { offset?: number; limit: number }) => {
+  return getKbdClient()
     .selectFrom("diplomeProfessionnel")
     .select("cfd")
     .distinct()
@@ -60,11 +51,11 @@ const selectDiplomeProCfd = async ({
 };
 
 const deleteFormationRome = async () => {
-  return kdb.deleteFrom("formationRome").execute();
+  return getKbdClient().deleteFrom("formationRome").execute();
 };
 
 const createFormationRome = async (data: Insertable<DB["formationRome"]>) => {
-  return kdb
+  return getKbdClient()
     .insertInto("formationRome")
     .values(data)
     .onConflict((oc) => oc.columns(["cfd", "codeRome"]).doUpdateSet(data))

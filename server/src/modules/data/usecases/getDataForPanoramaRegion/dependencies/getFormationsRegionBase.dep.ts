@@ -3,17 +3,17 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { getMillesimePrecedent } from "shared/utils/getMillesime";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
-import { kdb } from "../../../../../db/db";
-import { effectifAnnee } from "../../../utils/effectifAnnee";
-import { hasContinuum } from "../../../utils/hasContinuum";
-import { notAnneeCommune } from "../../../utils/notAnneeCommune";
-import { notHistoriqueUnlessCoExistant } from "../../../utils/notHistorique";
-import { withTauxDevenirFavorableReg } from "../../../utils/tauxDevenirFavorable";
-import { withInsertionReg } from "../../../utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../../../utils/tauxPoursuite";
-import { selectTauxPressionAgg } from "../../../utils/tauxPression";
-import { selectTauxRemplissageAgg } from "../../../utils/tauxRemplissage";
-import { Filters } from "../getDataForPanoramaRegion.schema";
+import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.schema";
+import { effectifAnnee } from "@/modules/data/utils/effectifAnnee";
+import { hasContinuum } from "@/modules/data/utils/hasContinuum";
+import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
+import { notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
+import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
+import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
+import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
+import { selectTauxPressionAgg } from "@/modules/data/utils/tauxPression";
+import { selectTauxRemplissageAgg } from "@/modules/data/utils/tauxRemplissage";
 
 export const getFormationsRegionBase = ({
   codeRegion,
@@ -24,56 +24,28 @@ export const getFormationsRegionBase = ({
   order,
   orderBy,
 }: Filters) =>
-  kdb
+  getKbdClient()
     .selectFrom("formationScolaireView as formationView")
-    .leftJoin(
-      "formationEtablissement",
-      "formationEtablissement.cfd",
-      "formationView.cfd"
-    )
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "formationView.codeNiveauDiplome"
-    )
-    .leftJoin(
-      "dispositif",
-      "formationEtablissement.codeDispositif",
-      "dispositif.codeDispositif"
-    )
+    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
+    .leftJoin("dispositif", "formationEtablissement.codeDispositif", "dispositif.codeDispositif")
     .leftJoin("indicateurEntree", (join) =>
       join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurEntree.formationEtablissementId"
-        )
+        .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
         .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
-    .leftJoin(
-      "etablissement",
-      "etablissement.uai",
-      "formationEtablissement.uai"
-    )
+    .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .leftJoin("indicateurEntree as iep", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
-        .on(
-          "iep.rentreeScolaire",
-          "=",
-          getRentreeScolairePrecedente(rentreeScolaire)
-        )
+        .on("iep.rentreeScolaire", "=", getRentreeScolairePrecedente(rentreeScolaire))
     )
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire))
     .where(notAnneeCommune)
     .where("etablissement.codeRegion", "=", codeRegion)
     .$call((q) => {
       if (!codeNiveauDiplome) return q;
-      return q.where(
-        "formationView.codeNiveauDiplome",
-        "in",
-        codeNiveauDiplome
-      );
+      return q.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
     .$call((q) => {
       if (!codeNsf) return q;
@@ -87,20 +59,12 @@ export const getFormationsRegionBase = ({
       "libelleNiveauDiplome",
       sql<number>`COUNT(etablissement."uai")`.as("nbEtablissement"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
-      sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(
-        "effectif"
-      ),
-      sql<number>`SUM(${effectifAnnee({ alias: "iep" })})`.as(
-        "effectifPrecedent"
-      ),
+      sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as("effectif"),
+      sql<number>`SUM(${effectifAnnee({ alias: "iep" })})`.as("effectifPrecedent"),
       sql<string>`CONCAT(${eb.ref(
         "formationView.libelleFormation"
-      )},' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as(
-        "libelleFormation"
-      ),
-      selectTauxPressionAgg("indicateurEntree", "formationView").as(
-        "tauxPression"
-      ),
+      )},' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as("libelleFormation"),
+      selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
       (eb) =>
         withInsertionReg({
           eb,

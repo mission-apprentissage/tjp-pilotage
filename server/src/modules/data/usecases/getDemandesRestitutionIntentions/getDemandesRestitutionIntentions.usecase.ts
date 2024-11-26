@@ -1,9 +1,8 @@
-import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "../../queries/getStatsSortie/getStatsSortie";
-import {
-  Filters,
-  getDemandesRestitutionIntentionsQuery,
-} from "./deps/getDemandesRestitutionIntentions.query";
+import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
+import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
+
+import type { Filters } from "./deps/getDemandesRestitutionIntentions.query";
+import { getDemandesRestitutionIntentionsQuery } from "./deps/getDemandesRestitutionIntentions.query";
 import { getFilters } from "./deps/getFilters.query";
 
 export interface ActiveFilters extends Omit<Filters, "campagne"> {
@@ -13,8 +12,7 @@ export interface ActiveFilters extends Omit<Filters, "campagne"> {
 const getDemandesRestitutionIntentionsFactory =
   (
     deps = {
-      getDemandesRestitutionIntentionsQuery:
-        getDemandesRestitutionIntentionsQuery,
+      getDemandesRestitutionIntentionsQuery: getDemandesRestitutionIntentionsQuery,
       getFilters: getFilters,
       getCurrentCampagneQuery,
       getStatsSortieParRegionsEtNiveauDiplomeQuery,
@@ -39,5 +37,4 @@ const getDemandesRestitutionIntentionsFactory =
     };
   };
 
-export const getDemandesRestitutionIntentionsUsecase =
-  getDemandesRestitutionIntentionsFactory();
+export const getDemandesRestitutionIntentionsUsecase = getDemandesRestitutionIntentionsFactory();

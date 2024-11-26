@@ -5,12 +5,12 @@ import NextLink from "next/link";
 import { hasRole } from "shared";
 
 import { client } from "@/api.client";
-import { CommentairesEtAvisSection } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/main/commentaireEtAvis/CommentairesEtAvisSection";
-import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/main/displayTypeEnum";
+import { canEditIntention } from "@/app/(wrapped)/intentions/perdir/saisie/utils/canEditIntention";
+import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { useAuth } from "../../../../../../../utils/security/useAuth";
-import { canEditIntention } from "../../../saisie/utils/canEditIntention";
+import { CommentairesEtAvisSection } from "./commentaireEtAvis/CommentairesEtAvisSection";
+import { DisplayTypeEnum } from "./displayTypeEnum";
 import { SyntheseSection } from "./synthese/SyntheseSection";
 import { TabsSection } from "./TabsSection";
 
@@ -30,41 +30,35 @@ export const MainSection = ({
   const { auth } = useAuth();
   const toast = useToast();
   const queryClient = useQueryClient();
-  const hasEditIntentionPermission = usePermission(
-    "intentions-perdir/ecriture"
-  );
+  const hasEditIntentionPermission = usePermission("intentions-perdir/ecriture");
 
-  const { mutate: submitSuivi } = client
-    .ref("[POST]/intention/suivi")
-    .useMutation({
-      onSuccess: (_body) => {
-        toast({
-          variant: "left-accent",
-          status: "success",
-          title: "La demande a bien été ajoutée à vos demandes suivies",
-        });
-        // Wait until view is updated before invalidating queries
-        setTimeout(() => {
-          queryClient.invalidateQueries(["[GET]/intention/:numero"]);
-        }, 500);
-      },
-    });
+  const { mutate: submitSuivi } = client.ref("[POST]/intention/suivi").useMutation({
+    onSuccess: (_body) => {
+      toast({
+        variant: "left-accent",
+        status: "success",
+        title: "La demande a bien été ajoutée à vos demandes suivies",
+      });
+      // Wait until view is updated before invalidating queries
+      setTimeout(() => {
+        queryClient.invalidateQueries(["[GET]/intention/:numero"]);
+      }, 500);
+    },
+  });
 
-  const { mutate: deleteSuivi } = client
-    .ref("[DELETE]/intention/suivi/:id")
-    .useMutation({
-      onSuccess: (_body) => {
-        toast({
-          variant: "left-accent",
-          status: "success",
-          title: "La demande a bien été supprimée de vos demandes suivies",
-        });
-        // Wait until view is updated before invalidating queries
-        setTimeout(() => {
-          queryClient.invalidateQueries(["[GET]/intention/:numero"]);
-        }, 500);
-      },
-    });
+  const { mutate: deleteSuivi } = client.ref("[DELETE]/intention/suivi/:id").useMutation({
+    onSuccess: (_body) => {
+      toast({
+        variant: "left-accent",
+        status: "success",
+        title: "La demande a bien été supprimée de vos demandes suivies",
+      });
+      // Wait until view is updated before invalidating queries
+      setTimeout(() => {
+        queryClient.invalidateQueries(["[GET]/intention/:numero"]);
+      }, 500);
+    },
+  });
 
   return (
     <Flex bg="white" borderRadius={6} p={8} direction="column">

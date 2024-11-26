@@ -1,7 +1,4 @@
-export const formatTauxTransformation = (
-  transformes: number,
-  effectif: number | undefined
-) => {
+export const formatTauxTransformation = (transformes: number, effectif: number | undefined) => {
   if (typeof effectif === "undefined") {
     return undefined;
   }

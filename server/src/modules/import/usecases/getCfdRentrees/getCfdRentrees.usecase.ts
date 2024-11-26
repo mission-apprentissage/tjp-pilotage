@@ -1,5 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import _ from "lodash";
+import { chain } from "lodash-es";
 
 import { findConstatRentrees } from "./findConstatRentrees.dep";
 import { getCfdDispositifs } from "./getCfdDispositifs.dep";
@@ -42,25 +43,21 @@ export const [getCfdRentrees] = inject(
       | undefined
     > => {
       const dispositifs = await deps.getCfdDispositifs({ cfd });
-      const dispositif = dispositifs.find(
-        (item) => item.codeDispositif === codeDispositif
-      );
+      const dispositif = dispositifs.find((item) => item.codeDispositif === codeDispositif);
 
       if (!dispositif) return;
 
       const anneesDispositifAvecConstats = await Promise.all(
-        Object.values(dispositif.anneesDispositif).map(
-          async (anneeDispositif) => ({
-            constats: await deps.findConstatRentrees({
-              mefStat11: anneeDispositif.mefstat,
-              year,
-            }),
-            ...anneeDispositif,
-          })
-        )
+        Object.values(dispositif.anneesDispositif).map(async (anneeDispositif) => ({
+          constats: await deps.findConstatRentrees({
+            mefStat11: anneeDispositif.mefstat,
+            year,
+          }),
+          ...anneeDispositif,
+        }))
       );
 
-      const enseignements = await _.chain(anneesDispositifAvecConstats)
+      const enseignements = await chain(anneesDispositifAvecConstats)
         .map(({ constats }) => constats)
         .flatMap()
         .groupBy((v) => v["UAI"])
@@ -72,15 +69,11 @@ export const [getCfdRentrees] = inject(
           codeDispositif: dispositif.codeDispositif,
           anneesEnseignement: Object.values(dispositif.anneesDispositif).reduce(
             (acc, anneeDispositif) => {
-              const constat = annees.find(
-                (constat) => constat["Mef Bcp 11"] === anneeDispositif.mefstat
-              );
+              const constat = annees.find((constat) => constat["Mef Bcp 11"] === anneeDispositif.mefstat);
               acc[anneeDispositif.annee] = {
                 libelle: anneeDispositif.libelleDispositif,
                 mefstat: anneeDispositif.mefstat,
-                effectif: constat
-                  ? parseInt(constat?.["Nombre d'élèves : Total"] ?? "0")
-                  : undefined,
+                effectif: constat ? parseInt(constat?.["Nombre d'élèves : Total"] ?? "0") : undefined,
                 constatee: !!constat,
               };
               return acc;

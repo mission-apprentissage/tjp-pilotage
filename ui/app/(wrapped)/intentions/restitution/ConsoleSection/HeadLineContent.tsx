@@ -1,12 +1,11 @@
 import { Box, chakra, Th, Tooltip } from "@chakra-ui/react";
-import { CSSProperties } from "react";
+import type { CSSProperties } from "react";
 
+import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
+import type { OrderDemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
-
-import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
-import { OrderDemandesRestitutionIntentions } from "../types";
 
 const ConditionalTh = chakra(
   ({
@@ -35,10 +34,7 @@ const ConditionalTh = chakra(
           style={style}
           isNumeric={isNumeric}
           cursor={onClick ? "pointer" : "default"}
-          onClick={() =>
-            onClick &&
-            onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])
-          }
+          onClick={() => onClick && onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])}
         >
           <Tooltip label={STATS_DEMANDES_COLUMNS[colonne]} placement="top">
             <Box
@@ -401,10 +397,7 @@ export const HeadLineContent = ({
           ml="1"
           label={
             <>
-              <Box>
-                Le ratio entre le nombre de premiers voeux et la capacité de la
-                formation au niveau régional.
-              </Box>
+              <Box>Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.</Box>
               <TauxPressionScale />
             </>
           }
@@ -421,10 +414,7 @@ export const HeadLineContent = ({
       >
         <OrderIcon {...order} column="nbEtablissement" />
         {STATS_DEMANDES_COLUMNS.nbEtablissement}
-        <TooltipIcon
-          ml="1"
-          label="Le nombre d'établissement dispensant la formation dans la région."
-        />
+        <TooltipIcon ml="1" label="Le nombre d'établissement dispensant la formation dans la région." />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -531,27 +521,17 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         bgColor={getCellColor("augmentationCapaciteAccueilHebergementPlaces")}
       >
-        <OrderIcon
-          {...order}
-          column="augmentationCapaciteAccueilHebergementPlaces"
-        />
+        <OrderIcon {...order} column="augmentationCapaciteAccueilHebergementPlaces" />
         {STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilHebergementPlaces}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilHebergementPrecisions"}
         onClick={handleOrder}
-        bgColor={getCellColor(
-          "augmentationCapaciteAccueilHebergementPrecisions"
-        )}
+        bgColor={getCellColor("augmentationCapaciteAccueilHebergementPrecisions")}
       >
-        <OrderIcon
-          {...order}
-          column="augmentationCapaciteAccueilHebergementPrecisions"
-        />
-        {
-          STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilHebergementPrecisions
-        }
+        <OrderIcon {...order} column="augmentationCapaciteAccueilHebergementPrecisions" />
+        {STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilHebergementPrecisions}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -559,10 +539,7 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         bgColor={getCellColor("augmentationCapaciteAccueilRestauration")}
       >
-        <OrderIcon
-          {...order}
-          column="augmentationCapaciteAccueilRestauration"
-        />
+        <OrderIcon {...order} column="augmentationCapaciteAccueilRestauration" />
         {STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilRestauration}
       </ConditionalTh>
       <ConditionalTh
@@ -571,27 +548,17 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         bgColor={getCellColor("augmentationCapaciteAccueilRestaurationPlaces")}
       >
-        <OrderIcon
-          {...order}
-          column="augmentationCapaciteAccueilRestaurationPlaces"
-        />
+        <OrderIcon {...order} column="augmentationCapaciteAccueilRestaurationPlaces" />
         {STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilRestaurationPlaces}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilRestaurationPrecisions"}
         onClick={handleOrder}
-        bgColor={getCellColor(
-          "augmentationCapaciteAccueilRestaurationPrecisions"
-        )}
+        bgColor={getCellColor("augmentationCapaciteAccueilRestaurationPrecisions")}
       >
-        <OrderIcon
-          {...order}
-          column="augmentationCapaciteAccueilRestaurationPrecisions"
-        />
-        {
-          STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilRestaurationPrecisions
-        }
+        <OrderIcon {...order} column="augmentationCapaciteAccueilRestaurationPrecisions" />
+        {STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilRestaurationPrecisions}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -602,11 +569,7 @@ export const HeadLineContent = ({
         <OrderIcon {...order} column="statut" />
         {STATS_DEMANDES_COLUMNS.statut}
       </ConditionalTh>
-      <ConditionalTh
-        colonneFilters={colonneFilters}
-        colonne={"motifRefus"}
-        bgColor={getCellColor("motifRefus")}
-      >
+      <ConditionalTh colonneFilters={colonneFilters} colonne={"motifRefus"} bgColor={getCellColor("motifRefus")}>
         {STATS_DEMANDES_COLUMNS.motifRefus}
       </ConditionalTh>
     </>

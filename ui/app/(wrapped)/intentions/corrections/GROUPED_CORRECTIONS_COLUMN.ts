@@ -1,6 +1,6 @@
 import { themeDefinition } from "@/theme/theme";
 
-import {
+import type {
   CORRECTIONS_COLUMNS,
   CORRECTIONS_COLUMNS_DEFAULT,
   CORRECTIONS_COLUMNS_OPTIONAL,
@@ -156,10 +156,7 @@ export const GROUPED_CORRECTIONS_COLUMNS_OPTIONAL: Record<
       nbEtablissement: "Nb établissement",
     },
   },
-} satisfies Record<
-  string,
-  { color: string; options: Partial<typeof CORRECTIONS_COLUMNS_OPTIONAL> }
->;
+} satisfies Record<string, { color: string; options: Partial<typeof CORRECTIONS_COLUMNS_OPTIONAL> }>;
 
 export const GROUPED_CORRECTIONS_COLUMNS_DEFAULT: Record<
   string,
@@ -202,7 +199,4 @@ export const GROUPED_CORRECTIONS_COLUMNS_DEFAULT: Record<
       positionQuadrant: "Position dans le quadrant",
     },
   },
-} satisfies Record<
-  string,
-  { color: string; options: Partial<typeof CORRECTIONS_COLUMNS_DEFAULT> }
->;
+} satisfies Record<string, { color: string; options: Partial<typeof CORRECTIONS_COLUMNS_DEFAULT> }>;

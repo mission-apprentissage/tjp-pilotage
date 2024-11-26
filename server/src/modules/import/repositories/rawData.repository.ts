@@ -1,84 +1,60 @@
-import { kdb } from "../../../db/db";
-import {
-  Attractivite_capacite,
-  AttractiviteCapaciteSchema,
-} from "../fileTypes/Attractivite_capacite";
-import {
-  BTS_Attractivite_capacite,
-  BTSAttractiviteCapaciteSchema,
-} from "../fileTypes/BTS_Attractivite_capacite";
-import { Certif_Info, CertifInfoSchema } from "../fileTypes/Certif_Info";
-import {
-  Chomage_departemental_INSEE,
-  ChomageDepartementalINSEESchema,
-} from "../fileTypes/Chomage_departemental_INSEE";
-import {
-  Chomage_regional_INSEE,
-  ChomageRegionalINSEESchema,
-} from "../fileTypes/Chomage_regional_INSEE";
-import { Constat, ConstatSchema } from "../fileTypes/Constat";
-import {
-  Departements_academies_regions,
-  DepartementsAcademiesRegionsSchema,
-} from "../fileTypes/Departements_academies_regions";
-import {
-  DiplomeProfessionnelLine,
-  DiplomeProfessionnelSchema,
-} from "../fileTypes/DiplomesProfessionnels";
-import { Discipline, DisciplineSchema } from "../fileTypes/Discipline";
-import {
-  Domaine_Professionnel,
-  DomaineProfessionnelSchema,
-} from "../fileTypes/DomaineProfessionnel";
-import {
-  FamillesMetiersLine,
-  FamillesMetiersSchema,
-} from "../fileTypes/FamilleMetiers";
-import { LyceesACCELine, LyceesACCESchema } from "../fileTypes/LyceesACCELine";
-import { Metier, MetierSchema } from "../fileTypes/Metier";
-import {
-  NDispositifFormation,
-  NDispositifFormationSchema,
-} from "../fileTypes/NDispositifFormation";
-import {
-  NFormationDiplomeLine,
-  NFormationDiplomeSchema,
-} from "../fileTypes/NFormationDiplome";
-import { NMefLine, NMefSchema } from "../fileTypes/NMef";
-import {
-  NNiveauFormationDiplome,
-  NNiveauFormationDiplomeSchema,
-} from "../fileTypes/NNiveauFormationDiplome";
-import {
-  NSF_Categorie_Specialite,
-  NSFCategorieSpecialiteSchema,
-} from "../fileTypes/NSFCategorieSpecialite";
-import {
-  NSF_Domaine_Specialite,
-  NSFDomaineSpecialiteSchema,
-} from "../fileTypes/NSFDomaineSpecialite";
-import {
-  NSF_Groupe_Specialite,
-  NSFGroupeSpecialiteSchema,
-} from "../fileTypes/NSFGroupeSpecialite";
-import {
-  Offres_apprentissage,
-  OffresApprentissageSchema,
-} from "../fileTypes/Offres_apprentissage";
-import { OptionsBTSLine, OptionsBTSSchema } from "../fileTypes/OptionsBTS";
-import { Regroupement, RegroupementSchema } from "../fileTypes/Regroupement";
-import { Rome, RomeSchema } from "../fileTypes/Rome";
-import {
-  StructureDenseignement,
-  StructureDenseignementSchema,
-} from "../fileTypes/Structures_denseignement";
-import { Tension_Rome, TensionRomeSchema } from "../fileTypes/Tension_Rome";
-import {
-  VFormationDiplomeLine,
-  VFormationDiplomeSchema,
-} from "../fileTypes/VFormationDiplome";
-import { IjRegionData } from "../services/inserJeunesApi/formatRegionData";
-import { IJUaiData } from "../services/inserJeunesApi/formatUaiData";
+import { getKbdClient } from "@/db/db";
+import type { Attractivite_capacite } from "@/modules/import/fileTypes/Attractivite_capacite";
+import { AttractiviteCapaciteSchema } from "@/modules/import/fileTypes/Attractivite_capacite";
+import type { BTS_Attractivite_capacite } from "@/modules/import/fileTypes/BTS_Attractivite_capacite";
+import { BTSAttractiviteCapaciteSchema } from "@/modules/import/fileTypes/BTS_Attractivite_capacite";
+import type { Certif_Info } from "@/modules/import/fileTypes/Certif_Info";
+import { CertifInfoSchema } from "@/modules/import/fileTypes/Certif_Info";
+import type { Chomage_departemental_INSEE } from "@/modules/import/fileTypes/Chomage_departemental_INSEE";
+import { ChomageDepartementalINSEESchema } from "@/modules/import/fileTypes/Chomage_departemental_INSEE";
+import type { Chomage_regional_INSEE } from "@/modules/import/fileTypes/Chomage_regional_INSEE";
+import { ChomageRegionalINSEESchema } from "@/modules/import/fileTypes/Chomage_regional_INSEE";
+import type { Constat } from "@/modules/import/fileTypes/Constat";
+import { ConstatSchema } from "@/modules/import/fileTypes/Constat";
+import type { Departements_academies_regions } from "@/modules/import/fileTypes/Departements_academies_regions";
+import { DepartementsAcademiesRegionsSchema } from "@/modules/import/fileTypes/Departements_academies_regions";
+import type { DiplomeProfessionnelLine } from "@/modules/import/fileTypes/DiplomesProfessionnels";
+import { DiplomeProfessionnelSchema } from "@/modules/import/fileTypes/DiplomesProfessionnels";
+import type { Discipline } from "@/modules/import/fileTypes/Discipline";
+import { DisciplineSchema } from "@/modules/import/fileTypes/Discipline";
+import type { Domaine_Professionnel } from "@/modules/import/fileTypes/DomaineProfessionnel";
+import { DomaineProfessionnelSchema } from "@/modules/import/fileTypes/DomaineProfessionnel";
+import type { FamillesMetiersLine } from "@/modules/import/fileTypes/FamilleMetiers";
+import { FamillesMetiersSchema } from "@/modules/import/fileTypes/FamilleMetiers";
+import type { LyceesACCELine } from "@/modules/import/fileTypes/LyceesACCELine";
+import { LyceesACCESchema } from "@/modules/import/fileTypes/LyceesACCELine";
+import type { Metier } from "@/modules/import/fileTypes/Metier";
+import { MetierSchema } from "@/modules/import/fileTypes/Metier";
+import type { NDispositifFormation } from "@/modules/import/fileTypes/NDispositifFormation";
+import { NDispositifFormationSchema } from "@/modules/import/fileTypes/NDispositifFormation";
+import type { NFormationDiplomeLine } from "@/modules/import/fileTypes/NFormationDiplome";
+import { NFormationDiplomeSchema } from "@/modules/import/fileTypes/NFormationDiplome";
+import type { NMefLine } from "@/modules/import/fileTypes/NMef";
+import { NMefSchema } from "@/modules/import/fileTypes/NMef";
+import type { NNiveauFormationDiplome } from "@/modules/import/fileTypes/NNiveauFormationDiplome";
+import { NNiveauFormationDiplomeSchema } from "@/modules/import/fileTypes/NNiveauFormationDiplome";
+import type { NSF_Categorie_Specialite } from "@/modules/import/fileTypes/NSFCategorieSpecialite";
+import { NSFCategorieSpecialiteSchema } from "@/modules/import/fileTypes/NSFCategorieSpecialite";
+import type { NSF_Domaine_Specialite } from "@/modules/import/fileTypes/NSFDomaineSpecialite";
+import { NSFDomaineSpecialiteSchema } from "@/modules/import/fileTypes/NSFDomaineSpecialite";
+import type { NSF_Groupe_Specialite } from "@/modules/import/fileTypes/NSFGroupeSpecialite";
+import { NSFGroupeSpecialiteSchema } from "@/modules/import/fileTypes/NSFGroupeSpecialite";
+import type { Offres_apprentissage } from "@/modules/import/fileTypes/Offres_apprentissage";
+import { OffresApprentissageSchema } from "@/modules/import/fileTypes/Offres_apprentissage";
+import type { OptionsBTSLine } from "@/modules/import/fileTypes/OptionsBTS";
+import { OptionsBTSSchema } from "@/modules/import/fileTypes/OptionsBTS";
+import type { Regroupement } from "@/modules/import/fileTypes/Regroupement";
+import { RegroupementSchema } from "@/modules/import/fileTypes/Regroupement";
+import type { Rome } from "@/modules/import/fileTypes/Rome";
+import { RomeSchema } from "@/modules/import/fileTypes/Rome";
+import type { StructureDenseignement } from "@/modules/import/fileTypes/Structures_denseignement";
+import { StructureDenseignementSchema } from "@/modules/import/fileTypes/Structures_denseignement";
+import type { Tension_Rome } from "@/modules/import/fileTypes/Tension_Rome";
+import { TensionRomeSchema } from "@/modules/import/fileTypes/Tension_Rome";
+import type { VFormationDiplomeLine } from "@/modules/import/fileTypes/VFormationDiplome";
+import { VFormationDiplomeSchema } from "@/modules/import/fileTypes/VFormationDiplome";
+import type { IjRegionData } from "@/modules/import/services/inserJeunesApi/formatRegionData";
+import type { IJUaiData } from "@/modules/import/services/inserJeunesApi/formatUaiData";
 
 export const Schemas = {
   regroupements: RegroupementSchema,
@@ -157,7 +133,7 @@ const findRawData = async <T extends keyof LineTypes>({
   filter?: Partial<LineTypes[T]>;
   year?: string;
 }) => {
-  const item = await kdb
+  const item = await getKbdClient()
     .selectFrom("rawData")
     .selectAll("rawData")
     .where("type", "=", year ? `${type}_${year}` : type)
@@ -184,7 +160,7 @@ const findRawDatas = async <T extends keyof LineTypes>({
   filter?: Partial<LineTypes[T]>;
   year?: string;
 }) => {
-  const items = await kdb
+  const items = await getKbdClient()
     .selectFrom("rawData")
     .selectAll("rawData")
     .where("type", "=", year ? `${type}_${year}` : type)

@@ -12,12 +12,13 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
-import { ComponentProps, ReactNode, useContext } from "react";
+import type { ComponentProps, ReactNode } from "react";
+import { useContext } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
-import { GlossaireShortcut } from "@/components/GlossaireShortcut";
-
+import { CampagneContext } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/CampagneContext";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 import {
   isTypeColoration,
   isTypeDiminution,
@@ -25,9 +26,8 @@ import {
   shouldDisplayColoration,
   shouldDisplayTypeDemande,
   TYPES_DEMANDES_OPTIONS,
-} from "../../../../utils/typeDemandeUtils";
-import { IntentionForms } from "../defaultFormValues";
-import { CampagneContext } from "../IntentionForm";
+} from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 
 function RadioCard({
   value,
@@ -68,18 +68,8 @@ function RadioCard({
       opacity={disabled ? "0.5" : "1"}
     >
       <Flex mb="3">
-        <Img
-          me={2}
-          display={["none", null, "unset"]}
-          height={"20px"}
-          src={`/icons/${value}.svg`}
-        />
-        <Text
-          fontWeight="bold"
-          fontSize="lg"
-          color="bluefrance.113"
-          lineHeight={"20px"}
-        >
+        <Img me={2} display={["none", null, "unset"]} height={"20px"} src={`/icons/${value}.svg`} />
+        <Text fontWeight="bold" fontSize="lg" color="bluefrance.113" lineHeight={"20px"}>
           {title}
         </Text>
         {tooltip}
@@ -92,13 +82,7 @@ function RadioCard({
 }
 
 export const TypeDemandeField = chakra(
-  ({
-    disabled = false,
-    className,
-  }: {
-    disabled?: boolean;
-    className?: string;
-  }) => {
+  ({ disabled = false, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       control,
@@ -112,11 +96,7 @@ export const TypeDemandeField = chakra(
     const rentreeScolaire = watch("rentreeScolaire");
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.typeDemande}
-        isRequired
-      >
+      <FormControl className={className} isInvalid={!!errors.typeDemande} isRequired>
         <FormLabel mb="4">Ma demande concerne</FormLabel>
         <Controller
           name="typeDemande"
@@ -135,11 +115,7 @@ export const TypeDemandeField = chakra(
             >
               {Object.values(TYPES_DEMANDES_OPTIONS).map(
                 (item) =>
-                  shouldDisplayTypeDemande(
-                    item.value,
-                    campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE,
-                    rentreeScolaire
-                  ) &&
+                  shouldDisplayTypeDemande(item.value, campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE, rentreeScolaire) &&
                   shouldDisplayColoration(item.value, libelleFCIL) && (
                     <RadioCard
                       selected={value === item.value}
@@ -149,9 +125,7 @@ export const TypeDemandeField = chakra(
                       desc={item.desc}
                       disabled={
                         disabled ||
-                        (compensation != null &&
-                          !isTypeFermeture(item.value) &&
-                          !isTypeDiminution(item.value))
+                        (compensation != null && !isTypeFermeture(item.value) && !isTypeDiminution(item.value))
                       }
                       invalid={!!errors.typeDemande}
                       onClick={() => onChange(item.value)}
@@ -164,10 +138,8 @@ export const TypeDemandeField = chakra(
                             tooltip={
                               <Box>
                                 <Text>
-                                  Une coloration consiste à adapter le projet
-                                  pédagogique à un champ professionnel
-                                  particulier, en général concentré sur un
-                                  territoire donné.
+                                  Une coloration consiste à adapter le projet pédagogique à un champ professionnel
+                                  particulier, en général concentré sur un territoire donné.
                                 </Text>
                                 <Text>Cliquez pour plus d'infos.</Text>
                               </Box>
@@ -181,9 +153,7 @@ export const TypeDemandeField = chakra(
             </RadioGroup>
           )}
         ></Controller>
-        {errors.typeDemande && (
-          <FormErrorMessage>{errors.typeDemande.message}</FormErrorMessage>
-        )}
+        {errors.typeDemande && <FormErrorMessage>{errors.typeDemande.message}</FormErrorMessage>}
       </FormControl>
     );
   }

@@ -49,10 +49,7 @@ export const getRequetesEnregistreesSchema = {
         nom: z.string(),
         couleur: z.string(),
         userId: z.string(),
-        filtres: z.union([
-          FiltresFormationSchema,
-          FiltresFormationEtablissementSchema,
-        ]),
+        filtres: z.union([FiltresFormationSchema, FiltresFormationEtablissementSchema]),
       })
     ),
   },

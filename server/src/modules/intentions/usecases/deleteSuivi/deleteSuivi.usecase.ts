@@ -1,19 +1,14 @@
 import Boom from "@hapi/boom";
 
-import { RequestUser } from "../../../core/model/User";
-import { findOneIntention } from "../../repositories/findOneIntention.query";
+import type { RequestUser } from "@/modules/core/model/User";
+import { findOneIntention } from "@/modules/intentions/repositories/findOneIntention.query";
+
 import { deleteSuiviQuery } from "./deps/deleteSuivi.query";
 import { findOneSuiviQuery } from "./deps/findOneSuivi.query";
 
 export const deleteSuiviFactory =
   (deps = { findOneIntention, findOneSuiviQuery, deleteSuiviQuery }) =>
-  async ({
-    id,
-    user,
-  }: {
-    id: string;
-    user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
-  }) => {
+  async ({ id, user }: { id: string; user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais"> }) => {
     const suivi = await deps.findOneSuiviQuery(id);
     if (!suivi) throw Boom.notFound("Suivi non trouvé en base");
 

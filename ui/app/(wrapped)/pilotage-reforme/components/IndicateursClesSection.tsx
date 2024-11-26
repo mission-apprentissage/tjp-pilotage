@@ -14,14 +14,13 @@ import {
 } from "@chakra-ui/react";
 import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
+import { DefinitionTauxTransfoModal } from "@/app/(wrapped)/components/DefinitionTauxTransfoModal";
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import type { IndicateurType, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
 import { ProgressBar } from "@/components/ProgressBar";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
 import { formatNumber } from "@/utils/formatUtils";
-
-import { DefinitionTauxTransfoModal } from "../../components/DefinitionTauxTransfoModal";
-import { useGlossaireContext } from "../../glossaire/glossaireContext";
-import { IndicateurType, PilotageReformeStats } from "../types";
 
 const EFFECTIF_FEATURE_FLAG = false;
 
@@ -57,25 +56,13 @@ const Loader = () => {
   );
 };
 
-const DeltaIcon = ({
-  delta,
-  children,
-  ...props
-}: {
-  delta: number;
-  children: React.ReactNode;
-}) => {
+const DeltaIcon = ({ delta, children, ...props }: { delta: number; children: React.ReactNode }) => {
   let deltaIcon;
   if (delta) {
     if (delta < 0)
       deltaIcon = (
         <Flex {...props} width="50%" justifyContent={"end"}>
-          <TriangleDownIcon
-            mt={1}
-            me={"auto"}
-            boxSize={4}
-            color={"pilotage.red"}
-          />
+          <TriangleDownIcon mt={1} me={"auto"} boxSize={4} color={"pilotage.red"} />
           {children}
         </Flex>
       );
@@ -83,23 +70,13 @@ const DeltaIcon = ({
     else
       deltaIcon = (
         <Flex {...props} width="50%" justifyContent={"end"}>
-          <TriangleUpIcon
-            mt={1}
-            me={"auto"}
-            boxSize={4}
-            color={"success.850"}
-          />
+          <TriangleUpIcon mt={1} me={"auto"} boxSize={4} color={"success.850"} />
           {children}
         </Flex>
       );
   } else {
     deltaIcon = (
-      <Flex
-        {...props}
-        width="50%"
-        justifyContent={"end"}
-        color={"blueecume.400_active"}
-      >
+      <Flex {...props} width="50%" justifyContent={"end"} color={"blueecume.400_active"}>
         -
       </Flex>
     );
@@ -117,18 +94,10 @@ const IndicateurCompare = ({
 }) => {
   return (
     <>
-      <Text
-        px={8}
-        color={"blueecume.400_hover"}
-        width={"40%"}
-        textAlign="end"
-        whiteSpace={"nowrap"}
-      >
+      <Text px={8} color={"blueecume.400_hover"} width={"40%"} textAlign="end" whiteSpace={"nowrap"}>
         {indicateuranneeN ?? "-"}
       </Text>
-      <DeltaIcon
-        delta={(indicateuranneeN || 0) - (indicateuranneeNMoins1 || 0)}
-      >
+      <DeltaIcon delta={(indicateuranneeN || 0) - (indicateuranneeNMoins1 || 0)}>
         <Text color={"blueecume.400_active"} whiteSpace={"nowrap"}>
           {indicateuranneeNMoins1 ? `${indicateuranneeNMoins1} / N-1` : "-"}
         </Text>
@@ -150,11 +119,7 @@ const IndicateurEffectifLine = ({
 }) => (
   <>
     <SimpleGrid spacing={3} columns={[2]} p={2} fontWeight={700}>
-      <Text
-        align="start"
-        textTransform={"uppercase"}
-        color={"blueecume.400_active"}
-      >
+      <Text align="start" textTransform={"uppercase"} color={"blueecume.400_active"}>
         {label}
       </Text>
       <Flex justifyContent={"end"}>
@@ -201,16 +166,8 @@ const DrapeauFrancaisIcon = ({ ...props }) => (
     >
       <rect x="0.951111" width="20" height="13" fill="url(#pattern0)" />
       <defs>
-        <pattern
-          id="pattern0"
-          patternContentUnits="objectBoundingBox"
-          width="1"
-          height="1"
-        >
-          <use
-            xlinkHref="#image0_2362_2536"
-            transform="matrix(0.00446964 0 0 0.00666667 -0.00283401 0)"
-          />
+        <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+          <use xlinkHref="#image0_2362_2536" transform="matrix(0.00446964 0 0 0.00666667 -0.00283401 0)" />
         </pattern>
         <image
           id="image0_2362_2536"
@@ -223,25 +180,14 @@ const DrapeauFrancaisIcon = ({ ...props }) => (
   </Icon>
 );
 
-const Delta = ({
-  delta,
-  isNational = false,
-}: {
-  delta: number | null;
-  isNational?: boolean;
-}) => {
+const Delta = ({ delta, isNational = false }: { delta: number | null; isNational?: boolean }) => {
   let deltaIcon;
 
   if (delta != null) {
     if (formatNumber(delta) < 0)
       deltaIcon = (
         <Flex>
-          <TriangleDownIcon
-            mt={1}
-            me={2}
-            boxSize={4}
-            color={"redmarianne.472"}
-          />
+          <TriangleDownIcon mt={1} me={2} boxSize={4} color={"redmarianne.472"} />
           <Text>{`${formatNumber(delta)} pts`}</Text>
         </Flex>
       );
@@ -289,78 +235,34 @@ const StatCard = ({
   const getDeltaAnneeNMoins1 = (type: IndicateurType): number | null => {
     switch (type) {
       case "tauxInsertion":
-        if (
-          data?.annees[0].scoped.tauxInsertion &&
-          data?.annees[1].scoped.tauxInsertion
-        )
-          return (
-            (data?.annees[0].scoped.tauxInsertion -
-              data?.annees[1].scoped.tauxInsertion) *
-            100
-          );
+        if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].scoped.tauxInsertion)
+          return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].scoped.tauxInsertion) * 100;
         return null;
       case "tauxPoursuite":
-        if (
-          data?.annees[0].scoped.tauxPoursuite &&
-          data?.annees[1].scoped.tauxPoursuite
-        )
-          return (
-            (data?.annees[0].scoped.tauxPoursuite -
-              data?.annees[1].scoped.tauxPoursuite) *
-            100
-          );
+        if (data?.annees[0].scoped.tauxPoursuite && data?.annees[1].scoped.tauxPoursuite)
+          return (data?.annees[0].scoped.tauxPoursuite - data?.annees[1].scoped.tauxPoursuite) * 100;
         return null;
       default:
-        if (
-          data?.annees[0].scoped.tauxInsertion &&
-          data?.annees[1].scoped.tauxInsertion
-        ) {
-          return (
-            (data?.annees[0].scoped.tauxInsertion -
-              data?.annees[1].scoped.tauxInsertion) *
-            100
-          );
+        if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].scoped.tauxInsertion) {
+          return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].scoped.tauxInsertion) * 100;
         }
         return null;
     }
   };
 
-  const getDeltaAnneeNMoins1Nationale = (
-    type: IndicateurType
-  ): number | null => {
+  const getDeltaAnneeNMoins1Nationale = (type: IndicateurType): number | null => {
     switch (type) {
       case "tauxInsertion":
-        if (
-          data?.annees[0].scoped.tauxInsertion &&
-          data?.annees[1].nationale.tauxInsertion
-        )
-          return (
-            (data?.annees[0].scoped.tauxInsertion -
-              data?.annees[1].nationale.tauxInsertion) *
-            100
-          );
+        if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].nationale.tauxInsertion)
+          return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].nationale.tauxInsertion) * 100;
         return null;
       case "tauxPoursuite":
-        if (
-          data?.annees[0].scoped.tauxPoursuite &&
-          data?.annees[1].nationale.tauxPoursuite
-        )
-          return (
-            (data?.annees[0].scoped.tauxPoursuite -
-              data?.annees[1].nationale.tauxPoursuite) *
-            100
-          );
+        if (data?.annees[0].scoped.tauxPoursuite && data?.annees[1].nationale.tauxPoursuite)
+          return (data?.annees[0].scoped.tauxPoursuite - data?.annees[1].nationale.tauxPoursuite) * 100;
         return null;
       default:
-        if (
-          data?.annees[0].scoped.tauxInsertion &&
-          data?.annees[1].nationale.tauxInsertion
-        )
-          return (
-            (data?.annees[0].scoped.tauxInsertion -
-              data?.annees[1].nationale.tauxInsertion) *
-            100
-          );
+        if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].nationale.tauxInsertion)
+          return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].nationale.tauxInsertion) * 100;
         return null;
     }
   };
@@ -378,13 +280,7 @@ const StatCard = ({
 
   return (
     <Card>
-      <CardBody
-        color={color}
-        py="2"
-        px="3"
-        alignItems={"center"}
-        minHeight={40}
-      >
+      <CardBody color={color} py="2" px="3" alignItems={"center"} minHeight={40}>
         <HStack
           width="100%"
           justifyContent={tooltip ? "space-between" : "start"}
@@ -398,31 +294,15 @@ const StatCard = ({
           {tooltip}
         </HStack>
         <Box fontWeight="bold" fontSize="40" color={"bluefrance.113"}>
-          {getValue(type) ? (
-            `${getValue(type)} %`
-          ) : (
-            <Text textAlign={"center"}>-</Text>
-          )}
+          {getValue(type) ? `${getValue(type)} %` : <Text textAlign={"center"}>-</Text>}
         </Box>
         <Box fontWeight="bold" fontSize="2xl">
-          {getDeltaAnneeNMoins1(type) != null ? (
-            <Delta delta={getDeltaAnneeNMoins1(type)} />
-          ) : (
-            <></>
-          )}
+          {getDeltaAnneeNMoins1(type) != null ? <Delta delta={getDeltaAnneeNMoins1(type)} /> : <></>}
         </Box>
-        {getDeltaAnneeNMoins1(type) != null &&
-        getDeltaAnneeNMoins1Nationale(type) != null ? (
-          <Divider />
-        ) : (
-          <></>
-        )}
+        {getDeltaAnneeNMoins1(type) != null && getDeltaAnneeNMoins1Nationale(type) != null ? <Divider /> : <></>}
         <Box fontWeight="bold" fontSize="2xl">
           {getDeltaAnneeNMoins1Nationale(type) != null ? (
-            <Delta
-              delta={getDeltaAnneeNMoins1Nationale(type)}
-              isNational={true}
-            />
+            <Delta delta={getDeltaAnneeNMoins1Nationale(type)} isNational={true} />
           ) : (
             <></>
           )}
@@ -432,11 +312,7 @@ const StatCard = ({
   );
 };
 
-const TauxTransfoCard = ({
-  tauxTransformation,
-}: {
-  tauxTransformation: number;
-}) => {
+const TauxTransfoCard = ({ tauxTransformation }: { tauxTransformation: number }) => {
   const percentage = (tauxTransformation * 100) / 6;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -455,12 +331,7 @@ const TauxTransfoCard = ({
               alignItems="start"
             >
               <Box>
-                <Text
-                  fontSize="14px"
-                  fontWeight="500"
-                  lineHeight="24px"
-                  textTransform="uppercase"
-                >
+                <Text fontSize="14px" fontWeight="500" lineHeight="24px" textTransform="uppercase">
                   Taux de transformation prévisionnel - Rentrée {NEXT_RENTREE}{" "}
                 </Text>
                 <Text fontSize="32px" fontWeight="700" lineHeight="40px">
@@ -478,11 +349,7 @@ const TauxTransfoCard = ({
         </Card>
         <HStack width="100%" justifyContent="start" alignItems="end">
           <Text color={themeColors.bluefrance[113]}>
-            <TooltipIcon
-              mr="6px"
-              label="Cliquez ici pour plus d’infos"
-              onClick={() => onOpen()}
-            />
+            <TooltipIcon mr="6px" label="Cliquez ici pour plus d’infos" onClick={() => onOpen()} />
             Comprendre le calcul du taux de transformation
           </Text>
         </HStack>
@@ -510,10 +377,7 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
                 mr="6px"
                 label={
                   <Box>
-                    <Text>
-                      La part d’élèves qui sont en emploi 6 mois après leur
-                      sortie d’études
-                    </Text>
+                    <Text>La part d’élèves qui sont en emploi 6 mois après leur sortie d’études</Text>
                     <Text>Cliquez ici pour plus d'infos.</Text>
                   </Box>
                 }
@@ -530,10 +394,7 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
                 mr="6px"
                 label={
                   <Box>
-                    <Text>
-                      Tout élève inscrit à la rentrée N+1 (réorientation et
-                      redoublement compris)
-                    </Text>
+                    <Text>Tout élève inscrit à la rentrée N+1 (réorientation et redoublement compris)</Text>
                     <Text>Cliquez ici pour plus d'infos.</Text>
                   </Box>
                 }
@@ -547,13 +408,7 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
   );
 };
 
-export const IndicateursClesSection = ({
-  data,
-  isLoading,
-}: {
-  data?: PilotageReformeStats;
-  isLoading: boolean;
-}) => {
+export const IndicateursClesSection = ({ data, isLoading }: { data?: PilotageReformeStats; isLoading: boolean }) => {
   return (
     <>
       {isLoading ? (

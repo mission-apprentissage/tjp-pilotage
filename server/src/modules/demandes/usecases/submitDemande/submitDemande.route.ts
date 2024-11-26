@@ -1,8 +1,9 @@
 import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { submitDemandeSchema } from "./submitDemande.schema";
 import { submitDemande } from "./submitDemande.usecase";
 

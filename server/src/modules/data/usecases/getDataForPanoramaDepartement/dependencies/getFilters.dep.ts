@@ -1,28 +1,16 @@
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
-export const getFilters = async ({
-  codeDepartement,
-}: {
-  codeDepartement?: string;
-}) => {
-  const filtersBase = kdb
+export const getFilters = async ({ codeDepartement }: { codeDepartement?: string }) => {
+  const filtersBase = getKbdClient()
     .selectFrom("niveauDiplome")
     .leftJoin(
       "formationScolaireView as formationView",
       "formationView.codeNiveauDiplome",
       "niveauDiplome.codeNiveauDiplome"
     )
-    .leftJoin(
-      "formationEtablissement",
-      "formationEtablissement.cfd",
-      "formationView.cfd"
-    )
-    .leftJoin(
-      "etablissement",
-      "etablissement.uai",
-      "formationEtablissement.uai"
-    )
+    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .$call((eb) => {
       if (!codeDepartement) return eb;
       return eb.where("etablissement.codeDepartement", "=", codeDepartement);
@@ -32,10 +20,7 @@ export const getFilters = async ({
     .orderBy("label", "asc");
 
   const diplomes = await filtersBase
-    .select([
-      "niveauDiplome.codeNiveauDiplome as value",
-      "niveauDiplome.libelleNiveauDiplome as label",
-    ])
+    .select(["niveauDiplome.codeNiveauDiplome as value", "niveauDiplome.libelleNiveauDiplome as label"])
     .where("formationView.codeNiveauDiplome", "is not", null)
     .execute();
 

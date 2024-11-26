@@ -1,9 +1,11 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 
-import { config } from "../../../../../config/config";
-import { shootTemplate } from "../../services/mailer/mailer";
+import config from "@/config";
+import { shootTemplate } from "@/modules/core/services/mailer/mailer";
+
 import { findUserQuery } from "./findUserQuery.dep";
 export const [sendResetPassword, sendResetPasswordFactory] = inject(
   {

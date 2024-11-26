@@ -1,11 +1,4 @@
-import {
-  Grid,
-  GridItem,
-  HStack,
-  Skeleton,
-  SkeletonText,
-  VStack,
-} from "@chakra-ui/react";
+import { Grid, GridItem, HStack, Skeleton, SkeletonText, VStack } from "@chakra-ui/react";
 
 // This is to ensure each react list element has a unique ID
 export const EntryLoader = () => {

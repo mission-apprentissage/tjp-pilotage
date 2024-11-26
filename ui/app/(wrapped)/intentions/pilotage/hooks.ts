@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { ScopeEnum } from "shared";
 
-import { FiltersStatsPilotageIntentions } from "./types";
+import type { FiltersStatsPilotageIntentions } from "./types";
 
 /**
  * Récupère le code du filtre en fonction du scope :

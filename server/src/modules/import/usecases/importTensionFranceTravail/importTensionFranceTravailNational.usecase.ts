@@ -2,14 +2,11 @@ import { AxiosError } from "axios";
 import { inject } from "injecti";
 import { setTimeout } from "timers/promises";
 
-import { localFilePathManager } from "../../../core/services/filePathManager/localFilePathManager";
-import { getStatsPerspectivesRecrutement } from "../../services/franceTravail/franceTravail.api";
-import { streamIt } from "../../utils/streamIt";
-import {
-  appendFranceTravailTensionFile,
-  createFranceTravailTensionFile,
-  findAllRomeCodes,
-} from "./utils";
+import { localFilePathManager } from "@/modules/core/services/filePathManager/localFilePathManager";
+import { getStatsPerspectivesRecrutement } from "@/modules/import/services/franceTravail/franceTravail.api";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
+import { appendFranceTravailTensionFile, createFranceTravailTensionFile, findAllRomeCodes } from "./utils";
 
 export const [importTensionFranceTravailNational] = inject(
   {
@@ -20,9 +17,7 @@ export const [importTensionFranceTravailNational] = inject(
   },
   (deps) => async () => {
     // Create new file
-    deps.createFranceTravailTensionFile(
-      deps.filePathManager.getFranceTravailIndicateurTensionStatsFilePath()
-    );
+    deps.createFranceTravailTensionFile(deps.filePathManager.getFranceTravailIndicateurTensionStatsFilePath());
 
     // Lister tous les ROMES pour lesquels il faut importer les données de tension
     const romes = (await deps.findAllRomeCodes()).map((r) => r.codeRome);
@@ -31,7 +26,7 @@ export const [importTensionFranceTravailNational] = inject(
 
     // Pour chaque ROME, requêter les informations auprès de france travail
     await streamIt(
-      (romeCount) => Promise.resolve(romes.slice(romeCount, romeCount + 10)),
+      async (romeCount) => Promise.resolve(romes.slice(romeCount, romeCount + 10)),
       async (codeRome, romeCount) => {
         let retry = true;
         let retryCount = 0;
@@ -53,9 +48,7 @@ export const [importTensionFranceTravailNational] = inject(
           } catch (e) {
             if (e instanceof AxiosError) {
               if (e.response?.status === 429) {
-                console.warn(
-                  `ERROR [ROME=${codeRome}][Retry ${retryCount}] Too many requests, retrying in 1s`
-                );
+                console.warn(`ERROR [ROME=${codeRome}][Retry ${retryCount}] Too many requests, retrying in 1s`);
                 await setTimeout(1000);
                 retryCount++;
                 continue;
@@ -67,9 +60,7 @@ export const [importTensionFranceTravailNational] = inject(
                   `ERROR [ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`
                 );
               } else {
-                console.error(
-                  `ERROR [ROME=${codeRome}] ${`Status code : ${e.response?.status}`}`
-                );
+                console.error(`ERROR [ROME=${codeRome}] ${`Status code : ${e.response?.status}`}`);
               }
             } else {
               console.error(e);

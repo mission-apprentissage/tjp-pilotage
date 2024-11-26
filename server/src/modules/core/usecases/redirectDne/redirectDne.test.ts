@@ -1,25 +1,24 @@
 import jwt from "jsonwebtoken";
+import { describe, expect, it, vi } from "vitest";
 
 import { redirectDneFactory } from "./redirectDne.usecase";
 
 describe("redirectDne usecase", () => {
   it("should throw an error if there is no valid code_verifier", async () => {
     const redirectDne = redirectDneFactory({
-      getDneClient: jest.fn().mockResolvedValue({
-        callbackParams: jest.fn(),
-        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
-        userinfo: jest.fn().mockResolvedValue({ email: "user@test.test" }),
+      getDneClient: vi.fn().mockResolvedValue({
+        callbackParams: vi.fn(),
+        callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: vi.fn().mockResolvedValue({ email: "user@test.test" }),
       }),
-      createUserInDB: jest.fn(),
+      createUserInDB: vi.fn(),
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
-      findUserQuery: jest
-        .fn()
-        .mockResolvedValue({ email: "salut", enabled: true }),
-      findEtablissement: jest.fn(),
+      findUserQuery: vi.fn().mockResolvedValue({ email: "salut", enabled: true }),
+      findEtablissement: vi.fn(),
     });
 
-    await expect(() =>
+    await expect(async () =>
       redirectDne({
         codeVerifierJwt: jwt.sign({}, "codeVerifierJwtSecret"),
         url: "localhost?code=mycode",
@@ -35,25 +34,22 @@ describe("redirectDne usecase", () => {
       FrEduFonctAdm: "ENS",
     };
     const deps = {
-      getDneClient: jest.fn().mockResolvedValue({
-        callbackParams: jest.fn(),
-        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
-        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      getDneClient: vi.fn().mockResolvedValue({
+        callbackParams: vi.fn(),
+        callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: vi.fn().mockResolvedValue(ssoUserInfo),
       }),
-      createUserInDB: jest.fn(),
+      createUserInDB: vi.fn(),
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
-      findUserQuery: jest.fn().mockResolvedValue(undefined),
-      findEtablissement: jest.fn(),
+      findUserQuery: vi.fn().mockResolvedValue(undefined),
+      findEtablissement: vi.fn(),
     };
     const redirectDne = redirectDneFactory(deps);
 
-    await expect(() =>
+    await expect(async () =>
       redirectDne({
-        codeVerifierJwt: jwt.sign(
-          { code_verifier: "code_verifier" },
-          "codeVerifierJwtSecret"
-        ),
+        codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
         url: "localhost?code=mycode",
       })
     ).rejects.toThrow();
@@ -68,25 +64,22 @@ describe("redirectDne usecase", () => {
       FrEduRne: ["code-uai$rest"],
     };
     const deps = {
-      getDneClient: jest.fn().mockResolvedValue({
-        callbackParams: jest.fn(),
-        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
-        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      getDneClient: vi.fn().mockResolvedValue({
+        callbackParams: vi.fn(),
+        callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: vi.fn().mockResolvedValue(ssoUserInfo),
       }),
-      createUserInDB: jest.fn(),
+      createUserInDB: vi.fn(),
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
-      findUserQuery: jest.fn().mockResolvedValue(undefined),
-      findEtablissement: jest.fn().mockResolvedValue(undefined),
+      findUserQuery: vi.fn().mockResolvedValue(undefined),
+      findEtablissement: vi.fn().mockResolvedValue(undefined),
     } as Parameters<typeof redirectDneFactory>[0];
     const redirectDne = redirectDneFactory(deps);
 
-    await expect(() =>
+    await expect(async () =>
       redirectDne({
-        codeVerifierJwt: jwt.sign(
-          { code_verifier: "code_verifier" },
-          "codeVerifierJwtSecret"
-        ),
+        codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
         url: "localhost?code=mycode",
       })
     ).rejects.toThrow();
@@ -101,28 +94,21 @@ describe("redirectDne usecase", () => {
       FrEduRne: ["code-uai$rest"],
     };
     const deps = {
-      getDneClient: jest.fn().mockResolvedValue({
-        callbackParams: jest.fn(),
-        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
-        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      getDneClient: vi.fn().mockResolvedValue({
+        callbackParams: vi.fn(),
+        callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: vi.fn().mockResolvedValue(ssoUserInfo),
       }),
-      createUserInDB: jest.fn(),
+      createUserInDB: vi.fn(),
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
-      findUserQuery: jest
-        .fn()
-        .mockResolvedValue({ email: "email@test.test", enabled: true }),
-      findEtablissement: jest
-        .fn()
-        .mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+      findUserQuery: vi.fn().mockResolvedValue({ email: "email@test.test", enabled: true }),
+      findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
     };
     const redirectDne = redirectDneFactory(deps);
 
     const result = await redirectDne({
-      codeVerifierJwt: jwt.sign(
-        { code_verifier: "code_verifier" },
-        "codeVerifierJwtSecret"
-      ),
+      codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
       url: "localhost?code=mycode",
     });
 
@@ -150,26 +136,21 @@ describe("redirectDne usecase", () => {
       FrEduRne: ["code-uai$rest"],
     };
     const deps = {
-      getDneClient: jest.fn().mockResolvedValue({
-        callbackParams: jest.fn(),
-        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
-        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      getDneClient: vi.fn().mockResolvedValue({
+        callbackParams: vi.fn(),
+        callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: vi.fn().mockResolvedValue(ssoUserInfo),
       }),
-      createUserInDB: jest.fn(),
+      createUserInDB: vi.fn(),
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
-      findUserQuery: jest.fn().mockResolvedValue(undefined),
-      findEtablissement: jest
-        .fn()
-        .mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+      findUserQuery: vi.fn().mockResolvedValue(undefined),
+      findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
     };
     const redirectDne = redirectDneFactory(deps);
 
     const result = await redirectDne({
-      codeVerifierJwt: jwt.sign(
-        { code_verifier: "code_verifier" },
-        "codeVerifierJwtSecret"
-      ),
+      codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
       url: "localhost?code=mycode",
     });
     expect(deps.createUserInDB).toHaveBeenCalledWith({
@@ -200,26 +181,21 @@ describe("redirectDne usecase", () => {
       family_name: "lastname",
     };
     const deps = {
-      getDneClient: jest.fn().mockResolvedValue({
-        callbackParams: jest.fn(),
-        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
-        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      getDneClient: vi.fn().mockResolvedValue({
+        callbackParams: vi.fn(),
+        callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: vi.fn().mockResolvedValue(ssoUserInfo),
       }),
-      createUserInDB: jest.fn(),
+      createUserInDB: vi.fn(),
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
-      findUserQuery: jest.fn().mockResolvedValue(undefined),
-      findEtablissement: jest
-        .fn()
-        .mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+      findUserQuery: vi.fn().mockResolvedValue(undefined),
+      findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
     };
     const redirectDne = redirectDneFactory(deps);
 
     const result = await redirectDne({
-      codeVerifierJwt: jwt.sign(
-        { code_verifier: "code_verifier" },
-        "codeVerifierJwtSecret"
-      ),
+      codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
       url: "localhost?code=mycode",
     });
     expect(deps.createUserInDB).toHaveBeenCalledWith({
@@ -249,27 +225,22 @@ describe("redirectDne usecase", () => {
       family_name: "lastname",
     };
     const deps = {
-      getDneClient: jest.fn().mockResolvedValue({
-        callbackParams: jest.fn(),
-        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
-        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      getDneClient: vi.fn().mockResolvedValue({
+        callbackParams: vi.fn(),
+        callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: vi.fn().mockResolvedValue(ssoUserInfo),
       }),
-      createUserInDB: jest.fn(),
+      createUserInDB: vi.fn(),
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
-      findUserQuery: jest.fn().mockResolvedValue(undefined),
-      findEtablissement: jest
-        .fn()
-        .mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+      findUserQuery: vi.fn().mockResolvedValue(undefined),
+      findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
     };
     const redirectDne = redirectDneFactory(deps);
 
-    await expect(() =>
+    await expect(async () =>
       redirectDne({
-        codeVerifierJwt: jwt.sign(
-          { code_verifier: "code_verifier" },
-          "codeVerifierJwtSecret"
-        ),
+        codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
         url: "localhost?code=mycode",
       })
     ).rejects.toThrow();
@@ -288,26 +259,21 @@ describe("redirectDne usecase", () => {
       family_name: "lastname",
     };
     const deps = {
-      getDneClient: jest.fn().mockResolvedValue({
-        callbackParams: jest.fn(),
-        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
-        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      getDneClient: vi.fn().mockResolvedValue({
+        callbackParams: vi.fn(),
+        callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: vi.fn().mockResolvedValue(ssoUserInfo),
       }),
-      createUserInDB: jest.fn(),
+      createUserInDB: vi.fn(),
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
-      findUserQuery: jest.fn().mockResolvedValue(undefined),
-      findEtablissement: jest
-        .fn()
-        .mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+      findUserQuery: vi.fn().mockResolvedValue(undefined),
+      findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
     };
     const redirectDne = redirectDneFactory(deps);
 
     const result = await redirectDne({
-      codeVerifierJwt: jwt.sign(
-        { code_verifier: "code_verifier" },
-        "codeVerifierJwtSecret"
-      ),
+      codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
       url: "localhost?code=mycode",
     });
 
@@ -333,14 +299,10 @@ describe("redirectDne usecase", () => {
       FrEduResDel: [
         `orioninserjeunes|/mdp/redirectionhub/redirect.jsp?applicationname=orioninserjeunes|03/03/${
           currentYear - 2
-        }|31/12/${
-          currentYear - 1
-        }|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||`,
+        }|31/12/${currentYear - 1}|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||`,
         `orioninserjeunes|/redirectionhub/redirect.jsp?applicationname=orioninserjeunes_etab|03/10/${
           currentYear + 1
-        }|31/12/${
-          currentYear + 2
-        }|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||`,
+        }|31/12/${currentYear + 2}|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||`,
       ],
       FrEduRneResp: ["X"],
       email: "user@test.test",
@@ -348,27 +310,22 @@ describe("redirectDne usecase", () => {
       family_name: "lastname",
     };
     const deps = {
-      getDneClient: jest.fn().mockResolvedValue({
-        callbackParams: jest.fn(),
-        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
-        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      getDneClient: vi.fn().mockResolvedValue({
+        callbackParams: vi.fn(),
+        callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: vi.fn().mockResolvedValue(ssoUserInfo),
       }),
-      createUserInDB: jest.fn(),
+      createUserInDB: vi.fn(),
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
-      findUserQuery: jest.fn().mockResolvedValue(undefined),
-      findEtablissement: jest
-        .fn()
-        .mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+      findUserQuery: vi.fn().mockResolvedValue(undefined),
+      findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
     };
     const redirectDne = redirectDneFactory(deps);
 
-    await expect(() =>
+    await expect(async () =>
       redirectDne({
-        codeVerifierJwt: jwt.sign(
-          { code_verifier: "code_verifier" },
-          "codeVerifierJwtSecret"
-        ),
+        codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
         url: "localhost?code=mycode",
       })
     ).rejects.toThrow();

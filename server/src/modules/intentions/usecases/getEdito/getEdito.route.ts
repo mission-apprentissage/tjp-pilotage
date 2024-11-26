@@ -1,7 +1,8 @@
 import { createRoute } from "@http-wizard/core";
 
-import { Server } from "../../../../server";
-import { RequestUser } from "../../../core/model/User";
+import type { RequestUser } from "@/modules/core/model/User";
+import type { Server } from "@/server/server";
+
 import { getEditoSchema } from "./getEdito.schema";
 import { getEditoUsecase } from "./getEdito.usecase";
 

@@ -21,7 +21,7 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
 import { useEffect, useState } from "react";
@@ -33,13 +33,7 @@ import { z } from "zod";
 import { client } from "@/api.client";
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
 
-export const CreateCampagne = ({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) => {
+export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const {
     getValues,
     setValue,
@@ -47,16 +41,11 @@ export const CreateCampagne = ({
     formState: { errors },
     reset,
     handleSubmit,
-  } = useForm<
-    (typeof client.inferArgs)["[POST]/campagnes/:campagneId"]["body"]
-  >({
+  } = useForm<(typeof client.inferArgs)["[POST]/campagnes/:campagneId"]["body"]>({
     shouldUseNativeValidation: false,
   });
 
-  useEffect(
-    () => reset(undefined, { keepDefaultValues: true }),
-    [isOpen, reset]
-  );
+  useEffect(() => reset(undefined, { keepDefaultValues: true }), [isOpen, reset]);
 
   const queryClient = useQueryClient();
 
@@ -109,8 +98,7 @@ export const CreateCampagne = ({
                     z.coerce
                       .string()
                       .regex(/^\d{4}$/)
-                      .safeParse(annee).success ||
-                    "Veuillez saisir une année valide",
+                      .safeParse(annee).success || "Veuillez saisir une année valide",
                 })}
               />
               <NumberInputStepper>
@@ -118,9 +106,8 @@ export const CreateCampagne = ({
                 <NumberDecrementStepper />
               </NumberInputStepper>
             </NumberInput>
-            {!!errors.annee && (
-              <FormErrorMessage>{errors.annee.message}</FormErrorMessage>
-            )}
+            {/* @ts-expect-error TODO */}
+            {!!errors.annee && <FormErrorMessage>{errors.annee.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.statut} isRequired>
             <FormLabel>Statut</FormLabel>
@@ -135,53 +122,38 @@ export const CreateCampagne = ({
                 </option>
               ))}
             </Select>
-            {!!errors.statut && (
-              <FormErrorMessage>{errors.statut.message}</FormErrorMessage>
-            )}
+            {/* @ts-expect-error TODO */}
+            {!!errors.statut && <FormErrorMessage>{errors.statut.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.dateDebut} isRequired>
             <FormLabel>Date début</FormLabel>
             <SingleDatepicker
-              date={
-                getValues("dateDebut")
-                  ? toDate(getValues("dateDebut"))
-                  : undefined
-              }
+              date={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
               onDateChange={(date) => {
                 setValue("dateDebut", date.toISOString(), {
                   shouldValidate: true,
                 });
               }}
-              maxDate={
-                getValues("dateFin") ? toDate(getValues("dateFin")) : undefined
-              }
+              maxDate={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
               configs={getDatePickerConfig()}
             />
-            {!!errors.dateDebut && (
-              <FormErrorMessage>{errors.dateDebut.message}</FormErrorMessage>
-            )}
+            {/* @ts-expect-error TODO */}
+            {!!errors.dateDebut && <FormErrorMessage>{errors.dateDebut.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.dateFin} isRequired>
             <FormLabel>Date de fin</FormLabel>
             <SingleDatepicker
-              date={
-                getValues("dateFin") ? toDate(getValues("dateFin")) : undefined
-              }
+              date={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
               onDateChange={(date) => {
                 setValue("dateFin", date.toISOString(), {
                   shouldValidate: true,
                 });
               }}
-              minDate={
-                getValues("dateDebut")
-                  ? toDate(getValues("dateDebut"))
-                  : undefined
-              }
+              minDate={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
               configs={getDatePickerConfig()}
             />
-            {!!errors.dateFin && (
-              <FormErrorMessage>{errors.dateFin.message}</FormErrorMessage>
-            )}
+            {/* @ts-expect-error TODO */}
+            {!!errors.dateFin && <FormErrorMessage>{errors.dateFin.message}</FormErrorMessage>}
           </FormControl>
           {isError && (
             <Alert status="error">

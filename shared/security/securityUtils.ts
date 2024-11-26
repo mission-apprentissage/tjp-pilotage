@@ -1,4 +1,5 @@
-import { HIERARCHY, Permission, PERMISSIONS, Role } from "./permissions";
+import type { Permission, Role } from "./permissions";
+import { HIERARCHY, PERMISSIONS } from "./permissions";
 
 export const CODES_REGIONS_EXPE = [
   //Occitanie
@@ -15,45 +16,27 @@ type KOfUnion<T> = {
   [D in KeyOfUnion<T>]: T extends { [Ks in D]: any } ? T[D] : never;
 };
 
-export const isUserInRegionsExperimentation = ({
-  user,
-}: {
-  user?: { codeRegion?: string };
-}) => {
+export const isUserInRegionsExperimentation = ({ user }: { user?: { codeRegion?: string } }) => {
   if (!user?.codeRegion) return false;
   return CODES_REGIONS_EXPE.includes(user.codeRegion);
 };
 
-export const hasRole = ({
-  user,
-  role,
-}: {
-  user?: { role?: Role };
-  role: Role;
-}) => {
+export const hasRole = ({ user, role }: { user?: { role?: Role }; role: Role }) => {
   return user?.role === role;
 };
 
-export const hasPermission = (
-  role: Role | undefined,
-  permission: Permission
-) => {
+export const hasPermission = (role: Role | undefined, permission: Permission) => {
   if (!role) return false;
   const scope = getPermissionScope(role, permission);
   return !!scope;
 };
 
-export const getPermissionScope = <P extends Permission>(
-  role: Role | undefined,
-  permission: P
-) => {
+export const getPermissionScope = <P extends Permission>(role: Role | undefined, permission: P) => {
   if (!role) return;
   const userPermissions = PERMISSIONS[role];
   if (!userPermissions || !(permission in userPermissions)) return;
 
-  const permissionScope = (userPermissions as KOfUnion<typeof userPermissions>)[
-    permission
-  ];
+  const permissionScope = (userPermissions as KOfUnion<typeof userPermissions>)[permission];
   if (!permissionScope) return;
 
   type D = KOfUnion<typeof userPermissions>[P];
@@ -76,13 +59,7 @@ export function getHierarchy(role: Role): Array<Role> {
   return [];
 }
 
-export function hasRightOverRole({
-  sourceRole,
-  targetRole,
-}: {
-  sourceRole: Role;
-  targetRole: Role;
-}) {
+export function hasRightOverRole({ sourceRole, targetRole }: { sourceRole: Role; targetRole: Role }) {
   const roleHierarchy = getHierarchy(sourceRole);
   return roleHierarchy.includes(targetRole);
 }

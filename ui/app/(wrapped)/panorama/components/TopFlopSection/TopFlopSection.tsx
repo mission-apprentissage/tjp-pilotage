@@ -1,7 +1,8 @@
 import { Box, Center, Heading, Spinner, Text } from "@chakra-ui/react";
 import { useMemo } from "react";
 
-import { PanoramaTopFlops } from "../../types";
+import type { PanoramaTopFlops } from "@/app/(wrapped)/panorama/types";
+
 import { TopFlopChart } from "./TopFlopChart";
 
 const Loader = () => (
@@ -10,22 +11,13 @@ const Loader = () => (
   </Center>
 );
 
-export const TopFlopSection = ({
-  topFlops,
-  isLoading,
-}: {
-  topFlops?: PanoramaTopFlops;
-  isLoading: boolean;
-}) => {
+export const TopFlopSection = ({ topFlops, isLoading }: { topFlops?: PanoramaTopFlops; isLoading: boolean }) => {
   const topFlopFormations = useMemo(() => {
     if (!topFlops) return;
 
     const nbTopFlop = Math.min(topFlops.length, 20) / 2;
-    const sorted = topFlops
-      .slice()
-      .sort((a, b) =>
-        a.tauxDevenirFavorable < b.tauxDevenirFavorable ? 1 : -1
-      );
+    // @ts-expect-error TODO
+    const sorted = topFlops.slice().sort((a, b) => (a.tauxDevenirFavorable < b.tauxDevenirFavorable ? 1 : -1));
     const top = sorted.slice().slice(0, Math.ceil(nbTopFlop));
     const flop = sorted.slice().reverse().slice(0, Math.floor(nbTopFlop));
 

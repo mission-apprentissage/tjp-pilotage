@@ -24,20 +24,17 @@ import { useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { escapeString } from "shared/utils/escapeString";
 
 import { client } from "@/api.client";
-
 import {
   formatStatut,
   getOrderStatut,
   getStepWorkflow,
   isStatutStepWorkflowEnabled,
-} from "../../../../utils/statutUtils";
+} from "@/app/(wrapped)/intentions/utils/statutUtils";
 
 type ChangementStatutForm = {
   id: string;
@@ -55,13 +52,9 @@ const isStatutDisabled = ({
   statutPrecedent?: DemandeStatutType;
   statut: DemandeStatutType;
 }) => {
-  if (statut != statutPrecedent && getStepWorkflow(statutPrecedent) === 4)
-    return true;
+  if (statut != statutPrecedent && getStepWorkflow(statutPrecedent) === 4) return true;
   if (statut === DemandeStatutEnum["refusée"]) return false;
-  if (
-    statut === DemandeStatutEnum["projet de demande"] &&
-    statutPrecedent !== DemandeStatutEnum["dossier complet"]
-  )
+  if (statut === DemandeStatutEnum["projet de demande"] && statutPrecedent !== DemandeStatutEnum["dossier complet"])
     return true;
   return (
     getOrderStatut(statutPrecedent) > getOrderStatut(statut) ||
@@ -99,8 +92,9 @@ export const ChangementStatutForm = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { isLoading: isSubmitting, mutateAsync: submitChangementStatut } =
-    client.ref("[POST]/intention/statut/submit").useMutation({
+  const { isLoading: isSubmitting, mutateAsync: submitChangementStatut } = client
+    .ref("[POST]/intention/statut/submit")
+    .useMutation({
       onSuccess: (body) => {
         let message: string | null = null;
 
@@ -187,9 +181,7 @@ export const ChangementStatutForm = ({
                 </option>
               ))}
           </Select>
-          {errors.statut && (
-            <FormErrorMessage>{errors.statut.message}</FormErrorMessage>
-          )}
+          {errors.statut && <FormErrorMessage>{errors.statut.message}</FormErrorMessage>}
         </FormControl>
         <FormControl>
           <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
@@ -227,18 +219,14 @@ export const ChangementStatutForm = ({
             </ModalHeader>
             <ModalBody>
               <Highlight
-                query={[
-                  formatStatut(intention.statut),
-                  formatStatut(getValues("statut")),
-                ]}
+                query={[formatStatut(intention.statut), formatStatut(getValues("statut"))]}
                 styles={{ fontWeight: 700 }}
               >
                 {`Souhaitez-vous changer le statut de la demande depuis ${formatStatut(
                   intention.statut
                 )} vers ${formatStatut(getValues("statut"))} ?`}
               </Highlight>
-              {getStepWorkflow(getValues("statut")) >
-                getStepWorkflow(intention.statut) && (
+              {getStepWorkflow(getValues("statut")) > getStepWorkflow(intention.statut) && (
                 <Text color="red" mt={2}>
                   Attention, ce changement est irréversible
                 </Text>

@@ -1,33 +1,25 @@
 import path from "node:path";
 
 import * as fs from "fs";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { FilePathManager } from "../../filePathManager/filePathManager";
-import { localFilePathManagerFactory } from "../../filePathManager/localFilePathManager";
-import { FileManager, FileType } from "../fileManager";
-import { localFileManagerFactory } from "../localFileManager";
+import type { FileManager, FileType } from "@/modules/core/services/fileManager/fileManager";
+import { localFileManagerFactory } from "@/modules/core/services/fileManager/localFileManager";
+import type { FilePathManager } from "@/modules/core/services/filePathManager/filePathManager";
+import { localFilePathManagerFactory } from "@/modules/core/services/filePathManager/localFilePathManager";
 
 describe("Core Service: Local file manager", () => {
   let fileFixture: ReturnType<typeof fileManagerFixture>;
 
   beforeEach(() => {
-    fileFixture = fileManagerFixture(
-      localFileManagerFactory(),
-      localFilePathManagerFactory()
-    );
+    fileFixture = fileManagerFixture(localFileManagerFactory(), localFilePathManagerFactory());
   });
 
   afterEach(async () => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
 
-    await fileFixture.thenDeleteFile(
-      fileFixture.givenAnIntentionId(),
-      "test.txt"
-    );
-    await fileFixture.thenDeleteFile(
-      fileFixture.givenAnIntentionId(),
-      "test-1.txt"
-    );
+    await fileFixture.thenDeleteFile(fileFixture.givenAnIntentionId(), "test.txt");
+    await fileFixture.thenDeleteFile(fileFixture.givenAnIntentionId(), "test-1.txt");
   });
 
   it("should list that no files are linked to the demande", async () => {
@@ -51,18 +43,11 @@ describe("Core Service: Local file manager", () => {
 
     // then
     fileFixture.thenExpectFilesToBeLength(1);
-    fileFixture.thenExpectFileToBeExisting(
-      "test.txt",
-      `public/upload/INTENTION_TEST/test.txt`,
-      25
-    );
+    fileFixture.thenExpectFileToBeExisting("test.txt", `public/upload/INTENTION_TEST/test.txt`, 25);
   });
 });
 
-const fileManagerFixture = (
-  fileManager: FileManager,
-  filePathManager: FilePathManager
-) => {
+const fileManagerFixture = (fileManager: FileManager, filePathManager: FilePathManager) => {
   let files: FileType[] = [];
 
   return {
@@ -85,26 +70,18 @@ const fileManagerFixture = (
         flag: "w",
       });
     },
-    whenUploadingAFileAsBuffer: async (
-      demandeId: string,
-      filename: string,
-      file: Buffer
-    ) => {
+    whenUploadingAFileAsBuffer: async (demandeId: string, filename: string, file: Buffer) => {
       const flname = filePathManager.getIntentionFilePath(demandeId, filename);
 
       await fileManager.uploadFile(flname, file);
     },
     whenListingFiles: async (id: string) => {
-      const listedFiles = await fileManager.listFiles(
-        filePathManager.getIntentionFilePath(id)
-      );
+      const listedFiles = await fileManager.listFiles(filePathManager.getIntentionFilePath(id));
 
       files = listedFiles;
     },
     thenDeleteFile: async (id: string, filename: string) => {
-      await fileManager.deleteFile(
-        filePathManager.getIntentionFilePath(id, filename)
-      );
+      await fileManager.deleteFile(filePathManager.getIntentionFilePath(id, filename));
     },
     thenExpectFilesToBeEmpty() {
       expect(files).toEqual([]);

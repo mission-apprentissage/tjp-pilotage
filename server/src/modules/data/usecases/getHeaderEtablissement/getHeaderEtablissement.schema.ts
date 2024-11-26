@@ -64,6 +64,4 @@ export const getHeaderEtablissementSchema = {
   },
 };
 
-export type GetHeaderEtablissementType = z.infer<
-  (typeof getHeaderEtablissementSchema)["response"]["200"]
->;
+export type GetHeaderEtablissementType = z.infer<(typeof getHeaderEtablissementSchema)["response"]["200"]>;

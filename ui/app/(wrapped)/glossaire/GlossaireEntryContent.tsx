@@ -16,7 +16,8 @@ import {
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
-import ReactMarkdown, { Components } from "react-markdown";
+import type { Components } from "react-markdown";
+import ReactMarkdown from "react-markdown";
 
 import { client } from "@/api.client";
 
@@ -30,17 +31,17 @@ function isNotionId(href?: string): boolean {
 }
 
 function convertToNotionPageId(id: string | undefined): string {
-  return (id ?? "")
-    .replace("/", "")
-    .replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
+  return (id ?? "").replace("/", "").replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
 }
 
 const chakraRendererTheme: Components = {
   ul: ({ children }) => <UnorderedList mb={"24px"}>{children}</UnorderedList>,
   li: ({ children }) => <ListItem>{children}</ListItem>,
   blockquote: ({ children }) => {
-    const greyColor = useToken("colors", "grey.975");
-    const blueColor = useToken("colors", "bluefrance.525");
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const greyColor = useToken("colors", "grey.975"); // TODO
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const blueColor = useToken("colors", "bluefrance.525"); // TODO
     return (
       <blockquote
         style={{
@@ -56,7 +57,8 @@ const chakraRendererTheme: Components = {
     );
   },
   a: ({ children, href }) => {
-    const { setSelectedEntry } = useGlossaireContext();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { setSelectedEntry } = useGlossaireContext(); // TODO
     if (isNotionId(href)) {
       return (
         <Link
@@ -80,13 +82,7 @@ const chakraRendererTheme: Components = {
 const RenderGlossaireEntrySkeleton = () => {
   return (
     <Flex direction={"column"}>
-      <Flex
-        direction="row"
-        wrap={"nowrap"}
-        width={"100%"}
-        alignItems={"center"}
-        gap={3}
-      >
+      <Flex direction="row" wrap={"nowrap"} width={"100%"} alignItems={"center"} gap={3}>
         <SkeletonCircle height="32px" width={"32px"} />
         <SkeletonText noOfLines={1} skeletonHeight="32px" width="100%" />
       </Flex>
@@ -98,19 +94,17 @@ const RenderGlossaireEntrySkeleton = () => {
 const useGlossaireEntryContentHook = (id: string) => {
   const trackEvent = usePlausible();
 
-  const { data, isLoading, isError, error } = client
-    .ref("[GET]/glossaire/:id")
-    .useQuery(
-      {
-        params: {
-          id,
-        },
+  const { data, isLoading, isError, error } = client.ref("[GET]/glossaire/:id").useQuery(
+    {
+      params: {
+        id,
       },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
+    },
+    {
+      keepPreviousData: true,
+      staleTime: 10000000,
+    }
+  );
 
   useEffect(() => {
     if (data) {
@@ -139,8 +133,7 @@ export const GlossaireEntryContent = ({ id }: { id: string }) => {
       <Alert status="error">
         <AlertIcon />
         <AlertDescription>
-          Une erreur est survenue lors de la récupération du contenu de l'entrée
-          du glossaire
+          Une erreur est survenue lors de la récupération du contenu de l'entrée du glossaire
         </AlertDescription>
       </Alert>
     );
@@ -148,16 +141,9 @@ export const GlossaireEntryContent = ({ id }: { id: string }) => {
 
   return (
     <Box margin={"0px 12px"}>
-      <Flex
-        direction="row"
-        justifyContent={"space-between"}
-        alignItems={"center"}
-        marginBottom={"24px"}
-      >
+      <Flex direction="row" justifyContent={"space-between"} alignItems={"center"} marginBottom={"24px"}>
         <Flex direction="row" justifyContent={"start"} alignItems={"center"}>
-          {entry?.icon && (
-            <GlossaireIcon icon={entry.icon} size="32px" marginRight="8px" />
-          )}
+          {entry?.icon && <GlossaireIcon icon={entry.icon} size="32px" marginRight="8px" />}
           {entry?.title && (
             <Heading as="h6" size="lg" color="bluefrance.113">
               {entry?.title}
@@ -167,6 +153,7 @@ export const GlossaireEntryContent = ({ id }: { id: string }) => {
         {entry?.indicator && (
           <Badge
             variant={
+              // @ts-expect-error TODO
               {
                 green: "success",
                 blue: "info",
@@ -186,11 +173,7 @@ export const GlossaireEntryContent = ({ id }: { id: string }) => {
           </Badge>
         )}
       </Flex>
-      <ReactMarkdown
-        components={ChakraUIRenderer(chakraRendererTheme)}
-        className={"react-markdown"}
-        skipHtml
-      >
+      <ReactMarkdown components={ChakraUIRenderer(chakraRendererTheme)} className={"react-markdown"} skipHtml>
         {entry?.content ?? ""}
       </ReactMarkdown>
     </Box>

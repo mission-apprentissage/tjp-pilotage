@@ -1,17 +1,13 @@
 import { sql } from "kysely";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { genericOnConstatRentree } from "../../../utils/onConstatDeRentree";
-import { selectPositionQuadrant } from "../../../utils/positionFormationRegionaleQuadrant";
-import { Filters } from "../getRepartitionPilotageIntentions.usecase";
+import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.usecase";
+import { genericOnConstatRentree } from "@/modules/data/utils/onConstatDeRentree";
+import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
+import { cleanNull } from "@/utils/noNull";
 
-export const getDenominateurQuery = async ({
-  filters,
-}: {
-  filters: Filters;
-}) => {
-  return kdb
+export const getDenominateurQuery = async ({ filters }: { filters: Filters }) => {
+  return getKbdClient()
     .selectFrom(
       genericOnConstatRentree(filters)
         .select((eb) => [
@@ -39,17 +35,9 @@ export const getDenominateurQuery = async ({
         ])
         .as("effectifs")
     )
-    .innerJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "effectifs.codeNiveauDiplome"
-    )
+    .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "effectifs.codeNiveauDiplome")
     .innerJoin("region", "region.codeRegion", "effectifs.codeRegion")
-    .innerJoin(
-      "departement",
-      "departement.codeDepartement",
-      "effectifs.codeDepartement"
-    )
+    .innerJoin("departement", "departement.codeDepartement", "effectifs.codeDepartement")
     .innerJoin("academie", "academie.codeAcademie", "effectifs.codeAcademie")
     .innerJoin("nsf", "nsf.codeNsf", "effectifs.codeNsf")
     .select((eb) => [

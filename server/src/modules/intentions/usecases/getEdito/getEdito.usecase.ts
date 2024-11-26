@@ -1,8 +1,9 @@
-import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
-import { config } from "../../../../../config/config";
-import { RequestUser } from "../../../core/model/User";
-import * as notion from "../../../core/services/notion/notion";
+import config from "@/config";
+import type { RequestUser } from "@/modules/core/model/User";
+import * as notion from "@/modules/core/services/notion/notion";
+
 import { mapNotionDatabaseRowToEditoEntry } from "./getEdito.query";
 
 const getEditoFactory =
@@ -16,9 +17,7 @@ const getEditoFactory =
   async (user: RequestUser, dbId: string = deps.config.notion.dbEditoId) => {
     const database = await deps.getDatabaseRows(dbId);
 
-    const entries = deps.mapNotionDatabaseRowToEditoEntry(
-      database.results as PageObjectResponse[]
-    );
+    const entries = deps.mapNotionDatabaseRowToEditoEntry(database.results as PageObjectResponse[]);
 
     return entries
       .sort((a, b) => a.order?.localeCompare(b.order ?? "") ?? 0)

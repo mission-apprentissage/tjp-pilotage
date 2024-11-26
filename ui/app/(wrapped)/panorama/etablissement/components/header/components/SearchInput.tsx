@@ -1,28 +1,21 @@
 import { Search2Icon } from "@chakra-ui/icons";
 import { Flex, GridItem, Skeleton, useToken } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { components, ControlProps, CSSObjectWithLabel } from "react-select";
+import type { ControlProps, CSSObjectWithLabel } from "react-select";
+import { components } from "react-select";
 import AsyncSelect from "react-select/async";
 
-import { client } from "../../../../../../../api.client";
+import { client } from "@/api.client";
 
 const Control = ({
   children,
   ...props
-}: ControlProps<
-  (typeof client.infer)["[GET]/etablissement/search/:search"][0],
-  false
->) => {
+}: ControlProps<(typeof client.infer)["[GET]/etablissement/search/:search"][0], false>) => {
   const [placeholderGrey] = useToken("colors", ["grey.625"]);
 
   return (
     <components.Control {...props}>
-      <Search2Icon
-        ml={2}
-        height={"18px"}
-        width={"18px"}
-        color={placeholderGrey}
-      />
+      <Search2Icon ml={2} height={"18px"} width={"18px"} color={placeholderGrey} />
       {children}
     </components.Control>
   );
@@ -40,9 +33,7 @@ export const SearchInput = ({ uai }: { uai: string }) => {
     }),
   };
 
-  const { isLoading } = client
-    .ref("[GET]/etablissement/:uai")
-    .useQuery({ params: { uai: uai } });
+  const { isLoading } = client.ref("[GET]/etablissement/:uai").useQuery({ params: { uai: uai } });
 
   return (
     <GridItem colSpan={5} justifySelf={"end"}>
@@ -75,15 +66,11 @@ export const SearchInput = ({ uai }: { uai: string }) => {
                 });
             }}
             loadingMessage={({ inputValue }) =>
-              inputValue.length >= 3
-                ? "Recherche..."
-                : "Veuillez rentrer au moins 3 lettres"
+              inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
             }
             isClearable={true}
             noOptionsMessage={({ inputValue }) =>
-              inputValue
-                ? "Pas d'établissement correspondant"
-                : "Commencez à écrire..."
+              inputValue ? "Pas d'établissement correspondant" : "Commencez à écrire..."
             }
             placeholder="Rechercher un établissement par UAI, nom, commune..."
           />

@@ -1,12 +1,12 @@
 "use client";
 import { Box, Flex, Text } from "@chakra-ui/react";
 
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
   return (
     <Flex height="100vh" width="100%" direction="column">
       <Text mb="2" mt="3" textAlign="center">
-        Pour remonter les incohérences constatées, merci d'envoyer un mail à
-        orion@inserjeunes.beta.gouv.fr.
+        Pour remonter les incohérences constatées, merci d'envoyer un mail à orion@inserjeunes.beta.gouv.fr.
       </Text>
       <Box
         border="none"

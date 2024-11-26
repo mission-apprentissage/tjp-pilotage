@@ -38,8 +38,7 @@ export const Graph = memo(
           label={
             <>
               <ContinuumIcon fontSize={16} mr="1" />
-              Données manquantes sur cette formation, le taux affiché est celui
-              de la formation historique :<br />
+              Données manquantes sur cette formation, le taux affiché est celui de la formation historique :<br />
               <Text mt="1" fontStyle="italic">
                 {continuum?.libelleFormation}
               </Text>

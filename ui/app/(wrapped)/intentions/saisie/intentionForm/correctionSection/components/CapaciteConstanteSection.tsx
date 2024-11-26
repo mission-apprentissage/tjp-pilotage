@@ -1,7 +1,7 @@
 import { Flex, Input, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 
-import { isTypeColoration } from "../../../../utils/typeDemandeUtils";
-import { Intention } from "../types";
+import type { Intention } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/types";
+import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 const ConstanteField = ({ value }: { value: string | number | undefined }) => (
   <Input
@@ -19,23 +19,14 @@ const ConstanteField = ({ value }: { value: string | number | undefined }) => (
   />
 );
 
-const differenceCapacité = (
-  valueA: number | undefined,
-  valueB: number | undefined = 0
-) => {
+const differenceCapacité = (valueA: number | undefined, valueB: number | undefined = 0) => {
   if (valueB === undefined || valueA === undefined) return "-";
   return valueA - valueB > 0 ? `+${valueA - valueB}` : valueA - valueB;
 };
 
-export const CapaciteConstanteSection = ({
-  demande,
-}: {
-  demande: Intention;
-}) => {
+export const CapaciteConstanteSection = ({ demande }: { demande: Intention }) => {
   const typeDemande = demande?.typeDemande;
-  const coloration =
-    typeDemande !== undefined &&
-    (isTypeColoration(typeDemande) || demande.coloration);
+  const coloration = typeDemande !== undefined && (isTypeColoration(typeDemande) || demande.coloration);
   return (
     <Flex gap="6" mb="6" direction={"column"}>
       <Table columnGap={1} rowGap={1}>
@@ -75,12 +66,7 @@ export const CapaciteConstanteSection = ({
               </Td>
             )}
             <Td p={0} border={"none"}>
-              <ConstanteField
-                value={differenceCapacité(
-                  demande.capaciteScolaire,
-                  demande.capaciteScolaireActuelle
-                )}
-              />
+              <ConstanteField value={differenceCapacité(demande.capaciteScolaire, demande.capaciteScolaireActuelle)} />
             </Td>
           </Tr>
           <Tr border={"none"}>
@@ -100,10 +86,7 @@ export const CapaciteConstanteSection = ({
             )}
             <Td p={0} border={"none"}>
               <ConstanteField
-                value={differenceCapacité(
-                  demande.capaciteApprentissage,
-                  demande.capaciteApprentissageActuelle
-                )}
+                value={differenceCapacité(demande.capaciteApprentissage, demande.capaciteApprentissageActuelle)}
               />
             </Td>
           </Tr>

@@ -1,12 +1,12 @@
 import { Flex } from "@chakra-ui/react";
 
-import {
+import type { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage/main/displayTypeEnum";
+import type {
   FiltersStatsPilotageIntentions,
   OrderRepartitionPilotageIntentions,
+  RepartitionPilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 
-import { RepartitionPilotageIntentions } from "../../types";
-import { DisplayTypeEnum } from "../displayTypeEnum";
 import { AnalyseComparativeSection } from "./AnalyseComparative/AnalyseComparativeSection";
 import { FiliereNiveauDiplomeSection } from "./FiliereNiveauDiplomeSection";
 
@@ -21,9 +21,7 @@ export const RepartitionSection = ({
 }: {
   repartitionData?: RepartitionPilotageIntentions;
   order: Partial<OrderRepartitionPilotageIntentions>;
-  setSearchParams: (params: {
-    order?: Partial<OrderRepartitionPilotageIntentions>;
-  }) => void;
+  setSearchParams: (params: { order?: Partial<OrderRepartitionPilotageIntentions> }) => void;
   filters?: Partial<FiltersStatsPilotageIntentions>;
   displayType: DisplayTypeEnum;
   displayZonesGeographiques: () => void;

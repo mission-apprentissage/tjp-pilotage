@@ -1,4 +1,4 @@
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
@@ -14,18 +14,10 @@ export const up = async (db: Kysely<unknown>) => {
       "codeRegion",
       "millesimeSortie",
     ])
-    .addForeignKeyConstraint(
-      "tauxIJNiveauDiplomeRegion_codeRegion_fk",
-      ["codeRegion"],
-      "region",
-      ["codeRegion"]
-    )
-    .addForeignKeyConstraint(
-      "tauxIJNiveauDiplomeRegion_codeNiveauDiplome_fk",
-      ["codeNiveauDiplome"],
-      "niveauDiplome",
-      ["codeNiveauDiplome"]
-    )
+    .addForeignKeyConstraint("tauxIJNiveauDiplomeRegion_codeRegion_fk", ["codeRegion"], "region", ["codeRegion"])
+    .addForeignKeyConstraint("tauxIJNiveauDiplomeRegion_codeNiveauDiplome_fk", ["codeNiveauDiplome"], "niveauDiplome", [
+      "codeNiveauDiplome",
+    ])
     .execute();
 };
 
