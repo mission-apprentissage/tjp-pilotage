@@ -1,7 +1,43 @@
-name: Release version
+name: Release manuelle
+
 on:
-  push:
-    branches: [develop]
+  workflow_dispatch:
+    inputs:
+      app_version:
+        description: Version de l'application en release candidate (eg. v0.0.2-rc.14)
+        type: string
+        required: true
+      source_branch:
+        description: Branche source
+        type: string
+        required: true
+        default: develop
+
+  workflow_call:
+    inputs:
+      source_branch:
+        description: Branche source
+        type: string
+        required: false
+        default: develop
+      app_version:
+        description: Version cible de l'application
+        type: string
+        required: false
+
+    secrets:
+      DEPLOY_SSH_PRIVATE_KEY:
+        description: SSH private key
+        required: true
+      DEPLOY_PASS:
+        description: SSH PWD TO DEPLOY
+        required: true
+      SLACK_WEBHOOK:
+        description: Slack webhook URL
+        required: true
+      VAULT_PWD:
+        description: Vault Password
+        required: true
 
 jobs:
   tests:
@@ -59,7 +95,7 @@ jobs:
         run: echo "VERSION=$(git describe --tags --abbrev=0 | cut -c2-)" >> "$GITHUB_OUTPUT"
 
       - name: bump and release
-        run: yarn release
+        run: yarn release:manual:rc ${{ inputs.app_version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
