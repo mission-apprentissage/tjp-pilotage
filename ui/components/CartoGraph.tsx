@@ -78,6 +78,7 @@ export const CartoGraph = ({
         return JSON.parse(JSON.stringify(CarteFranceAcademies));
       case ScopeEnum["département"]:
         return JSON.parse(JSON.stringify(CarteFranceDepartements));
+      case ScopeEnum["national"]:
       default:
         return JSON.parse(JSON.stringify(CarteFranceRegions));
     }
@@ -91,6 +92,7 @@ export const CartoGraph = ({
         return "code_academie";
       case ScopeEnum["département"]:
         return "dep";
+      case ScopeEnum["national"]:
       default:
         return "reg";
     }
@@ -104,6 +106,7 @@ export const CartoGraph = ({
         return ACADEMIES_LABEL_MAPPING;
       case ScopeEnum["département"]:
         return DEPARTEMENTS_LABEL_MAPPING;
+      case ScopeEnum["national"]:
       default:
         return REGIONS_LABEL_MAPPING;
     }
@@ -263,6 +266,7 @@ export const CartoGraph = ({
         case ScopeEnum["département"]:
           handleClick(findKey(DEPARTEMENTS_LABEL_MAPPING, partial(isEqual, name)));
           break;
+        case ScopeEnum["national"]:
         default:
           break;
       }

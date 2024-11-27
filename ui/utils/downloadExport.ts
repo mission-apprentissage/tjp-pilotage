@@ -113,6 +113,12 @@ export async function downloadExcel<D extends object>(
         case "number":
           setColumnWrapNumber(key);
           break;
+        case "bigint":
+        case "boolean":
+        case "symbol":
+        case "undefined":
+        case "object":
+        case "function":
         default:
           setColumnWrapText(key);
           break;
@@ -176,6 +182,12 @@ function downloadExcelMultipleSheets<D extends object>(
         case "number":
           setColumnWrapNumber(key);
           break;
+        case "bigint":
+        case "boolean":
+        case "symbol":
+        case "undefined":
+        case "object":
+        case "function":
         default:
           setColumnWrapText(key);
           break;

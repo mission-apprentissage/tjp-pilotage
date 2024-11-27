@@ -33,6 +33,12 @@ export const InformationHeader = ({ statut }: { statut?: DemandeStatutType }) =>
         return "success";
       case DemandeStatutEnum["prêt pour le vote"]:
         return "success";
+      case DemandeStatutEnum["brouillon"]:
+      case DemandeStatutEnum["proposition"]:
+      case DemandeStatutEnum["dossier complet"]:
+      case DemandeStatutEnum["demande validée"]:
+      case DemandeStatutEnum["refusée"]:
+      case DemandeStatutEnum["supprimée"]:
       default:
         return "info";
     }
@@ -45,6 +51,12 @@ export const InformationHeader = ({ statut }: { statut?: DemandeStatutType }) =>
         return "La proposition a passé l'étape 1 avec succès !";
       case DemandeStatutEnum["prêt pour le vote"]:
         return "La proposition a passé l'étape 2 avec succès !";
+      case DemandeStatutEnum["brouillon"]:
+      case DemandeStatutEnum["proposition"]:
+      case DemandeStatutEnum["dossier complet"]:
+      case DemandeStatutEnum["demande validée"]:
+      case DemandeStatutEnum["refusée"]:
+      case DemandeStatutEnum["supprimée"]:
       default:
         return null;
     }
