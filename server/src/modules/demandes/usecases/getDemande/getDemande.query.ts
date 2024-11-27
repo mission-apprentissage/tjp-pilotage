@@ -175,6 +175,9 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
         ...demande.campagne,
       }),
       codeDispositif,
+      formationSpecifique: {
+        isFormationActionPrioritaire: !!demande.isFormationActionPrioritaire,
+      },
     })
   );
 };

@@ -123,9 +123,9 @@ export const getFormationsQuery = async ({
       "formationView.cpcSecteur",
       "nsf.libelleNsf",
       "familleMetier.libelleFamille",
-      "libelleDispositif",
+      "dispositif.libelleDispositif",
       "dispositif.codeDispositif",
-      "libelleNiveauDiplome",
+      "niveauDiplome.libelleNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
       sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
@@ -336,6 +336,7 @@ export const getFormationsQuery = async ({
       }
       return q;
     })
+    .$narrowType<{ isFormationActionPrioritaire: boolean }>()
     .orderBy("libelleFormation", "asc")
     .orderBy("libelleNiveauDiplome", "asc")
     .orderBy("libelleDispositif", "asc")
@@ -351,6 +352,11 @@ export const getFormationsQuery = async ({
       cleanNull({
         ...formation,
         isFormationRenovee: !!formation.isFormationRenovee,
+        formationSpecifique: {
+          // rustine pour que le typage soit correct
+          isFormationActionPrioritaire:
+            "isFormationActionPrioritaire" in formation ? !!formation.isFormationActionPrioritaire : false,
+        },
       })
     ),
   };

@@ -149,7 +149,10 @@ export const FormationLineContent = ({
       </Flex>
     </ConditionalTd>
     <ConditionalTd colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <BadgeActionPrioritaire isFormationActionPrioritaire={line.isFormationActionPrioritaire} labelSize="long" />
+      <BadgeActionPrioritaire
+        isFormationActionPrioritaire={line.formationSpecifique?.isFormationActionPrioritaire}
+        labelSize="long"
+      />
     </ConditionalTd>
     <ConditionalTd colonne={"libelleNiveauDiplome"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleNiveauDiplome ?? "-"}

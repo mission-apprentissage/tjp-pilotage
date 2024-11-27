@@ -118,12 +118,12 @@ export const getFormationEtablissementsQuery = async ({
       "etablissement.uai as uai",
       "formationView.typeFamille",
       "familleMetier.libelleFamille",
-      "libelleDispositif",
+      "dispositif.libelleDispositif",
       "formationEtablissement.codeDispositif",
-      "libelleNiveauDiplome",
+      "niveauDiplome.libelleNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
       "indicateurEtablissement.valeurAjoutee",
-      "anneeDebut",
+      "indicateurEntree.anneeDebut",
       "formationHistorique.cfd as formationRenovee",
       selectTauxRemplissage("indicateurEntree").as("tauxRemplissage"),
       effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
@@ -381,7 +381,9 @@ export const getFormationEtablissementsQuery = async ({
       cleanNull({
         ...etablissement,
         isFormationRenovee: !!etablissement.isFormationRenovee,
-        isFormationActionPrioritaire: !!etablissement.isFormationActionPrioritaire,
+        formationSpecifique: {
+          isFormationActionPrioritaire: !!etablissement.isFormationActionPrioritaire,
+        },
       })
     ),
   };
