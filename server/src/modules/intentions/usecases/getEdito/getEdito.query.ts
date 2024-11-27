@@ -1,6 +1,5 @@
 import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
-
-import type { EditoEntry } from "./getEdito.schema";
+import type { EditoEntry } from "shared/routes/schemas/get.edito.schema";
 
 const PROPERTIES = {
   TITRE: "TITRE",

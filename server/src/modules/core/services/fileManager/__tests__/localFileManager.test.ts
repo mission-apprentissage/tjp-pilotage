@@ -1,9 +1,9 @@
 import path from "node:path";
 
 import * as fs from "fs";
+import type { FileManager, FileType } from "shared/files/types";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { FileManager, FileType } from "@/modules/core/services/fileManager/fileManager";
 import { localFileManagerFactory } from "@/modules/core/services/fileManager/localFileManager";
 import type { FilePathManager } from "@/modules/core/services/filePathManager/filePathManager";
 import { localFilePathManagerFactory } from "@/modules/core/services/filePathManager/localFilePathManager";

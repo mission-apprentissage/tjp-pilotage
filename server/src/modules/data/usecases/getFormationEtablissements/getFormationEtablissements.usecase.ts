@@ -1,4 +1,5 @@
 import type { MILLESIMES_IJ } from "shared";
+import type { getFormationEtablissementsSchema } from "shared/routes/schemas/get.etablissements.schema";
 import type { z } from "zod";
 
 import { getFormationsRenoveesEnseigneesQuery } from "@/modules/data/queries/getFormationsRenovees/getFormationsRenovees";
@@ -6,7 +7,6 @@ import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "@/modules/data/que
 
 import { getFiltersQuery } from "./deps/getFiltersQuery.dep";
 import { getFormationEtablissementsQuery } from "./deps/getFormationEtablissementsQuery.dep";
-import type { getFormationEtablissementsSchema } from "./getFormationEtablissements.schema";
 
 export interface Filters extends z.infer<typeof getFormationEtablissementsSchema.querystring> {
   millesimeSortie: (typeof MILLESIMES_IJ)[number];

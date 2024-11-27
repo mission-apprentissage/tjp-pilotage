@@ -1,21 +1,15 @@
 import { createRoute } from "@http-wizard/core";
-import { z } from "zod";
+import { ROUTES } from "shared/routes/routes";
 
 import config from "@/config";
 import type { Server } from "@/server/server";
 
+const ROUTE = ROUTES["[GET]/healthcheck"];
+
 export const homeRoute = (server: Server) => {
-  return createRoute("/healthcheck", {
-    method: "GET",
-    schema: {
-      response: {
-        200: z.object({
-          name: z.string(),
-          version: z.string(),
-          env: z.enum(["local", "recette1", "recette2", "production", "test"]),
-        }),
-      },
-    },
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

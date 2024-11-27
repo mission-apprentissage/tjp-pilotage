@@ -1,6 +1,5 @@
 import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
-
-import type { GlossaireEntryIndicator } from "@/modules/glossaire/usecases/getGlossaireEntry/getGlossaireEntry.schema";
+import type { GlossaireEntryIndicator } from "shared/routes/schemas/get.glossaire.id.schema";
 
 import { PROPERTIES } from "./properties";
 

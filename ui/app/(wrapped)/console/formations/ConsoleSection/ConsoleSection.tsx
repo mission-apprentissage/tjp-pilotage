@@ -101,7 +101,6 @@ export const ConsoleSection = ({
           getCellBgColor={getCellBgColor}
         />
         <Tbody>
-          {/* @ts-expect-error TODO */}
           {data?.formations.map((line) => (
             <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
               <Tr h="12" bg={"white"} role="group">
@@ -124,7 +123,6 @@ export const ConsoleSection = ({
               </Tr>
               {historiqueId?.cfd === line.cfd && historiqueId?.codeDispositif === line.codeDispositif && (
                 <>
-                  {/* @ts-expect-error TODO */}
                   {historique?.map((historiqueLine) => (
                     <Tr
                       key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}_${historiqueLine.rentreeScolaire}`}

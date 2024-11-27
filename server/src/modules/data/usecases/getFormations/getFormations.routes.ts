@@ -1,14 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import type { Server } from "@/server/server";
 
-import { getFormationSchema } from "./getFormations.schema";
 import { getFormations } from "./getFormations.usecase";
 
+const ROUTE = ROUTES["[GET]/formations"];
+
 export const getFormationsRoute = (server: Server) => {
-  return createRoute("/formations", {
-    method: "GET",
-    schema: getFormationSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

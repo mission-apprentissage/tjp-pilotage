@@ -1,17 +1,19 @@
 import { createRoute } from "@http-wizard/core";
 import type NodeCache from "node-cache";
+import { ROUTES } from "shared/routes/routes";
+import type { GlossaireEntry } from "shared/routes/schemas/get.glossaire.schema";
 
 import type { Server } from "@/server/server";
 import { CACHE_KEYS } from "@/utils/cacheKeys";
 
-import type { GlossaireEntry } from "./getGlossaire.schema";
-import { getGlossaireSchema } from "./getGlossaire.schema";
 import { getGlossaire } from "./getGlossaire.usecase";
 
+const ROUTE = ROUTES["[GET]/glossaire"];
+
 export const getGlossaireRoute = ({ server, cache }: { server: Server; cache: NodeCache }) => {
-  return createRoute("/glossaire", {
-    method: "GET",
-    schema: getGlossaireSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

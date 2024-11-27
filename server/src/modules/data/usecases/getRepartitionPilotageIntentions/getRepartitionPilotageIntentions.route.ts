@@ -1,15 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getRepartitionPilotageIntentionsSchema } from "./getRepartitionPilotageIntentions.schema";
 import { getRepartitionPilotageIntentionsUsecase } from "./getRepartitionPilotageIntentions.usecase";
 
+const ROUTE = ROUTES["[GET]/pilotage-intentions/repartition"];
+
 export const getRepartitionPilotageIntentionsRoute = (server: Server) => {
-  return createRoute("/pilotage-intentions/repartition", {
-    method: "GET",
-    schema: getRepartitionPilotageIntentionsSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

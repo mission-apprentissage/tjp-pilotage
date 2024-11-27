@@ -1,6 +1,6 @@
+import type { EtablissementSchema } from "shared/routes/schemas/get.etablissement.uai.map.list.schema";
 import type { z } from "zod";
 
-import type { EtablissementSchema } from "@/modules/data/usecases/getDataForEtablissementMapList/getDataForEtablissementMapList.schema";
 import type { EtablissementWithDistance } from "@/modules/data/usecases/getDataForEtablissementMapList/getDataForEtablissementMapList.usecase";
 
 export function formatEtablissement(etablissement: EtablissementWithDistance): z.infer<typeof EtablissementSchema> {

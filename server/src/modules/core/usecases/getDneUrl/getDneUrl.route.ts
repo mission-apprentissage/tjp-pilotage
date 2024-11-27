@@ -1,14 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import type { Server } from "@/server/server";
 
-import { getDneUrlSchema } from "./getDneUrl.schema";
 import { getDneUrl } from "./getDneUrl.usecase";
 
+const ROUTE = ROUTES["[GET]/dne_url"];
+
 export const getDneAuthorizationUrlRoute = (server: Server) => {
-  return createRoute("/dne_url", {
-    method: "GET",
-    schema: getDneUrlSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

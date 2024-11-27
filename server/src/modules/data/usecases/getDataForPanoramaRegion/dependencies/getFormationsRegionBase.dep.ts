@@ -1,10 +1,10 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import type { Filters } from "shared/routes/schemas/get.panorama.stats.region.schema";
 import { getMillesimePrecedent } from "shared/utils/getMillesime";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
 import { getKbdClient } from "@/db/db";
-import type { Filters } from "@/modules/data/usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.schema";
 import { effectifAnnee } from "@/modules/data/utils/effectifAnnee";
 import { hasContinuum } from "@/modules/data/utils/hasContinuum";
 import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";

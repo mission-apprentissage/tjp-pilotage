@@ -1,14 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import type { Server } from "@/server/server";
 
-import { sendResetPasswordSchema } from "./sendResetPassword.schema";
 import { sendResetPassword } from "./sendResetPassword.usecase";
 
+const ROUTE = ROUTES["[POST]/auth/send-reset-password"];
+
 export const sendResetPasswordRoute = (server: Server) => {
-  return createRoute("/auth/send-reset-password", {
-    method: "POST",
-    schema: sendResetPasswordSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

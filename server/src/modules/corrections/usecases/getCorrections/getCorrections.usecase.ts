@@ -1,5 +1,6 @@
 import type { MILLESIMES_IJ } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import type { FiltersSchema } from "shared/routes/schemas/get.corrections.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
@@ -9,7 +10,6 @@ import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant
 import { cleanNull } from "@/utils/noNull";
 
 import { getCampagneQuery, getCorrectionsQuery, getFiltersQuery, getStatsCorrectionsQuery } from "./deps";
-import type { FiltersSchema } from "./getCorrections.schema";
 
 export interface Filters extends z.infer<typeof FiltersSchema> {
   user: RequestUser;

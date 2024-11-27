@@ -1,9 +1,9 @@
 import { sql } from "kysely";
 import { ScopeEnum } from "shared";
+import type { getStatsPilotageIntentionsSchema } from "shared/routes/schemas/get.pilotage-intentions.stats.schema";
 import type z from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { getStatsPilotageIntentionsSchema } from "@/modules/data/usecases/getStatsPilotageIntentions/getStatsPilotageIntentions.schema";
 import {
   isInPerimetreIJAcademie,
   isInPerimetreIJDepartement,

@@ -20,33 +20,30 @@ export const EditoSection = chakra(() => {
         Actualités
       </Heading>
       <Divider />
-      {editoContent?.map(
-        // @ts-expect-error TODO
-        (rowEdito, index) => {
-          return (
-            <Flex direction={"column"} gap={2} key={rowEdito.id}>
-              <Heading as="h3" fontSize={16} fontWeight={700} color={"grey.425"} textTransform={"uppercase"}>
-                {rowEdito.titre}
-              </Heading>
-              <Heading as="h4" fontSize={14} fontWeight={400}>
-                {rowEdito.message}
-              </Heading>
-              {rowEdito.lien && (
-                <Button
-                  as={NextLink}
-                  href={rowEdito.lien}
-                  variant={"externalLink"}
-                  leftIcon={<LinkIcon />}
-                  textDecoration={"underline"}
-                >
-                  Ouvrir le lien
-                </Button>
-              )}
-              {editoContent.length - 1 !== index && <Divider />}
-            </Flex>
-          );
-        }
-      )}
+      {editoContent?.map((rowEdito, index) => {
+        return (
+          <Flex direction={"column"} gap={2} key={rowEdito.id}>
+            <Heading as="h3" fontSize={16} fontWeight={700} color={"grey.425"} textTransform={"uppercase"}>
+              {rowEdito.titre}
+            </Heading>
+            <Heading as="h4" fontSize={14} fontWeight={400}>
+              {rowEdito.message}
+            </Heading>
+            {rowEdito.lien && (
+              <Button
+                as={NextLink}
+                href={rowEdito.lien}
+                variant={"externalLink"}
+                leftIcon={<LinkIcon />}
+                textDecoration={"underline"}
+              >
+                Ouvrir le lien
+              </Button>
+            )}
+            {editoContent.length - 1 !== index && <Divider />}
+          </Flex>
+        );
+      })}
     </Flex>
   );
 });

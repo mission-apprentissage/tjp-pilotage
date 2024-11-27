@@ -276,7 +276,6 @@ export default () => {
     });
     downloadCsv(
       formatExportFilename("restitution_export", isFiltered ? filters : undefined),
-      // @ts-expect-error TODO
       data.demandes.map((demande) => ({
         ...demande,
         createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
@@ -320,7 +319,7 @@ export default () => {
     });
     downloadExcel(
       formatExportFilename("restitution_export", isFiltered ? filters : undefined),
-      // @ts-expect-error TODO
+
       data.demandes.map((demande) => ({
         ...demande,
         createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
@@ -409,7 +408,6 @@ export default () => {
           data={data}
           isLoading={isLoading}
           handleOrder={handleOrder}
-          // @ts-expect-error TODO
           order={order}
           colonneFilters={colonneFilters}
         />

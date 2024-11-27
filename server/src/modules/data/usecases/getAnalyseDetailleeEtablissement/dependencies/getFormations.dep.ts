@@ -1,7 +1,7 @@
 import { sql } from "kysely";
+import type { FormationSchema } from "shared/routes/schemas/get.etablissement.uai.analyse-detaillee.schema";
 import type { z } from "zod";
 
-import type { FormationSchema } from "@/modules/data/usecases/getAnalyseDetailleeEtablissement/getAnalyseDetailleeEtablissement.schema";
 import { cleanNull } from "@/utils/noNull";
 
 import { getBase } from "./base.dep";

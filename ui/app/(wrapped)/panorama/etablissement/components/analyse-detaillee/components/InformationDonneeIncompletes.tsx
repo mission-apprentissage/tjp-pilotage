@@ -33,11 +33,8 @@ const isAnyDataMissingOfChiffresIJ = (formation?: Formation, chiffresIJOffre?: C
 
   return Object.values(chiffresIJOffre).reduce((acc, value) => {
     if (
-      // @ts-expect-error TODO
       typeof value.tauxInsertion === "undefined" ||
-      // @ts-expect-error TODO
       typeof value.tauxPoursuite === "undefined" ||
-      // @ts-expect-error TODO
       typeof value.tauxDevenirFavorable === "undefined"
     ) {
       return true;
@@ -88,7 +85,7 @@ const isAnyDataMissingOfEffectifs = (formation?: Formation, chiffresEntreeOffre?
       return typeof chiffresEntreeOffre.effectifAnnee1 === "undefined";
     }
   }
-  // @ts-expect-error TODO
+
   return chiffresEntreeOffre.effectifs?.some((f) => f === null);
 };
 

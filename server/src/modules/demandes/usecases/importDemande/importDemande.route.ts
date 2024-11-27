@@ -1,15 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { importDemandeSchema } from "./importDemande.schema";
 import { importDemande } from "./importDemande.usecase";
 
+const ROUTE = ROUTES["[POST]/demande/import/:numero"];
+
 export const importDemandeRoute = (server: Server) => {
-  return createRoute("/demande/import/:numero", {
-    method: "POST",
-    schema: importDemandeSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

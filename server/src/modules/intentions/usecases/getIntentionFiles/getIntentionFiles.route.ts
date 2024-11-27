@@ -1,15 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getIntentionFilesSchema } from "./getIntentionFiles.schema";
 import { getIntentionFilesUseCase } from "./getIntentionFiles.usecase";
 
+const ROUTE = ROUTES["[GET]/intention/:numero/files"];
+
 export const getIntentionFilesRoute = (server: Server) => {
-  return createRoute("/intention/:numero/files", {
-    method: "GET",
-    schema: getIntentionFilesSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

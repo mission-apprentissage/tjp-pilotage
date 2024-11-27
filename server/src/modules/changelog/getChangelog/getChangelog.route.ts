@@ -1,14 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import type { Server } from "@/server/server";
 
-import { getChangelogSchema } from "./getChangelog.schema";
 import { getChangelog } from "./getChangelog.usecase";
 
+export const ROUTE = ROUTES["[GET]/changelog"];
+
 export const getChangelogRoute = (server: Server) => {
-  return createRoute("/changelog", {
-    method: "GET",
-    schema: getChangelogSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

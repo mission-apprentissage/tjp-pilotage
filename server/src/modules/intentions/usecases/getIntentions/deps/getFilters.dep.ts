@@ -1,12 +1,12 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
+import type { getIntentionsSchema } from "shared/routes/schemas/get.intentions.schema";
 import type { z } from "zod";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
 import { isInPerimetreIJAcademie } from "@/modules/data/utils/isInPerimetreIJ";
-import type { getIntentionsSchema } from "@/modules/intentions/usecases/getIntentions/getIntentions.schema";
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
 import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
 import { cleanNull } from "@/utils/noNull";

@@ -249,7 +249,6 @@ export default () => {
     });
     downloadCsv(
       "corrections_export",
-      /* @ts-expect-error TODO */
       data.corrections.map((correction) => ({
         ...correction,
         createdAt: new Date(correction.createdAt).toLocaleDateString("fr-FR", {
@@ -273,7 +272,6 @@ export default () => {
     });
     downloadExcel(
       "corrections_export",
-      /* @ts-expect-error TODO */
       data.corrections.map((correction) => ({
         ...correction,
         createdAt: new Date(correction.createdAt).toLocaleDateString("fr-FR", {
@@ -325,7 +323,6 @@ export default () => {
           data={data}
           isLoading={isLoading}
           handleOrder={handleOrder}
-          // @ts-expect-error TODO
           order={order}
           colonneFilters={colonneFilters}
         />

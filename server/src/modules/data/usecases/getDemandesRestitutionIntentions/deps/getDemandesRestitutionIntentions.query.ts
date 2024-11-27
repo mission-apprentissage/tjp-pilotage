@@ -2,13 +2,13 @@ import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import type { MILLESIMES_IJ } from "shared";
 import { CURRENT_RENTREE } from "shared";
+import type { FiltersSchema } from "shared/routes/schemas/get.restitution-intentions.demandes.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
-import type { FiltersSchema } from "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.schema";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { nbEtablissementFormationRegion } from "@/modules/data/utils/nbEtablissementFormationRegion";
 import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";

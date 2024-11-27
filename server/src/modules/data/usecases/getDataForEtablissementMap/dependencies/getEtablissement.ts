@@ -1,8 +1,8 @@
 import { sql } from "kysely";
+import type { getDataForEtablissementMapSchema } from "shared/routes/schemas/get.etablissement.uai.map.schema";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { getDataForEtablissementMapSchema } from "@/modules/data/usecases/getDataForEtablissementMap/getDataForEtablissementMap.schema";
 
 export interface Filters extends z.infer<typeof getDataForEtablissementMapSchema.params> {
   cfd?: string[];

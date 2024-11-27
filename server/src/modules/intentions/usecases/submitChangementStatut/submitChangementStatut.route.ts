@@ -1,15 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { submitChangementStatutSchema } from "./submitChangementStatut.schema";
 import { submitChangementStatutUsecase } from "./submitChangementStatut.usecase";
 
+const ROUTE = ROUTES["[POST]/intention/statut/submit"];
+
 export const submitChangementStatutRoute = (server: Server) => {
-  return createRoute("/intention/statut/submit", {
-    method: "POST",
-    schema: submitChangementStatutSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

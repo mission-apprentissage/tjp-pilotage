@@ -1,6 +1,6 @@
 import { CURRENT_IJ_MILLESIME } from "shared";
+import type { Filters } from "shared/routes/schemas/get.panorama.stats.departement.schema";
 
-import type { Filters } from "@/modules/data/usecases/getDataForPanoramaDepartement/getDataForPanoramaDepartement.schema";
 import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
 import { cleanNull } from "@/utils/noNull";
 

@@ -15,9 +15,7 @@ export default function Changelog() {
 
   const updates =
     changelog?.filter(
-      // @ts-expect-error TODO
       (changelogEntry) =>
-        // @ts-expect-error TODO
         changelogEntry.types.findIndex((t) => t.label === "BANDEAU") === -1 &&
         changelogEntry.deployed &&
         changelogEntry.show
@@ -25,9 +23,7 @@ export default function Changelog() {
 
   const incoming =
     changelog?.filter(
-      // @ts-expect-error TODO
       (changelogEntry) =>
-        // @ts-expect-error TODO
         changelogEntry.types.findIndex((t) => t.label === "BANDEAU") === -1 &&
         !changelogEntry.deployed &&
         changelogEntry.show
@@ -43,7 +39,6 @@ export default function Changelog() {
               {isLoading && <EntryLoader />}
               {!isLoading &&
                 updates.length > 0 &&
-                // @ts-expect-error TODO
                 updates.map((changelogEntry) => <Entry key={changelogEntry.title} changelogEntry={changelogEntry} />)}
               {updates.length === 0 && !isLoading && <Text>Aucune donnée de mise à jour disponible.</Text>}
             </VStack>
@@ -54,7 +49,6 @@ export default function Changelog() {
               {isLoading && <EntryLoader />}
               {!isLoading &&
                 incoming.length > 0 &&
-                // @ts-expect-error TODO
                 incoming.map((changelogEntry) => <Entry key={changelogEntry.title} changelogEntry={changelogEntry} />)}
               {incoming.length === 0 && !isLoading && <Text>Aucune donnée de mise à jour disponible.</Text>}
             </VStack>

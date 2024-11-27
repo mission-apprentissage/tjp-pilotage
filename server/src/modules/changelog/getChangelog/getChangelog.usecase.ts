@@ -1,7 +1,7 @@
+import type { Changelog, ChangelogEntry } from "shared/routes/schemas/get.changelog.schema";
+
 import config from "@/config";
 import { getDatabaseRows } from "@/modules/core/services/notion/notion";
-
-import type { Changelog, ChangelogEntry } from "./getChangelog.schema";
 
 /**
  * AUTO GENERATED TYPES

@@ -25,13 +25,11 @@ const getCompareData = (compareTo?: CompareTo) => {
     "error.425",
     "grey.425",
   ]);
-  // @ts-expect-error TODO
   const arrowImg: string = {
     up: `/icons/arrow_${direction}.svg`,
     down: `/icons/arrow_${direction}.svg`,
     equal: `/icons/arrow_right.svg`,
   }[direction];
-  // @ts-expect-error TODO
   const color = { up: green, down: red, equal: grey }[direction];
 
   return (

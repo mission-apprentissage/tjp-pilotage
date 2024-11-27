@@ -1,11 +1,6 @@
 import { CURRENT_RENTREE } from "shared";
+import type { CompareTo, Indicateur, Indicateurs } from "shared/routes/schemas/get.etablissement.uai.header.schema";
 import { MILLESIMES_IJ_ETAB } from "shared/time/millesimes";
-
-import type {
-  CompareTo,
-  Indicateur,
-  Indicateurs,
-} from "@/modules/data/usecases/getHeaderEtablissement/getHeaderEtablissement.schema";
 
 import { getTauxIJ } from "./getTauxIJ.deps";
 import { getValeurAjoutee } from "./getValeurAjoutee.deps";

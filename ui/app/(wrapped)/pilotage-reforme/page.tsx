@@ -112,7 +112,6 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
     <Box bg="blueecume.950">
       <Container maxWidth={"container.xl"} py="4">
         <FiltersSection
-          // @ts-expect-error TODO
           activeFilters={filters}
           handleFilters={handleFilters}
           filterTracker={filterTracker}
@@ -139,7 +138,6 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
               indicateur={indicateur}
               handleIndicateurChange={handleIndicateurChange}
               indicateurOptions={indicateurOptions}
-              // @ts-expect-error TODO
               activeFilters={filters}
               handleFilters={handleFilters}
             ></CartoSection>
@@ -147,7 +145,6 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
           <SimpleGrid spacing={5} columns={[1]} mt={14}>
             <VueRegionAcademieSection
               data={dataRegions}
-              // @ts-expect-error TODO
               order={order}
               isLoading={isLoadingRegions}
               handleOrder={handleOrder}

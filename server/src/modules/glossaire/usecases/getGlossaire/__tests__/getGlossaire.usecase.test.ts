@@ -1,9 +1,9 @@
 import type { PageObjectResponse, QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
+import type { GlossaireEntry } from "shared/routes/schemas/get.glossaire.schema";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import config from "@/config";
 import { mapNotionDatabaseRowToGlossaireEntry } from "@/modules/glossaire/usecases/getGlossaire/dependencies";
-import type { GlossaireEntry } from "@/modules/glossaire/usecases/getGlossaire/getGlossaire.schema";
 import { getGlossaireFactory } from "@/modules/glossaire/usecases/getGlossaire/getGlossaire.usecase";
 import { PROPERTIES } from "@/modules/glossaire/usecases/utils/properties/properties";
 

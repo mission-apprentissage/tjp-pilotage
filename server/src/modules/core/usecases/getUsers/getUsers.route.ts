@@ -1,16 +1,18 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { getScopeFilterForUser } from "@/modules/core/utils/getScopeFilterForUser";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getUsersSchema } from "./getUsers.schema";
 import { getUsers } from "./getUsers.usecase";
 
+const ROUTE = ROUTES["[GET]/users"];
+
 export const getUsersRoute = (server: Server) => {
-  return createRoute("/users", {
-    method: "GET",
-    schema: getUsersSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

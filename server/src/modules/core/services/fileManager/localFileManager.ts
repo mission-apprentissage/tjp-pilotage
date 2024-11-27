@@ -1,9 +1,8 @@
 import * as fs from "fs";
 import path from "path";
+import type { FileManager, FileType } from "shared/files/types";
 
 import config from "@/config";
-
-import type { FileManager, FileType } from "./fileManager";
 
 const mapperToFileType = (filepath: string, entry: fs.Dirent): FileType => {
   const fullPath = path.join(filepath, entry.name);
