@@ -2,11 +2,11 @@ import Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import type { BodySchema } from "shared/routes/schemas/put.campagnes.campagneId.schema";
 
 import { getCampagneEnCours } from "@/modules/core/queries/getCampagneEnCours";
 
 import { updateCampagneQuery } from "./editCampagne.query";
-import type { BodySchema } from "./editCampagne.schema";
 
 export const [editCampagneUsecase] = inject(
   { updateCampagneQuery, getCampagneEnCours },

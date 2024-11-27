@@ -1,10 +1,10 @@
+import type { getDataForPanoramaRegionSchema } from "shared/routes/schemas/get.panorama.stats.region.schema";
 import type { z } from "zod";
 
 import { getStatsSortieQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant";
 
 import { getFilters, getFormationsRegion, getTauxIJ, getTopFlopFormationsRegion } from "./dependencies";
-import type { getDataForPanoramaRegionSchema } from "./getDataForPanoramaRegion.schema";
 
 export const getDataForPanoramaRegionFactory =
   (

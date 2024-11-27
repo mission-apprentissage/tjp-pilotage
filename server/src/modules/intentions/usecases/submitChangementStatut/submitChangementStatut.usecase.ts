@@ -2,6 +2,7 @@ import Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
+import type { submitChangementStatutSchema } from "shared/routes/schemas/post.intention.statut.submit.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
@@ -10,7 +11,6 @@ import { updateIntentionWithHistory } from "@/modules/intentions/repositories/up
 
 import { createChangementStatutQuery } from "./deps/createChangementStatut.query";
 import { shootChangementStatutEmail } from "./deps/shootChangementStatutEmail.deps";
-import type { submitChangementStatutSchema } from "./submitChangementStatut.schema";
 
 type ChangementStatut = z.infer<typeof submitChangementStatutSchema.body>["changementStatut"];
 

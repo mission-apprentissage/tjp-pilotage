@@ -1,14 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import type { Server } from "@/server/server";
 
 import { getDepartements } from "./getDepartements.query";
-import { getDepartementsSchema } from "./getDepartements.schema";
+
+const ROUTE = ROUTES["[GET]/departements"];
 
 export const getDepartementsRoute = (server: Server) => {
-  return createRoute("/departements", {
-    method: "GET",
-    schema: getDepartementsSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

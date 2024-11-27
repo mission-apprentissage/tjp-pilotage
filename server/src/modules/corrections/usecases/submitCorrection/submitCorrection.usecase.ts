@@ -2,19 +2,19 @@ import Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
+import type { submitCorrectionSchema } from "shared/routes/schemas/post.correction.submit.schema";
+import type { submitDemandeSchema } from "shared/routes/schemas/post.demande.submit.schema";
 import { correctionValidators } from "shared/validators/correctionValidators";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { getCurrentCampagneQuery } from "@/modules/demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
 import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
-import type { submitDemandeSchema } from "@/modules/demandes/usecases/submitDemande/submitDemande.schema";
 import logger from "@/services/logger";
 import { cleanNull } from "@/utils/noNull";
 
 import { createCorrectionQuery } from "./deps/createCorrection.query";
 import { getCorrectionByIntentionNumeroQuery } from "./deps/getCorrectionByIntentionNumero.query";
-import type { submitCorrectionSchema } from "./submitCorrection.schema";
 
 type Correction = z.infer<typeof submitCorrectionSchema.body>["correction"];
 type Demande = z.infer<typeof submitDemandeSchema.body>["demande"];

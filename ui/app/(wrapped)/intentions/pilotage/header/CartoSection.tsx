@@ -85,17 +85,14 @@ export const CartoSection = ({
     }
 
     return Object.values(data?.all).map((territoire) => ({
-      // @ts-expect-error TODO
       name: territoire.libelle,
-      // @ts-expect-error TODO
+
       parentName: territoire.libelleAcademie,
       value:
-        // @ts-expect-error TODO
         territoire.effectif || indicateur != "tauxTransformation"
-          ? // @ts-expect-error TODO
-            formatPercentageWithoutSign(territoire[indicateur], 1)
+          ? formatPercentageWithoutSign(territoire[indicateur], 1)
           : undefined,
-      // @ts-expect-error TODO
+
       code: territoire.code,
     }));
   }, [data, filters, indicateur]);

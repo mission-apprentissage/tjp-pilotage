@@ -153,7 +153,6 @@ export const GlossaireEntryContent = ({ id }: { id: string }) => {
         {entry?.indicator && (
           <Badge
             variant={
-              // @ts-expect-error TODO
               {
                 green: "success",
                 blue: "info",

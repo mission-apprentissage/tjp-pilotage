@@ -1,7 +1,7 @@
+import type { searchMetierSchema } from "shared/routes/schemas/get.metier.search.search.schema";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { searchMetierSchema } from "@/modules/data/usecases/searchMetier/searchMetier.schema";
 import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 

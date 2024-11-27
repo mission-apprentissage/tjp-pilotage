@@ -152,13 +152,10 @@ export default function Etablissements() {
   });
 
   const getDataForExport = (data: QueryResult) => {
-    // @ts-expect-error TODO
     const region = data.filters.regions.find((r) => r.value === filters.codeRegion?.[0]);
 
-    // @ts-expect-error TODO
     const academies = data.filters.academies.filter((a) => filters.codeAcademie?.includes(a.value) ?? false);
 
-    // @ts-expect-error TODO
     const departements = data.filters.departements.filter((d) => filters.codeDepartement?.includes(d.value) ?? false);
 
     const regionsColumns = {
@@ -183,7 +180,6 @@ export default function Etablissements() {
 
     let etablissements = data.etablissements;
 
-    // @ts-expect-error TODO
     etablissements = data.etablissements.map((f) => ({
       ...f,
       ...(filters.codeRegion && region
@@ -194,17 +190,15 @@ export default function Etablissements() {
         : {}),
       ...(filters.codeAcademie && academies
         ? {
-            // @ts-expect-error TODO
             selectedCodeAcademie: formatArray(academies.map((academie) => academie.value)),
-            // @ts-expect-error TODO
+
             selectedAcademie: formatArray(academies.map((academie) => academie.label)),
           }
         : {}),
       ...(filters.codeDepartement && departements
         ? {
-            // @ts-expect-error TODO
             selectedCodeDepartement: formatArray(departements.map((departement) => departement.value)),
-            // @ts-expect-error TODO
+
             selectedDepartement: formatArray(departements.map((departement) => departement.label)),
           }
         : {}),

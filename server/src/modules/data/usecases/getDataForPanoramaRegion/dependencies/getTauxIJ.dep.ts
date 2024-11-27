@@ -1,8 +1,8 @@
+import type { TauxIJParAnneeSchema } from "shared/routes/schemas/get.panorama.stats.region.schema";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { TauxIJParAnneeSchema } from "@/modules/data/usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.schema";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommuneIndicateurRegionSortie } from "@/modules/data/utils/notAnneeCommune";
 import { selectTauxInsertion6moisAgg } from "@/modules/data/utils/tauxInsertion6mois";

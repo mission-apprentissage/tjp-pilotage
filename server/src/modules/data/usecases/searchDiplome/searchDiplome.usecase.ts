@@ -1,9 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
+import type { searchDiplomeSchema } from "shared/routes/schemas/get.diplome.search.search.schema";
 import type { z } from "zod";
 
 import { findManyInDataFormationQuery } from "./searchDiplome.query";
-import type { searchDiplomeSchema } from "./searchDiplome.schema";
 
 export const [searchDiplome] = inject(
   { findManyInDataFormationQuery },

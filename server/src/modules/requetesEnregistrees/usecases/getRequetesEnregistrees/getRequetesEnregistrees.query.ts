@@ -1,10 +1,12 @@
 import type { PageRequeteEnregistreeType } from "shared/enum/pageRequeteEnregistreeEnum";
+import type {
+  FiltresFormationEtablissementSchema,
+  FiltresFormationSchema,
+} from "shared/routes/schemas/get.requetes.schema";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
-
-import type { FiltresFormationEtablissementSchema, FiltresFormationSchema } from "./getRequetesEnregistrees.schema";
 
 type FormationFiltresType = z.infer<typeof FiltresFormationSchema>;
 type FormationEtablissementFiltresType = z.infer<typeof FiltresFormationEtablissementSchema>;

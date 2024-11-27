@@ -2,6 +2,7 @@ import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { getIntentionSchema } from "shared/routes/schemas/get.intention.numero.schema";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
@@ -16,8 +17,6 @@ import {
 import { isAvisVisible } from "@/modules/utils/isAvisVisible";
 import { isIntentionNotDeleted, isIntentionSelectable } from "@/modules/utils/isDemandeSelectable";
 import { cleanNull } from "@/utils/noNull";
-
-import type { getIntentionSchema } from "./getIntention.schema";
 
 export interface Filters extends z.infer<typeof getIntentionSchema.params> {
   user: RequestUser;

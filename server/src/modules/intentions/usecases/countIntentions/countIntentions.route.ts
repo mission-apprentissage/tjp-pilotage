@@ -1,15 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { countIntentionsSchema } from "./countIntentions.schema";
 import { countIntentionsUsecase } from "./countIntentions.usecase";
 
+const ROUTE = ROUTES["[GET]/intentions/count"];
+
 export const countIntentionsRoute = (server: Server) => {
-  return createRoute("/intentions/count", {
-    method: "GET",
-    schema: countIntentionsSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

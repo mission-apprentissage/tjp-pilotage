@@ -1,9 +1,9 @@
 import Boom from "@hapi/boom";
+import type { getDataForEtablissementMapListSchema } from "shared/routes/schemas/get.etablissement.uai.map.list.schema";
 import type { z } from "zod";
 
 import * as dependencies from "./dependencies";
 import { getCountEtablissementsProches } from "./dependencies/getCountEtablissementsProches";
-import type { getDataForEtablissementMapListSchema } from "./getDataForEtablissementMapList.schema";
 import { formatEtablissement } from "./services/formatEtablissement";
 import { getDistance } from "./services/getDistance";
 

@@ -3,6 +3,7 @@ import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { getPermissionScope, guardScope, intentionValidators } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { submitIntentionSchema } from "shared/routes/schemas/post.intention.submit.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
@@ -16,7 +17,6 @@ import { cleanNull } from "@/utils/noNull";
 
 import { createChangementStatutQuery } from "./deps/createChangementStatut.query";
 import { createIntentionQuery } from "./deps/createIntention.query";
-import type { submitIntentionSchema } from "./submitIntention.schema";
 
 type Intention = z.infer<typeof submitIntentionSchema.body>["intention"];
 

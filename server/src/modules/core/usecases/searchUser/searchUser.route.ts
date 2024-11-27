@@ -1,17 +1,19 @@
 import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
 import { getScopeFilterForUser } from "@/modules/core/utils/getScopeFilterForUser";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { searchUserSchema } from "./searchUser.schema";
 import { searchUser } from "./searchUser.usecase";
 
+const ROUTE = ROUTES["[GET]/user/search/:search"];
+
 export const searchUserRoute = (server: Server) => {
-  return createRoute("/user/search/:search", {
-    method: "GET",
-    schema: searchUserSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

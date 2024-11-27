@@ -1,4 +1,8 @@
 import { chain, filter, get, keys, sumBy, union } from "lodash-es";
+import type {
+  getRepartitionPilotageIntentionsSchema,
+  StatsSchema,
+} from "shared/routes/schemas/get.pilotage-intentions.repartition.schema";
 import type { z } from "zod";
 
 import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
@@ -9,7 +13,6 @@ import { getNiveauxDiplome } from "./deps/getNiveauxDiplome";
 import type { getNumerateurQuery } from "./deps/getNumerateurQuery";
 import { getPositionsQuadrant } from "./deps/getPositionsQuadrant";
 import { getZonesGeographiques } from "./deps/getZonesGeographiques";
-import type { getRepartitionPilotageIntentionsSchema, StatsSchema } from "./getRepartitionPilotageIntentions.schema";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Filters extends z.infer<typeof getRepartitionPilotageIntentionsSchema.querystring> {}

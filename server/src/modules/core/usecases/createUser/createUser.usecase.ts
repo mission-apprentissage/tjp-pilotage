@@ -3,12 +3,12 @@ import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 import { emailRegex } from "shared";
+import type { BodySchema } from "shared/routes/schemas/post.users.userId.schema";
 
 import config from "@/config";
 import type { RequestUser } from "@/modules/core/model/User";
 import { shootTemplate } from "@/modules/core/services/mailer/mailer";
 
-import type { BodySchema } from "./createUser.schema";
 import { findUserQuery } from "./findUserQuery.dep";
 import { insertUserQuery } from "./insertUserQuery.dep";
 import { canCreateRole } from "./utils/canCreateRole";

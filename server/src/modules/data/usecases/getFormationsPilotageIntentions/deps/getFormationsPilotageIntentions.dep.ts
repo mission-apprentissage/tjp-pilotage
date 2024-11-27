@@ -3,12 +3,12 @@ import { sql } from "kysely";
 import type { MILLESIMES_IJ } from "shared";
 import { CURRENT_IJ_MILLESIME } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
+import type { getFormationsPilotageIntentionsSchema } from "shared/routes/schemas/get.pilotage-intentions.formations.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import type { z } from "zod";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
-import type { getFormationsPilotageIntentionsSchema } from "@/modules/data/usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.schema";
 import { hasContinuum } from "@/modules/data/utils/hasContinuum";
 import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
 import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";

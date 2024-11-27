@@ -245,7 +245,6 @@ export const PageClient = () => {
         ) : (
           <>
             <Header
-              // @ts-expect-error TODO
               activeFilters={filters}
               setSearchParams={setSearchParams}
               getIntentionsQueryParameters={getIntentionsQueryParameters}
@@ -545,7 +544,6 @@ export const PageClient = () => {
                               <Tag size="md" color={"white"} bgColor={"bluefrance.525"} fontWeight={"bold"}>
                                 {
                                   intention.avis.filter(
-                                    // @ts-expect-error TODO
                                     (avis) =>
                                       getStepWorkflowAvis(avis.type as AvisTypeType) ===
                                       getStepWorkflow(intention.statut)

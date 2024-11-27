@@ -1,3 +1,4 @@
+import type { getDataForPanoramaDepartementSchema } from "shared/routes/schemas/get.panorama.stats.departement.schema";
 import type { z } from "zod";
 
 import { getStatsSortieQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
@@ -9,7 +10,6 @@ import {
   getFormationsDepartement,
   getTopFlopFormationsDepartement,
 } from "./dependencies";
-import type { getDataForPanoramaDepartementSchema } from "./getDataForPanoramaDepartement.schema";
 
 export const getDataForPanoramaDepartementFactory =
   (

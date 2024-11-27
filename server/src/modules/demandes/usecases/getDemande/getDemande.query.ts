@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
+import type { getDemandeSchema } from "shared/routes/schemas/get.demande.numero.schema";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
@@ -9,8 +10,6 @@ import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeSt
 import { countDifferenceCapaciteApprentissage, countDifferenceCapaciteScolaire } from "@/modules/utils/countCapacite";
 import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
 import { cleanNull } from "@/utils/noNull";
-
-import type { getDemandeSchema } from "./getDemande.schema";
 
 export interface Filters extends z.infer<typeof getDemandeSchema.params> {
   user: RequestUser;

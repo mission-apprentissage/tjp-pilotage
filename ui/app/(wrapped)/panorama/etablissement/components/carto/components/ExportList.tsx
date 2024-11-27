@@ -43,7 +43,7 @@ export const ExportList = () => {
     trackEvent("panorama-etablissement-liste-carte:export");
     downloadCsv(
       formatExportFilename("etablissements_proches"),
-      // @ts-expect-error TODO
+
       etablissementsProches.map((etablissement) => ({
         ...etablissement,
         commune: formatCommuneLibelleWithCodeDepartement({
@@ -74,7 +74,6 @@ export const ExportList = () => {
     trackEvent("panorama-etablissement-liste-carte:export-excel");
     downloadExcel(
       formatExportFilename("etablissements_proches"),
-      // @ts-expect-error TODO
       etablissementsProches.map((etablissement) => ({
         ...etablissement,
         commune: formatCommuneLibelleWithCodeDepartement({

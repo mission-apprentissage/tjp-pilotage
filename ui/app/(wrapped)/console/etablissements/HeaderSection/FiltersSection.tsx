@@ -125,7 +125,7 @@ export const FiltersSection = ({
                   <Text p={2} color="grey.425">
                     Vos requêtes favorites
                   </Text>
-                  {/*  @ts-expect-error TODO */}
+
                   {requetesEnregistrees?.map((requete) => (
                     <MenuItem
                       p={2}
@@ -190,7 +190,6 @@ export const FiltersSection = ({
           }}
           value={searchParams.filters?.codeRegion?.[0] ?? ""}
         >
-          {/* @ts-expect-error TODO */}
           {filtersList?.regions.map((item) => (
             <option key={item.value} value={item.value}>
               {item.label}

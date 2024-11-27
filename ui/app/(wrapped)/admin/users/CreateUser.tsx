@@ -71,7 +71,6 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   const filteredRegions = (() => {
     if (!regions) return [];
     if (isAdminRegion) {
-      // @ts-expect-error TODO
       return regions.filter((region) => region.value === auth?.user?.codeRegion);
     }
     return regions;
@@ -97,7 +96,6 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 validate: (v) => z.string().email().safeParse(v).success || "Veuillez saisir un email valide",
               })}
             />
-            {/* @ts-expect-error TODO */}
             {!!errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.firstname} isRequired>
@@ -107,7 +105,6 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 required: "Veuillez saisir un prénom",
               })}
             />
-            {/* @ts-expect-error TODO */}
             {!!errors.firstname && <FormErrorMessage>{errors.firstname.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.lastname} isRequired>
@@ -117,7 +114,6 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 required: "Veuillez saisir un nom",
               })}
             />
-            {/* @ts-expect-error TODO */}
             {!!errors.lastname && <FormErrorMessage>{errors.lastname.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.role} isRequired>
@@ -133,7 +129,6 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 </option>
               ))}
             </Select>
-            {/* @ts-expect-error TODO */}
             {!!errors.role && <FormErrorMessage>{errors.role.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.codeRegion} isRequired={isAdminRegion}>
@@ -147,16 +142,12 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
               })}
             >
               {!isAdminRegion && <option value="">Aucune</option>}
-              {filteredRegions?.map(
-                // @ts-expect-error TODO
-                (region) => (
-                  <option key={region.value} value={region.value}>
-                    {region.label}
-                  </option>
-                )
-              )}
+              {filteredRegions?.map((region) => (
+                <option key={region.value} value={region.value}>
+                  {region.label}
+                </option>
+              ))}
             </Select>
-            {/* @ts-expect-error TODO */}
             {!!errors.codeRegion && <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>}
           </FormControl>
           {isError && (
