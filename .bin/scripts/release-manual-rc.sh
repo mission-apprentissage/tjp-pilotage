@@ -26,7 +26,7 @@ verify_version_pattern() {
   local input="$1"
 
   # Define the regex pattern
-  local pattern="^v[0-9]+\.[0-9]+\.[0-9]+-rc\.[0-9]+$"
+  local pattern="^[0-9]+\.[0-9]+\.[0-9]+-rc\.[0-9]+$"
   echo $input 
 
   # Check if the input matches the pattern
@@ -43,7 +43,7 @@ if check_git_tag_exists $NEXT_VERSION; then
 fi
 
 if ! verify_version_pattern $NEXT_VERSION; then
-    echo "Invalid version pattern. Expected format: v0.0.2-rc.2"
+    echo "Invalid version pattern. Expected format: 0.0.2-rc.2"
     exit 1
 fi
 

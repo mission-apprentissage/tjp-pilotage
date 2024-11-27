@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       app_version:
-        description: Version de l'application en release candidate (eg. v0.0.2-rc.14)
+        description: Version de l'application en release candidate (eg. 0.0.2-rc.14)
         type: string
         required: true
 
