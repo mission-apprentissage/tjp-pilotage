@@ -65,6 +65,7 @@ export const getStepWorkflow = (statut?: DemandeStatutType): number => {
       return 4;
     case DemandeStatutEnum["brouillon"]:
     case DemandeStatutEnum["refusée"]:
+    case DemandeStatutEnum["supprimée"]:
     default:
       return 0;
   }
@@ -76,6 +77,12 @@ export const isChangementStatutAvisDisabled = (statut?: DemandeStatutType): bool
     case DemandeStatutEnum["refusée"]:
     case DemandeStatutEnum["supprimée"]:
       return true;
+    case DemandeStatutEnum["brouillon"]:
+    case DemandeStatutEnum["proposition"]:
+    case DemandeStatutEnum["dossier complet"]:
+    case DemandeStatutEnum["dossier incomplet"]:
+    case DemandeStatutEnum["projet de demande"]:
+    case DemandeStatutEnum["prêt pour le vote"]:
     default:
       return false;
   }

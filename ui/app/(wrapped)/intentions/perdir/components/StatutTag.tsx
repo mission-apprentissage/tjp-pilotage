@@ -15,6 +15,10 @@ const TagIcon = chakra(({ statut }: { statut: DemandeStatutType }) => {
     case DemandeStatutEnum["dossier complet"]:
     case DemandeStatutEnum["prêt pour le vote"]:
       return <Icon icon={"ep:success-filled"} />;
+    case DemandeStatutEnum["brouillon"]:
+    case DemandeStatutEnum["proposition"]:
+    case DemandeStatutEnum["projet de demande"]:
+    case DemandeStatutEnum["supprimée"]:
     default:
       return <></>;
   }
@@ -46,6 +50,7 @@ export const StatutTag = chakra(
         case DemandeStatutEnum["dossier incomplet"]:
           return "error.425";
         case DemandeStatutEnum["brouillon"]:
+        case DemandeStatutEnum["supprimée"]:
         default:
           return "grey.425";
       }
@@ -65,6 +70,7 @@ export const StatutTag = chakra(
         case DemandeStatutEnum["dossier incomplet"]:
           return "error.950";
         case DemandeStatutEnum["brouillon"]:
+        case DemandeStatutEnum["supprimée"]:
         default:
           return "grey.925";
       }

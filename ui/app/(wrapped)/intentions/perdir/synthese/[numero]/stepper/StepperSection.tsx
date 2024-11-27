@@ -84,6 +84,11 @@ const IllustrationStatut = chakra(
             m={"auto"}
           />
         );
+      case DemandeStatutEnum["proposition"]:
+      case DemandeStatutEnum["dossier complet"]:
+      case DemandeStatutEnum["projet de demande"]:
+      case DemandeStatutEnum["prêt pour le vote"]:
+      case DemandeStatutEnum["supprimée"]:
       default:
         return (
           <Img
