@@ -13,6 +13,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -148,6 +149,24 @@ export const SecondaryFiltersSection = ({
               placeholder="Public / privé"
             >
               {data?.filters.secteurs?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+          </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>Voie</FormLabel>
+            <Select
+              width={"64"}
+              size="md"
+              variant={"newInput"}
+              value={activeFilters.voie ?? ""}
+              onChange={(e) => handleFilters("voie", e.target.value)}
+              borderBottomColor={activeFilters.voie != undefined ? "info.525" : ""}
+              placeholder="Toutes"
+            >
+              {data?.filters.voies?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -335,6 +354,26 @@ export const SecondaryFiltersSection = ({
                 </option>
               ))}
             </Select>
+          </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>Formations spécifiques</FormLabel>
+            <Multiselect
+              width={"64"}
+              size="md"
+              variant="newInput"
+              onChange={(selected) => handleFilters("formationSpecifique", selected)}
+              options={[
+                {
+                  label: TypeFormationSpecifiqueEnum["Action prioritaire"],
+                  value: TypeFormationSpecifiqueEnum["Action prioritaire"],
+                },
+              ]}
+              hasDefaultValue={false}
+              value={activeFilters.formationSpecifique ?? []}
+              gutter={0}
+            >
+              Toutes
+            </Multiselect>
           </Box>
           <Button
             variant="externalLink"

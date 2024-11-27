@@ -127,6 +127,7 @@ const IntentionSchema = z.object({
   codeDepartement: z.string(),
   libelleFormation: z.string(),
   libelleDispositif: z.string(),
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
   differenceCapaciteScolaire: z.coerce.number().optional(),
   differenceCapaciteApprentissage: z.coerce.number().optional(),
   changementsStatut: z.array(

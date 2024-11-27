@@ -25,6 +25,7 @@ import {
 } from "@/modules/utils/countCapacite";
 import { isDemandeProjetOrValidee } from "@/modules/utils/isDemandeProjetOrValidee";
 import { isDemandeNotDeletedOrRefused } from "@/modules/utils/isDemandeSelectable";
+import { isFormationActionPrioritaireDemande } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
 
 import { getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery } from "./getEffectifsParCampagneCodeNiveauDiplomeCodeRegion.dep";
@@ -179,6 +180,7 @@ export const getFormationsPilotageIntentionsQuery = ({
         codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("continuum"),
+      isFormationActionPrioritaireDemande(eb).as("isFormationActionPrioritaire"),
     ])
     .where((wb) => {
       if (!type) return wb.val(true);
@@ -279,5 +281,12 @@ export const getFormationsPilotageIntentionsQuery = ({
     ])
     .orderBy("tauxDevenirFavorable", "desc")
     .execute()
-    .then(cleanNull);
+    .then((formations) =>
+      formations.map((formation) =>
+        cleanNull({
+          ...formation,
+          isFormationActionPrioritaire: !!formation.isFormationActionPrioritaire,
+        })
+      )
+    );
 };

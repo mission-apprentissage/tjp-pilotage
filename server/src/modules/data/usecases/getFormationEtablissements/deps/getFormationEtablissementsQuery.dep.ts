@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
@@ -19,6 +20,7 @@ import { selectTauxInsertion6mois, withInsertionReg } from "@/modules/data/utils
 import { selectTauxPoursuite, withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPression } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissage } from "@/modules/data/utils/tauxRemplissage";
+import { isFormationActionPrioritaireEtablissement } from "@/modules/utils/isFormationActionPrioritaire";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
@@ -40,6 +42,7 @@ export const getFormationEtablissementsQuery = async ({
   codeNsf,
   positionQuadrant,
   withAnneeCommune,
+  formationSpecifique,
   search,
   order,
   orderBy,
@@ -148,7 +151,6 @@ export const getFormationEtablissementsQuery = async ({
         )
         .end()
         .as("continuumEtablissement"),
-
       eb
         .selectFrom("formationHistorique")
         .select("formationHistorique.cfd")
@@ -156,6 +158,7 @@ export const getFormationEtablissementsQuery = async ({
         .where("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
         .limit(1)
         .as("isFormationRenovee"),
+      isFormationActionPrioritaireEtablissement(eb).as("isFormationActionPrioritaire"),
       sql<string | null>`
         case when ${eb.ref("formationView.dateFermeture")} is not null
         then to_char(${eb.ref("formationView.dateFermeture")}, 'dd/mm/yyyy')
@@ -315,6 +318,19 @@ export const getFormationEtablissementsQuery = async ({
       if (!positionQuadrant) return eb;
       return eb.where("positionQuadrant", "in", positionQuadrant);
     })
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
+          return q.innerJoin("actionPrioritaire", (join) =>
+            join
+              .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
+              .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
+              .onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion")
+          );
+        }
+      }
+      return q;
+    })
     .where(isInPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
     .groupBy([
@@ -365,6 +381,7 @@ export const getFormationEtablissementsQuery = async ({
       cleanNull({
         ...etablissement,
         isFormationRenovee: !!etablissement.isFormationRenovee,
+        isFormationActionPrioritaire: !!etablissement.isFormationActionPrioritaire,
       })
     ),
   };

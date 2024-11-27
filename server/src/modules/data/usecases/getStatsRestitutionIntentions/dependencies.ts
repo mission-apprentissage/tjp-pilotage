@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import type { FiltersSchema } from "shared/routes/schemas/get.restitution-intentions.stats.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import type { z } from "zod";
@@ -52,6 +53,7 @@ const getStatsRestitutionIntentionsQuery = async ({
   campagne,
   search,
   positionQuadrant,
+  formationSpecifique,
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
@@ -313,6 +315,19 @@ const getStatsRestitutionIntentionsQuery = async ({
       }
 
       return eb;
+    })
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
+          return q.innerJoin("actionPrioritaire", (join) =>
+            join
+              .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
+              .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
+              .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
+          );
+        }
+      }
+      return q;
     })
     .where(isRestitutionIntentionVisible({ user }))
     .executeTakeFirstOrThrow()

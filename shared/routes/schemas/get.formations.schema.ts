@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
 
 const OptionSchema = z.object({
@@ -44,6 +45,8 @@ export const FormationLineSchema = z.object({
   // Flag indiquant si la formation est renovée
   isFormationRenovee: z.coerce.boolean().optional(),
   dateFermeture: z.string().optional(),
+  // Flag indiquant si la formation fait l'objet d'une action prioritaire
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
 });
 
 export const getFormationSchema = {
@@ -62,6 +65,7 @@ export const getFormationSchema = {
     search: z.string().optional(),
     withEmptyFormations: z.string().optional(),
     withAnneeCommune: z.string().optional(),
+    formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationLineSchema.keyof().optional(),
     offset: z.coerce.number().optional(),

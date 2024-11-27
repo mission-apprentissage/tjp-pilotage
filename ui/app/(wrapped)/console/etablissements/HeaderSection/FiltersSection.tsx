@@ -16,27 +16,57 @@ import {
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 import { useState } from "react";
-import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { DeleteRequeteEnregistreeButton } from "@/app/(wrapped)/console/components/DeleteRequeteEnregistreeButton";
 import { FilterTags } from "@/app/(wrapped)/console/components/FilterTags";
 import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
-import type { Filters, FiltersList, Order, RequetesEnregistrees } from "@/app/(wrapped)/console/etablissements/types";
+import type {
+  Filters,
+  FiltersList,
+  Order,
+  RequetesEnregistrees,
+  RequetesSuggerees,
+} from "@/app/(wrapped)/console/etablissements/types";
 import { Multiselect } from "@/components/Multiselect";
 import { feature } from "@/utils/feature";
 
-const REQUETES_ENREGISTREES = [
+const REQUETES_SUGGEREES: RequetesSuggerees = [
   {
-    filtres: {},
-    nom: "Transition écologique",
+    filtres: {
+      formationSpecifique: [TypeFormationSpecifiqueEnum["Transition écologique"]],
+    },
+    nom: TypeFormationSpecifiqueEnum["Transition écologique"],
     couleur: "green.submitted",
+    active: false,
+    conditions: [],
   },
   {
     filtres: {
-      positionQuadrant: [PositionQuadrantEnum["Q4"]],
+      formationSpecifique: [TypeFormationSpecifiqueEnum["Transition démographique"]],
     },
-    nom: "Action prioritaire",
-    couleur: "redmarianne.625_hover",
+    nom: TypeFormationSpecifiqueEnum["Transition démographique"],
+    couleur: "pinkmacaron.950",
+    active: false,
+    conditions: [],
+  },
+  {
+    filtres: {
+      formationSpecifique: [TypeFormationSpecifiqueEnum["Transition numérique"]],
+    },
+    nom: TypeFormationSpecifiqueEnum["Transition numérique"],
+    couleur: "blueecume.950",
+    active: false,
+    conditions: [],
+  },
+  {
+    filtres: {
+      formationSpecifique: [TypeFormationSpecifiqueEnum["Action prioritaire"]],
+    },
+    nom: TypeFormationSpecifiqueEnum["Action prioritaire"],
+    couleur: "yellowTournesol.950",
+    active: true,
+    conditions: [],
   },
 ];
 
@@ -88,12 +118,19 @@ export const FiltersSection = ({
         cfd: [],
         codeNsf: [],
         positionQuadrant: [],
+        formationSpecifique: [],
       },
     });
     setRequeteEnregistreeActuelle({ nom: "Requêtes favorites" });
   };
 
   const [deleteButtonToDisplay, setDeleteButtonToDisplay] = useState<string>("");
+
+  const filteredRequetesSuggerees = REQUETES_SUGGEREES.filter((r) => r.active).filter((r) =>
+    r.conditions?.every((condition) => searchParams.filters?.[condition as keyof Partial<Filters>])
+  );
+
+  const isDisabled = !filteredRequetesSuggerees.length && !requetesEnregistrees?.length;
 
   return (
     <Flex direction={"column"} gap={4} wrap={"wrap"}>
@@ -109,7 +146,7 @@ export const FiltersSection = ({
             borderStyle="solid"
             borderColor="grey.900"
             bg={"white"}
-            isDisabled={!requetesEnregistrees || !requetesEnregistrees.length}
+            isDisabled={isDisabled}
           >
             <Flex direction="row" gap={2} overflow={"hidden"} whiteSpace="nowrap">
               {requeteEnregistreeActuelle.couleur && (
@@ -158,21 +195,21 @@ export const FiltersSection = ({
                   <Text p={2} color="grey.425">
                     Requêtes suggérées
                   </Text>
-                  {REQUETES_ENREGISTREES.map((requeteEnregistree) => (
+                  {REQUETES_SUGGEREES.filter((r) => r.active).map((requeteSuggeree) => (
                     <MenuItem
                       p={2}
-                      key={requeteEnregistree.nom}
+                      key={requeteSuggeree.nom}
                       onClick={() => {
                         setSearchParams({
                           page: 0,
-                          filters: requeteEnregistree.filtres,
+                          filters: requeteSuggeree.filtres,
                         });
-                        setRequeteEnregistreeActuelle(requeteEnregistree);
+                        setRequeteEnregistreeActuelle(requeteSuggeree);
                       }}
                       gap={2}
                     >
-                      <Tag size={"sm"} bgColor={requeteEnregistree.couleur} borderRadius={"100%"} />
-                      <Flex direction="row">{requeteEnregistree.nom}</Flex>
+                      <Tag size={"sm"} bgColor={requeteSuggeree.couleur} borderRadius={"100%"} />
+                      <Flex direction="row">{requeteSuggeree.nom}</Flex>
                     </MenuItem>
                   ))}
                 </>

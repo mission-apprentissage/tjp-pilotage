@@ -8,6 +8,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   libelleEtablissement: "Nom d'établissement",
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
   // Établissement
   commune: "Commune",
   codeDepartement: "Code Département",
@@ -55,6 +56,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   libelleEtablissement: "Nom d'établissement",
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
   // Établissement
   commune: "Commune",
   libelleDepartement: "Département",

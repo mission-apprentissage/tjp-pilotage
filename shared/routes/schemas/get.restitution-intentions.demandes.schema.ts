@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { OptionSchema } from "../../schema/optionSchema";
 
 const DemandeSchema = z.object({
@@ -108,6 +109,7 @@ const DemandeSchema = z.object({
     moyennePoursuiteEtudeCfdRegion: z.coerce.number().nullable().optional(),
     millesimeSortie: z.string().optional(),
   }),
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
 });
 
 export const FiltersSchema = z.object({
@@ -127,6 +129,7 @@ export const FiltersSchema = z.object({
   positionQuadrant: z.string().optional(),
   voie: z.enum(["scolaire", "apprentissage"]).optional(),
   campagne: z.string().optional(),
+  formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: DemandeSchema.keyof().optional(),
   offset: z.coerce.number().optional(),

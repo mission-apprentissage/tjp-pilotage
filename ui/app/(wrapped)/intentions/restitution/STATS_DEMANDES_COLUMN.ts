@@ -17,6 +17,7 @@ export const STATS_DEMANDES_COLUMNS = {
   cfd: "CFD",
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
   codeDispositif: "Code Dispositif",
   libelleDispositif: "Dispositif",
   niveauDiplome: "Diplôme",
@@ -107,6 +108,7 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<typeof STATS_DEMANDES_COLU
   // formation
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
   niveauDiplome: "Diplôme",
   // demande
   typeDemande: "Type de demande",
