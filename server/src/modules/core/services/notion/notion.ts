@@ -1,5 +1,5 @@
 import Boom from "@hapi/boom";
-import { APIErrorCode, Client, isNotionClientError } from "@notionhq/client";
+import { APIErrorCode, Client, ClientErrorCode, isNotionClientError } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
 
 export const notionClient = new Client({
@@ -26,6 +26,16 @@ const withNotionErrorHandling =
             throw Boom.unauthorized("Token Notion invalide");
           case APIErrorCode.RateLimited:
             throw Boom.tooManyRequests("Trop de requêtes Notion");
+          case ClientErrorCode.RequestTimeout:
+          case ClientErrorCode.ResponseError:
+          case APIErrorCode.RestrictedResource:
+          case APIErrorCode.InvalidJSON:
+          case APIErrorCode.InvalidRequestURL:
+          case APIErrorCode.InvalidRequest:
+          case APIErrorCode.ValidationError:
+          case APIErrorCode.ConflictError:
+          case APIErrorCode.InternalServerError:
+          case APIErrorCode.ServiceUnavailable:
           default:
             throw Boom.badImplementation("Erreur inattendue lors de la communication avec Notion", {
               error: error as Error,

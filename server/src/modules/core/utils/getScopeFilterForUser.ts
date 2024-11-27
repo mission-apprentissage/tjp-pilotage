@@ -22,6 +22,9 @@ export const getScopeFilterForUser = (permission: Permission, user: RequestUser)
           scopeWithFilter.scopeFilter = [user.codeRegion];
         }
         break;
+      case "national":
+      case "uai":
+      case "role":
       default:
         scopeWithFilter.scopeFilter = [];
         break;
