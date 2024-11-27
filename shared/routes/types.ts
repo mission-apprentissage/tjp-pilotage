@@ -1,14 +1,6 @@
-import type { TSchema } from "@sinclair/typebox";
 import type { z } from "zod";
 
 export type TMethod = "GET" | "HEAD" | "OPTIONS" | "TRACE" | "PUT" | "DELETE" | "POST" | "PATCH" | "CONNECT";
-
-export type SchemaTypeBox = {
-  params?: TSchema;
-  querystring?: TSchema;
-  body?: TSchema;
-  response: Record<number, TSchema>;
-};
 
 export type SchemaZod = {
   params?: z.AnyZodObject;
@@ -20,7 +12,7 @@ export type SchemaZod = {
 export interface IRoute {
   url: string;
   method: TMethod;
-  schema: SchemaTypeBox | SchemaZod;
+  schema: SchemaZod;
 }
 
 export interface IRoutesDefinition {

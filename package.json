@@ -18,7 +18,6 @@
   ],
   "dependencies": {
     "@sentry/cli": "^2.37.0",
-    "@sinclair/typebox": "^0.33.18",
     "dotenv": "^16.4.5",
     "eslint-plugin-react": "^7.37.1",
     "global": "4.4.0",
