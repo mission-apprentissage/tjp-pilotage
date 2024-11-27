@@ -277,6 +277,9 @@ export const getCorrectionsQuery = async ({
         ...correction,
         createdAt: correction.createdAt?.toISOString(),
         updatedAt: correction.updatedAt?.toISOString(),
+        formationSpecifique: {
+          isFormationActionPrioritaire: !!correction.isFormationActionPrioritaire,
+        },
       })
     ),
     campagnes: campagnes.map(cleanNull),

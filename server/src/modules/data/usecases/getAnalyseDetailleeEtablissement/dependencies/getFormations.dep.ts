@@ -1,6 +1,5 @@
 import { sql } from "kysely";
-import type { FormationSchema } from "shared/routes/schemas/get.etablissement.uai.analyse-detaillee.schema";
-import type { z } from "zod";
+import type { Voie } from "shared/enum/voieEnum";
 
 import { isFormationActionPrioritaireDataEtablissement } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
@@ -28,7 +27,16 @@ export const getFormations = async ({ uai }: { uai: string }) =>
       "dispositif.libelleDispositif",
       isFormationActionPrioritaireDataEtablissement(eb).as("isFormationActionPrioritaire"),
     ])
+    .$narrowType<{ voie: Voie }>()
     .orderBy(["libelleNiveauDiplome asc", "libelleFormation asc", "libelleDispositif"])
-    .$castTo<z.infer<typeof FormationSchema>>()
     .execute()
-    .then(cleanNull);
+    .then((formations) =>
+      formations.map((formation) =>
+        cleanNull({
+          ...formation,
+          formationSpecifique: {
+            isFormationActionPrioritaire: !!formation.isFormationActionPrioritaire,
+          },
+        })
+      )
+    );

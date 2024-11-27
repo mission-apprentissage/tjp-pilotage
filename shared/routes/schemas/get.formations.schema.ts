@@ -3,6 +3,13 @@ import { z } from "zod";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
 
+const FormationSpecifiqueFlagsSchema = z.object({
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
+  isFormationTransitionEcologique: z.coerce.boolean().optional(),
+  isFormationTransitionDemographique: z.coerce.boolean().optional(),
+  isFormationTransitionNumerique: z.coerce.boolean().optional(),
+});
+
 const OptionSchema = z.object({
   label: z.coerce.string(),
   value: z.coerce.string(),
@@ -11,6 +18,7 @@ const OptionSchema = z.object({
 export const FormationLineSchema = z.object({
   cfd: z.string(),
   libelleFormation: z.string(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
   rentreeScolaire: z.string().optional(),
   codeNiveauDiplome: z.string(),
   libelleFamille: z.string().optional(),
@@ -45,8 +53,6 @@ export const FormationLineSchema = z.object({
   // Flag indiquant si la formation est renovée
   isFormationRenovee: z.coerce.boolean().optional(),
   dateFermeture: z.string().optional(),
-  // Flag indiquant si la formation fait l'objet d'une action prioritaire
-  isFormationActionPrioritaire: z.coerce.boolean().optional(),
 });
 
 export const getFormationSchema = {

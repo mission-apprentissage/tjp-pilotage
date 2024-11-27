@@ -299,6 +299,9 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         statut: castDemandeStatutWithoutSupprimee(demande.statut),
         createdAt: demande.createdAt?.toISOString(),
         updatedAt: demande.updatedAt?.toISOString(),
+        formationSpecifique: {
+          isFormationActionPrioritaire: !!demande.isFormationActionPrioritaire,
+        },
       })
     ),
     count: parseInt(demandes[0]?.count) || 0,

@@ -160,7 +160,7 @@ export const LineContent = ({
         bgColor={getCellColor("formationSpecifique")}
       >
         <BadgeActionPrioritaire
-          isFormationActionPrioritaire={demande.isFormationActionPrioritaire}
+          isFormationActionPrioritaire={demande.formationSpecifique?.isFormationActionPrioritaire}
           labelSize="long"
           size="md"
         />

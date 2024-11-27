@@ -214,11 +214,6 @@ export const ROUTES = {
     method: "GET",
     schema: getDataForPanoramaDepartementSchema,
   },
-  "[GET]/panorama/stats/etablissement/:uai": {
-    url: "/panorama/stats/etablissement/:uai",
-    method: "GET",
-    schema: getEtablissementStatsSchema,
-  },
   "[GET]/panorama/stats/region": {
     url: "/panorama/stats/region",
     method: "GET",

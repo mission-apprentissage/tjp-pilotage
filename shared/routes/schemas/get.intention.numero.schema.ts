@@ -4,6 +4,13 @@ import { AvisStatutZodType } from "../../enum/avisStatutEnum";
 import { AvisTypeZodType } from "../../enum/avisTypeEnum";
 import { DemandeStatutEnum, DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 
+const FormationSpecifiqueFlagsSchema = z.object({
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
+  isFormationTransitionEcologique: z.coerce.boolean().optional(),
+  isFormationTransitionDemographique: z.coerce.boolean().optional(),
+  isFormationTransitionNumerique: z.coerce.boolean().optional(),
+});
+
 const UserSchema = z.object({
   fullname: z.string().optional(),
   id: z.string().optional(),
@@ -127,7 +134,7 @@ const IntentionSchema = z.object({
   codeDepartement: z.string(),
   libelleFormation: z.string(),
   libelleDispositif: z.string(),
-  isFormationActionPrioritaire: z.coerce.boolean().optional(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
   differenceCapaciteScolaire: z.coerce.number().optional(),
   differenceCapaciteApprentissage: z.coerce.number().optional(),
   changementsStatut: z.array(

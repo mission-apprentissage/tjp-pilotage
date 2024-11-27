@@ -32,7 +32,6 @@ export const getIntentionRoute = (server: Server) => {
         });
         response.status(200).send({
           ...intention,
-          statut: intention.statut,
           canEdit,
         });
       },

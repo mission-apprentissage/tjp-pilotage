@@ -2,6 +2,13 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 
+const FormationSpecifiqueFlagsSchema = z.object({
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
+  isFormationTransitionEcologique: z.coerce.boolean().optional(),
+  isFormationTransitionDemographique: z.coerce.boolean().optional(),
+  isFormationTransitionNumerique: z.coerce.boolean().optional(),
+});
+
 const UserSchema = z.object({
   fullname: z.string().optional(),
   id: z.string().optional(),
@@ -132,7 +139,7 @@ const DemandeSchema = z.object({
   differenceCapaciteScolaire: z.coerce.number().optional(),
   differenceCapaciteApprentissage: z.coerce.number().optional(),
   correction: CorrectionSchema.optional(),
-  isFormationActionPrioritaire: z.coerce.boolean().optional(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
 });
 
 export const getDemandeSchema = {

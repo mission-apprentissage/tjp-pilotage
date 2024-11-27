@@ -94,6 +94,7 @@ export const STATS_DEMANDES_COLUMNS = {
     disciplinesProfesseurAssocieRH: string;
     disciplinesFormationRH: string;
     inspecteurReferent: string;
+    formationSpecifique: string;
   }
 >;
 

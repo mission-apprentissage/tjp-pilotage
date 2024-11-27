@@ -4,6 +4,13 @@ import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { OptionSchema } from "../../schema/optionSchema";
 
+const FormationSpecifiqueFlagsSchema = z.object({
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
+  isFormationTransitionEcologique: z.coerce.boolean().optional(),
+  isFormationTransitionDemographique: z.coerce.boolean().optional(),
+  isFormationTransitionNumerique: z.coerce.boolean().optional(),
+});
+
 const CorrectionItem = z.object({
   intentionNumero: z.string().optional(),
   // Établissement
@@ -20,7 +27,7 @@ const CorrectionItem = z.object({
   // Formation
   libelleNsf: z.string().optional(),
   libelleFormation: z.string().optional(),
-  isFormationActionPrioritaire: z.coerce.boolean().optional(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
   niveauDiplome: z.string().optional(),
   libelleDispositif: z.string().optional(),
   codeDispositif: z.string(),

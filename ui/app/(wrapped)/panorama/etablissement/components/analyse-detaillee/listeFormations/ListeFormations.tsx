@@ -105,7 +105,7 @@ export const ListeFormations = ({
                       <BadgeVoieApprentissage voie={formation.voie} />
                       <BadgeTypeFamille typeFamille={formation.typeFamille as TypeFamilleKeys} />
                       <BadgeActionPrioritaire
-                        isFormationActionPrioritaire={formation.isFormationActionPrioritaire}
+                        isFormationActionPrioritaire={formation.formationSpecifique?.isFormationActionPrioritaire}
                         textTransform="capitalize"
                       />
                     </Flex>

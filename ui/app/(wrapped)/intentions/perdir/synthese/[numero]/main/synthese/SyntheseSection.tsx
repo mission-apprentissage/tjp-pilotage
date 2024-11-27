@@ -76,7 +76,7 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
                   <Text fontSize={14}>{intention.libelleFormation}</Text>
                 </Tooltip>
                 <BadgeActionPrioritaire
-                  isFormationActionPrioritaire={intention.isFormationActionPrioritaire}
+                  isFormationActionPrioritaire={intention.formationSpecifique?.isFormationActionPrioritaire}
                   size="sm"
                   labelSize="long"
                 />

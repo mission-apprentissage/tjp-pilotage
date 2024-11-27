@@ -2,6 +2,13 @@ import { z } from "zod";
 
 import { voie } from "../../enum/voieEnum";
 
+const FormationSpecifiqueFlagsSchema = z.object({
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
+  isFormationTransitionEcologique: z.coerce.boolean().optional(),
+  isFormationTransitionDemographique: z.coerce.boolean().optional(),
+  isFormationTransitionNumerique: z.coerce.boolean().optional(),
+});
+
 const EtablissementSchema = z.object({
   uai: z.string(),
   libelleEtablissement: z.string(),
@@ -77,7 +84,7 @@ export const FormationSchema = z.object({
   codeNiveauDiplome: z.string(),
   typeFamille: z.string().optional(),
   dateOuverture: z.date().optional(),
-  isFormationActionPrioritaire: z.coerce.boolean().optional(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
 });
 
 const OffreSchema = z.string();

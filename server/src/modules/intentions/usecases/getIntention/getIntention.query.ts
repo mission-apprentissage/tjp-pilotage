@@ -195,6 +195,9 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         statutAvis: castAvisStatut(avis.statutAvis),
         typeAvis: castAvisType(avis.typeAvis),
       })),
+      formationSpecifique: {
+        isFormationActionPrioritaire: !!intention.isFormationActionPrioritaire,
+      },
     })
   );
 };

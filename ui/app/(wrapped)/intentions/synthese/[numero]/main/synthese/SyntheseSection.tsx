@@ -94,7 +94,7 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
                   <Text fontSize={14}>{demande.libelleFormation}</Text>
                 </Tooltip>
                 <BadgeActionPrioritaire
-                  isFormationActionPrioritaire={demande.isFormationActionPrioritaire}
+                  isFormationActionPrioritaire={demande.formationSpecifique?.isFormationActionPrioritaire}
                   size="sm"
                   labelSize="long"
                 />

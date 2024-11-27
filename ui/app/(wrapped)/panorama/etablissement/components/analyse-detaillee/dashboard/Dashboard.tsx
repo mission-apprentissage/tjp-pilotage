@@ -38,7 +38,7 @@ export const Dashboard = ({
           <Flex>
             <BadgeVoieApprentissage voie={formation?.voie} labelSize="long" size={"md"} />
             <BadgeActionPrioritaire
-              isFormationActionPrioritaire={formation.isFormationActionPrioritaire}
+              isFormationActionPrioritaire={formation?.formationSpecifique?.isFormationActionPrioritaire}
               labelSize="long"
               size={"md"}
             />
