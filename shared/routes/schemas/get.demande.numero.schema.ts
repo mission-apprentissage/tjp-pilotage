@@ -132,6 +132,7 @@ const DemandeSchema = z.object({
   differenceCapaciteScolaire: z.coerce.number().optional(),
   differenceCapaciteApprentissage: z.coerce.number().optional(),
   correction: CorrectionSchema.optional(),
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
 });
 
 export const getDemandeSchema = {

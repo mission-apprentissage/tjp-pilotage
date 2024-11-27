@@ -7,6 +7,7 @@ export const FORMATION_COLUMNS = {
   // Formation
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
   libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",
@@ -37,6 +38,7 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   // Formation
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
   libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",

@@ -2,6 +2,7 @@ import { Box, Button, Flex, FormLabel, Grid, GridItem, Select, Text, VStack } fr
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { ScopeEnum } from "shared";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type {
@@ -358,6 +359,26 @@ export const FiltersSection = ({
             gutter={0}
           >
             Tous
+          </Multiselect>
+        </GridItem>
+        <GridItem>
+          <FormLabel>Formations Spécifiques</FormLabel>
+          <Multiselect
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            onChange={(selected) => onUpdateFilter({ key: "formationSpecifique", selected })}
+            options={[
+              {
+                label: TypeFormationSpecifiqueEnum["Action prioritaire"],
+                value: TypeFormationSpecifiqueEnum["Action prioritaire"],
+              },
+            ]}
+            hasDefaultValue={false}
+            value={filters.formationSpecifique ?? []}
+            gutter={0}
+          >
+            Toutes
           </Multiselect>
         </GridItem>
         <GridItem>

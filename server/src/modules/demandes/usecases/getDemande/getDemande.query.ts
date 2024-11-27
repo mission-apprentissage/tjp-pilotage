@@ -9,6 +9,7 @@ import type { RequestUser } from "@/modules/core/model/User";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
 import { countDifferenceCapaciteApprentissage, countDifferenceCapaciteScolaire } from "@/modules/utils/countCapacite";
 import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
+import { isFormationActionPrioritaireDemande } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
 
 export interface Filters extends z.infer<typeof getDemandeSchema.params> {
@@ -135,6 +136,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       ).as("updatedBy"),
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
+      isFormationActionPrioritaireDemande(eb).as("isFormationActionPrioritaire"),
     ])
     .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))

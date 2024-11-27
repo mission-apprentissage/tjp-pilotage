@@ -10,6 +10,7 @@ import { basepath } from "./basepath";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
 import type { LineTypes } from "./modules/import/repositories/rawData.repository";
 import { Schemas } from "./modules/import/repositories/rawData.repository";
+import { importActionPrioritaire } from "./modules/import/usecases/importActionPrioritaire/importActionPrioritaire.usecase";
 import { importConstatRentree } from "./modules/import/usecases/importConstatRentree/importConstatRentree.usecase";
 import { importDataEtablissements } from "./modules/import/usecases/importDataEtablissements/importDataEtablissements.usecase";
 import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
@@ -110,7 +111,6 @@ export function productCommands(cli: Command) {
     .command("importFiles")
     .argument("[filename]")
     .action(async (filename?: string) => {
-      console.log(filename);
       const getImport = async ({
         type,
         year,
@@ -121,7 +121,6 @@ export function productCommands(cli: Command) {
         schema: Zod.Schema<unknown>;
       }) => {
         const filePath = year ? `${basepath}/files/${year}/${type}_${year}.csv` : `${basepath}/files/${type}.csv`;
-        console.log(filePath);
         return await importRawFile({
           type: year ? `${type}_${year}` : type,
           path: filePath,
@@ -247,6 +246,10 @@ export function productCommands(cli: Command) {
           type: "tension_rome_departement",
           schema: Schemas.tension_rome_departement,
         }),
+        ...getImports({
+          type: "actions_prioritaires",
+          schema: Schemas.actions_prioritaires,
+        }),
       };
 
       await writeErrorLogs({
@@ -299,6 +302,7 @@ export function productCommands(cli: Command) {
         importTensionRomeNational,
         importTensionRomeRegion,
         importTensionRomeDepartement,
+        importActionPrioritaire,
         refreshViews,
       };
 

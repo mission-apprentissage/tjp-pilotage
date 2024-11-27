@@ -133,6 +133,9 @@ export const HeadLineContent = ({
           <OrderIcon {...order} column="libelleFormation" />
           {FORMATION_COLUMNS.libelleFormation}
         </ConditionalTh>
+        <ConditionalTh colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+          {FORMATION_COLUMNS.formationSpecifique}
+        </ConditionalTh>
         <ConditionalTh
           colonne={"libelleNiveauDiplome"}
           colonneFilters={colonneFilters}

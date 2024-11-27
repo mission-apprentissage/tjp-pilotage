@@ -1,10 +1,12 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Badge, Box, chakra, Flex, IconButton, Link, Skeleton, Tag, Td, Text, Tr } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { CURRENT_RENTREE } from "shared";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Line } from "@/app/(wrapped)/console/formations/types";
+import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -145,6 +147,9 @@ export const FormationLineContent = ({
           </Flex>
         )}
       </Flex>
+    </ConditionalTd>
+    <ConditionalTd colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      <BadgeActionPrioritaire isFormationActionPrioritaire={line.isFormationActionPrioritaire} labelSize="long" />
     </ConditionalTd>
     <ConditionalTd colonne={"libelleNiveauDiplome"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleNiveauDiplome ?? "-"}

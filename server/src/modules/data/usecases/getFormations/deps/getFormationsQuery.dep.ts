@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
@@ -18,6 +19,7 @@ import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "@/modules/data/utils/tauxRemplissage";
+import { isFormationActionPrioritaireEtablissement } from "@/modules/utils/isFormationActionPrioritaire";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
@@ -38,6 +40,7 @@ export const getFormationsQuery = async ({
   positionQuadrant,
   search,
   withEmptyFormations = "true",
+  formationSpecifique,
   withAnneeCommune,
   order,
   orderBy,
@@ -79,7 +82,7 @@ export const getFormationsQuery = async ({
             .onRef("positionFormationRegionaleQuadrant.codeRegion", "=", "etablissement.codeRegion")
             .on("positionFormationRegionaleQuadrant.millesimeSortie", "=", millesimeSortie)
         )
-        .select((eb) =>
+        .select((eb) => [
           eb
             .case()
             .when(eb("formationView.typeFamille", "in", ["1ere_commune", "2nde_commune"]))
@@ -98,13 +101,14 @@ export const getFormationsQuery = async ({
               )`
             )
             .end()
-            .as("positionQuadrant")
-        )
+            .as("positionQuadrant"),
+          isFormationActionPrioritaireEtablissement(eb).as("isFormationActionPrioritaire"),
+        ])
         .$call((eb) => {
           if (!positionQuadrant) return eb;
           return eb.where("positionQuadrant", "in", positionQuadrant);
         })
-        .groupBy("positionQuadrant");
+        .groupBy(["positionQuadrant", "etablissement.codeRegion"]);
     })
     .select((eb) => [
       sql<number>`COUNT(*) OVER()`.as("count"),
@@ -316,6 +320,21 @@ export const getFormationsQuery = async ({
       // disable ordering by positionQuadrant if codeRegion is not set
       if (!codeRegion && orderBy === "positionQuadrant") return q;
       return q.orderBy(sql.ref(orderBy), sql`${sql.raw(order)} NULLS LAST`);
+    })
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
+          return q.innerJoin("actionPrioritaire", (join) =>
+            join
+              .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
+              .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
+              .$call((join) =>
+                codeRegion ? join.onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion") : join
+              )
+          );
+        }
+      }
+      return q;
     })
     .orderBy("libelleFormation", "asc")
     .orderBy("libelleNiveauDiplome", "asc")

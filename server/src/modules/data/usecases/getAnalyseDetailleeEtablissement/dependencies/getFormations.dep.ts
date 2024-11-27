@@ -2,6 +2,7 @@ import { sql } from "kysely";
 import type { FormationSchema } from "shared/routes/schemas/get.etablissement.uai.analyse-detaillee.schema";
 import type { z } from "zod";
 
+import { isFormationActionPrioritaireDataEtablissement } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
 
 import { getBase } from "./base.dep";
@@ -25,6 +26,7 @@ export const getFormations = async ({ uai }: { uai: string }) =>
       "formationEtablissement.codeDispositif",
       "dataFormation.typeFamille",
       "dispositif.libelleDispositif",
+      isFormationActionPrioritaireDataEtablissement(eb).as("isFormationActionPrioritaire"),
     ])
     .orderBy(["libelleNiveauDiplome asc", "libelleFormation asc", "libelleDispositif"])
     .$castTo<z.infer<typeof FormationSchema>>()

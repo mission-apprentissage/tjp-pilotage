@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
 
@@ -66,6 +67,8 @@ const FormationEtablissementLineSchema = z.object({
   // Flag indiquant si la formation est renovée
   isFormationRenovee: z.coerce.boolean().optional(),
   dateFermeture: z.string().optional(),
+  // Flag indiquant si la formation fait l'objet d'une action prioritaire
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
 });
 
 const FiltersSchema = z.object({
@@ -82,6 +85,7 @@ const FiltersSchema = z.object({
   uai: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
   positionQuadrant: z.array(PositionQuadrantZodType).optional(),
+  formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
   withAnneeCommune: z.string().optional(),
   search: z.string().optional(),
   order: z.enum(["asc", "desc"]).optional(),

@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -11,6 +12,7 @@ import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6moi
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
 import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
+import { isFormationActionPrioritaireDemande } from "@/modules/utils/isFormationActionPrioritaire";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
@@ -32,6 +34,7 @@ export const getCorrectionsQuery = async ({
   millesimeSortie = CURRENT_IJ_MILLESIME,
   voie,
   campagne,
+  formationSpecifique,
   offset = 0,
   limit = MAX_LIMIT,
   order = "desc",
@@ -131,6 +134,7 @@ export const getCorrectionsQuery = async ({
       "correction.createdAt",
       "correction.updatedAt",
       "correction.commentaire",
+      isFormationActionPrioritaireDemande(eb).as("isFormationActionPrioritaire"),
     ])
     .$call((eb) => {
       if (search)
@@ -241,6 +245,19 @@ export const getCorrectionsQuery = async ({
       }
 
       return eb;
+    })
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
+          return q.innerJoin("actionPrioritaire", (join) =>
+            join
+              .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
+              .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
+              .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
+          );
+        }
+      }
+      return q;
     })
     .$call((q) => {
       if (!orderBy || !order) return q;

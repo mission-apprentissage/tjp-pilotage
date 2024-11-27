@@ -16,6 +16,7 @@ import {
 } from "@/modules/utils/countCapacite";
 import { isAvisVisible } from "@/modules/utils/isAvisVisible";
 import { isIntentionNotDeleted, isIntentionSelectable } from "@/modules/utils/isDemandeSelectable";
+import { isFormationActionPrioritaireIntention } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
 
 export interface Filters extends z.infer<typeof getIntentionSchema.params> {
@@ -110,6 +111,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
       "departement.codeDepartement",
+      isFormationActionPrioritaireIntention(eb).as("isFormationActionPrioritaire"),
     ])
     .where("intention.isIntention", "=", true)
     .where(isIntentionNotDeleted)

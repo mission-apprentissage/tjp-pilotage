@@ -77,6 +77,7 @@ export const FormationSchema = z.object({
   codeNiveauDiplome: z.string(),
   typeFamille: z.string().optional(),
   dateOuverture: z.date().optional(),
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
 });
 
 const OffreSchema = z.string();

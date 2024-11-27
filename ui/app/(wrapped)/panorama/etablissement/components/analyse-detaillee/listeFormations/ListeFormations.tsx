@@ -5,6 +5,7 @@ import { CURRENT_RENTREE } from "shared";
 
 import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import type { Formation } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
+import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "@/components/BadgeVoieApprentissage";
@@ -103,6 +104,10 @@ export const ListeFormations = ({
                     <Flex direction="row" gap={1}>
                       <BadgeVoieApprentissage voie={formation.voie} />
                       <BadgeTypeFamille typeFamille={formation.typeFamille as TypeFamilleKeys} />
+                      <BadgeActionPrioritaire
+                        isFormationActionPrioritaire={formation.isFormationActionPrioritaire}
+                        textTransform="capitalize"
+                      />
                     </Flex>
                   </Flex>
                 </ListItem>

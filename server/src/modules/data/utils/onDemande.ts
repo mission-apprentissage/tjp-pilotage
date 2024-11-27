@@ -1,6 +1,8 @@
 import { expressionBuilder, sql } from "kysely";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
+import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
@@ -43,6 +45,7 @@ export const genericOnDemandes = ({
   codeAcademie,
   codeDepartement,
   withColoration,
+  formationSpecifique,
 }: {
   statut?: Array<DemandeStatutType>;
   rentreeScolaire?: string[];
@@ -55,6 +58,7 @@ export const genericOnDemandes = ({
   codeAcademie?: string;
   codeDepartement?: string;
   withColoration?: string;
+  formationSpecifique?: Array<TypeFormationSpecifiqueType>;
 }) =>
   expressionBuilder<DB, keyof DB>()
     .selectFrom("latestDemandeIntentionView as demande")
@@ -170,5 +174,18 @@ export const genericOnDemandes = ({
         return q.where((w) =>
           w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
         );
+      return q;
+    })
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
+          return q.innerJoin("actionPrioritaire", (join) =>
+            join
+              .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
+              .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
+              .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
+          );
+        }
+      }
       return q;
     });

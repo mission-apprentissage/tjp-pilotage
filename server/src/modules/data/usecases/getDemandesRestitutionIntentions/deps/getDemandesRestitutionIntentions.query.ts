@@ -2,6 +2,7 @@ import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import type { MILLESIMES_IJ } from "shared";
 import { CURRENT_RENTREE } from "shared";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import type { FiltersSchema } from "shared/routes/schemas/get.restitution-intentions.demandes.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
@@ -24,6 +25,7 @@ import {
   countDifferenceCapaciteScolaireColoree,
 } from "@/modules/utils/countCapacite";
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
+import { isFormationActionPrioritaireDemande } from "@/modules/utils/isFormationActionPrioritaire";
 import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
@@ -52,6 +54,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   voie,
   campagne,
   positionQuadrant,
+  formationSpecifique,
   offset = 0,
   limit = MAX_LIMIT,
   order = "desc",
@@ -149,6 +152,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         tauxPoursuite: eb.ref("tauxIJNiveauDiplomeRegion.tauxPoursuite"),
         millesimeSortie: eb.ref("tauxIJNiveauDiplomeRegion.millesimeSortie"),
       }).as("tauxIJNiveauDiplomeRegion"),
+      isFormationActionPrioritaireDemande(eb).as("isFormationActionPrioritaire"),
     ])
     .$call((eb) => {
       if (search)
@@ -264,6 +268,19 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       }
 
       return eb;
+    })
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
+          return q.innerJoin("actionPrioritaire", (join) =>
+            join
+              .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
+              .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
+              .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
+          );
+        }
+      }
+      return q;
     })
     .$call((q) => {
       if (!orderBy || !order) return q;

@@ -1,10 +1,12 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
 
 const FormationTransformationStatsSchema = z.object({
   libelleFormation: z.string().optional(),
+  isFormationActionPrioritaire: z.coerce.boolean().optional(),
   libelleDispositif: z.string().optional(),
   tauxInsertion: z.coerce.number().optional(),
   tauxPoursuite: z.coerce.number().optional(),
@@ -44,6 +46,7 @@ export const getFormationsPilotageIntentionsSchema = {
     tauxPression: z.enum(["faible", "eleve"]).optional(),
     campagne: z.string().optional(),
     withColoration: z.string().optional(),
+    formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationTransformationStatsSchema.keyof().optional(),
   }),
