@@ -171,7 +171,7 @@ export const ROUTES = {
   },
   "[POST]/generate-metabase-dashboard-url": {
     url: "/generate-metabase-dashboard-url",
-    method: "PUT",
+    method: "POST",
     schema: getMetabaseDashboardUrlSchema,
   },
   "[GET]/dne_url": {
