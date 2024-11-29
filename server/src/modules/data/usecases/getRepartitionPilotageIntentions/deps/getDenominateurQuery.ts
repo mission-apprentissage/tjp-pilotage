@@ -3,7 +3,7 @@ import { sql } from "kysely";
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/data/usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.usecase";
 import { genericOnConstatRentree } from "@/modules/data/utils/onConstatDeRentree";
-import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
+import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { cleanNull } from "@/utils/noNull";
 
 export const getDenominateurQuery = async ({ filters }: { filters: Filters }) => {

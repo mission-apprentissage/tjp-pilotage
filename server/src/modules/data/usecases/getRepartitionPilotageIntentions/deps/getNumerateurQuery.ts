@@ -1,7 +1,7 @@
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/data/usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.usecase";
 import { genericOnDemandes } from "@/modules/data/utils/onDemande";
-import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
+import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { cleanNull } from "@/utils/noNull";
 
 export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
@@ -11,8 +11,8 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
         .select((eb) => [
           eb.ref("campagne.annee").as("annee"),
           eb.ref("demande.rentreeScolaire").as("rentreeScolaire"),
-          eb.ref("dataFormation.codeNsf").as("codeNsf"),
-          eb.ref("dataFormation.codeNiveauDiplome").as("codeNiveauDiplome"),
+          eb.ref("formationView.codeNsf").as("codeNsf"),
+          eb.ref("formationView.codeNiveauDiplome").as("codeNiveauDiplome"),
           selectPositionQuadrant(eb).as("positionQuadrant"),
           eb.ref("dataEtablissement.codeRegion").as("codeRegion"),
           eb.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
@@ -23,9 +23,9 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
           "rentreeScolaire",
           "dataEtablissement.codeRegion",
           "positionQuadrant",
-          "dataFormation.codeNsf",
-          "dataFormation.codeNiveauDiplome",
-          "dataFormation.typeFamille",
+          "formationView.codeNsf",
+          "formationView.codeNiveauDiplome",
+          "formationView.typeFamille",
           "dataEtablissement.codeAcademie",
           "dataEtablissement.codeDepartement",
         ])

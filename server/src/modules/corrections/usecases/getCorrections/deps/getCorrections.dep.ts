@@ -1,12 +1,15 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import { VoieEnum } from "shared/enum/voieEnum";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/corrections/usecases/getCorrections/getCorrections.usecase";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { nbEtablissementFormationRegion } from "@/modules/data/utils/nbEtablissementFormationRegion";
+import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { selectTauxDevenirFavorable } from "@/modules/data/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
@@ -34,6 +37,7 @@ export const getCorrectionsQuery = async ({
   millesimeSortie = CURRENT_IJ_MILLESIME,
   voie,
   campagne,
+  positionQuadrant,
   formationSpecifique,
   offset = 0,
   limit = MAX_LIMIT,
@@ -52,14 +56,16 @@ export const getCorrectionsQuery = async ({
         return eb;
       })
     )
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
+    .innerJoin("formationView", (join) =>
+      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
+    )
+    .leftJoin("nsf", "formationView.codeNsf", "nsf.codeNsf")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
-    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .leftJoin("indicateurRegionSortie", (join) =>
       join
         .onRef("indicateurRegionSortie.cfd", "=", "demande.cfd")
@@ -69,6 +75,16 @@ export const getCorrectionsQuery = async ({
         .on(isScolaireIndicateurRegionSortie)
     )
     .leftJoin("user", "user.id", "demande.createdBy")
+    .leftJoin("positionFormationRegionaleQuadrant", (join) =>
+      join.on((eb) =>
+        eb.and([
+          eb(eb.ref("positionFormationRegionaleQuadrant.cfd"), "=", eb.ref("demande.cfd")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeDispositif"), "=", eb.ref("demande.codeDispositif")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
+          eb("positionFormationRegionaleQuadrant.millesimeSortie", "=", getMillesimeFromCampagne(campagne)),
+        ])
+      )
+    )
     .select((eb) => [
       eb.fn.count<number>("correction.id").over().as("count"),
       "demande.uai",
@@ -83,7 +99,7 @@ export const getCorrectionsQuery = async ({
         )`.as("userName"),
       "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
       "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
-      "dataFormation.libelleFormation",
+      "formationView.libelleFormation",
       "nsf.libelleNsf as libelleNsf",
       "dataEtablissement.libelleEtablissement",
       "dataEtablissement.commune as commune",
@@ -94,7 +110,7 @@ export const getCorrectionsQuery = async ({
       "departement.codeDepartement as codeDepartement",
       "academie.libelleAcademie",
       "academie.codeAcademie as codeAcademie",
-      "dataFormation.typeFamille",
+      "formationView.typeFamille",
       selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertionRegional"),
       selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteRegional"),
       selectTauxDevenirFavorable("indicateurRegionSortie").as("tauxDevenirFavorableRegional"),
@@ -134,7 +150,11 @@ export const getCorrectionsQuery = async ({
       "correction.createdAt",
       "correction.updatedAt",
       "correction.commentaire",
-      isFormationActionPrioritaireDemande(eb).as("isFormationActionPrioritaire"),
+      selectPositionQuadrant(eb).as("positionQuadrant"),
+      isFormationActionPrioritaireDemande(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .$call((eb) => {
       if (search)
@@ -147,7 +167,7 @@ export const getCorrectionsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("demande.cfd")}),
                   ' ',
-                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
+                  unaccent(${eb.ref("formationView.libelleFormation")}),
                   ' ',
                   unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
                   ' ',
@@ -205,11 +225,11 @@ export const getCorrectionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
+      if (codeNsf) return eb.where("formationView.codeNsf", "in", codeNsf);
       return eb;
     })
     .$call((eb) => {
@@ -246,6 +266,11 @@ export const getCorrectionsQuery = async ({
 
       return eb;
     })
+    .$call((eb) => {
+      if (positionQuadrant)
+        return eb.where("positionFormationRegionaleQuadrant.positionQuadrant", "=", positionQuadrant);
+      return eb;
+    })
     .$call((q) => {
       if (formationSpecifique?.length) {
         if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
@@ -255,6 +280,15 @@ export const getCorrectionsQuery = async ({
               .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
               .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
           );
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])) {
+          q = q.where("formationView.isTransitionEcologique", "=", true);
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])) {
+          q = q.where("formationView.isTransitionDemographique", "=", true);
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])) {
+          q = q.where("formationView.isTransitionNumerique", "=", true);
         }
       }
       return q;
@@ -278,7 +312,14 @@ export const getCorrectionsQuery = async ({
         createdAt: correction.createdAt?.toISOString(),
         updatedAt: correction.updatedAt?.toISOString(),
         formationSpecifique: {
-          isFormationActionPrioritaire: !!correction.isFormationActionPrioritaire,
+          [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
+            !!correction[TypeFormationSpecifiqueEnum["Action prioritaire"]],
+          [TypeFormationSpecifiqueEnum["Transition démographique"]]:
+            !!correction[TypeFormationSpecifiqueEnum["Transition démographique"]],
+          [TypeFormationSpecifiqueEnum["Transition écologique"]]:
+            !!correction[TypeFormationSpecifiqueEnum["Transition écologique"]],
+          [TypeFormationSpecifiqueEnum["Transition numérique"]]:
+            !!correction[TypeFormationSpecifiqueEnum["Transition numérique"]],
         },
       })
     ),

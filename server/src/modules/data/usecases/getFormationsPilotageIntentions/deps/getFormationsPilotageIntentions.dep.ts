@@ -3,6 +3,8 @@ import { sql } from "kysely";
 import type { MILLESIMES_IJ } from "shared";
 import { CURRENT_IJ_MILLESIME } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import { VoieEnum } from "shared/enum/voieEnum";
 import type { getFormationsPilotageIntentionsSchema } from "shared/routes/schemas/get.pilotage-intentions.formations.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import type { z } from "zod";
@@ -10,7 +12,7 @@ import type { z } from "zod";
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
 import { hasContinuum } from "@/modules/data/utils/hasContinuum";
-import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
+import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
@@ -87,7 +89,9 @@ export const getFormationsPilotageIntentionsQuery = ({
     .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("campagne", (join) => join.onRef("campagne.id", "=", "demande.campagneId"))
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .innerJoin("formationView", (join) =>
+      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
+    )
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
@@ -128,15 +132,15 @@ export const getFormationsPilotageIntentionsQuery = ({
         join
           .onRef("campagne.annee", "=", "effectifs.annee")
           .onRef("demande.cfd", "=", "effectifs.cfd")
-          .onRef("dataFormation.codeNiveauDiplome", "=", "effectifs.codeNiveauDiplome")
+          .onRef("formationView.codeNiveauDiplome", "=", "effectifs.codeNiveauDiplome")
           .onRef("demande.codeRegion", "=", "effectifs.codeRegion")
     )
     .select((eb) => [
       sql<number>`COALESCE(${eb.ref("effectifs.denominateur")}, 0)`.as("effectif"),
       selectPositionQuadrant(eb).as("positionQuadrant"),
-      "dataFormation.libelleFormation",
+      "formationView.libelleFormation",
       "dispositif.libelleDispositif",
-      "dataFormation.cfd",
+      "formationView.cfd",
       "demande.codeDispositif as codeDispositif",
       (eb) =>
         withInsertionReg({
@@ -180,7 +184,10 @@ export const getFormationsPilotageIntentionsQuery = ({
         codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("continuum"),
-      isFormationActionPrioritaireDemande(eb).as("isFormationActionPrioritaire"),
+      isFormationActionPrioritaireDemande(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .where((wb) => {
       if (!type) return wb.val(true);
@@ -219,15 +226,15 @@ export const getFormationsPilotageIntentionsQuery = ({
       return eb;
     })
     .$call((eb) => {
-      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
+      if (CPC) return eb.where("formationView.cpc", "in", CPC);
       return eb;
     })
     .$call((eb) => {
-      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
+      if (codeNsf) return eb.where("formationView.codeNsf", "in", codeNsf);
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
@@ -272,10 +279,10 @@ export const getFormationsPilotageIntentionsQuery = ({
     .groupBy([
       "positionFormationRegionaleQuadrant.positionQuadrant",
       "demande.cfd",
-      "dataFormation.cfd",
+      "formationView.cfd",
       "demande.codeDispositif",
       "dispositif.libelleDispositif",
-      "dataFormation.libelleFormation",
+      "formationView.libelleFormation",
       "effectif",
       ...partition,
     ])
@@ -285,7 +292,16 @@ export const getFormationsPilotageIntentionsQuery = ({
       formations.map((formation) =>
         cleanNull({
           ...formation,
-          isFormationActionPrioritaire: !!formation.isFormationActionPrioritaire,
+          formationSpecifique: {
+            [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
+              !!formation[TypeFormationSpecifiqueEnum["Action prioritaire"]],
+            [TypeFormationSpecifiqueEnum["Transition démographique"]]:
+              !!formation[TypeFormationSpecifiqueEnum["Transition démographique"]],
+            [TypeFormationSpecifiqueEnum["Transition écologique"]]:
+              !!formation[TypeFormationSpecifiqueEnum["Transition écologique"]],
+            [TypeFormationSpecifiqueEnum["Transition numérique"]]:
+              !!formation[TypeFormationSpecifiqueEnum["Transition numérique"]],
+          },
         })
       )
     );

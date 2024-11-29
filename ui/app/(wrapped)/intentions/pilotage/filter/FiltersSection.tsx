@@ -373,6 +373,18 @@ export const FiltersSection = ({
                 label: TypeFormationSpecifiqueEnum["Action prioritaire"],
                 value: TypeFormationSpecifiqueEnum["Action prioritaire"],
               },
+              {
+                label: TypeFormationSpecifiqueEnum["Transition démographique"],
+                value: TypeFormationSpecifiqueEnum["Transition démographique"],
+              },
+              {
+                label: TypeFormationSpecifiqueEnum["Transition écologique"],
+                value: TypeFormationSpecifiqueEnum["Transition écologique"],
+              },
+              {
+                label: TypeFormationSpecifiqueEnum["Transition numérique"],
+                value: TypeFormationSpecifiqueEnum["Transition numérique"],
+              },
             ]}
             hasDefaultValue={false}
             value={filters.formationSpecifique ?? []}

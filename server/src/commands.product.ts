@@ -303,7 +303,6 @@ export function productCommands(cli: Command) {
         importTensionRomeRegion,
         importTensionRomeDepartement,
         importActionPrioritaire,
-        refreshViews,
       };
 
       if (usecaseName) {
@@ -313,6 +312,7 @@ export function productCommands(cli: Command) {
           await usecase();
         }
       }
+      await refreshViews();
     });
 
   cli.command("refreshViews").action(async () => {
@@ -329,7 +329,6 @@ export function productCommands(cli: Command) {
     .action(async (usecaseName: string) => {
       const usecases = {
         importFormations,
-        refreshViews,
         importPositionsQuadrant,
       };
 
@@ -340,6 +339,7 @@ export function productCommands(cli: Command) {
           await usecase();
         }
       }
+      await refreshViews();
     });
 
   cli

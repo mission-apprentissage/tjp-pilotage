@@ -9,6 +9,7 @@ import { getMotifRefusLabel } from "@/app/(wrapped)/intentions/utils/motifRefusD
 import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
+import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
@@ -159,11 +160,7 @@ export const LineContent = ({
         maxW={300}
         bgColor={getCellColor("formationSpecifique")}
       >
-        <BadgeActionPrioritaire
-          isFormationActionPrioritaire={demande.formationSpecifique?.isFormationActionPrioritaire}
-          labelSize="long"
-          size="md"
-        />
+        <BadgesFormationSpecifique formationSpecifique={demande.formationSpecifique} />
       </ConditionalTd>
       <ConditionalTd colonneFilters={colonneFilters} colonne={"niveauDiplome"} bgColor={getCellColor("niveauDiplome")}>
         {demande.niveauDiplome}

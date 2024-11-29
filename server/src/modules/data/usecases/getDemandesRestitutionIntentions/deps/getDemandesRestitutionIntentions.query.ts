@@ -1,18 +1,15 @@
 import { sql } from "kysely";
-import { jsonBuildObject } from "kysely/helpers/postgres";
-import type { MILLESIMES_IJ } from "shared";
 import { CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import type { FiltersSchema } from "shared/routes/schemas/get.restitution-intentions.demandes.schema";
+import { VoieEnum } from "shared/enum/voieEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
-import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { RequestUser } from "@/modules/core/model/User";
+import type { Filters } from "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.usecase";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { nbEtablissementFormationRegion } from "@/modules/data/utils/nbEtablissementFormationRegion";
-import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
+import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { selectTauxDevenirFavorable } from "@/modules/data/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
@@ -29,12 +26,6 @@ import { isFormationActionPrioritaireDemande } from "@/modules/utils/isFormation
 import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
-
-export interface Filters extends z.infer<typeof FiltersSchema> {
-  user: RequestUser;
-  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
-  campagne: string;
-}
 
 export const getDemandesRestitutionIntentionsQuery = async ({
   statut,
@@ -70,14 +61,16 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         return eb;
       })
     )
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
+    .innerJoin("formationView", (join) =>
+      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
+    )
+    .leftJoin("nsf", "formationView.codeNsf", "nsf.codeNsf")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
-    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .leftJoin("indicateurRegionSortie", (join) =>
       join
         .onRef("indicateurRegionSortie.cfd", "=", "demande.cfd")
@@ -96,24 +89,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         ])
       )
     )
-    .leftJoin("tauxIJNiveauDiplomeRegion", (join) =>
-      join.on((eb) =>
-        eb.and([
-          eb(eb.ref("tauxIJNiveauDiplomeRegion.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
-          eb(eb.ref("tauxIJNiveauDiplomeRegion.codeNiveauDiplome"), "=", eb.ref("dataFormation.codeNiveauDiplome")),
-          eb(
-            eb.ref("tauxIJNiveauDiplomeRegion.millesimeSortie"),
-            "=",
-            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie")
-          ),
-        ])
-      )
-    )
     .selectAll("demande")
     .select((eb) => [
       "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
       "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
-      "dataFormation.libelleFormation",
+      "formationView.libelleFormation",
       "nsf.libelleNsf as libelleNsf",
       "dataEtablissement.libelleEtablissement",
       "dataEtablissement.commune as commune",
@@ -124,7 +104,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       "departement.codeDepartement as codeDepartement",
       "academie.libelleAcademie",
       "academie.codeAcademie as codeAcademie",
-      "dataFormation.typeFamille",
+      "formationView.typeFamille",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
       countDifferenceCapaciteScolaireColoree(eb).as("differenceCapaciteScolaireColoree"),
@@ -142,17 +122,10 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
       selectPositionQuadrant(eb).as("positionQuadrant"),
-      jsonBuildObject({
-        moyenneInsertionCfdRegion: eb.ref("positionFormationRegionaleQuadrant.moyenneInsertionCfdRegion"),
-        moyennePoursuiteEtudeCfdRegion: eb.ref("positionFormationRegionaleQuadrant.moyennePoursuiteEtudeCfdRegion"),
-        millesimeSortie: eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
-      }).as("positionFormationRegionaleQuadrant"),
-      jsonBuildObject({
-        tauxInsertion6mois: eb.ref("tauxIJNiveauDiplomeRegion.tauxInsertion6mois"),
-        tauxPoursuite: eb.ref("tauxIJNiveauDiplomeRegion.tauxPoursuite"),
-        millesimeSortie: eb.ref("tauxIJNiveauDiplomeRegion.millesimeSortie"),
-      }).as("tauxIJNiveauDiplomeRegion"),
-      isFormationActionPrioritaireDemande(eb).as("isFormationActionPrioritaire"),
+      isFormationActionPrioritaireDemande(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .$call((eb) => {
       if (search)
@@ -165,7 +138,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("demande.cfd")}),
                   ' ',
-                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
+                  unaccent(${eb.ref("formationView.libelleFormation")}),
                   ' ',
                   unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
                   ' ',
@@ -228,11 +201,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
+      if (codeNsf) return eb.where("formationView.codeNsf", "in", codeNsf);
       return eb;
     })
     .$call((eb) => {
@@ -272,12 +245,21 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     .$call((q) => {
       if (formationSpecifique?.length) {
         if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
-          return q.innerJoin("actionPrioritaire", (join) =>
+          q = q.innerJoin("actionPrioritaire", (join) =>
             join
               .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
               .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
               .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
           );
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])) {
+          q = q.where("formationView.isTransitionEcologique", "=", true);
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])) {
+          q = q.where("formationView.isTransitionDemographique", "=", true);
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])) {
+          q = q.where("formationView.isTransitionNumerique", "=", true);
         }
       }
       return q;
@@ -300,7 +282,14 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         createdAt: demande.createdAt?.toISOString(),
         updatedAt: demande.updatedAt?.toISOString(),
         formationSpecifique: {
-          isFormationActionPrioritaire: !!demande.isFormationActionPrioritaire,
+          [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
+            !!demande[TypeFormationSpecifiqueEnum["Action prioritaire"]],
+          [TypeFormationSpecifiqueEnum["Transition démographique"]]:
+            !!demande[TypeFormationSpecifiqueEnum["Transition démographique"]],
+          [TypeFormationSpecifiqueEnum["Transition écologique"]]:
+            !!demande[TypeFormationSpecifiqueEnum["Transition écologique"]],
+          [TypeFormationSpecifiqueEnum["Transition numérique"]]:
+            !!demande[TypeFormationSpecifiqueEnum["Transition numérique"]],
         },
       })
     ),

@@ -1,6 +1,8 @@
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import { VoieEnum } from "shared/enum/voieEnum";
 import type { getDemandeSchema } from "shared/routes/schemas/get.demande.numero.schema";
 import type { z } from "zod";
 
@@ -19,14 +21,16 @@ export interface Filters extends z.infer<typeof getDemandeSchema.params> {
 export const getDemandeQuery = async ({ numero, user }: Filters) => {
   const demande = await getKbdClient()
     .selectFrom("latestDemandeView as demande")
+    .innerJoin("formationView", (join) =>
+      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
+    )
     .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
-    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .selectAll()
     .select((eb) => [
       "dispositif.libelleDispositif as libelleDispositif",
-      "dataFormation.libelleFormation",
+      "formationView.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
       "departement.codeDepartement",
@@ -50,13 +54,13 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
         ),
         formation: jsonObjectFrom(
           eb
-            .selectFrom("dataFormation")
-            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+            .selectFrom("formationView")
+            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
             .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
+              sql<string>`CONCAT(${ebDataFormation.ref("formationView.libelleFormation")},
               ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
-              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
-              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+              ' (',${ebDataFormation.ref("formationView.cfd")},')')`.as("libelleFormation"),
+              sql<boolean>`${ebDataFormation("formationView.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
                 "isFCIL"
               ),
             ])
@@ -70,11 +74,11 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
                       .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
                       .on("rawData.type", "=", "nMef")
                   )
-                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
+                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "formationView.cfd")
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
-            .whereRef("dataFormation.cfd", "=", "demande.cfd")
+            .whereRef("formationView.cfd", "=", "demande.cfd")
             .limit(1)
         ),
         etablissementCompensation: jsonObjectFrom(
@@ -86,13 +90,13 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
         ),
         formationCompensation: jsonObjectFrom(
           eb
-            .selectFrom("dataFormation")
-            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+            .selectFrom("formationView")
+            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
             .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
+              sql<string>`CONCAT(${ebDataFormation.ref("formationView.libelleFormation")},
               ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
-              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
-              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+              ' (',${ebDataFormation.ref("formationView.cfd")},')')`.as("libelleFormation"),
+              sql<boolean>`${ebDataFormation("formationView.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
                 "isFCIL"
               ),
             ])
@@ -106,11 +110,11 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
                       .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
                       .on("rawData.type", "=", "nMef")
                   )
-                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
+                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "formationView.cfd")
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
-            .whereRef("dataFormation.cfd", "=", "demande.compensationCfd")
+            .whereRef("formationView.cfd", "=", "demande.compensationCfd")
             .limit(1)
         ),
       }).as("metadata"),
@@ -136,7 +140,10 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       ).as("updatedBy"),
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
-      isFormationActionPrioritaireDemande(eb).as("isFormationActionPrioritaire"),
+      isFormationActionPrioritaireDemande(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
@@ -176,7 +183,14 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       }),
       codeDispositif,
       formationSpecifique: {
-        isFormationActionPrioritaire: !!demande.isFormationActionPrioritaire,
+        [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
+          !!demande[TypeFormationSpecifiqueEnum["Action prioritaire"]],
+        [TypeFormationSpecifiqueEnum["Transition démographique"]]:
+          !!demande[TypeFormationSpecifiqueEnum["Transition démographique"]],
+        [TypeFormationSpecifiqueEnum["Transition écologique"]]:
+          !!demande[TypeFormationSpecifiqueEnum["Transition écologique"]],
+        [TypeFormationSpecifiqueEnum["Transition numérique"]]:
+          !!demande[TypeFormationSpecifiqueEnum["Transition numérique"]],
       },
     })
   );

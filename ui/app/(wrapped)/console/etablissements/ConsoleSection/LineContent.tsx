@@ -7,6 +7,7 @@ import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissemen
 import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import type { Line } from "@/app/(wrapped)/console/etablissements/types";
 import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
+import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -192,10 +193,7 @@ export const EtablissementLineContent = ({
       </Flex>
     </ConditionalTd>
     <ConditionalTd colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <BadgeActionPrioritaire
-        isFormationActionPrioritaire={line.formationSpecifique?.isFormationActionPrioritaire}
-        labelSize="long"
-      />
+      <BadgesFormationSpecifique formationSpecifique={line.formationSpecifique} />
     </ConditionalTd>
     <ConditionalTd colonne="libelleNiveauDiplome" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleNiveauDiplome ?? "-"}

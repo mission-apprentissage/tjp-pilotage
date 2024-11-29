@@ -17,6 +17,7 @@ export const CORRECTIONS_COLUMNS = {
   cfd: "CFD",
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
   codeDispositif: "Code Dispositif",
   libelleDispositif: "Dispositif",
   niveauDiplome: "Diplôme",
@@ -41,7 +42,9 @@ export const CORRECTIONS_COLUMNS = {
   tauxPressionRegional: "Taux de pression régional",
   positionQuadrant: "Position dans le quadrant",
   nbEtablissement: "Nombre d'établissements",
-} satisfies ExportColumns<(typeof client.infer)["[GET]/corrections"]["corrections"][number]>;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/corrections"]["corrections"][number]> & {
+  formationSpecifique: string;
+};
 
 export const CORRECTIONS_COLUMNS_OPTIONAL: Partial<typeof CORRECTIONS_COLUMNS> = {
   // Établissement
@@ -55,6 +58,7 @@ export const CORRECTIONS_COLUMNS_OPTIONAL: Partial<typeof CORRECTIONS_COLUMNS> =
   cfd: "CFD",
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
   codeDispositif: "Code Dispositif",
   libelleDispositif: "Dispositif",
   niveauDiplome: "Diplôme",

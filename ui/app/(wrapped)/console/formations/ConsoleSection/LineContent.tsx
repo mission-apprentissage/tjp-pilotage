@@ -7,6 +7,7 @@ import { CURRENT_RENTREE } from "shared";
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Line } from "@/app/(wrapped)/console/formations/types";
 import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
+import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -149,10 +150,7 @@ export const FormationLineContent = ({
       </Flex>
     </ConditionalTd>
     <ConditionalTd colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <BadgeActionPrioritaire
-        isFormationActionPrioritaire={line.formationSpecifique?.isFormationActionPrioritaire}
-        labelSize="long"
-      />
+      <BadgesFormationSpecifique formationSpecifique={line.formationSpecifique} />
     </ConditionalTd>
     <ConditionalTd colonne={"libelleNiveauDiplome"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleNiveauDiplome ?? "-"}

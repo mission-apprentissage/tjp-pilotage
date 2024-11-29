@@ -202,7 +202,7 @@ export const FiltersSection = ({
                       onClick={() => {
                         setSearchParams({
                           page: 0,
-                          filters: requeteSuggeree.filtres,
+                          filters: { ...searchParams.filters, ...requeteSuggeree.filtres },
                         });
                         setRequeteEnregistreeActuelle(requeteSuggeree);
                       }}
