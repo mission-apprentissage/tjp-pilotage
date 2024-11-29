@@ -66,7 +66,7 @@ const getStatsRestitutionIntentionsQuery = async ({
         return eb;
       })
     )
-    .innerJoin("formationView", (join) =>
+    .leftJoin("formationView", (join) =>
       join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
     )
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")

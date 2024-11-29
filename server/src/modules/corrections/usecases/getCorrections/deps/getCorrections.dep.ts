@@ -56,7 +56,7 @@ export const getCorrectionsQuery = async ({
         return eb;
       })
     )
-    .innerJoin("formationView", (join) =>
+    .leftJoin("formationView", (join) =>
       join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
     )
     .leftJoin("nsf", "formationView.codeNsf", "nsf.codeNsf")

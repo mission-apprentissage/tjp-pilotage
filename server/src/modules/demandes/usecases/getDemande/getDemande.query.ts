@@ -21,7 +21,7 @@ export interface Filters extends z.infer<typeof getDemandeSchema.params> {
 export const getDemandeQuery = async ({ numero, user }: Filters) => {
   const demande = await getKbdClient()
     .selectFrom("latestDemandeView as demande")
-    .innerJoin("formationView", (join) =>
+    .leftJoin("formationView", (join) =>
       join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
     )
     .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")

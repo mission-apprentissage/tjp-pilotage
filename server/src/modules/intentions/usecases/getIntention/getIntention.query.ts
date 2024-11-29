@@ -37,7 +37,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     .innerJoin("dispositif", "dispositif.codeDispositif", "intention.codeDispositif")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "intention.uai")
     .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
-    .innerJoin("formationView", (join) =>
+    .leftJoin("formationView", (join) =>
       join.onRef("formationView.cfd", "=", "intention.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
     )
     .leftJoin("suivi", (join) =>
