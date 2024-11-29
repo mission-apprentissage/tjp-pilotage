@@ -1,12 +1,13 @@
 import { z } from "zod";
 
+import { TypeFormationSpecifiqueEnum } from "../../enum/formationSpecifiqueEnum";
 import { voie } from "../../enum/voieEnum";
 
 const FormationSpecifiqueFlagsSchema = z.object({
-  isFormationActionPrioritaire: z.coerce.boolean().optional(),
-  isFormationTransitionEcologique: z.coerce.boolean().optional(),
-  isFormationTransitionDemographique: z.coerce.boolean().optional(),
-  isFormationTransitionNumerique: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Action prioritaire"]]: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Transition écologique"]]: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Transition démographique"]]: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Transition numérique"]]: z.coerce.boolean().optional(),
 });
 
 const EtablissementSchema = z.object({

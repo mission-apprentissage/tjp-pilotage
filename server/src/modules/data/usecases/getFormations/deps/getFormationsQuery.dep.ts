@@ -102,7 +102,7 @@ export const getFormationsQuery = async ({
             )
             .end()
             .as("positionQuadrant"),
-          isFormationActionPrioritaireEtablissement(eb).as("isFormationActionPrioritaire"),
+          isFormationActionPrioritaireEtablissement(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
         ])
         .$call((eb) => {
           if (!positionQuadrant) return eb;
@@ -201,6 +201,9 @@ export const getFormationsQuery = async ({
           else null
           end
         `.as("dateFermeture"),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .where(isInPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
@@ -234,6 +237,9 @@ export const getFormationsQuery = async ({
       "formationView.dateFermeture",
       "formationView.cpc",
       "formationView.cpcSecteur",
+      "formationView.isTransitionDemographique",
+      "formationView.isTransitionEcologique",
+      "formationView.isTransitionNumerique",
       "nsf.libelleNsf",
       "formationHistorique.cfd",
       "indicateurEntree.rentreeScolaire",
@@ -324,7 +330,7 @@ export const getFormationsQuery = async ({
     .$call((q) => {
       if (formationSpecifique?.length) {
         if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
-          return q.innerJoin("actionPrioritaire", (join) =>
+          q = q.innerJoin("actionPrioritaire", (join) =>
             join
               .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
               .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
@@ -332,6 +338,15 @@ export const getFormationsQuery = async ({
                 codeRegion ? join.onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion") : join
               )
           );
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])) {
+          q = q.where("formationView.isTransitionEcologique", "=", true);
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])) {
+          q = q.where("formationView.isTransitionDemographique", "=", true);
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])) {
+          q = q.where("formationView.isTransitionNumerique", "=", true);
         }
       }
       return q;
@@ -354,8 +369,16 @@ export const getFormationsQuery = async ({
         isFormationRenovee: !!formation.isFormationRenovee,
         formationSpecifique: {
           // rustine pour que le typage soit correct
-          isFormationActionPrioritaire:
-            "isFormationActionPrioritaire" in formation ? !!formation.isFormationActionPrioritaire : false,
+          [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
+            TypeFormationSpecifiqueEnum["Action prioritaire"] in formation
+              ? !!formation[TypeFormationSpecifiqueEnum["Action prioritaire"]]
+              : false,
+          [TypeFormationSpecifiqueEnum["Transition démographique"]]:
+            !!formation[TypeFormationSpecifiqueEnum["Transition démographique"]],
+          [TypeFormationSpecifiqueEnum["Transition écologique"]]:
+            !!formation[TypeFormationSpecifiqueEnum["Transition écologique"]],
+          [TypeFormationSpecifiqueEnum["Transition numérique"]]:
+            !!formation[TypeFormationSpecifiqueEnum["Transition numérique"]],
         },
       })
     ),

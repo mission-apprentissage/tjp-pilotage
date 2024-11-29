@@ -1,14 +1,14 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
-import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import { TypeFormationSpecifiqueEnum, TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { OptionSchema } from "../../schema/optionSchema";
 
 const FormationSpecifiqueFlagsSchema = z.object({
-  isFormationActionPrioritaire: z.coerce.boolean().optional(),
-  isFormationTransitionEcologique: z.coerce.boolean().optional(),
-  isFormationTransitionDemographique: z.coerce.boolean().optional(),
-  isFormationTransitionNumerique: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Action prioritaire"]]: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Transition écologique"]]: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Transition démographique"]]: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Transition numérique"]]: z.coerce.boolean().optional(),
 });
 
 const DemandeSchema = z.object({
@@ -107,16 +107,6 @@ const DemandeSchema = z.object({
   createdAt: z.string(),
   campagneId: z.string(),
   isIntention: z.boolean(),
-  tauxIJNiveauDiplomeRegion: z.object({
-    tauxInsertion6mois: z.coerce.number().nullable().optional(),
-    tauxPoursuite: z.coerce.number().nullable().optional(),
-    millesimeSortie: z.string().optional(),
-  }),
-  positionFormationRegionaleQuadrant: z.object({
-    moyenneInsertionCfdRegion: z.coerce.number().nullable().optional(),
-    moyennePoursuiteEtudeCfdRegion: z.coerce.number().nullable().optional(),
-    millesimeSortie: z.string().optional(),
-  }),
 });
 
 export const FiltersSchema = z.object({

@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import { VoieEnum } from "shared/enum/voieEnum";
 import type { FiltersSchema } from "shared/routes/schemas/get.restitution-intentions.stats.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import type { z } from "zod";
@@ -65,13 +66,15 @@ const getStatsRestitutionIntentionsQuery = async ({
         return eb;
       })
     )
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
+    .innerJoin("formationView", (join) =>
+      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
+    )
+    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .leftJoin("nsf", "formationView.codeNsf", "nsf.codeNsf")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
-    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join.on((eb) =>
         eb.and([
@@ -128,7 +131,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           eb.fn.sum<number>((s) =>
             s
               .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["561", "461"]))
+              .when(eb("formationView.codeNiveauDiplome", "in", ["561", "461"]))
               .then(countPlacesOuvertes(eb))
               .else(0)
               .end()
@@ -139,7 +142,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           eb.fn.sum<number>((s) =>
             s
               .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["561", "461"]))
+              .when(eb("formationView.codeNiveauDiplome", "in", ["561", "461"]))
               .then(countPlacesOuvertesScolaire(eb))
               .else(0)
               .end()
@@ -150,7 +153,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           eb.fn.sum<number>((s) =>
             s
               .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["561", "461"]))
+              .when(eb("formationView.codeNiveauDiplome", "in", ["561", "461"]))
               .then(countPlacesOuvertesApprentissage(eb))
               .else(0)
               .end()
@@ -165,7 +168,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           eb.fn.sum<number>((s) =>
             s
               .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"]))
+              .when(eb("formationView.codeNiveauDiplome", "in", ["381", "481", "581"]))
               .then(countPlacesOuvertes(eb))
               .else(0)
               .end()
@@ -176,7 +179,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           eb.fn.sum<number>((s) =>
             s
               .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"]))
+              .when(eb("formationView.codeNiveauDiplome", "in", ["381", "481", "581"]))
               .then(countPlacesOuvertesScolaire(eb))
               .else(0)
               .end()
@@ -187,7 +190,7 @@ const getStatsRestitutionIntentionsQuery = async ({
           eb.fn.sum<number>((s) =>
             s
               .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"]))
+              .when(eb("formationView.codeNiveauDiplome", "in", ["381", "481", "581"]))
               .then(countPlacesOuvertesApprentissage(eb))
               .else(0)
               .end()
@@ -207,7 +210,7 @@ const getStatsRestitutionIntentionsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("demande.cfd")}),
                   ' ',
-                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
+                  unaccent(${eb.ref("formationView.libelleFormation")}),
                   ' ',
                   unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
                   ' ',
@@ -270,7 +273,7 @@ const getStatsRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
@@ -311,7 +314,7 @@ const getStatsRestitutionIntentionsQuery = async ({
     })
     .$call((eb) => {
       if (codeNsf && codeNsf.length > 0) {
-        return eb.where("dataFormation.codeNsf", "in", codeNsf);
+        return eb.where("formationView.codeNsf", "in", codeNsf);
       }
 
       return eb;
@@ -319,12 +322,21 @@ const getStatsRestitutionIntentionsQuery = async ({
     .$call((q) => {
       if (formationSpecifique?.length) {
         if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
-          return q.innerJoin("actionPrioritaire", (join) =>
+          q = q.innerJoin("actionPrioritaire", (join) =>
             join
               .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
               .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
               .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
           );
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])) {
+          q = q.where("formationView.isTransitionEcologique", "=", true);
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])) {
+          q = q.where("formationView.isTransitionDemographique", "=", true);
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])) {
+          q = q.where("formationView.isTransitionNumerique", "=", true);
         }
       }
       return q;

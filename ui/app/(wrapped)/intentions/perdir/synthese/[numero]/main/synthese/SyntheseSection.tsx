@@ -8,6 +8,7 @@ import type { MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUt
 import { getMotifLabel, hasMotifAutre } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
+import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { formatArray, formatBoolean, formatDate } from "@/utils/formatUtils";
 
@@ -75,11 +76,7 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
                 <Tooltip label={intention.libelleFormation}>
                   <Text fontSize={14}>{intention.libelleFormation}</Text>
                 </Tooltip>
-                <BadgeActionPrioritaire
-                  isFormationActionPrioritaire={intention.formationSpecifique?.isFormationActionPrioritaire}
-                  size="sm"
-                  labelSize="long"
-                />
+                <BadgesFormationSpecifique formationSpecifique={intention.formationSpecifique} />
               </Flex>
             </Flex>
             <Flex direction={"row"} gap={4}>

@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import type { Voie } from "shared/enum/voieEnum";
 
 import { isFormationActionPrioritaireDataEtablissement } from "@/modules/utils/isFormationActionPrioritaire";
@@ -10,22 +11,24 @@ export const getFormations = async ({ uai }: { uai: string }) =>
   getBase({ uai })
     .select((eb) => [
       sql<string>`CONCAT(
-        ${eb.ref("dataEtablissement.uai")},
-        ${eb.ref("dataFormation.cfd")},
+        ${eb.ref("formationEtablissement.uai")},
+        ${eb.ref("formationEtablissement.cfd")},
         COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
-      "libelleNiveauDiplome",
-      "libelleFormation",
-      "voie",
-      "libelleDispositif",
-      "dataFormation.codeNiveauDiplome",
-      "dataFormation.cfd",
-      "dataFormation.dateOuverture",
+      "formationEtablissement.voie",
+      "formationEtablissement.cfd",
       "formationEtablissement.codeDispositif",
-      "dataFormation.typeFamille",
+      "formationView.libelleFormation",
+      "formationView.codeNiveauDiplome",
+      "formationView.dateOuverture",
+      "formationView.typeFamille",
       "dispositif.libelleDispositif",
-      isFormationActionPrioritaireDataEtablissement(eb).as("isFormationActionPrioritaire"),
+      "niveauDiplome.libelleNiveauDiplome",
+      isFormationActionPrioritaireDataEtablissement(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .$narrowType<{ voie: Voie }>()
     .orderBy(["libelleNiveauDiplome asc", "libelleFormation asc", "libelleDispositif"])
@@ -35,7 +38,14 @@ export const getFormations = async ({ uai }: { uai: string }) =>
         cleanNull({
           ...formation,
           formationSpecifique: {
-            isFormationActionPrioritaire: !!formation.isFormationActionPrioritaire,
+            [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
+              !!formation[TypeFormationSpecifiqueEnum["Action prioritaire"]],
+            [TypeFormationSpecifiqueEnum["Transition démographique"]]:
+              !!formation[TypeFormationSpecifiqueEnum["Transition démographique"]],
+            [TypeFormationSpecifiqueEnum["Transition écologique"]]:
+              !!formation[TypeFormationSpecifiqueEnum["Transition écologique"]],
+            [TypeFormationSpecifiqueEnum["Transition numérique"]]:
+              !!formation[TypeFormationSpecifiqueEnum["Transition numérique"]],
           },
         })
       )

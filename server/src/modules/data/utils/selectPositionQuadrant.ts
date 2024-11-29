@@ -2,12 +2,12 @@ import type { ExpressionBuilder } from "kysely";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { TypeFamilleEnum } from "shared/enum/typeFamille";
 
-import type { DB } from "@/db/schema";
+import type { DB } from "@/db/db";
 
 export const selectPositionQuadrant = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "positionFormationRegionaleQuadrant" | "dataFormation">;
+  eb: ExpressionBuilder<DB, "positionFormationRegionaleQuadrant" | "formationView">;
 }) => {
   return eb
     .case()
@@ -16,7 +16,7 @@ export const selectPositionQuadrant = ({
     .else(
       eb
         .case()
-        .when(eb.ref("dataFormation.typeFamille"), "in", [
+        .when(eb.ref("formationView.typeFamille"), "in", [
           TypeFamilleEnum["1ere_commune"],
           TypeFamilleEnum["2nde_commune"],
         ])

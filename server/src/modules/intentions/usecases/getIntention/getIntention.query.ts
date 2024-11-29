@@ -2,6 +2,8 @@ import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import { VoieEnum } from "shared/enum/voieEnum";
 import type { getIntentionSchema } from "shared/routes/schemas/get.intention.numero.schema";
 import type { z } from "zod";
 
@@ -33,9 +35,11 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     )
     .innerJoin("user", "user.id", "intention.createdBy")
     .innerJoin("dispositif", "dispositif.codeDispositif", "intention.codeDispositif")
-    .innerJoin("dataFormation", "dataFormation.cfd", "intention.cfd")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "intention.uai")
     .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .innerJoin("formationView", (join) =>
+      join.onRef("formationView.cfd", "=", "intention.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
+    )
     .leftJoin("suivi", (join) =>
       join.onRef("suivi.intentionNumero", "=", "intention.numero").on("userId", "=", user.id)
     )
@@ -75,13 +79,13 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         ),
         formation: jsonObjectFrom(
           eb
-            .selectFrom("dataFormation")
-            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+            .selectFrom("formationView")
+            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
             .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
+              sql<string>`CONCAT(${ebDataFormation.ref("formationView.libelleFormation")},
               ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
-              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
-              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+              ' (',${ebDataFormation.ref("formationView.cfd")},')')`.as("libelleFormation"),
+              sql<boolean>`${ebDataFormation("formationView.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
                 "isFCIL"
               ),
             ])
@@ -95,11 +99,11 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
                       .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
                       .on("rawData.type", "=", "nMef")
                   )
-                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
+                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "formationView.cfd")
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
-            .whereRef("dataFormation.cfd", "=", "intention.cfd")
+            .whereRef("formationView.cfd", "=", "intention.cfd")
             .limit(1)
         ),
       }).as("metadata"),
@@ -107,11 +111,14 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       countDifferenceCapaciteScolaireIntention(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissageIntention(eb).as("differenceCapaciteApprentissage"),
       "dispositif.libelleDispositif as libelleDispositif",
-      "dataFormation.libelleFormation",
+      "formationView.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
       "departement.codeDepartement",
-      isFormationActionPrioritaireIntention(eb).as("isFormationActionPrioritaire"),
+      isFormationActionPrioritaireIntention(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .where("intention.isIntention", "=", true)
     .where(isIntentionNotDeleted)
@@ -196,7 +203,14 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         typeAvis: castAvisType(avis.typeAvis),
       })),
       formationSpecifique: {
-        isFormationActionPrioritaire: !!intention.isFormationActionPrioritaire,
+        [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
+          !!intention[TypeFormationSpecifiqueEnum["Action prioritaire"]],
+        [TypeFormationSpecifiqueEnum["Transition démographique"]]:
+          !!intention[TypeFormationSpecifiqueEnum["Transition démographique"]],
+        [TypeFormationSpecifiqueEnum["Transition écologique"]]:
+          !!intention[TypeFormationSpecifiqueEnum["Transition écologique"]],
+        [TypeFormationSpecifiqueEnum["Transition numérique"]]:
+          !!intention[TypeFormationSpecifiqueEnum["Transition numérique"]],
       },
     })
   );

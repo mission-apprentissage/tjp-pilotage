@@ -74,7 +74,7 @@ export const getFormationEtablissementsQuery = async ({
     .leftJoin("departement", "departement.codeDepartement", "etablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
-    .leftJoin("dataFormation as dataFormationContinuum", "dataFormationContinuum.cfd", "indicateurSortie.cfdContinuum")
+    .leftJoin("formationView as formationContinuum", "formationContinuum.cfd", "indicateurSortie.cfdContinuum")
     .leftJoin("formationHistorique", (join) =>
       join.onRef("formationHistorique.ancienCFD", "=", "formationView.cfd").on(isScolaireFormationHistorique)
     )
@@ -146,7 +146,7 @@ export const getFormationEtablissementsQuery = async ({
         .then(
           jsonBuildObject({
             cfd: eb.ref("indicateurSortie.cfdContinuum"),
-            libelleFormation: eb.ref("dataFormationContinuum.libelleFormation"),
+            libelleFormation: eb.ref("formationContinuum.libelleFormation"),
           })
         )
         .end()
@@ -184,6 +184,10 @@ export const getFormationEtablissementsQuery = async ({
         )
         .end()
         .as("positionQuadrant"),
+      isFormationActionPrioritaireEtablissement(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .$narrowType<{
       continuumEtablissement: { cfd: string; libelleFormation: string };
@@ -321,12 +325,21 @@ export const getFormationEtablissementsQuery = async ({
     .$call((q) => {
       if (formationSpecifique?.length) {
         if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
-          return q.innerJoin("actionPrioritaire", (join) =>
+          q = q.innerJoin("actionPrioritaire", (join) =>
             join
               .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
               .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
               .onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion")
           );
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])) {
+          q = q.where("formationView.isTransitionEcologique", "=", true);
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])) {
+          q = q.where("formationView.isTransitionDemographique", "=", true);
+        }
+        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])) {
+          q = q.where("formationView.isTransitionNumerique", "=", true);
         }
       }
       return q;
@@ -342,6 +355,9 @@ export const getFormationEtablissementsQuery = async ({
       "formationView.dateFermeture",
       "formationView.cpc",
       "formationView.cpcSecteur",
+      "formationView.isTransitionDemographique",
+      "formationView.isTransitionEcologique",
+      "formationView.isTransitionNumerique",
       "nsf.libelleNsf",
       "formationHistorique.cfd",
       "etablissement.id",
@@ -354,7 +370,7 @@ export const getFormationEtablissementsQuery = async ({
       "indicateurEntree.formationEtablissementId",
       "indicateurSortie.formationEtablissementId",
       "indicateurSortie.millesimeSortie",
-      "dataFormationContinuum.libelleFormation",
+      "formationContinuum.libelleFormation",
       "formationEtablissement.id",
       "formationEtablissement.codeDispositif",
       "libelleDispositif",
@@ -382,7 +398,14 @@ export const getFormationEtablissementsQuery = async ({
         ...etablissement,
         isFormationRenovee: !!etablissement.isFormationRenovee,
         formationSpecifique: {
-          isFormationActionPrioritaire: !!etablissement.isFormationActionPrioritaire,
+          [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
+            !!etablissement[TypeFormationSpecifiqueEnum["Action prioritaire"]],
+          [TypeFormationSpecifiqueEnum["Transition démographique"]]:
+            !!etablissement[TypeFormationSpecifiqueEnum["Transition démographique"]],
+          [TypeFormationSpecifiqueEnum["Transition écologique"]]:
+            !!etablissement[TypeFormationSpecifiqueEnum["Transition écologique"]],
+          [TypeFormationSpecifiqueEnum["Transition numérique"]]:
+            !!etablissement[TypeFormationSpecifiqueEnum["Transition numérique"]],
         },
       })
     ),

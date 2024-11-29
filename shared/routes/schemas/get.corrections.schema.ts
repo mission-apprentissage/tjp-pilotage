@@ -1,14 +1,14 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
-import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import { TypeFormationSpecifiqueEnum, TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { OptionSchema } from "../../schema/optionSchema";
 
 const FormationSpecifiqueFlagsSchema = z.object({
-  isFormationActionPrioritaire: z.coerce.boolean().optional(),
-  isFormationTransitionEcologique: z.coerce.boolean().optional(),
-  isFormationTransitionDemographique: z.coerce.boolean().optional(),
-  isFormationTransitionNumerique: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Action prioritaire"]]: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Transition écologique"]]: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Transition démographique"]]: z.coerce.boolean().optional(),
+  [TypeFormationSpecifiqueEnum["Transition numérique"]]: z.coerce.boolean().optional(),
 });
 
 const CorrectionItem = z.object({
@@ -79,6 +79,7 @@ export const FiltersSchema = z.object({
   coloration: z.string().optional(),
   amiCMA: z.string().optional(),
   secteur: z.string().optional(),
+  positionQuadrant: z.string().optional(),
   voie: z.enum(["scolaire", "apprentissage"]).optional(),
   campagne: z.string().optional(),
   formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),

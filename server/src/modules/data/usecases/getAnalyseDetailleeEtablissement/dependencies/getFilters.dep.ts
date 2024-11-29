@@ -7,11 +7,11 @@ import { getBase } from "./base.dep";
 
 export const getFiltersVoie = async ({ uai, codeNiveauDiplome }: { uai: string; codeNiveauDiplome?: string[] }) =>
   getBase({ uai })
-    .select(["voie"])
+    .select(["formationEtablissement.voie"])
     .distinct()
     .$call((q) => {
       if (codeNiveauDiplome?.length) {
-        q = q.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+        q = q.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       }
 
       return q;
@@ -25,10 +25,10 @@ export const getFiltersCodeNiveauDiplome = async ({ uai, voie }: { uai: string; 
   })
     .select((eb) => [
       "libelleNiveauDiplome as label",
-      "dataFormation.codeNiveauDiplome as value",
+      "formationView.codeNiveauDiplome as value",
       sql<number>`COUNT(DISTINCT CONCAT(
              ${eb.ref("dataEtablissement.uai")},
-             ${eb.ref("dataFormation.cfd")},
+             ${eb.ref("formationView.cfd")},
              COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
              ${eb.ref("formationEtablissement.voie")}
            ))`.as("nbOffres"),
