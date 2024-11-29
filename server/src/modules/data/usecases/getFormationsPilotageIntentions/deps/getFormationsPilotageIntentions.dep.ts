@@ -89,7 +89,7 @@ export const getFormationsPilotageIntentionsQuery = ({
     .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("campagne", (join) => join.onRef("campagne.id", "=", "demande.campagneId"))
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .innerJoin("formationView", (join) =>
+    .leftJoin("formationView", (join) =>
       join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
     )
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
