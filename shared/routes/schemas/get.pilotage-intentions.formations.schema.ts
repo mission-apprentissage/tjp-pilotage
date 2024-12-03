@@ -1,15 +1,9 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
-import { TypeFormationSpecifiqueEnum, TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
-
-const FormationSpecifiqueFlagsSchema = z.object({
-  [TypeFormationSpecifiqueEnum["Action prioritaire"]]: z.coerce.boolean().optional(),
-  [TypeFormationSpecifiqueEnum["Transition écologique"]]: z.coerce.boolean().optional(),
-  [TypeFormationSpecifiqueEnum["Transition démographique"]]: z.coerce.boolean().optional(),
-  [TypeFormationSpecifiqueEnum["Transition numérique"]]: z.coerce.boolean().optional(),
-});
+import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 
 const FormationTransformationStatsSchema = z.object({
   libelleFormation: z.string().optional(),

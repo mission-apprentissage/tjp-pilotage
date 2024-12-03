@@ -1,7 +1,6 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import { VoieEnum } from "shared/enum/voieEnum";
 import type { FiltersSchema } from "shared/routes/schemas/get.restitution-intentions.stats.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import type { z } from "zod";
@@ -66,9 +65,8 @@ const getStatsRestitutionIntentionsQuery = async ({
         return eb;
       })
     )
-    .leftJoin("formationView", (join) =>
-      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
-    )
+    .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("nsf", "formationView.codeNsf", "nsf.codeNsf")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
@@ -210,7 +208,7 @@ const getStatsRestitutionIntentionsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("demande.cfd")}),
                   ' ',
-                  unaccent(${eb.ref("formationView.libelleFormation")}),
+                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
                   unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
                   ' ',

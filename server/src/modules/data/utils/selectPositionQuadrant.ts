@@ -7,7 +7,7 @@ import type { DB } from "@/db/db";
 export const selectPositionQuadrant = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "positionFormationRegionaleQuadrant" | "formationView">;
+  eb: ExpressionBuilder<DB, "positionFormationRegionaleQuadrant" | "dataFormation">;
 }) => {
   return eb
     .case()
@@ -16,7 +16,7 @@ export const selectPositionQuadrant = ({
     .else(
       eb
         .case()
-        .when(eb.ref("formationView.typeFamille"), "in", [
+        .when(eb.ref("dataFormation.typeFamille"), "in", [
           TypeFamilleEnum["1ere_commune"],
           TypeFamilleEnum["2nde_commune"],
         ])

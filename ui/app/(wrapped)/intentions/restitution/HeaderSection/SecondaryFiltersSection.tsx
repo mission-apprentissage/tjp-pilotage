@@ -10,6 +10,7 @@ import {
   MenuItem,
   MenuList,
   Select,
+  Tag,
   Text,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";

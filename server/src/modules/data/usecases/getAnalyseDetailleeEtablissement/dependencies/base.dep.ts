@@ -7,7 +7,7 @@ export const getBase = ({ uai, rentreeScolaire = CURRENT_RENTREE }: { uai: strin
   getKbdClient()
     .selectFrom("formationEtablissement")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "formationEtablissement.uai")
-    .leftJoin("formationView", (join) =>
+    .innerJoin("formationView", (join) =>
       join
         .onRef("formationView.cfd", "=", "formationEtablissement.cfd")
         .on("formationView.voie", "=", VoieEnum.scolaire)

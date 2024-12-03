@@ -2,10 +2,14 @@ import { Badge, chakra, Flex, Tooltip } from "@chakra-ui/react";
 import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import type { GlossaireEntryKey } from "@/app/(wrapped)/glossaire/GlossaireEntries";
+
 import { BadgeActionPrioritaire } from "./BadgeActionPrioritaire";
 import { BadgeTransitionDemographique } from "./BadgeTransitionDemographique";
 import { BadgeTransitionEcologique } from "./BadgeTransitionEcologique";
 import { BadgeTransitionNumerique } from "./BadgeTransitionNumerique";
+import { TooltipIcon } from "./TooltipIcon";
 
 const BadgeFormationSpecifique = chakra(
   ({
@@ -14,6 +18,7 @@ const BadgeFormationSpecifique = chakra(
     labelSize,
     size,
     textTransform,
+    openGlossaire,
     ...props
   }: {
     typeFormationSpecifique: TypeFormationSpecifiqueType;
@@ -21,7 +26,9 @@ const BadgeFormationSpecifique = chakra(
     labelSize?: "short" | "long";
     size?: "xs" | "sm" | "md";
     textTransform?: "uppercase" | "capitalize" | "lowercase";
+    openGlossaire: (key: GlossaireEntryKey) => void;
   }) => {
+    console.log(openGlossaire);
     switch (typeFormationSpecifique) {
       case TypeFormationSpecifiqueEnum["Action prioritaire"]:
         return (
@@ -31,6 +38,7 @@ const BadgeFormationSpecifique = chakra(
             labelSize={labelSize}
             size={size}
             textTransform={textTransform}
+            openGlossaire={openGlossaire}
             {...props}
           />
         );
@@ -42,6 +50,7 @@ const BadgeFormationSpecifique = chakra(
             labelSize={labelSize}
             size={size}
             textTransform={textTransform}
+            openGlossaire={openGlossaire}
             {...props}
           />
         );
@@ -53,6 +62,7 @@ const BadgeFormationSpecifique = chakra(
             labelSize={labelSize}
             size={size}
             textTransform={textTransform}
+            openGlossaire={openGlossaire}
             {...props}
           />
         );
@@ -64,6 +74,7 @@ const BadgeFormationSpecifique = chakra(
             labelSize={labelSize}
             size={size}
             textTransform={textTransform}
+            openGlossaire={openGlossaire}
             {...props}
           />
         );
@@ -90,6 +101,7 @@ export const BadgesFormationSpecifique = chakra(
     size?: "xs" | "sm" | "md";
     textTransform?: "uppercase" | "capitalize" | "lowercase";
   }) => {
+    const { openGlossaire } = useGlossaireContext();
     if (!formationSpecifique) return <></>;
 
     const formationSpecifiqueKeys = Object.keys(formationSpecifique ?? {}).filter(
@@ -106,6 +118,7 @@ export const BadgesFormationSpecifique = chakra(
             labelSize={labelSize}
             size={size}
             textTransform={textTransform}
+            openGlossaire={openGlossaire}
             {...props}
           />
         ))}

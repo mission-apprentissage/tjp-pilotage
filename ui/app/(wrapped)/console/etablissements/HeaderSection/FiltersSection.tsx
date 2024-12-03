@@ -37,8 +37,8 @@ const REQUETES_SUGGEREES: RequetesSuggerees = [
       formationSpecifique: [TypeFormationSpecifiqueEnum["Transition écologique"]],
     },
     nom: TypeFormationSpecifiqueEnum["Transition écologique"],
-    couleur: "green.submitted",
-    active: false,
+    couleur: "success.950",
+    active: true,
     conditions: [],
   },
   {
@@ -46,8 +46,8 @@ const REQUETES_SUGGEREES: RequetesSuggerees = [
       formationSpecifique: [TypeFormationSpecifiqueEnum["Transition démographique"]],
     },
     nom: TypeFormationSpecifiqueEnum["Transition démographique"],
-    couleur: "pinkmacaron.950",
-    active: false,
+    couleur: "grey.1000_active",
+    active: true,
     conditions: [],
   },
   {
@@ -55,8 +55,8 @@ const REQUETES_SUGGEREES: RequetesSuggerees = [
       formationSpecifique: [TypeFormationSpecifiqueEnum["Transition numérique"]],
     },
     nom: TypeFormationSpecifiqueEnum["Transition numérique"],
-    couleur: "blueecume.950",
-    active: false,
+    couleur: "bluefrance.925",
+    active: true,
     conditions: [],
   },
   {

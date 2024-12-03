@@ -4,11 +4,7 @@ import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { scope, ScopeEnum } from "../../enum/scopeEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
-
-const OptionSchema = z.object({
-  label: z.coerce.string(),
-  value: z.coerce.string(),
-});
+import { OptionSchema } from "../../schema/optionSchema";
 
 const ScopedStatsTransfoSchema = z.object({
   key: z.string(),

@@ -58,7 +58,7 @@ export const FiltersSection = ({
           width="24rem"
           variant={"newInput"}
           onChange={(selected) => onChangeFilter("codeNiveauDiplome", selected)}
-          options={filtersData?.diplomes ?? []}
+          options={filtersData?.diplomes}
           value={filters.codeNiveauDiplome ?? []}
           size="md"
         >

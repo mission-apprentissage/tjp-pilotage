@@ -4,7 +4,6 @@ import type { MILLESIMES_IJ } from "shared";
 import { CURRENT_IJ_MILLESIME } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import { VoieEnum } from "shared/enum/voieEnum";
 import type { getFormationsPilotageIntentionsSchema } from "shared/routes/schemas/get.pilotage-intentions.formations.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import type { z } from "zod";
@@ -89,9 +88,8 @@ export const getFormationsPilotageIntentionsQuery = ({
     .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("campagne", (join) => join.onRef("campagne.id", "=", "demande.campagneId"))
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("formationView", (join) =>
-      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
-    )
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
@@ -140,8 +138,8 @@ export const getFormationsPilotageIntentionsQuery = ({
       selectPositionQuadrant(eb).as("positionQuadrant"),
       "formationView.libelleFormation",
       "dispositif.libelleDispositif",
-      "formationView.cfd",
-      "demande.codeDispositif as codeDispositif",
+      "demande.cfd",
+      "demande.codeDispositif",
       (eb) =>
         withInsertionReg({
           eb,

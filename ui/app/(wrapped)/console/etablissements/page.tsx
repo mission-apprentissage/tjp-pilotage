@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
@@ -178,10 +179,10 @@ export default function Etablissements() {
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
     };
 
-    let etablissements = data.etablissements;
+    let etablissements = [];
 
-    etablissements = data.etablissements.map((f) => ({
-      ...f,
+    etablissements = data.etablissements.map((etablissement) => ({
+      ...etablissement,
       ...(filters.codeRegion && region
         ? {
             selectedCodeRegion: region.value,
@@ -202,6 +203,11 @@ export default function Etablissements() {
             selectedDepartement: formatArray(departements.map((departement) => departement.label)),
           }
         : {}),
+      actionPrioritaire: etablissement.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
+      transitionDemographique:
+        etablissement.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
+      transitionEcologique: etablissement.formationSpecifique[TypeFormationSpecifiqueEnum["Transition écologique"]],
+      transitionNumerique: etablissement.formationSpecifique[TypeFormationSpecifiqueEnum["Transition numérique"]],
     }));
 
     return {
@@ -357,6 +363,7 @@ export default function Etablissements() {
       filters.uai = uaisFilter;
       setSearchParams({ filters: filters });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

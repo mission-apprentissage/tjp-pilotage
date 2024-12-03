@@ -1,6 +1,7 @@
 import { Box, chakra, Th, Tooltip } from "@chakra-ui/react";
 import type { CSSProperties } from "react";
 
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 import type { OrderDemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -67,6 +68,7 @@ export const HeadLineContent = ({
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
   getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   return (
     <>
       <ConditionalTh
@@ -148,8 +150,8 @@ export const HeadLineContent = ({
         colonne={"formationSpecifique"}
         bgColor={getCellColor("formationSpecifique")}
       >
-        <OrderIcon {...order} column="formationSpecifique" />
         {STATS_DEMANDES_COLUMNS.formationSpecifique}
+        <TooltipIcon ml="1" label="Cliquez pour plus d'infos." onClick={() => openGlossaire("formation-specifique")} />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}

@@ -1,7 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import { VoieEnum } from "shared/enum/voieEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
@@ -61,16 +60,15 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         return eb;
       })
     )
-    .leftJoin("formationView", (join) =>
-      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
-    )
-    .leftJoin("nsf", "formationView.codeNsf", "nsf.codeNsf")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
-    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
-    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
-    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
+    .innerJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .innerJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
+    .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .innerJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
+    .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
     .leftJoin("indicateurRegionSortie", (join) =>
       join
         .onRef("indicateurRegionSortie.cfd", "=", "demande.cfd")
@@ -91,20 +89,20 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     )
     .selectAll("demande")
     .select((eb) => [
-      "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
-      "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
-      "formationView.libelleFormation",
-      "nsf.libelleNsf as libelleNsf",
-      "dataEtablissement.libelleEtablissement",
-      "dataEtablissement.commune as commune",
-      "dataEtablissement.secteur",
+      "dataFormation.libelleFormation",
+      "dataFormation.typeFamille",
       "dispositif.libelleDispositif",
-      "region.libelleRegion as libelleRegion",
+      "nsf.libelleNsf",
+      "niveauDiplome.codeNiveauDiplome",
+      "niveauDiplome.libelleNiveauDiplome",
+      "dataEtablissement.libelleEtablissement",
+      "dataEtablissement.commune",
+      "dataEtablissement.secteur",
+      "region.libelleRegion",
       "departement.libelleDepartement",
-      "departement.codeDepartement as codeDepartement",
+      "departement.codeDepartement",
       "academie.libelleAcademie",
-      "academie.codeAcademie as codeAcademie",
-      "formationView.typeFamille",
+      "academie.codeAcademie",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
       countDifferenceCapaciteScolaireColoree(eb).as("differenceCapaciteScolaireColoree"),

@@ -2,6 +2,7 @@ import { Box, HStack, Text } from "@chakra-ui/react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { PanoramaFormation, PanoramaTopFlop } from "@/app/(wrapped)/panorama/types";
+import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 import { TableBadge } from "@/components/TableBadge";
@@ -62,7 +63,15 @@ export const FormationTooltipContent = ({ formation }: { formation: Formation })
       <Text mb="1" fontWeight="medium">
         Taux de devenir favorable régional
       </Text>
-      <GraphWrapper w="100%" continuum={formation.continuum} value={formation.tauxDevenirFavorable} />
+      <GraphWrapper mb="2" w="100%" continuum={formation.continuum} value={formation.tauxDevenirFavorable} />
+      {Object.values(formation.formationSpecifique).some((v) => v) && (
+        <>
+          <Text mb="1" fontWeight="medium">
+            Formation spécifique
+          </Text>
+          <BadgesFormationSpecifique formationSpecifique={formation?.formationSpecifique} />
+        </>
+      )}
     </Box>
   );
 };

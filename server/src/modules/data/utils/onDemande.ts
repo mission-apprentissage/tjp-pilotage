@@ -1,9 +1,9 @@
 import { expressionBuilder } from "kysely";
+import { VoieEnum } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import { VoieEnum } from "shared/enum/voieEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
@@ -69,10 +69,12 @@ export const genericOnDemandes = ({
         return eb;
       })
     )
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("formationView", (join) =>
       join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
     )
-    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join.on((eb) =>
         eb.and([

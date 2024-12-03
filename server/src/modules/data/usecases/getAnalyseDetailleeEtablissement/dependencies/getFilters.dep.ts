@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import type { Voie } from "shared/enum/voieEnum";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { cleanNull } from "@/utils/noNull";
 
@@ -26,27 +27,31 @@ export const getFiltersCodeNiveauDiplome = async ({ uai, voie }: { uai: string; 
     .select((eb) => [
       "libelleNiveauDiplome as label",
       "formationView.codeNiveauDiplome as value",
-      sql<number>`COUNT(DISTINCT CONCAT(
-             ${eb.ref("dataEtablissement.uai")},
-             ${eb.ref("formationView.cfd")},
-             COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
-             ${eb.ref("formationEtablissement.voie")}
-           ))`.as("nbOffres"),
+      sql<number>`
+      COUNT(
+        DISTINCT CONCAT(
+          ${eb.ref("dataEtablissement.uai")},
+          ${eb.ref("formationView.cfd")},
+          COALESCE(${eb.ref("formationEtablissement.codeDispositif")},
+          ''
+        ),
+        ${eb.ref("formationEtablissement.voie")}
+        )
+      )`.as("nbOffres"),
     ])
     .$call((q) => {
       if (voie?.length) {
         q = q.where("formationEtablissement.voie", "in", voie);
       }
-
       return q;
     })
     .groupBy(["label", "value"])
     .orderBy(["label asc"])
-    .$castTo<{
-      label: string;
-      value: string;
-      nbOffres: number;
-    }>()
+    .$castTo<
+      OptionSchema & {
+        nbOffres: number;
+      }
+    >()
     .execute()
     .then((filters) =>
       cleanNull({
