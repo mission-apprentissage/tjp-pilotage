@@ -121,7 +121,6 @@ export function productCommands(cli: Command) {
         schema: Zod.Schema<unknown>;
       }) => {
         const filePath = year ? `${basepath}/files/${year}/${type}_${year}.csv` : `${basepath}/files/${type}.csv`;
-        console.log(filePath);
         return await importRawFile({
           type: year ? `${type}_${year}` : type,
           path: filePath,

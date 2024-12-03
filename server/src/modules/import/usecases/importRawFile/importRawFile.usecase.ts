@@ -62,24 +62,29 @@ export const [importRawFile, importRawFileFactory] = inject(
           final: async (callback) => {
             await deps.batch.flush();
             console.log(`Import du fichier ${type} réussi (${count} lignes ajoutées)\n`);
+            if (errors.length > 0) {
+              console.log(
+                `L'import a rencontré des erreurs sur ${errors.length} ligne(s). Veillez ouvrir le fichier de rapport de logs situé ici : server/dist/import_files_report.csv.\n`
+              );
+            }
             callback();
           },
           objectMode: true,
-          write: async (line, _, callback) => {
+          write: async ({ line, lineNumber }, _, callback) => {
             try {
-              count++;
               schema.parse(line) as JSON;
+              count++;
+              await deps.batch.create({ data: { data: line, type } });
+              process.stdout.write(`Ajout de ${count} lignes\r`);
             } catch (err) {
               const zodError = err as ZodError;
               errors.push({
                 type: ImportFileErrorType.LINE,
                 error: zodError,
                 path,
-                line: count,
+                line: lineNumber,
               });
             }
-            await deps.batch.create({ data: { data: line, type } });
-            process.stdout.write(`Ajout de ${count} lignes\r`);
             callback();
           },
         }),
