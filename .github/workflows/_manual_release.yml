@@ -1,17 +1,21 @@
-name: Release manuelle
+name: Release candidate
 
 on:
   workflow_dispatch:
     inputs:
-      app_version:
-        description: Version de l'application en release candidate (eg. 0.0.2-rc.14)
-        type: string
+      release_type:
+        description: Le type de Release Candidate à générer
+        type: choice
         required: true
+        options:
+          - major
+          - minor
+          - patch
 
   workflow_call:
     inputs:
-      app_version:
-        description: Version cible de l'application
+      release_type:
+        description: Le type de Release Candidate à générer
         type: string
         required: false
 
@@ -85,7 +89,7 @@ jobs:
         run: echo "VERSION=$(git describe --tags --abbrev=0 | cut -c2-)" >> "$GITHUB_OUTPUT"
 
       - name: bump and release
-        run: yarn release:manual:rc ${{ inputs.app_version }}
+        run: yarn release:candidate ${{ inputs.release_type }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
