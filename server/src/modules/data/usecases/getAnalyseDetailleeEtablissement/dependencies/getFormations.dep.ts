@@ -10,10 +10,11 @@ import { getBase } from "./base.dep";
 export const getFormations = async ({ uai }: { uai: string }) =>
   getBase({ uai })
     .select((eb) => [
-      sql<string>`CONCAT(
+      sql<string>`
+      CONCAT(
         ${eb.ref("formationEtablissement.uai")},
         ${eb.ref("formationEtablissement.cfd")},
-        COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
+        COALESCE(${eb.ref("formationEtablissement.codeDispositif")}, ''),
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
       "formationEtablissement.voie",

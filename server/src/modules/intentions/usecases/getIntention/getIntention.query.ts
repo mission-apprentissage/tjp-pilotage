@@ -3,7 +3,6 @@ import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import { VoieEnum } from "shared/enum/voieEnum";
 import type { getIntentionSchema } from "shared/routes/schemas/get.intention.numero.schema";
 import type { z } from "zod";
 
@@ -37,9 +36,8 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     .innerJoin("dispositif", "dispositif.codeDispositif", "intention.codeDispositif")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "intention.uai")
     .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
-    .leftJoin("formationView", (join) =>
-      join.onRef("formationView.cfd", "=", "intention.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
-    )
+    .innerJoin("dataFormation", "dataFormation.cfd", "intention.cfd")
+    .leftJoin("formationScolaireView as formationView", "formationView.cfd", "intention.cfd")
     .leftJoin("suivi", (join) =>
       join.onRef("suivi.intentionNumero", "=", "intention.numero").on("userId", "=", user.id)
     )
@@ -111,7 +109,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       countDifferenceCapaciteScolaireIntention(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissageIntention(eb).as("differenceCapaciteApprentissage"),
       "dispositif.libelleDispositif as libelleDispositif",
-      "formationView.libelleFormation",
+      "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
       "departement.codeDepartement",

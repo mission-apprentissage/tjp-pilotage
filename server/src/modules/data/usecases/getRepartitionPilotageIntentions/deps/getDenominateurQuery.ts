@@ -46,7 +46,6 @@ export const getDenominateurQuery = async ({ filters }: { filters: Filters }) =>
       "region.codeRegion",
       "region.libelleRegion",
       "positionQuadrant",
-      // "cfd",
       "nsf.codeNsf",
       "nsf.libelleNsf",
       "niveauDiplome.codeNiveauDiplome",

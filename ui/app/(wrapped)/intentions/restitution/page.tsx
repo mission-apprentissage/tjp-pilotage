@@ -9,9 +9,11 @@ import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
+import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { SearchInput } from "@/components/SearchInput";
@@ -19,6 +21,7 @@ import { TableHeader } from "@/components/TableHeader";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
+import { formatArray } from "@/utils/formatUtils";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
@@ -26,7 +29,11 @@ import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDE
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import type { STATS_DEMANDES_COLUMNS_OPTIONAL } from "./STATS_DEMANDES_COLUMN";
 import { STATS_DEMANDES_COLUMNS, STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
-import type { FiltersDemandesRestitutionIntentions, OrderDemandesRestitutionIntentions } from "./types";
+import type {
+  DemandesRestitutionIntentions,
+  FiltersDemandesRestitutionIntentions,
+  OrderDemandesRestitutionIntentions,
+} from "./types";
 
 const ColonneFiltersSection = chakra(
   ({
@@ -269,47 +276,86 @@ export default () => {
     setSearchParams({ filters: filters });
   };
 
+  const getDataForExport = (data: DemandesRestitutionIntentions) => {
+    const region = data.filters.regions.find((r) => r.value === filters.codeRegion?.[0]);
+
+    const academies = data.filters.academies.filter((a) => filters.codeAcademie?.includes(a.value) ?? false);
+
+    const departements = data.filters.departements.filter((d) => filters.codeDepartement?.includes(d.value) ?? false);
+
+    const regionsColumns = {
+      selectedCodeRegion: "Code Région sélectionné",
+      selectedRegion: "Région sélectionnée",
+    };
+    const academiesColumns = {
+      selectedCodeAcademie: "Code Académie sélectionné",
+      selectedAcademie: "Académie sélectionnée",
+    };
+    const departementsColumns = {
+      selectedCodeDepartement: "Code Département sélectionné",
+      selectedDepartement: "Departement sélectionnée",
+    };
+
+    const columns = {
+      ...FORMATION_ETABLISSEMENT_COLUMNS,
+      ...(filters.codeRegion && region ? regionsColumns : {}),
+      ...(filters.codeAcademie && academies ? academiesColumns : {}),
+      ...(filters.codeDepartement && departements ? departementsColumns : {}),
+    };
+
+    let demandes = [];
+
+    demandes = data.demandes.map((demande) => ({
+      ...demande,
+      createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      updatedAt: new Date(demande.updatedAt).toLocaleDateString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      disciplinesRecrutementRH:
+        demande.discipline1RecrutementRH &&
+        `${demande.discipline1RecrutementRH} ${
+          demande.discipline2RecrutementRH ? `- ${demande.discipline2RecrutementRH}` : ""
+        }`,
+      disciplinesReconversionRH:
+        demande.discipline1ReconversionRH &&
+        `${demande.discipline1ReconversionRH} ${
+          demande.discipline2ReconversionRH ? `- ${demande.discipline2ReconversionRH}` : ""
+        }`,
+      disciplinesFormationRH:
+        demande.discipline1FormationRH &&
+        `${demande.discipline1FormationRH} ${
+          demande.discipline2FormationRH ? `- ${demande.discipline2FormationRH}` : ""
+        }`,
+      disciplinesProfesseurAssocieRH:
+        demande.discipline1ProfesseurAssocieRH &&
+        `${demande.discipline1ProfesseurAssocieRH} ${
+          demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
+        }`,
+      secteur: demande.secteur === "PU" ? "Public" : "Privé",
+      actionPrioritaire: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
+      transitionDemographique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
+      transitionEcologique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition écologique"]],
+      transitionNumerique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition numérique"]],
+    }));
+
+    return {
+      columns,
+      demandes,
+    };
+  };
+
   const onExportCsv = async (isFiltered?: boolean) => {
     trackEvent("restitution-demandes:export");
     const data = await client.ref("[GET]/restitution-intentions/demandes").query({
       query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
-    downloadCsv(
-      formatExportFilename("restitution_export", isFiltered ? filters : undefined),
-      data.demandes.map((demande) => ({
-        ...demande,
-        createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        updatedAt: new Date(demande.updatedAt).toLocaleDateString("fr-FR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        disciplinesRecrutementRH:
-          demande.discipline1RecrutementRH &&
-          `${demande.discipline1RecrutementRH} ${
-            demande.discipline2RecrutementRH ? `- ${demande.discipline2RecrutementRH}` : ""
-          }`,
-        disciplinesReconversionRH:
-          demande.discipline1ReconversionRH &&
-          `${demande.discipline1ReconversionRH} ${
-            demande.discipline2ReconversionRH ? `- ${demande.discipline2ReconversionRH}` : ""
-          }`,
-        disciplinesFormationRH:
-          demande.discipline1FormationRH &&
-          `${demande.discipline1FormationRH} ${
-            demande.discipline2FormationRH ? `- ${demande.discipline2FormationRH}` : ""
-          }`,
-        disciplinesProfesseurAssocieRH:
-          demande.discipline1ProfesseurAssocieRH &&
-          `${demande.discipline1ProfesseurAssocieRH} ${
-            demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
-          }`,
-        secteur: demande.secteur === "PU" ? "Public" : "Privé",
-      })),
-      STATS_DEMANDES_COLUMNS
-    );
+
+    const { columns, demandes } = getDataForExport(data);
+    downloadCsv(formatExportFilename("restitution_export"), demandes, columns);
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
@@ -317,47 +363,14 @@ export default () => {
     const data = await client.ref("[GET]/restitution-intentions/demandes").query({
       query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
-    downloadExcel(
-      formatExportFilename("restitution_export", isFiltered ? filters : undefined),
 
-      data.demandes.map((demande) => ({
-        ...demande,
-        createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        updatedAt: new Date(demande.updatedAt).toLocaleDateString("fr-FR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        disciplinesRecrutementRH:
-          demande.discipline1RecrutementRH &&
-          `${demande.discipline1RecrutementRH} ${
-            demande.discipline2RecrutementRH ? `- ${demande.discipline2RecrutementRH}` : ""
-          }`,
-        disciplinesReconversionRH:
-          demande.discipline1ReconversionRH &&
-          `${demande.discipline1ReconversionRH} ${
-            demande.discipline2ReconversionRH ? `- ${demande.discipline2ReconversionRH}` : ""
-          }`,
-        disciplinesFormationRH:
-          demande.discipline1FormationRH &&
-          `${demande.discipline1FormationRH} ${
-            demande.discipline2FormationRH ? `- ${demande.discipline2FormationRH}` : ""
-          }`,
-        disciplinesProfesseurAssocieRH:
-          demande.discipline1ProfesseurAssocieRH &&
-          `${demande.discipline1ProfesseurAssocieRH} ${
-            demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
-          }`,
-        secteur: demande.secteur === "PU" ? "Public" : "Privé",
-      })),
-      STATS_DEMANDES_COLUMNS
-    );
+    const { columns, demandes } = getDataForExport(data);
+    downloadExcel(formatExportFilename("restitution_export"), demandes, columns);
   };
 
   useEffect(() => {
     setDefaultFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onClickSearch = () => {
@@ -371,6 +384,8 @@ export default () => {
   useEffect(() => {
     const campagneFilterNumber = parseInt(searchParams.filters?.campagne ?? "");
     handleFilters("rentreeScolaire", campagneFilterNumber + 1);
+    // TODO: REFACTO
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.filters?.campagne]);
 
   return (

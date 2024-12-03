@@ -2,6 +2,7 @@ import { Box, Button, Flex, FormLabel, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { Corrections, FiltersCorrections } from "@/app/(wrapped)/intentions/corrections/types";
@@ -178,7 +179,7 @@ export const SecondaryFiltersSection = ({
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("typeDemande", selected)}
-              options={data?.filters.typesDemande.map((typeDemande: { value: string; label: string }) => {
+              options={data?.filters.typesDemande.map((typeDemande) => {
                 return {
                   value: typeDemande.value,
                   label: getTypeDemandeLabel(typeDemande.value),

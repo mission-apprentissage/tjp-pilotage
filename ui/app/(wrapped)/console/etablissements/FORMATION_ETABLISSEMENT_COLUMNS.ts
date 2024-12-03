@@ -10,6 +10,10 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
   formationSpecifique: "Formation spécifique",
+  actionPrioritaire: "Action prioritaire ?",
+  transitionDemographique: "Transition démographique ?",
+  transitionEcologique: "Transition écologique ?",
+  transitionNumerique: "Transition numérique ?",
   // Établissement
   commune: "Commune",
   codeDepartement: "Code Département",
@@ -50,6 +54,10 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   valeurAjoutee: "Valeur ajoutée",
 } satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]> & {
   formationSpecifique: string;
+  actionPrioritaire: string;
+  transitionDemographique: string;
+  transitionEcologique: string;
+  transitionNumerique: string;
 };
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {

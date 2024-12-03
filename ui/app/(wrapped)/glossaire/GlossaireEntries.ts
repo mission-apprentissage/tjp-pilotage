@@ -22,6 +22,11 @@ export const GLOSSAIRE_ENTRIES_KEYS = {
   ["nombre-deleves"]: "e329e9ff-0e2c-42b2-b340-4b2fa9c4ce30",
   ["millesime"]: "686ca38f-a583-4849-b709-b84d5ba1f62a",
   ["effectif-en-entree"]: "e2e29107-f570-4ff8-a734-46b3977cc974",
+  ["formation-specifique"]: "10cd0d8ec015803aa609c69570721993",
+  ["action-prioritaire"]: "10cd0d8ec015803aa609c69570721993",
+  ["transition-demographique"]: "135d0d8ec015807cb217d457ef980d67",
+  ["transition-ecologique"]: "10cd0d8ec015807fa301e23e56347ce8",
+  ["transition-numerique"]: "135d0d8ec01580319680f725df0d9683",
 };
 
 export type GlossaireEntryKey = keyof typeof GLOSSAIRE_ENTRIES_KEYS;

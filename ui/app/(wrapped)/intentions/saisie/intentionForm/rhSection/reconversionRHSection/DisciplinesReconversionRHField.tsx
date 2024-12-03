@@ -37,7 +37,7 @@ export const DisciplinesReconversionRHField = chakra(
                   name={name}
                   active={!disabled}
                   inError={!!errors.discipline1ReconversionRH}
-                  defaultValue={{ label: value, value: value ?? "" }}
+                  defaultValue={{ label: value ?? "", value: value ?? "" }}
                   onChange={(v) => {
                     onChange(v?.value);
                   }}
@@ -55,7 +55,7 @@ export const DisciplinesReconversionRHField = chakra(
                     name={name}
                     active={!disabled}
                     inError={!!errors.discipline2ReconversionRH}
-                    defaultValue={{ label: value, value: value ?? "" }}
+                    defaultValue={{ label: value ?? "", value: value ?? "" }}
                     onChange={(v) => {
                       onChange(v?.value);
                     }}

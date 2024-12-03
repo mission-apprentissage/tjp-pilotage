@@ -18,6 +18,10 @@ export const STATS_DEMANDES_COLUMNS = {
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
   formationSpecifique: "Formation spécifique",
+  actionPrioritaire: "Action prioritaire ?",
+  transitionDemographique: "Transition démographique ?",
+  transitionEcologique: "Transition écologique ?",
+  transitionNumerique: "Transition numérique ?",
   codeDispositif: "Code Dispositif",
   libelleDispositif: "Dispositif",
   niveauDiplome: "Diplôme",
@@ -95,6 +99,10 @@ export const STATS_DEMANDES_COLUMNS = {
     disciplinesFormationRH: string;
     inspecteurReferent: string;
     formationSpecifique: string;
+    actionPrioritaire: boolean;
+    transitionDemographique: boolean;
+    transitionEcologique: boolean;
+    transitionNumerique: boolean;
   }
 >;
 

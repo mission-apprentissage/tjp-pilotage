@@ -2,7 +2,6 @@ import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import { VoieEnum } from "shared/enum/voieEnum";
 import type { getDemandeSchema } from "shared/routes/schemas/get.demande.numero.schema";
 import type { z } from "zod";
 
@@ -21,16 +20,15 @@ export interface Filters extends z.infer<typeof getDemandeSchema.params> {
 export const getDemandeQuery = async ({ numero, user }: Filters) => {
   const demande = await getKbdClient()
     .selectFrom("latestDemandeView as demande")
-    .leftJoin("formationView", (join) =>
-      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
-    )
+    .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .selectAll()
     .select((eb) => [
-      "dispositif.libelleDispositif as libelleDispositif",
-      "formationView.libelleFormation",
+      "dispositif.libelleDispositif",
+      "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
       "departement.codeDepartement",

@@ -193,6 +193,11 @@ export const HeadLineContent = ({
         </ConditionalTh>
         <ConditionalTh colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
           {FORMATION_ETABLISSEMENT_COLUMNS.formationSpecifique}
+          <TooltipIcon
+            ml="1"
+            label="Cliquez pour plus d'infos."
+            onClick={() => openGlossaire("formation-specifique")}
+          />
         </ConditionalTh>
         <ConditionalTh
           colonneFilters={colonneFilters}

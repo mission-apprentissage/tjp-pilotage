@@ -1,7 +1,6 @@
 import { sql } from "kysely";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
-import { VoieEnum } from "shared/enum/voieEnum";
 
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/corrections/usecases/getCorrections/getCorrections.usecase";
@@ -39,9 +38,7 @@ export const getStatsCorrectionsQuery = async ({
         return eb;
       })
     )
-    .leftJoin("formationView", (join) =>
-      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
-    )
+    .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")

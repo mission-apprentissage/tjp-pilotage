@@ -76,6 +76,8 @@ export const CfdSelect = () => {
 
   const defaultValue: Option = useMemo(
     () => formatSearchResultToOption(formatOffreToCfdSearchResult(analyseDetailleeOffre)),
+    // TODO: REFACTO
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [offre, analyseDetailleeOffre]
   );
 
@@ -83,6 +85,8 @@ export const CfdSelect = () => {
     if (selected) {
       setCfdFilter(selected.value);
     }
+    // TODO: REFACTO
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
   useEffect(() => {
@@ -90,6 +94,8 @@ export const CfdSelect = () => {
       setCfdFilter(analyseDetailleeOffre.cfd);
       setSelected(formatSearchResultToOption(formatOffreToCfdSearchResult(analyseDetailleeOffre)));
     }
+    // TODO: REFACTO
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [analyseDetailleeOffre]);
 
   const loadOptions = async (search: string) => {
