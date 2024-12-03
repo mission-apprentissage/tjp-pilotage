@@ -50,3 +50,11 @@ brew install esolitos/ipa/sshpass
 ## bash 5+
 
 > Sur OS X vous pouvez utiliser `brew install bash`
+
+## awk
+
+> Sur OS X vous pouvez utiliser `brew install awk`
+
+## sed
+
+> Sur OS X il est normalement installé par défaut
