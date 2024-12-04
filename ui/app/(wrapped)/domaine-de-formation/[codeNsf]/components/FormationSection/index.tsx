@@ -40,7 +40,7 @@ export const FormationSection = ({
         <Divider width="48px" />
         <TabFilters counter={counter} />
         <Flex direction="row" gap={8}>
-          <ListeFormations formations={formations} selectCfd={handleChangeCfd} selectedCfd={currentFilters.cfd ?? ""} />
+          <ListeFormations formations={formations} selectCfd={handleChangeCfd} selectedCfd={currentFilters.cfd} />
           <TabContent tab={currentFilters.formationTab} />
         </Flex>
       </Flex>
