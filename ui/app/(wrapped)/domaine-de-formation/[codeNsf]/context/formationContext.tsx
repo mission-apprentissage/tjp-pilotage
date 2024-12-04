@@ -1,7 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 import type { ScopeZone } from "shared";
 
 import type {
@@ -46,25 +45,18 @@ type FormationContextType = InputFormationContextType & {
 type FormationContextProps = {
   children: React.ReactNode;
   value: InputFormationContextType;
-  cfd: string;
+  defaultCfd: string;
 };
 
 export const FormationContext = createContext<FormationContextType>({} as FormationContextType);
 
-export function FormationContextProvider({ children, value, cfd }: FormationContextProps) {
-  console.log("======== NEW CFD VALUE INCOMING : ", cfd);
-  const searchParams = useSearchParams();
-  const cfdFromParams = searchParams.get("cfd");
-
-  console.log("======== CFD FROM PARAMS : ", cfdFromParams);
-
-  const [selectedCfd, setSelectedCfd] = useState(cfdFromParams || cfd);
+export function FormationContextProvider({ children, value, defaultCfd }: FormationContextProps) {
   const [currentFilters, setCurrentFilters] = useStateParams<Filters>({
     defaultValues: {
       presence: "",
       voie: "",
       formationTab: "indicateurs",
-      cfd,
+      cfd: defaultCfd,
       etab: {
         includeAll: true,
         view: "map",
@@ -73,40 +65,51 @@ export function FormationContextProvider({ children, value, cfd }: FormationCont
     },
   });
 
-  console.log({ currentFilters });
-
-  const resetFilters = () =>
-    setCurrentFilters({
-      ...currentFilters,
+  const resetFilters = () => {
+    setCurrentFilters((prev) => ({
+      ...prev,
       codeRegion: "",
       codeDepartement: "",
       codeAcademie: "",
-    });
+    }));
+  };
 
   const handleRegionChange = (codeRegion: string) =>
-    setCurrentFilters({
-      ...currentFilters,
+    setCurrentFilters((prev) => ({
+      ...prev,
       codeRegion,
       codeDepartement: "",
       codeAcademie: "",
-    });
+      etab: {
+        ...prev.etab,
+        bbox: undefined,
+      },
+    }));
 
   const handleAcademieChange = (codeAcademie: string) => {
     const academie = value.academies.find((a) => a.value === codeAcademie);
 
     if (academie) {
-      setCurrentFilters({
-        ...currentFilters,
+      setCurrentFilters((prev) => ({
+        ...prev,
         codeRegion: academie.codeRegion,
         codeAcademie,
         codeDepartement: "",
-      });
+        etab: {
+          ...prev.etab,
+          bbox: undefined,
+        },
+      }));
     } else {
-      setCurrentFilters({
-        ...currentFilters,
+      setCurrentFilters((prev) => ({
+        ...prev,
         codeAcademie: "",
         codeDepartement: "",
-      });
+        etab: {
+          ...prev.etab,
+          bbox: undefined,
+        },
+      }));
     }
   };
 
@@ -114,62 +117,89 @@ export function FormationContextProvider({ children, value, cfd }: FormationCont
     const departement = value.departements.find((d) => d.value === codeDepartement);
 
     if (departement) {
-      setCurrentFilters({
-        ...currentFilters,
+      setCurrentFilters((prev) => ({
+        ...prev,
         codeRegion: departement.codeRegion,
         codeAcademie: departement.codeAcademie,
         codeDepartement,
-      });
+        etab: {
+          ...prev.etab,
+          bbox: undefined,
+        },
+      }));
     } else {
-      setCurrentFilters({
-        ...currentFilters,
+      setCurrentFilters((prev) => ({
+        ...prev,
         codeDepartement: "",
-      });
+        etab: {
+          ...prev.etab,
+          bbox: undefined,
+        },
+      }));
     }
   };
 
   const handlePresenceChange = (presence: Presence) => {
-    setCurrentFilters({ ...currentFilters, presence });
+    setCurrentFilters((prev) => ({
+      ...prev,
+      presence,
+    }));
   };
 
   const handleVoieChange = (voie: Voie) => {
-    setCurrentFilters({ ...currentFilters, voie });
+    setCurrentFilters((prev) => ({
+      ...prev,
+      voie,
+    }));
   };
 
   const handleTabFormationChange = (formationTab: FormationTab) => {
-    setCurrentFilters({ ...currentFilters, formationTab });
+    setCurrentFilters((prev) => ({
+      ...prev,
+      formationTab,
+    }));
   };
 
   const handleIncludeAllChange = (includeAll: boolean) => {
-    setCurrentFilters({ ...currentFilters, etab: { ...currentFilters.etab, includeAll } });
+    setCurrentFilters((prev) => ({
+      ...prev,
+      etab: { ...prev.etab, includeAll },
+    }));
   };
 
   const handleViewChange = (view: EtablissementsView) => {
-    setCurrentFilters({ ...currentFilters, etab: { ...currentFilters.etab, view } });
+    setCurrentFilters((prev) => ({
+      ...prev,
+      etab: { ...prev.etab, view },
+    }));
   };
 
   const handleOrderByChange = (orderBy: EtablissementsOrderBy) => {
-    setCurrentFilters({ ...currentFilters, etab: { ...currentFilters.etab, orderBy } });
+    setCurrentFilters((prev) => ({
+      ...prev,
+      etab: { ...prev.etab, orderBy },
+    }));
   };
 
   const handleChangeCfd = (cfd: string) => {
-    console.log(`change cfd from ${currentFilters.cfd} to ${cfd}`);
-    setSelectedCfd(cfd);
-    setCurrentFilters({ ...currentFilters, cfd });
+    setCurrentFilters((prev) => ({
+      ...prev,
+      cfd,
+    }));
   };
 
   const handleClearBbox = () => {
-    setCurrentFilters({ ...currentFilters, etab: { ...currentFilters.etab, bbox: undefined } });
+    setCurrentFilters((prev) => ({
+      ...prev,
+      etab: { ...prev.etab, bbox: undefined },
+    }));
   };
 
-  console.log({ currentFilters });
   const handleSetBbox = (bbox?: Bbox) => {
-    console.group("handleSetBbox");
-    console.log({ currentFilters });
-    console.log({ bbox });
-    console.groupEnd();
-
-    setCurrentFilters({ ...currentFilters, etab: { ...currentFilters.etab, bbox } });
+    setCurrentFilters((prev) => ({
+      ...prev,
+      etab: { ...prev.etab, bbox },
+    }));
   };
 
   const context = {
@@ -193,9 +223,6 @@ export function FormationContextProvider({ children, value, cfd }: FormationCont
     departements: value.departements,
     handleSetBbox,
   };
-
-  console.log(`cfd passed as props: ${cfd}, cfd in context: ${context.currentFilters.cfd}`);
-  console.log({ selectedCfd });
 
   return <FormationContext.Provider value={context}>{children}</FormationContext.Provider>;
 }
