@@ -20,8 +20,13 @@ const fetchDefaultNsf = async () => {
   }
 };
 
-export default async function Panorama({ searchParams }: { searchParams: { wrongNsf?: string } }) {
+type Params = {
+  searchParams: Promise<{ wrongNsf?: string }>;
+};
+
+export default async function Panorama({ searchParams }: Readonly<Params>) {
+  const { wrongNsf } = await searchParams;
   const defaultNsf = await fetchDefaultNsf();
 
-  return <PanoramaDomaineDeFormationClient defaultNsf={defaultNsf} wrongNsf={searchParams.wrongNsf} />;
+  return <PanoramaDomaineDeFormationClient defaultNsf={defaultNsf} wrongNsf={wrongNsf} />;
 }

@@ -1,7 +1,6 @@
 import { isAxiosError } from "axios";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import type { ScopeZone } from "shared";
 import { ScopeEnum } from "shared";
 
 import { serverClient } from "@/api.client";
@@ -10,27 +9,6 @@ import { PageDomaineDeFormationClient } from "./client";
 import type { Filters, FormationListItem, FormationsCounter, QueryFilters } from "./types";
 
 export const dynamic = "force-dynamic";
-
-type Params = {
-  params: Promise<{
-    codeNsf: string;
-  }>;
-  searchParams: Promise<Partial<Filters>>;
-};
-
-const fetchListOfNsfs = async () => {
-  const headersList = Object.fromEntries(headers().entries());
-  try {
-    return await serverClient
-      .ref("[GET]/domaine-de-formation")
-      .query({ query: { search: undefined } }, { headers: headersList });
-  } catch (e) {
-    if (isAxiosError(e)) {
-      console.error({ status: e.response?.status, message: e.response?.data });
-    }
-    return [];
-  }
-};
 
 const fetchNsf = async (codeNsf: string, filters: QueryFilters) => {
   const headersList = Object.fromEntries(headers().entries());
@@ -56,7 +34,34 @@ const findDefaultCfd = (defaultCfd: string | undefined, formations: FormationLis
   );
 };
 
-export default async function PageDomaineDeFormation({ params, searchParams }: Params) {
+const defineScope = (
+  codeRegion: string | undefined,
+  codeAcademie: string | undefined,
+  codeDepartement: string | undefined
+) => {
+  if (codeDepartement) {
+    return ScopeEnum.département;
+  }
+
+  if (codeAcademie) {
+    return ScopeEnum.académie;
+  }
+
+  if (codeRegion) {
+    return ScopeEnum.région;
+  }
+
+  return ScopeEnum.national;
+};
+
+type Params = {
+  params: Promise<{
+    codeNsf: string;
+  }>;
+  searchParams: Promise<Partial<Filters>>;
+};
+
+export default async function PageDomaineDeFormation({ params, searchParams }: Readonly<Params>) {
   const { codeNsf } = await params;
   const { codeRegion, codeAcademie, codeDepartement, cfd, presence, voie } = await searchParams;
 
@@ -65,8 +70,6 @@ export default async function PageDomaineDeFormation({ params, searchParams }: P
     codeAcademie,
     codeDepartement,
   });
-
-  const nsfs = await fetchListOfNsfs();
 
   if (!results) {
     return redirect(`/panorama/domaine-de-formation?wrongNsf=${codeNsf}`);
@@ -108,24 +111,14 @@ export default async function PageDomaineDeFormation({ params, searchParams }: P
     allScopes: results.formations.length,
   };
 
-  const scope: ScopeZone = codeDepartement
-    ? ScopeEnum.département
-    : codeAcademie
-      ? ScopeEnum.académie
-      : codeRegion
-        ? ScopeEnum.région
-        : ScopeEnum.national;
+  const scope = defineScope(codeRegion, codeAcademie, codeDepartement);
 
   const selectedCfd = findDefaultCfd(cfd, results.formations);
-
-  console.log({ selectedCfd, cfd });
 
   return (
     <PageDomaineDeFormationClient
       libelleNsf={results.libelleNsf}
       codeNsf={codeNsf}
-      filters={results.filters}
-      nsfs={nsfs}
       formations={formations}
       cfd={selectedCfd}
       regions={regions}

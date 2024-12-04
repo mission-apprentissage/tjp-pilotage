@@ -9,7 +9,7 @@ import { useFormationContext } from "@/app/(wrapped)/domaine-de-formation/[codeN
 
 import { FormationAbsente } from "./components/FormationAbsente";
 import { List } from "./List";
-import { Map } from "./Map";
+import { MapEtablissements } from "./Map";
 import { MapActions } from "./MapActions";
 
 const useEtablissementsTab = () => {
@@ -177,7 +177,7 @@ export const EtablissementsTab = () => {
       <FormationAbsente nbEtablissements={etablissements?.length} />
       {view === "map" && (
         <Box ref={mapContainer} aspectRatio={1}>
-          <Map
+          <MapEtablissements
             isLoading={isLoading}
             etablissements={etablissements}
             setMap={setMap}

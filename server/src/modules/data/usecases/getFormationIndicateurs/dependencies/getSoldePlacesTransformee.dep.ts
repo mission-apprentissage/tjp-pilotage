@@ -28,9 +28,21 @@ export const getSoldePlacesTransformee = async ({
         "latestDemandeIntentionView.capaciteApprentissageActuelle"
       )})`.as("apprentissage"),
     ])
-    .$if(!!codeRegion, (qb) => qb.where("dataEtablissement.codeRegion", "=", codeRegion!))
-    .$if(!!codeAcademie, (qb) => qb.where("dataEtablissement.codeAcademie", "=", codeAcademie!))
-    .$if(!!codeDepartement, (qb) => qb.where("dataEtablissement.codeDepartement", "=", codeDepartement!))
+    .$call((qb) => {
+      if (codeRegion) {
+        qb = qb.where("dataEtablissement.codeRegion", "=", codeRegion);
+      }
+
+      if (codeAcademie) {
+        qb = qb.where("dataEtablissement.codeAcademie", "=", codeAcademie);
+      }
+
+      if (codeDepartement) {
+        qb = qb.where("dataEtablissement.codeDepartement", "=", codeDepartement);
+      }
+
+      return qb;
+    })
     .groupBy(["rentreeScolaire"])
     .orderBy(["rentreeScolaire"])
     .execute()
