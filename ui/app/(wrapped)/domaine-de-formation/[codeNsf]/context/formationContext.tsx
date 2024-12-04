@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 import type { ScopeZone } from "shared";
 
@@ -51,7 +52,13 @@ type FormationContextProps = {
 export const FormationContext = createContext<FormationContextType>({} as FormationContextType);
 
 export function FormationContextProvider({ children, value, cfd }: FormationContextProps) {
-  const [selectedCfd, setSelectedCfd] = useState(cfd);
+  console.log("======== NEW CFD VALUE INCOMING : ", cfd);
+  const searchParams = useSearchParams();
+  const cfdFromParams = searchParams.get("cfd");
+
+  console.log("======== CFD FROM PARAMS : ", cfdFromParams);
+
+  const [selectedCfd, setSelectedCfd] = useState(cfdFromParams || cfd);
   const [currentFilters, setCurrentFilters] = useStateParams<Filters>({
     defaultValues: {
       presence: "",
@@ -65,6 +72,8 @@ export function FormationContextProvider({ children, value, cfd }: FormationCont
       },
     },
   });
+
+  console.log({ currentFilters });
 
   const resetFilters = () =>
     setCurrentFilters({
@@ -153,7 +162,13 @@ export function FormationContextProvider({ children, value, cfd }: FormationCont
     setCurrentFilters({ ...currentFilters, etab: { ...currentFilters.etab, bbox: undefined } });
   };
 
+  console.log({ currentFilters });
   const handleSetBbox = (bbox?: Bbox) => {
+    console.group("handleSetBbox");
+    console.log({ currentFilters });
+    console.log({ bbox });
+    console.groupEnd();
+
     setCurrentFilters({ ...currentFilters, etab: { ...currentFilters.etab, bbox } });
   };
 
