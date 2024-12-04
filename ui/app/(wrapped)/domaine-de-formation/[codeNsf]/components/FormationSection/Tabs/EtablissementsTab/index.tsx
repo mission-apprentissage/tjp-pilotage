@@ -12,18 +12,9 @@ import { List } from "./List";
 import { Map } from "./Map";
 import { MapActions } from "./MapActions";
 
-const useEtablissementsTab = ({
-  cfd,
-  codeRegion,
-  codeAcademie,
-  codeDepartement,
-}: {
-  cfd: string;
-  codeRegion?: string;
-  codeAcademie?: string;
-  codeDepartement?: string;
-}) => {
+const useEtablissementsTab = () => {
   const { currentFilters, handleClearBbox, handleSetBbox } = useFormationContext();
+  const { cfd, codeRegion, codeAcademie, codeDepartement } = currentFilters;
   const mapContainer = createRef<HTMLDivElement>();
   const [activeUai, setActiveUai] = useState<string | null>(null);
   const [hoverUai, setHoverUai] = useState<string | null>(null);
@@ -43,6 +34,8 @@ const useEtablissementsTab = ({
     lngMax: 9.15,
   });
   const [displayedEtablissements, setDisplayedEtablissements] = useState<Etablissement[]>([]);
+
+  console.log({ index: cfd });
 
   const { data: dataFormation, isLoading: isLoadingFormation } = client.ref("[GET]/formation/:cfd").useQuery(
     {
@@ -78,6 +71,7 @@ const useEtablissementsTab = ({
 
   useEffect(() => {
     if (mapContainer.current) {
+      console.log("going to check map dimensions");
       if (
         mapContainer.current.clientHeight !== mapDimensions.height ||
         mapContainer.current.clientWidth !== mapDimensions.width
@@ -92,8 +86,11 @@ const useEtablissementsTab = ({
 
   useEffect(() => {
     if (dataEtablissementsMap?.bbox) {
+      console.log("going to set default bbox");
       setDefaultBbox(dataEtablissementsMap.bbox);
+      console.log({ bbox: dataEtablissementsMap.bbox });
       if (currentFilters.etab.bbox === undefined) {
+        console.log("going to fit bounds");
         map?.fitBounds(
           [
             [dataEtablissementsMap.bbox.lngMin, dataEtablissementsMap.bbox.latMin],
@@ -111,11 +108,8 @@ const useEtablissementsTab = ({
   }, [dataEtablissementsMap, map, currentFilters.etab.bbox]);
 
   useEffect(() => {
-    handleClearBbox();
-  }, [codeRegion, codeDepartement, codeAcademie, cfd]);
-
-  useEffect(() => {
     if (dataEtablissementsMap?.etablissements) {
+      console.log("going to set displayed etablissements");
       setDisplayedEtablissements(
         dataEtablissementsMap.etablissements.filter((etablissement) => {
           const isInBbox =
@@ -131,6 +125,7 @@ const useEtablissementsTab = ({
   }, [dataEtablissementsMap?.etablissements, currentFilters.etab.bbox, defaultBbox]);
 
   const handleRecenter = () => {
+    console.log("handleRecenter");
     map?.fitBounds([
       [defaultBbox.lngMin, defaultBbox.latMin],
       [defaultBbox.lngMax, defaultBbox.latMax],
@@ -159,7 +154,10 @@ const useEtablissementsTab = ({
 
 export const EtablissementsTab = () => {
   const { currentFilters } = useFormationContext();
-  const { cfd, codeRegion, codeAcademie, codeDepartement } = currentFilters;
+  const {
+    cfd,
+    etab: { view },
+  } = currentFilters;
 
   const {
     dataFormation,
@@ -174,12 +172,7 @@ export const EtablissementsTab = () => {
     setHoverUai,
     bbox,
     handleRecenter,
-  } = useEtablissementsTab({
-    cfd,
-    codeRegion,
-    codeAcademie,
-    codeDepartement,
-  });
+  } = useEtablissementsTab();
 
   if (isLoading || !cfd || !dataFormation) {
     return null;
@@ -190,7 +183,7 @@ export const EtablissementsTab = () => {
       <FormationHeader data={dataFormation} />
       <MapActions nbEtablissementsInZone={etablissements.length} handleRecenter={handleRecenter} />
       <FormationAbsente nbEtablissements={etablissements?.length} />
-      {currentFilters.etab.view === "map" && (
+      {view === "map" && (
         <Box ref={mapContainer} aspectRatio={1}>
           <Map
             isLoading={isLoading}
@@ -205,7 +198,7 @@ export const EtablissementsTab = () => {
           />
         </Box>
       )}
-      {currentFilters.etab.view === "list" && <List isLoading={isLoading} etablissements={etablissements} />}
+      {view === "list" && <List isLoading={isLoading} etablissements={etablissements} />}
     </Flex>
   );
 };
