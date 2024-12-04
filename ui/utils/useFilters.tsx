@@ -21,6 +21,7 @@ export function useStateParams<F extends object>({
     filters,
     (filters: F) => {
       const mergedFilters = { ...prefixed, ...filters };
+      console.log({ prefixed, filters, mergedFilters });
       setFilters(mergedFilters);
       router.replace(
         createParametrizedUrl(
