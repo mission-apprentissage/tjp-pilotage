@@ -9,6 +9,8 @@ import { serverClient } from "@/api.client";
 import { PageDomaineDeFormationClient } from "./client";
 import type { Filters, FormationListItem, FormationsCounter, QueryFilters } from "./types";
 
+export const dynamic = "force-dynamic";
+
 type Params = {
   params: Promise<{
     codeNsf: string;
@@ -56,7 +58,7 @@ const findDefaultCfd = (defaultCfd: string | undefined, formations: FormationLis
 
 export default async function PageDomaineDeFormation({ params, searchParams }: Params) {
   const { codeNsf } = await params;
-  const { codeRegion, codeAcademie, codeDepartement, cfd, etab, formationTab, presence, voie } = await searchParams;
+  const { codeRegion, codeAcademie, codeDepartement, cfd, presence, voie } = await searchParams;
 
   const results = await fetchNsf(codeNsf, {
     codeRegion,
@@ -114,6 +116,10 @@ export default async function PageDomaineDeFormation({ params, searchParams }: P
         ? ScopeEnum.région
         : ScopeEnum.national;
 
+  const selectedCfd = findDefaultCfd(cfd, results.formations);
+
+  console.log({ selectedCfd, cfd });
+
   return (
     <PageDomaineDeFormationClient
       libelleNsf={results.libelleNsf}
@@ -121,7 +127,7 @@ export default async function PageDomaineDeFormation({ params, searchParams }: P
       filters={results.filters}
       nsfs={nsfs}
       formations={formations}
-      cfd={findDefaultCfd(cfd, results.formations)}
+      cfd={selectedCfd}
       regions={regions}
       academies={academies}
       departements={departements}
