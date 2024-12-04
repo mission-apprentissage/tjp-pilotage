@@ -27,7 +27,7 @@ const formatSecteur = (secteur: string) => {
 };
 
 const formatDepartement = (departement: string) => {
-  if (departement.length === 3 && departement[0] === "0") {
+  if (departement.length === 3 && departement.startsWith("0")) {
     return departement.substring(1);
   }
 

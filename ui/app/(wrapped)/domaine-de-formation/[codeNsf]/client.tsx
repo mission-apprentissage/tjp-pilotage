@@ -7,21 +7,11 @@ import { FormationSection } from "./components/FormationSection";
 import { HeaderSection } from "./components/HeaderSection/HeaderSection";
 import { LiensUtilesSection } from "./components/LiensUtilesSection/LiensUtilesSection";
 import { FormationContextProvider } from "./context/formationContext";
-import type {
-  Academie,
-  Departement,
-  DomaineDeFormationFilters,
-  FormationListItem,
-  FormationsCounter,
-  NsfOptions,
-  Region,
-} from "./types";
+import type { Academie, Departement, FormationListItem, FormationsCounter, Region } from "./types";
 
 type Props = {
   codeNsf: string;
   libelleNsf: string;
-  filters: DomaineDeFormationFilters;
-  nsfs: NsfOptions;
   formations: FormationListItem[];
   cfd: string;
   regions: Region[];

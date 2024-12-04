@@ -30,7 +30,7 @@ const AVAILABLE_STYLES = [
   "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/attenue.json",
 ];
 
-export const Map = ({
+export const MapEtablissements = ({
   isLoading,
   etablissements,
   setMap,
@@ -82,4 +82,4 @@ export const Map = ({
   );
 };
 
-Map.displayName = "Map";
+MapEtablissements.displayName = "MapEtablissements";

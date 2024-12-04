@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { createContext, useContext, useMemo } from "react";
 import type { ScopeZone } from "shared";
 
 import type {
@@ -50,7 +50,7 @@ type FormationContextProps = {
 
 export const FormationContext = createContext<FormationContextType>({} as FormationContextType);
 
-export function FormationContextProvider({ children, value, defaultCfd }: FormationContextProps) {
+export function FormationContextProvider({ children, value, defaultCfd }: Readonly<FormationContextProps>) {
   const [currentFilters, setCurrentFilters] = useStateParams<Filters>({
     defaultValues: {
       presence: "",
@@ -202,27 +202,45 @@ export function FormationContextProvider({ children, value, defaultCfd }: Format
     }));
   };
 
-  const context = {
-    currentFilters,
-    resetFilters,
-    handleRegionChange,
-    handleAcademieChange,
-    handleDepartementChange,
-    handlePresenceChange,
-    handleVoieChange,
-    handleTabFormationChange,
-    handleIncludeAllChange,
-    handleViewChange,
-    handleOrderByChange,
-    handleChangeCfd,
-    handleClearBbox,
-    scope: value.scope,
-    codeNsf: value.codeNsf,
-    regions: value.regions,
-    academies: value.academies,
-    departements: value.departements,
-    handleSetBbox,
-  };
+  const context = useMemo(
+    () => ({
+      currentFilters,
+      resetFilters,
+      handleRegionChange,
+      handleAcademieChange,
+      handleDepartementChange,
+      handlePresenceChange,
+      handleVoieChange,
+      handleTabFormationChange,
+      handleIncludeAllChange,
+      handleViewChange,
+      handleOrderByChange,
+      handleChangeCfd,
+      handleClearBbox,
+      scope: value.scope,
+      codeNsf: value.codeNsf,
+      regions: value.regions,
+      academies: value.academies,
+      departements: value.departements,
+      handleSetBbox,
+    }),
+    [
+      currentFilters,
+      resetFilters,
+      handleRegionChange,
+      handleAcademieChange,
+      handleDepartementChange,
+      handlePresenceChange,
+      handleVoieChange,
+      handleTabFormationChange,
+      handleIncludeAllChange,
+      handleViewChange,
+      handleOrderByChange,
+      handleChangeCfd,
+      handleClearBbox,
+      value,
+    ]
+  );
 
   return <FormationContext.Provider value={context}>{children}</FormationContext.Provider>;
 }
