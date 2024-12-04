@@ -137,15 +137,15 @@ export const getEtablissements = async ({
       }
 
       if (codeRegion) {
-        qb = qb.where("carto.codeRegion", "=", codeRegion!);
+        qb = qb.where("carto.codeRegion", "=", codeRegion);
       }
 
       if (codeAcademie) {
-        qb = qb.where("carto.codeAcademie", "=", codeAcademie!);
+        qb = qb.where("carto.codeAcademie", "=", codeAcademie);
       }
 
       if (codeDepartement) {
-        qb = qb.where("carto.codeDepartement", "=", codeDepartement!);
+        qb = qb.where("carto.codeDepartement", "=", codeDepartement);
       }
 
       return qb;

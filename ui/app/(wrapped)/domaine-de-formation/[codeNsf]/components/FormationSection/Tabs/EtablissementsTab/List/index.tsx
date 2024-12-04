@@ -11,8 +11,6 @@ export const List = ({ isLoading, etablissements }: { isLoading: boolean; etabli
       <CustomListItem
         key={etablissement.uai}
         etablissement={etablissement}
-        activeUai={""}
-        setActiveUai={(uai: string) => console.log(uai)}
         withDivider={i !== etablissements.length - 1}
       />
     ));

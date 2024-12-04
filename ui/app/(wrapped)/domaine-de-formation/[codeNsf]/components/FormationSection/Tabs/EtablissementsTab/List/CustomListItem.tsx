@@ -3,26 +3,17 @@ import { usePlausible } from "next-plausible";
 
 import { EtablissementItemContent } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/components/FormationSection/Tabs/EtablissementsTab/components/EtablissementItemContent";
 import type { Etablissement } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/types";
-import { themeDefinition } from "@/theme/theme";
 
 export const CustomListItem = ({
   etablissement,
-  activeUai,
   withDivider = true,
 }: {
   etablissement: Etablissement;
-  children?: React.ReactNode;
-  activeUai: string;
-  setActiveUai: (uai: string) => void;
   withDivider: boolean;
 }) => {
   const trackEvent = usePlausible();
 
   const backgroundColor = (() => {
-    if (activeUai === etablissement.uai) {
-      return themeDefinition.colors.grey["1000_active"];
-    }
-
     return "transparent";
   })();
 

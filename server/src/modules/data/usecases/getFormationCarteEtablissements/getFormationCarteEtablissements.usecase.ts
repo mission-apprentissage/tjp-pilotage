@@ -1,14 +1,13 @@
 import Boom from "@hapi/boom";
 import type { Params, QueryFilters } from "shared/routes/schemas/get.formation.cfd.map.schema";
 
-import { getBoundaries, getEtablissements, getFormation, getInitialZoom } from "./dependencies";
+import { getBoundaries, getEtablissements, getFormation } from "./dependencies";
 
 const getFormationCarteEtablissementsFactory =
   (
     deps = {
       getFormation,
       getEtablissements,
-      getInitialZoom,
       getBoundaries,
     }
   ) =>

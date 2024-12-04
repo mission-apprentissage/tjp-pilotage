@@ -6,7 +6,6 @@ export const SoldeDePlacesTransformeesGraph = ({
   xAxisData,
   series,
 }: {
-  title: string;
   xAxisData: string[];
   series: echarts.BarSeriesOption[];
 }) => {
