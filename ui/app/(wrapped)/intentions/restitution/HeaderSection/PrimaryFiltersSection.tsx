@@ -16,10 +16,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import type {
-  DemandesRestitutionIntentions,
-  FiltersDemandesRestitutionIntentions,
-} from "@/app/(wrapped)/intentions/restitution/types";
+import type { FiltersRestitutionIntentions, RestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { Multiselect } from "@/components/Multiselect";
 
@@ -30,14 +27,14 @@ export const PrimaryFiltersSection = ({
   isLoading,
   data,
 }: {
-  activeFilters: FiltersDemandesRestitutionIntentions;
+  activeFilters: FiltersRestitutionIntentions;
   handleFilters: (
-    type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+    type: keyof FiltersRestitutionIntentions,
+    value: FiltersRestitutionIntentions[keyof FiltersRestitutionIntentions]
   ) => void;
-  filterTracker: (filterName: keyof FiltersDemandesRestitutionIntentions) => () => void;
+  filterTracker: (filterName: keyof FiltersRestitutionIntentions) => () => void;
   isLoading: boolean;
-  data?: DemandesRestitutionIntentions;
+  data?: RestitutionIntentions;
 }) => {
   return (
     <>

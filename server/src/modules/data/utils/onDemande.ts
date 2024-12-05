@@ -1,5 +1,4 @@
 import { expressionBuilder } from "kysely";
-import { VoieEnum } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
@@ -30,7 +29,6 @@ import {
   countPlacesOuvertesTransitionEcologique,
   countPlacesTransformeesParCampagne,
 } from "@/modules/utils/countCapacite";
-import { isDemandeProjetOrValidee } from "@/modules/utils/isDemandeProjetOrValidee";
 
 import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
 
@@ -63,31 +61,22 @@ export const genericOnDemandes = ({
 }) =>
   expressionBuilder<DB, keyof DB>()
     .selectFrom("latestDemandeIntentionView as demande")
-    .innerJoin("campagne", (join) =>
-      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-        if (campagne) return eb.on("campagne.annee", "=", campagne);
-        return eb;
-      })
-    )
+    .innerJoin("campagne", "campagne.id", "demande.campagneId")
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("formationView", (join) =>
-      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
-    )
-
+    .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
-      join.on((eb) =>
-        eb.and([
-          eb(eb.ref("positionFormationRegionaleQuadrant.cfd"), "=", eb.ref("demande.cfd")),
-          eb(eb.ref("positionFormationRegionaleQuadrant.codeDispositif"), "=", eb.ref("demande.codeDispositif")),
-          eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
+      join
+        .onRef("positionFormationRegionaleQuadrant.cfd", "=", "demande.cfd")
+        .onRef("positionFormationRegionaleQuadrant.codeDispositif", "=", "demande.codeDispositif")
+        .onRef("positionFormationRegionaleQuadrant.codeRegion", "=", "dataEtablissement.codeRegion")
+        .on((eb) =>
           eb(
-            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
+            "positionFormationRegionaleQuadrant.millesimeSortie",
             "=",
             eb.val(getMillesimeFromCampagne(campagne ?? CURRENT_ANNEE_CAMPAGNE))
-          ),
-        ])
-      )
+          )
+        )
     )
     .select((eb) => [
       eb.fn.count<number>("numero").as("countDemande"),
@@ -139,39 +128,37 @@ export const genericOnDemandes = ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (codeNsf) return eb.where("formationView.codeNsf", "in", codeNsf);
+      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
       return eb;
     })
     .$call((eb) => {
-      if (CPC) return eb.where("formationView.cpc", "in", CPC);
+      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
       return eb;
     })
-    .$call((q) => {
-      if (!secteur || secteur.length === 0) return q;
-      return q.where("dataEtablissement.secteur", "in", secteur);
+    .$call((eb) => {
+      if (secteur) return eb.where("dataEtablissement.secteur", "in", secteur);
+      return eb;
     })
-    .$call((q) => {
-      if (!statut || statut.length === 0) {
-        return q.where(isDemandeProjetOrValidee);
-      }
-      return q.where("demande.statut", "in", statut);
+    .$call((eb) => {
+      if (statut) return eb.where("demande.statut", "in", statut);
+      return eb;
     })
-    .$call((q) => {
-      if (withColoration === undefined) return q;
+    .$call((eb) => {
+      if (withColoration === undefined) return eb;
       if (withColoration === "false")
-        return q.where((w) =>
+        return eb.where((w) =>
           w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
         );
-      return q;
+      return eb;
     })
-    .$call((q) => {
-      if (formationSpecifique?.length) {
+    .$call((eb) => {
+      if (formationSpecifique) {
         if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
-          q = q.innerJoin("actionPrioritaire", (join) =>
+          eb = eb.innerJoin("actionPrioritaire", (join) =>
             join
               .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
               .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
@@ -179,14 +166,14 @@ export const genericOnDemandes = ({
           );
         }
         if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])) {
-          q = q.where("formationView.isTransitionEcologique", "=", true);
+          eb = eb.where("formationView.isTransitionEcologique", "=", true);
         }
         if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])) {
-          q = q.where("formationView.isTransitionDemographique", "=", true);
+          eb = eb.where("formationView.isTransitionDemographique", "=", true);
         }
         if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])) {
-          q = q.where("formationView.isTransitionNumerique", "=", true);
+          eb = eb.where("formationView.isTransitionNumerique", "=", true);
         }
       }
-      return q;
+      return eb;
     });

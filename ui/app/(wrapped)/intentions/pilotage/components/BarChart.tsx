@@ -4,13 +4,13 @@ import { useLayoutEffect, useMemo, useRef } from "react";
 import type { PositionQuadrantType } from "shared/enum/positionQuadrantEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
-import type { RepartitionPilotageIntentionsPositionQuadrant } from "@/app/(wrapped)/intentions/pilotage/types";
+import type { RepartitionPilotageIntentionsPositionsQuadrant } from "@/app/(wrapped)/intentions/pilotage/types";
 import { formatPercentage } from "@/utils/formatUtils";
 
 export const BarChart = ({
   positionsQuadrant,
 }: {
-  positionsQuadrant?: RepartitionPilotageIntentionsPositionQuadrant;
+  positionsQuadrant?: RepartitionPilotageIntentionsPositionsQuadrant;
 }) => {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -235,6 +235,7 @@ export const BarChart = ({
         },
       ],
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [positionsQuadrant]
   );
 
@@ -244,7 +245,7 @@ export const BarChart = ({
       chartRef.current = echarts.init(containerRef.current);
     }
     chartRef.current.setOption(option, true);
-  }, [positionsQuadrant]);
+  }, [positionsQuadrant, option]);
 
   if (!positionsQuadrant) return <></>;
 

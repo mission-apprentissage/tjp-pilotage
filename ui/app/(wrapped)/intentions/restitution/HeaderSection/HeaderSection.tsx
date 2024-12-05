@@ -1,10 +1,6 @@
 import { Flex, Skeleton } from "@chakra-ui/react";
 
-import type {
-  DemandesRestitutionIntentions,
-  FiltersDemandesRestitutionIntentions,
-  StatsRestitutionIntentions,
-} from "@/app/(wrapped)/intentions/restitution/types";
+import type { FiltersRestitutionIntentions, RestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 
 import { CountersSection } from "./CountersSection";
 import { PrimaryFiltersSection } from "./PrimaryFiltersSection";
@@ -49,18 +45,16 @@ export const HeaderSection = ({
   resetFilters,
   isLoading,
   data,
-  countData,
 }: {
-  activeFilters: FiltersDemandesRestitutionIntentions;
+  activeFilters: FiltersRestitutionIntentions;
   handleFilters: (
-    type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+    type: keyof FiltersRestitutionIntentions,
+    value: FiltersRestitutionIntentions[keyof FiltersRestitutionIntentions]
   ) => void;
-  filterTracker: (filterName: keyof FiltersDemandesRestitutionIntentions) => () => void;
+  filterTracker: (filterName: keyof FiltersRestitutionIntentions) => () => void;
   resetFilters: () => void;
   isLoading: boolean;
-  data?: DemandesRestitutionIntentions;
-  countData?: StatsRestitutionIntentions;
+  data?: RestitutionIntentions;
 }) => (
   <>
     {isLoading ? (
@@ -75,7 +69,7 @@ export const HeaderSection = ({
             isLoading={isLoading}
             data={data}
           />
-          <CountersSection countData={countData} />
+          <CountersSection stats={data?.stats} />
         </Flex>
         <SecondaryFiltersSection
           activeFilters={activeFilters}

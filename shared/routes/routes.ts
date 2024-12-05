@@ -48,16 +48,13 @@ import { searchNsfSchema } from "./schemas/get.nsf.search.search.schema";
 import { searchNsfFormationSchema } from "./schemas/get.nsf-diplome.search.search.schema";
 import { getDataForPanoramaDepartementSchema } from "./schemas/get.panorama.stats.departement.schema";
 import { getDataForPanoramaRegionSchema } from "./schemas/get.panorama.stats.region.schema";
-import { getFormationsPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.formations.schema";
-import { getRepartitionPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.repartition.schema";
-import { getStatsPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.stats.schema";
+import { getPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.schema";
 import { getPilotageReformeStatsRegionsSchema } from "./schemas/get.pilotage-reforme.stats.regions.schema";
 import { getPilotageReformeStatsSchema } from "./schemas/get.pilotage-reforme.stats.schema";
 import { getRegionSchema } from "./schemas/get.region.codeRegion.schema";
 import { getRegionsSchema } from "./schemas/get.regions.schema";
 import { getRequetesEnregistreesSchema } from "./schemas/get.requetes.schema";
-import { getDemandesRestitutionIntentionsSchema } from "./schemas/get.restitution-intentions.demandes.schema";
-import { getStatsRestitutionIntentionsSchema } from "./schemas/get.restitution-intentions.stats.schema";
+import { getRestitutionIntentionsSchema } from "./schemas/get.restitution-intentions.schema";
 import { searchUserSchema } from "./schemas/get.user.search.search.schema";
 import { getUsersSchema } from "./schemas/get.users.schema";
 import { activateUserSchema } from "./schemas/post.auth.activate.schema";
@@ -219,10 +216,10 @@ export const ROUTES = {
     method: "GET",
     schema: getDataForPanoramaRegionSchema,
   },
-  "[GET]/restitution-intentions/demandes": {
-    url: "/restitution-intentions/demandes",
+  "[GET]/restitution-intentions": {
+    url: "/restitution-intentions",
     method: "GET",
-    schema: getDemandesRestitutionIntentionsSchema,
+    schema: getRestitutionIntentionsSchema,
   },
   "[GET]/departement/:codeDepartement": {
     url: "/departement/:codeDepartement",
@@ -249,11 +246,6 @@ export const ROUTES = {
     method: "GET",
     schema: getFormationSchema,
   },
-  "[GET]/pilotage-intentions/formations": {
-    url: "/pilotage-intentions/formations",
-    method: "GET",
-    schema: getFormationsPilotageIntentionsSchema,
-  },
   "[GET]/etablissement/:uai/header": {
     url: "/etablissement/:uai/header",
     method: "GET",
@@ -279,20 +271,10 @@ export const ROUTES = {
     method: "GET",
     schema: getRegionsSchema,
   },
-  "[GET]/pilotage-intentions/repartition": {
-    url: "/pilotage-intentions/repartition",
+  "[GET]/pilotage-intentions": {
+    url: "/pilotage-intentions",
     method: "GET",
-    schema: getRepartitionPilotageIntentionsSchema,
-  },
-  "[GET]/pilotage-intentions/stats": {
-    url: "/pilotage-intentions/stats",
-    method: "GET",
-    schema: getStatsPilotageIntentionsSchema,
-  },
-  "[GET]/restitution-intentions/stats": {
-    url: "/restitution-intentions/stats",
-    method: "GET",
-    schema: getStatsRestitutionIntentionsSchema,
+    schema: getPilotageIntentionsSchema,
   },
   "[GET]/campus/search/:search": {
     url: "/campus/search/:search",

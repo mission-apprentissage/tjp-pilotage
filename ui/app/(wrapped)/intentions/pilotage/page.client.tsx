@@ -13,19 +13,21 @@ import { HeaderSection } from "./header/HeaderSection";
 import { DisplayTypeEnum } from "./main/displayTypeEnum";
 import { MainSection } from "./main/MainSection";
 import type {
-  FiltersStatsPilotageIntentions,
+  FiltersPilotageIntentions,
   FilterTracker,
-  OrderRepartitionPilotageIntentions,
-  StatsPilotageIntentions,
+  OrderPilotageIntentions,
+  OrderQuadrantPilotageIntentions,
+  PilotageIntentions,
 } from "./types";
 import { findDefaultRentreeScolaireForCampagne } from "./utils";
 
 export const PilotageNationalClient = () => {
   const trackEvent = usePlausible();
   const [searchParams, setSearchParams] = useStateParams<{
-    filters?: FiltersStatsPilotageIntentions;
+    filters?: FiltersPilotageIntentions;
     displayTypes?: Array<DisplayTypeEnum>;
-    order?: Partial<OrderRepartitionPilotageIntentions>;
+    order?: Partial<OrderPilotageIntentions>;
+    orderQuadrant?: Partial<OrderQuadrantPilotageIntentions>;
   }>({
     defaultValues: {
       filters: {
@@ -43,6 +45,7 @@ export const PilotageNationalClient = () => {
     withColoration: "true",
   };
   const order = searchParams.order ?? { order: "asc" };
+  const orderQuadrant = searchParams.orderQuadrant ?? { orderQuadrant: "asc" };
 
   const filterTracker: FilterTracker = (filterName, options = {}) => {
     trackEvent("pilotage-transformation:filtre", {
@@ -50,7 +53,7 @@ export const PilotageNationalClient = () => {
     });
   };
 
-  const setFilters = (filters: FiltersStatsPilotageIntentions) => {
+  const setFilters = (filters: FiltersPilotageIntentions) => {
     setSearchParams({
       ...searchParams,
       filters,
@@ -81,15 +84,9 @@ export const PilotageNationalClient = () => {
       displayTypes: [searchParams.displayTypes?.[0] ?? DisplayTypeEnum.repartition, DisplayTypeEnum.domaine],
     });
 
-  const { data: repartitionData, isLoading: isLoadingRepartition } = client
-    .ref("[GET]/pilotage-intentions/repartition")
-    .useQuery({
-      query: { ...filters, ...order },
-    });
-
-  const { data, isLoading: isLoadingStats } = client.ref("[GET]/pilotage-intentions/stats").useQuery(
+  const { data, isLoading } = client.ref("[GET]/pilotage-intentions").useQuery(
     {
-      query: { ...filters },
+      query: { ...filters, ...order, ...orderQuadrant },
     },
     {
       onSuccess: (data) => {
@@ -100,9 +97,12 @@ export const PilotageNationalClient = () => {
     }
   );
 
-  const setDefaultFilters = (data: StatsPilotageIntentions | undefined) => {
+  const setDefaultFilters = (data: PilotageIntentions | undefined) => {
     if (!data) return;
-    const rentreeScolaire = findDefaultRentreeScolaireForCampagne(data.campagne.annee, data.filters.rentreesScolaires);
+    const rentreeScolaire = findDefaultRentreeScolaireForCampagne(
+      data.campagne.annee,
+      data.filtersOptions.rentreesScolaires
+    );
 
     setFilters({
       campagne: data.campagne.annee,
@@ -150,7 +150,7 @@ export const PilotageNationalClient = () => {
             setFilters={setFilters}
             filterTracker={filterTracker}
             onOpenTauxTransfoDefinition={onOpenTauxTransfoDefinition}
-            isLoading={isLoadingStats}
+            isLoading={isLoading}
           />
           <MainSection
             displayTypes={searchParams.displayTypes ?? [DisplayTypeEnum.repartition, DisplayTypeEnum.zone_geographique]}
@@ -159,10 +159,11 @@ export const PilotageNationalClient = () => {
             displayQuadrant={displayQuadrant}
             displayZonesGeographiques={displayZonesGeographiques}
             displayDomaines={displayDomaines}
-            quadrantData={data}
-            repartitionData={repartitionData}
-            isLoading={isLoadingRepartition}
+            data={data}
+            isLoading={isLoading}
             order={order}
+            orderQuadrant={orderQuadrant}
+            setFilters={setFilters}
             setSearchParams={setSearchParams}
           />
         </VStack>

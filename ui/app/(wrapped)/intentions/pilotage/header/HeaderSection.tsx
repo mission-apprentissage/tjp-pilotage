@@ -2,9 +2,9 @@ import { Flex, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 
 import type {
-  FiltersStatsPilotageIntentions,
+  FiltersPilotageIntentions,
   FilterTracker,
-  StatsPilotageIntentions,
+  PilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 
 import type { IndicateurType } from "./CartoSection";
@@ -19,9 +19,9 @@ export const HeaderSection = ({
   filterTracker,
   isLoading,
 }: {
-  data?: StatsPilotageIntentions;
-  filters: FiltersStatsPilotageIntentions;
-  setFilters: (filters: FiltersStatsPilotageIntentions) => void;
+  data?: PilotageIntentions;
+  filters: FiltersPilotageIntentions;
+  setFilters: (filters: FiltersPilotageIntentions) => void;
   onOpenTauxTransfoDefinition: () => void;
   filterTracker: FilterTracker;
   isLoading?: boolean;
@@ -51,7 +51,7 @@ export const HeaderSection = ({
       <Flex direction={"row"} width="100%" h="100%" gap="16px">
         <Flex flex="1" direction={"column"} gap={6}>
           <IndicateursClesSection
-            data={data}
+            repartition={data?.repartition}
             filters={filters}
             isLoading={isLoading}
             onOpenTauxTransfoDefinition={onOpenTauxTransfoDefinition}
@@ -63,7 +63,7 @@ export const HeaderSection = ({
             handleIndicateurChange={(newIndicateur) => setIndicateur(newIndicateur as IndicateurType)}
             indicateurOptions={indicateurOptions}
             filters={filters}
-            data={data}
+            repartition={data?.repartition}
             handleFilters={(f) => setFilters({ ...filters, ...f })}
             filterTracker={filterTracker}
             isLoading={isLoading}

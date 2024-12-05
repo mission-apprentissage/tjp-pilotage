@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
-import type { OrderDemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
+import type { OrderRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -23,7 +23,7 @@ const ConditionalTh = chakra(
     children: React.ReactNode;
     colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
     colonne: keyof typeof STATS_DEMANDES_COLUMNS;
-    onClick?: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
+    onClick?: (column: OrderRestitutionIntentions["orderBy"]) => void;
     isNumeric?: boolean;
   }) => {
     if (colonneFilters.includes(colonne))
@@ -35,7 +35,7 @@ const ConditionalTh = chakra(
           style={style}
           isNumeric={isNumeric}
           cursor={onClick ? "pointer" : "default"}
-          onClick={() => onClick && onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])}
+          onClick={() => onClick && onClick(colonne as OrderRestitutionIntentions["orderBy"])}
         >
           <Tooltip label={STATS_DEMANDES_COLUMNS[colonne]} placement="top">
             <Box
@@ -63,8 +63,8 @@ export const HeadLineContent = ({
   colonneFilters,
   getCellColor,
 }: {
-  order: OrderDemandesRestitutionIntentions;
-  handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
+  order: OrderRestitutionIntentions;
+  handleOrder: (column: OrderRestitutionIntentions["orderBy"]) => void;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
   getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
 }) => {

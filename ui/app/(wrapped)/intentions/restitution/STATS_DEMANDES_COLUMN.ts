@@ -1,6 +1,8 @@
 import type { client } from "@/api.client";
 import type { ExportColumns } from "@/utils/downloadExport";
 
+import type { RestitutionIntentions } from "./types";
+
 export const STATS_DEMANDES_COLUMNS = {
   // établissement
   uai: "UAI",
@@ -92,7 +94,7 @@ export const STATS_DEMANDES_COLUMNS = {
   motifRefus: "Motif(s) de refus",
   autreMotifRefus: "Autre motif de refus",
 } satisfies ExportColumns<
-  (typeof client.infer)["[GET]/restitution-intentions/demandes"]["demandes"][number] & {
+  RestitutionIntentions["demandes"][number] & {
     disciplinesRecrutementRH: string;
     disciplinesReconversionRH: string;
     disciplinesProfesseurAssocieRH: string;

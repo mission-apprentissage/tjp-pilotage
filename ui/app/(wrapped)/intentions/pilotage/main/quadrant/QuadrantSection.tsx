@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
@@ -25,7 +23,7 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import _ from "lodash";
+import _, { orderBy } from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
@@ -35,11 +33,14 @@ import { client } from "@/api.client";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import QuadrantPlaceholder from "@/app/(wrapped)/intentions/pilotage/components/QuadrantPlaceholder";
 import type {
-  FiltersStatsPilotageIntentions,
-  OrderFormationsPilotageIntentions,
+  FiltersOptionsPilotageIntentions,
+  FiltersPilotageIntentions,
+  FormationsPilotageIntentions,
+  OrderPilotageIntentions,
+  OrderQuadrantPilotageIntentions,
   RepartitionPilotageIntentions,
   SelectedScope,
-  StatsPilotageIntentions,
+  StatsSortiePilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { InfoTooltipContent } from "@/app/(wrapped)/panorama/components/QuadrantSection/InfoTooltipContent";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
@@ -66,15 +67,25 @@ const EFFECTIF_SIZES = [
 ];
 
 export const QuadrantSection = ({
+  orderQuadrant,
   scope,
-  parentFilters,
-  scopeFilters,
-  repartitionData,
+  filters,
+  filtersOptions,
+  setFilters,
+  setSearchParams,
+  repartition,
+  formations,
+  statsSortie,
 }: {
+  orderQuadrant: Partial<OrderQuadrantPilotageIntentions>;
   scope?: SelectedScope;
-  parentFilters: Partial<FiltersStatsPilotageIntentions>;
-  scopeFilters?: StatsPilotageIntentions["filters"];
-  repartitionData?: RepartitionPilotageIntentions;
+  filters: FiltersPilotageIntentions;
+  filtersOptions?: FiltersOptionsPilotageIntentions;
+  setFilters: (filters: FiltersPilotageIntentions) => void;
+  setSearchParams: (params: { orderQuadrant?: Partial<OrderQuadrantPilotageIntentions> }) => void;
+  repartition?: RepartitionPilotageIntentions;
+  formations?: FormationsPilotageIntentions;
+  statsSortie?: StatsSortiePilotageIntentions;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const bluefrance113 = useToken("colors", "bluefrance.113");
@@ -86,41 +97,13 @@ export const QuadrantSection = ({
     else setTypeVue("quadrant");
   };
 
-  const [filters, setFilters] = useStateParams({
-    prefix: "quadrant",
-    defaultValues: {
-      tauxPression: undefined,
-      type: undefined,
-      order: undefined,
-    } as {
-      tauxPression?: "eleve" | "faible";
-      type?: "ouverture" | "fermeture";
-      order?: Partial<OrderFormationsPilotageIntentions>;
-    },
-  });
-
-  const order = filters.order;
-
   const [currentFormationId, setCurrentFormationId] = useState<string | undefined>();
-  const { ...otherFilters } = parentFilters;
   const mergedFilters = {
-    ...otherFilters,
-    tauxPression: filters.tauxPression,
-    type: filters.type,
+    ...filters,
     codeRegion: scope?.type === ScopeEnum["région"] ? scope.value : undefined,
     codeAcademie: scope?.type === ScopeEnum["académie"] ? scope.value : undefined,
     codeDepartement: scope?.type === ScopeEnum["département"] ? scope.value : undefined,
   };
-
-  const { data: { formations, stats } = {} } = client.ref("[GET]/pilotage-intentions/formations").useQuery(
-    {
-      query: { ...mergedFilters, ...order },
-    },
-    {
-      keepPreviousData: true,
-      staleTime: 100000000,
-    }
-  );
 
   const formationsQuadrant =
     formations?.filter(
@@ -133,26 +116,23 @@ export const QuadrantSection = ({
   );
 
   const getLibelleTerritoire = (territoires?: Array<{ label: string; value: string }>, code?: string) => {
-    if (scope?.value && scopeFilters) return _.find(territoires, (territoire) => territoire.value === code)?.label;
+    if (scope?.value) return _.find(territoires, (territoire) => territoire.value === code)?.label;
     return undefined;
   };
 
-  const handleOrder = (column: OrderFormationsPilotageIntentions["orderBy"]) => {
+  const handleOrder = (column: OrderQuadrantPilotageIntentions["orderByQuadrant"]) => {
     trackEvent("tableau-quadrant-intentions:ordre", {
       props: { colonne: column },
     });
-    if (order?.orderBy !== column) {
-      setFilters({
-        ...filters,
-        order: { order: "desc", orderBy: column },
-      });
+    if (orderQuadrant?.orderByQuadrant !== column) {
+      setSearchParams({ orderQuadrant: { orderQuadrant: "desc", orderByQuadrant: column } });
       return;
     }
-    setFilters({
+    setSearchParams({
       ...filters,
-      order: {
-        order: order?.order === "asc" ? "desc" : "asc",
-        orderBy: column,
+      orderQuadrant: {
+        orderQuadrant: orderQuadrant?.orderQuadrant === "asc" ? "desc" : "asc",
+        orderByQuadrant: column,
       },
     });
   };
@@ -217,42 +197,34 @@ export const QuadrantSection = ({
           <ExportMenuButton
             color={"bluefrance.113"}
             onExportCsv={async () => {
-              downloadCsv(
-                `repartition_par_position_quadrant`,
-                Object.values(repartitionData?.positionsQuadrant ?? {}),
-                {
-                  libelle: "Position quadrant",
-                  code: "Code",
-                  effectif: "Effectif",
-                  placesTransformees: "Places transformées",
-                  tauxTransformation: "Taux de transformation",
-                  placesOuvertes: "Places ouvertes",
-                  placesFermees: "Places fermées",
-                  placesColoreesOuvertes: "Places colorées ouvertes",
-                  placesColoreesFermees: "Places colorées fermées",
-                  solde: "Solde",
-                  ratioFermeture: "Ratio de fermeture",
-                }
-              );
+              downloadCsv(`repartition_par_position_quadrant`, Object.values(repartition?.positionsQuadrant ?? {}), {
+                libelle: "Position quadrant",
+                code: "Code",
+                effectif: "Effectif",
+                placesTransformees: "Places transformées",
+                tauxTransformation: "Taux de transformation",
+                placesOuvertes: "Places ouvertes",
+                placesFermees: "Places fermées",
+                placesColoreesOuvertes: "Places colorées ouvertes",
+                placesColoreesFermees: "Places colorées fermées",
+                solde: "Solde",
+                ratioFermeture: "Ratio de fermeture",
+              });
             }}
             onExportExcel={async () => {
-              downloadExcel(
-                `repartition_par_position_quadrant`,
-                Object.values(repartitionData?.positionsQuadrant ?? {}),
-                {
-                  libelle: "Position quadrant",
-                  code: "Code",
-                  effectif: "Effectif",
-                  placesTransformees: "Places transformées",
-                  tauxTransformation: "Taux de transformation",
-                  placesOuvertes: "Places ouvertes",
-                  placesFermees: "Places fermées",
-                  placesColoreesOuvertes: "Places colorées ouvertes",
-                  placesColoreesFermees: "Places colorées fermées",
-                  solde: "Solde",
-                  ratioFermeture: "Ratio de fermeture",
-                }
-              );
+              downloadExcel(`repartition_par_position_quadrant`, Object.values(repartition?.positionsQuadrant ?? {}), {
+                libelle: "Position quadrant",
+                code: "Code",
+                effectif: "Effectif",
+                placesTransformees: "Places transformées",
+                tauxTransformation: "Taux de transformation",
+                placesOuvertes: "Places ouvertes",
+                placesFermees: "Places fermées",
+                placesColoreesOuvertes: "Places colorées ouvertes",
+                placesColoreesFermees: "Places colorées fermées",
+                solde: "Solde",
+                ratioFermeture: "Ratio de fermeture",
+              });
             }}
             variant="ghost"
           />
@@ -261,7 +233,7 @@ export const QuadrantSection = ({
         <Flex mt={12} width="80%" mx={"auto"}>
           <PlacesTransformeesParPositionQuadrantSection
             formations={formations}
-            positionsQuadrant={repartitionData?.positionsQuadrant}
+            positionsQuadrant={repartition?.positionsQuadrant}
           />
         </Flex>
       </Box>
@@ -305,15 +277,15 @@ export const QuadrantSection = ({
                       ...formation,
                       libelleRegion:
                         scope?.type === ScopeEnum["région"]
-                          ? getLibelleTerritoire(scopeFilters?.regions, scope.value)
+                          ? getLibelleTerritoire(filtersOptions?.regions, scope.value)
                           : undefined,
                       libelleAcademie:
                         scope?.type === ScopeEnum["académie"]
-                          ? getLibelleTerritoire(scopeFilters?.academies, scope.value)
+                          ? getLibelleTerritoire(filtersOptions?.academies, scope.value)
                           : undefined,
                       libelleDepartement:
                         scope?.type === ScopeEnum["département"]
-                          ? getLibelleTerritoire(scopeFilters?.departements, scope.value)
+                          ? getLibelleTerritoire(filtersOptions?.departements, scope.value)
                           : undefined,
                     })),
                     {
@@ -340,15 +312,15 @@ export const QuadrantSection = ({
                       ...formation,
                       libelleRegion:
                         scope?.type === ScopeEnum["région"]
-                          ? getLibelleTerritoire(scopeFilters?.regions, scope.value)
+                          ? getLibelleTerritoire(filtersOptions?.regions, scope.value)
                           : undefined,
                       libelleAcademie:
                         scope?.type === ScopeEnum["académie"]
-                          ? getLibelleTerritoire(scopeFilters?.academies, scope.value)
+                          ? getLibelleTerritoire(filtersOptions?.academies, scope.value)
                           : undefined,
                       libelleDepartement:
                         scope?.type === ScopeEnum["département"]
-                          ? getLibelleTerritoire(scopeFilters?.departements, scope.value)
+                          ? getLibelleTerritoire(filtersOptions?.departements, scope.value)
                           : undefined,
                     })),
                     {
@@ -501,7 +473,6 @@ export const QuadrantSection = ({
                       query={[
                         formationsQuadrant?.length.toString() ?? "-",
                         formationsQuadrant
-                          // @ts-expect-error TODO
                           ?.reduce((acc, { placesOuvertes, placesFermees }) => {
                             if (filters.type === "fermeture") return acc + (placesFermees ?? 0);
                             if (filters.type === "ouverture") return acc + (placesOuvertes ?? 0);
@@ -514,7 +485,6 @@ export const QuadrantSection = ({
                       {`${formationsQuadrant?.length ?? "-"} certifications -
                                 ${
                                   formationsQuadrant?.reduce(
-                                    // @ts-expect-error TODO
                                     (acc, { placesTransformees }) => acc + (placesTransformees ?? 0),
                                     0
                                   ) ?? "-"
@@ -529,35 +499,29 @@ export const QuadrantSection = ({
                     (typeVue === "quadrant" ? (
                       <Quadrant
                         onClick={({ cfd, codeDispositif }) => setCurrentFormationId(`${cfd}_${codeDispositif}`)}
-                        meanInsertion={stats?.tauxInsertion}
-                        meanPoursuite={stats?.tauxPoursuite}
+                        meanInsertion={statsSortie?.tauxInsertion}
+                        meanPoursuite={statsSortie?.tauxPoursuite}
                         currentFormationId={currentFormationId}
-                        data={formationsQuadrant?.map(
-                          // @ts-expect-error TODO
-                          (formation) => ({
-                            ...formation,
-                            codeDispositif: formation.codeDispositif ?? "",
-                            effectif: formation.placesTransformees,
-                            tauxInsertion: formation.tauxInsertion ?? 0,
-                            tauxPoursuite: formation.tauxPoursuite ?? 0,
-                          })
-                        )}
+                        data={formationsQuadrant?.map((formation) => ({
+                          ...formation,
+                          codeDispositif: formation.codeDispositif ?? "",
+                          effectif: formation.placesTransformees,
+                          tauxInsertion: formation.tauxInsertion ?? 0,
+                          tauxPoursuite: formation.tauxPoursuite ?? 0,
+                        }))}
                         effectifSizes={EFFECTIF_SIZES}
                       />
                     ) : (
                       <TableQuadrant
-                        formations={formationsQuadrant?.map(
-                          // @ts-expect-error TODO
-                          (formation) => ({
-                            ...formation,
-                            effectif: formation.placesTransformees,
-                          })
-                        )}
+                        formations={formationsQuadrant?.map((formation) => ({
+                          ...formation,
+                          effectif: formation.placesTransformees,
+                        }))}
                         handleClick={setCurrentFormationId}
                         currentFormationId={currentFormationId}
-                        order={order}
+                        order={{ order: orderQuadrant.orderQuadrant, orderBy: orderQuadrant.orderByQuadrant }}
                         handleOrder={(column?: string) =>
-                          handleOrder(column as OrderFormationsPilotageIntentions["orderBy"])
+                          handleOrder(column as OrderQuadrantPilotageIntentions["orderByQuadrant"])
                         }
                       />
                     ))}

@@ -18,10 +18,7 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import type {
-  DemandesRestitutionIntentions,
-  FiltersDemandesRestitutionIntentions,
-} from "@/app/(wrapped)/intentions/restitution/types";
+import type { FiltersRestitutionIntentions, RestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -35,14 +32,14 @@ export const SecondaryFiltersSection = ({
   resetFilters,
   data,
 }: {
-  activeFilters: FiltersDemandesRestitutionIntentions;
+  activeFilters: FiltersRestitutionIntentions;
   handleFilters: (
-    type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+    type: keyof FiltersRestitutionIntentions,
+    value: FiltersRestitutionIntentions[keyof FiltersRestitutionIntentions]
   ) => void;
-  filterTracker: (filterName: keyof FiltersDemandesRestitutionIntentions) => () => void;
+  filterTracker: (filterName: keyof FiltersRestitutionIntentions) => () => void;
   resetFilters: () => void;
-  data?: DemandesRestitutionIntentions;
+  data?: RestitutionIntentions;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   return (

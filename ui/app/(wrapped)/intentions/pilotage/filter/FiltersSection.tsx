@@ -6,9 +6,10 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type {
-  FiltersStatsPilotageIntentions,
+  FiltersOptionsPilotageIntentions,
+  FiltersPilotageIntentions,
   FilterTracker,
-  StatsPilotageIntentions,
+  PilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { getStickyNavHeight } from "@/app/(wrapped)/utils/getStickyNavOffset";
 import { Multiselect } from "@/components/Multiselect";
@@ -17,7 +18,7 @@ import { themeDefinition } from "@/theme/theme";
 
 const findDefaultRentreeScolaireForCampagne = (
   annee: string,
-  rentreesScolaires: StatsPilotageIntentions["filters"]["rentreesScolaires"]
+  rentreesScolaires: FiltersOptionsPilotageIntentions["rentreesScolaires"]
 ) => {
   if (rentreesScolaires) {
     const rentreeScolaire = rentreesScolaires.find((r) => parseInt(r.value) === parseInt(annee) + 1);
@@ -35,10 +36,10 @@ export const FiltersSection = ({
   filterTracker,
   data,
 }: {
-  filters: FiltersStatsPilotageIntentions;
-  setFilters: (filters: FiltersStatsPilotageIntentions) => void;
+  filters: FiltersPilotageIntentions;
+  setFilters: (filters: FiltersPilotageIntentions) => void;
   setDefaultFilters: () => void;
-  data: StatsPilotageIntentions | undefined;
+  data: PilotageIntentions | undefined;
   filterTracker: FilterTracker;
 }) => {
   const { openGlossaire } = useGlossaireContext();
@@ -46,7 +47,7 @@ export const FiltersSection = ({
     key,
     selected,
   }: {
-    key: keyof FiltersStatsPilotageIntentions;
+    key: keyof FiltersPilotageIntentions;
     selected: T | T[] | null;
   }) => {
     let value = undefined;
@@ -61,14 +62,14 @@ export const FiltersSection = ({
       value = undefined;
     }
 
-    let newFilters: Partial<FiltersStatsPilotageIntentions> = {
+    let newFilters: Partial<FiltersPilotageIntentions> = {
       [key]: value,
     };
 
     if (key === "campagne" && typeof value === "string") {
       const defaultRentreeScolaire = findDefaultRentreeScolaireForCampagne(
         value,
-        data?.filters?.rentreesScolaires ?? []
+        data?.filtersOptions?.rentreesScolaires ?? []
       );
       newFilters = {
         ...newFilters,
@@ -167,7 +168,7 @@ export const FiltersSection = ({
             }}
             placeholder="Choisir une campagne"
           >
-            {data?.filters.campagnes.map((campagne) => (
+            {data?.filtersOptions.campagnes.map((campagne) => (
               <option key={campagne.value} value={campagne.value}>
                 {_.capitalize(campagne.label)}
               </option>
@@ -181,7 +182,7 @@ export const FiltersSection = ({
             width={"100%"}
             variant="newInput"
             onChange={(selected) => onUpdateFilter({ key: "rentreeScolaire", selected })}
-            options={data?.filters.rentreesScolaires}
+            options={data?.filtersOptions.rentreesScolaires}
             value={filters.rentreeScolaire ?? []}
             gutter={0}
           >
@@ -220,7 +221,7 @@ export const FiltersSection = ({
             }}
             placeholder="Tous"
           >
-            {data?.filters.regions.map((region) => (
+            {data?.filtersOptions.regions.map((region) => (
               <option key={region.value} value={region.value}>
                 {region.label}
               </option>
@@ -242,7 +243,7 @@ export const FiltersSection = ({
             }}
             placeholder="Tous"
           >
-            {data?.filters.academies.map((academie) => (
+            {data?.filtersOptions.academies.map((academie) => (
               <option key={academie.value} value={academie.value}>
                 {academie.label}
               </option>
@@ -264,7 +265,7 @@ export const FiltersSection = ({
             }}
             placeholder="Tous"
           >
-            {data?.filters.departements.map((departement) => (
+            {data?.filtersOptions.departements.map((departement) => (
               <option key={departement.value} value={departement.value}>
                 {departement.label}
               </option>
@@ -278,7 +279,7 @@ export const FiltersSection = ({
             size="md"
             variant="newInput"
             onChange={(selected) => onUpdateFilter({ key: "codeNiveauDiplome", selected })}
-            options={data?.filters.niveauxDiplome}
+            options={data?.filtersOptions.niveauxDiplome}
             value={filters.codeNiveauDiplome ?? []}
             gutter={0}
           >
@@ -292,7 +293,7 @@ export const FiltersSection = ({
             size="md"
             variant="newInput"
             onChange={(selected) => onUpdateFilter({ key: "codeNsf", selected })}
-            options={data?.filters.nsfs}
+            options={data?.filtersOptions.nsfs}
             value={filters.codeNsf ?? []}
             gutter={0}
           >
@@ -306,7 +307,7 @@ export const FiltersSection = ({
             size="md"
             variant="newInput"
             onChange={(selected) => onUpdateFilter({ key: "statut", selected })}
-            options={data?.filters.statuts}
+            options={data?.filtersOptions.statuts}
             value={filters.statut ?? []}
             gutter={0}
           >
@@ -354,7 +355,7 @@ export const FiltersSection = ({
             size="md"
             variant="newInput"
             onChange={(selected) => onUpdateFilter({ key: "secteur", selected })}
-            options={data?.filters.secteurs}
+            options={data?.filtersOptions.secteurs}
             value={filters.secteur ?? []}
             gutter={0}
           >

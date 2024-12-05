@@ -89,7 +89,7 @@ export const LineContent = ({
   colonneFilters,
   getCellColor,
 }: {
-  demande: DemandesRestitutionIntentions["demandes"][0];
+  demande: DemandesRestitutionIntentions[number];
   campagne?: string;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
   getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;

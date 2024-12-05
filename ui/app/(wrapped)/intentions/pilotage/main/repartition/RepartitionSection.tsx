@@ -2,8 +2,8 @@ import { Flex } from "@chakra-ui/react";
 
 import type { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage/main/displayTypeEnum";
 import type {
-  FiltersStatsPilotageIntentions,
-  OrderRepartitionPilotageIntentions,
+  FiltersPilotageIntentions,
+  OrderPilotageIntentions,
   RepartitionPilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 
@@ -11,7 +11,7 @@ import { AnalyseComparativeSection } from "./AnalyseComparative/AnalyseComparati
 import { FiliereNiveauDiplomeSection } from "./FiliereNiveauDiplomeSection";
 
 export const RepartitionSection = ({
-  repartitionData,
+  repartition,
   order,
   setSearchParams,
   filters,
@@ -19,20 +19,20 @@ export const RepartitionSection = ({
   displayZonesGeographiques,
   displayDomaines,
 }: {
-  repartitionData?: RepartitionPilotageIntentions;
-  order: Partial<OrderRepartitionPilotageIntentions>;
-  setSearchParams: (params: { order?: Partial<OrderRepartitionPilotageIntentions> }) => void;
-  filters?: Partial<FiltersStatsPilotageIntentions>;
+  repartition?: RepartitionPilotageIntentions;
+  order: Partial<OrderPilotageIntentions>;
+  setSearchParams: (params: { order?: Partial<OrderPilotageIntentions> }) => void;
+  filters?: Partial<FiltersPilotageIntentions>;
   displayType: DisplayTypeEnum;
   displayZonesGeographiques: () => void;
   displayDomaines: () => void;
 }) => {
   return (
     <Flex direction={"column"} gap={8} w={"100%"}>
-      <FiliereNiveauDiplomeSection repartitionData={repartitionData} />
+      <FiliereNiveauDiplomeSection repartition={repartition} />
       <AnalyseComparativeSection
-        zonesGeographiques={repartitionData?.zonesGeographiques}
-        domaines={repartitionData?.domaines}
+        zonesGeographiques={repartition?.zonesGeographiques}
+        domaines={repartition?.domaines}
         order={order}
         setSearchParams={setSearchParams}
         filters={filters}

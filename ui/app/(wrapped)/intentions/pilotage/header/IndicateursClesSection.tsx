@@ -2,6 +2,7 @@ import { Box, Divider, Flex, Grid, GridItem, HStack, Skeleton, Text, VStack } fr
 import { Icon } from "@iconify/react";
 import { useMemo } from "react";
 import { ScopeEnum } from "shared";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { OBJECTIF_TAUX_TRANSFO_PERCENTAGE } from "shared/objectives/TAUX_TRANSFO";
 
@@ -12,9 +13,10 @@ import { NumberWithLabel } from "@/app/(wrapped)/intentions/pilotage/components/
 import { NumberWithProgressBars } from "@/app/(wrapped)/intentions/pilotage/components/NumberWithProgressBars";
 import { useScopeCode } from "@/app/(wrapped)/intentions/pilotage/hooks";
 import type {
-  FiltersStatsPilotageIntentions,
+  FiltersPilotageIntentions,
   Indicateur,
-  StatsPilotageIntentions,
+  RepartitionPilotageIntentions,
+  RepartitionPilotageIntentionsZonesGeographiques,
   Statut,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -55,43 +57,33 @@ const Loader = () => {
 };
 
 const generateGetScopedData =
-  (code: string | undefined, data?: StatsPilotageIntentions) =>
+  (code: string | undefined, repartition?: RepartitionPilotageIntentions) =>
   (statut: Statut, indicateur: Indicateur): number => {
-    if (!code) return 0;
-    return data?.[statut]?.[`_${code}`]?.[indicateur] as number;
+    const statutData = (statut === "all" ? repartition?.zonesGeographiques : repartition?.[statut]) ?? {};
+    const territoire = Object.values(statutData)?.find((territoire) => {
+      if (!code) return territoire.code === "total";
+      return territoire.code === code;
+    });
+
+    return territoire?.[indicateur] as number;
   };
 
 export const IndicateursClesSection = ({
-  data,
+  repartition,
   filters,
   isLoading,
   onOpenTauxTransfoDefinition,
 }: {
-  data?: StatsPilotageIntentions;
-  filters: FiltersStatsPilotageIntentions;
+  repartition?: RepartitionPilotageIntentions;
+  filters: FiltersPilotageIntentions;
   isLoading?: boolean;
   onOpenTauxTransfoDefinition: () => void;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const { code } = useScopeCode(filters);
 
-  const { data: nationalStats } = client.ref("[GET]/pilotage-intentions/stats").useQuery(
-    {
-      query: {
-        ...filters,
-        scope: ScopeEnum.national,
-      },
-    },
-    {
-      keepPreviousData: true,
-      staleTime: 10000000,
-    }
-  );
-
-  const getScopedData = useMemo(
-    () => (code ? generateGetScopedData(code, data) : generateGetScopedData(ScopeEnum.national, nationalStats)),
-    [generateGetScopedData, data, code, nationalStats]
-  );
+  const getScopedData = generateGetScopedData(code, repartition);
+  const getNationalData = generateGetScopedData("total", repartition);
 
   const shouldShowProjetDemande = () =>
     filters.statut === undefined ||
@@ -131,7 +123,7 @@ export const IndicateursClesSection = ({
                   icon={<Icon icon="ri:file-text-line" />}
                   scopeCode={code}
                   percentage={getScopedData(DemandeStatutEnum["projet de demande"], "tauxTransformation")}
-                  nationalPercentage={nationalStats?.["projet de demande"]?.["_national"].tauxTransformation}
+                  nationalPercentage={getNationalData(DemandeStatutEnum["projet de demande"], "tauxTransformation")}
                   objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
                 />
               </GridItem>
@@ -143,7 +135,7 @@ export const IndicateursClesSection = ({
                   icon={<Icon icon="ri:checkbox-circle-line" />}
                   scopeCode={code}
                   percentage={getScopedData(DemandeStatutEnum["demande validée"], "tauxTransformation")}
-                  nationalPercentage={nationalStats?.["demande validée"]?.["_national"].tauxTransformation}
+                  nationalPercentage={getNationalData(DemandeStatutEnum["demande validée"], "tauxTransformation")}
                   objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
                 />
               </GridItem>
@@ -155,7 +147,7 @@ export const IndicateursClesSection = ({
             label=" "
             scopeCode={code}
             percentage={getScopedData("all", "ratioFermeture")}
-            nationalPercentage={nationalStats?.all?.["_national"].ratioFermeture}
+            nationalPercentage={getNationalData("all", "ratioFermeture")}
           />
         </IndicateurCard>
       </Flex>

@@ -54,7 +54,7 @@ export function GlossaireProvider({
       setSelectedEntry,
       entries,
     }),
-    [isOpen, selectedEntry, onOpenCallback, onCloseCallback, setSelectedEntry]
+    [isOpen, selectedEntry, onOpenCallback, onCloseCallback, setSelectedEntry, entries]
   );
 
   return <GlossaireContext.Provider value={value}>{children}</GlossaireContext.Provider>;

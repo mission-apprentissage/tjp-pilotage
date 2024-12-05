@@ -29,11 +29,7 @@ import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDE
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import type { STATS_DEMANDES_COLUMNS_OPTIONAL } from "./STATS_DEMANDES_COLUMN";
 import { STATS_DEMANDES_COLUMNS, STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
-import type {
-  DemandesRestitutionIntentions,
-  FiltersDemandesRestitutionIntentions,
-  OrderDemandesRestitutionIntentions,
-} from "./types";
+import type { FiltersRestitutionIntentions, OrderRestitutionIntentions, RestitutionIntentions } from "./types";
 
 const ColonneFiltersSection = chakra(
   ({
@@ -88,9 +84,9 @@ export default () => {
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
-    filters?: Partial<FiltersDemandesRestitutionIntentions>;
+    filters?: Partial<FiltersRestitutionIntentions>;
     columns?: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[];
-    order?: Partial<OrderDemandesRestitutionIntentions>;
+    order?: Partial<OrderRestitutionIntentions>;
     page?: string;
     search?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
@@ -112,13 +108,13 @@ export default () => {
   };
 
   const trackEvent = usePlausible();
-  const filterTracker = (filterName: keyof FiltersDemandesRestitutionIntentions) => () => {
+  const filterTracker = (filterName: keyof FiltersRestitutionIntentions) => () => {
     trackEvent("restitution-demandes:filtre", {
       props: { filter_name: filterName },
     });
   };
 
-  const handleOrder = (column: OrderDemandesRestitutionIntentions["orderBy"]) => {
+  const handleOrder = (column: OrderRestitutionIntentions["orderBy"]) => {
     trackEvent("restitution-demandes:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
@@ -133,8 +129,8 @@ export default () => {
   };
 
   const handleDefaultFilters = (
-    type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+    type: keyof FiltersRestitutionIntentions,
+    value: FiltersRestitutionIntentions[keyof FiltersRestitutionIntentions]
   ) => {
     if (value != null)
       switch (type) {
@@ -157,8 +153,8 @@ export default () => {
   };
 
   const handleFilters = (
-    type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+    type: keyof FiltersRestitutionIntentions,
+    value: FiltersRestitutionIntentions[keyof FiltersRestitutionIntentions]
   ) => {
     handleDefaultFilters(type, value);
     setSearchParams({
@@ -199,22 +195,9 @@ export default () => {
     limit: qLimit,
   });
 
-  const { data, isLoading } = client.ref("[GET]/restitution-intentions/demandes").useQuery(
+  const { data, isLoading } = client.ref("[GET]/restitution-intentions").useQuery(
     {
       query: getIntentionsStatsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
-    },
-    {
-      keepPreviousData: true,
-      staleTime: 10000000,
-    }
-  );
-
-  const { data: countData, isLoading: isLoadingCount } = client.ref("[GET]/restitution-intentions/stats").useQuery(
-    {
-      query: {
-        ...filters,
-        search,
-      },
     },
     {
       keepPreviousData: true,
@@ -276,7 +259,7 @@ export default () => {
     setSearchParams({ filters: filters });
   };
 
-  const getDataForExport = (data: DemandesRestitutionIntentions) => {
+  const getDataForExport = (data: RestitutionIntentions) => {
     const region = data.filters.regions.find((r) => r.value === filters.codeRegion?.[0]);
 
     const academies = data.filters.academies.filter((a) => filters.codeAcademie?.includes(a.value) ?? false);
@@ -350,7 +333,7 @@ export default () => {
 
   const onExportCsv = async (isFiltered?: boolean) => {
     trackEvent("restitution-demandes:export");
-    const data = await client.ref("[GET]/restitution-intentions/demandes").query({
+    const data = await client.ref("[GET]/restitution-intentions").query({
       query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
 
@@ -360,7 +343,7 @@ export default () => {
 
   const onExportExcel = async (isFiltered?: boolean) => {
     trackEvent("restitution-demandes:export-excel");
-    const data = await client.ref("[GET]/restitution-intentions/demandes").query({
+    const data = await client.ref("[GET]/restitution-intentions").query({
       query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
 
@@ -392,12 +375,11 @@ export default () => {
     <GuardPermission permission="restitution-intentions/lecture">
       <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20} flex={1}>
         <HeaderSection
-          countData={countData}
           activeFilters={filters}
           handleFilters={handleFilters}
           filterTracker={filterTracker}
           resetFilters={resetFilters}
-          isLoading={isLoading || isLoadingCount}
+          isLoading={isLoading}
           data={data}
         />
         <TableHeader
@@ -420,7 +402,7 @@ export default () => {
           onPageChange={(newPage) => setSearchParams({ page: newPage })}
         />
         <ConsoleSection
-          data={data}
+          demandes={data?.demandes}
           isLoading={isLoading}
           handleOrder={handleOrder}
           order={order}

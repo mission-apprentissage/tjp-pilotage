@@ -28,7 +28,6 @@ const BadgeFormationSpecifique = chakra(
     textTransform?: "uppercase" | "capitalize" | "lowercase";
     openGlossaire: (key: GlossaireEntryKey) => void;
   }) => {
-    console.log(openGlossaire);
     switch (typeFormationSpecifique) {
       case TypeFormationSpecifiqueEnum["Action prioritaire"]:
         return (
