@@ -1,4 +1,6 @@
-import { Container, Divider, Flex, Heading } from "@chakra-ui/react";
+import type { BoxProps } from "@chakra-ui/react";
+import { Box, Container, Divider, Flex, forwardRef, Heading } from "@chakra-ui/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useFormationContext } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/context/formationContext";
 import type {
@@ -12,15 +14,27 @@ import { TabFilters } from "./TabFilters";
 import { EtablissementsTab } from "./Tabs/EtablissementsTab";
 import { IndicateursTab } from "./Tabs/IndicateursTab";
 
-const TabContent = ({ tab }: { tab: FormationTab }) => {
-  switch (tab) {
-    case "etablissements":
-      return <EtablissementsTab />;
-    case "indicateurs":
-    default:
-      return <IndicateursTab />;
-  }
+type TabContentProps = BoxProps & {
+  tab: FormationTab;
 };
+
+const TabContent = forwardRef<TabContentProps, "div">(({ tab, ...rest }, ref) => {
+  const content = useMemo(() => {
+    switch (tab) {
+      case "etablissements":
+        return <EtablissementsTab />;
+      case "indicateurs":
+      default:
+        return <IndicateursTab />;
+    }
+  }, [tab]);
+
+  return (
+    <Box ref={ref} w={"60%"} h={"fit-content"} {...rest}>
+      {content}
+    </Box>
+  );
+});
 
 export const FormationSection = ({
   formations,
@@ -30,6 +44,24 @@ export const FormationSection = ({
   counter: FormationsCounter;
 }) => {
   const { currentFilters, handleChangeCfd } = useFormationContext();
+  const tabContentRef = useRef<HTMLDivElement>(null);
+  const [tabContentHeight, setTabContentHeight] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setTabContentHeight(entry.contentRect.height);
+      }
+    });
+
+    if (tabContentRef.current) {
+      observer.observe(tabContentRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [tabContentRef]);
 
   return (
     <Container maxW={"container.xl"} as="section" id="formations" my={"32px"}>
@@ -40,8 +72,13 @@ export const FormationSection = ({
         <Divider width="48px" />
         <TabFilters counter={counter} />
         <Flex direction="row" gap={8}>
-          <ListeFormations formations={formations} selectCfd={handleChangeCfd} selectedCfd={currentFilters.cfd} />
-          <TabContent tab={currentFilters.formationTab} />
+          <ListeFormations
+            formations={formations}
+            selectCfd={handleChangeCfd}
+            selectedCfd={currentFilters.cfd}
+            h={tabContentHeight}
+          />
+          <TabContent tab={currentFilters.formationTab} ref={tabContentRef} />
         </Flex>
       </Flex>
     </Container>

@@ -172,7 +172,7 @@ export const EtablissementsTab = () => {
   }
 
   return (
-    <Flex direction={"column"} gap={8} w={"60%"}>
+    <Flex direction={"column"} gap={8}>
       <FormationHeader
         data={dataFormation}
         exportButton={
