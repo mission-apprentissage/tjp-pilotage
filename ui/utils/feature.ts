@@ -5,4 +5,5 @@ export const feature = {
   correction: true,
   showColorationFilter: false,
   requetesSuggerees: true,
+  formationsSpecifiqueConsole: false,
 };

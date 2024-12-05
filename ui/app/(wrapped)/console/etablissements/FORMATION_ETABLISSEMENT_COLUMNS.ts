@@ -1,5 +1,4 @@
 import type { client } from "@/api.client";
-import { FORMATION_COLUMNS_OPTIONAL } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { ExportColumns } from "@/utils/downloadExport";
 
 export const FORMATION_ETABLISSEMENT_COLUMNS = {
@@ -11,9 +10,6 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   libelleFormation: "Formation",
   formationSpecifique: "Formation spécifique",
   actionPrioritaire: "Action prioritaire ?",
-  transitionDemographique: "Transition démographique ?",
-  transitionEcologique: "Transition écologique ?",
-  transitionNumerique: "Transition numérique ?",
   // Établissement
   commune: "Commune",
   codeDepartement: "Code Département",
@@ -55,9 +51,6 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
 } satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]> & {
   formationSpecifique: string;
   actionPrioritaire: string;
-  transitionDemographique: string;
-  transitionEcologique: string;
-  transitionNumerique: string;
 };
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
@@ -67,7 +60,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   libelleEtablissement: "Nom d'établissement",
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
-  formationSpecifique: "Action prioritaire ?",
+  formationSpecifique: "Formation spécifique",
   // Établissement
   commune: "Commune",
   libelleDepartement: "Département",

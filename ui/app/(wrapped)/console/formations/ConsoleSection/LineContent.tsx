@@ -1,12 +1,10 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Badge, Box, chakra, Flex, IconButton, Link, Skeleton, Tag, Td, Text, Tr } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { CURRENT_RENTREE } from "shared";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Line } from "@/app/(wrapped)/console/formations/types";
-import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
