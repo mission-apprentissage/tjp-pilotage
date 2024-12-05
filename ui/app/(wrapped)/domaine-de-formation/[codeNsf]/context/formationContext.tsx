@@ -55,7 +55,7 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
     defaultValues: {
       presence: "",
       voie: "",
-      formationTab: "indicateurs",
+      formationTab: "etablissements",
       cfd: defaultCfd,
       etab: {
         includeAll: true,
