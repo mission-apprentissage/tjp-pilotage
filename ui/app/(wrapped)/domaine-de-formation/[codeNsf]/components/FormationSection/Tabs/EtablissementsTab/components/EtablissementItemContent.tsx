@@ -1,6 +1,7 @@
 import { Badge, Box, Divider, HStack, Link, Text, Tooltip, VStack } from "@chakra-ui/react";
 import { InlineIcon } from "@iconify/react";
-import { CURRENT_RENTREE } from "shared";
+import { useState } from "react";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import type { Etablissement } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/types";
 import { TableBadge } from "@/components/TableBadge";
@@ -35,6 +36,7 @@ const formatDepartement = (departement: string) => {
 };
 
 export const EtablissementItemContent = ({ etablissement }: { etablissement: Etablissement }) => {
+  const [hover, setHover] = useState(false);
   const isScolaire = etablissement.isScolaire;
   const isApprentissage = etablissement.isApprentissage;
 
@@ -58,7 +60,7 @@ export const EtablissementItemContent = ({ etablissement }: { etablissement: Eta
 
   const tooltilLabelTauxDevenir = (() => {
     if (etablissement.tauxDevenir !== undefined) {
-      return `Taux de devenir favorable à 6 mois (rentrée ${CURRENT_RENTREE})`;
+      return `Taux de devenir favorable à 6 mois (Millesime ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
     }
 
     if (isApprentissage && !isScolaire) {
@@ -88,9 +90,16 @@ export const EtablissementItemContent = ({ etablissement }: { etablissement: Eta
     <VStack>
       <HStack justifyContent={"space-between"} width="100%">
         <HStack>
-          <Link href={`/panorama/etablissement/${etablissement.uai}`} isExternal fontWeight={700}>
+          <Link
+            href={`/panorama/etablissement/${etablissement.uai}`}
+            isExternal
+            fontWeight={700}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+          >
             {etablissement.libelle}
           </Link>
+          {hover && <InlineIcon icon="ri:arrow-right-line" />}
         </HStack>
         <HStack flexWrap="wrap" justifyContent="flex-end">
           {formatDispositifs(etablissement.libellesDispositifs).map((libelle) => (
