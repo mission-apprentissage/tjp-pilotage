@@ -20,7 +20,7 @@ export const deleteDemandeFactory =
     });
     if (!isAllowed) throw Boom.forbidden();
     await deps.deleteDemandeQuery(demande);
-    logger.info("Demande supprimée", { numero, demande: demande });
+    logger.info({ numero, demande: demande }, "Demande supprimée");
   };
 
 export const deleteDemande = deleteDemandeFactory();
