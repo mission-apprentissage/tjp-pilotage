@@ -29,4 +29,9 @@ jobs:
           persist-credentials: true
 
       - name: Run playbook
+        id: run-playbook
         run: echo VERSION=$(.bin/product release:generate:rc-label ${{ inputs.release_type }}) >> $GITHUB_OUTPUT
+      - name: Get color
+        env:
+          VERSION: ${{ steps.run-playbook.outputs.VERSION }}
+        run: echo "Generated version is $VERSION"
