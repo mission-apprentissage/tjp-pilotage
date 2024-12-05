@@ -362,7 +362,7 @@ export const FiltersSection = ({
           </Multiselect>
         </GridItem>
         <GridItem>
-          <FormLabel>Formations Spécifiques</FormLabel>
+          <FormLabel>Formations spécifiques</FormLabel>
           <Multiselect
             width={"100%"}
             size="md"

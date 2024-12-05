@@ -2,6 +2,7 @@
 
 import { Button, Center, chakra, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -173,7 +174,7 @@ export default function Etablissements() {
     };
 
     const columns = {
-      ...FORMATION_ETABLISSEMENT_COLUMNS,
+      ..._.omit(FORMATION_ETABLISSEMENT_COLUMNS, "formationSpecifique"),
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
@@ -204,10 +205,6 @@ export default function Etablissements() {
           }
         : {}),
       actionPrioritaire: etablissement.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
-      transitionDemographique:
-        etablissement.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
-      transitionEcologique: etablissement.formationSpecifique[TypeFormationSpecifiqueEnum["Transition écologique"]],
-      transitionNumerique: etablissement.formationSpecifique[TypeFormationSpecifiqueEnum["Transition numérique"]],
     }));
 
     return {

@@ -9,9 +9,6 @@ export const FORMATION_COLUMNS = {
   libelleFormation: "Formation",
   formationSpecifique: "Formation spécifique",
   actionPrioritaire: "Action prioritaire ?",
-  transitionDemographique: "Transition démographique ?",
-  transitionEcologique: "Transition écologique ?",
-  transitionNumerique: "Transition numérique ?",
   libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",
@@ -37,9 +34,6 @@ export const FORMATION_COLUMNS = {
 } satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]> & {
   formationSpecifique: string;
   actionPrioritaire: string;
-  transitionDemographique: string;
-  transitionEcologique: string;
-  transitionNumerique: string;
 };
 
 export const FORMATION_COLUMNS_OPTIONAL = {
