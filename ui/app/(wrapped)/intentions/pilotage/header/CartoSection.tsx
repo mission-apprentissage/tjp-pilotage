@@ -4,9 +4,10 @@ import { ScopeEnum } from "shared";
 
 import { useScopeCode } from "@/app/(wrapped)/intentions/pilotage/hooks";
 import type {
-  FiltersStatsPilotageIntentions,
+  FiltersPilotageIntentions,
   FilterTracker,
-  StatsPilotageIntentions,
+  PilotageIntentions,
+  RepartitionPilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { CartoGraph } from "@/components/CartoGraph";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
@@ -21,7 +22,7 @@ export const CartoSection = ({
   indicateurOptions,
   filters,
   handleFilters,
-  data,
+  repartition,
   isLoading,
   filterTracker,
 }: {
@@ -32,9 +33,9 @@ export const CartoSection = ({
     value: string;
     isDefault: boolean;
   }[];
-  filters: FiltersStatsPilotageIntentions;
-  handleFilters: (filters: Partial<FiltersStatsPilotageIntentions>) => void;
-  data: StatsPilotageIntentions | undefined;
+  filters: FiltersPilotageIntentions;
+  handleFilters: (filters: Partial<FiltersPilotageIntentions>) => void;
+  repartition: RepartitionPilotageIntentions | undefined;
   isLoading?: boolean;
   filterTracker: FilterTracker;
 }) => {
@@ -80,14 +81,12 @@ export const CartoSection = ({
   };
 
   const getGraphData = useCallback(() => {
-    if (!data) {
+    if (!repartition) {
       return [];
     }
 
-    return Object.values(data?.all).map((territoire) => ({
+    return Object.values(repartition?.zonesGeographiques).map((territoire) => ({
       name: territoire.libelle,
-
-      parentName: territoire.libelleAcademie,
       value:
         territoire.effectif || indicateur != "tauxTransformation"
           ? formatPercentageWithoutSign(territoire[indicateur], 1)
@@ -97,7 +96,7 @@ export const CartoSection = ({
     }));
     // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, filters, indicateur]);
+  }, [repartition, filters, indicateur]);
 
   const handleClickOnTerritoire = useCallback(
     (code: string | undefined) => {

@@ -93,21 +93,21 @@ const CountCard = ({
   </Card>
 );
 
-export const CountersSection = ({ countData }: { countData?: StatsRestitutionIntentions }) => {
+export const CountersSection = ({ stats }: { stats?: StatsRestitutionIntentions }) => {
   return (
     <Flex flexDirection={"row"} gap={4} overflowY={"auto"} pb={2} flexWrap={["wrap", null, "nowrap"]}>
       <Flex gap={4} width="100%">
-        <CountCard label="Places ouvertes" iconSrc={"places_ouvertes"} value={countData?.ouvertures} />
-        <CountCard label="Places fermées" iconSrc={"places_fermees"} value={countData?.fermetures} />
+        <CountCard label="Places ouvertes" iconSrc={"places_ouvertes"} value={stats?.ouvertures} />
+        <CountCard label="Places fermées" iconSrc={"places_fermees"} value={stats?.fermetures} />
       </Flex>
       <Flex gap={4} width="100%">
         <CountCard
           label="Cert. Spécialisat."
           iconSrc={"places_ami-cma"}
           subLabel="Places ouvertes"
-          value={countData?.certifSpecialisation}
+          value={stats?.certifSpecialisation}
         />
-        <CountCard label="FCIL" iconSrc={"places_fcil"} subLabel="Places ouvertes" value={countData?.FCILs} />
+        <CountCard label="FCIL" iconSrc={"places_fcil"} subLabel="Places ouvertes" value={stats?.FCILs} />
       </Flex>
     </Flex>
   );

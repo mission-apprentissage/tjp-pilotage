@@ -7,7 +7,8 @@ import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/resti
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 import type {
   DemandesRestitutionIntentions,
-  OrderDemandesRestitutionIntentions,
+  OrderRestitutionIntentions,
+  RestitutionIntentions,
 } from "@/app/(wrapped)/intentions/restitution/types";
 import { useAuth } from "@/utils/security/useAuth";
 
@@ -48,17 +49,17 @@ const Loader = () => {
 };
 
 export const ConsoleSection = ({
-  data,
+  demandes,
   isLoading,
   order,
   handleOrder,
   campagne,
   colonneFilters,
 }: {
-  data?: DemandesRestitutionIntentions;
+  demandes?: DemandesRestitutionIntentions;
   isLoading: boolean;
-  order: OrderDemandesRestitutionIntentions;
-  handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
+  order: OrderRestitutionIntentions;
+  handleOrder: (column: OrderRestitutionIntentions["orderBy"]) => void;
   campagne?: string;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
 }) => {
@@ -95,7 +96,7 @@ export const ConsoleSection = ({
       </Center>
     );
 
-  if (!data?.demandes || data.demandes.length === 0)
+  if (!demandes || demandes.length === 0)
     return (
       <Center mt={12}>
         <Text fontSize={18}>Aucune demande à afficher.</Text>
@@ -118,7 +119,7 @@ export const ConsoleSection = ({
           </Thead>
           <Tbody>
             <Fragment>
-              {data?.demandes.map((demande: DemandesRestitutionIntentions["demandes"][0]) => {
+              {demandes.map((demande: RestitutionIntentions["demandes"][0]) => {
                 return (
                   <Fragment key={`${demande.numero}`}>
                     <Tr

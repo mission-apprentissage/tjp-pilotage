@@ -1,9 +1,6 @@
 import { chakra, Th, Tooltip, Tr } from "@chakra-ui/react";
 
-import type {
-  FiltersStatsPilotageIntentions,
-  OrderRepartitionPilotageIntentions,
-} from "@/app/(wrapped)/intentions/pilotage/types";
+import type { FiltersPilotageIntentions, OrderPilotageIntentions } from "@/app/(wrapped)/intentions/pilotage/types";
 import { OrderIcon } from "@/components/OrderIcon";
 
 export const HeadlineContent = chakra(
@@ -13,9 +10,9 @@ export const HeadlineContent = chakra(
     handleOrder,
     isZoneGeographiqueSelected,
   }: {
-    order: Partial<OrderRepartitionPilotageIntentions>;
-    handleOrder: (column: OrderRepartitionPilotageIntentions["orderBy"]) => void;
-    filters?: Partial<FiltersStatsPilotageIntentions>;
+    order: Partial<OrderPilotageIntentions>;
+    handleOrder: (column: OrderPilotageIntentions["orderBy"]) => void;
+    filters?: Partial<FiltersPilotageIntentions>;
     isZoneGeographiqueSelected: boolean;
   }) => {
     return (

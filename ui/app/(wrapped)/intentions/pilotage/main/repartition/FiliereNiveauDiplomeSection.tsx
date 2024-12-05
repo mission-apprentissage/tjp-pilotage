@@ -9,11 +9,7 @@ import { downloadExcel } from "@/utils/downloadExport";
 const TOP_DOMAINES_NAME = "Domaines";
 const TRANSFORMATIONS_PAR_DIPLOME_NAME = "Diplôme";
 
-export const FiliereNiveauDiplomeSection = ({
-  repartitionData,
-}: {
-  repartitionData?: RepartitionPilotageIntentions;
-}) => {
+export const FiliereNiveauDiplomeSection = ({ repartition }: { repartition?: RepartitionPilotageIntentions }) => {
   return (
     <Flex direction={"column"} gap={6}>
       <Flex direction={"row"} justify={"space-between"}>
@@ -26,8 +22,8 @@ export const FiliereNiveauDiplomeSection = ({
             downloadExcel(
               `domaines_et_diplomes_les_plus_transformés`,
               {
-                [TOP_DOMAINES_NAME]: Object.values(repartitionData?.top10Domaines ?? {}),
-                [TRANSFORMATIONS_PAR_DIPLOME_NAME]: Object.values(repartitionData?.niveauxDiplome ?? {}),
+                [TOP_DOMAINES_NAME]: Object.values(repartition?.top10Domaines ?? {}),
+                [TRANSFORMATIONS_PAR_DIPLOME_NAME]: Object.values(repartition?.niveauxDiplome ?? {}),
               },
               {
                 [TOP_DOMAINES_NAME]: {
@@ -107,12 +103,12 @@ export const FiliereNiveauDiplomeSection = ({
         <PositiveNegativeBarChart
           title="10 DOMAINES LES PLUS TRANSFORMÉS"
           type="domaine"
-          data={repartitionData?.top10Domaines}
+          data={repartition?.top10Domaines}
         />
         <PositiveNegativeBarChart
           title="TRANSFORMATIONS PAR DIPLÔME"
           type="diplome"
-          data={repartitionData?.niveauxDiplome}
+          data={repartition?.niveauxDiplome}
         />
       </SimpleGrid>
     </Flex>
