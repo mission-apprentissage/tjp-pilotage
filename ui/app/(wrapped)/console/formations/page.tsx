@@ -175,7 +175,7 @@ export default function Formations() {
     };
 
     const columns = {
-      ...FORMATION_COLUMNS,
+      ..._.omit(FORMATION_COLUMNS, "formationSpecifique"),
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),

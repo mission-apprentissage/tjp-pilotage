@@ -1,4 +1,5 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { PanoramaFormation, PanoramaTopFlop } from "@/app/(wrapped)/panorama/types";
@@ -7,6 +8,7 @@ import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 import { TableBadge } from "@/components/TableBadge";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import { feature } from "@/utils/feature";
 import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -64,14 +66,16 @@ export const FormationTooltipContent = ({ formation }: { formation: Formation })
         Taux de devenir favorable régional
       </Text>
       <GraphWrapper mb="2" w="100%" continuum={formation.continuum} value={formation.tauxDevenirFavorable} />
-      {Object.values(formation.formationSpecifique).some((v) => v) && (
-        <>
-          <Text mb="1" fontWeight="medium">
-            Formation spécifique
-          </Text>
-          <BadgesFormationSpecifique formationSpecifique={formation?.formationSpecifique} />
-        </>
-      )}
+      {(feature.formationsSpecifiqueConsole && Object.values(formation.formationSpecifique).some((v) => v)) ||
+        (!feature.formationsSpecifiqueConsole &&
+          formation.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]] && (
+            <>
+              <Text mb="1" fontWeight="medium">
+                Formation spécifique
+              </Text>
+              <BadgesFormationSpecifique formationSpecifique={formation?.formationSpecifique} />
+            </>
+          ))}
     </Box>
   );
 };
