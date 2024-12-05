@@ -19,6 +19,7 @@ import { useStateParams } from "@/utils/useFilters";
 
 type InputFormationContextType = {
   codeNsf: string;
+  libelleNsf: string;
   scope: ScopeZone;
   regions: Region[];
   academies: Academie[];
@@ -219,6 +220,7 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
       handleClearBbox,
       scope: value.scope,
       codeNsf: value.codeNsf,
+      libelleNsf: value.libelleNsf,
       regions: value.regions,
       academies: value.academies,
       departements: value.departements,

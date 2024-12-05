@@ -8,6 +8,7 @@ import { FormationHeader } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/
 import { useFormationContext } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/context/formationContext";
 
 import { FormationAbsente } from "./components/FormationAbsente";
+import { ExportListEtablissements } from "./ExportListEtablissements";
 import { List } from "./List";
 import { MapEtablissements } from "./Map";
 import { MapActions } from "./MapActions";
@@ -145,7 +146,7 @@ const useEtablissementsTab = () => {
 };
 
 export const EtablissementsTab = () => {
-  const { currentFilters } = useFormationContext();
+  const { currentFilters, codeNsf, libelleNsf } = useFormationContext();
   const {
     cfd,
     etab: { view },
@@ -172,11 +173,20 @@ export const EtablissementsTab = () => {
 
   return (
     <Flex direction={"column"} gap={8} w={"60%"}>
-      <FormationHeader data={dataFormation} />
+      <FormationHeader
+        data={dataFormation}
+        exportButton={
+          <ExportListEtablissements
+            etablissements={etablissements}
+            formation={dataFormation}
+            domaineDeFormation={{ codeNsf, libelleNsf }}
+          />
+        }
+      />
       <MapActions nbEtablissementsInZone={etablissements.length} handleRecenter={handleRecenter} />
       <FormationAbsente nbEtablissements={etablissements?.length} />
       {view === "map" && (
-        <Box ref={mapContainer} aspectRatio={1}>
+        <Box ref={mapContainer} aspectRatio={4 / 3}>
           <MapEtablissements
             isLoading={isLoading}
             etablissements={etablissements}
