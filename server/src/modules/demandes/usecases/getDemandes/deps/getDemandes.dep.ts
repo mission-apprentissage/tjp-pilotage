@@ -14,16 +14,16 @@ import { cleanNull } from "@/utils/noNull";
 import type { Filters } from "./getFilters.dep";
 
 export const getDemandes = async ({
+  campagne,
   statut,
-  search,
-  user,
   codeAcademie,
   codeNiveauDiplome,
+  user,
+  search,
   offset = 0,
   limit = MAX_LIMIT,
   order,
   orderBy,
-  campagne,
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
