@@ -4,6 +4,7 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { GlossaireEntryKey } from "@/app/(wrapped)/glossaire/GlossaireEntries";
+import { feature } from "@/utils/feature";
 
 import { BadgeActionPrioritaire } from "./BadgeActionPrioritaire";
 import { BadgeTransitionDemographique } from "./BadgeTransitionDemographique";
@@ -42,7 +43,7 @@ const BadgeFormationSpecifique = chakra(
           />
         );
       case TypeFormationSpecifiqueEnum["Transition écologique"]:
-        return (
+        return feature.formationsSpecifiqueConsole ? (
           <BadgeTransitionEcologique
             isFormationTransitionEcologique
             withIcon={withIcon}
@@ -52,9 +53,11 @@ const BadgeFormationSpecifique = chakra(
             openGlossaire={openGlossaire}
             {...props}
           />
+        ) : (
+          <></>
         );
       case TypeFormationSpecifiqueEnum["Transition démographique"]:
-        return (
+        return feature.formationsSpecifiqueConsole ? (
           <BadgeTransitionDemographique
             isFormationTransitionDemographique
             withIcon={withIcon}
@@ -64,9 +67,11 @@ const BadgeFormationSpecifique = chakra(
             openGlossaire={openGlossaire}
             {...props}
           />
+        ) : (
+          <></>
         );
       case TypeFormationSpecifiqueEnum["Transition numérique"]:
-        return (
+        return feature.formationsSpecifiqueConsole ? (
           <BadgeTransitionNumerique
             isFormationTransitionNumerique
             withIcon={withIcon}
@@ -76,7 +81,10 @@ const BadgeFormationSpecifique = chakra(
             openGlossaire={openGlossaire}
             {...props}
           />
+        ) : (
+          <></>
         );
+        break;
       default:
         return null;
     }

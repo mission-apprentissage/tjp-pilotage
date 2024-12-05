@@ -39,7 +39,7 @@ const REQUETES_SUGGEREES: RequetesSuggerees = [
     },
     nom: TypeFormationSpecifiqueEnum["Transition écologique"],
     couleur: "success.950",
-    active: true,
+    active: feature.formationsSpecifiqueConsole,
     conditions: [],
   },
   {
@@ -48,7 +48,7 @@ const REQUETES_SUGGEREES: RequetesSuggerees = [
     },
     nom: TypeFormationSpecifiqueEnum["Transition démographique"],
     couleur: "grey.1000_active",
-    active: true,
+    active: feature.formationsSpecifiqueConsole,
     conditions: [],
   },
   {
@@ -57,7 +57,7 @@ const REQUETES_SUGGEREES: RequetesSuggerees = [
     },
     nom: TypeFormationSpecifiqueEnum["Transition numérique"],
     couleur: "bluefrance.925",
-    active: true,
+    active: feature.formationsSpecifiqueConsole,
     conditions: [],
   },
   {
@@ -100,7 +100,6 @@ export const FiltersSection = ({
   requeteEnregistreeActuelle: { nom: string; couleur?: string };
   setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: { nom: string; couleur?: string }) => void;
 }) => {
-  const { onOpen, onClose, isOpen } = useDisclosure();
   const resetFilters = () => {
     setSearchParams({
       filters: {
@@ -280,23 +279,6 @@ export const FiltersSection = ({
         filtersList={filtersList}
         isEditable={true}
       />
-      {isOpen && (
-        <CreateRequeteEnregistreeModal
-          page={"formation"}
-          isOpen={isOpen}
-          onClose={onClose}
-          searchParams={searchParams}
-          filtersList={filtersList}
-          altText={
-            <>
-              <Text>Vous n'avez pas encore de requête favorite enregistrée.</Text>
-              <Text fontWeight={400} color="grey.450" fontSize={15}>
-                En enregistrer une vous permettra de retrouver rapidement vos recherches.
-              </Text>
-            </>
-          }
-        />
-      )}
     </Flex>
   );
 };
