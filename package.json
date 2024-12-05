@@ -46,7 +46,7 @@
     "prettier:check": "prettier --check -u .",
     "release": "semantic-release",
     "release:interactive": ".bin/product release:interactive",
-    "release:manual:rc": ".bin/product release:manual:rc",
+    "release:candidate": ".bin/product release:candidate",
     "postinstall": "husky",
     "talisman:add-exception": "yarn node-talisman --githook pre-commit -i",
     "test": "vitest",
