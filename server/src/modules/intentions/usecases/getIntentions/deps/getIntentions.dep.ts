@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
@@ -13,7 +14,18 @@ import { cleanNull } from "@/utils/noNull";
 import type { Filters } from "./getFilters.dep";
 
 export const getIntentions = async (
-  { statut, search, user, offset = 0, limit = 20, order, orderBy, codeAcademie, codeNiveauDiplome, campagne }: Filters,
+  {
+    campagne,
+    statut,
+    codeAcademie,
+    codeNiveauDiplome,
+    user,
+    search,
+    offset = 0,
+    limit = MAX_LIMIT,
+    order,
+    orderBy,
+  }: Filters,
   shouldFetchOnlyIntention: boolean
 ) => {
   const search_array = getNormalizedSearchArray(search);
