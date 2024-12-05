@@ -10,6 +10,7 @@ import type { TauxAttractiviteType, TauxIJType } from "@/app/(wrapped)/domaine-d
 import { DonneesManquantes } from "./DonneesManquantes";
 import { DonneesManquantesApprentissageCard } from "./DonneesManquantesApprentissageCard";
 import { EffectifsEtAttractiviteGraphs } from "./EffectifsEtAttractiviteGraphs";
+import { ExportListIndicateurs } from "./ExportListIndicateurs";
 import { NotInScope } from "./NotInScope";
 import { SoldeDePlacesTransformeesCard } from "./SoldeDePlacesTransformeesCard";
 import { TauxIJCard } from "./TauxIJCard";
@@ -99,7 +100,7 @@ export const IndicateursTab = () => {
 
   return (
     <Flex direction={"column"} gap={8} w={"60%"}>
-      <FormationHeader data={dataFormation} />
+      <FormationHeader data={dataFormation} exportButton={<ExportListIndicateurs />} />
       {dataFormation.isInScope ? (
         <>
           <Flex direction={"column"} gap={4} w={"100%"}>

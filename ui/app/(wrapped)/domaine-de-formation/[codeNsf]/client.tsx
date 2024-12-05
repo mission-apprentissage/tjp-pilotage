@@ -33,7 +33,7 @@ export const PageDomaineDeFormationClient = ({
   scope,
 }: Props) => {
   return (
-    <FormationContextProvider value={{ codeNsf, scope, regions, academies, departements }} defaultCfd={cfd}>
+    <FormationContextProvider value={{ codeNsf, scope, regions, academies, departements, libelleNsf }} defaultCfd={cfd}>
       <HeaderSection codeNsf={codeNsf} libelleNsf={libelleNsf} />
       <FiltersSection regionOptions={regions} academieOptions={academies} departementOptions={departements} />
       <FormationSection formations={formations} counter={counter} />

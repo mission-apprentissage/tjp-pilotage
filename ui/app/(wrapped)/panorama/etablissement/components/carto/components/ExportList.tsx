@@ -6,14 +6,8 @@ import { useEtablissementContext } from "@/app/(wrapped)/panorama/etablissement/
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
-import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
+import { formatCommuneLibelleWithCodeDepartement, formatLibelleFormation } from "@/utils/formatLibelle";
 import { formatArray } from "@/utils/formatUtils";
-
-const formatLibelleFormation = (etablissement: { libellesDispositifs: string[]; libelleFormation: string }) => {
-  const dispositifs =
-    formatArray(etablissement.libellesDispositifs) !== "" ? `(${formatArray(etablissement.libellesDispositifs)})` : "";
-  return `${etablissement.libelleFormation} ${dispositifs}`;
-};
 
 export const ExportList = () => {
   const trackEvent = usePlausible();
