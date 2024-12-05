@@ -18,7 +18,7 @@ on:
         required: false
 
 jobs:
-  deploy:
+  generate_rc_label:
     name: Generate ${{ inputs.release_type }} RC
     runs-on: ubuntu-latest
     steps:
