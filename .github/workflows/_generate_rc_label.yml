@@ -1,4 +1,4 @@
-name: Deployment
+name: Generate Release Candidate Label
 on:
   workflow_dispatch:
     inputs:
