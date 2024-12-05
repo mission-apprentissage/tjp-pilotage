@@ -180,7 +180,7 @@ export const ROUTES = {
     schema: getDneUrlSchema,
   },
   "[GET]/dne_connect": {
-    url: "dne_connect",
+    url: "/dne_connect",
     method: "GET",
     schema: redirectDneSchema,
   },
