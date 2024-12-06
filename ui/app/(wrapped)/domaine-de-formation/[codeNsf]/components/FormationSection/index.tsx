@@ -43,7 +43,7 @@ export const FormationSection = ({
   formations: FormationListItem[];
   counter: FormationsCounter;
 }) => {
-  const { currentFilters, handleChangeCfd } = useFormationContext();
+  const { currentFilters, handleCfdChange } = useFormationContext();
   const tabContentRef = useRef<HTMLDivElement>(null);
   const [tabContentHeight, setTabContentHeight] = useState<number | undefined>(undefined);
 
@@ -74,7 +74,7 @@ export const FormationSection = ({
         <Flex direction="row" gap={8}>
           <ListeFormations
             formations={formations}
-            selectCfd={handleChangeCfd}
+            selectCfd={handleCfdChange}
             selectedCfd={currentFilters.cfd}
             h={tabContentHeight}
           />

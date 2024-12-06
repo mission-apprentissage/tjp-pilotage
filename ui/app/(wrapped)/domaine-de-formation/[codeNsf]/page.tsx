@@ -25,6 +25,21 @@ const fetchNsf = async (codeNsf: string, filters: QueryFilters) => {
   }
 };
 
+const fetchDefaultNsfs = async () => {
+  const headersList = Object.fromEntries(headers().entries());
+  try {
+    return await serverClient
+      .ref("[GET]/domaine-de-formation")
+      .query({ query: { search: undefined } }, { headers: headersList });
+  } catch (e) {
+    if (isAxiosError(e)) {
+      console.error({ status: e.response?.status, message: e.response?.data });
+    }
+
+    return [];
+  }
+};
+
 const findDefaultCfd = (defaultCfd: string | undefined, formations: FormationListItem[]): string => {
   return (
     defaultCfd ??
@@ -70,6 +85,8 @@ export default async function PageDomaineDeFormation({ params, searchParams }: R
     codeAcademie,
     codeDepartement,
   });
+
+  const defaultNsfs = await fetchDefaultNsfs();
 
   if (!results) {
     return redirect(`/panorama/domaine-de-formation?wrongNsf=${codeNsf}`);
@@ -126,6 +143,7 @@ export default async function PageDomaineDeFormation({ params, searchParams }: R
       departements={departements}
       scope={scope}
       counter={counter}
+      defaultNsfs={defaultNsfs}
     />
   );
 }

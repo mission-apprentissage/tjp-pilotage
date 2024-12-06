@@ -11,6 +11,7 @@ import {
   Text,
   VisuallyHidden,
 } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
 import { SelectNsf } from "./components/selectNsf";
 import type { NsfOptions } from "./types";
@@ -22,6 +23,7 @@ export const PanoramaDomaineDeFormationClient = ({
   defaultNsf: NsfOptions;
   wrongNsf?: string;
 }) => {
+  const router = useRouter();
   return (
     <Container px="48px" as="section" py="40px" bg="bluefrance.975" maxWidth={"container.xl"} h={"100%"}>
       <Flex align="center" direction="row" justify="space-between">
@@ -29,7 +31,20 @@ export const PanoramaDomaineDeFormationClient = ({
           <Text as={"h1"}>Rechercher un domaine de formation (NSF) ou par formation</Text>
         </VisuallyHidden>
         <Flex w={"50%"} direction={"column"} gap={"4"}>
-          <SelectNsf defaultNsfs={defaultNsf} defaultSelected={null} w={"100%"} />
+          <SelectNsf
+            defaultNsfs={defaultNsf}
+            defaultSelected={null}
+            w={"100%"}
+            label={"Rechercher un domaine de formation (NSF) ou par formation"}
+            isClearable={false}
+            routeSelectedNsf={(selected) => {
+              if (selected.type === "formation") {
+                router.push(`/domaine-de-formation/${selected.nsf}?cfd=${selected.value}`);
+              } else {
+                router.push(`/domaine-de-formation/${selected.value}`);
+              }
+            }}
+          />
           {wrongNsf && (
             <Alert w={"100%"} status="error">
               <AlertIcon />

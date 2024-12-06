@@ -7,7 +7,7 @@ import { FormationSection } from "./components/FormationSection";
 import { HeaderSection } from "./components/HeaderSection/HeaderSection";
 import { LiensUtilesSection } from "./components/LiensUtilesSection/LiensUtilesSection";
 import { FormationContextProvider } from "./context/formationContext";
-import type { Academie, Departement, FormationListItem, FormationsCounter, Region } from "./types";
+import type { Academie, Departement, FormationListItem, FormationsCounter, NsfOptions, Region } from "./types";
 
 type Props = {
   codeNsf: string;
@@ -19,6 +19,7 @@ type Props = {
   departements: Departement[];
   scope: ScopeZone;
   counter: FormationsCounter;
+  defaultNsfs: NsfOptions;
 };
 
 export const PageDomaineDeFormationClient = ({
@@ -31,11 +32,18 @@ export const PageDomaineDeFormationClient = ({
   departements,
   counter,
   scope,
+  defaultNsfs,
 }: Props) => {
   return (
     <FormationContextProvider value={{ codeNsf, scope, regions, academies, departements, libelleNsf }} defaultCfd={cfd}>
       <HeaderSection codeNsf={codeNsf} libelleNsf={libelleNsf} />
-      <FiltersSection regionOptions={regions} academieOptions={academies} departementOptions={departements} />
+      <FiltersSection
+        regionOptions={regions}
+        academieOptions={academies}
+        departementOptions={departements}
+        defaultNsfs={defaultNsfs}
+        currentNsf={codeNsf}
+      />
       <FormationSection formations={formations} counter={counter} />
       <LiensUtilesSection />
     </FormationContextProvider>

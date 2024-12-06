@@ -1,5 +1,4 @@
 import { chakra, Flex } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import type { CSSObjectWithLabel, StylesConfig } from "react-select";
@@ -24,6 +23,12 @@ const selectStyle: StylesConfig<NsfOption, false> = {
     color: "#161616",
     fontSize: "14px",
   }),
+  placeholder: (styles) => ({
+    ...styles,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  }),
 };
 
 export const SelectNsf = chakra(
@@ -32,15 +37,19 @@ export const SelectNsf = chakra(
     defaultSelected = null,
     hideLabel = false,
     className,
+    label,
+    isClearable = true,
+    routeSelectedNsf,
   }: {
     defaultNsfs: NsfOptions;
     defaultSelected: NsfOption | null;
     hideLabel?: boolean;
     className?: string;
+    label?: string;
+    isClearable?: boolean;
+    routeSelectedNsf: (selected: NsfOption) => void;
   }) => {
-    const router = useRouter();
     const [search, setSearch] = useState<string>("");
-    const [selectedNsf, setSelectedNsf] = useState<NsfOption | null>(defaultSelected);
 
     const { data, isLoading, refetch } = client
       .ref("[GET]/domaine-de-formation")
@@ -48,12 +57,7 @@ export const SelectNsf = chakra(
 
     const onNsfSelected = (selected: NsfOption | null) => {
       if (selected) {
-        setSelectedNsf(selected);
-        if (selected.type === "formation") {
-          router.push(`/domaine-de-formation/${selected.nsf}?cfd=${selected.value}`);
-        } else {
-          router.push(`/domaine-de-formation/${selected.value}`);
-        }
+        routeSelectedNsf(selected);
       }
     };
 
@@ -64,9 +68,11 @@ export const SelectNsf = chakra(
 
     return (
       <Flex flexDirection="column" gap="2" className={className}>
-        <label htmlFor="nsf-select" style={labelStyle}>
-          Rechercher un domaine de formation (NSF) ou par formation
-        </label>
+        {label && (
+          <label htmlFor="nsf-select" style={labelStyle}>
+            {label}
+          </label>
+        )}
         <Flex width="100%">
           <Select
             id="nsf-select"
@@ -75,7 +81,7 @@ export const SelectNsf = chakra(
             }
             isLoading={isLoading}
             inputValue={search}
-            value={selectedNsf}
+            defaultValue={defaultSelected}
             options={[
               {
                 label: `DOMAINES DE FORMATION (${(data ?? []).filter((option) => option.type === "nsf").length})`,
@@ -94,6 +100,7 @@ export const SelectNsf = chakra(
             placeholder="Saisir un nom de domaine, un libellé de formation, un code diplôme..."
             styles={selectStyle}
             isMulti={false}
+            isClearable={isClearable}
           />
         </Flex>
       </Flex>
