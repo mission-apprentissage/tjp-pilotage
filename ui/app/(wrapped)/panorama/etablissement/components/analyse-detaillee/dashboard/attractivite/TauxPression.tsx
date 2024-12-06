@@ -38,17 +38,21 @@ export const TauxPression = ({
     national: Array<number | undefined>;
   } => {
     if (chiffresEntreeOffre) {
+      // Conserve uniquement les entrées où au moins une valeur est définie
+      const filteredData = Object.values(chiffresEntreeOffre).filter((value) => {
+        return !(
+          value.tauxPression === undefined &&
+          value.tauxPressionDepartemental === undefined &&
+          value.tauxPressionRegional === undefined &&
+          value.tauxPressionNational === undefined
+        );
+      });
+
       return {
-        établissement: Object.values(chiffresEntreeOffre).map((value) => formatAbsoluteOrUndefined(value.tauxPression)),
-        départemental: Object.values(chiffresEntreeOffre).map((value) =>
-          formatAbsoluteOrUndefined(value.tauxPressionDepartemental)
-        ),
-        régional: Object.values(chiffresEntreeOffre).map((value) =>
-          formatAbsoluteOrUndefined(value.tauxPressionRegional)
-        ),
-        national: Object.values(chiffresEntreeOffre).map((value) =>
-          formatAbsoluteOrUndefined(value.tauxPressionNational)
-        ),
+        établissement: filteredData.map((value) => formatAbsoluteOrUndefined(value.tauxPression)),
+        départemental: filteredData.map((value) => formatAbsoluteOrUndefined(value.tauxPressionDepartemental)),
+        régional: filteredData.map((value) => formatAbsoluteOrUndefined(value.tauxPressionRegional)),
+        national: filteredData.map((value) => formatAbsoluteOrUndefined(value.tauxPressionNational)),
       };
     }
     return {
@@ -82,6 +86,9 @@ export const TauxPression = ({
     régional: green,
     départemental: orange,
   };
+
+  console.log(getData());
+  console.log(getCategories());
 
   return (
     <DashboardCard
