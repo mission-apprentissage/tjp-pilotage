@@ -73,7 +73,15 @@ export const EtablissementItemContent = ({ etablissement }: { etablissement: Eta
   const tooltipLabelTauxPression = (() => {
     if (etablissement.tauxPression !== undefined) {
       if (etablissement.isBTS) {
+        if (isScolaire && isApprentissage) {
+          return `Taux de demande voie scolaire (rentrée ${CURRENT_RENTREE})`;
+        }
+
         return `Taux de demande (rentrée ${CURRENT_RENTREE})`;
+      }
+
+      if (isScolaire && isApprentissage) {
+        return `Taux de pression voie scolaire (rentrée ${CURRENT_RENTREE})`;
       }
 
       return `Taux de pression (rentrée ${CURRENT_RENTREE})`;

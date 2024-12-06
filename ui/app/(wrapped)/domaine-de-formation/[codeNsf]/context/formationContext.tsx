@@ -28,7 +28,7 @@ type InputFormationContextType = {
 
 type FormationContextType = InputFormationContextType & {
   currentFilters: Filters;
-  resetFilters: () => void;
+  handleResetFilters: () => void;
   handleRegionChange: (codeRegion: string) => void;
   handleAcademieChange: (codeAcademie: string) => void;
   handleDepartementChange: (codeDepartement: string) => void;
@@ -38,7 +38,7 @@ type FormationContextType = InputFormationContextType & {
   handleIncludeAllChange: (includeAll: boolean) => void;
   handleViewChange: (view: EtablissementsView) => void;
   handleOrderByChange: (orderBy: EtablissementsOrderBy) => void;
-  handleChangeCfd: (cfd: string) => void;
+  handleCfdChange: (cfd: string) => void;
   handleClearBbox: () => void;
   handleSetBbox: (bbox?: Bbox) => void;
 };
@@ -66,7 +66,7 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
     },
   });
 
-  const resetFilters = () => {
+  const handleResetFilters = () => {
     setCurrentFilters((prev) => ({
       ...prev,
       codeRegion: "",
@@ -182,7 +182,7 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
     }));
   };
 
-  const handleChangeCfd = (cfd: string) => {
+  const handleCfdChange = (cfd: string) => {
     setCurrentFilters((prev) => ({
       ...prev,
       cfd,
@@ -206,7 +206,7 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
   const context = useMemo(
     () => ({
       currentFilters,
-      resetFilters,
+      handleResetFilters,
       handleRegionChange,
       handleAcademieChange,
       handleDepartementChange,
@@ -216,7 +216,7 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
       handleIncludeAllChange,
       handleViewChange,
       handleOrderByChange,
-      handleChangeCfd,
+      handleCfdChange,
       handleClearBbox,
       scope: value.scope,
       codeNsf: value.codeNsf,
@@ -228,7 +228,7 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
     }),
     [
       currentFilters,
-      resetFilters,
+      handleResetFilters,
       handleRegionChange,
       handleAcademieChange,
       handleDepartementChange,
@@ -238,7 +238,7 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
       handleIncludeAllChange,
       handleViewChange,
       handleOrderByChange,
-      handleChangeCfd,
+      handleCfdChange,
       handleClearBbox,
       value,
     ]

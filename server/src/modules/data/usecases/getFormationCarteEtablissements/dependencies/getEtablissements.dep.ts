@@ -130,6 +130,7 @@ export const getEtablissements = async ({
       sql<string[]>`array_agg(distinct ${sb.ref("carto.libelleDispositif")})`.as("libellesDispositifs"),
     ])
     .where("carto.cfd", "=", cfd)
+    .where("carto.libelleEtablissement", "is not", null)
     .where((wb) => wb.and([wb("carto.longitude", "is not", null), wb("carto.latitude", "is not", null)]))
     .$call((qb) => {
       if (includeAll) {
