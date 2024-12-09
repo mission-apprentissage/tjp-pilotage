@@ -1,4 +1,4 @@
-import { expressionBuilder } from "kysely";
+import { expressionBuilder, sql } from "kysely";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
@@ -65,6 +65,12 @@ export const genericOnDemandes = ({
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
+    .leftJoin("actionPrioritaire", (join) =>
+      join
+        .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
+        .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
+        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
+    )
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join
         .onRef("positionFormationRegionaleQuadrant.cfd", "=", "demande.cfd")
@@ -155,25 +161,24 @@ export const genericOnDemandes = ({
         );
       return eb;
     })
-    .$call((eb) => {
-      if (formationSpecifique) {
-        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
-          eb = eb.innerJoin("actionPrioritaire", (join) =>
-            join
-              .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
-              .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
-              .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
-          );
-        }
-        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])) {
-          eb = eb.where("formationView.isTransitionEcologique", "=", true);
-        }
-        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])) {
-          eb = eb.where("formationView.isTransitionDemographique", "=", true);
-        }
-        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])) {
-          eb = eb.where("formationView.isTransitionNumerique", "=", true);
-        }
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        return q.where((w) =>
+          w.or([
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])
+              ? w("actionPrioritaire.cfd", "is not", null)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])
+              ? w("formationView.isTransitionEcologique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])
+              ? w("formationView.isTransitionDemographique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
+              ? w("formationView.isTransitionNumerique", "=", true)
+              : sql.val(false),
+          ])
+        );
       }
-      return eb;
+      return q;
     });
