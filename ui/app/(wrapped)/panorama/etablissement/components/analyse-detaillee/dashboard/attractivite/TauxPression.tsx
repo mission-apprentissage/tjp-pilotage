@@ -87,9 +87,6 @@ export const TauxPression = ({
     départemental: orange,
   };
 
-  console.log(getData());
-  console.log(getCategories());
-
   return (
     <DashboardCard
       label={codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? "Taux de demande" : "Taux de pression"}
