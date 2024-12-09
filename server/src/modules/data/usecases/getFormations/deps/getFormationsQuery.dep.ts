@@ -72,6 +72,14 @@ export const getFormationsQuery = async ({
       join.onRef("formationHistorique.ancienCFD", "=", "formationView.cfd").on(isScolaireFormationHistorique)
     )
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
+    .leftJoin("actionPrioritaire", (join) =>
+      join
+        .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
+        .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
+        .$call((join) =>
+          codeRegion ? join.onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion") : join
+        )
+    )
     .$call((eb) => {
       if (!codeRegion) return eb;
       return eb
@@ -329,25 +337,22 @@ export const getFormationsQuery = async ({
     })
     .$call((q) => {
       if (formationSpecifique?.length) {
-        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])) {
-          q = q.innerJoin("actionPrioritaire", (join) =>
-            join
-              .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
-              .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
-              .$call((join) =>
-                codeRegion ? join.onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion") : join
-              )
-          );
-        }
-        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])) {
-          q = q.where("formationView.isTransitionEcologique", "=", true);
-        }
-        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])) {
-          q = q.where("formationView.isTransitionDemographique", "=", true);
-        }
-        if (formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])) {
-          q = q.where("formationView.isTransitionNumerique", "=", true);
-        }
+        return q.where((w) =>
+          w.or([
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])
+              ? w("actionPrioritaire.cfd", "is not", null)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])
+              ? w("formationView.isTransitionEcologique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])
+              ? w("formationView.isTransitionDemographique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
+              ? w("formationView.isTransitionNumerique", "=", true)
+              : sql.val(false),
+          ])
+        );
       }
       return q;
     })

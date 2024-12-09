@@ -1,3 +1,5 @@
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/data/usecases/getPilotageIntentions/getPilotageIntentions.usecase";
 import { genericOnDemandes } from "@/modules/data/utils/onDemande";
@@ -69,6 +71,7 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
       eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
       eb.fn.coalesce("countDemande", eb.val(0)).as("countDemande"),
     ])
+    .where("demandes.statut", "in", [DemandeStatutEnum["projet de demande"], DemandeStatutEnum["demande validée"]])
     .execute()
     .then(cleanNull);
 };
