@@ -19,21 +19,16 @@ import { useQueryClient } from "@tanstack/react-query";
 import _ from "lodash";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { getHierarchy, Role } from "shared";
+import type { Role } from "shared";
+import { getHierarchy } from "shared";
 import { UserFonctionEnum } from "shared/enum/userFonction";
 import { z } from "zod";
 
-import { client } from "../../../../api.client";
-import { getErrorMessage } from "../../../../utils/apiError";
-import { useAuth } from "../../../../utils/security/useAuth";
+import { client } from "@/api.client";
+import { getErrorMessage } from "@/utils/apiError";
+import { useAuth } from "@/utils/security/useAuth";
 
-export const CreateUser = ({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) => {
+export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const { auth } = useAuth();
   const {
     register,
@@ -52,10 +47,7 @@ export const CreateUser = ({
     },
   });
 
-  useEffect(
-    () => reset(undefined, { keepDefaultValues: true }),
-    [isOpen, reset]
-  );
+  useEffect(() => reset(undefined, { keepDefaultValues: true }), [isOpen, reset]);
 
   const { data: regions } = client.ref("[GET]/regions").useQuery({});
 
@@ -73,18 +65,15 @@ export const CreateUser = ({
     },
   });
 
-  const onSubmit = (
-    v: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]
-  ) => createUser({ body: { ...v, codeRegion: v.codeRegion || undefined } });
+  const onSubmit = (v: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]) =>
+    createUser({ body: { ...v, codeRegion: v.codeRegion || undefined } });
 
   const roles = getHierarchy(auth?.user?.role as Role);
   const isAdminRegion = auth?.user?.role === "admin_region";
   const filteredRegions = (() => {
     if (!regions) return [];
     if (isAdminRegion) {
-      return regions.filter(
-        (region) => region.value === auth?.user?.codeRegion
-      );
+      return regions.filter((region) => region.value === auth?.user?.codeRegion);
     }
     return regions;
   })();
@@ -106,14 +95,10 @@ export const CreateUser = ({
             <FormLabel>Email</FormLabel>
             <Input
               {...register("email", {
-                validate: (v) =>
-                  z.string().email().safeParse(v).success ||
-                  "Veuillez saisir un email valide",
+                validate: (v) => z.string().email().safeParse(v).success || "Veuillez saisir un email valide",
               })}
             />
-            {!!errors.email && (
-              <FormErrorMessage>{errors.email.message}</FormErrorMessage>
-            )}
+            {!!errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.firstname} isRequired>
             <FormLabel>Prénom</FormLabel>
@@ -122,9 +107,7 @@ export const CreateUser = ({
                 required: "Veuillez saisir un prénom",
               })}
             />
-            {!!errors.firstname && (
-              <FormErrorMessage>{errors.firstname.message}</FormErrorMessage>
-            )}
+            {!!errors.firstname && <FormErrorMessage>{errors.firstname.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.lastname} isRequired>
             <FormLabel>Nom</FormLabel>
@@ -133,9 +116,7 @@ export const CreateUser = ({
                 required: "Veuillez saisir un nom",
               })}
             />
-            {!!errors.lastname && (
-              <FormErrorMessage>{errors.lastname.message}</FormErrorMessage>
-            )}
+            {!!errors.lastname && <FormErrorMessage>{errors.lastname.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.role} isRequired>
             <FormLabel>Role</FormLabel>
@@ -150,15 +131,9 @@ export const CreateUser = ({
                 </option>
               ))}
             </Select>
-            {!!errors.role && (
-              <FormErrorMessage>{errors.role.message}</FormErrorMessage>
-            )}
+            {!!errors.role && <FormErrorMessage>{errors.role.message}</FormErrorMessage>}
           </FormControl>
-          <FormControl
-            mb="4"
-            isInvalid={!!errors.codeRegion}
-            isRequired={isAdminRegion}
-          >
+          <FormControl mb="4" isInvalid={!!errors.codeRegion} isRequired={isAdminRegion}>
             <FormLabel>Code région</FormLabel>
             <Select
               {...register("codeRegion", {
@@ -175,9 +150,7 @@ export const CreateUser = ({
                 </option>
               ))}
             </Select>
-            {!!errors.codeRegion && (
-              <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>
-            )}
+            {!!errors.codeRegion && <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>}
           </FormControl>
           {isError && (
             <Alert status="error">
@@ -195,9 +168,7 @@ export const CreateUser = ({
                 </option>
               ))}
             </Select>
-            {!!errors.fonction && (
-              <FormErrorMessage>{errors.fonction.message}</FormErrorMessage>
-            )}
+            {!!errors.fonction && <FormErrorMessage>{errors.fonction.message}</FormErrorMessage>}
           </FormControl>
         </ModalBody>
 

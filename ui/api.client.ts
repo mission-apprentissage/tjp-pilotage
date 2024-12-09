@@ -1,15 +1,22 @@
-import { ZodTypeProvider } from "@http-wizard/core";
+import type { ZodTypeProvider } from "@http-wizard/core";
 import { createQueryClient } from "@http-wizard/react-query";
 import axios from "axios";
-import { Router } from "server/src/routes";
+import type { Router } from "shared/routes/index";
 
-export const API_BASE_URL =
-  typeof document === "undefined"
-    ? process.env.NEXT_PUBLIC_APP_CONTAINER_URL
-    : process.env.NEXT_PUBLIC_SERVER_URL;
+import { publicConfig } from "./config.public";
 
 export const client = createQueryClient<Router, ZodTypeProvider>({
   instance: axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: publicConfig.apiEndpoint,
+    withCredentials: true,
+  }),
+});
+
+export const serverClient = createQueryClient<Router, ZodTypeProvider>({
+  instance: axios.create({
+    // mandatory because localhost maps to ::1 (IPv6) with nodejs but api server insn't
+    // mapped to ::1 but only IPv4 127.0.0.1
+    baseURL: publicConfig.apiEndpoint.replace("localhost", "127.0.0.1"),
+    withCredentials: true,
   }),
 });

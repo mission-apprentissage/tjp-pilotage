@@ -1,8 +1,9 @@
 import { CURRENT_IJ_MILLESIME } from "shared";
+import type { Filters } from "shared/routes/schemas/get.panorama.stats.departement.schema";
 
-import { cleanNull } from "../../../../../utils/noNull";
-import { withInsertionReg } from "../../../utils/tauxInsertion6mois";
-import { Filters } from "../getDataForPanoramaDepartement.schema";
+import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
+import { cleanNull } from "@/utils/noNull";
+
 import { getFormationsDepartementBase } from "./getFormationsDepartementBase.dep";
 
 export const getFormationsDepartement = async (filters: Filters) =>

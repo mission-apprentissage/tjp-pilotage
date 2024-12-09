@@ -1,4 +1,7 @@
-import { hashPassword } from "../../utils/passwordUtils";
+import { describe, expect, it } from "vitest";
+
+import { hashPassword } from "@/modules/core/utils/passwordUtils";
+
 import { loginFactory } from "./login.usecase";
 
 const correctPassword = "Azerty123!";
@@ -12,7 +15,7 @@ describe("login usecase", () => {
       findUserQuery: async () => undefined,
     });
 
-    await expect(() =>
+    await expect(async () =>
       login({
         password: hashedPassword,
         email: "test@test.fr",
@@ -29,7 +32,7 @@ describe("login usecase", () => {
       }),
     });
 
-    await expect(() =>
+    await expect(async () =>
       login({
         password: hashedPassword,
         email: "test@test.fr",
@@ -46,7 +49,7 @@ describe("login usecase", () => {
       }),
     });
 
-    await expect(() =>
+    await expect(async () =>
       login({
         password: "other",
         email: "test@test.fr",

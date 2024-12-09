@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from "vitest";
+
 import { sendResetPasswordFactory } from "./sendResetPassword.usecase";
 
 const jwtSecret = "jwtSecret";
@@ -18,7 +20,7 @@ describe("sendResetPassword usecase", () => {
       shootTemplate: async () => {},
     });
 
-    await expect(() =>
+    await expect(async () =>
       sendResetPassword({
         email: "other@test.fr",
       })
@@ -32,7 +34,7 @@ describe("sendResetPassword usecase", () => {
       shootTemplate: async () => {},
     });
 
-    await expect(() =>
+    await expect(async () =>
       sendResetPassword({
         email: "test@test.fr",
       })
@@ -45,7 +47,7 @@ describe("sendResetPassword usecase", () => {
     const deps = {
       jwtSecret,
       findUserQuery: async () => user,
-      shootTemplate: jest.fn(async () => {}),
+      shootTemplate: vi.fn(async () => {}),
     };
 
     const sendResetPassword = sendResetPasswordFactory(deps);
@@ -54,8 +56,6 @@ describe("sendResetPassword usecase", () => {
       email: "test@test.fr",
     });
 
-    await expect(deps.shootTemplate).toHaveBeenCalledWith(
-      expect.objectContaining({ template: "reset_password" })
-    );
+    await expect(deps.shootTemplate).toHaveBeenCalledWith(expect.objectContaining({ template: "reset_password" }));
   });
 });

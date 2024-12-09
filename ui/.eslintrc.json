@@ -1,0 +1,28 @@
+{
+  "extends": [
+    "next",
+    "next/core-web-vitals",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:react-hooks/recommended"
+  ],
+  "rules": {
+    "react/no-unescaped-entities": 0,
+    "@dword-design/import-alias/prefer-alias": [
+      "error",
+      {
+        "alias": {
+          "@": "./ui",
+          "shared": "./shared"
+        }
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": 0
+  },
+  "settings": {
+    "next": {
+      "rootDir": "ui"
+    }
+  },
+  "ignorePatterns": ["next.config.js"]
+}

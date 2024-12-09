@@ -1,12 +1,18 @@
-import { FilePathManager } from "./filePathManager";
+import type { FilePathManager } from "./filePathManager";
 
 export const ovhFilePathManagerFactory = (): FilePathManager => {
   return {
     getIntentionFilePath: (id: string, filename: string = "") => {
       return `intentions/${id}/${filename}`;
     },
+    getFranceTravailIndicateurTensionDepartementStatsFilePath: () => {
+      return "files/tension_rome_departement.csv";
+    },
+    getFranceTravailIndicateurTensionRegionStatsFilePath: () => {
+      return "files/tension_rome_region.csv";
+    },
     getFranceTravailIndicateurTensionStatsFilePath: () => {
-      return "files/tension_departement_rome.csv";
+      return "files/tension_rome.csv";
     },
   };
 };

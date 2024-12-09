@@ -1,5 +1,5 @@
-import { client } from "@/api.client";
-import { ExportColumns } from "@/utils/downloadExport";
+import type { client } from "@/api.client";
+import type { ExportColumns } from "@/utils/downloadExport";
 
 export const INTENTIONS_COLUMNS = {
   numero: "N°Demande",
@@ -27,12 +27,14 @@ export const INTENTIONS_COLUMNS = {
   statut: "Statut",
   createdAt: "Créé le",
   updatedAt: "Der. modif.",
-  capaciteScolaireActuelle: "Capacité scolaire actuelle",
-  capaciteScolaire: "Capacité scolaire",
-  capaciteScolaireColoree: "Capacité scolaire coloree",
-  capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
-  capaciteApprentissage: "Capacité apprentissage",
-  capaciteApprentissageColoree: "Capacité apprentissage coloree",
+  capaciteScolaireActuelle: "Capacité actuelle en voie scolaire",
+  capaciteScolaire: "Future capacité en voie scolaire",
+  capaciteScolaireColoreeActuelle: "Capacité colorée actuelle en voie scolaire",
+  capaciteScolaireColoree: "Future capacité colorée en voie scolaire",
+  capaciteApprentissageActuelle: "Capacité actuelle en apprentissage",
+  capaciteApprentissage: "Future capacité en apprentissage",
+  capaciteApprentissageColoreeActuelle: "Capacité colorée actuelle en apprentissage",
+  capaciteApprentissageColoree: "Future capacité colorée en apprentissage",
   formationRH: "Formation(s) ?",
   nbFormationRH: "Nombre de formations",
   discipline1FormationRH: "Discipline 1 formation",
@@ -61,8 +63,7 @@ export const INTENTIONS_COLUMNS = {
   avis7: "Avis 8",
   avis8: "Avis 9",
   avis9: "Avis 10",
-  lastChangementStatutCommentaire:
-    "Commentaire du dernier changement de statut",
+  lastChangementStatutCommentaire: "Commentaire du dernier changement de statut",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/intentions"]["intentions"][number] & {
     [key: `avis${number}`]: string;

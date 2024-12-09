@@ -1,5 +1,5 @@
 import { parse } from "csv-parse";
-import _, { isEmpty } from "lodash";
+import { chain, isEmpty } from "lodash-es";
 
 export const getStreamParser = () => {
   return parse({
@@ -8,7 +8,7 @@ export const getStreamParser = () => {
     delimiter: ";",
     columns: true,
     on_record: (record) =>
-      _.chain(record)
+      chain(record)
         .mapKeys((_, key: string) => key.trim())
         .pickBy((value) => !isEmpty(value) && value.trim().length)
         .value(),

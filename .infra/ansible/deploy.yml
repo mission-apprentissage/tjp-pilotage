@@ -1,5 +1,96 @@
 ---
-
 - hosts: all
-  roles:
-    - deploy
+  become: true
+  gather_facts: false
+  vars_files:
+    - "../vault/vault.yml"
+  tasks:
+    - include_tasks: ./tasks/files_copy.yml
+
+    - name: Récupération des images docker
+      shell:
+        chdir: /opt/app
+        cmd: "/opt/app/tools/docker-compose.sh pull --policy missing"
+
+    - name: Récupération du status de la stack
+      shell:
+        chdir: /opt/app
+        cmd: docker stack ls --format json
+      register: stack_status
+
+    - name: Récupération du status des migrations
+      shell:
+        chdir: /opt/app
+        cmd: "sudo /opt/app/scripts/migrations-status.sh"
+      register: migration_status_output
+      when: stack_status.stdout != ""
+
+    - name: "Activation du mode maintenance pour effectuer la migration"
+      shell:
+        chdir: /opt/app
+        cmd: "sudo /opt/app/tools/maintenance/maintenance-on.sh"
+      when:
+        - stack_status.stdout != ""
+        - '"migrations-status=synced" not in migration_status_output.stdout_lines'
+
+    - name: "Shutdown server"
+      shell:
+        chdir: /opt/app
+        cmd: "sudo docker service scale {{product_name}}_server=0"
+      when:
+        - stack_status.stdout != ""
+        - '"migrations-status=synced" not in migration_status_output.stdout_lines'
+
+    - name: Lancement des migrations
+      shell:
+        chdir: /opt/app
+        cmd: "sudo /opt/app/scripts/migrations-up.sh"
+      when:
+        - stack_status.stdout != ""
+        - '"migrations-status=synced" not in migration_status_output.stdout_lines'
+      async: 18000
+      poll: 10
+
+    - name: Lancement de l'application {{env_name}}
+      shell:
+        chdir: /opt/app
+        cmd: "/opt/app/tools/update-stack.sh"
+      register: docker_deploy_output
+      async: 1800
+      poll: 10
+
+    - debug:
+        var: docker_deploy_output
+
+    - name: Attente du deploiement
+      shell:
+        chdir: /opt/app
+        cmd: "/opt/app/tools/wait-deployment.sh"
+      async: 1800
+      poll: 10
+
+    - name: "Reload du Reverse Proxy"
+      shell:
+        chdir: /opt/app
+        cmd: "sudo /opt/app/tools/reload-proxy.sh"
+
+    - name: "Désactivation du mode maintenance"
+      shell:
+        chdir: /opt/app
+        cmd: "sudo /opt/app/tools/maintenance/maintenance-off.sh"
+
+    - name: "Verification des certificats SSL"
+      shell:
+        chdir: /opt/app
+        cmd: "sudo /opt/app/tools/ssl/renew-certificate.sh {{dns_name}}"
+
+    - name: "Setup de la Metabase"
+      shell:
+        chdir: /opt/app
+        cmd: "sudo bash /opt/app/configs/metabase/setup-metabase.sh"
+      timeout: 86400 # 1 day
+
+    - name: "Prune Docker"
+      shell:
+        chdir: /opt/app
+        cmd: "sudo docker system prune --all --force"

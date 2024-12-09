@@ -1,24 +1,65 @@
-import { Button, Checkbox, Flex, Select, Text } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import {
+  Button,
+  Divider,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Portal,
+  Select,
+  Tag,
+  Text,
+  useDisclosure,
+  Wrap,
+} from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { usePlausible } from "next-plausible";
-import { useContext, useEffect } from "react";
-import { unstable_batchedUpdates } from "react-dom";
+import { useState } from "react";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
-import { CodeRegionFilterContext } from "@/app/layoutClient";
+import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
+import { DeleteRequeteEnregistreeButton } from "@/app/(wrapped)/console/components/DeleteRequeteEnregistreeButton";
+import { FilterTags } from "@/app/(wrapped)/console/components/FilterTags";
+import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
+import type {
+  Filters,
+  FiltersList,
+  Formations,
+  Order,
+  RequetesEnregistrees,
+} from "@/app/(wrapped)/console/formations/types";
 import { Multiselect } from "@/components/Multiselect";
+import { feature } from "@/utils/feature";
 
-import { FORMATION_COLUMNS } from "../FORMATION_COLUMNS";
-import { Filters, Formations, Order } from "../types";
+const REQUETES_ENREGISTREES = [
+  {
+    filtres: {},
+    nom: "Transition écologique",
+    couleur: "green.submitted",
+  },
+  {
+    filtres: {
+      positionQuadrant: [PositionQuadrantEnum["Q4"]],
+    },
+    nom: "Action prioritaire",
+    couleur: "redmarianne.625_hover",
+  },
+];
 
 export const FiltersSection = ({
+  handleFilters,
   setSearchParams,
   searchParams,
-  data,
+  filtersList,
+  requetesEnregistrees,
+  requeteEnregistreeActuelle,
+  setRequeteEnregistreeActuelle,
 }: {
+  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: number;
@@ -26,94 +67,20 @@ export const FiltersSection = ({
   searchParams: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: string;
   };
-  data?: Formations;
+  filtersList?: FiltersList;
+  requetesEnregistrees?: RequetesEnregistrees;
+  requeteEnregistreeActuelle: { nom: string; couleur?: string };
+  setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: { nom: string; couleur?: string }) => void;
 }) => {
-  const trackEvent = usePlausible();
-
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(
-    CodeRegionFilterContext
-  );
-
-  const filters = searchParams.filters ?? {};
-  const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
-
-  const handleFiltersContext = (
-    type: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
-    if (type === "codeRegion" && value != null)
-      setCodeRegionFilter((value as string[])[0] ?? "");
-  };
-
-  const handleFilters = (
-    type: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
-    handleFiltersContext(type, value);
-
-    let newFilters: Partial<Filters> = {
-      [type]: value,
-    };
-
-    // Valeurs par défaut pour les codes
-    switch (type) {
-      case "codeRegion":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            codeAcademie: undefined,
-            codeDepartement: undefined,
-            commune: undefined,
-          };
-        }
-        break;
-      case "codeAcademie":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            codeDepartement: undefined,
-            commune: undefined,
-          };
-        }
-        break;
-      case "codeDepartement":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            commune: undefined,
-          };
-        }
-        break;
-    }
-
-    unstable_batchedUpdates(() => {
-      setSearchParams({
-        page: 0,
-        filters: { ...filters, ...newFilters },
-        withAnneeCommune,
-      });
-    });
-  };
-
-  const handleToggleShowAnneeCommune = (value: string) => {
-    setSearchParams({
-      withAnneeCommune: value,
-    });
-  };
-
-  const filterTracker = (filterName: keyof Filters) => () => {
-    trackEvent("formations:filtre", { props: { filter_name: filterName } });
-  };
-
+  const { onOpen, onClose, isOpen } = useDisclosure();
   const resetFilters = () => {
     setSearchParams({
       filters: {
-        ...filters,
+        ...searchParams.filters,
         codeRegion: [],
         codeAcademie: [],
         codeDepartement: [],
@@ -123,162 +90,191 @@ export const FiltersSection = ({
         cfdFamille: [],
         cfd: [],
         codeNsf: [],
+        positionQuadrant: [],
       },
       search: "",
     });
+    setRequeteEnregistreeActuelle({ nom: "Requêtes favorites" });
   };
 
-  useEffect(() => {
-    if (codeRegionFilter !== "" && !filters.codeRegion?.length) {
-      filters.codeRegion = [codeRegionFilter];
-      setSearchParams({ filters: filters, withAnneeCommune });
-    }
-  }, []);
+  const [deleteButtonToDisplay, setDeleteButtonToDisplay] = useState<string>("");
+
+  const hasRequetesEnregistrees = requetesEnregistrees && requetesEnregistrees.length > 0;
 
   return (
-    <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
-      <Select
-        placeholder="Toutes les régions"
-        width="12rem"
-        variant="input"
-        size="sm"
-        onChange={(e) => {
-          handleFiltersContext("codeRegion", [e.target.value]);
-          setSearchParams({
-            page: 0,
-            filters: {
-              ...filters,
-              codeAcademie: undefined,
-              codeDepartement: undefined,
-              commune: undefined,
-              codeRegion: e.target.value === "" ? undefined : [e.target.value],
-            },
-          });
-        }}
-        value={filters.codeRegion?.[0] ?? ""}
-      >
-        {data?.filters.regions.map((item) => (
-          <option key={item.value} value={item.value}>
-            {item.label}
-          </option>
-        ))}
-      </Select>
-      <Multiselect
-        display={["none", null, "flex"]}
-        disabled={!filters.codeRegion}
-        onClose={filterTracker("codeAcademie")}
-        width="12rem"
-        onChange={(selected) => handleFilters("codeAcademie", selected)}
-        options={data?.filters.academies}
-        value={filters.codeAcademie ?? []}
-        menuZIndex={3}
-      >
-        Académie
-      </Multiselect>
-      <Multiselect
-        display={["none", null, "flex"]}
-        disabled={!filters.codeRegion}
-        onClose={filterTracker("codeDepartement")}
-        width="12rem"
-        onChange={(selected) => handleFilters("codeDepartement", selected)}
-        options={data?.filters.departements}
-        value={filters.codeDepartement ?? []}
-        menuZIndex={3}
-      >
-        Département
-      </Multiselect>
-      <Multiselect
-        display={["none", null, "flex"]}
-        disabled={!filters.codeRegion}
-        onClose={filterTracker("commune")}
-        width="12rem"
-        onChange={(selected) => handleFilters("commune", selected)}
-        options={data?.filters.communes}
-        value={filters.commune ?? []}
-        menuZIndex={3}
-      >
-        Commune
-      </Multiselect>
-      <Multiselect
-        display={["none", null, "flex"]}
-        onClose={filterTracker("codeNiveauDiplome")}
-        width="12rem"
-        onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
-        options={data?.filters.diplomes}
-        value={filters.codeNiveauDiplome ?? []}
-        menuZIndex={3}
-      >
-        Diplôme
-      </Multiselect>
-      <Multiselect
-        display={["none", null, "flex"]}
-        onClose={filterTracker("codeDispositif")}
-        width="12rem"
-        onChange={(selected) => handleFilters("codeDispositif", selected)}
-        options={data?.filters.dispositifs}
-        value={filters.codeDispositif ?? []}
-        menuZIndex={3}
-      >
-        Dispositif
-      </Multiselect>
-      <Multiselect
-        display={["none", null, "flex"]}
-        onClose={filterTracker("cfdFamille")}
-        width="12rem"
-        onChange={(selected) => handleFilters("cfdFamille", selected)}
-        options={data?.filters.familles}
-        value={filters.cfdFamille ?? []}
-        menuZIndex={3}
-      >
-        Famille
-      </Multiselect>
-      <Multiselect
-        onClose={filterTracker("cfd")}
-        width="12rem"
-        onChange={(selected) => handleFilters("cfd", selected)}
-        options={data?.filters.formations}
-        value={filters.cfd ?? []}
-        menuZIndex={3}
-      >
-        Formation
-      </Multiselect>
-      <Multiselect
-        display={["none", null, "flex"]}
-        onClose={filterTracker("codeNsf")}
-        width="12rem"
-        onChange={(selected) => handleFilters("codeNsf", selected)}
-        options={data?.filters.libellesNsf}
-        value={filters.codeNsf ?? []}
-        menuZIndex={3}
-      >
-        Domaine de formation (NSF)
-      </Multiselect>
-      <Flex w="24rem">
-        <Checkbox
-          size="lg"
-          variant="accessible"
-          onChange={(event) => {
-            handleToggleShowAnneeCommune(
-              event.target.checked.toString() ?? "false"
-            );
+    <Flex direction={"column"} gap={4} wrap={"wrap"}>
+      <Wrap spacing={3}>
+        <Menu autoSelect={false} gutter={3}>
+          <MenuButton
+            as={Button}
+            variant={"selectButton"}
+            rightIcon={<ChevronDownIcon />}
+            width={"15rem"}
+            size="md"
+            borderWidth="1px"
+            borderStyle="solid"
+            borderColor="grey.900"
+            bg={"white"}
+            opacity={hasRequetesEnregistrees ? 1 : 0.5}
+            cursor={hasRequetesEnregistrees ? "pointer" : "not-allowed"}
+            onClick={(e) => {
+              if (!hasRequetesEnregistrees) {
+                onOpen();
+                e.preventDefault();
+              }
+            }}
+          >
+            <Flex direction="row" gap={2} overflow={"hidden"} whiteSpace="nowrap">
+              {requeteEnregistreeActuelle.couleur && (
+                <Tag size={"sm"} bgColor={requeteEnregistreeActuelle.couleur} borderRadius={"100%"} />
+              )}
+              <Text my={"auto"}>{requeteEnregistreeActuelle.nom}</Text>
+            </Flex>
+          </MenuButton>
+          <Portal>
+            <MenuList py={0} borderColor="grey.900" borderTopRadius={0} minW={"fit-content"} zIndex={3}>
+              {requetesEnregistrees && requetesEnregistrees.length > 0 && (
+                <>
+                  <Text p={2} color="grey.425">
+                    Vos requêtes favorites
+                  </Text>
+                  {requetesEnregistrees?.map((requete) => (
+                    <MenuItem
+                      p={2}
+                      key={requete.id}
+                      onClick={() => {
+                        setSearchParams({
+                          page: 0,
+                          filters: requete.filtres,
+                        });
+                        setRequeteEnregistreeActuelle(requete);
+                      }}
+                      onMouseEnter={() => setDeleteButtonToDisplay(requete.id)}
+                      onMouseLeave={() => setDeleteButtonToDisplay("")}
+                      gap={2}
+                    >
+                      <Tag size={"sm"} bgColor={requete.couleur} borderRadius={"100%"} />
+                      <Flex direction="row" whiteSpace={"nowrap"}>
+                        {requete.nom}
+                      </Flex>
+                      {deleteButtonToDisplay === requete.id && (
+                        <DeleteRequeteEnregistreeButton requeteEnregistree={requete} />
+                      )}
+                    </MenuItem>
+                  ))}
+                  <Divider />
+                </>
+              )}
+              {feature.requetesSuggerees && (
+                <>
+                  <Text p={2} color="grey.425">
+                    Requêtes suggérées
+                  </Text>
+                  {REQUETES_ENREGISTREES.map((requeteEnregistree) => (
+                    <MenuItem
+                      p={2}
+                      key={requeteEnregistree.nom}
+                      onClick={() => {
+                        setSearchParams({
+                          page: 0,
+                          filters: requeteEnregistree.filtres,
+                        });
+                        setRequeteEnregistreeActuelle(requeteEnregistree);
+                      }}
+                      gap={2}
+                    >
+                      <Tag size={"sm"} bgColor={requeteEnregistree.couleur} borderRadius={"100%"} />
+                      <Flex direction="row">{requeteEnregistree.nom}</Flex>
+                    </MenuItem>
+                  ))}
+                </>
+              )}
+            </MenuList>
+          </Portal>
+        </Menu>
+        <Select
+          placeholder="Toutes les régions"
+          size="md"
+          variant="newInput"
+          width="14rem"
+          onChange={(e) => {
+            handleFilters("codeRegion", [e.target.value]);
           }}
-          isChecked={searchParams.withAnneeCommune !== "false"}
-          whiteSpace={"nowrap"}
+          value={searchParams.filters?.codeRegion?.[0] ?? ""}
         >
-          <Text fontSize={"14px"}>
-            Afficher les secondes et premières communes
-          </Text>
-        </Checkbox>
-      </Flex>
-      <Button
-        variant="externalLink"
-        border={"none"}
-        leftIcon={<Icon icon={"ri:refresh-line"} />}
-        mt={"auto"}
-        onClick={() => resetFilters()}
-      >
-        Réinitialiser les filtres
-      </Button>
+          {filtersList?.regions.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </Select>
+        <Multiselect
+          display={["none", null, "flex"]}
+          disabled={!searchParams.filters?.codeRegion}
+          size="md"
+          variant="newInput"
+          width="14rem"
+          onChange={(selected) => handleFilters("codeAcademie", selected)}
+          options={filtersList?.academies}
+          value={searchParams.filters?.codeAcademie ?? []}
+        >
+          Académie
+        </Multiselect>
+        <Multiselect
+          disabled={!searchParams.filters?.codeRegion}
+          size="md"
+          variant="newInput"
+          width="14rem"
+          onChange={(selected) => handleFilters("codeDepartement", selected)}
+          options={filtersList?.departements}
+          value={searchParams.filters?.codeDepartement ?? []}
+        >
+          Département
+        </Multiselect>
+        <Multiselect
+          disabled={!searchParams.filters?.codeRegion}
+          size="md"
+          variant="newInput"
+          width="14rem"
+          onChange={(selected) => handleFilters("commune", selected)}
+          options={filtersList?.communes}
+          value={searchParams.filters?.commune ?? []}
+        >
+          Commune
+        </Multiselect>
+        <Button
+          variant="externalLink"
+          border={"none"}
+          leftIcon={<Icon icon={"ri:refresh-line"} />}
+          mt={"auto"}
+          onClick={() => resetFilters()}
+        >
+          Réinitialiser les filtres
+        </Button>
+      </Wrap>
+      <FilterTags
+        handleFilters={handleFilters}
+        filters={searchParams?.filters}
+        filtersList={filtersList}
+        isEditable={true}
+      />
+      {isOpen && (
+        <CreateRequeteEnregistreeModal
+          page={"formation"}
+          isOpen={isOpen}
+          onClose={onClose}
+          searchParams={searchParams}
+          filtersList={filtersList}
+          altText={
+            <>
+              <Text>Vous n'avez pas encore de requête favorite enregistrée.</Text>
+              <Text fontWeight={400} color="grey.450" fontSize={15}>
+                En enregistrer une vous permettra de retrouver rapidement vos recherches.
+              </Text>
+            </>
+          }
+        />
+      )}
     </Flex>
   );
 };

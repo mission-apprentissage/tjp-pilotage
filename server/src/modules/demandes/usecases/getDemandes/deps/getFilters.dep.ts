@@ -1,30 +1,27 @@
-import { ExpressionBuilder, sql } from "kysely";
-import { z } from "zod";
+import type { ExpressionBuilder } from "kysely";
+import { sql } from "kysely";
+import type { getDemandesSchema } from "shared/routes/schemas/get.demandes.schema";
+import type { z } from "zod";
 
-import { kdb } from "../../../../../db/db";
-import { DB } from "../../../../../db/schema";
-import { cleanNull } from "../../../../../utils/noNull";
-import { RequestUser } from "../../../../core/model/User";
-import { isInPerimetreIJAcademie } from "../../../../data/utils/isInPerimetreIJ";
-import { isDemandeNotDeleted } from "../../../../utils/isDemandeSelectable";
-import { isRestitutionIntentionVisible } from "../../../../utils/isRestitutionIntentionVisible";
-import { getDemandesSchema } from "../getDemandes.schema";
+import { getKbdClient } from "@/db/db";
+import type { DB } from "@/db/schema";
+import type { RequestUser } from "@/modules/core/model/User";
+import { isInPerimetreIJAcademie } from "@/modules/data/utils/isInPerimetreIJ";
+import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
+import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
+import { cleanNull } from "@/utils/noNull";
 
 export interface Filters extends z.infer<typeof getDemandesSchema.querystring> {
   user: RequestUser;
 }
 
-export const getFilters = async ({
-  user,
-  codeAcademie,
-  codeNiveauDiplome,
-}: Filters) => {
+export const getFilters = async ({ user, codeAcademie, codeNiveauDiplome }: Filters) => {
   const inCodeAcademie = (eb: ExpressionBuilder<DB, "academie">) => {
     if (!codeAcademie) return sql<true>`true`;
     return eb("academie.codeAcademie", "in", codeAcademie);
   };
 
-  const geoFiltersBase = kdb
+  const geoFiltersBase = getKbdClient()
     .selectFrom("region")
     .leftJoin("departement", "departement.codeRegion", "region.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "region.codeRegion")
@@ -33,36 +30,21 @@ export const getFilters = async ({
     .orderBy("label", "asc");
 
   const academiesFilters = await geoFiltersBase
-    .select([
-      "academie.libelleAcademie as label",
-      "academie.codeAcademie as value",
-    ])
+    .select(["academie.libelleAcademie as label", "academie.codeAcademie as value"])
     .where("academie.codeAcademie", "is not", null)
     .where(isInPerimetreIJAcademie)
     .where((eb) => {
-      return eb.or([
-        user.codeRegion
-          ? eb("academie.codeRegion", "in", [user.codeRegion])
-          : sql<boolean>`true`,
-      ]);
+      return eb.or([user.codeRegion ? eb("academie.codeRegion", "in", [user.codeRegion]) : sql<boolean>`true`]);
     })
     .execute();
 
-  const filtersBase = kdb
+  const filtersBase = getKbdClient()
     .selectFrom("latestDemandeIntentionView as demande")
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "demande.codeDispositif"
-    )
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "dataFormation.codeNiveauDiplome"
-    )
+    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
     .leftJoin("departement", "departement.codeRegion", "demande.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
@@ -74,17 +56,12 @@ export const getFilters = async ({
     .orderBy("label", "asc");
 
   const diplomesFilters = await filtersBase
-    .select([
-      "niveauDiplome.libelleNiveauDiplome as label",
-      "niveauDiplome.codeNiveauDiplome as value",
-    ])
+    .select(["niveauDiplome.libelleNiveauDiplome as label", "niveauDiplome.codeNiveauDiplome as value"])
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
     .where((eb) => {
       return eb.or([
         inCodeAcademie(eb),
-        codeNiveauDiplome
-          ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome)
-          : sql<boolean>`false`,
+        codeNiveauDiplome ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome) : sql<boolean>`false`,
       ]);
     })
     .execute();

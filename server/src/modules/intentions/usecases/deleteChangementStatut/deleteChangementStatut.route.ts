@@ -1,15 +1,18 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
-import { RequestUser } from "../../../core/model/User";
-import { deleteChangementStatutSchema } from "./deleteChangementStatut.schema";
+import type { RequestUser } from "@/modules/core/model/User";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { deleteIntentionUsecase } from "./deleteChangementStatut.usecase";
 
+const ROUTE = ROUTES["[DELETE]/intention/statut/:id"];
+
 export const deleteChangementStatutRoute = (server: Server) => {
-  return createRoute("/intention/statut/:id", {
-    method: "DELETE",
-    schema: deleteChangementStatutSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

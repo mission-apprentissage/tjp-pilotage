@@ -1,17 +1,15 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
-import { kdb } from "../db/db";
+import { getKbdClient } from "@/db/db";
 
 export const up = async (db: Kysely<unknown>) => {
-  await db.schema
-    .dropView("demandeIntentionNonMaterializedView")
-    .ifExists()
-    .execute();
+  await db.schema.dropView("demandeIntentionNonMaterializedView").ifExists().execute();
 
   await db.schema
     .createView("demandeIntentionNonMaterializedView")
     .as(
-      kdb
+      getKbdClient()
         .selectFrom("intention")
         // @ts-ignore
         .select([
@@ -88,7 +86,7 @@ export const up = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
         .union(
-          kdb
+          getKbdClient()
             .selectFrom("demande")
             .select([
               "numero",
@@ -157,19 +155,11 @@ export const up = async (db: Kysely<unknown>) => {
               sql<string>`null`.as("achatEquipementDescription"),
               sql<number>`null`.as("achatEquipementCout"),
               sql<boolean>`null`.as("augmentationCapaciteAccueilHebergement"),
-              sql<number>`null`.as(
-                "augmentationCapaciteAccueilHebergementPlaces"
-              ),
-              sql<string>`null`.as(
-                "augmentationCapaciteAccueilHebergementPrecisions"
-              ),
+              sql<number>`null`.as("augmentationCapaciteAccueilHebergementPlaces"),
+              sql<string>`null`.as("augmentationCapaciteAccueilHebergementPrecisions"),
               sql<boolean>`null`.as("augmentationCapaciteAccueilRestauration"),
-              sql<number>`null`.as(
-                "augmentationCapaciteAccueilRestaurationPlaces"
-              ),
-              sql<string>`null`.as(
-                "augmentationCapaciteAccueilRestaurationPrecisions"
-              ),
+              sql<number>`null`.as("augmentationCapaciteAccueilRestaurationPlaces"),
+              sql<string>`null`.as("augmentationCapaciteAccueilRestaurationPrecisions"),
             ])
         )
     )
@@ -177,8 +167,5 @@ export const up = async (db: Kysely<unknown>) => {
 };
 
 export const down = async (db: Kysely<unknown>) => {
-  await db.schema
-    .dropView("demandeIntentionNonMaterializedView")
-    .ifExists()
-    .execute();
+  await db.schema.dropView("demandeIntentionNonMaterializedView").ifExists().execute();
 };

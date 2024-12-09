@@ -1,12 +1,14 @@
 import { pipeline, Writable } from "node:stream";
 
 import fs from "fs";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { ZodError, ZodIssueCode } from "zod";
 
-import batchCreate from "../../utils/batchCreate";
-import { getStreamParser } from "../../utils/parse";
-import { verifyFileEncoding } from "../../utils/verifyFileEncoding";
+import batchCreate from "@/modules/import/utils/batchCreate";
+import { getStreamParser } from "@/modules/import/utils/parse";
+import { verifyFileEncoding } from "@/modules/import/utils/verifyFileEncoding";
+
 import { createRawDatas } from "./createRawDatas.dep";
 import { deleteRawData } from "./deleteRawData.dep";
 
@@ -34,15 +36,7 @@ export const [importRawFile, importRawFileFactory] = inject(
     deleteRawData,
   },
   (deps) =>
-    async ({
-      type,
-      path,
-      schema,
-    }: {
-      type: string;
-      path: string;
-      schema: Zod.Schema<unknown>;
-    }) => {
+    async ({ type, path, schema }: { type: string; path: string; schema: Zod.Schema<unknown> }) => {
       const errors: Array<ImportFileError> = [];
 
       try {
@@ -51,9 +45,7 @@ export const [importRawFile, importRawFileFactory] = inject(
         errors.push({
           type: ImportFileErrorType.FILE,
           path,
-          error: new ZodError([
-            { code: ZodIssueCode.custom, message: err as string, path: [path] },
-          ]),
+          error: new ZodError([{ code: ZodIssueCode.custom, message: err as string, path: [path] }]),
         });
         return errors;
       }
@@ -69,9 +61,7 @@ export const [importRawFile, importRawFileFactory] = inject(
         new Writable({
           final: async (callback) => {
             await deps.batch.flush();
-            console.log(
-              `Import du fichier ${type} réussi (${count} lignes ajoutées)\n`
-            );
+            console.log(`Import du fichier ${type} réussi (${count} lignes ajoutées)\n`);
             callback();
           },
           objectMode: true,

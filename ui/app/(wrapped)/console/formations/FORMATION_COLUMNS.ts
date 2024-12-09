@@ -1,5 +1,5 @@
-import { client } from "@/api.client";
-import { ExportColumns } from "@/utils/downloadExport";
+import type { client } from "@/api.client";
+import type { ExportColumns } from "@/utils/downloadExport";
 
 export const FORMATION_COLUMNS = {
   // Rentrée scolaire
@@ -29,9 +29,7 @@ export const FORMATION_COLUMNS = {
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/formations"]["formations"][number]
->;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]>;
 
 export const FORMATION_COLUMNS_OPTIONAL = {
   // Rentrée scolaire
@@ -58,9 +56,7 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/formations"]["formations"][number]
->;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]>;
 
 export const FORMATION_COLUMNS_DEFAULT = {
   // Rentrée scolaire
@@ -80,6 +76,4 @@ export const FORMATION_COLUMNS_DEFAULT = {
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/formations"]["formations"][number]
->;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]>;

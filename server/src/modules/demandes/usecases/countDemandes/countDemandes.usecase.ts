@@ -1,5 +1,7 @@
-import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import { countDemandesQuery, Filters } from "./countDemandes.query";
+import { getCurrentCampagneQuery } from "@/modules/demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
+
+import type { Filters } from "./countDemandes.query";
+import { countDemandesQuery } from "./countDemandes.query";
 const countDemandesFactory =
   (
     deps = {

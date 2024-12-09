@@ -1,5 +1,7 @@
-import { FilePathManager } from "../filePathManager";
-import { ovhFilePathManagerFactory } from "../ovhFilePathManager";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import type { FilePathManager } from "@/modules/core/services/filePathManager/filePathManager";
+import { ovhFilePathManagerFactory } from "@/modules/core/services/filePathManager/ovhFilePathManager";
 
 describe("Core Service: Ovh file path manager", () => {
   let filePathManager: FilePathManager;
@@ -9,7 +11,7 @@ describe("Core Service: Ovh file path manager", () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it("should generate a path for a given intention id", () => {

@@ -14,10 +14,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 
+import type { Corrections, FiltersCorrections } from "@/app/(wrapped)/intentions/corrections/types";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { Multiselect } from "@/components/Multiselect";
-
-import { Corrections, FiltersCorrections } from "../types";
 
 export const PrimaryFiltersSection = ({
   activeFilters,
@@ -27,10 +26,7 @@ export const PrimaryFiltersSection = ({
   data,
 }: {
   activeFilters: FiltersCorrections;
-  handleFilters: (
-    type: keyof FiltersCorrections,
-    value: FiltersCorrections[keyof FiltersCorrections]
-  ) => void;
+  handleFilters: (type: keyof FiltersCorrections, value: FiltersCorrections[keyof FiltersCorrections]) => void;
   filterTracker: (filterName: keyof FiltersCorrections) => () => void;
   isLoading: boolean;
   data?: Corrections;
@@ -39,31 +35,12 @@ export const PrimaryFiltersSection = ({
     <>
       {isLoading ? (
         <Box height={24}>
-          <Skeleton
-            opacity="0.3"
-            width="100%"
-            height={"100%"}
-            py={4}
-            px={8}
-          ></Skeleton>
+          <Skeleton opacity="0.3" width="100%" height={"100%"} py={4} px={8}></Skeleton>
         </Box>
       ) : (
-        <Flex
-          borderRadius={5}
-          px={4}
-          py={2}
-          mb={2}
-          bg="blueecume.400_hover"
-          h="100%"
-        >
+        <Flex borderRadius={5} px={4} py={2} mb={2} bg="blueecume.400_hover" h="100%">
           <LightMode>
-            <Flex
-              justifyContent={"start"}
-              gap={4}
-              flexDirection={"column"}
-              py={3}
-              w="100%"
-            >
+            <Flex justifyContent={"start"} gap={4} flexDirection={"column"} py={3} w="100%">
               <Flex gap={4}>
                 <Box justifyContent={"start"}>
                   <FormLabel color="white">CAMPAGNE</FormLabel>
@@ -82,42 +59,27 @@ export const PrimaryFiltersSection = ({
                       >
                         <Flex direction="row">
                           <Text my={"auto"}>
-                            {data?.filters.campagnes?.find(
-                              (c) => c.value === activeFilters.campagne
-                            )?.value ??
-                              `TOUTES (${
-                                data?.filters.campagnes?.length ?? 0
-                              })`}
+                            {data?.filters.campagnes?.find((c) => c.value === activeFilters.campagne)?.value ??
+                              `TOUTES (${data?.filters.campagnes?.length ?? 0})`}
                           </Text>
                           {activeFilters.campagne && (
                             <CampagneStatutTag
-                              statut={
-                                data?.filters.campagnes?.find(
-                                  (c) => c.value === activeFilters.campagne
-                                )?.statut
-                              }
+                              statut={data?.filters.campagnes?.find((c) => c.value === activeFilters.campagne)?.statut}
                             />
                           )}
                         </Flex>
                       </MenuButton>
                       <MenuList py={0} borderTopRadius={0}>
-                        <MenuItem
-                          p={2}
-                          onClick={() => handleFilters("campagne", undefined)}
-                        >
+                        <MenuItem p={2} onClick={() => handleFilters("campagne", undefined)}>
                           <Flex direction="row">
-                            <Text my={"auto"}>{`TOUTES (${
-                              data?.filters.campagnes?.length ?? 0
-                            })`}</Text>
+                            <Text my={"auto"}>{`TOUTES (${data?.filters.campagnes?.length ?? 0})`}</Text>
                           </Flex>
                         </MenuItem>
                         {data?.filters.campagnes?.map((campagne) => (
                           <MenuItem
                             p={2}
                             key={campagne.value}
-                            onClick={() =>
-                              handleFilters("campagne", campagne.value)
-                            }
+                            onClick={() => handleFilters("campagne", campagne.value)}
                           >
                             <Flex direction="row">
                               <Text my={"auto"}>Campagne {campagne.value}</Text>
@@ -146,55 +108,34 @@ export const PrimaryFiltersSection = ({
                       >
                         <Flex direction="row">
                           <Text my={"auto"}>
-                            {data?.filters.rentreesScolaires?.find(
-                              (c) => c.value === activeFilters.rentreeScolaire
-                            )?.value ??
-                              `TOUTES (${
-                                data?.filters.rentreesScolaires?.length ?? 0
-                              })`}
+                            {data?.filters.rentreesScolaires?.find((c) => c.value === activeFilters.rentreeScolaire)
+                              ?.value ?? `TOUTES (${data?.filters.rentreesScolaires?.length ?? 0})`}
                           </Text>
                         </Flex>
                       </MenuButton>
                       <MenuList py={0} borderTopRadius={0}>
-                        <MenuItem
-                          p={2}
-                          onClick={() =>
-                            handleFilters("rentreeScolaire", undefined)
-                          }
-                        >
+                        <MenuItem p={2} onClick={() => handleFilters("rentreeScolaire", undefined)}>
                           <Flex direction="row">
-                            <Text my={"auto"}>{`TOUTES (${
-                              data?.filters.rentreesScolaires?.length ?? 0
-                            })`}</Text>
+                            <Text my={"auto"}>{`TOUTES (${data?.filters.rentreesScolaires?.length ?? 0})`}</Text>
                           </Flex>
                         </MenuItem>
-                        {data?.filters.rentreesScolaires?.map(
-                          (rentreeScolaire) => (
-                            <MenuItem
-                              p={2}
-                              key={rentreeScolaire.value}
-                              onClick={() =>
-                                handleFilters(
-                                  "rentreeScolaire",
-                                  rentreeScolaire.value
-                                )
-                              }
-                            >
-                              <Flex direction="row">
-                                <Text my={"auto"}>{rentreeScolaire.label}</Text>
-                                {(rentreeScolaire.value ===
-                                  data?.filters.campagnes?.find(
-                                    (c) => c.value === activeFilters.campagne
-                                  )?.value ??
-                                  "") && (
-                                  <Tag mx={3} colorScheme="red">
-                                    Ajustement RS {rentreeScolaire.value}
-                                  </Tag>
-                                )}
-                              </Flex>
-                            </MenuItem>
-                          )
-                        )}
+                        {data?.filters.rentreesScolaires?.map((rentreeScolaire) => (
+                          <MenuItem
+                            p={2}
+                            key={rentreeScolaire.value}
+                            onClick={() => handleFilters("rentreeScolaire", rentreeScolaire.value)}
+                          >
+                            <Flex direction="row">
+                              <Text my={"auto"}>{rentreeScolaire.label}</Text>
+                              {rentreeScolaire.value ===
+                                data?.filters.campagnes?.find((c) => c.value === activeFilters.campagne)?.value && (
+                                <Tag mx={3} colorScheme="red">
+                                  Ajustement RS {rentreeScolaire.value}
+                                </Tag>
+                              )}
+                            </Flex>
+                          </MenuItem>
+                        ))}
                       </MenuList>
                     </Menu>
                   </Flex>
@@ -208,9 +149,7 @@ export const PrimaryFiltersSection = ({
                     width={["100%", null, "64"]}
                     size="md"
                     variant={"newInput"}
-                    onChange={(selected) =>
-                      handleFilters("codeRegion", selected)
-                    }
+                    onChange={(selected) => handleFilters("codeRegion", selected)}
                     options={data?.filters.regions}
                     value={activeFilters.codeRegion ?? []}
                   >
@@ -224,9 +163,7 @@ export const PrimaryFiltersSection = ({
                     width={"64"}
                     size="md"
                     variant={"newInput"}
-                    onChange={(selected) =>
-                      handleFilters("codeAcademie", selected)
-                    }
+                    onChange={(selected) => handleFilters("codeAcademie", selected)}
                     options={data?.filters.academies}
                     value={activeFilters.codeAcademie ?? []}
                     disabled={data?.filters.academies.length === 0}

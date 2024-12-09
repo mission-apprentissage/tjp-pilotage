@@ -1,5 +1,5 @@
-import { kdb } from "../../../../../../db/db";
-import { cleanNull } from "../../../../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
 export const findIndicateurSortie = ({
   cfd,
@@ -12,13 +12,9 @@ export const findIndicateurSortie = ({
   uai: string;
   millesimeSortie: string;
 }) =>
-  kdb
+  getKbdClient()
     .selectFrom("indicateurSortie")
-    .innerJoin(
-      "formationEtablissement",
-      "formationEtablissement.id",
-      "indicateurSortie.formationEtablissementId"
-    )
+    .innerJoin("formationEtablissement", "formationEtablissement.id", "indicateurSortie.formationEtablissementId")
     .selectAll("indicateurSortie")
     .select("formationEtablissement.cfd")
     .where("cfd", "=", cfd)

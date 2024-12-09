@@ -1,6 +1,8 @@
 import { number as numberFormatter } from "@json2csv/formatters";
 import { Parser } from "@json2csv/plainjs";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Excel from "exceljs";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { saveAs } from "file-saver";
 import _ from "lodash";
 
@@ -8,12 +10,12 @@ export type ExportColumns<T extends object> = {
   [K in keyof T as T[K] extends string | string[] | number | boolean | undefined
     ? K
     : T[K] extends
-        | {
-            [Te in infer K2]?: string | string[] | number | boolean | undefined;
-          }
-        | undefined
-    ? `${Exclude<K, symbol>}.${Exclude<K2, symbol>}`
-    : never]?: string;
+          | {
+              [Te in infer K2]?: string | string[] | number | boolean | undefined;
+            }
+          | undefined
+      ? `${Exclude<K, symbol>}.${Exclude<K2, symbol>}`
+      : never]?: string;
 };
 
 export type MultipleData = Record<string, Array<object>>;
@@ -25,13 +27,8 @@ export type MultipleColumns = Record<string, ExportColumns<object>>;
  * @param data rows of the csv
  * @param columns headers of the csv
  */
-export function downloadCsv<D extends object>(
-  filename: string,
-  data: Array<D>,
-  columns: ExportColumns<D>
-) {
-  const filenameWithExtension =
-    filename.indexOf(".csv") !== -1 ? filename : `${filename}.csv`;
+export function downloadCsv<D extends object>(filename: string, data: Array<D>, columns: ExportColumns<D>) {
+  const filenameWithExtension = filename.indexOf(".csv") !== -1 ? filename : `${filename}.csv`;
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const objectFormatter = (value: any) => {
@@ -48,8 +45,7 @@ export function downloadCsv<D extends object>(
       value: value,
     })),
     formatters: {
-      string: (str: string) =>
-        `"${str.replace(/"/g, '\\"').replace(/(\r\n|\r|\n)/g, " ")}"`,
+      string: (str: string) => `"${str.replace(/"/g, '\\"').replace(/(\r\n|\r|\n)/g, " ")}"`,
       number: numberFormatter({
         separator: ",",
         decimals: 2,
@@ -66,10 +62,7 @@ export function downloadCsv<D extends object>(
 function downloadCsvFromString(filename: string, text: string) {
   const element = document.createElement("a");
   const universalBOM = "\uFEFF";
-  element.setAttribute(
-    "href",
-    "data:text/plain;charset=utf-8," + encodeURIComponent(universalBOM + text)
-  );
+  element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(universalBOM + text));
   element.setAttribute("download", filename);
   element.style.display = "none";
   document.body.appendChild(element);
@@ -82,9 +75,7 @@ export async function downloadExcel<D extends object>(
   data: Array<D> | MultipleData,
   columns: ExportColumns<D> | MultipleColumns
 ) {
-  const hasMultipleSheets = Object.values(data).every((value) =>
-    Array.isArray(value)
-  );
+  const hasMultipleSheets = Object.values(data).every((value) => Array.isArray(value));
   if (hasMultipleSheets) {
     downloadExcelMultipleSheets(
       filename,
@@ -93,8 +84,7 @@ export async function downloadExcel<D extends object>(
     );
     return;
   } else if (Array.isArray(data)) {
-    const filenameWithExtension =
-      filename.indexOf(".xlsx") !== -1 ? filename : `${filename}.xlsx`;
+    const filenameWithExtension = filename.indexOf(".xlsx") !== -1 ? filename : `${filename}.xlsx`;
 
     const workbook = new Excel.Workbook();
 
@@ -106,11 +96,9 @@ export async function downloadExcel<D extends object>(
     }));
 
     const setColumnWrapText = (columnName: string) => {
-      worksheet
-        .getColumn(columnName)
-        .eachCell({ includeEmpty: true }, (cell) => {
-          cell.alignment = { wrapText: true };
-        });
+      worksheet.getColumn(columnName).eachCell({ includeEmpty: true }, (cell) => {
+        cell.alignment = { wrapText: true };
+      });
     };
 
     const setColumnWrapNumber = (columnName: string) => {
@@ -125,6 +113,12 @@ export async function downloadExcel<D extends object>(
         case "number":
           setColumnWrapNumber(key);
           break;
+        case "bigint":
+        case "boolean":
+        case "symbol":
+        case "undefined":
+        case "object":
+        case "function":
         default:
           setColumnWrapText(key);
           break;
@@ -158,8 +152,7 @@ function downloadExcelMultipleSheets<D extends object>(
   data: Record<string, Array<D>>,
   columns: Record<string, ExportColumns<D>>
 ) {
-  const filenameWithExtension =
-    filename.indexOf(".xlsx") !== -1 ? filename : `${filename}.xlsx`;
+  const filenameWithExtension = filename.indexOf(".xlsx") !== -1 ? filename : `${filename}.xlsx`;
 
   const workbook = new Excel.Workbook();
 
@@ -172,11 +165,9 @@ function downloadExcelMultipleSheets<D extends object>(
     }));
 
     const setColumnWrapText = (columnName: string) => {
-      worksheet
-        .getColumn(columnName)
-        .eachCell({ includeEmpty: true }, (cell) => {
-          cell.alignment = { wrapText: true };
-        });
+      worksheet.getColumn(columnName).eachCell({ includeEmpty: true }, (cell) => {
+        cell.alignment = { wrapText: true };
+      });
     };
 
     const setColumnWrapNumber = (columnName: string) => {
@@ -191,6 +182,12 @@ function downloadExcelMultipleSheets<D extends object>(
         case "number":
           setColumnWrapNumber(key);
           break;
+        case "bigint":
+        case "boolean":
+        case "symbol":
+        case "undefined":
+        case "object":
+        case "function":
         default:
           setColumnWrapText(key);
           break;

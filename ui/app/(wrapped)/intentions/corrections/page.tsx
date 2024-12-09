@@ -8,25 +8,22 @@ import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 
 import { client } from "@/api.client";
+import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
+import { GroupedMultiselect } from "@/components/GroupedMultiselect";
+import { Loading } from "@/components/Loading";
+import { SearchInput } from "@/components/SearchInput";
+import { TableHeader } from "@/components/TableHeader";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { feature } from "@/utils/feature";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { GroupedMultiselect } from "../../../../components/GroupedMultiselect";
-import { Loading } from "../../../../components/Loading";
-import { SearchInput } from "../../../../components/SearchInput";
-import { TableHeader } from "../../../../components/TableHeader";
-import { feature } from "../../../../utils/feature";
-import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
-import {
-  CORRECTIONS_COLUMNS,
-  CORRECTIONS_COLUMNS_DEFAULT,
-  CORRECTIONS_COLUMNS_OPTIONAL,
-} from "./CORRECTIONS_COLUMN";
+import type { CORRECTIONS_COLUMNS_OPTIONAL } from "./CORRECTIONS_COLUMN";
+import { CORRECTIONS_COLUMNS, CORRECTIONS_COLUMNS_DEFAULT } from "./CORRECTIONS_COLUMN";
 import { GROUPED_CORRECTIONS_COLUMNS } from "./GROUPED_CORRECTIONS_COLUMN";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
-import { FiltersCorrections, OrderCorrections } from "./types";
+import type { FiltersCorrections, OrderCorrections } from "./types";
 
 const ColonneFiltersSection = chakra(
   ({
@@ -34,9 +31,7 @@ const ColonneFiltersSection = chakra(
     handleColonneFilters,
   }: {
     colonneFilters: (keyof typeof CORRECTIONS_COLUMNS_OPTIONAL)[];
-    handleColonneFilters: (
-      value: (keyof typeof CORRECTIONS_COLUMNS_OPTIONAL)[]
-    ) => void;
+    handleColonneFilters: (value: (keyof typeof CORRECTIONS_COLUMNS_OPTIONAL)[]) => void;
   }) => {
     return (
       <Flex justifyContent={"start"} direction="row">
@@ -44,11 +39,7 @@ const ColonneFiltersSection = chakra(
           width={"48"}
           size="md"
           variant={"newInput"}
-          onChange={(selected) =>
-            handleColonneFilters(
-              selected as (keyof typeof CORRECTIONS_COLUMNS_OPTIONAL)[]
-            )
-          }
+          onChange={(selected) => handleColonneFilters(selected as (keyof typeof CORRECTIONS_COLUMNS_OPTIONAL)[])}
           groupedOptions={Object.entries(GROUPED_CORRECTIONS_COLUMNS).reduce(
             (acc, [group, { color, options }]) => {
               acc[group] = {
@@ -60,26 +51,17 @@ const ColonneFiltersSection = chakra(
               };
               return acc;
             },
-            {} as Record<
-              string,
-              { color: string; options: { label: string; value: string }[] }
-            >
+            {} as Record<string, { color: string; options: { label: string; value: string }[] }>
           )}
-          defaultOptions={Object.entries(CORRECTIONS_COLUMNS_DEFAULT)?.map(
-            ([value, label]) => {
-              return {
-                label,
-                value,
-              };
-            }
-          )}
+          defaultOptions={Object.entries(CORRECTIONS_COLUMNS_DEFAULT)?.map(([value, label]) => {
+            return {
+              label,
+              value,
+            };
+          })}
           value={colonneFilters ?? []}
           customButton={
-            <Button
-              variant={"externalLink"}
-              leftIcon={<Icon icon={"ri:table-line"} />}
-              color="bluefrance.113"
-            >
+            <Button variant={"externalLink"} leftIcon={<Icon icon={"ri:table-line"} />} color="bluefrance.113">
               Modifier l'affichage des colonnes
             </Button>
           }
@@ -92,6 +74,7 @@ const ColonneFiltersSection = chakra(
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
 
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
   const router = useRouter();
   const queryParams = useSearchParams();
@@ -116,10 +99,12 @@ export default () => {
     page?: typeof page;
     search?: typeof search;
   }) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
   };
+
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
+
+  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
 
   const trackEvent = usePlausible();
   const filterTracker = (filterName: keyof FiltersCorrections) => () => {
@@ -151,22 +136,20 @@ export default () => {
         case "codeRegion":
           setCodeRegionFilter((value as string[])[0] ?? "");
           break;
+        case "codeDepartement":
+          setCodeDepartementFilter((value as string[])[0] ?? "");
+          break;
       }
   };
 
-  const handleFilters = (
-    type: keyof FiltersCorrections,
-    value: FiltersCorrections[keyof FiltersCorrections]
-  ) => {
+  const handleFilters = (type: keyof FiltersCorrections, value: FiltersCorrections[keyof FiltersCorrections]) => {
     handleDefaultFilters(type, value);
     setSearchParams({
       filters: { ...filters, [type]: value },
     });
   };
 
-  const handleColonneFilters = (
-    value: (keyof typeof CORRECTIONS_COLUMNS_OPTIONAL)[]
-  ) => {
+  const handleColonneFilters = (value: (keyof typeof CORRECTIONS_COLUMNS_OPTIONAL)[]) => {
     setSearchParams({ columns: value });
     setColonneFilters(value);
   };
@@ -209,18 +192,10 @@ export default () => {
     }
   );
 
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(
-    CodeRegionFilterContext
-  );
-
-  const [colonneFilters, setColonneFilters] = useState<
-    (keyof typeof CORRECTIONS_COLUMNS_OPTIONAL)[]
-  >(
+  const [colonneFilters, setColonneFilters] = useState<(keyof typeof CORRECTIONS_COLUMNS_OPTIONAL)[]>(
     (columns.length
       ? columns
-      : Object.keys(
-          CORRECTIONS_COLUMNS_DEFAULT
-        )) as (keyof typeof CORRECTIONS_COLUMNS_DEFAULT)[]
+      : Object.keys(CORRECTIONS_COLUMNS_DEFAULT)) as (keyof typeof CORRECTIONS_COLUMNS_DEFAULT)[]
   );
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
@@ -230,9 +205,17 @@ export default () => {
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeRegionFilter !== ""
+      codeRegionFilter
     ) {
       filters.codeRegion = [codeRegionFilter];
+    }
+    if (
+      filters?.codeRegion === undefined &&
+      filters?.codeAcademie === undefined &&
+      filters?.codeDepartement === undefined &&
+      codeDepartementFilter
+    ) {
+      filters.codeDepartement = [codeDepartementFilter];
     }
     setSearchParams({ filters: filters });
   };
@@ -259,6 +242,52 @@ export default () => {
     return <Loading />;
   }
 
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("restitution-correction:export");
+    const data = await client.ref("[GET]/corrections").query({
+      query: isFiltered ? getCorrectionsQueryParameters(EXPORT_LIMIT) : { limit: EXPORT_LIMIT },
+    });
+    downloadCsv(
+      "corrections_export",
+      data.corrections.map((correction) => ({
+        ...correction,
+        createdAt: new Date(correction.createdAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        updatedAt: new Date(correction.updatedAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        secteur: correction.secteur === "PU" ? "Public" : "Privé",
+      })),
+      CORRECTIONS_COLUMNS
+    );
+  };
+
+  const onExportExcel = async (isFiltered?: boolean) => {
+    trackEvent("restitution-correction:export-excel");
+    const data = await client.ref("[GET]/corrections").query({
+      query: isFiltered ? getCorrectionsQueryParameters(EXPORT_LIMIT) : { limit: EXPORT_LIMIT },
+    });
+    downloadExcel(
+      "corrections_export",
+      data.corrections.map((correction) => ({
+        ...correction,
+        createdAt: new Date(correction.createdAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        updatedAt: new Date(correction.updatedAt).toLocaleDateString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        secteur: correction.secteur === "PU" ? "Public" : "Privé",
+      })),
+      CORRECTIONS_COLUMNS
+    );
+  };
+
   return (
     <GuardPermission permission="restitution-intentions/lecture">
       <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20} flex={1}>
@@ -281,67 +310,10 @@ export default () => {
             />
           }
           ColonneFilter={
-            <ColonneFiltersSection
-              colonneFilters={colonneFilters}
-              handleColonneFilters={handleColonneFilters}
-            />
+            <ColonneFiltersSection colonneFilters={colonneFilters} handleColonneFilters={handleColonneFilters} />
           }
-          onExportCsv={async () => {
-            trackEvent("restitution-correction:export");
-            const data = await client.ref("[GET]/corrections").query({
-              query: getCorrectionsQueryParameters(EXPORT_LIMIT),
-            });
-            downloadCsv(
-              "corrections_export",
-              data.corrections.map((correction) => ({
-                ...correction,
-                createdAt: new Date(correction.createdAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                updatedAt: new Date(correction.updatedAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                secteur: correction.secteur === "PU" ? "Public" : "Privé",
-              })),
-              CORRECTIONS_COLUMNS
-            );
-          }}
-          onExportExcel={async () => {
-            trackEvent("restitution-correction:export-excel");
-            const data = await client.ref("[GET]/corrections").query({
-              query: getCorrectionsQueryParameters(EXPORT_LIMIT),
-            });
-            downloadExcel(
-              "corrections_export",
-              data.corrections.map((correction) => ({
-                ...correction,
-                createdAt: new Date(correction.createdAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                updatedAt: new Date(correction.updatedAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
-                secteur: correction.secteur === "PU" ? "Public" : "Privé",
-              })),
-              CORRECTIONS_COLUMNS
-            );
-          }}
+          onExportCsv={onExportCsv}
+          onExportExcel={onExportExcel}
           page={page}
           pageSize={PAGE_SIZE}
           count={data?.count}

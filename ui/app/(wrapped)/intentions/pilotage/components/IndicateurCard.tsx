@@ -23,13 +23,7 @@ export const IndicateurCard = ({
       gap={4}
     >
       <Flex direction={"row"} gap={2}>
-        <Text
-          color={"bluefrance.113"}
-          fontSize="14px"
-          fontWeight="500"
-          lineHeight="24px"
-          textTransform="uppercase"
-        >
+        <Text color={"bluefrance.113"} fontSize="14px" fontWeight="500" lineHeight="24px" textTransform="uppercase">
           {title}
         </Text>
         {tooltip}

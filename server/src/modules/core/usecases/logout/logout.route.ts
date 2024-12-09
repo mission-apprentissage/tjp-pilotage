@@ -1,25 +1,28 @@
 import { createRoute } from "@http-wizard/core";
-import cookie from "cookie";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { logoutSchema } from "./logout.schema";
+import type { Server } from "@/server/server";
+
+const ROUTE = ROUTES["[POST]/auth/logout"];
 
 export const logoutRoute = (server: Server) => {
-  return createRoute("/auth/logout", {
-    method: "POST",
-    schema: logoutSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
       handler: async (_, response) => {
-        const cookies = cookie.serialize("Authorization", "", {
-          maxAge: 30 * 24 * 3600000,
-          httpOnly: true,
-          sameSite: "lax",
-          secure: true,
-          path: "/",
-        });
-        response.status(200).header("set-cookie", cookies).send();
+        response
+          .status(200)
+          .setCookie("Authorization", "", {
+            maxAge: 30 * 24 * 3600000,
+            httpOnly: true,
+            sameSite: "lax",
+            secure: true,
+            path: "/",
+          })
+          .send();
       },
     });
   });

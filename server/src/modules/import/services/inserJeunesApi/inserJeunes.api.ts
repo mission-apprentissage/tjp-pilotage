@@ -1,7 +1,8 @@
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import axiosRetry, { isNetworkError } from "axios-retry";
 
-import { config } from "../../../../../config/config";
+import config from "@/config";
+
 import { formatRegionData } from "./formatRegionData";
 import { formatUaiData } from "./formatUaiData";
 import { instance, setInstanceBearerToken } from "./inserJeunes.provider";
@@ -28,9 +29,7 @@ async function retryCondition(error: AxiosError) {
     console.log("--- Refreshed insertjeunes API token");
     loggingIn = false;
   } else {
-    console.log(
-      "--- Already refreshing insertjeunes API token, triggering a 10s delay"
-    );
+    console.log("--- Already refreshing insertjeunes API token, triggering a 10s delay");
     await new Promise((resolve) => setTimeout(resolve, 10000));
   }
 
@@ -47,21 +46,15 @@ axiosRetry(instance, {
 export const login = async () => {
   const response = await instance.post("/login", undefined, {
     headers: {
-      username: config.PILOTAGE_INSERJEUNES_USERNAME,
-      password: config.PILOTAGE_INSERJEUNES_PASSWORD,
+      username: config.inserJeunes.username,
+      password: config.inserJeunes.username,
     },
   });
   const { access_token: token } = response.data;
   return token;
 };
 
-export const getUaiData = async ({
-  uai,
-  millesime,
-}: {
-  uai: string;
-  millesime: string;
-}) => {
+export const getUaiData = async ({ uai, millesime }: { uai: string; millesime: string }) => {
   const response = await instance.get(`/UAI/${uai}/millesime/${millesime}`);
 
   if (response) {
@@ -72,16 +65,8 @@ export const getUaiData = async ({
   throw new Error("no data");
 };
 
-export const getRegionData = async ({
-  codeRegionIj,
-  millesime,
-}: {
-  codeRegionIj: string;
-  millesime: string;
-}) => {
-  const response = await instance.get(
-    `/region/${codeRegionIj}/millesime/${millesime}`
-  );
+export const getRegionData = async ({ codeRegionIj, millesime }: { codeRegionIj: string; millesime: string }) => {
+  const response = await instance.get(`/region/${codeRegionIj}/millesime/${millesime}`);
 
   if (response) {
     return formatRegionData(response?.data);

@@ -1,7 +1,7 @@
 import { Box, Heading, Img, Text, VStack } from "@chakra-ui/react";
 
-import { themeDefinition } from "../../../../../theme/theme";
-import { themeColors } from "../../../../../theme/themeColors";
+import { themeDefinition } from "@/theme/theme";
+import { themeColors } from "@/theme/themeColors";
 
 const QuadrantPlaceholder = () => {
   return (
@@ -25,12 +25,7 @@ const QuadrantPlaceholder = () => {
         </b>{" "}
         dans les filtres en haut de page
       </Text>
-      <Box
-        width="160px"
-        height="160px"
-        borderRadius="120px"
-        backgroundColor={themeDefinition.colors.bluefrance[975]}
-      >
+      <Box width="160px" height="160px" borderRadius="120px" backgroundColor={themeDefinition.colors.bluefrance[975]}>
         <Img src="/illustrations/search.svg" />
       </Box>
     </VStack>

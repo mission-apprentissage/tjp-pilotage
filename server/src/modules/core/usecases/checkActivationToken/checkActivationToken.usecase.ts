@@ -1,8 +1,10 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
-import { config } from "../../../../../config/config";
+import config from "@/config";
+
 import { findUserQuery } from "./findUserQuery.dep";
 
 export const [checkActivationToken, checkActivationTokenFactory] = inject(
@@ -14,7 +16,7 @@ export const [checkActivationToken, checkActivationTokenFactory] = inject(
     async ({ activationToken }: { activationToken: string }) => {
       let decryptedToken: { email: string };
       try {
-        decryptedToken = verify(activationToken, deps.jwtSecret) as {
+        decryptedToken = jwt.verify(activationToken, deps.jwtSecret) as {
           email: string;
         };
       } catch {

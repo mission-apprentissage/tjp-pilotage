@@ -1,7 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import { NFormationDiplomeLine } from "../../fileTypes/NFormationDiplome";
-import { rawDataRepository } from "../../repositories/rawData.repository";
+import type { NFormationDiplomeLine } from "@/modules/import/fileTypes/NFormationDiplome";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 
 const ancienDiplomeFields = [
   "ANCIEN_DIPLOME_1",
@@ -13,14 +14,8 @@ const ancienDiplomeFields = [
   "ANCIEN_DIPLOME_7",
 ] as const;
 
-const toAncienCfds = ({
-  formationData,
-}: {
-  formationData: NFormationDiplomeLine;
-}) =>
-  ancienDiplomeFields
-    .map((field) => formationData[field])
-    .filter((item): item is string => !!item);
+const toAncienCfds = ({ formationData }: { formationData: NFormationDiplomeLine }) =>
+  ancienDiplomeFields.map((field) => formationData[field]).filter((item): item is string => !!item);
 
 export const [findFormationsHistoriques] = inject(
   {

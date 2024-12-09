@@ -1,5 +1,5 @@
 import { Flex, FormControl, FormLabel, Skeleton } from "@chakra-ui/react";
-import { CSSObjectWithLabel } from "react-select";
+import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
@@ -9,7 +9,7 @@ export const UaiForm = ({
   onUaiChanged,
   inError,
 }: {
-  uai: string;
+  uai?: string;
   onUaiChanged: (value: string) => void;
   inError: boolean;
 }) => {
@@ -22,9 +22,7 @@ export const UaiForm = ({
     }),
   };
 
-  const { isLoading } = client
-    .ref("[GET]/etablissement/:uai")
-    .useQuery({ params: { uai: uai } });
+  const { isLoading } = client.ref("[GET]/etablissement/:uai").useQuery({ params: { uai: uai ?? "" } });
 
   return (
     <FormControl margin="auto" maxW="400px" as="form">
@@ -52,15 +50,11 @@ export const UaiForm = ({
                 });
             }}
             loadingMessage={({ inputValue }) =>
-              inputValue.length >= 3
-                ? "Recherche..."
-                : "Veuillez rentrer au moins 3 lettres"
+              inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
             }
             isClearable={true}
             noOptionsMessage={({ inputValue }) =>
-              inputValue
-                ? "Pas d'établissement correspondant"
-                : "Commencez à écrire..."
+              inputValue ? "Pas d'établissement correspondant" : "Commencez à écrire..."
             }
             placeholder="UAI, nom de l'établissement ou commune"
           />

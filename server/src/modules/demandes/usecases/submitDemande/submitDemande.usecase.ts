@@ -1,19 +1,21 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { demandeValidators, getPermissionScope, guardScope } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { z } from "zod";
+import type { submitDemandeSchema } from "shared/routes/schemas/post.demande.submit.schema";
+import type { z } from "zod";
 
-import { logger } from "../../../../logger";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../../core/model/User";
-import { findOneDataEtablissement } from "../../../data/repositories/findOneDataEtablissement.query";
-import { generateId, generateShortId } from "../../../utils/generateId";
-import { findOneDataFormation } from "../../repositories/findOneDataFormation.query";
-import { findOneDemande } from "../../repositories/findOneDemande.query";
-import { findOneSimilarDemande } from "../../repositories/findOneSimilarDemande.query";
+import type { RequestUser } from "@/modules/core/model/User";
+import { findOneDataEtablissement } from "@/modules/data/repositories/findOneDataEtablissement.query";
+import { findOneDataFormation } from "@/modules/demandes/repositories/findOneDataFormation.query";
+import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+import { findOneSimilarDemande } from "@/modules/demandes/repositories/findOneSimilarDemande.query";
+import { generateId, generateShortId } from "@/modules/utils/generateId";
+import logger from "@/services/logger";
+import { cleanNull } from "@/utils/noNull";
+
 import { createDemandeQuery } from "./createDemandeQuery.dep";
-import { submitDemandeSchema } from "./submitDemande.schema";
 
 type Demande = z.infer<typeof submitDemandeSchema.body>["demande"];
 
@@ -51,16 +53,8 @@ export const [submitDemande, submitDemandeFactory] = inject(
     findOneSimilarDemande,
   },
   (deps) =>
-    async ({
-      demande,
-      user,
-    }: {
-      user: Pick<RequestUser, "id" | "role" | "codeRegion">;
-      demande: Demande;
-    }) => {
-      const currentDemande = demande.numero
-        ? await deps.findOneDemande(demande.numero)
-        : undefined;
+    async ({ demande, user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion">; demande: Demande }) => {
+      const currentDemande = demande.numero ? await deps.findOneDemande(demande.numero) : undefined;
 
       const { cfd, uai } = demande;
 
@@ -91,8 +85,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
       }
 
       const compensationRentreeScolaire =
-        demande.typeDemande === "augmentation_compensation" ||
-        demande.typeDemande === "ouverture_compensation"
+        demande.typeDemande === "augmentation_compensation" || demande.typeDemande === "ouverture_compensation"
           ? demande.rentreeScolaire
           : undefined;
 
@@ -108,11 +101,13 @@ export const [submitDemande, submitDemandeFactory] = inject(
         compensationCfd: null,
         compensationCodeDispositif: null,
         compensationUai: null,
-        capaciteScolaire: 0,
         capaciteScolaireActuelle: 0,
+        capaciteScolaire: 0,
+        capaciteScolaireColoreeActuelle: 0,
         capaciteScolaireColoree: 0,
-        capaciteApprentissage: 0,
         capaciteApprentissageActuelle: 0,
+        capaciteApprentissage: 0,
+        capaciteApprentissageColoreeActuelle: 0,
         capaciteApprentissageColoree: 0,
         mixte: false,
         poursuitePedagogique: false,

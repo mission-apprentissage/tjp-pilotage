@@ -29,25 +29,13 @@ const LienEmploiFormation = ({ children }: { children: React.ReactNode }) => {
       >
         <TabList>
           <Tab as={NextLink} href="/panorama/lien-metier-formation/formation">
-            <Flex
-              direction={"row"}
-              justify={"center"}
-              alignItems={"center"}
-              p={3}
-              gap={2}
-            >
+            <Flex direction={"row"} justify={"center"} alignItems={"center"} p={3} gap={2}>
               <Icon icon="ri:book-open-line" />
               <Text>À partir d'une formation</Text>
             </Flex>
           </Tab>
           <Tab as={NextLink} href="/panorama/lien-metier-formation/metier">
-            <Flex
-              direction={"row"}
-              justify={"center"}
-              alignItems={"center"}
-              p={3}
-              gap={2}
-            >
+            <Flex direction={"row"} justify={"center"} alignItems={"center"} p={3} gap={2}>
               <Icon icon="ri:briefcase-line" />
               <Text>À partir d'un métier</Text>
             </Flex>

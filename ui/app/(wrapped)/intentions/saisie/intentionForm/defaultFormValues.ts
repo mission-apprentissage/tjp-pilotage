@@ -1,4 +1,4 @@
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 export const defaultIntentionForms: PartialIntentionForms = {};
 
@@ -17,9 +17,11 @@ export type IntentionForms = {
   mixte: boolean;
   capaciteScolaireActuelle?: number;
   capaciteScolaire?: number;
+  capaciteScolaireColoreeActuelle?: number;
   capaciteScolaireColoree?: number;
   capaciteApprentissageActuelle?: number;
   capaciteApprentissage?: number;
+  capaciteApprentissageColoreeActuelle?: number;
   capaciteApprentissageColoree?: number;
   // Précisions
   motif?: string[];

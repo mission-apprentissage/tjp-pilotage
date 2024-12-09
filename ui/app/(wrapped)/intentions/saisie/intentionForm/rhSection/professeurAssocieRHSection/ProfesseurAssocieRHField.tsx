@@ -12,10 +12,9 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
+import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { toBoolean } from "@/utils/toBoolean";
-
-import { IntentionForms } from "../../defaultFormValues";
 
 export const ProfesseurAssocieRHField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -25,11 +24,7 @@ export const ProfesseurAssocieRHField = chakra(
     } = useFormContext<IntentionForms>();
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.professeurAssocieRH}
-        isRequired
-      >
+      <FormControl className={className} isInvalid={!!errors.professeurAssocieRH} isRequired>
         <Flex direction={"row"}>
           <FormLabel>Un professeur associé ?</FormLabel>
           <GlossaireShortcut
@@ -39,8 +34,7 @@ export const ProfesseurAssocieRHField = chakra(
             tooltip={
               <Box>
                 <Text>
-                  Dans le cas d’enseignements assurés par un salarié du secteur
-                  privé expert dans son domaine.
+                  Dans le cas d’enseignements assurés par un salarié du secteur privé expert dans son domaine.
                 </Text>
                 <Text>Cliquez pour plus d'infos.</Text>
               </Box>
@@ -52,8 +46,7 @@ export const ProfesseurAssocieRHField = chakra(
           control={control}
           disabled={disabled}
           rules={{
-            validate: (value) =>
-              typeof value === "boolean" || "Le champ est obligatoire",
+            validate: (value) => typeof value === "boolean" || "Le champ est obligatoire",
           }}
           render={({ field: { onChange, value, onBlur, ref, disabled } }) => (
             <RadioGroup
@@ -73,11 +66,7 @@ export const ProfesseurAssocieRHField = chakra(
             </RadioGroup>
           )}
         />
-        {errors.professeurAssocieRH && (
-          <FormErrorMessage>
-            {errors.professeurAssocieRH?.message}
-          </FormErrorMessage>
-        )}
+        {errors.professeurAssocieRH && <FormErrorMessage>{errors.professeurAssocieRH?.message}</FormErrorMessage>}
       </FormControl>
     );
   }

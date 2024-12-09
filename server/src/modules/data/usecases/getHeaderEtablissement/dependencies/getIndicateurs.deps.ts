@@ -1,19 +1,11 @@
 import { CURRENT_RENTREE } from "shared";
+import type { CompareTo, Indicateur, Indicateurs } from "shared/routes/schemas/get.etablissement.uai.header.schema";
 import { MILLESIMES_IJ_ETAB } from "shared/time/millesimes";
 
-import {
-  CompareTo,
-  Indicateur,
-  Indicateurs,
-} from "../getHeaderEtablissement.schema";
 import { getTauxIJ } from "./getTauxIJ.deps";
 import { getValeurAjoutee } from "./getValeurAjoutee.deps";
 
-const getCompareTo = (
-  current?: number,
-  previous?: number,
-  year?: string
-): CompareTo => {
+const getCompareTo = (current?: number, previous?: number, year?: string): CompareTo => {
   if (current === undefined || previous === undefined) {
     return undefined;
   }
@@ -43,11 +35,7 @@ const getCompareTo = (
   };
 };
 
-const getIndicateur = (
-  current?: number,
-  previous?: number,
-  year?: string
-): Indicateur => {
+const getIndicateur = (current?: number, previous?: number, year?: string): Indicateur => {
   if (current === undefined) {
     return undefined;
   }

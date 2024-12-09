@@ -1,17 +1,15 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { getEtablissementSchema } from "./getDataForPanoramaEtablissement.schema";
+import type { Server } from "@/server/server";
+
 import { getDataForPanoramaEtablissement } from "./getDataForPanoramaEtablissement.usecase";
+const ROUTE = ROUTES["[GET]/panorama/stats/etablissement/:uai"];
 
-export const getDataForPanoramaEtablissementRoute = ({
-  server,
-}: {
-  server: Server;
-}) => {
-  return createRoute("/panorama/stats/etablissement/:uai", {
-    method: "GET",
-    schema: getEtablissementSchema,
+export const getDataForPanoramaEtablissementRoute = (server: Server) => {
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

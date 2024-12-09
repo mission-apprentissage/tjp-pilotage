@@ -4,25 +4,17 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 
 import { client } from "@/api.client";
+import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
+import { GROUPED_FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/GROUPED_FORMATION_COLUMNS";
+import type { Filters, Formations, LineId, Order } from "@/app/(wrapped)/console/formations/types";
 
-import { FORMATION_COLUMNS } from "../FORMATION_COLUMNS";
-import { GROUPED_FORMATION_COLUMNS } from "../GROUPED_FORMATION_COLUMNS";
-import { Filters, Formations, LineId, Order } from "../types";
 import { HeadLineContent } from "./HeadLineContent";
-import {
-  FormationLineContent,
-  FormationLineLoader,
-  FormationLinePlaceholder,
-} from "./LineContent";
+import { FormationLineContent, FormationLineLoader, FormationLinePlaceholder } from "./LineContent";
 
 const getCellBgColor = (column: keyof typeof FORMATION_COLUMNS) => {
-  const groupLabel = Object.keys(GROUPED_FORMATION_COLUMNS).find(
-    (groupLabel) => {
-      return Object.keys(
-        GROUPED_FORMATION_COLUMNS[groupLabel].options
-      ).includes(column);
-    }
-  );
+  const groupLabel = Object.keys(GROUPED_FORMATION_COLUMNS).find((groupLabel) => {
+    return Object.keys(GROUPED_FORMATION_COLUMNS[groupLabel].options).includes(column);
+  });
   return GROUPED_FORMATION_COLUMNS[groupLabel as string].cellColor;
 };
 
@@ -36,11 +28,10 @@ export const ConsoleSection = ({
 }: {
   data?: Formations;
   filters: Partial<Filters>;
-  order: Order;
+  order: Partial<Order>;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_COLUMNS)[];
     order?: Partial<Order>;
     page?: number;
@@ -62,16 +53,12 @@ export const ConsoleSection = ({
           query: {
             ...filters,
             cfd: [historiqueId?.cfd],
-            codeDispositif: historiqueId?.codeDispositif
-              ? [historiqueId?.codeDispositif]
-              : undefined,
+            codeDispositif: historiqueId?.codeDispositif ? [historiqueId?.codeDispositif] : undefined,
             limit: 2,
             order: "desc",
             orderBy: "rentreeScolaire",
-            rentreeScolaire: RENTREES_SCOLAIRES.filter(
-              (rentree) => rentree !== CURRENT_RENTREE
-            ),
-            withEmptyFormations: false,
+            rentreeScolaire: RENTREES_SCOLAIRES.filter((rentree) => rentree !== CURRENT_RENTREE),
+            withEmptyFormations: "false",
           },
         })
       ).formations;
@@ -103,12 +90,7 @@ export const ConsoleSection = ({
   }, []);
 
   return (
-    <TableContainer
-      overflowY="auto"
-      flex={1}
-      position="relative"
-      ref={tableRef}
-    >
+    <TableContainer overflowY="auto" flex={1} position="relative" ref={tableRef}>
       <Table variant="simple" size={"sm"}>
         <HeadLineContent
           isSticky={isSticky}
@@ -125,10 +107,8 @@ export const ConsoleSection = ({
                 <FormationLineContent
                   isSticky={isSticky}
                   line={line}
-                  expended={
-                    historiqueId?.cfd === line.cfd &&
-                    historiqueId.codeDispositif === line.codeDispositif
-                  }
+                  filters={filters}
+                  expended={historiqueId?.cfd === line.cfd && historiqueId?.codeDispositif === line.codeDispositif}
                   onClickExpend={() =>
                     setHistoriqueId({
                       cfd: line.cfd,
@@ -141,33 +121,30 @@ export const ConsoleSection = ({
                   getCellBgColor={getCellBgColor}
                 />
               </Tr>
-              {historiqueId?.cfd === line.cfd &&
-                historiqueId.codeDispositif === line.codeDispositif && (
-                  <>
-                    {historique?.map((historiqueLine) => (
-                      <Tr
-                        key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}_${historiqueLine.rentreeScolaire}`}
-                        bg={"grey.975"}
-                      >
-                        <FormationLineContent
-                          isSticky={isSticky}
-                          line={historiqueLine}
-                          canShowQuadrantPosition={canShowQuadrantPosition}
-                          colonneFilters={colonneFilters}
-                          getCellBgColor={getCellBgColor}
-                        />
-                      </Tr>
-                    ))}
-                    {historique && !historique.length && (
-                      <FormationLinePlaceholder
+              {historiqueId?.cfd === line.cfd && historiqueId?.codeDispositif === line.codeDispositif && (
+                <>
+                  {historique?.map((historiqueLine) => (
+                    <Tr
+                      key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}_${historiqueLine.rentreeScolaire}`}
+                      bg={"grey.975"}
+                    >
+                      <FormationLineContent
+                        isSticky={isSticky}
+                        line={historiqueLine}
+                        canShowQuadrantPosition={canShowQuadrantPosition}
                         colonneFilters={colonneFilters}
+                        filters={filters}
                         getCellBgColor={getCellBgColor}
                       />
-                    )}
+                    </Tr>
+                  ))}
+                  {historique && !historique.length && (
+                    <FormationLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
+                  )}
 
-                    {isFetchingHistorique && <FormationLineLoader />}
-                  </>
-                )}
+                  {isFetchingHistorique && <FormationLineLoader />}
+                </>
+              )}
             </Fragment>
           ))}
         </Tbody>

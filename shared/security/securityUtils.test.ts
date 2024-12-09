@@ -1,4 +1,5 @@
-import { HIERARCHY, Permission, PERMISSIONS, Role } from "./permissions";
+import type { Permission, Role } from "./permissions";
+import { HIERARCHY, PERMISSIONS } from "./permissions";
 import { getPermissionScope, hasRightOverRole } from "./securityUtils";
 
 describe("securityUtils", () => {

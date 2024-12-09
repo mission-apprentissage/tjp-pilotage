@@ -1,19 +1,10 @@
-import {
-  Divider,
-  Flex,
-  Heading,
-  List,
-  ListItem,
-  SimpleGrid,
-  Text,
-} from "@chakra-ui/react";
+import { Divider, Flex, Heading, List, ListItem, SimpleGrid, Text } from "@chakra-ui/react";
 
+import { PositiveNegativeBarChart } from "@/app/(wrapped)/intentions/pilotage/components/PositiveNegativeBarChart";
+import type { RepartitionPilotageIntentions } from "@/app/(wrapped)/intentions/pilotage/types";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { TooltipIcon } from "@/components/TooltipIcon";
 import { downloadExcel } from "@/utils/downloadExport";
-
-import { TooltipIcon } from "../../../../../../components/TooltipIcon";
-import { PositiveNegativeBarChart } from "../../components/PositiveNegativeBarChart";
-import { RepartitionPilotageIntentions } from "../../types";
 
 const TOP_DOMAINES_NAME = "Domaines";
 const TRANSFORMATIONS_PAR_DIPLOME_NAME = "Diplôme";
@@ -35,12 +26,8 @@ export const FiliereNiveauDiplomeSection = ({
             downloadExcel(
               `domaines_et_diplomes_les_plus_transformés`,
               {
-                [TOP_DOMAINES_NAME]: Object.values(
-                  repartitionData?.top10Domaines ?? {}
-                ),
-                [TRANSFORMATIONS_PAR_DIPLOME_NAME]: Object.values(
-                  repartitionData?.niveauxDiplome ?? {}
-                ),
+                [TOP_DOMAINES_NAME]: Object.values(repartitionData?.top10Domaines ?? {}),
+                [TRANSFORMATIONS_PAR_DIPLOME_NAME]: Object.values(repartitionData?.niveauxDiplome ?? {}),
               },
               {
                 [TOP_DOMAINES_NAME]: {
@@ -50,7 +37,8 @@ export const FiliereNiveauDiplomeSection = ({
                   tauxTransformation: "Taux de transformation",
                   placesOuvertes: "Places ouvertes",
                   placesFermees: "Places fermées",
-                  placesColorees: "Places colorées",
+                  placesColoreesOuvertes: "Places colorées ouvertes",
+                  placesColoreesFermees: "Places colorées fermées",
                   solde: "Solde",
                   ratioFermeture: "Ratio de fermeture",
                 },
@@ -62,7 +50,8 @@ export const FiliereNiveauDiplomeSection = ({
                   tauxTransformation: "Taux de transformation",
                   placesOuvertes: "Places ouvertes",
                   placesFermees: "Places fermées",
-                  placesColorees: "Places colorées",
+                  placesColoreesOuvertes: "Places colorées ouvertes",
+                  placesColoreesFermees: "Places colorées fermées",
                   solde: "Solde",
                   ratioFermeture: "Ratio de fermeture",
                 },
@@ -84,8 +73,7 @@ export const FiliereNiveauDiplomeSection = ({
             label={
               <Flex direction={"column"} gap={3}>
                 <Text>
-                  en nombre de places transformées (places ouvertes + places
-                  fermées + places existantes colorées)
+                  en nombre de places transformées (places ouvertes + places fermées + places existantes colorées)
                 </Text>
               </Flex>
             }
@@ -100,19 +88,14 @@ export const FiliereNiveauDiplomeSection = ({
             my={"auto"}
             label={
               <Flex direction={"column"} gap={3}>
-                <Text>
-                  Pour certains diplômes le taux de transformation n'apparaît
-                  pas :
-                </Text>
+                <Text>Pour certains diplômes le taux de transformation n'apparaît pas :</Text>
                 <List>
                   <ListItem>
-                    soit le numérateur manque: le diplôme n’est pas transformé ⇒
-                    le taux de transformation vaut 0% ;
+                    soit le numérateur manque: le diplôme n’est pas transformé ⇒ le taux de transformation vaut 0% ;
                   </ListItem>
                   <ListItem>
-                    soit le dénominateur manque: les effectifs dans le diplôme
-                    ne sont pas présents dans le constat de rentrée (FCIL, CS…)
-                    ⇒ le taux de transfo n’est pas calculable
+                    soit le dénominateur manque: les effectifs dans le diplôme ne sont pas présents dans le constat de
+                    rentrée (FCIL, CS…) ⇒ le taux de transfo n’est pas calculable
                   </ListItem>
                 </List>
               </Flex>

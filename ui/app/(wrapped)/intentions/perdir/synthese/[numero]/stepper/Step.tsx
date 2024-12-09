@@ -2,26 +2,13 @@ import { Box, chakra, Flex, Tag, Text, useToken } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
 const StepIcon = chakra(
-  ({
-    etape,
-    currentEtape,
-    incomplet,
-  }: {
-    etape: number;
-    currentEtape: number;
-    incomplet?: boolean;
-  }) => {
+  ({ etape, currentEtape, incomplet }: { etape: number; currentEtape: number; incomplet?: boolean }) => {
     const bluefrance113 = useToken("colors", "bluefrance.113");
     const success425 = useToken("colors", "success.425");
 
     if (incomplet) {
       return (
-        <Box
-          w="32px"
-          h="28px"
-          borderRadius={"100%"}
-          bgColor={"orangeTerreBattue.850"}
-        >
+        <Box w="32px" h="28px" borderRadius={"100%"} bgColor={"orangeTerreBattue.850"}>
           <Icon icon={"ri:close-line"} color={bluefrance113} width="100%" />
         </Box>
       );
@@ -29,12 +16,7 @@ const StepIcon = chakra(
     if (etape === currentEtape) {
       return (
         <Box w="32px" h="28px" borderRadius={"100%"} bgColor={"blueecume.925"}>
-          <Text
-            textAlign={"center"}
-            fontSize={"18px"}
-            fontWeight={700}
-            color={"bluefrance.113"}
-          >
+          <Text textAlign={"center"} fontSize={"18px"} fontWeight={700} color={"bluefrance.113"}>
             {etape}
           </Text>
         </Box>
@@ -49,12 +31,7 @@ const StepIcon = chakra(
     }
     return (
       <Box w="32px" h="28px" borderRadius={"100%"} bgColor={"grey.925"}>
-        <Text
-          textAlign={"center"}
-          fontSize={"18px"}
-          fontWeight={700}
-          color={"grey.625"}
-        >
+        <Text textAlign={"center"} fontSize={"18px"} fontWeight={700} color={"grey.625"}>
           {etape}
         </Text>
       </Box>
@@ -82,24 +59,11 @@ export const Step = ({
   return (
     <Flex direction={"column"} gap={2}>
       <Flex direction={"row"} w={"100%"} gap={3} mb={3}>
-        <StepIcon
-          etape={etape}
-          currentEtape={currentEtape}
-          incomplet={incomplet}
-        />
-        <Box
-          w="100%"
-          h="2px"
-          bgColor={currentEtape > etape ? "bluefrance.113" : "grey.625"}
-          my={"auto"}
-        />
+        <StepIcon etape={etape} currentEtape={currentEtape} incomplet={incomplet} />
+        <Box w="100%" h="2px" bgColor={currentEtape > etape ? "bluefrance.113" : "grey.625"} my={"auto"} />
       </Flex>
       <Flex direction={"row"} gap={2}>
-        <Text
-          fontSize="lg"
-          fontWeight="bold"
-          color={currentEtape >= etape ? "black" : "grey.625"}
-        >
+        <Text fontSize="lg" fontWeight="bold" color={currentEtape >= etape ? "black" : "grey.625"}>
           {titre}
         </Text>
         {currentEtape === etape && (
@@ -110,13 +74,7 @@ export const Step = ({
       </Flex>
       <Flex direction={"row"}>
         {currentEtape === etape && (
-          <>
-            {dateDebut && (
-              <Text color={currentEtape >= etape ? "black" : "grey.625"}>
-                depuis le {dateDebut}
-              </Text>
-            )}
-          </>
+          <>{dateDebut && <Text color={currentEtape >= etape ? "black" : "grey.625"}>depuis le {dateDebut}</Text>}</>
         )}
         {currentEtape > etape && (
           <>

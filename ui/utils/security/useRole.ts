@@ -1,4 +1,5 @@
-import { hasRole, Role } from "shared";
+import type { Role } from "shared";
+import { hasRole } from "shared";
 
 import { useAuth } from "./useAuth";
 

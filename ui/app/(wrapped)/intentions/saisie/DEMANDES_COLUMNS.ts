@@ -1,5 +1,5 @@
-import { client } from "@/api.client";
-import { ExportColumns } from "@/utils/downloadExport";
+import type { client } from "@/api.client";
+import type { ExportColumns } from "@/utils/downloadExport";
 
 export const DEMANDES_COLUMNS = {
   numero: "numero",
@@ -31,12 +31,14 @@ export const DEMANDES_COLUMNS = {
   compensationCfd: "CFD compensé",
   compensationUai: "UAI compensé",
   compensationCodeDispositif: "Dispositif compensé",
-  capaciteScolaireActuelle: "Capacité scolaire actuelle",
-  capaciteScolaire: "Capacité scolaire",
-  capaciteScolaireColoree: "Capacité scolaire coloree",
-  capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
-  capaciteApprentissage: "Capacité apprentissage",
-  capaciteApprentissageColoree: "Capacité apprentissage coloree",
+  capaciteScolaireActuelle: "Capacité actuelle en voie scolaire",
+  capaciteScolaire: "Future capacité en voie scolaire",
+  capaciteScolaireColoreeActuelle: "Capacité colorée actuelle en voie scolaire",
+  capaciteScolaireColoree: "Future capacité colorée en voie scolaire",
+  capaciteApprentissageActuelle: "Capacité actuelle en apprentissage",
+  capaciteApprentissage: "Future capacité en apprentissage",
+  capaciteApprentissageColoreeActuelle: "Capacité colorée actuelle en apprentissage",
+  capaciteApprentissageColoree: "Future capacité colorée en apprentissage",
   formationRH: "Formation(s) ?",
   nbFormationRH: "Nombre de formations",
   discipline1FormationRH: "Discipline 1 formation",
@@ -54,6 +56,4 @@ export const DEMANDES_COLUMNS = {
   discipline1RecrutementRH: "Discipline 1 recrutement",
   discipline2RecrutementRH: "Discipline 2 recrutement",
   userName: "Auteur",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/demandes"]["demandes"][number]
->;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/demandes"]["demandes"][number]>;

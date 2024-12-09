@@ -1,7 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import { rawDataRepository } from "../../../../repositories/rawData.repository";
-import { AnneeDispositif } from "../../../getCfdRentrees/getCfdRentrees.usecase";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
+import type { AnneeDispositif } from "@/modules/import/usecases/getCfdRentrees/getCfdRentrees.usecase";
 
 const findAttractiviteCapaciteHorsBTS = async ({
   mefstat,
@@ -63,14 +64,9 @@ export const [getIndicateursAffelnet] = inject(
         return { capacites: [], premiersVoeux: [] };
       }
 
-      const {
-        "Capacité carte scolaire": rawCapacite,
-        "Demandes vœux 1": rawPremierVoeux,
-      } = lines.reduce(
+      const { "Capacité carte scolaire": rawCapacite, "Demandes vœux 1": rawPremierVoeux } = lines.reduce(
         (sum, line) => {
-          sum["Capacité carte scolaire"] += parseInt(
-            line["Capacité carte scolaire"]
-          );
+          sum["Capacité carte scolaire"] += parseInt(line["Capacité carte scolaire"]);
           sum["Demandes vœux 1"] += parseInt(line["Demandes vœux 1"]);
           return sum;
         },
@@ -85,19 +81,12 @@ export const [getIndicateursAffelnet] = inject(
        * elle est renseignée à un nombre arbitraire très élevé (900, 999, 1000, ...) dans le CSV
        * source.
        */
-      const capacite =
-        rawCapacite && rawCapacite >= 5 && rawCapacite <= 500
-          ? rawCapacite
-          : undefined;
+      const capacite = rawCapacite && rawCapacite >= 5 && rawCapacite <= 500 ? rawCapacite : undefined;
       const premiersVoeux = rawPremierVoeux ? rawPremierVoeux : undefined;
 
       return {
-        capacites:
-          anneeDebut === 0 ? [capacite ?? null] : [null, capacite ?? null],
-        premiersVoeux:
-          anneeDebut === 0
-            ? [premiersVoeux ?? null]
-            : [null, premiersVoeux ?? null],
+        capacites: anneeDebut === 0 ? [capacite ?? null] : [null, capacite ?? null],
+        premiersVoeux: anneeDebut === 0 ? [premiersVoeux ?? null] : [null, premiersVoeux ?? null],
       };
     }
 );

@@ -1,11 +1,8 @@
 import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 
-import { GlossaireShortcut } from "../../../../../components/GlossaireShortcut";
-import { BarGraph } from "../../../pilotage-reforme/components/BarGraph";
-import {
-  PanoramaStatsTauxInsertion,
-  PanoramaStatsTauxPoursuite,
-} from "../../types";
+import type { PanoramaStatsTauxInsertion, PanoramaStatsTauxPoursuite } from "@/app/(wrapped)/panorama/types";
+import { BarGraph } from "@/app/(wrapped)/pilotage-reforme/components/BarGraph";
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 
 export const TauxInserJeunesSection = ({
   region,
@@ -26,10 +23,7 @@ export const TauxInserJeunesSection = ({
           <hr />
         </Box>
         <Flex color={"grey.200"} my={"24px"}>
-          <Text>
-            Comparez les principaux indicateurs régionaux sur les derniers
-            millésimes
-          </Text>
+          <Text>Comparez les principaux indicateurs régionaux sur les derniers millésimes</Text>
           <GlossaireShortcut ml={"8px"} glossaireEntryKey="millesime" />
         </Flex>
       </Box>
@@ -44,21 +38,14 @@ export const TauxInserJeunesSection = ({
               ml={2}
               tooltip={
                 <Box>
-                  <Text>
-                    La part de ceux qui sont en emploi 6 mois après leur sortie
-                    d’étude.
-                  </Text>
+                  <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
                   <Text>Cliquez pour plus d'infos.</Text>
                 </Box>
               }
               glossaireEntryKey="taux-emploi-6-mois"
             />
           </Flex>
-          <BarGraph
-            graphData={tauxInsertion}
-            isFiltered={true}
-            libelleRegion={region}
-          />
+          <BarGraph graphData={tauxInsertion} isFiltered={true} libelleRegion={region} />
         </Box>
 
         {/* TAUX POURSUITE ETUDE */}
@@ -71,21 +58,14 @@ export const TauxInserJeunesSection = ({
               ml={2}
               tooltip={
                 <Box>
-                  <Text>
-                    Tout élève inscrit à N+1 (réorientation et redoublement
-                    compris).
-                  </Text>
+                  <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
                   <Text>Cliquez pour plus d'infos.</Text>
                 </Box>
               }
               glossaireEntryKey="taux-poursuite-etudes"
             />
           </Flex>
-          <BarGraph
-            graphData={tauxPoursuite}
-            isFiltered={true}
-            libelleRegion={region}
-          />
+          <BarGraph graphData={tauxPoursuite} isFiltered={true} libelleRegion={region} />
         </Box>
       </HStack>
     </Box>

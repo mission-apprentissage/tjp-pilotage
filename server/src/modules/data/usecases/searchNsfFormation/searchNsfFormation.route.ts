@@ -1,13 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { searchNsfFormationSchema } from "./searchNsfFormation.schema";
+import type { Server } from "@/server/server";
+
 import { searchDiplome } from "./searchNsfFormation.usecase";
 
-export const searchNsfDiplomeRoute = ({ server }: { server: Server }) => {
-  return createRoute("/nsf-diplome/search/:search", {
-    method: "GET",
-    schema: searchNsfFormationSchema,
+const ROUTE = ROUTES["[GET]/nsf-diplome/search/:search"];
+
+export const searchNsfDiplomeRoute = (server: Server) => {
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

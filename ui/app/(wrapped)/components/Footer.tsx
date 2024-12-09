@@ -10,13 +10,17 @@ const LANDING_FOOTER_SEGMENTS = [
   "pilotage",
   "pilotage-reforme",
   "ressources",
+  "changelog",
+  "declaration-accessibilite",
+  "politique-de-confidentialite",
+  "cgu",
+  "mentions-legales",
 ];
 
 export const Footer = () => {
   const segments = useSelectedLayoutSegments();
   const shouldUseLandingFooter =
-    segments.length === 0 ||
-    segments.some((segment) => LANDING_FOOTER_SEGMENTS.includes(segment));
+    segments.length === 0 || segments.some((segment) => LANDING_FOOTER_SEGMENTS.includes(segment));
 
   return shouldUseLandingFooter ? <LandingFooter /> : <MinimalFooter />;
 };

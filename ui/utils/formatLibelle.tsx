@@ -1,10 +1,8 @@
 import { Flex } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
-import {
-  BadgeTypeFamille,
-  TypeFamilleKeys,
-} from "../components/BadgeTypeFamille";
+import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
+import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 
 export const formatAnneeCommuneLibelle = (
   formation: {
@@ -13,36 +11,16 @@ export const formatAnneeCommuneLibelle = (
   },
   labelSize?: "short" | "long",
   size?: "xs" | "sm" | "md"
-) => {
+): React.ReactNode => {
   switch (formation.typeFamille) {
     case "2nde_commune":
-      return format2ndeCommuneLibelle(
-        formation.libelleFormation,
-        formation.typeFamille,
-        labelSize,
-        size
-      );
+      return format2ndeCommuneLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
     case "1ere_commune":
-      return format1ereCommuneLibelle(
-        formation.libelleFormation,
-        formation.typeFamille,
-        labelSize,
-        size
-      );
+      return format1ereCommuneLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
     case "specialite":
-      return formatSpecialiteLibelle(
-        formation.libelleFormation,
-        formation.typeFamille,
-        labelSize,
-        size
-      );
+      return formatSpecialiteLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
     case "option":
-      return formatOptionLibelle(
-        formation.libelleFormation,
-        formation.typeFamille,
-        labelSize,
-        size
-      );
+      return formatOptionLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
     default:
       return formation.libelleFormation ?? "-";
   }
@@ -56,11 +34,7 @@ export const format2ndeCommuneLibelle = (
 ): ReactNode => (
   <Flex alignItems={"center"} gap={2}>
     {libelleFormation?.replace(" 2nde commune", "")}
-    <BadgeTypeFamille
-      typeFamille={typeFamille as TypeFamilleKeys}
-      labelSize={labelSize}
-      size={size}
-    />
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} labelSize={labelSize} size={size} />
   </Flex>
 );
 
@@ -72,11 +46,7 @@ export const format1ereCommuneLibelle = (
 ): ReactNode => (
   <Flex alignItems={"center"} gap={2}>
     {libelleFormation?.replace(" 1ere annee commune", "")}
-    <BadgeTypeFamille
-      typeFamille={typeFamille as TypeFamilleKeys}
-      labelSize={labelSize}
-      size={size}
-    />
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} labelSize={labelSize} size={size} />
   </Flex>
 );
 
@@ -88,11 +58,7 @@ export const formatSpecialiteLibelle = (
 ): ReactNode => (
   <Flex alignItems={"center"} gap={2}>
     {libelleFormation}
-    <BadgeTypeFamille
-      typeFamille={typeFamille as TypeFamilleKeys}
-      labelSize={labelSize}
-      size={size}
-    />
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} labelSize={labelSize} size={size} />
   </Flex>
 );
 
@@ -104,18 +70,12 @@ export const formatOptionLibelle = (
 ): ReactNode => (
   <Flex alignItems={"center"} gap={2}>
     {libelleFormation}
-    <BadgeTypeFamille
-      typeFamille={typeFamille as TypeFamilleKeys}
-      labelSize={labelSize}
-      size={size}
-    />
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} labelSize={labelSize} size={size} />
   </Flex>
 );
 
 export const formatCodeDepartement = (codeDepartement?: string) =>
-  codeDepartement?.substring(0, 1) === "0"
-    ? codeDepartement.substring(1)
-    : codeDepartement;
+  codeDepartement?.substring(0, 1) === "0" ? codeDepartement.substring(1) : codeDepartement;
 
 export const formatCommuneLibelleWithCodeDepartement = ({
   commune,

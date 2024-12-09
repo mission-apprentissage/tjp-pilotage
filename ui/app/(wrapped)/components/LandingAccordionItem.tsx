@@ -1,25 +1,14 @@
-import {
-  AccordionButton,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  HStack,
-  Text,
-  useToken,
-} from "@chakra-ui/react";
+import { AccordionButton, AccordionItem, AccordionPanel, Box, HStack, Text, useToken } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
-import { themeDefinition } from "../../../theme/theme";
+import { themeDefinition } from "@/theme/theme";
 
 interface LandingAccordionItemProps {
   children: React.ReactNode;
   label: string;
 }
 
-export const LandingAccordionItem = ({
-  label,
-  children,
-}: LandingAccordionItemProps) => {
+export const LandingAccordionItem = ({ label, children }: LandingAccordionItemProps) => {
   const grey900Color = useToken("colors", "grey.900");
   const grey975Color = useToken("colors", "grey.975");
 
@@ -30,13 +19,7 @@ export const LandingAccordionItem = ({
           <Text as="h2" backgroundColor={isExpanded ? grey975Color : "auto"}>
             <AccordionButton>
               <HStack padding="16px" width="100%">
-                <Text
-                  as="span"
-                  flex="1"
-                  textAlign="left"
-                  fontSize="16px"
-                  fontWeight={isExpanded ? 500 : 400}
-                >
+                <Text as="span" flex="1" textAlign="left" fontSize="16px" fontWeight={isExpanded ? 500 : 400}>
                   {label}
                 </Text>
                 <Icon

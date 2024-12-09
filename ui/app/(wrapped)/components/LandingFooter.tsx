@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Flex,
-  HStack,
-  Img,
-  Link,
-  Stack,
-  StackDivider,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Flex, HStack, Img, Link, Stack, StackDivider, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
@@ -65,24 +55,13 @@ export const LandingFooter = () => {
             }}
           >
             Mandatée par plusieurs ministères, la{" "}
-            <Link
-              as={NextLink}
-              href="https://beta.gouv.fr/incubateurs/mission-inserjeunes"
-              textDecoration="underline"
-            >
+            <Link as={NextLink} href="https://beta.gouv.fr/incubateurs/mission-inserjeunes" textDecoration="underline">
               Mission interministérielle InserJeunes
             </Link>{" "}
-            développe plusieurs services destinés à faciliter l’orientation et
-            l’insertion des jeunes de la voie professionnelle
+            développe plusieurs services destinés à faciliter l’orientation et l’insertion des jeunes de la voie
+            professionnelle
           </Text>
-          <HStack
-            justifyContent="start"
-            width="100%"
-            spacing="8px 24px"
-            fontWeight={700}
-            fontSize="14px"
-            wrap="wrap"
-          >
+          <HStack justifyContent="start" width="100%" spacing="8px 24px" fontWeight={700} fontSize="14px" wrap="wrap">
             <LinkWithIcon href="https://gouvernement.fr">
               <Text as="span">gouvernement.fr</Text>
             </LinkWithIcon>
@@ -116,20 +95,12 @@ export const LandingFooter = () => {
           justifyContent={"center"}
         >
           <Box>
-            <Link
-              as={NextLink}
-              href="/mentions-legales"
-              onClick={() => trackEvent("footer:mentions-legales")}
-            >
+            <Link as={NextLink} href="/mentions-legales" onClick={() => trackEvent("footer:mentions-legales")}>
               Mentions légales
             </Link>
           </Box>
           <Box>
-            <Link
-              as={NextLink}
-              href="/cgu"
-              onClick={() => trackEvent("footer:cgu")}
-            >
+            <Link as={NextLink} href="/cgu" onClick={() => trackEvent("footer:cgu")}>
               CGU
             </Link>
           </Box>
@@ -143,25 +114,15 @@ export const LandingFooter = () => {
             </Link>
           </Box>
           <Box>
-            <Link
-              as={NextLink}
-              href="/changelog"
-              onClick={() => trackEvent("footer:journal-des-mises-a-jour")}
-            >
+            <Link as={NextLink} href="/changelog" onClick={() => trackEvent("footer:journal-des-mises-a-jour")}>
               Journal des mises à jour
             </Link>
           </Box>
           <Box>
-            <Link href="mailto:orion@inserjeunes.beta.gouv.fr">
-              Nous contacter : orion@inserjeunes.beta.gouv.fr
-            </Link>
+            <Link href="mailto:orion@inserjeunes.beta.gouv.fr">Nous contacter : orion@inserjeunes.beta.gouv.fr</Link>
           </Box>
           <Box>
-            <Link
-              as={NextLink}
-              href="/statistiques"
-              onClick={() => trackEvent("footer:statistiques")}
-            >
+            <Link as={NextLink} href="/statistiques" onClick={() => trackEvent("footer:statistiques")}>
               Statistiques
             </Link>
           </Box>
@@ -179,27 +140,21 @@ export const LandingFooter = () => {
               as={NextLink}
               href="https://beta.gouv.fr/accessibilite/schema-pluriannuel"
               target="_blank"
-              onClick={() =>
-                trackEvent("footer:schéma-pluriannuel-accessibilite")
-              }
+              onClick={() => trackEvent("footer:schéma-pluriannuel-accessibilite")}
             >
               Schéma pluriannuel d’accessibilité
             </Link>
           </Box>
           <Box>
-            <Link
-              as={NextLink}
-              href="/ressources"
-              onClick={() => trackEvent("footer:ressources")}
-            >
+            <Link as={NextLink} href="/ressources" onClick={() => trackEvent("footer:ressources")}>
               Ressources
             </Link>
           </Box>
         </HStack>
         <Flex justifyContent={"center"} width="100%">
           <Text color={"grey.425"} fontSize="12px">
-            Sauf mention explicite de propriété intellectuelle détenue par des
-            tiers, les contenus de ce site sont proposés sous{" "}
+            Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont
+            proposés sous{" "}
             <LinkWithIcon href="https://github.com/etalab/licence-ouverte/blob/master/LO.md">
               <Text as="span" textDecoration="underline">
                 licence etalab-2.0

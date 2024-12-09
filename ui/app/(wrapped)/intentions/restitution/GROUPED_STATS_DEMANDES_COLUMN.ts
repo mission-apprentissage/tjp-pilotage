@@ -1,5 +1,6 @@
-import { themeDefinition } from "../../../../theme/theme";
-import {
+import { themeDefinition } from "@/theme/theme";
+
+import type {
   STATS_DEMANDES_COLUMNS,
   STATS_DEMANDES_COLUMNS_DEFAULT,
   STATS_DEMANDES_COLUMNS_OPTIONAL,
@@ -52,14 +53,17 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
       motif: "Motif(s) de la demande",
       rentreeScolaire: "RS",
       differenceCapaciteScolaire: "Nombre de places en voie scolaire",
-      capaciteScolaireActuelle: "Capacité scolaire actuelle",
-      capaciteScolaire: "Capacité scolaire",
-      capaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
       differenceCapaciteApprentissage: "Nombre de places en apprentissage",
-      capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
-      capaciteApprentissage: "Capacité apprentissage",
-      capaciteApprentissageColoree:
-        "Nombre de places colorées en apprentissage",
+      differenceCapaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
+      differenceCapaciteApprentissageColoree: "Nombre de places colorées en apprentissage",
+      capaciteScolaireActuelle: "Capacité en voie scolaire actuelle",
+      capaciteScolaire: "Future capacité en voie scolaire",
+      capaciteScolaireColoreeActuelle: "Capacité colorée actuelle en voie scolaire",
+      capaciteScolaireColoree: "Future capacité colorée en voie scolaire",
+      capaciteApprentissageActuelle: "Capacité en apprentissage actuelle",
+      capaciteApprentissage: "Future capacité en apprentissage",
+      capaciteApprentissageColoreeActuelle: "Capacité colorée actuelle en apprentissage",
+      capaciteApprentissageColoree: "Future capacité colorée en apprentissage",
       libelleColoration: "Libellé coloration",
       libelleFCIL: "Libellé FCIL",
       amiCma: "AMI/CMA ?",
@@ -123,18 +127,12 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
     color: themeDefinition.colors.purpleGlycine[950],
     cellColor: "#FEF3FD",
     options: {
-      augmentationCapaciteAccueilHebergement:
-        "Besoin d'augmentation de la capacité d'hébergement ?",
-      augmentationCapaciteAccueilHebergementPlaces:
-        "Nombre de places d'hébergement supplémentaires",
-      augmentationCapaciteAccueilHebergementPrecisions:
-        "Précisions sur l'augmentation de la capacité d'hébergement",
-      augmentationCapaciteAccueilRestauration:
-        "Besoin d'augmentation de la capacité de restauration ?",
-      augmentationCapaciteAccueilRestaurationPlaces:
-        "Nombre de places de restauration supplémentaires",
-      augmentationCapaciteAccueilRestaurationPrecisions:
-        "Précisions sur l'augmentation de la capacité de restauration",
+      augmentationCapaciteAccueilHebergement: "Besoin d'augmentation de la capacité d'hébergement ?",
+      augmentationCapaciteAccueilHebergementPlaces: "Nombre de places d'hébergement supplémentaires",
+      augmentationCapaciteAccueilHebergementPrecisions: "Précisions sur l'augmentation de la capacité d'hébergement",
+      augmentationCapaciteAccueilRestauration: "Besoin d'augmentation de la capacité de restauration ?",
+      augmentationCapaciteAccueilRestaurationPlaces: "Nombre de places de restauration supplémentaires",
+      augmentationCapaciteAccueilRestaurationPrecisions: "Précisions sur l'augmentation de la capacité de restauration",
     },
   },
   // Statut
@@ -187,9 +185,8 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
       motif: "Motif(s) de la demande",
       differenceCapaciteScolaire: "Nombre de places en voie scolaire",
       differenceCapaciteApprentissage: "Nombre de places en apprentissage",
-      capaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
-      capaciteApprentissageColoree:
-        "Nombre de places colorées en apprentissage",
+      differenceCapaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
+      differenceCapaciteApprentissageColoree: "Nombre de places colorées en apprentissage",
       libelleColoration: "Libellé coloration",
       libelleFCIL: "Libellé FCIL",
       amiCma: "AMI/CMA ?",
@@ -243,18 +240,12 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   ["hébergement et restauration"]: {
     color: themeDefinition.colors.grey[950],
     options: {
-      augmentationCapaciteAccueilHebergement:
-        "Besoin d'augmentation de la capacité d'hébergement ?",
-      augmentationCapaciteAccueilHebergementPlaces:
-        "Nombre de places d'hébergement supplémentaires",
-      augmentationCapaciteAccueilHebergementPrecisions:
-        "Précisions sur l'augmentation de la capacité d'hébergement",
-      augmentationCapaciteAccueilRestauration:
-        "Besoin d'augmentation de la capacité de restauration ?",
-      augmentationCapaciteAccueilRestaurationPlaces:
-        "Nombre de places de restauration supplémentaires",
-      augmentationCapaciteAccueilRestaurationPrecisions:
-        "Précisions sur l'augmentation de la capacité de restauration",
+      augmentationCapaciteAccueilHebergement: "Besoin d'augmentation de la capacité d'hébergement ?",
+      augmentationCapaciteAccueilHebergementPlaces: "Nombre de places d'hébergement supplémentaires",
+      augmentationCapaciteAccueilHebergementPrecisions: "Précisions sur l'augmentation de la capacité d'hébergement",
+      augmentationCapaciteAccueilRestauration: "Besoin d'augmentation de la capacité de restauration ?",
+      augmentationCapaciteAccueilRestaurationPlaces: "Nombre de places de restauration supplémentaires",
+      augmentationCapaciteAccueilRestaurationPrecisions: "Précisions sur l'augmentation de la capacité de restauration",
     },
   },
   // Statut
@@ -265,10 +256,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
       motifRefus: "Motif(s) de refus",
     },
   },
-} as Record<
-  string,
-  { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL> }
->;
+} as Record<string, { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL> }>;
 
 export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
   string,
@@ -298,9 +286,8 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
       typeDemande: "Type de demande",
       differenceCapaciteScolaire: "Nombre de places en voie scolaire",
       differenceCapaciteApprentissage: "Nombre de places en apprentissage",
-      capaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
-      capaciteApprentissageColoree:
-        "Nombre de places colorées en apprentissage",
+      differenceCapaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
+      differenceCapaciteApprentissageColoree: "Nombre de places colorées en apprentissage",
       libelleColoration: "Libellé coloration",
     },
   },
@@ -317,7 +304,4 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
       statut: "Statut",
     },
   },
-} as Record<
-  string,
-  { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_DEFAULT> }
->;
+} as Record<string, { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_DEFAULT> }>;

@@ -1,15 +1,13 @@
-import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type { GlossaireEntry } from "shared/routes/schemas/get.glossaire.schema";
 
-import { getPageIcon } from "../utils/getPageIcon";
-import { getPropertyIndicateur } from "../utils/properties/getPropertyIndicateur";
-import { getPropertyOrder } from "../utils/properties/getPropertyOrder";
-import { getPropertyStatut } from "../utils/properties/getPropertyStatut";
-import { getPropertyTitre } from "../utils/properties/getPropertyTitre";
-import { GlossaireEntry } from "./getGlossaire.schema";
+import { getPageIcon } from "@/modules/glossaire/usecases/utils/getPageIcon";
+import { getPropertyIndicateur } from "@/modules/glossaire/usecases/utils/properties/getPropertyIndicateur";
+import { getPropertyOrder } from "@/modules/glossaire/usecases/utils/properties/getPropertyOrder";
+import { getPropertyStatut } from "@/modules/glossaire/usecases/utils/properties/getPropertyStatut";
+import { getPropertyTitre } from "@/modules/glossaire/usecases/utils/properties/getPropertyTitre";
 
-export const mapNotionDatabaseRowToGlossaireEntry = (
-  pages: PageObjectResponse[]
-) => {
+export const mapNotionDatabaseRowToGlossaireEntry = (pages: PageObjectResponse[]) => {
   const entries: GlossaireEntry[] = [];
 
   for (const page of pages) {

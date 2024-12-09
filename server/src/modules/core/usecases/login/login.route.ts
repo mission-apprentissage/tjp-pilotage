@@ -1,14 +1,16 @@
 import { createRoute } from "@http-wizard/core";
-import cookie from "cookie";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { loginSchema } from "./login.schema";
+import type { Server } from "@/server/server";
+
 import { login } from "./login.usecase";
 
+const ROUTE = ROUTES["[POST]/auth/login"];
+
 export const loginRoute = (server: Server) => {
-  return createRoute("/auth/login", {
-    method: "POST",
-    schema: loginSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
@@ -16,14 +18,17 @@ export const loginRoute = (server: Server) => {
         const { email, password } = request.body;
 
         const token = await login({ email, password });
-        const cookies = cookie.serialize("Authorization", token, {
-          maxAge: 30 * 24 * 3600000,
-          httpOnly: true,
-          sameSite: "lax",
-          secure: true,
-          path: "/",
-        });
-        response.status(200).header("set-cookie", cookies).send({ token });
+
+        response
+          .status(200)
+          .setCookie("Authorization", token, {
+            maxAge: 30 * 24 * 3600000,
+            httpOnly: true,
+            sameSite: "lax",
+            secure: true,
+            path: "/",
+          })
+          .send({ token });
       },
     });
   });

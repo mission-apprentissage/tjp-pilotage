@@ -1,65 +1,48 @@
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
-import { isAvisVisible } from "../../../../utils/isAvisVisible";
-import { isIntentionCampagneEnCours } from "../../../../utils/isDemandeCampagneEnCours";
-import {
-  isIntentionBrouillonVisible,
-  isIntentionSelectable,
-} from "../../../../utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
-import { Filters } from "./getFilters.dep";
+import { getKbdClient } from "@/db/db";
+import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { isAvisVisible } from "@/modules/utils/isAvisVisible";
+import { isIntentionCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
+import { isIntentionBrouillonVisible, isIntentionSelectable } from "@/modules/utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
+
+import type { Filters } from "./getFilters.dep";
 
 export const getIntentions = async (
   {
+    campagne,
     statut,
-    search,
-    user,
-    offset = 0,
-    limit = 20,
-    order,
-    orderBy,
     codeAcademie,
     codeNiveauDiplome,
-    campagne,
+    user,
+    search,
+    offset = 0,
+    limit = MAX_LIMIT,
+    order,
+    orderBy,
   }: Filters,
   shouldFetchOnlyIntention: boolean
 ) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const intentions = await kdb
+  const intentions = await getKbdClient()
     .selectFrom("latestDemandeIntentionView as intention")
     .leftJoin("dataFormation", "dataFormation.cfd", "intention.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "intention.uai")
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
-    .leftJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
+    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "intention.codeDispositif"
-    )
+    .leftJoin("dispositif", "dispositif.codeDispositif", "intention.codeDispositif")
     .leftJoin(
       (join) =>
         join
           .selectFrom("changementStatut")
-          .select([
-            "changementStatut.intentionNumero",
-            "changementStatut.statut",
-            "changementStatut.commentaire",
-          ])
+          .select(["changementStatut.intentionNumero", "changementStatut.statut", "changementStatut.commentaire"])
           .distinctOn(["changementStatut.intentionNumero"])
           .orderBy("changementStatut.intentionNumero", "desc")
           .orderBy("changementStatut.updatedAt", "desc")
@@ -71,9 +54,7 @@ export const getIntentions = async (
     )
     .leftJoin("user", "user.id", "intention.createdBy")
     .leftJoin("suivi", (join) =>
-      join
-        .onRef("suivi.intentionNumero", "=", "intention.numero")
-        .on("userId", "=", user.id)
+      join.onRef("suivi.intentionNumero", "=", "intention.numero").on("userId", "=", user.id)
     )
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "intention.campagneId").$call((eb) => {
@@ -90,9 +71,7 @@ export const getIntentions = async (
     .selectAll("intention")
     .select((eb) => [
       "suivi.id as suiviId",
-      sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
-        "user.lastname"
-      )})`.as("userName"),
+      sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("userName"),
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
@@ -109,31 +88,21 @@ export const getIntentions = async (
         .selectFrom(({ selectFrom }) =>
           selectFrom("intention as intentionImportee")
             .select(["numero", "statut", "numeroHistorique"])
-            .whereRef(
-              "intentionImportee.numeroHistorique",
-              "=",
-              "intention.numero"
-            )
+            .whereRef("intentionImportee.numeroHistorique", "=", "intention.numero")
             .where(isIntentionCampagneEnCours(eb, "intentionImportee"))
             .limit(1)
             .orderBy("updatedAt desc")
             .as("allIntentionImportee")
         )
         .select("allIntentionImportee.numero")
-        .where(
-          "allIntentionImportee.statut",
-          "<>",
-          DemandeStatutEnum["supprimée"]
-        )
+        .where("allIntentionImportee.statut", "<>", DemandeStatutEnum["supprimée"])
         .as("numeroDemandeImportee"),
       jsonObjectFrom(
         eb
           .selectFrom("user")
           .whereRef("user.id", "=", "intention.createdBy")
           .select((eb) => [
-            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
-              "user.lastname"
-            )})`.as("fullname"),
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
           ])
@@ -144,9 +113,7 @@ export const getIntentions = async (
           .selectFrom("user")
           .whereRef("user.id", "=", "intention.updatedBy")
           .select((eb) => [
-            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
-              "user.lastname"
-            )})`.as("fullname"),
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
           ])
@@ -180,11 +147,7 @@ export const getIntentions = async (
         if (statut === "suivies")
           return eb.innerJoin("suivi as suiviUtilisateur", (join) =>
             join
-              .onRef(
-                "suiviUtilisateur.intentionNumero",
-                "=",
-                "intention.numero"
-              )
+              .onRef("suiviUtilisateur.intentionNumero", "=", "intention.numero")
               .on("suiviUtilisateur.userId", "=", user.id)
           );
         return eb.where("intention.statut", "=", statut);
@@ -214,14 +177,10 @@ export const getIntentions = async (
     })
     .$call((q) => {
       if (!orderBy || !order) return q;
-      return q.orderBy(
-        sql`${sql.ref(orderBy)}`,
-        sql`${sql.raw(order)} NULLS LAST`
-      );
+      return q.orderBy(sql`${sql.ref(orderBy)}`, sql`${sql.raw(order)} NULLS LAST`);
     })
     .$call((q) => {
-      if (shouldFetchOnlyIntention)
-        return q.where("intention.isIntention", "=", true);
+      if (shouldFetchOnlyIntention) return q.where("intention.isIntention", "=", true);
       return q;
     })
     .$call((eb) => {
@@ -233,11 +192,7 @@ export const getIntentions = async (
     })
     .$call((eb) => {
       if (codeNiveauDiplome) {
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
+        return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       }
 
       return eb;
@@ -249,11 +204,7 @@ export const getIntentions = async (
     .limit(limit)
     .execute();
 
-  const campagnes = await kdb
-    .selectFrom("campagne")
-    .selectAll()
-    .orderBy("annee desc")
-    .execute();
+  const campagnes = await getKbdClient().selectFrom("campagne").selectAll().orderBy("annee desc").execute();
 
   return {
     intentions: intentions.map((intention) =>

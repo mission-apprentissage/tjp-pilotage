@@ -1,4 +1,5 @@
-import { Server } from "../../server";
+import type { Server } from "@/server/server";
+
 import { countIntentionsRoute } from "./usecases/countIntentions/countIntentions.route";
 import { deleteAvisRoute } from "./usecases/deleteAvis/deleteAvis.route";
 import { deleteChangementStatutRoute } from "./usecases/deleteChangementStatut/deleteChangementStatut.route";
@@ -20,13 +21,9 @@ import { submitIntentionAccessLogRoute } from "./usecases/submitIntentionAccessL
 import { submitSuiviRoute } from "./usecases/submitSuivi/submitSuivi.route";
 import { uploadIntentionFilesRoute } from "./usecases/uploadIntentionFiles/uploadIntentionFiles.route";
 
-export const registerIntentionsExpeModule = ({
-  server,
-}: {
-  server: Server;
-}) => {
+export const registerIntentionsExpeModule = (server: Server) => {
   return {
-    ...submitIntentionRoute({ server }),
+    ...submitIntentionRoute(server),
     ...getIntentionRoute(server),
     ...getIntentionsRoute(server),
     ...countIntentionsRoute(server),
@@ -34,17 +31,17 @@ export const registerIntentionsExpeModule = ({
     ...importIntentionRoute(server),
     ...getCurrentCampagneRoute(server),
     ...searchEtablissementPerdirRoute(server),
-    ...submitChangementStatutRoute({ server }),
+    ...submitChangementStatutRoute(server),
     ...deleteChangementStatutRoute(server),
-    ...submitAvisRoute({ server }),
+    ...submitAvisRoute(server),
     ...uploadIntentionFilesRoute(server),
     ...getIntentionFilesRoute(server),
     ...deleteIntentionFilesRoute(server),
     ...getIntentionFileDownloadUrlRoute(server),
     ...deleteAvisRoute(server),
-    ...submitSuiviRoute({ server }),
+    ...submitSuiviRoute(server),
     ...deleteSuiviRoute(server),
     ...getEditoRoute(server),
-    ...submitIntentionAccessLogRoute({ server }),
+    ...submitIntentionAccessLogRoute(server),
   };
 };

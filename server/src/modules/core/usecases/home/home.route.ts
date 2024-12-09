@@ -1,19 +1,24 @@
 import { createRoute } from "@http-wizard/core";
-import { z } from "zod";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
+import config from "@/config";
+import type { Server } from "@/server/server";
 
-export const homeRoute = ({ server }: { server: Server }) => {
-  return createRoute("/", {
-    method: "GET",
-    schema: {
-      response: { 200: z.object({ hello: z.string() }) },
-    },
+const ROUTE = ROUTES["[GET]/healthcheck"];
+
+export const homeRoute = (server: Server) => {
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
       handler: async (_, response) => {
-        response.status(200).send({ hello: "dsf" });
+        response.status(200).send({
+          name: config.productName,
+          version: config.version,
+          env: config.env,
+        });
       },
     });
   });

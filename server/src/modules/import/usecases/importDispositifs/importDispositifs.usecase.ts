@@ -1,7 +1,9 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import { NDispositifFormation } from "../../fileTypes/NDispositifFormation";
-import { streamIt } from "../../utils/streamIt";
+import type { NDispositifFormation } from "@/modules/import/fileTypes/NDispositifFormation";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { dependencies } from "./importDispositifs.dependencies";
 
 const toDispositif = (data: NDispositifFormation) => {
@@ -14,7 +16,7 @@ const toDispositif = (data: NDispositifFormation) => {
 
 export const [importDispositifs] = inject(dependencies, (deps) => async () => {
   await streamIt(
-    (count) => deps.findNDispositifFormation({ offset: count, limit: 30 }),
+    async (count) => deps.findNDispositifFormation({ offset: count, limit: 30 }),
     async (item) => {
       const dispositif = toDispositif(item);
       await deps.createDispositif(dispositif);

@@ -3,8 +3,8 @@ import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 
-import { themeDefinition } from "../../../theme/theme";
-import { useChangelog } from "../changelog/useChangelog";
+import { useChangelog } from "@/app/(wrapped)/changelog/useChangelog";
+import { themeDefinition } from "@/theme/theme";
 
 const LOCAL_STORAGE_KEY = "closedChangelogEntries";
 
@@ -28,9 +28,7 @@ export const InformationHeader = () => {
 
   useEffect(() => {
     if (localStorage) {
-      const storedEntries = JSON.parse(
-        localStorage.getItem(LOCAL_STORAGE_KEY) ?? "[]"
-      );
+      const storedEntries = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) ?? "[]");
       setClosedEntries(storedEntries);
     }
   }, [setClosedEntries]);

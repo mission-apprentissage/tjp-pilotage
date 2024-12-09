@@ -1,13 +1,9 @@
-import { LyceesACCELine } from "../../../../fileTypes/LyceesACCELine";
-import { StructureDenseignement } from "../../../../fileTypes/Structures_denseignement";
-import { rawDataRepository } from "../../../../repositories/rawData.repository";
-import { findAddress } from "../../../../services/ban/ban.api";
+import type { LyceesACCELine } from "@/modules/import/fileTypes/LyceesACCELine";
+import type { StructureDenseignement } from "@/modules/import/fileTypes/Structures_denseignement";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
+import { findAddress } from "@/modules/import/services/ban/ban.api";
 
-export type EtablissementGeolocSource =
-  | "depp_acce"
-  | "onisep_secondaire"
-  | "onisep_supérieur"
-  | "onisep";
+export type EtablissementGeolocSource = "depp_acce" | "onisep_secondaire" | "onisep_supérieur" | "onisep";
 
 export type EtablissementGeoloc = {
   adresse: string | null | undefined;
@@ -18,15 +14,11 @@ export type EtablissementGeoloc = {
   source: EtablissementGeolocSource;
 };
 
-const resultAppearMoreThanOnce = (
-  secondaire: StructureDenseignement[],
-  superieur: StructureDenseignement[]
-) => secondaire.length > 0 && superieur.length > 0;
+const resultAppearMoreThanOnce = (secondaire: StructureDenseignement[], superieur: StructureDenseignement[]) =>
+  secondaire.length > 0 && superieur.length > 0;
 
-const resultAppearOnlyOnce = (
-  secondaire: StructureDenseignement[],
-  superieur: StructureDenseignement[]
-) => secondaire.length === 1 || superieur.length === 1;
+const resultAppearOnlyOnce = (secondaire: StructureDenseignement[], superieur: StructureDenseignement[]) =>
+  secondaire.length === 1 || superieur.length === 1;
 
 const mapEtablissementGeoloc = (
   etablissement: StructureDenseignement,
@@ -40,10 +32,7 @@ const mapEtablissementGeoloc = (
   source,
 });
 
-const allAddressAreIdenticals = (
-  secondaire: StructureDenseignement[],
-  superieur: StructureDenseignement[]
-) => {
+const allAddressAreIdenticals = (secondaire: StructureDenseignement[], superieur: StructureDenseignement[]) => {
   const all = [...secondaire, ...superieur];
 
   if (all.length === 0) {
@@ -53,10 +42,7 @@ const allAddressAreIdenticals = (
   const longitude = all[0]['"longitude (X)"'];
   const latitude = all[0]['"latitude (Y)"'];
 
-  return all.every(
-    (a) =>
-      a['"longitude (X)"'] === longitude && a['"latitude (Y)"'] === latitude
-  );
+  return all.every((a) => a['"longitude (X)"'] === longitude && a['"latitude (Y)"'] === latitude);
 };
 
 export const findEtablissementGeoloc = async ({
@@ -81,18 +67,11 @@ export const findEtablissementGeoloc = async ({
     if (allAddressAreIdenticals(secondaire, superieur)) {
       return mapEtablissementGeoloc(secondaire[0], "onisep");
     }
-    const etablissementsDuSecondaire = secondaire.filter(
-      (s) => s.CP === lyceeACCE?.code_postal_uai
-    );
-    const etablissementsDuSup = superieur.filter(
-      (s) => s.CP === lyceeACCE?.code_postal_uai
-    );
+    const etablissementsDuSecondaire = secondaire.filter((s) => s.CP === lyceeACCE?.code_postal_uai);
+    const etablissementsDuSup = superieur.filter((s) => s.CP === lyceeACCE?.code_postal_uai);
 
     if (etablissementsDuSecondaire.length > 0) {
-      return mapEtablissementGeoloc(
-        etablissementsDuSecondaire[0],
-        "onisep_secondaire"
-      );
+      return mapEtablissementGeoloc(etablissementsDuSecondaire[0], "onisep_secondaire");
     }
 
     if (etablissementsDuSup.length > 0) {
@@ -102,16 +81,12 @@ export const findEtablissementGeoloc = async ({
 
   if (resultAppearOnlyOnce(secondaire, superieur)) {
     const geoDatas = secondaire.length > 0 ? secondaire[0] : superieur[0];
-    const source =
-      secondaire.length > 0 ? "onisep_secondaire" : "onisep_supérieur";
+    const source = secondaire.length > 0 ? "onisep_secondaire" : "onisep_supérieur";
 
     return mapEtablissementGeoloc(geoDatas, source);
   }
 
-  const search = [
-    lyceeACCE?.adresse_uai,
-    [lyceeACCE?.code_postal_uai, lyceeACCE?.commune_libe].join(" "),
-  ]
+  const search = [lyceeACCE?.adresse_uai, [lyceeACCE?.code_postal_uai, lyceeACCE?.commune_libe].join(" ")]
     .filter((n) => n)
     .join(", ");
   const resultFromBAN = await findAddress({
@@ -119,8 +94,7 @@ export const findEtablissementGeoloc = async ({
     limit: 1,
   });
 
-  const [longitude, latitude] =
-    resultFromBAN?.features[0]?.geometry?.coordinates ?? [];
+  const [longitude, latitude] = resultFromBAN?.features[0]?.geometry?.coordinates ?? [];
 
   if (!latitude || !longitude) {
     console.log(

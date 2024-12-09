@@ -1,19 +1,23 @@
 import { expressionBuilder, sql } from "kysely";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
-import { DemandeStatutType } from "../../../../../shared/enum/demandeStatutEnum";
-import { DemandeTypeEnum } from "../../../../../shared/enum/demandeTypeEnum";
-import { DB } from "../../../db/db";
+import type { DB } from "@/db/db";
 import {
   countPlacesColorees,
+  countPlacesColoreesFermees,
+  countPlacesColoreesOuvertes,
+  countPlacesColoreesOuvertesQ4,
   countPlacesColoreesQ4,
-  countPlacesFermees,
   countPlacesFermeesApprentissage,
   countPlacesFermeesApprentissageQ4,
-  countPlacesFermeesQ4,
+  countPlacesFermeesParCampagne,
+  countPlacesFermeesQ4ParCampagne,
   countPlacesFermeesScolaire,
   countPlacesFermeesScolaireQ4,
+  countPlacesNonColoreesTransformees,
   countPlacesOuvertes,
   countPlacesOuvertesApprentissage,
   countPlacesOuvertesApprentissageQ1,
@@ -22,8 +26,9 @@ import {
   countPlacesOuvertesScolaireQ1,
   countPlacesOuvertesTransitionEcologique,
   countPlacesTransformeesParCampagne,
-} from "../../utils/countCapacite";
-import { isDemandeProjetOrValidee } from "../../utils/isDemandeProjetOrValidee";
+} from "@/modules/utils/countCapacite";
+import { isDemandeProjetOrValidee } from "@/modules/utils/isDemandeProjetOrValidee";
+
 import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
 
 export const genericOnDemandes = ({
@@ -68,9 +73,7 @@ export const genericOnDemandes = ({
           .leftJoin("rome", "rome.codeRome", "formationRome.codeRome")
           .select((sseb) => [
             "formationRome.cfd",
-            sql<boolean>`bool_or(${sseb.ref("rome.transitionEcologique")})`.as(
-              "transitionEcologique"
-            ),
+            sql<boolean>`bool_or(${sseb.ref("rome.transitionEcologique")})`.as("transitionEcologique"),
           ])
           .groupBy("cfd")
           .as("rome"),
@@ -79,21 +82,9 @@ export const genericOnDemandes = ({
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join.on((eb) =>
         eb.and([
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.cfd"),
-            "=",
-            eb.ref("demande.cfd")
-          ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
-            "=",
-            eb.ref("demande.codeDispositif")
-          ),
-          eb(
-            eb.ref("positionFormationRegionaleQuadrant.codeRegion"),
-            "=",
-            eb.ref("dataEtablissement.codeRegion")
-          ),
+          eb(eb.ref("positionFormationRegionaleQuadrant.cfd"), "=", eb.ref("demande.cfd")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeDispositif"), "=", eb.ref("demande.codeDispositif")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
@@ -104,42 +95,26 @@ export const genericOnDemandes = ({
     )
     .select((eb) => [
       eb.fn.count<number>("numero").as("countDemande"),
-      eb.fn
-        .sum<number>(countPlacesOuvertesScolaire(eb))
-        .as("placesOuvertesScolaire"),
-      eb.fn
-        .sum<number>(countPlacesFermeesScolaire(eb))
-        .as("placesFermeesScolaire"),
-      eb.fn
-        .sum<number>(countPlacesOuvertesScolaireQ1(eb))
-        .as("placesOuvertesScolaireQ1"),
-      eb.fn
-        .sum<number>(countPlacesFermeesScolaireQ4(eb))
-        .as("placesFermeesScolaireQ4"),
-      eb.fn
-        .sum<number>(countPlacesOuvertesApprentissage(eb))
-        .as("placesOuvertesApprentissage"),
-      eb.fn
-        .sum<number>(countPlacesFermeesApprentissage(eb))
-        .as("placesFermeesApprentissage"),
-      eb.fn
-        .sum<number>(countPlacesOuvertesApprentissageQ1(eb))
-        .as("placesOuvertesApprentissageQ1"),
-      eb.fn
-        .sum<number>(countPlacesFermeesApprentissageQ4(eb))
-        .as("placesFermeesApprentissageQ4"),
+      eb.fn.sum<number>(countPlacesOuvertesScolaire(eb)).as("placesOuvertesScolaire"),
+      eb.fn.sum<number>(countPlacesFermeesScolaire(eb)).as("placesFermeesScolaire"),
+      eb.fn.sum<number>(countPlacesOuvertesScolaireQ1(eb)).as("placesOuvertesScolaireQ1"),
+      eb.fn.sum<number>(countPlacesFermeesScolaireQ4(eb)).as("placesFermeesScolaireQ4"),
+      eb.fn.sum<number>(countPlacesOuvertesApprentissage(eb)).as("placesOuvertesApprentissage"),
+      eb.fn.sum<number>(countPlacesFermeesApprentissage(eb)).as("placesFermeesApprentissage"),
+      eb.fn.sum<number>(countPlacesOuvertesApprentissageQ1(eb)).as("placesOuvertesApprentissageQ1"),
+      eb.fn.sum<number>(countPlacesFermeesApprentissageQ4(eb)).as("placesFermeesApprentissageQ4"),
       eb.fn.sum<number>(countPlacesOuvertes(eb)).as("placesOuvertes"),
-      eb.fn.sum<number>(countPlacesFermees(eb)).as("placesFermees"),
+      eb.fn.sum<number>(countPlacesFermeesParCampagne(eb)).as("placesFermees"),
       eb.fn.sum<number>(countPlacesOuvertesQ1(eb)).as("placesOuvertesQ1"),
-      eb.fn.sum<number>(countPlacesFermeesQ4(eb)).as("placesFermeesQ4"),
-      eb.fn
-        .sum<number>(countPlacesOuvertesTransitionEcologique(eb))
-        .as("placesOuvertesTransformationEcologique"),
+      eb.fn.sum<number>(countPlacesFermeesQ4ParCampagne(eb)).as("placesFermeesQ4"),
+      eb.fn.sum<number>(countPlacesNonColoreesTransformees(eb)).as("placesNonColoreesTransformees"),
+      eb.fn.sum<number>(countPlacesOuvertesTransitionEcologique(eb)).as("placesOuvertesTransformationEcologique"),
       eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
       eb.fn.sum<number>(countPlacesColoreesQ4(eb)).as("placesColoreesQ4"),
-      eb.fn
-        .sum<number>(countPlacesTransformeesParCampagne(eb))
-        .as("placesTransformees"),
+      eb.fn.sum<number>(countPlacesColoreesOuvertes(eb)).as("placesColoreesOuvertes"),
+      eb.fn.sum<number>(countPlacesColoreesFermees(eb)).as("placesColoreesFermees"),
+      eb.fn.sum<number>(countPlacesColoreesOuvertesQ4(eb)).as("placesColoreesOuvertesQ4"),
+      eb.fn.sum<number>(countPlacesTransformeesParCampagne(eb)).as("placesTransformees"),
     ])
     .where(isInPerimetreIJDataEtablissement)
     .$call((eb) => {
@@ -156,31 +131,19 @@ export const genericOnDemandes = ({
       return eb;
     })
     .$call((eb) => {
-      if (codeRegion)
-        return eb.where("dataEtablissement.codeRegion", "=", codeRegion);
+      if (codeRegion) return eb.where("dataEtablissement.codeRegion", "=", codeRegion);
       return eb;
     })
     .$call((eb) => {
-      if (codeAcademie)
-        return eb.where("dataEtablissement.codeAcademie", "=", codeAcademie);
+      if (codeAcademie) return eb.where("dataEtablissement.codeAcademie", "=", codeAcademie);
       return eb;
     })
     .$call((eb) => {
-      if (codeDepartement)
-        return eb.where(
-          "dataEtablissement.codeDepartement",
-          "=",
-          codeDepartement
-        );
+      if (codeDepartement) return eb.where("dataEtablissement.codeDepartement", "=", codeDepartement);
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
+      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
@@ -205,10 +168,7 @@ export const genericOnDemandes = ({
       if (withColoration === undefined) return q;
       if (withColoration === "false")
         return q.where((w) =>
-          w.or([
-            w("demande.coloration", "=", false),
-            w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"]),
-          ])
+          w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
         );
       return q;
     });

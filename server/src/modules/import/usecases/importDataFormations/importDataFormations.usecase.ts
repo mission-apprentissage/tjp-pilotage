@@ -1,11 +1,13 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import _ from "lodash";
+import { capitalize, isString, pickBy } from "lodash-es";
 import { DateTime } from "luxon";
 
-import { DiplomeProfessionnelLine } from "../../fileTypes/DiplomesProfessionnels";
-import { rawDataRepository } from "../../repositories/rawData.repository";
-import { streamIt } from "../../utils/streamIt";
-import { getCfdDispositifs } from "../getCfdRentrees/getCfdDispositifs.dep";
+import type { DiplomeProfessionnelLine } from "@/modules/import/fileTypes/DiplomesProfessionnels";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
+import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";
+import { streamIt } from "@/modules/import/utils/streamIt";
+
 import { createDataFormation } from "./createDataFormation.dep";
 import { findDiplomeProfessionnel } from "./findDiplomeProfessionnel.dep";
 import { find2ndeCommune, findSpecialite } from "./findFamilleMetier.dep";
@@ -21,21 +23,13 @@ const EMPTY_VALUE = "(VIDE)";
  * retourner le contenu hors premier mot avec un trim.
  * Rajouter une majuscule pour la première lettre.
  */
-const normalizeWithReplace = ({
-  value,
-  regexp,
-}: {
-  value?: string;
-  regexp: RegExp;
-}) => {
+const normalizeWithReplace = ({ value, regexp }: { value?: string; regexp: RegExp }) => {
   if (!value) return EMPTY_VALUE;
-  return _.capitalize(value.trim().replace(regexp, "").trim()) || EMPTY_VALUE;
+  return capitalize(value.trim().replace(regexp, "").trim()) || EMPTY_VALUE;
 };
 
 const getLineOverride = (line: DiplomeProfessionnelLine) => {
-  return overrides[
-    `${line["Diplôme"]}_${line["Intitulé de la spécialité (et options)"]}`
-  ];
+  return overrides[`${line["Diplôme"]}_${line["Intitulé de la spécialité (et options)"]}`];
 };
 
 const formatCFD = (line: DiplomeProfessionnelLine) => {
@@ -58,12 +52,9 @@ type CompleteDiplomePorfessionelLine = DiplomeProfessionnelLine & {
 
 const isCompleteDiplomeProfessionelLine = (
   diplomeProfessionnelLine: DiplomeProfessionnelLine
-): diplomeProfessionnelLine is CompleteDiplomePorfessionelLine =>
-  !!diplomeProfessionnelLine["Code diplôme"];
+): diplomeProfessionnelLine is CompleteDiplomePorfessionelLine => !!diplomeProfessionnelLine["Code diplôme"];
 
-const formatDiplomeProfessionel = (
-  line?: DiplomeProfessionnelLine
-): CompleteDiplomePorfessionelLine | undefined => {
+const formatDiplomeProfessionel = (line?: DiplomeProfessionnelLine): CompleteDiplomePorfessionelLine | undefined => {
   if (!line) return;
   const formattedLine = {
     ...line,
@@ -73,10 +64,7 @@ const formatDiplomeProfessionel = (
 
   const overridedLine = {
     ...formattedLine,
-    ..._.pickBy(
-      getLineOverride(line),
-      (val) => _.isString(val) && val.trim() !== ""
-    ),
+    ...pickBy(getLineOverride(line), (val) => isString(val) && val.trim() !== ""),
   };
   if (!isCompleteDiplomeProfessionelLine(overridedLine)) return;
   return overridedLine;
@@ -95,7 +83,7 @@ export const [importDataFormations] = inject(
     console.log("Import des dataFormation");
     let errorCount = 0;
     await streamIt(
-      (offset) =>
+      async (offset) =>
         rawDataRepository.findRawDatas({
           type: "nFormationDiplome_",
           offset,
@@ -105,9 +93,7 @@ export const [importDataFormations] = inject(
         const cfd = nFormationDiplome.FORMATION_DIPLOME;
         if (processedCfds.has(cfd)) return;
 
-        const diplomeProfessionnel = await deps
-          .findDiplomeProfessionnel({ cfd })
-          .then(formatDiplomeProfessionel);
+        const diplomeProfessionnel = await deps.findDiplomeProfessionnel({ cfd }).then(formatDiplomeProfessionel);
 
         const isBTS = cfd.slice(0, 3) === "320";
         const is2ndeCommune = !!(await deps.find2ndeCommune(cfd));
@@ -123,14 +109,9 @@ export const [importDataFormations] = inject(
           await deps
             .createDataFormation({
               cfd,
-              libelleFormation: diplomeProfessionnel?.[
-                "Intitulé de la spécialité (et options)"
-              ]
+              libelleFormation: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"]
                 ? normalizeWithReplace({
-                    value:
-                      diplomeProfessionnel?.[
-                        "Intitulé de la spécialité (et options)"
-                      ],
+                    value: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"],
                     regexp: /"/g,
                   })
                 : normalizeWithReplace({
@@ -141,10 +122,7 @@ export const [importDataFormations] = inject(
                 ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
                 : undefined,
               cpc: normalizeWithReplace({
-                value:
-                  diplomeProfessionnel?.[
-                    "Commission professionnelle consultative"
-                  ],
+                value: diplomeProfessionnel?.["Commission professionnelle consultative"],
                 regexp: /^cpc/i,
               }),
               cpcSecteur: normalizeWithReplace({
@@ -156,21 +134,12 @@ export const [importDataFormations] = inject(
                 regexp: /^sous-secteur/i,
               }),
               codeNsf: cfd.slice(3, 6),
-              codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(
-                0,
-                3
-              ),
+              codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(0, 3),
               dateOuverture: nFormationDiplome.DATE_OUVERTURE
-                ? DateTime.fromFormat(
-                    nFormationDiplome.DATE_OUVERTURE,
-                    "dd/LL/yyyy"
-                  ).toJSDate()
+                ? DateTime.fromFormat(nFormationDiplome.DATE_OUVERTURE, "dd/LL/yyyy").toJSDate()
                 : undefined,
               dateFermeture: nFormationDiplome.DATE_FERMETURE
-                ? DateTime.fromFormat(
-                    nFormationDiplome.DATE_FERMETURE,
-                    "dd/LL/yyyy"
-                  ).toJSDate()
+                ? DateTime.fromFormat(nFormationDiplome.DATE_FERMETURE, "dd/LL/yyyy").toJSDate()
                 : undefined,
               typeFamille: getTypeFamille(),
             })
@@ -181,9 +150,7 @@ export const [importDataFormations] = inject(
           console.log(e);
           errorCount++;
         } finally {
-          process.stdout.write(
-            `\r${count} dataFormation (scolaire) ajoutées ou mises à jour`
-          );
+          process.stdout.write(`\r${count} dataFormation (scolaire) ajoutées ou mises à jour`);
         }
       },
       { parallel: 20 }
@@ -191,7 +158,7 @@ export const [importDataFormations] = inject(
       console.log();
     });
     await streamIt(
-      (offset) =>
+      async (offset) =>
         rawDataRepository.findRawDatas({
           type: "vFormationDiplome_",
           offset,
@@ -201,9 +168,7 @@ export const [importDataFormations] = inject(
         const cfd = vFormationDiplome.FORMATION_DIPLOME;
         if (processedCfds.has(cfd)) return;
 
-        const diplomeProfessionnel = await deps
-          .findDiplomeProfessionnel({ cfd })
-          .then(formatDiplomeProfessionel);
+        const diplomeProfessionnel = await deps.findDiplomeProfessionnel({ cfd }).then(formatDiplomeProfessionel);
 
         const isBTS = cfd.slice(0, 3) === "320";
         const is2ndeCommune = !!(await deps.find2ndeCommune(cfd));
@@ -219,14 +184,9 @@ export const [importDataFormations] = inject(
           await deps
             .createDataFormation({
               cfd,
-              libelleFormation: diplomeProfessionnel?.[
-                "Intitulé de la spécialité (et options)"
-              ]
+              libelleFormation: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"]
                 ? normalizeWithReplace({
-                    value:
-                      diplomeProfessionnel?.[
-                        "Intitulé de la spécialité (et options)"
-                      ],
+                    value: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"],
                     regexp: /"/g,
                   })
                 : normalizeWithReplace({
@@ -237,10 +197,7 @@ export const [importDataFormations] = inject(
                 ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
                 : undefined,
               cpc: normalizeWithReplace({
-                value:
-                  diplomeProfessionnel?.[
-                    "Commission professionnelle consultative"
-                  ],
+                value: diplomeProfessionnel?.["Commission professionnelle consultative"],
                 regexp: /^cpc/i,
               }),
               cpcSecteur: normalizeWithReplace({
@@ -252,21 +209,12 @@ export const [importDataFormations] = inject(
                 regexp: /^sous-secteur/i,
               }),
               codeNsf: cfd.slice(3, 6),
-              codeNiveauDiplome: vFormationDiplome.FORMATION_DIPLOME.slice(
-                0,
-                3
-              ),
+              codeNiveauDiplome: vFormationDiplome.FORMATION_DIPLOME.slice(0, 3),
               dateOuverture: vFormationDiplome.DATE_OUVERTURE
-                ? DateTime.fromFormat(
-                    vFormationDiplome.DATE_OUVERTURE,
-                    "dd/LL/yyyy"
-                  ).toJSDate()
+                ? DateTime.fromFormat(vFormationDiplome.DATE_OUVERTURE, "dd/LL/yyyy").toJSDate()
                 : undefined,
               dateFermeture: vFormationDiplome.DATE_FERMETURE
-                ? DateTime.fromFormat(
-                    vFormationDiplome.DATE_FERMETURE,
-                    "dd/LL/yyyy"
-                  ).toJSDate()
+                ? DateTime.fromFormat(vFormationDiplome.DATE_FERMETURE, "dd/LL/yyyy").toJSDate()
                 : undefined,
               typeFamille: getTypeFamille(),
             })
@@ -277,15 +225,11 @@ export const [importDataFormations] = inject(
           console.log(e);
           errorCount++;
         } finally {
-          process.stdout.write(
-            `\r${count} dataFormation (apprentissage) ajoutées ou mises à jour`
-          );
+          process.stdout.write(`\r${count} dataFormation (apprentissage) ajoutées ou mises à jour`);
         }
       },
       { parallel: 20 }
     );
-    process.stdout.write(
-      `${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`
-    );
+    process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
   }
 );

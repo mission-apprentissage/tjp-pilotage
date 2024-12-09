@@ -1,8 +1,9 @@
 import { sql } from "kysely";
-import { z } from "zod";
+import type { FormationSchema } from "shared/routes/schemas/get.etablissement.uai.analyse-detaillee.schema";
+import type { z } from "zod";
 
-import { cleanNull } from "../../../../../utils/noNull";
-import { FormationSchema } from "../getAnalyseDetailleeEtablissement.schema";
+import { cleanNull } from "@/utils/noNull";
+
 import { getBase } from "./base.dep";
 
 export const getFormations = async ({ uai }: { uai: string }) =>
@@ -25,11 +26,7 @@ export const getFormations = async ({ uai }: { uai: string }) =>
       "dataFormation.typeFamille",
       "dispositif.libelleDispositif",
     ])
-    .orderBy([
-      "libelleNiveauDiplome asc",
-      "libelleFormation asc",
-      "libelleDispositif",
-    ])
+    .orderBy(["libelleNiveauDiplome asc", "libelleFormation asc", "libelleDispositif"])
     .$castTo<z.infer<typeof FormationSchema>>()
     .execute()
     .then(cleanNull);

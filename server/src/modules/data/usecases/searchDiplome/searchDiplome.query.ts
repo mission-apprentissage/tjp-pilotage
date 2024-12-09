@@ -1,11 +1,11 @@
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import { z } from "zod";
+import type { searchDiplomeSchema } from "shared/routes/schemas/get.diplome.search.search.schema";
+import type { z } from "zod";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
-import { searchDiplomeSchema } from "./searchDiplome.schema";
+import { getKbdClient } from "@/db/db";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
 export const findManyInDataFormationQuery = async ({
   search,
@@ -16,19 +16,11 @@ export const findManyInDataFormationQuery = async ({
 }) => {
   const search_array = getNormalizedSearchArray(search);
 
-  const formations = await kdb
+  const formations = await getKbdClient()
     .selectFrom("dataFormation")
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "dataFormation.codeNiveauDiplome"
-    )
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .leftJoin("familleMetier", "dataFormation.cfd", "familleMetier.cfd")
-    .innerJoin(
-      "dispositif",
-      "dispositif.codeNiveauDiplome",
-      "niveauDiplome.codeNiveauDiplome"
-    )
+    .innerJoin("dispositif", "dispositif.codeNiveauDiplome", "niveauDiplome.codeNiveauDiplome")
     .where((eb) => sql`LEFT(${eb.ref("dataFormation.cfd")}, 3)`, "in", [
       "320", // BTS
       "381", // FCIL
@@ -43,12 +35,7 @@ export const findManyInDataFormationQuery = async ({
       "401", // BMA
     ])
     // exlcusion des CFD d'années communes en CAP et BAC PRO (40030002, 40020005, 50020006, 50030001)
-    .where("dataFormation.cfd", "not in", [
-      "40030002",
-      "40020005",
-      "50020006",
-      "50030001",
-    ])
+    .where("dataFormation.cfd", "not in", ["40030002", "40020005", "50020006", "50030001"])
     .where((eb) =>
       eb.and([
         eb.and(
@@ -92,11 +79,7 @@ export const findManyInDataFormationQuery = async ({
             eb
               .selectFrom("dispositif")
               .select(["libelleDispositif", "codeDispositif"])
-              .whereRef(
-                "dispositif.codeNiveauDiplome",
-                "=",
-                "dataFormation.codeNiveauDiplome"
-              )
+              .whereRef("dispositif.codeNiveauDiplome", "=", "dataFormation.codeNiveauDiplome")
               .distinctOn("codeDispositif")
           )
         )
@@ -107,18 +90,10 @@ export const findManyInDataFormationQuery = async ({
               .select(["libelleDispositif", "codeDispositif"])
               .leftJoin("rawData", (join) =>
                 join
-                  .onRef(
-                    sql`"data"->>'DISPOSITIF_FORMATION'`,
-                    "=",
-                    "dispositif.codeDispositif"
-                  )
+                  .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
                   .on("rawData.type", "=", "nMef")
               )
-              .whereRef(
-                sql`"data"->>'FORMATION_DIPLOME'`,
-                "=",
-                "dataFormation.cfd"
-              )
+              .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
               .distinctOn("codeDispositif")
           )
         )
@@ -130,23 +105,11 @@ export const findManyInDataFormationQuery = async ({
       sql<string>`CONCAT(${eb.ref("dataFormation.libelleFormation")},
       ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')',
       ' (',${eb.ref("dataFormation.cfd")},')')`.as("label"),
-      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'specialite'`.as(
-        "isSpecialite"
-      ),
-      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'option'`.as(
-        "isOption"
-      ),
-      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = '1ere_commune'`.as(
-        "is1ereCommune"
-      ),
-      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = '2nde_commune'`.as(
-        "is2ndeCommune"
-      ),
-      sql<boolean>`${eb("dataFormation.codeNiveauDiplome", "in", [
-        "381",
-        "481",
-        "581",
-      ])}`.as("isFCIL"),
+      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'specialite'`.as("isSpecialite"),
+      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'option'`.as("isOption"),
+      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = '1ere_commune'`.as("is1ereCommune"),
+      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = '2nde_commune'`.as("is2ndeCommune"),
+      sql<boolean>`${eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as("isFCIL"),
       "dataFormation.libelleFormation",
       "niveauDiplome.libelleNiveauDiplome",
       "dataFormation.cfd",
@@ -157,15 +120,8 @@ export const findManyInDataFormationQuery = async ({
         end
       `.as("dateFermeture"),
     ])
-    .distinctOn([
-      "dataFormation.cfd",
-      "dataFormation.libelleFormation",
-      "niveauDiplome.libelleNiveauDiplome",
-    ])
-    .orderBy([
-      "niveauDiplome.libelleNiveauDiplome",
-      "dataFormation.libelleFormation asc",
-    ])
+    .distinctOn(["dataFormation.cfd", "dataFormation.libelleFormation", "niveauDiplome.libelleNiveauDiplome"])
+    .orderBy(["niveauDiplome.libelleNiveauDiplome", "dataFormation.libelleFormation asc"])
     .limit(20)
     .execute()
     .then(cleanNull);

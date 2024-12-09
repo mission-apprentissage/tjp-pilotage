@@ -1,12 +1,14 @@
 import { Flex, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 
-import {
+import type {
   FiltersStatsPilotageIntentions,
   FilterTracker,
   StatsPilotageIntentions,
-} from "../types";
-import { CartoSection, IndicateurType } from "./CartoSection";
+} from "@/app/(wrapped)/intentions/pilotage/types";
+
+import type { IndicateurType } from "./CartoSection";
+import { CartoSection } from "./CartoSection";
 import { IndicateursClesSection } from "./IndicateursClesSection";
 
 export const HeaderSection = ({
@@ -24,8 +26,7 @@ export const HeaderSection = ({
   filterTracker: FilterTracker;
   isLoading?: boolean;
 }) => {
-  const [indicateur, setIndicateur] =
-    useState<IndicateurType>("tauxTransformation");
+  const [indicateur, setIndicateur] = useState<IndicateurType>("tauxTransformation");
 
   const indicateurOptions = [
     {
@@ -59,9 +60,7 @@ export const HeaderSection = ({
         <Flex flex={1} minW={500} minH={500}>
           <CartoSection
             indicateur={indicateur}
-            handleIndicateurChange={(newIndicateur) =>
-              setIndicateur(newIndicateur as IndicateurType)
-            }
+            handleIndicateurChange={(newIndicateur) => setIndicateur(newIndicateur as IndicateurType)}
             indicateurOptions={indicateurOptions}
             filters={filters}
             data={data}

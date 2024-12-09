@@ -1,15 +1,18 @@
 import { createRoute } from "@http-wizard/core";
 import { getPermissionScope, guardScope } from "shared";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
-import { getIntentionSchema } from "./getIntention.schema";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { getIntentionUsecase } from "./getIntention.usecase";
 
+const ROUTE = ROUTES["[GET]/intention/:numero"];
+
 export const getIntentionRoute = (server: Server) => {
-  return createRoute("/intention/:numero", {
-    method: "GET",
-    schema: getIntentionSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
@@ -21,10 +24,7 @@ export const getIntentionRoute = (server: Server) => {
           user,
         });
 
-        const scope = getPermissionScope(
-          user.role,
-          "intentions-perdir/ecriture"
-        );
+        const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
         const canEdit = guardScope(scope?.default, {
           uai: () => user.uais?.includes(intention.uai) ?? false,
           region: () => user.codeRegion === intention.codeRegion,

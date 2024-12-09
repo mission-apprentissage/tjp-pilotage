@@ -8,26 +8,18 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Crisp } from "crisp-sdk-web";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { createContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import { Auth, AuthContext } from "@/app/(wrapped)/auth/authContext";
+import { publicConfig } from "@/config.public";
+import { theme } from "@/theme/theme";
 
-import { theme } from "../theme/theme";
-import {
-  Changelog,
-  ChangelogContext,
-} from "./(wrapped)/changelog/changelogContext";
+import type { Auth } from "./(wrapped)/auth/authContext";
+import { AuthContext } from "./(wrapped)/auth/authContext";
+import type { Changelog } from "./(wrapped)/changelog/changelogContext";
+import { ChangelogContext } from "./(wrapped)/changelog/changelogContext";
 import { GlossaireProvider } from "./(wrapped)/glossaire/glossaireContext";
-import { GlossaireEntries } from "./(wrapped)/glossaire/types";
+import type { GlossaireEntries } from "./(wrapped)/glossaire/types";
 
 interface RootLayoutClientProps {
   readonly children: React.ReactNode;
@@ -38,8 +30,8 @@ interface RootLayoutClientProps {
 
 const useCrisp = () => {
   useEffect(() => {
-    const token = process.env.NEXT_PUBLIC_CRISP_TOKEN;
-    if (process.env.NEXT_PUBLIC_ENV === "production" && token) {
+    const token = publicConfig.crisp.token;
+    if (publicConfig.env === "production" && token) {
       Crisp.configure(token);
     } else {
       console.log("Crisp disabled");
@@ -52,9 +44,7 @@ const useTracking = () => {
   const param = searchParams.get("notracking");
   const noTracking = useRef(
     param !== "reset" &&
-      (!!param ||
-        (typeof localStorage !== "undefined" &&
-          localStorage.getItem("notracking") === "true"))
+      (!!param || (typeof localStorage !== "undefined" && localStorage.getItem("notracking") === "true"))
   );
   useEffect(() => {
     if (param === "reset") {
@@ -65,32 +55,32 @@ const useTracking = () => {
       localStorage.setItem("notracking", "true");
     }
   }, [param]);
-  if (process.env.NEXT_PUBLIC_ENV !== "production") return false;
+  if (publicConfig.env !== "production") return false;
   return !noTracking.current;
 };
 
 export const CodeRegionFilterContext = createContext<{
-  codeRegionFilter: string;
-  setCodeRegionFilter: Dispatch<SetStateAction<string>>;
+  codeRegionFilter?: string;
+  setCodeRegionFilter: Dispatch<SetStateAction<string | undefined>>;
 }>({
   codeRegionFilter: "",
   setCodeRegionFilter: () => {},
 });
 
 export const CodeDepartementFilterContext = createContext<{
-  codeDepartementFilter: string;
-  setCodeDepartementFilter: Dispatch<SetStateAction<string>>;
+  codeDepartementFilter?: string;
+  setCodeDepartementFilter: Dispatch<SetStateAction<string | undefined>>;
 }>({
   codeDepartementFilter: "",
   setCodeDepartementFilter: () => {},
 });
 
-export const UaiFilterContext = createContext<{
-  uaiFilter: string;
-  setUaiFilter: Dispatch<SetStateAction<string>>;
+export const UaisFilterContext = createContext<{
+  uaisFilter?: Array<string>;
+  setUaisFilter: Dispatch<SetStateAction<Array<string> | undefined>>;
 }>({
-  uaiFilter: "",
-  setUaiFilter: () => {},
+  uaisFilter: [],
+  setUaisFilter: () => {},
 });
 
 export default function RootLayoutClient({
@@ -114,19 +104,13 @@ export default function RootLayoutClient({
 
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
   const [changelog, setChangelog] = useState<Changelog>(initialChangelog);
-  const [codeRegionFilter, setCodeRegionFilter] = useState<string>(
-    auth?.user.codeRegion ?? ""
-  );
-  const [uaiFilter, setUaiFilter] = useState("");
 
-  const codeRegionFilterValue = useMemo(
-    () => ({ codeRegionFilter, setCodeRegionFilter }),
-    [codeRegionFilter]
-  );
-  const uaiFilterValue = useMemo(
-    () => ({ uaiFilter, setUaiFilter }),
-    [uaiFilter]
-  );
+  const [codeRegionFilter, setCodeRegionFilter] = useState<string | undefined>(auth?.user.codeRegion);
+  const [uaisFilter, setUaisFilter] = useState<Array<string> | undefined>(auth?.user.uais);
+
+  const codeRegionFilterValue = useMemo(() => ({ codeRegionFilter, setCodeRegionFilter }), [codeRegionFilter]);
+
+  const uaisFilterValue = useMemo(() => ({ uaisFilter, setUaisFilter }), [uaisFilter]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef<number>(0);
@@ -151,25 +135,17 @@ export default function RootLayoutClient({
   return (
     <html lang="fr" data-theme="light">
       <head>
-        <PlausibleProvider
-          trackLocalhost={false}
-          enabled={tracking}
-          domain="orion.inserjeunes.beta.gouv.fr"
-        />
+        <PlausibleProvider trackLocalhost={false} enabled={tracking} domain={publicConfig.host} />
       </head>
       <body suppressHydrationWarning={true}>
         <QueryClientProvider client={queryClient}>
           <CacheProvider>
             <ChakraProvider theme={theme}>
               <AuthContext.Provider value={{ auth, setAuth }}>
-                <UaiFilterContext.Provider value={uaiFilterValue}>
-                  <CodeRegionFilterContext.Provider
-                    value={codeRegionFilterValue}
-                  >
+                <UaisFilterContext.Provider value={uaisFilterValue}>
+                  <CodeRegionFilterContext.Provider value={codeRegionFilterValue}>
                     <GlossaireProvider initialEntries={initialGlossaire}>
-                      <ChangelogContext.Provider
-                        value={{ changelog, setChangelog }}
-                      >
+                      <ChangelogContext.Provider value={{ changelog, setChangelog }}>
                         <Flex
                           direction="column"
                           height="100vh"
@@ -183,7 +159,7 @@ export default function RootLayoutClient({
                       </ChangelogContext.Provider>
                     </GlossaireProvider>
                   </CodeRegionFilterContext.Provider>
-                </UaiFilterContext.Provider>
+                </UaisFilterContext.Provider>
               </AuthContext.Provider>
             </ChakraProvider>
           </CacheProvider>

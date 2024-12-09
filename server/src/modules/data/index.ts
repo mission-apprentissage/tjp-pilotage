@@ -1,4 +1,5 @@
-import { Server } from "../../server";
+import type { Server } from "@/server/server";
+
 import { getAnalyseDetailleeEtablissementRoute } from "./usecases/getAnalyseDetailleeEtablissement/getAnalyseDetailleeEtablissement.route";
 import { getDataForEtablissementMapRoute } from "./usecases/getDataForEtablissementMap/getDataForEtablissementMap.route";
 import { getDataForEtablissementMapListRoute } from "./usecases/getDataForEtablissementMapList/getDataForEtablissementMapList.route";
@@ -30,37 +31,37 @@ import { searchMetierRoute } from "./usecases/searchMetier/searchMetier.route";
 import { searchNsfRoute } from "./usecases/searchNsf/searchNsf.route";
 import { searchNsfDiplomeRoute } from "./usecases/searchNsfFormation/searchNsfFormation.route";
 
-export const registerFormationModule = ({ server }: { server: Server }) => {
+export const registerDataModule = (server: Server) => {
   return {
-    ...getFormationsRoute({ server }),
-    ...getHeaderEtablissementRoute({ server }),
-    ...getEtablissementRoute({ server }),
-    ...getFormationEtablissementsRoutes({ server }),
-    ...getDataForPanoramaEtablissementRoute({ server }),
-    ...getDepartementRoute({ server }),
-    ...getDepartementsRoute({ server }),
-    ...getDataForPanoramaDepartementRoute({ server }),
+    ...getFormationsRoute(server),
+    ...getHeaderEtablissementRoute(server),
+    ...getEtablissementRoute(server),
+    ...getFormationEtablissementsRoutes(server),
+    ...getDataForPanoramaEtablissementRoute(server),
+    ...getDepartementRoute(server),
+    ...getDepartementsRoute(server),
+    ...getDataForPanoramaDepartementRoute(server),
     ...searchEtablissementRoute(server),
-    ...getAnalyseDetailleeEtablissementRoute({ server }),
-    ...getDataForPanoramaRegionRoute({ server }),
-    ...getRegionRoute({ server }),
-    ...getRegionsRoute({ server }),
-    ...getFormationsPilotageIntentionsRoute({ server }),
-    ...getStatsPilotageIntentionsRoute({ server }),
-    ...getDemandesRestitutionIntentionsRoute({ server }),
-    ...getStatsRestitutionIntentionsRoute({ server }),
-    ...getPilotageReformeStatsRoute({ server }),
-    ...getPilotageReformeStatsRegionsRoute({ server }),
-    ...getDataForEtablissementMapRoute({ server }),
-    ...getDataForEtablissementMapListRoute({ server }),
-    ...searchDiplomeRoute({ server }),
-    ...searchNsfRoute({ server }),
-    ...searchNsfDiplomeRoute({ server }),
-    ...searchMetierRoute({ server }),
-    ...searchDomaineProfessionnelRoute({ server }),
-    ...searchDisciplineRoute({ server }),
+    ...getAnalyseDetailleeEtablissementRoute(server),
+    ...getDataForPanoramaRegionRoute(server),
+    ...getRegionRoute(server),
+    ...getRegionsRoute(server),
+    ...getFormationsPilotageIntentionsRoute(server),
+    ...getStatsPilotageIntentionsRoute(server),
+    ...getDemandesRestitutionIntentionsRoute(server),
+    ...getStatsRestitutionIntentionsRoute(server),
+    ...getPilotageReformeStatsRoute(server),
+    ...getPilotageReformeStatsRegionsRoute(server),
+    ...getDataForEtablissementMapRoute(server),
+    ...getDataForEtablissementMapListRoute(server),
+    ...searchDiplomeRoute(server),
+    ...searchNsfRoute(server),
+    ...searchNsfDiplomeRoute(server),
+    ...searchMetierRoute(server),
+    ...searchDomaineProfessionnelRoute(server),
+    ...searchDisciplineRoute(server),
     ...searchFiliereRoute(server),
     ...searchCampusRoute(server),
-    ...getRepartitionPilotageIntentionsRoute({ server }),
+    ...getRepartitionPilotageIntentionsRoute(server),
   };
 };

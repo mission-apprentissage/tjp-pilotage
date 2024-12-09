@@ -1,12 +1,8 @@
-import { kdb } from "../../../../../../db/db";
-import { cleanNull } from "../../../../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
-export const findAnneeCommune = async ({
-  cfdFamille,
-}: {
-  cfdFamille: string;
-}) => {
-  const result = await kdb
+export const findAnneeCommune = async ({ cfdFamille }: { cfdFamille: string }) => {
+  const result = await getKbdClient()
     .selectFrom("familleMetier")
     .selectAll()
     .where("cfdFamille", "=", cfdFamille)
@@ -15,10 +11,6 @@ export const findAnneeCommune = async ({
 };
 
 export const findSpecialite = async ({ cfd }: { cfd: string }) => {
-  const result = await kdb
-    .selectFrom("familleMetier")
-    .selectAll()
-    .where("cfd", "=", cfd)
-    .executeTakeFirst();
+  const result = await getKbdClient().selectFrom("familleMetier").selectAll().where("cfd", "=", cfd).executeTakeFirst();
   return result && cleanNull(result);
 };

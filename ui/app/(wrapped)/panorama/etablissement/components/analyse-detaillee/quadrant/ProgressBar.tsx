@@ -18,12 +18,7 @@ export const ProgressBar = ({
           {leftLabel}
         </Text>
       </Flex>
-      <Flex
-        flex={1}
-        bgColor="gray.100"
-        justifyContent={"space-between"}
-        borderRadius={"4px"}
-      >
+      <Flex flex={1} bgColor="gray.100" justifyContent={"space-between"} borderRadius={"4px"}>
         <Flex
           w={`${percentage < 100 ? percentage : 100}%`}
           bgColor={colorScheme}

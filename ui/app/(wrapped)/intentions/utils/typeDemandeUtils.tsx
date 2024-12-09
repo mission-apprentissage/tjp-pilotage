@@ -1,60 +1,39 @@
 import { ListItem, OrderedList, Text } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export type TypeDemande = keyof typeof TYPES_DEMANDES_OPTIONS;
 
-export const shouldDisplayColoration = (
-  typeDemande: TypeDemande,
-  libelleFCIL?: string
-) => {
+export const shouldDisplayColoration = (typeDemande: TypeDemande, libelleFCIL?: string) => {
   if (!isTypeColoration(typeDemande)) return true;
   return !libelleFCIL;
 };
 
-export const shouldDisplayTypeDemande = (
-  typeDemande: TypeDemande,
-  anneeCampagne: string,
-  rentreeScolaire?: number
-) => {
-  if (rentreeScolaire && parseInt(anneeCampagne) === rentreeScolaire)
-    return isTypeAjustement(typeDemande);
-  return (
-    TYPES_DEMANDES_OPTIONS[typeDemande].campagnes.includes(anneeCampagne) &&
-    !isTypeAjustement(typeDemande)
-  );
+export const shouldDisplayTypeDemande = (typeDemande: TypeDemande, anneeCampagne: string, rentreeScolaire?: number) => {
+  if (rentreeScolaire && parseInt(anneeCampagne) === rentreeScolaire) return isTypeAjustement(typeDemande);
+  return TYPES_DEMANDES_OPTIONS[typeDemande].campagnes.includes(anneeCampagne) && !isTypeAjustement(typeDemande);
 };
 
-export const isTypeFermeture = (typeDemande: TypeDemande) =>
-  typeDemande === "fermeture";
+export const isTypeFermeture = (typeDemande: TypeDemande) => typeDemande === "fermeture";
 
 export const isTypeOuverture = (typeDemande: TypeDemande) =>
   typeDemande === "ouverture_compensation" || typeDemande === "ouverture_nette";
 
 export const isTypeAugmentation = (typeDemande: TypeDemande) =>
-  typeDemande === "augmentation_compensation" ||
-  typeDemande === "augmentation_nette";
+  typeDemande === "augmentation_compensation" || typeDemande === "augmentation_nette";
 
-export const isTypeDiminution = (typeDemande: TypeDemande) =>
-  typeDemande === "diminution";
+export const isTypeDiminution = (typeDemande: TypeDemande) => typeDemande === "diminution";
 
 export const isTypeCompensation = (typeDemande: TypeDemande) =>
-  typeDemande === "augmentation_compensation" ||
-  typeDemande === "ouverture_compensation";
+  typeDemande === "augmentation_compensation" || typeDemande === "ouverture_compensation";
 
-export const isTypeTransfert = (typeDemande: TypeDemande) =>
-  typeDemande === "transfert";
+export const isTypeTransfert = (typeDemande: TypeDemande) => typeDemande === "transfert";
 
-export const isTypeColoration = (typeDemande: TypeDemande) =>
-  typeDemande === "coloration";
+export const isTypeColoration = (typeDemande: TypeDemande) => typeDemande === "coloration";
 
-export const isTypeAjustement = (typeDemande: TypeDemande) =>
-  typeDemande === "ajustement";
+export const isTypeAjustement = (typeDemande: TypeDemande) => typeDemande === "ajustement";
 
 export const getTypeDemandeLabelFiltre = (typeDemande?: TypeDemande): string =>
-  typeDemande
-    ? TYPES_DEMANDES_OPTIONS[typeDemande].labelFiltre ??
-      TYPES_DEMANDES_OPTIONS[typeDemande].label
-    : "";
+  typeDemande ? (TYPES_DEMANDES_OPTIONS[typeDemande].labelFiltre ?? TYPES_DEMANDES_OPTIONS[typeDemande].label) : "";
 
 export const getTypeDemandeLabel = (typeDemande?: TypeDemande): string =>
   typeDemande ? TYPES_DEMANDES_OPTIONS[typeDemande].label : "";
@@ -84,13 +63,9 @@ export const TYPES_DEMANDES_OPTIONS: Record<
           Exemple pour une ouverture :
         </Text>
         <Text>
-          J’ouvre un BAC PRO Boucher Charcutier Traiteur dans un établissement
-          qui ne dispense pas cette formation.
+          J’ouvre un BAC PRO Boucher Charcutier Traiteur dans un établissement qui ne dispense pas cette formation.
         </Text>
-        <Text>
-          Je saisis les capacités pour la première année de la spécialité (pas
-          la seconde commune).
-        </Text>
+        <Text>Je saisis les capacités pour la première année de la spécialité (pas la seconde commune).</Text>
       </>
     ),
   },
@@ -105,9 +80,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
           Exemple pour une augmentation :
         </Text>
         <Text>J’ouvre des places sur un BAC Pro Aéronautique.</Text>
-        <Text>
-          J'indique le motif ; je peux préciser qu'il s'agit d'une coloration.
-        </Text>
+        <Text>J'indique le motif ; je peux préciser qu'il s'agit d'une coloration.</Text>
       </>
     ),
   },
@@ -121,13 +94,8 @@ export const TYPES_DEMANDES_OPTIONS: Record<
         <Text mb="3" fontWeight="bold">
           Exemple pour une fermeture :
         </Text>
-        <Text mb="3">
-          Je ferme un CAP Petite enfance dans un établissement.
-        </Text>
-        <Text>
-          J'indique le motif de fermeture ; je peux ajouter des précisions en
-          commentaire.
-        </Text>
+        <Text mb="3">Je ferme un CAP Petite enfance dans un établissement.</Text>
+        <Text>J'indique le motif de fermeture ; je peux ajouter des précisions en commentaire.</Text>
       </>
     ),
   },
@@ -141,18 +109,14 @@ export const TYPES_DEMANDES_OPTIONS: Record<
         <Text mb="3" fontWeight="bold">
           Exemple pour une ouverture avec compensation :
         </Text>
-        <Text mb="3">
-          J’ouvre des places sur Bac Pro Logistique et je ferme un CAP Agent
-          Propreté et Hygiène.
-        </Text>
+        <Text mb="3">J’ouvre des places sur Bac Pro Logistique et je ferme un CAP Agent Propreté et Hygiène.</Text>
         <OrderedList>
           <ListItem mb="2">
-            Dans la demande d’ouverture avec compensation j’indique la formation
-            et l’établissement sur lequel la fermeture va intervenir.
+            Dans la demande d’ouverture avec compensation j’indique la formation et l’établissement sur lequel la
+            fermeture va intervenir.
           </ListItem>
           <ListItem>
-            Une fois cette saisie terminée, je saisis la fermeture en lien sur
-            le CAP Agent Propreté et Hygiène.
+            Une fois cette saisie terminée, je saisis la fermeture en lien sur le CAP Agent Propreté et Hygiène.
           </ListItem>
         </OrderedList>
       </>
@@ -168,20 +132,13 @@ export const TYPES_DEMANDES_OPTIONS: Record<
         <Text mb="3" fontWeight="bold">
           Exemple pour une augmentation avec compensation :
         </Text>
-        <Text mb="3">
-          J’ouvre des places sur le Bac Pro Cuisine et je ferme des places en
-          CAP Cuisine.
-        </Text>
+        <Text mb="3">J’ouvre des places sur le Bac Pro Cuisine et je ferme des places en CAP Cuisine.</Text>
         <OrderedList>
           <ListItem mb="2">
-            Dans la demande d’augmentation avec compensation, j’indique la
-            formation et l’établissement sur lequel je vais augmenter la
-            capacité.
+            Dans la demande d’augmentation avec compensation, j’indique la formation et l’établissement sur lequel je
+            vais augmenter la capacité.
           </ListItem>
-          <ListItem>
-            Une fois cette saisie terminée, je saisis la diminution en lien sur
-            le CAP Cuisine.
-          </ListItem>
+          <ListItem>Une fois cette saisie terminée, je saisis la diminution en lien sur le CAP Cuisine.</ListItem>
         </OrderedList>
       </>
     ),
@@ -196,13 +153,8 @@ export const TYPES_DEMANDES_OPTIONS: Record<
         <Text mb="3" fontWeight="bold">
           Exemple pour une diminution :
         </Text>
-        <Text mb="3">
-          Je diminue les places sur un CAP Menuisier Fabricant.
-        </Text>
-        <Text>
-          J'indique le motif de diminution ; je peux ajouter des précisions en
-          commentaire.
-        </Text>
+        <Text mb="3">Je diminue les places sur un CAP Menuisier Fabricant.</Text>
+        <Text>J'indique le motif de diminution ; je peux ajouter des précisions en commentaire.</Text>
       </>
     ),
   },
@@ -217,13 +169,9 @@ export const TYPES_DEMANDES_OPTIONS: Record<
           Exemple pour un transfert :
         </Text>
         <Text mb="1">
-          Je transfère une partie des places en voie scolaire d'un BAC PRO
-          Menuisier Fabricant vers l'apprentissage.
+          Je transfère une partie des places en voie scolaire d'un BAC PRO Menuisier Fabricant vers l'apprentissage.
         </Text>
-        <Text>
-          Pour ouvrir une section entière en apprentissage j'utilise le type
-          demande "Ouverture nette".
-        </Text>
+        <Text>Pour ouvrir une section entière en apprentissage j'utilise le type demande "Ouverture nette".</Text>
       </>
     ),
   },
@@ -239,13 +187,11 @@ export const TYPES_DEMANDES_OPTIONS: Record<
           Exemple pour une coloration :
         </Text>
         <Text mb="1">
-          Je colore pour la prochaine rentrée un nombre de places d’une
-          formation déjà ouverte dans l’établissement.
+          Je colore pour la prochaine rentrée un nombre de places d’une formation déjà ouverte dans l’établissement.
         </Text>
         <Text>
-          Si la formation n’est pas ouverte sur l’établissement actuellement,
-          j’utilise le type de demande “Ouverture nette” et je coche Coloration
-          dans la section “Précisions sur votre demande”.
+          Si la formation n’est pas ouverte sur l’établissement actuellement, j’utilise le type de demande “Ouverture
+          nette” et je coche Coloration dans la section “Précisions sur votre demande”.
         </Text>
       </>
     ),
@@ -258,10 +204,9 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     exemple: (
       <>
         <Text>
-          Toute augmentation de capacité concernant des élèves non affectés doit
-          être saisie dans ce formulaire, y compris si la formation concernée
-          avait déjà fait l’objet d’une saisie d’ouverture ou d'augmentation
-          durant la campagne 2023.
+          Toute augmentation de capacité concernant des élèves non affectés doit être saisie dans ce formulaire, y
+          compris si la formation concernée avait déjà fait l’objet d’une saisie d’ouverture ou d'augmentation durant la
+          campagne 2023.
         </Text>
       </>
     ),

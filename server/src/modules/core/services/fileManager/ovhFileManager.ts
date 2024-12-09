@@ -1,5 +1,5 @@
+import type { _Object } from "@aws-sdk/client-s3";
 import {
-  _Object,
   DeleteObjectCommand,
   GetObjectCommand,
   ListObjectsV2Command,
@@ -7,9 +7,9 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import type { FileManager, FileType } from "shared/files/types";
 
-import { config } from "../../../../../config/config";
-import { FileManager, FileType } from "./fileManager";
+import config from "@/config";
 
 function generateNewS3Client() {
   return new S3Client({
@@ -69,10 +69,7 @@ export const ovhFileManagerFactory = (
 
         console.log({ $metadata });
       } catch (error) {
-        console.error(
-          `Une erreur est survenue lors de l'ajout d'un fichier au dossier suivant: ${filepath}`,
-          error
-        );
+        console.error(`Une erreur est survenue lors de l'ajout d'un fichier au dossier suivant: ${filepath}`, error);
 
         throw new Error((error as Error).message);
       }
@@ -90,9 +87,7 @@ export const ovhFileManagerFactory = (
           return [];
         }
 
-        return listObjectsCommand.Contents.map(mapperToFileType).filter(
-          Boolean
-        ) as FileType[];
+        return listObjectsCommand.Contents.map(mapperToFileType).filter(Boolean) as FileType[];
       } catch (error) {
         console.error(
           `Une erreur est survenue lors de la récupération des fichiers du dossier suivant: ${filepath}`,
@@ -115,10 +110,7 @@ export const ovhFileManagerFactory = (
           })
         );
       } catch (error) {
-        console.error(
-          `Une erreur est survenue lors de la suppression du fichier suivant: ${filepath}`,
-          error
-        );
+        console.error(`Une erreur est survenue lors de la suppression du fichier suivant: ${filepath}`, error);
 
         throw new Error((error as Error).message);
       }

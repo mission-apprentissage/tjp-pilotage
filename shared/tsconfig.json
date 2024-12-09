@@ -1,26 +1,32 @@
 {
-  "include": [".", "../shared"],
   "compilerOptions": {
-    "strictPropertyInitialization": false,
+    "declaration": true,
+    "sourceMap": true,
     "declarationMap": true,
-    "listEmittedFiles": false,
-    "listFiles": false,
+    "composite": true,
+    "incremental": true,
+    "strictPropertyInitialization": false,
     "pretty": true,
-    "isolatedModules": false,
-    "lib": ["ES2020"] /* Emit ECMAScript-standard-compliant class fields. */,
+    "isolatedModules": true,
+    "lib": ["ES2023"] /* Emit ECMAScript-standard-compliant class fields. */,
     "module": "ESNext" /* Specify what module code is generated. */,
     "moduleResolution": "node" /* Specify how TypeScript looks up a file from a given module specifier. */,
     "resolveJsonModule": true,
-    "target": "ES2020",
+    "target": "ES2022",
     "outDir": "./dist" /* Specify an output folder for all emitted files. */,
     "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */,
     "strict": true /* Enable all strict type-checking options. */,
-    "skipLibCheck": false,
-    "declaration": true,
-    "noEmit": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": false,
-    "baseUrl": ".",
-    "jsx": "react"
+    "jsx": "react",
+    "noErrorTruncation": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["**/node_modules"],
+  "typeAcquisition": {
+    "enable": true,
+    "include": ["@types/node"]
   }
 }

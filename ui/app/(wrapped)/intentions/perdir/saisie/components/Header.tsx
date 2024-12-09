@@ -1,33 +1,23 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
-import { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
+import { INTENTIONS_COLUMNS } from "@/app/(wrapped)/intentions/perdir/saisie/INTENTIONS_COLUMNS";
+import type { Campagnes, Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
+import { isSaisieDisabled } from "@/app/(wrapped)/intentions/perdir/saisie/utils/canEditIntention";
+import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { Multiselect } from "@/components/Multiselect";
+import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
-
-import { Multiselect } from "../../../../../../components/Multiselect";
-import { SearchInput } from "../../../../../../components/SearchInput";
-import { formatExportFilename } from "../../../../../../utils/formatExportFilename";
-import { INTENTIONS_COLUMNS } from "../INTENTIONS_COLUMNS";
-import { Campagnes, Filters } from "../types";
-import { isSaisieDisabled } from "../utils/canEditIntention";
-
-const EXPORT_LIMIT = 1_000_000;
+import { formatExportFilename } from "@/utils/formatExportFilename";
 
 export const Header = ({
-  searchParams,
+  activeFilters,
+  filterTracker,
   setSearchParams,
   getIntentionsQueryParameters,
   searchIntention,
@@ -37,20 +27,11 @@ export const Header = ({
   handleFilters,
   diplomes,
   academies,
-  filterTracker,
-  activeFilters,
 }: {
   activeFilters: Filters;
-  searchParams: {
-    search?: string;
-    campagne?: string;
-  };
   filterTracker: (filterName: keyof Filters) => () => void;
-  setSearchParams: (params: { search?: string; campagne?: string }) => void;
-  getIntentionsQueryParameters: (
-    qLimit: number,
-    qOffset?: number
-  ) => Partial<Filters>;
+  setSearchParams: (params: { filters: Partial<Filters> }) => void;
+  getIntentionsQueryParameters: (qLimit?: number, qOffset?: number) => Partial<Filters>;
   searchIntention?: string;
   setSearchIntention: (search: string) => void;
   campagnes?: Campagnes;
@@ -63,11 +44,66 @@ export const Header = ({
   academies: OptionSchema[];
 }) => {
   const trackEvent = usePlausible();
-  const anneeCampagne = searchParams.campagne ?? campagne?.annee;
+  const anneeCampagne = activeFilters.campagne ?? campagne?.annee;
 
   const onClickSearchIntention = () => {
-    setSearchParams({ search: searchIntention });
+    setSearchParams({ filters: { search: searchIntention } });
   };
+
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("saisie_intentions_perdir:export");
+    const data = await client.ref("[GET]/intentions").query({
+      query: isFiltered ? getIntentionsQueryParameters() : {},
+    });
+    downloadCsv(
+      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : {}),
+      [
+        ...data.intentions.map((intention) => ({
+          ...intention,
+          ...intention.avis.reduce(
+            (acc, current, index) => {
+              acc[`avis${index}`] = [
+                current.fonction!.toUpperCase(),
+                `Avis ${current.statut}`,
+                current.commentaire,
+              ].join(" - ");
+              return acc;
+            },
+            {} as Record<string, string>
+          ),
+        })),
+      ],
+      INTENTIONS_COLUMNS
+    );
+  };
+
+  const onExportExcel = async (isFiltered?: boolean) => {
+    trackEvent("saisie_intentions_perdir:export-excel");
+    const data = await client.ref("[GET]/intentions").query({
+      query: isFiltered ? getIntentionsQueryParameters() : {},
+    });
+    downloadExcel(
+      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : {}),
+      [
+        ...data.intentions.map((intention) => ({
+          ...intention,
+          ...intention.avis.reduce(
+            (acc, current, index) => {
+              acc[`avis${index}`] = [
+                current.fonction!.toUpperCase(),
+                `Avis ${current.statut}`,
+                current.commentaire,
+              ].join(" - ");
+              return acc;
+            },
+            {} as Record<string, string>
+          ),
+        })),
+      ],
+      INTENTIONS_COLUMNS
+    );
+  };
+
   return (
     <Flex gap={2} mb={2}>
       <Flex direction={"column"} gap={1}>
@@ -82,15 +118,8 @@ export const Header = ({
             borderColor="grey.900"
           >
             <Flex direction="row">
-              <Text my={"auto"}>
-                Campagne{" "}
-                {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}
-              </Text>
-              <CampagneStatutTag
-                statut={
-                  campagnes?.find((c) => c.annee === anneeCampagne)?.statut
-                }
-              />
+              <Text my={"auto"}>Campagne {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}</Text>
+              <CampagneStatutTag statut={campagnes?.find((c) => c.annee === anneeCampagne)?.statut} />
             </Flex>
           </MenuButton>
           <MenuList py={0} borderTopRadius={0} zIndex={"dropdown"}>
@@ -100,8 +129,7 @@ export const Header = ({
                 key={campagne.annee}
                 onClick={() => {
                   setSearchParams({
-                    ...searchParams,
-                    campagne: campagne.annee,
+                    filters: { ...activeFilters, campagne: campagne.annee },
                   });
                 }}
               >
@@ -126,17 +154,12 @@ export const Header = ({
         >
           <Text fontWeight={700}>Campagne de saisie 2023 terminée</Text>
           <Text fontWeight={400}>
-            La campagne de saisie 2023 est terminée, vous pourrez saisir vos
-            demandes pour la campagne de saisie 2024 d'ici le 15 avril.
+            La campagne de saisie 2023 est terminée, vous pourrez saisir vos demandes pour la campagne de saisie 2024
+            d'ici le 15 avril.
           </Text>
         </Flex>
       )}
-      <Flex
-        flexDirection={["column", null, "row"]}
-        justifyContent={"space-between"}
-        gap={2}
-        flex={1}
-      >
+      <Flex flexDirection={["column", null, "row"]} justifyContent={"space-between"} gap={2} flex={1}>
         <Flex direction={"row"} gap={2} flex={1}>
           <Box justifyContent={"start"}>
             <Multiselect
@@ -159,9 +182,7 @@ export const Header = ({
               width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) =>
-                handleFilters("codeNiveauDiplome", selected)
-              }
+              onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
               options={diplomes}
               value={activeFilters.codeNiveauDiplome ?? []}
               disabled={diplomes.length === 0}
@@ -170,67 +191,7 @@ export const Header = ({
               Diplôme: Tous ({diplomes.length ?? 0})
             </Multiselect>
           </Box>
-          <ExportMenuButton
-            onExportCsv={async () => {
-              trackEvent("saisie_intentions_perdir:export");
-              const data = await client.ref("[GET]/intentions").query({
-                query: getIntentionsQueryParameters(EXPORT_LIMIT),
-              });
-              downloadCsv(
-                formatExportFilename(
-                  "recueil_demandes",
-                  activeFilters.codeAcademie
-                ),
-                [
-                  ...data.intentions.map((intention) => ({
-                    ...intention,
-                    ...intention.avis.reduce(
-                      (acc, current, index) => {
-                        acc[`avis${index}`] = [
-                          current.fonction!.toUpperCase(),
-                          `Avis ${current.statut}`,
-                          current.commentaire,
-                        ].join(" - ");
-                        return acc;
-                      },
-                      {} as Record<string, string>
-                    ),
-                  })),
-                ],
-                INTENTIONS_COLUMNS
-              );
-            }}
-            onExportExcel={async () => {
-              trackEvent("saisie_intentions_perdir:export-excel");
-              const data = await client.ref("[GET]/intentions").query({
-                query: getIntentionsQueryParameters(EXPORT_LIMIT),
-              });
-              downloadExcel(
-                formatExportFilename(
-                  "recueil_demandes",
-                  activeFilters.codeAcademie
-                ),
-                [
-                  ...data.intentions.map((intention) => ({
-                    ...intention,
-                    ...intention.avis.reduce(
-                      (acc, current, index) => {
-                        acc[`avis${index}`] = [
-                          current.fonction!.toUpperCase(),
-                          `Avis ${current.statut}`,
-                          current.commentaire,
-                        ].join(" - ");
-                        return acc;
-                      },
-                      {} as Record<string, string>
-                    ),
-                  })),
-                ],
-                INTENTIONS_COLUMNS
-              );
-            }}
-            variant="externalLink"
-          />
+          <AdvancedExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} variant="externalLink" />
         </Flex>
 
         <SearchInput

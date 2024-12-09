@@ -17,14 +17,15 @@ import {
 } from "@chakra-ui/react";
 import _ from "lodash";
 import { useState } from "react";
-import { getPermissionScope, Permission, PERMISSIONS, Role } from "shared";
-import { Scope } from "shared/security/permissions";
+import { getPermissionScope, PERMISSIONS } from "shared";
+import type { Permission, Role, Scope } from "shared/security/permissions";
 
+import { themeDefinition } from "@/theme/theme";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { themeDefinition } from "../../../../theme/theme";
 import { PermissionBadge } from "./components/PermissionBadge";
-import { User, UserSearchBar } from "./components/UserSearchBar";
+import type { User } from "./components/UserSearchBar";
+import { UserSearchBar } from "./components/UserSearchBar";
 import { OVERRIDES, PERMISSION_GROUP_LABELS, ROLES_LABELS } from "./const";
 
 const ROLES = Object.keys(ROLES_LABELS) as Array<keyof typeof PERMISSIONS>;
@@ -41,10 +42,7 @@ const getPermissionsForRole = (role: Role) => {
   return Object.keys(PERMISSIONS[role]) as Permission[];
 };
 
-const getPermissionsFromGroup = (
-  permissions: Array<Permission>,
-  group: string
-) => {
+const getPermissionsFromGroup = (permissions: Array<Permission>, group: string) => {
   return permissions.filter((p) => p.split("/")[0] === group);
 };
 
@@ -54,23 +52,17 @@ const formatPermissions = (permissions: Array<Permission>) => {
 
 const getScopeFromGroup = (role: Role, group: string): Scope => {
   const rolePermissions = PERMISSIONS[role];
-  const permission = Object.keys(rolePermissions).filter(
-    (key) => key.split("/")[0] === group
-  )[0] as Permission;
+  const permission = Object.keys(rolePermissions).filter((key) => key.split("/")[0] === group)[0] as Permission;
 
   return getPermissionScope(role, permission)?.default ?? "national";
 };
 
 const formatRights = (role: Role, label: string, user?: User) => {
-  const permissions = getPermissionsFromGroup(
-    getPermissionsForRole(role),
-    label
-  );
+  const permissions = getPermissionsFromGroup(getPermissionsForRole(role), label);
 
   const overridePermissions = permissions.filter((p) => {
     const roleOverrides = OVERRIDES[role];
-    const permissionOverride =
-      roleOverrides !== undefined ? roleOverrides[p] : undefined;
+    const permissionOverride = roleOverrides !== undefined ? roleOverrides[p] : undefined;
     if (permissionOverride && user) {
       return permissionOverride(user.codeRegion);
     }
@@ -80,6 +72,7 @@ const formatRights = (role: Role, label: string, user?: User) => {
   return formatPermissions(overridePermissions);
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
   const [selectedUser, setSelectedUser] = useState<User>();
 
@@ -89,17 +82,14 @@ export default () => {
         <VStack gap="16px" width="100%">
           <HStack gap="22px" width="100%" px="8px">
             <Heading fontWeight={700} fontSize="17.5px">
-              Visualiser les permissions d’un utilisateur en fonction de son
-              rôle
+              Visualiser les permissions d’un utilisateur en fonction de son rôle
             </Heading>
             <UserSearchBar updateUser={setSelectedUser} user={selectedUser} />
           </HStack>
           <TableContainer position="relative">
             <Table variant="simple">
               <Thead>
-                <Tr
-                  borderBottom={`1px solid ${themeDefinition.colors.grey[850]}`}
-                >
+                <Tr borderBottom={`1px solid ${themeDefinition.colors.grey[850]}`}>
                   <Th
                     position="sticky"
                     zIndex="200"
@@ -128,13 +118,7 @@ export default () => {
                     Description
                   </Th>
                   {PERMISSION_GROUPS.map((p) => (
-                    <Th
-                      key={p}
-                      borderBottom={"none"}
-                      fontSize="12px"
-                      fontWeight={700}
-                      textAlign={"center"}
-                    >
+                    <Th key={p} borderBottom={"none"} fontSize="12px" fontWeight={700} textAlign={"center"}>
                       {PERMISSION_GROUP_LABELS[p]}
                     </Th>
                   ))}
@@ -144,11 +128,7 @@ export default () => {
                 {ROLES.map((role) => (
                   <Tr
                     key={role}
-                    bgColor={
-                      role === selectedUser?.role
-                        ? themeDefinition.colors.bluefrance[950]
-                        : "white"
-                    }
+                    bgColor={role === selectedUser?.role ? themeDefinition.colors.bluefrance[950] : "white"}
                     _hover={{
                       backgroundColor: themeDefinition.colors.blueecume[925],
                     }}
@@ -177,31 +157,14 @@ export default () => {
                       paddingRight="12px"
                       boxShadow={`inset -2px 0px 0px 0px ${themeDefinition.colors.grey[850]}`}
                     >
-                      <Tooltip
-                        label={
-                          ROLES_LABELS[role](selectedUser?.codeRegion)
-                            .description
-                        }
-                      >
-                        <Text
-                          textOverflow={"ellipsis"}
-                          isTruncated
-                          height="200%"
-                          width="100%"
-                        >
-                          {
-                            ROLES_LABELS[role](selectedUser?.codeRegion)
-                              .description
-                          }
+                      <Tooltip label={ROLES_LABELS[role](selectedUser?.codeRegion).description}>
+                        <Text textOverflow={"ellipsis"} isTruncated height="200%" width="100%">
+                          {ROLES_LABELS[role](selectedUser?.codeRegion).description}
                         </Text>
                       </Tooltip>
                     </Td>
                     {PERMISSION_GROUPS.map((label) => (
-                      <Td
-                        key={role + label}
-                        borderBottom={"none"}
-                        textAlign="center"
-                      >
+                      <Td key={role + label} borderBottom={"none"} textAlign="center">
                         <PermissionBadge
                           rights={formatRights(role, label, selectedUser)}
                           scope={getScopeFromGroup(role, label)}

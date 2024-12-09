@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { describe, expect, it, vi } from "vitest";
 
 import { resetPasswordFactory } from "./resetPassword.usecase";
 
@@ -16,13 +17,15 @@ describe("resetPassword usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       resetPassword({
         password: correctPassword,
         repeatPassword: correctPassword,
         resetPasswordToken: undefined as unknown as string,
       })
-    ).rejects.toThrow("missing token");
+    ).rejects.toThrow(
+      "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début."
+    );
   });
 
   it("should throw an exception if the token is invalid", async () => {
@@ -31,13 +34,15 @@ describe("resetPassword usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       resetPassword({
         password: correctPassword,
         repeatPassword: correctPassword,
         resetPasswordToken: "fakeToken",
       })
-    ).rejects.toThrow("wrong token");
+    ).rejects.toThrow(
+      "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début."
+    );
   });
 
   it("should throw an exception if passwords are different", async () => {
@@ -46,13 +51,13 @@ describe("resetPassword usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       resetPassword({
         password: "aaa",
         repeatPassword: "bbb",
         resetPasswordToken,
       })
-    ).rejects.toThrow("different passwords");
+    ).rejects.toThrow("Mot de passe non identiques.");
   });
 
   it("should throw an exception if password is unsafe", async () => {
@@ -61,18 +66,20 @@ describe("resetPassword usecase", () => {
       jwtSecret,
     });
 
-    await expect(() =>
+    await expect(async () =>
       resetPassword({
         password: "azerty",
         repeatPassword: "azerty",
         resetPasswordToken,
       })
-    ).rejects.toThrow("password unsafe");
+    ).rejects.toThrow(
+      "Le mot de passe doit contenir entre 8 et 15 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)"
+    );
   });
 
   it("should set password", async () => {
     const deps = {
-      setPasswordQuery: jest.fn(async () => {}),
+      setPasswordQuery: vi.fn(async () => {}),
       jwtSecret,
     };
 

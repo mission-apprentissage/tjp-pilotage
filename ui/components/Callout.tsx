@@ -1,4 +1,5 @@
-import { Flex, FlexProps, forwardRef, Text } from "@chakra-ui/react";
+import type { FlexProps } from "@chakra-ui/react";
+import { Flex, forwardRef, Text } from "@chakra-ui/react";
 
 type CalloutProps = FlexProps & {
   body: React.ReactNode;
@@ -36,13 +37,7 @@ export const Callout = forwardRef<CalloutProps, "div">(
           {title}
         </Text>
       )}
-      <Flex
-        flex="inline"
-        fontSize={14}
-        fontWeight={400}
-        lineHeight={"24px"}
-        flexDirection={"column"}
-      >
+      <Flex flex="inline" fontSize={14} fontWeight={400} lineHeight={"24px"} flexDirection={"column"}>
         {body}
       </Flex>
       {actionButton}

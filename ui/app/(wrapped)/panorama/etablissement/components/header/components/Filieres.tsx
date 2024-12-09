@@ -1,15 +1,8 @@
-import {
-  Flex,
-  GridItem,
-  Icon,
-  SimpleGrid,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react";
+import { Flex, GridItem, Icon, SimpleGrid, Text, Tooltip } from "@chakra-ui/react";
 import { Icon as Iconify } from "@iconify/react";
 import { useEffect, useState } from "react";
 
-import { Nsfs } from "../types";
+import type { Nsfs } from "@/app/(wrapped)/panorama/etablissement/components/header/types";
 
 const NUMBER_OF_MAX_FILIERES_TO_DISPLAY = 6;
 
@@ -56,14 +49,10 @@ export const Filieres = ({ nsfs = [] }: { nsfs?: Nsfs }) => {
   useEffect(() => {
     if (nsfs.length > NUMBER_OF_MAX_FILIERES_TO_DISPLAY) {
       setSplited(
-        nsfs
-          .slice(0, NUMBER_OF_MAX_FILIERES_TO_DISPLAY - 1)
-          .map((nsf) => ({ ...nsf, icon: getIcon(nsf.codeNsf) }))
+        nsfs.slice(0, NUMBER_OF_MAX_FILIERES_TO_DISPLAY - 1).map((nsf) => ({ ...nsf, icon: getIcon(nsf.codeNsf) }))
       );
       setHidden(
-        nsfs
-          .slice(NUMBER_OF_MAX_FILIERES_TO_DISPLAY - 1)
-          .map((nsf) => ({ ...nsf, icon: getIcon(nsf.codeNsf) }))
+        nsfs.slice(NUMBER_OF_MAX_FILIERES_TO_DISPLAY - 1).map((nsf) => ({ ...nsf, icon: getIcon(nsf.codeNsf) }))
       );
     } else {
       setSplited(nsfs.map((nsf) => ({ ...nsf, icon: getIcon(nsf.codeNsf) })));
@@ -75,9 +64,7 @@ export const Filieres = ({ nsfs = [] }: { nsfs?: Nsfs }) => {
       <Text fontSize={{ base: "14px" }} fontWeight={"bold"}>
         DOMAINES DE FORMATION PROPOSÉS
       </Text>
-      {(nsfs || []).length === 0 && (
-        <Text my={"16px"}>Information indisponible</Text>
-      )}
+      {(nsfs || []).length === 0 && <Text my={"16px"}>Information indisponible</Text>}
       {(nsfs || []).length > 0 && (
         <SimpleGrid columns={2} spacing={"16px"} color={"grey.50"} my={"16px"}>
           {splited?.map((filiere) => (

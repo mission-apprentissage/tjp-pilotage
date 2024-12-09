@@ -1,26 +1,13 @@
-import {
-  Box,
-  CloseButton,
-  Collapse,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, CloseButton, Collapse, Stack, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { hasRole } from "shared";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { useAuth } from "@/utils/security/useAuth";
 
-export const InformationHeader = ({
-  statut,
-}: {
-  statut?: DemandeStatutType;
-}) => {
+export const InformationHeader = ({ statut }: { statut?: DemandeStatutType }) => {
   const { auth } = useAuth();
   const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
 
@@ -46,6 +33,12 @@ export const InformationHeader = ({
         return "success";
       case DemandeStatutEnum["prêt pour le vote"]:
         return "success";
+      case DemandeStatutEnum["brouillon"]:
+      case DemandeStatutEnum["proposition"]:
+      case DemandeStatutEnum["dossier complet"]:
+      case DemandeStatutEnum["demande validée"]:
+      case DemandeStatutEnum["refusée"]:
+      case DemandeStatutEnum["supprimée"]:
       default:
         return "info";
     }
@@ -58,6 +51,12 @@ export const InformationHeader = ({
         return "La proposition a passé l'étape 1 avec succès !";
       case DemandeStatutEnum["prêt pour le vote"]:
         return "La proposition a passé l'étape 2 avec succès !";
+      case DemandeStatutEnum["brouillon"]:
+      case DemandeStatutEnum["proposition"]:
+      case DemandeStatutEnum["dossier complet"]:
+      case DemandeStatutEnum["demande validée"]:
+      case DemandeStatutEnum["refusée"]:
+      case DemandeStatutEnum["supprimée"]:
       default:
         return null;
     }

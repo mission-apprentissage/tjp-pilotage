@@ -1,12 +1,9 @@
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
-import { DB } from "../db/db";
+import type { DB } from "@/db/db";
 
 export const up = async (db: Kysely<DB>) => {
-  await db.schema
-    .alterTable("dataFormation")
-    .addColumn("codeNsf", "varchar(3)")
-    .execute();
+  await db.schema.alterTable("dataFormation").addColumn("codeNsf", "varchar(3)").execute();
 
   await db.schema
     .alterTable("dataFormation")
@@ -15,11 +12,7 @@ export const up = async (db: Kysely<DB>) => {
 };
 
 export const down = async (db: Kysely<DB>) => {
-  db.schema
-    .alterTable("dataFormation")
-    .dropConstraint("fk_nsf")
-    .ifExists()
-    .execute();
+  db.schema.alterTable("dataFormation").dropConstraint("fk_nsf").ifExists().execute();
 
   db.schema.alterTable("dataFormation").dropColumn("codeNsf").execute();
 };

@@ -1,4 +1,4 @@
-import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
+import { getCurrentCampagneQuery } from "@/modules/demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
 const getDefaultCampagneFactory =
   (
     deps = {

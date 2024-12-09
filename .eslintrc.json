@@ -1,57 +1,66 @@
 {
   "env": {
-    "es2021": true,
+    "es2022": true,
     "node": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     },
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": ["tsconfig.json", "server/tsconfig.json", "shared/tsconfig.json", "ui/tsconfig.json"]
   },
-  "plugins": [
-    "react",
-    "@typescript-eslint",
-    "simple-import-sort",
-    "import",
-    "unused-imports"
-  ],
+  "plugins": ["react", "@typescript-eslint", "simple-import-sort", "import", "@dword-design/import-alias"],
   "rules": {
     "simple-import-sort/imports": "error",
-    "react/react-in-jsx-scope": "off",
-    "@typescript-eslint/no-empty-function": "off",
-    "react/display-name": 0,
-    "@typescript-eslint/ban-ts-comment": "off",
-    "react/prop-types": "off",
-    "@typescript-eslint/no-empty-interface": "off",
-    "react/no-unescaped-entities": "off",
-    "@typescript-eslint/no-var-requires": "warn",
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "off",
-    "unused-imports/no-unused-imports": "error",
-    "unused-imports/no-unused-vars": [
+    "import/no-cycle": ["error", { "ignoreExternal": true }],
+    "import/no-relative-packages": "error",
+    "import/no-useless-path-segments": ["error"],
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+    "import/no-extraneous-dependencies": [
       "error",
       {
-        "vars": "all",
-        "varsIgnorePattern": "^_",
-        "args": "after-used",
-        "argsIgnorePattern": "^_"
+        "devDependencies": [
+          "**/*.test.ts",
+          "**/*.test.tsx",
+          "**/tests/**/*.ts",
+          "**/tests/*.ts",
+          "**/fixtures/**/*.ts",
+          "**/tsup.config.ts",
+          "**/vitest.workspace.ts"
+        ]
       }
     ],
-    "import/no-useless-path-segments": ["error"],
-    "import/no-duplicates": ["error", { "considerQueryString": true }],
-    "import/no-unassigned-import": ["off"]
+    "@typescript-eslint/consistent-type-imports": ["error", { "prefer": "type-imports" }],
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-import-type-side-effects": "error",
+    "@typescript-eslint/promise-function-async": "error",
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "args": "all",
+        "argsIgnorePattern": "^_",
+        "caughtErrors": "all",
+        "caughtErrorsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "ignoreRestSiblings": true
+      }
+    ]
   },
   "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": ["server/tsconfig.json", "shared/tsconfig.json", "ui/tsconfig.json"]
+      }
+    },
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "ignorePatterns": ["release.config.js"]
 }

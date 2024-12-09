@@ -1,14 +1,15 @@
-import { z } from "zod";
+import type { getDataForPanoramaDepartementSchema } from "shared/routes/schemas/get.panorama.stats.departement.schema";
+import type { z } from "zod";
 
-import { getStatsSortieQuery } from "../../queries/getStatsSortie/getStatsSortie";
-import { getPositionQuadrant } from "../../services/getPositionQuadrant";
+import { getStatsSortieQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
+import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant";
+
 import {
   getCodeRegionFromDepartement,
   getFilters,
   getFormationsDepartement,
   getTopFlopFormationsDepartement,
 } from "./dependencies";
-import { getDataForPanoramaDepartementSchema } from "./getDataForPanoramaDepartement.schema";
 
 export const getDataForPanoramaDepartementFactory =
   (
@@ -21,14 +22,8 @@ export const getDataForPanoramaDepartementFactory =
       getCodeRegionFromDepartement,
     }
   ) =>
-  async (
-    activeFilters: z.infer<
-      typeof getDataForPanoramaDepartementSchema.querystring
-    >
-  ) => {
-    const { codeRegion } = await deps.getCodeRegionFromDepartement(
-      activeFilters.codeDepartement
-    );
+  async (activeFilters: z.infer<typeof getDataForPanoramaDepartementSchema.querystring>) => {
+    const { codeRegion } = await deps.getCodeRegionFromDepartement(activeFilters.codeDepartement);
 
     const [formations, topFlops, filters, statsSortie] = await Promise.all([
       deps.getFormationsDepartement(activeFilters),
@@ -47,5 +42,4 @@ export const getDataForPanoramaDepartementFactory =
     };
   };
 
-export const getDataForPanoramaDepartement =
-  getDataForPanoramaDepartementFactory();
+export const getDataForPanoramaDepartement = getDataForPanoramaDepartementFactory();

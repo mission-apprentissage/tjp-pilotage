@@ -1,13 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
+import type { Server } from "@/server/server";
+
 import { getDepartementStats } from "./getDepartement.query";
-import { getDepartementSchema } from "./getDepartement.schema";
 
-export const getDepartementRoute = ({ server }: { server: Server }) => {
-  return createRoute("/departement/:codeDepartement", {
-    method: "GET",
-    schema: getDepartementSchema,
+const ROUTE = ROUTES["[GET]/departement/:codeDepartement"];
+
+export const getDepartementRoute = (server: Server) => {
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

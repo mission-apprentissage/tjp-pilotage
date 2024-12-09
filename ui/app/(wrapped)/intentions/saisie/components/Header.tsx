@@ -1,34 +1,21 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
-import { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
+import { DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/saisie/DEMANDES_COLUMNS";
+import type { Campagnes, Filters } from "@/app/(wrapped)/intentions/saisie/types";
+import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
+import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
-import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { Multiselect } from "@/components/Multiselect";
 import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
-
-import { Multiselect } from "../../../../../components/Multiselect";
-import { formatExportFilename } from "../../../../../utils/formatExportFilename";
-import { DEMANDES_COLUMNS } from "../DEMANDES_COLUMNS";
-import { Campagnes, Filters } from "../types";
-import { isSaisieDisabled } from "../utils/isSaisieDisabled";
-
-const EXPORT_LIMIT = 1_000_000;
+import { formatExportFilename } from "@/utils/formatExportFilename";
 
 export const Header = ({
   activeFilters,
-  searchParams,
   setSearchParams,
   getDemandesQueryParameters,
   searchDemande,
@@ -41,15 +28,8 @@ export const Header = ({
   handleFilters,
 }: {
   activeFilters: Filters;
-  searchParams: {
-    search?: string;
-    campagne?: string;
-  };
-  setSearchParams: (params: { search?: string; campagne?: string }) => void;
-  getDemandesQueryParameters: (
-    qLimit: number,
-    qOffset?: number
-  ) => Partial<Filters>;
+  setSearchParams: (params: { filters: Partial<Filters> }) => void;
+  getDemandesQueryParameters: (qLimit?: number, qOffset?: number) => Partial<Filters>;
   searchDemande?: string;
   setSearchDemande: (search: string) => void;
   campagnes?: Campagnes;
@@ -63,10 +43,34 @@ export const Header = ({
   academies: OptionSchema[];
 }) => {
   const trackEvent = usePlausible();
-  const anneeCampagne = searchParams.campagne ?? campagne?.annee;
+  const anneeCampagne = activeFilters.campagne ?? campagne?.annee;
 
   const onClickSearchDemande = () => {
-    setSearchParams({ search: searchDemande });
+    setSearchParams({ filters: { search: searchDemande } });
+  };
+
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("saisie_demandes:export");
+    const data = await client.ref("[GET]/demandes").query({
+      query: isFiltered ? getDemandesQueryParameters() : {},
+    });
+    downloadCsv(
+      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : undefined),
+      data.demandes,
+      DEMANDES_COLUMNS
+    );
+  };
+
+  const onExportExcel = async (isFiltered?: boolean) => {
+    trackEvent("saisie_demandes:export-excel");
+    const data = await client.ref("[GET]/demandes").query({
+      query: isFiltered ? getDemandesQueryParameters() : {},
+    });
+    downloadExcel(
+      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : undefined),
+      data.demandes,
+      DEMANDES_COLUMNS
+    );
   };
   return (
     <Flex gap={2} mb={2}>
@@ -83,8 +87,8 @@ export const Header = ({
           >
             <Text fontWeight={700}>Campagne de saisie 2023 terminée</Text>
             <Text fontWeight={400}>
-              La campagne de saisie 2023 est terminée, vous pourrez saisir vos
-              demandes pour la campagne de saisie 2024 d'ici le 15 avril.
+              La campagne de saisie 2023 est terminée, vous pourrez saisir vos demandes pour la campagne de saisie 2024
+              d'ici le 15 avril.
             </Text>
           </Flex>
         )}
@@ -102,17 +106,8 @@ export const Header = ({
                   borderColor="grey.900"
                 >
                   <Flex direction="row">
-                    <Text my={"auto"}>
-                      Campagne{" "}
-                      {campagnes?.find((c) => c.annee === anneeCampagne)
-                        ?.annee ?? ""}
-                    </Text>
-                    <CampagneStatutTag
-                      statut={
-                        campagnes?.find((c) => c.annee === anneeCampagne)
-                          ?.statut
-                      }
-                    />
+                    <Text my={"auto"}>Campagne {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}</Text>
+                    <CampagneStatutTag statut={campagnes?.find((c) => c.annee === anneeCampagne)?.statut} />
                   </Flex>
                 </MenuButton>
                 <MenuList py={0} borderTopRadius={0} zIndex={"banner"}>
@@ -122,8 +117,10 @@ export const Header = ({
                       key={campagne.annee}
                       onClick={() => {
                         setSearchParams({
-                          ...searchParams,
-                          campagne: campagne.annee,
+                          filters: {
+                            ...activeFilters,
+                            campagne: campagne.annee,
+                          },
                         });
                       }}
                     >
@@ -158,9 +155,7 @@ export const Header = ({
                 width={"64"}
                 size="md"
                 variant={"newInput"}
-                onChange={(selected) =>
-                  handleFilters("codeNiveauDiplome", selected)
-                }
+                onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
                 options={diplomes}
                 value={activeFilters.codeNiveauDiplome ?? []}
                 disabled={diplomes.length === 0}
@@ -170,37 +165,7 @@ export const Header = ({
               </Multiselect>
             </Box>
 
-            <ExportMenuButton
-              onExportCsv={async () => {
-                trackEvent("saisie_demandes:export");
-                const data = await client.ref("[GET]/demandes").query({
-                  query: getDemandesQueryParameters(EXPORT_LIMIT),
-                });
-                downloadCsv(
-                  formatExportFilename(
-                    "recueil_demandes",
-                    activeFilters.codeAcademie
-                  ),
-                  data.demandes,
-                  DEMANDES_COLUMNS
-                );
-              }}
-              onExportExcel={async () => {
-                trackEvent("saisie_demandes:export-excel");
-                const data = await client.ref("[GET]/demandes").query({
-                  query: getDemandesQueryParameters(EXPORT_LIMIT),
-                });
-                downloadExcel(
-                  formatExportFilename(
-                    "recueil_demandes",
-                    activeFilters.codeAcademie
-                  ),
-                  data.demandes,
-                  DEMANDES_COLUMNS
-                );
-              }}
-              variant="externalLink"
-            />
+            <AdvancedExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} variant="externalLink" />
           </Flex>
 
           <SearchInput

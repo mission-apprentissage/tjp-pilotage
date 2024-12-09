@@ -1,10 +1,10 @@
 import { Flex, Select, Text } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
-import { Voie, VoieEnum } from "shared";
+import type { Voie } from "shared";
+import { VoieEnum } from "shared";
 
+import type { Filters, FiltersData } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { Multiselect } from "@/components/Multiselect";
-
-import { Filters, FiltersData } from "../types";
 
 const extractVoieOptions = (voies?: Voie[]) => {
   const options = [];
@@ -17,10 +17,7 @@ const extractVoieOptions = (voies?: Voie[]) => {
     options.push({ value: VoieEnum.apprentissage, label: "Apprentissage" });
   }
 
-  if (
-    voies?.includes(VoieEnum.scolaire) &&
-    voies?.includes(VoieEnum.apprentissage)
-  ) {
+  if (voies?.includes(VoieEnum.scolaire) && voies?.includes(VoieEnum.apprentissage)) {
     options.push({ value: "all", label: "Toutes" });
   }
 

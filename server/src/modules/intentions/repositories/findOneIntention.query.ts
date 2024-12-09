@@ -1,9 +1,9 @@
-import { kdb } from "../../../db/db";
-import { cleanNull } from "../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
 export const findOneIntention = async (numero: string) => {
   return cleanNull(
-    await kdb
+    await getKbdClient()
       .selectFrom("latestDemandeIntentionView as intention")
       .selectAll()
       .where("numero", "=", numero)

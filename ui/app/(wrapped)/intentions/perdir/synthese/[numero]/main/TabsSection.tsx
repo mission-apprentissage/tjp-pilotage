@@ -28,25 +28,13 @@ export const TabsSection = ({
     >
       <TabList>
         <Tab as={Button} onClick={() => displaySynthese()}>
-          <Flex
-            direction={"row"}
-            justify={"center"}
-            alignItems={"center"}
-            p={3}
-            gap={2}
-          >
+          <Flex direction={"row"} justify={"center"} alignItems={"center"} p={3} gap={2}>
             <Icon icon="ri:article-line" />
             <Text>Synthèse</Text>
           </Flex>
         </Tab>
         <Tab as={Button} onClick={() => displayCommentairesEtAvis()}>
-          <Flex
-            direction={"row"}
-            justify={"center"}
-            alignItems={"center"}
-            p={3}
-            gap={2}
-          >
+          <Flex direction={"row"} justify={"center"} alignItems={"center"} p={3} gap={2}>
             <Icon icon="ri:team-line" />
             <Text>Commentaires et avis</Text>
           </Flex>

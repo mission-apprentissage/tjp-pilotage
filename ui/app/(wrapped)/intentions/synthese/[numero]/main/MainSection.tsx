@@ -2,10 +2,10 @@ import { Flex, IconButton, Tooltip } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 
-import { client } from "@/api.client";
+import type { client } from "@/api.client";
+import { canEditDemande } from "@/app/(wrapped)/intentions/saisie/utils/canEditDemande";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { canEditDemande } from "../../../saisie/utils/canEditDemande";
 import { SyntheseSection } from "./synthese/SyntheseSection";
 
 export const MainSection = ({

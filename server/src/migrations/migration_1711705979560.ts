@@ -1,4 +1,5 @@
-import { Kysely, sql } from "kysely";
+import type { Kysely } from "kysely";
+import { sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
@@ -23,12 +24,7 @@ export const up = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demande" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demande"."dateModification")`.as(
-                "dateDerniereModification"
-              ),
-              "numero",
-            ])
+            .select([sql<number>`max("demande"."dateModification")`.as("dateDerniereModification"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandes")
@@ -37,11 +33,7 @@ export const up = async (db: Kysely<unknown>) => {
         .leftJoin("demande", (join) =>
           join
             .onRef("latestDemandes.numero", "=", "demande.numero")
-            .onRef(
-              "latestDemandes.dateDerniereModification",
-              "=",
-              "demande.dateModification"
-            )
+            .onRef("latestDemandes.dateDerniereModification", "=", "demande.dateModification")
         )
         // @ts-ignore
         .selectAll("demande")
@@ -75,12 +67,7 @@ export const down = async (db: Kysely<unknown>) => {
           sq
             .selectFrom("demande" as never)
             // @ts-ignore
-            .select([
-              sql<number>`max("demande"."dateModification")`.as(
-                "dateDerniereModification"
-              ),
-              "numero",
-            ])
+            .select([sql<number>`max("demande"."dateModification")`.as("dateDerniereModification"), "numero"])
             .distinct()
             .groupBy("numero")
             .as("latestDemandes")
@@ -89,11 +76,7 @@ export const down = async (db: Kysely<unknown>) => {
         .leftJoin("demande", (join) =>
           join
             .onRef("latestDemandes.numero", "=", "demande.numero")
-            .onRef(
-              "latestDemandes.dateDerniereModification",
-              "=",
-              "demande.dateModification"
-            )
+            .onRef("latestDemandes.dateDerniereModification", "=", "demande.dateModification")
         )
         // @ts-ignore
         .selectAll("demande")

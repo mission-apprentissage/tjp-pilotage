@@ -11,8 +11,7 @@ import { SearchInput } from "./components/SearchInput";
 import { useEtablissementHeader } from "./hook";
 
 export const EtablissementHeader = () => {
-  const { nsfs, informations, indicateurs, isLoading, uai } =
-    useEtablissementHeader();
+  const { nsfs, informations, indicateurs, isLoading, uai } = useEtablissementHeader();
 
   if (isLoading) {
     return <Loading my={16} size="xl" />;

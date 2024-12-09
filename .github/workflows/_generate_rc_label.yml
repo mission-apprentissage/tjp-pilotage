@@ -1,0 +1,37 @@
+name: Generate Release Candidate Label
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: Le type de Release Candidate à générer
+        type: choice
+        required: true
+        options:
+          - major
+          - minor
+          - patch
+  workflow_call:
+    inputs:
+      release_type:
+        description: Le type de Release Candidate à générer
+        type: string
+        required: false
+
+jobs:
+  generate_rc_label:
+    name: Generate ${{ inputs.release_type }} RC
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Run playbook
+        id: run-playbook
+        run: echo VERSION=$(.bin/product release:generate:rc-label ${{ inputs.release_type }}) >> $GITHUB_OUTPUT
+      - name: Get version
+        env:
+          VERSION: ${{ steps.run-playbook.outputs.VERSION }}
+        run: echo "Generated version is $VERSION"

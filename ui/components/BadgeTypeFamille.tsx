@@ -3,7 +3,7 @@ import { Badge } from "@chakra-ui/react";
 import {
   formatTypeFamilleCourt,
   formatTypeFamilleLong,
-} from "../app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
+} from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 
 export const TYPE_FAMILL_KEYS = {
   ["2nde_commune"]: "info",
@@ -40,9 +40,7 @@ export const BadgeTypeFamille = ({
 
   return (
     <Badge variant={typeFamilleVariant} size={size}>
-      {labelSize === "short"
-        ? formatTypeFamilleCourt(typeFamille)
-        : formatTypeFamilleLong(typeFamille)}
+      {labelSize === "short" ? formatTypeFamilleCourt(typeFamille) : formatTypeFamilleLong(typeFamille)}
       {children && <> {children}</>}
     </Badge>
   );

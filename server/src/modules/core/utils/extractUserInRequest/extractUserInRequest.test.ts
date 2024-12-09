@@ -1,11 +1,11 @@
-import cookie from "cookie";
-import { FastifyRequest } from "fastify";
-import { sign } from "jsonwebtoken";
+import type { FastifyRequest } from "fastify";
+import jwt from "jsonwebtoken";
+import { describe, expect, it } from "vitest";
 
 import { extractUserInRequestFactory } from "./extractUserInRequest";
 
 const jwtSecret = "jwtSecret";
-const jwtToken = sign({ email: "test@test.fr" }, jwtSecret);
+const jwtToken = jwt.sign({ email: "test@test.fr" }, jwtSecret);
 
 describe("extractUserInRequest usecase", () => {
   it("should not set user in request if the is no token in the header", async () => {
@@ -14,7 +14,7 @@ describe("extractUserInRequest usecase", () => {
       findUserQuery: async () => undefined,
     });
 
-    const request = { headers: {} } as FastifyRequest;
+    const request = { cookies: {} } as FastifyRequest;
 
     await extractUserInRequest(request);
     await expect(request.user).toBeUndefined();
@@ -27,10 +27,12 @@ describe("extractUserInRequest usecase", () => {
     });
 
     const request = {
-      headers: { cookie: cookie.serialize("Authorization", "wrongToken") },
-    } as FastifyRequest;
+      cookies: {
+        Authorization: "wrongToken",
+      },
+    } as Partial<FastifyRequest>;
 
-    await extractUserInRequest(request);
+    await extractUserInRequest(request as FastifyRequest);
     await expect(request.user).toBeUndefined();
   });
 
@@ -55,10 +57,10 @@ describe("extractUserInRequest usecase", () => {
     });
 
     const request = {
-      headers: { cookie: cookie.serialize("Authorization", jwtToken) },
-    } as FastifyRequest;
+      cookies: { Authorization: jwtToken },
+    } as Partial<FastifyRequest>;
 
-    await extractUserInRequest(request);
+    await extractUserInRequest(request as FastifyRequest);
     await expect(request.user).toBeUndefined();
   });
 
@@ -83,10 +85,10 @@ describe("extractUserInRequest usecase", () => {
     });
 
     const request = {
-      headers: { cookie: cookie.serialize("Authorization", jwtToken) },
-    } as FastifyRequest;
+      cookies: { Authorization: jwtToken },
+    } as Partial<FastifyRequest>;
 
-    await extractUserInRequest(request);
+    await extractUserInRequest(request as FastifyRequest);
     await expect(request.user).toMatchObject({ email: "test@test.fr" });
   });
 });

@@ -1,7 +1,8 @@
 import { useFormContext } from "react-hook-form";
 
-import { getTypeDemandeExemple } from "../../utils/typeDemandeUtils";
-import { IntentionForms } from "../intentionForm/defaultFormValues";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import { getTypeDemandeExemple } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+
 import { InfoBox } from "./InfoBox";
 
 export const Conseils = () => {

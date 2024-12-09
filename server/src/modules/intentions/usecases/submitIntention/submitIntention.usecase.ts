@@ -1,20 +1,22 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { getPermissionScope, guardScope, intentionValidators } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { z } from "zod";
+import type { submitIntentionSchema } from "shared/routes/schemas/post.intention.submit.schema";
+import type { z } from "zod";
 
-import { logger } from "../../../../logger";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../../core/model/User";
-import { findOneDataEtablissement } from "../../../data/repositories/findOneDataEtablissement.query";
-import { generateId, generateShortId } from "../../../utils/generateId";
-import { findOneDataFormation } from "../../repositories/findOneDataFormation.query";
-import { findOneIntention } from "../../repositories/findOneIntention.query";
-import { findOneSimilarIntention } from "../../repositories/findOneSimilarIntention.query";
+import type { RequestUser } from "@/modules/core/model/User";
+import { findOneDataEtablissement } from "@/modules/data/repositories/findOneDataEtablissement.query";
+import { findOneDataFormation } from "@/modules/intentions/repositories/findOneDataFormation.query";
+import { findOneIntention } from "@/modules/intentions/repositories/findOneIntention.query";
+import { findOneSimilarIntention } from "@/modules/intentions/repositories/findOneSimilarIntention.query";
+import { generateId, generateShortId } from "@/modules/utils/generateId";
+import logger from "@/services/logger";
+import { cleanNull } from "@/utils/noNull";
+
 import { createChangementStatutQuery } from "./deps/createChangementStatut.query";
 import { createIntentionQuery } from "./deps/createIntention.query";
-import { submitIntentionSchema } from "./submitIntention.schema";
 
 type Intention = z.infer<typeof submitIntentionSchema.body>["intention"];
 
@@ -62,9 +64,7 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
       intention: Intention;
     }) => {
-      const currentIntention = intention.numero
-        ? await deps.findOneIntention(intention.numero)
-        : undefined;
+      const currentIntention = intention.numero ? await deps.findOneIntention(intention.numero) : undefined;
 
       const { cfd, uai } = intention;
 
@@ -107,11 +107,13 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
         libelleFCIL: null,
         autreMotif: null,
         commentaire: null,
-        capaciteScolaire: 0,
         capaciteScolaireActuelle: 0,
+        capaciteScolaire: 0,
+        capaciteScolaireColoreeActuelle: 0,
         capaciteScolaireColoree: 0,
-        capaciteApprentissage: 0,
         capaciteApprentissageActuelle: 0,
+        capaciteApprentissage: 0,
+        capaciteApprentissageColoreeActuelle: 0,
         capaciteApprentissageColoree: 0,
         mixte: false,
         ...intention,

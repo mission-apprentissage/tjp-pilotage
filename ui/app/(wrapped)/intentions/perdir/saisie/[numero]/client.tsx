@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { hasRole } from "shared";
 
 import { client } from "@/api.client";
+import { IntentionSpinner } from "@/app/(wrapped)/intentions/perdir/saisie/components/IntentionSpinner";
+import { IntentionForm } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/IntentionForm";
+import { IntentionFilesProvider } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/observationsSection/filesSection/filesContext";
+import { canEditIntention } from "@/app/(wrapped)/intentions/perdir/saisie/utils/canEditIntention";
+import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { useAuth } from "../../../../../../utils/security/useAuth";
-import { IntentionSpinner } from "../components/IntentionSpinner";
-import { IntentionForm } from "../intentionForm/IntentionForm";
-import { IntentionFilesProvider } from "../intentionForm/observationsSection/filesSection/filesContext";
-import { canEditIntention } from "../utils/canEditIntention";
-
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default ({
   params: { numero },
 }: {
@@ -26,24 +26,19 @@ export default ({
     user: auth?.user,
     role: "perdir",
   });
-  const hasEditIntentionPermission = usePermission(
-    "intentions-perdir/ecriture"
+  const hasEditIntentionPermission = usePermission("intentions-perdir/ecriture");
+  const { data: intention, isLoading } = client.ref("[GET]/intention/:numero").useQuery(
+    { params: { numero: numero } },
+    {
+      cacheTime: 0,
+      onError: (error: unknown) => {
+        if (isAxiosError(error) && error.response?.data?.message) {
+          console.error(error);
+          if (error.response?.status === 404) push(`/intentions/perdir/saisie?notfound=${numero}`);
+        }
+      },
+    }
   );
-  const { data: intention, isLoading } = client
-    .ref("[GET]/intention/:numero")
-    .useQuery(
-      { params: { numero: numero } },
-      {
-        cacheTime: 0,
-        onError: (error: unknown) => {
-          if (isAxiosError(error) && error.response?.data?.message) {
-            console.error(error);
-            if (error.response?.status === 404)
-              push(`/intentions/perdir/saisie?notfound=${numero}`);
-          }
-        },
-      }
-    );
 
   if (isLoading) return <IntentionSpinner />;
 

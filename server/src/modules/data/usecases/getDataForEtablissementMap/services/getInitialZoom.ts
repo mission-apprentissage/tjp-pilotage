@@ -1,8 +1,7 @@
 import { computeDestinationPoint, getRhumbLineBearing } from "geolib";
-import _ from "lodash";
-import { z } from "zod";
-
-import { EtablissementSchema } from "../getDataForEtablissementMap.schema";
+import { pick } from "lodash-es";
+import type { EtablissementSchema } from "shared/routes/schemas/get.etablissement.uai.map.schema";
+import type { z } from "zod";
 
 interface BoundingBox {
   latMin: number;
@@ -51,18 +50,13 @@ const getGroupMean = (group: Array<EtablissementSchemaType>) => {
   return group.reduce((a, b) => a + b.distance, 0) / group.length;
 };
 
-const getEtablissementContext = (
-  etablissementsProches: Array<EtablissementSchemaType>
-) => {
+const getEtablissementContext = (etablissementsProches: Array<EtablissementSchemaType>) => {
   const group: Array<EtablissementSchemaType> = [];
 
   etablissementsProches.forEach((etablissement) => {
     if (group.length < 2) {
       group.push(etablissement);
-    } else if (
-      getGroupMean(group) * 3 > etablissement.distance &&
-      group.length < CLOSEST_ETABLISSEMENTS
-    ) {
+    } else if (getGroupMean(group) * 3 > etablissement.distance && group.length < CLOSEST_ETABLISSEMENTS) {
       group.push(etablissement);
     }
   });
@@ -79,9 +73,7 @@ export const getInitialZoom = ({
   etablissementsProches: Array<EtablissementSchemaType>;
   mapDimensions: { height: number; width: number };
 }) => {
-  const sortedEtablissementsProches = getEtablissementContext(
-    etablissementsProches
-  );
+  const sortedEtablissementsProches = getEtablissementContext(etablissementsProches);
 
   if (etablissementsProches.length < 2) {
     return 11;
@@ -98,12 +90,12 @@ export const getInitialZoom = ({
       projectedEtablissementsProches.push(etablissementProche);
       if (i > 0) {
         const bearing = getRhumbLineBearing(
-          _.pick(etablissement, ["latitude", "longitude"]),
-          _.pick(etablissementProche, ["latitude", "longitude"])
+          pick(etablissement, ["latitude", "longitude"]),
+          pick(etablissementProche, ["latitude", "longitude"])
         );
 
         const destinationPoint = computeDestinationPoint(
-          _.pick(etablissement, ["latitude", "longitude"]),
+          pick(etablissement, ["latitude", "longitude"]),
           // On doit ici fournir une distance en m (d'où le x1000)
           // On doit doubler celle-ci pour que l'on puisse projeter suivant sa Rhumb line,
           // et que l'établissement de référence soit au centre

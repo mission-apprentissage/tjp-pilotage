@@ -1,16 +1,17 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../../db/db";
-import { RequestUser } from "../../../../core/model/User";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
+import type { RequestUser } from "@/modules/core/model/User";
 
-export const createCorrectionQuery = ({
+export const createCorrectionQuery = async ({
   correction,
   user,
 }: {
   correction: Insertable<DB["correction"]>;
   user: Pick<RequestUser, "id">;
 }) => {
-  return kdb
+  return getKbdClient()
     .insertInto("correction")
     .values({
       ...correction,

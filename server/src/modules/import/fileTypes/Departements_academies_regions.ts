@@ -9,6 +9,4 @@ export const DepartementsAcademiesRegionsSchema = z.object({
   libelleRegion: z.string(),
 });
 
-export type Departements_academies_regions = z.infer<
-  typeof DepartementsAcademiesRegionsSchema
->;
+export type Departements_academies_regions = z.infer<typeof DepartementsAcademiesRegionsSchema>;

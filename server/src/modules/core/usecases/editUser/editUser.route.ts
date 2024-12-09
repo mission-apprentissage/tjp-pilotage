@@ -1,14 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../utils/hasPermission";
-import { editUserSchema } from "./editUser.schema";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { editUser } from "./editUser.usecase";
 
+const ROUTE = ROUTES["[PUT]/users/:userId"];
+
 export const editUserRoute = (server: Server) => {
-  return createRoute("/users/:userId", {
-    method: "PUT",
-    schema: editUserSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

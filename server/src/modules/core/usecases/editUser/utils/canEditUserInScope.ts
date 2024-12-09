@@ -1,18 +1,10 @@
-import { RequestUser } from "../../../model/User";
-import { getScopeFilterForUser } from "../../../utils/getScopeFilterForUser";
-import { BodySchema } from "../editUser.schema";
+import type { BodySchema } from "shared/routes/schemas/put.users.userId.schema";
 
-export function canEditUserInScope({
-  body,
-  requestUser,
-}: {
-  body: BodySchema;
-  requestUser: RequestUser;
-}) {
-  const { scope, scopeFilter } = getScopeFilterForUser(
-    "users/ecriture",
-    requestUser
-  );
+import type { RequestUser } from "@/modules/core/model/User";
+import { getScopeFilterForUser } from "@/modules/core/utils/getScopeFilterForUser";
+
+export function canEditUserInScope({ body, requestUser }: { body: BodySchema; requestUser: RequestUser }) {
+  const { scope, scopeFilter } = getScopeFilterForUser("users/ecriture", requestUser);
   switch (scope) {
     case "national":
       return true;

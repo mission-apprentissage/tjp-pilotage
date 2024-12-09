@@ -1,26 +1,23 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
-import { getStatsPilotageIntentionsSchema } from "./getStatsPilotageIntentions.schema";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { getStatsPilotageIntentionsUsecase } from "./getStatsPilotageIntentions.usecase";
 
-export const getStatsPilotageIntentionsRoute = ({
-  server,
-}: {
-  server: Server;
-}) => {
-  return createRoute("/pilotage-intentions/stats", {
-    method: "GET",
-    schema: getStatsPilotageIntentionsSchema,
+const ROUTE = ROUTES["[GET]/pilotage-intentions/stats"];
+
+export const getStatsPilotageIntentionsRoute = (server: Server) => {
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
       handler: async (request, response) => {
-        const statsTauxTransfo = await getStatsPilotageIntentionsUsecase(
-          request.query
-        );
+        const statsTauxTransfo = await getStatsPilotageIntentionsUsecase(request.query);
         response.status(200).send(statsTauxTransfo);
       },
     });

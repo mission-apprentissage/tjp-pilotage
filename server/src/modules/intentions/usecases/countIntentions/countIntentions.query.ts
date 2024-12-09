@@ -1,20 +1,19 @@
 import { sql } from "kysely";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { z } from "zod";
+import type { countIntentionsSchema } from "shared/routes/schemas/get.intentions.count.schema";
+import type { z } from "zod";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../../core/model/User";
+import { getKbdClient } from "@/db/db";
+import type { RequestUser } from "@/modules/core/model/User";
 import {
   isIntentionBrouillonVisible,
   isIntentionNotDeleted,
   isIntentionSelectable,
-} from "../../../utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
-import { countIntentionsSchema } from "./countIntentions.schema";
+} from "@/modules/utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
-export interface Filters
-  extends z.infer<typeof countIntentionsSchema.querystring> {
+export interface Filters extends z.infer<typeof countIntentionsSchema.querystring> {
   user: RequestUser;
   shouldFetchOnlyIntention?: boolean;
 }
@@ -27,20 +26,12 @@ export const countIntentionsQuery = async ({
   codeNiveauDiplome,
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
-  const countIntentions = kdb
+  const countIntentions = getKbdClient()
     .selectFrom("latestDemandeIntentionView as intention")
     .leftJoin("dataFormation", "dataFormation.cfd", "intention.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "intention.uai")
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
-    .leftJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
+    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("user", "user.id", "intention.createdBy")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "intention.campagneId").$call((eb) => {
@@ -51,19 +42,13 @@ export const countIntentionsQuery = async ({
       })
     )
     .leftJoin("suivi", (join) =>
-      join
-        .onRef("suivi.intentionNumero", "=", "intention.numero")
-        .on("suivi.userId", "=", user.id)
+      join.onRef("suivi.intentionNumero", "=", "intention.numero").on("suivi.userId", "=", user.id)
     )
-    .select((eb) =>
-      sql<number>`count(${eb.ref("intention.numero")})`.as("total")
-    )
+    .select((eb) => sql<number>`count(${eb.ref("intention.numero")})`.as("total"))
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("intention.statut")} = ${
-            DemandeStatutEnum["proposition"]
-          }
+          CASE WHEN ${eb.ref("intention.statut")} = ${DemandeStatutEnum["proposition"]}
           THEN 1
           ELSE 0
           END
@@ -74,9 +59,7 @@ export const countIntentionsQuery = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("intention.statut")} = ${
-            DemandeStatutEnum["projet de demande"]
-          }
+          CASE WHEN ${eb.ref("intention.statut")} = ${DemandeStatutEnum["projet de demande"]}
           THEN 1
           ELSE 0
           END
@@ -87,9 +70,7 @@ export const countIntentionsQuery = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("intention.statut")} = ${
-            DemandeStatutEnum["demande validée"]
-          }
+          CASE WHEN ${eb.ref("intention.statut")} = ${DemandeStatutEnum["demande validée"]}
           THEN 1
           ELSE 0
           END
@@ -100,9 +81,7 @@ export const countIntentionsQuery = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("intention.statut")} = ${
-            DemandeStatutEnum["refusée"]
-          }
+          CASE WHEN ${eb.ref("intention.statut")} = ${DemandeStatutEnum["refusée"]}
           THEN 1
           ELSE 0
           END
@@ -113,9 +92,7 @@ export const countIntentionsQuery = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("intention.statut")} = ${
-            DemandeStatutEnum["brouillon"]
-          }
+          CASE WHEN ${eb.ref("intention.statut")} = ${DemandeStatutEnum["brouillon"]}
           THEN 1
           ELSE 0
           END
@@ -126,9 +103,7 @@ export const countIntentionsQuery = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("intention.statut")} = ${
-            DemandeStatutEnum["dossier complet"]
-          }
+          CASE WHEN ${eb.ref("intention.statut")} = ${DemandeStatutEnum["dossier complet"]}
           THEN 1
           ELSE 0
           END
@@ -139,9 +114,7 @@ export const countIntentionsQuery = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("intention.statut")} = ${
-            DemandeStatutEnum["dossier incomplet"]
-          }
+          CASE WHEN ${eb.ref("intention.statut")} = ${DemandeStatutEnum["dossier incomplet"]}
           THEN 1
           ELSE 0
           END
@@ -152,9 +125,7 @@ export const countIntentionsQuery = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("intention.statut")} = ${
-            DemandeStatutEnum["prêt pour le vote"]
-          }
+          CASE WHEN ${eb.ref("intention.statut")} = ${DemandeStatutEnum["prêt pour le vote"]}
           THEN 1
           ELSE 0
           END
@@ -174,8 +145,7 @@ export const countIntentionsQuery = async ({
       )`.as("suivies")
     )
     .$call((q) => {
-      if (shouldFetchOnlyIntention)
-        return q.where("intention.isIntention", "=", true);
+      if (shouldFetchOnlyIntention) return q.where("intention.isIntention", "=", true);
       return q;
     })
     .$call((eb) => {
@@ -207,11 +177,7 @@ export const countIntentionsQuery = async ({
     })
     .$call((eb) => {
       if (codeNiveauDiplome) {
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
+        return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       }
       return eb;
     })

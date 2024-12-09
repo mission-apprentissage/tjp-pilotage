@@ -1,14 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { RequestUser } from "../../../core/model/User";
-import { getEditoSchema } from "./getEdito.schema";
+import type { RequestUser } from "@/modules/core/model/User";
+import type { Server } from "@/server/server";
+
 import { getEditoUsecase } from "./getEdito.usecase";
 
+const ROUTE = ROUTES["[GET]/edito"];
+
 export const getEditoRoute = (server: Server) => {
-  return createRoute("/edito", {
-    method: "GET",
-    schema: getEditoSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

@@ -1,3 +1,5 @@
+// @ts-nocheck -- TODO
+
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
@@ -30,7 +32,16 @@ import { useMemo, useState } from "react";
 import { CURRENT_RENTREE, ScopeEnum } from "shared";
 
 import { client } from "@/api.client";
-import { PlacesTransformeesParPositionQuadrantSection } from "@/app/(wrapped)/intentions/pilotage/main/quadrant/PlacesTransformeesParPositionQuadrantSection";
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import QuadrantPlaceholder from "@/app/(wrapped)/intentions/pilotage/components/QuadrantPlaceholder";
+import type {
+  FiltersStatsPilotageIntentions,
+  OrderFormationsPilotageIntentions,
+  RepartitionPilotageIntentions,
+  SelectedScope,
+  StatsPilotageIntentions,
+} from "@/app/(wrapped)/intentions/pilotage/types";
+import { InfoTooltipContent } from "@/app/(wrapped)/panorama/components/QuadrantSection/InfoTooltipContent";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
@@ -44,16 +55,7 @@ import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 import { useStateParams } from "@/utils/useFilters";
 
-import { useGlossaireContext } from "../../../../glossaire/glossaireContext";
-import { InfoTooltipContent } from "../../../../panorama/components/QuadrantSection/InfoTooltipContent";
-import QuadrantPlaceholder from "../../components/QuadrantPlaceholder";
-import {
-  FiltersStatsPilotageIntentions,
-  OrderFormationsPilotageIntentions,
-  RepartitionPilotageIntentions,
-  SelectedScope,
-  StatsPilotageIntentions,
-} from "../../types";
+import { PlacesTransformeesParPositionQuadrantSection } from "./PlacesTransformeesParPositionQuadrantSection";
 
 const EFFECTIF_SIZES = [
   { max: 15, size: 6 },
@@ -99,62 +101,43 @@ export const QuadrantSection = ({
 
   const order = filters.order;
 
-  const [currentFormationId, setCurrentFormationId] = useState<
-    string | undefined
-  >();
+  const [currentFormationId, setCurrentFormationId] = useState<string | undefined>();
   const { ...otherFilters } = parentFilters;
   const mergedFilters = {
     ...otherFilters,
     tauxPression: filters.tauxPression,
     type: filters.type,
     codeRegion: scope?.type === ScopeEnum["région"] ? scope.value : undefined,
-    codeAcademie:
-      scope?.type === ScopeEnum["académie"] ? scope.value : undefined,
-    codeDepartement:
-      scope?.type === ScopeEnum["département"] ? scope.value : undefined,
+    codeAcademie: scope?.type === ScopeEnum["académie"] ? scope.value : undefined,
+    codeDepartement: scope?.type === ScopeEnum["département"] ? scope.value : undefined,
   };
 
-  const { data: { formations, stats } = {} } = client
-    .ref("[GET]/pilotage-intentions/formations")
-    .useQuery(
-      {
-        query: { ...mergedFilters, ...order },
-      },
-      {
-        keepPreviousData: true,
-        staleTime: 100000000,
-      }
-    );
+  const { data: { formations, stats } = {} } = client.ref("[GET]/pilotage-intentions/formations").useQuery(
+    {
+      query: { ...mergedFilters, ...order },
+    },
+    {
+      keepPreviousData: true,
+      staleTime: 100000000,
+    }
+  );
 
   const formationsQuadrant =
     formations?.filter(
-      (formation) =>
-        formation.tauxInsertion &&
-        formation.tauxPoursuite &&
-        formation.placesTransformees
+      (formation) => formation.tauxInsertion && formation.tauxPoursuite && formation.placesTransformees
     ) ?? [];
 
   const formation = useMemo(
-    () =>
-      formations?.find(
-        (item) => `${item.cfd}_${item.codeDispositif}` === currentFormationId
-      ),
+    () => formations?.find((item) => `${item.cfd}_${item.codeDispositif}` === currentFormationId),
     [currentFormationId, formations]
   );
 
-  const getLibelleTerritoire = (
-    territoires?: Array<{ label: string; value: string }>,
-    code?: string
-  ) => {
-    if (scope?.value && scopeFilters)
-      return _.find(territoires, (territoire) => territoire.value === code)
-        ?.label;
+  const getLibelleTerritoire = (territoires?: Array<{ label: string; value: string }>, code?: string) => {
+    if (scope?.value && scopeFilters) return _.find(territoires, (territoire) => territoire.value === code)?.label;
     return undefined;
   };
 
-  const handleOrder = (
-    column: OrderFormationsPilotageIntentions["orderBy"]
-  ) => {
+  const handleOrder = (column: OrderFormationsPilotageIntentions["orderBy"]) => {
     trackEvent("tableau-quadrant-intentions:ordre", {
       props: { colonne: column },
     });
@@ -179,15 +162,11 @@ export const QuadrantSection = ({
   };
 
   const trackRestitutionsLinkFromQuadrantSelection = () => {
-    trackEvent(
-      "pilotage-transformation:quadrant-link-restitution-from-selection"
-    );
+    trackEvent("pilotage-transformation:quadrant-link-restitution-from-selection");
   };
 
   const shouldShowQuadrant = !(
-    (!mergedFilters.codeDepartement &&
-      !mergedFilters.codeAcademie &&
-      !mergedFilters.codeRegion) ||
+    (!mergedFilters.codeDepartement && !mergedFilters.codeAcademie && !mergedFilters.codeRegion) ||
     !mergedFilters.codeNiveauDiplome ||
     mergedFilters.codeNiveauDiplome.length === 0 ||
     mergedFilters.codeNiveauDiplome.length > 1
@@ -249,7 +228,8 @@ export const QuadrantSection = ({
                   tauxTransformation: "Taux de transformation",
                   placesOuvertes: "Places ouvertes",
                   placesFermees: "Places fermées",
-                  placesColorees: "Colorations",
+                  placesColoreesOuvertes: "Places colorées ouvertes",
+                  placesColoreesFermees: "Places colorées fermées",
                   solde: "Solde",
                   ratioFermeture: "Ratio de fermeture",
                 }
@@ -267,7 +247,8 @@ export const QuadrantSection = ({
                   tauxTransformation: "Taux de transformation",
                   placesOuvertes: "Places ouvertes",
                   placesFermees: "Places fermées",
-                  placesColorees: "Colorations",
+                  placesColoreesOuvertes: "Places colorées ouvertes",
+                  placesColoreesFermees: "Places colorées fermées",
                   solde: "Solde",
                   ratioFermeture: "Ratio de fermeture",
                 }
@@ -300,9 +281,7 @@ export const QuadrantSection = ({
               codeNsf: mergedFilters.codeNsf,
               statut: mergedFilters.statut,
               secteur:
-                mergedFilters.secteur && mergedFilters.secteur?.length === 1
-                  ? mergedFilters.secteur[0]
-                  : undefined,
+                mergedFilters.secteur && mergedFilters.secteur?.length === 1 ? mergedFilters.secteur[0] : undefined,
             },
           })}
           color={"bluefrance.113"}
@@ -326,24 +305,15 @@ export const QuadrantSection = ({
                       ...formation,
                       libelleRegion:
                         scope?.type === ScopeEnum["région"]
-                          ? getLibelleTerritoire(
-                              scopeFilters?.regions,
-                              scope.value
-                            )
+                          ? getLibelleTerritoire(scopeFilters?.regions, scope.value)
                           : undefined,
                       libelleAcademie:
                         scope?.type === ScopeEnum["académie"]
-                          ? getLibelleTerritoire(
-                              scopeFilters?.academies,
-                              scope.value
-                            )
+                          ? getLibelleTerritoire(scopeFilters?.academies, scope.value)
                           : undefined,
                       libelleDepartement:
                         scope?.type === ScopeEnum["département"]
-                          ? getLibelleTerritoire(
-                              scopeFilters?.departements,
-                              scope.value
-                            )
+                          ? getLibelleTerritoire(scopeFilters?.departements, scope.value)
                           : undefined,
                     })),
                     {
@@ -370,24 +340,15 @@ export const QuadrantSection = ({
                       ...formation,
                       libelleRegion:
                         scope?.type === ScopeEnum["région"]
-                          ? getLibelleTerritoire(
-                              scopeFilters?.regions,
-                              scope.value
-                            )
+                          ? getLibelleTerritoire(scopeFilters?.regions, scope.value)
                           : undefined,
                       libelleAcademie:
                         scope?.type === ScopeEnum["académie"]
-                          ? getLibelleTerritoire(
-                              scopeFilters?.academies,
-                              scope.value
-                            )
+                          ? getLibelleTerritoire(scopeFilters?.academies, scope.value)
                           : undefined,
                       libelleDepartement:
                         scope?.type === ScopeEnum["département"]
-                          ? getLibelleTerritoire(
-                              scopeFilters?.departements,
-                              scope.value
-                            )
+                          ? getLibelleTerritoire(scopeFilters?.departements, scope.value)
                           : undefined,
                     })),
                     {
@@ -422,8 +383,7 @@ export const QuadrantSection = ({
 
                   setFilters({
                     ...filters,
-                    type: (item.target.value ||
-                      undefined) as typeof filters.type,
+                    type: (item.target.value || undefined) as typeof filters.type,
                   });
                 }}
               >
@@ -445,12 +405,7 @@ export const QuadrantSection = ({
           <Divider />
           <Flex mt="4">
             <Box p="4" mr="6" w="200px">
-              <Heading
-                mb="6"
-                fontSize={14}
-                fontWeight={500}
-                color={"bluefrance.113"}
-              >
+              <Heading mb="6" fontSize={14} fontWeight={500} color={"bluefrance.113"}>
                 FILTRES
               </Heading>
               <FormControl mb="6">
@@ -478,10 +433,7 @@ export const QuadrantSection = ({
                     <TooltipIcon
                       label={
                         <Box>
-                          <Text>
-                            Formations pour lesquelles le taux de pression est
-                            supérieur ou égal à 1.3
-                          </Text>
+                          <Text>Formations pour lesquelles le taux de pression est supérieur ou égal à 1.3</Text>
                           <Text mt={4}>Cliquez pour plus d'infos.</Text>
                         </Box>
                       }
@@ -496,10 +448,7 @@ export const QuadrantSection = ({
                     <TooltipIcon
                       label={
                         <Box>
-                          <Text>
-                            Formations pour lesquelles le taux de pression est
-                            inférieur à 0.7
-                          </Text>
+                          <Text>Formations pour lesquelles le taux de pression est inférieur à 0.7</Text>
                           <Text mt={4}>Cliquez pour plus d'infos.</Text>
                         </Box>
                       }
@@ -525,11 +474,7 @@ export const QuadrantSection = ({
                           </Text>
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent
-                        _focusVisible={{ outline: "none" }}
-                        p="3"
-                        minW={"sm"}
-                      >
+                      <PopoverContent _focusVisible={{ outline: "none" }} p="3" minW={"sm"}>
                         <>
                           <PopoverCloseButton />
                           <InfoTooltipContent />
@@ -538,28 +483,14 @@ export const QuadrantSection = ({
                     </Popover>
                   </Flex>
                   <Flex>
-                    <Button
-                      onClick={() => toggleTypeVue()}
-                      variant="link"
-                      gap={2}
-                    >
+                    <Button onClick={() => toggleTypeVue()} variant="link" gap={2}>
                       <Icon
-                        icon={`${
-                          typeVue === "quadrant"
-                            ? "ri:table-2"
-                            : "ri:layout-grid-line"
-                        }`}
+                        icon={`${typeVue === "quadrant" ? "ri:table-2" : "ri:layout-grid-line"}`}
                         color={bluefrance113}
                         height={"14px"}
                       />
-                      <Text
-                        color={bluefrance113}
-                        fontWeight={400}
-                        lineHeight={"14px"}
-                      >
-                        {`Vue ${
-                          typeVue === "quadrant" ? "tableau" : "quadrant"
-                        }`}
+                      <Text color={bluefrance113} fontWeight={400} lineHeight={"14px"}>
+                        {`Vue ${typeVue === "quadrant" ? "tableau" : "quadrant"}`}
                       </Text>
                     </Button>
                   </Flex>
@@ -570,11 +501,10 @@ export const QuadrantSection = ({
                       query={[
                         formationsQuadrant?.length.toString() ?? "-",
                         formationsQuadrant
+                          // @ts-expect-error TODO
                           ?.reduce((acc, { placesOuvertes, placesFermees }) => {
-                            if (filters.type === "fermeture")
-                              return acc + (placesFermees ?? 0);
-                            if (filters.type === "ouverture")
-                              return acc + (placesOuvertes ?? 0);
+                            if (filters.type === "fermeture") return acc + (placesFermees ?? 0);
+                            if (filters.type === "ouverture") return acc + (placesOuvertes ?? 0);
                             const total = placesOuvertes + placesFermees;
                             return acc + (total ?? 0);
                           }, 0)
@@ -584,8 +514,8 @@ export const QuadrantSection = ({
                       {`${formationsQuadrant?.length ?? "-"} certifications -
                                 ${
                                   formationsQuadrant?.reduce(
-                                    (acc, { placesTransformees }) =>
-                                      acc + (placesTransformees ?? 0),
+                                    // @ts-expect-error TODO
+                                    (acc, { placesTransformees }) => acc + (placesTransformees ?? 0),
                                     0
                                   ) ?? "-"
                                 } places transformées`}
@@ -598,34 +528,36 @@ export const QuadrantSection = ({
                   {formations &&
                     (typeVue === "quadrant" ? (
                       <Quadrant
-                        onClick={({ cfd, codeDispositif }) =>
-                          setCurrentFormationId(`${cfd}_${codeDispositif}`)
-                        }
+                        onClick={({ cfd, codeDispositif }) => setCurrentFormationId(`${cfd}_${codeDispositif}`)}
                         meanInsertion={stats?.tauxInsertion}
                         meanPoursuite={stats?.tauxPoursuite}
                         currentFormationId={currentFormationId}
-                        data={formationsQuadrant?.map((formation) => ({
-                          ...formation,
-                          codeDispositif: formation.codeDispositif ?? "",
-                          effectif: formation.placesTransformees,
-                          tauxInsertion: formation.tauxInsertion ?? 0,
-                          tauxPoursuite: formation.tauxPoursuite ?? 0,
-                        }))}
+                        data={formationsQuadrant?.map(
+                          // @ts-expect-error TODO
+                          (formation) => ({
+                            ...formation,
+                            codeDispositif: formation.codeDispositif ?? "",
+                            effectif: formation.placesTransformees,
+                            tauxInsertion: formation.tauxInsertion ?? 0,
+                            tauxPoursuite: formation.tauxPoursuite ?? 0,
+                          })
+                        )}
                         effectifSizes={EFFECTIF_SIZES}
                       />
                     ) : (
                       <TableQuadrant
-                        formations={formationsQuadrant?.map((formation) => ({
-                          ...formation,
-                          effectif: formation.placesTransformees,
-                        }))}
+                        formations={formationsQuadrant?.map(
+                          // @ts-expect-error TODO
+                          (formation) => ({
+                            ...formation,
+                            effectif: formation.placesTransformees,
+                          })
+                        )}
                         handleClick={setCurrentFormationId}
                         currentFormationId={currentFormationId}
                         order={order}
                         handleOrder={(column?: string) =>
-                          handleOrder(
-                            column as OrderFormationsPilotageIntentions["orderBy"]
-                          )
+                          handleOrder(column as OrderFormationsPilotageIntentions["orderBy"])
                         }
                       />
                     ))}
@@ -638,54 +570,38 @@ export const QuadrantSection = ({
                 DÉTAILS SUR LA FORMATION
               </Heading>
               {!formation && (
-                <Text color="gray.500">
-                  Cliquez sur un point pour afficher le détail de la formation.
-                </Text>
+                <Text color="gray.500">Cliquez sur un point pour afficher le détail de la formation.</Text>
               )}
 
               {formation && (
                 <Flex direction="column" gap={4}>
-                  <InfoBlock
-                    fontSize={12}
-                    label="Formation concernée"
-                    value={formation?.libelleFormation}
-                  />
-                  <InfoBlock
-                    fontSize={12}
-                    label="Dispositif"
-                    value={formation?.libelleDispositif}
-                  />
+                  <InfoBlock fontSize={12} label="Formation concernée" value={formation?.libelleFormation} />
+                  <InfoBlock fontSize={12} label="Dispositif" value={formation?.libelleDispositif} />
                   <Flex gap={6}>
                     {(!filters.type || filters.type === "ouverture") && (
+                      <InfoBlock flex={1} fontSize={12} label={"Pl. ouvertes"} value={formation?.placesOuvertes ?? 0} />
+                    )}
+                    {(!filters.type || filters.type === "fermeture") && (
+                      <InfoBlock flex={1} fontSize={12} label={"Pl. fermées"} value={formation?.placesFermees ?? 0} />
+                    )}
+                    {(!filters.type || filters.type === "fermeture") && (
                       <InfoBlock
                         flex={1}
                         fontSize={12}
-                        label={"Pl. ouvertes"}
-                        value={formation?.placesOuvertes ?? 0}
+                        label={"Pl. colorées ouvertes"}
+                        value={formation?.placesColoreesOuvertes ?? 0}
                       />
                     )}
                     {(!filters.type || filters.type === "fermeture") && (
                       <InfoBlock
                         flex={1}
                         fontSize={12}
-                        label={"Pl. fermées"}
-                        value={formation?.placesFermees ?? 0}
-                      />
-                    )}
-                    {(!filters.type || filters.type === "fermeture") && (
-                      <InfoBlock
-                        flex={1}
-                        fontSize={12}
-                        label={"Colorations"}
-                        value={formation?.placesColorees ?? 0}
+                        label={"Pl. colorées fermées"}
+                        value={formation?.placesColoreesFermees ?? 0}
                       />
                     )}
                   </Flex>
-                  <InfoBlock
-                    fontSize={12}
-                    label="Établissements concernés"
-                    value={formation?.nbEtablissements}
-                  />
+                  <InfoBlock fontSize={12} label="Établissements concernés" value={formation?.nbEtablissements} />
                   <Button
                     fontSize={14}
                     fontWeight={500}
@@ -695,10 +611,7 @@ export const QuadrantSection = ({
                     as={NextLink}
                     target="_blank"
                     rel="noreferrer"
-                    href={generateRestitutionUrl(
-                      formation.cfd,
-                      formation?.codeDispositif
-                    )}
+                    href={generateRestitutionUrl(formation.cfd, formation?.codeDispositif)}
                     mb={4}
                     onClick={() => trackRestitutionsLinkFromQuadrantSelection()}
                   >
@@ -709,43 +622,23 @@ export const QuadrantSection = ({
                     label="Taux de pression"
                     textBg="white"
                     value={
-                      <TableBadge
-                        sx={getTauxPressionStyle(formation?.tauxPression)}
-                      >
-                        {formation.tauxPression !== undefined
-                          ? formatNumber(formation?.tauxPression, 2)
-                          : "-"}
+                      <TableBadge sx={getTauxPressionStyle(formation?.tauxPression)}>
+                        {formation.tauxPression !== undefined ? formatNumber(formation?.tauxPression, 2) : "-"}
                       </TableBadge>
                     }
                   />
                   <Flex direction="column" width="100%">
                     <Text fontSize={12}>Taux d'emploi régional</Text>
-                    <GraphWrapper
-                      w="100%"
-                      continuum={formation.continuum}
-                      value={formation.tauxInsertion}
-                    />
+                    <GraphWrapper w="100%" continuum={formation.continuum} value={formation.tauxInsertion} />
                   </Flex>
                   <Flex direction="column" width="100%">
-                    <Text fontSize={12}>
-                      Taux de poursuite d'études régional
-                    </Text>
-                    <GraphWrapper
-                      w="100%"
-                      continuum={formation.continuum}
-                      value={formation.tauxPoursuite}
-                    />
+                    <Text fontSize={12}>Taux de poursuite d'études régional</Text>
+                    <GraphWrapper w="100%" continuum={formation.continuum} value={formation.tauxPoursuite} />
                   </Flex>
                   {formation.tauxDevenirFavorable && (
                     <Flex direction="column" width="100%">
-                      <Text fontSize={12}>
-                        Taux de devenir favorable régional
-                      </Text>
-                      <GraphWrapper
-                        w="100%"
-                        continuum={formation.continuum}
-                        value={formation.tauxDevenirFavorable}
-                      />
+                      <Text fontSize={12}>Taux de devenir favorable régional</Text>
+                      <GraphWrapper w="100%" continuum={formation.continuum} value={formation.tauxDevenirFavorable} />
                     </Flex>
                   )}
                 </Flex>

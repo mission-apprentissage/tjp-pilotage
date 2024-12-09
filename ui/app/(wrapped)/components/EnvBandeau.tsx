@@ -4,13 +4,12 @@ import { Box, Button, chakra, Stack, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
-import { getEnv, isProduction } from "@/config.public";
+import { isProduction, publicConfig } from "@/config.public";
 import { themeDefinition } from "@/theme/theme";
 
 export const EnvBandeau = chakra(() => {
   const [open, setOpen] = useState(true);
-  const env = getEnv();
-  if (!env || isProduction) return null;
+  if (isProduction) return null;
   return (
     <Box
       backgroundColor={themeDefinition.colors.redmarianne[925]}
@@ -30,11 +29,7 @@ export const EnvBandeau = chakra(() => {
         px={5}
         textAlign={"center"}
       >
-        <Icon
-          icon="ri:information-fill"
-          fontSize="24px"
-          style={{ margin: "auto" }}
-        />
+        <Icon icon="ri:information-fill" fontSize="24px" style={{ margin: "auto" }} />
         <Text
           flexGrow={1}
           fontSize="20px"
@@ -45,7 +40,7 @@ export const EnvBandeau = chakra(() => {
           }}
           textTransform={"uppercase"}
         >
-          {getEnv()}
+          {publicConfig.env}
         </Text>
         <Button
           onClick={() => setOpen(false)}
@@ -58,11 +53,7 @@ export const EnvBandeau = chakra(() => {
           width="auto"
           height="auto"
         >
-          <Icon
-            icon="ri:close-fill"
-            fontSize="24px"
-            style={{ margin: "auto" }}
-          />
+          <Icon icon="ri:close-fill" fontSize="24px" style={{ margin: "auto" }} />
         </Button>
       </Stack>
     </Box>

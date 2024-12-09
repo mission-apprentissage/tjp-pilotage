@@ -1,17 +1,16 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { getMetabaseDashboardUrlSchema } from "./generateMetabaseDashboardUrl.schema";
+import type { Server } from "@/server/server";
+
 import { getMetabaseDashboardUrl } from "./generateMetabaseDashboardUrl.usecase";
 
-export const generateMetabaseDashboardUrlRoute = ({
-  server,
-}: {
-  server: Server;
-}) => {
-  return createRoute("/generate-metabase-dashboard-url", {
-    method: "POST",
-    schema: getMetabaseDashboardUrlSchema,
+const ROUTE = ROUTES["[POST]/generate-metabase-dashboard-url"];
+
+export const generateMetabaseDashboardUrlRoute = (server: Server) => {
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

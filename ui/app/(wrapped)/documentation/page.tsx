@@ -6,9 +6,7 @@ export const revalidate = 60;
 
 const fetchData = async () => {
   const notion = new NotionAPI();
-  const recordMap = await notion.getPage(
-    "Documentation-V0-Orion-32a009e0dabe48e890893f789162a451"
-  );
+  const recordMap = await notion.getPage("Documentation-V0-Orion-32a009e0dabe48e890893f789162a451");
   return recordMap;
 };
 

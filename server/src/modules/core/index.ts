@@ -1,4 +1,5 @@
-import { Server } from "../../server";
+import type { Server } from "@/server/server";
+
 import { activateUserRoute } from "./usecases/activateUser/activateUser.route";
 import { checkActivationTokenRoute } from "./usecases/checkActivationToken/checkActivationToken.route";
 import { createCampagneRoute } from "./usecases/createCampagne/createCampagne.route";
@@ -20,9 +21,9 @@ import { sendResetPasswordRoute } from "./usecases/sendResetPassword/sendResetPa
 import { whoAmIRoute } from "./usecases/whoAmI/whoAmI.route";
 export { extractUserInRequest } from "./utils/extractUserInRequest/extractUserInRequest";
 
-export const registerCoreModule = ({ server }: { server: Server }) => {
+export const registerCoreModule = (server: Server) => {
   return {
-    ...homeRoute({ server }),
+    ...homeRoute(server),
     ...activateUserRoute(server),
     ...checkActivationTokenRoute(server),
     ...loginRoute(server),
@@ -38,11 +39,10 @@ export const registerCoreModule = ({ server }: { server: Server }) => {
     ...getCampagnesRoute(server),
     ...editCampagneRoute(server),
     ...createCampagneRoute(server),
-    ...generateMetabaseDashboardUrlRoute({ server }),
+    ...generateMetabaseDashboardUrlRoute(server),
     ...searchUserRoute(server),
     ...isMaintenanceRoute(server),
   };
 };
 
-export { hasPermissionHandler } from "./utils/hasPermission";
 export { shootTemplate } from "./services/mailer/mailer";

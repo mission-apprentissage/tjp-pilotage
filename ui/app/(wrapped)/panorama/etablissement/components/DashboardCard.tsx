@@ -1,4 +1,5 @@
-import { Box, Flex, FlexProps, forwardRef, Text } from "@chakra-ui/react";
+import type { FlexProps } from "@chakra-ui/react";
+import { Box, Flex, forwardRef, Text } from "@chakra-ui/react";
 
 type DashboardCardProps = FlexProps & {
   label: string;

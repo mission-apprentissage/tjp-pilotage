@@ -8,10 +8,7 @@ export const VFormationDiplomeSchema = z
     DATE_FERMETURE: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    if (
-      typeof data.DATE_OUVERTURE === "undefined" &&
-      typeof data.DATE_FERMETURE === "undefined"
-    ) {
+    if (typeof data.DATE_OUVERTURE === "undefined" && typeof data.DATE_FERMETURE === "undefined") {
       ctx.addIssue({
         code: z.ZodIssueCode.invalid_type,
         message: "DATE_OUVERTURE or DATE_FERMETURE Required",

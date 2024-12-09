@@ -1,21 +1,11 @@
-import {
-  Box,
-  Flex,
-  FormErrorMessage,
-  Heading,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+import { Box, Flex, FormErrorMessage, Heading, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { isTypeColoration } from "../../../../utils/typeDemandeUtils";
-import { CorrectionForms } from "../defaultFormValues";
-import { Intention } from "../types";
+import type { CorrectionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/defaultFormValues";
+import type { Intention } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/types";
+import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
 import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
@@ -23,21 +13,12 @@ import { CapaciteScolaireActuelleField } from "./CapaciteScolaireActuelleField";
 import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
 import { CapaciteScolaireField } from "./CapaciteScolaireField";
 
-const differenceCapacité = (
-  valueA: number | undefined = 0,
-  valueB: number | undefined = 0
-) => {
+const differenceCapacité = (valueA: number | undefined = 0, valueB: number | undefined = 0) => {
   if (valueB === undefined || valueA === undefined) return "-";
   return valueA - valueB > 0 ? `+${valueA - valueB}` : valueA - valueB;
 };
 
-export const CapaciteSection = ({
-  demande,
-  disabled,
-}: {
-  demande: Intention;
-  disabled?: boolean;
-}) => {
+export const CapaciteSection = ({ demande, disabled }: { demande: Intention; disabled?: boolean }) => {
   const {
     watch,
     formState: { errors },
@@ -45,16 +26,9 @@ export const CapaciteSection = ({
   } = useFormContext<CorrectionForms>();
 
   const typeDemande = demande?.typeDemande;
-  const coloration =
-    (typeDemande !== undefined && isTypeColoration(typeDemande)) ||
-    demande?.coloration;
+  const coloration = (typeDemande !== undefined && isTypeColoration(typeDemande)) || demande?.coloration;
 
-  const [
-    capaciteScolaireActuelle,
-    capaciteScolaire,
-    capaciteApprentissageActuelle,
-    capaciteApprentissage,
-  ] = watch([
+  const [capaciteScolaireActuelle, capaciteScolaire, capaciteApprentissageActuelle, capaciteApprentissage] = watch([
     "capaciteScolaireActuelle",
     "capaciteScolaire",
     "capaciteApprentissageActuelle",
@@ -64,40 +38,25 @@ export const CapaciteSection = ({
   useEffect(() => {
     setValue(
       "capaciteApprentissage",
-      demande?.correction?.capaciteApprentissage ??
-        demande?.capaciteApprentissage ??
-        0
+      demande?.correction?.capaciteApprentissage ?? demande?.capaciteApprentissage ?? 0
     );
     setValue(
       "capaciteApprentissageActuelle",
-      demande?.correction?.capaciteApprentissageActuelle ??
-        demande?.capaciteApprentissageActuelle ??
-        0
+      demande?.correction?.capaciteApprentissageActuelle ?? demande?.capaciteApprentissageActuelle ?? 0
     );
     setValue(
       "capaciteApprentissageColoree",
-      demande?.correction?.capaciteApprentissageColoree ??
-        demande?.capaciteApprentissageColoree ??
-        0
+      demande?.correction?.capaciteApprentissageColoree ?? demande?.capaciteApprentissageColoree ?? 0
     );
-    setValue(
-      "capaciteScolaire",
-      demande?.correction?.capaciteScolaire ?? demande?.capaciteScolaire ?? 0
-    );
+    setValue("capaciteScolaire", demande?.correction?.capaciteScolaire ?? demande?.capaciteScolaire ?? 0);
     setValue(
       "capaciteScolaireActuelle",
-      demande?.correction?.capaciteScolaireActuelle ??
-        demande?.capaciteScolaireActuelle ??
-        0
+      demande?.correction?.capaciteScolaireActuelle ?? demande?.capaciteScolaireActuelle ?? 0
     );
     setValue(
       "capaciteScolaireColoree",
-      demande?.correction?.capaciteScolaireColoree ??
-        demande?.capaciteScolaireColoree ??
-        0
+      demande?.correction?.capaciteScolaireColoree ?? demande?.capaciteScolaireColoree ?? 0
     );
-    nouvellesPlacesScolaire;
-    nouvellesPlacesApprentissage;
   }, []);
 
   const nouvellesPlacesScolaire = (() => {
@@ -107,10 +66,7 @@ export const CapaciteSection = ({
 
   const nouvellesPlacesApprentissage = (() => {
     if (coloration) return "-";
-    return differenceCapacité(
-      capaciteApprentissage,
-      capaciteApprentissageActuelle
-    );
+    return differenceCapacité(capaciteApprentissage, capaciteApprentissageActuelle);
   })();
 
   return (
@@ -141,26 +97,14 @@ export const CapaciteSection = ({
               Capacité en voie scolaire
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteScolaireActuelleField
-                flex={1}
-                demande={demande}
-                disabled={disabled}
-              />
+              <CapaciteScolaireActuelleField flex={1} demande={demande} disabled={disabled} />
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteScolaireField
-                flex={1}
-                demande={demande}
-                disabled={disabled}
-              />
+              <CapaciteScolaireField flex={1} demande={demande} disabled={disabled} />
             </Td>
             {coloration && (
               <Td p={0} border={"none"}>
-                <CapaciteScolaireColoreeField
-                  flex={1}
-                  demande={demande}
-                  disabled={disabled}
-                />
+                <CapaciteScolaireColoreeField flex={1} demande={demande} disabled={disabled} />
               </Td>
             )}
           </Tr>
@@ -169,59 +113,33 @@ export const CapaciteSection = ({
               Capacité en apprentissage
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageActuelleField
-                flex={1}
-                demande={demande}
-                disabled={disabled}
-              />
+              <CapaciteApprentissageActuelleField flex={1} demande={demande} disabled={disabled} />
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageField
-                flex={1}
-                demande={demande}
-                disabled={disabled}
-              />
+              <CapaciteApprentissageField flex={1} demande={demande} disabled={disabled} />
             </Td>
             {coloration && (
               <Td p={0} border={"none"}>
-                <CapaciteApprentissageColoreeField
-                  flex={1}
-                  demande={demande}
-                  disabled={disabled}
-                />
+                <CapaciteApprentissageColoreeField flex={1} demande={demande} disabled={disabled} />
               </Td>
             )}
           </Tr>
         </Tbody>
       </Table>
       <Box mb={5}>
-        {errors.capaciteScolaire && (
-          <FormErrorMessage>{errors.capaciteScolaire.message}</FormErrorMessage>
-        )}
+        {errors.capaciteScolaire && <FormErrorMessage>{errors.capaciteScolaire.message}</FormErrorMessage>}
         {errors.capaciteScolaireActuelle && (
-          <FormErrorMessage>
-            {errors.capaciteScolaireActuelle.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.capaciteScolaireActuelle.message}</FormErrorMessage>
         )}
         {errors.capaciteScolaireColoree && (
-          <FormErrorMessage>
-            {errors.capaciteScolaireColoree.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.capaciteScolaireColoree.message}</FormErrorMessage>
         )}
-        {errors.capaciteApprentissage && (
-          <FormErrorMessage>
-            {errors.capaciteApprentissage.message}
-          </FormErrorMessage>
-        )}
+        {errors.capaciteApprentissage && <FormErrorMessage>{errors.capaciteApprentissage.message}</FormErrorMessage>}
         {errors.capaciteApprentissageActuelle && (
-          <FormErrorMessage>
-            {errors.capaciteApprentissageActuelle.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.capaciteApprentissageActuelle.message}</FormErrorMessage>
         )}
         {errors.capaciteApprentissageColoree && (
-          <FormErrorMessage>
-            {errors.capaciteApprentissageColoree.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.capaciteApprentissageColoree.message}</FormErrorMessage>
         )}
       </Box>
     </Flex>

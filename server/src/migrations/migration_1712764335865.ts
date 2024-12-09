@@ -1,4 +1,4 @@
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
@@ -9,10 +9,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("dateFermeture", "date")
     .execute();
 
-  await db.schema
-    .alterTable("discipline")
-    .addPrimaryKeyConstraint("discipline_pkey", ["codeDiscipline"])
-    .execute();
+  await db.schema.alterTable("discipline").addPrimaryKeyConstraint("discipline_pkey", ["codeDiscipline"]).execute();
 };
 
 export const down = async (db: Kysely<unknown>) => {

@@ -1,15 +1,18 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
-import { RequestUser } from "../../../core/model/User";
-import { deleteSuiviSchema } from "./deleteSuivi.schema";
+import type { RequestUser } from "@/modules/core/model/User";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { deleteSuiviUsecase } from "./deleteSuivi.usecase";
 
+const ROUTE = ROUTES["[DELETE]/intention/suivi/:id"];
+
 export const deleteSuiviRoute = (server: Server) => {
-  return createRoute("/intention/suivi/:id", {
-    method: "DELETE",
-    schema: deleteSuiviSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

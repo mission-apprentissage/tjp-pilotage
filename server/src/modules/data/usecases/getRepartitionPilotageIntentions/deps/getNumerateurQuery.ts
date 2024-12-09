@@ -1,11 +1,11 @@
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
-import { genericOnDemandes } from "../../../utils/onDemande";
-import { selectPositionQuadrant } from "../../../utils/positionFormationRegionaleQuadrant";
-import { Filters } from "../getRepartitionPilotageIntentions.usecase";
+import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.usecase";
+import { genericOnDemandes } from "@/modules/data/utils/onDemande";
+import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
+import { cleanNull } from "@/utils/noNull";
 
 export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
-  return kdb
+  return getKbdClient()
     .selectFrom(
       genericOnDemandes(filters)
         .select((eb) => [
@@ -31,17 +31,9 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
         ])
         .as("demandes")
     )
-    .innerJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "demandes.codeNiveauDiplome"
-    )
+    .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "demandes.codeNiveauDiplome")
     .innerJoin("region", "region.codeRegion", "demandes.codeRegion")
-    .innerJoin(
-      "departement",
-      "departement.codeDepartement",
-      "demandes.codeDepartement"
-    )
+    .innerJoin("departement", "departement.codeDepartement", "demandes.codeDepartement")
     .innerJoin("academie", "academie.codeAcademie", "demandes.codeAcademie")
     .innerJoin("nsf", "nsf.codeNsf", "demandes.codeNsf")
     .select((eb) => [
@@ -50,7 +42,6 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
       "region.codeRegion",
       "region.libelleRegion",
       "positionQuadrant",
-      // "cfd",
       "nsf.codeNsf",
       "nsf.libelleNsf",
       "niveauDiplome.codeNiveauDiplome",
@@ -61,6 +52,9 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
       "departement.libelleDepartement",
       eb.fn.coalesce("placesOuvertes", eb.val(0)).as("placesOuvertes"),
       eb.fn.coalesce("placesFermees", eb.val(0)).as("placesFermees"),
+      eb.fn.coalesce("placesNonColoreesTransformees", eb.val(0)).as("placesNonColoreesTransformees"),
+      eb.fn.coalesce("placesColoreesOuvertes", eb.val(0)).as("placesColoreesOuvertes"),
+      eb.fn.coalesce("placesColoreesFermees", eb.val(0)).as("placesColoreesFermees"),
       eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
     ])

@@ -2,14 +2,13 @@
 
 import { Text } from "@chakra-ui/react";
 import { useId, useRef } from "react";
-import { GroupBase, SelectInstance } from "react-select";
+import type { GroupBase, SelectInstance } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
-
-import { TooltipIcon } from "../../../../../../components/TooltipIcon";
-import { useGlossaireContext } from "../../../../glossaire/glossaireContext";
-import { MetierOption } from "../page";
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import type { MetierOption } from "@/app/(wrapped)/panorama/lien-metier-formation/metier/page";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 interface AsyncMetierSearchProps {
   codeDomaineProfessionnel?: string;
@@ -19,15 +18,10 @@ interface AsyncMetierSearchProps {
 
 type Option = MetierOption | string;
 
-const AsyncMetierSearch = ({
-  codeDomaineProfessionnel,
-  metier,
-  onSelectMetier,
-}: AsyncMetierSearchProps) => {
+const AsyncMetierSearch = ({ codeDomaineProfessionnel, metier, onSelectMetier }: AsyncMetierSearchProps) => {
   const { openGlossaire } = useGlossaireContext();
 
-  const selectElementRef =
-    useRef<SelectInstance<Option, false, GroupBase<Option>>>(null);
+  const selectElementRef = useRef<SelectInstance<Option, false, GroupBase<Option>>>(null);
 
   const { data: defaultFormations } = client
     .ref("[GET]/metier/search/:search")
@@ -43,11 +37,7 @@ const AsyncMetierSearch = ({
     <>
       <Text onClick={openSelect} pb="4px" cursor="pointer">
         Métier
-        <TooltipIcon
-          ml="1"
-          label=""
-          onClick={() => openGlossaire("metier-rome")}
-        />
+        <TooltipIcon ml="1" label="" onClick={() => openGlossaire("metier-rome")} />
       </Text>
       <AsyncSelect
         ref={selectElementRef}
@@ -59,8 +49,7 @@ const AsyncMetierSearch = ({
         defaultOptions={defaultFormations ?? []}
         value={metier ?? ""}
         onChange={(selected) => {
-          if (typeof selected !== "string")
-            onSelectMetier(selected ?? undefined);
+          if (typeof selected !== "string") onSelectMetier(selected ?? undefined);
         }}
         loadOptions={(inputValue: string) => {
           return client.ref("[GET]/metier/search/:search").query({
@@ -69,14 +58,10 @@ const AsyncMetierSearch = ({
           });
         }}
         loadingMessage={({ inputValue }) =>
-          inputValue.length >= 3
-            ? "Recherche..."
-            : "Veuillez rentrer au moins 3 lettres"
+          inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
         }
         isClearable={true}
-        noOptionsMessage={({ inputValue }) =>
-          inputValue ? "Pas de métier correspondant" : "Commencez à écrire..."
-        }
+        noOptionsMessage={({ inputValue }) => (inputValue ? "Pas de métier correspondant" : "Commencez à écrire...")}
         placeholder="Libellé métier"
       />
     </>

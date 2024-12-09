@@ -1,16 +1,19 @@
 import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { getScopeFilterForUser } from "../../utils/getScopeFilterForUser";
-import { hasPermissionHandler } from "../../utils/hasPermission";
-import { searchUserSchema } from "./searchUser.schema";
+import { getScopeFilterForUser } from "@/modules/core/utils/getScopeFilterForUser";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { searchUser } from "./searchUser.usecase";
 
+const ROUTE = ROUTES["[GET]/user/search/:search"];
+
 export const searchUserRoute = (server: Server) => {
-  return createRoute("/user/search/:search", {
-    method: "GET",
-    schema: searchUserSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
@@ -21,10 +24,7 @@ export const searchUserRoute = (server: Server) => {
 
         if (!user) throw Boom.unauthorized();
 
-        const { scope, scopeFilter } = getScopeFilterForUser(
-          "users/lecture",
-          user
-        );
+        const { scope, scopeFilter } = getScopeFilterForUser("users/lecture", user);
 
         const result = await searchUser({
           search,

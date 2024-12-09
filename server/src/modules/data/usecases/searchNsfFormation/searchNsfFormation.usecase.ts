@@ -1,9 +1,10 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import _ from "lodash";
-import { z } from "zod";
+import { uniqWith } from "lodash-es";
+import type { searchNsfFormationSchema } from "shared/routes/schemas/get.nsf-diplome.search.search.schema";
+import type { z } from "zod";
 
 import { findManyInDataFormationQuery } from "./dependencies/findDataFormations.query";
-import { searchNsfFormationSchema } from "./searchNsfFormation.schema";
 
 type Option = z.infer<(typeof searchNsfFormationSchema.response)[200]>[number];
 type Formation = {
@@ -12,19 +13,12 @@ type Formation = {
   libelleNiveauDiplome: string | undefined;
 };
 
-const getFormationLabel = (formation: Formation) =>
-  `${formation.libelleFormation} (${formation.libelleNiveauDiplome})`;
+const getFormationLabel = (formation: Formation) => `${formation.libelleFormation} (${formation.libelleNiveauDiplome})`;
 
 export const [searchDiplome] = inject(
   { findManyInDataFormationQuery },
   (deps) =>
-    async ({
-      search,
-      filters,
-    }: {
-      search: string;
-      filters: z.infer<typeof searchNsfFormationSchema.querystring>;
-    }) => {
+    async ({ search, filters }: { search: string; filters: z.infer<typeof searchNsfFormationSchema.querystring> }) => {
       const formations = await deps.findManyInDataFormationQuery({
         search,
         filters,
@@ -33,7 +27,7 @@ export const [searchDiplome] = inject(
       const options: Array<Option> = [];
 
       // Déduplication des formations avec le même label
-      const filteredDup = _.uniqWith(formations, (formation1, formation2) => {
+      const filteredDup = uniqWith(formations, (formation1, formation2) => {
         return getFormationLabel(formation1) === getFormationLabel(formation2);
       });
 

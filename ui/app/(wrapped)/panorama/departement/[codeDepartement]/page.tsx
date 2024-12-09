@@ -2,16 +2,17 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
+import { useContext } from "react";
 
 import { client } from "@/api.client";
-
-import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
-import { FiltersSection } from "../../components/FiltersSection";
-import { IndicateursSection } from "../../components/IndicateursSection/IndicateursSection";
-import { InfoSection } from "../../components/InfoSection";
-import { QuadrantSection } from "../../components/QuadrantSection/QuadrantSection";
-import { TopFlopSection } from "../../components/TopFlopSection/TopFlopSection";
-import { FiltersPanoramaFormation, OrderPanoramaFormation } from "../../types";
+import { FiltersSection } from "@/app/(wrapped)/panorama/components/FiltersSection";
+import { IndicateursSection } from "@/app/(wrapped)/panorama/components/IndicateursSection/IndicateursSection";
+import { InfoSection } from "@/app/(wrapped)/panorama/components/InfoSection";
+import { QuadrantSection } from "@/app/(wrapped)/panorama/components/QuadrantSection/QuadrantSection";
+import { TopFlopSection } from "@/app/(wrapped)/panorama/components/TopFlopSection/TopFlopSection";
+import type { FiltersPanoramaFormation, OrderPanoramaFormation } from "@/app/(wrapped)/panorama/types";
+import { CodeDepartementFilterContext } from "@/app/layoutClient";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 export default function Panorama({
   params: { codeDepartement },
@@ -22,14 +23,11 @@ export default function Panorama({
 }) {
   const router = useRouter();
   const queryParams = useSearchParams();
-  const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(
-    queryParams.toString()
-  );
+  const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(queryParams.toString());
+  const { setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
 
   const setSearchParams = (params: FiltersPanoramaFormation) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const handleOrder = (column: OrderPanoramaFormation["orderBy"]) => {
@@ -56,45 +54,39 @@ export default function Panorama({
   };
 
   const onCodeDepartementChanged = (codeDepartement: string) => {
-    router.push(
-      `/panorama/departement/${codeDepartement}?${qs.stringify(searchParams)}`
-    );
+    setCodeDepartementFilter(codeDepartement);
+
+    router.push(`/panorama/departement/${codeDepartement}?${qs.stringify(searchParams)}`);
   };
 
-  const { data: departementsOptions } = client
-    .ref("[GET]/departements")
-    .useQuery(
-      {},
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
+  const { data: departementsOptions } = client.ref("[GET]/departements").useQuery(
+    {},
+    {
+      keepPreviousData: true,
+      staleTime: 10000000,
+    }
+  );
 
-  const { data: stats } = client
-    .ref("[GET]/departement/:codeDepartement")
-    .useQuery(
-      {
-        params: { codeDepartement },
-        query: { ...searchParams },
-      },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
+  const { data: stats } = client.ref("[GET]/departement/:codeDepartement").useQuery(
+    {
+      params: { codeDepartement },
+      query: { ...searchParams },
+    },
+    {
+      keepPreviousData: true,
+      staleTime: 10000000,
+    }
+  );
 
-  const { data, isLoading } = client
-    .ref("[GET]/panorama/stats/departement")
-    .useQuery(
-      {
-        query: {
-          codeDepartement,
-          ...searchParams,
-        },
+  const { data, isLoading } = client.ref("[GET]/panorama/stats/departement").useQuery(
+    {
+      query: {
+        codeDepartement,
+        ...searchParams,
       },
-      { keepPreviousData: true, staleTime: 10000000 }
-    );
+    },
+    { keepPreviousData: true, staleTime: 10000000 }
+  );
 
   return (
     <>
@@ -117,14 +109,9 @@ export default function Panorama({
               }
             : stats
         }
-        libelleTerritoire={
-          departementsOptions?.find((item) => item.value === codeDepartement)
-            ?.label
-        }
+        libelleTerritoire={departementsOptions?.find((item) => item.value === codeDepartement)?.label}
         libelleDiplome={
-          data?.filters.diplomes?.find(
-            (item) => item.value === searchParams.codeNiveauDiplome?.[0]
-          )?.label
+          data?.filters.diplomes?.find((item) => item.value === searchParams.codeNiveauDiplome?.[0])?.label
         }
         typeTerritoire={"departement"}
       />
@@ -134,9 +121,7 @@ export default function Panorama({
         quadrantFormations={data?.formations}
         isLoading={isLoading}
         order={{ order: searchParams.order, orderBy: searchParams.orderBy }}
-        handleOrder={(column?: string) =>
-          handleOrder(column as OrderPanoramaFormation["orderBy"])
-        }
+        handleOrder={(column?: string) => handleOrder(column as OrderPanoramaFormation["orderBy"])}
         codeRegion={stats?.codeRegion}
         codeDepartement={codeDepartement}
         codeNiveauDiplome={searchParams.codeNiveauDiplome?.[0]}
@@ -145,10 +130,7 @@ export default function Panorama({
         effectifEntreeTotal={stats?.effectifEntree}
       />
       <TopFlopSection topFlops={data?.topFlops} isLoading={isLoading} />
-      <InfoSection
-        codeRegion={stats?.codeRegion}
-        codeDepartement={codeDepartement}
-      />
+      <InfoSection codeRegion={stats?.codeRegion} codeDepartement={codeDepartement} />
     </>
   );
 }

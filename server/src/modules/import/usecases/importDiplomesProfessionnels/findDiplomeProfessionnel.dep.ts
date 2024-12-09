@@ -1,12 +1,6 @@
-import { rawDataRepository } from "../../repositories/rawData.repository";
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 
-export const findDiplomesProfessionnels = ({
-  offset,
-  limit,
-}: {
-  offset: number;
-  limit: number;
-}) => {
+export const findDiplomesProfessionnels = async ({ offset, limit }: { offset: number; limit: number }) => {
   return rawDataRepository.findRawDatas({
     type: "diplomesProfessionnels",
     offset,

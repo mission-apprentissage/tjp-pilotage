@@ -1,24 +1,17 @@
-import { ExpressionBuilder } from "kysely";
+import type { ExpressionBuilder } from "kysely";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { TypeFamilleEnum } from "shared/enum/typeFamille";
 
-import { DB } from "../../../db/schema";
+import type { DB } from "@/db/schema";
 
 export const selectPositionQuadrant = ({
   eb,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "positionFormationRegionaleQuadrant" | "dataFormation"
-  >;
+  eb: ExpressionBuilder<DB, "positionFormationRegionaleQuadrant" | "dataFormation">;
 }) => {
   return eb
     .case()
-    .when(
-      eb.ref("positionFormationRegionaleQuadrant.positionQuadrant"),
-      "is not",
-      null
-    )
+    .when(eb.ref("positionFormationRegionaleQuadrant.positionQuadrant"), "is not", null)
     .then(eb.ref("positionFormationRegionaleQuadrant.positionQuadrant"))
     .else(
       eb

@@ -1,10 +1,12 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { passwordRegex } from "shared/utils/passwordRegex";
 
-import { config } from "../../../../../config/config";
-import { hashPassword } from "../../utils/passwordUtils";
+import config from "@/config";
+import { hashPassword } from "@/modules/core/utils/passwordUtils";
+
 import { updateUserQuery } from "./updateUserQuery.dep";
 
 export const [activateUser, activateUserFactory] = inject(
@@ -26,7 +28,7 @@ export const [activateUser, activateUserFactory] = inject(
 
       let decryptedToken: { email: string };
       try {
-        decryptedToken = verify(activationToken, deps.jwtSecret) as {
+        decryptedToken = jwt.verify(activationToken, deps.jwtSecret) as {
           email: string;
         };
       } catch {

@@ -1,9 +1,9 @@
-import { kdb } from "../../../../db/db";
-import { NMefLine } from "../../fileTypes/NMef";
+import { getKbdClient } from "@/db/db";
+import type { NMefLine } from "@/modules/import/fileTypes/NMef";
 
 export const findNMefs = async ({ cfd }: { cfd: string }) =>
   (
-    await kdb
+    await getKbdClient()
       .selectFrom("rawData")
       .selectAll("rawData")
       .where("type", "=", "nMef")

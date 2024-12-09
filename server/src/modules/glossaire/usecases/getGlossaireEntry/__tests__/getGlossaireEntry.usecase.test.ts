@@ -1,13 +1,11 @@
-import "../../../../../../config/config";
+import "@/config";
 
 import Boom from "@hapi/boom";
+import { describe, expect, it, vi } from "vitest";
 
-import {
-  getPageAsMarkdown,
-  getPageProperties,
-} from "../../../../core/services/notion/notion";
-import { dependencies } from "../dependencies";
-import { getGlossaireEntryFactory } from "../getGlossaireEntry.usecase";
+import type { getPageAsMarkdown, getPageProperties } from "@/modules/core/services/notion/notion";
+import type { dependencies } from "@/modules/glossaire/usecases/getGlossaireEntry/dependencies";
+import { getGlossaireEntryFactory } from "@/modules/glossaire/usecases/getGlossaireEntry/getGlossaireEntry.usecase";
 
 const GetGlossaireFixture = () => {
   let errorMessage: string;
@@ -36,9 +34,7 @@ const GetGlossaireFixture = () => {
     thenExpectedErrorMessageIs: (expectedErrorMessage: string) => {
       expect(errorMessage).toEqual(expectedErrorMessage);
     },
-    thenExpectedResponseIs: (
-      expectedResponse: Awaited<ReturnType<typeof usecase>>
-    ) => {
+    thenExpectedResponseIs: (expectedResponse: Awaited<ReturnType<typeof usecase>>) => {
       expect(response).toEqual(expectedResponse);
     },
   };
@@ -52,12 +48,11 @@ describe("Feature: Getting a Glossaire Entry", () => {
     currentFixture.givenGetPageImplementation(
       () => {
         throw Boom.badImplementation(
-          "Erreur lors de la récupération des informations de la page Notion avec l'id : " +
-            currentPageId
+          "Erreur lors de la récupération des informations de la page Notion avec l'id : " + currentPageId
         );
       },
-      jest.fn(),
-      jest.fn()
+      vi.fn(),
+      vi.fn()
     );
 
     await currentFixture.whenGetGlossaireEntry(currentPageId);
@@ -75,7 +70,7 @@ describe("Feature: Getting a Glossaire Entry", () => {
       async () => {
         return "## Test";
       },
-      jest.fn(),
+      vi.fn(),
       () => {
         return {
           id: currentPageId,

@@ -1,7 +1,7 @@
 import { MILLESIMES_IJ_ETAB } from "shared/time/millesimes";
 
-import { kdb } from "../../../../../db/db";
-import { cleanNull } from "../../../../../utils/noNull";
+import { getKbdClient } from "@/db/db";
+import { cleanNull } from "@/utils/noNull";
 
 export const getValeurAjoutee = async ({
   uai,
@@ -10,7 +10,7 @@ export const getValeurAjoutee = async ({
   uai: string;
   millesime?: string[];
 }) =>
-  kdb
+  getKbdClient()
     .selectFrom("indicateurEtablissement")
     .where("indicateurEtablissement.uai", "=", uai)
     .where("millesime", "in", millesime)

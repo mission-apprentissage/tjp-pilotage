@@ -1,8 +1,8 @@
 import * as fs from "fs";
 import path from "path";
+import type { FileManager, FileType } from "shared/files/types";
 
-import { config } from "../../../../../config/config";
-import { FileManager, FileType } from "./fileManager";
+import config from "@/config";
 
 const mapperToFileType = (filepath: string, entry: fs.Dirent): FileType => {
   const fullPath = path.join(filepath, entry.name);
@@ -53,10 +53,7 @@ export const localFileManagerFactory = (): FileManager => {
 
         return filesDetails;
       } catch (error) {
-        console.error(
-          `Une erreur est survenue lors de la lecture des fichiers pour le chemin ${filepath}`,
-          error
-        );
+        console.error(`Une erreur est survenue lors de la lecture des fichiers pour le chemin ${filepath}`, error);
 
         return [];
       }
@@ -67,12 +64,7 @@ export const localFileManagerFactory = (): FileManager => {
       }
     },
     getDownloadUrl: async (filepath: string): Promise<string> => {
-      return encodeURI(
-        `http://${config.host}/public/upload/${filepath.replace(
-          "./public/upload/",
-          ""
-        )}`
-      );
+      return encodeURI(`${config.publicUrl}/public/upload/${filepath.replace("./public/upload/", "")}`);
     },
   };
 };

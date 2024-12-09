@@ -1,13 +1,7 @@
-import { kdb } from "../../../../db/db";
+import { getKbdClient } from "@/db/db";
 
-export const setPasswordQuery = async ({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) => {
-  await kdb
+export const setPasswordQuery = async ({ email, password }: { email: string; password: string }) => {
+  await getKbdClient()
     .updateTable("user")
     .where("user.email", "=", email)
     .where("user.enabled", "=", true)

@@ -1,15 +1,9 @@
-import { Kysely } from "kysely";
+import type { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
-  await db.schema
-    .alterTable("constatRentree")
-    .addColumn("codeDispositif", "varchar(3)")
-    .execute();
+  await db.schema.alterTable("constatRentree").addColumn("codeDispositif", "varchar(3)").execute();
 };
 
 export const down = async (db: Kysely<unknown>) => {
-  await db.schema
-    .alterTable("constatRentree")
-    .dropColumn("codeDispositif")
-    .execute();
+  await db.schema.alterTable("constatRentree").dropColumn("codeDispositif").execute();
 };

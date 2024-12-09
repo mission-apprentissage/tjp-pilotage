@@ -1,15 +1,18 @@
 import { createRoute } from "@http-wizard/core";
 import { getPermissionScope, guardScope } from "shared";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
-import { getDemandeSchema } from "./getDemande.schema";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { getDemandeUsecase } from "./getDemande.usecase";
 
+const ROUTE = ROUTES["[GET]/demande/:numero"];
+
 export const getDemandeRoute = (server: Server) => {
-  return createRoute("/demande/:numero", {
-    method: "GET",
-    schema: getDemandeSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

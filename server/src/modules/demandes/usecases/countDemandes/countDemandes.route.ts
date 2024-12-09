@@ -1,14 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
-import { countDemandesSchema } from "./countDemandes.schema";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { countDemandesUsecase } from "./countDemandes.usecase";
 
+const ROUTE = ROUTES["[GET]/demandes/count"];
+
 export const countDemandesRoute = (server: Server) => {
-  return createRoute("/demandes/count", {
-    method: "GET",
-    schema: countDemandesSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

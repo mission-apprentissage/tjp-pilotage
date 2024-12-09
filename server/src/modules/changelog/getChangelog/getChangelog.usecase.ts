@@ -1,6 +1,7 @@
-import { config } from "../../../../config/config";
-import { getDatabaseRows } from "../../core/services/notion/notion";
-import { Changelog, ChangelogEntry } from "./getChangelog.schema";
+import type { Changelog, ChangelogEntry } from "shared/routes/schemas/get.changelog.schema";
+
+import config from "@/config";
+import { getDatabaseRows } from "@/modules/core/services/notion/notion";
 
 /**
  * AUTO GENERATED TYPES
@@ -145,19 +146,14 @@ export const getChangelogFactory =
       config,
     }
   ) =>
-  async (
-    dbId: string = deps.config.notion.dbChangelogId
-  ): Promise<Changelog> => {
-    const database = (await deps.getDatabaseRows(
-      dbId
-    )) as unknown as ChangelogDatabase;
+  async (dbId: string = deps.config.notion.dbChangelogId): Promise<Changelog> => {
+    const database = (await deps.getDatabaseRows(dbId)) as unknown as ChangelogDatabase;
     const changelog: Changelog = [];
 
     database.results?.forEach((result) => {
       const entry: Partial<ChangelogEntry> = {};
 
-      entry.title =
-        result.properties["Mise à jour"].title?.[0]?.plain_text ?? "";
+      entry.title = result.properties["Mise à jour"].title?.[0]?.plain_text ?? "";
 
       if (!entry.title) {
         return;
@@ -172,16 +168,12 @@ export const getChangelogFactory =
         })) ?? [];
 
       entry.show = result.properties["A afficher"].checkbox;
-      entry.description =
-        result.properties["Description"].rich_text?.[0]?.plain_text ?? "";
+      entry.description = result.properties["Description"].rich_text?.[0]?.plain_text ?? "";
       entry.deployed = result.properties["En Prod ?"].checkbox;
 
       if (result.properties.Date.type === "rich_text") {
         entry.date = {
-          type:
-            result.properties.Date.rich_text?.[0]?.type === "mention"
-              ? "date"
-              : "string",
+          type: result.properties.Date.rich_text?.[0]?.type === "mention" ? "date" : "string",
           value: result.properties.Date.rich_text?.[0]?.plain_text ?? "",
         };
       }
@@ -191,9 +183,7 @@ export const getChangelogFactory =
 
     changelog.sort((a, b) => {
       if (a.date.type === "date" && b.date.type === "date") {
-        return (
-          new Date(b.date.value).getTime() - new Date(a.date.value).getTime()
-        );
+        return new Date(b.date.value).getTime() - new Date(a.date.value).getTime();
       }
 
       return 0;

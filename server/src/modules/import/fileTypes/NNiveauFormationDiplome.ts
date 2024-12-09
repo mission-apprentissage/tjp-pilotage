@@ -5,6 +5,4 @@ export const NNiveauFormationDiplomeSchema = z.object({
   LIBELLE_COURT: z.string(),
 });
 
-export type NNiveauFormationDiplome = z.infer<
-  typeof NNiveauFormationDiplomeSchema
->;
+export type NNiveauFormationDiplome = z.infer<typeof NNiveauFormationDiplomeSchema>;

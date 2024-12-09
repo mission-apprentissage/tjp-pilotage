@@ -1,14 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
-import { importIntentionSchema } from "./importIntention.schema";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { importIntentionUsecase } from "./importIntention.usecase";
 
+const ROUTE = ROUTES["[POST]/intention/import/:numero"];
+
 export const importIntentionRoute = (server: Server) => {
-  return createRoute("/intention/import/:numero", {
-    method: "POST",
-    schema: importIntentionSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

@@ -1,21 +1,18 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { z } from "zod";
+import type { submitIntentionAccessLogSchema } from "shared/routes/schemas/post.demande.access.submit.schema";
+import type { z } from "zod";
 
-import { RequestUser } from "../../../core/model/User";
-import { findOneIntention } from "../../repositories/findOneIntention.query";
-import { updateIntentionWithHistory } from "../../repositories/updateIntentionWithHistory.query";
+import type { RequestUser } from "@/modules/core/model/User";
+import { findOneIntention } from "@/modules/intentions/repositories/findOneIntention.query";
+import { updateIntentionWithHistory } from "@/modules/intentions/repositories/updateIntentionWithHistory.query";
+
 import { createIntentionAccessLog } from "./deps/createIntentionAccessLog.query";
-import { submitIntentionAccessLogSchema } from "./submitIntentionAccessLog.schema";
 
-type Intention = z.infer<
-  typeof submitIntentionAccessLogSchema.body
->["intention"];
+type Intention = z.infer<typeof submitIntentionAccessLogSchema.body>["intention"];
 
-export const [
-  submitIntentionAccessLogUsecase,
-  submitIntentionAccessLogFactory,
-] = inject(
+export const [submitIntentionAccessLogUsecase, submitIntentionAccessLogFactory] = inject(
   {
     createIntentionAccessLog,
     updateIntentionWithHistory,
@@ -30,16 +27,14 @@ export const [
       intention: Intention;
     }) => {
       const intentionData = await findOneIntention(intention.numero);
-      if (!intentionData) throw Boom.notFound("Intention not found");
+      if (!intentionData) throw Boom.notFound("Intention non trouvée en base");
 
       const newIntentionAccessLog = {
         intentionNumero: intentionData.numero,
         userId: user.id,
       };
 
-      const createdAvis = await deps.createIntentionAccessLog(
-        newIntentionAccessLog
-      );
+      const createdAvis = await deps.createIntentionAccessLog(newIntentionAccessLog);
 
       return createdAvis;
     }

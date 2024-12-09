@@ -1,4 +1,4 @@
-import { Role } from "shared";
+import type { Role } from "shared";
 
 export type RequestUser = {
   email: string;

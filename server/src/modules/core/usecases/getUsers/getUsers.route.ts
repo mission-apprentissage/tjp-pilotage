@@ -1,16 +1,19 @@
 import { createRoute } from "@http-wizard/core";
-import { UserFonction } from "shared/enum/userFonction";
+import type { UserFonction } from "shared/enum/userFonction";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { getScopeFilterForUser } from "../../utils/getScopeFilterForUser";
-import { hasPermissionHandler } from "../../utils/hasPermission";
-import { getUsersSchema } from "./getUsers.schema";
+import { getScopeFilterForUser } from "@/modules/core/utils/getScopeFilterForUser";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { getUsers } from "./getUsers.usecase";
 
+const ROUTE = ROUTES["[GET]/users"];
+
 export const getUsersRoute = (server: Server) => {
-  return createRoute("/users", {
-    method: "GET",
-    schema: getUsersSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
@@ -19,10 +22,7 @@ export const getUsersRoute = (server: Server) => {
         const { user } = request;
 
         const { order, orderBy, ...rest } = request.query;
-        const { scope, scopeFilter } = getScopeFilterForUser(
-          "users/lecture",
-          user!
-        );
+        const { scope, scopeFilter } = getScopeFilterForUser("users/lecture", user!);
 
         const users = await getUsers({
           ...rest,

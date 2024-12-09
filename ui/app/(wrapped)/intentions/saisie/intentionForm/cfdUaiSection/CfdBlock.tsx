@@ -1,29 +1,20 @@
-import {
-  Box,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  LightMode,
-} from "@chakra-ui/react";
+import { Box, FormControl, FormErrorMessage, FormLabel, LightMode } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { client } from "@/api.client";
-
-import { CfdAutocompleteInput } from "../../components/CfdAutocomplete";
-import { IntentionForms } from "../defaultFormValues";
+import type { client } from "@/api.client";
+import { CfdAutocompleteInput } from "@/app/(wrapped)/intentions/saisie/components/CfdAutocomplete";
+import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
 export const CfdBlock = ({
   setDispositifs,
   setIsFCIL,
   formMetaData,
-  active,
+  disabled,
 }: {
-  setDispositifs: (
-    info?: (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"]
-  ) => void;
+  setDispositifs: (info?: (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"]) => void;
   setIsFCIL: (isFcil: boolean) => void;
   formMetaData?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
-  active: boolean;
+  disabled: boolean;
 }) => {
   const {
     formState: { errors },
@@ -32,13 +23,7 @@ export const CfdBlock = ({
 
   return (
     <LightMode>
-      <FormControl
-        mb="4"
-        isInvalid={!!errors.cfd?.message}
-        isRequired
-        w="100%"
-        maxW="752px"
-      >
+      <FormControl mb="4" isInvalid={!!errors.cfd?.message} isRequired w="100%" maxW="752px">
         <FormLabel>Recherche d'un diplôme</FormLabel>
         <Box color="chakra-body-text">
           <Controller
@@ -57,7 +42,7 @@ export const CfdBlock = ({
                       }
                     : undefined
                 }
-                active={active}
+                disabled={disabled}
                 onChange={(selected) => {
                   onChange(selected?.value);
                   setDispositifs(selected?.dispositifs);
@@ -66,9 +51,7 @@ export const CfdBlock = ({
               />
             )}
           />
-          {errors.cfd && (
-            <FormErrorMessage>{errors.cfd.message}</FormErrorMessage>
-          )}
+          {errors.cfd && <FormErrorMessage>{errors.cfd.message}</FormErrorMessage>}
         </Box>
       </FormControl>
     </LightMode>

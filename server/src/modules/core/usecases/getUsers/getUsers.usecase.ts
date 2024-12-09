@@ -1,5 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { Scope } from "shared/security/permissions";
+import type { Scope } from "shared/security/permissions";
 
 import { findUsers } from "./findUsers.dep";
 
@@ -7,8 +8,8 @@ export const [getUsers] = inject(
   { findUsers },
   (deps) =>
     async ({
-      offset = 0,
-      limit = 30,
+      offset,
+      limit,
       search,
       orderBy,
       scope,

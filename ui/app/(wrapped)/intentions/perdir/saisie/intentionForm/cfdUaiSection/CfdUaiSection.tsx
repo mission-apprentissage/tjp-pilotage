@@ -1,26 +1,18 @@
 import { EditIcon } from "@chakra-ui/icons";
-import {
-  Badge,
-  Box,
-  Button,
-  DarkMode,
-  Divider,
-  Flex,
-  Heading,
-  IconButton,
-  Tag,
-  Text,
-} from "@chakra-ui/react";
+import { Badge, Box, Button, DarkMode, Divider, Flex, Heading, IconButton, Tag, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { client } from "@/api.client";
+import type { client } from "@/api.client";
+import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import type {
+  IntentionForms,
+  PartialIntentionForms,
+} from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
+import type { Campagne } from "@/app/(wrapped)/intentions/perdir/saisie/types";
 
-import { StatutTag } from "../../../components/StatutTag";
-import { Campagne } from "../../types";
-import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
 import { CfdBlock } from "./CfdBlock";
 import { DispositifBlock } from "./DispositifBlock";
 import { LibelleFCILField } from "./LibelleFCILField";
@@ -37,12 +29,7 @@ const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
       );
     case CampagneStatutEnum["en attente"]:
       return (
-        <Tag
-          size="md"
-          ml={4}
-          bgColor={"purpleGlycine.950"}
-          color={"purpleGlycine.319"}
-        >
+        <Tag size="md" ml={4} bgColor={"purpleGlycine.950"} color={"purpleGlycine.319"}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
@@ -54,12 +41,7 @@ const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
       );
     default:
       return (
-        <Tag
-          size="md"
-          ml={4}
-          color={"yellowTournesol.407"}
-          bgColor={"yellowTournesol.950"}
-        >
+        <Tag size="md" ml={4} color={"yellowTournesol.407"} bgColor={"yellowTournesol.950"}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
@@ -96,15 +78,13 @@ export const CfdUaiSection = ({
   const { watch, getValues } = useFormContext<IntentionForms>();
 
   const [dispositifs, setDispositifs] = useState<
-    | (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"]
-    | undefined
+    (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"] | undefined
   >(formMetadata?.formation?.dispositifs);
 
   const uai = watch("uai");
 
   const [uaiInfo, setUaiInfo] = useState<
-    | (typeof client.infer)["[GET]/etablissement/search/:search"][number]
-    | undefined
+    (typeof client.infer)["[GET]/etablissement/search/:search"][number] | undefined
   >(
     formMetadata?.etablissement?.libelleEtablissement && uai
       ? {
@@ -131,20 +111,11 @@ export const CfdUaiSection = ({
 
   return (
     <DarkMode>
-      <Box
-        color="chakra-body-text"
-        bg="blueecume.400_hover"
-        p="6"
-        borderRadius="6"
-      >
+      <Box color="chakra-body-text" bg="blueecume.400_hover" p="6" borderRadius="6">
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
           <TagCampagne campagne={campagne} />
-          <StatutTag
-            statut={defaultValues.statut ?? DemandeStatutEnum["brouillon"]}
-            ml={4}
-            size={"md"}
-          />
+          <StatutTag statut={defaultValues.statut ?? DemandeStatutEnum["brouillon"]} ml={4} size={"md"} />
           {defaultValues && (
             <IconButton
               icon={<EditIcon />}
@@ -169,25 +140,13 @@ export const CfdUaiSection = ({
           disabled={disabled || !active}
         />
         <DispositifBlock options={dispositifs} disabled={disabled || !active} />
-        <LibelleFCILField
-          shouldDisplay={isFCIL}
-          disabled={disabled || !active}
-        />
+        <LibelleFCILField shouldDisplay={isFCIL} disabled={disabled || !active} />
         <Flex direction={"row"} justify={"space-between"}>
           <Flex direction="column" w="100%" maxW="752px">
             <Box mb="auto" w="100%" maxW="752px">
-              <UaiBlock
-                formMetadata={formMetadata}
-                disabled={disabled || !active}
-                setUaiInfo={setUaiInfo}
-              />
+              <UaiBlock formMetadata={formMetadata} disabled={disabled || !active} setUaiInfo={setUaiInfo} />
             </Box>
-            <Flex
-              minH={16}
-              mt={"auto"}
-              align="flex-end"
-              justify={"space-between"}
-            >
+            <Flex minH={16} mt={"auto"} align="flex-end" justify={"space-between"}>
               {!disabled && (
                 <Button
                   visibility={active ? "collapse" : "visible"}
@@ -213,16 +172,7 @@ export const CfdUaiSection = ({
               )}
             </Flex>
           </Flex>
-          <Box
-            bg="rgba(255,255,255,0.1)"
-            p="4"
-            flex="1"
-            w="100%"
-            minH={150}
-            h="100%"
-            ms={8}
-            mt={8}
-          >
+          <Box bg="rgba(255,255,255,0.1)" p="4" flex="1" w="100%" minH={150} h="100%" ms={8} mt={8}>
             {!uaiInfo && <Text>Veuillez sélectionner un établissement.</Text>}
             {uaiInfo && (
               <>

@@ -1,12 +1,11 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../../../db/db";
+import type { DB } from "@/db/db";
+import { getKbdClient } from "@/db/db";
 
 export const createFormation = async (formation: Insertable<DB["formation"]>) =>
-  kdb
+  getKbdClient()
     .insertInto("formation")
     .values(formation)
-    .onConflict((oc) =>
-      oc.column("codeFormationDiplome").doUpdateSet(formation)
-    )
+    .onConflict((oc) => oc.column("codeFormationDiplome").doUpdateSet(formation))
     .execute();

@@ -1,7 +1,5 @@
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 const IS_SAISIE_DISABLED = false;
 

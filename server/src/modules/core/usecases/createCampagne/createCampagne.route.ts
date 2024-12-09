@@ -1,14 +1,17 @@
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../utils/hasPermission";
-import { createCampagneSchema } from "./createCampagne.schema";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { createCampagne } from "./createCampagne.usecase";
 
+const ROUTE = ROUTES["[POST]/campagnes/:campagneId"];
+
 export const createCampagneRoute = (server: Server) => {
-  return createRoute("/campagnes/:campagneId", {
-    method: "POST",
-    schema: createCampagneSchema,
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

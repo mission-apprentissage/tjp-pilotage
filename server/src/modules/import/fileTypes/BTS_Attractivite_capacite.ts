@@ -13,6 +13,4 @@ export const BTSAttractiviteCapaciteSchema = z.object({
   MEFSTAT11_old: z.string(),
 });
 
-export type BTS_Attractivite_capacite = z.infer<
-  typeof BTSAttractiviteCapaciteSchema
->;
+export type BTS_Attractivite_capacite = z.infer<typeof BTSAttractiviteCapaciteSchema>;

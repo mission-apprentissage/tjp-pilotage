@@ -1,15 +1,18 @@
 import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
+import { ROUTES } from "shared/routes/routes";
 
-import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
-import { submitDemandeSchema } from "./submitDemande.schema";
+import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
+import type { Server } from "@/server/server";
+
 import { submitDemande } from "./submitDemande.usecase";
 
-export const submitDemandeRoute = ({ server }: { server: Server }) => {
-  return createRoute("/demande/submit", {
-    method: "POST",
-    schema: submitDemandeSchema,
+const ROUTE = ROUTES["[POST]/demande/submit"];
+
+export const submitDemandeRoute = (server: Server) => {
+  return createRoute(ROUTE.url, {
+    method: ROUTE.method,
+    schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,

@@ -4,29 +4,18 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 
 import { client } from "@/api.client";
+import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
+import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
+import type { Etablissements, Filters, LineId, Order } from "@/app/(wrapped)/console/etablissements/types";
 
-import { HeadLineContent } from "../ConsoleSection/HeadLineContent";
-import {
-  EtablissementLineContent,
-  EtablissementLineLoader,
-  EtablissementLinePlaceholder,
-} from "../ConsoleSection/LineContent";
-import { FORMATION_ETABLISSEMENT_COLUMNS } from "../FORMATION_ETABLISSEMENT_COLUMNS";
-import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS } from "../GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
-import { Etablissements, Filters, LineId, Order } from "../types";
+import { HeadLineContent } from "./HeadLineContent";
+import { EtablissementLineContent, EtablissementLineLoader, EtablissementLinePlaceholder } from "./LineContent";
 
-const getCellBgColor = (
-  column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS
-) => {
-  const groupLabel = Object.keys(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS).find(
-    (groupLabel) => {
-      return Object.keys(
-        GROUPED_FORMATION_ETABLISSEMENT_COLUMNS[groupLabel].options
-      ).includes(column);
-    }
-  );
-  return GROUPED_FORMATION_ETABLISSEMENT_COLUMNS[groupLabel as string]
-    .cellColor;
+const getCellBgColor = (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => {
+  const groupLabel = Object.keys(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS).find((groupLabel) => {
+    return Object.keys(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS[groupLabel].options).includes(column);
+  });
+  return GROUPED_FORMATION_ETABLISSEMENT_COLUMNS[groupLabel as string].cellColor;
 };
 
 export const ConsoleSection = ({
@@ -38,11 +27,10 @@ export const ConsoleSection = ({
 }: {
   data?: Etablissements;
   filters: Partial<Filters>;
-  order: Order;
+  order: Partial<Order>;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    withAnneeCommune?: string;
     columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     order?: Partial<Order>;
     page?: number;
@@ -51,34 +39,29 @@ export const ConsoleSection = ({
 }) => {
   const [historiqueId, setHistoriqueId] = useState<LineId>();
 
-  const { data: historiqueData, isFetching: isFetchingHistoriqueData } =
-    useQuery({
-      keepPreviousData: false,
-      staleTime: 10000000,
-      queryKey: ["formations", historiqueId, filters],
-      enabled: !!historiqueId,
-      queryFn: async () => {
-        if (!historiqueId) return;
-        return (
-          await client.ref("[GET]/etablissements").query({
-            query: {
-              ...filters,
-              cfd: [historiqueId?.cfd],
-              codeDispositif: historiqueId?.codeDispositif
-                ? [historiqueId?.codeDispositif]
-                : undefined,
-              uai: [historiqueId.uai],
-              limit: 2,
-              order: "desc",
-              orderBy: "rentreeScolaire",
-              rentreeScolaire: RENTREES_SCOLAIRES.filter(
-                (rentree) => rentree !== CURRENT_RENTREE
-              ),
-            },
-          })
-        ).etablissements;
-      },
-    });
+  const { data: historiqueData, isFetching: isFetchingHistoriqueData } = useQuery({
+    keepPreviousData: false,
+    staleTime: 10000000,
+    queryKey: ["formations", historiqueId, filters],
+    enabled: !!historiqueId,
+    queryFn: async () => {
+      if (!historiqueId) return;
+      return (
+        await client.ref("[GET]/etablissements").query({
+          query: {
+            ...filters,
+            cfd: [historiqueId?.cfd],
+            codeDispositif: historiqueId?.codeDispositif ? [historiqueId?.codeDispositif] : undefined,
+            uai: [historiqueId.uai],
+            limit: 2,
+            order: "desc",
+            orderBy: "rentreeScolaire",
+            rentreeScolaire: RENTREES_SCOLAIRES.filter((rentree) => rentree !== CURRENT_RENTREE),
+          },
+        })
+      ).etablissements;
+    },
+  });
 
   const [isFirstColumnSticky, setIsFirstColumnSticky] = useState(false);
   const [isSecondColumnSticky, setIsSecondColumnSticky] = useState(false);
@@ -151,10 +134,7 @@ export const ConsoleSection = ({
                 historiqueId.uai === line.uai && (
                   <>
                     {historiqueData?.map((historiqueLine) => (
-                      <Tr
-                        key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
-                        bg={"grey.975"}
-                      >
+                      <Tr key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`} bg={"grey.975"}>
                         <EtablissementLineContent
                           isFirstColumnSticky={isFirstColumnSticky}
                           isSecondColumnSticky={isSecondColumnSticky}
@@ -166,10 +146,7 @@ export const ConsoleSection = ({
                     ))}
 
                     {historiqueData && !historiqueData.length && (
-                      <EtablissementLinePlaceholder
-                        colonneFilters={colonneFilters}
-                        getCellBgColor={getCellBgColor}
-                      />
+                      <EtablissementLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
                     )}
 
                     {isFetchingHistoriqueData && <EtablissementLineLoader />}

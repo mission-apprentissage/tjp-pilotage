@@ -1,21 +1,18 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { z } from "zod";
+import type { submitIntentionAccessLogSchema } from "shared/routes/schemas/post.demande.access.submit.schema";
+import type { z } from "zod";
 
-import { RequestUser } from "../../../core/model/User";
-import { findOneDemande } from "../../repositories/findOneDemande.query";
-import { updateDemandeWithHistory } from "../../repositories/updateDemandeWithHistory.query";
+import type { RequestUser } from "@/modules/core/model/User";
+import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+import { updateDemandeWithHistory } from "@/modules/demandes/repositories/updateDemandeWithHistory.query";
+
 import { createIntentionAccessLog } from "./deps/createIntentionAccessLog.query";
-import { submitIntentionAccessLogSchema } from "./submitIntentionAccessLog.schema";
 
-type Intention = z.infer<
-  typeof submitIntentionAccessLogSchema.body
->["intention"];
+type Intention = z.infer<typeof submitIntentionAccessLogSchema.body>["intention"];
 
-export const [
-  submitIntentionAccessLogUsecase,
-  submitIntentionAccessLogFactory,
-] = inject(
+export const [submitIntentionAccessLogUsecase, submitIntentionAccessLogFactory] = inject(
   {
     createIntentionAccessLog,
     updateDemandeWithHistory,
@@ -30,16 +27,14 @@ export const [
       intention: Intention;
     }) => {
       const demandeData = await findOneDemande(intention.numero);
-      if (!demandeData) throw Boom.notFound("Demande not found");
+      if (!demandeData) throw Boom.notFound("Demande non trouvée en base");
 
       const newIntentionAccessLog = {
         intentionNumero: demandeData.numero,
         userId: user.id,
       };
 
-      const createdAvis = await deps.createIntentionAccessLog(
-        newIntentionAccessLog
-      );
+      const createdAvis = await deps.createIntentionAccessLog(newIntentionAccessLog);
 
       return createdAvis;
     }

@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
-import { Box, chakra, Flex, IconButton } from "@chakra-ui/react";
+import { chakra, Flex, IconButton, Text } from "@chakra-ui/react";
 
-import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { AdvancedExportMenuButton } from "./AdvancedExportMenuButton";
 
 export const TableHeader = chakra(
   ({
@@ -12,6 +12,7 @@ export const TableHeader = chakra(
     onExportCsv,
     onExportExcel,
     className,
+    SaveFiltersButton,
     ColonneFilter,
     SearchInput,
   }: {
@@ -19,30 +20,27 @@ export const TableHeader = chakra(
     page: number;
     count?: number;
     onPageChange: (page: number) => void;
-    onExportCsv?: () => Promise<void>;
-    onExportExcel?: () => Promise<void>;
+    onExportCsv?: (isFiltered?: boolean) => Promise<void>;
+    onExportExcel?: (isFiltered?: boolean) => Promise<void>;
     className?: string;
+    SaveFiltersButton?: React.ReactNode;
     ColonneFilter?: React.ReactNode;
     SearchInput?: React.ReactNode;
   }) => {
     return (
-      <Flex align="center" py="1.5" px={0} className={className} gap={4}>
+      <Flex align="center" py="1.5" px={0} className={className} gap={2} maxW={"100%"} overflowY={"hidden"}>
         {SearchInput}
         <Flex ms={ColonneFilter ? "none" : "auto"}>
           {(onExportCsv || onExportExcel) && (
-            <ExportMenuButton
-              onExportCsv={onExportCsv}
-              onExportExcel={onExportExcel}
-              variant="externalLink"
-            />
+            <AdvancedExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} variant="externalLink" />
           )}
         </Flex>
+        {SaveFiltersButton}
         {ColonneFilter}
-        <Flex ms={ColonneFilter ? "auto" : "none"} mt={"auto"}>
-          <Box mx="4">
-            {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur{" "}
-            {count}
-          </Box>
+        <Flex ms={ColonneFilter ? "auto" : "none"} minW={"fit-content"}>
+          <Text mx="4" my="auto">
+            {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur {count}
+          </Text>
           <IconButton
             isDisabled={page === 0}
             onClick={() => onPageChange(page - 1)}

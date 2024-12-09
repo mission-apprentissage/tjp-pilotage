@@ -1,7 +1,7 @@
 import axios from "axios";
 import rateLimit from "axios-rate-limit";
 
-import { BANResponse } from "./banResponse";
+import type { BANResponse } from "./banResponse";
 
 const instance = rateLimit(
   axios.create({
@@ -44,9 +44,7 @@ export const findAddress = async ({
 
     return response.data;
   } catch (err) {
-    console.error(
-      `Une erreur est survenue lors de la recherche de l'adresse: ${search}`
-    );
+    console.error(`Une erreur est survenue lors de la recherche de l'adresse: ${search}`);
     if (axios.isAxiosError(err)) {
       console.error(err.message);
     }

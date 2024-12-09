@@ -1,8 +1,7 @@
-import { AvisTypeEnum, AvisTypeType } from "shared/enum/avisTypeEnum";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import type { AvisTypeType } from "shared/enum/avisTypeEnum";
+import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 export const formatStatut = (statut?: DemandeStatutType): string => {
   switch (statut) {
@@ -66,27 +65,30 @@ export const getStepWorkflow = (statut?: DemandeStatutType): number => {
       return 4;
     case DemandeStatutEnum["brouillon"]:
     case DemandeStatutEnum["refusée"]:
+    case DemandeStatutEnum["supprimée"]:
     default:
       return 0;
   }
 };
 
-export const isChangementStatutAvisDisabled = (
-  statut?: DemandeStatutType
-): boolean => {
+export const isChangementStatutAvisDisabled = (statut?: DemandeStatutType): boolean => {
   switch (statut) {
     case DemandeStatutEnum["demande validée"]:
     case DemandeStatutEnum["refusée"]:
     case DemandeStatutEnum["supprimée"]:
       return true;
+    case DemandeStatutEnum["brouillon"]:
+    case DemandeStatutEnum["proposition"]:
+    case DemandeStatutEnum["dossier complet"]:
+    case DemandeStatutEnum["dossier incomplet"]:
+    case DemandeStatutEnum["projet de demande"]:
+    case DemandeStatutEnum["prêt pour le vote"]:
     default:
       return false;
   }
 };
 
-export const isStatutStepWorkflowEnabled = (
-  statut?: DemandeStatutType
-): boolean => {
+export const isStatutStepWorkflowEnabled = (statut?: DemandeStatutType): boolean => {
   return isStepWorkflowEnabled(getStepWorkflow(statut));
 };
 

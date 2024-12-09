@@ -1,14 +1,9 @@
-import { Insertable } from "kysely";
+import type { Insertable } from "kysely";
 
-import { kdb } from "../../../../db/db";
-import { ChangementStatut } from "../../../../db/schema";
+import { getKbdClient } from "@/db/db";
+import type { ChangementStatut } from "@/db/schema";
 
-export const deleteChangementStatutQuery = async (
-  changementStatut: Insertable<ChangementStatut>
-) => {
+export const deleteChangementStatutQuery = async (changementStatut: Insertable<ChangementStatut>) => {
   if (changementStatut.id)
-    await kdb
-      .deleteFrom("changementStatut")
-      .where("id", "=", changementStatut.id)
-      .execute();
+    await getKbdClient().deleteFrom("changementStatut").where("id", "=", changementStatut.id).execute();
 };

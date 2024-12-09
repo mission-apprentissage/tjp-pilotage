@@ -17,8 +17,9 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
-import { themeDefinition } from "../../theme/theme";
-import { useAuth } from "../../utils/security/useAuth";
+import { themeDefinition } from "@/theme/theme";
+import { useAuth } from "@/utils/security/useAuth";
+
 import { AnimatedNumber } from "./components/AnimatedNumber";
 import { Card } from "./components/Card";
 import { EditorialTitle } from "./components/EditorialTitle";
@@ -38,12 +39,7 @@ export default function Home() {
     <Box zIndex="0" mb={20}>
       <Box overflow="hidden">
         <Hero>
-          <VStack
-            paddingTop="64px"
-            spacing="32px"
-            width={{ base: "90%", lg: "60%" }}
-            margin="auto"
-          >
+          <VStack paddingTop="64px" spacing="32px" width={{ base: "90%", lg: "60%" }} margin="auto">
             <VStack as="header" textAlign="center" spacing="8px">
               <Tag
                 size="sm"
@@ -53,12 +49,7 @@ export default function Home() {
               >
                 <HStack alignItems="center" spacing="4px">
                   <Icon icon="ri:barricade-fill" fontSize="12px" />
-                  <Text
-                    as="span"
-                    fontSize="14px"
-                    fontWeight={700}
-                    lineHeight="24px"
-                  >
+                  <Text as="span" fontSize="14px" fontWeight={700} lineHeight="24px">
                     OUTIL EN CONSTRUCTION
                   </Text>
                 </HStack>
@@ -67,17 +58,11 @@ export default function Home() {
                 Orion : améliorer le parcours vers l’emploi <br />
                 des élèves de la voie professionnelle
               </Heading>
-              <Text
-                fontSize="16px"
-                display={{ base: "none", md: "block" }}
-                padding="16px 16px 0 16px"
-              >
-                Orion est une plateforme commune à tous les acteurs de la carte
-                des formations des lycées professionnels. Elle vous donne accès
-                aux principales données éducatives de ces formations et aux
-                indicateurs InserJeunes (taux d’emploi à 6 mois, taux de
-                poursuite d’études...) afin d’améliorer le devenir des élèves,
-                vers l’emploi ou la poursuite d’une formation.
+              <Text fontSize="16px" display={{ base: "none", md: "block" }} padding="16px 16px 0 16px">
+                Orion est une plateforme commune à tous les acteurs de la carte des formations des lycées
+                professionnels. Elle vous donne accès aux principales données éducatives de ces formations et aux
+                indicateurs InserJeunes (taux d’emploi à 6 mois, taux de poursuite d’études...) afin d’améliorer le
+                devenir des élèves, vers l’emploi ou la poursuite d’une formation.
               </Text>
               {!auth && (
                 <Box margin="auto" marginTop="12px" padding="20px">
@@ -131,9 +116,8 @@ export default function Home() {
           linkHref="/panorama"
         >
           <Text>
-            Repérer en un coup d’oeil les formations offrant un devenir
-            favorable (emploi ou poursuite d’études) : lesquelles sont
-            attractives, insérantes, ... ?
+            Repérer en un coup d’oeil les formations offrant un devenir favorable (emploi ou poursuite d’études) :
+            lesquelles sont attractives, insérantes, ... ?
           </Text>
         </Card>
         <Card
@@ -143,9 +127,8 @@ export default function Home() {
           linkHref="/console/formations"
         >
           <Text>
-            Consulter toutes les données disponibles sur les établissements et
-            formations, par filière et par zone géographique (taux de pression,
-            évolution des effectifs…)
+            Consulter toutes les données disponibles sur les établissements et formations, par filière et par zone
+            géographique (taux de pression, évolution des effectifs…)
           </Text>
         </Card>
         <Card
@@ -155,17 +138,15 @@ export default function Home() {
           linkHref="/auth/login"
         >
           <Text>
-            Recueillir et suivre les demandes d’ouverture ou fermeture de places
-            (accès réservé aux utilisateurs habilités)
+            Recueillir et suivre les demandes d’ouverture ou fermeture de places (accès réservé aux utilisateurs
+            habilités)
           </Text>
         </Card>
       </Stack>
       <Hero variant="white">
         <Box paddingY="64px">
           <VStack spacing="48px">
-            <EditorialTitle>
-              La voie professionnelle initiale scolaire en 2023
-            </EditorialTitle>
+            <EditorialTitle>La voie professionnelle initiale scolaire en 2023</EditorialTitle>
             <Stack
               alignItems="start"
               justifyContent="center"
@@ -252,25 +233,17 @@ export default function Home() {
               gap="16px"
             >
               <Text>
-                InserJeunes est un{" "}
-                <b>dispositif statistique interministériel</b>, instauré par la
-                loi « pour la liberté de choisir son avenir professionnel » de
-                septembre 2018.
+                InserJeunes est un <b>dispositif statistique interministériel</b>, instauré par la loi « pour la liberté
+                de choisir son avenir professionnel » de septembre 2018.
               </Text>
               <Text>
-                Il est construit par{" "}
-                <b>
-                  rapprochement de bases administratives relatives à la
-                  scolarité
-                </b>{" "}
-                (remontées administratives des inscriptions) et à{" "}
-                <b>l’emploi</b> (notamment la déclaration sociale nominative des
+                Il est construit par <b>rapprochement de bases administratives relatives à la scolarité</b> (remontées
+                administratives des inscriptions) et à <b>l’emploi</b> (notamment la déclaration sociale nominative des
                 entreprises).
               </Text>
               <Text>
-                Ces données publiées à partir de <b>début 2021</b> apportent un
-                degré de <b>précision et de robustesse</b> que ne permettaient
-                pas les précédentes données issues d’enquêtes.
+                Ces données publiées à partir de <b>début 2021</b> apportent un degré de{" "}
+                <b>précision et de robustesse</b> que ne permettaient pas les précédentes données issues d’enquêtes.
               </Text>
             </VStack>
           </Stack>
@@ -282,54 +255,36 @@ export default function Home() {
           <Accordion allowMultiple>
             <VStack width="100%" spacing="16px">
               <LandingAccordionItem label="Pourquoi est-ce que je ne retrouve pas toutes mes formations dans Orion ?">
-                Orion recense toutes les formations de la voie professionnelle
-                initiale, dispensées en lycées professionnels et lycées
-                polyvalents. Toutefois, pour certaines formations, il n’y a pas
-                de taux d’emploi et de poursuite d’études : il n’est donc pas
-                possible de les afficher dans les visualisations basées sur ces
-                indicateurs. C’est le cas des formations dont l’effectif est
-                trop faible (&lt;20) ou qui ont été rénovées.
+                Orion recense toutes les formations de la voie professionnelle initiale, dispensées en lycées
+                professionnels et lycées polyvalents. Toutefois, pour certaines formations, il n’y a pas de taux
+                d’emploi et de poursuite d’études : il n’est donc pas possible de les afficher dans les visualisations
+                basées sur ces indicateurs. C’est le cas des formations dont l’effectif est trop faible (&lt;20) ou qui
+                ont été rénovées.
               </LandingAccordionItem>
               <LandingAccordionItem label="Pourquoi une formation affiche-t-elle un taux d’emploi plus faible que celui des précédentes enquêtes IVA ?">
-                Le taux d’emploi est désormais calculé sur la base des
-                déclarations des entreprises (donnée administrative vérifiée),
-                il est souvent plus faible que le taux précédemment calculé à
-                partir des enquêtes IVA. En effet, tous les jeunes ne
-                répondaient pas à l’enquête, cette non-réponse pouvait donc
-                induire un biais sur le taux d’emploi estimé, les jeunes sans
-                emploi étant sans doute moins enclins à répondre à l’enquête.
+                Le taux d’emploi est désormais calculé sur la base des déclarations des entreprises (donnée
+                administrative vérifiée), il est souvent plus faible que le taux précédemment calculé à partir des
+                enquêtes IVA. En effet, tous les jeunes ne répondaient pas à l’enquête, cette non-réponse pouvait donc
+                induire un biais sur le taux d’emploi estimé, les jeunes sans emploi étant sans doute moins enclins à
+                répondre à l’enquête.
               </LandingAccordionItem>
               <LandingAccordionItem label="Pourquoi une formation qui mène vers un métier d’avenir est-elle en Q4 du quadrant ?">
                 Il peut y avoir plusieurs explications, parmi lesquelles :
                 <UnorderedList spacing="6px" padding="6px">
+                  <ListItem>la formation accueille un public spécifique en fragilité</ListItem>
+                  <ListItem>la poursuite d’études n’est pas accessible sur le territoire</ListItem>
+                  <ListItem>il y a peu d’opportunités d’emploi sur le territoire</ListItem>
+                  <ListItem>la formation n’est pas adaptée aux besoins des entreprises locales</ListItem>
+                  <ListItem>le territoire est transfrontalier et les jeunes travaillent à l’étranger</ListItem>
                   <ListItem>
-                    la formation accueille un public spécifique en fragilité
-                  </ListItem>
-                  <ListItem>
-                    la poursuite d’études n’est pas accessible sur le territoire
-                  </ListItem>
-                  <ListItem>
-                    il y a peu d’opportunités d’emploi sur le territoire
-                  </ListItem>
-                  <ListItem>
-                    la formation n’est pas adaptée aux besoins des entreprises
-                    locales
-                  </ListItem>
-                  <ListItem>
-                    le territoire est transfrontalier et les jeunes travaillent
-                    à l’étranger
-                  </ListItem>
-                  <ListItem>
-                    les situations d’emploi étant observées à 6 mois après la
-                    sortie de formation (janvier), certains emplois saisonniers
-                    ne sont pas pris en compte
+                    les situations d’emploi étant observées à 6 mois après la sortie de formation (janvier), certains
+                    emplois saisonniers ne sont pas pris en compte
                   </ListItem>
                 </UnorderedList>
               </LandingAccordionItem>
               <LandingAccordionItem label="Pourquoi n’y a-t-il pas de taux de pression sur certaines formations ?">
-                Si la capacité théorique ou les vœux d’une formation ne sont pas
-                renseignés dans Affelnet, le taux de pression ne peut être
-                calculé.
+                Si la capacité théorique ou les vœux d’une formation ne sont pas renseignés dans Affelnet, le taux de
+                pression ne peut être calculé.
               </LandingAccordionItem>
             </VStack>
           </Accordion>

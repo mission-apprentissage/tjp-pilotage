@@ -1,7 +1,7 @@
 import { createRoute } from "@http-wizard/core";
+import { whoAmISchema } from "shared/routes/schemas/get.auth.whoAmI.schema";
 
-import { Server } from "../../../../server";
-import { whoAmISchema } from "./whoAmI.schema";
+import type { Server } from "@/server/server";
 
 export const whoAmIRoute = (server: Server) => {
   return createRoute("/auth/whoAmI", {

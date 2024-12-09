@@ -1,32 +1,33 @@
 import { sql } from "kysely";
-import { Role } from "shared";
-import { Scope } from "shared/security/permissions";
+import type { Role } from "shared";
+import type { Scope } from "shared/security/permissions";
+import { MAX_LIMIT } from "shared/utils/maxLimit";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
+import { getKbdClient } from "@/db/db";
+import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { cleanNull } from "@/utils/noNull";
 
 export const findUsers = async ({
-  offset,
-  limit,
+  offset = 0,
+  limit = MAX_LIMIT,
   search,
   orderBy,
   scope,
   scopeFilter,
 }: {
-  offset: number;
-  limit: number;
+  offset?: number;
+  limit?: number;
   search?: string;
   orderBy?: { order: "asc" | "desc"; column: string };
   scope: Scope;
   scopeFilter: Array<string>;
 }) => {
   const search_array = getNormalizedSearchArray(search);
-  const users = await kdb
+  const users = await getKbdClient()
     .selectFrom("user")
     .leftJoin("region", "region.codeRegion", "user.codeRegion")
     .selectAll()
-    .select(kdb.fn.count<number>("id").over().as("count"))
+    .select(getKbdClient().fn.count<number>("id").over().as("count"))
     .where((w) => {
       if (!search) return sql`true`;
       return w.and(
@@ -56,10 +57,7 @@ export const findUsers = async ({
     .limit(limit)
     .$call((q) => {
       if (!orderBy) return q;
-      return q.orderBy(
-        sql.ref(orderBy.column),
-        sql`${sql.raw(orderBy.order)} NULLS LAST`
-      );
+      return q.orderBy(sql.ref(orderBy.column), sql`${sql.raw(orderBy.order)} NULLS LAST`);
     })
     .orderBy("createdAt", "desc")
     .execute()

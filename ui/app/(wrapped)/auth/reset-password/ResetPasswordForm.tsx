@@ -11,17 +11,14 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
+import { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { passwordRegex } from "shared/utils/passwordRegex";
 
-import { passwordRegex } from "../../../../../shared/utils/passwordRegex";
-import { client } from "../../../../api.client";
+import { client } from "@/api.client";
 
-export const ResetPasswordForm = ({
-  resetPasswordToken,
-}: {
-  resetPasswordToken: string;
-}) => {
+export const ResetPasswordForm = ({ resetPasswordToken }: { resetPasswordToken: string }) => {
   const {
     register,
     handleSubmit,
@@ -35,6 +32,7 @@ export const ResetPasswordForm = ({
 
   const {
     mutate: activateAccount,
+    error,
     isError,
     isLoading,
   } = client.ref("[POST]/auth/reset-password").useMutation({
@@ -45,13 +43,7 @@ export const ResetPasswordForm = ({
 
   return (
     <Card boxShadow="md" maxW="360px" mt="20" mx="auto">
-      <CardBody
-        p="6"
-        as="form"
-        onSubmit={handleSubmit((v) =>
-          activateAccount({ body: { ...v, resetPasswordToken } })
-        )}
-      >
+      <CardBody p="6" as="form" onSubmit={handleSubmit((v) => activateAccount({ body: { ...v, resetPasswordToken } }))}>
         <Heading fontWeight="light" mb="6" textAlign="center" fontSize="2xl">
           Réinitialisation du mot de passe
         </Heading>
@@ -64,13 +56,11 @@ export const ResetPasswordForm = ({
               pattern: {
                 value: new RegExp(passwordRegex),
                 message:
-                  "Le mot de passe doit contenir au moins 8 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)",
+                  "Le mot de passe doit contenir entre 8 et 15 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)",
               },
             })}
           />
-          {!!errors.password && (
-            <FormErrorMessage>{errors.password.message}</FormErrorMessage>
-          )}
+          {!!errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
         </FormControl>
         <FormControl isInvalid={!!errors.repeatPassword}>
           <FormLabel>Confirmer le mot de passe</FormLabel>
@@ -85,23 +75,20 @@ export const ResetPasswordForm = ({
               },
             })}
           />
-          {!!errors.repeatPassword && (
-            <FormErrorMessage>{errors.repeatPassword.message}</FormErrorMessage>
-          )}
+          {!!errors.repeatPassword && <FormErrorMessage>{errors.repeatPassword.message}</FormErrorMessage>}
         </FormControl>
-        {isError && (
-          <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
-            Erreur lors de la réinitialisation du mot de passe
-          </Text>
+        {isError && isAxiosError(error) && (
+          <>
+            <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
+              Erreur lors de la réinitialisation du mot de passe :
+            </Text>
+            <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
+              {error.response?.data?.message}
+            </Text>
+          </>
         )}
         <Flex>
-          <Button
-            isLoading={isLoading}
-            type="submit"
-            mt="4"
-            ml="auto"
-            variant="primary"
-          >
+          <Button isLoading={isLoading} type="submit" mt="4" ml="auto" variant="primary">
             Envoyer
           </Button>
         </Flex>

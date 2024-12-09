@@ -1,27 +1,19 @@
 import Boom from "@hapi/boom";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import type { BodySchema } from "shared/routes/schemas/put.campagnes.campagneId.schema";
 
-import { getCampagneEnCours } from "../../queries/getCampagneEnCours";
+import { getCampagneEnCours } from "@/modules/core/queries/getCampagneEnCours";
+
 import { updateCampagneQuery } from "./editCampagne.query";
-import { BodySchema } from "./editCampagne.schema";
 
 export const [editCampagneUsecase] = inject(
   { updateCampagneQuery, getCampagneEnCours },
   (deps) =>
-    async ({
-      campagneId,
-      campagne,
-    }: {
-      campagneId: string;
-      campagne: BodySchema;
-    }) => {
+    async ({ campagneId, campagne }: { campagneId: string; campagne: BodySchema }) => {
       const campagneEnCours = await deps.getCampagneEnCours();
-      if (
-        campagneEnCours &&
-        campagneEnCours.id !== campagneId &&
-        campagne.statut === CampagneStatutEnum["en cours"]
-      ) {
+      if (campagneEnCours && campagneEnCours.id !== campagneId && campagne.statut === CampagneStatutEnum["en cours"]) {
         throw Boom.badRequest("Une campagne est déjà en cours", {
           id: campagneEnCours.id,
           errors: {

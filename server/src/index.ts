@@ -1,44 +1,13 @@
-import * as Sentry from "@sentry/node";
-import { EnvEnum } from "shared/enum/envEnum";
+import { config } from "dotenv";
 
-import { config } from "../config/config";
-import { build } from "./build";
-import { logger } from "./logger";
-import { migrateToLatest } from "./migrations/migrate";
-import { server as fastifyServer } from "./server";
+config({ path: ".env" });
+config({ path: ".env.local", override: true });
 
-if (config.env !== EnvEnum.test) {
-  Sentry.init({
-    dsn: config.sentry.dsn,
-    tracesSampleRate: 1.0,
-    environment: config.env,
-    enabled: config.env === EnvEnum.production,
+import("./services/sentry/sentry.js")
+  .then(async ({ initSentry }) => {
+    initSentry();
+  })
+  .then(async () => {
+    // Dynamic import to start server after env are loaded
+    return import("./main.js");
   });
-
-  Sentry.setTag("app", "server");
-}
-
-process.on("uncaughtExceptionMonitor", (error, origin) => {
-  logger.error("error: process exit", { error, origin });
-});
-
-export const server = build(fastifyServer, (error) => {
-  Sentry.captureException(error);
-});
-
-const cb = (error: Error | null) => {
-  if (error) {
-    logger.error("server failed to start", { error });
-    process.exit(1);
-  } else {
-    logger.info("server started");
-  }
-};
-
-if (config.env !== EnvEnum.dev) {
-  migrateToLatest(true).then(() => {
-    server.listen({ port: 5000, host: "0.0.0.0" }, cb);
-  });
-} else {
-  server.listen({ port: 5000, host: "0.0.0.0" }, cb);
-}

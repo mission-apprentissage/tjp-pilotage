@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { AddIcon, EditIcon } from "@chakra-ui/icons";
@@ -18,25 +19,24 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
+import { usePlausible } from "next-plausible";
+import type { AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, ReactPortal } from "react";
 import { useMemo, useState } from "react";
 import { hasRightOverRole } from "shared";
 
 import { client } from "@/api.client";
-import { EditUser } from "@/app/(wrapped)/admin/users/EditUser";
 import { OrderIcon } from "@/components/OrderIcon";
-import {
-  downloadCsv,
-  downloadExcel,
-  ExportColumns,
-} from "@/utils/downloadExport";
+import { TableHeader } from "@/components/TableHeader";
+import type { ExportColumns } from "@/utils/downloadExport";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatExportFilename } from "@/utils/formatExportFilename";
 import { formatDate } from "@/utils/formatUtils";
 import { GuardPermission } from "@/utils/security/GuardPermission";
+import { useAuth } from "@/utils/security/useAuth";
 import { useStateParams } from "@/utils/useFilters";
 
-import { TableHeader } from "../../../../components/TableHeader";
-import { formatExportFilename } from "../../../../utils/formatExportFilename";
-import { useAuth } from "../../../../utils/security/useAuth";
 import { CreateUser } from "./CreateUser";
+import { EditUser } from "./EditUser";
 
 const Columns = {
   email: "Email",
@@ -48,11 +48,11 @@ const Columns = {
   uais: "Uais",
   createdAt: "Ajouté le",
   fonction: "Fonction",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/users"]["users"][number]
->;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/users"]["users"][number]>;
 
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
+  const trackEvent = usePlausible();
   const { auth } = useAuth();
   const [filters, setFilters] = useStateParams<{
     page: number;
@@ -86,15 +86,10 @@ export default () => {
   });
 
   const [userId, setUserId] = useState<string>();
-  const user = useMemo(
-    () => data?.users.find(({ id }) => id === userId),
-    [data, userId]
-  );
+  const user = useMemo(() => data?.users.find(({ id }) => id === userId), [data, userId]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const canEditUser = (
-    user: (typeof client.infer)["[GET]/users"]["users"][number]
-  ) => {
+  const canEditUser = (user: (typeof client.infer)["[GET]/users"]["users"][number]) => {
     return (
       auth?.user?.role &&
       user.role &&
@@ -105,23 +100,29 @@ export default () => {
     );
   };
 
+  const onExportCsv = async (isFiltered?: boolean) => {
+    trackEvent("users:export");
+    const data = await client.ref("[GET]/users").query({
+      query: isFiltered ? { ...filters, ...order } : {},
+    });
+    downloadCsv(formatExportFilename("users_export", isFiltered ? filters : undefined), data.users, Columns);
+  };
+
+  const onExportExcel = async (isFiltered?: boolean) => {
+    trackEvent("users:export-excel");
+    const data = await client.ref("[GET]/users").query({
+      query: isFiltered ? { ...filters, ...order } : {},
+    });
+    downloadExcel(formatExportFilename("users_export", isFiltered ? filters : undefined), data.users, Columns);
+  };
+
   return (
     <GuardPermission permission="users/lecture">
       {data?.users && (
         <>
           <Flex px={4} py="2">
-            <Box
-              mt={"auto"}
-              mb={1.5}
-              as="form"
-              flex={1}
-              onSubmit={() => setFilters({ ...filters, search })}
-            >
-              <Input
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
-                placeholder="Rechercher..."
-              />
+            <Box mt={"auto"} mb={1.5} as="form" flex={1} onSubmit={() => setFilters({ ...filters, search })}>
+              <Input onChange={(e) => setSearch(e.target.value)} value={search} placeholder="Rechercher..." />
               <Button hidden type="submit" />
             </Box>
             <Button
@@ -143,45 +144,15 @@ export default () => {
               page={filters.page}
               pageSize={10}
               count={data.count}
-              onPageChange={(newPage) =>
-                setFilters({ ...filters, page: newPage })
-              }
-              onExportCsv={async () => {
-                const data = await client.ref("[GET]/users").query({
-                  query: { ...filters, ...order, limit: 1000000 },
-                });
-                downloadCsv(
-                  formatExportFilename("users_export"),
-                  data.users,
-                  Columns
-                );
-              }}
-              onExportExcel={async () => {
-                const data = await client.ref("[GET]/users").query({
-                  query: { ...filters, ...order, limit: 1000000 },
-                });
-                downloadExcel(
-                  formatExportFilename("users_export"),
-                  data.users,
-                  Columns
-                );
-              }}
+              onPageChange={(newPage) => setFilters({ ...filters, page: newPage })}
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
             />
           </Flex>
 
           <TableContainer overflowY="auto" flex={1}>
-            <Table
-              sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
-              size="md"
-              fontSize="14px"
-              gap="0"
-            >
-              <Thead
-                position="sticky"
-                top="0"
-                boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-                bg="white"
-              >
+            <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize="14px" gap="0">
+              <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white">
                 <Tr>
                   <Th w={0} />
                   <Th cursor="pointer" onClick={() => handleOrder("email")}>
@@ -208,10 +179,7 @@ export default () => {
                     <OrderIcon {...order} column="enabled" />
                     {Columns.enabled}
                   </Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("libelleRegion")}
-                  >
+                  <Th cursor="pointer" onClick={() => handleOrder("libelleRegion")}>
                     <OrderIcon {...order} column="libelleRegion" />
                     {Columns.libelleRegion}
                   </Th>
@@ -227,10 +195,7 @@ export default () => {
                 {data?.users.map((user) => (
                   <Tr height={"60px"} key={user.id} whiteSpace={"pre"}>
                     <Td>
-                      <Avatar
-                        name={`${user.firstname} ${user.lastname}`}
-                        position={"unset"}
-                      />
+                      <Avatar name={`${user.firstname} ${user.lastname}`} position={"unset"} />
                     </Td>
                     <Td>{user.email}</Td>
                     <Td>{user.firstname}</Td>
@@ -238,17 +203,11 @@ export default () => {
                     <Td>{user.role}</Td>
                     <Td>{user.fonction ?? "-"}</Td>
                     <Td>
-                      {user.enabled ? (
-                        <Badge variant="success">Actif</Badge>
-                      ) : (
-                        <Badge variant="error">Désactivé</Badge>
-                      )}
+                      {user.enabled ? <Badge variant="success">Actif</Badge> : <Badge variant="error">Désactivé</Badge>}
                     </Td>
                     <Td>{user.libelleRegion}</Td>
                     <Td>{user.uais}</Td>
-                    <Td>
-                      {user.createdAt && formatDate({ date: user.createdAt })}
-                    </Td>
+                    <Td>{user.createdAt && formatDate({ date: user.createdAt })}</Td>
                     <Td isNumeric>
                       {canEditUser(user) && (
                         <IconButton
@@ -270,13 +229,11 @@ export default () => {
             </Table>
             {!data.users.length && (
               <Box p={6} textAlign="center" color="gray">
-                Aucunes données
+                Aucune donnée
               </Box>
             )}
           </TableContainer>
-          {user && isOpen && (
-            <EditUser isOpen={isOpen} onClose={onClose} user={user} />
-          )}
+          {user && isOpen && <EditUser isOpen={isOpen} onClose={onClose} user={user} />}
           {!user && isOpen && <CreateUser isOpen={isOpen} onClose={onClose} />}
         </>
       )}

@@ -1,22 +1,18 @@
 import Boom from "@hapi/boom";
-import { z } from "zod";
+import type { getDataForEtablissementMapListSchema } from "shared/routes/schemas/get.etablissement.uai.map.list.schema";
+import type { z } from "zod";
 
 import * as dependencies from "./dependencies";
 import { getCountEtablissementsProches } from "./dependencies/getCountEtablissementsProches";
-import { getDataForEtablissementMapListSchema } from "./getDataForEtablissementMapList.schema";
 import { formatEtablissement } from "./services/formatEtablissement";
 import { getDistance } from "./services/getDistance";
 
-export type Etablissement = Awaited<
-  ReturnType<typeof dependencies.getEtablissementsProches>
->[number];
+export type Etablissement = Awaited<ReturnType<typeof dependencies.getEtablissementsProches>>[number];
 
 export interface EtablissementWithDistance extends Etablissement {
   distance: number;
 }
-export type RouteQueryString = z.infer<
-  typeof getDataForEtablissementMapListSchema.querystring
->;
+export type RouteQueryString = z.infer<typeof getDataForEtablissementMapListSchema.querystring>;
 
 export const getDataForEtablissementMapListFactory =
   (
@@ -29,9 +25,7 @@ export const getDataForEtablissementMapListFactory =
   async (
     params: z.infer<typeof getDataForEtablissementMapListSchema.params>,
     filters: RouteQueryString
-  ): Promise<
-    z.infer<(typeof getDataForEtablissementMapListSchema.response)["200"]>
-  > => {
+  ): Promise<z.infer<(typeof getDataForEtablissementMapListSchema.response)["200"]>> => {
     // Nécessaire ici de récupérer l'établissement sans filtrer par
     // CFD, parce qu'il est possible que l'établissement
     // ne dispense pas la formation sur laquelle la carte est filtrée.
@@ -40,7 +34,7 @@ export const getDataForEtablissementMapListFactory =
     });
 
     if (!etablissementData) {
-      throw Boom.notFound("Etablissement not found");
+      throw Boom.notFound("Établissement non trouvé en base");
     }
 
     const etablissement = await deps.getEtablissement({
@@ -63,9 +57,7 @@ export const getDataForEtablissementMapListFactory =
     const cfds =
       filters?.cfd && filters.cfd.length > 0
         ? filters.cfd
-        : (await deps.getEtablissementCfds({ uai: params.uai })).map(
-            (r) => r.cfd
-          );
+        : (await deps.getEtablissementCfds({ uai: params.uai })).map((r) => r.cfd);
 
     const etablissements = await deps.getEtablissementsProches({
       cfd: cfds,
@@ -89,5 +81,4 @@ export const getDataForEtablissementMapListFactory =
     };
   };
 
-export const getDataForEtablissementMapList =
-  getDataForEtablissementMapListFactory();
+export const getDataForEtablissementMapList = getDataForEtablissementMapListFactory();

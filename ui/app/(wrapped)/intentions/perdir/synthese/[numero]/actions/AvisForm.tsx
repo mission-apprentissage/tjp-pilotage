@@ -21,21 +21,23 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
-import { AvisStatutEnum, AvisStatutType } from "shared/enum/avisStatutEnum";
-import { AvisTypeEnum, AvisTypeType } from "shared/enum/avisTypeEnum";
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import type { AvisStatutType } from "shared/enum/avisStatutEnum";
+import { AvisStatutEnum } from "shared/enum/avisStatutEnum";
+import type { AvisTypeType } from "shared/enum/avisTypeEnum";
+import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { escapeString } from "shared/utils/escapeString";
 
 import { client } from "@/api.client";
+import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
+import { FonctionTag } from "@/app/(wrapped)/intentions/perdir/components/FonctionTag";
+import { RoleVisibleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleVisibleTag";
 import { getTypeAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 
-import { AvisStatutTag } from "../../../components/AvisStatutTag";
-import { FonctionTag } from "../../../components/FonctionTag";
-import { RoleVisibleTag } from "../../../components/RoleVisibleTag";
 import { FONCTIONS } from "./FONCTIONS";
 
 type Option = {
@@ -54,11 +56,7 @@ type AvisForm = {
   userFonction: string;
 };
 
-export const AvisForm = ({
-  intention,
-}: {
-  intention: (typeof client.infer)["[GET]/intention/:numero"];
-}) => {
+export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET]/intention/:numero"] }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
 
@@ -68,8 +66,7 @@ export const AvisForm = ({
       statutAvis: undefined,
       typeAvis: getTypeAvis(intention.statut),
       commentaire: undefined,
-      isVisibleParTous:
-        getTypeAvis(intention.statut) !== AvisTypeEnum["consultatif"],
+      isVisibleParTous: getTypeAvis(intention.statut) !== AvisTypeEnum["consultatif"],
       userFonction: undefined,
     },
     mode: "onTouched",
@@ -88,31 +85,29 @@ export const AvisForm = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { isLoading: isSubmitting, mutateAsync: submitAvis } = client
-    .ref("[POST]/intention/avis/submit")
-    .useMutation({
-      onSuccess: (body) => {
-        let message: string | null = null;
+  const { isLoading: isSubmitting, mutateAsync: submitAvis } = client.ref("[POST]/intention/avis/submit").useMutation({
+    onSuccess: (body) => {
+      let message: string | null = null;
 
-        const { statutAvis, typeAvis } = body;
-        message = `Vous avez bien rentré un avis ${typeAvis} ${statutAvis}`;
+      const { statutAvis, typeAvis } = body;
+      message = `Vous avez bien rentré un avis ${typeAvis} ${statutAvis}`;
 
-        onClose();
-        queryClient.invalidateQueries(["[GET]/intention/:numero"]);
-        if (message) {
-          toast({
-            variant: "left-accent",
-            status: "success",
-            title: message,
-          });
-        }
-      },
-      //@ts-ignore
-      onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-        const errors = e.response?.data.errors;
-        console.error(errors);
-      },
-    });
+      onClose();
+      queryClient.invalidateQueries(["[GET]/intention/:numero"]);
+      if (message) {
+        toast({
+          variant: "left-accent",
+          status: "success",
+          title: message,
+        });
+      }
+    },
+    //@ts-ignore
+    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
+      const errors = e.response?.data.errors;
+      console.error(errors);
+    },
+  });
 
   const getLabelAvis = (statut?: DemandeStatutType): string => {
     const typeAvis = getTypeAvis(statut);
@@ -175,29 +170,19 @@ export const AvisForm = ({
                     : undefined
                 }
                 placeholder="Sélectionner une option"
-                options={FONCTIONS[getTypeAvis(intention.statut)].map(
-                  (fonction) => ({
-                    label: fonction.toUpperCase(),
-                    value: fonction,
-                  })
-                )}
+                options={FONCTIONS[getTypeAvis(intention.statut)].map((fonction) => ({
+                  label: fonction.toUpperCase(),
+                  value: fonction,
+                }))}
                 formatOptionLabel={(option: { label: string }) =>
-                  option.label.startsWith("Créer la fonction") ? (
-                    option.label
-                  ) : (
-                    <FonctionTag fonction={option.label} />
-                  )
+                  option.label.startsWith("Créer la fonction") ? option.label : <FonctionTag fonction={option.label} />
                 }
                 isClearable
-                formatCreateLabel={(inputValue) =>
-                  `Créer la fonction ${inputValue}`
-                }
+                formatCreateLabel={(inputValue) => `Créer la fonction ${inputValue}`}
               />
             )}
           />
-          {errors.userFonction && (
-            <FormErrorMessage>{errors.userFonction.message}</FormErrorMessage>
-          )}
+          {errors.userFonction && <FormErrorMessage>{errors.userFonction.message}</FormErrorMessage>}
         </FormControl>
         <FormControl isInvalid={!!errors.statutAvis} isRequired>
           <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
@@ -240,9 +225,7 @@ export const AvisForm = ({
               />
             )}
           />
-          {errors.statutAvis && (
-            <FormErrorMessage>{errors.statutAvis.message}</FormErrorMessage>
-          )}
+          {errors.statutAvis && <FormErrorMessage>{errors.statutAvis.message}</FormErrorMessage>}
         </FormControl>
         <FormControl>
           <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
@@ -260,9 +243,8 @@ export const AvisForm = ({
         {getTypeAvis(intention.statut) === AvisTypeEnum["consultatif"] ? (
           <FormControl mt={3}>
             <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
-              Cet avis est visible uniquement par les administrateurs et
-              pilotes. Vous avez la possibilité de rendre votre avis visible de
-              tous en cochant la case ci-dessous.
+              Cet avis est visible uniquement par les administrateurs et pilotes. Vous avez la possibilité de rendre
+              votre avis visible de tous en cochant la case ci-dessous.
             </FormLabel>
             <Checkbox
               size="lg"
@@ -277,9 +259,7 @@ export const AvisForm = ({
             </Checkbox>
           </FormControl>
         ) : (
-          <Text mt={3}>{`Cet avis ${getTypeAvis(
-            intention.statut
-          )} sera visible de toutes les parties prenantes`}</Text>
+          <Text mt={3}>{`Cet avis ${getTypeAvis(intention.statut)} sera visible de toutes les parties prenantes`}</Text>
         )}
         <Flex direction={"column"} gap={3} mt={2}>
           <Flex direction={"row"} gap={3}>
@@ -289,24 +269,15 @@ export const AvisForm = ({
           <Flex direction={"row"} gap={3}>
             <RoleVisibleTag
               role={"Experts"}
-              isChecked={
-                !!isVisibleParTous ||
-                getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]
-              }
+              isChecked={!!isVisibleParTous || getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]}
             />
             <RoleVisibleTag
               role={"PERDIR"}
-              isChecked={
-                !!isVisibleParTous ||
-                getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]
-              }
+              isChecked={!!isVisibleParTous || getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]}
             />
             <RoleVisibleTag
               role={"Région"}
-              isChecked={
-                !!isVisibleParTous ||
-                getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]
-              }
+              isChecked={!!isVisibleParTous || getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]}
             />
           </Flex>
         </Flex>
