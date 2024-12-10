@@ -1,8 +1,9 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
   Button,
   Divider,
   Flex,
+  IconButton,
   Menu,
   MenuButton,
   MenuItem,
@@ -99,6 +100,7 @@ export const FiltersSection = ({
   requeteEnregistreeActuelle: { nom: string; couleur?: string };
   setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: { nom: string; couleur?: string }) => void;
 }) => {
+  const defaultName = requetesEnregistrees?.length ? "Requêtes favorites" : "Requêtes suggérées";
   const trackEvent = usePlausible();
 
   const resetFilters = () => {
@@ -121,7 +123,7 @@ export const FiltersSection = ({
         formationSpecifique: [],
       },
     });
-    setRequeteEnregistreeActuelle({ nom: "Requêtes favorites" });
+    setRequeteEnregistreeActuelle({ nom: defaultName });
   };
 
   const [deleteButtonToDisplay, setDeleteButtonToDisplay] = useState<string>("");
@@ -192,9 +194,23 @@ export const FiltersSection = ({
               )}
               {feature.requetesSuggerees && (
                 <>
-                  <Text p={2} color="grey.425">
-                    Requêtes suggérées
-                  </Text>
+                  <Flex direction={"row"} justify="space-between">
+                    <Text p={2} color="grey.425">
+                      Requêtes suggérées
+                    </Text>
+                    <IconButton
+                      aria-label="Tout décocher"
+                      bgColor={"transparent"}
+                      icon={<RepeatIcon />}
+                      my={"auto"}
+                      onClick={() => {
+                        setRequeteEnregistreeActuelle({ nom: defaultName });
+                        setSearchParams({
+                          filters: { ...searchParams.filters, formationSpecifique: [] },
+                        });
+                      }}
+                    />
+                  </Flex>
                   {REQUETES_SUGGEREES.filter((r) => r.active).map((requeteSuggeree) => (
                     <MenuItem
                       p={2}
