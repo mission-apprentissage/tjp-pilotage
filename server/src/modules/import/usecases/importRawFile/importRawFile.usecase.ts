@@ -9,8 +9,23 @@ import batchCreate from "@/modules/import/utils/batchCreate";
 import { getStreamParser } from "@/modules/import/utils/parse";
 import { verifyFileEncoding } from "@/modules/import/utils/verifyFileEncoding";
 
+import type { RawDataLine } from "./createRawDatas.dep";
 import { createRawDatas } from "./createRawDatas.dep";
 import { deleteRawData } from "./deleteRawData.dep";
+
+const sanitizeLine = (line: RawDataLine): RawDataLine => {
+  const sanitizedLine: RawDataLine = {};
+
+  Object.entries(line).map(([key, value]) => {
+    if (value.startsWith('"') && value.endsWith('"')) {
+      sanitizedLine[key] = value.slice(1, -1);
+    } else {
+      sanitizedLine[key] = value;
+    }
+  });
+
+  return sanitizedLine;
+};
 
 export enum ImportFileErrorType {
   FILE = "file",
@@ -78,7 +93,7 @@ export const [importRawFile, importRawFileFactory] = inject(
                 line: count,
               });
             }
-            await deps.batch.create({ data: { data: line, type } });
+            await deps.batch.create({ data: { data: sanitizeLine(line), type } });
             process.stdout.write(`Ajout de ${count} lignes\r`);
             callback();
           },
