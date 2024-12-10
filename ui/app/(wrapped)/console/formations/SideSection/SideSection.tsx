@@ -1,4 +1,4 @@
-import { Button, Checkbox, Divider, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, Checkbox, Divider, Flex, Text, Tooltip, useDisclosure } from "@chakra-ui/react";
 
 import type { Filters, FiltersList } from "@/app/(wrapped)/console/formations/types";
 import { DoubleArrowLeft } from "@/components/icons/DoubleArrowLeft";
@@ -107,17 +107,26 @@ export const SideSection = ({
           >
             Formation
           </Multiselect>
-          <Multiselect
-            size="md"
-            variant="newInput"
-            width="18rem"
-            onChange={(selected) => handleFilters("positionQuadrant", selected)}
-            options={filtersList?.positionsQuadrant}
-            value={searchParams.filters?.positionQuadrant ?? []}
-            disabled={searchParams.filters?.codeRegion === undefined}
+          <Tooltip
+            isDisabled={searchParams.filters?.codeRegion === undefined}
+            label={
+              "Sélectionnez une zone géographique pour afficher les positions quadrant correspondant à cette zone (par niveau de diplôme)"
+            }
           >
-            Position dans le quadrant
-          </Multiselect>
+            <Flex>
+              <Multiselect
+                size="md"
+                variant="newInput"
+                width="18rem"
+                onChange={(selected) => handleFilters("positionQuadrant", selected)}
+                options={filtersList?.positionsQuadrant}
+                value={searchParams.filters?.positionQuadrant ?? []}
+                disabled={searchParams.filters?.codeRegion === undefined}
+              >
+                Position dans le quadrant
+              </Multiselect>
+            </Flex>
+          </Tooltip>
         </Flex>
       )}
     </Flex>
