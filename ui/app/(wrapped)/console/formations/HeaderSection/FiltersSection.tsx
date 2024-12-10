@@ -1,8 +1,10 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
   Button,
+  CloseButton,
   Divider,
   Flex,
+  IconButton,
   Menu,
   MenuButton,
   MenuItem,
@@ -100,6 +102,7 @@ export const FiltersSection = ({
   requeteEnregistreeActuelle: { nom: string; couleur?: string };
   setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: { nom: string; couleur?: string }) => void;
 }) => {
+  const defaultName = requetesEnregistrees?.length ? "Requêtes favorites" : "Requêtes suggérées";
   const resetFilters = () => {
     setSearchParams({
       filters: {
@@ -118,7 +121,7 @@ export const FiltersSection = ({
       },
       search: "",
     });
-    setRequeteEnregistreeActuelle({ nom: "Requêtes favorites" });
+    setRequeteEnregistreeActuelle({ nom: defaultName });
   };
 
   const [deleteButtonToDisplay, setDeleteButtonToDisplay] = useState<string>("");
@@ -132,7 +135,7 @@ export const FiltersSection = ({
   return (
     <Flex direction={"column"} gap={4} wrap={"wrap"}>
       <Wrap spacing={3}>
-        <Menu autoSelect={false} gutter={3}>
+        <Menu matchWidth={true} autoSelect={false} gutter={3}>
           <MenuButton
             as={Button}
             variant={"selectButton"}
@@ -188,9 +191,23 @@ export const FiltersSection = ({
               )}
               {feature.requetesSuggerees && (
                 <>
-                  <Text p={2} color="grey.425">
-                    Requêtes suggérées
-                  </Text>
+                  <Flex direction={"row"} justify="space-between">
+                    <Text p={2} color="grey.425">
+                      Requêtes suggérées
+                    </Text>
+                    <IconButton
+                      aria-label="Tout décocher"
+                      bgColor={"transparent"}
+                      icon={<RepeatIcon />}
+                      my={"auto"}
+                      onClick={() => {
+                        setRequeteEnregistreeActuelle({ nom: defaultName });
+                        setSearchParams({
+                          filters: { ...searchParams.filters, formationSpecifique: [] },
+                        });
+                      }}
+                    />
+                  </Flex>
                   {filteredRequetesSuggerees.map((requeteSuggeree) => (
                     <MenuItem
                       p={2}
