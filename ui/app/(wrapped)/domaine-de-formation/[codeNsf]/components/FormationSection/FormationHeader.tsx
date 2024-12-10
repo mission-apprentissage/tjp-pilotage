@@ -1,6 +1,7 @@
-import { Badge, Flex, Heading, HStack } from "@chakra-ui/react";
+import { Flex, Heading, HStack } from "@chakra-ui/react";
 
 import type { Formation } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/types";
+import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 
@@ -15,21 +16,7 @@ export const FormationHeader = ({ data, exportButton }: { data: Formation; expor
       </HStack>
       <HStack gap={2}>
         <BadgeTypeFamille typeFamille={data.typeFamille as TypeFamilleKeys} labelSize="long" size="md" />
-        {data.isTransitionEcologique && (
-          <Badge size="md" variant={"success"}>
-            Transition écologique
-          </Badge>
-        )}
-        {data.isTransitionDemographique && (
-          <Badge size="md" variant={"success"}>
-            Transition démographique
-          </Badge>
-        )}
-        {data.isTransitionNumerique && (
-          <Badge size="md" variant={"success"}>
-            Transition numérique
-          </Badge>
-        )}
+        <BadgeFormationRenovee isFormationRenovee={data.isFormationRenovee} size="md" />
       </HStack>
     </Flex>
   );

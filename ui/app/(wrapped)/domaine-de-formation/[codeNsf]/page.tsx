@@ -1,4 +1,5 @@
 import { isAxiosError } from "axios";
+import _ from "lodash";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { ScopeEnum } from "shared";
@@ -7,8 +8,6 @@ import { serverClient } from "@/api.client";
 
 import { PageDomaineDeFormationClient } from "./client";
 import type { Filters, FormationListItem, FormationsCounter, QueryFilters } from "./types";
-
-export const dynamic = "force-dynamic";
 
 const fetchNsf = async (codeNsf: string, filters: QueryFilters) => {
   const headersList = Object.fromEntries(headers().entries());
@@ -40,13 +39,23 @@ const fetchDefaultNsfs = async () => {
   }
 };
 
-const findDefaultCfd = (defaultCfd: string | undefined, formations: FormationListItem[]): string => {
-  return (
-    defaultCfd ??
-    formations.filter((f) => f.scolaire).sort((a, b) => b.nbEtab - a.nbEtab)[0]?.cfd ??
-    formations.sort((a, b) => b.nbEtab - a.nbEtab)[0]?.cfd ??
-    ""
-  );
+const findDefaultCfd = (
+  defaultCfd: string | undefined,
+  formations: FormationListItem[],
+  formationByCodeNiveauDiplome: Record<string, FormationListItem[]>
+): string => {
+  if (defaultCfd) {
+    const isInList = formations.find((f) => f.cfd === defaultCfd);
+
+    if (isInList) {
+      return defaultCfd;
+    }
+  }
+  const firstFormations = formationByCodeNiveauDiplome[Object.keys(formationByCodeNiveauDiplome)[0]];
+
+  const formationWithAtLeastOneEtab = firstFormations.filter((f) => f.nbEtab > 0);
+
+  return formationWithAtLeastOneEtab[0]?.cfd;
 };
 
 const defineScope = (
@@ -130,7 +139,16 @@ export default async function PageDomaineDeFormation({ params, searchParams }: R
 
   const scope = defineScope(codeRegion, codeAcademie, codeDepartement);
 
-  const selectedCfd = findDefaultCfd(cfd, results.formations);
+  const formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]> = _.chain(formations)
+    .orderBy("ordreFormation", "desc")
+    .groupBy("libelleNiveauDiplome")
+    .toPairs()
+    .sortBy([0])
+    .fromPairs()
+    .mapValues((value) => value.sort((a, b) => a.libelleFormation.localeCompare(b.libelleFormation)))
+    .value();
+
+  const selectedCfd = findDefaultCfd(cfd, formations, formationsByLibelleNiveauDiplome);
 
   return (
     <PageDomaineDeFormationClient
@@ -144,6 +162,7 @@ export default async function PageDomaineDeFormation({ params, searchParams }: R
       scope={scope}
       counter={counter}
       defaultNsfs={defaultNsfs}
+      formationsByLibelleNiveauDiplome={formationsByLibelleNiveauDiplome}
     />
   );
 }

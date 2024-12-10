@@ -20,6 +20,7 @@ type Props = {
   scope: ScopeZone;
   counter: FormationsCounter;
   defaultNsfs: NsfOptions;
+  formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>;
 };
 
 export const PageDomaineDeFormationClient = ({
@@ -33,6 +34,7 @@ export const PageDomaineDeFormationClient = ({
   counter,
   scope,
   defaultNsfs,
+  formationsByLibelleNiveauDiplome,
 }: Props) => {
   return (
     <FormationContextProvider value={{ codeNsf, scope, regions, academies, departements, libelleNsf }} defaultCfd={cfd}>
@@ -44,7 +46,11 @@ export const PageDomaineDeFormationClient = ({
         defaultNsfs={defaultNsfs}
         currentNsf={codeNsf}
       />
-      <FormationSection formations={formations} counter={counter} />
+      <FormationSection
+        formations={formations}
+        counter={counter}
+        formationsByLibelleNiveauDiplome={formationsByLibelleNiveauDiplome}
+      />
       <LiensUtilesSection />
     </FormationContextProvider>
   );

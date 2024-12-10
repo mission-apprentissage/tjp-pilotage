@@ -34,11 +34,21 @@ export const getFormations = async ({
           sb.ref("formationView.codeNsf").as("codeNsf"),
           sb.ref("formationView.cfd").as("cfd"),
           sb.ref("formationView.libelleFormation").as("libelleFormation"),
+          sb.ref("formationView.dateOuverture").as("dateOuverture"),
           sb.ref("niveauDiplome.libelleNiveauDiplome").as("libelleNiveauDiplome"),
           sb.ref("niveauDiplome.codeNiveauDiplome").as("codeNiveauDiplome"),
           sb.ref("formationView.typeFamille").as("typeFamille"),
         ])
         .orderBy("formationView.libelleFormation", "asc")
+        .distinct()
+    )
+    .with("formation_renovee", (wb) =>
+      wb
+        .selectFrom("formations")
+        .leftJoin("formationHistorique", "formationHistorique.cfd", "formations.cfd")
+        .where("formations.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`)
+        .where("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
+        .select("formationHistorique.cfd")
         .distinct()
     )
     .with("formation_etab", (wb) =>
@@ -80,6 +90,9 @@ export const getFormations = async ({
       sb.fn.count<number>("formation_etab.uai").as("nbEtab"),
       sql<boolean>`bool_or(voie = 'apprentissage' OR voie IS NULL)`.as("apprentissage"),
       sql<boolean>`bool_or(voie = 'scolaire' OR voie IS NULL)`.as("scolaire"),
+      sb.fn
+        .coalesce(sql<boolean>`formations.cfd IN (SELECT cfd FROM formation_renovee)`, sql<boolean>`false`)
+        .as("isFormationRenovee"),
     ])
     .distinct()
     .groupBy([
@@ -89,6 +102,7 @@ export const getFormations = async ({
       "formations.codeNiveauDiplome",
       "formations.typeFamille",
       "formations.codeNsf",
+      "formations.dateOuverture",
     ])
     .$castTo<z.infer<typeof formationSchema>>()
     .execute()

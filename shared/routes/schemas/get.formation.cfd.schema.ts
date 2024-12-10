@@ -28,6 +28,7 @@ export const getFormationCfdSchema = {
       isApprentissage: z.boolean(),
       isScolaire: z.boolean(),
       isInScope: z.boolean(),
+      isFormationRenovee: z.boolean(),
     }),
   },
 };

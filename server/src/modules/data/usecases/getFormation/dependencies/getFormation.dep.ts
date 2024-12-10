@@ -102,6 +102,7 @@ export const getFormation = async ({
         "formationView.libelleFormation",
         "formationView.cfd",
         "formationView.codeNsf",
+        "dateOuverture",
         "dateFermeture",
         "typeFamille",
       ])
@@ -114,8 +115,19 @@ export const getFormation = async ({
       .orderBy(["libelleNsf", "libelleNiveauDiplome", "libelleFormation"])
       .distinct();
 
+  const getFormationRenovee = () =>
+    getKbdClient()
+      .selectFrom("formationHistorique")
+      .leftJoin("formationView", "formationHistorique.cfd", "formationView.cfd")
+      .where("formationHistorique.cfd", "=", cfd)
+      .where("formationView.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`)
+      .where("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
+      .select("formationView.cfd")
+      .distinct();
+
   return getKbdClient()
     .with("formation", () => getFormation())
+    .with("formation_renovee", () => getFormationRenovee())
     .with("formation_maille_etab", () =>
       getFormationMailleEtab({
         codeRegion,
@@ -175,6 +187,13 @@ export const getFormation = async ({
         .else(false)
         .end()
         .as("isInScope"),
+      sb
+        .case()
+        .when("formation.cfd", "in", (sb) => sb.selectFrom("formation_renovee").select("cfd"))
+        .then(true)
+        .else(false)
+        .end()
+        .as("isFormationRenovee"),
     ])
     .groupBy([
       "formation.cfd",

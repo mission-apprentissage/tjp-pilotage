@@ -39,9 +39,11 @@ const TabContent = forwardRef<TabContentProps, "div">(({ tab, ...rest }, ref) =>
 export const FormationSection = ({
   formations,
   counter,
+  formationsByLibelleNiveauDiplome,
 }: {
   formations: FormationListItem[];
   counter: FormationsCounter;
+  formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>;
 }) => {
   const { currentFilters, handleCfdChange } = useFormationContext();
   const tabContentRef = useRef<HTMLDivElement>(null);
@@ -63,6 +65,15 @@ export const FormationSection = ({
     };
   }, [tabContentRef]);
 
+  useEffect(() => {
+    const cfdInListOfFormations = formations.find((f) => f.cfd === currentFilters.cfd);
+
+    if (!cfdInListOfFormations) {
+      const firstFormation = formationsByLibelleNiveauDiplome[Object.keys(formationsByLibelleNiveauDiplome)[0]][0];
+      handleCfdChange(firstFormation.cfd);
+    }
+  }, [currentFilters, formations, handleCfdChange]);
+
   return (
     <Container maxW={"container.xl"} as="section" id="formations" my={"32px"}>
       <Flex direction={"column"} gap={8}>
@@ -73,10 +84,10 @@ export const FormationSection = ({
         <TabFilters counter={counter} />
         <Flex direction="row" gap={8}>
           <ListeFormations
-            formations={formations}
             selectCfd={handleCfdChange}
             selectedCfd={currentFilters.cfd}
             h={tabContentHeight}
+            formationsByLibelleNiveauDiplome={formationsByLibelleNiveauDiplome}
           />
           <TabContent tab={currentFilters.formationTab} ref={tabContentRef} />
         </Flex>

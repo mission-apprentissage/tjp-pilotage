@@ -27,6 +27,8 @@ export const formationSchema = z.object({
   nbEtab: z.number(),
   apprentissage: z.boolean(),
   scolaire: z.boolean(),
+  isFormationRenovee: z.boolean(),
+  dateOuverture: z.date(),
 });
 
 const queryFiltersSchema = z.object({
