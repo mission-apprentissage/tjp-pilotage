@@ -95,16 +95,13 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
           },
           "Demande similaire existante"
         );
-        throw Boom.badRequest(
-          {
-            id: sameIntention.id,
-            errors: {
-              same_demande:
-                "Une demande similaire existe avec ces mêmes champs: code diplôme, numéro établissement, dispositif et rentrée scolaire.",
-            },
+        throw Boom.badRequest("Demande similaire existante", {
+          id: sameIntention.id,
+          errors: {
+            same_demande:
+              "Une demande similaire existe avec ces mêmes champs: code diplôme, numéro établissement, dispositif et rentrée scolaire.",
           },
-          "Demande similaire existante"
-        );
+        });
       }
 
       const dataFormation = await deps.findOneDataFormation({ cfd });
