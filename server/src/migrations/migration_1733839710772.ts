@@ -142,6 +142,14 @@ export const up = async (db: Kysely<unknown>) => {
   );
 
   await getKbdClient().deleteFrom("dataFormation").where("cfd", "in", listeDesCfdsNonReutilises).execute();
+
+  await getKbdClient().executeQuery(
+    sql`
+    REFRESH MATERIALIZED VIEW "formationView" WITH DATA;
+    REFRESH MATERIALIZED VIEW "formationScolaireView" WITH DATA;
+    REFRESH MATERIALIZED VIEW "formationApprentissageView" WITH DATA;
+    `.compile(db)
+  );
 };
 
 export const down = async (_db: Kysely<unknown>) => {};
