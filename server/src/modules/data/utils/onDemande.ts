@@ -28,6 +28,7 @@ import {
   countPlacesTransformeesParCampagne,
 } from "@/modules/utils/countCapacite";
 import { isDemandeProjetOrValidee } from "@/modules/utils/isDemandeProjetOrValidee";
+import { isDemandeNotAjustementRentree } from "@/modules/utils/isDemandeSelectable";
 
 import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
 
@@ -43,6 +44,7 @@ export const genericOnDemandes = ({
   codeAcademie,
   codeDepartement,
   withColoration,
+  withAjustementRentree = true,
 }: {
   statut?: Array<DemandeStatutType>;
   rentreeScolaire?: string[];
@@ -55,6 +57,7 @@ export const genericOnDemandes = ({
   codeAcademie?: string;
   codeDepartement?: string;
   withColoration?: string;
+  withAjustementRentree?: boolean;
 }) =>
   expressionBuilder<DB, keyof DB>()
     .selectFrom("latestDemandeIntentionView as demande")
@@ -117,6 +120,8 @@ export const genericOnDemandes = ({
       eb.fn.sum<number>(countPlacesTransformeesParCampagne(eb)).as("placesTransformees"),
     ])
     .where(isInPerimetreIJDataEtablissement)
+    .$if(withAjustementRentree, (eb) => eb.where(isDemandeNotAjustementRentree))
+    .where("demande.statut", "in", ["projet de demande", "demande validée"])
     .$call((eb) => {
       if (campagne) return eb.where("campagne.annee", "=", campagne);
       return eb;
