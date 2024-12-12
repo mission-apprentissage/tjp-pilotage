@@ -56,7 +56,7 @@ export const Header = ({
       query: isFiltered ? getIntentionsQueryParameters() : {},
     });
     downloadCsv(
-      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : {}),
+      formatExportFilename("recueil_demandes"),
       [
         ...data.intentions.map((intention) => ({
           ...intention,
@@ -83,7 +83,7 @@ export const Header = ({
       query: isFiltered ? getIntentionsQueryParameters() : {},
     });
     downloadExcel(
-      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : {}),
+      formatExportFilename("recueil_demandes"),
       [
         ...data.intentions.map((intention) => ({
           ...intention,
