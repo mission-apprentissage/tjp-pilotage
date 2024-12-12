@@ -1,5 +1,6 @@
 import { expressionBuilder, sql } from "kysely";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
@@ -121,7 +122,7 @@ export const genericOnDemandes = ({
     ])
     .where(isInPerimetreIJDataEtablissement)
     .$if(withAjustementRentree, (eb) => eb.where(isDemandeNotAjustementRentree))
-    .where("demande.statut", "in", ["projet de demande", "demande validée"])
+    .where("demande.statut", "in", [DemandeStatutEnum["projet de demande"], DemandeStatutEnum["demande validée"]])
     .$call((eb) => {
       if (campagne) return eb.where("campagne.annee", "=", campagne);
       return eb;
