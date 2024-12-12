@@ -65,11 +65,55 @@ const correspondancesCFD: Record<string, string> = {
   "56123202": "56123205",
 };
 
+const listeDesCfdsNonReutilises = [
+  "56122101",
+  "56122102",
+  "46122701",
+  "46125001",
+  "46125101",
+  "56122106",
+  "46122301",
+  "46123301",
+  "46125502",
+  "56122301",
+  "56122302",
+  "56122401",
+  "56122701",
+  "56123201",
+  "56123301",
+  "56125101",
+  "56133001",
+  "56133401",
+  "56133601",
+  "46122702",
+  "46123302",
+  "46125102",
+  "46125301",
+  "46125302",
+  "46125303",
+  "46125304",
+  "46125305",
+  "46125401",
+  "46125402",
+  "46125403",
+  "46125404",
+  "46125501",
+  "46133401",
+  "56122104",
+  "46125503",
+  "46133403",
+  "46133402",
+  "56123302",
+  "56123303",
+  "56123202",
+];
+
 export const up = async (db: Kysely<unknown>) => {
   let sqlQuery = "";
-  Object.entries(correspondancesCFD).map(async (ancienCFD, nouveauCFD) => {
-    sqlQuery += `UPDATE demande SET cfd = '${nouveauCFD}' WHERE cfd = '${ancienCFD}';\n`;
-    sqlQuery += `UPDATE intention SET cfd = '${nouveauCFD}' WHERE cfd = '${ancienCFD}';\n`;
+
+  Object.entries(correspondancesCFD).map(async ([ancienCFD, nouveauCFD]) => {
+    sqlQuery += `UPDATE demande SET cfd = '${nouveauCFD}' WHERE cfd = '${ancienCFD}' AND id in (SELECT id FROM latestDemandeView);\n`;
+    sqlQuery += `UPDATE intention SET cfd = '${nouveauCFD}' WHERE cfd = '${ancienCFD}' AND id in (SELECT id FROM latestIntentionView);\n`;
   });
 
   // disable les triggers qui utilisent trop de mémoire sur des opérations massives
@@ -96,42 +140,15 @@ export const up = async (db: Kysely<unknown>) => {
     REFRESH MATERIALIZED VIEW "latestDemandeIntentionView" WITH DATA;
     `.compile(db)
   );
+
+  await getKbdClient().deleteFrom("dataFormation").where("cfd", "in", listeDesCfdsNonReutilises).execute();
 };
 
-export const down = async (db: Kysely<unknown>) => {
-  let sqlQuery = "";
-  Object.entries(correspondancesCFD).map(async (ancienCFD, nouveauCFD) => {
-    sqlQuery += `UPDATE demande SET cfd = '${ancienCFD}' WHERE cfd = '${nouveauCFD}';\n`;
-    sqlQuery += `UPDATE intention SET cfd = '${ancienCFD}' WHERE cfd = '${nouveauCFD}';\n`;
-  });
-
-  // disable les triggers qui utilisent trop de mémoire sur des opérations massives
-  await getKbdClient().executeQuery(
-    sql`
-    ALTER TABLE demande DISABLE TRIGGER ALL;
-    ALTER TABLE intention DISABLE TRIGGER ALL;
-    `.compile(db)
-  );
-  await getKbdClient().executeQuery(sql.raw(sqlQuery).compile(db));
-  // enable les triggers
-  await getKbdClient().executeQuery(
-    sql`
-    ALTER TABLE demande ENABLE TRIGGER ALL;
-    ALTER TABLE intention ENABLE TRIGGER ALL;
-    `.compile(db)
-  );
-
-  await getKbdClient().executeQuery(
-    sql`
-    REFRESH MATERIALIZED VIEW "latestDemandeView" WITH DATA;
-    REFRESH MATERIALIZED VIEW "latestIntentionView" WITH DATA;
-    REFRESH MATERIALIZED VIEW "demandeIntentionView" WITH DATA;
-    REFRESH MATERIALIZED VIEW "latestDemandeIntentionView" WITH DATA;
-    `.compile(db)
-  );
-};
+export const down = async (_db: Kysely<unknown>) => {};
 
 // codes temporaires
 // ('56122103','56122105','56124201','46122703','46131101','56134201','46125002','46125003','46122001','46131201','46133503','46132601','46133504','46133501','46133502','46133505','46125122','56122112','46122306','46123304','46125509','56122107','56122109','56122111','56122304','56122307','56122405','56122706','56123204','56123307','56125118','56133002','56133411','56133605','46122704','46123306','46125004','46125123','46125308','46125309','46125310','46125311','46125312','46125406','46125407','46125408','46122705','46125409','46125508','46133412','56122113','46125510','46133414','46133413','56123308','56123309','56122114','56123205')
 // codes actuels
 // ('56122101','56122102','56124201','46122701','46131101','56134201','46125001','46125002','46122001','46131201','46133503','46132601','46133504','46133501','46133502','46133505','46125101','56122106','46122301','46123301','46125502','56122103','56122105','56122107','56122301','56122302','56122401','56122701','56123201','56123301','56125101','56133001','56133401','56133601','46122702','46123302','46125003','46125102','46125301','46125302','46125303','46125304','46125305','46125401','46125402','46125403','46122703','46125404','46125501','46133401','56122104','46125503','46133403','46133402','56123302','56123303','56122109','56123202')
+// codes à supprimer
+// ('56122101','56122102','46122701','46125001','46125101','56122106','46122301','46123301','46125502','56122301','56122302','56122401','56122701','56123201','56123301','56125101','56133001','56133401','56133601','46122702','46123302','46125102','46125301','46125302','46125303','46125304','46125305','46125401','46125402','46125403','46125404','46125501','46133401','56122104','46125503','46133403','46133402','56123302','56123303','56123202')
