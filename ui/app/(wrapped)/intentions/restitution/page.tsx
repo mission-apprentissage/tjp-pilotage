@@ -275,7 +275,7 @@ export default () => {
       query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
     downloadCsv(
-      formatExportFilename("restitution_export", isFiltered ? filters : undefined),
+      formatExportFilename("restitution_export"),
       data.demandes.map((demande) => ({
         ...demande,
         createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
@@ -318,7 +318,7 @@ export default () => {
       query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
     downloadExcel(
-      formatExportFilename("restitution_export", isFiltered ? filters : undefined),
+      formatExportFilename("restitution_export"),
 
       data.demandes.map((demande) => ({
         ...demande,
@@ -358,6 +358,7 @@ export default () => {
 
   useEffect(() => {
     setDefaultFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onClickSearch = () => {
@@ -371,6 +372,7 @@ export default () => {
   useEffect(() => {
     const campagneFilterNumber = parseInt(searchParams.filters?.campagne ?? "");
     handleFilters("rentreeScolaire", campagneFilterNumber + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.filters?.campagne]);
 
   return (

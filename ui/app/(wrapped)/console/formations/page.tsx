@@ -221,11 +221,7 @@ export default function Formations() {
 
     const filteredColumns = canShowQuadrantPosition ? columns : _.omit(columns, "positionQuadrant");
 
-    downloadCsv(
-      formatExportFilename("formation_export", isFiltered ? filters : undefined),
-      formations,
-      filteredColumns
-    );
+    downloadCsv(formatExportFilename("formation_export"), formations, filteredColumns);
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
@@ -238,11 +234,7 @@ export default function Formations() {
 
     const filteredColumns = canShowQuadrantPosition ? columns : _.omit(columns, "positionQuadrant");
 
-    downloadExcel(
-      formatExportFilename("formation_export", isFiltered ? filters : undefined),
-      formations,
-      filteredColumns
-    );
+    downloadExcel(formatExportFilename("formation_export"), formations, filteredColumns);
   };
 
   const canShowQuadrantPosition = filters.codeRegion?.length === 1;
