@@ -97,7 +97,7 @@ export const PageClient = () => {
         title: `La demande ${notFound} n'a pas été trouvée`,
       });
     }
-  }, [notFound]);
+  }, [notFound, toast]);
 
   const trackEvent = usePlausible();
 

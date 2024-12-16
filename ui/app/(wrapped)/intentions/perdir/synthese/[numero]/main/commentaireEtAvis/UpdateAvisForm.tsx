@@ -114,7 +114,7 @@ export const UpdateAvisForm = chakra(
                   defaultValue={
                     value
                       ? {
-                          value: value,
+                          value: `${value}`,
                           // @ts-expect-error TODO
                           label: value?.toUpperCase() ?? "",
                         }

@@ -11,7 +11,8 @@ const getTabIndex = (segment: string | null) => {
   if (segment === "region") return 0;
   if (segment === "departement") return 1;
   if (segment === "etablissement") return 2;
-  if (segment === "lien-metier-formation") return 3;
+  if (segment === "domaine-de-formation") return 3;
+  if (segment === "lien-metier-formation") return 4;
 };
 
 export default function PanoramaLayout({ children }: { readonly children: ReactNode }) {
@@ -42,6 +43,18 @@ export default function PanoramaLayout({ children }: { readonly children: ReactN
           active: true,
         },
       ];
+
+    if (segment === "domaine-de-formation") {
+      return [
+        { title: "Accueil", to: "/" },
+        {
+          title: "Panorama domaine de formation",
+          to: "/panorama/domaine-de-formation",
+          active: true,
+        },
+      ];
+    }
+
     return [
       { title: "Accueil", to: "/" },
       {
@@ -73,6 +86,9 @@ export default function PanoramaLayout({ children }: { readonly children: ReactN
           </Tab>
           <Tab as={Link} href="/panorama/etablissement">
             Établissement
+          </Tab>
+          <Tab as={Link} href="/panorama/domaine-de-formation">
+            Domaine de formation
           </Tab>
           <Tab as={Link} href="/panorama/lien-metier-formation">
             Lien métier formation
