@@ -22,6 +22,8 @@ import { searchDiplomeSchema } from "./schemas/get.diplome.search.search.schema"
 import { searchDisciplineSchema } from "./schemas/get.discipline.search.search.schema";
 import { redirectDneSchema } from "./schemas/get.dne_connect.schema";
 import { getDneUrlSchema } from "./schemas/get.dne_url.schema";
+import { getDomaineDeFormationCodeNsfSchema } from "./schemas/get.domaine-de-formation.codeNsf.schema";
+import { getDomaineDeFormationSchema } from "./schemas/get.domaine-de-formation.schema";
 import { searchDomaineProfessionnelSchema } from "./schemas/get.domaine-professionnel.search.search.schema";
 import { getEditoSchema } from "./schemas/get.edito.schema";
 import { searchEtablissementPerdirSchema } from "./schemas/get.etablissement.perdir.search.search.schema";
@@ -33,7 +35,10 @@ import { getDataForEtablissementMapSchema } from "./schemas/get.etablissement.ua
 import { getEtablissementSchema } from "./schemas/get.etablissement.uai.schema";
 import { getFormationEtablissementsSchema } from "./schemas/get.etablissements.schema";
 import { searchFiliereSchema } from "./schemas/get.filiere.search.search.schema";
-import { getFormationSchema } from "./schemas/get.formations.schema";
+import { getFormationCfdIndicatorsSchema } from "./schemas/get.formation.cfd.indicators.schema";
+import { getFormationCfdMapSchema } from "./schemas/get.formation.cfd.map.schema";
+import { getFormationCfdSchema } from "./schemas/get.formation.cfd.schema";
+import { getFormationsSchema } from "./schemas/get.formations.schema";
 import { getGlossaireEntrySchema } from "./schemas/get.glossaire.id.schema";
 import { getGlossaireSchema } from "./schemas/get.glossaire.schema";
 import { getHomeSchema } from "./schemas/get.home.schema";
@@ -253,7 +258,7 @@ export const ROUTES = {
   "[GET]/formations": {
     url: "/formations",
     method: "GET",
-    schema: getFormationSchema,
+    schema: getFormationsSchema,
   },
   "[GET]/pilotage-intentions/formations": {
     url: "/pilotage-intentions/formations",
@@ -519,5 +524,30 @@ export const ROUTES = {
     url: "/intention/:numero/files",
     method: "PUT",
     schema: uploadIntentionFilesSchema,
+  },
+  "[GET]/formation/:cfd": {
+    url: "/formation/:cfd",
+    method: "GET",
+    schema: getFormationCfdSchema,
+  },
+  "[GET]/formation/:cfd/map": {
+    url: "/formation/:cfd/map",
+    method: "GET",
+    schema: getFormationCfdMapSchema,
+  },
+  "[GET]/formation/:cfd/indicators": {
+    url: "/formation/:cfd/indicators",
+    method: "GET",
+    schema: getFormationCfdIndicatorsSchema,
+  },
+  "[GET]/domaine-de-formation/:codeNsf": {
+    url: "/domaine-de-formation/:codeNsf",
+    method: "GET",
+    schema: getDomaineDeFormationCodeNsfSchema,
+  },
+  "[GET]/domaine-de-formation": {
+    url: "/domaine-de-formation",
+    method: "GET",
+    schema: getDomaineDeFormationSchema,
   },
 } satisfies IRoutesDefinition;
