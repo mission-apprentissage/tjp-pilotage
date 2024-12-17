@@ -175,13 +175,19 @@ export const [redirectDne, redirectDneFactory] = inject(
       await deps.createUserInDB({ user: userToInsert });
 
       if (user) {
-        logger.info(`Info (SSO) : Nouveau login`, {
-          user: userToInsert,
-        });
+        logger.info(
+          {
+            user: userToInsert,
+          },
+          `Info (SSO) : Nouveau login`
+        );
       } else {
-        logger.info(`Info (SSO) : Nouvel utilisateur DNE`, {
-          user: userToInsert,
-        });
+        logger.info(
+          {
+            user: userToInsert,
+          },
+          `Info (SSO) : Nouvel utilisateur DNE`
+        );
       }
 
       const authorizationToken = jwt.sign({ email }, deps.authJwtSecret, {

@@ -384,7 +384,6 @@ export default () => {
   useEffect(() => {
     const campagneFilterNumber = parseInt(searchParams.filters?.campagne ?? "");
     handleFilters("rentreeScolaire", campagneFilterNumber + 1);
-    // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.filters?.campagne]);
 

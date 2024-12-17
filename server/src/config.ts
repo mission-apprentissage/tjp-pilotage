@@ -21,6 +21,7 @@ const config = {
   log: {
     type: env.get("LOG_TYPE").asString(),
     level: env.get("LOG_LEVEL").required().asString(),
+    forceLocalLogs: env.get("LOG_LOCAL").asBool(),
   },
   psql: {
     host: env.get("PSQL_HOST").required().asString(),

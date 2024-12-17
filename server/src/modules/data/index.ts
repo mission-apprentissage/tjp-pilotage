@@ -8,8 +8,13 @@ import { getDataForPanoramaRegionRoute } from "./usecases/getDataForPanoramaRegi
 import { getDemandesRestitutionIntentionsRoute } from "./usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.route";
 import { getDepartementRoute } from "./usecases/getDepartement/getDepartement.route";
 import { getDepartementsRoute } from "./usecases/getDepartements/getDepartements.route";
+import { getDomaineDeFormationRoute } from "./usecases/getDomaineDeFormation/getDomaineDeFormation.route";
+import { getDomainesDeFormationRoute } from "./usecases/getDomainesDeFormation/getDomainesDeFormation.route";
 import { getEtablissementRoute } from "./usecases/getEtablissement/getEtablissement.route";
+import { getFormationRoute } from "./usecases/getFormation/getFormation.route";
+import { getFormationCarteEtablissementsRoute } from "./usecases/getFormationCarteEtablissements/getFormationCarteEtablissements.route";
 import { getFormationEtablissementsRoutes } from "./usecases/getFormationEtablissements/getFormationEtablissements.routes";
+import { getFormationIndicateursRoute } from "./usecases/getFormationIndicateurs/getFormationIndicateurs.route";
 import { getFormationsRoute } from "./usecases/getFormations/getFormations.routes";
 import { getFormationsPilotageIntentionsRoute } from "./usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.route";
 import { getHeaderEtablissementRoute } from "./usecases/getHeaderEtablissement/getHeaderEtablissement.route";
@@ -61,5 +66,10 @@ export const registerDataModule = (server: Server) => {
     ...searchFiliereRoute(server),
     ...searchCampusRoute(server),
     ...getRepartitionPilotageIntentionsRoute(server),
+    ...getDomainesDeFormationRoute(server),
+    ...getFormationRoute(server),
+    ...getDomaineDeFormationRoute(server),
+    ...getFormationIndicateursRoute(server),
+    ...getFormationCarteEtablissementsRoute(server),
   };
 };
