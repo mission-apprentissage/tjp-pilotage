@@ -79,10 +79,13 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
 
       const errors = validateCorrection(cleanNull(correction), cleanNull(demande) as Demande);
       if (errors) {
-        logger.info("Correction incorrecte", {
-          errors,
-          correction: correction,
-        });
+        logger.info(
+          {
+            errors,
+            correction: correction,
+          },
+          "Correction incorrecte"
+        );
         throw Boom.badData("Donnée incorrectes", { errors });
       }
 

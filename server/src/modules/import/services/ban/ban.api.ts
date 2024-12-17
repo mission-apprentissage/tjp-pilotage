@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import rateLimit from "axios-rate-limit";
 
 import type { BANResponse } from "./banResponse";
@@ -45,7 +45,7 @@ export const findAddress = async ({
     return response.data;
   } catch (err) {
     console.error(`Une erreur est survenue lors de la recherche de l'adresse: ${search}`);
-    if (axios.isAxiosError(err)) {
+    if (isAxiosError(err)) {
       console.error(err.message);
     }
     return null;

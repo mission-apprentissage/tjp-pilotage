@@ -8,7 +8,7 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
-  checksum: d75971da55a3f43660e8e8d15247c755e8fbcde5077ea04c203e0975aa17616e
+  checksum: 0577a982f46500c55d62463f34fde72a3e14700b5235f8573cbf870e2452348f
 - filename: README.md
   checksum: 00ac991f0b2746c5a5ffa14e2b3c5427b739c0d952aa3730efe1f234ac1fc3ca
 - filename: server/.env.test
@@ -21,6 +21,8 @@ fileignoreconfig:
   checksum: 28cdc80f0d836857ee9a802bff5a72a3ff3addad70a31b1ad4b7e98bc8db447c
 - filename: server/src/modules/core/usecases/redirectDne/redirectDne.test.ts
   checksum: 97116750d964c12ae4a0ffe9f5477d66526bf2f2e8ac8719ee399dc88faf7ae5
+- filename: server/static/files/offres_apprentissage.csv
+  checksum: f8e173f11056708d2958e4f000428c2acb2281d9f19db55d9d72c5790bf0bf4b
 - filename: server/tests/test_origin/controllers/campagnes.controller.test.js_old
   checksum: 546c306130034fdce2c4165b1f31656dfa883bc8808f0e8b1fa5a5461da1cb08
 - filename: server/tests/test_origin/controllers/users.controller.test.js_old

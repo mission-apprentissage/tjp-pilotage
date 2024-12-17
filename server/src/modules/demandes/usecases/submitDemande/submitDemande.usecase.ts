@@ -33,13 +33,13 @@ const logDemande = (demande?: { statut: string }) => {
   if (!demande) return;
   switch (demande.statut) {
     case DemandeStatutEnum["projet de demande"]:
-      logger.info("Projet de demande enregistré", { demande: demande });
+      logger.info({ demande: demande }, "Projet de demande enregistré");
       break;
     case DemandeStatutEnum["demande validée"]:
-      logger.info("Demande validée", { demande: demande });
+      logger.info({ demande: demande }, "Demande validée");
       break;
     case DemandeStatutEnum["refusée"]:
-      logger.info("Demande refusée", { demande: demande });
+      logger.info({ demande: demande }, "Demande refusée");
       break;
   }
 };
@@ -74,7 +74,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
         notNumero: demande.numero,
       });
       if (sameDemande) {
-        logger.info("Demande similaire existante", { sameDemande, demande });
+        logger.info({ sameDemande, demande }, "Demande similaire existante");
         throw Boom.badRequest("Demande similaire existante", {
           id: sameDemande.id,
           errors: {
@@ -117,7 +117,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
 
       const errors = validateDemande(cleanNull(demandeData));
       if (errors) {
-        logger.info("demande incorrecte", { errors, demande: demandeData });
+        logger.info({ errors, demande: demandeData }, "demande incorrecte");
         throw Boom.badData("Donnée incorrectes", { errors });
       }
 
