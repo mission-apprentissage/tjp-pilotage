@@ -79,6 +79,16 @@
         chdir: /opt/app
         cmd: "sudo /opt/app/tools/maintenance/maintenance-off.sh"
 
+    - name: "Installation du cron d'anonymisation des utilisateurs"
+      ansible.builtin.cron:
+        name: "Anonymisation des utilisateurs"
+        minute: "0"
+        hour: "2"
+        weekday: "1"
+        job: "/opt/app/scripts/anonymise-users.sh"
+        user: "root"
+        cron_file: "anonymize-users"
+
     - name: "Verification des certificats SSL"
       shell:
         chdir: /opt/app
