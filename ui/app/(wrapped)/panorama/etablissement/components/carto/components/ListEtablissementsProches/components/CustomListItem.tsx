@@ -7,44 +7,14 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import type { client } from "@/api.client";
 import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
 import { themeDefinition } from "@/theme/theme";
-import { formatNumber, formatPercentage } from "@/utils/formatUtils";
+import { formatCodeDepartement, formatDispositifs, formatSecteur } from "@/utils/formatLibelle";
+import { formatDistance, formatPercentage } from "@/utils/formatUtils";
 
 interface CustomListItemProps {
   etablissement: (typeof client.infer)["[GET]/etablissement/:uai/map/list"]["etablissementsProches"][number];
   withDivider: boolean;
   children?: React.ReactNode;
 }
-
-const formatDistance = (distance: number) => {
-  return `${formatNumber(distance, 1)} km`;
-};
-
-const formatDispositifs = (dispositifs: string[]) => {
-  return dispositifs
-    .filter((libelle) => libelle !== "")
-    .map((d) => {
-      return d.replace(/\sen\s/i, " ").replace(/professionnel/i, "PRO");
-    });
-};
-
-const formatSecteur = (secteur: string) => {
-  switch (secteur) {
-    case "PU":
-      return "Public";
-    case "PR":
-      return "Privé";
-    default:
-      return "";
-  }
-};
-
-const formatDepartement = (departement: string) => {
-  if (departement.length === 3 && departement[0] === "0") {
-    return departement.substring(1);
-  }
-
-  return departement;
-};
 
 export const CustomListItem = ({ etablissement, withDivider, children }: CustomListItemProps) => {
   const trackEvent = usePlausible();
@@ -180,7 +150,7 @@ export const CustomListItem = ({ etablissement, withDivider, children }: CustomL
               divider={<Divider orientation="vertical" h="12px" w="1px" />}
             >
               <Text>
-                {etablissement.commune} ({formatDepartement(etablissement.codeDepartement)})
+                {etablissement.commune} ({formatCodeDepartement(etablissement.codeDepartement)})
               </Text>
               <Text>{formatDistance(etablissement.distance)}</Text>
               {etablissement.secteur && <Text>{formatSecteur(etablissement.secteur)}</Text>}
