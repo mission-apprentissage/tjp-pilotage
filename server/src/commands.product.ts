@@ -7,6 +7,7 @@ import { PERMISSIONS } from "shared";
 import { z } from "zod";
 
 import { basepath } from "./basepath";
+import { anonymiseUsers } from "./modules/core/usecases/anonymiseUsers/anonymiseUsers.usecase";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
 import type { LineTypes } from "./modules/import/repositories/rawData.repository";
 import { Schemas } from "./modules/import/repositories/rawData.repository";
@@ -363,5 +364,12 @@ export function productCommands(cli: Command) {
     .description("Calcul des positions quadrants")
     .action(async () => {
       await importPositionsQuadrant();
+    });
+
+  cli
+    .command("anonymiseUsers")
+    .description("Anonymisation des users inactifs depuis 2 ans")
+    .action(async () => {
+      await anonymiseUsers();
     });
 }
