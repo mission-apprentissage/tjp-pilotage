@@ -8,6 +8,16 @@ import { selectTauxInsertion6moisAgg } from "@/modules/data/utils/tauxInsertion6
 import { selectTauxPoursuiteAgg } from "@/modules/data/utils/tauxPoursuite";
 import { cleanNull } from "@/utils/noNull";
 
+function listUniqMillesimes(
+  indicateurs: {
+    millesimeSortie: string | null;
+  }[]
+) {
+  return _.uniq(indicateurs.filter((i) => i.millesimeSortie).map((i) => i.millesimeSortie as string)).sort((a, z) =>
+    a.localeCompare(z)
+  );
+}
+
 export const getTauxIJ = async ({ cfd, codeRegion }: { cfd: string; codeRegion?: string }) => {
   const indicateursIJ = await getKbdClient()
     .selectFrom("formationView as formation")
@@ -40,9 +50,10 @@ export const getTauxIJ = async ({ cfd, codeRegion }: { cfd: string; codeRegion?:
       "formation.libelleFormation",
       "indicateurRegionSortie.millesimeSortie",
     ])
+    .orderBy("indicateurRegionSortie.millesimeSortie", "asc")
     .execute();
 
-  const millesimes = _.uniq(indicateursIJ.filter((i) => i.millesimeSortie).map((i) => i.millesimeSortie as string));
+  const millesimes = listUniqMillesimes(indicateursIJ);
 
   const tauxIJ: Record<TauxIJKey, TauxIJValue[]> = {
     tauxPoursuite: [],

@@ -40,7 +40,7 @@ export const DevenirBarGraph = function ({
 
   if (hasVoieScolaire) {
     series.push({
-      name: `Voie scolaire ${datas.some((d) => d.scolaire !== undefined) ? "" : "(indisponible)"}`,
+      name: `Voie scolaire${datas.some((d) => d.scolaire !== undefined) ? "" : " (indisponible)"}`,
       data: datas.map((data) => data.scolaire),
       color: blue,
     });
@@ -48,7 +48,7 @@ export const DevenirBarGraph = function ({
 
   if (hasVoieApprentissage) {
     series.push({
-      name: `Apprentissage ${datas.some((d) => d.apprentissage !== undefined) ? "" : "(indisponible)"}`,
+      name: `Apprentissage${datas.some((d) => d.apprentissage !== undefined) ? "" : " (indisponible)"}`,
       data: datas.map((data) => data.apprentissage),
       color: mustard,
     });
