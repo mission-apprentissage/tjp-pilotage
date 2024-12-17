@@ -1,4 +1,5 @@
 import { createRoute } from "@http-wizard/core";
+import type { UserFonction } from "shared/enum/userFonction";
 import { ROUTES } from "shared/routes/routes";
 
 import { getScopeFilterForUser } from "@/modules/core/utils/getScopeFilterForUser";
@@ -29,7 +30,14 @@ export const getUsersRoute = (server: Server) => {
           scope,
           scopeFilter,
         });
-        response.code(200).send(users);
+
+        response.code(200).send({
+          count: users.count,
+          users: users.users.map((user) => ({
+            ...user,
+            fonction: user.fonction as UserFonction,
+          })),
+        });
       },
     });
   });

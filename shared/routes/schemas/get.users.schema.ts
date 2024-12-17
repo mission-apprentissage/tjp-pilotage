@@ -1,9 +1,10 @@
 import { z } from "zod";
 
+import { userFonction } from "../../enum/userFonction";
 import type { Role } from "../../security/permissions";
 import { PERMISSIONS } from "../../security/permissions";
 
-const UserSchema = z.object({
+export const UserSchema = z.object({
   id: z.string(),
   firstname: z.string().optional(),
   lastname: z.string().optional(),
@@ -14,6 +15,7 @@ const UserSchema = z.object({
   createdAt: z.string().optional(),
   uais: z.array(z.string()).optional(),
   enabled: z.boolean(),
+  fonction: userFonction.optional(),
 });
 
 export const getUsersSchema = {
