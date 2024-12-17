@@ -2,19 +2,19 @@ import type { AvisTypeType } from "shared/enum/avisTypeEnum";
 import type { UserFonction } from "shared/enum/userFonction";
 
 export const FONCTIONS = {
-  préalable: ["région", "région académique"],
+  préalable: ["Région", "Région académique"],
   consultatif: [
-    "inspecteur",
+    "Inspecteur",
     "DO CMQ",
-    "conseiller en formation professionnelle",
-    "coordonnateur de CFA-A",
+    "Conseiller en formation professionnelle",
+    "Coordonnateur de CFA-A",
     "DRAIO",
-    "services DOS",
+    "Services DOS",
     "DASEN",
-    "région",
+    "Région",
     "DRAFPIC",
     "SGRA",
-    "recteur",
+    "Recteur",
   ],
-  final: ["région", "CSA", "recteur"],
+  final: ["Région", "CSA", "Recteur"],
 } as Record<AvisTypeType, UserFonction[]>;

@@ -1,19 +1,19 @@
 import { z } from "zod";
 
 export const userFonction = z.enum([
-  "région",
-  "région académique",
-  "inspecteur",
+  "Région",
+  "Région académique",
+  "Inspecteur",
   "DO CMQ",
-  "conseiller en formation professionnelle",
-  "coordonnateur de CFA-A",
+  "Conseiller en formation professionnelle",
+  "Coordonnateur de CFA-A",
   "DRAIO",
-  "services DOS",
+  "Services DOS",
   "DASEN",
   "DRAFPIC",
   "SGRA",
   "CSA",
-  "recteur",
+  "Recteur",
 ]);
 
 export const UserFonctionEnum = userFonction.Enum;

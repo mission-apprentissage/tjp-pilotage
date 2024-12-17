@@ -19,7 +19,6 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import _ from "lodash";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { Role } from "shared";
@@ -162,7 +161,7 @@ export const EditUser = ({
               {<option value="">Aucune</option>}
               {Object.keys(UserFonctionEnum)?.map((userFonction) => (
                 <option key={userFonction} value={userFonction}>
-                  {_.capitalize(userFonction)}
+                  {userFonction}
                 </option>
               ))}
             </Select>
