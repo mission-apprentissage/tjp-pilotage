@@ -16,7 +16,6 @@
     "dev": "tsup-node --env.TSUP_WATCH true",
     "build": "tsup-node --env.NODE_ENV production",
     "typecheck": "NODE_OPTIONS='--max-old-space-size=8192' tsc --noEmit",
-    "kysely": "npx kysely-codegen --schema public --out-file=./src/db/schema.ts --dialect postgres && yarn prettier:fix",
     "generate:seed": "./seed/generate-seed.sh"
   },
   "dependencies": {

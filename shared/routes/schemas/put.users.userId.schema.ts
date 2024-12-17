@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { userFonction } from "../../enum/userFonction";
 import type { Role } from "../../security/permissions";
 import { PERMISSIONS } from "../../security/permissions";
 
@@ -10,6 +11,7 @@ const BodySchema = z.object({
   role: z.enum(Object.keys(PERMISSIONS) as [Role]),
   codeRegion: z.string().min(1).nullable(),
   enabled: z.boolean(),
+  fonction: userFonction.optional(),
 });
 
 export type BodySchema = z.infer<typeof BodySchema>;
