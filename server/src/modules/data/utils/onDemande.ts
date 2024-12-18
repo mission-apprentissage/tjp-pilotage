@@ -1,7 +1,10 @@
 import { expressionBuilder, sql } from "kysely";
+import { VoieEnum } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
+import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
@@ -45,6 +48,7 @@ export const genericOnDemandes = ({
   codeAcademie,
   codeDepartement,
   withColoration,
+  formationSpecifique,
   withAjustementRentree = true,
 }: {
   statut?: Array<DemandeStatutType>;
@@ -58,6 +62,7 @@ export const genericOnDemandes = ({
   codeAcademie?: string;
   codeDepartement?: string;
   withColoration?: string;
+  formationSpecifique?: Array<TypeFormationSpecifiqueType>;
   withAjustementRentree?: boolean;
 }) =>
   expressionBuilder<DB, keyof DB>()
@@ -68,20 +73,16 @@ export const genericOnDemandes = ({
         return eb;
       })
     )
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin(
-      (seb) =>
-        seb
-          .selectFrom("formationRome")
-          .leftJoin("rome", "rome.codeRome", "formationRome.codeRome")
-          .select((sseb) => [
-            "formationRome.cfd",
-            sql<boolean>`bool_or(${sseb.ref("rome.transitionEcologique")})`.as("transitionEcologique"),
-          ])
-          .groupBy("cfd")
-          .as("rome"),
-      (join) => join.onRef("rome.cfd", "=", "demande.cfd")
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .leftJoin("formationView", (join) =>
+      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
+    )
+    .leftJoin("actionPrioritaire", (join) =>
+      join
+        .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
+        .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
+        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
     )
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join.on((eb) =>
@@ -149,15 +150,15 @@ export const genericOnDemandes = ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
+      if (codeNsf) return eb.where("formationView.codeNsf", "in", codeNsf);
       return eb;
     })
     .$call((eb) => {
-      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
+      if (CPC) return eb.where("formationView.cpc", "in", CPC);
       return eb;
     })
     .$call((q) => {
@@ -176,5 +177,26 @@ export const genericOnDemandes = ({
         return q.where((w) =>
           w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
         );
+      return q;
+    })
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        return q.where((w) =>
+          w.or([
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])
+              ? w("actionPrioritaire.cfd", "is not", null)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])
+              ? w("formationView.isTransitionEcologique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])
+              ? w("formationView.isTransitionDemographique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
+              ? w("formationView.isTransitionNumerique", "=", true)
+              : sql.val(false),
+          ])
+        );
+      }
       return q;
     });

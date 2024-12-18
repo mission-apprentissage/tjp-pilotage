@@ -1,10 +1,19 @@
+import type { MILLESIMES_IJ } from "shared";
+import type { FiltersSchema } from "shared/routes/schemas/get.restitution-intentions.demandes.schema";
+import type { z } from "zod";
+
+import type { RequestUser } from "@/modules/core/model/User";
 import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
 import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
 
-import type { Filters } from "./deps/getDemandesRestitutionIntentions.query";
 import { getDemandesRestitutionIntentionsQuery } from "./deps/getDemandesRestitutionIntentions.query";
 import { getFilters } from "./deps/getFilters.query";
 
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+  campagne: string;
+}
 export interface ActiveFilters extends Omit<Filters, "campagne"> {
   campagne?: string;
 }
@@ -12,7 +21,7 @@ export interface ActiveFilters extends Omit<Filters, "campagne"> {
 const getDemandesRestitutionIntentionsFactory =
   (
     deps = {
-      getDemandesRestitutionIntentionsQuery: getDemandesRestitutionIntentionsQuery,
+      getDemandesRestitutionIntentionsQuery,
       getFilters: getFilters,
       getCurrentCampagneQuery,
       getStatsSortieParRegionsEtNiveauDiplomeQuery,

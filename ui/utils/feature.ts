@@ -4,5 +4,6 @@ export const feature = {
   etablissementQuadrant: publicConfig.env !== "production",
   correction: true,
   showColorationFilter: false,
-  requetesSuggerees: false,
+  requetesSuggerees: true,
+  formationsSpecifiqueConsole: false,
 };

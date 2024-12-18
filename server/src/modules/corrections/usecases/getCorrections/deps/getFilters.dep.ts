@@ -56,19 +56,19 @@ export const getFiltersQuery = async ({
     return eb("demande.rentreeScolaire", "=", parseInt(rentreeScolaire));
   };
 
-  const inCfd = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+  const inCfd = (eb: ExpressionBuilder<DB, "formationView">) => {
     if (!cfd) return sql<true>`true`;
-    return eb("dataFormation.cfd", "in", cfd);
+    return eb("formationView.cfd", "in", cfd);
   };
 
-  const inCodeNiveauDiplome = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+  const inCodeNiveauDiplome = (eb: ExpressionBuilder<DB, "formationView">) => {
     if (!codeNiveauDiplome) return sql<true>`true`;
-    return eb("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+    return eb("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
   };
 
-  const inCodeNsf = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+  const inCodeNsf = (eb: ExpressionBuilder<DB, "formationView">) => {
     if (!codeNsf) return sql<true>`true`;
-    return eb("dataFormation.codeNsf", "in", codeNsf);
+    return eb("formationView.codeNsf", "in", codeNsf);
   };
 
   const inTypeDemande = (eb: ExpressionBuilder<DB, "demande">) => {
@@ -155,10 +155,10 @@ export const getFiltersQuery = async ({
       join.onRef("correction.intentionNumero", "=", "demande.numero")
     )
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin("formationView", "formationView.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
-    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
     .leftJoin("departement", "departement.codeRegion", "demande.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
@@ -273,14 +273,14 @@ export const getFiltersQuery = async ({
   const formationsFilters = await filtersBase
     .select((eb) => [
       sql`CONCAT(
-      ${eb.ref("dataFormation.libelleFormation")},
+      ${eb.ref("formationView.libelleFormation")},
       ' (',
       ${eb.ref("niveauDiplome.libelleNiveauDiplome")},
       ')'
     )`.as("label"),
-      "dataFormation.cfd as value",
+      "formationView.cfd as value",
     ])
-    .where("dataFormation.cfd", "is not", null)
+    .where("formationView.cfd", "is not", null)
     .where((eb) => {
       return eb.or([
         eb.and([
@@ -298,13 +298,13 @@ export const getFiltersQuery = async ({
           inStatut(eb),
           inCampagne(eb),
         ]),
-        cfd ? eb("dataFormation.cfd", "in", cfd) : sql<boolean>`false`,
+        cfd ? eb("formationView.cfd", "in", cfd) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
   const libellesNsf = await filtersBase
-    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
+    .leftJoin("nsf", "formationView.codeNsf", "nsf.codeNsf")
     .select(["nsf.libelleNsf as label", "nsf.codeNsf as value"])
     .where("nsf.libelleNsf", "is not", null)
     .where((eb) => {
@@ -324,7 +324,7 @@ export const getFiltersQuery = async ({
           inStatut(eb),
           inCampagne(eb),
         ]),
-        codeNsf ? eb("dataFormation.codeNsf", "in", codeNsf) : sql<boolean>`false`,
+        codeNsf ? eb("formationView.codeNsf", "in", codeNsf) : sql<boolean>`false`,
       ]);
     })
     .execute();

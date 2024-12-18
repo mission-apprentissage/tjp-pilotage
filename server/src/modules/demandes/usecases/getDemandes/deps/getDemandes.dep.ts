@@ -29,7 +29,7 @@ export const getDemandes = async ({
 
   const demandes = await getKbdClient()
     .selectFrom("latestDemandeView as demande")
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
@@ -52,10 +52,14 @@ export const getDemandes = async ({
     .selectAll("demande")
     .select((eb) => [
       "suivi.id as suiviId",
-      sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("userName"),
+      sql<string>`CONCAT(
+        ${eb.ref("user.firstname")},
+        ' ',
+        ${eb.ref("user.lastname")}
+      )`.as("userName"),
       sql<boolean>`(
         "intentionAccessLog"."id" is not null
-         or "demande"."updatedBy" = ${user.id}
+         OR "demande"."updatedBy" = ${user.id}
       )`.as("alreadyAccessed"),
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
@@ -109,15 +113,13 @@ export const getDemandes = async ({
           ])
           .where("demande.updatedBy", "is not", null)
       ).as("updatedBy"),
-    ])
-    .select((eb) =>
       eb
         .selectFrom("correction")
         .whereRef("correction.intentionNumero", "=", "demande.numero")
         .select("correction.id")
         .limit(1)
-        .as("correction")
-    )
+        .as("correction"),
+    ])
     .$call((eb) => {
       if (statut) {
         if (statut === "suivies")

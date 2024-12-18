@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
@@ -19,6 +20,8 @@ import { selectTauxInsertion6mois, withInsertionReg } from "@/modules/data/utils
 import { selectTauxPoursuite, withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPression } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissage } from "@/modules/data/utils/tauxRemplissage";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
@@ -40,6 +43,7 @@ export const getFormationEtablissementsQuery = async ({
   codeNsf,
   positionQuadrant,
   withAnneeCommune,
+  formationSpecifique,
   search,
   order,
   orderBy,
@@ -71,7 +75,7 @@ export const getFormationEtablissementsQuery = async ({
     .leftJoin("departement", "departement.codeDepartement", "etablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
-    .leftJoin("dataFormation as dataFormationContinuum", "dataFormationContinuum.cfd", "indicateurSortie.cfdContinuum")
+    .leftJoin("formationView as formationContinuum", "formationContinuum.cfd", "indicateurSortie.cfdContinuum")
     .leftJoin("formationHistorique", (join) =>
       join.onRef("formationHistorique.ancienCFD", "=", "formationView.cfd").on(isScolaireFormationHistorique)
     )
@@ -95,6 +99,12 @@ export const getFormationEtablissementsQuery = async ({
         ])
       )
     )
+    .leftJoin("actionPrioritaire", (join) =>
+      join
+        .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
+        .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
+        .onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion")
+    )
     .select((eb) => [
       sql<number>`COUNT(*) OVER()`.as("count"),
       "etablissement.libelleEtablissement",
@@ -115,12 +125,12 @@ export const getFormationEtablissementsQuery = async ({
       "etablissement.uai as uai",
       "formationView.typeFamille",
       "familleMetier.libelleFamille",
-      "libelleDispositif",
+      "dispositif.libelleDispositif",
       "formationEtablissement.codeDispositif",
-      "libelleNiveauDiplome",
+      "niveauDiplome.libelleNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
       "indicateurEtablissement.valeurAjoutee",
-      "anneeDebut",
+      "indicateurEntree.anneeDebut",
       "formationHistorique.cfd as formationRenovee",
       selectTauxRemplissage("indicateurEntree").as("tauxRemplissage"),
       effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
@@ -143,12 +153,11 @@ export const getFormationEtablissementsQuery = async ({
         .then(
           jsonBuildObject({
             cfd: eb.ref("indicateurSortie.cfdContinuum"),
-            libelleFormation: eb.ref("dataFormationContinuum.libelleFormation"),
+            libelleFormation: eb.ref("formationContinuum.libelleFormation"),
           })
         )
         .end()
         .as("continuumEtablissement"),
-
       eb
         .selectFrom("formationHistorique")
         .select("formationHistorique.cfd")
@@ -156,6 +165,11 @@ export const getFormationEtablissementsQuery = async ({
         .where("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
         .limit(1)
         .as("isFormationRenovee"),
+      isFormationActionPrioritaire({
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
       sql<string | null>`
         case when ${eb.ref("formationView.dateFermeture")} is not null
         then to_char(${eb.ref("formationView.dateFermeture")}, 'dd/mm/yyyy')
@@ -181,6 +195,9 @@ export const getFormationEtablissementsQuery = async ({
         )
         .end()
         .as("positionQuadrant"),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .$narrowType<{
       continuumEtablissement: { cfd: string; libelleFormation: string };
@@ -315,6 +332,27 @@ export const getFormationEtablissementsQuery = async ({
       if (!positionQuadrant) return eb;
       return eb.where("positionQuadrant", "in", positionQuadrant);
     })
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        return q.where((w) =>
+          w.or([
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])
+              ? w("actionPrioritaire.cfd", "is not", null)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])
+              ? w("formationView.isTransitionEcologique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])
+              ? w("formationView.isTransitionDemographique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
+              ? w("formationView.isTransitionNumerique", "=", true)
+              : sql.val(false),
+          ])
+        );
+      }
+      return q;
+    })
     .where(isInPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
     .groupBy([
@@ -326,6 +364,9 @@ export const getFormationEtablissementsQuery = async ({
       "formationView.dateFermeture",
       "formationView.cpc",
       "formationView.cpcSecteur",
+      "formationView.isTransitionDemographique",
+      "formationView.isTransitionEcologique",
+      "formationView.isTransitionNumerique",
       "nsf.libelleNsf",
       "formationHistorique.cfd",
       "etablissement.id",
@@ -338,7 +379,7 @@ export const getFormationEtablissementsQuery = async ({
       "indicateurEntree.formationEtablissementId",
       "indicateurSortie.formationEtablissementId",
       "indicateurSortie.millesimeSortie",
-      "dataFormationContinuum.libelleFormation",
+      "formationContinuum.libelleFormation",
       "formationEtablissement.id",
       "formationEtablissement.codeDispositif",
       "libelleDispositif",
@@ -357,15 +398,15 @@ export const getFormationEtablissementsQuery = async ({
     .orderBy("libelleNiveauDiplome", "asc")
     .offset(offset)
     .limit(limit)
-    .execute();
+    .execute()
+    .then(cleanNull);
 
   return {
     count: result[0]?.count ?? 0,
-    etablissements: result.map((etablissement) =>
-      cleanNull({
-        ...etablissement,
-        isFormationRenovee: !!etablissement.isFormationRenovee,
-      })
-    ),
+    etablissements: result.map((etablissement) => ({
+      ...etablissement,
+      isFormationRenovee: !!etablissement.isFormationRenovee,
+      formationSpecifique: formatFormationSpecifique(etablissement),
+    })),
   };
 };

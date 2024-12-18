@@ -39,6 +39,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
       cfd: "CFD",
       libelleNsf: "Domaine de formation (NSF)",
       libelleFormation: "Formation",
+      formationSpecifique: "Formation spécifique",
       codeDispositif: "Code Dispositif",
       libelleDispositif: "Dispositif",
       niveauDiplome: "Diplôme",
@@ -174,6 +175,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
     options: {
       libelleNsf: "Domaine de formation (NSF)",
       libelleFormation: "Formation",
+      formationSpecifique: "Formation spécifique",
       niveauDiplome: "Diplôme",
     },
   },

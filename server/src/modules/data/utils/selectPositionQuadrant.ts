@@ -2,7 +2,7 @@ import type { ExpressionBuilder } from "kysely";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { TypeFamilleEnum } from "shared/enum/typeFamille";
 
-import type { DB } from "@/db/schema";
+import type { DB } from "@/db/db";
 
 export const selectPositionQuadrant = ({
   eb,

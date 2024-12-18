@@ -6,14 +6,13 @@ import { VoieEnum } from "shared/enum/voieEnum";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.usecase";
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
 import {
   isRestitutionIntentionRegionVisible,
   isRestitutionIntentionVisible,
 } from "@/modules/utils/isRestitutionIntentionVisible";
 import { cleanNull } from "@/utils/noNull";
-
-import type { Filters } from "./getDemandesRestitutionIntentions.query";
 
 export const getFilters = async ({
   statut,
@@ -101,8 +100,8 @@ export const getFilters = async ({
 
   const geoFiltersBase = getKbdClient()
     .selectFrom("region")
-    .leftJoin("departement", "departement.codeRegion", "region.codeRegion")
-    .leftJoin("academie", "academie.codeRegion", "region.codeRegion")
+    .innerJoin("departement", "departement.codeRegion", "region.codeRegion")
+    .innerJoin("academie", "academie.codeRegion", "region.codeRegion")
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -149,15 +148,15 @@ export const getFilters = async ({
 
   const filtersBase = getKbdClient()
     .selectFrom("latestDemandeIntentionView as demande")
-    .leftJoin("region", "region.codeRegion", "demande.codeRegion")
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
-    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
-    .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
-    .leftJoin("departement", "departement.codeRegion", "demande.codeRegion")
-    .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
-    .leftJoin("campagne", "campagne.id", "demande.campagneId")
+    .innerJoin("region", "region.codeRegion", "demande.codeRegion")
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
+    .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .innerJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
+    .innerJoin("departement", "departement.codeRegion", "demande.codeRegion")
+    .innerJoin("academie", "academie.codeRegion", "demande.codeRegion")
+    .innerJoin("campagne", "campagne.id", "demande.campagneId")
     .where(isDemandeNotDeleted)
     .where(isRestitutionIntentionVisible({ user }))
     .distinct()
@@ -295,7 +294,7 @@ export const getFilters = async ({
     .execute();
 
   const libellesNsf = await filtersBase
-    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
+    .innerJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
     .select(["nsf.libelleNsf as label", "nsf.codeNsf as value"])
     .where("nsf.libelleNsf", "is not", null)
     .where((eb) => {

@@ -2,6 +2,7 @@ import { Flex, Tag, Text } from "@chakra-ui/react";
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 
@@ -40,7 +41,7 @@ export const CfdAutocompleteInput = ({
   onChange,
 }: {
   name: string;
-  defaultValue?: { value: string; label: string };
+  defaultValue?: OptionSchema;
   disabled?: boolean;
   inError: boolean;
   onChange: (value?: (typeof client.infer)["[GET]/diplome/search/:search"][number]) => void;

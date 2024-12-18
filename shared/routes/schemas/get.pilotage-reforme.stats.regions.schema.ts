@@ -1,9 +1,7 @@
 import { z } from "zod";
 
-const OptionSchema = z.object({
-  label: z.coerce.string(),
-  value: z.coerce.string(),
-});
+import { OptionSchema } from "../../schema/optionSchema";
+
 const StatsRegionLineSchema = z.object({
   codeRegion: z.string(),
   libelleRegion: z.string().optional(),
