@@ -903,6 +903,7 @@ export interface User {
   enabled: Generated<boolean>;
   sub: string | null;
   lastSeenAt: Timestamp | null;
+  fonction: string | null;
 }
 
 export interface DB {
