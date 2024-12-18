@@ -19,7 +19,8 @@ import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "@/modules/data/utils/tauxRemplissage";
-import { isFormationActionPrioritaireEtablissement } from "@/modules/utils/isFormationActionPrioritaire";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
@@ -110,7 +111,6 @@ export const getFormationsQuery = async ({
             )
             .end()
             .as("positionQuadrant"),
-          isFormationActionPrioritaireEtablissement(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
         ])
         .$call((eb) => {
           if (!positionQuadrant) return eb;
@@ -209,6 +209,11 @@ export const getFormationsQuery = async ({
           else null
           end
         `.as("dateFermeture"),
+      isFormationActionPrioritaire({
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
@@ -356,7 +361,6 @@ export const getFormationsQuery = async ({
       }
       return q;
     })
-    .$narrowType<{ isFormationActionPrioritaire: boolean }>()
     .orderBy("libelleFormation", "asc")
     .orderBy("libelleNiveauDiplome", "asc")
     .orderBy("libelleDispositif", "asc")
@@ -364,28 +368,15 @@ export const getFormationsQuery = async ({
     .orderBy("nbEtablissement", "asc")
     .offset(offset)
     .limit(limit)
-    .execute();
+    .execute()
+    .then(cleanNull);
 
   return {
     count: result[0]?.count ?? 0,
-    formations: result.map((formation) =>
-      cleanNull({
-        ...formation,
-        isFormationRenovee: !!formation.isFormationRenovee,
-        formationSpecifique: {
-          // rustine pour que le typage soit correct
-          [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
-            TypeFormationSpecifiqueEnum["Action prioritaire"] in formation
-              ? !!formation[TypeFormationSpecifiqueEnum["Action prioritaire"]]
-              : false,
-          [TypeFormationSpecifiqueEnum["Transition démographique"]]:
-            !!formation[TypeFormationSpecifiqueEnum["Transition démographique"]],
-          [TypeFormationSpecifiqueEnum["Transition écologique"]]:
-            !!formation[TypeFormationSpecifiqueEnum["Transition écologique"]],
-          [TypeFormationSpecifiqueEnum["Transition numérique"]]:
-            !!formation[TypeFormationSpecifiqueEnum["Transition numérique"]],
-        },
-      })
-    ),
+    formations: result.map((formation) => ({
+      ...formation,
+      isFormationRenovee: !!formation.isFormationRenovee,
+      formationSpecifique: formatFormationSpecifique(formation),
+    })),
   };
 };

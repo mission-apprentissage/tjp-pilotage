@@ -10,7 +10,6 @@ import { BadgeActionPrioritaire } from "./BadgeActionPrioritaire";
 import { BadgeTransitionDemographique } from "./BadgeTransitionDemographique";
 import { BadgeTransitionEcologique } from "./BadgeTransitionEcologique";
 import { BadgeTransitionNumerique } from "./BadgeTransitionNumerique";
-import { TooltipIcon } from "./TooltipIcon";
 
 const BadgeFormationSpecifique = chakra(
   ({

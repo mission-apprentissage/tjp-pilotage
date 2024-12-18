@@ -17,8 +17,9 @@ import {
   countDifferenceCapaciteScolaire,
   countDifferenceCapaciteScolaireColoree,
 } from "@/modules/utils/countCapacite";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
-import { isFormationActionPrioritaireDemande } from "@/modules/utils/isFormationActionPrioritaire";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
 import { cleanNull } from "@/utils/noNull";
 
@@ -103,7 +104,11 @@ export const getDemandes = async ({
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
       selectPositionQuadrant(eb).as("positionQuadrant"),
-      isFormationActionPrioritaireDemande(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      isFormationActionPrioritaire({
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
@@ -116,27 +121,17 @@ export const getDemandes = async ({
     .where(isRestitutionIntentionVisible({ user }))
     .offset(offset)
     .limit(limit)
-    .execute();
+    .execute()
+    .then(cleanNull);
 
   return {
-    demandes: demandes.map((demande) =>
-      cleanNull({
-        ...demande,
-        statut: castDemandeStatutWithoutSupprimee(demande.statut),
-        createdAt: demande.createdAt?.toISOString(),
-        updatedAt: demande.updatedAt?.toISOString(),
-        formationSpecifique: {
-          [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
-            !!demande[TypeFormationSpecifiqueEnum["Action prioritaire"]],
-          [TypeFormationSpecifiqueEnum["Transition démographique"]]:
-            !!demande[TypeFormationSpecifiqueEnum["Transition démographique"]],
-          [TypeFormationSpecifiqueEnum["Transition écologique"]]:
-            !!demande[TypeFormationSpecifiqueEnum["Transition écologique"]],
-          [TypeFormationSpecifiqueEnum["Transition numérique"]]:
-            !!demande[TypeFormationSpecifiqueEnum["Transition numérique"]],
-        },
-      })
-    ),
+    demandes: demandes.map((demande) => ({
+      ...demande,
+      statut: castDemandeStatutWithoutSupprimee(demande.statut),
+      createdAt: demande.createdAt?.toISOString(),
+      updatedAt: demande.updatedAt?.toISOString(),
+      formationSpecifique: formatFormationSpecifique(demande),
+    })),
     count: parseInt(demandes[0]?.count) || 0,
   };
 };

@@ -7,9 +7,14 @@ import { getDataForPanoramaDepartementRoute } from "./usecases/getDataForPanoram
 import { getDataForPanoramaRegionRoute } from "./usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.route";
 import { getDepartementRoute } from "./usecases/getDepartement/getDepartement.route";
 import { getDepartementsRoute } from "./usecases/getDepartements/getDepartements.route";
+import { getDomaineDeFormationRoute } from "./usecases/getDomaineDeFormation/getDomaineDeFormation.route";
+import { getDomainesDeFormationRoute } from "./usecases/getDomainesDeFormation/getDomainesDeFormation.route";
 import { getEtablissementRoute } from "./usecases/getEtablissement/getEtablissement.route";
+import { getFormationRoute } from "./usecases/getFormation/getFormation.route";
+import { getFormationCarteEtablissementsRoute } from "./usecases/getFormationCarteEtablissements/getFormationCarteEtablissements.route";
 import { getFormationEtablissementsRoutes } from "./usecases/getFormationEtablissements/getFormationEtablissements.routes";
-import { getFormationsRoute } from "./usecases/getFormations/getFormations.routes";
+import { getFormationIndicateursRoute } from "./usecases/getFormationIndicateurs/getFormationIndicateurs.route";
+import { getFormationsRoute } from "./usecases/getFormations/getFormations.route";
 import { getHeaderEtablissementRoute } from "./usecases/getHeaderEtablissement/getHeaderEtablissement.route";
 import { getPilotageIntentionsRoute } from "./usecases/getPilotageIntentions/getPilotageIntentions.route";
 import { getPilotageReformeStatsRoute } from "./usecases/getPilotageReformeStats/getPilotageReformeStats.route";
@@ -55,5 +60,10 @@ export const registerDataModule = (server: Server) => {
     ...searchDisciplineRoute(server),
     ...searchFiliereRoute(server),
     ...searchCampusRoute(server),
+    ...getDomainesDeFormationRoute(server),
+    ...getFormationRoute(server),
+    ...getDomaineDeFormationRoute(server),
+    ...getFormationIndicateursRoute(server),
+    ...getFormationCarteEtablissementsRoute(server),
   };
 };
