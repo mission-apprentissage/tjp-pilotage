@@ -1,7 +1,7 @@
 import type { AxiosError } from "axios";
 import axios from "axios";
 import rateLimit from "axios-rate-limit";
-import axiosRetry, { isNetworkError } from "axios-retry";
+import axiosRetry, { exponentialDelay, isNetworkError } from "axios-retry";
 
 import config from "@/config";
 
@@ -55,7 +55,7 @@ axiosRetry(instance, {
   retries: 3,
   retryCondition,
   shouldResetTimeout: true,
-  retryDelay: axiosRetry.exponentialDelay,
+  retryDelay: exponentialDelay,
 });
 
 const setInstanceBearerToken = (token: string) => {

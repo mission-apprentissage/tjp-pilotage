@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
@@ -218,11 +218,7 @@ export default function Etablissements() {
 
     const { columns, etablissements } = getDataForExport(data);
 
-    downloadCsv(
-      formatExportFilename("etablissement_export", isFiltered ? filters : undefined),
-      etablissements,
-      columns
-    );
+    downloadCsv(formatExportFilename("etablissement_export"), etablissements, columns);
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
@@ -233,11 +229,7 @@ export default function Etablissements() {
 
     const { columns, etablissements } = getDataForExport(data);
 
-    downloadExcel(
-      formatExportFilename("etablissement_export", isFiltered ? filters : undefined),
-      etablissements,
-      columns
-    );
+    downloadExcel(formatExportFilename("etablissement_export"), etablissements, columns);
   };
 
   const [colonneFilters, setColonneFilters] = useState<(keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]>(
@@ -357,6 +349,7 @@ export default function Etablissements() {
       filters.uai = uaisFilter;
       setSearchParams({ filters: filters });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

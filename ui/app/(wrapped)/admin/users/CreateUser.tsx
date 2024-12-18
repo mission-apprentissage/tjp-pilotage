@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { Role } from "shared";
 import { getHierarchy } from "shared";
+import { UserFonctionEnum } from "shared/enum/userFonction";
 import { z } from "zod";
 
 import { client } from "@/api.client";
@@ -155,6 +156,19 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
               <AlertDescription>{getErrorMessage(error)}</AlertDescription>
             </Alert>
           )}
+
+          <FormControl mb="4" isInvalid={!!errors.fonction}>
+            <FormLabel>Fonction de l'utilisateur</FormLabel>
+            <Select {...register("fonction")}>
+              {<option value="">Aucune</option>}
+              {Object.keys(UserFonctionEnum)?.map((userFonction) => (
+                <option key={userFonction} value={userFonction}>
+                  {userFonction}
+                </option>
+              ))}
+            </Select>
+            {!!errors.fonction && <FormErrorMessage>{errors.fonction.message}</FormErrorMessage>}
+          </FormControl>
         </ModalBody>
 
         <ModalFooter>

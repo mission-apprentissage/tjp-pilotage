@@ -18,8 +18,8 @@ const formatCFDDiplomeProfessionnel = (line: DiplomeProfessionnelLine) => {
 };
 
 const formatCFDOffreApprentissage = (line: Offres_apprentissage) => {
-  if (!line["Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)"]) return;
-  const cfd = line["Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)"];
+  if (!line["Formation: code CFD"]) return;
+  const cfd = line["Formation: code CFD"];
 
   if (isNaN(parseInt(cfd))) return;
   return cfd;
