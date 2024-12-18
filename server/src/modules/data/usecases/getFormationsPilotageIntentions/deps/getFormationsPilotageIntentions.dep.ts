@@ -24,9 +24,10 @@ import {
   countPlacesOuvertes,
   countPlacesTransformeesParCampagne,
 } from "@/modules/utils/countCapacite";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isDemandeProjetOrValidee } from "@/modules/utils/isDemandeProjetOrValidee";
 import { isDemandeNotDeletedOrRefused } from "@/modules/utils/isDemandeSelectable";
-import { isFormationActionPrioritaireDemande } from "@/modules/utils/isFormationActionPrioritaire";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
 
 import { getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery } from "./getEffectifsParCampagneCodeNiveauDiplomeCodeRegion.dep";
@@ -182,7 +183,11 @@ export const getFormationsPilotageIntentionsQuery = ({
         codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("continuum"),
-      isFormationActionPrioritaireDemande(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      isFormationActionPrioritaire({
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
@@ -286,21 +291,11 @@ export const getFormationsPilotageIntentionsQuery = ({
     ])
     .orderBy("tauxDevenirFavorable", "desc")
     .execute()
+    .then(cleanNull)
     .then((formations) =>
-      formations.map((formation) =>
-        cleanNull({
-          ...formation,
-          formationSpecifique: {
-            [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
-              !!formation[TypeFormationSpecifiqueEnum["Action prioritaire"]],
-            [TypeFormationSpecifiqueEnum["Transition démographique"]]:
-              !!formation[TypeFormationSpecifiqueEnum["Transition démographique"]],
-            [TypeFormationSpecifiqueEnum["Transition écologique"]]:
-              !!formation[TypeFormationSpecifiqueEnum["Transition écologique"]],
-            [TypeFormationSpecifiqueEnum["Transition numérique"]]:
-              !!formation[TypeFormationSpecifiqueEnum["Transition numérique"]],
-          },
-        })
-      )
+      formations.map((formation) => ({
+        ...formation,
+        formationSpecifique: formatFormationSpecifique(formation),
+      }))
     );
 };
