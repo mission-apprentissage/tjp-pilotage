@@ -5,29 +5,31 @@ import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
-export const Effectifs = ({ effectifEntree, capacite }: { effectifEntree?: number; capacite?: number }) => {
-  const { openGlossaire } = useGlossaireContext();
-  const getCompareData = () => {
-    if (!effectifEntree || !capacite) return "";
-    if (capacite > effectifEntree) {
-      return (
-        <Text fontWeight={"bold"} color="warning.525">
-          {`${capacite - effectifEntree} pl. vacante(s)`}
-        </Text>
-      );
-    } else if (capacite < effectifEntree) {
-      return (
-        <Text fontWeight={"bold"} color={"success.425"}>
-          {`${effectifEntree - capacite} pl. en surnombre`}
-        </Text>
-      );
-    }
+const getCompareData = ({ effectifEntree, capacite }: { effectifEntree?: number; capacite?: number }) => {
+  if (!effectifEntree || !capacite) return "";
+  if (capacite > effectifEntree) {
     return (
-      <Text fontWeight={"bold"} color="grey.625">
-        0 pl. vacante
+      <Text fontWeight={"bold"} color="warning.525">
+        {`${capacite - effectifEntree} pl. vacante(s)`}
       </Text>
     );
-  };
+  } else if (capacite < effectifEntree) {
+    return (
+      <Text fontWeight={"bold"} color={"success.425"}>
+        {`${effectifEntree - capacite} pl. en surnombre`}
+      </Text>
+    );
+  }
+  return (
+    <Text fontWeight={"bold"} color="grey.625">
+      0 pl. vacante
+    </Text>
+  );
+};
+
+export const Effectifs = ({ effectifEntree, capacite }: { effectifEntree?: number; capacite?: number }) => {
+  const { openGlossaire } = useGlossaireContext();
+
   return (
     <DashboardCard
       label="Effectifs en entrée (Constat Rentrée 2023)"
@@ -49,7 +51,7 @@ export const Effectifs = ({ effectifEntree, capacite }: { effectifEntree?: numbe
         </Badge>
       }
     >
-      <CounterChart data={effectifEntree} compareData={getCompareData()} />
+      <CounterChart data={effectifEntree} compareData={getCompareData({ effectifEntree, capacite })} />
     </DashboardCard>
   );
 };
