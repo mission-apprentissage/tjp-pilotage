@@ -364,8 +364,6 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
         const result = await response.json<Response>();
 
-        console.log(result.tauxPressions);
-
         const tauxPressionFound = result.tauxPressions.find(
           (tp) => tp.rentreeScolaire === rs && tp.scope === scope && tp.value === tauxPression
         );

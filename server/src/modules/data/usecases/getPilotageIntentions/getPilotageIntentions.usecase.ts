@@ -186,7 +186,6 @@ const getPilotageIntentionsFactory =
     ]);
 
     return {
-      stats: {},
       repartition: {
         // Répartitions non ordonnées
         top10Domaines: formatResult(domaines, "desc", "placesTransformees"),
