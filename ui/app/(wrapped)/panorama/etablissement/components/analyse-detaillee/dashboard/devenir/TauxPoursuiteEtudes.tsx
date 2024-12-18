@@ -11,26 +11,31 @@ import type { ChiffresIJOffre } from "@/app/(wrapped)/panorama/etablissement/com
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
+const checkDataAvailability = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOffre }): boolean => {
+  if (chiffresIJOffre) {
+    return Object.values(chiffresIJOffre).findIndex((value) => value.tauxPoursuite) !== -1;
+  }
+  return false;
+};
+
+const getVerticalBarChartData = ({
+  chiffresIJOffre,
+}: {
+  chiffresIJOffre?: ChiffresIJOffre;
+}): { label: string; value: number }[] => {
+  if (chiffresIJOffre) {
+    return Object.keys(chiffresIJOffre)
+      .filter((millesime) => chiffresIJOffre[millesime].tauxPoursuite)
+      .map((millesime) => ({
+        label: formatMillesime(millesime),
+        value: formatTaux(chiffresIJOffre[millesime].tauxPoursuite),
+      }));
+  }
+  return [];
+};
+
 export const TauxPoursuiteEtudes = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOffre }) => {
   const { openGlossaire } = useGlossaireContext();
-  const checkDataAvailability = (): boolean => {
-    if (chiffresIJOffre) {
-      return Object.values(chiffresIJOffre).findIndex((value) => value.tauxPoursuite) !== -1;
-    }
-    return false;
-  };
-
-  const getVerticalBarChartData = (): { label: string; value: number }[] => {
-    if (chiffresIJOffre) {
-      return Object.keys(chiffresIJOffre)
-        .filter((millesime) => chiffresIJOffre[millesime].tauxPoursuite)
-        .map((millesime) => ({
-          label: formatMillesime(millesime),
-          value: formatTaux(chiffresIJOffre[millesime].tauxPoursuite),
-        }));
-    }
-    return [];
-  };
   return (
     <DashboardCard
       label={"Poursuite d'études"}
@@ -52,8 +57,8 @@ export const TauxPoursuiteEtudes = ({ chiffresIJOffre }: { chiffresIJOffre?: Chi
         </Badge>
       }
     >
-      {checkDataAvailability() ? (
-        <VerticalBarChart title="Poursuite d'études" data={getVerticalBarChartData()} />
+      {checkDataAvailability({ chiffresIJOffre }) ? (
+        <VerticalBarChart title="Poursuite d'études" data={getVerticalBarChartData({ chiffresIJOffre })} />
       ) : (
         <CounterChart />
       )}
