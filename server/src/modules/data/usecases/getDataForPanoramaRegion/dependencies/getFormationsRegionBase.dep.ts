@@ -15,7 +15,7 @@ import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "@/modules/data/utils/tauxRemplissage";
-import { isFormationActionPrioritaireEtablissement } from "@/modules/utils/isFormationActionPrioritaire";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 
 export const getFormationsRegionBase = ({
   codeRegion,
@@ -135,7 +135,11 @@ export const getFormationsRegionBase = ({
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
       "positionFormationRegionaleQuadrant.positionQuadrant",
-      isFormationActionPrioritaireEtablissement(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      isFormationActionPrioritaire({
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),

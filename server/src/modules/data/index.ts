@@ -15,7 +15,7 @@ import { getFormationRoute } from "./usecases/getFormation/getFormation.route";
 import { getFormationCarteEtablissementsRoute } from "./usecases/getFormationCarteEtablissements/getFormationCarteEtablissements.route";
 import { getFormationEtablissementsRoutes } from "./usecases/getFormationEtablissements/getFormationEtablissements.routes";
 import { getFormationIndicateursRoute } from "./usecases/getFormationIndicateurs/getFormationIndicateurs.route";
-import { getFormationsRoute } from "./usecases/getFormations/getFormations.routes";
+import { getFormationsRoute } from "./usecases/getFormations/getFormations.route";
 import { getFormationsPilotageIntentionsRoute } from "./usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.route";
 import { getHeaderEtablissementRoute } from "./usecases/getHeaderEtablissement/getHeaderEtablissement.route";
 import { getPilotageReformeStatsRoute } from "./usecases/getPilotageReformeStats/getPilotageReformeStats.route";

@@ -15,9 +15,10 @@ import {
   countDifferenceCapaciteApprentissageIntention,
   countDifferenceCapaciteScolaireIntention,
 } from "@/modules/utils/countCapacite";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isAvisVisible } from "@/modules/utils/isAvisVisible";
 import { isIntentionNotDeleted, isIntentionSelectable } from "@/modules/utils/isDemandeSelectable";
-import { isFormationActionPrioritaireIntention } from "@/modules/utils/isFormationActionPrioritaire";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
 
 export interface Filters extends z.infer<typeof getIntentionSchema.params> {
@@ -113,7 +114,11 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
       "departement.codeDepartement",
-      isFormationActionPrioritaireIntention(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      isFormationActionPrioritaire({
+        cfdRef: "intention.cfd",
+        codeDispositifRef: "intention.codeDispositif",
+        codeRegionRef: "intention.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
@@ -124,6 +129,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     .where("intention.numero", "=", numero)
     .limit(1)
     .executeTakeFirstOrThrow()
+    .then(cleanNull)
     .catch(() => {
       throw Boom.notFound(`Aucune intention trouvée pour le numéro ${numero}`, {
         errors: {
@@ -150,7 +156,8 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       "user.role as userRole",
       sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref("user.lastname")})`.as("userFullName"),
     ])
-    .execute();
+    .execute()
+    .then(cleanNull);
 
   const avis = await getKbdClient()
     .selectFrom("avis")
@@ -169,47 +176,36 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       ),
     ])
     .where(isAvisVisible({ user }))
-    .execute();
+    .execute()
+    .then(cleanNull);
 
-  return (
-    intention &&
-    cleanNull({
-      ...intention,
-      metadata: cleanNull({
-        ...intention.metadata,
-        formation: cleanNull(intention.metadata.formation),
-        etablissement: cleanNull(intention.metadata.etablissement),
-      }),
-      createdAt: intention.createdAt?.toISOString(),
-      updatedAt: intention.updatedAt?.toISOString(),
-      campagne: cleanNull({
-        ...intention.campagne,
-      }),
-      statut: castDemandeStatutWithoutSupprimee(intention.statut),
-      changementsStatut: changementsStatut.map((changementStatut) => ({
-        ...changementStatut,
-        statut: castDemandeStatutWithoutSupprimee(changementStatut.statut),
-        statutPrecedent: castDemandeStatutWithoutSupprimee(changementStatut.statutPrecedent),
-        updatedAt: changementStatut.updatedAt?.toISOString(),
-      })),
-      avis: avis.map((avis) => ({
-        ...avis,
-        createdAt: avis.createdAt?.toISOString(),
-        updatedAt: avis.updatedAt?.toISOString(),
-        updatedByFullName: avis.updatedByFullName.trim() ?? null,
-        statutAvis: castAvisStatut(avis.statutAvis),
-        typeAvis: castAvisType(avis.typeAvis),
-      })),
-      formationSpecifique: {
-        [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
-          !!intention[TypeFormationSpecifiqueEnum["Action prioritaire"]],
-        [TypeFormationSpecifiqueEnum["Transition démographique"]]:
-          !!intention[TypeFormationSpecifiqueEnum["Transition démographique"]],
-        [TypeFormationSpecifiqueEnum["Transition écologique"]]:
-          !!intention[TypeFormationSpecifiqueEnum["Transition écologique"]],
-        [TypeFormationSpecifiqueEnum["Transition numérique"]]:
-          !!intention[TypeFormationSpecifiqueEnum["Transition numérique"]],
-      },
-    })
-  );
+  return {
+    ...intention,
+    metadata: {
+      ...intention.metadata,
+      formation: intention.metadata.formation,
+      etablissement: intention.metadata.etablissement,
+    },
+    createdAt: intention.createdAt?.toISOString(),
+    updatedAt: intention.updatedAt?.toISOString(),
+    campagne: {
+      ...intention.campagne,
+    },
+    statut: castDemandeStatutWithoutSupprimee(intention.statut),
+    changementsStatut: changementsStatut.map((changementStatut) => ({
+      ...changementStatut,
+      statut: castDemandeStatutWithoutSupprimee(changementStatut.statut),
+      statutPrecedent: castDemandeStatutWithoutSupprimee(changementStatut.statutPrecedent),
+      updatedAt: changementStatut.updatedAt?.toISOString(),
+    })),
+    avis: avis.map((avis) => ({
+      ...avis,
+      createdAt: avis.createdAt?.toISOString(),
+      updatedAt: avis.updatedAt?.toISOString(),
+      updatedByFullName: avis.updatedByFullName.trim() ?? null,
+      statutAvis: castAvisStatut(avis.statutAvis),
+      typeAvis: castAvisType(avis.typeAvis),
+    })),
+    formationSpecifique: formatFormationSpecifique(intention),
+  };
 };

@@ -13,8 +13,9 @@ import { selectTauxDevenirFavorable } from "@/modules/data/utils/tauxDevenirFavo
 import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
-import { isFormationActionPrioritaireDemande } from "@/modules/utils/isFormationActionPrioritaire";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
@@ -155,7 +156,11 @@ export const getCorrectionsQuery = async ({
       "correction.updatedAt",
       "correction.commentaire",
       selectPositionQuadrant(eb).as("positionQuadrant"),
-      isFormationActionPrioritaireDemande(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      isFormationActionPrioritaire({
+        cfdRef: "demande.cfd",
+        codeDispositifRef: "demande.codeDispositif",
+        codeRegionRef: "demande.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
@@ -304,29 +309,24 @@ export const getCorrectionsQuery = async ({
     .where(isDemandeNotDeleted)
     .offset(offset)
     .limit(limit)
-    .execute();
+    .execute()
+    .then(cleanNull);
 
-  const campagnes = await getKbdClient().selectFrom("campagne").selectAll().orderBy("annee desc").execute();
+  const campagnes = await getKbdClient()
+    .selectFrom("campagne")
+    .selectAll()
+    .orderBy("annee desc")
+    .execute()
+    .then(cleanNull);
 
   return {
-    corrections: corrections.map((correction) =>
-      cleanNull({
-        ...correction,
-        createdAt: correction.createdAt?.toISOString(),
-        updatedAt: correction.updatedAt?.toISOString(),
-        formationSpecifique: {
-          [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
-            !!correction[TypeFormationSpecifiqueEnum["Action prioritaire"]],
-          [TypeFormationSpecifiqueEnum["Transition démographique"]]:
-            !!correction[TypeFormationSpecifiqueEnum["Transition démographique"]],
-          [TypeFormationSpecifiqueEnum["Transition écologique"]]:
-            !!correction[TypeFormationSpecifiqueEnum["Transition écologique"]],
-          [TypeFormationSpecifiqueEnum["Transition numérique"]]:
-            !!correction[TypeFormationSpecifiqueEnum["Transition numérique"]],
-        },
-      })
-    ),
-    campagnes: campagnes.map(cleanNull),
+    corrections: corrections.map((correction) => ({
+      ...correction,
+      createdAt: correction.createdAt?.toISOString(),
+      updatedAt: correction.updatedAt?.toISOString(),
+      formationSpecifique: formatFormationSpecifique(correction),
+    })),
+    campagnes,
     count: corrections[0]?.count || 0,
   };
 };
