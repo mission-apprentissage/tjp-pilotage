@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
@@ -18,6 +19,8 @@ import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "@/modules/data/utils/tauxRemplissage";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
@@ -38,6 +41,7 @@ export const getFormationsQuery = async ({
   positionQuadrant,
   search,
   withEmptyFormations = "true",
+  formationSpecifique,
   withAnneeCommune,
   order,
   orderBy,
@@ -69,6 +73,14 @@ export const getFormationsQuery = async ({
       join.onRef("formationHistorique.ancienCFD", "=", "formationView.cfd").on(isScolaireFormationHistorique)
     )
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
+    .leftJoin("actionPrioritaire", (join) =>
+      join
+        .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
+        .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
+        .$call((join) =>
+          codeRegion ? join.onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion") : join
+        )
+    )
     .$call((eb) => {
       if (!codeRegion) return eb;
       return eb
@@ -79,7 +91,7 @@ export const getFormationsQuery = async ({
             .onRef("positionFormationRegionaleQuadrant.codeRegion", "=", "etablissement.codeRegion")
             .on("positionFormationRegionaleQuadrant.millesimeSortie", "=", millesimeSortie)
         )
-        .select((eb) =>
+        .select((eb) => [
           eb
             .case()
             .when(eb("formationView.typeFamille", "in", ["1ere_commune", "2nde_commune"]))
@@ -98,13 +110,13 @@ export const getFormationsQuery = async ({
               )`
             )
             .end()
-            .as("positionQuadrant")
-        )
+            .as("positionQuadrant"),
+        ])
         .$call((eb) => {
           if (!positionQuadrant) return eb;
           return eb.where("positionQuadrant", "in", positionQuadrant);
         })
-        .groupBy("positionQuadrant");
+        .groupBy(["positionQuadrant", "etablissement.codeRegion"]);
     })
     .select((eb) => [
       sql<number>`COUNT(*) OVER()`.as("count"),
@@ -119,9 +131,9 @@ export const getFormationsQuery = async ({
       "formationView.cpcSecteur",
       "nsf.libelleNsf",
       "familleMetier.libelleFamille",
-      "libelleDispositif",
+      "dispositif.libelleDispositif",
       "dispositif.codeDispositif",
-      "libelleNiveauDiplome",
+      "niveauDiplome.libelleNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
       sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
@@ -197,6 +209,14 @@ export const getFormationsQuery = async ({
           else null
           end
         `.as("dateFermeture"),
+      isFormationActionPrioritaire({
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .where(isInPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
@@ -230,6 +250,9 @@ export const getFormationsQuery = async ({
       "formationView.dateFermeture",
       "formationView.cpc",
       "formationView.cpcSecteur",
+      "formationView.isTransitionDemographique",
+      "formationView.isTransitionEcologique",
+      "formationView.isTransitionNumerique",
       "nsf.libelleNsf",
       "formationHistorique.cfd",
       "indicateurEntree.rentreeScolaire",
@@ -317,6 +340,27 @@ export const getFormationsQuery = async ({
       if (!codeRegion && orderBy === "positionQuadrant") return q;
       return q.orderBy(sql.ref(orderBy), sql`${sql.raw(order)} NULLS LAST`);
     })
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        return q.where((w) =>
+          w.or([
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])
+              ? w("actionPrioritaire.cfd", "is not", null)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])
+              ? w("formationView.isTransitionEcologique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])
+              ? w("formationView.isTransitionDemographique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
+              ? w("formationView.isTransitionNumerique", "=", true)
+              : sql.val(false),
+          ])
+        );
+      }
+      return q;
+    })
     .orderBy("libelleFormation", "asc")
     .orderBy("libelleNiveauDiplome", "asc")
     .orderBy("libelleDispositif", "asc")
@@ -324,15 +368,15 @@ export const getFormationsQuery = async ({
     .orderBy("nbEtablissement", "asc")
     .offset(offset)
     .limit(limit)
-    .execute();
+    .execute()
+    .then(cleanNull);
 
   return {
     count: result[0]?.count ?? 0,
-    formations: result.map((formation) =>
-      cleanNull({
-        ...formation,
-        isFormationRenovee: !!formation.isFormationRenovee,
-      })
-    ),
+    formations: result.map((formation) => ({
+      ...formation,
+      isFormationRenovee: !!formation.isFormationRenovee,
+      formationSpecifique: formatFormationSpecifique(formation),
+    })),
   };
 };

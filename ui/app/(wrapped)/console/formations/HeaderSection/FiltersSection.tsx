@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
 import { DeleteRequeteEnregistreeButton } from "@/app/(wrapped)/console/components/DeleteRequeteEnregistreeButton";
@@ -25,25 +25,49 @@ import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMA
 import type {
   Filters,
   FiltersList,
-  Formations,
   Order,
   RequetesEnregistrees,
+  RequetesSuggerees,
 } from "@/app/(wrapped)/console/formations/types";
 import { Multiselect } from "@/components/Multiselect";
 import { feature } from "@/utils/feature";
 
-const REQUETES_ENREGISTREES = [
+const REQUETES_SUGGEREES: RequetesSuggerees = [
   {
-    filtres: {},
-    nom: "Transition écologique",
-    couleur: "green.submitted",
+    filtres: {
+      formationSpecifique: [TypeFormationSpecifiqueEnum["Transition écologique"]],
+    },
+    nom: TypeFormationSpecifiqueEnum["Transition écologique"],
+    couleur: "success.950",
+    active: feature.formationsSpecifiqueConsole,
+    conditions: [],
   },
   {
     filtres: {
-      positionQuadrant: [PositionQuadrantEnum["Q4"]],
+      formationSpecifique: [TypeFormationSpecifiqueEnum["Transition démographique"]],
     },
-    nom: "Action prioritaire",
-    couleur: "redmarianne.625_hover",
+    nom: TypeFormationSpecifiqueEnum["Transition démographique"],
+    couleur: "grey.1000_active",
+    active: feature.formationsSpecifiqueConsole,
+    conditions: [],
+  },
+  {
+    filtres: {
+      formationSpecifique: [TypeFormationSpecifiqueEnum["Transition numérique"]],
+    },
+    nom: TypeFormationSpecifiqueEnum["Transition numérique"],
+    couleur: "bluefrance.925",
+    active: feature.formationsSpecifiqueConsole,
+    conditions: [],
+  },
+  {
+    filtres: {
+      formationSpecifique: [TypeFormationSpecifiqueEnum["Action prioritaire"]],
+    },
+    nom: TypeFormationSpecifiqueEnum["Action prioritaire"],
+    couleur: "yellowTournesol.950",
+    active: true,
+    conditions: ["codeRegion"],
   },
 ];
 
@@ -76,7 +100,6 @@ export const FiltersSection = ({
   requeteEnregistreeActuelle: { nom: string; couleur?: string };
   setRequeteEnregistreeActuelle: (requeteEnregistreeActuelle: { nom: string; couleur?: string }) => void;
 }) => {
-  const { onOpen, onClose, isOpen } = useDisclosure();
   const resetFilters = () => {
     setSearchParams({
       filters: {
@@ -91,6 +114,7 @@ export const FiltersSection = ({
         cfd: [],
         codeNsf: [],
         positionQuadrant: [],
+        formationSpecifique: [],
       },
       search: "",
     });
@@ -99,7 +123,11 @@ export const FiltersSection = ({
 
   const [deleteButtonToDisplay, setDeleteButtonToDisplay] = useState<string>("");
 
-  const hasRequetesEnregistrees = requetesEnregistrees && requetesEnregistrees.length > 0;
+  const filteredRequetesSuggerees = REQUETES_SUGGEREES.filter((r) => r.active).filter((r) =>
+    r.conditions?.every((condition) => searchParams.filters?.[condition as keyof Partial<Filters>])
+  );
+
+  const isDisabled = !filteredRequetesSuggerees.length && !requetesEnregistrees?.length;
 
   return (
     <Flex direction={"column"} gap={4} wrap={"wrap"}>
@@ -115,14 +143,7 @@ export const FiltersSection = ({
             borderStyle="solid"
             borderColor="grey.900"
             bg={"white"}
-            opacity={hasRequetesEnregistrees ? 1 : 0.5}
-            cursor={hasRequetesEnregistrees ? "pointer" : "not-allowed"}
-            onClick={(e) => {
-              if (!hasRequetesEnregistrees) {
-                onOpen();
-                e.preventDefault();
-              }
-            }}
+            isDisabled={isDisabled}
           >
             <Flex direction="row" gap={2} overflow={"hidden"} whiteSpace="nowrap">
               {requeteEnregistreeActuelle.couleur && (
@@ -170,21 +191,21 @@ export const FiltersSection = ({
                   <Text p={2} color="grey.425">
                     Requêtes suggérées
                   </Text>
-                  {REQUETES_ENREGISTREES.map((requeteEnregistree) => (
+                  {filteredRequetesSuggerees.map((requeteSuggeree) => (
                     <MenuItem
                       p={2}
-                      key={requeteEnregistree.nom}
+                      key={requeteSuggeree.nom}
                       onClick={() => {
                         setSearchParams({
                           page: 0,
-                          filters: requeteEnregistree.filtres,
+                          filters: { ...searchParams.filters, ...requeteSuggeree.filtres },
                         });
-                        setRequeteEnregistreeActuelle(requeteEnregistree);
+                        setRequeteEnregistreeActuelle(requeteSuggeree);
                       }}
                       gap={2}
                     >
-                      <Tag size={"sm"} bgColor={requeteEnregistree.couleur} borderRadius={"100%"} />
-                      <Flex direction="row">{requeteEnregistree.nom}</Flex>
+                      <Tag size={"sm"} bgColor={requeteSuggeree.couleur} borderRadius={"100%"} />
+                      <Flex direction="row">{requeteSuggeree.nom}</Flex>
                     </MenuItem>
                   ))}
                 </>
@@ -258,23 +279,6 @@ export const FiltersSection = ({
         filtersList={filtersList}
         isEditable={true}
       />
-      {isOpen && (
-        <CreateRequeteEnregistreeModal
-          page={"formation"}
-          isOpen={isOpen}
-          onClose={onClose}
-          searchParams={searchParams}
-          filtersList={filtersList}
-          altText={
-            <>
-              <Text>Vous n'avez pas encore de requête favorite enregistrée.</Text>
-              <Text fontWeight={400} color="grey.450" fontSize={15}>
-                En enregistrer une vous permettra de retrouver rapidement vos recherches.
-              </Text>
-            </>
-          }
-        />
-      )}
     </Flex>
   );
 };

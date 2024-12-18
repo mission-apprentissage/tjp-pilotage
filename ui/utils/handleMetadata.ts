@@ -75,6 +75,10 @@ const METADATA_MAP = {
     title: "Restitution des demandes de transformation - Orion",
     description: "Restitution des demandes de transformation de formation",
   },
+  "/intentions/corrections": {
+    title: "Restitution des corrections de demandes de transformation - Orion",
+    description: "Restitution des corrections de demandes de transformation de formation",
+  },
   "/pilotage-reforme": {
     title: "Pilotage de la réforme - Orion",
     description: "Pilotage de la réforme de la carte de formations",

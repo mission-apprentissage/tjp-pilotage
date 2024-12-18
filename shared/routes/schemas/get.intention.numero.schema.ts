@@ -3,7 +3,7 @@ import { z } from "zod";
 import { AvisStatutZodType } from "../../enum/avisStatutEnum";
 import { AvisTypeZodType } from "../../enum/avisTypeEnum";
 import { DemandeStatutEnum, DemandeStatutZodType } from "../../enum/demandeStatutEnum";
-
+import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 const UserSchema = z.object({
   fullname: z.string().optional(),
   id: z.string().optional(),
@@ -127,6 +127,7 @@ const IntentionSchema = z.object({
   codeDepartement: z.string(),
   libelleFormation: z.string(),
   libelleDispositif: z.string(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
   differenceCapaciteScolaire: z.coerce.number().optional(),
   differenceCapaciteApprentissage: z.coerce.number().optional(),
   changementsStatut: z.array(

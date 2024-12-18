@@ -1,6 +1,7 @@
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncCreatableSelect from "react-select/async-creatable";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 
@@ -12,7 +13,7 @@ export const FiliereAutoCompleteInput = ({
   onChange,
 }: {
   name: string;
-  defaultValue?: { value: string; label?: string };
+  defaultValue?: OptionSchema;
   active?: boolean;
   inError: boolean;
   onChange: (value?: (typeof client.infer)["[GET]/filiere/search/:search"][number]) => void;

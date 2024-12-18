@@ -1,13 +1,12 @@
 import { z } from "zod";
 
-const OptionSchema = z.object({
-  label: z.coerce.string(),
-  value: z.coerce.string(),
-});
+import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
+import { OptionSchema } from "../../schema/optionSchema";
 
 const FormationSchema = z.object({
   cfd: z.string(),
   libelleFormation: z.string(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
   codeNiveauDiplome: z.string(),
   libelleNiveauDiplome: z.string().optional(),
   codeDispositif: z.string().optional(),
@@ -33,7 +32,7 @@ const FormationSchema = z.object({
 
 const TopFlopSchema = FormationSchema.extend({
   tauxInsertion: z.coerce.number().optional(),
-}).omit({ positionQuadrant: true });
+});
 
 export const getDataForPanoramaDepartementSchema = {
   querystring: z.object({
@@ -45,8 +44,8 @@ export const getDataForPanoramaDepartementSchema = {
   }),
   response: {
     200: z.object({
-      formations: z.array(FormationSchema),
       topFlops: z.array(TopFlopSchema),
+      formations: z.array(FormationSchema),
       filters: z.object({
         diplomes: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),

@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
 const DemandeSchema = z.object({
@@ -18,6 +20,7 @@ const DemandeSchema = z.object({
   // Formation
   libelleNsf: z.string().optional(),
   libelleFormation: z.string().optional(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
   niveauDiplome: z.string().optional(),
   libelleDispositif: z.string().optional(),
   codeDispositif: z.string(),
@@ -98,16 +101,6 @@ const DemandeSchema = z.object({
   createdAt: z.string(),
   campagneId: z.string(),
   isIntention: z.boolean(),
-  tauxIJNiveauDiplomeRegion: z.object({
-    tauxInsertion6mois: z.coerce.number().nullable().optional(),
-    tauxPoursuite: z.coerce.number().nullable().optional(),
-    millesimeSortie: z.string().optional(),
-  }),
-  positionFormationRegionaleQuadrant: z.object({
-    moyenneInsertionCfdRegion: z.coerce.number().nullable().optional(),
-    moyennePoursuiteEtudeCfdRegion: z.coerce.number().nullable().optional(),
-    millesimeSortie: z.string().optional(),
-  }),
 });
 
 export const FiltersSchema = z.object({
@@ -127,6 +120,7 @@ export const FiltersSchema = z.object({
   positionQuadrant: z.string().optional(),
   voie: z.enum(["scolaire", "apprentissage"]).optional(),
   campagne: z.string().optional(),
+  formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: DemandeSchema.keyof().optional(),
   offset: z.coerce.number().optional(),

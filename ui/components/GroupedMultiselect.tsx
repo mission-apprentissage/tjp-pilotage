@@ -19,6 +19,7 @@ import {
 import type { ChangeEventHandler, ReactNode } from "react";
 import React, { memo, useMemo, useRef, useState } from "react";
 import removeAccents from "remove-accents";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 const ButtonContent = ({ selected, children }: { selected: string[]; children: ReactNode }) => {
   if (!selected.length) return <>{children}</>;
@@ -131,10 +132,10 @@ export const GroupedMultiselect = chakra(
       string,
       {
         color?: string;
-        options: { label: string; value: string; isDisabled?: boolean }[];
+        options: (OptionSchema & { isDisabled?: boolean })[];
       }
     >;
-    readonly defaultOptions?: { label: string; value: string }[];
+    readonly defaultOptions?: OptionSchema[];
     onChange?: (value: string[]) => void;
     onClose?: () => void;
     className?: string;
@@ -167,7 +168,7 @@ export const GroupedMultiselect = chakra(
           ];
         })
       );
-    }, [value, groupedOptions, stateValue.current]);
+    }, [value, groupedOptions]);
 
     const [search, setSearch] = useState("");
 
@@ -204,7 +205,7 @@ export const GroupedMultiselect = chakra(
           );
     };
 
-    const filteredOptions = useMemo(filterOptions, [groupedOptions, search, map]);
+    const filteredOptions = useMemo(filterOptions, [groupedOptions, search]);
     const ref = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 

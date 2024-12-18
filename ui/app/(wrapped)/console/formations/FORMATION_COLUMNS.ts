@@ -7,6 +7,8 @@ export const FORMATION_COLUMNS = {
   // Formation
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
+  actionPrioritaire: "Action prioritaire ?",
   libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",
@@ -29,7 +31,10 @@ export const FORMATION_COLUMNS = {
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
-} satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]>;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]> & {
+  formationSpecifique: string;
+  actionPrioritaire: string;
+};
 
 export const FORMATION_COLUMNS_OPTIONAL = {
   // Rentrée scolaire
@@ -37,6 +42,7 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   // Formation
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
   libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",
@@ -56,7 +62,7 @@ export const FORMATION_COLUMNS_OPTIONAL = {
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
-} satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]>;
+} satisfies Partial<typeof FORMATION_COLUMNS>;
 
 export const FORMATION_COLUMNS_DEFAULT = {
   // Rentrée scolaire
@@ -76,4 +82,4 @@ export const FORMATION_COLUMNS_DEFAULT = {
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
-} satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]>;
+} satisfies Partial<typeof FORMATION_COLUMNS_OPTIONAL>;

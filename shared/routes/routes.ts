@@ -52,7 +52,6 @@ import { searchMetierSchema } from "./schemas/get.metier.search.search.schema";
 import { searchNsfSchema } from "./schemas/get.nsf.search.search.schema";
 import { searchNsfFormationSchema } from "./schemas/get.nsf-diplome.search.search.schema";
 import { getDataForPanoramaDepartementSchema } from "./schemas/get.panorama.stats.departement.schema";
-import { getEtablissementSchema as getEtablissementStatsSchema } from "./schemas/get.panorama.stats.etablissement.uai.schema";
 import { getDataForPanoramaRegionSchema } from "./schemas/get.panorama.stats.region.schema";
 import { getFormationsPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.formations.schema";
 import { getRepartitionPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.repartition.schema";
@@ -219,11 +218,6 @@ export const ROUTES = {
     url: "/panorama/stats/departement",
     method: "GET",
     schema: getDataForPanoramaDepartementSchema,
-  },
-  "[GET]/panorama/stats/etablissement/:uai": {
-    url: "/panorama/stats/etablissement/:uai",
-    method: "GET",
-    schema: getEtablissementStatsSchema,
   },
   "[GET]/panorama/stats/region": {
     url: "/panorama/stats/region",

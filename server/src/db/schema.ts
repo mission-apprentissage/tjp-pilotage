@@ -23,6 +23,13 @@ export interface Academie {
   codeRegion: string;
 }
 
+export interface ActionPrioritaire {
+  id: Generated<string>;
+  cfd: string;
+  codeRegion: string;
+  codeDispositif: string;
+}
+
 export interface Avis {
   id: Generated<string>;
   createdBy: string | null;
@@ -417,6 +424,9 @@ export interface FormationNonMaterializedView {
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
   voie: string | null;
   codeNsf: string | null;
+  isTransitionNumerique: boolean | null;
+  isTransitionEcologique: boolean | null;
+  isTransitionDemographique: boolean | null;
 }
 
 export interface FormationRome {
@@ -898,6 +908,7 @@ export interface User {
 
 export interface DB {
   academie: Academie;
+  actionPrioritaire: ActionPrioritaire;
   avis: Avis;
   campagne: Campagne;
   changeLog: ChangeLog;
