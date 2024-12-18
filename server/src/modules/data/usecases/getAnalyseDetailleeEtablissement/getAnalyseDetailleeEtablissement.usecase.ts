@@ -88,8 +88,6 @@ export const getAnalyseDetailleeEtablissementFactory =
       chiffresEntreeObject[chiffres.offre][chiffres.rentreeScolaire] = chiffres;
     });
 
-    console.log(chiffresEntreeObject);
-
     return {
       etablissement,
       formations: formationsObject,
