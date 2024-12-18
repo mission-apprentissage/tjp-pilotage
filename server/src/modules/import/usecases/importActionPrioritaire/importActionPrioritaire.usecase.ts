@@ -7,10 +7,13 @@ export const importActionPrioritaireFactory =
   ({
     findRawDatas = dataDI.rawDataRepository.findRawDatas,
     createActionsPrioritaires = importActionPrioritaireDeps.createActionsPrioritaires,
+    deleteActionPrioritaire = importActionPrioritaireDeps.deleteActionPrioritaire,
   }) =>
   async () => {
-    console.log(`Import des actions prioritaires`);
+    console.log(`Suppression des actions prioritaires...`);
+    await deleteActionPrioritaire();
 
+    console.log(`Import des actions prioritaires\n`);
     let countActionsPrioritaires = 0;
     await streamIt(
       async (countActionsPrioritaires) =>

@@ -9,8 +9,9 @@ import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
 import { countDifferenceCapaciteApprentissage, countDifferenceCapaciteScolaire } from "@/modules/utils/countCapacite";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
-import { isFormationActionPrioritaireDemande } from "@/modules/utils/isFormationActionPrioritaire";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
 
 export interface Filters extends z.infer<typeof getDemandeSchema.params> {
@@ -138,7 +139,11 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       ).as("updatedBy"),
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
-      isFormationActionPrioritaireDemande(eb).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      isFormationActionPrioritaire({
+        cfdRef: "demande.cfd",
+        codeDispositifRef: "demande.codeDispositif",
+        codeRegionRef: "demande.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
@@ -149,6 +154,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
     .orderBy("createdAt", "asc")
     .limit(1)
     .executeTakeFirstOrThrow()
+    .then(cleanNull)
     .catch(() => {
       throw Boom.notFound(`Aucune demande trouvée pour le numéro ${numero}`, {
         errors: {
@@ -162,34 +168,22 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
     demande.metadata.formation?.dispositifs.find((item) => item.codeDispositif === demande?.codeDispositif)
       ?.codeDispositif;
 
-  return (
-    demande &&
-    cleanNull({
-      ...demande,
-      metadata: cleanNull({
-        ...demande.metadata,
-        formation: cleanNull(demande.metadata.formation),
-        etablissement: cleanNull(demande.metadata.etablissement),
-        formationCompensation: cleanNull(demande.metadata.formationCompensation),
-        etablissementCompensation: cleanNull(demande.metadata.etablissementCompensation),
-      }),
-      statut: castDemandeStatutWithoutSupprimee(demande.statut),
-      createdAt: demande.createdAt?.toISOString(),
-      updatedAt: demande.updatedAt?.toISOString(),
-      campagne: cleanNull({
-        ...demande.campagne,
-      }),
-      codeDispositif,
-      formationSpecifique: {
-        [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
-          !!demande[TypeFormationSpecifiqueEnum["Action prioritaire"]],
-        [TypeFormationSpecifiqueEnum["Transition démographique"]]:
-          !!demande[TypeFormationSpecifiqueEnum["Transition démographique"]],
-        [TypeFormationSpecifiqueEnum["Transition écologique"]]:
-          !!demande[TypeFormationSpecifiqueEnum["Transition écologique"]],
-        [TypeFormationSpecifiqueEnum["Transition numérique"]]:
-          !!demande[TypeFormationSpecifiqueEnum["Transition numérique"]],
-      },
-    })
-  );
+  return {
+    ...demande,
+    metadata: {
+      ...demande.metadata,
+      formation: demande.metadata.formation,
+      etablissement: demande.metadata.etablissement,
+      formationCompensation: demande.metadata.formationCompensation,
+      etablissementCompensation: demande.metadata.etablissementCompensation,
+    },
+    statut: castDemandeStatutWithoutSupprimee(demande.statut),
+    createdAt: demande.createdAt?.toISOString(),
+    updatedAt: demande.updatedAt?.toISOString(),
+    campagne: {
+      ...demande.campagne,
+    },
+    codeDispositif,
+    formationSpecifique: formatFormationSpecifique(demande),
+  };
 };

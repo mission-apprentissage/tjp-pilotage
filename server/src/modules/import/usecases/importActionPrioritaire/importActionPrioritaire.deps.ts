@@ -3,17 +3,9 @@ import type { Insertable } from "kysely";
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
 
-const findActionPrioritaire = async ({ offset = 0, limit }: { offset?: number; limit?: number }) =>
-  getKbdClient()
-    .selectFrom("actionPrioritaire")
-    .select(["cfd", "codeRegion", "codeDispositif"])
-    .distinct()
-    .offset(offset)
-    .$call((q) => {
-      if (!limit) return q;
-      return q.limit(limit);
-    })
-    .execute();
+export const deleteActionPrioritaire = async () => {
+  return getKbdClient().deleteFrom("actionPrioritaire").execute();
+};
 
 const createActionsPrioritaires = async (actionsPrioritaires: Insertable<DB["actionPrioritaire"]>) =>
   getKbdClient()
@@ -24,5 +16,5 @@ const createActionsPrioritaires = async (actionsPrioritaires: Insertable<DB["act
 
 export const importActionPrioritaireDeps = {
   createActionsPrioritaires,
-  findActionPrioritaire,
+  deleteActionPrioritaire,
 };

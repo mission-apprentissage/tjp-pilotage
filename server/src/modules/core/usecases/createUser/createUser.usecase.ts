@@ -22,7 +22,7 @@ export const [createUser, createUserFactory] = inject(
   },
   (deps) =>
     async ({ body, requestUser }: { body: BodySchema; requestUser?: RequestUser }) => {
-      const { email, firstname, lastname, role, codeRegion } = body;
+      const { email, firstname, lastname, role, codeRegion, fonction } = body;
 
       if (!email.match(emailRegex)) throw Boom.badRequest(`L'email est invalide`);
 
@@ -46,7 +46,9 @@ export const [createUser, createUserFactory] = inject(
         role,
         codeRegion,
         enabled: true,
+        fonction,
       });
+
       const activationToken = jwt.sign({ email }, config.auth.activationJwtSecret, {
         issuer: "orion",
       });

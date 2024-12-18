@@ -5,16 +5,16 @@ export const findUAIsApprentissage = async ({ cfd }: { cfd: string }) => {
     .findRawDatas({
       type: "offres_apprentissage",
       filter: {
-        "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)": cfd,
+        "Formation: code CFD": cfd,
       },
     })
     .then((rawDatas) => {
       if (!rawDatas || !rawDatas.length) return;
       return rawDatas
         .map((rawData) => {
-          if (rawData["UAI formation"]) return rawData["UAI formation"];
-          if (rawData["UAI formateur"]) return rawData["UAI formateur"];
-          return rawData["UAI Responsable"]!;
+          if (rawData["Lieu: UAI"]) return rawData["Lieu: UAI"];
+          if (rawData["Formateur: UAI"]) return rawData["Formateur: UAI"];
+          return rawData["Responsable: UAI"]!;
         })
         .filter((uai) => uai);
     });

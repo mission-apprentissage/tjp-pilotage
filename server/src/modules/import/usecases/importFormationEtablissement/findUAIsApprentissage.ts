@@ -5,17 +5,17 @@ export const findUAIsApprentissage = async ({ cfd }: { cfd: string }) => {
     .findRawDatas({
       type: "offres_apprentissage",
       filter: {
-        "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)": cfd,
+        "Formation: code CFD": cfd,
       },
     })
     .then((rawDatas) => {
       if (!rawDatas || !rawDatas.length) return;
       return rawDatas
-        .filter((rawData) => rawData["Tags"].includes("2023") || rawData["Tags"].includes("2024"))
+        .filter((rawData) => rawData["Offre: Tags"].includes("2023") || rawData["Offre: Tags"].includes("2024"))
         .map((rawData) => {
-          if (rawData["UAI formation"]) return rawData["UAI formation"];
-          if (rawData["UAI formateur"]) return rawData["UAI formateur"];
-          return rawData["UAI Responsable"]!;
+          if (rawData["Lieu: UAI"]) return rawData["Lieu: UAI"];
+          if (rawData["Formateur: UAI"]) return rawData["Formateur: UAI"];
+          return rawData["Responsable: UAI"]!;
         })
         .filter((uai) => uai);
     });
@@ -27,7 +27,7 @@ export const findUAIsApprentissage = async ({ cfd }: { cfd: string }) => {
   //   .where(
   //     "data",
   //     "@>",
-  //     sql`{"Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)": ${cfd}}`
+  //     sql`{"Formation: code CFD": ${cfd}}`
   //   )
   //   .where((eb) =>
   //     eb.and([
@@ -43,7 +43,7 @@ export const findUAIsApprentissage = async ({ cfd }: { cfd: string }) => {
   //       eb(
   //         "data",
   //         "@>",
-  //         sql`{"Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)": ${cfd}}`
+  //         sql`{"Formation: code CFD": ${cfd}}`
   //       ),
   //     ])
   //   )

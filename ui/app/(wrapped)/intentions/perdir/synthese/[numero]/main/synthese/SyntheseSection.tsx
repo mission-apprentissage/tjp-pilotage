@@ -158,10 +158,16 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
                 Observations sur la demande
               </Heading>
             </Flex>
-            <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text fontSize={14}>
-                {intention.commentaire && intention.commentaire.length ? intention.commentaire : "Aucune"}
-              </Text>
+            <Flex gap={2} direction="column">
+              {intention.commentaire && intention.commentaire.length ? (
+                intention.commentaire.split("\n").map((p, i) => (
+                  <Text key={`commentaire-${i}`} fontSize={14} sx={{ py: 1 }}>
+                    {p}
+                  </Text>
+                ))
+              ) : (
+                <Text fontSize={14}>Aucune</Text>
+              )}
             </Flex>
           </Flex>
           <FilesSection numero={intention.numero!} />

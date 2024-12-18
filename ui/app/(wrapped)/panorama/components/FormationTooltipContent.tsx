@@ -17,6 +17,13 @@ type Formation = PanoramaFormation | PanoramaTopFlop;
 export const FormationTooltipContent = ({ formation }: { formation: Formation }) => {
   const { openGlossaire } = useGlossaireContext();
 
+  // Si la feature formationsSpecifiqueConsole est activée et que cette formation est concernée, on affiche les tags
+  // Sinon si la feature n'est pas activée, on affiche les tags si la formation est une action prioritaire
+  const shouldDisplayFormationSpecifique =
+    (feature.formationsSpecifiqueConsole && Object.values(formation.formationSpecifique).some((v) => v)) ||
+    (!feature.formationsSpecifiqueConsole &&
+      formation.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]]);
+
   return (
     <Box bg="white" fontSize="xs" w={"100%"}>
       <InfoBlock mb="2" label="Formation concernée" value={formation?.libelleFormation} />
@@ -66,16 +73,14 @@ export const FormationTooltipContent = ({ formation }: { formation: Formation })
         Taux de devenir favorable régional
       </Text>
       <GraphWrapper mb="2" w="100%" continuum={formation.continuum} value={formation.tauxDevenirFavorable} />
-      {(feature.formationsSpecifiqueConsole && Object.values(formation.formationSpecifique).some((v) => v)) ||
-        (!feature.formationsSpecifiqueConsole &&
-          formation.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]] && (
-            <>
-              <Text mb="1" fontWeight="medium">
-                Formation spécifique
-              </Text>
-              <BadgesFormationSpecifique formationSpecifique={formation?.formationSpecifique} />
-            </>
-          ))}
+      {shouldDisplayFormationSpecifique && (
+        <>
+          <Text mb="1" fontWeight="medium">
+            Formation spécifique
+          </Text>
+          <BadgesFormationSpecifique formationSpecifique={formation?.formationSpecifique} />
+        </>
+      )}
     </Box>
   );
 };

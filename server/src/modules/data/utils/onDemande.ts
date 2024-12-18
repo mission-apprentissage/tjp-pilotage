@@ -1,5 +1,6 @@
 import { expressionBuilder, sql } from "kysely";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
@@ -29,6 +30,7 @@ import {
   countPlacesOuvertesTransitionEcologique,
   countPlacesTransformeesParCampagne,
 } from "@/modules/utils/countCapacite";
+import { isDemandeNotAjustementRentree } from "@/modules/utils/isDemandeSelectable";
 
 import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
 
@@ -45,6 +47,7 @@ export const genericOnDemandes = ({
   codeDepartement,
   withColoration,
   formationSpecifique,
+  withAjustementRentree = true,
 }: {
   statut?: Array<DemandeStatutType>;
   rentreeScolaire?: string[];
@@ -58,6 +61,7 @@ export const genericOnDemandes = ({
   codeDepartement?: string;
   withColoration?: string;
   formationSpecifique?: Array<TypeFormationSpecifiqueType>;
+  withAjustementRentree?: boolean;
 }) =>
   expressionBuilder<DB, keyof DB>()
     .selectFrom("latestDemandeIntentionView as demande")
@@ -108,6 +112,8 @@ export const genericOnDemandes = ({
       eb.fn.sum<number>(countPlacesTransformeesParCampagne(eb)).as("placesTransformees"),
     ])
     .where(isInPerimetreIJDataEtablissement)
+    .$if(withAjustementRentree, (eb) => eb.where(isDemandeNotAjustementRentree))
+    .where("demande.statut", "in", [DemandeStatutEnum["projet de demande"], DemandeStatutEnum["demande validée"]])
     .$call((eb) => {
       if (campagne) return eb.where("campagne.annee", "=", campagne);
       return eb;

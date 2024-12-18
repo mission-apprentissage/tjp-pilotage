@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 
+import { formatArray } from "./formatUtils";
+
 export const formatAnneeCommuneLibelle = (
   formation: {
     libelleFormation?: string;
@@ -75,7 +77,7 @@ export const formatOptionLibelle = (
 );
 
 export const formatCodeDepartement = (codeDepartement?: string) =>
-  codeDepartement?.substring(0, 1) === "0" ? codeDepartement.substring(1) : codeDepartement;
+  codeDepartement?.startsWith("0") ? codeDepartement.substring(1) : codeDepartement;
 
 export const formatCommuneLibelleWithCodeDepartement = ({
   commune,
@@ -95,4 +97,29 @@ export const formatDepartementLibelleWithCodeDepartement = ({
   codeDepartement?: string;
 }) => {
   return `${libelleDepartement} (${formatCodeDepartement(codeDepartement)})`;
+};
+
+export const formatLibelleFormation = (etablissement: { libellesDispositifs: string[]; libelleFormation: string }) => {
+  const dispositifs =
+    formatArray(etablissement.libellesDispositifs) !== "" ? `(${formatArray(etablissement.libellesDispositifs)})` : "";
+  return `${etablissement.libelleFormation} ${dispositifs}`;
+};
+
+/**
+ * Format le secteur en "Public" ou "Privé"
+ * @param secteur - PU, PR
+ * @returns Public, Privé
+ */
+export const formatSecteur = (secteur: string) => {
+  if (secteur === "PU") return "Public";
+  if (secteur === "PR") return "Privé";
+  return secteur;
+};
+
+export const formatDispositifs = (dispositifs: string[]) => {
+  return dispositifs
+    .filter((libelle) => libelle !== "")
+    .map((d) => {
+      return d.replace(/\sen\s/i, " ").replace(/professionnel/i, "PRO");
+    });
 };
