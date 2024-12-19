@@ -22,6 +22,8 @@ export const startAndConnectPg = async () => {
 
   await connectToPgDb(dbUri);
 
+  await refreshViews();
+
   await migrateToLatest(true, false);
   console.log("Migration terminée");
   console.log("Rafraichissement des vues matérialisées");
