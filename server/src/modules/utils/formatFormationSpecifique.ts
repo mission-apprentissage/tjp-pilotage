@@ -2,7 +2,7 @@ import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqu
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 export const formatFormationSpecifique = (
-  formation: Record<TypeFormationSpecifiqueType, string | boolean | undefined | null>
+  formation: Record<Partial<TypeFormationSpecifiqueType>, string | boolean | undefined | null>
 ) => ({
   [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
     TypeFormationSpecifiqueEnum["Action prioritaire"] in formation
