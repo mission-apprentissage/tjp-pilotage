@@ -10,9 +10,11 @@ import {
   MenuItem,
   MenuList,
   Select,
+  Tag,
   Text,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -154,6 +156,24 @@ export const SecondaryFiltersSection = ({
               ))}
             </Select>
           </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>Voie</FormLabel>
+            <Select
+              width={"64"}
+              size="md"
+              variant={"newInput"}
+              value={activeFilters.voie ?? ""}
+              onChange={(e) => handleFilters("voie", e.target.value)}
+              borderBottomColor={activeFilters.voie != undefined ? "info.525" : ""}
+              placeholder="Toutes"
+            >
+              {data?.filters.voies?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+          </Box>
         </Flex>
         <Flex justifyContent={"start"} gap={4}>
           <Box justifyContent={"start"}>
@@ -191,24 +211,6 @@ export const SecondaryFiltersSection = ({
             >
               Tous ({data?.filters.typesDemande.length ?? 0})
             </Multiselect>
-          </Box>
-          <Box justifyContent={"start"}>
-            <FormLabel>Voie</FormLabel>
-            <Select
-              width={"64"}
-              size="md"
-              variant={"newInput"}
-              value={activeFilters.voie ?? ""}
-              onChange={(e) => handleFilters("voie", e.target.value)}
-              borderBottomColor={activeFilters.voie != undefined ? "info.525" : ""}
-              placeholder="Toutes"
-            >
-              {data?.filters.voies?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
           </Box>
           {feature.showColorationFilter && (
             <Box justifyContent={"start"}>
@@ -335,6 +337,38 @@ export const SecondaryFiltersSection = ({
                 </option>
               ))}
             </Select>
+          </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>Formations spécifiques</FormLabel>
+            <Multiselect
+              width={"64"}
+              size="md"
+              variant="newInput"
+              onChange={(selected) => handleFilters("formationSpecifique", selected)}
+              options={[
+                {
+                  label: TypeFormationSpecifiqueEnum["Action prioritaire"],
+                  value: TypeFormationSpecifiqueEnum["Action prioritaire"],
+                },
+                {
+                  label: TypeFormationSpecifiqueEnum["Transition démographique"],
+                  value: TypeFormationSpecifiqueEnum["Transition démographique"],
+                },
+                {
+                  label: TypeFormationSpecifiqueEnum["Transition écologique"],
+                  value: TypeFormationSpecifiqueEnum["Transition écologique"],
+                },
+                {
+                  label: TypeFormationSpecifiqueEnum["Transition numérique"],
+                  value: TypeFormationSpecifiqueEnum["Transition numérique"],
+                },
+              ]}
+              hasDefaultValue={false}
+              value={activeFilters.formationSpecifique ?? []}
+              gutter={0}
+            >
+              Toutes
+            </Multiselect>
           </Box>
           <Button
             variant="externalLink"

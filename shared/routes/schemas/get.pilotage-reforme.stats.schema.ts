@@ -1,9 +1,6 @@
 import { z } from "zod";
 
-const OptionSchema = z.object({
-  label: z.coerce.string(),
-  value: z.coerce.string(),
-});
+import { OptionSchema } from "../../schema/optionSchema";
 
 const StatsSchema = z.object({
   effectif: z.coerce.number().optional(),

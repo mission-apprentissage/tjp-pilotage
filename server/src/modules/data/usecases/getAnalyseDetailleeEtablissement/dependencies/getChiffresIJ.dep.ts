@@ -24,13 +24,13 @@ export const getChiffresIj = async ({
     .innerJoin("indicateurSortie", "indicateurSortie.formationEtablissementId", "formationEtablissement.id")
     .select((eb) => [
       sql<string>`CONCAT(
-        ${eb.ref("dataEtablissement.uai")},
-        ${eb.ref("dataFormation.cfd")},
+        ${eb.ref("formationEtablissement.uai")},
+        ${eb.ref("formationEtablissement.cfd")},
         COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
       "millesimeSortie",
-      "voie",
+      "formationEtablissement.voie",
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuite"),
       selectTauxInsertion6mois("indicateurSortie").as("tauxInsertion"),
       selectTauxDevenirFavorable("indicateurSortie").as("tauxDevenirFavorable"),
@@ -48,7 +48,7 @@ export const getChiffresIj = async ({
         codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxInsertionRegional"),
-      "dataFormation.cfd",
+      "formationEtablissement.cfd",
       "formationEtablissement.codeDispositif",
       "effectifSortie",
       "nbSortants",
@@ -63,15 +63,15 @@ export const getChiffresIj = async ({
       }).as("continuum"),
     ])
     .$call((q) => {
-      if (codeNiveauDiplome?.length) return q.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome?.length) return q.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       return q;
     })
     .groupBy([
-      "dataEtablissement.uai",
-      "dataFormation.cfd",
+      "formationEtablissement.uai",
+      "formationEtablissement.cfd",
       "formationEtablissement.codeDispositif",
       "formationEtablissement.cfd",
-      "voie",
+      "formationEtablissement.voie",
       "millesimeSortie",
       "nbPoursuiteEtudes",
       "nbInsertion6mois",

@@ -84,6 +84,7 @@ Commandes:
 - `yarn cli migrations:status`: Vérification du status des migrations
 - `yarn cli migrations:up`: Execution des migrations
 - `yarn cli migrations:create`: Creation d'une nouvelle migration
+- `yarn cli migrations:generate-schema`: Génère le schéma de la base de données
 
 ### Lancement de l'application
 

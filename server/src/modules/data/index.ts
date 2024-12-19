@@ -4,14 +4,18 @@ import { getAnalyseDetailleeEtablissementRoute } from "./usecases/getAnalyseDeta
 import { getDataForEtablissementMapRoute } from "./usecases/getDataForEtablissementMap/getDataForEtablissementMap.route";
 import { getDataForEtablissementMapListRoute } from "./usecases/getDataForEtablissementMapList/getDataForEtablissementMapList.route";
 import { getDataForPanoramaDepartementRoute } from "./usecases/getDataForPanoramaDepartement/getDataForPanoramaDepartement.route";
-import { getDataForPanoramaEtablissementRoute } from "./usecases/getDataForPanoramaEtablissement/getDataForPanoramaEtablissement.route";
 import { getDataForPanoramaRegionRoute } from "./usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.route";
 import { getDemandesRestitutionIntentionsRoute } from "./usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.route";
 import { getDepartementRoute } from "./usecases/getDepartement/getDepartement.route";
 import { getDepartementsRoute } from "./usecases/getDepartements/getDepartements.route";
+import { getDomaineDeFormationRoute } from "./usecases/getDomaineDeFormation/getDomaineDeFormation.route";
+import { getDomainesDeFormationRoute } from "./usecases/getDomainesDeFormation/getDomainesDeFormation.route";
 import { getEtablissementRoute } from "./usecases/getEtablissement/getEtablissement.route";
+import { getFormationRoute } from "./usecases/getFormation/getFormation.route";
+import { getFormationCarteEtablissementsRoute } from "./usecases/getFormationCarteEtablissements/getFormationCarteEtablissements.route";
 import { getFormationEtablissementsRoutes } from "./usecases/getFormationEtablissements/getFormationEtablissements.routes";
-import { getFormationsRoute } from "./usecases/getFormations/getFormations.routes";
+import { getFormationIndicateursRoute } from "./usecases/getFormationIndicateurs/getFormationIndicateurs.route";
+import { getFormationsRoute } from "./usecases/getFormations/getFormations.route";
 import { getFormationsPilotageIntentionsRoute } from "./usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.route";
 import { getHeaderEtablissementRoute } from "./usecases/getHeaderEtablissement/getHeaderEtablissement.route";
 import { getPilotageReformeStatsRoute } from "./usecases/getPilotageReformeStats/getPilotageReformeStats.route";
@@ -37,7 +41,6 @@ export const registerDataModule = (server: Server) => {
     ...getHeaderEtablissementRoute(server),
     ...getEtablissementRoute(server),
     ...getFormationEtablissementsRoutes(server),
-    ...getDataForPanoramaEtablissementRoute(server),
     ...getDepartementRoute(server),
     ...getDepartementsRoute(server),
     ...getDataForPanoramaDepartementRoute(server),
@@ -63,5 +66,10 @@ export const registerDataModule = (server: Server) => {
     ...searchFiliereRoute(server),
     ...searchCampusRoute(server),
     ...getRepartitionPilotageIntentionsRoute(server),
+    ...getDomainesDeFormationRoute(server),
+    ...getFormationRoute(server),
+    ...getDomaineDeFormationRoute(server),
+    ...getFormationIndicateursRoute(server),
+    ...getFormationCarteEtablissementsRoute(server),
   };
 };

@@ -63,6 +63,11 @@ const draftStyle = defineStyle({
   bgColor: "yellowTournesol.950",
 });
 
+const greenArchipelStyle = defineStyle({
+  bgColor: "#C7F6FC",
+  color: "#006A6F",
+});
+
 export const badgeTheme = defineStyleConfig({
   baseStyle: {
     display: "inline-flex",
@@ -112,6 +117,7 @@ export const badgeTheme = defineStyleConfig({
     grey: greyStyle,
     neutral: neutralStyle,
     draft: draftStyle,
+    greenArchipel: greenArchipelStyle,
   },
   defaultProps: {
     size: "md",

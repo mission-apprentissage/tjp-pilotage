@@ -32,7 +32,7 @@ export const FiliereCmqField = chakra(({ disabled, className }: { disabled?: boo
                 name={name}
                 active={!disabled}
                 inError={!!errors.filiereCmq}
-                defaultValue={{ label: value, value: value ?? "" }}
+                defaultValue={{ label: value ?? "", value: value ?? "" }}
                 onChange={(v) => {
                   onChange(v?.value);
                 }}

@@ -1,5 +1,4 @@
 import { sql } from "kysely";
-import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
 import { getKbdClient } from "@/db/db";
 import { getMillesimeFromRentreeScolaire } from "@/modules/data/services/getMillesime";
@@ -13,11 +12,12 @@ import {
   notHistoriqueIndicateurRegionSortie,
 } from "@/modules/data/utils/notHistorique";
 import { genericOnConstatRentree } from "@/modules/data/utils/onConstatDeRentree";
+import { genericOnDemandes } from "@/modules/data/utils/onDemande";
 import { selectTauxInsertion6moisAgg } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "@/modules/data/utils/tauxPoursuite";
-import { countPlacesTransformeesParCampagne } from "@/modules/utils/countCapacite";
-import { isDemandeNotAjustementRentree, isDemandeNotDeletedOrRefused } from "@/modules/utils/isDemandeSelectable";
 import { cleanNull } from "@/utils/noNull";
+
+import type { Filters } from "./getPilotageReformeStats.usecase";
 
 const getRentreesScolaires = async () => {
   return await getKbdClient()
@@ -167,34 +167,19 @@ const findFiltersInDb = async () => {
   };
 };
 
-const getTauxTransformationData = async (filters: { codeNiveauDiplome?: string[]; codeRegion?: string }) => {
+const getTauxTransformationData = async (filters: Filters) => {
   return getKbdClient()
-    .selectFrom("latestDemandeIntentionView as demande")
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("campagne", "campagne.id", "demande.campagneId")
+    .selectFrom(genericOnDemandes({ ...filters, rentreeScolaire: ["2025"] }).as("demande"))
+    .leftJoin(
+      genericOnConstatRentree(filters)
+        .select((eb) => [sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("effectif")])
+        .as("effectifs"),
+      (join) => join.onTrue()
+    )
     .select((eb) => [
-      eb.fn.coalesce(eb.fn.sum<number>(countPlacesTransformeesParCampagne(eb)), sql`0`).as("transformes"),
-      genericOnConstatRentree({ ...filters })
-        .select((eb) => eb.fn.coalesce(eb.fn.sum<number>("effectif"), eb.val(0)).as("effectif"))
-        .as("effectif"),
+      eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
+      eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
     ])
-    .where(isDemandeNotDeletedOrRefused)
-    .where(isDemandeNotAjustementRentree)
-    .$call((eb) => {
-      return eb.where("demande.rentreeScolaire", "in", [parseInt(NEXT_RENTREE)]);
-    })
-    .$call((eb) => {
-      if (filters.codeNiveauDiplome)
-        return eb.where("dataFormation.codeNiveauDiplome", "in", filters.codeNiveauDiplome);
-      return eb;
-    })
-    .$call((eb) => {
-      if (filters.codeRegion) {
-        return eb.where("dataEtablissement.codeRegion", "=", filters.codeRegion);
-      }
-      return eb;
-    })
     .execute()
     .then(cleanNull);
 };

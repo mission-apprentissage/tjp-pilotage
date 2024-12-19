@@ -233,6 +233,11 @@ export const Nav = () => {
                 Lien métier formation
               </NavMenuLink>
             </MenuItem>
+            <MenuItem p="0">
+              <NavMenuLink href="/panorama/domaine-de-formation" segment="panorama/domaine-de-formation">
+                Domaine de formation
+              </NavMenuLink>
+            </MenuItem>
           </MenuList>
         </Portal>
       </Menu>
