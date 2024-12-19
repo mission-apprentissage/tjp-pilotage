@@ -1,5 +1,6 @@
 import { resolve } from "node:path";
 
+import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineWorkspace } from "vitest/config";
 
@@ -45,7 +46,6 @@ export default defineWorkspace([
       },
     },
   },
-  // Tests unitaires shared
   {
     plugins: [tsconfigPaths()],
     test: {
@@ -59,5 +59,16 @@ export default defineWorkspace([
         "@shared": resolve(__dirname, "./shared/src"),
       },
     },
+  },
+  {
+    plugins: [tsconfigPaths(), react()],
+    test: {
+      name: "ui",
+      root: "./ui",
+      include: ["./**/*.test.ts"],
+      clearMocks: true,
+      environment: "jsdom",
+    },
+    resolve: {},
   },
 ]);
