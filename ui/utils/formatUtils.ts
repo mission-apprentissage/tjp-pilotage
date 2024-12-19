@@ -42,7 +42,23 @@ export const formatNumber = (value?: number, numberOfDigits: number = 0): number
   return Number.parseFloat(value.toFixed(numberOfDigits));
 };
 
-export const formatPercentage = (value?: number, numberOfDigits: number = 0, nullValue: string = "0 %"): string => {
+export const formatNumberToString = (
+  value?: number | null,
+  numberOfDigits: number = 0,
+  nullValue: string = "0"
+): string => {
+  if (value === undefined || value === null || Number.isNaN(value)) return nullValue;
+  return new Intl.NumberFormat("fr-FR", {
+    style: "decimal",
+    maximumFractionDigits: numberOfDigits,
+  }).format(value);
+};
+
+export const formatPercentage = (
+  value?: number | null,
+  numberOfDigits: number = 0,
+  nullValue: string = "0 %"
+): string => {
   if (value === undefined || value === null || Number.isNaN(value)) return nullValue;
   return new Intl.NumberFormat("fr-FR", {
     style: "percent",
@@ -66,4 +82,8 @@ export const formatLargeNumber = (
 ): string => {
   if (value === undefined || value === null) return nullValue;
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+};
+
+export const formatDistance = (distance: number) => {
+  return `${formatNumber(distance, 1)} km`;
 };

@@ -11,26 +11,31 @@ import type { ChiffresIJOffre } from "@/app/(wrapped)/panorama/etablissement/com
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
+const checkDataAvailability = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOffre }): boolean => {
+  if (chiffresIJOffre) {
+    return Object.values(chiffresIJOffre).findIndex((value) => value.tauxInsertion) !== -1;
+  }
+  return false;
+};
+
+const getVerticalBarChartData = ({
+  chiffresIJOffre,
+}: {
+  chiffresIJOffre?: ChiffresIJOffre;
+}): { label: string; value: number }[] => {
+  if (chiffresIJOffre) {
+    return Object.keys(chiffresIJOffre)
+      .filter((millesime) => chiffresIJOffre[millesime].tauxInsertion)
+      .map((millesime) => ({
+        label: formatMillesime(millesime),
+        value: formatTaux(chiffresIJOffre[millesime].tauxInsertion),
+      }));
+  }
+  return [];
+};
+
 export const TauxEmploi = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOffre }) => {
   const { openGlossaire } = useGlossaireContext();
-  const checkDataAvailability = (): boolean => {
-    if (chiffresIJOffre) {
-      return Object.values(chiffresIJOffre).findIndex((value) => value.tauxInsertion) !== -1;
-    }
-    return false;
-  };
-
-  const getVerticalBarChartData = (): { label: string; value: number }[] => {
-    if (chiffresIJOffre) {
-      return Object.keys(chiffresIJOffre)
-        .filter((millesime) => chiffresIJOffre[millesime].tauxInsertion)
-        .map((millesime) => ({
-          label: formatMillesime(millesime),
-          value: formatTaux(chiffresIJOffre[millesime].tauxInsertion),
-        }));
-    }
-    return [];
-  };
 
   return (
     <DashboardCard
@@ -53,8 +58,8 @@ export const TauxEmploi = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOf
         </Badge>
       }
     >
-      {checkDataAvailability() ? (
-        <VerticalBarChart title="Taux d'emploi à 6 mois" data={getVerticalBarChartData()} />
+      {checkDataAvailability({ chiffresIJOffre }) ? (
+        <VerticalBarChart title="Taux d'emploi à 6 mois" data={getVerticalBarChartData({ chiffresIJOffre })} />
       ) : (
         <CounterChart />
       )}

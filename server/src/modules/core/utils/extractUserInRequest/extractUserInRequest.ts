@@ -13,7 +13,6 @@ import { findUserQuery } from "./findUserQuery.dep";
 export const [extractUserInRequest, extractUserInRequestFactory] = inject(
   { jwtSecret: config.auth.authJwtSecret, findUserQuery },
   (deps) => async (request: FastifyRequest) => {
-    console.log(request.cookies);
     const token = request.cookies["Authorization"];
     if (!token) return;
     try {

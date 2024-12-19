@@ -18,3 +18,10 @@ export type LineId = {
   uai: string;
 };
 export type RequetesEnregistrees = (typeof client.infer)["[GET]/requetes"];
+export type RequetesSuggerees = Array<{
+  nom: string;
+  couleur?: string;
+  filtres: Partial<Filters>;
+  active?: boolean;
+  conditions: Array<keyof Partial<Filters>>;
+}>;

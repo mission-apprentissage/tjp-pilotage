@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
+import { PREVIOUS_ANNEE_CAMPAGNE } from "shared/time/PREVIOUS_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
 import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
@@ -106,6 +107,8 @@ export default () => {
 
   const { codeDepartementFilter, setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
 
+  const [campagneFilter, setCampagneFilter] = useState<string>(PREVIOUS_ANNEE_CAMPAGNE);
+
   const trackEvent = usePlausible();
   const filterTracker = (filterName: keyof FiltersCorrections) => () => {
     trackEvent("restitution-correction:filtre", {
@@ -138,6 +141,9 @@ export default () => {
           break;
         case "codeDepartement":
           setCodeDepartementFilter((value as string[])[0] ?? "");
+          break;
+        case "campagne":
+          setCampagneFilter((value as string[])[0] ?? "");
           break;
       }
   };
@@ -217,11 +223,15 @@ export default () => {
     ) {
       filters.codeDepartement = [codeDepartementFilter];
     }
+    if (filters?.campagne === undefined && campagneFilter !== "") {
+      filters.campagne = campagneFilter;
+    }
     setSearchParams({ filters: filters });
   };
 
   useEffect(() => {
     setDefaultFilters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onClickSearch = () => {
@@ -235,6 +245,7 @@ export default () => {
   useEffect(() => {
     const campagneFilterNumber = parseInt(searchParams.filters?.campagne ?? "");
     handleFilters("rentreeScolaire", campagneFilterNumber + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.filters?.campagne]);
 
   if (!feature.correction) {

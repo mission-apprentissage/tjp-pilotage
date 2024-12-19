@@ -6,6 +6,8 @@ import type {
   ChiffresIJOffre,
   Formation,
 } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
+import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
+import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "@/components/BadgeVoieApprentissage";
@@ -36,6 +38,7 @@ export const Dashboard = ({
           <BadgeTypeFamille typeFamille={formation?.typeFamille as TypeFamilleKeys} labelSize="long" size={"md"} />
           <Flex>
             <BadgeVoieApprentissage voie={formation?.voie} labelSize="long" size={"md"} />
+            <BadgesFormationSpecifique formationSpecifique={formation?.formationSpecifique} />
             {formation?.voie === "apprentissage" && (
               <GlossaireShortcut
                 ml={2}

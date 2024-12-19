@@ -46,6 +46,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS: Record<
     options: {
       libelleDispositif: "Dispositif",
       libelleFormation: "Formation",
+      formationSpecifique: "Formation spécifique",
       libelleNiveauDiplome: "Diplôme",
       libelleFamille: "Famille de métiers",
       cfd: "Code formation diplôme",
@@ -132,6 +133,7 @@ export const GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL: Record<
     options: {
       libelleDispositif: "Dispositif",
       libelleFormation: "Formation",
+      formationSpecifique: "Formation spécifique",
       libelleNiveauDiplome: "Diplôme",
       libelleFamille: "Famille de métiers",
       cpc: "CPC",

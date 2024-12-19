@@ -7,6 +7,8 @@ import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
 import type { MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getMotifLabel, hasMotifAutre } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
+import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { formatArray, formatBoolean, formatDate } from "@/utils/formatUtils";
 
@@ -70,11 +72,12 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
               <Text w={["44", "48", "52"]} fontWeight={700}>
                 Diplôme
               </Text>
-              <Tooltip label={intention.libelleFormation}>
-                <Text w={["64", "72", "80", "96"]} fontSize={14}>
-                  {intention.libelleFormation}
-                </Text>
-              </Tooltip>
+              <Flex direction={"column"} gap={2} w={["64", "72", "80", "96"]}>
+                <Tooltip label={intention.libelleFormation}>
+                  <Text fontSize={14}>{intention.libelleFormation}</Text>
+                </Tooltip>
+                <BadgesFormationSpecifique formationSpecifique={intention.formationSpecifique} />
+              </Flex>
             </Flex>
             <Flex direction={"row"} gap={4}>
               <Text w={["44", "48", "52"]} fontWeight={700}>
@@ -155,10 +158,16 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
                 Observations sur la demande
               </Heading>
             </Flex>
-            <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text fontSize={14}>
-                {intention.commentaire && intention.commentaire.length ? intention.commentaire : "Aucune"}
-              </Text>
+            <Flex gap={2} direction="column">
+              {intention.commentaire && intention.commentaire.length ? (
+                intention.commentaire.split("\n").map((p, i) => (
+                  <Text key={`commentaire-${i}`} fontSize={14} sx={{ py: 1 }}>
+                    {p}
+                  </Text>
+                ))
+              ) : (
+                <Text fontSize={14}>Aucune</Text>
+              )}
             </Flex>
           </Flex>
           <FilesSection numero={intention.numero!} />

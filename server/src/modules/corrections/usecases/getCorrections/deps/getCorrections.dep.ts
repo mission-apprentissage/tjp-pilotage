@@ -1,16 +1,21 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/corrections/usecases/getCorrections/getCorrections.usecase";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { nbEtablissementFormationRegion } from "@/modules/data/utils/nbEtablissementFormationRegion";
+import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { selectTauxDevenirFavorable } from "@/modules/data/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
@@ -32,6 +37,8 @@ export const getCorrectionsQuery = async ({
   millesimeSortie = CURRENT_IJ_MILLESIME,
   voie,
   campagne,
+  positionQuadrant,
+  formationSpecifique,
   offset = 0,
   limit = MAX_LIMIT,
   order = "desc",
@@ -49,14 +56,15 @@ export const getCorrectionsQuery = async ({
         return eb;
       })
     )
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
+    .leftJoin("nsf", "formationView.codeNsf", "nsf.codeNsf")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
-    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .leftJoin("indicateurRegionSortie", (join) =>
       join
         .onRef("indicateurRegionSortie.cfd", "=", "demande.cfd")
@@ -66,6 +74,22 @@ export const getCorrectionsQuery = async ({
         .on(isScolaireIndicateurRegionSortie)
     )
     .leftJoin("user", "user.id", "demande.createdBy")
+    .leftJoin("positionFormationRegionaleQuadrant", (join) =>
+      join.on((eb) =>
+        eb.and([
+          eb(eb.ref("positionFormationRegionaleQuadrant.cfd"), "=", eb.ref("demande.cfd")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeDispositif"), "=", eb.ref("demande.codeDispositif")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
+          eb("positionFormationRegionaleQuadrant.millesimeSortie", "=", getMillesimeFromCampagne(campagne)),
+        ])
+      )
+    )
+    .leftJoin("actionPrioritaire", (join) =>
+      join
+        .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
+        .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
+        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
+    )
     .select((eb) => [
       eb.fn.count<number>("correction.id").over().as("count"),
       "demande.uai",
@@ -80,7 +104,7 @@ export const getCorrectionsQuery = async ({
         )`.as("userName"),
       "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
       "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
-      "dataFormation.libelleFormation",
+      "formationView.libelleFormation",
       "nsf.libelleNsf as libelleNsf",
       "dataEtablissement.libelleEtablissement",
       "dataEtablissement.commune as commune",
@@ -91,7 +115,7 @@ export const getCorrectionsQuery = async ({
       "departement.codeDepartement as codeDepartement",
       "academie.libelleAcademie",
       "academie.codeAcademie as codeAcademie",
-      "dataFormation.typeFamille",
+      "formationView.typeFamille",
       selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertionRegional"),
       selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteRegional"),
       selectTauxDevenirFavorable("indicateurRegionSortie").as("tauxDevenirFavorableRegional"),
@@ -131,6 +155,15 @@ export const getCorrectionsQuery = async ({
       "correction.createdAt",
       "correction.updatedAt",
       "correction.commentaire",
+      selectPositionQuadrant(eb).as("positionQuadrant"),
+      isFormationActionPrioritaire({
+        cfdRef: "demande.cfd",
+        codeDispositifRef: "demande.codeDispositif",
+        codeRegionRef: "demande.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .$call((eb) => {
       if (search)
@@ -143,7 +176,7 @@ export const getCorrectionsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("demande.cfd")}),
                   ' ',
-                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
+                  unaccent(${eb.ref("formationView.libelleFormation")}),
                   ' ',
                   unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
                   ' ',
@@ -201,11 +234,11 @@ export const getCorrectionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
+      if (codeNsf) return eb.where("formationView.codeNsf", "in", codeNsf);
       return eb;
     })
     .$call((eb) => {
@@ -242,6 +275,32 @@ export const getCorrectionsQuery = async ({
 
       return eb;
     })
+    .$call((eb) => {
+      if (positionQuadrant)
+        return eb.where("positionFormationRegionaleQuadrant.positionQuadrant", "=", positionQuadrant);
+      return eb;
+    })
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        return q.where((w) =>
+          w.or([
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])
+              ? w("actionPrioritaire.cfd", "is not", null)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])
+              ? w("formationView.isTransitionEcologique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])
+              ? w("formationView.isTransitionDemographique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
+              ? w("formationView.isTransitionNumerique", "=", true)
+              : sql.val(false),
+          ])
+        );
+      }
+      return q;
+    })
     .$call((q) => {
       if (!orderBy || !order) return q;
       return q.orderBy(sql`${sql.ref(orderBy)}`, sql`${sql.raw(order)} NULLS LAST`);
@@ -250,19 +309,24 @@ export const getCorrectionsQuery = async ({
     .where(isDemandeNotDeleted)
     .offset(offset)
     .limit(limit)
-    .execute();
+    .execute()
+    .then(cleanNull);
 
-  const campagnes = await getKbdClient().selectFrom("campagne").selectAll().orderBy("annee desc").execute();
+  const campagnes = await getKbdClient()
+    .selectFrom("campagne")
+    .selectAll()
+    .orderBy("annee desc")
+    .execute()
+    .then(cleanNull);
 
   return {
-    corrections: corrections.map((correction) =>
-      cleanNull({
-        ...correction,
-        createdAt: correction.createdAt?.toISOString(),
-        updatedAt: correction.updatedAt?.toISOString(),
-      })
-    ),
-    campagnes: campagnes.map(cleanNull),
+    corrections: corrections.map((correction) => ({
+      ...correction,
+      createdAt: correction.createdAt?.toISOString(),
+      updatedAt: correction.updatedAt?.toISOString(),
+      formationSpecifique: formatFormationSpecifique(correction),
+    })),
+    campagnes,
     count: corrections[0]?.count || 0,
   };
 };
