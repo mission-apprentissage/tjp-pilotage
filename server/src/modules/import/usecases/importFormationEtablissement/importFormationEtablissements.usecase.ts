@@ -2,6 +2,7 @@
 import { inject } from "injecti";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "shared";
 
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "@/modules/import/usecases/getCfdRentrees/getCfdRentrees.usecase";
 import { findDiplomesProfessionnels } from "@/modules/import/usecases/importIJData/findDiplomesProfessionnels.dep";
@@ -25,6 +26,56 @@ import {
 } from "./steps/importIndicateursSortieRegionaux/importIndicateursSortieRegionaux.step";
 
 const processedUais = new Set<string>();
+
+const parseCfd = (mef: string, duree: number): number => {
+  const threeFirstChars = parseInt(mef.substring(0, 3));
+
+  switch (threeFirstChars) {
+    case 320:
+      if (duree === 1) return 310;
+      if (duree === 2) return 311;
+      if (duree === 3) return 312;
+      return -1;
+
+    case 323:
+      if (duree === 1) return 370;
+      return -1;
+
+    case 400:
+      if (duree === 1 || duree === 2 || duree === 3) return 247;
+      return -1;
+
+    case 401:
+      if (duree === 3) return 252;
+      return -1;
+
+    case 403:
+      if (duree === 2) return 273;
+      return -1;
+
+    case 450:
+      if (duree === 1 || duree === 2 || duree === 3) return 890;
+      return -1;
+
+    case 500:
+      if (duree === 1) return 240;
+      if (duree === 2) return 241;
+      if (duree === 3) return 242;
+      return -1;
+
+    case 503:
+      if (duree === 1) return 270;
+      return -1;
+
+    case 561:
+      return 257;
+
+    case 461:
+      return 258;
+  }
+
+  return -1;
+};
 
 export const [importFormations] = inject(
   {
@@ -87,10 +138,13 @@ export const [importFormationEtablissements] = inject(
     importIndicateurSortieApprentissage,
     importIndicateursRegionSortieApprentissage,
     findUAIsApprentissage,
+    findRawData: rawDataRepository.findRawData,
+    findRawDatas: rawDataRepository.findRawDatas,
   },
   (deps) => {
     return async ({ cfd, voie = "scolaire" }: { cfd: string; voie?: string }) => {
       if (voie === "apprentissage") {
+        //console.log("codesDispo", 3);
         await deps.importIndicateursRegionSortieApprentissage({ cfd });
         const uais = await deps.findUAIsApprentissage({ cfd });
         if (!uais) return;
@@ -102,20 +156,63 @@ export const [importFormationEtablissements] = inject(
             }
             processedUais.add(uai);
           }
-          const formationEtablissement = await deps.createFormationEtablissement({
-            uai,
-            cfd,
-            codeDispositif: null,
-            voie: "apprentissage",
+
+          // Récupération du codeDispositif pour les formations en apprentissage
+          // à partir du contenu du fichier offres_apprentissage
+          const offreApprentissage = await deps.findRawData({
+            type: "offres_apprentissage",
+            filter: { "Formation: code CFD": cfd },
           });
 
-          for (const millesime of MILLESIMES_IJ) {
-            await deps.importIndicateurSortieApprentissage({
+          if (!offreApprentissage) continue;
+
+          const codesDispositifs: Array<string> = [];
+          const mefs = offreApprentissage["Formation: codes MEF"]?.split(",").map((mef) => mef.trim()) ?? [];
+          const dureeCollectee = offreApprentissage?.["Formation: durée collectée"]
+            ? parseInt(offreApprentissage?.["Formation: durée collectée"])
+            : -1;
+
+          if (mefs.length > 0) {
+            /**
+             * Chercher ce MEF dans le fichier nMef le couple (FORMATION_DIPLOME, DISPOSITIF_FORMATION) qui correspond au (cfd, codeDispositif)
+             */
+            for (const mef of mefs) {
+              const nMefs = await deps.findRawDatas({
+                type: "nMef",
+                filter: {
+                  MEF: mef,
+                  FORMATION_DIPLOME: cfd,
+                },
+              });
+
+              nMefs.forEach((nMef) => {
+                codesDispositifs.push(nMef.DISPOSITIF_FORMATION);
+              });
+            }
+          } else {
+            // déduire le code dispositif du cfd
+            const codeDispositif = parseCfd(offreApprentissage?.["Formation: code CFD"], dureeCollectee);
+            if (codeDispositif > -1) {
+              codesDispositifs.push(codeDispositif.toString());
+            }
+          }
+
+          for (const codeDispositif of codesDispositifs) {
+            const formationEtablissement = await deps.createFormationEtablissement({
               uai,
-              formationEtablissementId: formationEtablissement.id,
-              millesime,
               cfd,
+              codeDispositif,
+              voie: "apprentissage",
             });
+
+            for (const millesime of MILLESIMES_IJ) {
+              await deps.importIndicateurSortieApprentissage({
+                uai,
+                formationEtablissementId: formationEtablissement.id,
+                millesime,
+                cfd,
+              });
+            }
           }
         }
       } else {
