@@ -36,5 +36,5 @@ export const inQ3Q4 = (eb: ExpressionBuilder<DB, "positionFormationRegionaleQuad
     PositionQuadrantEnum.Q4,
   ]);
 
-export const inTransitionEcologique = (eb: ExpressionBuilder<DB, "rome">) =>
-  eb(eb.ref("rome.transitionEcologique"), "=", true);
+export const inTransitionEcologique = (eb: ExpressionBuilder<DB, "formationView">) =>
+  eb(eb.ref("formationView.isTransitionEcologique"), "=", true);

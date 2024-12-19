@@ -9,8 +9,10 @@ function Help() {
    echo "  init:env                                                Update local env files using values from vault file"
    echo "  docker:login                                            Login to ghcr.io"
    echo "  release:interactive                                                                Build & Push Docker image releases"
+   echo "  release:manual                                                                Build & Push Docker image releases in a new release"
    echo "  release:candidate                                                                Build & Push Docker image releases in a release candidate"
    echo "  release:generate:rc-label                                                   Generate next rc label"
+   echo "  release:generate:manual-label                                                   Generate next manual label"
    echo "  release:app                                                                Build & Push Docker image releases"
    echo "  deploy <env> --user <your_username>                                           Deploy application to <env>"
    echo "  preview:build                                                                Build preview"
@@ -55,8 +57,16 @@ function release:candidate() {
   "${SCRIPT_DIR}/release-candidate.sh" "$@"
 }
 
+function release:manual() {
+  "${SCRIPT_DIR}/release-manual.sh" "$@"
+}
+
 function release:generate:rc-label() {
   "${SCRIPT_DIR}/generate-rc-label.sh" "$@"
+}
+
+function release:generate:manual-label() {
+  "${SCRIPT_DIR}/generate-manual-label.sh" "$@"
 }
 
 function deploy() {

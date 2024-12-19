@@ -18,7 +18,7 @@ import { inQ1, inQ1Q2, inQ2, inTransitionEcologique } from "./utils";
 export const countPlacesOuvertesTransitionEcologique = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande" | "campagne">;
+  eb: ExpressionBuilder<DB, "demande" | "campagne" | "formationView">;
 }) => sql<number>`
     ${countPlacesOuvertesScolaireTransitionEcologique(eb)} +
     ${countPlacesOuvertesApprentissageTransitionEcologique(eb)}
@@ -27,13 +27,13 @@ export const countPlacesOuvertesTransitionEcologique = ({
 export const countPlacesOuvertesScolaireTransitionEcologique = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande" | "rome" | "campagne">;
+  eb: ExpressionBuilder<DB, "demande" | "campagne" | "formationView">;
 }) => eb.case().when(inTransitionEcologique(eb)).then(countPlacesOuvertesScolaire(eb)).else(0).end();
 
 export const countPlacesOuvertesApprentissageTransitionEcologique = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande" | "rome" | "campagne">;
+  eb: ExpressionBuilder<DB, "demande" | "campagne" | "formationView">;
 }) => eb.case().when(inTransitionEcologique(eb)).then(countPlacesOuvertesApprentissage(eb)).else(0).end();
 
 export const countPlacesOuvertes = ({ eb }: { eb: ExpressionBuilder<DB, "demande" | "campagne"> }) => sql<number>`

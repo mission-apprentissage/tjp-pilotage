@@ -38,17 +38,17 @@ export const getChiffresEntree = async ({
     ])
     .select((eb) => [
       sql<string>`CONCAT(
-        ${eb.ref("dataEtablissement.uai")},
-        ${eb.ref("dataFormation.cfd")},
+        ${eb.ref("formationEtablissement.uai")},
+        ${eb.ref("formationEtablissement.cfd")},
         COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
       eb.fn.coalesce("ie.rentreeScolaire", sql<string>`${rentreeScolaire}`).as("rentreeScolaire"),
-      "voie",
-      "dataEtablissement.uai",
-      "dataFormation.cfd",
+      "formationEtablissement.voie",
+      "formationEtablissement.uai",
+      "formationEtablissement.cfd",
       "formationEtablissement.codeDispositif",
-      sql<number>`EXTRACT('year' FROM ${eb.ref("dataFormation.dateOuverture")})`.as("dateOuverture"),
+      sql<number>`EXTRACT('year' FROM ${eb.ref("formationView.dateOuverture")})`.as("dateOuverture"),
       sql<string[]>`COALESCE(${eb.ref("ie.effectifs")}, '[]')`.as("effectifs"),
       premiersVoeuxAnnee({ alias: "ie" }).as("premiersVoeux"),
       capaciteAnnee({ alias: "ie" }).as("capacite"),
@@ -56,17 +56,17 @@ export const getChiffresEntree = async ({
       effectifAnnee({ alias: "ie", annee: sql`'0'` }).as("effectifAnnee1"),
       effectifAnnee({ alias: "ie", annee: sql`'1'` }).as("effectifAnnee2"),
       effectifAnnee({ alias: "ie", annee: sql`'2'` }).as("effectifAnnee3"),
-      selectTauxPression("ie", "nd", true).as("tauxPression"),
+      selectTauxPression("ie", "niveauDiplome", true).as("tauxPression"),
       withTauxPressionNat({
         eb: eb2,
-        cfdRef: "dataFormation.cfd",
+        cfdRef: "formationEtablissement.cfd",
         codeDispositifRef: "formationEtablissement.codeDispositif",
         indicateurEntreeAlias: "ie",
         withTauxDemande: true,
       }).as("tauxPressionNational"),
       withTauxPressionReg({
         eb: eb2,
-        cfdRef: "dataFormation.cfd",
+        cfdRef: "formationEtablissement.cfd",
         codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
         indicateurEntreeAlias: "ie",
@@ -74,7 +74,7 @@ export const getChiffresEntree = async ({
       }).as("tauxPressionRegional"),
       withTauxPressionDep({
         eb: eb2,
-        cfdRef: "dataFormation.cfd",
+        cfdRef: "formationEtablissement.cfd",
         codeDispositifRef: "formationEtablissement.codeDispositif",
         codeDepartementRef: "dataEtablissement.codeDepartement",
         indicateurEntreeAlias: "ie",
@@ -84,16 +84,17 @@ export const getChiffresEntree = async ({
     ])
     .distinct()
     .$call((q) => {
-      if (codeNiveauDiplome?.length) return q.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome?.length) return q.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       return q;
     })
     .groupBy([
       "ie.rentreeScolaire",
       "formationEtablissement.voie",
       "formationEtablissement.codeDispositif",
-      "dataEtablissement.uai",
-      "dataFormation.cfd",
-      "nd.codeNiveauDiplome",
+      "formationEtablissement.uai",
+      "formationEtablissement.cfd",
+      "formationView.dateOuverture",
+      "niveauDiplome.codeNiveauDiplome",
       "ie.capacites",
       "ie.anneeDebut",
       "ie.premiersVoeux",

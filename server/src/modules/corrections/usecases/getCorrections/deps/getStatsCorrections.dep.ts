@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
 
 import { getKbdClient } from "@/db/db";
@@ -23,27 +24,34 @@ export const getStatsCorrectionsQuery = async ({
   user,
   voie,
   campagne,
+  formationSpecifique,
   search,
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
   const statsCorrections = await getKbdClient()
     .selectFrom("correction")
-    .leftJoin("latestDemandeView as demande", "demande.numero", "correction.intentionNumero")
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .innerJoin("latestDemandeView as demande", "demande.numero", "correction.intentionNumero")
+    .innerJoin("campagne", (join) =>
+      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
+        if (campagne) return eb.on("campagne.annee", "=", campagne);
+        return eb;
+      })
+    )
+    .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("user", "user.id", "demande.createdBy")
-    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
-    .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
-    .innerJoin("campagne", (join) =>
-      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-        if (campagne) return eb.on("campagne.annee", "=", campagne);
-        return eb;
-      })
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
+    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
+    .leftJoin("actionPrioritaire", (join) =>
+      join
+        .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
+        .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
+        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
     )
     .select((eb) => [
       eb.fn.count<number>("correction.id").as("nbCorrections"),
@@ -107,7 +115,7 @@ export const getStatsCorrectionsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("demande.cfd")}),
                   ' ',
-                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
+                  unaccent(${eb.ref("formationView.libelleFormation")}),
                   ' ',
                   unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
                   ' ',
@@ -165,11 +173,11 @@ export const getStatsCorrectionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
+      if (codeNsf) return eb.where("formationView.codeNsf", "in", codeNsf);
       return eb;
     })
     .$call((eb) => {
@@ -205,6 +213,27 @@ export const getStatsCorrectionsQuery = async ({
         );
       }
       return eb;
+    })
+    .$call((q) => {
+      if (formationSpecifique?.length) {
+        return q.where((w) =>
+          w.or([
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])
+              ? w("actionPrioritaire.cfd", "is not", null)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])
+              ? w("formationView.isTransitionEcologique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])
+              ? w("formationView.isTransitionDemographique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
+              ? w("formationView.isTransitionNumerique", "=", true)
+              : sql.val(false),
+          ])
+        );
+      }
+      return q;
     })
     .where(isDemandeSelectable({ user }))
     .executeTakeFirstOrThrow();

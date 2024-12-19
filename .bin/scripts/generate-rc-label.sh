@@ -23,7 +23,7 @@ esac
 
 readonly VERSION=$("${ROOT_DIR}/.bin/scripts/get-version.sh")
 
-generate_next_patch_version() {
+generate_next_rc_version() {
   local last_current_branch_tag=$(git describe --tags --abbrev=0 --match="v[0-9]*.[0-9]*.[0-9]*")
   local remote_tags=$(git ls-remote --tags origin | awk '{print $2}' | sed 's|refs/tags/||')
   local current_commit_id=$(git rev-parse HEAD)
@@ -77,4 +77,4 @@ generate_next_patch_version() {
   echo $rc_version
 }
 
-echo $(generate_next_patch_version "$@")
+echo $(generate_next_rc_version "$@")

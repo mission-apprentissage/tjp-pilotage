@@ -34,15 +34,18 @@ const logDemande = (intention?: { statut: string }) => {
   if (!intention) return;
   switch (intention.statut) {
     case DemandeStatutEnum["proposition"]:
-      logger.info("Proposition enregistrée", {
-        intention: intention,
-      });
+      logger.info(
+        {
+          intention: intention,
+        },
+        "Proposition enregistrée"
+      );
       break;
     case DemandeStatutEnum["demande validée"]:
-      logger.info("Demande validée", { intention: intention });
+      logger.info({ intention: intention }, "Demande validée");
       break;
     case DemandeStatutEnum["refusée"]:
-      logger.info("Demande refusée", { intention: intention });
+      logger.info({ intention: intention }, "Demande refusée");
       break;
   }
 };
@@ -85,10 +88,13 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
         notNumero: intention.numero,
       });
       if (sameIntention) {
-        logger.info("Demande similaire existante", {
-          sameIntention,
-          intention,
-        });
+        logger.info(
+          {
+            sameIntention,
+            intention,
+          },
+          "Demande similaire existante"
+        );
         throw Boom.badRequest("Demande similaire existante", {
           id: sameIntention.id,
           errors: {
@@ -121,10 +127,13 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
 
       const errors = validateIntention(cleanNull(intentionData));
       if (errors) {
-        logger.info("Intention incorrecte", {
-          errors,
-          intention: intentionData,
-        });
+        logger.info(
+          {
+            errors,
+            intention: intentionData,
+          },
+          "Intention incorrecte"
+        );
         throw Boom.badData("Donnée incorrectes", { errors });
       }
 

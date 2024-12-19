@@ -12,6 +12,7 @@ import type {
   RaisonCorrectionLabel,
 } from "@/app/(wrapped)/intentions/utils/raisonCorrectionUtils";
 import { getRaisonCorrectionLabel } from "@/app/(wrapped)/intentions/utils/raisonCorrectionUtils";
+import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
@@ -151,6 +152,16 @@ export const LineContent = ({
       >
         {correction.libelleFormation}
       </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"formationSpecifique"}
+        minW={300}
+        maxW={300}
+        bgColor={getCellColor("formationSpecifique")}
+      >
+        <BadgesFormationSpecifique formationSpecifique={correction.formationSpecifique} />
+      </ConditionalTd>
+
       <ConditionalTd colonneFilters={colonneFilters} colonne={"niveauDiplome"} bgColor={getCellColor("niveauDiplome")}>
         {correction.niveauDiplome}
       </ConditionalTd>

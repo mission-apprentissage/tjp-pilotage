@@ -1,6 +1,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
-import { useState } from "react";
+import type { SetStateAction } from "react";
+import { useEffect, useState } from "react";
 
 import { createParametrizedUrl } from "./createParametrizedUrl";
 
@@ -10,25 +11,19 @@ export function useStateParams<F extends object>({
 }: {
   defaultValues: F;
   prefix?: string;
-}): [F, (filters: F) => void] {
+}): [F, (f: SetStateAction<F>) => void] {
   const queryParams = useSearchParams();
   const router = useRouter();
   const params = qs.parse(queryParams.toString());
   const prefixed = (prefix ? params[prefix] : params) as F;
   const [filters, setFilters] = useState<F>({ ...defaultValues, ...prefixed });
 
-  return [
-    filters,
-    (filters: F) => {
-      const mergedFilters = { ...prefixed, ...filters };
-      setFilters(mergedFilters);
-      router.replace(
-        createParametrizedUrl(
-          location.pathname,
-          prefix ? { ...params, [prefix]: mergedFilters } : { ...params, ...mergedFilters }
-        ),
-        { scroll: false }
-      );
-    },
-  ];
+  useEffect(() => {
+    router.replace(
+      createParametrizedUrl(location.pathname, prefix ? { ...params, [prefix]: filters } : { ...params, ...filters }),
+      { scroll: false }
+    );
+  }, [filters]);
+
+  return [filters, setFilters];
 }

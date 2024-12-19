@@ -7,6 +7,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
@@ -24,11 +26,9 @@ import { FORMATION_COLUMNS, FORMATION_COLUMNS_DEFAULT } from "./FORMATION_COLUMN
 import { GROUPED_FORMATION_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_COLUMNS";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import { SideSection } from "./SideSection/SideSection";
-import type { Filters, Order } from "./types";
+import type { Filters, Formations, Order } from "./types";
 
 const PAGE_SIZE = 30;
-
-type QueryResult = (typeof client.infer)["[GET]/formations"];
 
 const ColonneFilterSection = chakra(
   ({
@@ -72,7 +72,7 @@ const ColonneFilterSection = chakra(
               string,
               {
                 color: string;
-                options: { label: string; value: string; disabled?: boolean }[];
+                options: (OptionSchema & { disabled?: boolean })[];
               }
             >
           )}
@@ -154,7 +154,7 @@ export default function Formations() {
     query: { page: "formation" },
   });
 
-  const getDataForExport = (data: QueryResult) => {
+  const getDataForExport = (data: Formations) => {
     const region = data.filters.regions.find((r) => r.value === filters.codeRegion?.[0]);
 
     const academies = data.filters.academies.filter((a) => filters.codeAcademie?.includes(a.value) ?? false);
@@ -175,16 +175,16 @@ export default function Formations() {
     };
 
     const columns = {
-      ...FORMATION_COLUMNS,
+      ..._.omit(FORMATION_COLUMNS, "formationSpecifique"),
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
     };
 
-    let formations = data.formations;
+    let formations = [];
 
-    formations = data.formations.map((f) => ({
-      ...f,
+    formations = data.formations.map((formation) => ({
+      ...formation,
       ...(filters.codeRegion && region
         ? {
             selectedCodeRegion: region.value,
@@ -203,6 +203,10 @@ export default function Formations() {
             selectedDepartement: formatArray(departements.map((departement) => departement.label)),
           }
         : {}),
+      actionPrioritaire: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
+      transitionDemographique: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
+      transitionEcologique: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Transition écologique"]],
+      transitionNumerique: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Transition numérique"]],
     }));
 
     return {
@@ -221,11 +225,7 @@ export default function Formations() {
 
     const filteredColumns = canShowQuadrantPosition ? columns : _.omit(columns, "positionQuadrant");
 
-    downloadCsv(
-      formatExportFilename("formation_export", isFiltered ? filters : undefined),
-      formations,
-      filteredColumns
-    );
+    downloadCsv(formatExportFilename("formation_export"), formations, filteredColumns);
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
@@ -238,11 +238,7 @@ export default function Formations() {
 
     const filteredColumns = canShowQuadrantPosition ? columns : _.omit(columns, "positionQuadrant");
 
-    downloadExcel(
-      formatExportFilename("formation_export", isFiltered ? filters : undefined),
-      formations,
-      filteredColumns
-    );
+    downloadExcel(formatExportFilename("formation_export"), formations, filteredColumns);
   };
 
   const canShowQuadrantPosition = filters.codeRegion?.length === 1;

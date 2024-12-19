@@ -2,6 +2,7 @@ import { CURRENT_IJ_MILLESIME } from "shared";
 import type { Filters } from "shared/routes/schemas/get.panorama.stats.departement.schema";
 
 import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { cleanNull } from "@/utils/noNull";
 
 import { getFormationsDepartementBase } from "./getFormationsDepartementBase.dep";
@@ -21,4 +22,10 @@ export const getFormationsDepartement = async (filters: Filters) =>
       null
     )
     .execute()
-    .then(cleanNull);
+    .then(cleanNull)
+    .then((formations) =>
+      formations.map((formation) => ({
+        ...formation,
+        formationSpecifique: formatFormationSpecifique(formation),
+      }))
+    );

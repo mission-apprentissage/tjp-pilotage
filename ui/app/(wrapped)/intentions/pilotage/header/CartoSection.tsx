@@ -95,6 +95,8 @@ export const CartoSection = ({
 
       code: territoire.code,
     }));
+    // TODO: REFACTO
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, filters, indicateur]);
 
   const handleClickOnTerritoire = useCallback(
@@ -118,6 +120,8 @@ export const CartoSection = ({
         codeDepartement: filters.scope !== ScopeEnum["département"] ? undefined : code,
       });
     },
+    // TODO: REFACTO
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [handleFilters, filters, scopeCode]
   );
 

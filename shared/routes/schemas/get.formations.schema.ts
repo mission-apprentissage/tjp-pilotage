@@ -1,15 +1,14 @@
 import { z } from "zod";
 
+import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
-
-const OptionSchema = z.object({
-  label: z.coerce.string(),
-  value: z.coerce.string(),
-});
+import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
+import { OptionSchema } from "../../schema/optionSchema";
 
 export const FormationLineSchema = z.object({
   cfd: z.string(),
   libelleFormation: z.string(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
   rentreeScolaire: z.string().optional(),
   codeNiveauDiplome: z.string(),
   libelleFamille: z.string().optional(),
@@ -46,7 +45,7 @@ export const FormationLineSchema = z.object({
   dateFermeture: z.string().optional(),
 });
 
-export const getFormationSchema = {
+export const getFormationsSchema = {
   querystring: z.object({
     cfd: z.array(z.string()).optional(),
     codeRegion: z.array(z.string()).optional(),
@@ -62,6 +61,7 @@ export const getFormationSchema = {
     search: z.string().optional(),
     withEmptyFormations: z.string().optional(),
     withAnneeCommune: z.string().optional(),
+    formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationLineSchema.keyof().optional(),
     offset: z.coerce.number().optional(),

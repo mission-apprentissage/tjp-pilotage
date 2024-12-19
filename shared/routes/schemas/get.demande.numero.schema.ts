@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
-
+import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 const UserSchema = z.object({
   fullname: z.string().optional(),
   id: z.string().optional(),
@@ -132,6 +132,7 @@ const DemandeSchema = z.object({
   differenceCapaciteScolaire: z.coerce.number().optional(),
   differenceCapaciteApprentissage: z.coerce.number().optional(),
   correction: CorrectionSchema.optional(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
 });
 
 export const getDemandeSchema = {

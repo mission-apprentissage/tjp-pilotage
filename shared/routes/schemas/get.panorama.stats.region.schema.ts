@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
+import { OptionSchema } from "../../schema/optionSchema";
+
 export const TauxIJSchema = z.object({
   annee: z.string(),
   libelleAnnee: z.string(),
@@ -9,14 +12,10 @@ export const TauxIJSchema = z.object({
 
 export const TauxIJParAnneeSchema = z.record(z.string(), TauxIJSchema);
 
-const OptionSchema = z.object({
-  label: z.coerce.string(),
-  value: z.coerce.string(),
-});
-
 const FormationSchema = z.object({
   cfd: z.string(),
   libelleFormation: z.string(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
   codeNiveauDiplome: z.string(),
   libelleNiveauDiplome: z.string().optional(),
   codeDispositif: z.string().optional(),
@@ -42,7 +41,7 @@ const FormationSchema = z.object({
 
 const TopFlopSchema = FormationSchema.extend({
   tauxInsertion: z.coerce.number().optional(),
-}).omit({ positionQuadrant: true });
+});
 
 export const getDataForPanoramaRegionSchema = {
   querystring: z.object({
