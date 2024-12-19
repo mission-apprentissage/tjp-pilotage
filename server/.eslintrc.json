@@ -17,6 +17,12 @@
       {
         "allowModules": ["shared"]
       }
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["**/*.test.ts", "**/*.spec.ts"]
+      }
     ]
   },
   "overrides": [
