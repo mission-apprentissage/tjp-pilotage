@@ -1,7 +1,9 @@
 import { sql } from "kysely";
-import type { FormationSchema } from "shared/routes/schemas/get.etablissement.uai.analyse-detaillee.schema";
-import type { z } from "zod";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import type { Voie } from "shared/enum/voieEnum";
 
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
 
 import { getBase } from "./base.dep";
@@ -9,24 +11,38 @@ import { getBase } from "./base.dep";
 export const getFormations = async ({ uai }: { uai: string }) =>
   getBase({ uai })
     .select((eb) => [
-      sql<string>`CONCAT(
-        ${eb.ref("dataEtablissement.uai")},
-        ${eb.ref("dataFormation.cfd")},
-        COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
+      sql<string>`
+      CONCAT(
+        ${eb.ref("formationEtablissement.uai")},
+        ${eb.ref("formationEtablissement.cfd")},
+        COALESCE(${eb.ref("formationEtablissement.codeDispositif")}, ''),
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
-      "libelleNiveauDiplome",
-      "libelleFormation",
-      "voie",
-      "libelleDispositif",
-      "dataFormation.codeNiveauDiplome",
-      "dataFormation.cfd",
-      "dataFormation.dateOuverture",
+      "formationEtablissement.voie",
+      "formationEtablissement.cfd",
       "formationEtablissement.codeDispositif",
-      "dataFormation.typeFamille",
+      "formationView.libelleFormation",
+      "formationView.codeNiveauDiplome",
+      "formationView.dateOuverture",
+      "formationView.typeFamille",
       "dispositif.libelleDispositif",
+      "niveauDiplome.libelleNiveauDiplome",
+      isFormationActionPrioritaire({
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "dataEtablissement.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
+    .$narrowType<{ voie: Voie }>()
     .orderBy(["libelleNiveauDiplome asc", "libelleFormation asc", "libelleDispositif"])
-    .$castTo<z.infer<typeof FormationSchema>>()
     .execute()
-    .then(cleanNull);
+    .then(cleanNull)
+    .then((formations) =>
+      formations.map((formation) => ({
+        ...formation,
+        formationSpecifique: formatFormationSpecifique(formation),
+      }))
+    );

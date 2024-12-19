@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { scope, ScopeEnum } from "../../enum/scopeEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
 
@@ -60,6 +61,7 @@ export const FiltersSchema = z.object({
   secteur: z.array(SecteurZodType).optional(),
   statut: z.array(DemandeStatutZodType.exclude(["refusée", "supprimée"])).optional(),
   withColoration: z.string().optional(),
+  formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
 });
 
 export const getRepartitionPilotageIntentionsSchema = {

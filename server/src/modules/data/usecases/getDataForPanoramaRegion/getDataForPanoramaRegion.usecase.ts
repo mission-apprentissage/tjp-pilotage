@@ -1,9 +1,6 @@
 import type { getDataForPanoramaRegionSchema } from "shared/routes/schemas/get.panorama.stats.region.schema";
 import type { z } from "zod";
 
-import { getStatsSortieQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
-import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant";
-
 import { getFilters, getFormationsRegion, getTauxIJ, getTopFlopFormationsRegion } from "./dependencies";
 
 export const getDataForPanoramaRegionFactory =
@@ -12,24 +9,20 @@ export const getDataForPanoramaRegionFactory =
       getFormationsRegion,
       getFilters,
       getTopFlopFormationsRegion,
-      getStatsSortieQuery,
-      getPositionQuadrant,
       getTauxIJ,
     }
   ) =>
   async (activeFilters: z.infer<typeof getDataForPanoramaRegionSchema.querystring>) => {
-    const [formations, topFlops, filters, statsSortie, { tauxInsertion, tauxPoursuite }] = await Promise.all([
+    const [formations, topFlops, filters, { tauxInsertion, tauxPoursuite }] = await Promise.all([
       deps.getFormationsRegion(activeFilters),
       deps.getTopFlopFormationsRegion(activeFilters),
       deps.getFilters(activeFilters),
-      deps.getStatsSortieQuery(activeFilters),
       deps.getTauxIJ(activeFilters),
     ]);
 
     return {
       formations: formations.map((formation) => ({
         ...formation,
-        positionQuadrant: deps.getPositionQuadrant(formation, statsSortie),
       })),
       topFlops,
       filters,

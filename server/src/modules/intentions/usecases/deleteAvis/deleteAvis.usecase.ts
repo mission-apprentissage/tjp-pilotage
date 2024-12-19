@@ -24,7 +24,7 @@ export const deleteAvisFactory =
     });
     if (!isAllowed) throw Boom.forbidden();
     await deps.deleteAvisQuery(id);
-    logger.info("Avis supprimé", { id, avis: avis });
+    logger.info({ id, avis: avis }, "Avis supprimé");
   };
 
 export const deleteAvisUsecase = deleteAvisFactory();

@@ -1,12 +1,10 @@
 import { z } from "zod";
 
+import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
-
-const OptionSchema = z.object({
-  label: z.coerce.string(),
-  value: z.coerce.string(),
-});
+import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
+import { OptionSchema } from "../../schema/optionSchema";
 
 const FormationEtablissementLineSchema = z.object({
   libelleEtablissement: z.string().optional(),
@@ -22,6 +20,7 @@ const FormationEtablissementLineSchema = z.object({
   libelleRegion: z.string().optional(),
   cfd: z.string(),
   libelleFormation: z.string(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
   codeNiveauDiplome: z.string(),
   libelleFamille: z.string().optional(),
   codeDispositif: z.string().optional(),
@@ -82,6 +81,7 @@ const FiltersSchema = z.object({
   uai: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
   positionQuadrant: z.array(PositionQuadrantZodType).optional(),
+  formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
   withAnneeCommune: z.string().optional(),
   search: z.string().optional(),
   order: z.enum(["asc", "desc"]).optional(),

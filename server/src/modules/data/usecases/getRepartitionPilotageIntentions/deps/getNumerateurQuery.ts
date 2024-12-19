@@ -1,7 +1,7 @@
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/data/usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.usecase";
 import { genericOnDemandes } from "@/modules/data/utils/onDemande";
-import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
+import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { cleanNull } from "@/utils/noNull";
 
 export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {

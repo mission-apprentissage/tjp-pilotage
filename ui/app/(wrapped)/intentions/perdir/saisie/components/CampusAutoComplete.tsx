@@ -1,6 +1,7 @@
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 
@@ -12,7 +13,7 @@ export const CampusAutocompleteInput = ({
   onChange,
 }: {
   name: string;
-  defaultValue?: { value: string; label?: string };
+  defaultValue?: OptionSchema;
   active?: boolean;
   inError: boolean;
   onChange: (value?: (typeof client.infer)["[GET]/campus/search/:search"][number]) => void;

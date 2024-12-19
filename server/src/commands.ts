@@ -1,3 +1,4 @@
+import { exec } from "node:child_process";
 import { setMaxListeners } from "node:events";
 import { writeFileSync } from "node:fs";
 import path from "node:path";
@@ -153,6 +154,16 @@ export const up = async (db: Kysely<unknown>) => {};
 
 export const down = async (db: Kysely<unknown>) => {};
 `
+    );
+  });
+
+program
+  .command("migrations:generate-schema")
+  .description("Generate kysely schema")
+  .action(async () => {
+    console.log(path.join(__dirname(), "../src", "db/schema.ts"));
+    exec(
+      `DATABASE_URL="${config.psql.uri}" npx kysely-codegen --schema public --out-file=${path.join(__dirname(), "../src", "db/schema.ts")} --dialect postgres && yarn prettier:fix`
     );
   });
 

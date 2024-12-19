@@ -2,6 +2,7 @@ import { CURRENT_IJ_MILLESIME } from "shared";
 import type { Filters } from "shared/routes/schemas/get.panorama.stats.region.schema";
 
 import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { cleanNull } from "@/utils/noNull";
 
 import { getFormationsRegionBase } from "./getFormationsRegionBase.dep";
@@ -21,4 +22,10 @@ export const getTopFlopFormationsRegion = async (filters: Filters) =>
       null
     )
     .execute()
-    .then(cleanNull);
+    .then(cleanNull)
+    .then((formations) =>
+      formations.map((formation) => ({
+        ...formation,
+        formationSpecifique: formatFormationSpecifique(formation),
+      }))
+    );

@@ -1,6 +1,7 @@
 import { getKbdClient } from "@/db/db";
 
-export type RawData = { type: string; data: JSON };
+export type RawDataLine = { [key: string]: string };
+export type RawData = { type: string; data: RawDataLine };
 
 export const createRawDatas = async ({ data }: { data: Array<RawData> }) => {
   return await getKbdClient()

@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
 const CorrectionItem = z.object({
@@ -19,6 +21,7 @@ const CorrectionItem = z.object({
   // Formation
   libelleNsf: z.string().optional(),
   libelleFormation: z.string().optional(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
   niveauDiplome: z.string().optional(),
   libelleDispositif: z.string().optional(),
   codeDispositif: z.string(),
@@ -70,8 +73,10 @@ export const FiltersSchema = z.object({
   coloration: z.string().optional(),
   amiCMA: z.string().optional(),
   secteur: z.string().optional(),
+  positionQuadrant: z.string().optional(),
   voie: z.enum(["scolaire", "apprentissage"]).optional(),
   campagne: z.string().optional(),
+  formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: CorrectionItem.keyof().optional(),
   offset: z.coerce.number().optional(),

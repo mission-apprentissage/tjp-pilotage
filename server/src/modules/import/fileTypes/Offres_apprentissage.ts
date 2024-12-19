@@ -2,23 +2,23 @@ import { z } from "zod";
 
 export const OffresApprentissageSchema = z
   .object({
-    "UAI formation": z.string().optional(),
-    "UAI Responsable": z.string().optional(),
-    "UAI formateur": z.string().optional(),
-    "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)": z.string(),
-    "Niveau de la formation": z.string(),
-    Tags: z.string(),
+    "Lieu: UAI": z.string().optional(),
+    "Responsable: UAI": z.string().optional(),
+    "Formateur: UAI": z.string().optional(),
+    "Formation: code CFD": z.string(),
+    "Formation: niveau BCN": z.string(),
+    "Offre: Tags": z.string(),
   })
   .superRefine((data, ctx) => {
     if (
-      typeof data["UAI formation"] === "undefined" &&
-      typeof data["UAI formateur"] === "undefined" &&
-      typeof data["UAI Responsable"] === "undefined"
+      typeof data["Lieu: UAI"] === "undefined" &&
+      typeof data["Formateur: UAI"] === "undefined" &&
+      typeof data["Responsable: UAI"] === "undefined"
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.invalid_type,
-        message: "UAI formation or UAI formateur or UAI Responsable Required",
-        path: ["UAI formation", "UAI formateur", "UAI Responsable"],
+        message: "'Lieu: UAI' or 'Formateur: UAI' or 'Responsable: UAI' Required",
+        path: ["Lieu: UAI", "Formateur: UAI", "Responsable: UAI"],
         expected: "string",
         received: "undefined",
       });

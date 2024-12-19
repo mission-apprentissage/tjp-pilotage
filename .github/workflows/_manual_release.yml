@@ -1,10 +1,10 @@
-name: Release candidate
+name: Manual Release
 
 on:
   workflow_dispatch:
     inputs:
       release_type:
-        description: Le type de Release Candidate à générer
+        description: Le type de Release à générer
         type: choice
         required: true
         options:
@@ -15,7 +15,7 @@ on:
   workflow_call:
     inputs:
       release_type:
-        description: Le type de Release Candidate à générer
+        description: Le type de Release à générer
         type: string
         required: false
 
@@ -89,7 +89,7 @@ jobs:
         run: echo "VERSION=$(git describe --tags --abbrev=0 | cut -c2-)" >> "$GITHUB_OUTPUT"
 
       - name: bump and release
-        run: yarn release:candidate ${{ inputs.release_type }}
+        run: yarn release:manual ${{ inputs.release_type }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

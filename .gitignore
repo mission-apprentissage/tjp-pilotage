@@ -176,3 +176,10 @@ seed.gz
 
 tsconfig.tsbuildinfo
 .infra_
+
+
+# Vs code config
+.vscode/terminals.json
+
+# Cursor
+.cursorrules

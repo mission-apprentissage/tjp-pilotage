@@ -1,4 +1,6 @@
 import { getKbdClient } from "@/db/db";
+import type { Actions_prioritaires } from "@/modules/import/fileTypes/Actions_prioritaires";
+import { ActionsPrioritairesSchema } from "@/modules/import/fileTypes/Actions_prioritaires";
 import type { Attractivite_capacite } from "@/modules/import/fileTypes/Attractivite_capacite";
 import { AttractiviteCapaciteSchema } from "@/modules/import/fileTypes/Attractivite_capacite";
 import type { BTS_Attractivite_capacite } from "@/modules/import/fileTypes/BTS_Attractivite_capacite";
@@ -87,6 +89,7 @@ export const Schemas = {
   tension_rome_departement: TensionRomeSchema,
   tension_rome_region: TensionRomeSchema,
   tension_rome: TensionRomeSchema,
+  actions_prioritaires: ActionsPrioritairesSchema,
 };
 
 export type LineTypes = {
@@ -122,6 +125,7 @@ export type LineTypes = {
   tension_rome_departement: Tension_Rome;
   tension_rome_region: Tension_Rome;
   tension_rome: Tension_Rome;
+  actions_prioritaires: Actions_prioritaires;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

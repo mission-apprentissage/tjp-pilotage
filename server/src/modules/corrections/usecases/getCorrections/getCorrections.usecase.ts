@@ -1,19 +1,20 @@
 import type { MILLESIMES_IJ } from "shared";
-import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import type { FiltersSchema } from "shared/routes/schemas/get.corrections.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { getCurrentCampagneQuery } from "@/modules/corrections/queries/getCurrentCampagne/getCurrentCampagne.query";
-import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
-import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant";
-import { cleanNull } from "@/utils/noNull";
 
 import { getCampagneQuery, getCorrectionsQuery, getFiltersQuery, getStatsCorrectionsQuery } from "./deps";
 
 export interface Filters extends z.infer<typeof FiltersSchema> {
   user: RequestUser;
   millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+  campagne: string;
+}
+
+export interface ActiveFilters extends Omit<Filters, "campagne"> {
+  campagne?: string;
 }
 
 const getCorrectionsFactory =
@@ -24,34 +25,28 @@ const getCorrectionsFactory =
       getCurrentCampagneQuery,
       getCampagneQuery,
       getFiltersQuery,
-      getStatsSortieParRegionsEtNiveauDiplomeQuery,
     }
   ) =>
-  async (activeFilters: Filters) => {
-    const [stats, { count, corrections }, filters, statsSortie] = await Promise.all([
-      deps.getStatsCorrectionsQuery(activeFilters),
-      deps.getCorrectionsQuery(activeFilters),
-      deps.getFiltersQuery(activeFilters),
-      deps.getStatsSortieParRegionsEtNiveauDiplomeQuery(activeFilters),
+  async (activeFilters: ActiveFilters) => {
+    const campagne = await deps.getCurrentCampagneQuery();
+    const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
+    const [stats, { count, corrections }, filters] = await Promise.all([
+      deps.getStatsCorrectionsQuery({
+        ...activeFilters,
+        campagne: anneeCampagne,
+      }),
+      deps.getCorrectionsQuery({
+        ...activeFilters,
+        campagne: anneeCampagne,
+      }),
+      deps.getFiltersQuery({
+        ...activeFilters,
+        campagne: anneeCampagne,
+      }),
     ]);
 
     return {
-      corrections: corrections.map((correction) =>
-        cleanNull({
-          ...correction,
-          positionQuadrant:
-            statsSortie && statsSortie[correction.codeRegion ?? ""]
-              ? getPositionQuadrant(
-                  {
-                    ...correction,
-                    tauxInsertion: correction.tauxInsertionRegional,
-                    tauxPoursuite: correction.tauxPoursuiteRegional,
-                  },
-                  statsSortie[correction.codeRegion ?? ""][correction.codeNiveauDiplome ?? ""] || {}
-                )
-              : PositionQuadrantEnum["Hors quadrant"],
-        })
-      ),
+      corrections,
       count,
       stats,
       filters,
