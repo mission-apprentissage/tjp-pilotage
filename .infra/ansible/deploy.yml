@@ -85,7 +85,7 @@
         minute: "0"
         hour: "2"
         weekday: "1"
-        job: "/opt/app/scripts/anonymise-users.sh"
+        job: "/opt/app/scripts/anonymize-users.sh"
         user: "root"
         cron_file: "anonymize-users"
 
