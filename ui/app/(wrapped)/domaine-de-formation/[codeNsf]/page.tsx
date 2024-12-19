@@ -2,6 +2,7 @@ import { isAxiosError } from "axios";
 import _ from "lodash";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import type { ScopeZone } from "shared";
 import { ScopeEnum } from "shared";
 
 import { serverClient } from "@/api.client";
@@ -53,16 +54,16 @@ const findDefaultCfd = (
   }
   const firstFormations = formationByCodeNiveauDiplome[Object.keys(formationByCodeNiveauDiplome)[0]];
 
-  const formationWithAtLeastOneEtab = firstFormations.filter((f) => f.nbEtab > 0);
+  const formationWithAtLeastOneEtab = firstFormations?.filter((f) => f.nbEtab > 0);
 
-  return formationWithAtLeastOneEtab[0]?.cfd;
+  return formationWithAtLeastOneEtab?.[0]?.cfd ?? "";
 };
 
 const defineScope = (
   codeRegion: string | undefined,
   codeAcademie: string | undefined,
   codeDepartement: string | undefined
-) => {
+): ScopeZone => {
   if (codeDepartement) {
     return ScopeEnum.département;
   }
