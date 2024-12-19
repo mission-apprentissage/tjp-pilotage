@@ -81,13 +81,11 @@
 
     - name: "Installation du cron d'anonymisation des utilisateurs"
       ansible.builtin.cron:
-        name: "Anonymisation des utilisateurs"
+        name: "anonymize-users"
         minute: "0"
         hour: "2"
         weekday: "1"
-        job: "/opt/app/scripts/anonymise-users.sh"
-        user: "root"
-        cron_file: "anonymize-users"
+        job: "sudo /opt/app/scripts/anonymize-users.sh"
 
     - name: "Verification des certificats SSL"
       shell:

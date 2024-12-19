@@ -2,7 +2,7 @@ import { sql } from "kysely";
 
 import { getKbdClient } from "@/db/db";
 
-export const countUsersToAnonymiseQuery = async () =>
+export const countUsersToAnonymizeQuery = async () =>
   await getKbdClient()
     .selectFrom("user")
     .select((eb) =>
@@ -22,7 +22,7 @@ export const countUsersToAnonymiseQuery = async () =>
     )
     .executeTakeFirstOrThrow();
 
-export const anonymiseUsersQuery = async () => {
+export const anonymizeUsersQuery = async () => {
   await sql`
     UPDATE ${sql.table("user")}
     SET

@@ -7,7 +7,8 @@ import { PERMISSIONS } from "shared";
 import { z } from "zod";
 
 import { basepath } from "./basepath";
-import { anonymiseUsers } from "./modules/core/usecases/anonymiseUsers/anonymiseUsers.usecase";
+import { createJob } from "./modules/core/queries/createJob";
+import { anonymizeUsers } from "./modules/core/usecases/anonymizeUsers/anonymizeUsers.usecase";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
 import type { LineTypes } from "./modules/import/repositories/rawData.repository";
 import { Schemas } from "./modules/import/repositories/rawData.repository";
@@ -93,10 +94,11 @@ export function productCommands(cli: Command) {
           console.log(`${user.email} failed`, (e as Error).message);
         }
       }
+      await createJob({ name: "importUsers" });
     });
 
   cli
-    .command("create-user")
+    .command("createUser")
     .requiredOption("--email <string>")
     .requiredOption("--firstname <string>")
     .requiredOption("--lastname <string>")
@@ -105,6 +107,7 @@ export function productCommands(cli: Command) {
     .action(
       async (options: { email: string; firstname: string; lastname: string; role: Role; codeRegion?: string }) => {
         await createUser({ body: options });
+        await createJob({ name: "createUser" });
       }
     );
 
@@ -280,6 +283,7 @@ export function productCommands(cli: Command) {
           }
         }
       }
+      await createJob({ name: "importFiles", sub: filename });
     });
 
   cli
@@ -314,6 +318,7 @@ export function productCommands(cli: Command) {
         }
       }
       await refreshViews();
+      await createJob({ name: "importTables", sub: usecaseName });
     });
 
   cli.command("refreshViews").action(async () => {
@@ -321,7 +326,8 @@ export function productCommands(cli: Command) {
   });
 
   cli.command("importIJ").action(async () => {
-    await importIJData();
+    await importIJData().then();
+    await createJob({ name: "importIJ" });
   });
 
   cli
@@ -341,6 +347,7 @@ export function productCommands(cli: Command) {
         }
       }
       await refreshViews();
+      await createJob({ name: "importFormations", sub: usecaseName });
     });
 
   cli
@@ -361,6 +368,7 @@ export function productCommands(cli: Command) {
           await usecase();
         }
       }
+      await createJob({ name: "importTensionFranceTravail", sub: usecaseName });
     });
 
   cli
@@ -368,12 +376,14 @@ export function productCommands(cli: Command) {
     .description("Calcul des positions quadrants")
     .action(async () => {
       await importPositionsQuadrant();
+      await createJob({ name: "importPositionsQuadrant" });
     });
 
   cli
-    .command("anonymiseUsers")
+    .command("anonymizeUsers")
     .description("Anonymisation des users inactifs depuis 2 ans")
     .action(async () => {
-      await anonymiseUsers();
+      await anonymizeUsers();
+      await createJob({ name: "anonymizeUsers" });
     });
 }
