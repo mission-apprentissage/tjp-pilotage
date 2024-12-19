@@ -111,6 +111,11 @@ export const getFormationsQuery = async ({
             )
             .end()
             .as("positionQuadrant"),
+          isFormationActionPrioritaire({
+            cfdRef: "formationEtablissement.cfd",
+            codeDispositifRef: "formationEtablissement.codeDispositif",
+            codeRegionRef: "etablissement.codeRegion",
+          }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
         ])
         .$call((eb) => {
           if (!positionQuadrant) return eb;
@@ -209,11 +214,6 @@ export const getFormationsQuery = async ({
           else null
           end
         `.as("dateFermeture"),
-      isFormationActionPrioritaire({
-        cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.codeDispositif",
-        codeRegionRef: "etablissement.codeRegion",
-      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
@@ -361,6 +361,7 @@ export const getFormationsQuery = async ({
       }
       return q;
     })
+    .$narrowType<{ ["Action prioritaire"]: boolean }>()
     .orderBy("libelleFormation", "asc")
     .orderBy("libelleNiveauDiplome", "asc")
     .orderBy("libelleDispositif", "asc")
@@ -376,7 +377,13 @@ export const getFormationsQuery = async ({
     formations: result.map((formation) => ({
       ...formation,
       isFormationRenovee: !!formation.isFormationRenovee,
-      formationSpecifique: formatFormationSpecifique(formation),
+      formationSpecifique: formatFormationSpecifique({
+        ...formation,
+        [TypeFormationSpecifiqueEnum["Action prioritaire"]]:
+          TypeFormationSpecifiqueEnum["Action prioritaire"] in formation
+            ? !!formation[TypeFormationSpecifiqueEnum["Action prioritaire"]]
+            : false,
+      }),
     })),
   };
 };
