@@ -14,7 +14,6 @@ export default defineWorkspace([
       include: ["./src/**/*.test.ts"],
       exclude: ["**/*.spec.ts"],
       setupFiles: ["./tests/setup.ts"],
-      globalSetup: ["./tests/globalSetup.ts"],
       clearMocks: true,
       sequence: {
         hooks: "stack",
@@ -32,6 +31,7 @@ export default defineWorkspace([
     test: {
       name: "server-integration",
       root: "./server",
+      environment: "node",
       include: ["./src/**/*.spec.ts"],
       setupFiles: ["./tests/setup.ts"],
       globalSetup: ["./tests/globalSetup.ts"],
@@ -39,6 +39,7 @@ export default defineWorkspace([
       sequence: {
         hooks: "stack",
       },
+      pool: "forks",
     },
     resolve: {
       alias: {
