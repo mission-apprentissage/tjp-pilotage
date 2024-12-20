@@ -116,20 +116,10 @@ export const up = async (db: Kysely<unknown>) => {
   });
 
   // disable les triggers qui utilisent trop de mémoire sur des opérations massives
-  await getKbdClient().executeQuery(
-    sql`
-    ALTER TABLE demande DISABLE TRIGGER ALL;
-    ALTER TABLE intention DISABLE TRIGGER ALL;
-    `.compile(db)
-  );
+  await getKbdClient().executeQuery(sql`SET session_replication_role = replica;`.compile(db));
   await getKbdClient().executeQuery(sql.raw(sqlQuery).compile(db));
   // enable les triggers
-  await getKbdClient().executeQuery(
-    sql`
-    ALTER TABLE demande ENABLE TRIGGER ALL;
-    ALTER TABLE intention ENABLE TRIGGER ALL;
-    `.compile(db)
-  );
+  await getKbdClient().executeQuery(sql`SET session_replication_role = DEFAULT;`.compile(db));
 
   await getKbdClient().executeQuery(
     sql`
