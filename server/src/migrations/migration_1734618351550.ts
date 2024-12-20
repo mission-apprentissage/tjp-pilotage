@@ -115,7 +115,11 @@ export const up = async (db: Kysely<unknown>) => {
     sqlQuery += `UPDATE intention SET cfd = '${nouveauCFD}' WHERE cfd = '${ancienCFD}' AND id in (SELECT id FROM "latestIntentionView");\n`;
   });
 
+  // disable les triggers qui utilisent trop de mémoire sur des opérations massives
+  await getKbdClient().executeQuery(sql`SET session_replication_role = replica;`.compile(db));
   await getKbdClient().executeQuery(sql.raw(sqlQuery).compile(db));
+  // enable les triggers
+  await getKbdClient().executeQuery(sql`SET session_replication_role = DEFAULT;`.compile(db));
 
   await getKbdClient().executeQuery(
     sql`
