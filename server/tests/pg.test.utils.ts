@@ -24,7 +24,7 @@ export const startAndConnectPg = async () => {
 
   await refreshViews();
 
-  await migrateToLatest(true, false);
+  await migrateToLatest(false);
   console.log("Migration terminée");
   console.log("Rafraichissement des vues matérialisées");
   await refreshViews();
