@@ -8,7 +8,7 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: b1fa159bb2036a835b4138843b48043eca4ea374bcbb710ba4593bd39b1dfec1
 - filename: .infra/vault/vault.yml
-  checksum: d75971da55a3f43660e8e8d15247c755e8fbcde5077ea04c203e0975aa17616e
+  checksum: 0577a982f46500c55d62463f34fde72a3e14700b5235f8573cbf870e2452348f
 - filename: README.md
   checksum: 00ac991f0b2746c5a5ffa14e2b3c5427b739c0d952aa3730efe1f234ac1fc3ca
 - filename: server/.env.test
@@ -51,6 +51,8 @@ fileignoreconfig:
   checksum: d42601745f99f191e3fb865ed61ef829e4c7e82a5d157a544deb8f4986717fef
 - filename: ui/app/(wrapped)/documentation/page.tsx
   checksum: 50bc89c2ce7e01f8b8ff7381b44abb68ed2979230dc7252009e2e77b85c11558
+- filename: ui/app/(wrapped)/glossaire/GlossaireEntries.ts
+  checksum: 879121c075cb8d6f1bb728ed24706ea5c31b20bc7a0ba1d20747237ddbe42ec5
 - filename: ui/app/(wrapped)/mentions-legales/page.tsx
   checksum: 9d41bf20ab3cb269091a285eefeae595ecfd38dad78dbda7859eef31e69e7bc7
 - filename: ui/app/(wrapped)/politique-de-confidentialite/page.tsx
@@ -58,7 +60,7 @@ fileignoreconfig:
 - filename: ui/app/(wrapped)/ressources/page.tsx
   checksum: 58aeb5ee51ef187a6f97a6dc73922767bd177c600164ffd7076391a87f372ebe
 - filename: ui/app/(wrapped)/statistiques/page.tsx
-  checksum: 573be5ad333d02b3969e61ec8a4860c161af648abb752a3a22b35d5f37bc6bd1
+  checksum: 4eff930f0a5a1df09c53d1a2e65c8911b3ae7d0ca8d2393ce371d9773af1e217
 - filename: ui/config.public.ts
   checksum: 5a6c64c078366fc4c259fcf660abb66e4db3ffbc8365fdad5d3c05cad54d99dc
 - filename: ui/src/config.public.ts

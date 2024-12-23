@@ -7,6 +7,39 @@ import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 
 const CODE_NIVEAU_DIPLOME_BTS = "320";
+const getCompareData = ({
+  premiersVoeux,
+  premiersVoeuxAnneePrecedente,
+}: {
+  premiersVoeux?: number;
+  premiersVoeuxAnneePrecedente?: number;
+}) => {
+  if (!premiersVoeux || !premiersVoeuxAnneePrecedente) return "";
+  if (premiersVoeux > premiersVoeuxAnneePrecedente) {
+    return (
+      <Tooltip label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}>
+        <Flex color="success.425">
+          <Img src={"/icons/arrow_up.svg"} alt="up" />
+          <Text fontWeight={"bold"}>{`+${premiersVoeux - premiersVoeuxAnneePrecedente}`}</Text>
+        </Flex>
+      </Tooltip>
+    );
+  } else if (premiersVoeux < premiersVoeuxAnneePrecedente) {
+    return (
+      <Tooltip label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}>
+        <Flex color="warning.525">
+          <Img src={"/icons/arrow_down.svg"} alt="down" />
+          <Text fontWeight={"bold"}>{`${premiersVoeux - premiersVoeuxAnneePrecedente}`}</Text>
+        </Flex>
+      </Tooltip>
+    );
+  }
+  return (
+    <Tooltip label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}>
+      <Text fontWeight={"bold"}>+0pts</Text>
+    </Tooltip>
+  );
+};
 
 export const PremiersVoeux = ({
   codeNiveauDiplome,
@@ -17,34 +50,6 @@ export const PremiersVoeux = ({
   premiersVoeux?: number;
   premiersVoeuxAnneePrecedente?: number;
 }) => {
-  const getCompareData = () => {
-    if (!premiersVoeux || !premiersVoeuxAnneePrecedente) return "";
-    if (premiersVoeux > premiersVoeuxAnneePrecedente) {
-      return (
-        <Tooltip label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}>
-          <Flex color="success.425">
-            <Img src={"/icons/arrow_up.svg"} alt="up" />
-            <Text fontWeight={"bold"}>{`+${premiersVoeux - premiersVoeuxAnneePrecedente}`}</Text>
-          </Flex>
-        </Tooltip>
-      );
-    } else if (premiersVoeux < premiersVoeuxAnneePrecedente) {
-      return (
-        <Tooltip label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}>
-          <Flex color="warning.525">
-            <Img src={"/icons/arrow_down.svg"} alt="down" />
-            <Text fontWeight={"bold"}>{`${premiersVoeux - premiersVoeuxAnneePrecedente}`}</Text>
-          </Flex>
-        </Tooltip>
-      );
-    }
-    return (
-      <Tooltip label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}>
-        <Text fontWeight={"bold"}>+0pts</Text>
-      </Tooltip>
-    );
-  };
-
   return (
     <DashboardCard
       label={codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? "Nombre de voeux" : "Nombre de 1ers voeux"}
@@ -67,7 +72,10 @@ export const PremiersVoeux = ({
         </Badge>
       }
     >
-      <CounterChart data={premiersVoeux} compareData={getCompareData()} />
+      <CounterChart
+        data={premiersVoeux}
+        compareData={getCompareData({ premiersVoeux, premiersVoeuxAnneePrecedente })}
+      />
     </DashboardCard>
   );
 };

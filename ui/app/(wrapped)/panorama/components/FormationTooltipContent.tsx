@@ -1,11 +1,14 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { PanoramaFormation, PanoramaTopFlop } from "@/app/(wrapped)/panorama/types";
+import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 import { TableBadge } from "@/components/TableBadge";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import { feature } from "@/utils/feature";
 import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -13,6 +16,13 @@ type Formation = PanoramaFormation | PanoramaTopFlop;
 
 export const FormationTooltipContent = ({ formation }: { formation: Formation }) => {
   const { openGlossaire } = useGlossaireContext();
+
+  // Si la feature formationsSpecifiqueConsole est activée et que cette formation est concernée, on affiche les tags
+  // Sinon si la feature n'est pas activée, on affiche les tags si la formation est une action prioritaire
+  const shouldDisplayFormationSpecifique =
+    (feature.formationsSpecifiqueConsole && Object.values(formation.formationSpecifique).some((v) => v)) ||
+    (!feature.formationsSpecifiqueConsole &&
+      formation.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]]);
 
   return (
     <Box bg="white" fontSize="xs" w={"100%"}>
@@ -62,7 +72,15 @@ export const FormationTooltipContent = ({ formation }: { formation: Formation })
       <Text mb="1" fontWeight="medium">
         Taux de devenir favorable régional
       </Text>
-      <GraphWrapper w="100%" continuum={formation.continuum} value={formation.tauxDevenirFavorable} />
+      <GraphWrapper mb="2" w="100%" continuum={formation.continuum} value={formation.tauxDevenirFavorable} />
+      {shouldDisplayFormationSpecifique && (
+        <>
+          <Text mb="1" fontWeight="medium">
+            Formation spécifique
+          </Text>
+          <BadgesFormationSpecifique formationSpecifique={formation?.formationSpecifique} />
+        </>
+      )}
     </Box>
   );
 };

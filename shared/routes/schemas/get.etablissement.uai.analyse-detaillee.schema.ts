@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { voie } from "../../enum/voieEnum";
+import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 
 const EtablissementSchema = z.object({
   uai: z.string(),
@@ -77,6 +78,7 @@ export const FormationSchema = z.object({
   codeNiveauDiplome: z.string(),
   typeFamille: z.string().optional(),
   dateOuverture: z.date().optional(),
+  formationSpecifique: FormationSpecifiqueFlagsSchema,
 });
 
 const OffreSchema = z.string();

@@ -1,17 +1,14 @@
 import { sql } from "kysely";
-import { jsonBuildObject } from "kysely/helpers/postgres";
-import type { MILLESIMES_IJ } from "shared";
 import { CURRENT_RENTREE } from "shared";
-import type { FiltersSchema } from "shared/routes/schemas/get.restitution-intentions.demandes.schema";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
-import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { RequestUser } from "@/modules/core/model/User";
+import type { Filters } from "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.usecase";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { nbEtablissementFormationRegion } from "@/modules/data/utils/nbEtablissementFormationRegion";
-import { selectPositionQuadrant } from "@/modules/data/utils/positionFormationRegionaleQuadrant";
+import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { selectTauxDevenirFavorable } from "@/modules/data/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
@@ -23,16 +20,12 @@ import {
   countDifferenceCapaciteScolaire,
   countDifferenceCapaciteScolaireColoree,
 } from "@/modules/utils/countCapacite";
+import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
+import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
-
-export interface Filters extends z.infer<typeof FiltersSchema> {
-  user: RequestUser;
-  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
-  campagne: string;
-}
 
 export const getDemandesRestitutionIntentionsQuery = async ({
   statut,
@@ -52,6 +45,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   voie,
   campagne,
   positionQuadrant,
+  formationSpecifique,
   offset = 0,
   limit = MAX_LIMIT,
   order = "desc",
@@ -67,14 +61,15 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         return eb;
       })
     )
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
-    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
-    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
-    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
+    .innerJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .innerJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
+    .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .innerJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
+    .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
     .leftJoin("indicateurRegionSortie", (join) =>
       join
         .onRef("indicateurRegionSortie.cfd", "=", "demande.cfd")
@@ -93,35 +88,28 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         ])
       )
     )
-    .leftJoin("tauxIJNiveauDiplomeRegion", (join) =>
-      join.on((eb) =>
-        eb.and([
-          eb(eb.ref("tauxIJNiveauDiplomeRegion.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
-          eb(eb.ref("tauxIJNiveauDiplomeRegion.codeNiveauDiplome"), "=", eb.ref("dataFormation.codeNiveauDiplome")),
-          eb(
-            eb.ref("tauxIJNiveauDiplomeRegion.millesimeSortie"),
-            "=",
-            eb.ref("positionFormationRegionaleQuadrant.millesimeSortie")
-          ),
-        ])
-      )
+    .leftJoin("actionPrioritaire", (join) =>
+      join
+        .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
+        .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
+        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
     )
     .selectAll("demande")
     .select((eb) => [
-      "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
-      "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
       "dataFormation.libelleFormation",
-      "nsf.libelleNsf as libelleNsf",
-      "dataEtablissement.libelleEtablissement",
-      "dataEtablissement.commune as commune",
-      "dataEtablissement.secteur",
-      "dispositif.libelleDispositif",
-      "region.libelleRegion as libelleRegion",
-      "departement.libelleDepartement",
-      "departement.codeDepartement as codeDepartement",
-      "academie.libelleAcademie",
-      "academie.codeAcademie as codeAcademie",
       "dataFormation.typeFamille",
+      "dispositif.libelleDispositif",
+      "nsf.libelleNsf",
+      "niveauDiplome.codeNiveauDiplome",
+      "niveauDiplome.libelleNiveauDiplome",
+      "dataEtablissement.libelleEtablissement",
+      "dataEtablissement.commune",
+      "dataEtablissement.secteur",
+      "region.libelleRegion",
+      "departement.libelleDepartement",
+      "departement.codeDepartement",
+      "academie.libelleAcademie",
+      "academie.codeAcademie",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
       countDifferenceCapaciteScolaireColoree(eb).as("differenceCapaciteScolaireColoree"),
@@ -139,16 +127,14 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
       selectPositionQuadrant(eb).as("positionQuadrant"),
-      jsonBuildObject({
-        moyenneInsertionCfdRegion: eb.ref("positionFormationRegionaleQuadrant.moyenneInsertionCfdRegion"),
-        moyennePoursuiteEtudeCfdRegion: eb.ref("positionFormationRegionaleQuadrant.moyennePoursuiteEtudeCfdRegion"),
-        millesimeSortie: eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
-      }).as("positionFormationRegionaleQuadrant"),
-      jsonBuildObject({
-        tauxInsertion6mois: eb.ref("tauxIJNiveauDiplomeRegion.tauxInsertion6mois"),
-        tauxPoursuite: eb.ref("tauxIJNiveauDiplomeRegion.tauxPoursuite"),
-        millesimeSortie: eb.ref("tauxIJNiveauDiplomeRegion.millesimeSortie"),
-      }).as("tauxIJNiveauDiplomeRegion"),
+      isFormationActionPrioritaire({
+        cfdRef: "demande.cfd",
+        codeDispositifRef: "demande.codeDispositif",
+        codeRegionRef: "demande.codeRegion",
+      }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
+      eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
+      eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .$call((eb) => {
       if (search)
@@ -161,7 +147,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("demande.cfd")}),
                   ' ',
-                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
+                  unaccent(${eb.ref("formationView.libelleFormation")}),
                   ' ',
                   unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
                   ' ',
@@ -224,11 +210,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
+      if (codeNsf) return eb.where("formationView.codeNsf", "in", codeNsf);
       return eb;
     })
     .$call((eb) => {
@@ -266,6 +252,27 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((q) => {
+      if (formationSpecifique?.length) {
+        return q.where((w) =>
+          w.or([
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])
+              ? w("actionPrioritaire.cfd", "is not", null)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition écologique"])
+              ? w("formationView.isTransitionEcologique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition démographique"])
+              ? w("formationView.isTransitionDemographique", "=", true)
+              : sql.val(false),
+            formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
+              ? w("formationView.isTransitionNumerique", "=", true)
+              : sql.val(false),
+          ])
+        );
+      }
+      return q;
+    })
+    .$call((q) => {
       if (!orderBy || !order) return q;
       return q.orderBy(sql`${sql.ref(orderBy)}`, sql`${sql.raw(order)} NULLS LAST`);
     })
@@ -273,17 +280,17 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     .where(isRestitutionIntentionVisible({ user }))
     .offset(offset)
     .limit(limit)
-    .execute();
+    .execute()
+    .then(cleanNull);
 
   return {
-    demandes: demandes.map((demande) =>
-      cleanNull({
-        ...demande,
-        statut: castDemandeStatutWithoutSupprimee(demande.statut),
-        createdAt: demande.createdAt?.toISOString(),
-        updatedAt: demande.updatedAt?.toISOString(),
-      })
-    ),
+    demandes: demandes.map((demande) => ({
+      ...demande,
+      statut: castDemandeStatutWithoutSupprimee(demande.statut),
+      createdAt: demande.createdAt?.toISOString(),
+      updatedAt: demande.updatedAt?.toISOString(),
+      formationSpecifique: formatFormationSpecifique(demande),
+    })),
     count: parseInt(demandes[0]?.count) || 0,
   };
 };

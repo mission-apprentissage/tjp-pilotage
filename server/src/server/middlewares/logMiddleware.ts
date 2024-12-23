@@ -46,7 +46,19 @@ const withoutSensibleFields = (obj: unknown, seen: Set<unknown>): unknown => {
 };
 
 export function logMiddleware(): FastifyLoggerOptions | PinoLoggerOptions | false {
-  if (process.env.NODE_ENV === "test") {
+  if (config.log.forceLocalLogs && config.env === "local") {
+    return {
+      transport: {
+        target: "pino-pretty",
+        options: {
+          translateTime: "HH:MM:ss Z",
+          ignore: "pid,hostname",
+        },
+      },
+    };
+  }
+
+  if (process.env.NODE_ENV === "test" || config.env === "local") {
     return false;
   }
 
@@ -68,6 +80,7 @@ export function logMiddleware(): FastifyLoggerOptions | PinoLoggerOptions | fals
       },
       res: (res: ResSerializerReply<RawServerDefault, FastifyReply>) => {
         return {
+          url: res.request?.url,
           responseTime: res.elapsedTime ?? null,
           statusCode: res.statusCode,
           headers: typeof res.getHeaders === "function" ? withoutSensibleFields(res.getHeaders(), new Set()) : {},
@@ -84,17 +97,5 @@ export function logMiddleware(): FastifyLoggerOptions | PinoLoggerOptions | fals
     },
   };
 
-  if (config.env === "local") {
-    return {
-      transport: {
-        target: "pino-pretty",
-        options: {
-          translateTime: "HH:MM:ss Z",
-          ignore: "pid,hostname",
-        },
-      },
-    };
-  } else {
-    return defaultSettings;
-  }
+  return defaultSettings;
 }

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 
 const CountCapaciteStatsDemandesSchema = z.object({
   total: z.number(),
@@ -29,6 +30,7 @@ export const FiltersSchema = z.object({
   codeNsf: z.array(z.string()).optional(),
   campagne: z.string().optional(),
   search: z.string().optional(),
+  formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
 });
 
 export const getStatsRestitutionIntentionsSchema = {

@@ -54,11 +54,7 @@ export const Header = ({
     const data = await client.ref("[GET]/demandes").query({
       query: isFiltered ? getDemandesQueryParameters() : {},
     });
-    downloadCsv(
-      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : undefined),
-      data.demandes,
-      DEMANDES_COLUMNS
-    );
+    downloadCsv(formatExportFilename("recueil_demandes"), data.demandes, DEMANDES_COLUMNS);
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
@@ -66,11 +62,7 @@ export const Header = ({
     const data = await client.ref("[GET]/demandes").query({
       query: isFiltered ? getDemandesQueryParameters() : {},
     });
-    downloadExcel(
-      formatExportFilename("recueil_demandes", isFiltered ? activeFilters : undefined),
-      data.demandes,
-      DEMANDES_COLUMNS
-    );
+    downloadExcel(formatExportFilename("recueil_demandes"), data.demandes, DEMANDES_COLUMNS);
   };
   return (
     <Flex gap={2} mb={2}>

@@ -19,8 +19,9 @@ const config = {
   publicUrl,
   apiPublicUrl: environement === "local" ? "http://localhost:5001/api" : `${publicUrl}/api`,
   log: {
-    type: env.get("LOG_TYPE").required().asString(),
+    type: env.get("LOG_TYPE").asString(),
     level: env.get("LOG_LEVEL").required().asString(),
+    forceLocalLogs: env.get("LOG_LOCAL").asBool(),
   },
   psql: {
     host: env.get("PSQL_HOST").required().asString(),
@@ -32,7 +33,7 @@ const config = {
       .get("PSQL_CA")
       .required(environement === "production")
       .asString(),
-    logLevel: env.get("PSQL_LOG_LEVEL").required().asString(),
+    logLevel: env.get("PSQL_LOG_LEVEL").asString(),
   },
   auth: {
     authJwtSecret: env.get("AUTH_JWT_SECRET").required().asString(),

@@ -1,5 +1,8 @@
 import { Box, Button, Flex, FormLabel, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { Corrections, FiltersCorrections } from "@/app/(wrapped)/intentions/corrections/types";
@@ -45,7 +48,7 @@ export const SecondaryFiltersSection = ({
               value={activeFilters.codeNsf ?? []}
               disabled={data?.filters.libellesNsf.length === 0}
             >
-              TOUS ({data?.filters.libellesNsf.length ?? 0})
+              Tous ({data?.filters.libellesNsf.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
@@ -75,7 +78,7 @@ export const SecondaryFiltersSection = ({
               value={activeFilters.codeNiveauDiplome ?? []}
               disabled={data?.filters.diplomes.length === 0}
             >
-              TOUS ({data?.filters.diplomes.length ?? 0})
+              Tous ({data?.filters.diplomes.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
@@ -96,7 +99,7 @@ export const SecondaryFiltersSection = ({
               value={activeFilters.codeDepartement ?? []}
               disabled={data?.filters.departements.length === 0}
             >
-              TOUS ({data?.filters.departements.length ?? 0})
+              Tous ({data?.filters.departements.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
@@ -111,7 +114,7 @@ export const SecondaryFiltersSection = ({
               value={activeFilters.uai ?? []}
               disabled={data?.filters.etablissements.length === 0}
             >
-              TOUS ({data?.filters.etablissements.length ?? 0})
+              Tous ({data?.filters.etablissements.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
@@ -126,6 +129,24 @@ export const SecondaryFiltersSection = ({
               placeholder="Public / privé"
             >
               {data?.filters.secteurs?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+          </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>Voie</FormLabel>
+            <Select
+              width={"64"}
+              size="md"
+              variant={"newInput"}
+              value={activeFilters.voie ?? ""}
+              onChange={(e) => handleFilters("voie", e.target.value)}
+              borderBottomColor={activeFilters.voie != undefined ? "info.525" : ""}
+              placeholder="TOUTES"
+            >
+              {data?.filters.voies?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -147,7 +168,7 @@ export const SecondaryFiltersSection = ({
               disabled={data?.filters.statuts.length === 0}
               hasDefaultValue={false}
             >
-              TOUS ({data?.filters.statuts.length ?? 0})
+              Tous ({data?.filters.statuts.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
@@ -158,7 +179,7 @@ export const SecondaryFiltersSection = ({
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("typeDemande", selected)}
-              options={data?.filters.typesDemande.map((typeDemande: { value: string; label: string }) => {
+              options={data?.filters.typesDemande.map((typeDemande) => {
                 return {
                   value: typeDemande.value,
                   label: getTypeDemandeLabel(typeDemande.value),
@@ -167,26 +188,8 @@ export const SecondaryFiltersSection = ({
               value={activeFilters.typeDemande ?? []}
               disabled={data?.filters.typesDemande.length === 0}
             >
-              TOUS ({data?.filters.typesDemande.length ?? 0})
+              Tous ({data?.filters.typesDemande.length ?? 0})
             </Multiselect>
-          </Box>
-          <Box justifyContent={"start"}>
-            <FormLabel>Voie</FormLabel>
-            <Select
-              width={"64"}
-              size="md"
-              variant={"newInput"}
-              value={activeFilters.voie ?? ""}
-              onChange={(e) => handleFilters("voie", e.target.value)}
-              borderBottomColor={activeFilters.voie != undefined ? "info.525" : ""}
-              placeholder="TOUTES"
-            >
-              {data?.filters.voies?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
           </Box>
           <Box justifyContent={"start"}>
             <FormLabel>Coloration</FormLabel>
@@ -223,6 +226,95 @@ export const SecondaryFiltersSection = ({
                 </option>
               ))}
             </Select>
+          </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>Coloration</FormLabel>
+            <Select
+              width={"64"}
+              size="md"
+              variant={"newInput"}
+              value={activeFilters.coloration?.toString() ?? ""}
+              onChange={(e) => handleFilters("coloration", e.target.value)}
+              borderBottomColor={activeFilters.coloration != undefined ? "info.525" : ""}
+              placeholder="Avec / sans"
+            >
+              {data?.filters.colorations?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+          </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>Position quadrant</FormLabel>
+            <Select
+              width={"64"}
+              size="md"
+              variant={"newInput"}
+              value={activeFilters.positionQuadrant?.toString() ?? ""}
+              onChange={(e) => handleFilters("positionQuadrant", e.target.value)}
+              borderBottomColor={activeFilters.positionQuadrant != undefined ? "info.525" : ""}
+              placeholder="Toutes"
+            >
+              {[
+                {
+                  value: PositionQuadrantEnum.Q1,
+                  label: PositionQuadrantEnum.Q1,
+                },
+                {
+                  value: PositionQuadrantEnum.Q2,
+                  label: PositionQuadrantEnum.Q2,
+                },
+                {
+                  value: PositionQuadrantEnum.Q3,
+                  label: PositionQuadrantEnum.Q3,
+                },
+                {
+                  value: PositionQuadrantEnum.Q4,
+                  label: PositionQuadrantEnum.Q4,
+                },
+                {
+                  value: PositionQuadrantEnum["Hors quadrant"],
+                  label: PositionQuadrantEnum["Hors quadrant"],
+                },
+              ].map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+          </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>Formations spécifiques</FormLabel>
+            <Multiselect
+              width={"64"}
+              size="md"
+              variant="newInput"
+              onChange={(selected) => handleFilters("formationSpecifique", selected)}
+              options={[
+                {
+                  label: TypeFormationSpecifiqueEnum["Action prioritaire"],
+                  value: TypeFormationSpecifiqueEnum["Action prioritaire"],
+                },
+                {
+                  label: TypeFormationSpecifiqueEnum["Transition démographique"],
+                  value: TypeFormationSpecifiqueEnum["Transition démographique"],
+                },
+                {
+                  label: TypeFormationSpecifiqueEnum["Transition écologique"],
+                  value: TypeFormationSpecifiqueEnum["Transition écologique"],
+                },
+                {
+                  label: TypeFormationSpecifiqueEnum["Transition numérique"],
+                  value: TypeFormationSpecifiqueEnum["Transition numérique"],
+                },
+              ]}
+              hasDefaultValue={false}
+              value={activeFilters.formationSpecifique ?? []}
+              gutter={0}
+            >
+              Toutes
+            </Multiselect>
           </Box>
           <Button
             variant="externalLink"

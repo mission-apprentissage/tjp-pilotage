@@ -73,6 +73,7 @@ function getTransport() {
 
   return {
     target: "pino/file",
+    options: { destination: 1, ignore: "pid,hostname" },
   };
 }
 
@@ -105,11 +106,10 @@ export function createJobProcessorLogger(logger: PinoLogger<never>): ILogger {
   };
 }
 
-export default pino({
+const logger = pino({
   name: config.productName,
-  level: config.log.level,
   enabled: process.env.NODE_ENV !== "test",
-  depthLimit: 50,
+  level: config.env !== "production" ? "debug" : "info",
   transport: getTransport(),
   messageKey: "message",
   formatters: {
@@ -121,3 +121,5 @@ export default pino({
     err: (err) => err,
   },
 });
+
+export default logger;

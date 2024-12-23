@@ -8,6 +8,8 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   libelleEtablissement: "Nom d'établissement",
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
+  actionPrioritaire: "Action prioritaire ?",
   // Établissement
   commune: "Commune",
   codeDepartement: "Code Département",
@@ -46,7 +48,10 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
   tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
-} satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]>;
+} satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]> & {
+  formationSpecifique: string;
+  actionPrioritaire: string;
+};
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   // Rentrée scolaire
@@ -55,6 +60,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   libelleEtablissement: "Nom d'établissement",
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
+  formationSpecifique: "Formation spécifique",
   // Établissement
   commune: "Commune",
   libelleDepartement: "Département",
@@ -87,7 +93,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
   tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
-} satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]>;
+} satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS>;
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   // Rentrée scolaire
@@ -115,4 +121,4 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
   tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
-} satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]>;
+} satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL>;

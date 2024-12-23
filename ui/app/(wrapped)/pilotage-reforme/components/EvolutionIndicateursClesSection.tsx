@@ -1,5 +1,6 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 import _ from "lodash";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import type { IndicateurType, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
 
@@ -21,7 +22,7 @@ export const EvolutionIndicateursClesSection = ({
   codeRegion?: string;
   indicateur: IndicateurType;
   handleIndicateurChange: (indicateur: string) => void;
-  indicateurOptions: { label: string; value: string; isDefault: boolean }[];
+  indicateurOptions: (OptionSchema & { isDefault: boolean })[];
 }) => {
   const graphData: BarGraphData = {};
 

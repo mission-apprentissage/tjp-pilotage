@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import type { Voie } from "shared/enum/voieEnum";
+import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { cleanNull } from "@/utils/noNull";
 
@@ -7,11 +8,11 @@ import { getBase } from "./base.dep";
 
 export const getFiltersVoie = async ({ uai, codeNiveauDiplome }: { uai: string; codeNiveauDiplome?: string[] }) =>
   getBase({ uai })
-    .select(["voie"])
+    .select(["formationEtablissement.voie"])
     .distinct()
     .$call((q) => {
       if (codeNiveauDiplome?.length) {
-        q = q.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+        q = q.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
       }
 
       return q;
@@ -25,28 +26,32 @@ export const getFiltersCodeNiveauDiplome = async ({ uai, voie }: { uai: string; 
   })
     .select((eb) => [
       "libelleNiveauDiplome as label",
-      "dataFormation.codeNiveauDiplome as value",
-      sql<number>`COUNT(DISTINCT CONCAT(
-             ${eb.ref("dataEtablissement.uai")},
-             ${eb.ref("dataFormation.cfd")},
-             COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
-             ${eb.ref("formationEtablissement.voie")}
-           ))`.as("nbOffres"),
+      "formationView.codeNiveauDiplome as value",
+      sql<number>`
+      COUNT(
+        DISTINCT CONCAT(
+          ${eb.ref("dataEtablissement.uai")},
+          ${eb.ref("formationView.cfd")},
+          COALESCE(${eb.ref("formationEtablissement.codeDispositif")},
+          ''
+        ),
+        ${eb.ref("formationEtablissement.voie")}
+        )
+      )`.as("nbOffres"),
     ])
     .$call((q) => {
       if (voie?.length) {
         q = q.where("formationEtablissement.voie", "in", voie);
       }
-
       return q;
     })
     .groupBy(["label", "value"])
     .orderBy(["label asc"])
-    .$castTo<{
-      label: string;
-      value: string;
-      nbOffres: number;
-    }>()
+    .$castTo<
+      OptionSchema & {
+        nbOffres: number;
+      }
+    >()
     .execute()
     .then((filters) =>
       cleanNull({

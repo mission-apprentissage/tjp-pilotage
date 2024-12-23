@@ -23,8 +23,8 @@ esac
 
 readonly VERSION=$("${ROOT_DIR}/.bin/scripts/get-version.sh")
 
-generate_next_patch_version() {
-  local last_current_branch_tag=$(git describe --tags --abbrev=0)
+generate_next_rc_version() {
+  local last_current_branch_tag=$(git describe --tags --abbrev=0 --match="v[0-9]*.[0-9]*.[0-9]*")
   local remote_tags=$(git ls-remote --tags origin | awk '{print $2}' | sed 's|refs/tags/||')
   local current_commit_id=$(git rev-parse HEAD)
   local current_version_commit_id=$(git rev-list -n 1 $VERSION 2> /dev/null)
@@ -36,8 +36,15 @@ generate_next_patch_version() {
 
   local version=${last_current_branch_tag#v}
 
+  if [[ $version =~ ^([0-9]+)\.([0-9]+)\.([0-9]+).*$ ]]; then
+    major="${BASH_REMATCH[1]}"
+    minor="${BASH_REMATCH[2]}"
+    patch="${BASH_REMATCH[3]}"
+  else
+    echo "Invalid version format $version"
+    exit 1
+  fi
 
-  IFS='.' read -r major minor patch <<< "$version"
   rc_number=1
 
   case $RC_TYPE in
@@ -70,4 +77,4 @@ generate_next_patch_version() {
   echo $rc_version
 }
 
-echo $(generate_next_patch_version "$@")
+echo $(generate_next_rc_version "$@")
