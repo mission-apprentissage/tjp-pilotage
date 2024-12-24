@@ -66,9 +66,10 @@ export default defineWorkspace([
     test: {
       name: "ui",
       root: "./ui",
-      include: ["./**/*.test.ts"],
+      include: ["./**/*.test.{ts,tsx}"],
       clearMocks: true,
       environment: "jsdom",
+      setupFiles: ["./ui/vitest.config.ts"],
     },
     resolve: {},
   },

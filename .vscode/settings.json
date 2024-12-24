@@ -1,13 +1,13 @@
 {
   "editor.formatOnSave": true,
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "always"
   },
   "files.insertFinalNewline": true,
   "files.exclude": {
@@ -47,10 +47,11 @@
   "vitest.enable": true,
   "vitest.commandLine": "yarn test --single-thread",
   "ansible.python.interpreterPath": "/opt/homebrew/bin/python3",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "vitest.workspaceConfig": "vitest.workspace.ts",
   "compareFolders.ignoreAllWhiteSpaces": true,
   "compareFolders.ignoreEmptyLines": true,
   "compareFolders.ignoreWhiteSpaces": true,
-  "compareFolders.respectGitIgnore": true
+  "compareFolders.respectGitIgnore": true,
+  "eslint.useFlatConfig": false
 }
