@@ -69,7 +69,7 @@ export default defineWorkspace([
       include: ["./**/*.test.{ts,tsx}"],
       clearMocks: true,
       environment: "jsdom",
-      setupFiles: ["./ui/vitest.config.ts"],
+      setupFiles: ["./vitest.config.js"],
     },
     resolve: {},
   },
