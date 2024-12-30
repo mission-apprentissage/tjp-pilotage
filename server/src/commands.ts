@@ -122,7 +122,7 @@ program
   .command("migrations:latest")
   .description("Run migrations latest")
   .action(async () => {
-    await migrateToLatest();
+    await migrateToLatest(true);
   });
 
 program

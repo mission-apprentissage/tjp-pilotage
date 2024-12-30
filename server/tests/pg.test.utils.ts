@@ -6,7 +6,7 @@ import { beforeAll, beforeEach } from "vitest";
 
 import config from "@/config";
 import { closePgDbConnection, connectToPgDb } from "@/db/db";
-import { migrateToLatest } from "@/migrations/migrate";
+import { migrateUp, statusMigration } from "@/migrations/migrate";
 import { refreshViews } from "@/modules/import/usecases/refreshViews/refreshViews.usecase";
 import { createdb } from "@/utils/pgtools.utils";
 
@@ -16,16 +16,26 @@ export const startAndConnectPg = async () => {
   const dbUri = config.psql.uri.replace("VITEST_POOL_ID", workerId);
   const testDb = `orion-test-${workerId}`;
 
+  console.log("Creating database", testDb);
   await createdb(testDb, config.psql);
 
+  console.log("Seeding database", testDb);
   await seed(testDb);
 
+  console.log("Connecting to database", testDb);
   await connectToPgDb(dbUri);
 
+  console.log("Refreshing views", testDb);
   await refreshViews();
 
-  await migrateToLatest(true, false);
+  let remainingMigrations = await statusMigration();
 
+  while (remainingMigrations > 0) {
+    await migrateUp();
+    remainingMigrations = await statusMigration();
+  }
+
+  console.log("Refreshing views", testDb);
   await refreshViews();
 };
 
@@ -41,7 +51,7 @@ export const usePg = (clearStep: "beforeEach" | "beforeAll" = "beforeEach") => {
     }
 
     return async () => stopPg();
-  }, 30_000);
+  }, 60_000);
 
   beforeEach(async () => {
     if (clearStep === "beforeEach") {
