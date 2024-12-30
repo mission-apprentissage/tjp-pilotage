@@ -16,17 +16,22 @@ export const startAndConnectPg = async () => {
   const dbUri = config.psql.uri.replace("VITEST_POOL_ID", workerId);
   const testDb = `orion-test-${workerId}`;
 
+  console.log("Creating database", testDb);
   await createdb(testDb, config.psql);
 
+  console.log("Seeding database", testDb);
   await seed(testDb);
 
+  console.log("Connecting to database", testDb);
   await connectToPgDb(dbUri);
 
+  console.log("Refreshing views", testDb);
   await refreshViews();
 
-  await migrateToLatest(true, false);
-  console.log("Migration terminée");
-  console.log("Rafraichissement des vues matérialisées");
+  console.log("Migrating to latest", testDb);
+  await migrateToLatest(true);
+
+  console.log("Refreshing views", testDb);
   await refreshViews();
 };
 
@@ -42,7 +47,7 @@ export const usePg = (clearStep: "beforeEach" | "beforeAll" = "beforeEach") => {
     }
 
     return async () => stopPg();
-  }, 30_000);
+  }, 60_000);
 
   beforeEach(async () => {
     if (clearStep === "beforeEach") {
