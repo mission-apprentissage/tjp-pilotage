@@ -1,9 +1,11 @@
+import { describe, expect, it } from "vitest";
+
 import {
   getDateRentreeScolaire,
   getRentreeScolaire,
   getRentreeScolairePrecedente,
   getRentreeScolaireSuivante,
-} from "./getRentreeScolaire";
+} from "../getRentreeScolaire";
 
 describe("getRentreeScolaire", () => {
   describe("getRentreeScolairePrecedente", () => {
