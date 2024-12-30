@@ -6,7 +6,7 @@ import { beforeAll, beforeEach } from "vitest";
 
 import config from "@/config";
 import { closePgDbConnection, connectToPgDb } from "@/db/db";
-import { migrateUp, statusMigration } from "@/migrations/migrate";
+import { migrateToLatest } from "@/migrations/migrate";
 import { refreshViews } from "@/modules/import/usecases/refreshViews/refreshViews.usecase";
 import { createdb } from "@/utils/pgtools.utils";
 
@@ -28,12 +28,8 @@ export const startAndConnectPg = async () => {
   console.log("Refreshing views", testDb);
   await refreshViews();
 
-  let remainingMigrations = await statusMigration();
-
-  while (remainingMigrations > 0) {
-    await migrateUp();
-    remainingMigrations = await statusMigration();
-  }
+  console.log("Migrating to latest", testDb);
+  await migrateToLatest(true);
 
   console.log("Refreshing views", testDb);
   await refreshViews();
