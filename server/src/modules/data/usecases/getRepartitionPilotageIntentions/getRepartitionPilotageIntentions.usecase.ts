@@ -6,6 +6,7 @@ import type {
 import type { z } from "zod";
 
 import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
+import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
 
 import type { getDenominateurQuery } from "./deps/getDenominateurQuery";
 import { getDomaines } from "./deps/getDomaines";
@@ -165,7 +166,12 @@ const formatResult = (repartition: Repartition, order: "asc" | "desc" = "desc", 
       tauxTransformation: item.effectif ? item.placesTransformees / item.effectif : undefined,
     }))
     .orderBy((item) => {
-      const value = orderBy ? item[orderBy as keyof typeof item] : item.libelle;
+      let value = orderBy ? item[orderBy as keyof typeof item] : item.libelle;
+
+      if (typeof value === "string") {
+        // unaccent to allow alphabetic order despite french accent
+        value = getNormalizedSearch(value);
+      }
 
       return !value ? 0 : value; // Treat null/undefined as 0
     }, order)
