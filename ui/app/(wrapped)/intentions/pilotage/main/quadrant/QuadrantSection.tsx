@@ -514,7 +514,6 @@ export const QuadrantSection = ({
                       {`${formationsQuadrant?.length ?? "-"} certifications -
                                 ${
                                   formationsQuadrant?.reduce(
-                                    // @ts-expect-error TODO
                                     (acc, { placesTransformees }) => acc + (placesTransformees ?? 0),
                                     0
                                   ) ?? "-"
@@ -532,27 +531,21 @@ export const QuadrantSection = ({
                         meanInsertion={stats?.tauxInsertion}
                         meanPoursuite={stats?.tauxPoursuite}
                         currentFormationId={currentFormationId}
-                        data={formationsQuadrant?.map(
-                          // @ts-expect-error TODO
-                          (formation) => ({
-                            ...formation,
-                            codeDispositif: formation.codeDispositif ?? "",
-                            effectif: formation.placesTransformees,
-                            tauxInsertion: formation.tauxInsertion ?? 0,
-                            tauxPoursuite: formation.tauxPoursuite ?? 0,
-                          })
-                        )}
+                        data={formationsQuadrant?.map((formation) => ({
+                          ...formation,
+                          codeDispositif: formation.codeDispositif ?? "",
+                          effectif: formation.placesTransformees,
+                          tauxInsertion: formation.tauxInsertion ?? 0,
+                          tauxPoursuite: formation.tauxPoursuite ?? 0,
+                        }))}
                         effectifSizes={EFFECTIF_SIZES}
                       />
                     ) : (
                       <TableQuadrant
-                        formations={formationsQuadrant?.map(
-                          // @ts-expect-error TODO
-                          (formation) => ({
-                            ...formation,
-                            effectif: formation.placesTransformees,
-                          })
-                        )}
+                        formations={formationsQuadrant?.map((formation) => ({
+                          ...formation,
+                          effectif: formation.placesTransformees,
+                        }))}
                         handleClick={setCurrentFormationId}
                         currentFormationId={currentFormationId}
                         order={order}
