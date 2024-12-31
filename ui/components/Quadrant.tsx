@@ -19,6 +19,8 @@ import type { FC, ReactNode } from "react";
 import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
+
 const quadrantLabelStyle = {
   show: true,
   distance: 14,
@@ -336,6 +338,7 @@ export const Quadrant = function <
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
+      echarts.registerLocale("fr", frenchLocale);
       chartRef.current = echarts.init(containerRef.current);
     }
     chartRef.current.setOption(option);
