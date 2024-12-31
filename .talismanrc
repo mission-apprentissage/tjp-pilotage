@@ -47,6 +47,8 @@ fileignoreconfig:
   checksum: 58922cbe6994821e59cd535a2827e1774b85c2466bd0b51cb58a2e4bd9382912
 - filename: server/tests/test_origin/services/users.service.test.js_old
   checksum: aa5435b4faf485b49d3e9362d7550432cc4a431b863e8248f5b95b18b3d3e931
+- filename: shared/utils/__tests__/emailRegex.test.ts
+  checksum: 7bdc65299956e6277afa0e0f74bdb55871e5ff7dbae60a127a6a5062745eda74
 - filename: ui/app/(wrapped)/cgu/page.tsx
   checksum: d42601745f99f191e3fb865ed61ef829e4c7e82a5d157a544deb8f4986717fef
 - filename: ui/app/(wrapped)/documentation/page.tsx
