@@ -150,6 +150,15 @@ export const Quadrant = function <
 
   const option = useMemo<EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+        },
+        decal: {
+          show: true,
+        },
+      },
+      locale: "fr",
       grid: { top: 0, right: 0, bottom: 50, left: 60 },
 
       xAxis: [
@@ -350,7 +359,7 @@ export const Quadrant = function <
 
   return (
     <Box position="relative" className={className} overflow="visible !important">
-      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0"></Box>
+      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0" role="figure"></Box>
 
       {InfoTootipContent && (
         <InfoTooltip>
