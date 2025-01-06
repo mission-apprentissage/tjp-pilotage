@@ -1,4 +1,5 @@
 import type { ExpressionBuilder } from "kysely";
+import type { PositionQuadrantType } from "shared/enum/positionQuadrantEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { TypeFamilleEnum } from "shared/enum/typeFamille";
 
@@ -12,7 +13,7 @@ export const selectPositionQuadrant = ({
   return eb
     .case()
     .when(eb.ref("positionFormationRegionaleQuadrant.positionQuadrant"), "is not", null)
-    .then(eb.ref("positionFormationRegionaleQuadrant.positionQuadrant"))
+    .then(eb.ref("positionFormationRegionaleQuadrant.positionQuadrant").$castTo<PositionQuadrantType>())
     .else(
       eb
         .case()
