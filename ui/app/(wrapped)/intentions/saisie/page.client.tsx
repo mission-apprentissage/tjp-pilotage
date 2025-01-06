@@ -88,6 +88,7 @@ export const PageClient = () => {
         title: `La demande ${notFound} n'a pas été trouvée`,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notFound]);
 
   const filterTracker = (filterName: keyof Filters) => () => {

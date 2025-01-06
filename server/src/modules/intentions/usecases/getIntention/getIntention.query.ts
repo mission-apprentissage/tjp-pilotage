@@ -78,13 +78,19 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         ),
         formation: jsonObjectFrom(
           eb
-            .selectFrom("formationView")
-            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
+            .selectFrom("dataFormation")
+            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
             .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref("formationView.libelleFormation")},
-              ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
-              ' (',${ebDataFormation.ref("formationView.cfd")},')')`.as("libelleFormation"),
-              sql<boolean>`${ebDataFormation("formationView.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+              sql<string>`CONCAT(
+                ${ebDataFormation.ref("formationView.libelleFormation")},
+                ' (',
+                ${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},
+                ')',
+                ' (',
+                ${ebDataFormation.ref("dataFormation.cfd")},
+                ')')
+              `.as("libelleFormation"),
+              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
                 "isFCIL"
               ),
             ])
@@ -98,11 +104,11 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
                       .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
                       .on("rawData.type", "=", "nMef")
                   )
-                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "formationView.cfd")
+                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
-            .whereRef("formationView.cfd", "=", "intention.cfd")
+            .whereRef("dataFormation.cfd", "=", "intention.cfd")
             .limit(1)
         ),
       }).as("metadata"),

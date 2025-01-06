@@ -66,24 +66,46 @@ export async function migrateUp() {
 export async function migrateToLatest(keepAlive?: boolean, exitProcessInSuccess = true) {
   const migrator = makeMigrator();
 
-  const { error, results } = await migrator.migrateToLatest();
+  let remainingMigrations = await statusMigration();
+  let errorInMigrations: unknown | undefined = undefined;
+  let executedMigrations: number = 0;
 
-  results?.forEach((it) => {
-    if (it.status === "Success") {
-      console.log(`migration "${it.migrationName}" was executed successfully (UP)`); // a lot of log
-    } else if (it.status === "Error") {
-      console.error(`failed to execute migration "${it.migrationName}" (UP)`);
-    }
-  });
-
-  if (!results?.length) {
+  if (remainingMigrations === 0) {
     console.log("already up to date !");
     if (exitProcessInSuccess) process.exit(1);
   }
 
-  if (error) {
+  while (remainingMigrations > 0 && !errorInMigrations) {
+    const { error, results } = await migrator.migrateUp();
+
+    if (error) {
+      errorInMigrations = error;
+    }
+
+    results?.forEach((it) => {
+      if (it.status === "Success") {
+        console.log(`migration "${it.migrationName}" was executed successfully (UP)`); // a lot of log
+        executedMigrations++;
+      } else if (it.status === "Error") {
+        console.error(`failed to execute migration "${it.migrationName}" (UP)`);
+      }
+    });
+
+    remainingMigrations = await statusMigration();
+  }
+
+  if (errorInMigrations) {
     console.error("failed to migrate up");
-    console.error(error);
+    console.error(errorInMigrations);
+
+    console.log(`Rolling back ${executedMigrations} migrations`);
+
+    if (executedMigrations === 0) {
+      console.error("No migrations executed");
+    } else {
+      await migrateDownDB(executedMigrations);
+    }
+
     process.exit(1);
   }
 

@@ -16,6 +16,11 @@
   "plugins": ["react", "@typescript-eslint", "simple-import-sort", "import", "@dword-design/import-alias"],
   "rules": {
     "simple-import-sort/imports": "error",
+    "no-extra-semi": "error",
+    "semi": ["error", "always"],
+    "indent": ["warn", 2],
+    "no-prototype-builtins": "error",
+    "no-trailing-spaces": "error",
     "import/no-cycle": ["error", { "ignoreExternal": true }],
     "import/no-relative-packages": "error",
     "import/no-useless-path-segments": ["error"],
@@ -26,6 +31,7 @@
         "devDependencies": [
           "**/*.test.ts",
           "**/*.test.tsx",
+          "**/*.spec.ts",
           "**/tests/**/*.ts",
           "**/tests/*.ts",
           "**/fixtures/**/*.ts",

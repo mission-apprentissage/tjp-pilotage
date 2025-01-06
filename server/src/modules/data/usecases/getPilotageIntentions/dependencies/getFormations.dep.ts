@@ -55,7 +55,7 @@ export const getFormationsQuery = ({ filters }: { filters: Filters & { millesime
       join.on((eb) =>
         eb.and([
           eb(eb.ref("positionFormationRegionaleQuadrant.cfd"), "=", eb.ref("demande.cfd")),
-          eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("demande.codeRegion")),
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
@@ -95,27 +95,27 @@ export const getFormationsQuery = ({ filters }: { filters: Filters & { millesime
           millesimeSortie: getMillesimeFromCampagne(filters.campagne),
           cfdRef: "demande.cfd",
           codeDispositifRef: "demande.codeDispositif",
-          codeRegionRef: "dataEtablissement.codeRegion",
+          codeRegionRef: "demande.codeRegion",
         }).as("tauxInsertion"),
       withPoursuiteReg({
         eb,
         millesimeSortie: getMillesimeFromCampagne(filters.campagne),
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
-        codeRegionRef: "dataEtablissement.codeRegion",
+        codeRegionRef: "demande.codeRegion",
       }).as("tauxPoursuite"),
       withTauxPressionReg({
         eb,
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
-        codeRegionRef: "dataEtablissement.codeRegion",
+        codeRegionRef: "demande.codeRegion",
       }).as("tauxPression"),
       withTauxDevenirFavorableReg({
         eb,
         millesimeSortie: getMillesimeFromCampagne(filters.campagne),
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
-        codeRegionRef: "dataEtablissement.codeRegion",
+        codeRegionRef: "demande.codeRegion",
       }).as("tauxDevenirFavorable"),
       selectNbDemandes(eb).as("nbDemandes"),
       selectNbEtablissements(eb).as("nbEtablissements"),
@@ -129,7 +129,7 @@ export const getFormationsQuery = ({ filters }: { filters: Filters & { millesime
         millesimeSortie: filters.millesimeSortie,
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
-        codeRegionRef: "dataEtablissement.codeRegion",
+        codeRegionRef: "demande.codeRegion",
       }).as("continuum"),
       isFormationActionPrioritaire({
         cfdRef: "demande.cfd",
@@ -161,7 +161,7 @@ export const getFormationsQuery = ({ filters }: { filters: Filters & { millesime
             eb,
             cfdRef: "demande.cfd",
             codeDispositifRef: "demande.codeDispositif",
-            codeRegionRef: "dataEtablissement.codeRegion",
+            codeRegionRef: "demande.codeRegion",
           }),
         filters.tauxPression === "eleve" ? ">" : "<",
         filters.tauxPression === "eleve" ? 1.3 : 0.7
@@ -241,6 +241,11 @@ export const getFormationsQuery = ({ filters }: { filters: Filters & { millesime
       "formationView.isTransitionEcologique",
       "formationView.isTransitionNumerique",
       "effectif",
+      "dataFormation.typeFamille",
+      "demande.codeRegion",
+      "formationView.isTransitionDemographique",
+      "formationView.isTransitionEcologique",
+      "formationView.isTransitionNumerique",
       ...partition,
     ])
     .orderBy("tauxDevenirFavorable", "desc")

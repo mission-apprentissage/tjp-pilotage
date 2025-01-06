@@ -53,13 +53,13 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
         ),
         formation: jsonObjectFrom(
           eb
-            .selectFrom("formationView")
-            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
+            .selectFrom("dataFormation")
+            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
             .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref("formationView.libelleFormation")},
+              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
               ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
-              ' (',${ebDataFormation.ref("formationView.cfd")},')')`.as("libelleFormation"),
-              sql<boolean>`${ebDataFormation("formationView.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
+              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
                 "isFCIL"
               ),
             ])
@@ -73,11 +73,11 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
                       .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
                       .on("rawData.type", "=", "nMef")
                   )
-                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "formationView.cfd")
+                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
-            .whereRef("formationView.cfd", "=", "demande.cfd")
+            .whereRef("dataFormation.cfd", "=", "demande.cfd")
             .limit(1)
         ),
         etablissementCompensation: jsonObjectFrom(
@@ -89,13 +89,13 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
         ),
         formationCompensation: jsonObjectFrom(
           eb
-            .selectFrom("formationView")
-            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
+            .selectFrom("dataFormation")
+            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
             .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref("formationView.libelleFormation")},
+              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
               ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
-              ' (',${ebDataFormation.ref("formationView.cfd")},')')`.as("libelleFormation"),
-              sql<boolean>`${ebDataFormation("formationView.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
+              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
                 "isFCIL"
               ),
             ])
@@ -109,11 +109,11 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
                       .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
                       .on("rawData.type", "=", "nMef")
                   )
-                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "formationView.cfd")
+                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
-            .whereRef("formationView.cfd", "=", "demande.compensationCfd")
+            .whereRef("dataFormation.cfd", "=", "demande.compensationCfd")
             .limit(1)
         ),
       }).as("metadata"),
@@ -168,22 +168,24 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
     demande.metadata.formation?.dispositifs.find((item) => item.codeDispositif === demande?.codeDispositif)
       ?.codeDispositif;
 
-  return {
-    ...demande,
-    metadata: {
-      ...demande.metadata,
-      formation: demande.metadata.formation,
-      etablissement: demande.metadata.etablissement,
-      formationCompensation: demande.metadata.formationCompensation,
-      etablissementCompensation: demande.metadata.etablissementCompensation,
-    },
-    statut: castDemandeStatutWithoutSupprimee(demande.statut),
-    createdAt: demande.createdAt?.toISOString(),
-    updatedAt: demande.updatedAt?.toISOString(),
-    campagne: {
-      ...demande.campagne,
-    },
-    codeDispositif,
-    formationSpecifique: formatFormationSpecifique(demande),
-  };
+  return (
+    demande && {
+      ...demande,
+      metadata: {
+        ...demande.metadata,
+        formation: demande.metadata.formation,
+        etablissement: demande.metadata.etablissement,
+        formationCompensation: demande.metadata.formationCompensation,
+        etablissementCompensation: demande.metadata.etablissementCompensation,
+      },
+      statut: castDemandeStatutWithoutSupprimee(demande.statut),
+      createdAt: demande.createdAt?.toISOString(),
+      updatedAt: demande.updatedAt?.toISOString(),
+      campagne: {
+        ...demande.campagne,
+      },
+      codeDispositif,
+      formationSpecifique: formatFormationSpecifique(demande),
+    }
+  );
 };
