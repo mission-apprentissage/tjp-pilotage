@@ -36,6 +36,17 @@ const TabContent = forwardRef<TabContentProps, "div">(({ tab, ...rest }, ref) =>
   );
 });
 
+const getFirstFormation = (formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>) => {
+  const libellesNiveauDiplome = Object.keys(formationsByLibelleNiveauDiplome);
+
+  if (libellesNiveauDiplome.length === 0) {
+    return "";
+  }
+
+  const firstFormation = formationsByLibelleNiveauDiplome[libellesNiveauDiplome[0]][0];
+  return firstFormation.cfd;
+};
+
 const useFormationSection = (
   formations: FormationListItem[],
   formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>
@@ -61,11 +72,14 @@ const useFormationSection = (
   }, [tabContentRef]);
 
   useEffect(() => {
-    const cfdInListOfFormations = formations.find((f) => f.cfd === currentFilters.cfd);
+    if (currentFilters.cfd !== "") {
+      const cfdInListOfFormations = formations.find((f) => f.cfd === currentFilters.cfd);
 
-    if (!cfdInListOfFormations) {
-      const firstFormation = formationsByLibelleNiveauDiplome[Object.keys(formationsByLibelleNiveauDiplome)[0]][0];
-      handleCfdChange(firstFormation.cfd);
+      if (!cfdInListOfFormations) {
+        handleCfdChange(getFirstFormation(formationsByLibelleNiveauDiplome));
+      }
+    } else if (currentFilters.cfd === "" && Object.keys(formationsByLibelleNiveauDiplome).length > 0) {
+      handleCfdChange(getFirstFormation(formationsByLibelleNiveauDiplome));
     }
   }, [currentFilters, formations, handleCfdChange, formationsByLibelleNiveauDiplome]);
 

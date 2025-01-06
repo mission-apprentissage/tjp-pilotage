@@ -105,9 +105,9 @@ export const getDemandes = async ({
       }).as("nbEtablissement"),
       selectPositionQuadrant(eb).as("positionQuadrant"),
       isFormationActionPrioritaire({
-        cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.codeDispositif",
-        codeRegionRef: "etablissement.codeRegion",
+        cfdRef: "demande.cfd",
+        codeDispositifRef: "demande.codeDispositif",
+        codeRegionRef: "demande.codeRegion",
       }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
