@@ -37,6 +37,8 @@ export const Quadrant = function <
     tauxPoursuite: number;
     tauxInsertion: number;
     positionQuadrant?: string;
+    libelleFormation: string;
+    libelleDispositif?: string;
   },
 >({
   className,
@@ -117,8 +119,8 @@ export const Quadrant = function <
 
   const series = data.map((formation) => ({
     value: [
-      dimensions?.includes("tauxPoursuite") ? formation.tauxPoursuite * 100 : 50,
-      dimensions?.includes("tauxInsertion") ? formation.tauxInsertion * 100 : 50,
+      dimensions?.includes("tauxPoursuite") ? Math.round(formation.tauxPoursuite * 10000) / 100 : 50,
+      dimensions?.includes("tauxInsertion") ? Math.round(formation.tauxInsertion * 10000) / 100 : 50,
     ],
     name: `${formation.cfd}_${formation.codeDispositif}`,
   }));
@@ -156,13 +158,8 @@ export const Quadrant = function <
         label: {
           enabled: true,
         },
-        decal: {
-          show: true,
-        },
       },
-      locale: "fr",
       grid: { top: 0, right: 0, bottom: 50, left: 60 },
-
       xAxis: [
         {
           type: "value",
@@ -339,7 +336,7 @@ export const Quadrant = function <
     if (!containerRef.current) return;
     if (!chartRef.current) {
       echarts.registerLocale("fr", frenchLocale);
-      chartRef.current = echarts.init(containerRef.current);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option);
 
