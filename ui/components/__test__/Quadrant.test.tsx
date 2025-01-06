@@ -35,6 +35,8 @@ describe("ui > components > Quadrant", () => {
           effectif: formation.placesTransformees,
           tauxInsertion: formation.tauxInsertion ?? 0,
           tauxPoursuite: formation.tauxPoursuite ?? 0,
+          libelleFormation: formation.libelleFormation ?? "",
+          libelleDispositif: formation.libelleDispositif ?? "",
         }))}
         effectifSizes={EFFECTIF_SIZES}
       />
