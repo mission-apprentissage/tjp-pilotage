@@ -19496,8 +19496,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "server@workspace:server"
   dependencies:
+    "@anatine/zod-mock": ^3.13.4
     "@aws-sdk/client-s3": ^3.574.0
     "@aws-sdk/s3-request-presigner": ^3.574.0
+    "@faker-js/faker": ^9.3.0
     "@fastify/auth": ^4.6.1
     "@fastify/cookie": ^9.4.0
     "@fastify/cors": ^9.0.1
