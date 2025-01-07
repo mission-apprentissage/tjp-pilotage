@@ -32,9 +32,9 @@ const handleMotifLabel = ({
     motif === "autre"
       ? `Autre : ${autreMotif}`
       : getMotifLabel({
-          motif: motif as MotifLabel,
-          campagne: campagne as MotifCampagne,
-        })
+        motif: motif as MotifLabel,
+        campagne: campagne as MotifCampagne,
+      })
   );
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
 };

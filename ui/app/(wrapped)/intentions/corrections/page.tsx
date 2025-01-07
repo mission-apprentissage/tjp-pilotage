@@ -136,15 +136,15 @@ export default () => {
   ) => {
     if (value != null)
       switch (type) {
-        case "codeRegion":
-          setCodeRegionFilter((value as string[])[0] ?? "");
-          break;
-        case "codeDepartement":
-          setCodeDepartementFilter((value as string[])[0] ?? "");
-          break;
-        case "campagne":
-          setCampagneFilter((value as string[])[0] ?? "");
-          break;
+      case "codeRegion":
+        setCodeRegionFilter((value as string[])[0] ?? "");
+        break;
+      case "codeDepartement":
+        setCodeDepartementFilter((value as string[])[0] ?? "");
+        break;
+      case "campagne":
+        setCampagneFilter((value as string[])[0] ?? "");
+        break;
       }
   };
 

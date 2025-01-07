@@ -37,9 +37,9 @@ export const CfdBlock = ({
                 defaultValue={
                   value && formMetaData?.formation?.libelleFormation
                     ? {
-                        value,
-                        label: formMetaData?.formation?.libelleFormation,
-                      }
+                      value,
+                      label: formMetaData?.formation?.libelleFormation,
+                    }
                     : undefined
                 }
                 disabled={disabled}

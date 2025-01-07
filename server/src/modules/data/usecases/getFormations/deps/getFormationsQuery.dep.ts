@@ -226,17 +226,17 @@ export const getFormationsQuery = async ({
         eb("indicateurEntree.rentreeScolaire", "is not", null),
         withEmptyFormations === "true"
           ? eb.not(
-              eb.exists(
-                eb
-                  .selectFrom("formationEtablissement as fe")
-                  .select("fe.cfd")
-                  .distinct()
-                  .innerJoin("indicateurEntree", "id", "formationEtablissementId")
-                  .where("rentreeScolaire", "in", rentreeScolaire)
-                  .whereRef("fe.codeDispositif", "=", "formationEtablissement.codeDispositif")
-                  .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
-              )
+            eb.exists(
+              eb
+                .selectFrom("formationEtablissement as fe")
+                .select("fe.cfd")
+                .distinct()
+                .innerJoin("indicateurEntree", "id", "formationEtablissementId")
+                .where("rentreeScolaire", "in", rentreeScolaire)
+                .whereRef("fe.codeDispositif", "=", "formationEtablissement.codeDispositif")
+                .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
             )
+          )
           : sql<boolean>`false`,
       ])
     )

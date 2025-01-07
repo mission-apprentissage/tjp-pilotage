@@ -78,59 +78,59 @@ export const FiltersSection = ({
 
     // Valeurs par défaut pour les codes
     switch (key) {
-      case "scope":
-        if (value === ScopeEnum["région"]) {
-          newFilters = {
-            ...newFilters,
-            codeAcademie: undefined,
-            codeDepartement: undefined,
-          };
-        }
-        if (value === ScopeEnum["académie"]) {
-          newFilters = {
-            ...newFilters,
-            codeRegion: undefined,
-            codeDepartement: undefined,
-          };
-        }
-        if (value === ScopeEnum["département"]) {
-          newFilters = {
-            ...newFilters,
-            codeRegion: undefined,
-            codeAcademie: undefined,
-          };
-        }
-        break;
-      case "codeAcademie":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            scope: ScopeEnum["académie"],
-            codeRegion: undefined,
-            codeDepartement: undefined,
-          };
-        }
-        break;
-      case "codeRegion":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            scope: ScopeEnum["région"],
-            codeDepartement: undefined,
-            codeAcademie: undefined,
-          };
-        }
-        break;
-      case "codeDepartement":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            scope: ScopeEnum["département"],
-            codeRegion: undefined,
-            codeAcademie: undefined,
-          };
-        }
-        break;
+    case "scope":
+      if (value === ScopeEnum["région"]) {
+        newFilters = {
+          ...newFilters,
+          codeAcademie: undefined,
+          codeDepartement: undefined,
+        };
+      }
+      if (value === ScopeEnum["académie"]) {
+        newFilters = {
+          ...newFilters,
+          codeRegion: undefined,
+          codeDepartement: undefined,
+        };
+      }
+      if (value === ScopeEnum["département"]) {
+        newFilters = {
+          ...newFilters,
+          codeRegion: undefined,
+          codeAcademie: undefined,
+        };
+      }
+      break;
+    case "codeAcademie":
+      if (value !== undefined) {
+        newFilters = {
+          ...newFilters,
+          scope: ScopeEnum["académie"],
+          codeRegion: undefined,
+          codeDepartement: undefined,
+        };
+      }
+      break;
+    case "codeRegion":
+      if (value !== undefined) {
+        newFilters = {
+          ...newFilters,
+          scope: ScopeEnum["région"],
+          codeDepartement: undefined,
+          codeAcademie: undefined,
+        };
+      }
+      break;
+    case "codeDepartement":
+      if (value !== undefined) {
+        newFilters = {
+          ...newFilters,
+          scope: ScopeEnum["département"],
+          codeRegion: undefined,
+          codeAcademie: undefined,
+        };
+      }
+      break;
     }
 
     setFilters({ ...filters, ...newFilters });

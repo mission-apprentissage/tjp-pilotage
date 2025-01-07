@@ -36,10 +36,10 @@ export const UaiBlock = ({
                 defaultValue={
                   formMetadata?.etablissement?.libelleEtablissement && value
                     ? {
-                        label: formMetadata?.etablissement.libelleEtablissement,
-                        value: value,
-                        commune: formMetadata?.etablissement.commune,
-                      }
+                      label: formMetadata?.etablissement.libelleEtablissement,
+                      value: value,
+                      commune: formMetadata?.etablissement.commune,
+                    }
                     : undefined
                 }
                 onChange={(v) => {

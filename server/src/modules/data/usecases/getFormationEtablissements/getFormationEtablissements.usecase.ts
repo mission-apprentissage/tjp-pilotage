@@ -21,23 +21,23 @@ const getFormationEtablissementsFactory =
       getStatsSortieParRegionsEtNiveauDiplomeQuery,
     }
   ) =>
-  async (activeFilters: Partial<Filters>) => {
-    const [{ etablissements, count }, filters, formationsRenoveesEnseignees] = await Promise.all([
-      deps.getFormationEtablissementsQuery(activeFilters),
-      deps.getFiltersQuery(activeFilters),
-      deps.getFormationsRenoveesEnseigneesQuery(activeFilters),
-    ]);
+    async (activeFilters: Partial<Filters>) => {
+      const [{ etablissements, count }, filters, formationsRenoveesEnseignees] = await Promise.all([
+        deps.getFormationEtablissementsQuery(activeFilters),
+        deps.getFiltersQuery(activeFilters),
+        deps.getFormationsRenoveesEnseigneesQuery(activeFilters),
+      ]);
 
-    return {
-      count,
-      filters,
-      etablissements: etablissements.map((etablissement) => ({
-        ...etablissement,
-        formationRenovee: formationsRenoveesEnseignees.includes(etablissement.formationRenovee ?? "")
-          ? etablissement.formationRenovee
-          : undefined,
-      })),
+      return {
+        count,
+        filters,
+        etablissements: etablissements.map((etablissement) => ({
+          ...etablissement,
+          formationRenovee: formationsRenoveesEnseignees.includes(etablissement.formationRenovee ?? "")
+            ? etablissement.formationRenovee
+            : undefined,
+        })),
+      };
     };
-  };
 
 export const getFormationEtablissements = getFormationEtablissementsFactory();
