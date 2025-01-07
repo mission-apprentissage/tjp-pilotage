@@ -153,10 +153,10 @@ export const Multiselect = chakra(
     const filterOptions = () => {
       return search
         ? preparedOptions.filter(
-            (item) =>
-              removeAccents(item.label?.toLowerCase()).includes(removeAccents(search.toLowerCase())) ||
+          (item) =>
+            removeAccents(item.label?.toLowerCase()).includes(removeAccents(search.toLowerCase())) ||
               removeAccents(item.value?.toLowerCase()).includes(removeAccents(search.toLowerCase()))
-          )
+        )
         : preparedOptions;
     };
 

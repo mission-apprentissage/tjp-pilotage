@@ -107,21 +107,21 @@ export async function downloadExcel<D extends object>(
 
     Object.entries(columns).forEach(([key, _value]) => {
       switch (typeof _.get(data[0], key)) {
-        case "string":
-          setColumnWrapText(key);
-          break;
-        case "number":
-          setColumnWrapNumber(key);
-          break;
-        case "bigint":
-        case "boolean":
-        case "symbol":
-        case "undefined":
-        case "object":
-        case "function":
-        default:
-          setColumnWrapText(key);
-          break;
+      case "string":
+        setColumnWrapText(key);
+        break;
+      case "number":
+        setColumnWrapNumber(key);
+        break;
+      case "bigint":
+      case "boolean":
+      case "symbol":
+      case "undefined":
+      case "object":
+      case "function":
+      default:
+        setColumnWrapText(key);
+        break;
       }
     });
 
@@ -176,21 +176,21 @@ function downloadExcelMultipleSheets<D extends object>(
 
     Object.entries(columns[key]).forEach(([key, _value]) => {
       switch (typeof _.get(sheetData[0], key)) {
-        case "string":
-          setColumnWrapText(key);
-          break;
-        case "number":
-          setColumnWrapNumber(key);
-          break;
-        case "bigint":
-        case "boolean":
-        case "symbol":
-        case "undefined":
-        case "object":
-        case "function":
-        default:
-          setColumnWrapText(key);
-          break;
+      case "string":
+        setColumnWrapText(key);
+        break;
+      case "number":
+        setColumnWrapNumber(key);
+        break;
+      case "bigint":
+      case "boolean":
+      case "symbol":
+      case "undefined":
+      case "object":
+      case "function":
+      default:
+        setColumnWrapText(key);
+        break;
       }
     });
 

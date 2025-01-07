@@ -29,63 +29,63 @@ const BadgeFormationSpecifique = chakra(
     openGlossaire: (key: GlossaireEntryKey) => void;
   }) => {
     switch (typeFormationSpecifique) {
-      case TypeFormationSpecifiqueEnum["Action prioritaire"]:
-        return (
-          <BadgeActionPrioritaire
-            isFormationActionPrioritaire
-            withIcon={withIcon}
-            labelSize={labelSize}
-            size={size}
-            textTransform={textTransform}
-            openGlossaire={openGlossaire}
-            {...props}
-          />
-        );
-      case TypeFormationSpecifiqueEnum["Transition écologique"]:
-        return feature.formationsSpecifiqueConsole ? (
-          <BadgeTransitionEcologique
-            isFormationTransitionEcologique
-            withIcon={withIcon}
-            labelSize={labelSize}
-            size={size}
-            textTransform={textTransform}
-            openGlossaire={openGlossaire}
-            {...props}
-          />
-        ) : (
-          <></>
-        );
-      case TypeFormationSpecifiqueEnum["Transition démographique"]:
-        return feature.formationsSpecifiqueConsole ? (
-          <BadgeTransitionDemographique
-            isFormationTransitionDemographique
-            withIcon={withIcon}
-            labelSize={labelSize}
-            size={size}
-            textTransform={textTransform}
-            openGlossaire={openGlossaire}
-            {...props}
-          />
-        ) : (
-          <></>
-        );
-      case TypeFormationSpecifiqueEnum["Transition numérique"]:
-        return feature.formationsSpecifiqueConsole ? (
-          <BadgeTransitionNumerique
-            isFormationTransitionNumerique
-            withIcon={withIcon}
-            labelSize={labelSize}
-            size={size}
-            textTransform={textTransform}
-            openGlossaire={openGlossaire}
-            {...props}
-          />
-        ) : (
-          <></>
-        );
-        break;
-      default:
-        return null;
+    case TypeFormationSpecifiqueEnum["Action prioritaire"]:
+      return (
+        <BadgeActionPrioritaire
+          isFormationActionPrioritaire
+          withIcon={withIcon}
+          labelSize={labelSize}
+          size={size}
+          textTransform={textTransform}
+          openGlossaire={openGlossaire}
+          {...props}
+        />
+      );
+    case TypeFormationSpecifiqueEnum["Transition écologique"]:
+      return feature.formationsSpecifiqueConsole ? (
+        <BadgeTransitionEcologique
+          isFormationTransitionEcologique
+          withIcon={withIcon}
+          labelSize={labelSize}
+          size={size}
+          textTransform={textTransform}
+          openGlossaire={openGlossaire}
+          {...props}
+        />
+      ) : (
+        <></>
+      );
+    case TypeFormationSpecifiqueEnum["Transition démographique"]:
+      return feature.formationsSpecifiqueConsole ? (
+        <BadgeTransitionDemographique
+          isFormationTransitionDemographique
+          withIcon={withIcon}
+          labelSize={labelSize}
+          size={size}
+          textTransform={textTransform}
+          openGlossaire={openGlossaire}
+          {...props}
+        />
+      ) : (
+        <></>
+      );
+    case TypeFormationSpecifiqueEnum["Transition numérique"]:
+      return feature.formationsSpecifiqueConsole ? (
+        <BadgeTransitionNumerique
+          isFormationTransitionNumerique
+          withIcon={withIcon}
+          labelSize={labelSize}
+          size={size}
+          textTransform={textTransform}
+          openGlossaire={openGlossaire}
+          {...props}
+        />
+      ) : (
+        <></>
+      );
+      break;
+    default:
+      return null;
     }
   }
 );

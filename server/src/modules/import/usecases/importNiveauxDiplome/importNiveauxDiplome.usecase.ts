@@ -15,15 +15,15 @@ export const importNiveauxDiplomeFactory =
     findNNiveauDiplomes = dependencies.findNNiveauDiplomes,
     createNiveauDiplome = dependencies.createNiveauDiplome,
   }) =>
-  async () => {
-    await streamIt(
-      async (count) => findNNiveauDiplomes({ offset: count, limit: 30 }),
-      async (nNiveauDiplome) => {
-        const niveauDiplome = toNiveauDiplome({ nNiveauDiplome });
-        await createNiveauDiplome(niveauDiplome);
-      },
-      { parallel: 20 }
-    );
-  };
+    async () => {
+      await streamIt(
+        async (count) => findNNiveauDiplomes({ offset: count, limit: 30 }),
+        async (nNiveauDiplome) => {
+          const niveauDiplome = toNiveauDiplome({ nNiveauDiplome });
+          await createNiveauDiplome(niveauDiplome);
+        },
+        { parallel: 20 }
+      );
+    };
 
 export const importNiveauxDiplome = importNiveauxDiplomeFactory({});

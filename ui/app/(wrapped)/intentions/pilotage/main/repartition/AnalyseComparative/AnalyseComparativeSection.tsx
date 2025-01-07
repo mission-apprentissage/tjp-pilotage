@@ -120,13 +120,13 @@ export const AnalyseComparativeSection = ({
   const getScopeKey = () => {
     if (!filters?.scope) return "codeRegion";
     switch (filters?.scope) {
-      case ScopeEnum["académie"]:
-        return "codeAcademie";
-      case ScopeEnum["département"]:
-        return "codeDepartement";
-      case ScopeEnum["région"]:
-      default:
-        return "codeRegion";
+    case ScopeEnum["académie"]:
+      return "codeAcademie";
+    case ScopeEnum["département"]:
+      return "codeDepartement";
+    case ScopeEnum["région"]:
+    default:
+      return "codeRegion";
     }
   };
 
