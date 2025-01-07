@@ -20,7 +20,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
-import type { AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, ReactPortal } from "react";
 import { useMemo, useState } from "react";
 import { hasRightOverRole } from "shared";
 
