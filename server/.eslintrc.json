@@ -1,7 +1,12 @@
 {
-  "extends": ["plugin:n/recommended-module", "plugin:import/recommended", "plugin:import/typescript"],
+  "extends": [
+    "plugin:n/recommended-module",
+    "plugin:import/recommended",
+    "plugin:import/typescript"
+  ],
   "plugins": ["zod"],
   "rules": {
+    "@typescript-eslint/no-floating-promises": ["error"],
     "n/no-missing-import": 0,
     "@dword-design/import-alias/prefer-alias": [
       "error",
@@ -24,6 +29,12 @@
       "files": ["**/*.test.ts"],
       "rules": {
         "n/no-extraneous-import": ["off"]
+      }
+    },
+    {
+      "files": ["**/migrations/**/*.ts", "./src/index.ts", "./src/main.ts"],
+      "rules": {
+        "@typescript-eslint/no-floating-promises": ["off"]
       }
     }
   ],
