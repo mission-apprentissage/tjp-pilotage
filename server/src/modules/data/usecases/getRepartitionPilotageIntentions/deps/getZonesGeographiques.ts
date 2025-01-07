@@ -29,33 +29,33 @@ export const getZonesGeographiques = async ({ filters }: { filters: Filters }): 
   ]);
 
   switch (filters.scope) {
-    case ScopeEnum["département"]:
-      return {
-        numerateur,
-        denominateur,
-        groupBy: {
-          code: "codeDepartement",
-          libelle: "libelleDepartement",
-        },
-      };
-    case ScopeEnum["académie"]:
-      return {
-        numerateur,
-        denominateur,
-        groupBy: {
-          code: "codeAcademie",
-          libelle: "libelleAcademie",
-        },
-      };
-    case ScopeEnum["région"]:
-    default:
-      return {
-        numerateur,
-        denominateur,
-        groupBy: {
-          code: "codeRegion",
-          libelle: "libelleRegion",
-        },
-      };
+  case ScopeEnum["département"]:
+    return {
+      numerateur,
+      denominateur,
+      groupBy: {
+        code: "codeDepartement",
+        libelle: "libelleDepartement",
+      },
+    };
+  case ScopeEnum["académie"]:
+    return {
+      numerateur,
+      denominateur,
+      groupBy: {
+        code: "codeAcademie",
+        libelle: "libelleAcademie",
+      },
+    };
+  case ScopeEnum["région"]:
+  default:
+    return {
+      numerateur,
+      denominateur,
+      groupBy: {
+        code: "codeRegion",
+        libelle: "libelleRegion",
+      },
+    };
   }
 };

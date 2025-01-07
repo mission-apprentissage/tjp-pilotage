@@ -14,14 +14,14 @@ const getStatsRestitutionIntentionsFactory =
       getCurrentCampagneQuery: getCurrentCampagneQuery,
     }
   ) =>
-  async (activeFilters: ActiveFilters) => {
-    const anneeCampagne = activeFilters.campagne ?? (await deps.getCurrentCampagneQuery()).annee;
-    const countRestitutionIntentions = deps.getStatsRestitutionIntentionsQuery({
-      ...activeFilters,
-      campagne: anneeCampagne,
-    });
+    async (activeFilters: ActiveFilters) => {
+      const anneeCampagne = activeFilters.campagne ?? (await deps.getCurrentCampagneQuery()).annee;
+      const countRestitutionIntentions = deps.getStatsRestitutionIntentionsQuery({
+        ...activeFilters,
+        campagne: anneeCampagne,
+      });
 
-    return await countRestitutionIntentions;
-  };
+      return await countRestitutionIntentions;
+    };
 
 export const getStatsRestitutionIntentionsUsecase = getStatsRestitutionIntentionsFactory();

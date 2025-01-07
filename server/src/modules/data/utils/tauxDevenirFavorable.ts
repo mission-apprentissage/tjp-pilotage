@@ -30,8 +30,8 @@ export const selectTauxDevenirFavorableAgg = (indicateurSortieAlias: string) => 
       CASE WHEN ${selectDenominateurDevenirFavorableAgg(indicateurSortieAlias)} >= ${seuil}
       THEN (
         SUM(${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes" + ${sql.table(
-          indicateurSortieAlias
-        )}."nbInsertion6mois")
+  indicateurSortieAlias
+)}."nbInsertion6mois")
       / ${selectDenominateurDevenirFavorableAgg(indicateurSortieAlias)})::NUMERIC
       END
     `;

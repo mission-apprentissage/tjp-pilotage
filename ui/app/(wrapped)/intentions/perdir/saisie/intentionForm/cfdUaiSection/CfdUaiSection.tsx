@@ -21,30 +21,30 @@ import { UaiBlock } from "./UaiBlock";
 const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
   if (!campagne) return null;
   switch (campagne.statut) {
-    case CampagneStatutEnum["en cours"]:
-      return (
-        <Tag size="md" color={"success.425"} bgColor={"success.950"} ml={4}>
+  case CampagneStatutEnum["en cours"]:
+    return (
+      <Tag size="md" color={"success.425"} bgColor={"success.950"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
-        </Tag>
-      );
-    case CampagneStatutEnum["en attente"]:
-      return (
-        <Tag size="md" ml={4} bgColor={"purpleGlycine.950"} color={"purpleGlycine.319"}>
+      </Tag>
+    );
+  case CampagneStatutEnum["en attente"]:
+    return (
+      <Tag size="md" ml={4} bgColor={"purpleGlycine.950"} color={"purpleGlycine.319"}>
           Campagne {campagne.annee} ({campagne.statut})
-        </Tag>
-      );
-    case CampagneStatutEnum["terminée"]:
-      return (
-        <Tag size="md" ml={4} color={"error.425"} bgColor={"error.950"}>
+      </Tag>
+    );
+  case CampagneStatutEnum["terminée"]:
+    return (
+      <Tag size="md" ml={4} color={"error.425"} bgColor={"error.950"}>
           Campagne {campagne.annee} ({campagne.statut})
-        </Tag>
-      );
-    default:
-      return (
-        <Tag size="md" ml={4} color={"yellowTournesol.407"} bgColor={"yellowTournesol.950"}>
+      </Tag>
+    );
+  default:
+    return (
+      <Tag size="md" ml={4} color={"yellowTournesol.407"} bgColor={"yellowTournesol.950"}>
           Campagne {campagne.annee} ({campagne.statut})
-        </Tag>
-      );
+      </Tag>
+    );
   }
 };
 
@@ -79,21 +79,21 @@ export const CfdUaiSection = ({
 
   const [dispositifs, setDispositifs] = useState<
     (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"] | undefined
-  >(formMetadata?.formation?.dispositifs);
+      >(formMetadata?.formation?.dispositifs);
 
   const uai = watch("uai");
 
   const [uaiInfo, setUaiInfo] = useState<
     (typeof client.infer)["[GET]/etablissement/search/:search"][number] | undefined
-  >(
-    formMetadata?.etablissement?.libelleEtablissement && uai
-      ? {
+      >(
+      formMetadata?.etablissement?.libelleEtablissement && uai
+        ? {
           label: formMetadata?.etablissement.libelleEtablissement,
           value: uai,
           commune: formMetadata?.etablissement.commune,
         }
-      : undefined
-  );
+        : undefined
+      );
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 

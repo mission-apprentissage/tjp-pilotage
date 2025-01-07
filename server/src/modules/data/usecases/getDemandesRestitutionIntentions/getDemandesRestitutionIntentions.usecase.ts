@@ -27,23 +27,23 @@ const getDemandesRestitutionIntentionsFactory =
       getStatsSortieParRegionsEtNiveauDiplomeQuery,
     }
   ) =>
-  async (activeFilters: ActiveFilters) => {
-    const campagne = await deps.getCurrentCampagneQuery();
-    const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
-    const [{ count, demandes }, filters] = await Promise.all([
-      deps.getDemandesRestitutionIntentionsQuery({
-        ...activeFilters,
-        campagne: anneeCampagne,
-      }),
-      deps.getFilters({ ...activeFilters, campagne: anneeCampagne }),
-    ]);
+    async (activeFilters: ActiveFilters) => {
+      const campagne = await deps.getCurrentCampagneQuery();
+      const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
+      const [{ count, demandes }, filters] = await Promise.all([
+        deps.getDemandesRestitutionIntentionsQuery({
+          ...activeFilters,
+          campagne: anneeCampagne,
+        }),
+        deps.getFilters({ ...activeFilters, campagne: anneeCampagne }),
+      ]);
 
-    return {
-      count,
-      filters,
-      demandes,
-      campagne,
+      return {
+        count,
+        filters,
+        demandes,
+        campagne,
+      };
     };
-  };
 
 export const getDemandesRestitutionIntentionsUsecase = getDemandesRestitutionIntentionsFactory();

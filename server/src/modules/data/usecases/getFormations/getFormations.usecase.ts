@@ -21,23 +21,23 @@ const getFormationsFactory =
       getFormationsRenoveesRentreeScolaireQuery,
     }
   ) =>
-  async (activeFilters: Partial<Filters>) => {
-    const [{ formations, count }, filters, formationsRenoveesEnseignees] = await Promise.all([
-      deps.getFormationsQuery(activeFilters),
-      deps.getFiltersQuery(activeFilters),
-      deps.getFormationsRenoveesRentreeScolaireQuery(activeFilters),
-    ]);
+    async (activeFilters: Partial<Filters>) => {
+      const [{ formations, count }, filters, formationsRenoveesEnseignees] = await Promise.all([
+        deps.getFormationsQuery(activeFilters),
+        deps.getFiltersQuery(activeFilters),
+        deps.getFormationsRenoveesRentreeScolaireQuery(activeFilters),
+      ]);
 
-    return {
-      count,
-      filters,
-      formations: formations.map((formation) => ({
-        ...formation,
-        formationRenovee: formationsRenoveesEnseignees.includes(formation.formationRenovee ?? "")
-          ? formation.formationRenovee
-          : undefined,
-      })),
+      return {
+        count,
+        filters,
+        formations: formations.map((formation) => ({
+          ...formation,
+          formationRenovee: formationsRenoveesEnseignees.includes(formation.formationRenovee ?? "")
+            ? formation.formationRenovee
+            : undefined,
+        })),
+      };
     };
-  };
 
 export const getFormations = getFormationsFactory();

@@ -195,14 +195,14 @@ export const getFormationsPilotageIntentionsQuery = ({
     .where((wb) => {
       if (!type) return wb.val(true);
       switch (type) {
-        case "ouverture":
-          return wb(countPlacesOuvertes(wb), ">", 0);
-        case "fermeture":
-          return wb(countPlacesFermees(wb), ">", 0);
-        case "coloration":
-          return wb(countPlacesColoreesTransformees(wb), ">", 0);
-        default:
-          return wb.val(true);
+      case "ouverture":
+        return wb(countPlacesOuvertes(wb), ">", 0);
+      case "fermeture":
+        return wb(countPlacesFermees(wb), ">", 0);
+      case "coloration":
+        return wb(countPlacesColoreesTransformees(wb), ">", 0);
+      default:
+        return wb.val(true);
       }
     })
     .having((h) => {
