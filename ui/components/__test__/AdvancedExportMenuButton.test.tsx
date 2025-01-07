@@ -13,6 +13,15 @@ const onExportCsv = vi.fn(async (f) => Promise.resolve());
 const onExportExcel = vi.fn(async (f) => Promise.resolve());
 
 describe("ui > components > AdvancedExportMenuButton", () => {
+  it("Ne doit pas afficher le bouton exporter si aucune fonction d'export est fournie", () => {
+    const { unmount, queryByRole } = render(<AdvancedExportMenuButton />);
+
+    const exporterButton = queryByRole("button", { name: "Exporter" });
+
+    expect(exporterButton).toBeNull();
+    unmount();
+  });
+
   it("Doit afficher le bouton exporter", () => {
     const { unmount, queryByRole } = render(
       <AdvancedExportMenuButton onExportCsv={onExportCsv} onExportExcel={onExportExcel} />
