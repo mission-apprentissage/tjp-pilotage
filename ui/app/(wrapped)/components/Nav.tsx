@@ -268,10 +268,10 @@ export const Nav = () => {
                 href={
                   uaisFilter
                     ? createParametrizedUrl("/console/etablissements", {
-                        filters: {
-                          uai: uaisFilter,
-                        },
-                      })
+                      filters: {
+                        uai: uaisFilter,
+                      },
+                    })
                     : "/console/etablissements"
                 }
                 segment="consoles/etablissements"

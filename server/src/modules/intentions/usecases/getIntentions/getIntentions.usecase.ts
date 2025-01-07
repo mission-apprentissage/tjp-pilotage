@@ -16,25 +16,25 @@ const getIntentionsFactory =
       getFilters,
     }
   ) =>
-  async (activeFilters: Filters) => {
-    const currentCampagne = await deps.getCurrentCampagneQuery();
-    const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
+    async (activeFilters: Filters) => {
+      const currentCampagne = await deps.getCurrentCampagneQuery();
+      const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
 
-    const shouldFetchOnlyIntention = anneeCampagne !== CAMPAGNE_DEMANDE;
+      const shouldFetchOnlyIntention = anneeCampagne !== CAMPAGNE_DEMANDE;
 
-    const [intentions, campagne, filters] = await Promise.all([
-      deps.getIntentions(
-        {
-          ...activeFilters,
-          campagne: anneeCampagne,
-        },
-        shouldFetchOnlyIntention
-      ),
-      deps.getCampagne(anneeCampagne),
-      deps.getFilters(activeFilters),
-    ]);
+      const [intentions, campagne, filters] = await Promise.all([
+        deps.getIntentions(
+          {
+            ...activeFilters,
+            campagne: anneeCampagne,
+          },
+          shouldFetchOnlyIntention
+        ),
+        deps.getCampagne(anneeCampagne),
+        deps.getFilters(activeFilters),
+      ]);
 
-    return { ...intentions, currentCampagne, campagne, filters };
-  };
+      return { ...intentions, currentCampagne, campagne, filters };
+    };
 
 export const getIntentionsUsecase = getIntentionsFactory();

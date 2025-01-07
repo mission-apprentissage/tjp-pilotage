@@ -138,21 +138,21 @@ export default () => {
   ) => {
     if (value != null)
       switch (type) {
-        case "codeRegion":
-          setCodeRegionFilter((value as string[])[0] ?? "");
-          break;
-        case "codeDepartement":
-          setCodeDepartementFilter((value as string[])[0] ?? "");
-          break;
-        case "rentreeScolaire":
-          setRentreeScolaireFilter((value as string[])[0] ?? "");
-          break;
-        case "campagne":
-          setCampagneFilter((value as string[])[0] ?? "");
-          break;
-        case "statut":
-          setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
-          break;
+      case "codeRegion":
+        setCodeRegionFilter((value as string[])[0] ?? "");
+        break;
+      case "codeDepartement":
+        setCodeDepartementFilter((value as string[])[0] ?? "");
+        break;
+      case "rentreeScolaire":
+        setRentreeScolaireFilter((value as string[])[0] ?? "");
+        break;
+      case "campagne":
+        setCampagneFilter((value as string[])[0] ?? "");
+        break;
+      case "statut":
+        setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
+        break;
       }
   };
 

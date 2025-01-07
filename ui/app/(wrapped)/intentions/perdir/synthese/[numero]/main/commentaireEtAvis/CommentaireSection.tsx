@@ -119,32 +119,32 @@ export const CommentaireSection = chakra(
               !isChangementStatutAvisDisabled(statut) &&
               !isDeleting &&
               !isModifying && (
-                <Flex direction={"row"} gap={6}>
-                  <Button
-                    isLoading={isDeleting || isModifying}
-                    variant={"link"}
-                    color="bluefrance.113"
-                    fontSize={12}
-                    fontWeight={400}
-                    onClick={() => {
-                      submitDeleteChangementStatutCommentaire();
-                      onToggleUpdateChangementStatut();
-                    }}
-                  >
+              <Flex direction={"row"} gap={6}>
+                <Button
+                  isLoading={isDeleting || isModifying}
+                  variant={"link"}
+                  color="bluefrance.113"
+                  fontSize={12}
+                  fontWeight={400}
+                  onClick={() => {
+                    submitDeleteChangementStatutCommentaire();
+                    onToggleUpdateChangementStatut();
+                  }}
+                >
                     Supprimer
-                  </Button>
-                  <Button
-                    variant={"link"}
-                    color="bluefrance.113"
-                    fontSize={12}
-                    fontWeight={400}
-                    isLoading={isDeleting || isModifying}
-                    onClick={() => setIsModifying(true)}
-                  >
+                </Button>
+                <Button
+                  variant={"link"}
+                  color="bluefrance.113"
+                  fontSize={12}
+                  fontWeight={400}
+                  isLoading={isDeleting || isModifying}
+                  onClick={() => setIsModifying(true)}
+                >
                     Modifier
-                  </Button>
-                </Flex>
-              )}
+                </Button>
+              </Flex>
+            )}
           </Flex>
         </Box>
       </SlideFade>

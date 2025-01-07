@@ -7,13 +7,13 @@ const getPilotageReformeStatsRegionsFactory =
       findFiltersInDb: dependencies.findFiltersInDb,
     }
   ) =>
-  async (activeFilters: { codeNiveauDiplome?: string[]; orderBy?: { order: "asc" | "desc"; column: string } }) => {
-    const [statsRegions, filters] = await Promise.all([deps.getStatsRegions(activeFilters), deps.findFiltersInDb()]);
+    async (activeFilters: { codeNiveauDiplome?: string[]; orderBy?: { order: "asc" | "desc"; column: string } }) => {
+      const [statsRegions, filters] = await Promise.all([deps.getStatsRegions(activeFilters), deps.findFiltersInDb()]);
 
-    return {
-      statsRegions,
-      filters,
+      return {
+        statsRegions,
+        filters,
+      };
     };
-  };
 
 export const getPilotageReformeStatsRegions = getPilotageReformeStatsRegionsFactory();

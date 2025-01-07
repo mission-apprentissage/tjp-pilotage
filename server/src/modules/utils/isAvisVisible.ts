@@ -13,26 +13,26 @@ import type { RequestUser } from "@/modules/core/model/User";
  */
 export const isAvisVisible =
   ({ user }: { user: RequestUser }) =>
-  (eb: ExpressionBuilder<DB, "avis" | "user">) => {
-    return eb.or([
-      eb.and([
-        eb("avis.typeAvis", "=", AvisTypeEnum["consultatif"]),
-        eb("avis.isVisibleParTous", "=", sql<boolean>`false`),
-        eb
-          .selectFrom("user")
-          .where("user.id", "=", user.id)
-          .select((eb) =>
-            sql<boolean>`${eb("user.role", "in", [
-              "admin",
-              "admin_region",
-              "gestionnaire",
-              "gestionnaire_region",
-              "pilote",
-              "pilote_region",
-            ])}`.as("isUserAllowedToSeeAvis")
-          ),
-      ]),
-      eb("avis.isVisibleParTous", "=", sql<boolean>`true`),
-      eb("avis.createdBy", "=", user.id),
-    ]);
-  };
+    (eb: ExpressionBuilder<DB, "avis" | "user">) => {
+      return eb.or([
+        eb.and([
+          eb("avis.typeAvis", "=", AvisTypeEnum["consultatif"]),
+          eb("avis.isVisibleParTous", "=", sql<boolean>`false`),
+          eb
+            .selectFrom("user")
+            .where("user.id", "=", user.id)
+            .select((eb) =>
+              sql<boolean>`${eb("user.role", "in", [
+                "admin",
+                "admin_region",
+                "gestionnaire",
+                "gestionnaire_region",
+                "pilote",
+                "pilote_region",
+              ])}`.as("isUserAllowedToSeeAvis")
+            ),
+        ]),
+        eb("avis.isVisibleParTous", "=", sql<boolean>`true`),
+        eb("avis.createdBy", "=", user.id),
+      ]);
+    };

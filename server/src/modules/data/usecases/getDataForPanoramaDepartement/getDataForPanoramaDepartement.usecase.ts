@@ -11,18 +11,18 @@ export const getDataForPanoramaDepartementFactory =
       getTopFlopFormationsDepartement,
     }
   ) =>
-  async (activeFilters: z.infer<typeof getDataForPanoramaDepartementSchema.querystring>) => {
-    const [formations, topFlops, filters] = await Promise.all([
-      deps.getFormationsDepartement(activeFilters),
-      deps.getTopFlopFormationsDepartement(activeFilters),
-      deps.getFilters(activeFilters),
-    ]);
+    async (activeFilters: z.infer<typeof getDataForPanoramaDepartementSchema.querystring>) => {
+      const [formations, topFlops, filters] = await Promise.all([
+        deps.getFormationsDepartement(activeFilters),
+        deps.getTopFlopFormationsDepartement(activeFilters),
+        deps.getFilters(activeFilters),
+      ]);
 
-    return {
-      formations,
-      filters,
-      topFlops,
+      return {
+        formations,
+        filters,
+        topFlops,
+      };
     };
-  };
 
 export const getDataForPanoramaDepartement = getDataForPanoramaDepartementFactory();

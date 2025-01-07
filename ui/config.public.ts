@@ -126,26 +126,26 @@ function getProductMeta(): PublicConfig["productMeta"] {
 function getEnv(): PublicConfig["env"] {
   const env = process.env.NEXT_PUBLIC_ENV;
   switch (env) {
-    case "production":
-    case "recette1":
-    case "recette2":
-    case "local":
-      return env;
-    default:
-      throw new Error(`Invalid NEXT_PUBLIC_ENV env-vars ${env}`);
+  case "production":
+  case "recette1":
+  case "recette2":
+  case "local":
+    return env;
+  default:
+    throw new Error(`Invalid NEXT_PUBLIC_ENV env-vars ${env}`);
   }
 }
 
 function getPublicConfig(): PublicConfig {
   switch (getEnv()) {
-    case "production":
-      return getProductionPublicConfig();
-    case "recette1":
-      return getRecette1PublicConfig();
-    case "recette2":
-      return getRecette2PublicConfig();
-    case "local":
-      return getLocalPublicConfig();
+  case "production":
+    return getProductionPublicConfig();
+  case "recette1":
+    return getRecette1PublicConfig();
+  case "recette2":
+    return getRecette2PublicConfig();
+  case "local":
+    return getLocalPublicConfig();
   }
 }
 

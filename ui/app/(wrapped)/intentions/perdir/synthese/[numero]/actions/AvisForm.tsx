@@ -112,14 +112,14 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
   const getLabelAvis = (statut?: DemandeStatutType): string => {
     const typeAvis = getTypeAvis(statut);
     switch (typeAvis) {
-      case AvisTypeEnum["préalable"]:
-        return `avis préalable`;
-      case AvisTypeEnum["consultatif"]:
-        return `avis consultatif`;
-      case AvisTypeEnum["final"]:
-        return `vote`;
-      default:
-        return `avis`;
+    case AvisTypeEnum["préalable"]:
+      return `avis préalable`;
+    case AvisTypeEnum["consultatif"]:
+      return `avis consultatif`;
+    case AvisTypeEnum["final"]:
+      return `vote`;
+    default:
+      return `avis`;
     }
   };
 
@@ -164,9 +164,9 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
                 defaultValue={
                   value
                     ? {
-                        value: value,
-                        label: value?.toUpperCase() ?? "",
-                      }
+                      value: value,
+                      label: value?.toUpperCase() ?? "",
+                    }
                     : undefined
                 }
                 placeholder="Sélectionner une option"
@@ -202,9 +202,9 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
                 defaultValue={
                   value
                     ? {
-                        value: value,
-                        label: value?.toUpperCase() ?? "",
-                      }
+                      value: value,
+                      label: value?.toUpperCase() ?? "",
+                    }
                     : undefined
                 }
                 placeholder="Sélectionner une option"
