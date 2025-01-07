@@ -82,9 +82,9 @@ export async function bind(app: Server) {
   app.register(fastifyCors, {
     ...(config.env === "local"
       ? {
-          origin: true,
-          credentials: true,
-        }
+        origin: true,
+        credentials: true,
+      }
       : {}),
   });
 

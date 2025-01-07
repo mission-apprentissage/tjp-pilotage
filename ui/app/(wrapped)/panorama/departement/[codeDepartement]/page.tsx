@@ -103,10 +103,10 @@ export default function Panorama({
         stats={
           searchParams.codeNsf
             ? {
-                libelleRegion: "",
-                codeRegion: "",
-                libelleDepartement: stats?.libelleDepartement,
-              }
+              libelleRegion: "",
+              codeRegion: "",
+              libelleDepartement: stats?.libelleDepartement,
+            }
             : stats
         }
         libelleTerritoire={departementsOptions?.find((item) => item.value === codeDepartement)?.label}

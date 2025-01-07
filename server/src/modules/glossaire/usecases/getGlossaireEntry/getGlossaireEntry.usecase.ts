@@ -12,16 +12,16 @@ export const getGlossaireEntryFactory =
       mapNotionPageToGlossaireEntry: dependencies.mapNotionPageToGlossaireEntry,
     }
   ) =>
-  async (id: string) => {
-    const page = await deps.getPageProperties(id);
-    const content = await deps.getPageAsMarkdown(id);
+    async (id: string) => {
+      const page = await deps.getPageProperties(id);
+      const content = await deps.getPageAsMarkdown(id);
 
-    const entry = deps.mapNotionPageToGlossaireEntry(id, page as PageObjectResponse);
+      const entry = deps.mapNotionPageToGlossaireEntry(id, page as PageObjectResponse);
 
-    return {
-      ...entry,
-      content,
+      return {
+        ...entry,
+        content,
+      };
     };
-  };
 
 export const getGlossaireEntry = getGlossaireEntryFactory();

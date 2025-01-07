@@ -15,16 +15,16 @@ export const formatAnneeCommuneLibelle = (
   size?: "xs" | "sm" | "md"
 ): React.ReactNode => {
   switch (formation.typeFamille) {
-    case "2nde_commune":
-      return format2ndeCommuneLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
-    case "1ere_commune":
-      return format1ereCommuneLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
-    case "specialite":
-      return formatSpecialiteLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
-    case "option":
-      return formatOptionLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
-    default:
-      return formation.libelleFormation ?? "-";
+  case "2nde_commune":
+    return format2ndeCommuneLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
+  case "1ere_commune":
+    return format1ereCommuneLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
+  case "specialite":
+    return formatSpecialiteLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
+  case "option":
+    return formatOptionLibelle(formation.libelleFormation, formation.typeFamille, labelSize, size);
+  default:
+    return formation.libelleFormation ?? "-";
   }
 };
 

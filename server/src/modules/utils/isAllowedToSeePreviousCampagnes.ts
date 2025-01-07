@@ -7,6 +7,6 @@ import type { RequestUser } from "@/modules/core/model/User";
 
 export const isAllowedToSeePreviousCampagnes =
   ({ user }: { user: RequestUser }) =>
-  (eb: ExpressionBuilder<DB, "campagne">): ExpressionWrapper<DB, "demande", SqlBool> => {
-    return eb.and([user.role === "invite" ? eb("campagne.annee", "=", CURRENT_ANNEE_CAMPAGNE) : sql<boolean>`true`]);
-  };
+    (eb: ExpressionBuilder<DB, "campagne">): ExpressionWrapper<DB, "demande", SqlBool> => {
+      return eb.and([user.role === "invite" ? eb("campagne.annee", "=", CURRENT_ANNEE_CAMPAGNE) : sql<boolean>`true`]);
+    };

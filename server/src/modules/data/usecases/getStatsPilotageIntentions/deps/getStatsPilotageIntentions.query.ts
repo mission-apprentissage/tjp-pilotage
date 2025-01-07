@@ -220,59 +220,59 @@ export const getStatsPilotageIntentionsQuery = async ({
   formationSpecifique,
 }: Filters) => {
   switch (scope) {
-    case ScopeEnum["académie"]:
-      return getAcademieData({
-        statut,
-        rentreeScolaire,
-        codeNiveauDiplome,
-        CPC,
-        codeNsf,
-        campagne,
-        scope,
-        secteur,
-        withColoration,
-        formationSpecifique,
-      });
+  case ScopeEnum["académie"]:
+    return getAcademieData({
+      statut,
+      rentreeScolaire,
+      codeNiveauDiplome,
+      CPC,
+      codeNsf,
+      campagne,
+      scope,
+      secteur,
+      withColoration,
+      formationSpecifique,
+    });
 
-    case ScopeEnum["département"]:
-      return getDepartementData({
-        statut,
-        rentreeScolaire,
-        codeNiveauDiplome,
-        CPC,
-        codeNsf,
-        campagne,
-        scope,
-        secteur,
-        withColoration,
-        formationSpecifique,
-      });
-    case ScopeEnum["région"]:
-      return getRegionData({
-        statut,
-        rentreeScolaire,
-        codeNiveauDiplome,
-        CPC,
-        codeNsf,
-        campagne,
-        scope,
-        secteur,
-        withColoration,
-        formationSpecifique,
-      });
-    case ScopeEnum.national:
-    default:
-      return getNationalData({
-        statut,
-        rentreeScolaire,
-        codeNiveauDiplome,
-        CPC,
-        codeNsf,
-        campagne,
-        scope,
-        secteur,
-        withColoration,
-        formationSpecifique,
-      });
+  case ScopeEnum["département"]:
+    return getDepartementData({
+      statut,
+      rentreeScolaire,
+      codeNiveauDiplome,
+      CPC,
+      codeNsf,
+      campagne,
+      scope,
+      secteur,
+      withColoration,
+      formationSpecifique,
+    });
+  case ScopeEnum["région"]:
+    return getRegionData({
+      statut,
+      rentreeScolaire,
+      codeNiveauDiplome,
+      CPC,
+      codeNsf,
+      campagne,
+      scope,
+      secteur,
+      withColoration,
+      formationSpecifique,
+    });
+  case ScopeEnum.national:
+  default:
+    return getNationalData({
+      statut,
+      rentreeScolaire,
+      codeNiveauDiplome,
+      CPC,
+      codeNsf,
+      campagne,
+      scope,
+      secteur,
+      withColoration,
+      formationSpecifique,
+    });
   }
 };

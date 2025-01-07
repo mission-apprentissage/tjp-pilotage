@@ -80,18 +80,18 @@ export const IntentionForm = ({
       let message: string | null = null;
 
       switch (body.statut) {
-        case DemandeStatutEnum["projet de demande"]:
-          message = "Projet de demande enregistré avec succès";
-          break;
-        case DemandeStatutEnum["demande validée"]:
-          message = "Demande validée avec succès";
-          break;
-        case DemandeStatutEnum["refusée"]:
-          message = "Demande refusée avec succès";
-          break;
-        case DemandeStatutEnum["supprimée"]:
-          message = "Demande supprimée avec succès";
-          break;
+      case DemandeStatutEnum["projet de demande"]:
+        message = "Projet de demande enregistré avec succès";
+        break;
+      case DemandeStatutEnum["demande validée"]:
+        message = "Demande validée avec succès";
+        break;
+      case DemandeStatutEnum["refusée"]:
+        message = "Demande refusée avec succès";
+        break;
+      case DemandeStatutEnum["supprimée"]:
+        message = "Demande supprimée avec succès";
+        break;
       }
 
       if (message) {
@@ -202,15 +202,15 @@ export const IntentionForm = ({
                 { title: "Recueil des demandes", to: "/intentions" },
                 pathname === "/intentions/saisie/new"
                   ? {
-                      title: "Nouvelle demande",
-                      to: "/intentions/saisie/new",
-                      active: true,
-                    }
+                    title: "Nouvelle demande",
+                    to: "/intentions/saisie/new",
+                    active: true,
+                  }
                   : {
-                      title: `Demande n°${formId}`,
-                      to: `/intentions/saisie/${formId}`,
-                      active: true,
-                    },
+                    title: `Demande n°${formId}`,
+                    to: `/intentions/saisie/${formId}`,
+                    active: true,
+                  },
               ]}
             />
             <CfdUaiSection

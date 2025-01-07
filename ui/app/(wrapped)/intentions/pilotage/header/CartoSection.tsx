@@ -51,31 +51,31 @@ export const CartoSection = ({
 
   const getCustomPalette = () => {
     switch (indicateur) {
-      case "tauxTransformation":
-        return customPalette;
-      case "ratioFermeture":
-        return [customPalette[0], customPalette[1], customPalette[2], customPalette[4]];
+    case "tauxTransformation":
+      return customPalette;
+    case "ratioFermeture":
+      return [customPalette[0], customPalette[1], customPalette[2], customPalette[4]];
     }
   };
 
   const getCustomPieces = () => {
     switch (indicateur) {
-      case "tauxTransformation":
-        return [
-          [0, 1],
-          [1, 2],
-          [2, 4],
-          [4, 5],
-          [5, 6],
-          [6, 10000],
-        ];
-      case "ratioFermeture":
-        return [
-          [0, 15],
-          [15, 25],
-          [25, 30],
-          [30, 100],
-        ];
+    case "tauxTransformation":
+      return [
+        [0, 1],
+        [1, 2],
+        [2, 4],
+        [4, 5],
+        [5, 6],
+        [6, 10000],
+      ];
+    case "ratioFermeture":
+      return [
+        [0, 15],
+        [15, 25],
+        [25, 30],
+        [30, 100],
+      ];
     }
   };
 
@@ -102,15 +102,15 @@ export const CartoSection = ({
   const handleClickOnTerritoire = useCallback(
     (code: string | undefined) => {
       switch (filters.scope) {
-        case ScopeEnum["région"]:
-          filterTracker("codeRegion", { value: code, context: "carto" });
-          break;
-        case ScopeEnum["académie"]:
-          filterTracker("codeAcademie", { value: code, context: "carto" });
-          break;
-        case ScopeEnum["département"]:
-          filterTracker("codeDepartement", { value: code, context: "carto" });
-          break;
+      case ScopeEnum["région"]:
+        filterTracker("codeRegion", { value: code, context: "carto" });
+        break;
+      case ScopeEnum["académie"]:
+        filterTracker("codeAcademie", { value: code, context: "carto" });
+        break;
+      case ScopeEnum["département"]:
+        filterTracker("codeDepartement", { value: code, context: "carto" });
+        break;
       }
 
       return handleFilters({

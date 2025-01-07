@@ -111,13 +111,13 @@ export const [importDataFormations] = inject(
               cfd,
               libelleFormation: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"]
                 ? normalizeWithReplace({
-                    value: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"],
-                    regexp: /"/g,
-                  })
+                  value: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"],
+                  regexp: /"/g,
+                })
                 : normalizeWithReplace({
-                    value: nFormationDiplome.LIBELLE_LONG_200,
-                    regexp: / \(.*\)/,
-                  }),
+                  value: nFormationDiplome.LIBELLE_LONG_200,
+                  regexp: / \(.*\)/,
+                }),
               rncp: diplomeProfessionnel?.["Code RNCP"]
                 ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
                 : undefined,
@@ -186,13 +186,13 @@ export const [importDataFormations] = inject(
               cfd,
               libelleFormation: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"]
                 ? normalizeWithReplace({
-                    value: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"],
-                    regexp: /"/g,
-                  })
+                  value: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"],
+                  regexp: /"/g,
+                })
                 : normalizeWithReplace({
-                    value: vFormationDiplome.LIBELLE_LONG_200,
-                    regexp: / \(.*\)/,
-                  }),
+                  value: vFormationDiplome.LIBELLE_LONG_200,
+                  regexp: / \(.*\)/,
+                }),
               rncp: diplomeProfessionnel?.["Code RNCP"]
                 ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
                 : undefined,

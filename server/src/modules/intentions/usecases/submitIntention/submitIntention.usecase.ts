@@ -33,20 +33,20 @@ const validateIntention = (intention: Intention) => {
 const logDemande = (intention?: { statut: string }) => {
   if (!intention) return;
   switch (intention.statut) {
-    case DemandeStatutEnum["proposition"]:
-      logger.info(
-        {
-          intention: intention,
-        },
-        "Proposition enregistrée"
-      );
-      break;
-    case DemandeStatutEnum["demande validée"]:
-      logger.info({ intention: intention }, "Demande validée");
-      break;
-    case DemandeStatutEnum["refusée"]:
-      logger.info({ intention: intention }, "Demande refusée");
-      break;
+  case DemandeStatutEnum["proposition"]:
+    logger.info(
+      {
+        intention: intention,
+      },
+      "Proposition enregistrée"
+    );
+    break;
+  case DemandeStatutEnum["demande validée"]:
+    logger.info({ intention: intention }, "Demande validée");
+    break;
+  case DemandeStatutEnum["refusée"]:
+    logger.info({ intention: intention }, "Demande refusée");
+    break;
   }
 };
 

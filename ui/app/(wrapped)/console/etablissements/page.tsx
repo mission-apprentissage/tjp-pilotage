@@ -186,23 +186,23 @@ export default function Etablissements() {
       ...etablissement,
       ...(filters.codeRegion && region
         ? {
-            selectedCodeRegion: region.value,
-            selectedRegion: region.label,
-          }
+          selectedCodeRegion: region.value,
+          selectedRegion: region.label,
+        }
         : {}),
       ...(filters.codeAcademie && academies
         ? {
-            selectedCodeAcademie: formatArray(academies.map((academie) => academie.value)),
+          selectedCodeAcademie: formatArray(academies.map((academie) => academie.value)),
 
-            selectedAcademie: formatArray(academies.map((academie) => academie.label)),
-          }
+          selectedAcademie: formatArray(academies.map((academie) => academie.label)),
+        }
         : {}),
       ...(filters.codeDepartement && departements
         ? {
-            selectedCodeDepartement: formatArray(departements.map((departement) => departement.value)),
+          selectedCodeDepartement: formatArray(departements.map((departement) => departement.value)),
 
-            selectedDepartement: formatArray(departements.map((departement) => departement.label)),
-          }
+          selectedDepartement: formatArray(departements.map((departement) => departement.label)),
+        }
         : {}),
       actionPrioritaire: etablissement.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
     }));
@@ -279,56 +279,56 @@ export default function Etablissements() {
 
     // Valeurs par défaut pour les codes
     switch (type) {
-      case "codeRegion":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            codeAcademie: undefined,
-            codeDepartement: undefined,
-            commune: undefined,
-            secteur: [],
-            uai: [],
-          };
-        }
-        break;
-      case "codeAcademie":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            codeDepartement: undefined,
-            commune: undefined,
-            secteur: [],
-            uai: [],
-          };
-        }
-        break;
-      case "codeDepartement":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            commune: undefined,
-            secteur: [],
-            uai: [],
-          };
-        }
-        break;
-      case "commune":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            secteur: [],
-            uai: [],
-          };
-        }
-        break;
-      case "secteur":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            uai: [],
-          };
-        }
-        break;
+    case "codeRegion":
+      if (value !== undefined) {
+        newFilters = {
+          ...newFilters,
+          codeAcademie: undefined,
+          codeDepartement: undefined,
+          commune: undefined,
+          secteur: [],
+          uai: [],
+        };
+      }
+      break;
+    case "codeAcademie":
+      if (value !== undefined) {
+        newFilters = {
+          ...newFilters,
+          codeDepartement: undefined,
+          commune: undefined,
+          secteur: [],
+          uai: [],
+        };
+      }
+      break;
+    case "codeDepartement":
+      if (value !== undefined) {
+        newFilters = {
+          ...newFilters,
+          commune: undefined,
+          secteur: [],
+          uai: [],
+        };
+      }
+      break;
+    case "commune":
+      if (value !== undefined) {
+        newFilters = {
+          ...newFilters,
+          secteur: [],
+          uai: [],
+        };
+      }
+      break;
+    case "secteur":
+      if (value !== undefined) {
+        newFilters = {
+          ...newFilters,
+          uai: [],
+        };
+      }
+      break;
     }
 
     filterTracker(type)();

@@ -149,29 +149,29 @@ export const AvisSection = chakra(({ avis, statut }: { avis: Avis; statut: Deman
               !isChangementStatutAvisDisabled(statut) &&
               !isDeleting &&
               !isModifying && (
-                <Flex direction={"row"} gap={6}>
-                  <Button
-                    isLoading={isDeleting || isModifying}
-                    variant={"link"}
-                    color="bluefrance.113"
-                    fontSize={12}
-                    fontWeight={400}
-                    onClick={() => onOpen()}
-                  >
+              <Flex direction={"row"} gap={6}>
+                <Button
+                  isLoading={isDeleting || isModifying}
+                  variant={"link"}
+                  color="bluefrance.113"
+                  fontSize={12}
+                  fontWeight={400}
+                  onClick={() => onOpen()}
+                >
                     Supprimer
-                  </Button>
-                  <Button
-                    variant={"link"}
-                    color="bluefrance.113"
-                    fontSize={12}
-                    fontWeight={400}
-                    isLoading={isDeleting || isModifying}
-                    onClick={() => setIsModifying(true)}
-                  >
+                </Button>
+                <Button
+                  variant={"link"}
+                  color="bluefrance.113"
+                  fontSize={12}
+                  fontWeight={400}
+                  isLoading={isDeleting || isModifying}
+                  onClick={() => setIsModifying(true)}
+                >
                     Modifier
-                  </Button>
-                </Flex>
-              )}
+                </Button>
+              </Flex>
+            )}
           </Flex>
           <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
             <ModalOverlay />
