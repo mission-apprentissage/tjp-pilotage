@@ -21,14 +21,13 @@ import { TableHeader } from "@/components/TableHeader";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
-import { formatArray } from "@/utils/formatUtils";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDES_COLUMN";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import type { STATS_DEMANDES_COLUMNS_OPTIONAL } from "./STATS_DEMANDES_COLUMN";
-import { STATS_DEMANDES_COLUMNS, STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
+import { STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
 import type {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,
@@ -138,21 +137,21 @@ export default () => {
   ) => {
     if (value != null)
       switch (type) {
-        case "codeRegion":
-          setCodeRegionFilter((value as string[])[0] ?? "");
-          break;
-        case "codeDepartement":
-          setCodeDepartementFilter((value as string[])[0] ?? "");
-          break;
-        case "rentreeScolaire":
-          setRentreeScolaireFilter((value as string[])[0] ?? "");
-          break;
-        case "campagne":
-          setCampagneFilter((value as string[])[0] ?? "");
-          break;
-        case "statut":
-          setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
-          break;
+      case "codeRegion":
+        setCodeRegionFilter((value as string[])[0] ?? "");
+        break;
+      case "codeDepartement":
+        setCodeDepartementFilter((value as string[])[0] ?? "");
+        break;
+      case "rentreeScolaire":
+        setRentreeScolaireFilter((value as string[])[0] ?? "");
+        break;
+      case "campagne":
+        setCampagneFilter((value as string[])[0] ?? "");
+        break;
+      case "statut":
+        setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
+        break;
       }
   };
 

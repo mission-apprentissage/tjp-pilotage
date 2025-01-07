@@ -52,12 +52,12 @@ export const TableQuadrant = ({
     if (currentFormationId && `${formation.cfd}_${formation.codeDispositif}` === currentFormationId)
       return "blueecume.400_hover !important";
     switch (formation.positionQuadrant) {
-      case PositionQuadrantEnum.Q1:
-        return "green.submitted";
-      case PositionQuadrantEnum.Q4:
-        return "redmarianne.925";
-      default:
-        return "inherit";
+    case PositionQuadrantEnum.Q1:
+      return "green.submitted";
+    case PositionQuadrantEnum.Q4:
+      return "redmarianne.925";
+    default:
+      return "inherit";
     }
   };
   return (

@@ -238,13 +238,13 @@ export const getTauxTransformation = ({
   campagne?: string;
 }) => {
   switch (campagne) {
-    case "2023":
-      return sql<number>`
+  case "2023":
+    return sql<number>`
         ${sql.table(demandeAlias)}.placesTransformees::INTEGER /
         ${sql.table(effectifAlias)}.effectif::INTEGER
       `;
-    default:
-      return sql<number>`
+  default:
+    return sql<number>`
         ${sql.table(demandeAlias)}.placesTransformeesCampagne2023::INTEGER /
         ${sql.table(effectifAlias)}.effectif::FLOAT
       `;

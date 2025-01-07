@@ -18,23 +18,23 @@ const getPilotageReformeStatsFactory =
       getTauxTransformationData: dependencies.getTauxTransformationData,
     }
   ) =>
-  async (activeFilters: { codeNiveauDiplome?: string[]; orderBy?: { order: "asc" | "desc"; column: string } }) => {
-    const currentCampagne = await deps.getCurrentCampagneQuery();
-    const anneeCampagne = currentCampagne.annee;
-    const [stats, filters] = await Promise.all([deps.getStats(activeFilters), deps.findFiltersInDb()]);
+    async (activeFilters: { codeNiveauDiplome?: string[]; orderBy?: { order: "asc" | "desc"; column: string } }) => {
+      const currentCampagne = await deps.getCurrentCampagneQuery();
+      const anneeCampagne = currentCampagne.annee;
+      const [stats, filters] = await Promise.all([deps.getStats(activeFilters), deps.findFiltersInDb()]);
 
-    const [{ placesTransformees, effectif }] = await deps.getTauxTransformationData({
-      ...activeFilters,
-      campagne: anneeCampagne,
-    });
+      const [{ placesTransformees, effectif }] = await deps.getTauxTransformationData({
+        ...activeFilters,
+        campagne: anneeCampagne,
+      });
 
-    const tauxTransformation = formatTauxTransformation(placesTransformees, effectif);
+      const tauxTransformation = formatTauxTransformation(placesTransformees, effectif);
 
-    return {
-      ...stats,
-      tauxTransformation: tauxTransformation ?? 0,
-      filters,
+      return {
+        ...stats,
+        tauxTransformation: tauxTransformation ?? 0,
+        filters,
+      };
     };
-  };
 
 export const getPilotageReformeStats = getPilotageReformeStatsFactory();

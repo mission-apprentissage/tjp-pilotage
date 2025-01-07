@@ -14,12 +14,12 @@ type CallbackFunction<K extends unknown[], T> = (...args: K) => Promise<T>;
 
 const withNotionErrorHandling =
   <K extends unknown[], T>(callback: CallbackFunction<K, T>) =>
-  async (...args: K): Promise<T> => {
-    try {
-      return await callback(...args);
-    } catch (error) {
-      if (isNotionClientError(error)) {
-        switch (error.code) {
+    async (...args: K): Promise<T> => {
+      try {
+        return await callback(...args);
+      } catch (error) {
+        if (isNotionClientError(error)) {
+          switch (error.code) {
           case APIErrorCode.ObjectNotFound:
             throw Boom.notFound("Base de donnée Notion introuvable");
           case APIErrorCode.Unauthorized:
@@ -41,14 +41,14 @@ const withNotionErrorHandling =
               error: error as Error,
               ...args,
             });
+          }
         }
-      }
 
-      throw Boom.badImplementation(
-        "Erreur lors de l'appel à Notion avec les parametres suivants " + JSON.stringify(args)
-      );
-    }
-  };
+        throw Boom.badImplementation(
+          "Erreur lors de l'appel à Notion avec les parametres suivants " + JSON.stringify(args)
+        );
+      }
+    };
 
 const getDatabaseRowsFactory = (
   deps = {

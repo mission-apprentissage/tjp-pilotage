@@ -21,11 +21,11 @@ type TabContentProps = BoxProps & {
 const TabContent = forwardRef<TabContentProps, "div">(({ tab, ...rest }, ref) => {
   const content = useMemo(() => {
     switch (tab) {
-      case "etablissements":
-        return <EtablissementsTab />;
-      case "indicateurs":
-      default:
-        return <IndicateursTab />;
+    case "etablissements":
+      return <EtablissementsTab />;
+    case "indicateurs":
+    default:
+      return <IndicateursTab />;
     }
   }, [tab]);
 

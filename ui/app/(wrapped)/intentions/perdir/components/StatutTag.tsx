@@ -8,19 +8,19 @@ import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
 
 const TagIcon = chakra(({ statut }: { statut: DemandeStatutType }) => {
   switch (statut) {
-    case DemandeStatutEnum["refusée"]:
-    case DemandeStatutEnum["dossier incomplet"]:
-      return <Icon icon={"ri:close-circle-fill"} />;
-    case DemandeStatutEnum["demande validée"]:
-    case DemandeStatutEnum["dossier complet"]:
-    case DemandeStatutEnum["prêt pour le vote"]:
-      return <Icon icon={"ep:success-filled"} />;
-    case DemandeStatutEnum["brouillon"]:
-    case DemandeStatutEnum["proposition"]:
-    case DemandeStatutEnum["projet de demande"]:
-    case DemandeStatutEnum["supprimée"]:
-    default:
-      return <></>;
+  case DemandeStatutEnum["refusée"]:
+  case DemandeStatutEnum["dossier incomplet"]:
+    return <Icon icon={"ri:close-circle-fill"} />;
+  case DemandeStatutEnum["demande validée"]:
+  case DemandeStatutEnum["dossier complet"]:
+  case DemandeStatutEnum["prêt pour le vote"]:
+    return <Icon icon={"ep:success-filled"} />;
+  case DemandeStatutEnum["brouillon"]:
+  case DemandeStatutEnum["proposition"]:
+  case DemandeStatutEnum["projet de demande"]:
+  case DemandeStatutEnum["supprimée"]:
+  default:
+    return <></>;
   }
 });
 
@@ -38,41 +38,41 @@ export const StatutTag = chakra(
   }) => {
     const getColor = (statut: DemandeStatutType) => {
       switch (statut) {
-        case DemandeStatutEnum["proposition"]:
-          return "purpleGlycine.319";
-        case DemandeStatutEnum["projet de demande"]:
-          return "yellowTournesol.407";
-        case DemandeStatutEnum["demande validée"]:
-        case DemandeStatutEnum["dossier complet"]:
-        case DemandeStatutEnum["prêt pour le vote"]:
-          return "success.425";
-        case DemandeStatutEnum["refusée"]:
-        case DemandeStatutEnum["dossier incomplet"]:
-          return "error.425";
-        case DemandeStatutEnum["brouillon"]:
-        case DemandeStatutEnum["supprimée"]:
-        default:
-          return "grey.425";
+      case DemandeStatutEnum["proposition"]:
+        return "purpleGlycine.319";
+      case DemandeStatutEnum["projet de demande"]:
+        return "yellowTournesol.407";
+      case DemandeStatutEnum["demande validée"]:
+      case DemandeStatutEnum["dossier complet"]:
+      case DemandeStatutEnum["prêt pour le vote"]:
+        return "success.425";
+      case DemandeStatutEnum["refusée"]:
+      case DemandeStatutEnum["dossier incomplet"]:
+        return "error.425";
+      case DemandeStatutEnum["brouillon"]:
+      case DemandeStatutEnum["supprimée"]:
+      default:
+        return "grey.425";
       }
     };
 
     const getBgColor = (statut: DemandeStatutType) => {
       switch (statut) {
-        case DemandeStatutEnum["proposition"]:
-          return "purpleGlycine.950";
-        case DemandeStatutEnum["projet de demande"]:
-          return "yellowTournesol.950";
-        case DemandeStatutEnum["demande validée"]:
-        case DemandeStatutEnum["dossier complet"]:
-        case DemandeStatutEnum["prêt pour le vote"]:
-          return "success.950";
-        case DemandeStatutEnum["refusée"]:
-        case DemandeStatutEnum["dossier incomplet"]:
-          return "error.950";
-        case DemandeStatutEnum["brouillon"]:
-        case DemandeStatutEnum["supprimée"]:
-        default:
-          return "grey.925";
+      case DemandeStatutEnum["proposition"]:
+        return "purpleGlycine.950";
+      case DemandeStatutEnum["projet de demande"]:
+        return "yellowTournesol.950";
+      case DemandeStatutEnum["demande validée"]:
+      case DemandeStatutEnum["dossier complet"]:
+      case DemandeStatutEnum["prêt pour le vote"]:
+        return "success.950";
+      case DemandeStatutEnum["refusée"]:
+      case DemandeStatutEnum["dossier incomplet"]:
+        return "error.950";
+      case DemandeStatutEnum["brouillon"]:
+      case DemandeStatutEnum["supprimée"]:
+      default:
+        return "grey.925";
       }
     };
 

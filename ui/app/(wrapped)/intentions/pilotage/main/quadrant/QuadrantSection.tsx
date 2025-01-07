@@ -513,11 +513,11 @@ export const QuadrantSection = ({
                     >
                       {`${formationsQuadrant?.length ?? "-"} certifications -
                                 ${
-                                  formationsQuadrant?.reduce(
-                                    (acc, { placesTransformees }) => acc + (placesTransformees ?? 0),
-                                    0
-                                  ) ?? "-"
-                                } places transformées`}
+        formationsQuadrant?.reduce(
+          (acc, { placesTransformees }) => acc + (placesTransformees ?? 0),
+          0
+        ) ?? "-"
+        } places transformées`}
                     </Highlight>
                   </Text>
                 </Flex>

@@ -102,42 +102,42 @@ export const BarGraph = function <F extends BarGraphData>({
       },
       series: isFiltered
         ? [
-            {
-              name: "NATIONAL",
-              data: getNationalSerieData(),
-              type: "bar",
-              color: bf113,
-              barMaxWidth: 50,
-              itemStyle: {
-                borderRadius: [15, 15, 0, 0],
-              },
-              label: {
-                formatter: "{c}%",
-              },
+          {
+            name: "NATIONAL",
+            data: getNationalSerieData(),
+            type: "bar",
+            color: bf113,
+            barMaxWidth: 50,
+            itemStyle: {
+              borderRadius: [15, 15, 0, 0],
             },
-            {
-              name: libelleRegion?.toUpperCase() ?? "",
-              data: getFilteredSerieData(),
-              type: "bar",
-              color: be850,
-              barMaxWidth: 50,
-              itemStyle: {
-                borderRadius: [15, 15, 0, 0],
-              },
+            label: {
+              formatter: "{c}%",
             },
-          ]
+          },
+          {
+            name: libelleRegion?.toUpperCase() ?? "",
+            data: getFilteredSerieData(),
+            type: "bar",
+            color: be850,
+            barMaxWidth: 50,
+            itemStyle: {
+              borderRadius: [15, 15, 0, 0],
+            },
+          },
+        ]
         : [
-            {
-              name: "NATIONAL",
-              data: getNationalSerieData(),
-              type: "bar",
-              color: bf113,
-              barMaxWidth: 50,
-              itemStyle: {
-                borderRadius: [15, 15, 0, 0],
-              },
+          {
+            name: "NATIONAL",
+            data: getNationalSerieData(),
+            type: "bar",
+            color: bf113,
+            barMaxWidth: 50,
+            itemStyle: {
+              borderRadius: [15, 15, 0, 0],
             },
-          ],
+          },
+        ],
     }),
     [graphData]
   );

@@ -114,10 +114,10 @@ export const UpdateAvisForm = chakra(
                   defaultValue={
                     value
                       ? {
-                          value: `${value}`,
-                          // @ts-expect-error TODO
-                          label: value?.toUpperCase() ?? "",
-                        }
+                        value: `${value}`,
+                        // @ts-expect-error TODO
+                        label: value?.toUpperCase() ?? "",
+                      }
                       : undefined
                   }
                   placeholder="Sélectionner une option"
@@ -152,10 +152,10 @@ export const UpdateAvisForm = chakra(
                   defaultValue={
                     value
                       ? {
-                          // @ts-expect-error TODO
-                          value: value,
-                          label: value?.toUpperCase() ?? "",
-                        }
+                        // @ts-expect-error TODO
+                        value: value,
+                        label: value?.toUpperCase() ?? "",
+                      }
                       : undefined
                   }
                   placeholder="Sélectionner une option"

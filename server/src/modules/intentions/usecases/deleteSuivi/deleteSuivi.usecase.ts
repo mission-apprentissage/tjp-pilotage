@@ -8,15 +8,15 @@ import { findOneSuiviQuery } from "./deps/findOneSuivi.query";
 
 export const deleteSuiviFactory =
   (deps = { findOneIntention, findOneSuiviQuery, deleteSuiviQuery }) =>
-  async ({ id, user }: { id: string; user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais"> }) => {
-    const suivi = await deps.findOneSuiviQuery(id);
-    if (!suivi) throw Boom.notFound("Suivi non trouvé en base");
+    async ({ id, user }: { id: string; user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais"> }) => {
+      const suivi = await deps.findOneSuiviQuery(id);
+      if (!suivi) throw Boom.notFound("Suivi non trouvé en base");
 
-    const intention = await deps.findOneIntention(suivi.intentionNumero);
-    if (!intention) throw Boom.notFound("Intention non trouvée en base");
-    const isAllowed = suivi.userId === user.id;
-    if (!isAllowed) throw Boom.forbidden();
-    await deps.deleteSuiviQuery(id);
-  };
+      const intention = await deps.findOneIntention(suivi.intentionNumero);
+      if (!intention) throw Boom.notFound("Intention non trouvée en base");
+      const isAllowed = suivi.userId === user.id;
+      if (!isAllowed) throw Boom.forbidden();
+      await deps.deleteSuiviQuery(id);
+    };
 
 export const deleteSuiviUsecase = deleteSuiviFactory();

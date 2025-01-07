@@ -44,8 +44,6 @@
     "seed:update": ".bin/product seed:update",
     "lint": "eslint --ignore-path .gitignore --cache --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix",
-    "prettier:fix": "prettier --write -u .",
-    "prettier:check": "prettier --check -u .",
     "release": "semantic-release",
     "release:interactive": ".bin/product release:interactive",
     "release:manual": ".bin/product release:manual",
@@ -97,7 +95,6 @@
     "exceljs": "^4.4.0",
     "lint-staged": "^15.2.10",
     "node-talisman": "^1.29.11",
-    "prettier": "^3.3.3",
     "semantic-release": "22.0.12",
     "semantic-release-slack-bot": "4.0.2",
     "typescript": "^5.6.3",
@@ -105,19 +102,9 @@
     "vitest": "^2.0.5",
     "vitest-canvas-mock": "^0.3.3"
   },
-  "prettier": {
-    "printWidth": 120,
-    "bracketSpacing": true,
-    "trailingComma": "es5",
-    "arrowParens": "always"
-  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --ignore-path .gitignore --cache --fix",
-      "prettier --write -u"
-    ],
-    "*": [
-      "prettier --write -u"
+      "eslint --ignore-path .gitignore --cache --fix"
     ],
     "yarn.lock": [
       "yarn dedupe"
