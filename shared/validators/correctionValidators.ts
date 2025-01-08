@@ -99,7 +99,7 @@ export const correctionValidators = {
       return "La capacité en apprentissage colorée doit être un nombre entier positif";
     if (isRaisonAnnulation(correction.raison) || isRaisonReport(correction.raison)) {
       if (correction.capaciteApprentissageColoree !== 0) {
-        return "La capacité apprentissage colorée doit être égale à 0 dans le cas d'un report ou d'une annulation";
+        return "La capacité en apprentissage colorée doit être égale à 0 dans le cas d'un report ou d'une annulation";
       }
     }
   },
