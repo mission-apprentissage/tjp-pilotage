@@ -11,14 +11,12 @@ import {
   Select,
   Tag,
   Text,
-  useDisclosure,
   Wrap,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
-import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
 import { DeleteRequeteEnregistreeButton } from "@/app/(wrapped)/console/components/DeleteRequeteEnregistreeButton";
 import { FilterTags } from "@/app/(wrapped)/console/components/FilterTags";
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";

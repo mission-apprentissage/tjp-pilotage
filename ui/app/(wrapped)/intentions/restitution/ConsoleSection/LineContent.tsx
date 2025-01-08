@@ -8,7 +8,6 @@ import type { MotifRefusLabel } from "@/app/(wrapped)/intentions/utils/motifRefu
 import { getMotifRefusLabel } from "@/app/(wrapped)/intentions/utils/motifRefusDemandeUtils";
 import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
-import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";

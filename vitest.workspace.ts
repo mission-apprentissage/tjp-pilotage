@@ -70,6 +70,11 @@ export default defineWorkspace([
       clearMocks: true,
       environment: "jsdom",
       setupFiles: ["./vitest.config.js"],
+      poolOptions: {
+        threads: {
+          singleThread: true,
+        },
+      },
     },
     resolve: {},
   },

@@ -11,7 +11,7 @@ import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { client } from "@/api.client";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { ActionsSection } from "./actions/ActionsSection";
@@ -39,7 +39,7 @@ export default ({
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const setSearchParams = (params: { displayType?: DisplayTypeEnum }) => {
-    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
+    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
   const { data: intention, isLoading } = client.ref("[GET]/intention/:numero").useQuery(
     { params: { numero: numero } },
