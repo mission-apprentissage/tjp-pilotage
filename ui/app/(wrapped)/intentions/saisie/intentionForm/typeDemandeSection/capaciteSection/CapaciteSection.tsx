@@ -1,4 +1,4 @@
-import { Box, Flex, FormErrorMessage, Input, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import {Box, Flex, FormErrorMessage, Input, Table, Tbody, Td, Th, Thead, Tr, VisuallyHidden} from '@chakra-ui/react';
 import { useFormContext } from "react-hook-form";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
@@ -15,8 +15,9 @@ import { CapaciteScolaireField } from "./CapaciteScolaireField";
 import { ColorationField } from "./ColorationField";
 import { LibelleColorationField } from "./LibelleColorationField";
 
-const ConstanteField = ({ value }: { value: string | number | undefined }) => (
+const ConstanteField = ({ id, value }: { id: string; value: string | number | undefined }) => (
   <Input
+    id={id}
     opacity="1!important"
     color="blueecume.850"
     fontSize={"16px"}
@@ -68,7 +69,7 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
       <Table columnGap={1} rowGap={1}>
         <Thead>
           <Tr borderBottom={"2px solid black"} bgColor={"grey.975"}>
-            <Th w={"30%"}></Th>
+            <Th w={"30%"}><VisuallyHidden>Tableau des capacités</VisuallyHidden></Th>
             <Th textAlign={"end"} p={2} pe={0}>
               Capacité actuelle
             </Th>
@@ -96,23 +97,58 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
               Capacité en voie scolaire
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteScolaireActuelleField disabled={disabled} maxW={240} flex={1} />
+              <VisuallyHidden as="label" htmlFor="capaciteScolaireActuelle">
+                Capacité scolaire actuelle
+              </VisuallyHidden>
+              <CapaciteScolaireActuelleField
+                id={"capaciteScolaireActuelle"}
+                disabled={disabled}
+                maxW={240}
+                flex={1}
+              />
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteScolaireField disabled={disabled} maxW={240} flex={1} />
+              <VisuallyHidden as="label" htmlFor="capaciteScolaire">
+                Capacité scolaire
+              </VisuallyHidden>
+              <CapaciteScolaireField
+                id={"capaciteScolaire"}
+                disabled={disabled}
+                maxW={240}
+                flex={1}
+              />
             </Td>
             {coloration && (
               <>
                 <Td p={0} border={"none"}>
-                  <CapaciteScolaireColoreeActuelleField disabled={disabled} maxW={240} flex={1} />
+                  <VisuallyHidden as="label" htmlFor="capaciteScolaireColoreeActuelle">
+                    Capacité scolaire colorée actuelle
+                  </VisuallyHidden>
+                  <CapaciteScolaireColoreeActuelleField
+                    id={"capaciteScolaireColoreeActuelle"}
+                    disabled={disabled}
+                    maxW={240}
+                    flex={1}
+                  />
                 </Td>
                 <Td p={0} border={"none"}>
-                  <CapaciteScolaireColoreeField disabled={disabled} maxW={240} flex={1} />
+                  <VisuallyHidden as="label" htmlFor="capaciteScolaireColoree">
+                    Capacité scolaire colorée
+                  </VisuallyHidden>
+                  <CapaciteScolaireColoreeField
+                    id={"capaciteScolaireColoree"}
+                    disabled={disabled}
+                    maxW={240}
+                    flex={1}
+                  />
                 </Td>
               </>
             )}
             <Td p={0} border={"none"}>
-              <ConstanteField value={nouvellesPlacesScolaire} />
+              <VisuallyHidden as="label" htmlFor="nouvellesPlacesScolaire">
+                Nouvelles places scolaire
+              </VisuallyHidden>
+              <ConstanteField id={"nouvellesPlacesScolaire"} value={nouvellesPlacesScolaire} />
             </Td>
           </Tr>
           <Tr border={"none"}>
@@ -120,23 +156,58 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
               Capacité en apprentissage
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageActuelleField disabled={disabled} maxW={240} flex={1} />
+              <VisuallyHidden as="label" htmlFor="capaciteApprentissageActuelle">
+                Capacité en apprentissage actuelle
+              </VisuallyHidden>
+              <CapaciteApprentissageActuelleField
+                id={"capaciteApprentissageActuelle"}
+                disabled={disabled}
+                maxW={240}
+                flex={1}
+              />
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageField disabled={disabled} maxW={240} flex={1} />
+              <VisuallyHidden as="label" htmlFor="capaciteApprentissage">
+                Capacité en apprentissage
+              </VisuallyHidden>
+              <CapaciteApprentissageField
+                id={"capaciteApprentissage"}
+                disabled={disabled}
+                maxW={240}
+                flex={1}
+              />
             </Td>
             {coloration && (
               <>
                 <Td p={0} border={"none"}>
-                  <CapaciteApprentissageColoreeActuelleField disabled={disabled} maxW={240} flex={1} />
+                  <VisuallyHidden as="label" htmlFor="capaciteApprentissageColoreeActuelle">
+                    Capacité en apprentissage colorée actuelle
+                  </VisuallyHidden>
+                  <CapaciteApprentissageColoreeActuelleField
+                    id={"capaciteApprentissageColoreeActuelle"}
+                    disabled={disabled}
+                    maxW={240}
+                    flex={1}
+                  />
                 </Td>
                 <Td p={0} border={"none"}>
-                  <CapaciteApprentissageColoreeField disabled={disabled} maxW={240} flex={1} />
+                  <VisuallyHidden as="label" htmlFor="capaciteApprentissageColoree">
+                    Capacité en apprentissage colorée
+                  </VisuallyHidden>
+                  <CapaciteApprentissageColoreeField
+                    id={"capaciteApprentissageColoree"}
+                    disabled={disabled}
+                    maxW={240}
+                    flex={1}
+                  />
                 </Td>
               </>
             )}
             <Td p={0} border={"none"}>
-              <ConstanteField value={nouvellesPlacesApprentissage} />
+              <VisuallyHidden as="label" htmlFor="nouvellesPlacesApprentissage">
+                  Nouvelles places en apprentissage
+              </VisuallyHidden>
+              <ConstanteField id={"nouvellesPlacesApprentissage"} value={nouvellesPlacesApprentissage} />
             </Td>
           </Tr>
         </Tbody>

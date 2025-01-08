@@ -53,7 +53,6 @@ function RadioCard({
     <Box
       display="flex"
       flexDirection="column"
-      {...props}
       onClick={!disabled ? props.onClick : undefined}
       flex={1}
       cursor={disabled ? "not-allowed" : "pointer"}
@@ -66,9 +65,16 @@ function RadioCard({
       borderColor={invalid ? "red" : "inherit"}
       p={4}
       opacity={disabled ? "0.5" : "1"}
+      {...props}
     >
       <Flex mb="3">
-        <Img me={2} display={["none", null, "unset"]} height={"20px"} src={`/icons/${value}.svg`} />
+        <Img
+          me={2}
+          display={["none", null, "unset"]}
+          height={"20px"}
+          src={`/icons/${value}.svg`}
+          alt={`Icône ${title}`}
+        />
         <Text fontWeight="bold" fontSize="lg" color="bluefrance.113" lineHeight={"20px"}>
           {title}
         </Text>

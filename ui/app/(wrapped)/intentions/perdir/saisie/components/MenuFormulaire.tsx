@@ -80,7 +80,7 @@ export const MenuFormulaire = ({
               py={3}
               bg={"bluefrance.975"}
               _hover={{ bg: "blueecume.925_hover" }}
-              leftIcon={<Img src="/icons/travauxEtEquipements.svg" />}
+              leftIcon={<Img src="/icons/travauxEtEquipements.svg" alt={""}/>}
             >
               Travaux et équipements
             </Button>

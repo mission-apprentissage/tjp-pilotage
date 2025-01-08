@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, chakra, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, chakra, CloseButton, Stack, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
@@ -42,7 +42,7 @@ export const EnvBandeau = chakra(() => {
         >
           {publicConfig.env}
         </Text>
-        <Button
+        <CloseButton
           onClick={() => setOpen(false)}
           variant="inline"
           display="flex"
@@ -54,7 +54,7 @@ export const EnvBandeau = chakra(() => {
           height="auto"
         >
           <Icon icon="ri:close-fill" fontSize="24px" style={{ margin: "auto" }} />
-        </Button>
+        </CloseButton>
       </Stack>
     </Box>
   );

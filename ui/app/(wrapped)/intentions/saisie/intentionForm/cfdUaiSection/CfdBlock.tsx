@@ -24,7 +24,7 @@ export const CfdBlock = ({
   return (
     <LightMode>
       <FormControl mb="4" isInvalid={!!errors.cfd?.message} isRequired w="100%" maxW="752px">
-        <FormLabel>Recherche d'un diplôme</FormLabel>
+        <FormLabel htmlFor="cfd-autocomplete">Recherche d'un diplôme</FormLabel>
         <Box color="chakra-body-text">
           <Controller
             name="cfd"
@@ -32,6 +32,7 @@ export const CfdBlock = ({
             rules={{ required: "Ce champs est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
               <CfdAutocompleteInput
+                id="cfd-autocomplete"
                 name={name}
                 inError={!!errors.cfd}
                 defaultValue={

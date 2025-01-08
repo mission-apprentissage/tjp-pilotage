@@ -33,10 +33,11 @@ export const RentreeScolaireField = ({
     setValue,
     watch,
   } = useFormContext<IntentionForms>();
-  const rentreeScolaire = watch("rentreeScolaire");
+
   const rentreeScolaireOptions = [0, 1, 2, 3, 4, 5].map(
     (offsetRentree: number) => parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) + offsetRentree
   );
+  const rentreeScolaire = watch("rentreeScolaire") ?? rentreeScolaireOptions[1];
 
   useEffect(
     () =>
@@ -54,9 +55,10 @@ export const RentreeScolaireField = ({
 
   return (
     <FormControl className={className} isInvalid={!!errors.rentreeScolaire} isRequired>
-      <FormLabel>Rentrée scolaire</FormLabel>
+      <FormLabel htmlFor="rentree-scolaire">Rentrée scolaire</FormLabel>
       <Menu gutter={0} matchWidth={true} autoSelect={false}>
         <MenuButton
+          id="rentree-scolaire"
           as={Button}
           variant={"selectButton"}
           rightIcon={<ChevronDownIcon />}

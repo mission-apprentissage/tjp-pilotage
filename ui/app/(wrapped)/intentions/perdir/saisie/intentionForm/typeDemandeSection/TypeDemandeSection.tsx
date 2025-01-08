@@ -1,4 +1,4 @@
-import { Box, Button, chakra, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Button, chakra, CloseButton, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import type { RefObject } from "react";
 import { useState } from "react";
@@ -53,7 +53,7 @@ const InfoAjustementSection = chakra(({ anneeCampagne }: { anneeCampagne: string
             {`Pour apporter un ajustement à la rentrée scolaire ${anneeCampagne}, sélectionner ${anneeCampagne} dans le champ ci-dessus`}
           </Highlight>
         </Text>
-        <Button
+        <CloseButton
           onClick={() => setOpen(false)}
           variant="inline"
           display="flex"
@@ -65,7 +65,7 @@ const InfoAjustementSection = chakra(({ anneeCampagne }: { anneeCampagne: string
           height="auto"
         >
           <Icon icon="ri:close-fill" fontSize="24px" />
-        </Button>
+        </CloseButton>
       </Stack>
     </Box>
   );

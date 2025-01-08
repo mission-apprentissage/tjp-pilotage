@@ -6,7 +6,9 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Highlight,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
@@ -86,7 +88,11 @@ export const MotifField = chakra(
                 </Stack>
                 {coloration && !isTypeColoration(typeDemande) && !isTypeFermeture(typeDemande) && (
                   <Flex direction={"column"} mt={8}>
-                    <FormLabel>Merci de préciser le(s) motif(s) de votre coloration</FormLabel>
+                    <Text mb={2} fontWeight={700}>
+                      <Highlight query={"*"} styles={{ color: "red" }}>
+                        Merci de préciser le(s) motif(s) de votre coloration *
+                      </Highlight>
+                    </Text>
                     <Stack spacing={[3]} ms={6}>
                       {getMotifOptions("coloration")?.map(({ value, label }) => (
                         <Checkbox
