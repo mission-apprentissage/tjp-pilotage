@@ -67,7 +67,7 @@ const NavLink = chakra(
         {children}
       </Link>
     );
-  }
+  },
 );
 
 const NavMenuLink = chakra(
@@ -104,7 +104,7 @@ const NavMenuLink = chakra(
         {children}
       </Link>
     );
-  }
+  },
 );
 
 const NavMenuButton = chakra(
@@ -148,7 +148,7 @@ const NavMenuButton = chakra(
         {children}
       </MenuButton>
     );
-  }
+  },
 );
 
 export const Nav = () => {
@@ -268,10 +268,10 @@ export const Nav = () => {
                 href={
                   uaisFilter
                     ? createParametrizedUrl("/console/etablissements", {
-                      filters: {
-                        uai: uaisFilter,
-                      },
-                    })
+                        filters: {
+                          uai: uaisFilter,
+                        },
+                      })
                     : "/console/etablissements"
                 }
                 segment="consoles/etablissements"

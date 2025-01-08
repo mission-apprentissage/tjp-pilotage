@@ -22,9 +22,9 @@ describe("resetPassword usecase", () => {
         password: correctPassword,
         repeatPassword: correctPassword,
         resetPasswordToken: undefined as unknown as string,
-      })
+      }),
     ).rejects.toThrow(
-      "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début."
+      "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début.",
     );
   });
 
@@ -39,9 +39,9 @@ describe("resetPassword usecase", () => {
         password: correctPassword,
         repeatPassword: correctPassword,
         resetPasswordToken: "fakeToken",
-      })
+      }),
     ).rejects.toThrow(
-      "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début."
+      "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début.",
     );
   });
 
@@ -56,7 +56,7 @@ describe("resetPassword usecase", () => {
         password: "aaa",
         repeatPassword: "bbb",
         resetPasswordToken,
-      })
+      }),
     ).rejects.toThrow("Mot de passe non identiques.");
   });
 
@@ -71,9 +71,9 @@ describe("resetPassword usecase", () => {
         password: "azerty",
         repeatPassword: "azerty",
         resetPasswordToken,
-      })
+      }),
     ).rejects.toThrow(
-      "Le mot de passe doit contenir entre 8 et 15 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)"
+      "Le mot de passe doit contenir entre 8 et 15 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)",
     );
   });
 
@@ -93,7 +93,7 @@ describe("resetPassword usecase", () => {
     await expect(deps.setPasswordQuery).toBeCalledWith(
       expect.objectContaining({
         email: "test@test.fr",
-      })
+      }),
     );
   });
 });

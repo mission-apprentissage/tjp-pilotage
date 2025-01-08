@@ -22,7 +22,7 @@ describe("redirectDne usecase", () => {
       redirectDne({
         codeVerifierJwt: jwt.sign({}, "codeVerifierJwtSecret"),
         url: "localhost?code=mycode",
-      })
+      }),
     ).rejects.toThrow();
   });
 
@@ -51,7 +51,7 @@ describe("redirectDne usecase", () => {
       redirectDne({
         codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
         url: "localhost?code=mycode",
-      })
+      }),
     ).rejects.toThrow();
   });
 
@@ -81,7 +81,7 @@ describe("redirectDne usecase", () => {
       redirectDne({
         codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
         url: "localhost?code=mycode",
-      })
+      }),
     ).rejects.toThrow();
   });
 
@@ -242,7 +242,7 @@ describe("redirectDne usecase", () => {
       redirectDne({
         codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
         url: "localhost?code=mycode",
-      })
+      }),
     ).rejects.toThrow();
   });
 
@@ -327,7 +327,7 @@ describe("redirectDne usecase", () => {
       redirectDne({
         codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
         url: "localhost?code=mycode",
-      })
+      }),
     ).rejects.toThrow();
   });
 });

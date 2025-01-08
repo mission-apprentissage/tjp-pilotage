@@ -23,7 +23,7 @@ export const AmiCmaEnCoursValidationField = chakra(
           if (name !== "amiCmaValide" && name !== "amiCma") return;
           if (name === "amiCma") setValue("amiCmaEnCoursValidation", undefined);
           if (name === "amiCmaValide" && getValues("amiCmaValide") === true) setValue("amiCmaEnCoursValidation", false);
-        }).unsubscribe
+        }).unsubscribe,
     );
 
     const [typeDemande, amiCma] = watch(["typeDemande", "amiCma"]);
@@ -63,5 +63,5 @@ export const AmiCmaEnCoursValidationField = chakra(
         )}
       </FormControl>
     );
-  }
+  },
 );

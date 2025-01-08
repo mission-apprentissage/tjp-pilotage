@@ -17,7 +17,7 @@ export const CapaciteScolaireField = chakra(({ disabled, className }: { disabled
         } else if (name === "capaciteScolaireActuelle" && typeDemande === "coloration") {
           setValue("capaciteScolaire", capaciteScolaireActuelle);
         }
-      }).unsubscribe
+      }).unsubscribe,
   );
 
   const typeDemande = watch("typeDemande");

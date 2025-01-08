@@ -48,5 +48,5 @@ export const TableFooter = chakra(
         />
       </Flex>
     );
-  }
+  },
 );

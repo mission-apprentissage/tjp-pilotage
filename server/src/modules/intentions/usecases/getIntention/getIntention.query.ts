@@ -31,7 +31,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     .leftJoin("changementStatut", (join) =>
       join
         .onRef("changementStatut.intentionNumero", "=", "intention.numero")
-        .onRef("changementStatut.statut", "=", "intention.statut")
+        .onRef("changementStatut.statut", "=", "intention.statut"),
     )
     .innerJoin("user", "user.id", "intention.createdBy")
     .innerJoin("dispositif", "dispositif.codeDispositif", "intention.codeDispositif")
@@ -40,7 +40,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     .innerJoin("dataFormation", "dataFormation.cfd", "intention.cfd")
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "intention.cfd")
     .leftJoin("suivi", (join) =>
-      join.onRef("suivi.intentionNumero", "=", "intention.numero").on("userId", "=", user.id)
+      join.onRef("suivi.intentionNumero", "=", "intention.numero").on("userId", "=", user.id),
     )
     .selectAll("intention")
     .select((eb) => [
@@ -53,7 +53,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
             sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
-          ])
+          ]),
       ).as("createdBy"),
       jsonObjectFrom(
         eb
@@ -63,10 +63,10 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
             sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
-          ])
+          ]),
       ).as("updatedBy"),
       jsonObjectFrom(
-        eb.selectFrom("campagne").selectAll("campagne").whereRef("campagne.id", "=", "intention.campagneId").limit(1)
+        eb.selectFrom("campagne").selectAll("campagne").whereRef("campagne.id", "=", "intention.campagneId").limit(1),
       ).as("campagne"),
       jsonBuildObject({
         etablissement: jsonObjectFrom(
@@ -74,7 +74,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
             .selectFrom("dataEtablissement")
             .selectAll("dataEtablissement")
             .whereRef("dataEtablissement.uai", "=", "intention.uai")
-            .limit(1)
+            .limit(1),
         ),
         formation: jsonObjectFrom(
           eb
@@ -91,7 +91,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
                 ')')
               `.as("libelleFormation"),
               sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
-                "isFCIL"
+                "isFCIL",
               ),
             ])
             .select((eb) =>
@@ -102,14 +102,14 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
                   .leftJoin("rawData", (join) =>
                     join
                       .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
-                      .on("rawData.type", "=", "nMef")
+                      .on("rawData.type", "=", "nMef"),
                   )
                   .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
-                  .distinctOn("codeDispositif")
-              ).as("dispositifs")
+                  .distinctOn("codeDispositif"),
+              ).as("dispositifs"),
             )
             .whereRef("dataFormation.cfd", "=", "intention.cfd")
-            .limit(1)
+            .limit(1),
         ),
       }).as("metadata"),
       "changementStatut.commentaire as commentaireStatut",
@@ -152,7 +152,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         w("changementStatut.intentionNumero", "=", numero),
         w("changementStatut.statut", "<>", DemandeStatutEnum["supprimée"]),
         w("changementStatut.statutPrecedent", "<>", DemandeStatutEnum["supprimée"]),
-      ])
+      ]),
     )
     .distinctOn(["changementStatut.updatedAt", "changementStatut.statut", "changementStatut.statutPrecedent"])
     .orderBy("changementStatut.updatedAt", "desc")
@@ -178,7 +178,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       "user.role as userRole",
       sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref("user.lastname")})`.as("userFullName"),
       sql<string>`CONCAT(${eb.ref("updatedByUser.firstname")},' ',${eb.ref("updatedByUser.lastname")})`.as(
-        "updatedByFullName"
+        "updatedByFullName",
       ),
     ])
     .where(isAvisVisible({ user }))

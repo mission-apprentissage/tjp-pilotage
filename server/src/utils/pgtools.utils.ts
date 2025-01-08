@@ -80,7 +80,7 @@ function createFunction(action: "CREATE" | "DROP") {
           port: number;
         }
       | EmptyObject = {},
-    openedClient?: Ipg.Client
+    openedClient?: Ipg.Client,
   ) {
     if (!dbName) throw new TypeError("dbName not set");
 

@@ -21,7 +21,7 @@ export const AmiCmaEnCoursValidationField = chakra(
           if (name !== "amiCmaValide") return;
           if (getValues("amiCmaValide") === false) return;
           setValue("amiCmaEnCoursValidation", false);
-        }).unsubscribe
+        }).unsubscribe,
     );
 
     const visible = watch("amiCma");
@@ -60,5 +60,5 @@ export const AmiCmaEnCoursValidationField = chakra(
         )}
       </FormControl>
     );
-  }
+  },
 );

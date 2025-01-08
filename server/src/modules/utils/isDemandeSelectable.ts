@@ -8,28 +8,28 @@ import type { DB } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
 export const isDemandeSelectable =
   ({ user }: { user: RequestUser }) =>
-    (eb: ExpressionBuilder<DB, "demande">) => {
-      const { filter, draftFilter } = getDemandeSelectableFilters(user);
+  (eb: ExpressionBuilder<DB, "demande">) => {
+    const { filter, draftFilter } = getDemandeSelectableFilters(user);
 
-      return eb.or([
-        eb.and([
-          eb("demande.statut", "=", DemandeStatutEnum["proposition"]),
-          draftFilter.codeRegion ? eb("demande.codeRegion", "=", draftFilter.codeRegion) : sql<boolean>`true`,
-          draftFilter.role == "invite" ? sql<boolean>`false` : sql<boolean>`true`,
-        ]),
-        eb.and([
-          eb("demande.statut", "!=", DemandeStatutEnum["proposition"]),
-          filter.codeRegion ? eb("demande.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
-          filter.uais ? eb("demande.uai", "in", filter.uais) : sql<boolean>`true`,
-          filter.role === "invite" ? sql<boolean>`false` : sql<boolean>`true`,
-        ]),
-        eb.and([
-          filter.role === "invite" ? sql<boolean>`true` : sql<boolean>`false`,
-          filter.codeRegion ? eb("demande.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
-          eb("demande.statut", "in", [DemandeStatutEnum["demande validée"], DemandeStatutEnum["refusée"]]),
-        ]),
-      ]);
-    };
+    return eb.or([
+      eb.and([
+        eb("demande.statut", "=", DemandeStatutEnum["proposition"]),
+        draftFilter.codeRegion ? eb("demande.codeRegion", "=", draftFilter.codeRegion) : sql<boolean>`true`,
+        draftFilter.role == "invite" ? sql<boolean>`false` : sql<boolean>`true`,
+      ]),
+      eb.and([
+        eb("demande.statut", "!=", DemandeStatutEnum["proposition"]),
+        filter.codeRegion ? eb("demande.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
+        filter.uais ? eb("demande.uai", "in", filter.uais) : sql<boolean>`true`,
+        filter.role === "invite" ? sql<boolean>`false` : sql<boolean>`true`,
+      ]),
+      eb.and([
+        filter.role === "invite" ? sql<boolean>`true` : sql<boolean>`false`,
+        filter.codeRegion ? eb("demande.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
+        eb("demande.statut", "in", [DemandeStatutEnum["demande validée"], DemandeStatutEnum["refusée"]]),
+      ]),
+    ]);
+  };
 
 const getDemandeSelectableFilters = (user?: RequestUser) => {
   if (!user) throw new Error("missing variable user");
@@ -66,30 +66,30 @@ export const isDemandeNotAjustementRentree = (eb: ExpressionBuilder<DB, "demande
 
 export const isIntentionBrouillonVisible =
   ({ user }: { user: RequestUser }) =>
-    (eb: ExpressionBuilder<DB, "intention">) => {
-      return eb.or([
-        eb.and([eb("intention.statut", "=", DemandeStatutEnum["brouillon"]), eb("intention.createdBy", "=", user.id)]),
-        eb("intention.statut", "!=", DemandeStatutEnum["brouillon"]),
-      ]);
-    };
+  (eb: ExpressionBuilder<DB, "intention">) => {
+    return eb.or([
+      eb.and([eb("intention.statut", "=", DemandeStatutEnum["brouillon"]), eb("intention.createdBy", "=", user.id)]),
+      eb("intention.statut", "!=", DemandeStatutEnum["brouillon"]),
+    ]);
+  };
 
 export const isIntentionSelectable =
   ({ user }: { user: RequestUser }) =>
-    (eb: ExpressionBuilder<DB, "intention">) => {
-      const { filter, draftFilter } = getIntentionSelectableFilters(user);
-      return eb.or([
-        eb.and([
-          eb("intention.statut", "=", DemandeStatutEnum["proposition"]),
-          draftFilter.uais ? eb.or(draftFilter.uais.map((uai) => eb("intention.uai", "=", uai))) : sql<boolean>`true`,
-          draftFilter.codeRegion ? eb("intention.codeRegion", "=", draftFilter.codeRegion) : sql<boolean>`true`,
-        ]),
-        eb.and([
-          eb("intention.statut", "!=", DemandeStatutEnum["proposition"]),
-          filter.uais ? eb.or(filter.uais.map((uai) => eb("intention.uai", "=", uai))) : sql<boolean>`true`,
-          filter.codeRegion ? eb("intention.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
-        ]),
-      ]);
-    };
+  (eb: ExpressionBuilder<DB, "intention">) => {
+    const { filter, draftFilter } = getIntentionSelectableFilters(user);
+    return eb.or([
+      eb.and([
+        eb("intention.statut", "=", DemandeStatutEnum["proposition"]),
+        draftFilter.uais ? eb.or(draftFilter.uais.map((uai) => eb("intention.uai", "=", uai))) : sql<boolean>`true`,
+        draftFilter.codeRegion ? eb("intention.codeRegion", "=", draftFilter.codeRegion) : sql<boolean>`true`,
+      ]),
+      eb.and([
+        eb("intention.statut", "!=", DemandeStatutEnum["proposition"]),
+        filter.uais ? eb.or(filter.uais.map((uai) => eb("intention.uai", "=", uai))) : sql<boolean>`true`,
+        filter.codeRegion ? eb("intention.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
+      ]),
+    ]);
+  };
 
 const getIntentionSelectableFilters = (user?: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">) => {
   if (!user) throw new Error("missing variable user");

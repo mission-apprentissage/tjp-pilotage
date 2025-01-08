@@ -66,7 +66,7 @@ export const ActiveEtablissement = () => {
   const onSinglePointClick = async (
     e: MapMouseEvent & {
       features?: MapGeoJSONFeature[];
-    }
+    },
   ) => {
     if (map !== undefined) {
       const features = map.queryRenderedFeatures(e.point, {

@@ -134,7 +134,7 @@ export const LineChart = ({
         };
       }),
     }),
-    [data, mainKey, categories, colors, title]
+    [data, mainKey, categories, colors, title],
   );
 
   useLayoutEffect(() => {

@@ -26,10 +26,10 @@ export const searchDiplomeSchema = {
             z.object({
               codeDispositif: z.string().optional(),
               libelleDispositif: z.string().optional(),
-            })
+            }),
           )
           .optional(),
-      })
+      }),
     ),
   },
 };

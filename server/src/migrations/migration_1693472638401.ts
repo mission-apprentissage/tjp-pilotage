@@ -175,7 +175,7 @@ export const up = async (db: Kysely<any>) => {
       CONSTRAINT indicateursortie_pk PRIMARY KEY ("formationEtablissementId", "millesimeSortie"),
       CONSTRAINT fk_indicateursortie_formationetablissement FOREIGN KEY ("formationEtablissementId") REFERENCES "formationEtablissement"(id)
     );
-  `.compile(db)
+  `.compile(db),
   );
 };
 export const down = async () => {};

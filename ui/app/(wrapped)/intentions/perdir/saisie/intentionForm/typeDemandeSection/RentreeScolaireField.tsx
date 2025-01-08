@@ -35,7 +35,7 @@ export const RentreeScolaireField = ({
   } = useFormContext<IntentionForms>();
   const rentreeScolaire = watch("rentreeScolaire");
   const rentreeScolaireOptions = [0, 1, 2, 3, 4, 5].map(
-    (offsetRentree: number) => parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) + offsetRentree
+    (offsetRentree: number) => parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) + offsetRentree,
   );
 
   useEffect(
@@ -49,7 +49,7 @@ export const RentreeScolaireField = ({
         } else if (typeDemande === "ajustement") {
           setValue("typeDemande", "");
         }
-      }).unsubscribe
+      }).unsubscribe,
   );
 
   return (

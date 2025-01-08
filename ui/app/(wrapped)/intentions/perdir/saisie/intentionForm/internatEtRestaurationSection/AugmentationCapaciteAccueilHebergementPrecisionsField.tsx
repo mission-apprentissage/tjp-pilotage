@@ -38,5 +38,5 @@ export const AugmentationCapaciteAccueilHebergementPrecisionsField = chakra(
         )}
       </FormControl>
     );
-  }
+  },
 );

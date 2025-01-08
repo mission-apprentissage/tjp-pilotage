@@ -80,5 +80,5 @@ export const PartenairesEconomiquesFields = chakra(
         </FormControl>
       </Flex>
     );
-  }
+  },
 );

@@ -56,7 +56,7 @@ export const getFiltersCodeNiveauDiplome = async ({ uai, voie }: { uai: string; 
     .then((filters) =>
       cleanNull({
         diplomes: filters.map(cleanNull),
-      })
+      }),
     );
 
 export const getFilters = async ({

@@ -39,5 +39,5 @@ export const ConsoleSearchInput = chakra(
         />
       </Flex>
     );
-  }
+  },
 );

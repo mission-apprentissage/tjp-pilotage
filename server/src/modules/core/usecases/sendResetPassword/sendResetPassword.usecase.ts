@@ -23,7 +23,7 @@ export const [sendResetPassword, sendResetPasswordFactory] = inject(
 
       if (user.sub) {
         throw Boom.badRequest(
-          "Vous ne pouvez pas réinitialiser votre mot de passe, veuillez vous connecter à Orion via le portail ARENA."
+          "Vous ne pouvez pas réinitialiser votre mot de passe, veuillez vous connecter à Orion via le portail ARENA.",
         );
       }
 
@@ -44,5 +44,5 @@ export const [sendResetPassword, sendResetPasswordFactory] = inject(
           },
         },
       });
-    }
+    },
 );

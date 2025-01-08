@@ -35,7 +35,7 @@ export const [importEtablissement] = inject(
       });
 
       await deps.createEtablissement(etablissement);
-    }
+    },
 );
 // @ts-expect-error TODO
 const formatCodeDepartement = (codeInsee: string | undefined) => {

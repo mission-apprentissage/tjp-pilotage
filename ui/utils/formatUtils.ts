@@ -30,7 +30,7 @@ export const formatArray = (values?: Array<string | number | undefined>, capital
       values
         .filter((value) => value)
         .join(", ")
-        .toLowerCase()
+        .toLowerCase(),
     );
   }
   if (values.length === 1 && values[0]) return values[0].toString();
@@ -45,7 +45,7 @@ export const formatNumber = (value?: number, numberOfDigits: number = 0): number
 export const formatNumberToString = (
   value?: number | null,
   numberOfDigits: number = 0,
-  nullValue: string = "0"
+  nullValue: string = "0",
 ): string => {
   if (value === undefined || value === null || Number.isNaN(value)) return nullValue;
   return new Intl.NumberFormat("fr-FR", {
@@ -57,7 +57,7 @@ export const formatNumberToString = (
 export const formatPercentage = (
   value?: number | null,
   numberOfDigits: number = 0,
-  nullValue: string = "0 %"
+  nullValue: string = "0 %",
 ): string => {
   if (value === undefined || value === null || Number.isNaN(value)) return nullValue;
   return new Intl.NumberFormat("fr-FR", {
@@ -69,7 +69,7 @@ export const formatPercentage = (
 export const formatPercentageWithoutSign = (
   value?: number,
   numberOfDigits: number = 0,
-  nullValue: number = 0
+  nullValue: number = 0,
 ): number => {
   if (value === undefined || value === null) return nullValue;
   return formatNumber(value * 100, numberOfDigits);
@@ -78,7 +78,7 @@ export const formatPercentageWithoutSign = (
 export const formatLargeNumber = (
   value?: number,
   thousandSeparator: string = "\u00A0",
-  nullValue: string = "0"
+  nullValue: string = "0",
 ): string => {
   if (value === undefined || value === null) return nullValue;
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);

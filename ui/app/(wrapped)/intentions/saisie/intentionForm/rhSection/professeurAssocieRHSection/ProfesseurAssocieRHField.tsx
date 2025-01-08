@@ -69,5 +69,5 @@ export const ProfesseurAssocieRHField = chakra(
         {errors.professeurAssocieRH && <FormErrorMessage>{errors.professeurAssocieRH?.message}</FormErrorMessage>}
       </FormControl>
     );
-  }
+  },
 );

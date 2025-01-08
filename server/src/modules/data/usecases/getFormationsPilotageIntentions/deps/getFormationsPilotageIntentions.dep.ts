@@ -103,10 +103,10 @@ export const getFormationsPilotageIntentionsQuery = ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
-            eb.val(getMillesimeFromCampagne(campagne))
+            eb.val(getMillesimeFromCampagne(campagne)),
           ),
-        ])
-      )
+        ]),
+      ),
     )
     .leftJoin(
       getKbdClient()
@@ -117,7 +117,7 @@ export const getFormationsPilotageIntentionsQuery = ({
           "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeRegion",
           "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeNiveauDiplome",
           sql<number>`SUM(${eb.ref("effectifsParCampagneCodeNiveauDiplomeCodeRegion.denominateur")})`.as(
-            "denominateur"
+            "denominateur",
           ),
         ])
         .groupBy([
@@ -132,7 +132,7 @@ export const getFormationsPilotageIntentionsQuery = ({
           .onRef("campagne.annee", "=", "effectifs.annee")
           .onRef("demande.cfd", "=", "effectifs.cfd")
           .onRef("formationView.codeNiveauDiplome", "=", "effectifs.codeNiveauDiplome")
-          .onRef("demande.codeRegion", "=", "effectifs.codeRegion")
+          .onRef("demande.codeRegion", "=", "effectifs.codeRegion"),
     )
     .select((eb) => [
       sql<number>`COALESCE(${eb.ref("effectifs.denominateur")}, 0)`.as("effectif"),
@@ -195,14 +195,14 @@ export const getFormationsPilotageIntentionsQuery = ({
     .where((wb) => {
       if (!type) return wb.val(true);
       switch (type) {
-      case "ouverture":
-        return wb(countPlacesOuvertes(wb), ">", 0);
-      case "fermeture":
-        return wb(countPlacesFermees(wb), ">", 0);
-      case "coloration":
-        return wb(countPlacesColoreesTransformees(wb), ">", 0);
-      default:
-        return wb.val(true);
+        case "ouverture":
+          return wb(countPlacesOuvertes(wb), ">", 0);
+        case "fermeture":
+          return wb(countPlacesFermees(wb), ">", 0);
+        case "coloration":
+          return wb(countPlacesColoreesTransformees(wb), ">", 0);
+        default:
+          return wb.val(true);
       }
     })
     .having((h) => {
@@ -216,7 +216,7 @@ export const getFormationsPilotageIntentionsQuery = ({
             codeRegionRef: "demande.codeRegion",
           }),
         tauxPression === "eleve" ? ">" : "<",
-        tauxPression === "eleve" ? 1.3 : 0.7
+        tauxPression === "eleve" ? 1.3 : 0.7,
       );
     })
     .$call((eb) => {
@@ -224,7 +224,7 @@ export const getFormationsPilotageIntentionsQuery = ({
         return eb.where(
           "demande.rentreeScolaire",
           "in",
-          rentreeScolaire.map((rentree) => parseInt(rentree))
+          rentreeScolaire.map((rentree) => parseInt(rentree)),
         );
       return eb;
     })
@@ -269,7 +269,7 @@ export const getFormationsPilotageIntentionsQuery = ({
     .$call((q) => {
       if (!withColoration || withColoration === "false")
         return q.where((w) =>
-          w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
+          w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])]),
         );
       return q;
     })
@@ -301,6 +301,6 @@ export const getFormationsPilotageIntentionsQuery = ({
       formations.map((formation) => ({
         ...formation,
         formationSpecifique: formatFormationSpecifique(formation),
-      }))
+      })),
     );
 };

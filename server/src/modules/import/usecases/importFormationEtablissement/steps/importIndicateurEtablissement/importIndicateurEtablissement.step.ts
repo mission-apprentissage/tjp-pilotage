@@ -40,5 +40,5 @@ export const [importIndicateurEtablissement] = inject(
       });
       if (!indicateur) return;
       await deps.upsertIndicateurEtablissement(indicateur);
-    }
+    },
 );

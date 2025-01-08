@@ -47,7 +47,7 @@ const useEtablissementsTab = () => {
       keepPreviousData: true,
       staleTime: 10000000,
       enabled: !!cfd,
-    }
+    },
   );
 
   const { data: dataEtablissementsMap, isLoading: isLoadingEtablissements } = client
@@ -67,7 +67,7 @@ const useEtablissementsTab = () => {
         keepPreviousData: true,
         staleTime: 10000000,
         enabled: !!cfd && !!mapDimensions.height && !!mapDimensions.width,
-      }
+      },
     );
 
   useEffect(() => {
@@ -98,7 +98,7 @@ const useEtablissementsTab = () => {
           },
           {
             computer: true,
-          }
+          },
         );
       }
     }
@@ -115,7 +115,7 @@ const useEtablissementsTab = () => {
             etablissement.longitude <= (currentFilters.etab.bbox ?? defaultBbox).lngMax;
 
           return isInBbox;
-        })
+        }),
       );
     }
   }, [dataEtablissementsMap?.etablissements, currentFilters.etab.bbox, defaultBbox]);

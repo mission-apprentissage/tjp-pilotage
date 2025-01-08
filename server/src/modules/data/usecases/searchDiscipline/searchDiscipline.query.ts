@@ -17,11 +17,11 @@ export const searchDisciplineQuery = async ({ search }: { search: string }) => {
           eb("discipline.codeDiscipline", "ilike", `${search}%`),
           eb.and(
             search_array.map((search_word) =>
-              eb(sql`unaccent(${eb.ref("discipline.libelleDiscipline")})`, "ilike", `%${search_word}%`)
-            )
+              eb(sql`unaccent(${eb.ref("discipline.libelleDiscipline")})`, "ilike", `%${search_word}%`),
+            ),
           ),
         ]),
-      ])
+      ]),
     )
     .limit(60)
     .execute();

@@ -30,5 +30,5 @@ export const [getUsers] = inject(
         scope,
         scopeFilter,
       });
-    }
+    },
 );

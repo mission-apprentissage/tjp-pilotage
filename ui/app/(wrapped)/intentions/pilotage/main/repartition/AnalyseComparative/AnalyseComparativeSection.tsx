@@ -52,7 +52,7 @@ const AnalyseComparativeTabsSection = chakra(
     isZoneGeographiqueSelected: boolean;
     isDomaineSelected: boolean;
     setDisplayType: (
-      displayType: Extract<DisplayTypeEnum, DisplayTypeEnum.zone_geographique | DisplayTypeEnum.domaine>
+      displayType: Extract<DisplayTypeEnum, DisplayTypeEnum.zone_geographique | DisplayTypeEnum.domaine>,
     ) => void;
   }) => {
     const getTabIndex = () => {
@@ -80,7 +80,7 @@ const AnalyseComparativeTabsSection = chakra(
         </Tabs>
       </Flex>
     );
-  }
+  },
 );
 
 export const AnalyseComparativeSection = ({
@@ -105,7 +105,7 @@ export const AnalyseComparativeSection = ({
   const trackEvent = usePlausible();
 
   const setDisplayType = (
-    displayType: Extract<DisplayTypeEnum, DisplayTypeEnum.zone_geographique | DisplayTypeEnum.domaine>
+    displayType: Extract<DisplayTypeEnum, DisplayTypeEnum.zone_geographique | DisplayTypeEnum.domaine>,
   ) => {
     trackEvent("pilotage-transformation:analyse-comparative-tabs", {
       props: { type: displayType },
@@ -120,13 +120,13 @@ export const AnalyseComparativeSection = ({
   const getScopeKey = () => {
     if (!filters?.scope) return "codeRegion";
     switch (filters?.scope) {
-    case ScopeEnum["académie"]:
-      return "codeAcademie";
-    case ScopeEnum["département"]:
-      return "codeDepartement";
-    case ScopeEnum["région"]:
-    default:
-      return "codeRegion";
+      case ScopeEnum["académie"]:
+        return "codeAcademie";
+      case ScopeEnum["département"]:
+        return "codeDepartement";
+      case ScopeEnum["région"]:
+      default:
+        return "codeRegion";
     }
   };
 
@@ -209,7 +209,7 @@ export const AnalyseComparativeSection = ({
                 placesColoreesFermees: "Places colorées fermées",
                 solde: "Solde",
                 ratioFermeture: "Ratio de fermeture",
-              }
+              },
             );
           }}
           onExportExcel={async () => {
@@ -231,7 +231,7 @@ export const AnalyseComparativeSection = ({
                 placesColoreesFermees: "Places colorées fermées",
                 solde: "Solde",
                 ratioFermeture: "Ratio de fermeture",
-              }
+              },
             );
           }}
           variant="ghost"

@@ -37,5 +37,5 @@ export const [submitIntentionAccessLogUsecase, submitIntentionAccessLogFactory] 
       const createdAvis = await deps.createIntentionAccessLog(newIntentionAccessLog);
 
       return createdAvis;
-    }
+    },
 );

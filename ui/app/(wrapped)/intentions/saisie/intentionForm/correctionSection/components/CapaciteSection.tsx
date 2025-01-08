@@ -38,24 +38,24 @@ export const CapaciteSection = ({ demande, disabled }: { demande: Intention; dis
   useEffect(() => {
     setValue(
       "capaciteApprentissage",
-      demande?.correction?.capaciteApprentissage ?? demande?.capaciteApprentissage ?? 0
+      demande?.correction?.capaciteApprentissage ?? demande?.capaciteApprentissage ?? 0,
     );
     setValue(
       "capaciteApprentissageActuelle",
-      demande?.correction?.capaciteApprentissageActuelle ?? demande?.capaciteApprentissageActuelle ?? 0
+      demande?.correction?.capaciteApprentissageActuelle ?? demande?.capaciteApprentissageActuelle ?? 0,
     );
     setValue(
       "capaciteApprentissageColoree",
-      demande?.correction?.capaciteApprentissageColoree ?? demande?.capaciteApprentissageColoree ?? 0
+      demande?.correction?.capaciteApprentissageColoree ?? demande?.capaciteApprentissageColoree ?? 0,
     );
     setValue("capaciteScolaire", demande?.correction?.capaciteScolaire ?? demande?.capaciteScolaire ?? 0);
     setValue(
       "capaciteScolaireActuelle",
-      demande?.correction?.capaciteScolaireActuelle ?? demande?.capaciteScolaireActuelle ?? 0
+      demande?.correction?.capaciteScolaireActuelle ?? demande?.capaciteScolaireActuelle ?? 0,
     );
     setValue(
       "capaciteScolaireColoree",
-      demande?.correction?.capaciteScolaireColoree ?? demande?.capaciteScolaireColoree ?? 0
+      demande?.correction?.capaciteScolaireColoree ?? demande?.capaciteScolaireColoree ?? 0,
     );
   }, []);
 

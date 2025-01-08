@@ -34,7 +34,7 @@ export const getFormationsRegionBase = ({
     .leftJoin("indicateurEntree", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire),
     )
     .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
@@ -44,17 +44,17 @@ export const getFormationsRegionBase = ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
             "=",
-            eb.ref("formationEtablissement.codeDispositif")
+            eb.ref("formationEtablissement.codeDispositif"),
           ),
           eb(
             eb.ref("positionFormationRegionaleQuadrant.codeNiveauDiplome"),
             "=",
-            eb.ref("formationView.codeNiveauDiplome")
+            eb.ref("formationView.codeNiveauDiplome"),
           ),
           eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("etablissement.codeRegion")),
           eb(eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"), "=", millesimeSortie),
-        ])
-      )
+        ]),
+      ),
     )
     .leftJoin("indicateurEntree as iep", "formationEtablissement.id", "iep.formationEtablissementId")
     .where("iep.rentreeScolaire", "=", getRentreeScolairePrecedente(rentreeScolaire))
@@ -80,7 +80,7 @@ export const getFormationsRegionBase = ({
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as("effectif"),
       sql<number>`SUM(${effectifAnnee({ alias: "iep" })})`.as("effectifPrecedent"),
       sql<string>`CONCAT(${eb.ref(
-        "formationView.libelleFormation"
+        "formationView.libelleFormation",
       )},' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as("libelleFormation"),
       selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
       (eb) =>
@@ -156,7 +156,7 @@ export const getFormationsRegionBase = ({
           codeRegionRef: "etablissement.codeRegion",
         }),
       "is not",
-      null
+      null,
     )
     .groupBy([
       "formationEtablissement.cfd",

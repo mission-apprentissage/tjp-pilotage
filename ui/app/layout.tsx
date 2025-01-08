@@ -17,7 +17,7 @@ type Props = {
 export async function generateMetadata(
   _: Props,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  state: any
+  state: any,
 ): Promise<Metadata> {
   const { title, description } = getMetadata(state);
 

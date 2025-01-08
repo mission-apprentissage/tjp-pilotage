@@ -32,7 +32,7 @@ describe("createUser usecase", () => {
       createUser({
         body: user,
         requestUser,
-      })
+      }),
     ).rejects.toThrow("test@test.fr est déjà éxistant dans l'application.");
   });
 
@@ -48,7 +48,7 @@ describe("createUser usecase", () => {
       createUser({
         body: { ...user, email: "fakeEmail" },
         requestUser,
-      })
+      }),
     ).rejects.toThrow("L'email est invalide");
   });
 
@@ -77,7 +77,7 @@ describe("createUser usecase", () => {
       };
       const createUser = createUserFactory(deps);
       const notAllowedRoles: Array<keyof typeof PERMISSIONS> = Object.keys(PERMISSIONS).filter(
-        (p) => !["admin", "admin_region"].includes(p)
+        (p) => !["admin", "admin_region"].includes(p),
       ) as Array<keyof typeof PERMISSIONS>;
 
       for (const role of notAllowedRoles) {
@@ -85,7 +85,7 @@ describe("createUser usecase", () => {
           createUser({
             body: user,
             requestUser: { ...requestUser, role },
-          })
+          }),
         ).rejects.toThrow(`Vous n'avez pas les droits de créer un utilisateur avec le rôle ${user.role}`);
       }
     });
@@ -131,7 +131,7 @@ describe("createUser usecase", () => {
 
       await expect(deps.insertUserQuery).toHaveBeenCalled();
       await expect(deps.shootTemplate).toHaveBeenCalledWith(
-        expect.objectContaining({ template: "activate_account_region" })
+        expect.objectContaining({ template: "activate_account_region" }),
       );
     });
 
@@ -150,7 +150,7 @@ describe("createUser usecase", () => {
             codeRegion: "84",
             role: "admin_region",
           },
-        })
+        }),
       ).rejects.toThrow("Vous ne pouvez pas créer un utilisateur dans ce périmètre.");
     });
   });

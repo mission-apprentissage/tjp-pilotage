@@ -55,10 +55,10 @@ const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
             const frEduRnes = frEduRneResp.replace("FrEduRneResp=", "");
             return frEduRnes.split(";").map((frEduRne) => frEduRne.split("$")[0]);
           }
-        })
+        }),
       ).filter((del) => {
         return del !== undefined;
-      }) as unknown as Array<string>
+      }) as unknown as Array<string>,
     );
 
     if (delegations.length > 0) {
@@ -179,14 +179,14 @@ export const [redirectDne, redirectDneFactory] = inject(
           {
             user: userToInsert,
           },
-          `Info (SSO) : Nouveau login`
+          `Info (SSO) : Nouveau login`,
         );
       } else {
         logger.info(
           {
             user: userToInsert,
           },
-          `Info (SSO) : Nouvel utilisateur DNE`
+          `Info (SSO) : Nouvel utilisateur DNE`,
         );
       }
 
@@ -196,5 +196,5 @@ export const [redirectDne, redirectDneFactory] = inject(
       });
 
       return { token: authorizationToken, user: userToInsert };
-    }
+    },
 );

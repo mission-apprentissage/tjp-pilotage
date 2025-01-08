@@ -41,7 +41,7 @@ export const up = async (db: Kysely<unknown>) => {
       on df."cfd" = formations.cfd
       left join "diplomeProfessionnel" dp on dp."cfd" = df."cfd"
       order by df."cfd";
-      `
+      `,
     )
     .execute();
 
@@ -78,7 +78,7 @@ export const up = async (db: Kysely<unknown>) => {
       order by df."cfd";
 
       create unique index on "formationView" ("id");
-      `
+      `,
     )
     .materialized()
     .execute();
@@ -105,7 +105,7 @@ export const up = async (db: Kysely<unknown>) => {
           where "voie" is null
           or "voie" = 'scolaire';
 
-          create unique index on "formationScolaireView" ("id");`
+          create unique index on "formationScolaireView" ("id");`,
     )
     .materialized()
     .execute();
@@ -132,7 +132,7 @@ export const up = async (db: Kysely<unknown>) => {
             where "voie" is not null
             and "voie" = 'apprentissage';
 
-            create unique index on "formationApprentissageView" ("id");`
+            create unique index on "formationApprentissageView" ("id");`,
     )
     .materialized()
     .execute();

@@ -48,9 +48,9 @@ const handleMotifCorrectionLabel = ({
   return motifCorrection === "autre"
     ? `Autre : ${autreMotif}`
     : getMotifCorrectionLabel({
-      motifCorrection: motifCorrection as MotifCorrectionLabel,
-      campagne: campagne as MotifCorrectionCampagne,
-    });
+        motifCorrection: motifCorrection as MotifCorrectionLabel,
+        campagne: campagne as MotifCorrectionCampagne,
+      });
 };
 const ConditionalTd = chakra(
   ({
@@ -79,7 +79,7 @@ const ConditionalTd = chakra(
         </Td>
       );
     return null;
-  }
+  },
 );
 
 export const LineContent = ({

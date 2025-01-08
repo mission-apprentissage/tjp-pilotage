@@ -74,7 +74,7 @@ const ColonneFilterSection = chakra(
                 color: string;
                 options: (OptionSchema & { disabled?: boolean })[];
               }
-            >
+            >,
           )}
           defaultOptions={Object.entries(FORMATION_COLUMNS_DEFAULT)?.map(([value, label]) => {
             return {
@@ -96,7 +96,7 @@ const ColonneFilterSection = chakra(
         />
       </Flex>
     );
-  }
+  },
 );
 
 export default function Formations() {
@@ -147,7 +147,7 @@ export default function Formations() {
     {
       query: getFormationsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
-    { staleTime: 10000000, keepPreviousData: false }
+    { staleTime: 10000000, keepPreviousData: false },
   );
 
   const { data: requetesEnregistrees } = client.ref("[GET]/requetes").useQuery({
@@ -187,21 +187,21 @@ export default function Formations() {
       ...formation,
       ...(filters.codeRegion && region
         ? {
-          selectedCodeRegion: region.value,
-          selectedRegion: region.label,
-        }
+            selectedCodeRegion: region.value,
+            selectedRegion: region.label,
+          }
         : {}),
       ...(filters.codeAcademie && academies
         ? {
-          selectedCodeAcademie: formatArray(academies.map((academie) => academie.value)),
-          selectedAcademie: formatArray(academies.map((academie) => academie.label)),
-        }
+            selectedCodeAcademie: formatArray(academies.map((academie) => academie.value)),
+            selectedAcademie: formatArray(academies.map((academie) => academie.label)),
+          }
         : {}),
       ...(filters.codeDepartement && departements
         ? {
-          selectedCodeDepartement: formatArray(departements.map((departement) => departement.value)),
-          selectedDepartement: formatArray(departements.map((departement) => departement.label)),
-        }
+            selectedCodeDepartement: formatArray(departements.map((departement) => departement.value)),
+            selectedDepartement: formatArray(departements.map((departement) => departement.label)),
+          }
         : {}),
       actionPrioritaire: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
       transitionDemographique: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
@@ -244,7 +244,7 @@ export default function Formations() {
   const canShowQuadrantPosition = filters.codeRegion?.length === 1;
 
   const [colonneFilters, setColonneFilters] = useState<(keyof typeof FORMATION_COLUMNS)[]>(
-    (columns.length ? columns : Object.keys(FORMATION_COLUMNS_DEFAULT)) as (keyof typeof FORMATION_COLUMNS)[]
+    (columns.length ? columns : Object.keys(FORMATION_COLUMNS_DEFAULT)) as (keyof typeof FORMATION_COLUMNS)[],
   );
 
   const handleColonneFilters = (value: (keyof typeof FORMATION_COLUMNS)[]) => {
@@ -283,33 +283,33 @@ export default function Formations() {
 
     // Valeurs par défaut pour les codes
     switch (type) {
-    case "codeRegion":
-      if (value !== undefined) {
-        newFilters = {
-          ...newFilters,
-          codeAcademie: undefined,
-          codeDepartement: undefined,
-          commune: undefined,
-        };
-      }
-      break;
-    case "codeAcademie":
-      if (value !== undefined) {
-        newFilters = {
-          ...newFilters,
-          codeDepartement: undefined,
-          commune: undefined,
-        };
-      }
-      break;
-    case "codeDepartement":
-      if (value !== undefined) {
-        newFilters = {
-          ...newFilters,
-          commune: undefined,
-        };
-      }
-      break;
+      case "codeRegion":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeAcademie: undefined,
+            codeDepartement: undefined,
+            commune: undefined,
+          };
+        }
+        break;
+      case "codeAcademie":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            codeDepartement: undefined,
+            commune: undefined,
+          };
+        }
+        break;
+      case "codeDepartement":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            commune: undefined,
+          };
+        }
+        break;
     }
     filterTracker(type);
     setSearchParams({

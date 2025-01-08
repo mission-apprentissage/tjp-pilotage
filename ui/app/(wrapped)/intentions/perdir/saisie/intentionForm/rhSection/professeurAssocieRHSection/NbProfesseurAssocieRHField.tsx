@@ -29,7 +29,7 @@ export const NbProfesseurAssocieRHField = chakra(
         watch((_, { name }) => {
           if (name !== "professeurAssocieRH") return;
           setValue("nbProfesseurAssocieRH", undefined);
-        }).unsubscribe
+        }).unsubscribe,
     );
 
     const visible = watch("professeurAssocieRH");
@@ -99,5 +99,5 @@ export const NbProfesseurAssocieRHField = chakra(
         </FormHelperText>
       </FormControl>
     );
-  }
+  },
 );

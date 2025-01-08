@@ -17,16 +17,16 @@ const premierVoeuxAnnee = (annee: RawBuilder<unknown>, indicateurEntreeAlias: st
 export const selectDenominateurPressionAgg = (
   indicateurEntreeAlias: string,
   codeNiveauDiplomeAlias: string,
-  withTauxDemande: boolean = false
+  withTauxDemande: boolean = false,
 ) => sql<number>`
   SUM(
     CASE
     WHEN ${sql<boolean>`${!withTauxDemande}`} AND
     ${sql.table(codeNiveauDiplomeAlias)}."codeNiveauDiplome" = '${sql.raw(CODE_NIVEAU_DIPLOME_DES_BTS)}' THEN NULL
     WHEN ${premierVoeuxAnnee(
-    sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
-    indicateurEntreeAlias
-  )} IS NOT NULL
+      sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
+      indicateurEntreeAlias,
+    )} IS NOT NULL
     THEN ${capaciteAnnee(sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`, indicateurEntreeAlias)}
     END
   )`;
@@ -34,7 +34,7 @@ export const selectDenominateurPressionAgg = (
 export const selectTauxPressionAgg = (
   indicateurEntreeAlias: string,
   codeNiveauDiplomeAlias: string,
-  withTauxDemande: boolean = false
+  withTauxDemande: boolean = false,
 ) => sql<number>`
     CASE
     WHEN ${selectDenominateurPressionAgg(indicateurEntreeAlias, codeNiveauDiplomeAlias, withTauxDemande)} >= 0
@@ -47,21 +47,21 @@ export const selectTauxPressionAgg = (
 
 export const selectDenominateurPression = (indicateurEntreeAlias: string) => sql<number>`
     CASE WHEN ${capaciteAnnee(
-    sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
-    indicateurEntreeAlias
-  )} IS NOT NULL
+      sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
+      indicateurEntreeAlias,
+    )} IS NOT NULL
     THEN ${capaciteAnnee(sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`, indicateurEntreeAlias)}
     END`;
 
 export const selectTauxPression = (
   indicateurEntreeAlias: string,
   codeNiveauDiplomeTableAlias: string,
-  withTauxDemande: boolean = false
+  withTauxDemande: boolean = false,
 ) => sql<number>`
     CASE
       WHEN ${sql<boolean>`${!withTauxDemande}`} AND ${sql.table(
-  codeNiveauDiplomeTableAlias
-)}."codeNiveauDiplome" = '${sql.raw(CODE_NIVEAU_DIPLOME_DES_BTS)}' THEN NULL
+        codeNiveauDiplomeTableAlias,
+      )}."codeNiveauDiplome" = '${sql.raw(CODE_NIVEAU_DIPLOME_DES_BTS)}' THEN NULL
       WHEN ${selectDenominateurPression(indicateurEntreeAlias)} >= 0
       THEN (
         ${premierVoeuxAnnee(sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`, indicateurEntreeAlias)}
@@ -141,10 +141,10 @@ export const withTauxPressionReg = <EB extends ExpressionBuilder<DB, "demande" |
           return j.onRef(
             "subIE.rentreeScolaire",
             "=",
-            sql`${sql.table(indicateurEntreeAlias)}."rentreeScolaire"::text`
+            sql`${sql.table(indicateurEntreeAlias)}."rentreeScolaire"::text`,
           );
         return j.on("subIE.rentreeScolaire", "=", CURRENT_RENTREE);
-      })
+      }),
     )
     .innerJoin("etablissement as subEtab", "subEtab.uai", "subFE.uai")
     .innerJoin("dataFormation as subF", "subF.cfd", "subFE.cfd")
@@ -178,10 +178,10 @@ export const withTauxPressionDep = <EB extends ExpressionBuilder<DB, "demande" |
           return j.onRef(
             "subIE.rentreeScolaire",
             "=",
-            sql`${sql.table(indicateurEntreeAlias)}."rentreeScolaire"::text`
+            sql`${sql.table(indicateurEntreeAlias)}."rentreeScolaire"::text`,
           );
         return j.on("subIE.rentreeScolaire", "=", CURRENT_RENTREE);
-      })
+      }),
     )
     .innerJoin("etablissement as subEtab", "subEtab.uai", "subFE.uai")
     .innerJoin("dataFormation as subF", "subF.cfd", "subFE.cfd")
@@ -213,10 +213,10 @@ export const withTauxPressionNat = <EB extends ExpressionBuilder<DB, "demande" |
           return j.onRef(
             "subIE.rentreeScolaire",
             "=",
-            sql`${sql.table(indicateurEntreeAlias)}."rentreeScolaire"::text`
+            sql`${sql.table(indicateurEntreeAlias)}."rentreeScolaire"::text`,
           );
         return j.on("subIE.rentreeScolaire", "=", CURRENT_RENTREE);
-      })
+      }),
     )
     .innerJoin("etablissement as subEtab", "subEtab.uai", "subFE.uai")
     .innerJoin("dataFormation as subF", "subF.cfd", "subFE.cfd")

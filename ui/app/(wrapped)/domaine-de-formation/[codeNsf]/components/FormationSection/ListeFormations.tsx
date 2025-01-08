@@ -128,5 +128,5 @@ export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
         </List>
       </Box>
     );
-  }
+  },
 );

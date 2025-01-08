@@ -9,7 +9,7 @@ export const searchCampusSchema = {
       z.object({
         value: z.string().optional(),
         label: z.string().optional(),
-      })
+      }),
     ),
   },
 };

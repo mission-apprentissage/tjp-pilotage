@@ -25,5 +25,5 @@ export const [searchEtablissementPerdirUsecase] = inject(
         commune: etablissement.commune,
       }));
       return suggestions;
-    }
+    },
 );

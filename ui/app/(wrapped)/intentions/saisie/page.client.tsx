@@ -135,7 +135,7 @@ export const PageClient = () => {
     {
       query: getDemandesQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
-    { keepPreviousData: true, cacheTime: 0 }
+    { keepPreviousData: true, cacheTime: 0 },
   );
 
   const hasPermissionSubmitIntention = usePermission("intentions/ecriture");

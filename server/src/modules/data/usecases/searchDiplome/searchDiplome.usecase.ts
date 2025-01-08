@@ -15,5 +15,5 @@ export const [searchDiplome] = inject(
       });
 
       return formations;
-    }
+    },
 );

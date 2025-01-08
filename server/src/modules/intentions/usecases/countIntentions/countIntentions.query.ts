@@ -39,10 +39,10 @@ export const countIntentionsQuery = async ({
           return eb.on("campagne.annee", "=", anneeCampagne);
         }
         return eb;
-      })
+      }),
     )
     .leftJoin("suivi", (join) =>
-      join.onRef("suivi.intentionNumero", "=", "intention.numero").on("suivi.userId", "=", user.id)
+      join.onRef("suivi.intentionNumero", "=", "intention.numero").on("suivi.userId", "=", user.id),
     )
     .select((eb) => sql<number>`count(${eb.ref("intention.numero")})`.as("total"))
     .select((eb) =>
@@ -54,7 +54,7 @@ export const countIntentionsQuery = async ({
           END
         ),
         0
-      )`.as(DemandeStatutEnum["proposition"])
+      )`.as(DemandeStatutEnum["proposition"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -65,7 +65,7 @@ export const countIntentionsQuery = async ({
           END
         ),
         0
-      )`.as(DemandeStatutEnum["projet de demande"])
+      )`.as(DemandeStatutEnum["projet de demande"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -76,7 +76,7 @@ export const countIntentionsQuery = async ({
           END
         ),
         0
-      )`.as(DemandeStatutEnum["demande validée"])
+      )`.as(DemandeStatutEnum["demande validée"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -87,7 +87,7 @@ export const countIntentionsQuery = async ({
           END
         ),
         0
-      )`.as(DemandeStatutEnum["refusée"])
+      )`.as(DemandeStatutEnum["refusée"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -98,7 +98,7 @@ export const countIntentionsQuery = async ({
           END
         ),
         0
-      )`.as(DemandeStatutEnum["brouillon"])
+      )`.as(DemandeStatutEnum["brouillon"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -109,7 +109,7 @@ export const countIntentionsQuery = async ({
           END
         ),
         0
-      )`.as(DemandeStatutEnum["dossier complet"])
+      )`.as(DemandeStatutEnum["dossier complet"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -120,7 +120,7 @@ export const countIntentionsQuery = async ({
           END
         ),
         0
-      )`.as(DemandeStatutEnum["dossier incomplet"])
+      )`.as(DemandeStatutEnum["dossier incomplet"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -131,7 +131,7 @@ export const countIntentionsQuery = async ({
           END
         ),
         0
-      )`.as(DemandeStatutEnum["prêt pour le vote"])
+      )`.as(DemandeStatutEnum["prêt pour le vote"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -142,7 +142,7 @@ export const countIntentionsQuery = async ({
           END
         ),
         0
-      )`.as("suivies")
+      )`.as("suivies"),
     )
     .$call((q) => {
       if (shouldFetchOnlyIntention) return q.where("intention.isIntention", "=", true);
@@ -162,10 +162,10 @@ export const countIntentionsQuery = async ({
                   unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
                 )`,
                 "ilike",
-                `%${search_word}%`
-              )
-            )
-          )
+                `%${search_word}%`,
+              ),
+            ),
+          ),
         );
       return eb;
     })

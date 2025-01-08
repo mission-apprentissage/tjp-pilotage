@@ -13,7 +13,7 @@ export const NombreElevesParAnnee = ({ chiffresEntreeOffre }: { chiffresEntreeOf
     if (chiffresEntreeOffre) {
       return (
         Object.values(chiffresEntreeOffre).findIndex(
-          (value) => value.effectifAnnee1 || value.effectifAnnee2 || value.effectifAnnee3
+          (value) => value.effectifAnnee1 || value.effectifAnnee2 || value.effectifAnnee3,
         ) !== -1
       );
     }
@@ -45,7 +45,7 @@ export const NombreElevesParAnnee = ({ chiffresEntreeOffre }: { chiffresEntreeOf
           }
           return acc;
         },
-        {} as Record<string, { label: string; value: number }[]>
+        {} as Record<string, { label: string; value: number }[]>,
       );
     }
     return {};

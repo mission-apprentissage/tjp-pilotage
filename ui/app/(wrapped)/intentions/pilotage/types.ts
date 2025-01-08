@@ -56,5 +56,5 @@ export type OrderFormationsPilotageIntentions = Pick<FormationsPilotageIntention
 
 export type FilterTracker = (
   filterName: keyof FiltersStatsPilotageIntentions,
-  options?: { value?: unknown; context?: string }
+  options?: { value?: unknown; context?: string },
 ) => void;

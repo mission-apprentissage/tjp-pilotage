@@ -24,7 +24,7 @@ export const DonneesDisponiblesSection = ({
       ((filteredFormations?.reduce((acc, formation) => acc + (formation?.effectif ?? 0), 0) ?? 0) /
         (formations?.reduce(
           (acc, formation) => acc + (chiffresEntree?.[formation.offre]?.[CURRENT_RENTREE]?.effectifEntree ?? 0),
-          0
+          0,
         ) ?? 0)) *
       100;
 
@@ -60,7 +60,7 @@ export const DonneesDisponiblesSection = ({
           } / ${
             formations?.reduce(
               (acc, formation) => acc + (chiffresEntree?.[formation.offre]?.[CURRENT_RENTREE]?.effectifEntree ?? 0),
-              0
+              0,
             ) ?? "-"
           }`}
         />

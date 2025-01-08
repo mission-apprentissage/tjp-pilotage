@@ -22,7 +22,7 @@ export const findOneSimilarRequeteEnregistreeQuery = async ({
         w("requeteEnregistree.couleur", "=", couleur),
         w("requeteEnregistree.userId", "=", userId),
         w("requeteEnregistree.page", "=", page),
-      ])
+      ]),
     )
     .executeTakeFirst();
 };

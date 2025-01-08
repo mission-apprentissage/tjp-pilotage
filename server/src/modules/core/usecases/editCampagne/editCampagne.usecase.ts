@@ -26,5 +26,5 @@ export const [editCampagneUsecase] = inject(
         campagneId,
         campagne,
       });
-    }
+    },
 );

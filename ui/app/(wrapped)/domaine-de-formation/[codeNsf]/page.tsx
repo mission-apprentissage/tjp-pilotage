@@ -43,7 +43,7 @@ const fetchDefaultNsfs = async () => {
 const findDefaultCfd = (
   defaultCfd: string | undefined,
   formations: FormationListItem[],
-  formationByCodeNiveauDiplome: Record<string, FormationListItem[]>
+  formationByCodeNiveauDiplome: Record<string, FormationListItem[]>,
 ): string => {
   if (defaultCfd) {
     const isInList = formations.find((f) => f.cfd === defaultCfd);
@@ -62,7 +62,7 @@ const findDefaultCfd = (
 const defineScope = (
   codeRegion: string | undefined,
   codeAcademie: string | undefined,
-  codeDepartement: string | undefined
+  codeDepartement: string | undefined,
 ): ScopeZone => {
   if (codeDepartement) {
     return ScopeEnum.département;
@@ -80,7 +80,7 @@ const defineScope = (
 };
 
 const groupFromationsByLibelleNiveauDiplome = (
-  formations: FormationListItem[]
+  formations: FormationListItem[],
 ): Record<string, FormationListItem[]> => {
   return _.chain(formations)
     .orderBy("ordreFormation", "desc")

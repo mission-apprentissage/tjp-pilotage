@@ -23,6 +23,6 @@ export const getRequetesEnregistrees = ({ user, page }: { user: RequestUser; pag
       requetesEnregistrees.map((requeteEnregistree) => ({
         ...requeteEnregistree,
         filtres: requeteEnregistree.filtres as FormationFiltresType | FormationEtablissementFiltresType,
-      }))
+      })),
     );
 };

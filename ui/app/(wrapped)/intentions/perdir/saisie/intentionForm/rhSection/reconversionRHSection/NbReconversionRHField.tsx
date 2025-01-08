@@ -27,7 +27,7 @@ export const NbReconversionRHField = chakra(({ disabled, className }: { disabled
       watch((_, { name }) => {
         if (name !== "reconversionRH") return;
         setValue("nbReconversionRH", undefined);
-      }).unsubscribe
+      }).unsubscribe,
   );
 
   const visible = watch("reconversionRH");

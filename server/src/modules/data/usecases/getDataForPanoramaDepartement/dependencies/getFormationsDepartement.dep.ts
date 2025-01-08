@@ -19,7 +19,7 @@ export const getFormationsDepartement = async (filters: Filters) =>
           codeRegionRef: "etablissement.codeRegion",
         }),
       "is not",
-      null
+      null,
     )
     .execute()
     .then(cleanNull)
@@ -27,5 +27,5 @@ export const getFormationsDepartement = async (filters: Filters) =>
       formations.map((formation) => ({
         ...formation,
         formationSpecifique: formatFormationSpecifique(formation),
-      }))
+      })),
     );

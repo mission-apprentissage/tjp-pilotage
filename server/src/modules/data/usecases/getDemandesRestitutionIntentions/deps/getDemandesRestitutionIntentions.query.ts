@@ -59,7 +59,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
-      })
+      }),
     )
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
@@ -76,7 +76,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         .onRef("indicateurRegionSortie.codeRegion", "=", "demande.codeRegion")
         .onRef("indicateurRegionSortie.codeDispositif", "=", "demande.codeDispositif")
         .on("indicateurRegionSortie.millesimeSortie", "=", getMillesimeFromCampagne(campagne))
-        .on(isScolaireIndicateurRegionSortie)
+        .on(isScolaireIndicateurRegionSortie),
     )
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join.on((eb) =>
@@ -85,14 +85,14 @@ export const getDemandesRestitutionIntentionsQuery = async ({
           eb(eb.ref("positionFormationRegionaleQuadrant.codeDispositif"), "=", eb.ref("demande.codeDispositif")),
           eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
           eb("positionFormationRegionaleQuadrant.millesimeSortie", "=", getMillesimeFromCampagne(campagne)),
-        ])
-      )
+        ]),
+      ),
     )
     .leftJoin("actionPrioritaire", (join) =>
       join
         .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
         .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
-        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
+        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion"),
     )
     .selectAll("demande")
     .select((eb) => [
@@ -164,10 +164,10 @@ export const getDemandesRestitutionIntentionsQuery = async ({
                   unaccent(${eb.ref("departement.libelleDepartement")})
                 )`,
                 "ilike",
-                `%${search_word}%`
-              )
-            )
-          )
+                `%${search_word}%`,
+              ),
+            ),
+          ),
         );
       return eb;
     })
@@ -235,8 +235,8 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         return eb.where(
           ({ eb: ebw }) =>
             sql<boolean>`abs(${ebw.ref(
-              "demande.capaciteApprentissage"
-            )} - ${ebw.ref("demande.capaciteApprentissageActuelle")}) > 1`
+              "demande.capaciteApprentissage",
+            )} - ${ebw.ref("demande.capaciteApprentissageActuelle")}) > 1`,
         );
       }
 
@@ -244,8 +244,8 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         return eb.where(
           ({ eb: ebw }) =>
             sql<boolean>`abs(${ebw.ref("demande.capaciteScolaire")} - ${ebw.ref(
-              "demande.capaciteScolaireActuelle"
-            )}) > 1`
+              "demande.capaciteScolaireActuelle",
+            )}) > 1`,
         );
       }
 
@@ -267,7 +267,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
             formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
               ? w("formationView.isTransitionNumerique", "=", true)
               : sql.val(false),
-          ])
+          ]),
         );
       }
       return q;

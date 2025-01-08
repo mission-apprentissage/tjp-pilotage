@@ -9,19 +9,19 @@ import { deleteIntentionQuery } from "./deleteIntention.query";
 
 export const deleteIntentionFactory =
   (deps = { findOneIntention, deleteIntentionQuery }) =>
-    async ({ numero, user }: { numero: string; user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais"> }) => {
-      const intention = await deps.findOneIntention(numero);
-      if (!intention) throw Boom.notFound();
+  async ({ numero, user }: { numero: string; user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais"> }) => {
+    const intention = await deps.findOneIntention(numero);
+    if (!intention) throw Boom.notFound();
 
-      const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
-      const isAllowed = guardScope(scope?.default, {
-        uai: () => user.uais?.includes(intention.uai) ?? false,
-        region: () => user.codeRegion === intention.codeRegion,
-        national: () => true,
-      });
-      if (!isAllowed) throw Boom.forbidden();
-      await deps.deleteIntentionQuery({ intention, updatedBy: user.id });
-      logger.info({ numero, intention: intention }, "Intention supprimée");
-    };
+    const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
+    const isAllowed = guardScope(scope?.default, {
+      uai: () => user.uais?.includes(intention.uai) ?? false,
+      region: () => user.codeRegion === intention.codeRegion,
+      national: () => true,
+    });
+    if (!isAllowed) throw Boom.forbidden();
+    await deps.deleteIntentionQuery({ intention, updatedBy: user.id });
+    logger.info({ numero, intention: intention }, "Intention supprimée");
+  };
 
 export const deleteIntentionUsecase = deleteIntentionFactory();

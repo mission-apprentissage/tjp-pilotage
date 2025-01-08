@@ -145,7 +145,7 @@ export const DevenirBarGraph = function ({
         },
       })),
     }),
-    [series, datas]
+    [series, datas],
   );
 
   useLayoutEffect(() => {

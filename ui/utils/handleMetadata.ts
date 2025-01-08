@@ -145,7 +145,7 @@ const METADATA_MAP = {
  */
 const getPathnameFromMetadataState = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  state: any
+  state: any,
 ): string | undefined => {
   const res = Object.getOwnPropertySymbols(state || {})
     .map((p) => state[p])

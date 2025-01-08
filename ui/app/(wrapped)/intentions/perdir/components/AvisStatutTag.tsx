@@ -7,40 +7,40 @@ import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 
 export const TagIcon = chakra(({ statutAvis }: { statutAvis: AvisStatutType }) => {
   switch (statutAvis) {
-  case AvisStatutEnum["favorable"]:
-    return <Icon icon={"ri:thumb-up-fill"} />;
-  case AvisStatutEnum["défavorable"]:
-    return <Icon icon={"ri:thumb-down-fill"} />;
-  case AvisStatutEnum["réservé"]:
-    return <Icon icon={"ri:emotion-normal-fill"} />;
-  default:
-    return <></>;
+    case AvisStatutEnum["favorable"]:
+      return <Icon icon={"ri:thumb-up-fill"} />;
+    case AvisStatutEnum["défavorable"]:
+      return <Icon icon={"ri:thumb-down-fill"} />;
+    case AvisStatutEnum["réservé"]:
+      return <Icon icon={"ri:emotion-normal-fill"} />;
+    default:
+      return <></>;
   }
 });
 
 export const getAvisStatusTagTextColor = (statutAvis: AvisStatutType) => {
   switch (statutAvis) {
-  case AvisStatutEnum["réservé"]:
-    return "yellowTournesol.407";
-  case AvisStatutEnum["favorable"]:
-    return "success.425";
-  case AvisStatutEnum["défavorable"]:
-    return "error.425";
-  default:
-    return "grey.425";
+    case AvisStatutEnum["réservé"]:
+      return "yellowTournesol.407";
+    case AvisStatutEnum["favorable"]:
+      return "success.425";
+    case AvisStatutEnum["défavorable"]:
+      return "error.425";
+    default:
+      return "grey.425";
   }
 };
 
 export const getAvisStatusTagBgColor = (statutAvis: AvisStatutType) => {
   switch (statutAvis) {
-  case AvisStatutEnum["réservé"]:
-    return "yellowTournesol.950";
-  case AvisStatutEnum["favorable"]:
-    return "success.950";
-  case AvisStatutEnum["défavorable"]:
-    return "error.950";
-  default:
-    return "grey.425";
+    case AvisStatutEnum["réservé"]:
+      return "yellowTournesol.950";
+    case AvisStatutEnum["favorable"]:
+      return "success.950";
+    case AvisStatutEnum["défavorable"]:
+      return "error.950";
+    default:
+      return "grey.425";
   }
 };
 
@@ -69,5 +69,5 @@ export const AvisStatutTag = chakra(
       {typeAvis && (typeAvis != AvisTypeEnum["final"] ? `Avis ${typeAvis} ` : `Vote ${typeAvis} `)}
       {statutAvis}
     </Tag>
-  )
+  ),
 );

@@ -29,7 +29,7 @@ export const logError = (
       message?: string;
     };
   },
-  url: string
+  url: string,
 ) => {
   const type = url.split("/")[1];
   const code = url.split("/")[2];
@@ -41,11 +41,11 @@ export const logError = (
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   type === "UAI"
     ? loggerUai.log(
-      `${date};${code};${millesime};NOK;${response.status};${response.data?.msg ?? response.data?.message}`
-    )
+        `${date};${code};${millesime};NOK;${response.status};${response.data?.msg ?? response.data?.message}`,
+      )
     : loggerReg.log(
-      `${date};${code};${millesime};NOK;${response.status};${response.data?.msg ?? response.data?.message}`
-    );
+        `${date};${code};${millesime};NOK;${response.status};${response.data?.msg ?? response.data?.message}`,
+      );
 };
 
 export const loggerReg = {

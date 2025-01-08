@@ -18,7 +18,7 @@ export default () => {
     {
       enabled: !!numero,
       cacheTime: 0,
-    }
+    },
   );
 
   const { data: defaultCampagne } = client.ref("[GET]/demande/campagne/default").useQuery({});

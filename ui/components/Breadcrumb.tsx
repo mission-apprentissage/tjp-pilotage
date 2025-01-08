@@ -12,5 +12,5 @@ export const Breadcrumb = chakra(
         ))}
       </ChakraBreadcrumb>
     );
-  }
+  },
 );

@@ -152,7 +152,7 @@ export const getFiltersQuery = async ({
   const filtersBase = getKbdClient()
     .selectFrom("correction")
     .innerJoin("latestDemandeView as demande", (join) =>
-      join.onRef("correction.intentionNumero", "=", "demande.numero")
+      join.onRef("correction.intentionNumero", "=", "demande.numero"),
     )
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
     .leftJoin("formationView", "formationView.cfd", "demande.cfd")
@@ -330,7 +330,7 @@ export const getFiltersQuery = async ({
     .execute();
 
   const statutsFilters = values(DemandeStatutEnum).filter(
-    (statut) => statut !== DemandeStatutEnum["brouillon"] && statut !== DemandeStatutEnum["supprimée"]
+    (statut) => statut !== DemandeStatutEnum["brouillon"] && statut !== DemandeStatutEnum["supprimée"],
   );
 
   const filters = {
@@ -348,7 +348,7 @@ export const getFiltersQuery = async ({
       cleanNull({
         value,
         label: capitalize(value),
-      })
+      }),
     ),
     secteurs: [
       {

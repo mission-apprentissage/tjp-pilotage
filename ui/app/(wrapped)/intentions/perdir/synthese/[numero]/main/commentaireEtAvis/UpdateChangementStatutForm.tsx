@@ -66,7 +66,7 @@ export const UpdateChangementStatutForm = chakra(
           onSubmit={handleSubmit((values) =>
             submitChangementStatut({
               body: { changementStatut: values },
-            })
+            }),
           )}
           width={"50%"}
         >
@@ -89,7 +89,7 @@ export const UpdateChangementStatutForm = chakra(
                 body: {
                   changementStatut: values,
                 },
-              })
+              }),
             )}
             leftIcon={<CheckIcon />}
             width={"100%"}
@@ -99,5 +99,5 @@ export const UpdateChangementStatutForm = chakra(
         </Flex>
       </FormProvider>
     );
-  }
+  },
 );

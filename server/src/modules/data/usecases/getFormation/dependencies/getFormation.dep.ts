@@ -10,7 +10,7 @@ import { getFormationMailleEtab } from "./getFormationMailleEtab.dep";
 
 function getListOfCfdWhichAreTransition(
   transitionType: "transitionNumerique" | "transitionEcologique" | "transitionDemographique",
-  cfd: string
+  cfd: string,
 ) {
   return getKbdClient()
     .selectFrom(
@@ -25,11 +25,11 @@ function getListOfCfdWhichAreTransition(
           sb.ref("formationView.libelleFormation").as("libelleFormation"),
           sql<number>`count(distinct ${sb.ref("formationRome.codeRome")})`.as("nbRomesTotal"),
           sql<number>`count(distinct case when ${sb.ref(
-            `rome.${transitionType}`
+            `rome.${transitionType}`,
           )} then ${sb.ref("formationRome.codeRome")} end)`.as(`nbRomes${transitionType}`),
         ])
         .groupBy(["formationView.cfd", "niveauDiplome.libelleNiveauDiplome", "formationView.libelleFormation"])
-        .as("count_romes_transition")
+        .as("count_romes_transition"),
     )
     .select((sb) => [sb.ref("count_romes_transition.cfd").as("cfd")])
     .where("count_romes_transition.cfd", "=", cfd)
@@ -91,7 +91,7 @@ export const getFormation = async ({
         codeRegion,
         codeDepartement,
         codeAcademie,
-      })
+      }),
     )
     .with("inTransitionNumerique", () => listOfCfdWhichAreTransitionNumerique)
     .with("inTransitionEcologique", () => listOfCfdWhichAreTransitionEcologique)
@@ -104,7 +104,7 @@ export const getFormation = async ({
     .where("formation.cfd", "=", cfd)
     .select((sb) => [
       sql<string>`concat( ${sb.ref(
-        "formation.libelleNiveauDiplome"
+        "formation.libelleNiveauDiplome",
       )}, ' - ', ${sb.ref("formation.libelleFormation")})`.as("libelle"),
       sb.ref("formation.cfd").as("cfd"),
       sb.ref("formation.codeNiveauDiplome").as("codeNiveauDiplome"),
@@ -133,10 +133,10 @@ export const getFormation = async ({
         .end()
         .as("isTransitionDemographique"),
       sql<boolean>`bool_or(${sb.ref("formation_maille_etab.voie")} = 'apprentissage' OR ${sb.ref(
-        "formation_maille_etab.voie"
+        "formation_maille_etab.voie",
       )} IS NULL)`.as("isApprentissage"),
       sql<boolean>`bool_or(${sb.ref(
-        "formation_maille_etab.voie"
+        "formation_maille_etab.voie",
       )} = 'scolaire' OR ${sb.ref("formation_maille_etab.voie")} IS NULL)`.as("isScolaire"),
       sb
         .case()

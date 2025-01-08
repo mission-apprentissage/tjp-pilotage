@@ -22,7 +22,7 @@ const resultAppearOnlyOnce = (secondaire: StructureDenseignement[], superieur: S
 
 const mapEtablissementGeoloc = (
   etablissement: StructureDenseignement,
-  source: EtablissementGeolocSource
+  source: EtablissementGeolocSource,
 ): EtablissementGeoloc => ({
   adresse: etablissement["adresse"]?.replace(/"/g, ""),
   codePostal: etablissement["CP"],
@@ -98,7 +98,7 @@ export const findEtablissementGeoloc = async ({
 
   if (!latitude || !longitude) {
     console.log(
-      `Aucune coordonnées de géoloc trouvée pour cet établissement: ${uai} / ${lyceeACCE?.appellation_officielle}, ${search} `
+      `Aucune coordonnées de géoloc trouvée pour cet établissement: ${uai} / ${lyceeACCE?.appellation_officielle}, ${search} `,
     );
   }
 

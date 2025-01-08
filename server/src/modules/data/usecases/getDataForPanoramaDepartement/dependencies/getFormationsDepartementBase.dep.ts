@@ -34,7 +34,7 @@ export const getFormationsDepartementBase = ({
     .leftJoin("indicateurEntree", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire),
     )
     .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .leftJoin("indicateurEntree as iep", "formationEtablissement.id", "iep.formationEtablissementId")
@@ -57,17 +57,17 @@ export const getFormationsDepartementBase = ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
             "=",
-            eb.ref("formationEtablissement.codeDispositif")
+            eb.ref("formationEtablissement.codeDispositif"),
           ),
           eb(
             eb.ref("positionFormationRegionaleQuadrant.codeNiveauDiplome"),
             "=",
-            eb.ref("formationView.codeNiveauDiplome")
+            eb.ref("formationView.codeNiveauDiplome"),
           ),
           eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("etablissement.codeRegion")),
           eb(eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"), "=", millesimeSortie),
-        ])
-      )
+        ]),
+      ),
     )
     .select((eb) => [
       "formationView.cfd",
@@ -160,7 +160,7 @@ export const getFormationsDepartementBase = ({
           codeRegionRef: "etablissement.codeRegion",
         }),
       "is not",
-      null
+      null,
     )
     .groupBy([
       "formationEtablissement.cfd",

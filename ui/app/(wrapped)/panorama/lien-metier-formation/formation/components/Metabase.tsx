@@ -22,7 +22,7 @@ const Metabase = ({ domaineFormation, formation, dashboardId }: DashboardProps) 
         },
       },
     },
-    { staleTime: 10000000, keepPreviousData: true }
+    { staleTime: 10000000, keepPreviousData: true },
   );
 
   const onIFrameLoad = () => {

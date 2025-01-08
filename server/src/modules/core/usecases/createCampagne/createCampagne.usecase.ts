@@ -38,5 +38,5 @@ export const [createCampagne, createCampagneFactory] = inject(
     await insertCampagne({
       data: campagne,
     });
-  }
+  },
 );

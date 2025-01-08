@@ -32,12 +32,12 @@ export const searchEtablissementQuery = async ({
                 sql`concat(unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
                   ' ',${eb.ref("dataEtablissement.commune")})`,
                 "ilike",
-                `%${search_word}%`
-              )
-            )
+                `%${search_word}%`,
+              ),
+            ),
           ),
         ]),
-      ])
+      ]),
     )
     .$call((q) => {
       if (!codeRegion) return q;
@@ -53,8 +53,8 @@ export const searchEtablissementQuery = async ({
               on.or([
                 on("etablissement.dateFermeture", "is", null),
                 on("etablissement.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
-              ])
-            )
+              ]),
+            ),
         )
         .innerJoin("formationEtablissement", "formationEtablissement.uai", "etablissement.uai");
     })

@@ -11,10 +11,10 @@ import { cleanNull } from "@/utils/noNull";
 function listUniqMillesimes(
   indicateurs: {
     millesimeSortie: string | null;
-  }[]
+  }[],
 ) {
   return _.uniq(indicateurs.filter((i) => i.millesimeSortie).map((i) => i.millesimeSortie as string)).sort((a, z) =>
-    a.localeCompare(z)
+    a.localeCompare(z),
   );
 }
 
@@ -25,7 +25,7 @@ export const getTauxIJ = async ({ cfd, codeRegion }: { cfd: string; codeRegion?:
     .leftJoin("indicateurRegionSortie", (join) =>
       join
         .onRef("indicateurRegionSortie.cfd", "=", "formation.cfd")
-        .onRef("indicateurRegionSortie.voie", "=", "formation.voie")
+        .onRef("indicateurRegionSortie.voie", "=", "formation.voie"),
     )
     .where("formation.cfd", "=", cfd)
     .$call((q) => {

@@ -29,7 +29,7 @@ export const getChiffresEntree = async ({
 
   return getBase({ uai })
     .innerJoin("indicateurEntree as ie", (join) =>
-      join.onRef("ie.formationEtablissementId", "=", "formationEtablissement.id")
+      join.onRef("ie.formationEtablissementId", "=", "formationEtablissement.id"),
     )
     .where("ie.rentreeScolaire", "in", [
       rentreeScolaire,

@@ -46,7 +46,7 @@ export const getPermissionScope = <P extends Permission>(role: Role | undefined,
 
 export function guardScope<S extends string>(
   scope: S | undefined,
-  guards: { [C in S]: () => boolean }
+  guards: { [C in S]: () => boolean },
 ): scope is Exclude<S, undefined> {
   if (!scope) return false;
   return guards[scope]();

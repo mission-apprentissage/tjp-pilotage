@@ -23,5 +23,5 @@ export const [getMetabaseDashboardUrl, getMetabaseDashboardUrlFactory] = inject(
       const token = deps.signJwt(payload, METABASE_SECRET_KEY);
 
       return `${METABASE_SITE_URL}/embed/dashboard/${token}#bordered=true&titled=true`;
-    }
+    },
 );

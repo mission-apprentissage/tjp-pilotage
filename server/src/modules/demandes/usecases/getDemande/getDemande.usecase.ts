@@ -5,13 +5,13 @@ const getDemandeFactory =
   (
     deps = {
       getDemandeQuery,
-    }
+    },
   ) =>
-    async ({ numero, user }: Filters) => {
-      return await deps.getDemandeQuery({
-        numero: numero,
-        user,
-      });
-    };
+  async ({ numero, user }: Filters) => {
+    return await deps.getDemandeQuery({
+      numero: numero,
+      user,
+    });
+  };
 
 export const getDemandeUsecase = getDemandeFactory();

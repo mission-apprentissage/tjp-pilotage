@@ -23,7 +23,7 @@ type StatsPositionQuadrant = {
 
 const getStatsPositionQuadrant = (
   positionsQuadrant: RepartitionPilotageIntentionsPositionQuadrant,
-  positionQuadrant: PositionQuadrantType
+  positionQuadrant: PositionQuadrantType,
 ): StatsPositionQuadrant => {
   const statsPositionQuadrant: StatsPositionQuadrant = {
     ["Places fermées"]: 0,
@@ -45,11 +45,11 @@ const getStatsPositionQuadrant = (
 
   statsPositionQuadrant["Taux de transformation"] = formatPercentage(
     statsPositionQuadrant["Places transformées"] / statsPositionQuadrant["Effectif en entrée"],
-    1
+    1,
   );
   statsPositionQuadrant["Ratio de fermeture"] = formatPercentage(
     statsPositionQuadrant["Places fermées"] / statsPositionQuadrant["Places transformées"],
-    1
+    1,
   );
 
   return statsPositionQuadrant;
@@ -118,7 +118,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                   px={3}
                   color={getTdColor(
                     indicateur,
-                    getStatsPositionQuadrant(positionsQuadrant, PositionQuadrantEnum.Q1)[indicateur]
+                    getStatsPositionQuadrant(positionsQuadrant, PositionQuadrantEnum.Q1)[indicateur],
                   )}
                 >
                   <Text align="center">
@@ -130,7 +130,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                   px={3}
                   color={getTdColor(
                     indicateur,
-                    getStatsPositionQuadrant(positionsQuadrant, PositionQuadrantEnum.Q2)[indicateur]
+                    getStatsPositionQuadrant(positionsQuadrant, PositionQuadrantEnum.Q2)[indicateur],
                   )}
                 >
                   <Text align="center">
@@ -142,7 +142,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                   px={3}
                   color={getTdColor(
                     indicateur,
-                    getStatsPositionQuadrant(positionsQuadrant, PositionQuadrantEnum.Q3)[indicateur]
+                    getStatsPositionQuadrant(positionsQuadrant, PositionQuadrantEnum.Q3)[indicateur],
                   )}
                 >
                   <Text align="center">
@@ -154,7 +154,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                   px={3}
                   color={getTdColor(
                     indicateur,
-                    getStatsPositionQuadrant(positionsQuadrant, PositionQuadrantEnum.Q4)[indicateur]
+                    getStatsPositionQuadrant(positionsQuadrant, PositionQuadrantEnum.Q4)[indicateur],
                   )}
                 >
                   <Text align="center">
@@ -166,7 +166,7 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
                   px={3}
                   color={getTdColor(
                     indicateur,
-                    getStatsPositionQuadrant(positionsQuadrant, PositionQuadrantEnum["Hors quadrant"])[indicateur]
+                    getStatsPositionQuadrant(positionsQuadrant, PositionQuadrantEnum["Hors quadrant"])[indicateur],
                   )}
                 >
                   <Text align="center">

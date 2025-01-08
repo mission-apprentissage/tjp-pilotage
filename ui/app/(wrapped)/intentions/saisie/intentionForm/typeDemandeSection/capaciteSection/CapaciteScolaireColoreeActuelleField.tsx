@@ -15,7 +15,7 @@ export const CapaciteScolaireColoreeActuelleField = chakra(
         watch((_, { name }) => {
           if (name !== "typeDemande") return;
           setValue("capaciteScolaireColoreeActuelle", 0);
-        }).unsubscribe
+        }).unsubscribe,
     );
 
     const typeDemande = watch("typeDemande");
@@ -25,5 +25,5 @@ export const CapaciteScolaireColoreeActuelleField = chakra(
     if (!coloration) return <></>;
 
     return <CapaciteField name={"capaciteScolaireColoreeActuelle"} className={className} isReadOnly={isReadOnly} />;
-  }
+  },
 );

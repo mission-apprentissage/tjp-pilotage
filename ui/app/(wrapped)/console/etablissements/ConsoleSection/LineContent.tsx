@@ -43,7 +43,7 @@ const ConditionalTd = chakra(
         </Td>
       );
     return null;
-  }
+  },
 );
 
 export const EtablissementLineContent = ({

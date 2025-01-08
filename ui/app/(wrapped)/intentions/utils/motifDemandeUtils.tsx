@@ -146,6 +146,7 @@ export const getMotifsTriggerAutre = () => motifsTriggerAutre;
 export const hasMotifAutre = (values?: Array<string | undefined>) => {
   return values?.filter(
     (motif) =>
-      MOTIFS_LABELS[2023][motif! as MotifLabel] !== undefined || MOTIFS_LABELS[2024][motif! as MotifLabel] !== undefined
+      MOTIFS_LABELS[2023][motif! as MotifLabel] !== undefined ||
+      MOTIFS_LABELS[2024][motif! as MotifLabel] !== undefined,
   );
 };

@@ -126,7 +126,7 @@ export const CorrectionSection = ({
         if (name === "raison") {
           setRaison(values.raison as RaisonCorrectionType);
         }
-      }).unsubscribe
+      }).unsubscribe,
   );
   return (
     <Flex ref={correctionRef} scrollMarginTop={SCROLL_OFFSET} direction={"column"}>
@@ -142,7 +142,7 @@ export const CorrectionSection = ({
                   ...values,
                 },
               },
-            })
+            }),
           )}
         >
           <Flex direction="column" gap={6}>

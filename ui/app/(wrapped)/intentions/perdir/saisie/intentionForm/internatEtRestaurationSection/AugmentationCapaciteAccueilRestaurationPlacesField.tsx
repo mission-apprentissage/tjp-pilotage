@@ -96,7 +96,7 @@ export const AugmentationCapaciteAccueilRestaurationPlacesField = chakra(
         )}
       </FormControl>
     );
-  }
+  },
 );
 
 export const CommentaireField = chakra(({ disabled, className }: { disabled?: boolean; className?: string }) => {

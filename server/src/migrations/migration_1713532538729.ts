@@ -19,18 +19,18 @@ export const up = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestIntention")
+            .as("latestIntention"),
         )
         // @ts-ignore
         .leftJoin("intention", (join) =>
           join
             .onRef("latestIntention.numero", "=", "intention.numero")
-            .onRef("latestIntention.lastUpdatedAt", "=", "intention.updatedAt")
+            .onRef("latestIntention.lastUpdatedAt", "=", "intention.updatedAt"),
         )
         // @ts-ignore
         .selectAll("intention")
         // @ts-ignore
-        .where("intention.statut", "!=", "deleted")
+        .where("intention.statut", "!=", "deleted"),
     )
     .materialized()
     .execute();
@@ -50,18 +50,18 @@ export const up = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestIntention")
+            .as("latestIntention"),
         )
         // @ts-ignore
         .leftJoin("intention", (join) =>
           join
             .onRef("latestIntention.numero", "=", "intention.numero")
-            .onRef("latestIntention.lastUpdatedAt", "=", "intention.updatedAt")
+            .onRef("latestIntention.lastUpdatedAt", "=", "intention.updatedAt"),
         )
         // @ts-ignore
         .selectAll("intention")
         // @ts-ignore
-        .where("intention.statut", "!=", "deleted")
+        .where("intention.statut", "!=", "deleted"),
     )
     .execute();
 
@@ -113,18 +113,18 @@ export const down = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestIntention")
+            .as("latestIntention"),
         )
         // @ts-ignore
         .leftJoin("intention", (join) =>
           join
             .onRef("latestIntention.numero", "=", "intention.numero")
-            .onRef("latestIntention.lastUpdatedAt", "=", "intention.updatedAt")
+            .onRef("latestIntention.lastUpdatedAt", "=", "intention.updatedAt"),
         )
         // @ts-ignore
         .selectAll("intention")
         // @ts-ignore
-        .where("intention.statut", "!=", "deleted")
+        .where("intention.statut", "!=", "deleted"),
     )
     .execute();
 };

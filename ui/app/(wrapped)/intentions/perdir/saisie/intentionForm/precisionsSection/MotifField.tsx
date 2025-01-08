@@ -46,7 +46,7 @@ export const MotifField = chakra(
         watch((_, { name }) => {
           if (name !== "typeDemande") return;
           setValue("motif", []);
-        }).unsubscribe
+        }).unsubscribe,
     );
 
     const [typeDemande, coloration] = watch(["typeDemande", "coloration"]);
@@ -112,5 +112,5 @@ export const MotifField = chakra(
         {errors.motif && <FormErrorMessage>{errors.motif?.message}</FormErrorMessage>}
       </FormControl>
     );
-  }
+  },
 );

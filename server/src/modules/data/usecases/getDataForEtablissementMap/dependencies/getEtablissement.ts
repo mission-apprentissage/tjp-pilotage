@@ -24,7 +24,7 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
       "etablissement.longitude",
       "etablissement.latitude",
       sql<string>`trim(split_part(split_part(split_part(split_part(${sb.ref(
-        "etablissement.libelleEtablissement"
+        "etablissement.libelleEtablissement",
       )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as("libelleEtablissement"),
     ])
     .$call((q) => {

@@ -9,7 +9,7 @@ export const searchDomaineProfessionnelSchema = {
       z.object({
         value: z.string(),
         label: z.string(),
-      })
+      }),
     ),
   },
 };

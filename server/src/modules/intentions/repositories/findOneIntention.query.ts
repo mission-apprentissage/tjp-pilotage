@@ -7,6 +7,6 @@ export const findOneIntention = async (numero: string) => {
       .selectFrom("latestDemandeIntentionView as intention")
       .selectAll()
       .where("numero", "=", numero)
-      .executeTakeFirst()
+      .executeTakeFirst(),
   );
 };

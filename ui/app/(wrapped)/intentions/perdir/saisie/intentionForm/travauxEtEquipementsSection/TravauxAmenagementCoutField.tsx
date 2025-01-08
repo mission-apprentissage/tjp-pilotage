@@ -28,7 +28,7 @@ export const TravauxAmenagementCoutField = chakra(
         watch((_, { name }) => {
           if (name !== "travauxAmenagement") return;
           setValue("travauxAmenagementCout", undefined);
-        }).unsubscribe
+        }).unsubscribe,
     );
 
     const travauxAmenagement = watch("travauxAmenagement");
@@ -55,5 +55,5 @@ export const TravauxAmenagementCoutField = chakra(
         {errors.travauxAmenagementCout && <FormErrorMessage>{errors.travauxAmenagementCout.message}</FormErrorMessage>}
       </FormControl>
     );
-  }
+  },
 );

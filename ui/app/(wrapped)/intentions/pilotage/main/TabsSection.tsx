@@ -22,7 +22,7 @@ export const TabsSection = ({
   const isQuadrantSelected = displayType === DisplayTypeEnum.quadrant;
 
   const setDisplayType = (
-    displayType: Extract<DisplayTypeEnum, DisplayTypeEnum.quadrant | DisplayTypeEnum.repartition>
+    displayType: Extract<DisplayTypeEnum, DisplayTypeEnum.quadrant | DisplayTypeEnum.repartition>,
   ) => {
     trackEvent("pilotage-transformation:quadrant-repartition-tabs", {
       props: { type: displayType },

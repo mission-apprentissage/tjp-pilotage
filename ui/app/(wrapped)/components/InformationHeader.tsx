@@ -17,7 +17,7 @@ export const InformationHeader = () => {
       (changelogEntry) =>
         changelogEntry.types.findIndex((t) => t.label === "BANDEAU") !== -1 &&
         changelogEntry.show &&
-        !closedEntries.includes(changelogEntry.id)
+        !closedEntries.includes(changelogEntry.id),
     ) ?? [];
 
   useEffect(() => {

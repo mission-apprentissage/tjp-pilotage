@@ -36,5 +36,5 @@ export const GlossaireShortcut = chakra(
         {label && <Text marginLeft={2}>{label}</Text>}
       </Flex>
     );
-  }
+  },
 );

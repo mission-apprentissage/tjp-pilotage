@@ -17,17 +17,17 @@ export const getScopeFilterForUser = (permission: Permission, user: RequestUser)
     };
 
     switch (scope) {
-    case "region":
-      if (user.codeRegion) {
-        scopeWithFilter.scopeFilter = [user.codeRegion];
-      }
-      break;
-    case "national":
-    case "uai":
-    case "role":
-    default:
-      scopeWithFilter.scopeFilter = [];
-      break;
+      case "region":
+        if (user.codeRegion) {
+          scopeWithFilter.scopeFilter = [user.codeRegion];
+        }
+        break;
+      case "national":
+      case "uai":
+      case "role":
+      default:
+        scopeWithFilter.scopeFilter = [];
+        break;
     }
 
     return scopeWithFilter;

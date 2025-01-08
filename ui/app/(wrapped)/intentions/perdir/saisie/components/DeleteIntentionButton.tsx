@@ -112,5 +112,5 @@ export const DeleteIntentionButton = chakra(
         </Modal>
       </>
     );
-  }
+  },
 );

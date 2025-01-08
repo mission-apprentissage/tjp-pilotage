@@ -17,7 +17,7 @@ export const findTauxIJRegionaux = async ({
         wb("millesimeSortie", "=", millesimeSortie),
         wb("codeRegion", "=", codeRegion),
         wb("codeNiveauDiplome", "=", codeNiveauDiplome),
-      ])
+      ]),
     )
     .executeTakeFirst();
 };

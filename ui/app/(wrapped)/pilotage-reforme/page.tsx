@@ -69,7 +69,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
     {
       keepPreviousData: true,
       staleTime: 10000000,
-    }
+    },
   );
 
   const { data: dataRegions, isLoading: isLoadingRegions } = client
@@ -84,7 +84,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
       {
         keepPreviousData: true,
         staleTime: 10000000,
-      }
+      },
     );
 
   const isFiltered = filters.codeRegion;

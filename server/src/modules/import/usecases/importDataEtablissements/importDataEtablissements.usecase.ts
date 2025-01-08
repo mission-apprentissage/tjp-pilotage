@@ -49,10 +49,10 @@ export const [importDataEtablissements] = inject(
 
         process.stdout.write(`\r${count} dataEtablissement ajoutés ou mis à jour`);
       },
-      { parallel: 20 }
+      { parallel: 20 },
     );
     process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
-  }
+  },
 );
 // @ts-expect-error TODO
 const formatCodeDepartement = (codeInsee: string | undefined) => {

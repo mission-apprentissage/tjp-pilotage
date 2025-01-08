@@ -47,5 +47,5 @@ export const [activateUser, activateUserFactory] = inject(
 
       const hashedPassword = hashPassword(password);
       await deps.updateUserQuery({ email, password: hashedPassword });
-    }
+    },
 );

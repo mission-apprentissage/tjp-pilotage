@@ -19,6 +19,6 @@ export const getFormationRoute = (server: Server) => {
         const result = await getFormationUsecase(cfd, request.query);
         response.status(200).send(result);
       },
-    })
+    }),
   );
 };

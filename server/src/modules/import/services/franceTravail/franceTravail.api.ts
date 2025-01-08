@@ -15,7 +15,7 @@ const instance = rateLimit(
   }),
   {
     maxRPS: 10,
-  }
+  },
 );
 
 const retryCondition = async (error: AxiosError) => {
@@ -75,7 +75,7 @@ export const login = async () => {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-    }
+    },
   );
 
   console.log({ status: response.status, data: response.data });
@@ -100,7 +100,7 @@ export const getStatsPerspectivesRecrutement = async (codeRome: string) => {
       headers: {
         Accept: "application/json",
       },
-    }
+    },
   );
 
   return response.data?.listeValeursParPeriode;
@@ -121,7 +121,7 @@ export const getStatsPerspectivesRecrutementRegion = async (codeRome: string, co
       headers: {
         Accept: "application/json",
       },
-    }
+    },
   );
 
   return response.data?.listeValeursParPeriode;
@@ -137,7 +137,7 @@ export const getStatsPerspectivesRecrutementDepartement = async (codeRome: strin
       codeActivite: codeRome,
       codeTypePeriode: "ANNEE",
       codeTypeNomenclature: "TYPE_TENSION",
-    }
+    },
   );
 
   return response.data?.listeValeursParPeriode;

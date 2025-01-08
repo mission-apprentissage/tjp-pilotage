@@ -43,10 +43,10 @@ export const genericOnConstatRentree = ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
-            eb.val(getMillesimeFromCampagne(campagne ?? getCampagneFromRentreeScolaire(rentree)))
+            eb.val(getMillesimeFromCampagne(campagne ?? getCampagneFromRentreeScolaire(rentree))),
           ),
-        ])
-      )
+        ]),
+      ),
     )
     .where(isInDenominateurTauxTransfo)
     .where(isInPerimetreIJDataEtablissement)

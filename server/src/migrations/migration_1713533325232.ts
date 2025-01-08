@@ -152,8 +152,8 @@ export const up = async (db: Kysely<unknown>) => {
               sql<boolean>`null`.as("augmentationCapaciteAccueilRestauration"),
               sql<number>`null`.as("augmentationCapaciteAccueilRestaurationPlaces"),
               sql<string>`null`.as("augmentationCapaciteAccueilRestaurationPrecisions"),
-            ])
-        )
+            ]),
+        ),
     )
     .materialized()
     .execute();
@@ -201,18 +201,18 @@ export const up = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demandeIntention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandeIntention")
+            .as("latestDemandeIntention"),
         )
         // @ts-ignore
         .leftJoin("demandeIntentionView as demandeIntention", (join) =>
           join
             .onRef("latestDemandeIntention.numero", "=", "demandeIntention.numero")
-            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt")
+            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt"),
         )
         // @ts-ignore
         .selectAll("demandeIntention")
         // @ts-ignore
-        .where("demandeIntention.statut", "!=", "deleted")
+        .where("demandeIntention.statut", "!=", "deleted"),
     )
     .materialized()
     .execute();
@@ -232,18 +232,18 @@ export const up = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demandeIntention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandeIntention")
+            .as("latestDemandeIntention"),
         )
         // @ts-ignore
         .leftJoin("demandeIntentionView as demandeIntention", (join) =>
           join
             .onRef("latestDemandeIntention.numero", "=", "demandeIntention.numero")
-            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt")
+            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt"),
         )
         // @ts-ignore
         .selectAll("demandeIntention")
         // @ts-ignore
-        .where("demandeIntention.statut", "!=", "deleted")
+        .where("demandeIntention.statut", "!=", "deleted"),
     )
     .execute();
 
@@ -278,11 +278,11 @@ export const up = async (db: Kysely<unknown>) => {
 
 export const down = async (db: Kysely<unknown>) => {
   await sql`DROP TRIGGER update_demande_refresh_latest_demande_intention_materialized_view_t ON ${sql.table(
-    "demande"
+    "demande",
   )}`.execute(db);
 
   await sql`DROP TRIGGER update_intention_refresh_latest_demande_intention_materialized_view_t ON ${sql.table(
-    "intention"
+    "intention",
   )}`.execute(db);
 
   await sql`DROP FUNCTION refresh_latest_demande_intention_view()`.execute(db);
@@ -293,11 +293,11 @@ export const down = async (db: Kysely<unknown>) => {
   await db.schema.dropView("latestDemandeIntentionNonMaterializedView").ifExists().execute();
 
   await sql`DROP TRIGGER update_demande_refresh_demande_intention_materialized_view_t ON ${sql.table(
-    "demande"
+    "demande",
   )}`.execute(db);
 
   await sql`DROP TRIGGER update_intention_refresh_demande_intention_materialized_view_t ON ${sql.table(
-    "intention"
+    "intention",
   )}`.execute(db);
 
   await sql`DROP FUNCTION refresh_demande_intention_view()`.execute(db);

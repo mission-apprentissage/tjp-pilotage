@@ -78,7 +78,7 @@ export const QuadrantSection = ({
 
   const offresDimensions: Array<"tauxPoursuite" | "tauxInsertion"> | undefined = useMemo(
     () => getOffreDimensions(),
-    [offre]
+    [offre],
   );
 
   return (
@@ -141,26 +141,26 @@ export const QuadrantSection = ({
           filteredFormations.length &&
           statsSortie?.tauxPoursuite &&
           statsSortie?.tauxInsertion ? (
-              <Quadrant
-                meanPoursuite={statsSortie.tauxPoursuite}
-                meanInsertion={statsSortie.tauxInsertion}
-                data={filteredFormations.map((formation) => ({
-                  ...formation,
-                  codeDispositif: formation.codeDispositif ?? "",
-                }))}
-                currentFormationId={`${currentFormation?.cfd}_${currentFormation?.codeDispositif}`}
-                TooltipContent={FormationTooltipContent}
-                onClick={(formation: (typeof filteredFormations)[number]) => {
-                  if (offre !== formation.offre) setOffre(formation.offre);
-                }}
-                effectifSizes={effectifSizes}
-                dimensions={offresDimensions}
-              />
-            ) : (
-              <Flex>
-                <Text>Aucune donnée à afficher pour les filtres sélectionnés</Text>
-              </Flex>
-            )}
+            <Quadrant
+              meanPoursuite={statsSortie.tauxPoursuite}
+              meanInsertion={statsSortie.tauxInsertion}
+              data={filteredFormations.map((formation) => ({
+                ...formation,
+                codeDispositif: formation.codeDispositif ?? "",
+              }))}
+              currentFormationId={`${currentFormation?.cfd}_${currentFormation?.codeDispositif}`}
+              TooltipContent={FormationTooltipContent}
+              onClick={(formation: (typeof filteredFormations)[number]) => {
+                if (offre !== formation.offre) setOffre(formation.offre);
+              }}
+              effectifSizes={effectifSizes}
+              dimensions={offresDimensions}
+            />
+          ) : (
+            <Flex>
+              <Text>Aucune donnée à afficher pour les filtres sélectionnés</Text>
+            </Flex>
+          )}
         </AspectRatio>
       </Flex>
       <DonneesIndisponiblesSection

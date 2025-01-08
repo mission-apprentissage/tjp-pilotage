@@ -7,16 +7,16 @@ let i = 0;
 
 const formatScopeLabel = (scope: Scope) => {
   switch (scope) {
-  case "national":
-    return "National";
-  case "region":
-    return "Régional";
-  case "uai":
-    return "Établissement";
-  case "user":
-    return "Utilisateur";
-  case "role":
-    return "Limité";
+    case "national":
+      return "National";
+    case "region":
+      return "Régional";
+    case "uai":
+      return "Établissement";
+    case "user":
+      return "Utilisateur";
+    case "role":
+      return "Limité";
   }
 };
 
@@ -24,16 +24,16 @@ const PermissionBadge = ({ rights, scope }: { rights: string[]; scope: Scope }) 
   const icons = [];
   const getVariant = () => {
     switch (scope) {
-    case "national":
-      return "lavander";
-    case "region":
-      return "info";
-    case "uai":
-      return "draft";
-    case "user":
-      return "success";
-    case "role":
-      return "new";
+      case "national":
+        return "lavander";
+      case "region":
+        return "info";
+      case "uai":
+        return "draft";
+      case "user":
+        return "success";
+      case "role":
+        return "new";
     }
   };
 
@@ -53,7 +53,7 @@ const PermissionBadge = ({ rights, scope }: { rights: string[]; scope: Scope }) 
     icons.push(
       <Box pr="4px" key={`${i}-permission-badge-icon`}>
         <Icon icon="ri:eye-fill" />
-      </Box>
+      </Box>,
     );
   }
 
@@ -62,7 +62,7 @@ const PermissionBadge = ({ rights, scope }: { rights: string[]; scope: Scope }) 
     icons.push(
       <Box pr="4px" key={`${i}-permission-badge-icon`}>
         <Icon icon="ri:pencil-fill" />
-      </Box>
+      </Box>,
     );
   }
 

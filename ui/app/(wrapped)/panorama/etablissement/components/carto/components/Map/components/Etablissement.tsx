@@ -89,7 +89,7 @@ export const Etablissement = () => {
   const onSinglePointOver = async (
     e: MapMouseEvent & {
       features?: MapGeoJSONFeature[];
-    }
+    },
   ) => {
     if (map !== undefined) {
       const features = map.queryRenderedFeatures(e.point, {

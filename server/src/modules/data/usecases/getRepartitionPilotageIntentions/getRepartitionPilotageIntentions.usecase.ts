@@ -57,7 +57,7 @@ const groupByResult = ({ numerateur, denominateur, groupBy }: Repartition) => {
   // Récupérer tous les codes possibles (y compris ceux qui n'ont pas d'effectif ou de demande)
   const allKeys = union(
     keys(chain(numerateur).groupBy(groupBy.code).value()),
-    keys(chain(denominateur).groupBy(groupBy.code).value())
+    keys(chain(denominateur).groupBy(groupBy.code).value()),
   );
 
   return chain(allKeys)
@@ -187,49 +187,49 @@ const getRepartitionPilotageIntentionsFactory =
       getNiveauxDiplome,
       getZonesGeographiques,
       getPositionsQuadrant,
-    }
+    },
   ) =>
-    async (activeFilters: Filters) => {
-      const campagne = await deps.getCurrentCampagneQuery();
-      const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
-      const [domaines, niveauxDiplome, zonesGeographiques, positionsQuadrant] = await Promise.all([
-        deps.getDomaines({
-          filters: {
-            ...activeFilters,
-            codeNsf: undefined,
-            campagne: anneeCampagne,
-          },
-        }),
-        deps.getNiveauxDiplome({
-          filters: {
-            ...activeFilters,
-            codeNiveauDiplome: undefined,
-            campagne: anneeCampagne,
-          },
-        }),
-        deps.getZonesGeographiques({
-          filters: {
-            ...activeFilters,
-            campagne: anneeCampagne,
-          },
-        }),
-        deps.getPositionsQuadrant({
-          filters: {
-            ...activeFilters,
-            campagne: anneeCampagne,
-          },
-        }),
-      ]);
+  async (activeFilters: Filters) => {
+    const campagne = await deps.getCurrentCampagneQuery();
+    const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
+    const [domaines, niveauxDiplome, zonesGeographiques, positionsQuadrant] = await Promise.all([
+      deps.getDomaines({
+        filters: {
+          ...activeFilters,
+          codeNsf: undefined,
+          campagne: anneeCampagne,
+        },
+      }),
+      deps.getNiveauxDiplome({
+        filters: {
+          ...activeFilters,
+          codeNiveauDiplome: undefined,
+          campagne: anneeCampagne,
+        },
+      }),
+      deps.getZonesGeographiques({
+        filters: {
+          ...activeFilters,
+          campagne: anneeCampagne,
+        },
+      }),
+      deps.getPositionsQuadrant({
+        filters: {
+          ...activeFilters,
+          campagne: anneeCampagne,
+        },
+      }),
+    ]);
 
-      return {
+    return {
       // Répartitions non ordonnées
-        top10Domaines: formatResult(domaines, "desc", "placesTransformees"),
-        niveauxDiplome: formatResult(niveauxDiplome, "desc", "placesTransformees"),
-        // Répartitions ordonnées
-        domaines: formatResult(domaines, activeFilters.order, activeFilters.orderBy),
-        zonesGeographiques: formatResult(zonesGeographiques, activeFilters.order, activeFilters.orderBy),
-        positionsQuadrant: formatResult(positionsQuadrant, activeFilters.order, activeFilters.orderBy),
-      };
+      top10Domaines: formatResult(domaines, "desc", "placesTransformees"),
+      niveauxDiplome: formatResult(niveauxDiplome, "desc", "placesTransformees"),
+      // Répartitions ordonnées
+      domaines: formatResult(domaines, activeFilters.order, activeFilters.orderBy),
+      zonesGeographiques: formatResult(zonesGeographiques, activeFilters.order, activeFilters.orderBy),
+      positionsQuadrant: formatResult(positionsQuadrant, activeFilters.order, activeFilters.orderBy),
     };
+  };
 
 export const getRepartitionPilotageIntentionsUsecase = getRepartitionPilotageIntentionsFactory();

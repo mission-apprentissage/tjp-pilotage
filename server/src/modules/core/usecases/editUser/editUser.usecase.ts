@@ -17,5 +17,5 @@ export const [editUser, editUserFactory] = inject(
       if (!canEditUserInScope({ requestUser, body: data }))
         throw Boom.unauthorized("cannot edit user within this scope");
       return await deps.updateUser({ userId, data });
-    }
+    },
 );

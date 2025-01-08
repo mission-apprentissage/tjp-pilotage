@@ -16,7 +16,7 @@ const GetGlossaireFixture = () => {
     givenGetPageImplementation: (
       getPageFcn: typeof getPageAsMarkdown,
       getPagePpts: typeof getPageProperties,
-      mapNotionPageToGlEnt: typeof dependencies.mapNotionPageToGlossaireEntry
+      mapNotionPageToGlEnt: typeof dependencies.mapNotionPageToGlossaireEntry,
     ) => {
       usecase = getGlossaireEntryFactory({
         getPageAsMarkdown: getPageFcn,
@@ -48,17 +48,17 @@ describe("Feature: Getting a Glossaire Entry", () => {
     currentFixture.givenGetPageImplementation(
       () => {
         throw Boom.badImplementation(
-          "Erreur lors de la récupération des informations de la page Notion avec l'id : " + currentPageId
+          "Erreur lors de la récupération des informations de la page Notion avec l'id : " + currentPageId,
         );
       },
       vi.fn(),
-      vi.fn()
+      vi.fn(),
     );
 
     await currentFixture.whenGetGlossaireEntry(currentPageId);
 
     currentFixture.thenExpectedErrorMessageIs(
-      `Erreur lors de la récupération des informations de la page Notion avec l'id : ${currentPageId}`
+      `Erreur lors de la récupération des informations de la page Notion avec l'id : ${currentPageId}`,
     );
   });
 
@@ -82,7 +82,7 @@ describe("Feature: Getting a Glossaire Entry", () => {
           },
           status: "validé",
         };
-      }
+      },
     );
 
     await currentFixure.whenGetGlossaireEntry(currentPageId);

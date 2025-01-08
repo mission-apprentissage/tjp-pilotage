@@ -54,7 +54,7 @@ export const LoginForm = () => {
   useEffect(() => {
     if (auth)
       router.replace(
-        auth.user.role === "perdir" && auth.user.uais?.[0] ? `/panorama/etablissement/${auth.user.uais?.[0]}` : "/"
+        auth.user.role === "perdir" && auth.user.uais?.[0] ? `/panorama/etablissement/${auth.user.uais?.[0]}` : "/",
       );
   }, [auth]);
 

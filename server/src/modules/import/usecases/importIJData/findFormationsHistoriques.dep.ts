@@ -30,5 +30,5 @@ export const [findFormationsHistoriques] = inject(
       if (!formationData) return;
 
       return toAncienCfds({ formationData });
-    }
+    },
 );

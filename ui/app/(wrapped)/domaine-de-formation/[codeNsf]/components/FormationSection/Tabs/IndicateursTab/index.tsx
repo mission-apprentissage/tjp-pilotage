@@ -37,7 +37,7 @@ const useIndicateursTab = ({
       keepPreviousData: true,
       staleTime: 10000000,
       enabled: !!cfd,
-    }
+    },
   );
 
   const { data: dataIndicateurs, isLoading: isLoadingIndicateurs } = client
@@ -51,7 +51,7 @@ const useIndicateursTab = ({
         keepPreviousData: true,
         staleTime: 10000000,
         enabled: !!cfd,
-      }
+      },
     );
 
   const handleChangeTauxIJ = (e: ChangeEvent<HTMLSelectElement>) => {

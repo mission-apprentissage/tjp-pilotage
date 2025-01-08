@@ -54,7 +54,7 @@ export const getCorrectionsQuery = async ({
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
-      })
+      }),
     )
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
@@ -71,7 +71,7 @@ export const getCorrectionsQuery = async ({
         .onRef("indicateurRegionSortie.codeRegion", "=", "demande.codeRegion")
         .onRef("indicateurRegionSortie.codeDispositif", "=", "demande.codeDispositif")
         .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
-        .on(isScolaireIndicateurRegionSortie)
+        .on(isScolaireIndicateurRegionSortie),
     )
     .leftJoin("user", "user.id", "demande.createdBy")
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
@@ -81,14 +81,14 @@ export const getCorrectionsQuery = async ({
           eb(eb.ref("positionFormationRegionaleQuadrant.codeDispositif"), "=", eb.ref("demande.codeDispositif")),
           eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
           eb("positionFormationRegionaleQuadrant.millesimeSortie", "=", getMillesimeFromCampagne(campagne)),
-        ])
-      )
+        ]),
+      ),
     )
     .leftJoin("actionPrioritaire", (join) =>
       join
         .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
         .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
-        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
+        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion"),
     )
     .select((eb) => [
       eb.fn.count<number>("correction.id").over().as("count"),
@@ -133,7 +133,7 @@ export const getCorrectionsQuery = async ({
             ${eb.ref("correction.capaciteScolaire")} -
             ${eb.ref("demande.capaciteScolaire")}
           `,
-          eb.val(0)
+          eb.val(0),
         )
         .as("ecartScolaire"),
 
@@ -143,7 +143,7 @@ export const getCorrectionsQuery = async ({
             ${eb.ref("correction.capaciteApprentissage")} -
             ${eb.ref("demande.capaciteApprentissage")}
           `,
-          eb.val(0)
+          eb.val(0),
         )
         .as("ecartApprentissage"),
       "correction.capaciteScolaire as capaciteScolaireCorrigee",
@@ -193,10 +193,10 @@ export const getCorrectionsQuery = async ({
                   unaccent(${eb.ref("departement.libelleDepartement")})
                 )`,
                 "ilike",
-                `%${search_word}%`
-              )
-            )
-          )
+                `%${search_word}%`,
+              ),
+            ),
+          ),
         );
       return eb;
     })
@@ -259,8 +259,8 @@ export const getCorrectionsQuery = async ({
         return eb.where(
           ({ eb: ebw }) =>
             sql<boolean>`abs(${ebw.ref(
-              "demande.capaciteApprentissage"
-            )} - ${ebw.ref("demande.capaciteApprentissageActuelle")}) > 1`
+              "demande.capaciteApprentissage",
+            )} - ${ebw.ref("demande.capaciteApprentissageActuelle")}) > 1`,
         );
       }
 
@@ -268,8 +268,8 @@ export const getCorrectionsQuery = async ({
         return eb.where(
           ({ eb: ebw }) =>
             sql<boolean>`abs(${ebw.ref("demande.capaciteScolaire")} - ${ebw.ref(
-              "demande.capaciteScolaireActuelle"
-            )}) > 1`
+              "demande.capaciteScolaireActuelle",
+            )}) > 1`,
         );
       }
 
@@ -296,7 +296,7 @@ export const getCorrectionsQuery = async ({
             formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
               ? w("formationView.isTransitionNumerique", "=", true)
               : sql.val(false),
-          ])
+          ]),
         );
       }
       return q;

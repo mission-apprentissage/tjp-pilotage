@@ -16,5 +16,5 @@ export const QuestionBlock = chakra(
         </Flex>
       </Box>
     );
-  }
+  },
 );

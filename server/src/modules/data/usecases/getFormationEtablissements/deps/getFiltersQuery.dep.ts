@@ -35,7 +35,7 @@ export const getFiltersQuery = async ({
     .innerJoin("indicateurEntree", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire),
     )
     .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")

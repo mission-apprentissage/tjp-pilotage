@@ -23,7 +23,7 @@ const formatDifferenceCapacite = (difference?: number) => {
 const formatMotifArray = (values?: Array<string | undefined>): string => {
   if (!values) return "Aucun";
   return formatArray(
-    values.filter((motif) => !hasMotifAutre([motif])).map((motif) => getMotifLabel({ motif: motif as MotifLabel }))
+    values.filter((motif) => !hasMotifAutre([motif])).map((motif) => getMotifLabel({ motif: motif as MotifLabel })),
   );
 };
 
@@ -354,7 +354,7 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
                 <Text>
                   {formatArray(
                     [intention.discipline1ProfesseurAssocieRH, intention.discipline2ProfesseurAssocieRH],
-                    true
+                    true,
                   )}
                 </Text>
               </Flex>

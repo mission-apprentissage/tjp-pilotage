@@ -8,7 +8,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("cfd", "varchar(8)", (c) => c.references("dataFormation.cfd").onDelete("cascade").notNull())
     .addColumn("codeRegion", "varchar(2)", (c) => c.references("region.codeRegion").onDelete("cascade").notNull())
     .addColumn("codeDispositif", "varchar(3)", (c) =>
-      c.references("dispositif.codeDispositif").onDelete("cascade").notNull()
+      c.references("dispositif.codeDispositif").onDelete("cascade").notNull(),
     )
     .execute();
 

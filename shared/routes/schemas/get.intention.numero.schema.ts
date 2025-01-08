@@ -26,7 +26,7 @@ const FormationMetadataSchema = z
         z.object({
           codeDispositif: z.string().optional(),
           libelleDispositif: z.string().optional(),
-        })
+        }),
       )
       .optional(),
   })
@@ -141,7 +141,7 @@ const IntentionSchema = z.object({
       updatedAt: z.string(),
       userFullName: z.string(),
       commentaire: z.string().optional(),
-    })
+    }),
   ),
   avis: z.array(
     z.object({
@@ -159,7 +159,7 @@ const IntentionSchema = z.object({
       statutAvis: AvisStatutZodType,
       commentaire: z.string().optional(),
       userFonction: z.string().optional(),
-    })
+    }),
   ),
   suiviId: z.string().optional(),
 });
@@ -171,7 +171,7 @@ export const getIntentionSchema = {
       z.object({
         metadata: MetadataSchema,
         canEdit: z.boolean(),
-      })
+      }),
     ),
   },
 };

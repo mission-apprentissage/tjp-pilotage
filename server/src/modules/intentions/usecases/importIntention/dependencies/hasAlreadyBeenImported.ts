@@ -10,7 +10,7 @@ export const hasAlreadyBeenImported = async ({ numero }: { numero: string }) =>
         .where(isIntentionCampagneEnCours)
         .where("numeroHistorique", "=", numero)
         .selectAll()
-        .as("latestIntentions")
+        .as("latestIntentions"),
     )
     .selectAll()
     .where("latestIntentions.statut", "<>", DemandeStatutEnum["supprimée"])

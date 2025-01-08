@@ -19,7 +19,7 @@ describe("login usecase", () => {
       login({
         password: hashedPassword,
         email: "test@test.fr",
-      })
+      }),
     ).rejects.toThrow("wrong credentials");
   });
 
@@ -36,7 +36,7 @@ describe("login usecase", () => {
       login({
         password: hashedPassword,
         email: "test@test.fr",
-      })
+      }),
     ).rejects.toThrow("wrong credentials");
   });
 
@@ -53,7 +53,7 @@ describe("login usecase", () => {
       login({
         password: "other",
         email: "test@test.fr",
-      })
+      }),
     ).rejects.toThrow();
   });
 

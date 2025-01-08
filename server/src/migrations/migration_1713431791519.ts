@@ -11,7 +11,7 @@ export const up = async (db: Kysely<unknown>) => {
     sql`
       ALTER TYPE "demandeStatus" RENAME TO "demandeStatut";
       ALTER TABLE "demande" ALTER COLUMN "statut" TYPE "demandeStatut" USING "statut"::text::"demandeStatut";
-    `.compile(db)
+    `.compile(db),
   );
 
   // await db.schema
@@ -158,18 +158,18 @@ export const up = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestIntention")
+            .as("latestIntention"),
         )
         // @ts-ignore
         .leftJoin("intention", (join) =>
           join
             .onRef("latestIntention.numero", "=", "intention.numero")
-            .onRef("latestIntention.lastUpdatedAt", "=", "intention.updatedAt")
+            .onRef("latestIntention.lastUpdatedAt", "=", "intention.updatedAt"),
         )
         // @ts-ignore
         .selectAll("intention")
         // @ts-ignore
-        .where("intention.statut", "!=", "deleted")
+        .where("intention.statut", "!=", "deleted"),
     )
     .execute();
 };
@@ -188,7 +188,7 @@ export const down = async (db: Kysely<unknown>) => {
     sql`
       ALTER TABLE "demande" ALTER COLUMN "statut" TYPE "varchar" USING "statut"::text;
       ALTER TYPE "demandeStatut" RENAME TO "demandeStatus";
-    `.compile(db)
+    `.compile(db),
   );
 
   await db.schema
@@ -206,18 +206,18 @@ export const down = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandes")
+            .as("latestDemandes"),
         )
         // @ts-ignore
         .leftJoin("demande", (join) =>
           join
             .onRef("latestDemandes.numero", "=", "demande.numero")
-            .onRef("latestDemandes.lastUpdatedAt", "=", "demande.updatedAt")
+            .onRef("latestDemandes.lastUpdatedAt", "=", "demande.updatedAt"),
         )
         // @ts-ignore
         .selectAll("demande")
         // @ts-ignore
-        .where("demande.statut", "!=", "deleted")
+        .where("demande.statut", "!=", "deleted"),
     )
     .materialized()
     .execute();

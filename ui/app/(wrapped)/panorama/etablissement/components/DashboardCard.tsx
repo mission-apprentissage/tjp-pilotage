@@ -34,5 +34,5 @@ export const DashboardCard = forwardRef<DashboardCardProps, "div">(
       </Box>
       <Flex>{children}</Flex>
     </Flex>
-  )
+  ),
 );

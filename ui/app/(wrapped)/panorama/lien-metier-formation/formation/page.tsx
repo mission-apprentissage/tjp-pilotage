@@ -60,7 +60,7 @@ const DashboardFormation = () => {
         code_domaine_formation: nsf ? encodeURI(nsf.value) : undefined,
         formation: undefined,
         code_formation: undefined,
-      })
+      }),
     );
   };
 
@@ -73,7 +73,7 @@ const DashboardFormation = () => {
           code_domaine_formation: selectedNsf ? encodeURI(selectedNsf.value) : undefined,
           formation: encodeURI(formation.label),
           code_formation: encodeURI(formation.value),
-        })
+        }),
       );
 
       return;
@@ -86,7 +86,7 @@ const DashboardFormation = () => {
           code_domaine_formation: encodeURI(selectedNsf.value),
           formation: undefined,
           code_formation: undefined,
-        })
+        }),
       );
       return;
     }
@@ -97,7 +97,7 @@ const DashboardFormation = () => {
         code_domaine_formation: undefined,
         formation: undefined,
         code_formation: undefined,
-      })
+      }),
     );
   };
 

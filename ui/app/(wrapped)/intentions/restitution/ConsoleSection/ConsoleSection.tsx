@@ -126,7 +126,7 @@ export const ConsoleSection = ({
                       cursor={"pointer"}
                       onClick={() =>
                         router.push(
-                          `/intentions/${showFormulairePerdir(demande) ? "perdir/" : ""}synthese/${demande.numero}`
+                          `/intentions/${showFormulairePerdir(demande) ? "perdir/" : ""}synthese/${demande.numero}`,
                         )
                       }
                       role="group"

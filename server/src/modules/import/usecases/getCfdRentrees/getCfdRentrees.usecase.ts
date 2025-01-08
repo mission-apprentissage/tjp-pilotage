@@ -54,7 +54,7 @@ export const [getCfdRentrees] = inject(
             year,
           }),
           ...anneeDispositif,
-        }))
+        })),
       );
 
       const enseignements = await chain(anneesDispositifAvecConstats)
@@ -83,7 +83,7 @@ export const [getCfdRentrees] = inject(
               mefstat: string;
               effectif?: number;
               constatee: boolean;
-            }[]
+            }[],
           ),
         }))
         .value();
@@ -91,5 +91,5 @@ export const [getCfdRentrees] = inject(
       return {
         enseignements,
       };
-    }
+    },
 );

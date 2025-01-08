@@ -90,7 +90,7 @@ export const EditCampagne = ({
               dateFin: toDate(form.dateFin).toISOString(),
             },
             params: { campagneId: campagne?.id },
-          })
+          }),
         )}
       >
         <ModalHeader>Éditer une campagne</ModalHeader>

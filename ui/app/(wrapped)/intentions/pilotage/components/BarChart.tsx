@@ -75,8 +75,8 @@ export const BarChart = ({
               <br />
               <div style="display: inline-block; margin-top: 5px;">
                 <span style="border-radius: 100%; width:15px; height:15px; background-color:${
-      params[2]?.color
-      }; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                  params[2]?.color
+                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Colorations :
                   <span style="font-weight: 700;">${params[2]?.data}</span>
@@ -85,8 +85,8 @@ export const BarChart = ({
               <br />
               <div style="display: inline-block; margin-top: 5px;">
                 <span style="border-radius: 100%; width:15px; height:15px; background-color:${
-      params[1]?.color
-      }; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                  params[1]?.color
+                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Pl. ouvertes :
                   <span style="font-weight: 700;">${params[1]?.data}</span>
@@ -95,8 +95,8 @@ export const BarChart = ({
               <br />
               <div style="display: inline-block; margin-top: 5px;">
                 <span style="border-radius: 100%; width:15px; height:15px; background-color:${
-      params[0]?.color
-      }; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                  params[0]?.color
+                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Pl. fermées :
                   <span style="font-weight: 700;"> ${params[0]?.data}</span>
@@ -107,8 +107,8 @@ export const BarChart = ({
                 <span>
                   Pl. transformées :
                   <span style="font-weight: 700;"> ${
-      positionsQuadrant?.[params[0]?.name as PositionQuadrantType].placesTransformees
-      }</span>
+                    positionsQuadrant?.[params[0]?.name as PositionQuadrantType].placesTransformees
+                  }</span>
                 </span>
               </div>
             </div>
@@ -207,7 +207,7 @@ export const BarChart = ({
       series: [
         {
           data: positionsQuadrantOptions.map(
-            (PositionQuadrantType) => positionsQuadrant?.[PositionQuadrantType]?.placesFermees ?? 0
+            (PositionQuadrantType) => positionsQuadrant?.[PositionQuadrantType]?.placesFermees ?? 0,
           ),
           stack: "placesTransformées",
           color: bf113,
@@ -216,7 +216,7 @@ export const BarChart = ({
         },
         {
           data: positionsQuadrantOptions.map(
-            (PositionQuadrantType) => positionsQuadrant?.[PositionQuadrantType]?.placesOuvertes
+            (PositionQuadrantType) => positionsQuadrant?.[PositionQuadrantType]?.placesOuvertes,
           ),
           stack: "placesTransformées",
           color: bf850_active,
@@ -225,7 +225,7 @@ export const BarChart = ({
         },
         {
           data: positionsQuadrantOptions.map(
-            (PositionQuadrantType) => positionsQuadrant?.[PositionQuadrantType]?.placesColorees
+            (PositionQuadrantType) => positionsQuadrant?.[PositionQuadrantType]?.placesColorees,
           ),
           stack: "placesTransformées",
           color: bf850,
@@ -235,7 +235,7 @@ export const BarChart = ({
         },
       ],
     }),
-    [positionsQuadrant]
+    [positionsQuadrant],
   );
 
   useLayoutEffect(() => {

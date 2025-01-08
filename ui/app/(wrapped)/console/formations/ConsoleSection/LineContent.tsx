@@ -42,7 +42,7 @@ const ConditionalTd = chakra(
         </Td>
       );
     return null;
-  }
+  },
 );
 
 export const FormationLineContent = ({

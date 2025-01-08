@@ -51,7 +51,7 @@ export const getRequetesEnregistreesSchema = {
         couleur: z.string(),
         userId: z.string(),
         filtres: z.union([FiltresFormationSchema, FiltresFormationEtablissementSchema]),
-      })
+      }),
     ),
   },
 };

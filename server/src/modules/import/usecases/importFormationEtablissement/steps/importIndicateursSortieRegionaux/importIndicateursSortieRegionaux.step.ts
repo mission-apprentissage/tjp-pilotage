@@ -59,7 +59,7 @@ export const [importIndicateursRegionSortie] = inject(
             nbInsertion24mois: mefstatData.nb_en_emploi_24_mois ?? null,
           });
         }
-    }
+    },
 );
 
 export const [importIndicateursRegionSortieApprentissage] = inject(
@@ -110,7 +110,7 @@ export const [importIndicateursRegionSortieApprentissage] = inject(
             nbInsertion24mois: cfdData.nb_en_emploi_24_mois ?? null,
           });
         }
-    }
+    },
 );
 
 const [getContinuumData] = inject(
@@ -152,5 +152,5 @@ const [getContinuumData] = inject(
         millesimeSortie,
         voie,
       });
-    }
+    },
 );

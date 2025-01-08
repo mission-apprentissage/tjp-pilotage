@@ -124,7 +124,7 @@ export const FiltersSection = ({
   const [deleteButtonToDisplay, setDeleteButtonToDisplay] = useState<string>("");
 
   const filteredRequetesSuggerees = REQUETES_SUGGEREES.filter((r) => r.active).filter((r) =>
-    r.conditions?.every((condition) => searchParams.filters?.[condition as keyof Partial<Filters>])
+    r.conditions?.every((condition) => searchParams.filters?.[condition as keyof Partial<Filters>]),
   );
 
   const isDisabled = !filteredRequetesSuggerees.length && !requetesEnregistrees?.length;

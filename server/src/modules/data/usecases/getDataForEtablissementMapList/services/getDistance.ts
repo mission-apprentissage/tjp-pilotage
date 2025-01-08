@@ -30,7 +30,7 @@ export function getDistance({
           latitude: etablissement.latitude,
           longitude: etablissement.longitude,
         },
-        { latitude: e.latitude, longitude: e.longitude }
+        { latitude: e.latitude, longitude: e.longitude },
       );
 
       return {

@@ -31,7 +31,7 @@ export const getFormationMailleEtab = ({
       eb.or([
         eb("dateFermeture", "is", null),
         eb("dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
-      ])
+      ]),
     )
     .orderBy(["libelleNsf", "libelleNiveauDiplome", "libelleFormation"])
     .distinct();

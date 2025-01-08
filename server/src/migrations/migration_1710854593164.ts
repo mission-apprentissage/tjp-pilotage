@@ -26,7 +26,7 @@ export const up = async (db: Kysely<unknown>) => {
     sql`
     INSERT INTO "campagne" ("annee", "dateDebut", "statut") VALUES ('2023', '2023-10-03'::timestamp with time zone, 'terminée');
     INSERT INTO "campagne" ("annee", "statut") VALUES ('2024', 'en attente');
-  `.compile(db)
+  `.compile(db),
   );
 };
 

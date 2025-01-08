@@ -29,5 +29,5 @@ export const TooltipIcon = chakra(
         />
       </Tooltip>
     );
-  }
+  },
 );

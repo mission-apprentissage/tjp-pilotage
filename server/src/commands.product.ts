@@ -73,7 +73,7 @@ export function productCommands(cli: Command) {
               .string()
               .optional()
               .transform((val) => val || undefined),
-          })
+          }),
         )
         .parse(data);
 
@@ -104,7 +104,7 @@ export function productCommands(cli: Command) {
     .action(
       async (options: { email: string; firstname: string; lastname: string; role: Role; codeRegion?: string }) => {
         await createUser({ body: options });
-      }
+      },
     );
 
   cli
@@ -145,7 +145,7 @@ export function productCommands(cli: Command) {
             ...acc,
             [`${type}_${year}`]: async () => getImport({ type, year, schema }),
           }),
-          {} as Record<string, () => Promise<Array<ImportFileError>>>
+          {} as Record<string, () => Promise<Array<ImportFileError>>>,
         );
       };
 

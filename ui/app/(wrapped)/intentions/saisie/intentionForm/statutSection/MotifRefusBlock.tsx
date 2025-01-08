@@ -37,7 +37,7 @@ export const MotifRefusBlock = chakra(({ disabled, className }: { disabled?: boo
         if (name !== "statut") return;
         setValue("motifRefus", []);
         setValue("autreMotifRefus", "");
-      }).unsubscribe
+      }).unsubscribe,
   );
 
   const getMotifOptions = (typeDemande: TypeDemande) => {

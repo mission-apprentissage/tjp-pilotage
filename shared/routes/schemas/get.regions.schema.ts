@@ -6,7 +6,7 @@ export const getRegionsSchema = {
       z.object({
         label: z.string(),
         value: z.string(),
-      })
+      }),
     ),
   },
 };

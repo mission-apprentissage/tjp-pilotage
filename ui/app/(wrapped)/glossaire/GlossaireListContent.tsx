@@ -15,8 +15,8 @@ const useGlossaireList = (initialEntries: GlossaireEntries) => {
   useEffect(() => {
     setEntries(() =>
       initialEntries.filter(
-        (entry) => searchValue === "" || entry?.title?.toLowerCase().trim().includes(searchValue.toLowerCase().trim())
-      )
+        (entry) => searchValue === "" || entry?.title?.toLowerCase().trim().includes(searchValue.toLowerCase().trim()),
+      ),
     );
   }, [searchValue, setEntries, initialEntries]);
 

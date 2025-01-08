@@ -25,32 +25,32 @@ const getCorrectionsFactory =
       getCurrentCampagneQuery,
       getCampagneQuery,
       getFiltersQuery,
-    }
+    },
   ) =>
-    async (activeFilters: ActiveFilters) => {
-      const campagne = await deps.getCurrentCampagneQuery();
-      const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
-      const [stats, { count, corrections }, filters] = await Promise.all([
-        deps.getStatsCorrectionsQuery({
-          ...activeFilters,
-          campagne: anneeCampagne,
-        }),
-        deps.getCorrectionsQuery({
-          ...activeFilters,
-          campagne: anneeCampagne,
-        }),
-        deps.getFiltersQuery({
-          ...activeFilters,
-          campagne: anneeCampagne,
-        }),
-      ]);
+  async (activeFilters: ActiveFilters) => {
+    const campagne = await deps.getCurrentCampagneQuery();
+    const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
+    const [stats, { count, corrections }, filters] = await Promise.all([
+      deps.getStatsCorrectionsQuery({
+        ...activeFilters,
+        campagne: anneeCampagne,
+      }),
+      deps.getCorrectionsQuery({
+        ...activeFilters,
+        campagne: anneeCampagne,
+      }),
+      deps.getFiltersQuery({
+        ...activeFilters,
+        campagne: anneeCampagne,
+      }),
+    ]);
 
-      return {
-        corrections,
-        count,
-        stats,
-        filters,
-      };
+    return {
+      corrections,
+      count,
+      stats,
+      filters,
     };
+  };
 
 export const getCorrectionsUsecase = getCorrectionsFactory();

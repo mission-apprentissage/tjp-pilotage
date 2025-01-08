@@ -9,6 +9,6 @@ export const refreshDemandeIntentionMaterializedViews = async () => {
     REFRESH MATERIALIZED VIEW "latestIntentionView" WITH DATA;
     REFRESH MATERIALIZED VIEW "demandeIntentionView" WITH DATA;
     REFRESH MATERIALIZED VIEW "latestDemandeIntentionView" WITH DATA;
-    `.compile(getKbdClient())
+    `.compile(getKbdClient()),
   );
 };

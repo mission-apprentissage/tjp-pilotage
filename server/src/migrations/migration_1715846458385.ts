@@ -19,7 +19,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addUniqueConstraint(
       "changementStatut_unique_constraint",
       ["userId", "intentionNumero", "statutPrecedent", "statut"],
-      (builder) => builder.nullsNotDistinct()
+      (builder) => builder.nullsNotDistinct(),
     )
 
     .execute();

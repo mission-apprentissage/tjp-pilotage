@@ -51,7 +51,7 @@ export const [importFormations] = inject(
           }
           await importFormationEtablissements({ cfd, voie });
         },
-        { parallel: 20 }
+        { parallel: 20 },
       );
 
       await streamIt(
@@ -68,10 +68,10 @@ export const [importFormations] = inject(
           await importFormationEtablissements({ cfd });
           if (!formation) return;
         },
-        { parallel: 20 }
+        { parallel: 20 },
       );
     };
-  }
+  },
 );
 
 export const [importFormationEtablissements] = inject(
@@ -183,5 +183,5 @@ export const [importFormationEtablissements] = inject(
         }
       }
     };
-  }
+  },
 );

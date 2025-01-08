@@ -12,7 +12,7 @@ export const searchNsfFormationSchema = {
       z.object({
         value: z.string(),
         label: z.string(),
-      })
+      }),
     ),
   },
 };

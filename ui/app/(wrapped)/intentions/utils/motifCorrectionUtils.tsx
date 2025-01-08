@@ -35,7 +35,7 @@ export const getMotifCorrectionLabel = ({
 };
 
 export const getMotifsCampagne = (
-  campagne: MotifCorrectionCampagne = CURRENT_ANNEE_CAMPAGNE
+  campagne: MotifCorrectionCampagne = CURRENT_ANNEE_CAMPAGNE,
 ): MotifCorrectionLabel[] => {
   const motifsCampagne = MOTIFS_CORRECTION_LABELS[campagne];
   return Object.keys(motifsCampagne) as MotifCorrectionLabel[];

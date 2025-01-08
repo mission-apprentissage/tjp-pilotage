@@ -41,7 +41,7 @@ export const [importConstatRentree] = inject(
 
             if (!uai) {
               throw new Error(
-                `Création de la table constatRentree : Pas d'UAI pour la ligne comportant le mefstat ${constatRentreeLine["Mef Bcp 11"]}.`
+                `Création de la table constatRentree : Pas d'UAI pour la ligne comportant le mefstat ${constatRentreeLine["Mef Bcp 11"]}.`,
               );
             }
 
@@ -66,10 +66,10 @@ export const [importConstatRentree] = inject(
             }
           }
         },
-        { parallel: 20 }
+        { parallel: 20 },
       );
 
       process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
     }
-  }
+  },
 );

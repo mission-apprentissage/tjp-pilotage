@@ -74,7 +74,7 @@ export const [importTensionRomeDepartement] = inject(
       },
       {
         parallel: 20,
-      }
+      },
     );
-  }
+  },
 );

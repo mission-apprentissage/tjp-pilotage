@@ -98,5 +98,5 @@ export const NbProfesseurAssocieRHField = chakra(
         </FormHelperText>
       </FormControl>
     );
-  }
+  },
 );

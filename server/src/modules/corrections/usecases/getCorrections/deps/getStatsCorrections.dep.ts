@@ -36,7 +36,7 @@ export const getStatsCorrectionsQuery = async ({
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
-      })
+      }),
     )
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
@@ -51,16 +51,16 @@ export const getStatsCorrectionsQuery = async ({
       join
         .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
         .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
-        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
+        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion"),
     )
     .select((eb) => [
       eb.fn.count<number>("correction.id").as("nbCorrections"),
       eb.fn
         .coalesce(
           eb.fn.sum<number>(
-            sql<number>`${eb.ref("correction.capaciteScolaire")}-${eb.ref("demande.capaciteScolaire")}`
+            sql<number>`${eb.ref("correction.capaciteScolaire")}-${eb.ref("demande.capaciteScolaire")}`,
           ),
-          eb.val(0)
+          eb.val(0),
         )
         .as("ecartScolaire"),
       eb.fn
@@ -69,25 +69,25 @@ export const getStatsCorrectionsQuery = async ({
             sql<number>`
             ${eb.ref("correction.capaciteApprentissage")} -
             ${eb.ref("demande.capaciteApprentissage")}
-          `
+          `,
           ),
-          eb.val(0)
+          eb.val(0),
         )
         .as("ecartApprentissage"),
       eb.fn
         .coalesce(
           eb.fn.sum<number>(
-            eb.case().when("correction.raison", "=", RaisonCorrectionEnum["report"]).then(1).else(0).end()
+            eb.case().when("correction.raison", "=", RaisonCorrectionEnum["report"]).then(1).else(0).end(),
           ),
-          eb.val(0)
+          eb.val(0),
         )
         .as("nbReports"),
       eb.fn
         .coalesce(
           eb.fn.sum<number>(
-            eb.case().when("correction.raison", "=", RaisonCorrectionEnum["annulation"]).then(1).else(0).end()
+            eb.case().when("correction.raison", "=", RaisonCorrectionEnum["annulation"]).then(1).else(0).end(),
           ),
-          eb.val(0)
+          eb.val(0),
         )
         .as("nbAnnulations"),
       eb.fn
@@ -98,9 +98,9 @@ export const getStatsCorrectionsQuery = async ({
               .when("correction.raison", "=", RaisonCorrectionEnum["modification_capacite"])
               .then(1)
               .else(0)
-              .end()
+              .end(),
           ),
-          eb.val(0)
+          eb.val(0),
         )
         .as("nbModifications"),
     ])
@@ -132,10 +132,10 @@ export const getStatsCorrectionsQuery = async ({
                   unaccent(${eb.ref("departement.libelleDepartement")})
                 )`,
                 "ilike",
-                `%${search_word}%`
-              )
-            )
-          )
+                `%${search_word}%`,
+              ),
+            ),
+          ),
         );
       return eb;
     })
@@ -200,7 +200,7 @@ export const getStatsCorrectionsQuery = async ({
             sql<boolean>`ABS(
               ${ebw.ref("demande.capaciteApprentissage")} -
               ${ebw.ref("demande.capaciteApprentissageActuelle")}
-            ) > 1`
+            ) > 1`,
         );
       }
       if (voie === "scolaire") {
@@ -209,7 +209,7 @@ export const getStatsCorrectionsQuery = async ({
             sql<boolean>`ABS(
               ${ebw.ref("demande.capaciteScolaire")} -
               ${ebw.ref("demande.capaciteScolaireActuelle")}
-            ) > 1`
+            ) > 1`,
         );
       }
       return eb;
@@ -230,7 +230,7 @@ export const getStatsCorrectionsQuery = async ({
             formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
               ? w("formationView.isTransitionNumerique", "=", true)
               : sql.val(false),
-          ])
+          ]),
         );
       }
       return q;

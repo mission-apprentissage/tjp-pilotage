@@ -73,14 +73,14 @@ function downloadCsvFromString(filename: string, text: string) {
 export async function downloadExcel<D extends object>(
   filename: string,
   data: Array<D> | MultipleData,
-  columns: ExportColumns<D> | MultipleColumns
+  columns: ExportColumns<D> | MultipleColumns,
 ) {
   const hasMultipleSheets = Object.values(data).every((value) => Array.isArray(value));
   if (hasMultipleSheets) {
     downloadExcelMultipleSheets(
       filename,
       data as Record<string, Array<D>>,
-      columns as Record<string, ExportColumns<D>>
+      columns as Record<string, ExportColumns<D>>,
     );
     return;
   } else if (Array.isArray(data)) {
@@ -107,21 +107,21 @@ export async function downloadExcel<D extends object>(
 
     Object.entries(columns).forEach(([key, _value]) => {
       switch (typeof _.get(data[0], key)) {
-      case "string":
-        setColumnWrapText(key);
-        break;
-      case "number":
-        setColumnWrapNumber(key);
-        break;
-      case "bigint":
-      case "boolean":
-      case "symbol":
-      case "undefined":
-      case "object":
-      case "function":
-      default:
-        setColumnWrapText(key);
-        break;
+        case "string":
+          setColumnWrapText(key);
+          break;
+        case "number":
+          setColumnWrapNumber(key);
+          break;
+        case "bigint":
+        case "boolean":
+        case "symbol":
+        case "undefined":
+        case "object":
+        case "function":
+        default:
+          setColumnWrapText(key);
+          break;
       }
     });
 
@@ -132,8 +132,8 @@ export async function downloadExcel<D extends object>(
             acc[key as keyof D] = _.get(dataRow, key);
             return acc;
           },
-          {} as Record<keyof D, D[keyof D]>
-        )
+          {} as Record<keyof D, D[keyof D]>,
+        ),
       );
     }
 
@@ -150,7 +150,7 @@ export async function downloadExcel<D extends object>(
 function downloadExcelMultipleSheets<D extends object>(
   filename: string,
   data: Record<string, Array<D>>,
-  columns: Record<string, ExportColumns<D>>
+  columns: Record<string, ExportColumns<D>>,
 ) {
   const filenameWithExtension = filename.indexOf(".xlsx") !== -1 ? filename : `${filename}.xlsx`;
 
@@ -176,21 +176,21 @@ function downloadExcelMultipleSheets<D extends object>(
 
     Object.entries(columns[key]).forEach(([key, _value]) => {
       switch (typeof _.get(sheetData[0], key)) {
-      case "string":
-        setColumnWrapText(key);
-        break;
-      case "number":
-        setColumnWrapNumber(key);
-        break;
-      case "bigint":
-      case "boolean":
-      case "symbol":
-      case "undefined":
-      case "object":
-      case "function":
-      default:
-        setColumnWrapText(key);
-        break;
+        case "string":
+          setColumnWrapText(key);
+          break;
+        case "number":
+          setColumnWrapNumber(key);
+          break;
+        case "bigint":
+        case "boolean":
+        case "symbol":
+        case "undefined":
+        case "object":
+        case "function":
+        default:
+          setColumnWrapText(key);
+          break;
       }
     });
 
@@ -201,8 +201,8 @@ function downloadExcelMultipleSheets<D extends object>(
             acc[key as keyof D] = _.get(dataRow, key);
             return acc;
           },
-          {} as Record<keyof D, D[keyof D]>
-        )
+          {} as Record<keyof D, D[keyof D]>,
+        ),
       );
     }
   });

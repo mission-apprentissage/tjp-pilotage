@@ -94,7 +94,7 @@ export const InformationsBlock = ({
         setValue("nbFormationRH", undefined);
         setValue("discipline1FormationRH", undefined);
         setValue("discipline2FormationRH", undefined);
-      }).unsubscribe
+      }).unsubscribe,
   );
 
   const typeDemande = watch("typeDemande");

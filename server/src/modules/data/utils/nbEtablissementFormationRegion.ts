@@ -15,7 +15,7 @@ export const nbEtablissementFormationRegion = ({
     .leftJoin("indicateurEntree", (join) =>
       join
         .onRef("indicateurEntree.formationEtablissementId", "=", "formationEtablissement.id")
-        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire),
     )
     .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .whereRef("etablissement.codeRegion", "=", "demande.codeRegion")

@@ -12,7 +12,7 @@ const formatSuffixs = (suffixs: string[] | Record<string, string | Array<string>
 
 export const formatExportFilename = (
   filename: string,
-  suffixs?: string[] | Record<string, string | Array<string> | boolean | number>
+  suffixs?: string[] | Record<string, string | Array<string> | boolean | number>,
 ) => {
   const timestamp = format(new Date(), "yyyyMMddHHmmss");
   const suffix = suffixs ? `_${formatSuffixs(suffixs)}` : "";

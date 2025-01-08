@@ -36,7 +36,7 @@ export const up = async (db: Kysely<unknown>) => {
       ) as formations
       on df."cfd" = formations.cfd
       order by df."cfd";
-      `
+      `,
     )
     .execute();
 
@@ -69,7 +69,7 @@ export const up = async (db: Kysely<unknown>) => {
       order by df."cfd";
 
       create unique index on "formationView" ("id");
-      `
+      `,
     )
     .materialized()
     .execute();

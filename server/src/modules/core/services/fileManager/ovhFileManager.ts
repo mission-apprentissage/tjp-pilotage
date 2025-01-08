@@ -48,14 +48,14 @@ const mapperToFileType = (content: _Object): FileType | undefined => {
 export const ovhFileManagerFactory = (
   deps = {
     client: generateNewS3Client(),
-  }
+  },
 ): FileManager => {
   return {
     uploadFile: async (filepath: string, file: Buffer) => {
       try {
         if (!filepath) {
           throw new Error(
-            "Le chemin du fichier n'a pas été fourni pour l'ajout d'un fichier. Il doit contenir au moins le nom du fichier."
+            "Le chemin du fichier n'a pas été fourni pour l'ajout d'un fichier. Il doit contenir au moins le nom du fichier.",
           );
         }
 
@@ -64,7 +64,7 @@ export const ovhFileManagerFactory = (
             Bucket: config.s3.bucket,
             Key: filepath,
             Body: file,
-          })
+          }),
         );
 
         console.log({ $metadata });
@@ -80,7 +80,7 @@ export const ovhFileManagerFactory = (
           new ListObjectsV2Command({
             Bucket: config.s3.bucket,
             Prefix: filepath,
-          })
+          }),
         );
 
         if (!listObjectsCommand.Contents) {
@@ -91,7 +91,7 @@ export const ovhFileManagerFactory = (
       } catch (error) {
         console.error(
           `Une erreur est survenue lors de la récupération des fichiers du dossier suivant: ${filepath}`,
-          error
+          error,
         );
 
         throw new Error((error as Error).message);
@@ -107,7 +107,7 @@ export const ovhFileManagerFactory = (
           new DeleteObjectCommand({
             Bucket: config.s3.bucket,
             Key: filepath,
-          })
+          }),
         );
       } catch (error) {
         console.error(`Une erreur est survenue lors de la suppression du fichier suivant: ${filepath}`, error);
@@ -130,7 +130,7 @@ export const ovhFileManagerFactory = (
       } catch (error) {
         console.error(
           `Une erreur est survenue en générant l'url de téléchargement du fichier suivant: ${filepath}`,
-          error
+          error,
         );
         throw new Error((error as Error).message);
       }

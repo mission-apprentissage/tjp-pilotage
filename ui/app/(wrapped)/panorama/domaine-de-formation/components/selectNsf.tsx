@@ -105,5 +105,5 @@ export const SelectNsf = chakra(
         </Flex>
       </Flex>
     );
-  }
+  },
 );

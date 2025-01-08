@@ -14,7 +14,7 @@ export const up = async (db: Kysely<any>) => {
       ALTER TABLE "demande" ALTER COLUMN "status" TYPE "demandeStatus" USING "status"::text::"demandeStatus";
 
       DROP TYPE "demandeStatus_old";
-    `.compile(db)
+    `.compile(db),
   );
 };
 
@@ -28,6 +28,6 @@ export const down = async (db: Kysely<any>) => {
       ALTER TABLE "demande" ALTER COLUMN "status" TYPE "demandeStatus" USING "status"::text::"demandeStatus";
 
       DROP TYPE "demandeStatus_old";
-    `.compile(db)
+    `.compile(db),
   );
 };

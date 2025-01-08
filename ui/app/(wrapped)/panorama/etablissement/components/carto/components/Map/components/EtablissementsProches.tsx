@@ -99,7 +99,7 @@ export const EtablissementsProches = () => {
   const onClusterClick = async (
     e: MapMouseEvent & {
       features?: MapGeoJSONFeature[];
-    }
+    },
   ) => {
     if (map !== undefined) {
       const features = map.queryRenderedFeatures(e.point, {
@@ -128,7 +128,7 @@ export const EtablissementsProches = () => {
   const onSinglePointOver = async (
     e: MapMouseEvent & {
       features?: MapGeoJSONFeature[];
-    }
+    },
   ) => {
     if (map !== undefined) {
       const features = map.queryRenderedFeatures(e.point, {

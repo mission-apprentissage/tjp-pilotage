@@ -19,6 +19,6 @@ export const getDomaineDeFormationRoute = (server: Server) => {
         const result = await getDomaineDeFormation(codeNsf, request.query);
         response.status(200).send(result);
       },
-    })
+    }),
   );
 };

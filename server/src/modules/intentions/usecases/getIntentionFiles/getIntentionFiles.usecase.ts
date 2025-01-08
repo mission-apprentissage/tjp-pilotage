@@ -6,9 +6,9 @@ const getIntentionFilesUseCaseFactory =
     deps = {
       fileManager,
       filePathManager,
-    }
+    },
   ) =>
-    async (numero: string) =>
-      deps.fileManager.listFiles(deps.filePathManager.getIntentionFilePath(numero));
+  async (numero: string) =>
+    deps.fileManager.listFiles(deps.filePathManager.getIntentionFilePath(numero));
 
 export const getIntentionFilesUseCase = getIntentionFilesUseCaseFactory();

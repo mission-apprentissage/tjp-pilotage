@@ -69,7 +69,7 @@ export const [importTensionRomeNational] = inject(
       },
       {
         parallel: 20,
-      }
+      },
     );
-  }
+  },
 );

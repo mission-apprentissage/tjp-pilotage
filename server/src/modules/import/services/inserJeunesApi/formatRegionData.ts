@@ -36,7 +36,7 @@ export const formatRegionData = (rawData: any): IjRegionData => {
           ensemble?: string;
         }[];
         filiere: "voie_pro_sco_educ_nat" | "apprentissage";
-      }
+      },
     ) => {
       const filiere = cur.filiere;
       const voie = (
@@ -82,6 +82,6 @@ export const formatRegionData = (rawData: any): IjRegionData => {
       }
       return acc;
     },
-    { scolaire: {}, apprentissage: {} } as IjRegionData
+    { scolaire: {}, apprentissage: {} } as IjRegionData,
   );
 };

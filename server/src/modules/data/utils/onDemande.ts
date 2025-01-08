@@ -71,18 +71,18 @@ export const genericOnDemandes = ({
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
-      })
+      }),
     )
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("formationView", (join) =>
-      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire)
+      join.onRef("formationView.cfd", "=", "demande.cfd").on("formationView.voie", "=", VoieEnum.scolaire),
     )
     .leftJoin("actionPrioritaire", (join) =>
       join
         .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
         .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
-        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
+        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion"),
     )
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join.on((eb) =>
@@ -93,10 +93,10 @@ export const genericOnDemandes = ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
-            eb.val(getMillesimeFromCampagne(campagne ?? CURRENT_ANNEE_CAMPAGNE))
+            eb.val(getMillesimeFromCampagne(campagne ?? CURRENT_ANNEE_CAMPAGNE)),
           ),
-        ])
-      )
+        ]),
+      ),
     )
     .select((eb) => [
       eb.fn.count<number>("numero").as("countDemande"),
@@ -133,7 +133,7 @@ export const genericOnDemandes = ({
         return eb.where(
           "demande.rentreeScolaire",
           "in",
-          rentreeScolaire.map((rentree) => parseInt(rentree))
+          rentreeScolaire.map((rentree) => parseInt(rentree)),
         );
       return eb;
     })
@@ -175,7 +175,7 @@ export const genericOnDemandes = ({
       if (withColoration === undefined) return q;
       if (withColoration === "false")
         return q.where((w) =>
-          w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
+          w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])]),
         );
       return q;
     })
@@ -195,7 +195,7 @@ export const genericOnDemandes = ({
             formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
               ? w("formationView.isTransitionNumerique", "=", true)
               : sql.val(false),
-          ])
+          ]),
         );
       }
       return q;

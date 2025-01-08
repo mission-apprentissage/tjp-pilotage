@@ -38,7 +38,7 @@ export const SecondaryFiltersSection = ({
   activeFilters: FiltersDemandesRestitutionIntentions;
   handleFilters: (
     type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions],
   ) => void;
   filterTracker: (filterName: keyof FiltersDemandesRestitutionIntentions) => () => void;
   resetFilters: () => void;

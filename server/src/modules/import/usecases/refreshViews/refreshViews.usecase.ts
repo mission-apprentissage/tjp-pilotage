@@ -24,5 +24,5 @@ export const [refreshViews] = inject(
         console.log("latestDemandeIntentionView refreshed");
       });
     };
-  }
+  },
 );

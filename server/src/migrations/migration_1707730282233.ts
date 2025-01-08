@@ -18,9 +18,9 @@ export const up = async (db: Kysely<DB>) => {
         eb(
           "formationEtablissementId",
           "in",
-          db.selectFrom("formationEtablissement").select("id").where("formationEtablissement.cfd", "like", "320%")
+          db.selectFrom("formationEtablissement").select("id").where("formationEtablissement.cfd", "like", "320%"),
         ),
-      ])
+      ]),
     )
     .execute();
 };

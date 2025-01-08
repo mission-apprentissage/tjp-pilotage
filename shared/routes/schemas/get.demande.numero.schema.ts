@@ -24,7 +24,7 @@ const FormationMetadataSchema = z
         z.object({
           codeDispositif: z.string().optional(),
           libelleDispositif: z.string().optional(),
-        })
+        }),
       )
       .optional(),
   })
@@ -142,7 +142,7 @@ export const getDemandeSchema = {
       z.object({
         metadata: MetadataSchema,
         canEdit: z.boolean(),
-      })
+      }),
     ),
   },
 };

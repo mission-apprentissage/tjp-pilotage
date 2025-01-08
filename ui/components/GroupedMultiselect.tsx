@@ -65,15 +65,15 @@ const InputWapper = memo(
           props.isReadOnly
             ? undefined
             : onChange({
-              checked: (e.target as HTMLInputElement).checked,
-              label: props.children,
-              value: props.value,
-            })
+                checked: (e.target as HTMLInputElement).checked,
+                label: props.children,
+                value: props.value,
+              })
         }
         {...props}
       ></Checkbox>
     );
-  }
+  },
 );
 
 const CheckboxIcon = ({ checked }: { checked: boolean }) => {
@@ -161,12 +161,12 @@ export const GroupedMultiselect = chakra(
             (stateValue.current?.get?.(val) ||
               groupedOptions[
                 Object.keys(groupedOptions).find((key) =>
-                  groupedOptions[key].options.find(({ value }) => val === value)
+                  groupedOptions[key].options.find(({ value }) => val === value),
                 ) as string
               ]?.options.find(({ value }) => val === value)?.label) ??
               val,
           ];
-        })
+        }),
       );
     }, [value, groupedOptions]);
 
@@ -180,29 +180,29 @@ export const GroupedMultiselect = chakra(
     const filterOptions = () => {
       return search
         ? Object.keys(groupedOptions).reduce(
-          (acc, key) => {
-            const filteredOptions = groupedOptions[key].options.filter(
-              (item) =>
-                removeAccents(item.label?.toLowerCase()).includes(removeAccents(search.toLowerCase())) ||
-                  removeAccents(item.value?.toLowerCase()).includes(removeAccents(search.toLowerCase()))
-            );
-            if (filteredOptions.length > 0) {
-              acc[key] = filteredOptions;
-            }
-            return acc;
-          },
-            {} as Record<string, { label: string; value: string; isDisabled?: boolean }[]>
-        )
+            (acc, key) => {
+              const filteredOptions = groupedOptions[key].options.filter(
+                (item) =>
+                  removeAccents(item.label?.toLowerCase()).includes(removeAccents(search.toLowerCase())) ||
+                  removeAccents(item.value?.toLowerCase()).includes(removeAccents(search.toLowerCase())),
+              );
+              if (filteredOptions.length > 0) {
+                acc[key] = filteredOptions;
+              }
+              return acc;
+            },
+            {} as Record<string, { label: string; value: string; isDisabled?: boolean }[]>,
+          )
         : Object.keys(groupedOptions).reduce(
-          (acc, key) => {
-            const unFilteredOptions = groupedOptions[key].options;
-            if (unFilteredOptions.length > 0) {
-              acc[key] = unFilteredOptions;
-            }
-            return acc;
-          },
-            {} as Record<string, { label: string; value: string; isDisabled?: boolean }[]>
-        );
+            (acc, key) => {
+              const unFilteredOptions = groupedOptions[key].options;
+              if (unFilteredOptions.length > 0) {
+                acc[key] = unFilteredOptions;
+              }
+              return acc;
+            },
+            {} as Record<string, { label: string; value: string; isDisabled?: boolean }[]>,
+          );
     };
 
     const filteredOptions = useMemo(filterOptions, [groupedOptions, search]);
@@ -364,5 +364,5 @@ export const GroupedMultiselect = chakra(
         </Portal>
       </Menu>
     );
-  }
+  },
 );

@@ -42,7 +42,7 @@ export function GlossaireProvider({
       }
       onOpen();
     },
-    [setSelectedEntry, onOpen]
+    [setSelectedEntry, onOpen],
   );
 
   const value = useMemo(
@@ -54,7 +54,7 @@ export function GlossaireProvider({
       setSelectedEntry,
       entries,
     }),
-    [isOpen, selectedEntry, onOpenCallback, onCloseCallback, setSelectedEntry]
+    [isOpen, selectedEntry, onOpenCallback, onCloseCallback, setSelectedEntry],
   );
 
   return <GlossaireContext.Provider value={value}>{children}</GlossaireContext.Provider>;

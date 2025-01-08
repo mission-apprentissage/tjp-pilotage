@@ -9,7 +9,7 @@ export const searchNsfSchema = {
       z.object({
         value: z.string(),
         label: z.string(),
-      })
+      }),
     ),
   },
 };

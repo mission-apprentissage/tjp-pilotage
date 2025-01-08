@@ -19,6 +19,6 @@ export const getDomainesDeFormationRoute = (server: Server) => {
         const result = await getDomainesDeFormation(search);
         response.status(200).send(result);
       },
-    })
+    }),
   );
 };

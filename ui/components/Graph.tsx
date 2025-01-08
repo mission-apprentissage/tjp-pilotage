@@ -75,6 +75,6 @@ export const Graph = memo(
           </Box>
         </Tooltip>
       );
-    }
-  )
+    },
+  ),
 );

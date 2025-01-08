@@ -32,7 +32,7 @@ function countValues(data: ChiffresEntreeOffreRentree | ChiffresIJOffreMillesime
 function selectFormationWithMostValues(
   formations: Formations,
   chiffresIJ: ChiffresIJ,
-  chiffresEntree: ChiffresEntree
+  chiffresEntree: ChiffresEntree,
 ): string {
   const offres = Object.keys(formations);
 
@@ -122,7 +122,7 @@ export const useAnalyseDetaillee = () => {
     {
       keepPreviousData: true,
       staleTime: 10000000,
-    }
+    },
   );
 
   const displayDashboard = () =>

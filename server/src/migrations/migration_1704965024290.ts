@@ -35,7 +35,7 @@ export const up = async (db: Kysely<unknown>) => {
         ALTER TABLE "dataFormation" ALTER COLUMN "typeFamille" TYPE "typeFamille" USING "typeFamille"::text::"typeFamille";
 
         DROP TYPE "typeFamille_old";
-      `.compile(db)
+      `.compile(db),
   );
 
   await db.schema
@@ -70,7 +70,7 @@ export const up = async (db: Kysely<unknown>) => {
       ) as formations
       on df."cfd" = formations.cfd
       order by df."cfd";
-      `
+      `,
     )
     .execute();
 
@@ -106,7 +106,7 @@ export const up = async (db: Kysely<unknown>) => {
       order by df."cfd";
 
       create unique index on "formationView" ("id");
-      `
+      `,
     )
     .materialized()
     .execute();
@@ -128,7 +128,7 @@ export const down = async (db: Kysely<unknown>) => {
       ALTER TABLE "dataFormation" ALTER COLUMN "typeFamille" TYPE "typeFamille" USING "typeFamille"::text::"typeFamille";
 
       DROP TYPE "typeFamille_old";
-    `.compile(db)
+    `.compile(db),
   );
 
   await db.schema
@@ -163,7 +163,7 @@ export const down = async (db: Kysely<unknown>) => {
       ) as formations
       on df."cfd" = formations.cfd
       order by df."cfd";
-      `
+      `,
     )
     .execute();
 
@@ -199,7 +199,7 @@ export const down = async (db: Kysely<unknown>) => {
       order by df."cfd";
 
       create unique index on "formationView" ("id");
-      `
+      `,
     )
     .materialized()
     .execute();

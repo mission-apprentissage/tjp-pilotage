@@ -41,13 +41,13 @@ export const getDemandes = async ({
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
-      })
+      }),
     )
     .leftJoin("intentionAccessLog", (join) =>
       join
         .onRef("intentionAccessLog.intentionNumero", "=", "demande.numero")
         .onRef("intentionAccessLog.updatedAt", ">", "demande.updatedAt")
-        .on("intentionAccessLog.userId", "=", user.id)
+        .on("intentionAccessLog.userId", "=", user.id),
     )
     .selectAll("demande")
     .select((eb) => [
@@ -76,7 +76,7 @@ export const getDemandes = async ({
           .whereRef("demandeCompensee.uai", "=", "demande.compensationUai")
           .whereRef("demandeCompensee.codeDispositif", "=", "demande.compensationCodeDispositif")
           .select(["demandeCompensee.numero", "demandeCompensee.typeDemande"])
-          .limit(1)
+          .limit(1),
       ).as("demandeCompensee"),
       eb
         .selectFrom(({ selectFrom }) =>
@@ -86,7 +86,7 @@ export const getDemandes = async ({
             .where(isDemandeCampagneEnCours(eb, "demandeImportee"))
             .limit(1)
             .orderBy("updatedAt desc")
-            .as("allDemandeImportee")
+            .as("allDemandeImportee"),
         )
         .select("allDemandeImportee.numero")
         .where("allDemandeImportee.statut", "<>", DemandeStatutEnum["supprimée"])
@@ -100,7 +100,7 @@ export const getDemandes = async ({
             "user.id",
             "user.role",
           ])
-          .where("demande.createdBy", "is not", null)
+          .where("demande.createdBy", "is not", null),
       ).as("createdBy"),
       jsonObjectFrom(
         eb
@@ -111,7 +111,7 @@ export const getDemandes = async ({
             "user.id",
             "user.role",
           ])
-          .where("demande.updatedBy", "is not", null)
+          .where("demande.updatedBy", "is not", null),
       ).as("updatedBy"),
       eb
         .selectFrom("correction")
@@ -126,7 +126,7 @@ export const getDemandes = async ({
           return eb.innerJoin("suivi as suiviUtilisateur", (join) =>
             join
               .onRef("suiviUtilisateur.intentionNumero", "=", "demande.numero")
-              .on("suiviUtilisateur.userId", "=", user.id)
+              .on("suiviUtilisateur.userId", "=", user.id),
           );
         return eb.where("demande.statut", "=", statut);
       }
@@ -146,10 +146,10 @@ export const getDemandes = async ({
                   unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
                 )`,
                 "ilike",
-                `%${search_word}%`
-              )
-            )
-          )
+                `%${search_word}%`,
+              ),
+            ),
+          ),
         );
       return eb;
     })
@@ -188,7 +188,7 @@ export const getDemandes = async ({
         numeroCompensation: demande.demandeCompensee?.numero,
         typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
         alreadyAccessed: demande.alreadyAccessed ?? true,
-      })
+      }),
     ),
     count: parseInt(demandes[0]?.count) || 0,
     campagnes: campagnes.map(cleanNull),

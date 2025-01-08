@@ -39,5 +39,5 @@ export const [searchDiplome] = inject(
       }
 
       return options;
-    }
+    },
 );

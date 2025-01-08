@@ -97,7 +97,7 @@ export const PilotageNationalClient = () => {
           setDefaultFilters(data);
         }
       },
-    }
+    },
   );
 
   const setDefaultFilters = (data: StatsPilotageIntentions | undefined) => {

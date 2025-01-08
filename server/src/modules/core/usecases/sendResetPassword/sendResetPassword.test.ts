@@ -23,7 +23,7 @@ describe("sendResetPassword usecase", () => {
     await expect(async () =>
       sendResetPassword({
         email: "other@test.fr",
-      })
+      }),
     ).rejects.toThrow("Email inconnu dans Orion.");
   });
 
@@ -37,9 +37,9 @@ describe("sendResetPassword usecase", () => {
     await expect(async () =>
       sendResetPassword({
         email: "test@test.fr",
-      })
+      }),
     ).rejects.toThrow(
-      "Vous ne pouvez pas réinitialiser votre mot de passe, veuillez vous connecter à Orion via le portail ARENA."
+      "Vous ne pouvez pas réinitialiser votre mot de passe, veuillez vous connecter à Orion via le portail ARENA.",
     );
   });
 

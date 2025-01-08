@@ -16,5 +16,5 @@ export const [searchUser] = inject(
         scopeFilter,
       });
       return users;
-    }
+    },
 );

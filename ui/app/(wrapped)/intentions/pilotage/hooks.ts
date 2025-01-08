@@ -13,16 +13,16 @@ import type { FiltersStatsPilotageIntentions } from "./types";
 export const useScopeCode = (filters: FiltersStatsPilotageIntentions) => {
   const code = useMemo(() => {
     switch (filters.scope) {
-    case ScopeEnum["région"]:
-      return filters.codeRegion;
-    case ScopeEnum["académie"]:
-      return filters.codeAcademie;
-    case ScopeEnum["département"]:
-      return filters.codeDepartement;
-    case "national":
-      return "national";
-    default:
-      return undefined;
+      case ScopeEnum["région"]:
+        return filters.codeRegion;
+      case ScopeEnum["académie"]:
+        return filters.codeAcademie;
+      case ScopeEnum["département"]:
+        return filters.codeDepartement;
+      case "national":
+        return "national";
+      default:
+        return undefined;
     }
   }, [filters]);
 

@@ -153,7 +153,7 @@ program
 export const up = async (db: Kysely<unknown>) => {};
 
 export const down = async (db: Kysely<unknown>) => {};
-`
+`,
     );
   });
 
@@ -163,7 +163,7 @@ program
   .action(async () => {
     console.log(path.join(__dirname(), "../src", "db/schema.ts"));
     exec(
-      `DATABASE_URL="${config.psql.uri}" npx kysely-codegen --schema public --out-file=${path.join(__dirname(), "../src", "db/schema.ts")} --dialect postgres`
+      `DATABASE_URL="${config.psql.uri}" npx kysely-codegen --schema public --out-file=${path.join(__dirname(), "../src", "db/schema.ts")} --dialect postgres`,
     );
   });
 

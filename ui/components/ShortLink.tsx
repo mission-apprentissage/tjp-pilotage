@@ -26,5 +26,5 @@ export const ShortLink = forwardRef<ShortLinkProps, "a">(
       {label}
       {iconRight && <Icon icon={iconRight} height={"16px"} width={"16px"} style={{ marginLeft: "8px" }} />}
     </Link>
-  )
+  ),
 );

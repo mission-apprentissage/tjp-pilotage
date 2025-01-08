@@ -21,11 +21,11 @@ type TabContentProps = BoxProps & {
 const TabContent = forwardRef<TabContentProps, "div">(({ tab, ...rest }, ref) => {
   const content = useMemo(() => {
     switch (tab) {
-    case "etablissements":
-      return <EtablissementsTab />;
-    case "indicateurs":
-    default:
-      return <IndicateursTab />;
+      case "etablissements":
+        return <EtablissementsTab />;
+      case "indicateurs":
+      default:
+        return <IndicateursTab />;
     }
   }, [tab]);
 
@@ -49,7 +49,7 @@ const getFirstFormation = (formationsByLibelleNiveauDiplome: Record<string, Form
 
 const useFormationSection = (
   formations: FormationListItem[],
-  formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>
+  formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>,
 ) => {
   const { currentFilters, handleCfdChange } = useFormationContext();
   const tabContentRef = useRef<HTMLDivElement>(null);
@@ -102,7 +102,7 @@ export const FormationSection = ({
 }) => {
   const { currentFilters, handleCfdChange, tabContentRef, tabContentHeight } = useFormationSection(
     formations,
-    formationsByLibelleNiveauDiplome
+    formationsByLibelleNiveauDiplome,
   );
 
   return (

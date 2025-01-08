@@ -132,7 +132,7 @@ export const VerticalBarChart = ({
           },
         })),
     }),
-    [data]
+    [data],
   );
 
   useLayoutEffect(() => {

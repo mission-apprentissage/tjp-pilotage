@@ -78,7 +78,7 @@ export const CfdSelect = () => {
     () => formatSearchResultToOption(formatOffreToCfdSearchResult(analyseDetailleeOffre)),
     // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [offre, analyseDetailleeOffre]
+    [offre, analyseDetailleeOffre],
   );
 
   useEffect(() => {
@@ -105,16 +105,16 @@ export const CfdSelect = () => {
       cfdAnalyseDetaillee.filter(
         (cfd) =>
           cfd.label.toLowerCase().includes(search.toLowerCase()) ||
-          cfd.value.toLowerCase().includes(search.toLowerCase())
+          cfd.value.toLowerCase().includes(search.toLowerCase()),
       ),
-      "value"
+      "value",
     );
     const queryResult: TCfdSearchResult[] = await client
       .ref("[GET]/diplome/search/:search")
       .query({ params: { search }, query: {} });
 
     const filteredQueryResult = queryResult.filter(
-      (result) => searchResults.findIndex((local) => local.value === result.value) === -1
+      (result) => searchResults.findIndex((local) => local.value === result.value) === -1,
     );
 
     return [

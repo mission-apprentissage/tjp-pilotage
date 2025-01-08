@@ -36,7 +36,7 @@ export const formatUaiData = (rawData: any): IJUaiData => {
           ensemble?: string;
         }[];
         filiere: "voie_pro_sco_educ_nat" | "apprentissage";
-      }
+      },
     ) => {
       const ensemble = cur.dimensions[0].ensemble;
       const mefstat11 = cur.dimensions[0].id_mefstat11;
@@ -79,6 +79,6 @@ export const formatUaiData = (rawData: any): IJUaiData => {
       }
       return acc;
     },
-    { scolaire: {}, apprentissage: {} } as IJUaiData
+    { scolaire: {}, apprentissage: {} } as IJUaiData,
   );
 };

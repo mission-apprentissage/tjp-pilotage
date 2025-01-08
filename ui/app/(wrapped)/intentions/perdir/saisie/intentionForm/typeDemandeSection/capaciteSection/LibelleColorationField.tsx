@@ -19,7 +19,7 @@ export const LibelleColorationField = chakra(({ disabled, className }: { disable
       watch((_, { name }) => {
         if (name !== "coloration") return;
         setValue("libelleColoration", "");
-      }).unsubscribe
+      }).unsubscribe,
   );
 
   return (

@@ -25,7 +25,7 @@ describe("getScopeFilterForUser", () => {
       getScopeFilterForUser("users/lecture", {
         ...requestUser,
         role: "admin",
-      })
+      }),
     ).toEqual({
       scope: "national",
       scopeFilter: [],

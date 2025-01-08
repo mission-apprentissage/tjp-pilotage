@@ -111,7 +111,7 @@ export const getCorrectionsSchema = {
             label: z.coerce.string(),
             value: z.coerce.string(),
             statut: z.coerce.string(),
-          })
+          }),
         ),
       }),
     }),

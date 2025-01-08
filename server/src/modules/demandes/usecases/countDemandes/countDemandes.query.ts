@@ -28,10 +28,10 @@ export const countDemandesQuery = async ({ user, anneeCampagne, codeAcademie, co
           return eb.on("campagne.annee", "=", anneeCampagne);
         }
         return eb;
-      })
+      }),
     )
     .leftJoin("suivi", (join) =>
-      join.onRef("suivi.intentionNumero", "=", "demande.numero").on("suivi.userId", "=", user.id)
+      join.onRef("suivi.intentionNumero", "=", "demande.numero").on("suivi.userId", "=", user.id),
     )
     .select((eb) => sql<number>`count(${eb.ref("demande.numero")})`.as("total"))
     .select((eb) =>
@@ -43,7 +43,7 @@ export const countDemandesQuery = async ({ user, anneeCampagne, codeAcademie, co
           END
         ),
         0
-      )`.as(DemandeStatutEnum["projet de demande"])
+      )`.as(DemandeStatutEnum["projet de demande"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -54,7 +54,7 @@ export const countDemandesQuery = async ({ user, anneeCampagne, codeAcademie, co
           END
         ),
         0
-      )`.as(DemandeStatutEnum["demande validée"])
+      )`.as(DemandeStatutEnum["demande validée"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -65,7 +65,7 @@ export const countDemandesQuery = async ({ user, anneeCampagne, codeAcademie, co
           END
         ),
         0
-      )`.as(DemandeStatutEnum["refusée"])
+      )`.as(DemandeStatutEnum["refusée"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -76,7 +76,7 @@ export const countDemandesQuery = async ({ user, anneeCampagne, codeAcademie, co
           END
         ),
         0
-      )`.as(DemandeStatutEnum["brouillon"])
+      )`.as(DemandeStatutEnum["brouillon"]),
     )
     .select((eb) =>
       sql<number>`COALESCE(
@@ -87,7 +87,7 @@ export const countDemandesQuery = async ({ user, anneeCampagne, codeAcademie, co
           END
         ),
         0
-      )`.as("suivies")
+      )`.as("suivies"),
     )
     .$call((eb) => {
       if (search)
@@ -103,10 +103,10 @@ export const countDemandesQuery = async ({ user, anneeCampagne, codeAcademie, co
                   unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
                 )`,
                 "ilike",
-                `%${search_word}%`
-              )
-            )
-          )
+                `%${search_word}%`,
+              ),
+            ),
+          ),
         );
       return eb;
     })

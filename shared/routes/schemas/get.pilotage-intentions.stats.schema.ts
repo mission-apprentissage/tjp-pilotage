@@ -65,7 +65,7 @@ const StatsTransfoSchema = z.record(
   ScopedStatsTransfoSchema.extend({
     code: z.string().optional(),
     libelle: z.string().optional(),
-  })
+  }),
 );
 
 export const getStatsPilotageIntentionsSchema = {

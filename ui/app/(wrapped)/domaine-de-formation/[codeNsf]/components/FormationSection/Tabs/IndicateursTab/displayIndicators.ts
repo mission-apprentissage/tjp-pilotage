@@ -8,7 +8,7 @@ export const displayIJDatas = (data: FormationIndicateurs, tauxIJSelected: TauxI
   return (
     data.tauxIJ[tauxIJSelected].length > 0 &&
     data.tauxIJ[tauxIJSelected].some(
-      (data) => typeof data.apprentissage !== "undefined" || typeof data.scolaire !== "undefined"
+      (data) => typeof data.apprentissage !== "undefined" || typeof data.scolaire !== "undefined",
     )
   );
 };

@@ -72,7 +72,7 @@ export const [shootEmail] = inject(
       });
 
       return messageId;
-    }
+    },
 );
 
 export const shootTemplate = async <T extends keyof TemplatePayloads>({

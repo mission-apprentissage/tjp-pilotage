@@ -30,7 +30,7 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
     } catch (_e) {
       return;
     }
-  }
+  },
 );
 
 declare module "fastify" {

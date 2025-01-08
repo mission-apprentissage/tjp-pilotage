@@ -19,7 +19,7 @@ const nsfsSchema = z.array(
     codeNsf: z.string().optional(),
     libelleNsf: z.string().optional(),
     nbFormations: z.number(),
-  })
+  }),
 );
 
 const compareToSchema = z

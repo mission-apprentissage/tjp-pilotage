@@ -12,7 +12,7 @@ const createRegions = async ({ data }: { data: Array<Insertable<DB["region"]>> }
       oc.column("codeRegion").doUpdateSet((eb) => ({
         libelleRegion: eb.ref("excluded.libelleRegion"),
         codeRegion: eb.ref("excluded.codeRegion"),
-      }))
+      })),
     )
     .execute();
 };
@@ -28,7 +28,7 @@ const createAcademies = async ({ data }: { data: Array<Insertable<DB["academie"]
           codeAcademie: eb.ref("excluded.codeAcademie"),
           libelleAcademie: eb.ref("excluded.libelleAcademie"),
         };
-      })
+      }),
     )
     .execute();
 };
@@ -43,7 +43,7 @@ const createDepartements = async ({ data }: { data: Array<Insertable<DB["departe
         codeAcademie: eb.ref("excluded.codeAcademie"),
         codeDepartement: eb.ref("excluded.codeDepartement"),
         libelleDepartement: eb.ref("excluded.libelleDepartement"),
-      }))
+      })),
     )
     .execute();
 };

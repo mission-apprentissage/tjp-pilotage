@@ -32,7 +32,7 @@ export default ({
           if (error.response?.status === 404) push(`/intentions/saisie?notfound=${numero}`);
         }
       },
-    }
+    },
   );
 
   const { mutate: submitIntentionAccessLog } = client.ref("[POST]/demande/access/submit").useMutation({});

@@ -87,7 +87,7 @@ export const [importPositionsQuadrant, importPositionsQuadrantFactory] = inject(
               {
                 tauxInsertion: tauxRegionaux?.tauxInsertion6mois,
                 tauxPoursuite: tauxRegionaux?.tauxPoursuite,
-              }
+              },
             );
 
             await insertPositionFormationRegionaleQuadrant({
@@ -106,9 +106,9 @@ export const [importPositionsQuadrant, importPositionsQuadrantFactory] = inject(
         countPositionQuadrant++;
         process.stdout.write(`\r${countPositionQuadrant}`);
       },
-      { parallel: 5 }
+      { parallel: 5 },
     );
 
     console.log("\nImport des positions quadrant terminé.\n");
-  }
+  },
 );

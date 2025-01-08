@@ -11,7 +11,7 @@ import { formatArray } from "@/utils/formatUtils";
 const extractDatas = (
   etablissement: Etablissement,
   formation: Formation,
-  domaineDeFormation: { codeNsf: string; libelleNsf: string }
+  domaineDeFormation: { codeNsf: string; libelleNsf: string },
 ) => {
   const { libelleEtablissement, commune, codeDepartement, ...restEtablissement } = etablissement;
   const { libelle: libelleFormation, ...restFormation } = formation;
@@ -81,7 +81,7 @@ export const ExportListEtablissements = ({
     downloadCsv(
       formatExportFilename("domaine-de-formation_etablissements"),
       etablissements.map((etablissement) => extractDatas(etablissement, formation, domaineDeFormation)),
-      columns
+      columns,
     );
   };
 
@@ -93,7 +93,7 @@ export const ExportListEtablissements = ({
     downloadExcel(
       formatExportFilename("domaine-de-formation_etablissements"),
       etablissements.map((etablissement) => extractDatas(etablissement, formation, domaineDeFormation)),
-      columns
+      columns,
     );
   };
 

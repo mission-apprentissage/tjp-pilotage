@@ -10,18 +10,18 @@ const countIntentionsFactory =
     deps = {
       countIntentionsQuery,
       getCurrentCampagneQuery,
-    }
+    },
   ) =>
-    async (activeFilters: Filters) => {
-      const currentCampagne = await deps.getCurrentCampagneQuery();
-      const anneeCampagne = activeFilters.anneeCampagne ?? currentCampagne.annee;
+  async (activeFilters: Filters) => {
+    const currentCampagne = await deps.getCurrentCampagneQuery();
+    const anneeCampagne = activeFilters.anneeCampagne ?? currentCampagne.annee;
 
-      const shouldFetchOnlyIntention = anneeCampagne !== CAMPAGNE_DEMANDE;
-      return await deps.countIntentionsQuery({
-        anneeCampagne,
-        ...activeFilters,
-        shouldFetchOnlyIntention,
-      });
-    };
+    const shouldFetchOnlyIntention = anneeCampagne !== CAMPAGNE_DEMANDE;
+    return await deps.countIntentionsQuery({
+      anneeCampagne,
+      ...activeFilters,
+      shouldFetchOnlyIntention,
+    });
+  };
 
 export const countIntentionsUsecase = countIntentionsFactory();

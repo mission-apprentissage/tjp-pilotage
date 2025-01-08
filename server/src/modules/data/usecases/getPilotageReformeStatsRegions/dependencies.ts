@@ -48,7 +48,7 @@ const getStatsRegions = async ({
       return q.where(
         "indicateurRegionSortie.millesimeSortie",
         "=",
-        getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: 0 })
+        getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: 0 }),
       );
     })
     .where("indicateurRegionSortie.cfdContinuum", "is", null)

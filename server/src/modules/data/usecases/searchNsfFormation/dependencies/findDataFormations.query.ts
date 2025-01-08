@@ -42,16 +42,16 @@ export const findManyInDataFormationQuery = async ({
                   unaccent(${eb.ref("familleMetier.libelleFamille")})
                 )`,
               "ilike",
-              `%${search_word}%`
-            )
-          )
+              `%${search_word}%`,
+            ),
+          ),
         ),
         eb.or([
           eb("formationView.typeFamille", "is", null),
           eb("formationView.typeFamille", "=", "specialite"),
           eb("formationView.typeFamille", "=", "option"),
         ]),
-      ])
+      ]),
     )
     .$call((q) => {
       if (filters.codeNsf) {

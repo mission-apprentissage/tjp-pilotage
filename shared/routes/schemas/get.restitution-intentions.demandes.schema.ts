@@ -152,7 +152,7 @@ export const getDemandesRestitutionIntentionsSchema = {
             label: z.coerce.string(),
             value: z.coerce.string(),
             statut: z.coerce.string(),
-          })
+          }),
         ),
       }),
       demandes: z.array(DemandeSchema),

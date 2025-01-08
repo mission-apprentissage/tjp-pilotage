@@ -85,18 +85,18 @@ export const IntentionForm = ({
     onSuccess: async (body) => {
       let message = undefined;
       switch (body.statut) {
-      case DemandeStatutEnum["brouillon"]:
-        message = "Votre demande a bien été enregistrée en tant que brouillon";
-        break;
-      case DemandeStatutEnum["proposition"]:
-        message = "Votre proposition a bien été enregistrée";
-        break;
-      case DemandeStatutEnum["projet de demande"]:
-        message = "Votre projet de demande a bien été enregistré";
-        break;
-      default:
-        message = "Votre demande a bien été enregistrée";
-        break;
+        case DemandeStatutEnum["brouillon"]:
+          message = "Votre demande a bien été enregistrée en tant que brouillon";
+          break;
+        case DemandeStatutEnum["proposition"]:
+          message = "Votre proposition a bien été enregistrée";
+          break;
+        case DemandeStatutEnum["projet de demande"]:
+          message = "Votre projet de demande a bien été enregistré";
+          break;
+        default:
+          message = "Votre demande a bien été enregistrée";
+          break;
       }
 
       if (message) {
@@ -184,7 +184,7 @@ export const IntentionForm = ({
     !!typeDemande && !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
 
   const getStatutSubmit = (
-    statutActuel?: Exclude<DemandeStatutType, "supprimée">
+    statutActuel?: Exclude<DemandeStatutType, "supprimée">,
   ): Exclude<DemandeStatutType, "supprimée"> => {
     if (hasRole({ user: auth?.user, role: "perdir" }) || hasRole({ user: auth?.user, role: "expert_region" })) {
       return DemandeStatutEnum["proposition"];
@@ -198,7 +198,7 @@ export const IntentionForm = ({
 
   const getLabelSubmit = (
     statut: Exclude<DemandeStatutType, "supprimée">,
-    statutPrecedent?: Exclude<DemandeStatutType, "supprimée">
+    statutPrecedent?: Exclude<DemandeStatutType, "supprimée">,
   ): string => {
     if (statut === DemandeStatutEnum["projet de demande"] || statut === DemandeStatutEnum["demande validée"]) {
       return "Valider mon projet de demande";
@@ -239,7 +239,7 @@ export const IntentionForm = ({
                   autreMotifRefus: escapeString(values.autreMotifRefus),
                 },
               },
-            })
+            }),
           )}
         >
           <Container maxW={"container.xl"} pt="4" mb={24}>
@@ -251,15 +251,15 @@ export const IntentionForm = ({
                 { title: "Recueil des demandes", to: "/intentions" },
                 pathname === "/intentions/perdir/saisie/new"
                   ? {
-                    title: "Nouvelle demande",
-                    to: "/intentions/perdir/saisie/new",
-                    active: true,
-                  }
+                      title: "Nouvelle demande",
+                      to: "/intentions/perdir/saisie/new",
+                      active: true,
+                    }
                   : {
-                    title: `Demande n°${formId}`,
-                    to: `/intentions/perdir/saisie/${formId}`,
-                    active: true,
-                  },
+                      title: `Demande n°${formId}`,
+                      to: `/intentions/perdir/saisie/${formId}`,
+                      active: true,
+                    },
               ]}
             />
             <CfdUaiSection
@@ -335,7 +335,7 @@ export const IntentionForm = ({
                                       autreMotifRefus: escapeString(values.autreMotifRefus),
                                     },
                                   },
-                                })
+                                }),
                               )}
                               leftIcon={<CheckIcon />}
                             >
@@ -361,7 +361,7 @@ export const IntentionForm = ({
                                     autreMotifRefus: escapeString(values.autreMotifRefus),
                                   },
                                 },
-                              })
+                              }),
                             )}
                             leftIcon={<CheckIcon />}
                           >

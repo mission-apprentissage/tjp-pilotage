@@ -13,7 +13,7 @@ export const up = async (db: Kysely<unknown>) => {
       ALTER TYPE "demandeStatut" ADD VALUE IF NOT EXISTS 'dossier incomplet';
       ALTER TYPE "demandeStatut" ADD VALUE IF NOT EXISTS 'proposition';
       ALTER TYPE "demandeStatut" ADD VALUE IF NOT EXISTS 'prêt pour le vote';
-    `.compile(db)
+    `.compile(db),
   );
 };
 
@@ -24,6 +24,6 @@ export const down = async (db: Kysely<unknown>) => {
         ALTER TYPE "demandeStatut" RENAME VALUE 'demande validée' TO 'submitted';
         ALTER TYPE "demandeStatut" RENAME VALUE 'refusée' TO 'refused';
         ALTER TYPE "demandeStatut" RENAME VALUE 'supprimée' TO 'deleted';
-        `.compile(db)
+        `.compile(db),
   );
 };
