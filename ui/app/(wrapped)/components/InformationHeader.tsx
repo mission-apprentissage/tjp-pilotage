@@ -1,4 +1,4 @@
-import { Box, Button, CloseButton, Link, Stack, Text, VStack } from "@chakra-ui/react";
+import {Box, Button, CloseButton, Link, Stack, Text, VisuallyHidden,VStack} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
@@ -97,6 +97,7 @@ export const InformationHeader = () => {
               width="auto"
               height="auto"
             >
+              <VisuallyHidden>Fermer</VisuallyHidden>
               <Icon icon="ri:close-fill" fontSize="16px" />
             </CloseButton>
           </Stack>
