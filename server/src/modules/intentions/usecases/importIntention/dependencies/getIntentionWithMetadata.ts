@@ -16,7 +16,7 @@ export const getIntentionWithMetadata = async (id: string) => {
             .selectFrom("dataEtablissement")
             .selectAll("dataEtablissement")
             .whereRef("dataEtablissement.uai", "=", "intention.uai")
-            .limit(1)
+            .limit(1),
         ),
         formation: jsonObjectFrom(
           eb
@@ -27,7 +27,7 @@ export const getIntentionWithMetadata = async (id: string) => {
             ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
             ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
               sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
-                "isFCIL"
+                "isFCIL",
               ),
             ])
             .select((eb) =>
@@ -38,14 +38,14 @@ export const getIntentionWithMetadata = async (id: string) => {
                   .leftJoin("rawData", (join) =>
                     join
                       .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
-                      .on("rawData.type", "=", "nMef")
+                      .on("rawData.type", "=", "nMef"),
                   )
                   .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
-                  .distinctOn("codeDispositif")
-              ).as("dispositifs")
+                  .distinctOn("codeDispositif"),
+              ).as("dispositifs"),
             )
             .whereRef("dataFormation.cfd", "=", "intention.cfd")
-            .limit(1)
+            .limit(1),
         ),
       }).as("metadata"),
     ])

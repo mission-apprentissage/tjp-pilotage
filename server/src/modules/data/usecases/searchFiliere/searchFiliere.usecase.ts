@@ -11,5 +11,5 @@ export const [searchFiliereUsecase] = inject(
         search,
       });
       return disciplines;
-    }
+    },
 );

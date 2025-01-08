@@ -67,7 +67,7 @@ export const SoldeDePlacesTransformeesGraph = ({
         },
       })),
     }),
-    [series, xAxisData]
+    [series, xAxisData],
   );
 
   useLayoutEffect(() => {

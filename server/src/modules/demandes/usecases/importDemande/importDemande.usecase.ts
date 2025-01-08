@@ -72,5 +72,5 @@ export const [importDemande, importDemandeFactory] = inject(
       }
 
       return deps.getDemandeWithMetadata(importedDemande.id);
-    }
+    },
 );

@@ -54,5 +54,5 @@ export const RaisonField = chakra(
         {errors.raison && <FormErrorMessage>{errors.raison.message}</FormErrorMessage>}
       </FormControl>
     );
-  }
+  },
 );

@@ -49,5 +49,5 @@ export const StatCard = chakra(
         </Flex>
       </CardBody>
     </Card>
-  )
+  ),
 );

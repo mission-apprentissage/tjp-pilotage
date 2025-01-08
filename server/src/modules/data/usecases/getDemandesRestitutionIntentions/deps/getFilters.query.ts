@@ -319,7 +319,7 @@ export const getFilters = async ({
     .execute();
 
   const statutsFilters = values(DemandeStatutEnum).filter(
-    (statut) => statut !== DemandeStatutEnum["brouillon"] && statut !== DemandeStatutEnum["supprimée"]
+    (statut) => statut !== DemandeStatutEnum["brouillon"] && statut !== DemandeStatutEnum["supprimée"],
   );
 
   const filters = {
@@ -337,7 +337,7 @@ export const getFilters = async ({
       cleanNull({
         value,
         label: capitalize(value),
-      })
+      }),
     ),
     secteurs: [
       {

@@ -8,7 +8,7 @@ export const createFormationEtablissement = async (formationEtablissement: Inser
     .insertInto("formationEtablissement")
     .values(formationEtablissement)
     .onConflict((oc) =>
-      oc.column("uai").column("cfd").column("codeDispositif").column("voie").doUpdateSet(formationEtablissement)
+      oc.column("uai").column("cfd").column("codeDispositif").column("voie").doUpdateSet(formationEtablissement),
     )
     .returningAll()
     .executeTakeFirstOrThrow();

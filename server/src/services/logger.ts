@@ -54,7 +54,7 @@ function logFormatter(obj: unknown, seen: Set<unknown>): unknown {
 
       return acc;
     },
-    {} as Record<string, unknown>
+    {} as Record<string, unknown>,
   );
 }
 

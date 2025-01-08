@@ -18,7 +18,7 @@ export const up = async (db: Kysely<unknown>) => {
   await db.executeQuery(
     sql`
     INSERT INTO "maintenance" ("isMaintenance") VALUES ('false');
-  `.compile(db)
+  `.compile(db),
   );
 };
 

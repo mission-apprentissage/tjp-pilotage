@@ -105,7 +105,7 @@ export const InformationDonneeIncompletes = ({
       isAnyDataMissingOfChiffresIJ(formation, chiffresIJOffre) ||
       isAnyDataMissingOfChiffresEntreeOffre(chiffresEntreeOffre?.[CURRENT_RENTREE]) ||
       isAnyDataMissingOfEffectifs(formation, chiffresEntreeOffre?.[CURRENT_RENTREE]),
-    [formation, chiffresIJOffre, chiffresEntreeOffre]
+    [formation, chiffresIJOffre, chiffresEntreeOffre],
   );
 
   if (!isAnyDataMissing) {

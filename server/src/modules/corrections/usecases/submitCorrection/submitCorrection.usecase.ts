@@ -84,7 +84,7 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
             errors,
             correction: correction,
           },
-          "Correction incorrecte"
+          "Correction incorrecte",
         );
         throw Boom.badData("Donnée incorrectes", { errors });
       }
@@ -100,5 +100,5 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
       });
 
       return result;
-    }
+    },
 );

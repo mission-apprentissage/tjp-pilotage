@@ -36,7 +36,7 @@ export const getTauxRemplissages = async ({
             codeRegion,
             codeAcademie,
             codeDepartement,
-          })
+          }),
         )
         .with("quatre_dernieres_rentrees", (wb) =>
           wb
@@ -44,13 +44,13 @@ export const getTauxRemplissages = async ({
             .select("rentreeScolaire")
             .distinct()
             .orderBy("rentreeScolaire", "desc")
-            .limit(4)
+            .limit(4),
         )
         .selectFrom("maille_etab")
         .innerJoin("indicateurEntree", "indicateurEntree.formationEtablissementId", "maille_etab.id")
         .where("cfd", "=", cfd)
         .where("indicateurEntree.rentreeScolaire", "in", (sb) =>
-          sb.selectFrom("quatre_dernieres_rentrees").select("rentreeScolaire")
+          sb.selectFrom("quatre_dernieres_rentrees").select("rentreeScolaire"),
         )
         .groupBy(["rentreeScolaire", "libelleFormation"])
         .select((eb) => [
@@ -60,8 +60,8 @@ export const getTauxRemplissages = async ({
         ])
         .orderBy("rentreeScolaire", "asc")
         .execute()
-        .then(cleanNull)
-    )
+        .then(cleanNull),
+    ),
   );
 
   return results.flat();

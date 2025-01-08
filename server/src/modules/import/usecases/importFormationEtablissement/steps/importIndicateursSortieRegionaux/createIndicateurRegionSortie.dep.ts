@@ -14,6 +14,6 @@ export const createIndicateurRegionSortie = async (indicateurRegionSortie: Inser
         .column("codeDispositif")
         .column("voie")
         .column("millesimeSortie")
-        .doUpdateSet(indicateurRegionSortie)
+        .doUpdateSet(indicateurRegionSortie),
     )
     .execute();

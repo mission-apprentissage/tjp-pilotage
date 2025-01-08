@@ -31,7 +31,7 @@ export default async () => {
             return dropdb(db, {}, pgClient);
           }
           return;
-        })
+        }),
       );
     } catch (e) {
       console.error(e);

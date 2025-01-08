@@ -63,12 +63,12 @@ export const verifyFileEncoding = async (filePath: string) => {
   await promise();
 
   const highestScoreEncoding = Object.keys(encodingPredictions).reduce((a, b) =>
-    encodingPredictions[a] > encodingPredictions[b] ? a : b
+    encodingPredictions[a] > encodingPredictions[b] ? a : b,
   );
 
   if (highestScoreEncoding !== "UTF-8") {
     throw new Error(
-      `Le fichier ${filePath} n'est pas correctement encodé en UTF-8. Veuillez le ré-encoder ou le sauvegarder sour le format UTF-8 (BOM).`
+      `Le fichier ${filePath} n'est pas correctement encodé en UTF-8. Veuillez le ré-encoder ou le sauvegarder sour le format UTF-8 (BOM).`,
     );
   }
 

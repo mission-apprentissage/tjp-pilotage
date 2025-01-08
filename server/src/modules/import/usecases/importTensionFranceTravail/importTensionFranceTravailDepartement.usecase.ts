@@ -24,7 +24,7 @@ export const [importTensionFranceTravailDepartement] = inject(
   (deps) => async () => {
     // Create new file
     deps.createFranceTravailTensionFile(
-      deps.filePathManager.getFranceTravailIndicateurTensionDepartementStatsFilePath()
+      deps.filePathManager.getFranceTravailIndicateurTensionDepartementStatsFilePath(),
     );
 
     // Lister tous les ROMES pour lesquels il faut importer les données de tension
@@ -51,7 +51,7 @@ export const [importTensionFranceTravailDepartement] = inject(
             do {
               try {
                 console.log(
-                  `Département (${departementCount}/${departements.length}) ${codeDepartement} et rome ${codeRome} (${romeCount}/${romes.length})`
+                  `Département (${departementCount}/${departements.length}) ${codeDepartement} et rome ${codeRome} (${romeCount}/${romes.length})`,
                 );
 
                 const result = await getStatsPerspectivesRecrutementDepartement(codeRome, codeDepartement);
@@ -59,7 +59,7 @@ export const [importTensionFranceTravailDepartement] = inject(
                 if (result?.length) {
                   await deps.appendFranceTravailTensionFile(
                     deps.filePathManager.getFranceTravailIndicateurTensionDepartementStatsFilePath(),
-                    result
+                    result,
                   );
                 }
 
@@ -68,7 +68,7 @@ export const [importTensionFranceTravailDepartement] = inject(
                 if (e instanceof AxiosError) {
                   if (e.response?.status === 429) {
                     console.warn(
-                      `ERROR [DEP=${codeDepartement},ROME=${codeRome}][Retry ${retryCount}] Too many requests, retrying in 1s`
+                      `ERROR [DEP=${codeDepartement},ROME=${codeRome}][Retry ${retryCount}] Too many requests, retrying in 1s`,
                     );
                     await setTimeout(1000);
                     retryCount++;
@@ -78,11 +78,11 @@ export const [importTensionFranceTravailDepartement] = inject(
                   retry = false;
                   if (e.response?.data?.message?.includes("FiltreErreurSldng")) {
                     console.error(
-                      `ERROR [DEP=${codeDepartement},ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`
+                      `ERROR [DEP=${codeDepartement},ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`,
                     );
                   } else {
                     console.error(
-                      `ERROR [DEP=${codeDepartement},ROME=${codeRome}] ${`Status code : ${e.response?.status}`}`
+                      `ERROR [DEP=${codeDepartement},ROME=${codeRome}] ${`Status code : ${e.response?.status}`}`,
                     );
                   }
                 } else {
@@ -92,9 +92,9 @@ export const [importTensionFranceTravailDepartement] = inject(
               }
             } while (retry);
           },
-          { parallel: 10 }
+          { parallel: 10 },
         );
-      }
+      },
     );
-  }
+  },
 );

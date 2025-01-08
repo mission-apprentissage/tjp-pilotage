@@ -70,7 +70,7 @@ export const [importTensionRomeRegion] = inject(
       },
       {
         parallel: 20,
-      }
+      },
     );
-  }
+  },
 );

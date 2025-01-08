@@ -23,7 +23,7 @@ export const AmiCmaValideField = chakra(({ disabled, className }: { disabled?: b
         if (name === "amiCma") setValue("amiCmaValide", undefined);
         if (name === "amiCmaEnCoursValidation" && getValues("amiCmaEnCoursValidation") === true)
           setValue("amiCmaValide", false);
-      }).unsubscribe
+      }).unsubscribe,
   );
 
   const [typeDemande, amiCma] = watch(["typeDemande", "amiCma"]);

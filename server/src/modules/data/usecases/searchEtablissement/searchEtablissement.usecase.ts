@@ -21,5 +21,5 @@ export const [searchEtablissement] = inject(
         commune: etablissement.commune,
       }));
       return suggestions;
-    }
+    },
 );

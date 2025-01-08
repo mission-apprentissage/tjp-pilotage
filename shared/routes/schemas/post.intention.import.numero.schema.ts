@@ -18,7 +18,7 @@ const FormationMetadataSchema = z
         z.object({
           codeDispositif: z.string().optional(),
           libelleDispositif: z.string().optional(),
-        })
+        }),
       )
       .optional(),
   })
@@ -67,7 +67,7 @@ export const importIntentionSchema = {
     200: IntentionSchema.partial().merge(
       z.object({
         metadata: MetadataSchema,
-      })
+      }),
     ),
   },
 };

@@ -119,17 +119,17 @@ export const QuadrantSection = ({
     {
       keepPreviousData: true,
       staleTime: 100000000,
-    }
+    },
   );
 
   const formationsQuadrant =
     formations?.filter(
-      (formation) => formation.tauxInsertion && formation.tauxPoursuite && formation.placesTransformees
+      (formation) => formation.tauxInsertion && formation.tauxPoursuite && formation.placesTransformees,
     ) ?? [];
 
   const formation = useMemo(
     () => formations?.find((item) => `${item.cfd}_${item.codeDispositif}` === currentFormationId),
-    [currentFormationId, formations]
+    [currentFormationId, formations],
   );
 
   const getLibelleTerritoire = (territoires?: Array<{ label: string; value: string }>, code?: string) => {
@@ -232,7 +232,7 @@ export const QuadrantSection = ({
                   placesColoreesFermees: "Places colorées fermées",
                   solde: "Solde",
                   ratioFermeture: "Ratio de fermeture",
-                }
+                },
               );
             }}
             onExportExcel={async () => {
@@ -251,7 +251,7 @@ export const QuadrantSection = ({
                   placesColoreesFermees: "Places colorées fermées",
                   solde: "Solde",
                   ratioFermeture: "Ratio de fermeture",
-                }
+                },
               );
             }}
             variant="ghost"
@@ -329,7 +329,7 @@ export const QuadrantSection = ({
                       libelleRegion: "Région",
                       libelleAcademie: "Académie",
                       libelleDepartement: "Département",
-                    }
+                    },
                   );
                 }}
                 onExportExcel={async () => {
@@ -364,7 +364,7 @@ export const QuadrantSection = ({
                       libelleRegion: "Région",
                       libelleAcademie: "Académie",
                       libelleDepartement: "Département",
-                    }
+                    },
                   );
                 }}
                 variant="ghost"
@@ -513,12 +513,12 @@ export const QuadrantSection = ({
                     >
                       {`${formationsQuadrant?.length ?? "-"} certifications -
                                 ${
-        formationsQuadrant?.reduce(
-          // @ts-expect-error TODO
-          (acc, { placesTransformees }) => acc + (placesTransformees ?? 0),
-          0
-        ) ?? "-"
-        } places transformées`}
+                                  formationsQuadrant?.reduce(
+                                    // @ts-expect-error TODO
+                                    (acc, { placesTransformees }) => acc + (placesTransformees ?? 0),
+                                    0,
+                                  ) ?? "-"
+                                } places transformées`}
                     </Highlight>
                   </Text>
                 </Flex>
@@ -540,7 +540,7 @@ export const QuadrantSection = ({
                             effectif: formation.placesTransformees,
                             tauxInsertion: formation.tauxInsertion ?? 0,
                             tauxPoursuite: formation.tauxPoursuite ?? 0,
-                          })
+                          }),
                         )}
                         effectifSizes={EFFECTIF_SIZES}
                       />
@@ -551,7 +551,7 @@ export const QuadrantSection = ({
                           (formation) => ({
                             ...formation,
                             effectif: formation.placesTransformees,
-                          })
+                          }),
                         )}
                         handleClick={setCurrentFormationId}
                         currentFormationId={currentFormationId}

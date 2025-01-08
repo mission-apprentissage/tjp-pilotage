@@ -16,7 +16,7 @@ export const up = async (db: Kysely<unknown>) => {
         AFTER INSERT OR UPDATE OR DELETE ON ${sql.table(table)}
             FOR EACH ROW EXECUTE PROCEDURE change_trigger();
     `.execute(db);
-    })
+    }),
   );
 };
 

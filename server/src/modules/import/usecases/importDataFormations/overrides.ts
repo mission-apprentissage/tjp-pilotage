@@ -6,7 +6,7 @@ import { getStaticFilePath } from "@/utils/getStaticFilePath";
 
 const overridesRef = fs.readFileSync(
   getStaticFilePath(`./import/usecases/importDataFormations/OVERRIDES.csv`),
-  "utf-8"
+  "utf-8",
 );
 const overridesData = parse(overridesRef, {
   columns: true,
@@ -27,5 +27,5 @@ export const overrides = overridesData.reduce(
     ...acc,
     [`${cur.Diplôme}_${cur.Libellé}`]: cur,
   }),
-  {} as Record<string, (typeof overridesData)[number]>
+  {} as Record<string, (typeof overridesData)[number]>,
 );

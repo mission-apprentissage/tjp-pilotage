@@ -12,7 +12,7 @@ export const up = async (db: Kysely<unknown>) => {
     .createTable("tensionRomeDepartement")
     .addColumn("codeRome", "varchar(5)", (c) => c.references("rome.codeRome").onDelete("cascade").notNull())
     .addColumn("codeDepartement", "varchar(100)", (c) =>
-      c.references("departement.codeDepartement").onDelete("cascade").notNull()
+      c.references("departement.codeDepartement").onDelete("cascade").notNull(),
     )
     .addColumn("codeTension", "varchar(100)", (c) => c.references("tension.codeTension").onDelete("cascade").notNull())
     .addColumn("annee", "varchar(4)", (c) => c.notNull())

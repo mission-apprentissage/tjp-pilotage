@@ -20,6 +20,6 @@ export const isInDenominateurTauxTransfo = ({
         .when("dataFormation.typeFamille", "in", ["2nde_commune", "1ere_commune"])
         .then(false)
         .else(eb("constatRentree.anneeDispositif", "=", 1))
-        .end()
+        .end(),
     )
     .end();

@@ -452,5 +452,5 @@ export const CorrectionDemandeButton = chakra(
         </Modal>
       </>
     );
-  }
+  },
 );

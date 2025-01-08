@@ -19,7 +19,7 @@ const transformEffectifs = (effectifs: { rentreeScolaire: string; effectif: numb
       ...acc,
       [`effectif ${rentreeScolaire}`]: effectif,
     }),
-    {} as Record<string, number>
+    {} as Record<string, number>,
   );
 };
 
@@ -29,7 +29,7 @@ const transformEtablissements = (etablissements: { rentreeScolaire: string; nbEt
       ...acc,
       [`etablissements ${rentreeScolaire}`]: nbEtablissements,
     }),
-    {} as Record<string, number>
+    {} as Record<string, number>,
   );
 };
 
@@ -40,7 +40,7 @@ const transformTauxIJ = (taux: TauxIJType, tauxIJ: TauxIJValues) => {
       [`${taux} ${libelle} - scolaire`]: scolaire,
       [`${taux} ${libelle} - apprentissage`]: apprentissage,
     }),
-    {} as Record<string, number | undefined>
+    {} as Record<string, number | undefined>,
   );
 };
 
@@ -50,7 +50,7 @@ const transformTauxPressions = (tauxPressions: TauxPressionValue[]) => {
       ...acc,
       [`tauxPressions ${rentreeScolaire} - ${scope}`]: value,
     }),
-    {} as Record<string, number | undefined>
+    {} as Record<string, number | undefined>,
   );
 };
 
@@ -60,7 +60,7 @@ const transformTauxRemplissages = (tauxRemplissages: TauxRemplissageValue[]) => 
       ...acc,
       [`tauxRemplissages ${rentreeScolaire} - ${scope}`]: value,
     }),
-    {} as Record<string, number | undefined>
+    {} as Record<string, number | undefined>,
   );
 };
 
@@ -174,7 +174,7 @@ export const ExportListIndicateurs = ({
     downloadCsv(
       formatExportFilename("domaine-de-formation_etablissements"),
       [extractDatas({ formation, indicateurs })],
-      columns
+      columns,
     );
   };
 
@@ -184,7 +184,7 @@ export const ExportListIndicateurs = ({
     downloadExcel(
       formatExportFilename("domaine-de-formation_etablissements"),
       [extractDatas({ formation, indicateurs })],
-      columns
+      columns,
     );
   };
 

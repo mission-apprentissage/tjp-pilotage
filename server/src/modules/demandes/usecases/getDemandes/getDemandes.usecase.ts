@@ -12,20 +12,20 @@ const getDemandesFactory =
       getCurrentCampagneQuery,
       getCampagne,
       getFilters,
-    }
+    },
   ) =>
-    async (activeFilters: Filters) => {
-      const currentCampagne = await deps.getCurrentCampagneQuery();
-      const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
+  async (activeFilters: Filters) => {
+    const currentCampagne = await deps.getCurrentCampagneQuery();
+    const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
 
-      const [demandes, campagne, filters] = await Promise.all([
-        deps.getDemandes({ ...activeFilters, campagne: anneeCampagne }),
-        deps.getCampagne(anneeCampagne),
-        deps.getFilters(activeFilters),
-      ]);
-      console.log(demandes);
+    const [demandes, campagne, filters] = await Promise.all([
+      deps.getDemandes({ ...activeFilters, campagne: anneeCampagne }),
+      deps.getCampagne(anneeCampagne),
+      deps.getFilters(activeFilters),
+    ]);
+    console.log(demandes);
 
-      return { ...demandes, currentCampagne, campagne, filters };
-    };
+    return { ...demandes, currentCampagne, campagne, filters };
+  };
 
 export const getDemandesUsecase = getDemandesFactory();

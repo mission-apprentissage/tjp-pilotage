@@ -32,7 +32,7 @@ export const ColorationField = chakra(({ disabled, className }: { disabled?: boo
       watch((_, { name }) => {
         if (name !== "typeDemande") return;
         if (isTypeColoration(getValues("typeDemande"))) setValue("coloration", true);
-      }).unsubscribe
+      }).unsubscribe,
   );
 
   return (

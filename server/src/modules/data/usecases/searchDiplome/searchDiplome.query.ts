@@ -55,9 +55,9 @@ export const findManyInDataFormationQuery = async ({
                   unaccent(${eb.ref("familleMetier.libelleFamille")})
                 )`,
               "ilike",
-              `%${search_word}%`
-            )
-          )
+              `%${search_word}%`,
+            ),
+          ),
         ),
         eb.or([
           eb("dataFormation.dateFermeture", "is", null),
@@ -68,7 +68,7 @@ export const findManyInDataFormationQuery = async ({
           eb("dataFormation.typeFamille", "=", "specialite"),
           eb("dataFormation.typeFamille", "=", "option"),
         ]),
-      ])
+      ]),
     )
     .$call((q) => {
       if (filters.codeNsf) {
@@ -88,8 +88,8 @@ export const findManyInDataFormationQuery = async ({
               .selectFrom("dispositif")
               .select(["libelleDispositif", "codeDispositif"])
               .whereRef("dispositif.codeNiveauDiplome", "=", "dataFormation.codeNiveauDiplome")
-              .distinctOn("codeDispositif")
-          )
+              .distinctOn("codeDispositif"),
+          ),
         )
         .else(
           jsonArrayFrom(
@@ -99,14 +99,14 @@ export const findManyInDataFormationQuery = async ({
               .leftJoin("rawData", (join) =>
                 join
                   .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
-                  .on("rawData.type", "=", "nMef")
+                  .on("rawData.type", "=", "nMef"),
               )
               .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
-              .distinctOn("codeDispositif")
-          )
+              .distinctOn("codeDispositif"),
+          ),
         )
         .end()
-        .as("dispositifs")
+        .as("dispositifs"),
     )
     .select((eb) => [
       "dataFormation.cfd as value",

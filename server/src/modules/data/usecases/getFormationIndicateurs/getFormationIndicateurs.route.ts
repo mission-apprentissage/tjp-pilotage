@@ -19,6 +19,6 @@ export const getFormationIndicateursRoute = (server: Server) => {
         const result = await getFormationIndicateursUseCase(cfd, request.query);
         response.status(200).send(result);
       },
-    })
+    }),
   );
 };

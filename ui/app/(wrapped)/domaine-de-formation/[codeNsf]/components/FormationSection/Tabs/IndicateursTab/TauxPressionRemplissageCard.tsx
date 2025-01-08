@@ -28,7 +28,7 @@ const tauxAttractiviteOptions = (isBTS: boolean) => [
 
 export const getTauxAttractiviteDatas = (
   datas: FormationIndicateurs,
-  tauxAttractiviteSelected: TauxAttractiviteType
+  tauxAttractiviteSelected: TauxAttractiviteType,
 ): Record<string, Array<number | undefined>> => {
   const scopedDatas: Record<string, Array<number | undefined>> = {};
   const scopes = [ScopeEnum.national, ScopeEnum.région, ScopeEnum.académie, ScopeEnum.département];
@@ -38,7 +38,7 @@ export const getTauxAttractiviteDatas = (
     const scopeValues = values.filter((d) => d.scope === scope);
     if (scopeValues.length > 0) {
       scopedDatas[scope] = scopeValues.map(({ value }) =>
-        typeof value === "undefined" ? undefined : formatNumber(value, 2)
+        typeof value === "undefined" ? undefined : formatNumber(value, 2),
       );
     }
   });
@@ -133,13 +133,13 @@ export const TauxPressionRemplissageCard = ({
       tauxAttractiviteSelected === "tauxRemplissage" ? indicateurs.tauxRemplissages : indicateurs.tauxPressions;
 
     return _.uniq(values.map(({ rentreeScolaire }) => `RS ${rentreeScolaire}`)).sort(
-      (a, b) => parseInt(a) - parseInt(b)
+      (a, b) => parseInt(a) - parseInt(b),
     );
   }, [tauxAttractiviteSelected, indicateurs.tauxPressions, indicateurs.tauxRemplissages]);
 
   const lineChartDatas = useMemo(
     () => getTauxAttractiviteDatas(indicateurs, tauxAttractiviteSelected),
-    [indicateurs, tauxAttractiviteSelected]
+    [indicateurs, tauxAttractiviteSelected],
   );
 
   return (

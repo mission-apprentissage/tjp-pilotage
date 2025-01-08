@@ -11,5 +11,5 @@ export const [searchDomaineProfessionnel] = inject(
         search,
       });
       return nsf;
-    }
+    },
 );

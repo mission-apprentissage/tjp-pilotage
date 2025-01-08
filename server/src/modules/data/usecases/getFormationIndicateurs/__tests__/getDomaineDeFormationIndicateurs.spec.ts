@@ -51,7 +51,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { rentreeScolaire: "2021", nbEtablissements: 797 },
           { rentreeScolaire: "2022", nbEtablissements: 802 },
           { rentreeScolaire: "2023", nbEtablissements: 806 },
-        ])
+        ]),
       );
     });
 
@@ -71,7 +71,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { rentreeScolaire: "2021", nbEtablissements: 92 },
           { rentreeScolaire: "2022", nbEtablissements: 94 },
           { rentreeScolaire: "2023", nbEtablissements: 95 },
-        ])
+        ]),
       );
     });
 
@@ -92,7 +92,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { rentreeScolaire: "2021", nbEtablissements: 37 },
           { rentreeScolaire: "2022", nbEtablissements: 38 },
           { rentreeScolaire: "2023", nbEtablissements: 39 },
-        ])
+        ]),
       );
     });
 
@@ -114,7 +114,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { rentreeScolaire: "2021", nbEtablissements: 18 },
           { rentreeScolaire: "2022", nbEtablissements: 19 },
           { rentreeScolaire: "2023", nbEtablissements: 20 },
-        ])
+        ]),
       );
     });
   });
@@ -135,7 +135,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { rentreeScolaire: "2021", effectif: 22823 },
           { rentreeScolaire: "2022", effectif: 22658 },
           { rentreeScolaire: "2023", effectif: 23268 },
-        ])
+        ]),
       );
     });
 
@@ -155,7 +155,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { rentreeScolaire: "2021", effectif: 2071 },
           { rentreeScolaire: "2022", effectif: 2024 },
           { rentreeScolaire: "2023", effectif: 2088 },
-        ])
+        ]),
       );
     });
 
@@ -176,7 +176,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { rentreeScolaire: "2021", effectif: 776 },
           { rentreeScolaire: "2022", effectif: 819 },
           { rentreeScolaire: "2023", effectif: 827 },
-        ])
+        ]),
       );
     });
 
@@ -198,7 +198,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { rentreeScolaire: "2021", effectif: 444 },
           { rentreeScolaire: "2022", effectif: 466 },
           { rentreeScolaire: "2023", effectif: 480 },
-        ])
+        ]),
       );
     });
   });
@@ -216,7 +216,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.2967, libelle: "2019+20", scolaire: 0.509 },
           { apprentissage: 0.4036, libelle: "2020+21", scolaire: 0.5379 },
           { apprentissage: 0.3954, libelle: "2021+22", scolaire: 0.5504 },
-        ])
+        ]),
       );
 
       expect(result.tauxIJ.tauxInsertion).toEqual(
@@ -224,7 +224,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.5937, libelle: "2019+20", scolaire: 0.3496 },
           { apprentissage: 0.6249, libelle: "2020+21", scolaire: 0.3531 },
           { apprentissage: 0.6137, libelle: "2021+22", scolaire: 0.4291 },
-        ])
+        ]),
       );
 
       expect(result.tauxIJ.tauxDevenirFavorable).toEqual(
@@ -232,7 +232,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.7143, libelle: "2019+20", scolaire: 0.6807 },
           { apprentissage: 0.7755, libelle: "2020+21", scolaire: 0.7011 },
           { apprentissage: 0.7664, libelle: "2021+22", scolaire: 0.7433 },
-        ])
+        ]),
       );
     });
 
@@ -249,7 +249,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.2518, libelle: "2019+20", scolaire: 0.5095 },
           { apprentissage: 0.375, libelle: "2020+21", scolaire: 0.5478 },
           { apprentissage: 0.4047, libelle: "2021+22", scolaire: 0.5769 },
-        ])
+        ]),
       );
 
       expect(result.tauxIJ.tauxInsertion).toEqual(
@@ -257,7 +257,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.6362, libelle: "2019+20", scolaire: 0.4757 },
           { apprentissage: 0.7, libelle: "2020+21", scolaire: 0.468 },
           { apprentissage: 0.6719, libelle: "2021+22", scolaire: 0.4935 },
-        ])
+        ]),
       );
 
       expect(result.tauxIJ.tauxDevenirFavorable).toEqual(
@@ -265,7 +265,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.7278, libelle: "2019+20", scolaire: 0.7428 },
           { apprentissage: 0.8125, libelle: "2020+21", scolaire: 0.7594 },
           { apprentissage: 0.8047, libelle: "2021+22", scolaire: 0.7857 },
-        ])
+        ]),
       );
     });
 
@@ -283,7 +283,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.2518, libelle: "2019+20", scolaire: 0.5095 },
           { apprentissage: 0.375, libelle: "2020+21", scolaire: 0.5478 },
           { apprentissage: 0.4047, libelle: "2021+22", scolaire: 0.5769 },
-        ])
+        ]),
       );
 
       expect(result.tauxIJ.tauxInsertion).toEqual(
@@ -291,7 +291,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.6362, libelle: "2019+20", scolaire: 0.4757 },
           { apprentissage: 0.7, libelle: "2020+21", scolaire: 0.468 },
           { apprentissage: 0.6719, libelle: "2021+22", scolaire: 0.4935 },
-        ])
+        ]),
       );
 
       expect(result.tauxIJ.tauxDevenirFavorable).toEqual(
@@ -299,7 +299,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.7278, libelle: "2019+20", scolaire: 0.7428 },
           { apprentissage: 0.8125, libelle: "2020+21", scolaire: 0.7594 },
           { apprentissage: 0.8047, libelle: "2021+22", scolaire: 0.7857 },
-        ])
+        ]),
       );
     });
 
@@ -318,7 +318,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.2518, libelle: "2019+20", scolaire: 0.5095 },
           { apprentissage: 0.375, libelle: "2020+21", scolaire: 0.5478 },
           { apprentissage: 0.4047, libelle: "2021+22", scolaire: 0.5769 },
-        ])
+        ]),
       );
 
       expect(result.tauxIJ.tauxInsertion).toEqual(
@@ -326,7 +326,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.6362, libelle: "2019+20", scolaire: 0.4757 },
           { apprentissage: 0.7, libelle: "2020+21", scolaire: 0.468 },
           { apprentissage: 0.6719, libelle: "2021+22", scolaire: 0.4935 },
-        ])
+        ]),
       );
 
       expect(result.tauxIJ.tauxDevenirFavorable).toEqual(
@@ -334,7 +334,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.7278, libelle: "2019+20", scolaire: 0.7428 },
           { apprentissage: 0.8125, libelle: "2020+21", scolaire: 0.7594 },
           { apprentissage: 0.8047, libelle: "2021+22", scolaire: 0.7857 },
-        ])
+        ]),
       );
     });
   });
@@ -365,11 +365,11 @@ describe("GET /api/formation/:cfd/indicators", () => {
         const result = await response.json<Response>();
 
         const tauxPressionFound = result.tauxPressions.find(
-          (tp) => tp.rentreeScolaire === rs && tp.scope === scope && tp.value === tauxPression
+          (tp) => tp.rentreeScolaire === rs && tp.scope === scope && tp.value === tauxPression,
         );
 
         expect(tauxPressionFound).toBeDefined();
-      }
+      },
     );
   });
 
@@ -399,11 +399,11 @@ describe("GET /api/formation/:cfd/indicators", () => {
         const result = await response.json<Response>();
 
         const tauxRemplissageFound = result.tauxRemplissages.find(
-          (tp) => tp.rentreeScolaire === rs && tp.scope === scope && tp.value === tauxRemplissage
+          (tp) => tp.rentreeScolaire === rs && tp.scope === scope && tp.value === tauxRemplissage,
         );
 
         expect(tauxRemplissageFound).toBeDefined();
-      }
+      },
     );
   });
 });

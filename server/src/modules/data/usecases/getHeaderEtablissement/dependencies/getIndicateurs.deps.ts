@@ -66,22 +66,22 @@ export const getIndicateurs = async ({
     valeurAjoutee: getIndicateur(
       valeurAjoutee[0]?.valeurAjoutee,
       valeurAjoutee[1]?.valeurAjoutee,
-      valeurAjoutee[1]?.millesime?.replace("_", "+")
+      valeurAjoutee[1]?.millesime?.replace("_", "+"),
     ),
     tauxPoursuite: getIndicateur(
       tauxIJ[0]?.["tauxPoursuite"],
       tauxIJ[1]?.["tauxPoursuite"],
-      tauxIJ[1]?.["millesimeSortie"]?.replace("_", "+")
+      tauxIJ[1]?.["millesimeSortie"]?.replace("_", "+"),
     ),
     tauxDevenir: getIndicateur(
       tauxIJ[0]?.["tauxDevenir"],
       tauxIJ[1]?.["tauxDevenir"],
-      tauxIJ[1]?.["millesimeSortie"]?.replace("_", "+")
+      tauxIJ[1]?.["millesimeSortie"]?.replace("_", "+"),
     ),
     tauxEmploi6mois: getIndicateur(
       tauxIJ[0]?.["tauxEmploi6mois"],
       tauxIJ[1]?.["tauxEmploi6mois"],
-      tauxIJ[1]?.["millesimeSortie"]?.replace("_", "+")
+      tauxIJ[1]?.["millesimeSortie"]?.replace("_", "+"),
     ),
   };
 };

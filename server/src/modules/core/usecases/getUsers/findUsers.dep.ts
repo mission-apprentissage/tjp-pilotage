@@ -41,9 +41,9 @@ export const findUsers = async ({
               unaccent(${w.ref("user.lastname")})
             )`,
             "ilike",
-            `%${search_word}%`
-          )
-        )
+            `%${search_word}%`,
+          ),
+        ),
       );
     })
     .$call((q) => {

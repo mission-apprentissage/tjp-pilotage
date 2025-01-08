@@ -8,7 +8,7 @@ export const createFormationHistorique = async (
   ancienneFormation: Insertable<DB["formation"]> & {
     nouveauCFD: string;
     voie: string;
-  }
+  },
 ) => {
   const formationHistorique = {
     cfd: ancienneFormation.nouveauCFD,
@@ -22,7 +22,7 @@ export const createFormationHistorique = async (
         .insertInto("formation")
         .values(omit(ancienneFormation, ["nouveauCFD", "voie"]))
         .onConflict((oc) =>
-          oc.column("codeFormationDiplome").doUpdateSet(omit(ancienneFormation, ["nouveauCFD", "voie"]))
+          oc.column("codeFormationDiplome").doUpdateSet(omit(ancienneFormation, ["nouveauCFD", "voie"])),
         )
         .execute();
 

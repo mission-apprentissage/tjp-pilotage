@@ -26,7 +26,7 @@ export const getIntentions = async (
     order,
     orderBy,
   }: Filters,
-  shouldFetchOnlyIntention: boolean
+  shouldFetchOnlyIntention: boolean,
 ) => {
   const search_array = getNormalizedSearchArray(search);
 
@@ -50,23 +50,23 @@ export const getIntentions = async (
       (join) =>
         join
           .onRef("changementStatut.intentionNumero", "=", "intention.numero")
-          .onRef("changementStatut.statut", "=", "intention.statut")
+          .onRef("changementStatut.statut", "=", "intention.statut"),
     )
     .leftJoin("user", "user.id", "intention.createdBy")
     .leftJoin("suivi", (join) =>
-      join.onRef("suivi.intentionNumero", "=", "intention.numero").on("userId", "=", user.id)
+      join.onRef("suivi.intentionNumero", "=", "intention.numero").on("userId", "=", user.id),
     )
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "intention.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
-      })
+      }),
     )
     .leftJoin("intentionAccessLog", (join) =>
       join
         .onRef("intentionAccessLog.intentionNumero", "=", "intention.numero")
         .onRef("intentionAccessLog.updatedAt", ">", "intention.updatedAt")
-        .on("intentionAccessLog.userId", "=", user.id)
+        .on("intentionAccessLog.userId", "=", user.id),
     )
     .selectAll("intention")
     .select((eb) => [
@@ -92,7 +92,7 @@ export const getIntentions = async (
             .where(isIntentionCampagneEnCours(eb, "intentionImportee"))
             .limit(1)
             .orderBy("updatedAt desc")
-            .as("allIntentionImportee")
+            .as("allIntentionImportee"),
         )
         .select("allIntentionImportee.numero")
         .where("allIntentionImportee.statut", "<>", DemandeStatutEnum["supprimée"])
@@ -106,7 +106,7 @@ export const getIntentions = async (
             "user.id",
             "user.role",
           ])
-          .where("intention.createdBy", "is not", null)
+          .where("intention.createdBy", "is not", null),
       ).as("createdBy"),
       jsonObjectFrom(
         eb
@@ -117,7 +117,7 @@ export const getIntentions = async (
             "user.id",
             "user.role",
           ])
-          .where("intention.updatedBy", "is not", null)
+          .where("intention.updatedBy", "is not", null),
       ).as("updatedBy"),
       jsonArrayFrom(
         eb
@@ -130,7 +130,7 @@ export const getIntentions = async (
             ref("avis.typeAvis").as("type"),
             ref("avis.userFonction").as("fonction"),
           ])
-          .where(isAvisVisible({ user }))
+          .where(isAvisVisible({ user })),
       ).as("avis"),
       "changementStatut.commentaire as lastChangementStatutCommentaire",
     ])
@@ -140,7 +140,7 @@ export const getIntentions = async (
         .whereRef("correction.intentionNumero", "=", "intention.numero")
         .select("correction.id")
         .limit(1)
-        .as("correction")
+        .as("correction"),
     )
     .$call((eb) => {
       if (statut) {
@@ -148,7 +148,7 @@ export const getIntentions = async (
           return eb.innerJoin("suivi as suiviUtilisateur", (join) =>
             join
               .onRef("suiviUtilisateur.intentionNumero", "=", "intention.numero")
-              .on("suiviUtilisateur.userId", "=", user.id)
+              .on("suiviUtilisateur.userId", "=", user.id),
           );
         return eb.where("intention.statut", "=", statut);
       }
@@ -168,10 +168,10 @@ export const getIntentions = async (
                   unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
                 )`,
                 "ilike",
-                `%${search_word}%`
-              )
-            )
-          )
+                `%${search_word}%`,
+              ),
+            ),
+          ),
         );
       return eb;
     })
@@ -215,7 +215,7 @@ export const getIntentions = async (
         createdAt: intention.createdAt?.toISOString(),
         updatedAt: intention.updatedAt?.toISOString(),
         alreadyAccessed: intention.alreadyAccessed ?? true,
-      })
+      }),
     ),
     count: parseInt(intentions[0]?.count) || 0,
     campagnes: campagnes.map(cleanNull),

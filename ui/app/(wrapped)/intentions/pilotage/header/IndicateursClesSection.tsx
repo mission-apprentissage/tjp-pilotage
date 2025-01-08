@@ -56,10 +56,10 @@ const Loader = () => {
 
 const generateGetScopedData =
   (code: string | undefined, data?: StatsPilotageIntentions) =>
-    (statut: Statut, indicateur: Indicateur): number => {
-      if (!code) return 0;
-      return data?.[statut]?.[`_${code}`]?.[indicateur] as number;
-    };
+  (statut: Statut, indicateur: Indicateur): number => {
+    if (!code) return 0;
+    return data?.[statut]?.[`_${code}`]?.[indicateur] as number;
+  };
 
 export const IndicateursClesSection = ({
   data,
@@ -85,12 +85,12 @@ export const IndicateursClesSection = ({
     {
       keepPreviousData: true,
       staleTime: 10000000,
-    }
+    },
   );
 
   const getScopedData = useMemo(
     () => (code ? generateGetScopedData(code, data) : generateGetScopedData(ScopeEnum.national, nationalStats)),
-    [generateGetScopedData, data, code, nationalStats]
+    [generateGetScopedData, data, code, nationalStats],
   );
 
   const shouldShowProjetDemande = () =>
@@ -175,7 +175,7 @@ export const IndicateursClesSection = ({
                 {formatPercentage(
                   getScopedData("all", "placesOuvertesQ1") / getScopedData("all", "placesOuvertes"),
                   1,
-                  "-"
+                  "-",
                 )}
               </Text>
               <Flex direction={"row"} gap={2}>
@@ -212,7 +212,7 @@ export const IndicateursClesSection = ({
                 {formatPercentage(
                   getScopedData("all", "placesFermeesQ4") / getScopedData("all", "placesFermees"),
                   1,
-                  "-"
+                  "-",
                 )}
               </Text>
               <Flex direction={"row"} gap={2}>
@@ -270,7 +270,7 @@ export const IndicateursClesSection = ({
                 {formatPercentage(
                   getScopedData("all", "placesColoreesQ4") / getScopedData("all", "placesColorees"),
                   1,
-                  "-"
+                  "-",
                 )}
               </Text>
               <Flex direction={"row"} gap={2}>

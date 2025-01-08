@@ -33,7 +33,7 @@ export const PrimaryFiltersSection = ({
   activeFilters: FiltersDemandesRestitutionIntentions;
   handleFilters: (
     type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions],
   ) => void;
   filterTracker: (filterName: keyof FiltersDemandesRestitutionIntentions) => () => void;
   isLoading: boolean;
@@ -143,7 +143,7 @@ export const PrimaryFiltersSection = ({
                                   (rentreeScolaire.value ===
                                     data?.filters.campagnes?.find(
                                       // @ts-expect-error TODO
-                                      (c) => c.value === activeFilters.campagne
+                                      (c) => c.value === activeFilters.campagne,
                                     )?.value ??
                                     "") && (
                                     <Tag mx={3} colorScheme="red">
@@ -153,7 +153,7 @@ export const PrimaryFiltersSection = ({
                                 }
                               </Flex>
                             </MenuItem>
-                          )
+                          ),
                         )}
                       </MenuList>
                     </Menu>

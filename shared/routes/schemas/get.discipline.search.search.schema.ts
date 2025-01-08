@@ -9,7 +9,7 @@ export const searchDisciplineSchema = {
       z.object({
         value: z.string().optional(),
         label: z.string().optional(),
-      })
+      }),
     ),
   },
 };

@@ -17,12 +17,12 @@ const getBase = ({ uai, rentreeScolaire }: { uai: string; rentreeScolaire: strin
     .leftJoin("dispositif", (join) =>
       join
         .onRef("dispositif.codeDispositif", "=", "formationEtablissement.codeDispositif")
-        .on("formationEtablissement.voie", "=", "scolaire")
+        .on("formationEtablissement.voie", "=", "scolaire"),
     )
     .leftJoin("indicateurEntree", (join) =>
       join
         .onRef("indicateurEntree.formationEtablissementId", "=", "formationEtablissement.id")
-        .on("formationEtablissement.voie", "=", "scolaire")
+        .on("formationEtablissement.voie", "=", "scolaire"),
     )
     .where((w) =>
       w.and([
@@ -31,7 +31,7 @@ const getBase = ({ uai, rentreeScolaire }: { uai: string; rentreeScolaire: strin
           w("indicateurEntree.rentreeScolaire", "is", null),
         ]),
         w("formationEtablissement.uai", "=", uai),
-      ])
+      ]),
     );
 
 export const getChiffresIj = ({
@@ -89,7 +89,7 @@ export const getChiffresNumerateurAndDenominateur = ({
             .case()
             .when(eb.and([eb("nbInsertion6mois", ">=", eb.val(0)), eb("nbSortants", ">=", eb.val(0))]))
             .then(sql<number>`${eb.ref("nbInsertion6mois")}::float`)
-            .end()
+            .end(),
         )
         .as("numerateurEmploi"),
       eb.fn
@@ -98,7 +98,7 @@ export const getChiffresNumerateurAndDenominateur = ({
             .case()
             .when(eb.and([eb("nbInsertion6mois", ">=", eb.val(0)), eb("nbSortants", ">=", eb.val(0))]))
             .then(sql<number>`${eb.ref("nbSortants")}::float`)
-            .end()
+            .end(),
         )
         .as("denominateurEmploi"),
       eb.fn
@@ -107,7 +107,7 @@ export const getChiffresNumerateurAndDenominateur = ({
             .case()
             .when(eb.and([eb("nbPoursuiteEtudes", ">=", eb.val(0)), eb("effectifSortie", ">=", eb.val(0))]))
             .then(sql<number>`${eb.ref("nbPoursuiteEtudes")}::float`)
-            .end()
+            .end(),
         )
         .as("numerateurPoursuite"),
       eb.fn
@@ -116,7 +116,7 @@ export const getChiffresNumerateurAndDenominateur = ({
             .case()
             .when(eb.and([eb("nbPoursuiteEtudes", ">=", eb.val(0)), eb("effectifSortie", ">=", eb.val(0))]))
             .then(sql<number>`${eb.ref("effectifSortie")}::float`)
-            .end()
+            .end(),
         )
         .as("denominateurPoursuite"),
       eb.fn
@@ -128,10 +128,10 @@ export const getChiffresNumerateurAndDenominateur = ({
                 eb("nbInsertion6mois", ">=", eb.val(0)),
                 eb("nbPoursuiteEtudes", ">=", eb.val(0)),
                 eb("effectifSortie", ">=", eb.val(0)),
-              ])
+              ]),
             )
             .then(sql<number>`(${eb.ref("nbPoursuiteEtudes")} + ${eb.ref("nbInsertion6mois")})::float`)
-            .end()
+            .end(),
         )
         .as("numerateurDevenir"),
       eb.fn
@@ -143,10 +143,10 @@ export const getChiffresNumerateurAndDenominateur = ({
                 eb("nbInsertion6mois", ">=", eb.val(0)),
                 eb("nbPoursuiteEtudes", ">=", eb.val(0)),
                 eb("effectifSortie", ">=", eb.val(0)),
-              ])
+              ]),
             )
             .then(sql<number>`${eb.ref("effectifSortie")}::float`)
-            .end()
+            .end(),
         )
         .as("denominateurDevenir"),
     ])
@@ -168,7 +168,7 @@ export const getTauxIJ = async ({
         uai,
         millesime,
         rentreeScolaire,
-      }).as("chiffres")
+      }).as("chiffres"),
     )
     .select((eb) => [
       eb.ref("uai").as("uai"),

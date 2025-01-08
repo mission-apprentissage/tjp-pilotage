@@ -242,7 +242,7 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
       handleClearBbox,
       handleSetBbox,
       value,
-    ]
+    ],
   );
 
   return <FormationContext.Provider value={context}>{children}</FormationContext.Provider>;

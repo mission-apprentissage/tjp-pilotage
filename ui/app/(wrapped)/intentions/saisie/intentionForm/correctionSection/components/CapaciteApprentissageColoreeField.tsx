@@ -16,5 +16,5 @@ export const CapaciteApprentissageColoreeField = chakra(
     if (fermeture) return <></>;
 
     return <CapaciteField name={"capaciteApprentissageColoree"} className={className} isReadOnly={isReadOnly} />;
-  }
+  },
 );

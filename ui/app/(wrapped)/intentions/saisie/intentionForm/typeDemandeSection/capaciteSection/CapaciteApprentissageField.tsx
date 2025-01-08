@@ -18,7 +18,7 @@ export const CapaciteApprentissageField = chakra(
           } else if (name === "capaciteApprentissageActuelle" && typeDemande === "coloration") {
             setValue("capaciteApprentissage", capaciteApprentissageActuelle);
           }
-        }).unsubscribe
+        }).unsubscribe,
     );
 
     const typeDemande = watch("typeDemande");
@@ -28,5 +28,5 @@ export const CapaciteApprentissageField = chakra(
     const isReadOnly = disabled || fermeture || coloration;
 
     return <CapaciteField name={"capaciteApprentissage"} className={className} isReadOnly={isReadOnly} />;
-  }
+  },
 );

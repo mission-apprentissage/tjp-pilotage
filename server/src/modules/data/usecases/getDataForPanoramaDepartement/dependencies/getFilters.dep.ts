@@ -7,7 +7,7 @@ export const getFilters = async ({ codeDepartement }: { codeDepartement?: string
     .leftJoin(
       "formationScolaireView as formationView",
       "formationView.codeNiveauDiplome",
-      "niveauDiplome.codeNiveauDiplome"
+      "niveauDiplome.codeNiveauDiplome",
     )
     .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
     .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")

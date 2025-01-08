@@ -20,7 +20,7 @@ export const FiltersSection = ({
   diplomeOptions?: OptionSchema[];
   handleFilters: (
     type: keyof FiltersPanoramaFormation,
-    value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
+    value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation],
   ) => void;
   activeFilters: Partial<FiltersPanoramaFormation>;
   libelleNsfOptions?: OptionSchema[];

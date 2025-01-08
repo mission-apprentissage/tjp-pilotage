@@ -33,7 +33,7 @@ export const getDenominateurQuery = async ({ filters }: { filters: Filters }) =>
           "dataEtablissement.codeAcademie",
           "dataEtablissement.codeDepartement",
         ])
-        .as("effectifs")
+        .as("effectifs"),
     )
     .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "effectifs.codeNiveauDiplome")
     .innerJoin("region", "region.codeRegion", "effectifs.codeRegion")

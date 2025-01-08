@@ -22,7 +22,7 @@ export const selectPositionQuadrant = ({
         ])
         .then(eb.val(PositionQuadrantEnum["-"]))
         .else(eb.val(PositionQuadrantEnum["Hors quadrant"]))
-        .end()
+        .end(),
     )
     .end();
 };

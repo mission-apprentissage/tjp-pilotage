@@ -91,7 +91,7 @@ export const getInitialZoom = ({
       if (i > 0) {
         const bearing = getRhumbLineBearing(
           pick(etablissement, ["latitude", "longitude"]),
-          pick(etablissementProche, ["latitude", "longitude"])
+          pick(etablissementProche, ["latitude", "longitude"]),
         );
 
         const destinationPoint = computeDestinationPoint(
@@ -100,7 +100,7 @@ export const getInitialZoom = ({
           // On doit doubler celle-ci pour que l'on puisse projeter suivant sa Rhumb line,
           // et que l'établissement de référence soit au centre
           etablissementProche.distance * 1000 * 2,
-          bearing
+          bearing,
         );
 
         projectedEtablissementsProches.push({

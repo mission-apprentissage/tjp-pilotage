@@ -49,7 +49,7 @@ export const [importTensionFranceTravailRegion] = inject(
             do {
               try {
                 console.log(
-                  `Région (${regionCount}/${regions.length}) ${codeRegion} et rome ${codeRome} (${romeCount}/${romes.length})`
+                  `Région (${regionCount}/${regions.length}) ${codeRegion} et rome ${codeRome} (${romeCount}/${romes.length})`,
                 );
 
                 const result = await getStatsPerspectivesRecrutementRegion(codeRome, codeRegion);
@@ -57,7 +57,7 @@ export const [importTensionFranceTravailRegion] = inject(
                 if (result?.length) {
                   await deps.appendFranceTravailTensionFile(
                     deps.filePathManager.getFranceTravailIndicateurTensionRegionStatsFilePath(),
-                    result
+                    result,
                   );
                 }
 
@@ -66,7 +66,7 @@ export const [importTensionFranceTravailRegion] = inject(
                 if (e instanceof AxiosError) {
                   if (e.response?.status === 429) {
                     console.warn(
-                      `ERROR [REG=${codeRegion},ROME=${codeRome}][Retry ${retryCount}] Too many requests, retrying in 1s`
+                      `ERROR [REG=${codeRegion},ROME=${codeRome}][Retry ${retryCount}] Too many requests, retrying in 1s`,
                     );
                     await setTimeout(1000);
                     retryCount++;
@@ -76,11 +76,11 @@ export const [importTensionFranceTravailRegion] = inject(
                   retry = false;
                   if (e.response?.data?.message?.includes("FiltreErreurSldng")) {
                     console.error(
-                      `ERROR [REG=${codeRegion},ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`
+                      `ERROR [REG=${codeRegion},ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`,
                     );
                   } else {
                     console.error(
-                      `ERROR [REG=${codeRegion},ROME=${codeRome}] ${`Status code : ${e.response?.status}`}`
+                      `ERROR [REG=${codeRegion},ROME=${codeRome}] ${`Status code : ${e.response?.status}`}`,
                     );
                   }
                 } else {
@@ -90,9 +90,9 @@ export const [importTensionFranceTravailRegion] = inject(
               }
             } while (retry);
           },
-          { parallel: 10 }
+          { parallel: 10 },
         );
-      }
+      },
     );
-  }
+  },
 );

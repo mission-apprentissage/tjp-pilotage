@@ -137,7 +137,7 @@ export const getIntentionsSchema = {
         z.object({
           annee: z.string(),
           statut: z.string(),
-        })
+        }),
       ),
       currentCampagne: z.object({
         annee: z.string(),

@@ -22,6 +22,6 @@ export const createAvisQuery = async (avis: Insertable<DB["avis"]>) => {
         ...avis,
         statutAvis: castAvisStatut(avis.statutAvis),
         typeAvis: castAvisType(avis.typeAvis),
-      })
+      }),
     );
 };

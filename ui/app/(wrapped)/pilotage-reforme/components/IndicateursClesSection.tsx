@@ -234,47 +234,47 @@ const StatCard = ({
 }) => {
   const getDeltaAnneeNMoins1 = (type: IndicateurType): number | null => {
     switch (type) {
-    case "tauxInsertion":
-      if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].scoped.tauxInsertion)
-        return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].scoped.tauxInsertion) * 100;
-      return null;
-    case "tauxPoursuite":
-      if (data?.annees[0].scoped.tauxPoursuite && data?.annees[1].scoped.tauxPoursuite)
-        return (data?.annees[0].scoped.tauxPoursuite - data?.annees[1].scoped.tauxPoursuite) * 100;
-      return null;
-    default:
-      if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].scoped.tauxInsertion) {
-        return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].scoped.tauxInsertion) * 100;
-      }
-      return null;
+      case "tauxInsertion":
+        if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].scoped.tauxInsertion)
+          return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].scoped.tauxInsertion) * 100;
+        return null;
+      case "tauxPoursuite":
+        if (data?.annees[0].scoped.tauxPoursuite && data?.annees[1].scoped.tauxPoursuite)
+          return (data?.annees[0].scoped.tauxPoursuite - data?.annees[1].scoped.tauxPoursuite) * 100;
+        return null;
+      default:
+        if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].scoped.tauxInsertion) {
+          return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].scoped.tauxInsertion) * 100;
+        }
+        return null;
     }
   };
 
   const getDeltaAnneeNMoins1Nationale = (type: IndicateurType): number | null => {
     switch (type) {
-    case "tauxInsertion":
-      if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].nationale.tauxInsertion)
-        return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].nationale.tauxInsertion) * 100;
-      return null;
-    case "tauxPoursuite":
-      if (data?.annees[0].scoped.tauxPoursuite && data?.annees[1].nationale.tauxPoursuite)
-        return (data?.annees[0].scoped.tauxPoursuite - data?.annees[1].nationale.tauxPoursuite) * 100;
-      return null;
-    default:
-      if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].nationale.tauxInsertion)
-        return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].nationale.tauxInsertion) * 100;
-      return null;
+      case "tauxInsertion":
+        if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].nationale.tauxInsertion)
+          return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].nationale.tauxInsertion) * 100;
+        return null;
+      case "tauxPoursuite":
+        if (data?.annees[0].scoped.tauxPoursuite && data?.annees[1].nationale.tauxPoursuite)
+          return (data?.annees[0].scoped.tauxPoursuite - data?.annees[1].nationale.tauxPoursuite) * 100;
+        return null;
+      default:
+        if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].nationale.tauxInsertion)
+          return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].nationale.tauxInsertion) * 100;
+        return null;
     }
   };
 
   const getValue = (type: IndicateurType) => {
     switch (type) {
-    case "tauxInsertion":
-      return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
-    case "tauxPoursuite":
-      return formatNumber((data?.annees[0].scoped.tauxPoursuite ?? 0) * 100);
-    default:
-      return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
+      case "tauxInsertion":
+        return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
+      case "tauxPoursuite":
+        return formatNumber((data?.annees[0].scoped.tauxPoursuite ?? 0) * 100);
+      default:
+        return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
     }
   };
 

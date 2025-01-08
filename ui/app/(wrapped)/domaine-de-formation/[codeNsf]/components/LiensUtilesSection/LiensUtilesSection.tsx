@@ -60,7 +60,7 @@ export const LiensUtilesSection = () => {
                 href: {
                   [ScopeEnum.national]: "https://dataemploi.francetravail.fr/emploi/metier/NAT/FR",
                   [ScopeEnum.département]: `https://dataemploi.francetravail.fr/metier/DEP/${formatCodeDepartement(
-                    codeDepartement
+                    codeDepartement,
                   )}`,
                   [ScopeEnum.région]: `https://dataemploi.francetravail.fr/emploi/metier/REG/${codeRegion}`,
                   [ScopeEnum.académie]: `https://dataemploi.francetravail.fr/metier/REG/${codeRegion}`,
@@ -84,7 +84,7 @@ export const LiensUtilesSection = () => {
                 href: {
                   [ScopeEnum.national]: "https://dataemploi.francetravail.fr/emploi/ajouter-territoire",
                   [ScopeEnum.département]: `https://dataemploi.pole-emploi.fr/secteur/DEP/${formatCodeDepartement(
-                    codeDepartement
+                    codeDepartement,
                   )}`,
                   [ScopeEnum.région]: `https://dataemploi.pole-emploi.fr/secteur/REG/${codeRegion}`,
                   [ScopeEnum.académie]: `https://dataemploi.pole-emploi.fr/secteur/REG/${codeRegion}`,

@@ -112,14 +112,14 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
   const getLabelAvis = (statut?: DemandeStatutType): string => {
     const typeAvis = getTypeAvis(statut);
     switch (typeAvis) {
-    case AvisTypeEnum["préalable"]:
-      return `avis préalable`;
-    case AvisTypeEnum["consultatif"]:
-      return `avis consultatif`;
-    case AvisTypeEnum["final"]:
-      return `vote`;
-    default:
-      return `avis`;
+      case AvisTypeEnum["préalable"]:
+        return `avis préalable`;
+      case AvisTypeEnum["consultatif"]:
+        return `avis consultatif`;
+      case AvisTypeEnum["final"]:
+        return `vote`;
+      default:
+        return `avis`;
     }
   };
 
@@ -141,7 +141,7 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
                 commentaire: escapeString(values.commentaire),
               },
             },
-          })
+          }),
         )}
       >
         <Heading as="h2" fontSize={18} fontWeight={700} mb={4}>
@@ -164,9 +164,9 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
                 defaultValue={
                   value
                     ? {
-                      value: value,
-                      label: value?.toUpperCase() ?? "",
-                    }
+                        value: value,
+                        label: value?.toUpperCase() ?? "",
+                      }
                     : undefined
                 }
                 placeholder="Sélectionner une option"
@@ -202,9 +202,9 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
                 defaultValue={
                   value
                     ? {
-                      value: value,
-                      label: value?.toUpperCase() ?? "",
-                    }
+                        value: value,
+                        label: value?.toUpperCase() ?? "",
+                      }
                     : undefined
                 }
                 placeholder="Sélectionner une option"
@@ -313,9 +313,9 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
                 styles={{ fontWeight: 700 }}
               >
                 {`Souhaitez-vous déposer un avis ${getTypeAvis(
-                  intention.statut
+                  intention.statut,
                 )} ${getValues("statutAvis")} en tant que ${getValues(
-                  "userFonction"
+                  "userFonction",
                 )} pour la demande ${intention.numero} ?`}
               </Highlight>
             </ModalBody>

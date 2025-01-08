@@ -18,13 +18,13 @@ export const findDomaineProfessionnelQuery = async ({ search, limit = 100 }: { s
       eb.and([
         eb("domaineProfessionnel.codeDomaineProfessionnel", "is not", null),
         eb("domaineProfessionnel.libelleDomaineProfessionnel", "is not", null),
-      ])
+      ]),
     )
     .$castTo<OptionSchema>()
     .where(
       (eb) => sql`unaccent(${eb.ref("domaineProfessionnel.libelleDomaineProfessionnel")})`,
       "ilike",
-      `%${normalizedSearch}%`
+      `%${normalizedSearch}%`,
     )
     .orderBy("domaineProfessionnel.libelleDomaineProfessionnel asc")
     .limit(limit)

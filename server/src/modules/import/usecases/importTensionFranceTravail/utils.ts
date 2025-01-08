@@ -48,7 +48,7 @@ export const findAllDepartements = async (filter?: string) =>
     })
     .select(({ ref }) => [
       sql<string>`CASE WHEN LEFT(${ref(
-        "codeDepartement"
+        "codeDepartement",
       )}, 1) = '0' THEN RIGHT(${ref("codeDepartement")}, 2) ELSE ${ref("codeDepartement")} END`.as("codeDepartement"),
     ])
     .orderBy("codeDepartement", "asc")
@@ -64,7 +64,7 @@ export const createFranceTravailTensionFile = async (filepath: string) => {
   const file = fs.createWriteStream(filepath);
 
   file.write(
-    `datMaj;codeTypeTerritoire;codeTerritoire;libTerritoire;codeTypeActivite;codeActivite;libActivite;codeNomenclature;libNomenclature;codeTypePeriode;codePeriode;libPeriode;valeurPrincipaleNom\n`
+    `datMaj;codeTypeTerritoire;codeTerritoire;libTerritoire;codeTypeActivite;codeActivite;libActivite;codeNomenclature;libNomenclature;codeTypePeriode;codePeriode;libPeriode;valeurPrincipaleNom\n`,
   );
 
   return file;
@@ -72,7 +72,7 @@ export const createFranceTravailTensionFile = async (filepath: string) => {
 
 export const appendFranceTravailTensionFile = async (
   filepath: string,
-  data: FranceTravailStatsPerspectiveRecrutementValeurParPeriode[]
+  data: FranceTravailStatsPerspectiveRecrutementValeurParPeriode[],
 ) => {
   const file = fs.createWriteStream(filepath, { flags: "a" });
   data.map((item) =>
@@ -91,7 +91,7 @@ export const appendFranceTravailTensionFile = async (
         item.codePeriode,
         item.libPeriode,
         item.valeurPrincipaleNom,
-      ].join(";") + "\n"
-    )
+      ].join(";") + "\n",
+    ),
   );
 };

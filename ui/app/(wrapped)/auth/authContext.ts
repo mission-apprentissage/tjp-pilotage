@@ -9,4 +9,4 @@ export type Auth = {
 export const AuthContext = createContext<{
   auth?: Auth;
   setAuth: (auth?: Auth) => void;
-    }>({ setAuth: () => {} });
+}>({ setAuth: () => {} });

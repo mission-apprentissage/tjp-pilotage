@@ -22,5 +22,5 @@ export const CommentaireField = chakra(
         {errors.commentaire && <FormErrorMessage>{errors.commentaire.message}</FormErrorMessage>}
       </FormControl>
     );
-  }
+  },
 );

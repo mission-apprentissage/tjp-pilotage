@@ -27,38 +27,38 @@ export const InformationHeader = ({ statut }: { statut?: DemandeStatutType }) =>
 
   const getInformationHeaderStatus = (statut?: DemandeStatutType) => {
     switch (statut) {
-    case DemandeStatutEnum["dossier incomplet"]:
-      return "warning";
-    case DemandeStatutEnum["projet de demande"]:
-      return "success";
-    case DemandeStatutEnum["prêt pour le vote"]:
-      return "success";
-    case DemandeStatutEnum["brouillon"]:
-    case DemandeStatutEnum["proposition"]:
-    case DemandeStatutEnum["dossier complet"]:
-    case DemandeStatutEnum["demande validée"]:
-    case DemandeStatutEnum["refusée"]:
-    case DemandeStatutEnum["supprimée"]:
-    default:
-      return "info";
+      case DemandeStatutEnum["dossier incomplet"]:
+        return "warning";
+      case DemandeStatutEnum["projet de demande"]:
+        return "success";
+      case DemandeStatutEnum["prêt pour le vote"]:
+        return "success";
+      case DemandeStatutEnum["brouillon"]:
+      case DemandeStatutEnum["proposition"]:
+      case DemandeStatutEnum["dossier complet"]:
+      case DemandeStatutEnum["demande validée"]:
+      case DemandeStatutEnum["refusée"]:
+      case DemandeStatutEnum["supprimée"]:
+      default:
+        return "info";
     }
   };
   const getInformationHeaderMessage = (statut?: DemandeStatutType) => {
     switch (statut) {
-    case DemandeStatutEnum["dossier incomplet"]:
-      return "Dossier incomplet, merci de vous référer aux consignes du gestionnaire";
-    case DemandeStatutEnum["projet de demande"]:
-      return "La proposition a passé l'étape 1 avec succès !";
-    case DemandeStatutEnum["prêt pour le vote"]:
-      return "La proposition a passé l'étape 2 avec succès !";
-    case DemandeStatutEnum["brouillon"]:
-    case DemandeStatutEnum["proposition"]:
-    case DemandeStatutEnum["dossier complet"]:
-    case DemandeStatutEnum["demande validée"]:
-    case DemandeStatutEnum["refusée"]:
-    case DemandeStatutEnum["supprimée"]:
-    default:
-      return null;
+      case DemandeStatutEnum["dossier incomplet"]:
+        return "Dossier incomplet, merci de vous référer aux consignes du gestionnaire";
+      case DemandeStatutEnum["projet de demande"]:
+        return "La proposition a passé l'étape 1 avec succès !";
+      case DemandeStatutEnum["prêt pour le vote"]:
+        return "La proposition a passé l'étape 2 avec succès !";
+      case DemandeStatutEnum["brouillon"]:
+      case DemandeStatutEnum["proposition"]:
+      case DemandeStatutEnum["dossier complet"]:
+      case DemandeStatutEnum["demande validée"]:
+      case DemandeStatutEnum["refusée"]:
+      case DemandeStatutEnum["supprimée"]:
+      default:
+        return null;
     }
   };
 

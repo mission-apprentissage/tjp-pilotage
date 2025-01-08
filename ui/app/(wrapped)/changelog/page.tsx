@@ -18,7 +18,7 @@ export default function Changelog() {
       (changelogEntry) =>
         changelogEntry.types.findIndex((t) => t.label === "BANDEAU") === -1 &&
         changelogEntry.deployed &&
-        changelogEntry.show
+        changelogEntry.show,
     ) ?? [];
 
   const incoming =
@@ -26,7 +26,7 @@ export default function Changelog() {
       (changelogEntry) =>
         changelogEntry.types.findIndex((t) => t.label === "BANDEAU") === -1 &&
         !changelogEntry.deployed &&
-        changelogEntry.show
+        changelogEntry.show,
     ) ?? [];
 
   return (

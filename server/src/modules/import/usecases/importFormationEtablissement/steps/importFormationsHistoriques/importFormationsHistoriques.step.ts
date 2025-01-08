@@ -62,5 +62,5 @@ export const [importFormationHistorique] = inject(
       }
 
       return ancienCfds;
-    }
+    },
 );

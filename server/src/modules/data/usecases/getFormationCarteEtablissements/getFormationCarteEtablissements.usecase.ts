@@ -9,30 +9,30 @@ const getFormationCarteEtablissementsFactory =
       getFormation,
       getEtablissements,
       getBoundaries,
-    }
+    },
   ) =>
-    async ({ cfd }: Params, { codeAcademie, codeRegion, codeDepartement, orderBy, includeAll }: QueryFilters) => {
-      const [formation, etablissements, bbox] = await Promise.all([
-        deps.getFormation({ cfd }),
-        deps.getEtablissements({
-          cfd,
-          codeAcademie,
-          codeRegion,
-          codeDepartement,
-          orderBy,
-          includeAll,
-        }),
-        deps.getBoundaries({ codeAcademie, codeRegion, codeDepartement }),
-      ]);
+  async ({ cfd }: Params, { codeAcademie, codeRegion, codeDepartement, orderBy, includeAll }: QueryFilters) => {
+    const [formation, etablissements, bbox] = await Promise.all([
+      deps.getFormation({ cfd }),
+      deps.getEtablissements({
+        cfd,
+        codeAcademie,
+        codeRegion,
+        codeDepartement,
+        orderBy,
+        includeAll,
+      }),
+      deps.getBoundaries({ codeAcademie, codeRegion, codeDepartement }),
+    ]);
 
-      if (!formation) {
-        throw Boom.notFound(`La formation avec le cfd ${cfd} est inconnue`);
-      }
+    if (!formation) {
+      throw Boom.notFound(`La formation avec le cfd ${cfd} est inconnue`);
+    }
 
-      return {
-        etablissements,
-        bbox,
-      };
+    return {
+      etablissements,
+      bbox,
     };
+  };
 
 export const getFormationCarteEtablissementsUsecase = getFormationCarteEtablissementsFactory();

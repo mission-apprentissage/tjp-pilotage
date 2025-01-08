@@ -25,5 +25,5 @@ export const BadgeFormationRenovee = forwardRef<BadgeFormationRenoveeProps, "spa
         RÉNOVÉE
       </Badge>
     );
-  }
+  },
 );

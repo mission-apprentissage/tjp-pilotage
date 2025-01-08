@@ -61,7 +61,7 @@ const ColonneFiltersSection = chakra(
               };
               return acc;
             },
-            {} as Record<string, { color: string; options: { label: string; value: string }[] }>
+            {} as Record<string, { color: string; options: { label: string; value: string }[] }>,
           )}
           defaultOptions={Object.entries(STATS_DEMANDES_COLUMNS_DEFAULT)?.map(([value, label]) => {
             return {
@@ -78,7 +78,7 @@ const ColonneFiltersSection = chakra(
         />
       </Flex>
     );
-  }
+  },
 );
 
 const PAGE_SIZE = 30;
@@ -134,31 +134,31 @@ export default () => {
 
   const handleDefaultFilters = (
     type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions],
   ) => {
     if (value != null)
       switch (type) {
-      case "codeRegion":
-        setCodeRegionFilter((value as string[])[0] ?? "");
-        break;
-      case "codeDepartement":
-        setCodeDepartementFilter((value as string[])[0] ?? "");
-        break;
-      case "rentreeScolaire":
-        setRentreeScolaireFilter((value as string[])[0] ?? "");
-        break;
-      case "campagne":
-        setCampagneFilter((value as string[])[0] ?? "");
-        break;
-      case "statut":
-        setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
-        break;
+        case "codeRegion":
+          setCodeRegionFilter((value as string[])[0] ?? "");
+          break;
+        case "codeDepartement":
+          setCodeDepartementFilter((value as string[])[0] ?? "");
+          break;
+        case "rentreeScolaire":
+          setRentreeScolaireFilter((value as string[])[0] ?? "");
+          break;
+        case "campagne":
+          setCampagneFilter((value as string[])[0] ?? "");
+          break;
+        case "statut":
+          setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
+          break;
       }
   };
 
   const handleFilters = (
     type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions],
   ) => {
     handleDefaultFilters(type, value);
     setSearchParams({
@@ -206,7 +206,7 @@ export default () => {
     {
       keepPreviousData: true,
       staleTime: 10000000,
-    }
+    },
   );
 
   const { data: countData, isLoading: isLoadingCount } = client.ref("[GET]/restitution-intentions/stats").useQuery(
@@ -219,7 +219,7 @@ export default () => {
     {
       keepPreviousData: true,
       staleTime: 10000000,
-    }
+    },
   );
 
   const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
@@ -233,7 +233,7 @@ export default () => {
   const [colonneFilters, setColonneFilters] = useState<(keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]>(
     (columns.length
       ? columns
-      : Object.keys(STATS_DEMANDES_COLUMNS_DEFAULT)) as (keyof typeof STATS_DEMANDES_COLUMNS_DEFAULT)[]
+      : Object.keys(STATS_DEMANDES_COLUMNS_DEFAULT)) as (keyof typeof STATS_DEMANDES_COLUMNS_DEFAULT)[],
   );
 
   const [statutFilter, setStatutFilter] = useState<Exclude<DemandeStatutType, "supprimée">[] | undefined>();
@@ -270,7 +270,7 @@ export default () => {
         (statut) =>
           statut !== DemandeStatutEnum["supprimée"] &&
           statut !== DemandeStatutEnum["brouillon"] &&
-          statut !== DemandeStatutEnum["refusée"]
+          statut !== DemandeStatutEnum["refusée"],
       ) as Exclude<DemandeStatutType, "supprimée">[];
     }
     setSearchParams({ filters: filters });

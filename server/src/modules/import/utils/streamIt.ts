@@ -5,7 +5,7 @@ export const streamIt = async <T>(
   load: (count: number) => Promise<T[]>,
   write: (chunk: T, writeCount: number) => Promise<void>,
   { parallel = 1 } = {},
-  onFinal?: () => Promise<void>
+  onFinal?: () => Promise<void>,
 ) => {
   let count = 0;
 
@@ -34,7 +34,7 @@ export const streamIt = async <T>(
         chunk.map(async (item: T) => {
           writeCount++;
           await write(item, writeCount);
-        })
+        }),
       );
 
       callback();

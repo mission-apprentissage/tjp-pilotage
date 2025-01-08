@@ -26,5 +26,5 @@ export const [searchMetier] = inject(
       }
 
       return options;
-    }
+    },
 );

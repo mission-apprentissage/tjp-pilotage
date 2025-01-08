@@ -78,5 +78,5 @@ export const [getIndicateursParcoursSup] = inject(
         capacites: anneeDebut === 0 ? [numbers.capacite ?? null] : [null, numbers.capacite ?? null],
         premiersVoeux: anneeDebut === 0 ? [numbers.premiersVoeux ?? null] : [null, numbers.premiersVoeux ?? null],
       };
-    }
+    },
 );

@@ -77,5 +77,5 @@ export const [createUser, createUserFactory] = inject(
           recipient: { email, firstname, lastname, role },
         },
       });
-    }
+    },
 );

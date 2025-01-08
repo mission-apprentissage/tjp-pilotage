@@ -55,7 +55,7 @@ const InputWapper = memo(
         {...props}
       ></Checkbox>
     );
-  }
+  },
 );
 
 const CheckboxIcon = ({ checked }: { checked: boolean }) => {
@@ -130,7 +130,7 @@ export const Multiselect = chakra(
       return new Map(
         value.map((val) => {
           return [val, (stateValue.current?.get?.(val) || options.find(({ value }) => val === value)?.label) ?? val];
-        })
+        }),
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value, options, stateValue.current]);
@@ -153,10 +153,10 @@ export const Multiselect = chakra(
     const filterOptions = () => {
       return search
         ? preparedOptions.filter(
-          (item) =>
-            removeAccents(item.label?.toLowerCase()).includes(removeAccents(search.toLowerCase())) ||
-              removeAccents(item.value?.toLowerCase()).includes(removeAccents(search.toLowerCase()))
-        )
+            (item) =>
+              removeAccents(item.label?.toLowerCase()).includes(removeAccents(search.toLowerCase())) ||
+              removeAccents(item.value?.toLowerCase()).includes(removeAccents(search.toLowerCase())),
+          )
         : preparedOptions;
     };
 
@@ -259,5 +259,5 @@ export const Multiselect = chakra(
         </Portal>
       </Menu>
     );
-  }
+  },
 );

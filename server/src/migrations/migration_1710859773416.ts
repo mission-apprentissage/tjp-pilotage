@@ -54,7 +54,7 @@ export const up = async (db: Kysely<unknown>) => {
     UPDATE "demande"
     SET "campagneId" = (SELECT "id" FROM "campagne" WHERE "annee" = '2023')
     WHERE "dateCreation" < '2024-03-19'::timestamp with time zone;
-  `.compile(db)
+  `.compile(db),
   );
 };
 
@@ -66,7 +66,7 @@ export const down = async (db: Kysely<unknown>) => {
       USING "demande" d2
       WHERE d1."dateModification" < d2."dateModification"
       AND d1.numero = d2.numero;
-  `.compile(db)
+  `.compile(db),
   );
 
   await db.schema.alterTable("demande").renameColumn("dateModification", "updatedAt").execute();

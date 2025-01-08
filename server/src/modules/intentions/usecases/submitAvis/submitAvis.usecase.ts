@@ -51,5 +51,5 @@ export const [submitAvisUsecase, submitAvisFactory] = inject(
       });
 
       return createdAvis;
-    }
+    },
 );

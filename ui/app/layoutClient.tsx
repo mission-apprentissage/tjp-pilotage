@@ -44,7 +44,7 @@ const useTracking = () => {
   const param = searchParams.get("notracking");
   const noTracking = useRef(
     param !== "reset" &&
-      (!!param || (typeof localStorage !== "undefined" && localStorage.getItem("notracking") === "true"))
+      (!!param || (typeof localStorage !== "undefined" && localStorage.getItem("notracking") === "true")),
   );
   useEffect(() => {
     if (param === "reset") {
@@ -99,7 +99,7 @@ export default function RootLayoutClient({
           queries: { retry: false },
           mutations: { useErrorBoundary: false, retry: false },
         },
-      })
+      }),
   );
 
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);

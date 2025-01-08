@@ -195,8 +195,8 @@ export const up = async (db: Kysely<unknown>) => {
               sql<boolean>`null`.as("augmentationCapaciteAccueilRestauration"),
               sql<number>`null`.as("augmentationCapaciteAccueilRestaurationPlaces"),
               sql<string>`null`.as("augmentationCapaciteAccueilRestaurationPrecisions"),
-            ])
-        )
+            ]),
+        ),
     )
     .execute();
 
@@ -360,8 +360,8 @@ export const up = async (db: Kysely<unknown>) => {
               sql<boolean>`null`.as("augmentationCapaciteAccueilRestauration"),
               sql<number>`null`.as("augmentationCapaciteAccueilRestaurationPlaces"),
               sql<string>`null`.as("augmentationCapaciteAccueilRestaurationPrecisions"),
-            ])
-        )
+            ]),
+        ),
     )
     .materialized()
     .execute();
@@ -388,18 +388,18 @@ export const up = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandes")
+            .as("latestDemandes"),
         )
         // @ts-ignore
         .leftJoin("demande", (join) =>
           join
             .onRef("latestDemandes.numero", "=", "demande.numero")
-            .onRef("latestDemandes.lastUpdatedAt", "=", "demande.updatedAt")
+            .onRef("latestDemandes.lastUpdatedAt", "=", "demande.updatedAt"),
         )
         // @ts-ignore
         .selectAll("demande")
         // @ts-ignore
-        .where("demande.statut", "!=", "supprimée")
+        .where("demande.statut", "!=", "supprimée"),
     )
     .materialized()
     .execute();
@@ -420,18 +420,18 @@ export const up = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandes")
+            .as("latestDemandes"),
         )
         // @ts-ignore
         .leftJoin("demande", (join) =>
           join
             .onRef("latestDemandes.numero", "=", "demande.numero")
-            .onRef("latestDemandes.lastUpdatedAt", "=", "demande.updatedAt")
+            .onRef("latestDemandes.lastUpdatedAt", "=", "demande.updatedAt"),
         )
         // @ts-ignore
         .selectAll("demande")
         // @ts-ignore
-        .where("demande.statut", "!=", "supprimée")
+        .where("demande.statut", "!=", "supprimée"),
     )
     .execute();
 
@@ -457,18 +457,18 @@ export const up = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demandeIntention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandeIntention")
+            .as("latestDemandeIntention"),
         )
         // @ts-ignore
         .leftJoin("demandeIntentionView as demandeIntention", (join) =>
           join
             .onRef("latestDemandeIntention.numero", "=", "demandeIntention.numero")
-            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt")
+            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt"),
         )
         // @ts-ignore
         .selectAll("demandeIntention")
         // @ts-ignore
-        .where("demandeIntention.statut", "!=", "supprimée")
+        .where("demandeIntention.statut", "!=", "supprimée"),
     )
     .materialized()
     .execute();
@@ -488,18 +488,18 @@ export const up = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demandeIntention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandeIntention")
+            .as("latestDemandeIntention"),
         )
         // @ts-ignore
         .leftJoin("demandeIntentionView as demandeIntention", (join) =>
           join
             .onRef("latestDemandeIntention.numero", "=", "demandeIntention.numero")
-            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt")
+            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt"),
         )
         // @ts-ignore
         .selectAll("demandeIntention")
         // @ts-ignore
-        .where("demandeIntention.statut", "!=", "supprimée")
+        .where("demandeIntention.statut", "!=", "supprimée"),
     )
     .execute();
 
@@ -699,8 +699,8 @@ export const down = async (db: Kysely<unknown>) => {
               sql<boolean>`null`.as("augmentationCapaciteAccueilRestauration"),
               sql<number>`null`.as("augmentationCapaciteAccueilRestaurationPlaces"),
               sql<string>`null`.as("augmentationCapaciteAccueilRestaurationPrecisions"),
-            ])
-        )
+            ]),
+        ),
     )
     .execute();
 
@@ -860,8 +860,8 @@ export const down = async (db: Kysely<unknown>) => {
               sql<boolean>`null`.as("augmentationCapaciteAccueilRestauration"),
               sql<number>`null`.as("augmentationCapaciteAccueilRestaurationPlaces"),
               sql<string>`null`.as("augmentationCapaciteAccueilRestaurationPrecisions"),
-            ])
-        )
+            ]),
+        ),
     )
     .materialized()
     .execute();
@@ -888,18 +888,18 @@ export const down = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandes")
+            .as("latestDemandes"),
         )
         // @ts-ignore
         .leftJoin("demande", (join) =>
           join
             .onRef("latestDemandes.numero", "=", "demande.numero")
-            .onRef("latestDemandes.lastUpdatedAt", "=", "demande.updatedAt")
+            .onRef("latestDemandes.lastUpdatedAt", "=", "demande.updatedAt"),
         )
         // @ts-ignore
         .selectAll("demande")
         // @ts-ignore
-        .where("demande.statut", "!=", "supprimée")
+        .where("demande.statut", "!=", "supprimée"),
     )
     .materialized()
     .execute();
@@ -920,18 +920,18 @@ export const down = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demande"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandes")
+            .as("latestDemandes"),
         )
         // @ts-ignore
         .leftJoin("demande", (join) =>
           join
             .onRef("latestDemandes.numero", "=", "demande.numero")
-            .onRef("latestDemandes.lastUpdatedAt", "=", "demande.updatedAt")
+            .onRef("latestDemandes.lastUpdatedAt", "=", "demande.updatedAt"),
         )
         // @ts-ignore
         .selectAll("demande")
         // @ts-ignore
-        .where("demande.statut", "!=", "supprimée")
+        .where("demande.statut", "!=", "supprimée"),
     )
     .execute();
 
@@ -957,18 +957,18 @@ export const down = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demandeIntention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandeIntention")
+            .as("latestDemandeIntention"),
         )
         // @ts-ignore
         .leftJoin("demandeIntentionView as demandeIntention", (join) =>
           join
             .onRef("latestDemandeIntention.numero", "=", "demandeIntention.numero")
-            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt")
+            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt"),
         )
         // @ts-ignore
         .selectAll("demandeIntention")
         // @ts-ignore
-        .where("demandeIntention.statut", "!=", "supprimée")
+        .where("demandeIntention.statut", "!=", "supprimée"),
     )
     .materialized()
     .execute();
@@ -988,18 +988,18 @@ export const down = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demandeIntention"."updatedAt")`.as("lastUpdatedAt"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandeIntention")
+            .as("latestDemandeIntention"),
         )
         // @ts-ignore
         .leftJoin("demandeIntentionView as demandeIntention", (join) =>
           join
             .onRef("latestDemandeIntention.numero", "=", "demandeIntention.numero")
-            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt")
+            .onRef("latestDemandeIntention.lastUpdatedAt", "=", "demandeIntention.updatedAt"),
         )
         // @ts-ignore
         .selectAll("demandeIntention")
         // @ts-ignore
-        .where("demandeIntention.statut", "!=", "supprimée")
+        .where("demandeIntention.statut", "!=", "supprimée"),
     )
     .execute();
 

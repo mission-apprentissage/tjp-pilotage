@@ -18,7 +18,7 @@ const getXAxisData = (
   data: {
     label: string;
     value: number;
-  }[]
+  }[],
 ) => {
   if (data !== undefined) {
     return data.map((data) => data.label).reverse();
@@ -48,7 +48,7 @@ const VerticalBarChart = ({
       if (index === 3) return be850;
       if (index === 4) return gris;
     },
-    [bf113, be850, be850a, gris]
+    [bf113, be850, be850a, gris],
   );
 
   const option = useMemo<echarts.EChartsOption>(
@@ -137,7 +137,7 @@ const VerticalBarChart = ({
           },
         })),
     }),
-    [data, getColors]
+    [data, getColors],
   );
 
   useLayoutEffect(() => {

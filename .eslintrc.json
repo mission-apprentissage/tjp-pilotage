@@ -3,7 +3,7 @@
     "es2022": true,
     "node": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -15,11 +15,19 @@
   },
   "plugins": ["react", "@typescript-eslint", "simple-import-sort", "import", "@dword-design/import-alias"],
   "rules": {
-    "max-len": ["warn", { "code": 120 }],
+    "max-len": [
+      "warn",
+      {
+        "code": 120,
+        "ignorePattern": "^import\\s.+\\sfrom\\s.+;$",
+        "ignoreComments": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
     "simple-import-sort/imports": "error",
     "no-extra-semi": "error",
     "semi": ["error", "always"],
-    "indent": ["warn", 2],
     "no-prototype-builtins": "error",
     "no-trailing-spaces": "error",
     "import/no-cycle": ["error", { "ignoreExternal": true }],

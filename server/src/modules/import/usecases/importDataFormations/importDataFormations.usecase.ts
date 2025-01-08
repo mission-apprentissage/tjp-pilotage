@@ -51,7 +51,7 @@ type CompleteDiplomePorfessionelLine = DiplomeProfessionnelLine & {
 };
 
 const isCompleteDiplomeProfessionelLine = (
-  diplomeProfessionnelLine: DiplomeProfessionnelLine
+  diplomeProfessionnelLine: DiplomeProfessionnelLine,
 ): diplomeProfessionnelLine is CompleteDiplomePorfessionelLine => !!diplomeProfessionnelLine["Code diplôme"];
 
 const formatDiplomeProfessionel = (line?: DiplomeProfessionnelLine): CompleteDiplomePorfessionelLine | undefined => {
@@ -111,13 +111,13 @@ export const [importDataFormations] = inject(
               cfd,
               libelleFormation: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"]
                 ? normalizeWithReplace({
-                  value: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"],
-                  regexp: /"/g,
-                })
+                    value: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"],
+                    regexp: /"/g,
+                  })
                 : normalizeWithReplace({
-                  value: nFormationDiplome.LIBELLE_LONG_200,
-                  regexp: / \(.*\)/,
-                }),
+                    value: nFormationDiplome.LIBELLE_LONG_200,
+                    regexp: / \(.*\)/,
+                  }),
               rncp: diplomeProfessionnel?.["Code RNCP"]
                 ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
                 : undefined,
@@ -153,7 +153,7 @@ export const [importDataFormations] = inject(
           process.stdout.write(`\r${count} dataFormation (scolaire) ajoutées ou mises à jour`);
         }
       },
-      { parallel: 20 }
+      { parallel: 20 },
     ).then(() => {
       console.log();
     });
@@ -186,13 +186,13 @@ export const [importDataFormations] = inject(
               cfd,
               libelleFormation: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"]
                 ? normalizeWithReplace({
-                  value: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"],
-                  regexp: /"/g,
-                })
+                    value: diplomeProfessionnel?.["Intitulé de la spécialité (et options)"],
+                    regexp: /"/g,
+                  })
                 : normalizeWithReplace({
-                  value: vFormationDiplome.LIBELLE_LONG_200,
-                  regexp: / \(.*\)/,
-                }),
+                    value: vFormationDiplome.LIBELLE_LONG_200,
+                    regexp: / \(.*\)/,
+                  }),
               rncp: diplomeProfessionnel?.["Code RNCP"]
                 ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
                 : undefined,
@@ -228,8 +228,8 @@ export const [importDataFormations] = inject(
           process.stdout.write(`\r${count} dataFormation (apprentissage) ajoutées ou mises à jour`);
         }
       },
-      { parallel: 20 }
+      { parallel: 20 },
     );
     process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
-  }
+  },
 );

@@ -53,7 +53,7 @@ export const getFormationsQuery = async ({
     .leftJoin("formationEtablissement", (join) =>
       join
         .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
-        .on("formationEtablissement.codeDispositif", "is not", null)
+        .on("formationEtablissement.codeDispositif", "is not", null),
     )
     .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
@@ -61,16 +61,16 @@ export const getFormationsQuery = async ({
     .leftJoin("indicateurEntree", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire),
     )
     .leftJoin("indicateurSortie", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurSortie.formationEtablissementId")
-        .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
+        .on("indicateurSortie.millesimeSortie", "=", millesimeSortie),
     )
     .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .leftJoin("formationHistorique", (join) =>
-      join.onRef("formationHistorique.ancienCFD", "=", "formationView.cfd").on(isScolaireFormationHistorique)
+      join.onRef("formationHistorique.ancienCFD", "=", "formationView.cfd").on(isScolaireFormationHistorique),
     )
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .leftJoin("actionPrioritaire", (join) =>
@@ -78,8 +78,8 @@ export const getFormationsQuery = async ({
         .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
         .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
         .$call((join) =>
-          codeRegion ? join.onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion") : join
-        )
+          codeRegion ? join.onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion") : join,
+        ),
     )
     .$call((eb) => {
       if (!codeRegion) return eb;
@@ -89,7 +89,7 @@ export const getFormationsQuery = async ({
             .onRef("positionFormationRegionaleQuadrant.cfd", "=", "formationView.cfd")
             .onRef("positionFormationRegionaleQuadrant.codeDispositif", "=", "formationEtablissement.codeDispositif")
             .onRef("positionFormationRegionaleQuadrant.codeRegion", "=", "etablissement.codeRegion")
-            .on("positionFormationRegionaleQuadrant.millesimeSortie", "=", millesimeSortie)
+            .on("positionFormationRegionaleQuadrant.millesimeSortie", "=", millesimeSortie),
         )
         .select((eb) => [
           eb
@@ -100,14 +100,14 @@ export const getFormationsQuery = async ({
               COALESCE(
                 ${eb.ref("positionQuadrant")},
                 '-'
-              )`
+              )`,
             )
             .else(
               sql<string>`
               COALESCE(
                 ${eb.ref("positionQuadrant")},
                 ${PositionQuadrantEnum["Hors quadrant"]}
-              )`
+              )`,
             )
             .end()
             .as("positionQuadrant"),
@@ -226,19 +226,19 @@ export const getFormationsQuery = async ({
         eb("indicateurEntree.rentreeScolaire", "is not", null),
         withEmptyFormations === "true"
           ? eb.not(
-            eb.exists(
-              eb
-                .selectFrom("formationEtablissement as fe")
-                .select("fe.cfd")
-                .distinct()
-                .innerJoin("indicateurEntree", "id", "formationEtablissementId")
-                .where("rentreeScolaire", "in", rentreeScolaire)
-                .whereRef("fe.codeDispositif", "=", "formationEtablissement.codeDispositif")
-                .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
+              eb.exists(
+                eb
+                  .selectFrom("formationEtablissement as fe")
+                  .select("fe.cfd")
+                  .distinct()
+                  .innerJoin("indicateurEntree", "id", "formationEtablissementId")
+                  .where("rentreeScolaire", "in", rentreeScolaire)
+                  .whereRef("fe.codeDispositif", "=", "formationEtablissement.codeDispositif")
+                  .whereRef("fe.cfd", "=", "formationEtablissement.cfd"),
+              ),
             )
-          )
           : sql<boolean>`false`,
-      ])
+      ]),
     )
     .groupBy([
       "formationEtablissement.cfd",
@@ -282,10 +282,10 @@ export const getFormationsQuery = async ({
                   unaccent(${eb.ref("formationView.cpcSecteur")})
                 )`,
                 "ilike",
-                `%${search_word}%`
-              )
-            )
-          )
+                `%${search_word}%`,
+              ),
+            ),
+          ),
         );
       return eb;
     })
@@ -323,7 +323,7 @@ export const getFormationsQuery = async ({
         w.or([
           w("familleMetier.cfdFamille", "in", cfdFamille),
           w.and([w("formationView.typeFamille", "=", "2nde_commune"), w("formationView.cfd", "in", cfdFamille)]),
-        ])
+        ]),
       );
     })
     .$call((q) => {
@@ -356,7 +356,7 @@ export const getFormationsQuery = async ({
             formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
               ? w("formationView.isTransitionNumerique", "=", true)
               : sql.val(false),
-          ])
+          ]),
         );
       }
       return q;

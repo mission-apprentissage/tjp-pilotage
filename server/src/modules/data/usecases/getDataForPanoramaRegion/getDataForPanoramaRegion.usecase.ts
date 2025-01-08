@@ -10,25 +10,25 @@ export const getDataForPanoramaRegionFactory =
       getFilters,
       getTopFlopFormationsRegion,
       getTauxIJ,
-    }
+    },
   ) =>
-    async (activeFilters: z.infer<typeof getDataForPanoramaRegionSchema.querystring>) => {
-      const [formations, topFlops, filters, { tauxInsertion, tauxPoursuite }] = await Promise.all([
-        deps.getFormationsRegion(activeFilters),
-        deps.getTopFlopFormationsRegion(activeFilters),
-        deps.getFilters(activeFilters),
-        deps.getTauxIJ(activeFilters),
-      ]);
+  async (activeFilters: z.infer<typeof getDataForPanoramaRegionSchema.querystring>) => {
+    const [formations, topFlops, filters, { tauxInsertion, tauxPoursuite }] = await Promise.all([
+      deps.getFormationsRegion(activeFilters),
+      deps.getTopFlopFormationsRegion(activeFilters),
+      deps.getFilters(activeFilters),
+      deps.getTauxIJ(activeFilters),
+    ]);
 
-      return {
-        formations: formations.map((formation) => ({
-          ...formation,
-        })),
-        topFlops,
-        filters,
-        tauxInsertion,
-        tauxPoursuite,
-      };
+    return {
+      formations: formations.map((formation) => ({
+        ...formation,
+      })),
+      topFlops,
+      filters,
+      tauxInsertion,
+      tauxPoursuite,
     };
+  };
 
 export const getDataForPanoramaRegion = getDataForPanoramaRegionFactory();

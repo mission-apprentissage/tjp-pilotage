@@ -24,7 +24,7 @@ export const DispositifBlock = ({
       watch((_, { name }) => {
         if (name !== "cfd") return;
         setValue("codeDispositif", "");
-      }).unsubscribe
+      }).unsubscribe,
   );
 
   return (

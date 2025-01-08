@@ -80,7 +80,7 @@ export const NumberWithLabel = ({
             >
               {`${(percentage ? percentage - nationalPercentage > 0 : false) ? "+" : ""}${formatPercentageWithoutSign(
                 percentage ? percentage - nationalPercentage : undefined,
-                1
+                1,
               )} pts`}
             </Text>
           </Flex>

@@ -6,7 +6,7 @@ export const getDepartementsSchema = {
       z.object({
         label: z.string(),
         value: z.string(),
-      })
+      }),
     ),
   },
 };

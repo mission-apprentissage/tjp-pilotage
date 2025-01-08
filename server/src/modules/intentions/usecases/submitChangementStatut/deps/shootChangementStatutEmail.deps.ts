@@ -12,7 +12,7 @@ type IntentionData = Awaited<ReturnType<typeof findOneIntention>>;
 export const shootChangementStatutEmail = async (
   previousStatut: DemandeStatutType | undefined,
   newStatut: DemandeStatutType,
-  intention: IntentionData
+  intention: IntentionData,
 ): Promise<void> => {
   console.debug({
     previousStatut,
@@ -34,7 +34,7 @@ export const shootChangementStatutEmail = async (
 
     if (!owner) {
       throw Boom.badRequest(
-        `Impossible de trouver le créateur de l'intention avec l'identifiant ${intention.createdBy}`
+        `Impossible de trouver le créateur de l'intention avec l'identifiant ${intention.createdBy}`,
       );
     }
 

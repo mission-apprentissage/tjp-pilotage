@@ -26,8 +26,8 @@ export const getNsfsAndFormations = async (search?: string) => {
     baseQuery = baseQuery
       .where((w) =>
         w.and(
-          searchArray.map((search_word) => w(sql`unaccent(${w.ref("nsf.libelleNsf")})`, "ilike", `%${search_word}%`))
-        )
+          searchArray.map((search_word) => w(sql`unaccent(${w.ref("nsf.libelleNsf")})`, "ilike", `%${search_word}%`)),
+        ),
       )
       .union(
         getKbdClient()
@@ -37,7 +37,7 @@ export const getNsfsAndFormations = async (search?: string) => {
           .where("nsf.libelleNsf", "is not", null)
           .select((sb) => [
             sql<string>`concat( ${sb.ref(
-              "niveauDiplome.libelleNiveauDiplome"
+              "niveauDiplome.libelleNiveauDiplome",
             )}, ' - ', ${sb.ref("formationView.libelleFormation")})`.as("label"),
             sb.ref("formationView.cfd").as("value"),
             sb.ref("nsf.codeNsf").as("nsf"),
@@ -53,11 +53,11 @@ export const getNsfsAndFormations = async (search?: string) => {
                     unaccent(${w.ref("formationView.cfd")})
                   )`,
                   "ilike",
-                  `%${search_word}%`
-                )
-              )
-            )
-          )
+                  `%${search_word}%`,
+                ),
+              ),
+            ),
+          ),
       );
   }
 

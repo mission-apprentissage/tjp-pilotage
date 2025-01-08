@@ -38,39 +38,39 @@ const getStatsPilotageIntentionsFactory =
       getStatsPilotageIntentionsQuery: getStatsPilotageIntentionsQuery,
       getFiltersQuery: getFiltersQuery,
       getCurrentCampagneQuery,
-    }
+    },
   ) =>
-    async (activeFilters: ActiveFilters) => {
-      const currentCampagne = await getCurrentCampagneQuery();
-      const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
-      const [filters, projets, validees, all] = await Promise.all([
-        deps.getFiltersQuery({
-          ...activeFilters,
-          campagne: anneeCampagne,
-        }),
-        deps.getStatsPilotageIntentionsQuery({
-          ...activeFilters,
-          statut: [DemandeStatutEnum["projet de demande"]],
-          campagne: anneeCampagne,
-        }),
-        deps.getStatsPilotageIntentionsQuery({
-          ...activeFilters,
-          statut: [DemandeStatutEnum["demande validée"]],
-          campagne: anneeCampagne,
-        }),
-        deps.getStatsPilotageIntentionsQuery({
-          ...activeFilters,
-          campagne: anneeCampagne,
-        }),
-      ]);
+  async (activeFilters: ActiveFilters) => {
+    const currentCampagne = await getCurrentCampagneQuery();
+    const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
+    const [filters, projets, validees, all] = await Promise.all([
+      deps.getFiltersQuery({
+        ...activeFilters,
+        campagne: anneeCampagne,
+      }),
+      deps.getStatsPilotageIntentionsQuery({
+        ...activeFilters,
+        statut: [DemandeStatutEnum["projet de demande"]],
+        campagne: anneeCampagne,
+      }),
+      deps.getStatsPilotageIntentionsQuery({
+        ...activeFilters,
+        statut: [DemandeStatutEnum["demande validée"]],
+        campagne: anneeCampagne,
+      }),
+      deps.getStatsPilotageIntentionsQuery({
+        ...activeFilters,
+        campagne: anneeCampagne,
+      }),
+    ]);
 
-      return {
-        ["projet de demande"]: formatResult(projets),
-        ["demande validée"]: formatResult(validees),
-        all: formatResult(all),
-        campagne: currentCampagne,
-        filters,
-      };
+    return {
+      ["projet de demande"]: formatResult(projets),
+      ["demande validée"]: formatResult(validees),
+      all: formatResult(all),
+      campagne: currentCampagne,
+      filters,
     };
+  };
 
 export const getStatsPilotageIntentionsUsecase = getStatsPilotageIntentionsFactory();

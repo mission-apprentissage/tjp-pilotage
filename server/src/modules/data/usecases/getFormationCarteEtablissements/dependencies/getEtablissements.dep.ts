@@ -30,7 +30,7 @@ export const getEtablissements = async ({
         .leftJoin("indicateurSortie", (join) =>
           join
             .onRef("indicateurSortie.formationEtablissementId", "=", "formationEtablissement.id")
-            .on("millesimeSortie", "=", "2021_2022")
+            .on("millesimeSortie", "=", "2021_2022"),
         )
         .select([
           "cfd",
@@ -38,7 +38,7 @@ export const getEtablissements = async ({
           "codeDispositif",
           "voie",
           sql<string>`${sql.ref("cfd")} || ${sql.ref("uai")} || coalesce(${sql.ref("codeDispositif")},'') || ${sql.ref(
-            "voie"
+            "voie",
           )}`.as("offre"),
           "millesimeSortie",
           selectTauxInsertion6mois("indicateurSortie").as("tauxInsertion"),
@@ -48,7 +48,7 @@ export const getEtablissements = async ({
           "nbPoursuiteEtudes",
           "nbSortants",
           "nbInsertion6mois",
-        ])
+        ]),
     )
     .with("carto", (db) =>
       db
@@ -64,16 +64,16 @@ export const getEtablissements = async ({
             "taux_ij_formation_etab.offre",
             "=",
             sql`${sql.ref("formationEtablissement.cfd")} || ${sql.ref(
-              "formationEtablissement.uai"
+              "formationEtablissement.uai",
             )} || coalesce(${sql.ref(
-              "formationEtablissement.codeDispositif"
-            )},'') || ${sql.ref("formationEtablissement.voie")}`
-          )
+              "formationEtablissement.codeDispositif",
+            )},'') || ${sql.ref("formationEtablissement.voie")}`,
+          ),
         )
         .select((sb) => [
           "etablissement.uai",
           sql<string>`trim(split_part(split_part(split_part(split_part(${sb.ref(
-            "etablissement.libelleEtablissement"
+            "etablissement.libelleEtablissement",
           )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as("libelleEtablissement"),
           "etablissement.commune",
           "etablissement.latitude",
@@ -100,8 +100,8 @@ export const getEtablissements = async ({
           selectTauxPression("indicateurEntree", "niveauDiplome", true).as("tauxPression"),
         ])
         .where((eb) =>
-          eb.or([eb("rentreeScolaire", "=", "2023"), eb("formationEtablissement.voie", "=", "apprentissage")])
-        )
+          eb.or([eb("rentreeScolaire", "=", "2023"), eb("formationEtablissement.voie", "=", "apprentissage")]),
+        ),
     )
     .selectFrom("carto")
     .select((sb) => [
@@ -120,7 +120,7 @@ export const getEtablissements = async ({
       sb.fn.sum("carto.effectifs").as("effectifs"),
       sb.fn.sum("carto.tauxPression").as("tauxPression"),
       sql<boolean>`bool_or(${sb.ref("carto.voie")} = 'apprentissage' OR ${sb.ref("carto.voie")} IS NULL)`.as(
-        "isApprentissage"
+        "isApprentissage",
       ),
       sql<boolean>`bool_or(${sb.ref("carto.voie")} = 'scolaire' OR ${sb.ref("carto.voie")} IS NULL)`.as("isScolaire"),
       sql<boolean>`case when left(${sb.ref("carto.cfd")}, 3) = '320' then true else false end`.as("isBTS"),

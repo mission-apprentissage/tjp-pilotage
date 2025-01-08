@@ -30,7 +30,7 @@ export const [fetchIjReg] = inject({ getRegionData, cacheIjReg, clearIjRegCache 
       console.log(
         `--- fetch IJ Reg summary for ${codeRegion} (code region IJ : ${codeRegionIj}) :`,
         millesimesOK.join(","),
-        "ok"
+        "ok",
       );
     }
 
@@ -38,7 +38,7 @@ export const [fetchIjReg] = inject({ getRegionData, cacheIjReg, clearIjRegCache 
       console.log(
         `--- fetch IJ Reg summary for ${codeRegion} (code region IJ : ${codeRegionIj}) :`,
         millesimesNOK.join(","),
-        "nok"
+        "nok",
       );
     }
   }

@@ -32,7 +32,7 @@ export const getEtablissementsProches = async ({ cfd, bbox, limit = 100 }: Filte
       "etablissement.latitude",
       "etablissement.secteur",
       sql<string>`trim(split_part(split_part(split_part(split_part(${sb.ref(
-        "etablissement.libelleEtablissement"
+        "etablissement.libelleEtablissement",
       )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as("libelleEtablissement"),
       "region.libelleRegion",
       "academie.libelleAcademie",
@@ -44,13 +44,13 @@ export const getEtablissementsProches = async ({ cfd, bbox, limit = 100 }: Filte
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE),
         eb("indicateurEntree.rentreeScolaire", "is", null),
-      ])
+      ]),
     )
     .where((eb) =>
       eb.or([
         eb("indicateurSortie.millesimeSortie", "=", CURRENT_IJ_MILLESIME),
         eb("indicateurSortie.millesimeSortie", "is", null),
-      ])
+      ]),
     )
     .$call((q) => {
       if (bbox !== undefined) {
@@ -60,7 +60,7 @@ export const getEtablissementsProches = async ({ cfd, bbox, limit = 100 }: Filte
             eb("etablissement.longitude", "<=", parseFloat(bbox.maxLng)),
             eb("etablissement.latitude", ">=", parseFloat(bbox.minLat)),
             eb("etablissement.latitude", "<=", parseFloat(bbox.maxLat)),
-          ])
+          ]),
         );
       }
       return q;

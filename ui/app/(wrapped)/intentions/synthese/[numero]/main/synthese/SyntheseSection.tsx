@@ -33,7 +33,7 @@ const formatArray = (values?: Array<string | number | undefined>): string => {
     values
       .filter((value) => value)
       .join(", ")
-      .toLowerCase()
+      .toLowerCase(),
   );
 };
 
@@ -41,7 +41,7 @@ const formatMotifArray = (values?: Array<string | undefined>): string => {
   if (!values) return "Aucun";
   // Filtrer le motifs autre pour les ajouter différemment sur la synthèse
   return formatArray(
-    values.filter((motif) => !hasMotifAutre([motif])).map((motif) => getMotifLabel({ motif: motif as MotifLabel }))
+    values.filter((motif) => !hasMotifAutre([motif])).map((motif) => getMotifLabel({ motif: motif as MotifLabel })),
   );
 };
 

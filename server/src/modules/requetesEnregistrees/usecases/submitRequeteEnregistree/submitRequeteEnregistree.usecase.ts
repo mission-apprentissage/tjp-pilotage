@@ -54,5 +54,5 @@ export const [submitRequeteEnregistreeUsecase, submitRequeteEnregistreeFactory] 
       });
 
       return createdSuivi;
-    }
+    },
 );

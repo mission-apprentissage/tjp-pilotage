@@ -26,8 +26,8 @@ export const findTauxRegionauxFormation = async ({
         eb.and([
           eb(eb.ref("formationView.cfd"), "=", eb.ref("indicateurRegionSortie.cfd")),
           eb(eb.ref("indicateurRegionSortie.voie"), "=", eb.ref("formationView.voie")),
-        ])
-      )
+        ]),
+      ),
     )
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .select((sb) => [
@@ -36,8 +36,8 @@ export const findTauxRegionauxFormation = async ({
         .when(sb.fn.sum<number>(selectSortants(sb)), ">=", 20)
         .then(
           sql<number>`100 * ${sb.fn.sum<number>(
-            "nbInsertion6mois"
-          )}::FLOAT / ${sb.fn.sum<number>(selectSortants(sb))}::FLOAT`
+            "nbInsertion6mois",
+          )}::FLOAT / ${sb.fn.sum<number>(selectSortants(sb))}::FLOAT`,
         )
         .end()
         .as("tauxInsertion6mois"),
@@ -46,8 +46,8 @@ export const findTauxRegionauxFormation = async ({
         .when(sb.fn.sum<number>(selectEffectifIJ(sb)), ">=", 20)
         .then(
           sql<number>`100 * ${sb.fn.sum<number>(
-            "nbPoursuiteEtudes"
-          )}::FLOAT / ${sb.fn.sum<number>(selectEffectifIJ(sb))}::FLOAT`
+            "nbPoursuiteEtudes",
+          )}::FLOAT / ${sb.fn.sum<number>(selectEffectifIJ(sb))}::FLOAT`,
         )
         .end()
         .as("tauxPoursuite"),
@@ -56,8 +56,8 @@ export const findTauxRegionauxFormation = async ({
         .when(sql<number>`${sb.fn.sum<number>(selectDenominateurTauxDevenir(sb))}::FLOAT`, ">=", 20)
         .then(
           sql<number>`100 * ${sb.fn.sum<number>(
-            sql<number>`${sb.ref("nbPoursuiteEtudes")} + ${sb.ref("nbInsertion6mois")}::FLOAT`
-          )} / ${sb.fn.sum<number>(selectDenominateurTauxDevenir(sb))}::FLOAT`
+            sql<number>`${sb.ref("nbPoursuiteEtudes")} + ${sb.ref("nbInsertion6mois")}::FLOAT`,
+          )} / ${sb.fn.sum<number>(selectDenominateurTauxDevenir(sb))}::FLOAT`,
         )
         .end()
         .as("tauxDevenirFavorable"),

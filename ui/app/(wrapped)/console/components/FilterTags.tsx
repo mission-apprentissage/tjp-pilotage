@@ -56,13 +56,13 @@ export const FilterTags = chakra(
           }
           return [...acc, { key, value }];
         },
-        [] as Array<{ key: string; value: string }>
+        [] as Array<{ key: string; value: string }>,
       );
     };
 
     const getFilterValue = ({ key, value }: { key: string; value: string }) => {
       return filtersList?.[FILTRES_KEYS[key as keyof typeof FILTRES_KEYS] as keyof FiltersList]?.find(
-        (filter) => filter.value === value
+        (filter) => filter.value === value,
       )?.label;
     };
 
@@ -108,7 +108,7 @@ export const FilterTags = chakra(
                             if (filterValue && Array.isArray(filterValue) && filterValue.length > 1) {
                               handleFilters(
                                 key as keyof Filters,
-                                filterValue.filter((v) => v !== value)
+                                filterValue.filter((v) => v !== value),
                               );
                               return;
                             }
@@ -136,5 +136,5 @@ export const FilterTags = chakra(
         </Wrap>
       </Box>
     );
-  }
+  },
 );

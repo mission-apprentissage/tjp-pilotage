@@ -109,52 +109,52 @@ export const countPlacesTransformeesScolaire = ({ eb }: { eb: ExpressionBuilder<
       eb.and([
         sql<boolean>`${countDifferenceCapaciteScolaire(eb)} < 0`,
         sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} < 0`,
-      ])
+      ]),
     )
     .then(
       sql<number>`GREATEST(
         ABS(${countDifferenceCapaciteScolaire(eb)}),
         ABS(${countDifferenceCapaciteScolaireColoree(eb)})
-      )`
+      )`,
     )
     // si augmentation des places globales + diminution des places colorées => somme des 2 transfo  (aucun cas en prod)
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteScolaire(eb)} >= 0`,
         sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} < 0`,
-      ])
+      ]),
     )
     .then(
       sql<number>`
         ABS(${countDifferenceCapaciteScolaire(eb)}) +
         ABS(${countDifferenceCapaciteScolaireColoree(eb)})
-      `
+      `,
     )
     // si diminution des places globales + augmentation des places colorées => somme des 2 transfo
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteScolaire(eb)} < 0`,
         sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} >= 0`,
-      ])
+      ]),
     )
     .then(
       sql<number>`
         ABS(${countDifferenceCapaciteScolaire(eb)}) +
         ABS(${countDifferenceCapaciteScolaireColoree(eb)})
-      `
+      `,
     )
     // si augmentation des places globales + augmentation des places colorées => max de augmentation
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteScolaire(eb)} >= 0`,
         sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} >= 0`,
-      ])
+      ]),
     )
     .then(
       sql<number>`GREATEST(
         ABS(${countDifferenceCapaciteScolaire(eb)}),
         ABS(${countDifferenceCapaciteScolaireColoree(eb)})
-      )`
+      )`,
     )
     .end();
 
@@ -166,52 +166,52 @@ export const countPlacesTransformeesApprentissage = ({ eb }: { eb: ExpressionBui
       eb.and([
         sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} < 0`,
         sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} < 0`,
-      ])
+      ]),
     )
     .then(
       sql<number>`GREATEST(
         ABS(${countDifferenceCapaciteApprentissage(eb)}),
         ABS(${countDifferenceCapaciteApprentissageColoree(eb)})
-      )`
+      )`,
     )
     // si augmentation des places globales + diminution des places colorées => somme des 2 transfo  (aucun cas en prod)
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} >= 0`,
         sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} < 0`,
-      ])
+      ]),
     )
     .then(
       sql<number>`
         ABS(${countDifferenceCapaciteApprentissage(eb)}) +
         ABS(${countDifferenceCapaciteApprentissageColoree(eb)})
-      `
+      `,
     )
     // si diminution des places globales + augmentation des places colorées => somme des 2 transfo
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} < 0`,
         sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} >= 0`,
-      ])
+      ]),
     )
     .then(
       sql<number>`
         ABS(${countDifferenceCapaciteApprentissage(eb)}) +
         ABS(${countDifferenceCapaciteApprentissageColoree(eb)})
-      `
+      `,
     )
     // si augmentation des places globales + augmentation des places colorées => max de augmentation
     .when(
       eb.and([
         sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} >= 0`,
         sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} >= 0`,
-      ])
+      ]),
     )
     .then(
       sql<number>`GREATEST(
         ABS(${countDifferenceCapaciteApprentissage(eb)}),
         ABS(${countDifferenceCapaciteApprentissageColoree(eb)})
-      )`
+      )`,
     )
     .end();
 
@@ -238,13 +238,13 @@ export const getTauxTransformation = ({
   campagne?: string;
 }) => {
   switch (campagne) {
-  case "2023":
-    return sql<number>`
+    case "2023":
+      return sql<number>`
         ${sql.table(demandeAlias)}.placesTransformees::INTEGER /
         ${sql.table(effectifAlias)}.effectif::INTEGER
       `;
-  default:
-    return sql<number>`
+    default:
+      return sql<number>`
         ${sql.table(demandeAlias)}.placesTransformeesCampagne2023::INTEGER /
         ${sql.table(effectifAlias)}.effectif::FLOAT
       `;

@@ -27,7 +27,7 @@ export const HorizontalBarChart = ({
   const getDelta = (valueName?: string) => {
     const current = data[CURRENT_RENTREE]?.find((data) => data.label === valueName)?.value;
     const previous = data[getRentreeScolairePrecedente(CURRENT_RENTREE)]?.find(
-      (data) => data.label === valueName
+      (data) => data.label === valueName,
     )?.value;
     if (current && previous) {
       if (current > previous) {
@@ -148,7 +148,7 @@ export const HorizontalBarChart = ({
         },
       },
     }),
-    [data]
+    [data],
   );
 
   useLayoutEffect(() => {

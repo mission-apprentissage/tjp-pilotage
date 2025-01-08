@@ -27,7 +27,7 @@ export default ({
           if (error.response?.status === 404) push(`/intentions/saisie?notfound=${numero}`);
         }
       },
-    }
+    },
   );
 
   if (isLoading) return <IntentionSpinner />;

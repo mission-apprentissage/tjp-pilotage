@@ -33,7 +33,7 @@ const withoutSensibleFields = (obj: unknown, seen: Set<unknown>): unknown => {
         }
 
         return [key, withoutSensibleFields(value, seen)];
-      })
+      }),
     );
   }
 

@@ -5,13 +5,13 @@ const getIntentionFactory =
   (
     deps = {
       getIntentionQuery,
-    }
+    },
   ) =>
-    async ({ numero, user }: Filters) => {
-      return await deps.getIntentionQuery({
-        numero: numero,
-        user,
-      });
-    };
+  async ({ numero, user }: Filters) => {
+    return await deps.getIntentionQuery({
+      numero: numero,
+      user,
+    });
+  };
 
 export const getIntentionUsecase = getIntentionFactory();

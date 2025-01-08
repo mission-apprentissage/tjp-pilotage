@@ -139,7 +139,7 @@ export const TauxPressionRemplissageGraph = ({
         };
       }),
     }),
-    [data, mainKey, categories, colors, isPercentage, title]
+    [data, mainKey, categories, colors, isPercentage, title],
   );
 
   useLayoutEffect(() => {

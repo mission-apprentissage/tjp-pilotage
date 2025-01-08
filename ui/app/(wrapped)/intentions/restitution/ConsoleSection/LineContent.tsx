@@ -32,9 +32,9 @@ const handleMotifLabel = ({
     motif === "autre"
       ? `Autre : ${autreMotif}`
       : getMotifLabel({
-        motif: motif as MotifLabel,
-        campagne: campagne as MotifCampagne,
-      })
+          motif: motif as MotifLabel,
+          campagne: campagne as MotifCampagne,
+        }),
   );
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
 };
@@ -48,7 +48,7 @@ const handleMotifRefusLabel = ({
 }) => {
   if (!motifsRefus || motifsRefus.length === 0) return undefined;
   const formattedMotifs = motifsRefus?.map((motif) =>
-    motif === "autre" ? `Autre : ${autreMotifRefus}` : getMotifRefusLabel(motif as MotifRefusLabel)
+    motif === "autre" ? `Autre : ${autreMotifRefus}` : getMotifRefusLabel(motif as MotifRefusLabel),
   );
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
 };
@@ -80,7 +80,7 @@ const ConditionalTd = chakra(
         </Td>
       );
     return null;
-  }
+  },
 );
 
 export const LineContent = ({

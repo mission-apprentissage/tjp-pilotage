@@ -79,7 +79,7 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
               dateDebut: toDate(form.dateDebut).toISOString(),
               dateFin: toDate(form.dateFin).toISOString(),
             },
-          })
+          }),
         )}
       >
         <ModalHeader>Créer une campagne</ModalHeader>

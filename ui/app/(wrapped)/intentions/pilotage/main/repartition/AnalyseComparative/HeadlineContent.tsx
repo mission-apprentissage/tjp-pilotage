@@ -70,5 +70,5 @@ export const HeadlineContent = chakra(
         </Th>
       </Tr>
     );
-  }
+  },
 );

@@ -24,7 +24,7 @@ const getNationalData = async (filters: Filters) => {
       genericOnConstatRentree(filters)
         .select((eb) => [sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("effectif")])
         .as("effectifs"),
-      (join) => join.onTrue()
+      (join) => join.onTrue(),
     )
     .select((eb) => [
       eb.fn.coalesce("countDemande", eb.val(0)).as("countDemande"),
@@ -63,7 +63,7 @@ const getRegionData = async (filters: Filters) => {
         .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])
         .groupBy(["demande.codeRegion"])
         .as("demandes"),
-      (join) => join.onRef("demandes.codeRegion", "=", "region.codeRegion")
+      (join) => join.onRef("demandes.codeRegion", "=", "region.codeRegion"),
     )
     .leftJoin(
       genericOnConstatRentree(filters)
@@ -73,7 +73,7 @@ const getRegionData = async (filters: Filters) => {
         ])
         .groupBy(["dataEtablissement.codeRegion"])
         .as("effectifs"),
-      (join) => join.onRef("effectifs.codeRegion", "=", "region.codeRegion")
+      (join) => join.onRef("effectifs.codeRegion", "=", "region.codeRegion"),
     )
     .select((eb) => [
       eb.fn.coalesce("countDemande", eb.val(0)).as("countDemande"),
@@ -113,7 +113,7 @@ const getAcademieData = async (filters: Filters) => {
         .select((eb) => [eb.ref("demande.codeAcademie").as("codeAcademie")])
         .groupBy(["demande.codeAcademie"])
         .as("demandes"),
-      (join) => join.onRef("demandes.codeAcademie", "=", "academie.codeAcademie")
+      (join) => join.onRef("demandes.codeAcademie", "=", "academie.codeAcademie"),
     )
     .leftJoin(
       genericOnConstatRentree(filters)
@@ -123,7 +123,7 @@ const getAcademieData = async (filters: Filters) => {
         ])
         .groupBy(["dataEtablissement.codeAcademie"])
         .as("effectifs"),
-      (join) => join.onRef("effectifs.codeAcademie", "=", "academie.codeAcademie")
+      (join) => join.onRef("effectifs.codeAcademie", "=", "academie.codeAcademie"),
     )
     .select((eb) => [
       eb.fn.coalesce("countDemande", eb.val(0)).as("countDemande"),
@@ -163,7 +163,7 @@ const getDepartementData = async (filters: Filters) => {
         .select((eb) => [eb.ref("dataEtablissement.codeDepartement").as("codeDepartement")])
         .groupBy(["dataEtablissement.codeDepartement"])
         .as("demandes"),
-      (join) => join.onRef("demandes.codeDepartement", "=", "departement.codeDepartement")
+      (join) => join.onRef("demandes.codeDepartement", "=", "departement.codeDepartement"),
     )
     .leftJoin(
       genericOnConstatRentree(filters)
@@ -173,7 +173,7 @@ const getDepartementData = async (filters: Filters) => {
         ])
         .groupBy(["dataEtablissement.codeDepartement"])
         .as("effectifs"),
-      (join) => join.onRef("effectifs.codeDepartement", "=", "departement.codeDepartement")
+      (join) => join.onRef("effectifs.codeDepartement", "=", "departement.codeDepartement"),
     )
     .leftJoin("academie", "academie.codeAcademie", "departement.codeAcademie")
     .select((eb) => [
@@ -220,59 +220,59 @@ export const getStatsPilotageIntentionsQuery = async ({
   formationSpecifique,
 }: Filters) => {
   switch (scope) {
-  case ScopeEnum["académie"]:
-    return getAcademieData({
-      statut,
-      rentreeScolaire,
-      codeNiveauDiplome,
-      CPC,
-      codeNsf,
-      campagne,
-      scope,
-      secteur,
-      withColoration,
-      formationSpecifique,
-    });
+    case ScopeEnum["académie"]:
+      return getAcademieData({
+        statut,
+        rentreeScolaire,
+        codeNiveauDiplome,
+        CPC,
+        codeNsf,
+        campagne,
+        scope,
+        secteur,
+        withColoration,
+        formationSpecifique,
+      });
 
-  case ScopeEnum["département"]:
-    return getDepartementData({
-      statut,
-      rentreeScolaire,
-      codeNiveauDiplome,
-      CPC,
-      codeNsf,
-      campagne,
-      scope,
-      secteur,
-      withColoration,
-      formationSpecifique,
-    });
-  case ScopeEnum["région"]:
-    return getRegionData({
-      statut,
-      rentreeScolaire,
-      codeNiveauDiplome,
-      CPC,
-      codeNsf,
-      campagne,
-      scope,
-      secteur,
-      withColoration,
-      formationSpecifique,
-    });
-  case ScopeEnum.national:
-  default:
-    return getNationalData({
-      statut,
-      rentreeScolaire,
-      codeNiveauDiplome,
-      CPC,
-      codeNsf,
-      campagne,
-      scope,
-      secteur,
-      withColoration,
-      formationSpecifique,
-    });
+    case ScopeEnum["département"]:
+      return getDepartementData({
+        statut,
+        rentreeScolaire,
+        codeNiveauDiplome,
+        CPC,
+        codeNsf,
+        campagne,
+        scope,
+        secteur,
+        withColoration,
+        formationSpecifique,
+      });
+    case ScopeEnum["région"]:
+      return getRegionData({
+        statut,
+        rentreeScolaire,
+        codeNiveauDiplome,
+        CPC,
+        codeNsf,
+        campagne,
+        scope,
+        secteur,
+        withColoration,
+        formationSpecifique,
+      });
+    case ScopeEnum.national:
+    default:
+      return getNationalData({
+        statut,
+        rentreeScolaire,
+        codeNiveauDiplome,
+        CPC,
+        codeNsf,
+        campagne,
+        scope,
+        secteur,
+        withColoration,
+        formationSpecifique,
+      });
   }
 };

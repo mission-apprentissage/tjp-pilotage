@@ -18,6 +18,6 @@ export const getFormationCarteEtablissementsRoute = (server: Server) => {
         const result = await getFormationCarteEtablissementsUsecase({ ...request.params }, { ...request.query });
         response.status(200).send(result);
       },
-    })
+    }),
   );
 };

@@ -4,7 +4,7 @@ import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
 
 export const upsertIndicateurEtablissement = async (
-  indicateurEtablissement: Insertable<DB["indicateurEtablissement"]>
+  indicateurEtablissement: Insertable<DB["indicateurEtablissement"]>,
 ) => {
   await getKbdClient()
     .insertInto("indicateurEtablissement")

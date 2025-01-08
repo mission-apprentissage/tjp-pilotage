@@ -56,8 +56,8 @@ const selectStatsSortie = ({
       q.where(
         "indicateurRegionSortie.millesimeSortie",
         "=",
-        getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: annee })
-      )
+        getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: annee }),
+      ),
     )
     .where(isScolaireIndicateurRegionSortie)
     .where(notAnneeCommuneIndicateurRegionSortie)
@@ -131,7 +131,7 @@ export const getTauxIJ = async ({
 
       return [tauxInsertion, tauxPoursuite];
     },
-    [{} as TauxIJParAnnee, {} as TauxIJParAnnee]
+    [{} as TauxIJParAnnee, {} as TauxIJParAnnee],
   );
 
   return {

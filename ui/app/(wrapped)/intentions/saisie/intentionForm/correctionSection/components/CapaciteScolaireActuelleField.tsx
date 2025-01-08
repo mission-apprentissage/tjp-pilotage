@@ -10,5 +10,5 @@ export const CapaciteScolaireActuelleField = chakra(
     const isReadOnly = (typeDemande !== undefined && isTypeOuverture(typeDemande)) || disabled;
 
     return <CapaciteField name={"capaciteScolaireActuelle"} className={className} isReadOnly={isReadOnly} />;
-  }
+  },
 );

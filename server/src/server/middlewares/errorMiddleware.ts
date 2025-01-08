@@ -75,6 +75,6 @@ export function errorMiddleware(server: Server) {
       }
 
       return reply.status(payload.statusCode).send(payload);
-    }
+    },
   );
 }

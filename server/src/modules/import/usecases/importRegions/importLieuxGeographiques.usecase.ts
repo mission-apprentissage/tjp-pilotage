@@ -32,11 +32,11 @@ export const [importLieuxGeographiques, importLieuxGeographiquesFactory] = injec
         if (!departement) return;
         await deps.departement({ data: [departement] });
       },
-      { parallel: 20 }
+      { parallel: 20 },
     );
 
     console.log("Lieux géographiques ajoutés ou mis à jour\n");
-  }
+  },
 );
 
 const createRegionFromLine = (data: Departements_academies_regions): Insertable<DB["region"]> => {

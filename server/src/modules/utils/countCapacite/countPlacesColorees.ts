@@ -24,7 +24,7 @@ export const countPlacesColoreesOuvertesScolaire = ({ eb }: { eb: ExpressionBuil
         eb.and([
           sql<boolean>`${countDifferenceCapaciteScolaire(eb)} < 0`,
           sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} >= 0`,
-        ])
+        ]),
       )
       .then(sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`)
       // si augmentation des places globales + augmentation des places colorées => nombre de places colorées si supérieur à l'augmentation de capacité
@@ -32,7 +32,7 @@ export const countPlacesColoreesOuvertesScolaire = ({ eb }: { eb: ExpressionBuil
         eb.and([
           sql<boolean>`${countDifferenceCapaciteScolaire(eb)} >= 0`,
           sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} >= 0`,
-        ])
+        ]),
       )
       .then(
         eb
@@ -41,12 +41,12 @@ export const countPlacesColoreesOuvertesScolaire = ({ eb }: { eb: ExpressionBuil
             eb(
               sql<number>`ABS(${countDifferenceCapaciteScolaire(eb)})`,
               "<",
-              sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`
-            )
+              sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`,
+            ),
           )
           .then(sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`)
           .else(eb.val(0))
-          .end()
+          .end(),
       )
       .else(eb.val(0))
       .end(),
@@ -65,7 +65,7 @@ export const countPlacesColoreesFermeesScolaire = ({ eb }: { eb: ExpressionBuild
         eb.and([
           sql<boolean>`${countDifferenceCapaciteScolaire(eb)} < 0`,
           sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} < 0`,
-        ])
+        ]),
       )
       .then(
         eb
@@ -74,19 +74,19 @@ export const countPlacesColoreesFermeesScolaire = ({ eb }: { eb: ExpressionBuild
             eb(
               sql<number>`ABS(${countDifferenceCapaciteScolaire(eb)})`,
               "<",
-              sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`
-            )
+              sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`,
+            ),
           )
           .then(sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`)
           .else(eb.val(0))
-          .end()
+          .end(),
       )
       // si augmentation des places globales + diminution des places colorées => somme des diminutions
       .when(
         eb.and([
           sql<boolean>`${countDifferenceCapaciteScolaire(eb)} >= 0`,
           sql<boolean>`${countDifferenceCapaciteScolaireColoree(eb)} < 0`,
-        ])
+        ]),
       )
       .then(sql<number>`ABS(${countDifferenceCapaciteScolaireColoree(eb)})`)
       .else(eb.val(0))
@@ -128,7 +128,7 @@ export const countPlacesColoreesOuvertesApprentissage = ({
         eb.and([
           sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} < 0`,
           sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} >= 0`,
-        ])
+        ]),
       )
       .then(sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`)
       // si augmentation des places globales + augmentation des places colorées => nombre de places colorées si supérieur à l'augmentation de capacité
@@ -136,7 +136,7 @@ export const countPlacesColoreesOuvertesApprentissage = ({
         eb.and([
           sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} >= 0`,
           sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} >= 0`,
-        ])
+        ]),
       )
       .then(
         eb
@@ -147,12 +147,12 @@ export const countPlacesColoreesOuvertesApprentissage = ({
               "<",
               sql<number>`
                 ABS(${countDifferenceCapaciteApprentissageColoree(eb)})
-              `
-            )
+              `,
+            ),
           )
           .then(sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`)
           .else(eb.val(0))
-          .end()
+          .end(),
       )
       .else(eb.val(0))
       .end(),
@@ -172,7 +172,7 @@ export const countPlacesColoreesFermeesApprentissage = ({
         eb.and([
           sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} < 0`,
           sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} < 0`,
-        ])
+        ]),
       )
       .then(
         eb
@@ -183,19 +183,19 @@ export const countPlacesColoreesFermeesApprentissage = ({
               "<",
               sql<number>`
                 ABS(${countDifferenceCapaciteApprentissageColoree(eb)})
-              `
-            )
+              `,
+            ),
           )
           .then(sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`)
           .else(eb.val(0))
-          .end()
+          .end(),
       )
       // si augmentation des places globales + diminution des places colorées => nombre de places colorées
       .when(
         eb.and([
           sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} >= 0`,
           sql<boolean>`${countDifferenceCapaciteApprentissageColoree(eb)} < 0`,
-        ])
+        ]),
       )
       .then(sql<number>`ABS(${countDifferenceCapaciteApprentissageColoree(eb)})`)
       // si augmentation des places colorées => 0

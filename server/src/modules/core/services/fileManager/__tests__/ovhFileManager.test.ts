@@ -69,7 +69,7 @@ const fileManagerFixture = (client: S3Client) => {
     givenAFileIsExistingInDirectory: (id: string, filename: string) => {
       fileManager.uploadFile(
         filepathManager.getIntentionFilePath(id, filename),
-        Buffer.from("i'm the content of a file", "utf-8")
+        Buffer.from("i'm the content of a file", "utf-8"),
       );
     },
     givenUploadWillResultWell: () => {
@@ -103,7 +103,7 @@ const fileManagerFixture = (client: S3Client) => {
         filepath: string;
         lastModified: Date;
         size: number;
-      }[]
+      }[],
     ) => {
       s3ClientMock.on(ListObjectsV2Command).resolves({
         Contents: [

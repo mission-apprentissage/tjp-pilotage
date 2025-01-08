@@ -28,7 +28,7 @@ export const AchatEquipementCoutField = chakra(
         watch((_, { name }) => {
           if (name !== "achatEquipement") return;
           setValue("achatEquipementCout", undefined);
-        }).unsubscribe
+        }).unsubscribe,
     );
 
     const achatEquipement = watch("achatEquipement");
@@ -55,5 +55,5 @@ export const AchatEquipementCoutField = chakra(
         {errors.achatEquipementCout && <FormErrorMessage>{errors.achatEquipementCout.message}</FormErrorMessage>}
       </FormControl>
     );
-  }
+  },
 );

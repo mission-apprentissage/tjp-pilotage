@@ -14,7 +14,7 @@ type CreateFunction<D> = ({ data }: { data: Array<D> }) => unknown;
 export default function batchCreate<T>(
   createCallback: CreateFunction<T>,
   batchSize: number = DEFAULT_BATCH_SIZE,
-  allowDuplicates: boolean = false
+  allowDuplicates: boolean = false,
 ) {
   const BATCH: T[] = [];
 

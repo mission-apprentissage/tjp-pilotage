@@ -52,7 +52,7 @@ const ColonneFiltersSection = chakra(
               };
               return acc;
             },
-            {} as Record<string, { color: string; options: { label: string; value: string }[] }>
+            {} as Record<string, { color: string; options: { label: string; value: string }[] }>,
           )}
           defaultOptions={Object.entries(CORRECTIONS_COLUMNS_DEFAULT)?.map(([value, label]) => {
             return {
@@ -69,7 +69,7 @@ const ColonneFiltersSection = chakra(
         />
       </Flex>
     );
-  }
+  },
 );
 
 const PAGE_SIZE = 30;
@@ -132,19 +132,19 @@ export default () => {
 
   const handleDefaultFilters = (
     type: keyof FiltersCorrections,
-    value: FiltersCorrections[keyof FiltersCorrections]
+    value: FiltersCorrections[keyof FiltersCorrections],
   ) => {
     if (value != null)
       switch (type) {
-      case "codeRegion":
-        setCodeRegionFilter((value as string[])[0] ?? "");
-        break;
-      case "codeDepartement":
-        setCodeDepartementFilter((value as string[])[0] ?? "");
-        break;
-      case "campagne":
-        setCampagneFilter((value as string[])[0] ?? "");
-        break;
+        case "codeRegion":
+          setCodeRegionFilter((value as string[])[0] ?? "");
+          break;
+        case "codeDepartement":
+          setCodeDepartementFilter((value as string[])[0] ?? "");
+          break;
+        case "campagne":
+          setCampagneFilter((value as string[])[0] ?? "");
+          break;
       }
   };
 
@@ -195,13 +195,13 @@ export default () => {
     {
       keepPreviousData: true,
       staleTime: 10000000,
-    }
+    },
   );
 
   const [colonneFilters, setColonneFilters] = useState<(keyof typeof CORRECTIONS_COLUMNS_OPTIONAL)[]>(
     (columns.length
       ? columns
-      : Object.keys(CORRECTIONS_COLUMNS_DEFAULT)) as (keyof typeof CORRECTIONS_COLUMNS_DEFAULT)[]
+      : Object.keys(CORRECTIONS_COLUMNS_DEFAULT)) as (keyof typeof CORRECTIONS_COLUMNS_DEFAULT)[],
   );
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
@@ -272,7 +272,7 @@ export default () => {
         }),
         secteur: correction.secteur === "PU" ? "Public" : "Privé",
       })),
-      CORRECTIONS_COLUMNS
+      CORRECTIONS_COLUMNS,
     );
   };
 
@@ -295,7 +295,7 @@ export default () => {
         }),
         secteur: correction.secteur === "PU" ? "Public" : "Privé",
       })),
-      CORRECTIONS_COLUMNS
+      CORRECTIONS_COLUMNS,
     );
   };
 

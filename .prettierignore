@@ -1,6 +1,13 @@
 .yarn
 .talismanrc
 .infra
+node_modules
+
 
 # GeoJSON files
 fond_carte_*.json
+
+# Static files
+public/
+server/static
+ui/public

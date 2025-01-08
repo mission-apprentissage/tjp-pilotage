@@ -245,7 +245,7 @@ export const IntentionFilesProvider = ({ children, numero }: { readonly children
       isDeletingFiles,
       downloadFile,
     }),
-    [files, deleteFile, newFiles, addNewFiles, isLoadingFiles, isUploadingFiles, isDeletingFiles, downloadFile]
+    [files, deleteFile, newFiles, addNewFiles, isLoadingFiles, isUploadingFiles, isDeletingFiles, downloadFile],
   );
 
   return <IntentionFilesContext.Provider value={value}>{children}</IntentionFilesContext.Provider>;

@@ -73,7 +73,7 @@ export const [getIndicateursAffelnet] = inject(
         {
           "Capacité carte scolaire": 0,
           "Demandes vœux 1": 0,
-        }
+        },
       );
 
       /**
@@ -88,5 +88,5 @@ export const [getIndicateursAffelnet] = inject(
         capacites: anneeDebut === 0 ? [capacite ?? null] : [null, capacite ?? null],
         premiersVoeux: anneeDebut === 0 ? [premiersVoeux ?? null] : [null, premiersVoeux ?? null],
       };
-    }
+    },
 );

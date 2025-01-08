@@ -23,14 +23,14 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       "etablissement.longitude",
       "etablissement.latitude",
       sql<string>`trim(split_part(split_part(split_part(split_part(${sb.ref(
-        "etablissement.libelleEtablissement"
+        "etablissement.libelleEtablissement",
       )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as("libelleEtablissement"),
     ])
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE),
         eb("indicateurEntree.rentreeScolaire", "is", null),
-      ])
+      ]),
     )
     .$call((q) => {
       if (bbox !== undefined) {
@@ -40,7 +40,7 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
             eb("etablissement.longitude", "<=", parseFloat(bbox.x2)),
             eb("etablissement.latitude", ">=", parseFloat(bbox.y1)),
             eb("etablissement.latitude", "<=", parseFloat(bbox.y2)),
-          ])
+          ]),
         );
       }
       return q;

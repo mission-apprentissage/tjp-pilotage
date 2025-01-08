@@ -13,7 +13,7 @@ export const searchEtablissementPerdirSchema = {
         value: z.string(),
         label: z.string().optional(),
         commune: z.string().optional(),
-      })
+      }),
     ),
   },
 };

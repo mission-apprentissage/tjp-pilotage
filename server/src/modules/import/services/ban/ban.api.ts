@@ -8,7 +8,7 @@ const instance = rateLimit(
     baseURL: "https://api-adresse.data.gouv.fr/search/",
     responseType: "json",
   }),
-  { maxRPS: 50 }
+  { maxRPS: 50 },
 );
 
 export const findAddress = async ({

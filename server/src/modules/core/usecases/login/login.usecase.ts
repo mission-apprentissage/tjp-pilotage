@@ -26,5 +26,5 @@ export const [login, loginFactory] = inject(
         issuer: "orion",
         expiresIn: "7d",
       });
-    }
+    },
 );

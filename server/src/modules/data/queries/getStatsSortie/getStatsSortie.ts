@@ -64,7 +64,7 @@ export const getStatsSortieParNiveauDiplomeQuery = async ({
       };
       return acc;
     },
-    {} as Record<string, { tauxInsertion: number; tauxPoursuite: number }>
+    {} as Record<string, { tauxInsertion: number; tauxPoursuite: number }>,
   );
 };
 
@@ -95,7 +95,7 @@ export const getStatsSortieParRegionsEtNiveauDiplomeQuery = async ({
       };
       return acc;
     },
-    {} as Record<string, Record<string, { tauxInsertion: number; tauxPoursuite: number }>>
+    {} as Record<string, Record<string, { tauxInsertion: number; tauxPoursuite: number }>>,
   );
 };
 
@@ -125,7 +125,7 @@ export const getStatsSortieParRegionsQuery = async ({
       };
       return acc;
     },
-    {} as Record<string, { tauxInsertion: number; tauxPoursuite: number }>
+    {} as Record<string, { tauxInsertion: number; tauxPoursuite: number }>,
   );
 };
 

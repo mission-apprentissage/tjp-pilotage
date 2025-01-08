@@ -141,11 +141,11 @@ export const Quadrant = function <
   const repartitionsQuadrants =
     meanInsertion && meanPoursuite
       ? {
-        q1: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q1 && item.effectif).length,
-        q2: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q2 && item.effectif).length,
-        q3: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q3 && item.effectif).length,
-        q4: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q4 && item.effectif).length,
-      }
+          q1: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q1 && item.effectif).length,
+          q2: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q2 && item.effectif).length,
+          q3: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q3 && item.effectif).length,
+          q4: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q4 && item.effectif).length,
+        }
       : undefined;
 
   const option = useMemo<EChartsOption>(
@@ -232,7 +232,7 @@ export const Quadrant = function <
             }
 
             const size = effectifSizes.find(
-              ({ max, min }) => effectif && (!min || effectif >= min) && (!max || effectif <= max)
+              ({ max, min }) => effectif && (!min || effectif >= min) && (!max || effectif <= max),
             )?.size;
 
             return size ?? 0;
@@ -254,74 +254,74 @@ export const Quadrant = function <
           markArea:
             moyennes.poursuite && moyennes.insertion
               ? {
-                silent: true,
-                animation: false,
-                data: [
-                  [
-                    {
-                      coord: [0, 0],
-                      itemStyle: {
-                        color:
+                  silent: true,
+                  animation: false,
+                  data: [
+                    [
+                      {
+                        coord: [0, 0],
+                        itemStyle: {
+                          color:
                             dimensions?.includes("tauxPoursuite") && dimensions?.includes("tauxInsertion")
                               ? redColor
                               : greyColor,
+                        },
+                        name: `Q4 - ${repartitionsQuadrants?.q4} formations`,
+                        label: {
+                          ...quadrantLabelStyle,
+                          position: "insideBottomLeft",
+                        },
                       },
-                      name: `Q4 - ${repartitionsQuadrants?.q4} formations`,
-                      label: {
-                        ...quadrantLabelStyle,
-                        position: "insideBottomLeft",
-                      },
-                    },
-                    { coord: [moyennes.poursuite, moyennes.insertion] },
-                  ],
-                  [
-                    {
-                      coord: [moyennes.poursuite, moyennes.insertion],
-                      itemStyle: {
-                        color:
+                      { coord: [moyennes.poursuite, moyennes.insertion] },
+                    ],
+                    [
+                      {
+                        coord: [moyennes.poursuite, moyennes.insertion],
+                        itemStyle: {
+                          color:
                             dimensions?.includes("tauxPoursuite") && dimensions?.includes("tauxInsertion")
                               ? greenColor
                               : greyColor,
+                        },
+                        name: `Q1 - ${repartitionsQuadrants?.q1} formations`,
+                        label: {
+                          ...quadrantLabelStyle,
+                          position: "insideTopRight",
+                        },
                       },
-                      name: `Q1 - ${repartitionsQuadrants?.q1} formations`,
-                      label: {
-                        ...quadrantLabelStyle,
-                        position: "insideTopRight",
+                      { coord: [100, 100] },
+                    ],
+                    [
+                      {
+                        coord: [0, moyennes.insertion],
+                        itemStyle: { color: greyColor },
+                        name: `Q2 - ${repartitionsQuadrants?.q2} formations`,
+                        label: {
+                          ...quadrantLabelStyle,
+                          position: "insideTopLeft",
+                        },
                       },
-                    },
-                    { coord: [100, 100] },
+                      { coord: [moyennes.poursuite, 100] },
+                    ],
+                    [
+                      {
+                        coord: [moyennes.poursuite, 0],
+                        itemStyle: { color: greyColor },
+                        name: `Q3 - ${repartitionsQuadrants?.q3} formations`,
+                        label: {
+                          ...quadrantLabelStyle,
+                          position: "insideBottomRight",
+                        },
+                      },
+                      { coord: [100, moyennes.insertion] },
+                    ],
                   ],
-                  [
-                    {
-                      coord: [0, moyennes.insertion],
-                      itemStyle: { color: greyColor },
-                      name: `Q2 - ${repartitionsQuadrants?.q2} formations`,
-                      label: {
-                        ...quadrantLabelStyle,
-                        position: "insideTopLeft",
-                      },
-                    },
-                    { coord: [moyennes.poursuite, 100] },
-                  ],
-                  [
-                    {
-                      coord: [moyennes.poursuite, 0],
-                      itemStyle: { color: greyColor },
-                      name: `Q3 - ${repartitionsQuadrants?.q3} formations`,
-                      label: {
-                        ...quadrantLabelStyle,
-                        position: "insideBottomRight",
-                      },
-                    },
-                    { coord: [100, moyennes.insertion] },
-                  ],
-                ],
-              }
+                }
               : undefined,
         },
       ],
     }),
-    [data, moyennes, dimensions]
+    [data, moyennes, dimensions],
   );
 
   useLayoutEffect(() => {
@@ -393,7 +393,7 @@ export const FormationTooltipWrapper = forwardRef<HTMLDivElement, { children: Re
         </Card>
       </Box>
     );
-  }
+  },
 );
 
 const InfoTooltip = ({ children }: { children: ReactNode }) => (

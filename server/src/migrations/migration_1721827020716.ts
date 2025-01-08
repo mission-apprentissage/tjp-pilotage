@@ -41,7 +41,7 @@ export const up = async (db: Kysely<unknown>) => {
         ALTER TABLE intention ENABLE TRIGGER update_intention_refresh_materialized_view_t;
 
         COMMIT;
-  `.compile(db)
+  `.compile(db),
   );
 };
 

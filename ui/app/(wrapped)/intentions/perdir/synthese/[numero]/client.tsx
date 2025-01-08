@@ -51,7 +51,7 @@ export default ({
           if (error.response?.status === 404) router.push(`/intentions/perdir/saisie?notfound=${numero}`);
         }
       },
-    }
+    },
   );
 
   const { mutate: submitIntentionAccessLog } = client.ref("[POST]/intention/access/submit").useMutation({});

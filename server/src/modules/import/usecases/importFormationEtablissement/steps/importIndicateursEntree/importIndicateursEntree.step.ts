@@ -50,17 +50,17 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
 
       const { capacites, premiersVoeux } = isBTS(cfd)
         ? await deps.getIndicateursParcoursSup({
-          anneesDispositif,
-          uai,
-          anneeDebut,
-          rentreeScolaire,
-        })
+            anneesDispositif,
+            uai,
+            anneeDebut,
+            rentreeScolaire,
+          })
         : await deps.getIndicateursAffelnet({
-          anneesDispositif,
-          uai,
-          anneeDebut,
-          rentreeScolaire,
-        });
+            anneesDispositif,
+            uai,
+            anneeDebut,
+            rentreeScolaire,
+          });
 
       const indicateurEntree = toIndicateurEntree({
         anneesEnseignement,
@@ -73,7 +73,7 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
       if (!indicateurEntree) return;
       await deps.createIndicateurEntree(indicateurEntree);
     };
-  }
+  },
 );
 
 const toIndicateurEntree = ({

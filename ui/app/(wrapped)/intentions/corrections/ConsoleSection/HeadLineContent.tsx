@@ -51,7 +51,7 @@ const ConditionalTh = chakra(
         </Tooltip>
       );
     return null;
-  }
+  },
 );
 
 export const HeadLineContent = ({

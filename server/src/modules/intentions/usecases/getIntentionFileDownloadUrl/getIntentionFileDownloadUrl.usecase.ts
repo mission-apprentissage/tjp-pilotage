@@ -6,9 +6,9 @@ const getIntentionFileDownloadUrlUseCaseFactory =
     deps = {
       fileManager,
       filePathManager,
-    }
+    },
   ) =>
-    async (numero: string, filename: string) =>
-      deps.fileManager.getDownloadUrl(deps.filePathManager.getIntentionFilePath(numero, filename));
+  async (numero: string, filename: string) =>
+    deps.fileManager.getDownloadUrl(deps.filePathManager.getIntentionFilePath(numero, filename));
 
 export const getIntentionFileDownloadUrlUseCase = getIntentionFileDownloadUrlUseCaseFactory();

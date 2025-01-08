@@ -144,7 +144,7 @@ export const TypeDemandeField = chakra(
                         )
                       }
                     />
-                  )
+                  ),
               )}
             </RadioGroup>
           )}
@@ -152,5 +152,5 @@ export const TypeDemandeField = chakra(
         {errors.typeDemande && <FormErrorMessage>{errors.typeDemande.message}</FormErrorMessage>}
       </FormControl>
     );
-  }
+  },
 );

@@ -9,7 +9,7 @@ export const searchFiliereSchema = {
       z.object({
         value: z.string().optional(),
         label: z.string().optional(),
-      })
+      }),
     ),
   },
 };

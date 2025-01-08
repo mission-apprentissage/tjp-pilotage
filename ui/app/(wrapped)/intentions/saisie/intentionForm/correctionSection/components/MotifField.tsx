@@ -54,5 +54,5 @@ export const MotifField = chakra(
         {errors.motif && <FormErrorMessage>{errors.motif.message}</FormErrorMessage>}
       </FormControl>
     );
-  }
+  },
 );

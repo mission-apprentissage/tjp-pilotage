@@ -94,7 +94,7 @@ export const EditUser = ({
           updateUser({
             body: { ...v, codeRegion: v.codeRegion || null },
             params: { userId: user?.id },
-          })
+          }),
         )}
       >
         <ModalHeader>Éditer un utilisateur</ModalHeader>

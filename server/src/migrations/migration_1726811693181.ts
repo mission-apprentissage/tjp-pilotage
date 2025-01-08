@@ -5,7 +5,7 @@ export const up = async (db: Kysely<unknown>) => {
   await db.executeQuery(
     sql`
     UPDATE "user" SET "email" = LOWER("email");
-  `.compile(db)
+  `.compile(db),
   );
 };
 

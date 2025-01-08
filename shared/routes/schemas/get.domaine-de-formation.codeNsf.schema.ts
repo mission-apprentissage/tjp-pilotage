@@ -7,13 +7,13 @@ const filtersSchema = z.object({
   academies: z.array(
     OptionSchema.extend({
       codeRegion: z.string(),
-    })
+    }),
   ),
   departements: z.array(
     OptionSchema.extend({
       codeRegion: z.string(),
       codeAcademie: z.string(),
-    })
+    }),
   ),
 });
 

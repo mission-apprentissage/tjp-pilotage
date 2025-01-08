@@ -38,10 +38,10 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
           .selectFrom("correction")
           .selectAll("correction")
           .whereRef("correction.intentionNumero", "=", "demande.numero")
-          .limit(1)
+          .limit(1),
       ).as("correction"),
       jsonObjectFrom(
-        eb.selectFrom("campagne").selectAll("campagne").whereRef("campagne.id", "=", "demande.campagneId").limit(1)
+        eb.selectFrom("campagne").selectAll("campagne").whereRef("campagne.id", "=", "demande.campagneId").limit(1),
       ).as("campagne"),
       jsonBuildObject({
         etablissement: jsonObjectFrom(
@@ -49,7 +49,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
             .selectFrom("dataEtablissement")
             .selectAll("dataEtablissement")
             .whereRef("dataEtablissement.uai", "=", "demande.uai")
-            .limit(1)
+            .limit(1),
         ),
         formation: jsonObjectFrom(
           eb
@@ -60,7 +60,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
               ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
               ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
               sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
-                "isFCIL"
+                "isFCIL",
               ),
             ])
             .select((eb) =>
@@ -71,21 +71,21 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
                   .leftJoin("rawData", (join) =>
                     join
                       .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
-                      .on("rawData.type", "=", "nMef")
+                      .on("rawData.type", "=", "nMef"),
                   )
                   .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
-                  .distinctOn("codeDispositif")
-              ).as("dispositifs")
+                  .distinctOn("codeDispositif"),
+              ).as("dispositifs"),
             )
             .whereRef("dataFormation.cfd", "=", "demande.cfd")
-            .limit(1)
+            .limit(1),
         ),
         etablissementCompensation: jsonObjectFrom(
           eb
             .selectFrom("dataEtablissement")
             .selectAll("dataEtablissement")
             .whereRef("dataEtablissement.uai", "=", "demande.compensationUai")
-            .limit(1)
+            .limit(1),
         ),
         formationCompensation: jsonObjectFrom(
           eb
@@ -96,7 +96,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
               ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
               ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
               sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
-                "isFCIL"
+                "isFCIL",
               ),
             ])
             .select((eb) =>
@@ -107,14 +107,14 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
                   .leftJoin("rawData", (join) =>
                     join
                       .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
-                      .on("rawData.type", "=", "nMef")
+                      .on("rawData.type", "=", "nMef"),
                   )
                   .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
-                  .distinctOn("codeDispositif")
-              ).as("dispositifs")
+                  .distinctOn("codeDispositif"),
+              ).as("dispositifs"),
             )
             .whereRef("dataFormation.cfd", "=", "demande.compensationCfd")
-            .limit(1)
+            .limit(1),
         ),
       }).as("metadata"),
       jsonObjectFrom(
@@ -125,7 +125,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
             sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
-          ])
+          ]),
       ).as("createdBy"),
       jsonObjectFrom(
         eb
@@ -135,7 +135,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
             sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("fullname"),
             "user.id",
             "user.role",
-          ])
+          ]),
       ).as("updatedBy"),
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),

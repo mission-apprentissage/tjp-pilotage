@@ -53,7 +53,7 @@ export const [importIJData] = inject(
           await importIJDataForEtablissement({ cfd, voie });
           process.stdout.write(`\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`);
         },
-        { parallel: 20 }
+        { parallel: 20 },
       );
       console.log("\n--- end recueil des UAI à partir des CFD des diplomes professionnels");
 
@@ -71,7 +71,7 @@ export const [importIJData] = inject(
 
           process.stdout.write(`\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`);
         },
-        { parallel: 20 }
+        { parallel: 20 },
       );
       console.log("\n--- end recueil des UAI à partir des CFD des familles métiers");
 
@@ -96,7 +96,7 @@ export const [importIJData] = inject(
       console.log("--- end fetch des données IJ pour les UAIs");
       console.log(Date.now() - start, "ms");
     };
-  }
+  },
 );
 
 export const [importIJDataForEtablissement] = inject(
@@ -140,5 +140,5 @@ export const [importIJDataForEtablissement] = inject(
         }
       }
     };
-  }
+  },
 );

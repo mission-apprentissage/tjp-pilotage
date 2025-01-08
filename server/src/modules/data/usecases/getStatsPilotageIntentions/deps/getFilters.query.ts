@@ -37,7 +37,7 @@ export const getFiltersQuery = async ({
     return eb(
       "demande.rentreeScolaire",
       "in",
-      rentreeScolaire.map((rentree) => parseInt(rentree))
+      rentreeScolaire.map((rentree) => parseInt(rentree)),
     );
   };
 
@@ -74,7 +74,7 @@ export const getFiltersQuery = async ({
     .$call((q) => {
       if (!withColoration || withColoration === "false")
         return q.where((w) =>
-          w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
+          w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])]),
         );
       return q;
     })
@@ -167,7 +167,7 @@ export const getFiltersQuery = async ({
         .where("niveauDiplome.codeNiveauDiplome", "is not", null)
         .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)
         .where((eb) => eb.and([inCPC(eb), inNsf(eb)]))
-        .$castTo<{ label: string; value: string }>()
+        .$castTo<{ label: string; value: string }>(),
     )
     .execute();
 

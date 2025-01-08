@@ -63,7 +63,7 @@ const DashboardMetier = () => {
         code_domaine_pro: domaineProfessionnel ? encodeURI(domaineProfessionnel.value) : undefined,
         metier: undefined,
         code_metier: undefined,
-      })
+      }),
     );
   };
 
@@ -81,7 +81,7 @@ const DashboardMetier = () => {
             : undefined,
           metier: encodeURI(metier.label),
           code_metier: encodeURI(metier.value),
-        })
+        }),
       );
 
       return;
@@ -94,7 +94,7 @@ const DashboardMetier = () => {
           code_domaine_pro: encodeURI(selectedDomaineProfessionnel.value),
           metier: undefined,
           code_metier: undefined,
-        })
+        }),
       );
 
       return;
@@ -106,7 +106,7 @@ const DashboardMetier = () => {
         code_domaine_formation: undefined,
         formation: undefined,
         code_formation: undefined,
-      })
+      }),
     );
   };
 

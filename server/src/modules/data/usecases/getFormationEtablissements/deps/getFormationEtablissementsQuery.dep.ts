@@ -59,25 +59,25 @@ export const getFormationEtablissementsQuery = async ({
     .innerJoin("indicateurEntree", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire),
     )
     .leftJoin("indicateurSortie", (join) =>
       join
         .onRef("indicateurSortie.formationEtablissementId", "=", "formationEtablissement.id")
-        .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
+        .on("indicateurSortie.millesimeSortie", "=", millesimeSortie),
     )
     .innerJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .leftJoin("indicateurEtablissement", (join) =>
       join
         .onRef("etablissement.uai", "=", "indicateurEtablissement.uai")
-        .on("indicateurEtablissement.millesime", "=", millesimeSortie)
+        .on("indicateurEtablissement.millesime", "=", millesimeSortie),
     )
     .leftJoin("departement", "departement.codeDepartement", "etablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .leftJoin("formationView as formationContinuum", "formationContinuum.cfd", "indicateurSortie.cfdContinuum")
     .leftJoin("formationHistorique", (join) =>
-      join.onRef("formationHistorique.ancienCFD", "=", "formationView.cfd").on(isScolaireFormationHistorique)
+      join.onRef("formationHistorique.ancienCFD", "=", "formationView.cfd").on(isScolaireFormationHistorique),
     )
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
@@ -87,23 +87,23 @@ export const getFormationEtablissementsQuery = async ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.codeDispositif"),
             "=",
-            eb.ref("formationEtablissement.codeDispositif")
+            eb.ref("formationEtablissement.codeDispositif"),
           ),
           eb(
             eb.ref("positionFormationRegionaleQuadrant.codeNiveauDiplome"),
             "=",
-            eb.ref("formationView.codeNiveauDiplome")
+            eb.ref("formationView.codeNiveauDiplome"),
           ),
           eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("etablissement.codeRegion")),
           eb(eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"), "=", millesimeSortie),
-        ])
-      )
+        ]),
+      ),
     )
     .leftJoin("actionPrioritaire", (join) =>
       join
         .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
         .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
-        .onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion")
+        .onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion"),
     )
     .select((eb) => [
       sql<number>`COUNT(*) OVER()`.as("count"),
@@ -154,7 +154,7 @@ export const getFormationEtablissementsQuery = async ({
           jsonBuildObject({
             cfd: eb.ref("indicateurSortie.cfdContinuum"),
             libelleFormation: eb.ref("formationContinuum.libelleFormation"),
-          })
+          }),
         )
         .end()
         .as("continuumEtablissement"),
@@ -184,14 +184,14 @@ export const getFormationEtablissementsQuery = async ({
             COALESCE(
               ${eb.ref("positionQuadrant")},
               '-'
-            )`
+            )`,
         )
         .else(
           sql<string>`
             COALESCE(
               ${eb.ref("positionQuadrant")},
               ${PositionQuadrantEnum["Hors quadrant"]}
-            )`
+            )`,
         )
         .end()
         .as("positionQuadrant"),
@@ -268,10 +268,10 @@ export const getFormationEtablissementsQuery = async ({
                   unaccent(${eb.ref("departement.libelleDepartement")})
                 )`,
                 "ilike",
-                `%${search_word}%`
-              )
-            )
-          )
+                `%${search_word}%`,
+              ),
+            ),
+          ),
         );
       return eb;
     })
@@ -313,7 +313,7 @@ export const getFormationEtablissementsQuery = async ({
         w.or([
           w("familleMetier.cfdFamille", "in", cfdFamille),
           w.and([w("formationView.typeFamille", "=", "2nde_commune"), w("formationView.cfd", "in", cfdFamille)]),
-        ])
+        ]),
       );
     })
     .$call((q) => {
@@ -348,7 +348,7 @@ export const getFormationEtablissementsQuery = async ({
             formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
               ? w("formationView.isTransitionNumerique", "=", true)
               : sql.val(false),
-          ])
+          ]),
         );
       }
       return q;

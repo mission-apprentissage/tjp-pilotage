@@ -59,5 +59,5 @@ export const TableHeader = chakra(
         </Flex>
       </Flex>
     );
-  }
+  },
 );

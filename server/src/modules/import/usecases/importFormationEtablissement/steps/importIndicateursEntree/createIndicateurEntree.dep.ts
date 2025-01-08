@@ -9,7 +9,7 @@ export const createIndicateurEntree = async (
     effectifs: JsonValue;
     capacites: JsonValue;
     premiersVoeux: JsonValue;
-  }
+  },
 ) => {
   const formatted = {
     ...indicateurEntree,

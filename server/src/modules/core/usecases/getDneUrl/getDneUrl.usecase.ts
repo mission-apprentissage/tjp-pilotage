@@ -29,5 +29,5 @@ export const [getDneUrl, getDneUrlFactory] = inject(
     });
 
     return { url, codeVerifierJwt };
-  }
+  },
 );

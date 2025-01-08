@@ -29,7 +29,7 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
           "dataEtablissement.codeAcademie",
           "dataEtablissement.codeDepartement",
         ])
-        .as("demandes")
+        .as("demandes"),
     )
     .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "demandes.codeNiveauDiplome")
     .innerJoin("region", "region.codeRegion", "demandes.codeRegion")

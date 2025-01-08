@@ -174,7 +174,7 @@ export const CustomListItem = ({ etablissement, withDivider, children }: CustomL
                       </Box>
                       {voie}
                     </Badge>
-                  )
+                  ),
                 )}
               </HStack>
               <HStack

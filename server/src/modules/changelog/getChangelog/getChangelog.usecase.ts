@@ -144,52 +144,52 @@ export const getChangelogFactory =
     deps = {
       getDatabaseRows,
       config,
-    }
+    },
   ) =>
-    async (dbId: string = deps.config.notion.dbChangelogId): Promise<Changelog> => {
-      const database = (await deps.getDatabaseRows(dbId)) as unknown as ChangelogDatabase;
-      const changelog: Changelog = [];
+  async (dbId: string = deps.config.notion.dbChangelogId): Promise<Changelog> => {
+    const database = (await deps.getDatabaseRows(dbId)) as unknown as ChangelogDatabase;
+    const changelog: Changelog = [];
 
-      database.results?.forEach((result) => {
-        const entry: Partial<ChangelogEntry> = {};
+    database.results?.forEach((result) => {
+      const entry: Partial<ChangelogEntry> = {};
 
-        entry.title = result.properties["Mise à jour"].title?.[0]?.plain_text ?? "";
+      entry.title = result.properties["Mise à jour"].title?.[0]?.plain_text ?? "";
 
-        if (!entry.title) {
-          return;
-        }
+      if (!entry.title) {
+        return;
+      }
 
-        entry.id = result.id;
+      entry.id = result.id;
 
-        entry.types =
+      entry.types =
         result.properties.Type.multi_select?.map((type) => ({
           label: type.name,
           color: type.color,
         })) ?? [];
 
-        entry.show = result.properties["A afficher"].checkbox;
-        entry.description = result.properties["Description"].rich_text?.[0]?.plain_text ?? "";
-        entry.deployed = result.properties["En Prod ?"].checkbox;
+      entry.show = result.properties["A afficher"].checkbox;
+      entry.description = result.properties["Description"].rich_text?.[0]?.plain_text ?? "";
+      entry.deployed = result.properties["En Prod ?"].checkbox;
 
-        if (result.properties.Date.type === "rich_text") {
-          entry.date = {
-            type: result.properties.Date.rich_text?.[0]?.type === "mention" ? "date" : "string",
-            value: result.properties.Date.rich_text?.[0]?.plain_text ?? "",
-          };
-        }
+      if (result.properties.Date.type === "rich_text") {
+        entry.date = {
+          type: result.properties.Date.rich_text?.[0]?.type === "mention" ? "date" : "string",
+          value: result.properties.Date.rich_text?.[0]?.plain_text ?? "",
+        };
+      }
 
-        changelog.push(entry as ChangelogEntry);
-      });
+      changelog.push(entry as ChangelogEntry);
+    });
 
-      changelog.sort((a, b) => {
-        if (a.date.type === "date" && b.date.type === "date") {
-          return new Date(b.date.value).getTime() - new Date(a.date.value).getTime();
-        }
+    changelog.sort((a, b) => {
+      if (a.date.type === "date" && b.date.type === "date") {
+        return new Date(b.date.value).getTime() - new Date(a.date.value).getTime();
+      }
 
-        return 0;
-      });
+      return 0;
+    });
 
-      return changelog;
-    };
+    return changelog;
+  };
 
 export const getChangelog = getChangelogFactory();

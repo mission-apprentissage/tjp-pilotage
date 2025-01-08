@@ -13,7 +13,7 @@ export const getCampagnes = async () => {
           ...campagne,
           dateDebut: campagne.dateDebut?.toISOString(),
           dateFin: campagne.dateFin?.toISOString(),
-        }))
-      )
+        })),
+      ),
     );
 };

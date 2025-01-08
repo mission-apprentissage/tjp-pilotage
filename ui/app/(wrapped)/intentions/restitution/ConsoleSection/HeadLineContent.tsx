@@ -54,7 +54,7 @@ const ConditionalTh = chakra(
         </Th>
       );
     return null;
-  }
+  },
 );
 
 export const HeadLineContent = ({

@@ -17,7 +17,7 @@ const checkDataAvailability = ({ chiffresEntreeOffre }: { chiffresEntreeOffre?: 
           value.tauxPression &&
           value.tauxPressionNational &&
           value.tauxPressionRegional &&
-          value.tauxPressionDepartemental
+          value.tauxPressionDepartemental,
       ) !== -1
     );
   }
@@ -67,7 +67,7 @@ const getCategories = ({ chiffresEntreeOffre }: { chiffresEntreeOffre?: Chiffres
         chiffresEntreeOffre[key].tauxPression ||
         chiffresEntreeOffre[key].tauxPressionNational ||
         chiffresEntreeOffre[key].tauxPressionRegional ||
-        chiffresEntreeOffre[key].tauxPressionDepartemental
+        chiffresEntreeOffre[key].tauxPressionDepartemental,
     );
   }
   return [];

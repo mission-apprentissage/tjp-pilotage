@@ -70,7 +70,7 @@ describe("submitDemande usecase", () => {
           ...demande,
           statut: DemandeStatutEnum["demande validée"],
         },
-      })
+      }),
     ).rejects.toThrow("Code uai non valide");
   });
 
@@ -87,7 +87,7 @@ describe("submitDemande usecase", () => {
           ...demande,
           statut: DemandeStatutEnum["demande validée"],
         },
-      })
+      }),
     ).rejects.toThrow("Code diplome non valide");
   });
 
@@ -102,7 +102,7 @@ describe("submitDemande usecase", () => {
           statut: DemandeStatutEnum["refusée"],
           motifRefus: undefined,
         },
-      })
+      }),
     ).rejects.toThrow("Donnée incorrectes");
   });
 
@@ -122,7 +122,7 @@ describe("submitDemande usecase", () => {
           capaciteApprentissage: undefined,
           statut: DemandeStatutEnum["demande validée"],
         },
-      })
+      }),
     ).rejects.toThrow("Forbidden");
   });
 
@@ -149,7 +149,7 @@ describe("submitDemande usecase", () => {
         id: expect.stringMatching(".+"),
         numero: expect.stringMatching(".+"),
         updatedAt: expect.any(Date),
-      })
+      }),
     );
   });
 
@@ -176,7 +176,7 @@ describe("submitDemande usecase", () => {
         numero: "numero-id",
         id: expect.stringMatching(".+"),
         updatedAt: expect.any(Date),
-      })
+      }),
     );
   });
 });

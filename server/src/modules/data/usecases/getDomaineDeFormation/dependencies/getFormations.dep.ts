@@ -36,7 +36,7 @@ export const getFormations = async ({
           sb.ref("formationView.typeFamille").as("typeFamille"),
         ])
         .orderBy("formationView.libelleFormation", "asc")
-        .distinct()
+        .distinct(),
     )
     .with("formation_renovee", (wb) =>
       wb
@@ -45,7 +45,7 @@ export const getFormations = async ({
         .where("formations.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`)
         .where("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
         .select("formationHistorique.cfd")
-        .distinct()
+        .distinct(),
     )
     .with("formation_etab", (wb) =>
       wb
@@ -77,7 +77,7 @@ export const getFormations = async ({
             return q.where("codeDepartement", "=", codeDepartement);
           }
           return q;
-        })
+        }),
     )
     .selectFrom("formations")
     .leftJoin("formation_etab", "formations.cfd", "formation_etab.cfd")

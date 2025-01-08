@@ -117,7 +117,7 @@ export const CommentairesEtAvisSection = ({
                       {`${
                         etape.commentairesEtAvis?.length
                       } changement(s) de statut ou avis par ${getNombreDifferentsContributeurs(
-                        etape.commentairesEtAvis
+                        etape.commentairesEtAvis,
                       )} contributeur(s)`}
                     </Highlight>
                   </Text>

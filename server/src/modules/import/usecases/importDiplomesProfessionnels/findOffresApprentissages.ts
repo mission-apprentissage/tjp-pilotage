@@ -16,10 +16,10 @@ export const findOffresApprentissages = async ({ offset, limit }: { offset: numb
           eb(sql`"data"->>'Niveau de la formation'`, "like", "5%"),
         ]),
         eb.or([eb(sql`"data"->>'Tags'`, "like", "%2023%"), eb(sql`"data"->>'Tags'`, "like", "%2024%")]),
-      ])
+      ]),
     )
     .distinctOn(
-      sql<string>`data->>'Code du diplome ou du titre suivant la nomenclature de l''Education nationale (CodeEN)'`
+      sql<string>`data->>'Code du diplome ou du titre suivant la nomenclature de l''Education nationale (CodeEN)'`,
     )
     .offset(offset)
     .$call((q) => {

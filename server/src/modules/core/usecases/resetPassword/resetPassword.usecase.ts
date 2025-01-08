@@ -26,7 +26,7 @@ export const [resetPassword, resetPasswordFactory] = inject(
     }) => {
       if (!resetPasswordToken)
         throw Boom.unauthorized(
-          "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début."
+          "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début.",
         );
 
       let decryptedToken: { email: string };
@@ -36,7 +36,7 @@ export const [resetPassword, resetPasswordFactory] = inject(
         };
       } catch {
         throw Boom.unauthorized(
-          "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début."
+          "Lien de réinitialisation incorrect ou expiré. Veuillez reprendre la procédure de réinitialisation depuis le début.",
         );
       }
 
@@ -48,11 +48,11 @@ export const [resetPassword, resetPasswordFactory] = inject(
 
       if (!password.match(passwordRegex)) {
         throw Boom.badRequest(
-          "Le mot de passe doit contenir entre 8 et 15 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)"
+          "Le mot de passe doit contenir entre 8 et 15 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)",
         );
       }
 
       const hashedPassword = hashPassword(password);
       await deps.setPasswordQuery({ email, password: hashedPassword });
-    }
+    },
 );

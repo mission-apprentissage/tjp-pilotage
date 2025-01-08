@@ -59,7 +59,7 @@ export const getDepartementStats = async ({
     .innerJoin("indicateurEntree", (join) =>
       join
         .onRef("indicateurEntree.formationEtablissementId", "=", "formationEtablissement.id")
-        .on("rentreeScolaire", "=", rentreeScolaire)
+        .on("rentreeScolaire", "=", rentreeScolaire),
     )
     .innerJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
@@ -79,7 +79,7 @@ export const getDepartementStats = async ({
       eb.ref("departement.codeDepartement").as("codeDepartement"),
       eb.ref("formationView.codeNiveauDiplome").as("codeNiveauDiplome"),
       sql<number>`sum(coalesce((effectifs->>0)::integer,0)) + sum(coalesce((effectifs->>1)::integer,0)) + sum(coalesce((effectifs->>2)::integer,0))`.as(
-        "effectifTotal"
+        "effectifTotal",
       ),
     ])
     .groupBy(["departement.codeDepartement", "formationView.codeNiveauDiplome"])
@@ -95,7 +95,7 @@ export const getDepartementStats = async ({
       eb.ref("formationView.codeNiveauDiplome").as("codeNiveauDiplome"),
       eb.ref("libelleNiveauDiplome").as("libelleNiveauDiplome"),
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."codeDispositif"))`.as(
-        "nbFormations"
+        "nbFormations",
       ),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
       `.as("effectifEntree"),

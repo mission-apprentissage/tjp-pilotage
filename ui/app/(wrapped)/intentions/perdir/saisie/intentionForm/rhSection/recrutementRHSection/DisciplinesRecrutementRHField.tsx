@@ -76,5 +76,5 @@ export const DisciplinesRecrutementRHField = chakra(
         </FormControl>
       </Flex>
     );
-  }
+  },
 );

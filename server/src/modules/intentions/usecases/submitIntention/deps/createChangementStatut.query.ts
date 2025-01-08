@@ -14,7 +14,7 @@ export const createChangementStatutQuery = async (changementStatut: Insertable<D
       createdAt: new Date(),
     })
     .onConflict((oc) =>
-      oc.columns(["createdBy", "intentionNumero", "statutPrecedent", "statut"]).doUpdateSet(changementStatut)
+      oc.columns(["createdBy", "intentionNumero", "statutPrecedent", "statut"]).doUpdateSet(changementStatut),
     )
     .returningAll()
     .executeTakeFirstOrThrow()
@@ -23,6 +23,6 @@ export const createChangementStatutQuery = async (changementStatut: Insertable<D
         ...changementStatut,
         statut: castDemandeStatut(changementStatut.statut),
         statutPrecedent: castDemandeStatut(changementStatut.statutPrecedent),
-      })
+      }),
     );
 };

@@ -38,8 +38,8 @@ export const [importDiscipline] = inject(
           errorCount++;
         }
       },
-      { parallel: 20 }
+      { parallel: 20 },
     );
     process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
-  }
+  },
 );

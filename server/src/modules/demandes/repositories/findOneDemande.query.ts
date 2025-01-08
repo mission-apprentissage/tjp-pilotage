@@ -7,6 +7,6 @@ export const findOneDemande = async (numero: string) => {
       .selectFrom("latestDemandeView as demande")
       .selectAll()
       .where("numero", "=", numero)
-      .executeTakeFirst()
+      .executeTakeFirst(),
   );
 };

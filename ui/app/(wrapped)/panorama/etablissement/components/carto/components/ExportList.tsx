@@ -59,7 +59,7 @@ export const ExportList = () => {
         tauxPoursuite: "Taux de poursuite d'études",
         libelleAcademie: "Académie",
         libelleRegion: "Région",
-      }
+      },
     );
   };
 
@@ -89,7 +89,7 @@ export const ExportList = () => {
         tauxPoursuite: "Taux de poursuite d'études",
         libelleAcademie: "Académie",
         libelleRegion: "Région",
-      }
+      },
     );
   };
 

@@ -80,18 +80,18 @@ export const IntentionForm = ({
       let message: string | null = null;
 
       switch (body.statut) {
-      case DemandeStatutEnum["projet de demande"]:
-        message = "Projet de demande enregistré avec succès";
-        break;
-      case DemandeStatutEnum["demande validée"]:
-        message = "Demande validée avec succès";
-        break;
-      case DemandeStatutEnum["refusée"]:
-        message = "Demande refusée avec succès";
-        break;
-      case DemandeStatutEnum["supprimée"]:
-        message = "Demande supprimée avec succès";
-        break;
+        case DemandeStatutEnum["projet de demande"]:
+          message = "Projet de demande enregistré avec succès";
+          break;
+        case DemandeStatutEnum["demande validée"]:
+          message = "Demande validée avec succès";
+          break;
+        case DemandeStatutEnum["refusée"]:
+          message = "Demande refusée avec succès";
+          break;
+        case DemandeStatutEnum["supprimée"]:
+          message = "Demande supprimée avec succès";
+          break;
       }
 
       if (message) {
@@ -130,7 +130,7 @@ export const IntentionForm = ({
   const onEditUaiCfdSection = () => setStep(1);
 
   const getStatutSubmit = (
-    demande: (typeof client.inferArgs)["[POST]/demande/submit"]["body"]["demande"]
+    demande: (typeof client.inferArgs)["[POST]/demande/submit"]["body"]["demande"],
   ): Exclude<DemandeStatutType, "supprimée"> => {
     if (isTypeAjustement(demande.typeDemande)) return DemandeStatutEnum["demande validée"];
     if (formId) return demande.statut;
@@ -190,7 +190,7 @@ export const IntentionForm = ({
                   autreMotifRefus: escapeString(values.autreMotifRefus),
                 },
               },
-            })
+            }),
           )}
         >
           <Container maxW={"container.xl"} pt="4" mb={24}>
@@ -202,15 +202,15 @@ export const IntentionForm = ({
                 { title: "Recueil des demandes", to: "/intentions" },
                 pathname === "/intentions/saisie/new"
                   ? {
-                    title: "Nouvelle demande",
-                    to: "/intentions/saisie/new",
-                    active: true,
-                  }
+                      title: "Nouvelle demande",
+                      to: "/intentions/saisie/new",
+                      active: true,
+                    }
                   : {
-                    title: `Demande n°${formId}`,
-                    to: `/intentions/saisie/${formId}`,
-                    active: true,
-                  },
+                      title: `Demande n°${formId}`,
+                      to: `/intentions/saisie/${formId}`,
+                      active: true,
+                    },
               ]}
             />
             <CfdUaiSection
@@ -283,7 +283,7 @@ export const IntentionForm = ({
                                     autreMotifRefus: escapeString(values.autreMotifRefus),
                                   },
                                 },
-                              })
+                              }),
                             )}
                             leftIcon={<CheckIcon />}
                           >

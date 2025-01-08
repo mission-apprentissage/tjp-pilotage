@@ -40,7 +40,7 @@ export const [importTensionFranceTravailNational] = inject(
             if (result?.length) {
               await deps.appendFranceTravailTensionFile(
                 deps.filePathManager.getFranceTravailIndicateurTensionStatsFilePath(),
-                result
+                result,
               );
             }
 
@@ -57,7 +57,7 @@ export const [importTensionFranceTravailNational] = inject(
               retry = false;
               if (e.response?.data?.message?.includes("FiltreErreurSldng")) {
                 console.error(
-                  `ERROR [ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`
+                  `ERROR [ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`,
                 );
               } else {
                 console.error(`ERROR [ROME=${codeRome}] ${`Status code : ${e.response?.status}`}`);
@@ -69,7 +69,7 @@ export const [importTensionFranceTravailNational] = inject(
           }
         } while (retry);
       },
-      { parallel: 10 }
+      { parallel: 10 },
     );
-  }
+  },
 );

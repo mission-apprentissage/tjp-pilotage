@@ -32,15 +32,15 @@ const validateDemande = (demande: Demande) => {
 const logDemande = (demande?: { statut: string }) => {
   if (!demande) return;
   switch (demande.statut) {
-  case DemandeStatutEnum["projet de demande"]:
-    logger.info({ demande: demande }, "Projet de demande enregistré");
-    break;
-  case DemandeStatutEnum["demande validée"]:
-    logger.info({ demande: demande }, "Demande validée");
-    break;
-  case DemandeStatutEnum["refusée"]:
-    logger.info({ demande: demande }, "Demande refusée");
-    break;
+    case DemandeStatutEnum["projet de demande"]:
+      logger.info({ demande: demande }, "Projet de demande enregistré");
+      break;
+    case DemandeStatutEnum["demande validée"]:
+      logger.info({ demande: demande }, "Demande validée");
+      break;
+    case DemandeStatutEnum["refusée"]:
+      logger.info({ demande: demande }, "Demande refusée");
+      break;
   }
 };
 
@@ -134,5 +134,5 @@ export const [submitDemande, submitDemandeFactory] = inject(
 
       logDemande(created);
       return created;
-    }
+    },
 );

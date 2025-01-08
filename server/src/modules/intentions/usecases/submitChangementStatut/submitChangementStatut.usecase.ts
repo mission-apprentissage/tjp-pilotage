@@ -60,7 +60,7 @@ export const [submitChangementStatutUsecase, submitChangementStatutFactory] = in
       await deps.shootChangementStatutEmail(
         newChangementStatut.statutPrecedent,
         newChangementStatut.statut,
-        intentionData
+        intentionData,
       );
 
       return {
@@ -68,5 +68,5 @@ export const [submitChangementStatutUsecase, submitChangementStatutFactory] = in
         statut: createdChangementStatut.statut,
         statutPrecedent: createdChangementStatut.statutPrecedent,
       };
-    }
+    },
 );

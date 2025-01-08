@@ -21,10 +21,10 @@ const getFormationIndicateursFactory =
       getTauxPressions,
       getTauxRemplissages,
       getSoldePlacesTransformee,
-    }
+    },
   ) =>
-    async (cfd: string, { codeAcademie, codeRegion, codeDepartement }: QueryFilters) => {
-      const [formation, tauxIJ, effectifs, etablissements, tauxPressions, tauxRemplissages, soldePlacesTransformee] =
+  async (cfd: string, { codeAcademie, codeRegion, codeDepartement }: QueryFilters) => {
+    const [formation, tauxIJ, effectifs, etablissements, tauxPressions, tauxRemplissages, soldePlacesTransformee] =
       await Promise.all([
         deps.getFormation({ cfd }),
         deps.getTauxIJ({ cfd, codeRegion }),
@@ -55,19 +55,19 @@ const getFormationIndicateursFactory =
         }),
       ]);
 
-      if (!formation) {
-        throw Boom.notFound(`La formation avec le cfd ${cfd} est inconnue`);
-      }
+    if (!formation) {
+      throw Boom.notFound(`La formation avec le cfd ${cfd} est inconnue`);
+    }
 
-      return {
-        ...formation,
-        tauxIJ,
-        effectifs,
-        etablissements,
-        tauxPressions,
-        tauxRemplissages,
-        soldePlacesTransformee,
-      };
+    return {
+      ...formation,
+      tauxIJ,
+      effectifs,
+      etablissements,
+      tauxPressions,
+      tauxRemplissages,
+      soldePlacesTransformee,
     };
+  };
 
 export const getFormationIndicateursUseCase = getFormationIndicateursFactory();

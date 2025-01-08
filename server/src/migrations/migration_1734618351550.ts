@@ -127,7 +127,7 @@ export const up = async (db: Kysely<unknown>) => {
       ALTER TABLE intention DISABLE TRIGGER update_intention_refresh_demande_intention_materialized_view_t;
       ALTER TABLE intention DISABLE TRIGGER update_intention_refresh_latest_demande_intention_materialized_;
       ALTER TABLE intention DISABLE TRIGGER update_intention_refresh_materialized_view_t;
-    `.compile(db)
+    `.compile(db),
   );
   await getKbdClient().executeQuery(sql.raw(sqlQuery).compile(db));
   // enable les triggers
@@ -142,7 +142,7 @@ export const up = async (db: Kysely<unknown>) => {
       ALTER TABLE intention ENABLE TRIGGER update_intention_refresh_demande_intention_materialized_view_t;
       ALTER TABLE intention ENABLE TRIGGER update_intention_refresh_latest_demande_intention_materialized_;
       ALTER TABLE intention ENABLE TRIGGER update_intention_refresh_materialized_view_t;
-    `.compile(db)
+    `.compile(db),
   );
 
   await getKbdClient().executeQuery(
@@ -151,7 +151,7 @@ export const up = async (db: Kysely<unknown>) => {
     REFRESH MATERIALIZED VIEW "latestIntentionView" WITH DATA;
     REFRESH MATERIALIZED VIEW "demandeIntentionView" WITH DATA;
     REFRESH MATERIALIZED VIEW "latestDemandeIntentionView" WITH DATA;
-    `.compile(db)
+    `.compile(db),
   );
 
   await getKbdClient().deleteFrom("formationRome").where("cfd", "in", listeDesCfdsNonReutilises).execute();
@@ -162,7 +162,7 @@ export const up = async (db: Kysely<unknown>) => {
     REFRESH MATERIALIZED VIEW "formationView" WITH DATA;
     REFRESH MATERIALIZED VIEW "formationScolaireView" WITH DATA;
     REFRESH MATERIALIZED VIEW "formationApprentissageView" WITH DATA;
-    `.compile(db)
+    `.compile(db),
   );
 };
 

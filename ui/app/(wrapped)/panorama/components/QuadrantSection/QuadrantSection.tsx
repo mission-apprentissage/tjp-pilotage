@@ -12,7 +12,7 @@ const filterFormations = ({ formations, filters }: { formations?: PanoramaFormat
   return (formations ?? [])
 
     .filter((formation) =>
-      filters.effectifMin && formation.effectif ? formation.effectif >= filters.effectifMin : true
+      filters.effectifMin && formation.effectif ? formation.effectif >= filters.effectifMin : true,
     )
 
     .filter(({ effectifPrecedent, effectif }) => {
@@ -104,7 +104,7 @@ const useQuadrantSection = (formations?: PanoramaFormations) => {
 
   const effectifEntree: string = useMemo(
     () => filteredFormations?.reduce((acc, { effectif }) => acc + (effectif ?? 0), 0).toString() ?? "-",
-    [filteredFormations]
+    [filteredFormations],
   );
 
   return {

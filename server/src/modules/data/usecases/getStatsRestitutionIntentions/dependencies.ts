@@ -63,7 +63,7 @@ const getStatsRestitutionIntentionsQuery = async ({
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
-      })
+      }),
     )
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
@@ -82,16 +82,16 @@ const getStatsRestitutionIntentionsQuery = async ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
-            eb.val(getMillesimeFromCampagne(campagne))
+            eb.val(getMillesimeFromCampagne(campagne)),
           ),
-        ])
-      )
+        ]),
+      ),
     )
     .leftJoin("actionPrioritaire", (join) =>
       join
         .onRef("actionPrioritaire.cfd", "=", "demande.cfd")
         .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
-        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
+        .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion"),
     )
     .select((eb) =>
       jsonBuildObject({
@@ -99,9 +99,9 @@ const getStatsRestitutionIntentionsQuery = async ({
         scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesNonColoreesTransformeesScolaire(eb)), eb.val(0)),
         apprentissage: eb.fn.coalesce(
           eb.fn.sum<number>(countPlacesNonColoreesTransformeesApprentissage(eb)),
-          eb.val(0)
+          eb.val(0),
         ),
-      }).as("total")
+      }).as("total"),
     )
     .select((eb) =>
       jsonBuildObject({
@@ -112,9 +112,9 @@ const getStatsRestitutionIntentionsQuery = async ({
         apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesOuvertesApprentissage(eb)), eb.val(0)),
         colorationApprentissage: eb.fn.coalesce(
           eb.fn.sum<number>(countPlacesColoreesOuvertesApprentissage(eb)),
-          eb.val(0)
+          eb.val(0),
         ),
-      }).as("ouvertures")
+      }).as("ouvertures"),
     )
     .select((eb) =>
       jsonBuildObject({
@@ -125,9 +125,9 @@ const getStatsRestitutionIntentionsQuery = async ({
         apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesFermeesApprentissage(eb)), eb.val(0)),
         colorationApprentissage: eb.fn.coalesce(
           eb.fn.sum<number>(countPlacesColoreesFermeesApprentissage(eb)),
-          eb.val(0)
+          eb.val(0),
         ),
-      }).as("fermetures")
+      }).as("fermetures"),
     )
     .select((eb) =>
       jsonBuildObject({
@@ -138,9 +138,9 @@ const getStatsRestitutionIntentionsQuery = async ({
               .when(eb("formationView.codeNiveauDiplome", "in", ["561", "461"]))
               .then(countPlacesOuvertes(eb))
               .else(0)
-              .end()
+              .end(),
           ),
-          eb.val(0)
+          eb.val(0),
         ),
         scolaire: eb.fn.coalesce(
           eb.fn.sum<number>((s) =>
@@ -149,9 +149,9 @@ const getStatsRestitutionIntentionsQuery = async ({
               .when(eb("formationView.codeNiveauDiplome", "in", ["561", "461"]))
               .then(countPlacesOuvertesScolaire(eb))
               .else(0)
-              .end()
+              .end(),
           ),
-          eb.val(0)
+          eb.val(0),
         ),
         apprentissage: eb.fn.coalesce(
           eb.fn.sum<number>((s) =>
@@ -160,11 +160,11 @@ const getStatsRestitutionIntentionsQuery = async ({
               .when(eb("formationView.codeNiveauDiplome", "in", ["561", "461"]))
               .then(countPlacesOuvertesApprentissage(eb))
               .else(0)
-              .end()
+              .end(),
           ),
-          eb.val(0)
+          eb.val(0),
         ),
-      }).as("certifSpecialisation")
+      }).as("certifSpecialisation"),
     )
     .select((eb) =>
       jsonBuildObject({
@@ -175,9 +175,9 @@ const getStatsRestitutionIntentionsQuery = async ({
               .when(eb("formationView.codeNiveauDiplome", "in", ["381", "481", "581"]))
               .then(countPlacesOuvertes(eb))
               .else(0)
-              .end()
+              .end(),
           ),
-          eb.val(0)
+          eb.val(0),
         ),
         scolaire: eb.fn.coalesce(
           eb.fn.sum<number>((s) =>
@@ -186,9 +186,9 @@ const getStatsRestitutionIntentionsQuery = async ({
               .when(eb("formationView.codeNiveauDiplome", "in", ["381", "481", "581"]))
               .then(countPlacesOuvertesScolaire(eb))
               .else(0)
-              .end()
+              .end(),
           ),
-          eb.val(0)
+          eb.val(0),
         ),
         apprentissage: eb.fn.coalesce(
           eb.fn.sum<number>((s) =>
@@ -197,11 +197,11 @@ const getStatsRestitutionIntentionsQuery = async ({
               .when(eb("formationView.codeNiveauDiplome", "in", ["381", "481", "581"]))
               .then(countPlacesOuvertesApprentissage(eb))
               .else(0)
-              .end()
+              .end(),
           ),
-          eb.val(0)
+          eb.val(0),
         ),
-      }).as("FCILs")
+      }).as("FCILs"),
     )
     .$call((eb) => {
       if (search)
@@ -231,10 +231,10 @@ const getStatsRestitutionIntentionsQuery = async ({
                   unaccent(${eb.ref("departement.libelleDepartement")})
                 )`,
                 "ilike",
-                `%${search_word}%`
-              )
-            )
-          )
+                `%${search_word}%`,
+              ),
+            ),
+          ),
         );
       return eb;
     })
@@ -300,7 +300,7 @@ const getStatsRestitutionIntentionsQuery = async ({
             sql<boolean>`ABS(
               ${ebw.ref("demande.capaciteApprentissage")} -
               ${ebw.ref("demande.capaciteApprentissageActuelle")}
-            ) > 1`
+            ) > 1`,
         );
       }
 
@@ -310,7 +310,7 @@ const getStatsRestitutionIntentionsQuery = async ({
             sql<boolean>`ABS(
               ${ebw.ref("demande.capaciteScolaire")} -
               ${ebw.ref("demande.capaciteScolaireActuelle")}
-            ) > 1`
+            ) > 1`,
         );
       }
 
@@ -339,7 +339,7 @@ const getStatsRestitutionIntentionsQuery = async ({
             formationSpecifique.includes(TypeFormationSpecifiqueEnum["Transition numérique"])
               ? w("formationView.isTransitionNumerique", "=", true)
               : sql.val(false),
-          ])
+          ]),
         );
       }
       return q;

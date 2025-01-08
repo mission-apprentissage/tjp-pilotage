@@ -146,5 +146,5 @@ const [getContinuumData] = inject(
         uai,
         millesimeSortie,
       });
-    }
+    },
 );

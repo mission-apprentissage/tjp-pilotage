@@ -48,7 +48,7 @@ export default function Panorama({
 
   const handleFilters = (
     type: keyof FiltersPanoramaFormation,
-    value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
+    value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation],
   ) => {
     setSearchParams({ ...searchParams, [type]: value });
   };
@@ -64,7 +64,7 @@ export default function Panorama({
     {
       keepPreviousData: true,
       staleTime: 10000000,
-    }
+    },
   );
 
   const { data: stats } = client.ref("[GET]/departement/:codeDepartement").useQuery(
@@ -75,7 +75,7 @@ export default function Panorama({
     {
       keepPreviousData: true,
       staleTime: 10000000,
-    }
+    },
   );
 
   const { data, isLoading } = client.ref("[GET]/panorama/stats/departement").useQuery(
@@ -85,7 +85,7 @@ export default function Panorama({
         ...searchParams,
       },
     },
-    { keepPreviousData: true, staleTime: 10000000 }
+    { keepPreviousData: true, staleTime: 10000000 },
   );
 
   return (
@@ -103,10 +103,10 @@ export default function Panorama({
         stats={
           searchParams.codeNsf
             ? {
-              libelleRegion: "",
-              codeRegion: "",
-              libelleDepartement: stats?.libelleDepartement,
-            }
+                libelleRegion: "",
+                codeRegion: "",
+                libelleDepartement: stats?.libelleDepartement,
+              }
             : stats
         }
         libelleTerritoire={departementsOptions?.find((item) => item.value === codeDepartement)?.label}

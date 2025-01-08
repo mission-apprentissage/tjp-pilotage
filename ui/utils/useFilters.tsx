@@ -21,7 +21,7 @@ export function useStateParams<F extends object>({
   useEffect(() => {
     router.replace(
       createParametrizedUrl(location.pathname, prefix ? { ...params, [prefix]: filters } : { ...params, ...filters }),
-      { scroll: false }
+      { scroll: false },
     );
   }, [filters]);
 

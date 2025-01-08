@@ -75,7 +75,7 @@ export const up = async (db: Kysely<unknown>) => {
       on df."cfd" = formations.cfd
       left join "diplomeProfessionnel" dp on dp."cfd" = df."cfd"
       order by df."cfd";
-      `
+      `,
     )
     .execute();
 
@@ -112,7 +112,7 @@ export const up = async (db: Kysely<unknown>) => {
       order by df."cfd";
 
       create unique index on "formationView" ("id");
-      `
+      `,
     )
     .materialized()
     .execute();
@@ -139,7 +139,7 @@ export const up = async (db: Kysely<unknown>) => {
         where "voie" is null
         or "voie" = 'scolaire';
 
-        create unique index on "formationScolaireView" ("id");`
+        create unique index on "formationScolaireView" ("id");`,
     )
     .materialized()
     .execute();
@@ -166,7 +166,7 @@ export const up = async (db: Kysely<unknown>) => {
           where "voie" is not null
           and "voie" = 'apprentissage';
 
-          create unique index on "formationApprentissageView" ("id");`
+          create unique index on "formationApprentissageView" ("id");`,
     )
     .materialized()
     .execute();
@@ -176,7 +176,7 @@ export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .alterTable("formationEtablissement")
     .addUniqueConstraint("formationetablissement_pk", ["cfd", "UAI", "dispositifId", "voie"], (builder) =>
-      builder.nullsNotDistinct()
+      builder.nullsNotDistinct(),
     )
     .execute();
 
@@ -190,7 +190,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addUniqueConstraint(
       "indicateurRegionSortie_unique_constraint",
       ["cfd", "codeRegion", "dispositifId", "millesimeSortie", "voie"],
-      (builder) => builder.nullsNotDistinct()
+      (builder) => builder.nullsNotDistinct(),
     )
     .execute();
 };
@@ -236,7 +236,7 @@ export const down = async (db: Kysely<unknown>) => {
     ) as formations
     on df."cfd" = formations.cfd
     order by df."cfd";
-    `
+    `,
     )
     .execute();
 
@@ -272,7 +272,7 @@ export const down = async (db: Kysely<unknown>) => {
     order by df."cfd";
 
     create unique index on "formationView" ("id");
-    `
+    `,
     )
     .materialized()
     .execute();

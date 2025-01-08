@@ -103,7 +103,7 @@ const useGlossaireEntryContentHook = (id: string) => {
     {
       keepPreviousData: true,
       staleTime: 10000000,
-    }
+    },
   );
 
   useEffect(() => {

@@ -27,7 +27,7 @@ export const getRaisonCorrectionLabel = ({
 };
 
 export const getRaisonsCampagne = (
-  campagne: RaisonCorrectionCampagne = CURRENT_ANNEE_CAMPAGNE
+  campagne: RaisonCorrectionCampagne = CURRENT_ANNEE_CAMPAGNE,
 ): RaisonCorrectionLabel[] => {
   const raisonsCampagne = RAISONS_CORRECTION_LABELS[campagne];
   return Object.keys(raisonsCampagne) as RaisonCorrectionLabel[];

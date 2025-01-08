@@ -52,14 +52,14 @@ describe("createUser usecase", () => {
             userId: "test",
             data: user,
             requestUser: { ...requestUser, role: "admin_region" },
-          })
+          }),
         ).rejects.toThrow("cannot edit user with this role");
         expect(async () =>
           editUser({
             userId: "test",
             data: { ...user, role: "admin_region" },
             requestUser: { ...requestUser, role: "admin_region" },
-          })
+          }),
         ).rejects.toThrow("cannot edit user with this role");
       });
 
@@ -77,7 +77,7 @@ describe("createUser usecase", () => {
               role: "admin_region",
               codeRegion: "76",
             },
-          })
+          }),
         ).rejects.toThrow("cannot edit user within this scope");
       });
     });

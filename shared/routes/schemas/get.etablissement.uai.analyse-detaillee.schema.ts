@@ -40,7 +40,7 @@ const ChiffresIjSchema = z.record(
         libelleFormation: z.string().optional(),
       })
       .optional(),
-  })
+  }),
 );
 
 const ChiffresEntreeSchema = z.record(
@@ -64,7 +64,7 @@ const ChiffresEntreeSchema = z.record(
     tauxPressionDepartemental: z.coerce.number().optional(),
     tauxRemplissage: z.coerce.number().optional(),
     dateOuverture: z.coerce.number(),
-  })
+  }),
 );
 
 export const FormationSchema = z.object({

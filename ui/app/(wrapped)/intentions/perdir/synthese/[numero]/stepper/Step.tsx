@@ -36,7 +36,7 @@ const StepIcon = chakra(
         </Text>
       </Box>
     );
-  }
+  },
 );
 
 export const Step = ({

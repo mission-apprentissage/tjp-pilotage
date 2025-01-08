@@ -48,18 +48,18 @@ export const up = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demande"."dateModification")`.as("dateDerniereModification"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandes")
+            .as("latestDemandes"),
         )
         // @ts-ignore
         .leftJoin("demande", (join) =>
           join
             .onRef("latestDemandes.numero", "=", "demande.numero")
-            .onRef("latestDemandes.dateDerniereModification", "=", "demande.dateModification")
+            .onRef("latestDemandes.dateDerniereModification", "=", "demande.dateModification"),
         )
         // @ts-ignore
         .selectAll("demande")
         // @ts-ignore
-        .where("demande.statut", "!=", "deleted")
+        .where("demande.statut", "!=", "deleted"),
     )
     .execute();
 };
@@ -110,18 +110,18 @@ export const down = async (db: Kysely<unknown>) => {
             .select([sql<number>`max("demande"."dateModification")`.as("dateDerniereModification"), "numero"])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandes")
+            .as("latestDemandes"),
         )
         // @ts-ignore
         .leftJoin("demande", (join) =>
           join
             .onRef("latestDemandes.numero", "=", "demande.numero")
-            .onRef("latestDemandes.dateDerniereModification", "=", "demande.dateModification")
+            .onRef("latestDemandes.dateDerniereModification", "=", "demande.dateModification"),
         )
         // @ts-ignore
         .selectAll("demande")
         // @ts-ignore
-        .where("demande.statut", "!=", "deleted")
+        .where("demande.statut", "!=", "deleted"),
     )
     .execute();
 };

@@ -82,9 +82,9 @@ export async function bind(app: Server) {
   app.register(fastifyCors, {
     ...(config.env === "local"
       ? {
-        origin: true,
-        credentials: true,
-      }
+          origin: true,
+          credentials: true,
+        }
       : {}),
   });
 
@@ -102,7 +102,7 @@ export async function bind(app: Server) {
     async (instance: Server) => {
       registerRoutes(instance);
     },
-    { prefix: "/api" }
+    { prefix: "/api" },
   );
 
   app.setNotFoundHandler((_req, res) => {

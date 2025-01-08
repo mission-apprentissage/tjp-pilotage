@@ -30,5 +30,5 @@ export const [getHeaderEtablissement] = inject(
         nsfs,
         indicateurs,
       };
-    }
+    },
 );

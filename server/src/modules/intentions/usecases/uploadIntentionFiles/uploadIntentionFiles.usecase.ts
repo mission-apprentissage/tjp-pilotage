@@ -13,5 +13,5 @@ export const [uploadIntentionFilesUsecase] = inject(
       console.log(`Upload du fichier ${filename} pour l'intention numéro: ${id} vers ${filePath}`);
 
       await deps.fileManager.uploadFile(filePath, file);
-    }
+    },
 );

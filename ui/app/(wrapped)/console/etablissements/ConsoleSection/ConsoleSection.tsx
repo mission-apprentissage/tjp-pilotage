@@ -132,26 +132,26 @@ export const ConsoleSection = ({
               {historiqueId?.cfd === line.cfd &&
                 historiqueId.codeDispositif === line.codeDispositif &&
                 historiqueId.uai === line.uai && (
-                <>
-                  {historiqueData?.map((historiqueLine) => (
-                    <Tr key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`} bg={"grey.975"}>
-                      <EtablissementLineContent
-                        isFirstColumnSticky={isFirstColumnSticky}
-                        isSecondColumnSticky={isSecondColumnSticky}
-                        line={historiqueLine}
-                        colonneFilters={colonneFilters}
-                        getCellBgColor={getCellBgColor}
-                      />
-                    </Tr>
-                  ))}
+                  <>
+                    {historiqueData?.map((historiqueLine) => (
+                      <Tr key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`} bg={"grey.975"}>
+                        <EtablissementLineContent
+                          isFirstColumnSticky={isFirstColumnSticky}
+                          isSecondColumnSticky={isSecondColumnSticky}
+                          line={historiqueLine}
+                          colonneFilters={colonneFilters}
+                          getCellBgColor={getCellBgColor}
+                        />
+                      </Tr>
+                    ))}
 
-                  {historiqueData && !historiqueData.length && (
-                    <EtablissementLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
-                  )}
+                    {historiqueData && !historiqueData.length && (
+                      <EtablissementLinePlaceholder colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
+                    )}
 
-                  {isFetchingHistoriqueData && <EtablissementLineLoader />}
-                </>
-              )}
+                    {isFetchingHistoriqueData && <EtablissementLineLoader />}
+                  </>
+                )}
             </Fragment>
           ))}
         </Tbody>

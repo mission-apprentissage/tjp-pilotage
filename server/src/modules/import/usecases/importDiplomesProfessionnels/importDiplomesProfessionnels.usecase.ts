@@ -42,7 +42,7 @@ export const [importDiplomesProfessionnels] = inject(
           console.log(
             "\n--\nIl manque le CFD pour ce diplome professionnel : ",
             JSON.stringify(diplomeProfessionnel),
-            "\n--\n"
+            "\n--\n",
           );
           return;
         }
@@ -58,7 +58,7 @@ export const [importDiplomesProfessionnels] = inject(
         }
         process.stdout.write(`\r${count} diplomeProfessionnel (scolaire) ajoutés ou mis à jour`);
       },
-      { parallel: 20 }
+      { parallel: 20 },
     ).then(() => {
       process.stdout.write(`${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`);
     });
@@ -80,9 +80,9 @@ export const [importDiplomesProfessionnels] = inject(
         }
         process.stdout.write(`\r${count} diplomeProfessionnel (apprentissage) ajoutés ou mis à jour`);
       },
-      { parallel: 20 }
+      { parallel: 20 },
     ).then(() => {
       process.stdout.write(`${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`);
     });
-  }
+  },
 );

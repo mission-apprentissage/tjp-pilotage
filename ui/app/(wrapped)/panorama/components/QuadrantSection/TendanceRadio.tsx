@@ -40,5 +40,5 @@ export const TendanceRadio = chakra(
         </FormControl>
       </Flex>
     );
-  }
+  },
 );

@@ -22,7 +22,7 @@ describe("activateUser usecase", () => {
         password: correctPassword,
         repeatPassword: correctPassword,
         activationToken: undefined as unknown as string,
-      })
+      }),
     ).rejects.toThrow("missing token");
   });
 
@@ -37,7 +37,7 @@ describe("activateUser usecase", () => {
         password: correctPassword,
         repeatPassword: correctPassword,
         activationToken: "fakeToken",
-      })
+      }),
     ).rejects.toThrow("wrong token");
   });
 
@@ -52,7 +52,7 @@ describe("activateUser usecase", () => {
         password: "aaa",
         repeatPassword: "bbb",
         activationToken,
-      })
+      }),
     ).rejects.toThrow("different passwords");
   });
 
@@ -67,7 +67,7 @@ describe("activateUser usecase", () => {
         password: "azerty",
         repeatPassword: "azerty",
         activationToken,
-      })
+      }),
     ).rejects.toThrow("password unsafe");
   });
 
@@ -87,7 +87,7 @@ describe("activateUser usecase", () => {
     await expect(deps.updateUserQuery).toBeCalledWith(
       expect.objectContaining({
         email: "test@test.fr",
-      })
+      }),
     );
   });
 });

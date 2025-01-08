@@ -74,7 +74,7 @@ const seed = async (dbname: string) => {
       "--no-acl",
       "/seed_schema.dump",
     ],
-    { cwd: join(dir, "../..") }
+    { cwd: join(dir, "../..") },
   );
 
   if (execSchema.status || execSchema.error) {
@@ -95,7 +95,7 @@ const seed = async (dbname: string) => {
       `--dbname=${dbname}`,
       "/seed_data.dump",
     ],
-    { cwd: join(dir, "../..") }
+    { cwd: join(dir, "../..") },
   );
 
   if (execData.status || execData.error) {

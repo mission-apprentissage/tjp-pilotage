@@ -102,7 +102,7 @@ export const [importRawFile, importRawFileFactory] = inject(
           if (err) {
             console.log(err);
           }
-        }
+        },
       );
 
       const promise = async () =>
@@ -118,5 +118,5 @@ export const [importRawFile, importRawFileFactory] = inject(
       await promise();
 
       return errors;
-    }
+    },
 );

@@ -19,7 +19,7 @@ export const Callout = forwardRef<CalloutProps, "div">(
       body: string | React.ReactNode;
       actionButton?: React.ReactNode;
     },
-    ref
+    ref,
   ) => (
     <Flex
       bgColor={"grey.975"}
@@ -42,5 +42,5 @@ export const Callout = forwardRef<CalloutProps, "div">(
       </Flex>
       {actionButton}
     </Flex>
-  )
+  ),
 );

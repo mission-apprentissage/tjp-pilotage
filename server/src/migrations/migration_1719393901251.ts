@@ -160,8 +160,8 @@ export const up = async (db: Kysely<unknown>) => {
               sql<boolean>`null`.as("augmentationCapaciteAccueilRestauration"),
               sql<number>`null`.as("augmentationCapaciteAccueilRestaurationPlaces"),
               sql<string>`null`.as("augmentationCapaciteAccueilRestaurationPrecisions"),
-            ])
-        )
+            ]),
+        ),
     )
     .execute();
 };

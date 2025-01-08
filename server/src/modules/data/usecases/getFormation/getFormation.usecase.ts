@@ -7,21 +7,21 @@ const getFormationFactory =
   (
     deps = {
       getFormation,
-    }
+    },
   ) =>
-    async (cfd: string, { codeAcademie, codeRegion, codeDepartement }: QueryFilters) => {
-      const formation = await deps.getFormation({
-        cfd,
-        codeRegion,
-        codeDepartement,
-        codeAcademie,
-      });
+  async (cfd: string, { codeAcademie, codeRegion, codeDepartement }: QueryFilters) => {
+    const formation = await deps.getFormation({
+      cfd,
+      codeRegion,
+      codeDepartement,
+      codeAcademie,
+    });
 
-      if (!formation) {
-        throw Boom.notFound(`La formation avec le cfd ${cfd} est inconnue`);
-      }
+    if (!formation) {
+      throw Boom.notFound(`La formation avec le cfd ${cfd} est inconnue`);
+    }
 
-      return formation;
-    };
+    return formation;
+  };
 
 export const getFormationUsecase = getFormationFactory();

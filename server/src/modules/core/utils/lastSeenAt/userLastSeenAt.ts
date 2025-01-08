@@ -27,7 +27,7 @@ const [userLastSeenAt, userLastSeenAtFactory] = inject(
       if (!request.user) return;
       await deps.updateUserLastSeenAt({ email: request.user.email });
       return;
-    }
+    },
 );
 
 export { userLastSeenAt, userLastSeenAtFactory };

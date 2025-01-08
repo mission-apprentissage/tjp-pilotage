@@ -24,7 +24,7 @@ export const up = async (db: Kysely<unknown>) => {
       "positionFormationRegionaleQuadrant_codeNiveauDiplome_fk",
       ["codeNiveauDiplome"],
       "niveauDiplome",
-      ["codeNiveauDiplome"]
+      ["codeNiveauDiplome"],
     )
     .execute();
 };

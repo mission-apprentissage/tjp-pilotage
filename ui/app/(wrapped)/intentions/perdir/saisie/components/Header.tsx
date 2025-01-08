@@ -69,11 +69,11 @@ export const Header = ({
               ].join(" - ");
               return acc;
             },
-            {} as Record<string, string>
+            {} as Record<string, string>,
           ),
         })),
       ],
-      INTENTIONS_COLUMNS
+      INTENTIONS_COLUMNS,
     );
   };
 
@@ -96,11 +96,11 @@ export const Header = ({
               ].join(" - ");
               return acc;
             },
-            {} as Record<string, string>
+            {} as Record<string, string>,
           ),
         })),
       ],
-      INTENTIONS_COLUMNS
+      INTENTIONS_COLUMNS,
     );
   };
 

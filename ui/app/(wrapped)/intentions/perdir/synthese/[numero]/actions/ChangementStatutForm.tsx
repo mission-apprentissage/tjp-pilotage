@@ -100,7 +100,7 @@ export const ChangementStatutForm = ({
 
         const { statut, statutPrecedent } = body;
         message = `Le statut de la demande a été changé depuis ${formatStatut(
-          statutPrecedent
+          statutPrecedent,
         )} vers ${formatStatut(statut)}`;
 
         onClose();
@@ -140,7 +140,7 @@ export const ChangementStatutForm = ({
                 commentaire: escapeString(values.commentaire),
               },
             },
-          })
+          }),
         )}
       >
         <Heading as="h2" fontSize={18} fontWeight={700} mb={4}>
@@ -223,7 +223,7 @@ export const ChangementStatutForm = ({
                 styles={{ fontWeight: 700 }}
               >
                 {`Souhaitez-vous changer le statut de la demande depuis ${formatStatut(
-                  intention.statut
+                  intention.statut,
                 )} vers ${formatStatut(getValues("statut"))} ?`}
               </Highlight>
               {getStepWorkflow(getValues("statut")) > getStepWorkflow(intention.statut) && (
@@ -254,7 +254,7 @@ export const ChangementStatutForm = ({
                         commentaire: escapeString(values.commentaire),
                       },
                     },
-                  })
+                  }),
                 )}
               >
                 Confirmer le changement

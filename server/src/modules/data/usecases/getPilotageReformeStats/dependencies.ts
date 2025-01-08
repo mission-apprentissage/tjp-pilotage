@@ -57,7 +57,7 @@ export const getStats = async ({
       .innerJoin("indicateurEntree", (join) =>
         join
           .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-          .on("indicateurEntree.rentreeScolaire", "=", getRentreeScolaire({ rentreeScolaire, offset: annee }))
+          .on("indicateurEntree.rentreeScolaire", "=", getRentreeScolaire({ rentreeScolaire, offset: annee })),
       )
       .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
       .$call((q) => {
@@ -72,7 +72,7 @@ export const getStats = async ({
       .where(notAnneeCommune)
       .select([
         sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."codeDispositif"))`.as(
-          "nbFormations"
+          "nbFormations",
         ),
         sql<number>`COUNT(distinct "formationEtablissement"."uai")`.as("nbEtablissements"),
         sql<number>`COALESCE(SUM(${effectifAnnee({
@@ -98,8 +98,8 @@ export const getStats = async ({
         q.where(
           "indicateurRegionSortie.millesimeSortie",
           "=",
-          getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: annee })
-        )
+          getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: annee }),
+        ),
       )
       .where("indicateurRegionSortie.cfdContinuum", "is", null)
       .where(isScolaireIndicateurRegionSortie)
@@ -174,7 +174,7 @@ const getTauxTransformationData = async (filters: Filters) => {
       genericOnConstatRentree(filters)
         .select((eb) => [sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("effectif")])
         .as("effectifs"),
-      (join) => join.onTrue()
+      (join) => join.onTrue(),
     )
     .select((eb) => [
       eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),

@@ -108,7 +108,7 @@ export const EtablissementsLayers = ({
   const onClusterClick = async (
     e: MapMouseEvent & {
       features?: MapGeoJSONFeature[];
-    }
+    },
   ) => {
     if (map !== undefined) {
       const features = map.queryRenderedFeatures(e.point, {
@@ -138,7 +138,7 @@ export const EtablissementsLayers = ({
   const onSinglePointOver = async (
     e: MapMouseEvent & {
       features?: MapGeoJSONFeature[];
-    }
+    },
   ) => {
     if (map !== undefined) {
       const features = map.queryRenderedFeatures(e.point, {

@@ -14,17 +14,17 @@ export const up = async (db: Kysely<any>) => {
             db
               .selectFrom("formationHistorique")
               .distinct()
-              .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"])
+              .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"]),
           )
           .union(
             db
               .selectFrom("familleMetier")
               .distinct()
               .select((sb) => ["cfdFamille", sb.val("scolaire").as("voie")])
-              .$castTo<{ cfd: string; voie: string }>()
+              .$castTo<{ cfd: string; voie: string }>(),
           )
           .as("formations"),
-      (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
+      (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd"),
     )
     .select((sb) => [
       sb.fn("uuid_generate_v4").as("id"),
@@ -55,11 +55,11 @@ export const up = async (db: Kysely<any>) => {
           sb.ref("formationView.libelleFormation").as("libelleFormation"),
           sql<number>`count(distinct ${sb.ref("formationRome.codeRome")})`.as("nb romes total"),
           sql<number>`count(distinct case when ${sb.ref(
-            "rome.transitionDemographique"
+            "rome.transitionDemographique",
           )} then ${sb.ref("formationRome.codeRome")} end)`.as("nb romes TD"),
         ])
         .groupBy(["formationView.cfd", "niveauDiplome.libelleNiveauDiplome", "formationView.libelleFormation"])
-        .as("sous_requete")
+        .as("sous_requete"),
     )
     .select((sb) => [sb.ref("sous_requete.cfd").as("cfd")])
     .where("nb romes total", ">", 0)
@@ -78,11 +78,11 @@ export const up = async (db: Kysely<any>) => {
           sb.ref("formationView.libelleFormation").as("libelleFormation"),
           sql<number>`count(distinct ${sb.ref("formationRome.codeRome")})`.as("nb romes total"),
           sql<number>`count(distinct case when ${sb.ref(
-            "rome.transitionEcologique"
+            "rome.transitionEcologique",
           )} then ${sb.ref("formationRome.codeRome")} end)`.as("nb romes TE"),
         ])
         .groupBy(["formationView.cfd", "niveauDiplome.libelleNiveauDiplome", "formationView.libelleFormation"])
-        .as("sous_requete")
+        .as("sous_requete"),
     )
     .select((sb) => [sb.ref("sous_requete.cfd").as("cfd")])
     .where("nb romes total", ">", 0)
@@ -101,11 +101,11 @@ export const up = async (db: Kysely<any>) => {
           sb.ref("formationView.libelleFormation").as("libelleFormation"),
           sql<number>`count(distinct ${sb.ref("formationRome.codeRome")})`.as("nb romes total"),
           sql<number>`count(distinct case when ${sb.ref(
-            "rome.transitionNumerique"
+            "rome.transitionNumerique",
           )} then ${sb.ref("formationRome.codeRome")} end)`.as("nb romes TN"),
         ])
         .groupBy(["formationView.cfd", "niveauDiplome.libelleNiveauDiplome", "formationView.libelleFormation"])
-        .as("sous_requete")
+        .as("sous_requete"),
     )
     .select((sb) => [sb.ref("sous_requete.cfd").as("cfd")])
     .where("nb romes total", ">", 0)
@@ -136,7 +136,7 @@ export const up = async (db: Kysely<any>) => {
           sql<boolean>`${eb.ref("transitionEcologique.cfd")} is not null`.as("isTransitionEcologique"),
           sql<boolean>`${eb.ref("transitionDemographique.cfd")} is not null`.as("isTransitionDemographique"),
         ])
-        .orderBy("cfd")
+        .orderBy("cfd"),
     )
     .execute();
 
@@ -158,7 +158,7 @@ export const up = async (db: Kysely<any>) => {
           sql<boolean>`${eb.ref("transitionEcologique.cfd")} is not null`.as("isTransitionEcologique"),
           sql<boolean>`${eb.ref("transitionDemographique.cfd")} is not null`.as("isTransitionDemographique"),
         ])
-        .orderBy("cfd")
+        .orderBy("cfd"),
     )
     .materialized()
     .execute();
@@ -192,7 +192,7 @@ export const up = async (db: Kysely<any>) => {
           "isTransitionEcologique",
           "isTransitionDemographique",
         ])
-        .where((eb) => eb.or([eb("voie", "is", eb.val(null)), eb("voie", "=", eb.val("scolaire"))]))
+        .where((eb) => eb.or([eb("voie", "is", eb.val(null)), eb("voie", "=", eb.val("scolaire"))])),
     )
     .materialized()
     .execute();
@@ -231,7 +231,7 @@ export const up = async (db: Kysely<any>) => {
           "isTransitionEcologique",
           "isTransitionDemographique",
         ])
-        .where((eb) => eb.and([eb("voie", "is not", eb.val(null)), eb("voie", "=", eb.val("apprentissage"))]))
+        .where((eb) => eb.and([eb("voie", "is not", eb.val(null)), eb("voie", "=", eb.val("apprentissage"))])),
     )
     .materialized()
     .execute();
@@ -266,17 +266,17 @@ export const down = async (db: Kysely<any>) => {
                 db
                   .selectFrom("formationHistorique")
                   .distinct()
-                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"])
+                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"]),
               )
               .union(
                 db
                   .selectFrom("familleMetier")
                   .distinct()
                   .select((sb) => ["cfdFamille", sb.val("scolaire").as("voie")])
-                  .$castTo<{ cfd: string; voie: string }>()
+                  .$castTo<{ cfd: string; voie: string }>(),
               )
               .as("formations"),
-          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
+          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd"),
         )
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
@@ -293,7 +293,7 @@ export const down = async (db: Kysely<any>) => {
           "formations.voie",
           "dataFormation.codeNsf",
         ])
-        .orderBy("cfd")
+        .orderBy("cfd"),
     )
     .execute();
 
@@ -311,17 +311,17 @@ export const down = async (db: Kysely<any>) => {
                 db
                   .selectFrom("formationHistorique")
                   .distinct()
-                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"])
+                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"]),
               )
               .union(
                 db
                   .selectFrom("familleMetier")
                   .distinct()
                   .select((sb) => ["cfdFamille", sb.val("scolaire").as("voie")])
-                  .$castTo<{ cfd: string; voie: string }>()
+                  .$castTo<{ cfd: string; voie: string }>(),
               )
               .as("formations"),
-          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
+          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd"),
         )
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
@@ -338,7 +338,7 @@ export const down = async (db: Kysely<any>) => {
           "formations.voie",
           "dataFormation.codeNsf",
         ])
-        .orderBy("cfd")
+        .orderBy("cfd"),
     )
     .materialized()
     .execute();
@@ -369,7 +369,7 @@ export const down = async (db: Kysely<any>) => {
           "typeFamille",
           "voie",
         ])
-        .where((eb) => eb.or([eb("voie", "is", eb.val(null)), eb("voie", "=", eb.val("scolaire"))]))
+        .where((eb) => eb.or([eb("voie", "is", eb.val(null)), eb("voie", "=", eb.val("scolaire"))])),
     )
     .materialized()
     .execute();
@@ -405,7 +405,7 @@ export const down = async (db: Kysely<any>) => {
           "typeFamille",
           "voie",
         ])
-        .where((eb) => eb.and([eb("voie", "is not", eb.val(null)), eb("voie", "=", eb.val("apprentissage"))]))
+        .where((eb) => eb.and([eb("voie", "is not", eb.val(null)), eb("voie", "=", eb.val("apprentissage"))])),
     )
     .materialized()
     .execute();

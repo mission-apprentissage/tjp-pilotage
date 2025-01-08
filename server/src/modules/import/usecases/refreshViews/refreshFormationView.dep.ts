@@ -8,6 +8,6 @@ export const refreshFormationMaterializedViews = async () => {
     REFRESH MATERIALIZED VIEW "formationView" WITH DATA;
     REFRESH MATERIALIZED VIEW "formationScolaireView" WITH DATA;
     REFRESH MATERIALIZED VIEW "formationApprentissageView" WITH DATA;
-    `.compile(getKbdClient())
+    `.compile(getKbdClient()),
   );
 };

@@ -44,5 +44,5 @@ export const getFormations = async ({ uai }: { uai: string }) =>
       formations.map((formation) => ({
         ...formation,
         formationSpecifique: formatFormationSpecifique(formation),
-      }))
+      })),
     );

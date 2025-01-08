@@ -23,17 +23,17 @@ export const up = async (db: Kysely<any>) => {
                 db
                   .selectFrom("formationHistorique")
                   .distinct()
-                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"])
+                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"]),
               )
               .union(
                 db
                   .selectFrom("familleMetier")
                   .distinct()
                   .select((sb) => ["cfdFamille", sb.val("scolaire").as("voie")])
-                  .$castTo<{ cfd: string; voie: string }>()
+                  .$castTo<{ cfd: string; voie: string }>(),
               )
               .as("formations"),
-          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
+          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd"),
         )
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
@@ -50,7 +50,7 @@ export const up = async (db: Kysely<any>) => {
           "formations.voie",
           "dataFormation.codeNsf",
         ])
-        .orderBy("cfd")
+        .orderBy("cfd"),
     )
     .execute();
 
@@ -68,17 +68,17 @@ export const up = async (db: Kysely<any>) => {
                 db
                   .selectFrom("formationHistorique")
                   .distinct()
-                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"])
+                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"]),
               )
               .union(
                 db
                   .selectFrom("familleMetier")
                   .distinct()
                   .select((sb) => ["cfdFamille", sb.val("scolaire").as("voie")])
-                  .$castTo<{ cfd: string; voie: string }>()
+                  .$castTo<{ cfd: string; voie: string }>(),
               )
               .as("formations"),
-          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
+          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd"),
         )
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
@@ -95,7 +95,7 @@ export const up = async (db: Kysely<any>) => {
           "formations.voie",
           "dataFormation.codeNsf",
         ])
-        .orderBy("cfd")
+        .orderBy("cfd"),
     )
     .materialized()
     .execute();
@@ -126,7 +126,7 @@ export const up = async (db: Kysely<any>) => {
           "typeFamille",
           "voie",
         ])
-        .where((eb) => eb.or([eb("voie", "is", eb.val(null)), eb("voie", "=", eb.val("scolaire"))]))
+        .where((eb) => eb.or([eb("voie", "is", eb.val(null)), eb("voie", "=", eb.val("scolaire"))])),
     )
     .materialized()
     .execute();
@@ -162,7 +162,7 @@ export const up = async (db: Kysely<any>) => {
           "typeFamille",
           "voie",
         ])
-        .where((eb) => eb.and([eb("voie", "is not", eb.val(null)), eb("voie", "=", eb.val("apprentissage"))]))
+        .where((eb) => eb.and([eb("voie", "is not", eb.val(null)), eb("voie", "=", eb.val("apprentissage"))])),
     )
     .materialized()
     .execute();
@@ -196,17 +196,17 @@ export const down = async (db: Kysely<any>) => {
                 db
                   .selectFrom("formationHistorique")
                   .distinct()
-                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"])
+                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"]),
               )
               .union(
                 db
                   .selectFrom("familleMetier")
                   .distinct()
                   .select((sb) => ["cfdFamille", sb.val("scolaire").as("voie")])
-                  .$castTo<{ cfd: string; voie: string }>()
+                  .$castTo<{ cfd: string; voie: string }>(),
               )
               .as("formations"),
-          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
+          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd"),
         )
         .leftJoin("diplomeProfessionnel", "diplomeProfessionnel.cfd", "dataFormation.cfd")
         .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
@@ -226,7 +226,7 @@ export const down = async (db: Kysely<any>) => {
           "nsf.libelleNsf",
           "nsf.codeNsf",
         ])
-        .orderBy("cfd")
+        .orderBy("cfd"),
     )
     .execute();
 
@@ -244,17 +244,17 @@ export const down = async (db: Kysely<any>) => {
                 db
                   .selectFrom("formationHistorique")
                   .distinct()
-                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"])
+                  .select(["formationHistorique.ancienCFD as cfd", "formationHistorique.voie"]),
               )
               .union(
                 db
                   .selectFrom("familleMetier")
                   .distinct()
                   .select((sb) => ["cfdFamille", sb.val("scolaire").as("voie")])
-                  .$castTo<{ cfd: string; voie: string }>()
+                  .$castTo<{ cfd: string; voie: string }>(),
               )
               .as("formations"),
-          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
+          (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd"),
         )
         .leftJoin("diplomeProfessionnel", "diplomeProfessionnel.cfd", "dataFormation.cfd")
         .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
@@ -274,7 +274,7 @@ export const down = async (db: Kysely<any>) => {
           "nsf.codeNsf",
           "nsf.libelleNsf",
         ])
-        .orderBy("cfd")
+        .orderBy("cfd"),
     )
     .materialized()
     .execute();
@@ -306,7 +306,7 @@ export const down = async (db: Kysely<any>) => {
           "typeFamille",
           "voie",
         ])
-        .where((eb) => eb.or([eb("voie", "is", eb.val(null)), eb("voie", "=", eb.val("scolaire"))]))
+        .where((eb) => eb.or([eb("voie", "is", eb.val(null)), eb("voie", "=", eb.val("scolaire"))])),
     )
     .materialized()
     .execute();
@@ -343,7 +343,7 @@ export const down = async (db: Kysely<any>) => {
           "typeFamille",
           "voie",
         ])
-        .where((eb) => eb.and([eb("voie", "is not", eb.val(null)), eb("voie", "=", eb.val("apprentissage"))]))
+        .where((eb) => eb.and([eb("voie", "is not", eb.val(null)), eb("voie", "=", eb.val("apprentissage"))])),
     )
     .materialized()
     .execute();

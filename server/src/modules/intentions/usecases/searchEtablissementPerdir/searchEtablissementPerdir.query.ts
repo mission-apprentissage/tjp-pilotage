@@ -37,12 +37,12 @@ export const searchEtablissementPerdirQuery = async ({
                     sql`concat(unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
                       ' ',${eb.ref("dataEtablissement.commune")})`,
                     "ilike",
-                    `%${search_word}%`
-                  )
-                )
+                    `%${search_word}%`,
+                  ),
+                ),
               ),
             ]),
-          ])
+          ]),
         );
       }
       return q.where((w) => w.or(uais.map((uai) => w("dataEtablissement.uai", "=", uai))));
@@ -61,8 +61,8 @@ export const searchEtablissementPerdirQuery = async ({
               on.or([
                 on("etablissement.dateFermeture", "is", null),
                 on("etablissement.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
-              ])
-            )
+              ]),
+            ),
         )
         .innerJoin("formationEtablissement", "formationEtablissement.uai", "etablissement.uai");
     })

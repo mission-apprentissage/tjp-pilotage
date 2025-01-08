@@ -139,7 +139,7 @@ export const PageClient = () => {
     {
       query: getIntentionsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
-    { cacheTime: 0, keepPreviousData: true }
+    { cacheTime: 0, keepPreviousData: true },
   );
 
   const hasPermissionSubmitIntention = usePermission("intentions-perdir/ecriture");
@@ -387,7 +387,7 @@ export const PageClient = () => {
                                     router.push(
                                       campagne === "2023"
                                         ? `/intentions/synthese/${intention.numero}`
-                                        : `/intentions/perdir/synthese/${intention.numero}`
+                                        : `/intentions/perdir/synthese/${intention.numero}`,
                                     );
                                   }}
                                   aria-label="Voir la demande"
@@ -546,7 +546,7 @@ export const PageClient = () => {
                                   intention.avis.filter(
                                     (avis) =>
                                       getStepWorkflowAvis(avis.type as AvisTypeType) ===
-                                      getStepWorkflow(intention.statut)
+                                      getStepWorkflow(intention.statut),
                                   ).length
                                 }
                               </Tag>

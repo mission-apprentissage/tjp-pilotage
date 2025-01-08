@@ -29,5 +29,5 @@ export const [submitSuiviUsecase, submitSuiviFactory] = inject(
       });
 
       return createdSuivi;
-    }
+    },
 );

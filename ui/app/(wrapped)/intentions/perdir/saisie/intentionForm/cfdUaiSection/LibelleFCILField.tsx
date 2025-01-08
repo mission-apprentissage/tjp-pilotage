@@ -18,7 +18,7 @@ export const LibelleFCILField = chakra(
         watch((_, { name }) => {
           if (name !== "cfd") return;
           setValue("libelleFCIL", "");
-        }).unsubscribe
+        }).unsubscribe,
     );
 
     if (!shouldDisplay) return <></>;
@@ -51,5 +51,5 @@ export const LibelleFCILField = chakra(
         </FormControl>
       </LightMode>
     );
-  }
+  },
 );

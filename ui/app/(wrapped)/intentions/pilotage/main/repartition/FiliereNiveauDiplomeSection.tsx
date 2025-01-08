@@ -55,7 +55,7 @@ export const FiliereNiveauDiplomeSection = ({
                   solde: "Solde",
                   ratioFermeture: "Ratio de fermeture",
                 },
-              }
+              },
             );
           }}
           variant="ghost"

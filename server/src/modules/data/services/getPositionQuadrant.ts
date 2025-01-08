@@ -14,7 +14,7 @@ export const getPositionQuadrant = (
   moyenne?: {
     tauxInsertion?: number;
     tauxPoursuite?: number;
-  }
+  },
 ): string => {
   if (formation.typeFamille === PREMIERE_COMMUNE || formation.typeFamille === SECONDE_COMMUNE)
     return UNDEFINED_QUADRANT;
@@ -50,13 +50,13 @@ export const filterPositionQuadrant = (formations: { positionQuadrant: string }[
 
 export const orderPositionQuadrant = (
   formations: { positionQuadrant: string }[],
-  orderBy?: { column: string; order: "asc" | "desc" }
+  orderBy?: { column: string; order: "asc" | "desc" },
 ) => {
   if (orderBy && orderBy.column === "positionQuadrant")
     return formations.sort((a, b) =>
       orderBy.order === "asc"
         ? a.positionQuadrant.localeCompare(b.positionQuadrant)
-        : b.positionQuadrant.localeCompare(a.positionQuadrant)
+        : b.positionQuadrant.localeCompare(a.positionQuadrant),
     );
   return formations;
 };
@@ -64,7 +64,7 @@ export const orderPositionQuadrant = (
 export const filterOrderPositionQuadrant = (
   formations: { positionQuadrant: string }[],
   positionQuadrantFilter?: string,
-  orderBy?: { column: string; order: "asc" | "desc" }
+  orderBy?: { column: string; order: "asc" | "desc" },
 ) => {
   return orderPositionQuadrant(filterPositionQuadrant(formations, positionQuadrantFilter), orderBy);
 };

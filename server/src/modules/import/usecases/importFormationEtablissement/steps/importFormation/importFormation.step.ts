@@ -29,5 +29,5 @@ export const [importFormation] = inject(
       };
       await deps.createFormation(formation);
       return formation;
-    }
+    },
 );

@@ -35,5 +35,5 @@ export const [checkActivationToken, checkActivationTokenFactory] = inject(
       }
 
       return true as const;
-    }
+    },
 );
