@@ -9,7 +9,7 @@ import type { Line } from "@/app/(wrapped)/console/etablissements/types";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { formatAnneeCommuneLibelle, formatCodeDepartement } from "@/utils/formatLibelle";
 import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
@@ -175,7 +175,7 @@ export const EtablissementLineContent = ({
             <Link
               variant="text"
               as={NextLink}
-              href={createParametrizedUrl("/console/etablissements", {
+              href={createParameterizedUrl("/console/etablissements", {
                 filters: {
                   cfd: [line.formationRenovee],
                 },

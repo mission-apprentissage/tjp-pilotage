@@ -19,6 +19,8 @@ import type { FC, ReactNode } from "react";
 import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
+
 const quadrantLabelStyle = {
   show: true,
   distance: 14,
@@ -35,6 +37,8 @@ export const Quadrant = function <
     tauxPoursuite: number;
     tauxInsertion: number;
     positionQuadrant?: string;
+    libelleFormation: string;
+    libelleDispositif?: string;
   },
 >({
   className,
@@ -115,8 +119,8 @@ export const Quadrant = function <
 
   const series = data.map((formation) => ({
     value: [
-      dimensions?.includes("tauxPoursuite") ? formation.tauxPoursuite * 100 : 50,
-      dimensions?.includes("tauxInsertion") ? formation.tauxInsertion * 100 : 50,
+      dimensions?.includes("tauxPoursuite") ? Math.round(formation.tauxPoursuite * 10000) / 100 : 50,
+      dimensions?.includes("tauxInsertion") ? Math.round(formation.tauxInsertion * 10000) / 100 : 50,
     ],
     name: `${formation.cfd}_${formation.codeDispositif}`,
   }));
@@ -150,8 +154,12 @@ export const Quadrant = function <
 
   const option = useMemo<EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+        },
+      },
       grid: { top: 0, right: 0, bottom: 50, left: 60 },
-
       xAxis: [
         {
           type: "value",
@@ -327,7 +335,8 @@ export const Quadrant = function <
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option);
 
@@ -350,7 +359,7 @@ export const Quadrant = function <
 
   return (
     <Box position="relative" className={className} overflow="visible !important">
-      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0"></Box>
+      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0" role="figure"></Box>
 
       {InfoTootipContent && (
         <InfoTooltip>

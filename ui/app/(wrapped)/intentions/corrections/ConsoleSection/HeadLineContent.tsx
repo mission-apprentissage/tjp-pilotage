@@ -3,7 +3,6 @@ import type { CSSProperties } from "react";
 
 import { CORRECTIONS_COLUMNS } from "@/app/(wrapped)/intentions/corrections/CORRECTIONS_COLUMN";
 import type { OrderCorrections } from "@/app/(wrapped)/intentions/corrections/types";
-import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";

@@ -37,7 +37,7 @@ export const AdvancedExportMenuButton = ({
     }
   };
 
-  if (!handleExportCsv && !handleExportExcel) return null;
+  if (!onExportCsv && !onExportExcel) return null;
 
   if (isLoading) {
     return (
