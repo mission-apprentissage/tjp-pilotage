@@ -22,6 +22,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@anatine/zod-mock@npm:^3.13.4":
+  version: 3.13.4
+  resolution: "@anatine/zod-mock@npm:3.13.4"
+  dependencies:
+    randexp: ^0.5.3
+  peerDependencies:
+    "@faker-js/faker": ^7.0.0 || ^8.0.0
+    zod: ^3.21.4
+  checksum: a4224a21c36b32a4f1cc3f2219564605a0cfbf652a7e8681995de8d91afa7095decc9779e7ce1dbb620f6e04bc2cf520843f3ac3cec8971b7739e152804ee9dc
+  languageName: node
+  linkType: hard
+
 "@aws-crypto/crc32@npm:5.2.0":
   version: 5.2.0
   resolution: "@aws-crypto/crc32@npm:5.2.0"
@@ -2369,6 +2381,13 @@ __metadata:
   version: 8.57.1
   resolution: "@eslint/js@npm:8.57.1"
   checksum: 2afb77454c06e8316793d2e8e79a0154854d35e6782a1217da274ca60b5044d2c69d6091155234ed0551a1e408f86f09dd4ece02752c59568fa403e60611e880
+  languageName: node
+  linkType: hard
+
+"@faker-js/faker@npm:^9.3.0":
+  version: 9.3.0
+  resolution: "@faker-js/faker@npm:9.3.0"
+  checksum: 0ee845a9b7dc0d6bc5bd9b7d89fc0a86b31bf0b4a55128feab5dd24c0e8e0b5f80f9ab40f639bf259b3edf62370677c1ebfd420cd8e51d4ca69b94d2ff208ba9
   languageName: node
   linkType: hard
 
@@ -8260,7 +8279,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"color-name@npm:^1.0.0, color-name@npm:~1.1.4":
+"color-name@npm:^1.0.0, color-name@npm:^1.1.4, color-name@npm:~1.1.4":
   version: 1.1.4
   resolution: "color-name@npm:1.1.4"
   checksum: b0445859521eb4021cd0fb0cc1a75cecf67fceecae89b63f62b201cca8d345baf8b952c966862a9d9a2632987d4f6581f0ec8d957dfacece86f0a7919316f610
@@ -8758,6 +8777,13 @@ __metadata:
   bin:
     cssesc: bin/cssesc
   checksum: f8c4ababffbc5e2ddf2fa9957dda1ee4af6048e22aeda1869d0d00843223c1b13ad3f5d88b51caa46c994225eacb636b764eb807a8883e2fb6f99b4f4e8c48b2
+  languageName: node
+  linkType: hard
+
+"cssfontparser@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "cssfontparser@npm:1.2.1"
+  checksum: 952d487cddab591fb944f2a4c326a7736bc963784a6d92b6ad4051f3bf5ee49a732eff62e29a52ff085197cb07f5bd66525a2245ded7fd356113ac81be9238b9
   languageName: node
   linkType: hard
 
@@ -9273,6 +9299,13 @@ __metadata:
   version: 16.4.5
   resolution: "dotenv@npm:16.4.5"
   checksum: 301a12c3d44fd49888b74eb9ccf9f07a1f5df43f489e7fcb89647a2edcd84c42d6bc349dc8df099cd18f07c35c7b04685c1a4f3e6a6a9e6b30f8d48c15b7f49c
+  languageName: node
+  linkType: hard
+
+"drange@npm:^1.0.2":
+  version: 1.1.1
+  resolution: "drange@npm:1.1.1"
+  checksum: 7e6ed639f9ab4d826e79717e2b0685a7ab02ecd39dac6483305dcc43ea2a27dc78b538e10adaba35c086efab216ef1f53f22bc402abfd0d29454b1c5f48fecd1
   languageName: node
   linkType: hard
 
@@ -10245,18 +10278,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-unused-imports@npm:^3.0.0":
-  version: 3.2.0
-  resolution: "eslint-plugin-unused-imports@npm:3.2.0"
-  dependencies:
-    eslint-rule-composer: ^0.3.0
+"eslint-plugin-unused-imports@npm:^4.1.4":
+  version: 4.1.4
+  resolution: "eslint-plugin-unused-imports@npm:4.1.4"
   peerDependencies:
-    "@typescript-eslint/eslint-plugin": 6 - 7
-    eslint: 8
+    "@typescript-eslint/eslint-plugin": ^8.0.0-0 || ^7.0.0 || ^6.0.0 || ^5.0.0
+    eslint: ^9.0.0 || ^8.0.0
   peerDependenciesMeta:
     "@typescript-eslint/eslint-plugin":
       optional: true
-  checksum: e85ae4f3af489294ef5e0969ab904fa87f9fa7c959ca0804f30845438db4aeb0428ddad7ab06a70608e93121626799977241b442fdf126a4d0667be57390c3d6
+  checksum: 1f4ce3e3972699345513840f3af1b783033dbc3a3e85b62ce12b3f6a89fd8c92afe46d0c00af40bacb14465445983ba0ccc326a6fd5132553061fb0e47bcba19
   languageName: node
   linkType: hard
 
@@ -10266,13 +10297,6 @@ __metadata:
   peerDependencies:
     eslint: ">=8.1.0"
   checksum: e43d5acf3a673f66e850515abb13bd79f175c1388da7b2b357cd1019fdc40dda605e125f2e26579eebc3007f9e270a8e45e428be932cc067851105e7de5d5543
-  languageName: node
-  linkType: hard
-
-"eslint-rule-composer@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "eslint-rule-composer@npm:0.3.0"
-  checksum: c2f57cded8d1c8f82483e0ce28861214347e24fd79fd4144667974cd334d718f4ba05080aaef2399e3bbe36f7d6632865110227e6b176ed6daa2d676df9281b1
   languageName: node
   linkType: hard
 
@@ -13173,6 +13197,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-canvas-mock@npm:~2.5.2":
+  version: 2.5.2
+  resolution: "jest-canvas-mock@npm:2.5.2"
+  dependencies:
+    cssfontparser: ^1.2.1
+    moo-color: ^1.0.2
+  checksum: a3004d2e96473049045e49dcf98e5ea6011494048ab42b5422b3089d9ff406aaca8353e79587055d840fa145541668eb8f78613765f252ad5901a8217e91ea5d
+  languageName: node
+  linkType: hard
+
 "jiti@npm:^1.18.2, jiti@npm:^1.21.6":
   version: 1.21.6
   resolution: "jiti@npm:1.21.6"
@@ -15905,6 +15939,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"moo-color@npm:^1.0.2":
+  version: 1.0.3
+  resolution: "moo-color@npm:1.0.3"
+  dependencies:
+    color-name: ^1.1.4
+  checksum: 02bf59b6bbd5e86641bc062e2dc0843e6e579e18ef67e1c8e93bfc01945df578f20e66ce16aa9632db2aa0e16806e0914a26eb345a804f45fff1ae12a8906a29
+  languageName: node
+  linkType: hard
+
 "ms@npm:2.0.0":
   version: 2.0.0
   resolution: "ms@npm:2.0.0"
@@ -16842,7 +16885,7 @@ __metadata:
     eslint-plugin-node: ^11.1.0
     eslint-plugin-react: ^7.37.1
     eslint-plugin-simple-import-sort: ^12.1.1
-    eslint-plugin-unused-imports: ^3.0.0
+    eslint-plugin-unused-imports: ^4.1.4
     eslint-plugin-zod: ^1.4.0
     exceljs: ^4.4.0
     global: 4.4.0
@@ -16854,6 +16897,7 @@ __metadata:
     typescript: ^5.6.3
     vite-tsconfig-paths: ^4.2.0
     vitest: ^2.0.5
+    vitest-canvas-mock: ^0.3.3
   languageName: unknown
   linkType: soft
 
@@ -18084,6 +18128,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"randexp@npm:^0.5.3":
+  version: 0.5.3
+  resolution: "randexp@npm:0.5.3"
+  dependencies:
+    drange: ^1.0.2
+    ret: ^0.2.0
+  checksum: 9a4011b4b012debea545fc379a18208876fffc1179d2ac211351caf7626a3956efc4bc41e329bc5b241a671553eda58e0703933a9bcfdf90dde501ba1a2cf40a
+  languageName: node
+  linkType: hard
+
 "range-parser@npm:~1.2.1":
   version: 1.2.1
   resolution: "range-parser@npm:1.2.1"
@@ -18996,6 +19050,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ret@npm:^0.2.0":
+  version: 0.2.2
+  resolution: "ret@npm:0.2.2"
+  checksum: 774964bb413a3525e687bca92d81c1cd75555ec33147c32ecca22f3d06409e35df87952cfe3d57afff7650a0f7e42139cf60cb44e94c29dde390243bc1941f16
+  languageName: node
+  linkType: hard
+
 "ret@npm:~0.4.0":
   version: 0.4.3
   resolution: "ret@npm:0.4.3"
@@ -19592,6 +19653,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "shared@workspace:shared"
   dependencies:
+    "@anatine/zod-mock": ^3.13.4
+    "@faker-js/faker": ^9.3.0
     "@http-wizard/core": ^1.3.20
     "@tsconfig/node22": ^22.0.0
     "@types/he": ^1.2.3
@@ -21254,6 +21317,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ui@workspace:ui"
   dependencies:
+    "@anatine/zod-mock": ^3.13.4
     "@chakra-ui/anatomy": ^2.3.4
     "@chakra-ui/checkbox": ^2.3.2
     "@chakra-ui/cli": ^2.5.5
@@ -21266,6 +21330,7 @@ __metadata:
     "@chakra-ui/table": ^2.1.0
     "@emotion/react": ^11.13.3
     "@emotion/styled": ^11.13.0
+    "@faker-js/faker": ^9.3.0
     "@http-wizard/core": ^1.3.20
     "@http-wizard/react-query": ^1.3.20
     "@iconify/react": ^4.1.1
@@ -21945,6 +22010,17 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 6c567f6ede66396b2b28f723e31d5d7893f2a86be2d83e9b767c24661fd95be35f1fc796a137326858bc4e8bb7b3ae6496933c23bfeb1e9997674194aa08b199
+  languageName: node
+  linkType: hard
+
+"vitest-canvas-mock@npm:^0.3.3":
+  version: 0.3.3
+  resolution: "vitest-canvas-mock@npm:0.3.3"
+  dependencies:
+    jest-canvas-mock: ~2.5.2
+  peerDependencies:
+    vitest: "*"
+  checksum: bf564fe0cb701f228eb20cacdbd3abb9eb83c948bebbbea7fe907082ef830b2f8d7865277eade77fd84806bd1ddccdf1426c85ad716b8da8a977ae6b82e4f85f
   languageName: node
   linkType: hard
 

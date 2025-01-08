@@ -128,6 +128,18 @@ export const PERMISSIONS = {
   };
 };
 
+export enum RoleEnum {
+  admin = "admin",
+  pilote = "pilote",
+  admin_region = "admin_region",
+  region = "region",
+  pilote_region = "pilote_region",
+  gestionnaire_region = "gestionnaire_region",
+  expert_region = "expert_region",
+  perdir = "perdir",
+  invite = "invite",
+}
+
 export const HIERARCHY: {
   [key in Role]: {
     sub: Array<Role>;

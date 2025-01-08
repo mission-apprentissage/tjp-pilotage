@@ -2,7 +2,6 @@ import { Box, Button, Flex, FormLabel, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
-import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { Corrections, FiltersCorrections } from "@/app/(wrapped)/intentions/corrections/types";

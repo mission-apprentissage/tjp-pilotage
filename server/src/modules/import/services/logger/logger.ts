@@ -1,7 +1,6 @@
 import fs from "node:fs";
 
 import { logspath } from "@/basepath";
-import { __dirname } from "@/utils/esmUtils";
 
 type Logs = string[];
 let logsReg: Logs = [];

@@ -7,7 +7,6 @@ import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
 import type { MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getMotifLabel, hasMotifAutre } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
-import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { formatArray, formatBoolean, formatDate } from "@/utils/formatUtils";

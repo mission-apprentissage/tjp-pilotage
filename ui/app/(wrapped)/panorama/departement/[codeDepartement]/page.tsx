@@ -12,7 +12,7 @@ import { QuadrantSection } from "@/app/(wrapped)/panorama/components/QuadrantSec
 import { TopFlopSection } from "@/app/(wrapped)/panorama/components/TopFlopSection/TopFlopSection";
 import type { FiltersPanoramaFormation, OrderPanoramaFormation } from "@/app/(wrapped)/panorama/types";
 import { CodeDepartementFilterContext } from "@/app/layoutClient";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 
 export default function Panorama({
   params: { codeDepartement },
@@ -27,7 +27,7 @@ export default function Panorama({
   const { setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
 
   const setSearchParams = (params: FiltersPanoramaFormation) => {
-    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
+    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const handleOrder = (column: OrderPanoramaFormation["orderBy"]) => {
