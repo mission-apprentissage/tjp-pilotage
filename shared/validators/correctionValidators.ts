@@ -4,12 +4,11 @@ import type { Args, ZodTypeProvider } from "@http-wizard/core";
 
 // import type { Router } from "server/src/server/routes/routes";
 import { RaisonCorrectionEnum } from "../enum/raisonCorrectionEnum";
+import type { Router } from "../routes";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Correction = Args<any["[POST]/correction/submit"]["schema"], ZodTypeProvider>["body"]["correction"];
+export type Correction = Args<Router["[POST]/correction/submit"]["schema"], ZodTypeProvider>["body"]["correction"];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Demande = Args<any["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
+export type Demande = Args<Router["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
 
 const isRaisonAnnulation = (raison: string): boolean => raison === RaisonCorrectionEnum["annulation"];
 
@@ -25,10 +24,7 @@ const isPositiveNumber = (value: number | undefined): value is number => {
   return true;
 };
 
-export const correctionValidators: Record<
-  keyof Correction | string,
-  (correction: Correction, demande: Demande) => string | undefined
-> = {
+export const correctionValidators = {
   raison: (correction) => {
     if (!correction.raison?.length) {
       return "Le champ 'raison' est obligatoire";
@@ -103,7 +99,7 @@ export const correctionValidators: Record<
       return "La capacité en apprentissage colorée doit être un nombre entier positif";
     if (isRaisonAnnulation(correction.raison) || isRaisonReport(correction.raison)) {
       if (correction.capaciteApprentissageColoree !== 0) {
-        return "La capacité apprentissage colorée doit être égale à 0 dans le cas d'un report ou d'une annulation";
+        return "La capacité en apprentissage colorée doit être égale à 0 dans le cas d'un report ou d'une annulation";
       }
     }
   },
@@ -153,4 +149,7 @@ export const correctionValidators: Record<
     )
       return "La somme des futures capacités colorées doit être inférieure ou égale à la somme des futures capacités";
   },
-};
+} satisfies Record<
+keyof Correction | string,
+(correction: Correction, demande: Demande) => string | undefined
+>;
