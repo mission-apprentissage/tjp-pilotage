@@ -14,8 +14,16 @@
     "project": ["tsconfig.json", "server/tsconfig.json", "shared/tsconfig.json", "ui/tsconfig.json"]
   },
   "plugins": ["react", "@typescript-eslint", "simple-import-sort", "import", "@dword-design/import-alias"],
-  "rules": {
-    "max-len": ["warn", { "code": 120 }],
+  "rules": {"max-len": [
+      "warn",
+      {
+        "code": 120,
+        "ignorePattern": "^import\\s.+\\sfrom\\s.+;$",
+        "ignoreComments": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
     "simple-import-sort/imports": "error",
     "no-extra-semi": "error",
     "semi": ["error", "always"],

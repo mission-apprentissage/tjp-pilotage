@@ -1,4 +1,4 @@
-import { Button, Flex, InputGroup, Text, useToken } from "@chakra-ui/react";
+import { Button, Flex, InputGroup, Text, useToken, VisuallyHidden } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { MAX_FILE_SIZE, MAX_FILE_SIZE_IN_MB } from "shared";
 
@@ -65,8 +65,10 @@ export const UploadField = ({
       </Text>
       <Text color={greyColor}>Vous pouvez ajouter des fichiers pour étayer votre demande</Text>
       <Flex direction={"row"} alignItems={"center"} mt={4}>
+        <VisuallyHidden as="label" htmlFor="fileInput">Ajout d'un fichier</VisuallyHidden>
         <InputGroup onClick={() => fileInputRef.current?.click()} width={"auto"}>
           <input
+            id="fileInput"
             type={"file"}
             multiple={true}
             hidden

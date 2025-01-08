@@ -37,6 +37,7 @@ export const ColorationField = chakra(({ disabled, className }: { disabled?: boo
 
   useEffect(() => {
     if (getValues("libelleFCIL")) setValue("coloration", false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const libelleFCIL = watch("libelleFCIL");

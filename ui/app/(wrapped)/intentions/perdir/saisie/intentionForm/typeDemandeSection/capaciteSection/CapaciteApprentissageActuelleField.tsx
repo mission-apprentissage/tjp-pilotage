@@ -7,7 +7,7 @@ import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/in
 import { isTypeOuverture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const CapaciteApprentissageActuelleField = chakra(
-  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
+  ({ id, disabled, className }: { id: string; disabled?: boolean; className?: string }) => {
     const { watch, setValue } = useFormContext<IntentionForms>();
 
     useEffect(
@@ -22,6 +22,13 @@ export const CapaciteApprentissageActuelleField = chakra(
     const ouverture = isTypeOuverture(typeDemande);
     const isReadOnly = disabled || ouverture;
 
-    return <CapaciteField name={"capaciteApprentissageActuelle"} className={className} isReadOnly={isReadOnly} />;
+    return (
+      <CapaciteField
+        id={id}
+        name={"capaciteApprentissageActuelle"}
+        className={className}
+        isReadOnly={isReadOnly}
+      />
+    );
   }
 );

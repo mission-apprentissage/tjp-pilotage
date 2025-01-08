@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { CURRENT_RENTREE } from "shared";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
@@ -38,7 +39,7 @@ export const RentreeScolaireField = ({
     (offsetRentree: number) => parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) + offsetRentree
   );
 
-  const rentreeScolaire = watch("rentreeScolaire");
+  const rentreeScolaire = watch("rentreeScolaire") ?? rentreeScolaireOptions[1];
 
   useEffect(
     () =>
@@ -55,9 +56,10 @@ export const RentreeScolaireField = ({
 
   return (
     <FormControl className={className} isInvalid={!!errors.rentreeScolaire} isRequired>
-      <FormLabel>Rentrée scolaire</FormLabel>
+      <FormLabel htmlFor="rentree-scolaire">Rentrée scolaire</FormLabel>
       <Menu gutter={0} matchWidth={true} autoSelect={false}>
         <MenuButton
+          id="rentree-scolaire"
           as={Button}
           variant={"selectButton"}
           rightIcon={<ChevronDownIcon />}
