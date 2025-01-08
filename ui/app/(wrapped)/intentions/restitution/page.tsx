@@ -18,17 +18,16 @@ import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/lay
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { SearchInput } from "@/components/SearchInput";
 import { TableHeader } from "@/components/TableHeader";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
-import { formatArray } from "@/utils/formatUtils";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDES_COLUMN";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import type { STATS_DEMANDES_COLUMNS_OPTIONAL } from "./STATS_DEMANDES_COLUMN";
-import { STATS_DEMANDES_COLUMNS, STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
+import { STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
 import type {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,
@@ -108,7 +107,7 @@ export default () => {
     page?: typeof page;
     search?: typeof search;
   }) => {
-    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
+    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const trackEvent = usePlausible();

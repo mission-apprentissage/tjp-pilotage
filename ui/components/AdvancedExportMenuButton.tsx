@@ -1,6 +1,6 @@
 import { DownloadIcon } from "@chakra-ui/icons";
 import type { MenuButtonProps } from "@chakra-ui/react";
-import { Button, Divider, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuItemOption, MenuList, MenuOptionGroup, Radio, RadioGroup, Spinner, Text } from "@chakra-ui/react";
+import { Button, Flex, Menu, MenuButton, MenuDivider, MenuItem, MenuItemOption, MenuList, MenuOptionGroup, Spinner } from "@chakra-ui/react";
 import { useState } from "react";
 
 type AdvancedExportMenuButtonProps = MenuButtonProps & {
@@ -37,7 +37,7 @@ export const AdvancedExportMenuButton = ({
     }
   };
 
-  if (!handleExportCsv && !handleExportExcel) return null;
+  if (!onExportCsv && !onExportExcel) return null;
 
   if (isLoading) {
     return (

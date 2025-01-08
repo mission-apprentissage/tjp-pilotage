@@ -5,7 +5,6 @@ import { CURRENT_RENTREE } from "shared";
 
 import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import type { Formation } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
-import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";

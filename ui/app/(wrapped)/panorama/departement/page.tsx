@@ -1,4 +1,4 @@
-import { client, serverClient } from "@/api.client";
+import { serverClient } from "@/api.client";
 
 import { PanoramaSelection } from "./PanoramaSelection";
 

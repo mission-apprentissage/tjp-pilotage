@@ -9,7 +9,6 @@ import type { Campagnes, Filters } from "@/app/(wrapped)/intentions/perdir/saisi
 import { isSaisieDisabled } from "@/app/(wrapped)/intentions/perdir/saisie/utils/canEditIntention";
 import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
-import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { Multiselect } from "@/components/Multiselect";
 import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
