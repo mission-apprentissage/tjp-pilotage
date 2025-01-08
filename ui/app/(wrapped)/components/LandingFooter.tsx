@@ -41,7 +41,7 @@ export const LandingFooter = () => {
         }}
       >
         <Box>
-          <Img src="/logo_gouvernement_large.svg" />
+          <Img src="/logo_gouvernement_large.svg" alt="Logo République française" />
         </Box>
         <VStack
           width={{

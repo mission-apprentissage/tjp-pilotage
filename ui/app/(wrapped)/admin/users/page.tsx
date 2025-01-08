@@ -18,6 +18,7 @@ import {
   Thead,
   Tr,
   useDisclosure,
+  VisuallyHidden,
 } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
 import type { AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, ReactPortal } from "react";
@@ -122,8 +123,10 @@ export default () => {
         <>
           <Flex px={4} py="2">
             <Box mt={"auto"} mb={1.5} as="form" flex={1} onSubmit={() => setFilters({ ...filters, search })}>
-              <Input onChange={(e) => setSearch(e.target.value)} value={search} placeholder="Rechercher..." />
-              <Button hidden type="submit" />
+              <VisuallyHidden as="label" htmlFor="search">
+                Rechercher
+              </VisuallyHidden>
+              <Input id={"search"} onChange={(e) => setSearch(e.target.value)} value={search} placeholder="Rechercher..." />
             </Box>
             <Button
               mt={"auto"}
@@ -154,7 +157,7 @@ export default () => {
             <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize="14px" gap="0">
               <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white">
                 <Tr>
-                  <Th w={0} />
+                  <Th w={0}><VisuallyHidden>Icône utilisateur</VisuallyHidden></Th>
                   <Th cursor="pointer" onClick={() => handleOrder("email")}>
                     <OrderIcon {...order} column="email" />
                     {Columns.email}

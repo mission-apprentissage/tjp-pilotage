@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, chakra, CloseButton, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, chakra, CloseButton, Stack, Text, VisuallyHidden } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
@@ -53,6 +53,7 @@ export const EnvBandeau = chakra(() => {
           width="auto"
           height="auto"
         >
+          <VisuallyHidden>Fermer</VisuallyHidden>
           <Icon icon="ri:close-fill" fontSize="24px" style={{ margin: "auto" }} />
         </CloseButton>
       </Stack>

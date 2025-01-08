@@ -1,9 +1,9 @@
 "use client";
 import { ChevronDownIcon, RepeatIcon } from "@chakra-ui/icons";
 import type { PlacementWithLogical, PositionProps } from "@chakra-ui/react";
-import { Box, Button, chakra, Flex, Input, Menu, MenuButton, MenuList, Portal, Text } from "@chakra-ui/react";
+import { Box, Button, chakra, Flex, Input, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuItemOption, MenuList, MenuOptionGroup, Portal, Text, VisuallyHidden } from "@chakra-ui/react";
 import type { ChangeEventHandler, ReactNode } from "react";
-import { memo, useMemo, useRef, useState } from "react";
+import { memo, useId, useMemo, useRef, useState } from "react";
 import removeAccents from "remove-accents";
 
 const ButtonContent = ({ selected, children }: { selected: string[]; children: ReactNode }) => {
@@ -24,7 +24,7 @@ const Checkbox = ({
   checked: boolean;
 }) => {
   return (
-    <label style={{ display: "flex", alignItems: "center" }}>
+    <label style={{ display: "flex", alignItems: "center" }} role="menuitemcheckbox" aria-checked={checked}>
       <input checked={checked} value={value} onChange={onChange} hidden type="checkbox" />
       <CheckboxIcon checked={checked} />
       {children}
@@ -169,6 +169,8 @@ export const Multiselect = chakra(
 
     const showDefaultValue = () => hasDefaultValue && options.length === 1;
 
+    const id = useId();
+
     return (
       <Menu
         isLazy={true}
@@ -201,16 +203,20 @@ export const Multiselect = chakra(
           </ButtonContent>
         </MenuButton>
         <Portal>
-          <MenuList maxWidth={450} pt="0" zIndex={menuZIndex}>
-            <Flex borderBottom="1px solid" borderBottomColor="grey.900">
+          <MenuList maxWidth={450} pt="0" zIndex={menuZIndex} role="menu">
+            <Flex role="menuitem">
+              <VisuallyHidden as="label" htmlFor={id}>
+                  Rechercher
+              </VisuallyHidden>
               <Input
+                id={id}
                 ref={inputRef}
                 placeholder="Rechercher dans la liste"
                 value={search}
                 onInput={async (e) => handleSearch((e.target as HTMLInputElement).value)}
+                variant="unstyled"
                 px="3"
                 py="2"
-                variant="unstyled"
               />
               <Button
                 onClick={() => {
@@ -222,11 +228,12 @@ export const Multiselect = chakra(
                 {map.size > 0 && (
                   <Text fontSize={12} fontWeight={"normal"} color="bluefrance.113" p={2}>
                     <RepeatIcon ml={1} mr={1} verticalAlign={"bottom"} />
-                    Tout décocher
+                      Tout décocher
                   </Text>
                 )}
               </Button>
             </Flex>
+            <MenuDivider m={0}/>
             <Flex direction="column" ref={ref} maxHeight={300} overflow="auto" sx={{ "> *": { px: "3", py: "1.5" } }}>
               {filteredOptions.slice(0, limit).map(({ value, label }) => (
                 <InputWapper
@@ -248,11 +255,11 @@ export const Multiselect = chakra(
                 </InputWapper>
               ))}
               {filteredOptions.length > limit && (
-                <Box px="3">
+                <MenuItem px="3">
                   <Button size="sm" w="100%" onClick={() => setLimit(limit + 100)}>
-                    Afficher plus
+                      Afficher plus
                   </Button>
-                </Box>
+                </MenuItem>
               )}
             </Flex>
           </MenuList>

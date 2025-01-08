@@ -1,6 +1,6 @@
 import { DownloadIcon } from "@chakra-ui/icons";
 import type { MenuButtonProps } from "@chakra-ui/react";
-import { Button, Divider, Flex, Menu, MenuButton, MenuList, Radio, RadioGroup, Spinner, Text } from "@chakra-ui/react";
+import { Button, Divider, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuItemOption, MenuList, MenuOptionGroup, Radio, RadioGroup, Spinner, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
 type AdvancedExportMenuButtonProps = MenuButtonProps & {
@@ -57,46 +57,61 @@ export const AdvancedExportMenuButton = ({
   };
 
   return (
-    <Menu gutter={0}>
+    <Menu gutter={0} closeOnSelect={false}>
       <MenuButton as={Button} variant={variant} size="md" leftIcon={<DownloadIcon />} {...rest}>
         <Flex minW={20}>{isQueryLoading ? <Spinner mr="2" size="sm" /> : "Exporter"}</Flex>
       </MenuButton>
       <MenuList zIndex={1000}>
-        <Flex direction={"column"} gap={2} px={3} pt={1}>
-          <Text textTransform={"uppercase"} fontWeight={700}>
-            Option d'export
-          </Text>
-          <RadioGroup onChange={setExportType} value={exportType}>
-            <Flex direction={"column"} gap={3}>
-              <Radio value="filtered" ms={2}>
-                Exporter la requête en cours
-              </Radio>
-              <Radio value="all" ms={2}>
-                Exporter toutes les données
-              </Radio>
-            </Flex>
-          </RadioGroup>
-          <Divider />
-          <Text textTransform={"uppercase"} fontWeight={700}>
-            Format
-          </Text>
-          <RadioGroup onChange={setExportFormat} value={exportFormat}>
-            <Flex direction={"column"} gap={3}>
-              <Radio value="csv" ms={2}>
-                CSV (.csv)
-              </Radio>
-              <Radio value="excel" ms={2}>
-                Excel (.xlsx)
-              </Radio>
-            </Flex>
-          </RadioGroup>
-          <Divider />
-          <Flex>
-            <Button variant={"primary"} onClick={async () => handleExport()} mx={"auto"}>
-              Exporter
-            </Button>
-          </Flex>
-        </Flex>
+        <MenuOptionGroup
+          title="Option d'export"
+          textTransform={"uppercase"}
+          fontWeight={700}
+          mb={2}
+          type={"radio"}
+          onChange={(value) => setExportType(value as string)}
+          value={exportType}
+        >
+          <MenuItemOption value="filtered" ms={2}>
+            Exporter la requête en cours
+          </MenuItemOption>
+          <MenuItemOption value="all" ms={2}>
+            Exporter toutes les données
+          </MenuItemOption>
+        </MenuOptionGroup>
+        <MenuDivider />
+        <MenuOptionGroup
+          title={"Format"}
+          textTransform={"uppercase"}
+          fontWeight={700}
+          mb={2}
+          type={"radio"}
+          onChange={(value) => setExportFormat(value as string)}
+          value={exportFormat}
+        >
+          <MenuItemOption value="csv" ms={2}>
+            CSV (.csv)
+          </MenuItemOption>
+          <MenuItemOption value="excel" ms={2}>
+            Excel (.xlsx)
+          </MenuItemOption>
+        </MenuOptionGroup>
+        <MenuDivider />
+        <MenuItem
+          as={Button}
+          onClick={async () => handleExport()}
+          mx={"auto"}
+          w={"fit-content"}
+          bgColor={"bluefrance.113"}
+          color={"white"}
+          borderRadius={0}
+          fontWeight={400}
+          _hover={{
+            bg: "bluefrance.113_hover",
+            _disabled: { bg: "bluefrance.113" },
+          }}
+        >
+          Exporter
+        </MenuItem>
       </MenuList>
     </Menu>
   );

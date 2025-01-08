@@ -69,7 +69,7 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
       <Table columnGap={1} rowGap={1}>
         <Thead>
           <Tr borderBottom={"2px solid black"} bgColor={"grey.975"}>
-            <Th w={"30%"}><VisuallyHidden>Tableau des capacités</VisuallyHidden></Th>
+            <Th w={"30%"}><VisuallyHidden>Voie</VisuallyHidden></Th>
             <Th textAlign={"end"} p={2} pe={0}>
               Capacité actuelle
             </Th>

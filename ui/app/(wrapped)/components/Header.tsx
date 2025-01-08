@@ -94,7 +94,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
                 </MenuButton>
                 <Portal>
                   <MenuList zIndex={"dropdown"}>
-                    <MenuItem onClick={logout}>
+                    <MenuItem onClick={logout} role="menuitem">
                       <LoginIcon me={2} />
                       Se déconnecter
                     </MenuItem>

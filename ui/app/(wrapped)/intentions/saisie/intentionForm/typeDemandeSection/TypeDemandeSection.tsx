@@ -1,4 +1,4 @@
-import { Box, Button, chakra, CloseButton, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip } from "@chakra-ui/react";
+import {Box, Button, chakra, CloseButton, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip, VisuallyHidden} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { RefObject } from "react";
@@ -69,6 +69,7 @@ const InfoAjustementSection = chakra(({ anneeCampagne }: { anneeCampagne: string
           width="auto"
           height="auto"
         >
+          <VisuallyHidden>Fermer</VisuallyHidden>
           <Icon icon="ri:close-fill" fontSize="24px" />
         </CloseButton>
       </Stack>

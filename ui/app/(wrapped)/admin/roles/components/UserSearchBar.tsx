@@ -1,4 +1,4 @@
-import { Badge, HStack, Skeleton, Text } from "@chakra-ui/react";
+import { Badge, HStack, Skeleton, Text, VisuallyHidden } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useEffect } from "react";
 import type { CSSObjectWithLabel, SingleValueProps } from "react-select";
@@ -60,13 +60,18 @@ const UserSearchBar = ({ updateUser, user }: UserSearchBarProps) => {
         role: defaultValues[0].role!,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, defaultValues]);
 
   return (
     <>
+      <VisuallyHidden as="label" htmlFor="search-input">
+        Rechercher un utilisateur
+      </VisuallyHidden>
       {(!user || isLoading) && <Skeleton width="200px" height="24px" />}
       {user && !isLoading && (
         <AsyncSelect
+          inputId="search-input"
           instanceId={"user-search-email"}
           styles={{
             control: (styles: CSSObjectWithLabel) => ({
