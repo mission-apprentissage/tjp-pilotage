@@ -2,7 +2,8 @@ import type { Insertable } from "kysely";
 import type { AvisStatutType } from "shared/enum/avisStatutEnum";
 import type { AvisTypeType } from "shared/enum/avisTypeEnum";
 
-import type { DB } from "@/db/db";
+import type {DB} from "@/db/db";
+import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
 import { generateId, generateShortId } from "@/modules/utils/generateId";
 
@@ -27,6 +28,18 @@ export function buildAvis(user?: RequestUser, defaultAvis: Partial<Avis> = {}) {
       buildAvis(user, { ...avis, typeAvis: type }),
     withStatus: (status: AvisStatutType) =>
       buildAvis(user, { ...avis, statutAvis: status }),
+    injectInDB: async () => {
+      const result = await getKbdClient()
+        .insertInto("avis")
+        .values(avis)
+        .returningAll()
+        .executeTakeFirstOrThrow();
+      return buildAvis(user, result);
+    },
     build: () => avis,
   };
+}
+
+export async function clearAvis() {
+  await getKbdClient().deleteFrom("avis").execute();
 }
