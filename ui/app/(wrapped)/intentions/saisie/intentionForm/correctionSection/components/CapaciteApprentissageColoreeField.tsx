@@ -6,7 +6,18 @@ import type { Intention } from "@/app/(wrapped)/intentions/saisie/intentionForm/
 import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const CapaciteApprentissageColoreeField = chakra(
-  ({ demande, disabled = false, className }: { demande: Intention; disabled?: boolean; className?: string }) => {
+  ({
+    id,
+    demande,
+    disabled = false,
+    className
+  } :
+  {
+    id: string;
+    demande: Intention;
+    disabled?: boolean;
+    className?: string;
+  }) => {
     const typeDemande = demande?.typeDemande;
     const fermeture = typeDemande !== undefined && isTypeFermeture(typeDemande);
     const coloration = typeDemande !== undefined && (isTypeColoration(typeDemande) || demande?.coloration);
@@ -15,6 +26,6 @@ export const CapaciteApprentissageColoreeField = chakra(
     if (!coloration) return <></>;
     if (fermeture) return <></>;
 
-    return <CapaciteField name={"capaciteApprentissageColoree"} className={className} isReadOnly={isReadOnly} />;
+    return <CapaciteField id={id} name={"capaciteApprentissageColoree"} className={className} isReadOnly={isReadOnly} />;
   }
 );

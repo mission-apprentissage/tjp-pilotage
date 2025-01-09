@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, chakra, CloseButton, Stack, Text, VisuallyHidden } from "@chakra-ui/react";
+import { Box, chakra, CloseButton, Stack, Text, VisuallyHidden } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 

@@ -1,4 +1,4 @@
-import {Box, Button, CloseButton, Link, Stack, Text, VisuallyHidden,VStack} from '@chakra-ui/react';
+import { Box, CloseButton, Link, Stack, Text, VisuallyHidden, VStack } from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";

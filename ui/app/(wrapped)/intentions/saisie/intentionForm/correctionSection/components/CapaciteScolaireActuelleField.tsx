@@ -5,10 +5,21 @@ import type { Intention } from "@/app/(wrapped)/intentions/saisie/intentionForm/
 import { isTypeOuverture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const CapaciteScolaireActuelleField = chakra(
-  ({ demande, disabled = false, className }: { demande: Intention; disabled?: boolean; className?: string }) => {
+  ({
+    id,
+    demande,
+    disabled = false,
+    className
+  } :
+  {
+    id: string;
+    demande: Intention;
+    disabled?: boolean;
+    className?: string;
+  }) => {
     const typeDemande = demande?.typeDemande;
     const isReadOnly = (typeDemande !== undefined && isTypeOuverture(typeDemande)) || disabled;
 
-    return <CapaciteField name={"capaciteScolaireActuelle"} className={className} isReadOnly={isReadOnly} />;
+    return <CapaciteField id={id} name={"capaciteScolaireActuelle"} className={className} isReadOnly={isReadOnly} />;
   }
 );
