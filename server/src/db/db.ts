@@ -74,7 +74,7 @@ export const connectToPgDb = async (uri: string) => {
   pool.on("error", (error) => {
     try {
       console.error("lost connection with DB!");
-      logger.error("pg pool lost connexion with database", { error });
+      logger.error({ error }, "pg pool lost connexion with database");
       // eslint-disable-next-line no-empty
     } catch (_e) {}
   });
