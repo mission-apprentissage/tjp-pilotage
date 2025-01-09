@@ -1,4 +1,4 @@
-import { Box, Flex, FormErrorMessage, Heading, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import {Box, Flex, FormErrorMessage, Heading, Input,Table, Tbody, Td, Th, Thead, Tr, VisuallyHidden} from '@chakra-ui/react';
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
@@ -7,11 +7,31 @@ import type { Intention } from "@/app/(wrapped)/intentions/saisie/intentionForm/
 import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
+import { CapaciteApprentissageColoreeActuelleField } from "./CapaciteApprentissageColoreeActuelleField";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
 import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
 import { CapaciteScolaireActuelleField } from "./CapaciteScolaireActuelleField";
+import { CapaciteScolaireColoreeActuelleField } from "./CapaciteScolaireColoreeActuelleField";
 import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
 import { CapaciteScolaireField } from "./CapaciteScolaireField";
+
+
+const ConstanteField = ({ id, value }: { id: string; value: string | number | undefined }) => (
+  <Input
+    id={id}
+    opacity="1!important"
+    color="blueecume.850"
+    fontSize={"16px"}
+    fontWeight={700}
+    isDisabled
+    value={Number.isNaN(value) ? undefined : value}
+    textAlign={"end"}
+    maxW={496}
+    borderColor={"gray.200"}
+    borderRadius={4}
+    py={6}
+  />
+);
 
 const differenceCapacité = (valueA: number | undefined = 0, valueB: number | undefined = 0) => {
   if (valueB === undefined || valueA === undefined) return "-";
@@ -77,7 +97,7 @@ export const CapaciteSection = ({ demande, disabled }: { demande: Intention; dis
       <Table columnGap={1} rowGap={1}>
         <Thead>
           <Tr borderBottom={"2px solid black"} bgColor={"grey.975"}>
-            <Th w={"30%"}></Th>
+            <Th w={"30%"}><VisuallyHidden>Voie</VisuallyHidden></Th>
             <Th textAlign={"end"} p={2} pe={0}>
               Capacité actuelle
             </Th>
@@ -85,10 +105,18 @@ export const CapaciteSection = ({ demande, disabled }: { demande: Intention; dis
               Nouvelle capacité
             </Th>
             {coloration && (
-              <Th textAlign={"end"} p={2} pe={0}>
-                Dont colorations
-              </Th>
+              <>
+                <Th textAlign={"end"} p={2} pe={0}>
+                  Capacité colorée actuelle
+                </Th>
+                <Th textAlign={"end"} p={2} pe={0}>
+                  Nouvelle capacité colorée
+                </Th>
+              </>
             )}
+            <Th textAlign={"end"} p={2} pe={0}>
+              Écart
+            </Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -97,32 +125,112 @@ export const CapaciteSection = ({ demande, disabled }: { demande: Intention; dis
               Capacité en voie scolaire
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteScolaireActuelleField flex={1} demande={demande} disabled={disabled} />
+              <VisuallyHidden as="label" htmlFor="correctionCapaciteScolaireActuelle">Capacité scolaire actuelle</VisuallyHidden>
+              <CapaciteScolaireActuelleField
+                id={"correctionCapaciteScolaireActuelle"}
+                flex={1}
+                maxW={240}
+                demande={demande}
+                disabled={disabled}
+              />
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteScolaireField flex={1} demande={demande} disabled={disabled} />
+              <VisuallyHidden as="label" htmlFor="correctionCapaciteScolaire">Capacité scolaire</VisuallyHidden>
+              <CapaciteScolaireField
+                id={"correctionCapaciteScolaire"}
+                flex={1}
+                maxW={240}
+                demande={demande}
+                disabled={disabled}
+              />
             </Td>
             {coloration && (
-              <Td p={0} border={"none"}>
-                <CapaciteScolaireColoreeField flex={1} demande={demande} disabled={disabled} />
-              </Td>
+              <>
+                <Td p={0} border={"none"}>
+                  <VisuallyHidden as="label" htmlFor="correctionCapaciteScolaireColoreeActuelle">Capacité scolaire colorée actuelle</VisuallyHidden>
+                  <CapaciteScolaireColoreeActuelleField
+                    id={"correctionCapaciteScolaireColoreeActuelle"}
+                    flex={1}
+                    maxW={240}
+                    demande={demande}
+                    disabled={disabled}
+                  />
+                </Td>
+                <Td p={0} border={"none"}>
+                  <VisuallyHidden as="label" htmlFor="correctionCapaciteScolaireColoree">Capacité scolaire colorée</VisuallyHidden>
+                  <CapaciteScolaireColoreeField
+                    id={"correctionCapaciteScolaireColoree"}
+                    flex={1}
+                    maxW={240}
+                    demande={demande}
+                    disabled={disabled}
+                  />
+                </Td>
+              </>
             )}
+            <Td p={0} border={"none"}>
+              <VisuallyHidden as="label" htmlFor="correctionNouvellesPlacesScolaire">
+                Nouvelles places scolaire
+              </VisuallyHidden>
+              <ConstanteField id={"correctionNouvellesPlacesScolaire"} value={nouvellesPlacesScolaire} />
+            </Td>
           </Tr>
           <Tr border={"none"}>
             <Td p={2} bgColor={"grey.975"} border={"1px solid gray.200"}>
               Capacité en apprentissage
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageActuelleField flex={1} demande={demande} disabled={disabled} />
+              <VisuallyHidden as="label" htmlFor="correctionCapaciteApprentissageActuelle">Capacité en apprentissage actuelle</VisuallyHidden>
+              <CapaciteApprentissageActuelleField
+                id={"correctionCapaciteApprentissageActuelle"}
+                flex={1}
+                maxW={240}
+                demande={demande}
+                disabled={disabled}
+              />
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageField flex={1} demande={demande} disabled={disabled} />
+              <VisuallyHidden as="label" htmlFor="correctionCapaciteApprentissage">Capacité en apprentissage</VisuallyHidden>
+              <CapaciteApprentissageField
+                id={"correctionCapaciteApprentissage"}
+                flex={1}
+                maxW={240}
+                demande={demande}
+                disabled={disabled}
+              />
             </Td>
             {coloration && (
-              <Td p={0} border={"none"}>
-                <CapaciteApprentissageColoreeField flex={1} demande={demande} disabled={disabled} />
-              </Td>
+              <>
+                <Td p={0} border={"none"}>
+                  <VisuallyHidden as="label" htmlFor="correctionCapaciteApprentissageColoreeActuelle">
+                    Capacité scolaire colorée actuelle
+                  </VisuallyHidden>
+                  <CapaciteApprentissageColoreeActuelleField
+                    id={"correctionCapaciteApprentissageColoreeActuelle"}
+                    flex={1}
+                    maxW={240}
+                    demande={demande}
+                    disabled={disabled}
+                  />
+                </Td>
+                <Td p={0} border={"none"}>
+                  <VisuallyHidden as="label" htmlFor="correctionCapaciteScolaireColoree">Capacité en apprentissage colorée</VisuallyHidden>
+                  <CapaciteApprentissageColoreeField
+                    id={"correctionCapaciteScolaireColoree"}
+                    flex={1}
+                    maxW={240}
+                    demande={demande}
+                    disabled={disabled}
+                  />
+                </Td>
+              </>
             )}
+            <Td p={0} border={"none"}>
+              <VisuallyHidden as="label" htmlFor="correctionNouvellesPlacesApprentissage">
+                Nouvelles places en apprentissage
+              </VisuallyHidden>
+              <ConstanteField id={"correctionNouvellesPlacesApprentissage"} value={nouvellesPlacesApprentissage} />
+            </Td>
           </Tr>
         </Tbody>
       </Table>

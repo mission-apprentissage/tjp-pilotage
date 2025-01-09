@@ -1,4 +1,4 @@
-import {Box, Button, chakra, CloseButton, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip, VisuallyHidden} from '@chakra-ui/react';
+import { Box, chakra, CloseButton, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip, VisuallyHidden } from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import type { RefObject } from "react";
 import { useState } from "react";
