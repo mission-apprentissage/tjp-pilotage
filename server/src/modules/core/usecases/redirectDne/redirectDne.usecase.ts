@@ -121,43 +121,43 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       const email = userinfo.email?.toLowerCase();
       if (!email) {
-        logger.error("Error (SSO) : Il manque l'email de l'utilisateur", {
+        logger.error({
           error: new Error("missing user email"),
           userinfo,
-        });
+        }, "Error (SSO) : Il manque l'email de l'utilisateur");
         throw new Error("missing user email");
       }
 
       const user = await deps.findUserQuery(email);
       if (user && !user.enabled) {
-        logger.error("Error (SSO) : L'utilisateur existe et est désactivé", {
+        logger.error({
           error: new Error("user not enabled"),
           userinfo,
           email,
-        });
+        }, "Error (SSO) : L'utilisateur existe et est désactivé");
         throw new Error("user not enabled");
       }
 
       const attributes = getUserRoleAttributes(userinfo);
       if (!attributes) {
-        logger.error("Error (SSO) : Il manque les droits perdir pour l'utilisateur", {
+        logger.error({
           error: new Error("missing rights"),
           userinfo,
           email,
-        });
+        }, "Error (SSO) : Il manque les droits perdir pour l'utilisateur");
         throw new Error("missing right attributes");
       }
 
       const etablissement = attributes.uais && (await deps.findEtablissement({ uais: attributes.uais }));
 
       if (!etablissement?.codeRegion) {
-        logger.error("Error (SSO): Il manque le code région pour l'établissement", {
+        logger.error({
           error: new Error("missing codeRegion"),
           userinfo,
           email,
           attributes,
           etablissement,
-        });
+        }, "Error (SSO): Il manque le code région pour l'établissement");
         throw new Error("missing codeRegion");
       }
 
