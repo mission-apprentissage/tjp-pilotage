@@ -34,7 +34,7 @@ describe("[DELETE]/intention/avis/:id", () => {
   });
 
   describe("errors", () => {
-    it("l'utilisateur doit être authentifié pour supprimer un avis", async () => {
+    it("doit retourner une erreur 401 si l'utilisateur n'est pas authentifié", async () => {
       fixture.given.utilisateurAnonyme();
       await fixture.given.avisExistant();
 
@@ -43,7 +43,7 @@ describe("[DELETE]/intention/avis/:id", () => {
       fixture.then.expectResponseToBeUnauthorized();
     });
 
-    it("retourne une erreur 403 si l'utilisateur n'a pas les permissions nécessaires", async () => {
+    it("doit retourner une erreur 403 si l'utilisateur n'a pas les permissions nécessaires", async () => {
       await fixture.given.utilisateurNonAuthorise();
       await fixture.given.avisExistant();
 
@@ -52,7 +52,7 @@ describe("[DELETE]/intention/avis/:id", () => {
       fixture.then.expectResponseToBeForbidden();
     });
 
-    it("retourne une erreur 404 si l'avis n'existe pas", async () => {
+    it("doit retourner une erreur 404 si l'avis n'existe pas", async () => {
       await fixture.given.utilisateurPiloteRegion();
       await fixture.given.avisInexistant();
 
@@ -61,7 +61,7 @@ describe("[DELETE]/intention/avis/:id", () => {
       fixture.then.expectResponseToBeNotFound();
     });
 
-    it("retourne une erreur 404 si l'intention liée à l'avis n'existe pas", async () => {
+    it("doit retourner une erreur 404 si l'intention liée à l'avis n'existe pas", async () => {
       await fixture.given.utilisateurPiloteRegion();
       await fixture.given.intentionInexistante();
       await fixture.given.avisExistant();
@@ -71,7 +71,7 @@ describe("[DELETE]/intention/avis/:id", () => {
       fixture.then.expectResponseToBeNotFound();
     });
 
-    it("retourne une erreur 403 si l'utilisateur n'est pas de la même région que l'intention", async () => {
+    it("doit retourner une erreur 403 si l'utilisateur n'est pas de la même région que l'intention", async () => {
       await fixture.given.utilisateurPiloteRegion({ codeRegion: "11" });
       await fixture.given.intentionExistante({ codeRegion: "76" });
       await fixture.given.avisExistant();
@@ -83,7 +83,7 @@ describe("[DELETE]/intention/avis/:id", () => {
   });
 
   describe("success", () => {
-    it("un utilisateur régional peut supprimer un avis de sa région", async () => {
+    it("doit pouvoir supprimer un avis de sa région", async () => {
       await fixture.given.utilisateurPiloteRegion();
       await fixture.given.intentionExistante();
       await fixture.given.avisExistant();
@@ -94,7 +94,7 @@ describe("[DELETE]/intention/avis/:id", () => {
       await fixture.then.expectAvisToBeDeleted();
     });
 
-    it("un utilisateur national peut supprimer n'importe quel avis", async () => {
+    it("doit pouvoir supprimer n'importe quel avis", async () => {
       await fixture.given.utilisateurNational();
       await fixture.given.intentionExistante();
       await fixture.given.avisExistant();
