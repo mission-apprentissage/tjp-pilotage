@@ -13,8 +13,10 @@ import { cleanNull } from "@/utils/noNull";
 
 export type Intention = Insertable<DB["intention"]>;
 
-
-export function createIntentionBuilder(user: RequestUser, defaultIntention: Partial<Intention> = {}){
+export function createIntentionBuilder(
+  user: RequestUser,
+  defaultIntention: Partial<Intention> = {}
+) {
   const intention: Intention = {
     id: defaultIntention.id ?? generateId(),
     numero: defaultIntention.numero ?? generateShortId(),
@@ -24,7 +26,8 @@ export function createIntentionBuilder(user: RequestUser, defaultIntention: Part
     updatedBy: defaultIntention.updatedBy ?? user.id,
     uai: defaultIntention.uai ?? "0820917B", //
     cfd: defaultIntention.cfd ?? "32031309", // Professions immobilières
-    rentreeScolaire: defaultIntention.rentreeScolaire ?? Number(CURRENT_RENTREE),
+    rentreeScolaire:
+      defaultIntention.rentreeScolaire ?? Number(CURRENT_RENTREE),
     typeDemande: defaultIntention.typeDemande ?? "ouverture_nette",
     mixte: defaultIntention?.mixte,
     coloration: defaultIntention?.coloration ?? false,
@@ -38,17 +41,29 @@ export function createIntentionBuilder(user: RequestUser, defaultIntention: Part
   };
 
   return {
-    withUai: (uai: string | null | undefined) => createIntentionBuilder(user, { ...intention, uai }),
-    withCfd: (cfd: string | null | undefined) => createIntentionBuilder(user, { ...intention, cfd }),
-    withId: (id: string  = generateId()) => createIntentionBuilder(user, { ...intention, id }),
-    withNumero: (numero: string = generateShortId()) => createIntentionBuilder(user, { ...intention, numero }),
-    withStatut: (statut: DemandeStatutType) => createIntentionBuilder(user, { ...intention, statut }),
+    withUai: (uai: string | null | undefined) =>
+      createIntentionBuilder(user, { ...intention, uai }),
+    withCfd: (cfd: string | null | undefined) =>
+      createIntentionBuilder(user, { ...intention, cfd }),
+    withId: (id: string = generateId()) =>
+      createIntentionBuilder(user, { ...intention, id }),
+    withNumero: (numero: string = generateShortId()) =>
+      createIntentionBuilder(user, { ...intention, numero }),
+    withStatut: (statut: DemandeStatutType) =>
+      createIntentionBuilder(user, { ...intention, statut }),
     withCurrentCampagneId: async () => {
       const campagne = await getCurrentCampagneQuery();
-      return createIntentionBuilder(user, { ...intention, campagneId: campagne.id });
+      return createIntentionBuilder(user, {
+        ...intention,
+        campagneId: campagne.id,
+      });
     },
-    withCampagneId: (campagneId: string | null | undefined) => createIntentionBuilder(user, { ...intention, campagneId }),
-    withTypeDemande: (typeDemande: DemandeType) => createIntentionBuilder(user, { ...intention, typeDemande }),
+    withCampagneId: (campagneId: string | null | undefined) =>
+      createIntentionBuilder(user, { ...intention, campagneId }),
+    withTypeDemande: (typeDemande: DemandeType) =>
+      createIntentionBuilder(user, { ...intention, typeDemande }),
+    withCodeRegion: (codeRegion: string | null | undefined) =>
+      createIntentionBuilder(user, { ...intention, codeRegion }),
     injectInDB: async () => {
       const result = await getKbdClient()
         .insertInto("intention")
@@ -61,8 +76,6 @@ export function createIntentionBuilder(user: RequestUser, defaultIntention: Part
     toJSON: () => cleanNull(intention),
   };
 }
-
-
 
 export async function clearIntentions() {
   await getKbdClient().deleteFrom("avis").execute();
