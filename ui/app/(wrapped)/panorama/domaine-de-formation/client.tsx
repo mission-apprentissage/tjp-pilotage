@@ -8,8 +8,6 @@ import {
   Container,
   Flex,
   Img,
-  Text,
-  VisuallyHidden,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 
@@ -27,15 +25,11 @@ export const PanoramaDomaineDeFormationClient = ({
   return (
     <Container px="48px" as="section" py="40px" bg="bluefrance.975" maxWidth={"container.xl"} h={"100%"}>
       <Flex align="center" direction="row" justify="space-between">
-        <VisuallyHidden>
-          <Text as={"h1"}>Rechercher un domaine de formation (NSF) ou par formation</Text>
-        </VisuallyHidden>
         <Flex w={"50%"} direction={"column"} gap={"4"}>
           <SelectNsf
             defaultNsfs={defaultNsf}
             defaultSelected={null}
             w={"100%"}
-            label={"Rechercher un domaine de formation (NSF) ou par formation"}
             isClearable={false}
             routeSelectedNsf={(selected) => {
               if (selected.type === "formation") {

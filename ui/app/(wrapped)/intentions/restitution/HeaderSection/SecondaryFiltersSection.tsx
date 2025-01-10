@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  FormLabel,
   Highlight,
   Menu,
   MenuButton,
@@ -49,14 +48,14 @@ export const SecondaryFiltersSection = ({
       <Flex justifyContent={"start"} flexDirection={"column"} gap={4} py={3}>
         <Flex justifyContent={"start"} gap={4}>
           <Box justifyContent={"start"}>
-            <FormLabel>
+            <Text>
               Domaine de formation (NSF)
               <TooltipIcon
                 ml="1"
                 label="Cliquez pour plus d'infos."
                 onClick={() => openGlossaire("domaine-de-formation-nsf")}
               />
-            </FormLabel>
+            </Text>
             <Multiselect
               onClose={filterTracker("codeNsf")}
               width={"64"}
@@ -72,7 +71,7 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Formation</FormLabel>
+            <Text>Formation</Text>
             <Multiselect
               onClose={filterTracker("cfd")}
               width={"64"}
@@ -87,7 +86,7 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Diplôme</FormLabel>
+            <Text>Diplôme</Text>
             <Multiselect
               onClose={filterTracker("codeNiveauDiplome")}
               width={"64"}
@@ -102,7 +101,7 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Département</FormLabel>
+            <Text>Département</Text>
             <Multiselect
               onClose={filterTracker("codeDepartement")}
               width={"64"}
@@ -123,7 +122,7 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Établissement</FormLabel>
+            <Text>Établissement</Text>
             <Multiselect
               onClose={filterTracker("uai")}
               width={"64"}
@@ -138,8 +137,9 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Secteur</FormLabel>
+            <Text as="label" htmlFor="select-secteur">Secteur</Text>
             <Select
+              id="select-secteur"
               width={"64"}
               size="md"
               variant={"newInput"}
@@ -156,8 +156,9 @@ export const SecondaryFiltersSection = ({
             </Select>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Voie</FormLabel>
+            <Text as="label" htmlFor="select-voie">Voie</Text>
             <Select
+              id="select-voie"
               width={"64"}
               size="md"
               variant={"newInput"}
@@ -176,7 +177,7 @@ export const SecondaryFiltersSection = ({
         </Flex>
         <Flex justifyContent={"start"} gap={4}>
           <Box justifyContent={"start"}>
-            <FormLabel>Statut</FormLabel>
+            <Text>Statut</Text>
             <Multiselect
               onClose={filterTracker("statut")}
               width={"64"}
@@ -192,7 +193,7 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Type de demande</FormLabel>
+            <Text>Type de demande</Text>
             <Multiselect
               onClose={filterTracker("typeDemande")}
               width={"64"}
@@ -213,7 +214,7 @@ export const SecondaryFiltersSection = ({
           </Box>
           {feature.showColorationFilter && (
             <Box justifyContent={"start"}>
-              <FormLabel>Coloration</FormLabel>
+              <Text>Coloration</Text>
               <Menu gutter={6} matchWidth={false} autoSelect={true}>
                 <MenuButton
                   as={Button}
@@ -263,8 +264,9 @@ export const SecondaryFiltersSection = ({
             </Box>
           )}
           <Box justifyContent={"start"}>
-            <FormLabel>AMI/CMA</FormLabel>
+            <Text as="label" htmlFor="select-ami-cma">AMI/CMA</Text>
             <Select
+              id="select-ami-cma"
               width={"64"}
               size="md"
               variant={"newInput"}
@@ -281,8 +283,9 @@ export const SecondaryFiltersSection = ({
             </Select>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Coloration</FormLabel>
+            <Text as="label" htmlFor="select-coloration">Coloration</Text>
             <Select
+              id="select-coloration"
               width={"64"}
               size="md"
               variant={"newInput"}
@@ -299,8 +302,9 @@ export const SecondaryFiltersSection = ({
             </Select>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Position quadrant</FormLabel>
+            <Text as="label" htmlFor="select-position-quadrant">Position quadrant</Text>
             <Select
+              id="select-position-quadrant"
               width={"64"}
               size="md"
               variant={"newInput"}
@@ -338,7 +342,7 @@ export const SecondaryFiltersSection = ({
             </Select>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Formations spécifiques</FormLabel>
+            <Text>Formations spécifiques</Text>
             <Multiselect
               width={"64"}
               size="md"

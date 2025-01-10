@@ -35,7 +35,7 @@ const getCompareData = (compareTo?: CompareTo) => {
   return (
     <Tooltip label={compareTo?.description}>
       <Flex color={color}>
-        <Img src={arrowImg} alt={direction} />
+        <Img src={arrowImg} alt={`Icône tendance ${direction}`} />
         <Text fontWeight={"bold"}>{value}</Text>
       </Flex>
     </Tooltip>

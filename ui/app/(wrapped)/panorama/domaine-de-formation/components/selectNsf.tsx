@@ -1,4 +1,4 @@
-import { chakra, Flex } from "@chakra-ui/react";
+import { chakra, Flex, FormControl, FormLabel } from "@chakra-ui/react";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import type { CSSObjectWithLabel, StylesConfig } from "react-select";
@@ -37,7 +37,6 @@ export const SelectNsf = chakra(
     defaultSelected = null,
     hideLabel = false,
     className,
-    label,
     isClearable = true,
     routeSelectedNsf,
   }: {
@@ -45,7 +44,6 @@ export const SelectNsf = chakra(
     defaultSelected: NsfOption | null;
     hideLabel?: boolean;
     className?: string;
-    label?: string;
     isClearable?: boolean;
     routeSelectedNsf: (selected: NsfOption) => void;
   }) => {
@@ -68,40 +66,40 @@ export const SelectNsf = chakra(
 
     return (
       <Flex flexDirection="column" gap="2" className={className}>
-        {label && (
-          <label htmlFor="nsf-select" style={labelStyle}>
-            {label}
-          </label>
-        )}
         <Flex width="100%">
-          <Select
-            id="nsf-select"
-            noOptionsMessage={({ inputValue }) =>
-              inputValue ? "Pas de formation correspondant à votre recherche" : "Commencez à écrire..."
-            }
-            isLoading={isLoading}
-            inputValue={search}
-            defaultValue={defaultSelected}
-            options={[
-              {
-                label: `DOMAINES DE FORMATION (${(data ?? []).filter((option) => option.type === "nsf").length})`,
-                options: (data ?? []).filter((option) => option.type === "nsf"),
-              },
-              {
-                label: `FORMATIONS (${(data ?? []).filter((option) => option.type === "formation").length})`,
-                options: (data ?? []).filter((option) => option.type === "formation"),
-              },
-            ]}
-            onChange={(selected) => onNsfSelected(selected as NsfOption)}
-            onInputChange={(value) => setSearch(value)}
-            isSearchable={true}
-            onMenuOpen={async () => refetch()}
-            onMenuClose={() => setSearch("")}
-            placeholder="Saisir un nom de domaine, un libellé de formation, un code diplôme..."
-            styles={selectStyle}
-            isMulti={false}
-            isClearable={isClearable}
-          />
+          <FormControl>
+            <FormLabel htmlFor="nsf-select">
+              Rechercher un domaine de formation (NSF) ou par formation
+            </FormLabel>
+            <Select
+              inputId="nsf-select"
+              noOptionsMessage={({ inputValue }) =>
+                inputValue ? "Pas de formation correspondant à votre recherche" : "Commencez à écrire..."
+              }
+              isLoading={isLoading}
+              inputValue={search}
+              defaultValue={defaultSelected}
+              options={[
+                {
+                  label: `DOMAINES DE FORMATION (${(data ?? []).filter((option) => option.type === "nsf").length})`,
+                  options: (data ?? []).filter((option) => option.type === "nsf"),
+                },
+                {
+                  label: `FORMATIONS (${(data ?? []).filter((option) => option.type === "formation").length})`,
+                  options: (data ?? []).filter((option) => option.type === "formation"),
+                },
+              ]}
+              onChange={(selected) => onNsfSelected(selected as NsfOption)}
+              onInputChange={(value) => setSearch(value)}
+              isSearchable={true}
+              onMenuOpen={async () => refetch()}
+              onMenuClose={() => setSearch("")}
+              placeholder="Saisir un nom de domaine, un libellé de formation, un code diplôme..."
+              styles={selectStyle}
+              isMulti={false}
+              isClearable={isClearable}
+            />
+          </FormControl>
         </Flex>
       </Flex>
     );

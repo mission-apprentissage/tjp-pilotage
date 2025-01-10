@@ -20,7 +20,7 @@ const getCompareData = ({
     return (
       <Tooltip label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}>
         <Flex>
-          <Img src={"/icons/arrow_up.svg"} alt="up" />
+          <Img src={"/icons/arrow_up.svg"} alt="Icône tendance à la hausse" />
           <Text fontWeight={"bold"} color="success.425">
             {`+${formatTaux(tauxRemplissage - tauxRemplissageAnneePrecedente)}`}
           </Text>
@@ -31,7 +31,7 @@ const getCompareData = ({
     return (
       <Tooltip label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}>
         <Flex>
-          <Img src={"/icons/arrow_down.svg"} alt="down" />
+          <Img src={"/icons/arrow_down.svg"} alt="Icône tendance à la baisse" />
           <Text fontWeight={"bold"} color="warning.525">
             {`${formatTaux(tauxRemplissage - tauxRemplissageAnneePrecedente)}`}
           </Text>

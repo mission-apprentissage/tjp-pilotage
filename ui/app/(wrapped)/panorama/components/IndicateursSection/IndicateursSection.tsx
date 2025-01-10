@@ -47,7 +47,7 @@ export const IndicateursSection = ({
             Retrouvez ici les principaux indicateurs sur votre territoire (Voie scolaire, Chiffres {CURRENT_RENTREE}).{" "}
           </Flex>
         </Flex>
-        <Img alignSelf={"end"} src="/design_search.svg" objectFit="cover" width={"auto"} height={"100%"} mt={"1rem"} />
+        <Img alignSelf={"end"} src="/design_search.svg" objectFit="cover" width={"auto"} height={"100%"} mt={"1rem"} alt=""/>
       </Flex>
       <SimpleGrid spacing={3} columns={[1, 3, 3]} flex={2}>
         <StatCard

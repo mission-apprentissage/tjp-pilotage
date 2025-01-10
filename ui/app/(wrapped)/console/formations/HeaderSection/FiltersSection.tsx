@@ -11,6 +11,7 @@ import {
   Select,
   Tag,
   Text,
+  VisuallyHidden,
   Wrap,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
@@ -211,7 +212,9 @@ export const FiltersSection = ({
             </MenuList>
           </Portal>
         </Menu>
+        <VisuallyHidden as="label" htmlFor="console-filters-region">Filtrer par région</VisuallyHidden>
         <Select
+          id="console-filters-region"
           placeholder="Toutes les régions"
           size="md"
           variant="newInput"

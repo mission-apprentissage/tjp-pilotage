@@ -96,6 +96,7 @@ const CheckboxIcon = ({ checked }: { checked: boolean }) => {
 
 export const Multiselect = chakra(
   ({
+    inputId,
     children,
     options = [],
     onChange,
@@ -110,6 +111,7 @@ export const Multiselect = chakra(
     gutter,
     placement,
   }: {
+    inputId?: string;
     children: ReactNode;
     options?: { label: string; value: string }[];
     onChange?: (value: string[]) => void;
@@ -169,7 +171,7 @@ export const Multiselect = chakra(
 
     const showDefaultValue = () => hasDefaultValue && options.length === 1;
 
-    const id = useId();
+    const id = inputId ?? useId();
 
     return (
       <Menu
@@ -205,9 +207,11 @@ export const Multiselect = chakra(
         <Portal>
           <MenuList maxWidth={450} pt="0" zIndex={menuZIndex} role="menu">
             <Flex role="menuitem">
-              <VisuallyHidden as="label" htmlFor={id}>
-                  Rechercher
-              </VisuallyHidden>
+              {!inputId && (
+                <VisuallyHidden as="label" htmlFor={id}>
+                  Rechercher {children}
+                </VisuallyHidden>
+              )}
               <Input
                 id={id}
                 ref={inputRef}
