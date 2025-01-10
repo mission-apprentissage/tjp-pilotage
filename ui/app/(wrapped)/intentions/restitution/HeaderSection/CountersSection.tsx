@@ -35,7 +35,7 @@ const CountCard = ({
               </Text>
             )}
           </Flex>
-          {iconSrc && <Img src={`/icons/${iconSrc}.svg`} height="30px" ms={"auto"} />}
+          {iconSrc && <Img src={`/icons/${iconSrc}.svg`} height="30px" ms={"auto"} alt=""/>}
         </Flex>
       </Flex>
     </CardHeader>

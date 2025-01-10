@@ -1,4 +1,4 @@
-import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
+import { Box, Flex, Select, Skeleton, Text, VisuallyHidden } from "@chakra-ui/react";
 
 import type { Filters, IndicateurType, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage-reforme/types";
 import { CartoGraph } from "@/components/CartoGraph";
@@ -49,7 +49,9 @@ export const CartoSection = ({
             <Text color={"bluefrance.113"} fontWeight={700}>
               VISUALISATION TERRITORIALE
             </Text>
+            <VisuallyHidden as="label" htmlFor="select-indicateur-carto">Indicateur</VisuallyHidden>
             <Select
+              id="select-indicateur-carto"
               width="64"
               size="sm"
               variant="newInput"

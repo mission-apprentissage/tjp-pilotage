@@ -90,7 +90,7 @@ export default function Home() {
                 boxShadow="0px 0px 10px rgba(0,0,0,0.16)"
                 borderRadius="8px 8px 0px 0px"
               >
-                <Img src="/capture-accueil.png" />
+                <Img src="/capture-accueil.png" alt=""/>
               </Box>
             </HStack>
           </VStack>
@@ -110,7 +110,7 @@ export default function Home() {
         spacing="24px"
       >
         <Card
-          icon={<Img src="/illustrations/data-visualization.svg" />}
+          icon={<Img src="/illustrations/data-visualization.svg" alt="" />}
           title="Analyser et comparer"
           link="Voir le panorama"
           linkHref="/panorama"
@@ -121,7 +121,7 @@ export default function Home() {
           </Text>
         </Card>
         <Card
-          icon={<Img src="/illustrations/school.svg" />}
+          icon={<Img src="/illustrations/school.svg" alt="" />}
           title="Explorer les données"
           link="Voir la console"
           linkHref="/console/formations"
@@ -132,7 +132,7 @@ export default function Home() {
           </Text>
         </Card>
         <Card
-          icon={<Img src="/illustrations/location-france.svg" />}
+          icon={<Img src="/illustrations/location-france.svg" alt="" />}
           title="Transformer la carte"
           link="Se connecter"
           linkHref="/auth/login"
@@ -222,7 +222,7 @@ export default function Home() {
               }}
               justifyContent="center"
             >
-              <Img src="/illustrations/mission-inserjeunes.svg" />
+              <Img src="/illustrations/mission-inserjeunes.svg" alt="" />
             </HStack>
             <VStack
               alignItems="start"

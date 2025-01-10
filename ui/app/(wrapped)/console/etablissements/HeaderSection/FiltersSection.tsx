@@ -1,18 +1,5 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  Divider,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Portal,
-  Select,
-  Tag,
-  Text,
-  Wrap,
-} from "@chakra-ui/react";
+import {Button, Divider, Flex, Menu, MenuButton, MenuItem, MenuList, Portal, Select, Tag, Text, VisuallyHidden,Wrap} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 import { useState } from "react";
@@ -217,7 +204,9 @@ export const FiltersSection = ({
             </MenuList>
           </Portal>
         </Menu>
+        <VisuallyHidden as="label" htmlFor="console-filters-region">Filtrer par région</VisuallyHidden>
         <Select
+          id="console-filters-region"
           placeholder="Toutes les régions"
           size="md"
           variant="newInput"

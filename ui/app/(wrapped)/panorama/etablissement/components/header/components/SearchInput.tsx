@@ -1,5 +1,5 @@
 import { Search2Icon } from "@chakra-ui/icons";
-import { Flex, GridItem, Skeleton, useToken } from "@chakra-ui/react";
+import { Flex, GridItem, Skeleton, useToken, VisuallyHidden } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import type { ControlProps, CSSObjectWithLabel } from "react-select";
 import { components } from "react-select";
@@ -41,39 +41,45 @@ export const SearchInput = ({ uai }: { uai: string }) => {
         {isLoading ? (
           <Skeleton height="38px" width="25rem" opacity={0.25} />
         ) : (
-          <AsyncSelect
-            instanceId={"panorama-etablissement-uai"}
-            styles={{
-              ...selectStyle,
-              menu: (provided) => ({ ...provided, zIndex: 9999 }),
-              placeholder: (styles) => ({
-                ...styles,
-                display: "flex",
-                alignItems: "center",
-              }),
-            }}
-            components={{
-              DropdownIndicator: () => null,
-              IndicatorSeparator: () => null,
-              Control,
-            }}
-            onChange={(selected) => selected && router.push(selected.value)}
-            loadOptions={(inputValue: string) => {
-              if (inputValue.length >= 3)
-                return client.ref("[GET]/etablissement/search/:search").query({
-                  params: { search: inputValue },
-                  query: { filtered: true },
-                });
-            }}
-            loadingMessage={({ inputValue }) =>
-              inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
-            }
-            isClearable={true}
-            noOptionsMessage={({ inputValue }) =>
-              inputValue ? "Pas d'établissement correspondant" : "Commencez à écrire..."
-            }
-            placeholder="Rechercher un établissement par UAI, nom, commune..."
-          />
+          <>
+            <VisuallyHidden as="label" htmlFor="search-etablissement">
+              Rechercher un établissement
+            </VisuallyHidden>
+            <AsyncSelect
+              inputId="search-etablissement"
+              instanceId={"panorama-etablissement-uai"}
+              styles={{
+                ...selectStyle,
+                menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                placeholder: (styles) => ({
+                  ...styles,
+                  display: "flex",
+                  alignItems: "center",
+                }),
+              }}
+              components={{
+                DropdownIndicator: () => null,
+                IndicatorSeparator: () => null,
+                Control,
+              }}
+              onChange={(selected) => selected && router.push(selected.value)}
+              loadOptions={(inputValue: string) => {
+                if (inputValue.length >= 3)
+                  return client.ref("[GET]/etablissement/search/:search").query({
+                    params: { search: inputValue },
+                    query: { filtered: true },
+                  });
+              }}
+              loadingMessage={({ inputValue }) =>
+                inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
+              }
+              isClearable={true}
+              noOptionsMessage={({ inputValue }) =>
+                inputValue ? "Pas d'établissement correspondant" : "Commencez à écrire..."
+              }
+              placeholder="Rechercher un établissement par UAI, nom, commune..."
+            />
+          </>
         )}
       </Flex>
     </GridItem>

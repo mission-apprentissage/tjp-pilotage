@@ -62,10 +62,11 @@ const AsyncFormationSearch = ({ codeNsf, formation, onSelectFormation }: AsyncFo
 
   return (
     <>
-      <Text onClick={openSelect} pb="4px" cursor="pointer">
+      <Text as="label" onClick={openSelect} pb="4px" cursor="pointer" htmlFor="select-diplome">
         Formation
       </Text>
       <AsyncSelect
+        inputId="select-diplome"
         ref={selectElementRef}
         instanceId={useId()}
         name={"select-diplome"}

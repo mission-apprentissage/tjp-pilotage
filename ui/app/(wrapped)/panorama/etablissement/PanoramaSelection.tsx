@@ -25,7 +25,7 @@ export function PanoramaSelection({ wrongUai }: { readonly wrongUai?: string }) 
       <Flex align="center" direction="column">
         <UaiForm uai={uaisFilter?.[0]} onUaiChanged={onUaiChanged} inError={!!wrongUai} />
         <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
-          <Img src="/graphs_statistics.png" objectFit="contain" />
+          <Img src="/graphs_statistics.png" objectFit="contain" alt="" />
         </AspectRatio>
         {wrongUai && (
           <Alert maxW="300px" status="error" mt="6">

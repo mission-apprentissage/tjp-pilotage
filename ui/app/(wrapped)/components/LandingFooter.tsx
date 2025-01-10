@@ -12,11 +12,9 @@ interface LinkWithIconProps {
 
 const LinkWithIcon = ({ children, href }: LinkWithIconProps) => {
   return (
-    <Link as={NextLink} href={href}>
-      <HStack as="span" spacing="2px" display="inline-flex">
-        {children}
-        <Icon icon="ri:external-link-line" />
-      </HStack>
+    <Link as={NextLink} href={href} display="inline-flex" textDecoration="underline">
+      {children}
+      <Flex my={"auto"} ms={1}><Icon icon="ri:external-link-line" /></Flex>
     </Link>
   );
 };
@@ -41,7 +39,7 @@ export const LandingFooter = () => {
         }}
       >
         <Box>
-          <Img src="/logo_gouvernement_large.svg" alt="Logo République française" />
+          <Img src="/logo_gouvernement_large.svg" alt="Logo république Française 2" />
         </Box>
         <VStack
           width={{
@@ -156,9 +154,7 @@ export const LandingFooter = () => {
             Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont
             proposés sous{" "}
             <LinkWithIcon href="https://github.com/etalab/licence-ouverte/blob/master/LO.md">
-              <Text as="span" textDecoration="underline">
-                licence etalab-2.0
-              </Text>
+              licence etalab-2.0
             </LinkWithIcon>
           </Text>
         </Flex>

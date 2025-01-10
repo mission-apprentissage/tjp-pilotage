@@ -57,9 +57,9 @@ export const TabsSection = ({
         >
           <Flex direction={"column"} justify={"center"} alignItems={"center"} mx={"80px"}>
             {isRepartitionSelected ? (
-              <Img src={`/icons/repartition_selected.svg`} alt="quadrant" w={"32px"} h={"32px"} />
+              <Img src={`/icons/repartition_selected.svg`} alt="Icône onglet répartition" w={"32px"} h={"32px"} />
             ) : (
-              <Img src={`/icons/repartition.svg`} alt="quadrant" w={"32px"} h={"32px"} />
+              <Img src={`/icons/repartition.svg`} alt="Icône onglet répartition sélectionné" w={"32px"} h={"32px"} />
             )}
             <Text
               fontWeight={isRepartitionSelected ? 700 : 400}
@@ -80,9 +80,9 @@ export const TabsSection = ({
         >
           <Flex direction={"column"} justify={"center"} alignItems={"center"} mx={"80px"}>
             {isQuadrantSelected ? (
-              <Img src={`/icons/quadrant_selected.svg`} alt="quadrant" w={"32px"} h={"32px"} />
+              <Img src={`/icons/quadrant_selected.svg`} alt="Icône onglet quadrant" w={"32px"} h={"32px"} />
             ) : (
-              <Img src={`/icons/quadrant.svg`} alt="quadrant" w={"32px"} h={"32px"} />
+              <Img src={`/icons/quadrant.svg`} alt="Icône onglet quadrant sélectionné" w={"32px"} h={"32px"} />
             )}
             <Text fontWeight={isQuadrantSelected ? 700 : 400} color={isQuadrantSelected ? "bluefrance.113" : "black"}>
               Quadrant

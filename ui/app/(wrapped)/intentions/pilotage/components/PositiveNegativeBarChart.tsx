@@ -31,7 +31,7 @@ export const PositiveNegativeBarChart = ({
           pour les filtres sélectionnés
         </Heading>
         <Flex flex={1} backgroundColor={themeDefinition.colors.bluefrance[975]}>
-          <Img src="/illustrations/search.svg" />
+          <Img src="/illustrations/search.svg" alt="Icône rechercher"/>
         </Flex>
       </VStack>
     );

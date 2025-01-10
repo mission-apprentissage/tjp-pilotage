@@ -64,7 +64,7 @@ export const InfoCard = ({
                 </Menu>
               )}
             </Flex>
-            <Img width={["70px", null, "160px"]} src={img} objectFit="contain" />
+            <Img width={["70px", null, "160px"]} src={img} objectFit="contain" alt=""/>
           </Flex>
           <Flex direction={"row"} justify={"space-between"} mt={"auto"}>
             {!Array.isArray(links) && (
