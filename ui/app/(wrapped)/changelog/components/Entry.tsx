@@ -37,14 +37,14 @@ export const Entry = ({ changelogEntry }: EntryProps) => {
       <GridItem>
         <HStack alignItems="start" paddingBottom="16px" paddingRight="16px">
           <Text paddingRight="6px">🚧</Text>
-          <Text as="h2" fontWeight={700} fontSize="16px">
+          <Text as="h2" fontWeight={700} fontSize={16}>
             {changelogEntry.title}
           </Text>
         </HStack>
       </GridItem>
       <GridItem>
         <VStack flexGrow={1} alignItems="start">
-          <HStack fontSize="14px" fontWeight="400">
+          <HStack fontSize={14} fontWeight="400">
             {changelogEntry.types.map((type, i) => (
               <Tag
                 key={`${entry}-${type}-${i}`}
@@ -65,7 +65,7 @@ export const Entry = ({ changelogEntry }: EntryProps) => {
               {changelogEntry.date.type === "date" && generateDateString(changelogEntry.date.value)}
             </Text>
           </HStack>
-          <Text fontSize="16px" fontWeight={400}>
+          <Text fontSize={16} fontWeight={400}>
             {changelogEntry.description}
           </Text>
         </VStack>

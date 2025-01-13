@@ -260,54 +260,53 @@ export const PageClient = () => {
             {data?.intentions.length ? (
               <>
                 <TableContainer overflowY="auto" flex={1}>
-                  <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize="14px" gap="0">
+                  <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize={14} gap="0">
                     <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white" zIndex={"1"}>
                       <Tr>
-                        <Th cursor="pointer" onClick={() => handleOrder("updatedAt")}>
+                        <Th cursor="pointer" onClick={() => handleOrder("updatedAt")} fontSize={12}>
                           <OrderIcon {...order} column="updatedAt" />
                           {INTENTIONS_COLUMNS.updatedAt}
                         </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("libelleFormation")} minW={300} maxW={300}>
+                        <Th cursor="pointer" onClick={() => handleOrder("libelleFormation")} minW={300} maxW={300} fontSize={12}>
                           <OrderIcon {...order} column="libelleFormation" />
                           {INTENTIONS_COLUMNS.libelleFormation}
                         </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("libelleEtablissement")} minW={350} maxW={350}>
+                        <Th cursor="pointer" onClick={() => handleOrder("libelleEtablissement")} minW={350} maxW={350} fontSize={12}>
                           <OrderIcon {...order} column="libelleEtablissement" />
                           {INTENTIONS_COLUMNS.libelleEtablissement}
                         </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("libelleDepartement")}>
+                        <Th cursor="pointer" onClick={() => handleOrder("libelleDepartement")} fontSize={12}>
                           <OrderIcon {...order} column="libelleDepartement" />
                           {INTENTIONS_COLUMNS.libelleDepartement}
                         </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("statut")} textAlign={"center"}>
+                        <Th cursor="pointer" onClick={() => handleOrder("statut")} textAlign={"center"} fontSize={12}>
                           <OrderIcon {...order} column="statut" />
                           {INTENTIONS_COLUMNS.statut}
                         </Th>
-                        <Th textAlign={"center"}>actions</Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("typeDemande")} textAlign={"center"}>
+                        <Th textAlign={"center"} fontSize={12}>actions</Th>
+                        <Th cursor="pointer" onClick={() => handleOrder("typeDemande")} textAlign={"center"} fontSize={12}>
                           <OrderIcon {...order} column="typeDemande" />
                           {INTENTIONS_COLUMNS.typeDemande}
                         </Th>
-
-                        <Th cursor="pointer" onClick={() => handleOrder("createdAt")}>
+                        <Th cursor="pointer" onClick={() => handleOrder("createdAt")} fontSize={12}>
                           <OrderIcon {...order} column="createdAt" />
                           {INTENTIONS_COLUMNS.createdAt}
                         </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("numeroDemandeImportee")}>
+                        <Th cursor="pointer" onClick={() => handleOrder("numeroDemandeImportee")} fontSize={12}>
                           <OrderIcon {...order} column="numeroDemandeImportee" />
                           {INTENTIONS_COLUMNS.numero}
                         </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("userName")} w="15">
+                        <Th cursor="pointer" onClick={() => handleOrder("userName")} w="15" fontSize={12}>
                           <OrderIcon {...order} column="userName" />
                           {INTENTIONS_COLUMNS.userName}
                         </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("inspecteurReferent")} minW={250} maxW={250}>
+                        <Th cursor="pointer" onClick={() => handleOrder("inspecteurReferent")} minW={250} maxW={250} fontSize={12}>
                           <OrderIcon {...order} column="inspecteurReferent" />
                           {INTENTIONS_COLUMNS.inspecteurReferent}
                         </Th>
-                        <Th textAlign={"center"}>Progression</Th>
-                        <Th>Avis (Phase en cours)</Th>
-                        <Th>Derniers avis - Phase en cours</Th>
+                        <Th textAlign={"center"} fontSize={12}>Progression</Th>
+                        <Th fontSize={12}>Avis (Phase en cours)</Th>
+                        <Th fontSize={12}>Derniers avis - Phase en cours</Th>
                       </Tr>
                     </Thead>
                     <Tbody>

@@ -142,6 +142,7 @@ export const Quadrant = function <
     })(),
   };
 
+
   const repartitionsQuadrants =
     meanInsertion && meanPoursuite
       ? {
@@ -397,7 +398,7 @@ export const FormationTooltipWrapper = forwardRef<HTMLDivElement, { children: Re
 
     return (
       <Box zIndex={10} ref={ref} {...props}>
-        <Card width={"280px"} ref={cardRef}>
+        <Card width={"330px"} ref={cardRef}>
           <CardBody p="4">{children}</CardBody>
         </Card>
       </Box>

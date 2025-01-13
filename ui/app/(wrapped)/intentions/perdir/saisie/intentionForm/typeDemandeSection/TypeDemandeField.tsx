@@ -80,7 +80,7 @@ function RadioCard({
         </Text>
         {tooltip}
       </Flex>
-      <Text fontSize="12px" mb="auto">
+      <Text fontSize={12} mb="auto">
         {desc}
       </Text>
     </Box>
@@ -102,8 +102,8 @@ export const TypeDemandeField = chakra(
     const rentreeScolaire = watch("rentreeScolaire");
 
     return (
-      <FormControl className={className} isInvalid={!!errors.typeDemande} isRequired>
-        <FormLabel mb="4">Ma demande concerne</FormLabel>
+      <FormControl as="fieldset" className={className} isInvalid={!!errors.typeDemande} isRequired>
+        <FormLabel as="legend" mb="4">Ma demande concerne</FormLabel>
         <Controller
           name="typeDemande"
           control={control}

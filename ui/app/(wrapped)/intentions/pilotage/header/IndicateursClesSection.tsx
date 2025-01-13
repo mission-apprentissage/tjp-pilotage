@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Grid, GridItem, HStack, Skeleton, Text, VStack } from "@chakra-ui/react";
+import { Box, Divider, Flex, Grid, GridItem, HStack, Skeleton, Text, VisuallyHidden, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useMemo } from "react";
 import { ScopeEnum } from "shared";
@@ -90,6 +90,7 @@ export const IndicateursClesSection = ({
 
   const getScopedData = useMemo(
     () => (code ? generateGetScopedData(code, data) : generateGetScopedData(ScopeEnum.national, nationalStats)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [generateGetScopedData, data, code, nationalStats]
   );
 
@@ -152,7 +153,7 @@ export const IndicateursClesSection = ({
         </IndicateurCard>
         <IndicateurCard title="Ratio de fermetures">
           <NumberWithLabel
-            label=" "
+            label={<VisuallyHidden>Ratio de fermetures</VisuallyHidden>}
             scopeCode={code}
             percentage={getScopedData("all", "ratioFermeture")}
             nationalPercentage={nationalStats?.all?.["_national"].ratioFermeture}
@@ -168,7 +169,7 @@ export const IndicateursClesSection = ({
           projetDeDemande={getScopedData(DemandeStatutEnum["projet de demande"], "placesOuvertes")}
         >
           <Divider />
-          <VStack width="100%" color={themeDefinition.colors.grey[425]} fontSize="12px">
+          <VStack width="100%" color={themeDefinition.colors.grey[425]} fontSize={12}>
             <Text alignSelf="end">dont</Text>
             <HStack justifyContent="space-between" width="100%" alignItems="start">
               <Text>
@@ -205,7 +206,7 @@ export const IndicateursClesSection = ({
           projetDeDemande={getScopedData(DemandeStatutEnum["projet de demande"], "placesFermees")}
         >
           <Divider />
-          <VStack width="100%" color={themeDefinition.colors.grey[425]} fontSize="12px">
+          <VStack width="100%" color={themeDefinition.colors.grey[425]} fontSize={12}>
             <Text alignSelf="end">dont</Text>
             <HStack justifyContent="space-between" width="100%" alignItems="start">
               <Text>
@@ -263,7 +264,7 @@ export const IndicateursClesSection = ({
           }
         >
           <Divider />
-          <VStack width="100%" color={themeDefinition.colors.grey[425]} fontSize="12px">
+          <VStack width="100%" color={themeDefinition.colors.grey[425]} fontSize={12}>
             <Text alignSelf="end">dont</Text>
             <HStack justifyContent="space-between" width="100%" alignItems="start">
               <Text>

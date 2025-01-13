@@ -41,7 +41,7 @@ const InfoAjustementSection = chakra(({ anneeCampagne }: { anneeCampagne: string
         <Icon icon="ri:information-fill" fontSize="24px" />
         <Text
           flexGrow={1}
-          fontSize="14px"
+          fontSize={14}
           fontWeight={400}
           display={{
             base: "none",
@@ -69,7 +69,7 @@ const InfoAjustementSection = chakra(({ anneeCampagne }: { anneeCampagne: string
           width="auto"
           height="auto"
         >
-          <VisuallyHidden>Fermer</VisuallyHidden>
+          <VisuallyHidden fontSize={12}>Fermer</VisuallyHidden>
           <Icon icon="ri:close-fill" fontSize="24px" />
         </CloseButton>
       </Stack>
@@ -120,7 +120,6 @@ export const TypeDemandeSection = ({
           direction={"row"}
           gap={2}
           color={"bluefrance.113"}
-          textDecoration={"underline"}
           cursor={"pointer"}
           fontWeight={"700"}
           width={"fit-content"}

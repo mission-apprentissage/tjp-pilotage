@@ -228,7 +228,7 @@ export const UpdateAvisForm = chakra(
                 })}
                 whiteSpace={"nowrap"}
               >
-                <Text fontSize={"14px"} fontWeight={400}>
+                <Text fontSize={14} fontWeight={400}>
                   Rendre cet avis visible de tous
                 </Text>
               </Checkbox>

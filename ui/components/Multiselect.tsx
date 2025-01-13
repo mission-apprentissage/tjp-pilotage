@@ -175,7 +175,6 @@ export const Multiselect = chakra(
 
     return (
       <Menu
-        isLazy={true}
         onOpen={() => {
           prepareOptions();
           handleSearch("");
@@ -222,20 +221,20 @@ export const Multiselect = chakra(
                 px="3"
                 py="2"
               />
-              <Button
-                onClick={() => {
-                  stateValue.current = new Map();
-                  onChange?.(Array.from(new Map().keys()));
-                }}
-                bgColor={"transparent"}
-              >
-                {map.size > 0 && (
+              {map.size > 0 && (
+                <Button
+                  onClick={() => {
+                    stateValue.current = new Map();
+                    onChange?.(Array.from(new Map().keys()));
+                  }}
+                  bgColor={"transparent"}
+                >
                   <Text fontSize={12} fontWeight={"normal"} color="bluefrance.113" p={2}>
                     <RepeatIcon ml={1} mr={1} verticalAlign={"bottom"} />
                       Tout décocher
                   </Text>
-                )}
-              </Button>
+                </Button>
+              )}
             </Flex>
             <MenuDivider m={0}/>
             <Flex direction="column" ref={ref} maxHeight={300} overflow="auto" sx={{ "> *": { px: "3", py: "1.5" } }}>

@@ -58,8 +58,8 @@ export const MotifField = chakra(
     if (!isMotifVisible) return null;
 
     return (
-      <FormControl className={className} isInvalid={!!errors.motif} isRequired>
-        <FormLabel>
+      <FormControl as="fieldset" className={className} isInvalid={!!errors.motif} isRequired>
+        <FormLabel as="legend">
           Merci de préciser le(s) motif(s) de votre {getTypeDemandeLabel(typeDemande).toLowerCase()}
         </FormLabel>
         <Controller

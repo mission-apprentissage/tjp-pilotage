@@ -1,24 +1,7 @@
 "use client";
 
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Link } from "@chakra-ui/next-js";
-import {
-  Box,
-  Button,
-  Container,
-  createIcon,
-  Flex,
-  Heading,
-  HStack,
-  Img,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Portal,
-  useToken,
-  VStack,
-} from "@chakra-ui/react";
+import {Box, Button, Container, createIcon, Flex, Heading, HStack, Img, Menu, MenuButton, MenuItem, MenuList, Portal, useDisclosure,useToken, VStack} from '@chakra-ui/react';
 import { useQueryClient } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useContext } from "react";
@@ -36,6 +19,8 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const { setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
   const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
   const queryClient = useQueryClient();
+
+  const { isOpen: isMenuDeconnexionOpen, onOpen: onMenuDeconnexionOpen, onClose: onMenuDeconnexionClose } = useDisclosure();
 
   const logout = async () => {
     await client.ref("[POST]/auth/logout").query({});
@@ -58,7 +43,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
         borderBottom={`1px solid ${greyColor}`}
       >
         <Flex align="center" as={Container} py={2} maxWidth={"container.xl"}>
-          <HStack as={Link} spacing={1} align="center" href="/">
+          <HStack spacing={1} align="center">
             <Flex direction={"row"} gap={6}>
               <Img height="70px" src="/logo_gouvernement.svg" alt="Logo république Française 1" />
               <Img height="60px" src="/logo_orion.svg" alt="Logo Orion" my={"auto"} />
@@ -84,8 +69,17 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
               </Button>
             )}
             {!!auth && (
-              <Menu isLazy autoSelect={false} placement="bottom-end">
-                <MenuButton ml="auto" as={Button} fontWeight="light" color="bluefrance.113" variant="ghost">
+              <Menu autoSelect={false} placement="bottom-end" closeOnBlur  isOpen={isMenuDeconnexionOpen} gutter={0}>
+                <MenuButton
+                  ml="auto"
+                  as={Button}
+                  fontWeight="light"
+                  color="bluefrance.113"
+                  variant="ghost"
+                  aria-expanded={isMenuDeconnexionOpen ? "true" : "false"}
+                  onMouseEnter={onMenuDeconnexionOpen}
+                  onMouseLeave={onMenuDeconnexionClose}
+                >
                   <Box as="span" display={["none", null, "unset"]}>
                     Bienvenue,{" "}
                   </Box>
@@ -93,8 +87,13 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
                   <ChevronDownIcon ml="2" />
                 </MenuButton>
                 <Portal>
-                  <MenuList zIndex={"dropdown"}>
-                    <MenuItem onClick={logout} role="menuitem">
+                  <MenuList
+                    zIndex={"dropdown"}
+                    borderTop="unset"
+                    onMouseEnter={onMenuDeconnexionOpen}
+                    onMouseLeave={onMenuDeconnexionClose}
+                  >
+                    <MenuItem autoFocus onClick={logout} >
                       <LoginIcon me={2} />
                       Se déconnecter
                     </MenuItem>

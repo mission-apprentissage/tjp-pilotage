@@ -69,24 +69,24 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
       <Table columnGap={1} rowGap={1}>
         <Thead>
           <Tr borderBottom={"2px solid black"} bgColor={"grey.975"}>
-            <Th w={"30%"}><VisuallyHidden>Voie</VisuallyHidden></Th>
-            <Th textAlign={"end"} p={2} pe={0}>
+            <Th w={"30%"}  fontSize={12}><VisuallyHidden>Voie</VisuallyHidden></Th>
+            <Th textAlign={"end"} p={2} pe={0} fontSize={12}>
               Capacité actuelle
             </Th>
-            <Th textAlign={"end"} p={2} pe={0}>
+            <Th textAlign={"end"} p={2} pe={0} fontSize={12}>
               Nouvelle capacité
             </Th>
             {coloration && (
               <>
-                <Th textAlign={"end"} p={2} pe={0}>
+                <Th textAlign={"end"} p={2} pe={0} fontSize={12}>
                   Capacité colorée actuelle
                 </Th>
-                <Th textAlign={"end"} p={2} pe={0}>
+                <Th textAlign={"end"} p={2} pe={0} fontSize={12}>
                   Nouvelle capacité colorée
                 </Th>
               </>
             )}
-            <Th textAlign={"end"} p={2} pe={0}>
+            <Th textAlign={"end"} p={2} pe={0} fontSize={12}>
               Écart
             </Th>
           </Tr>

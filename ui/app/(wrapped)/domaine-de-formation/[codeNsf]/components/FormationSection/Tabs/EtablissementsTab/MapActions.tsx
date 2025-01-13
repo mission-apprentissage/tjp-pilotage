@@ -61,7 +61,7 @@ export const MapActions = ({
               <MenuList>
                 <MenuItem
                   color="bluefrance.113"
-                  fontSize="14px"
+                  fontSize={14}
                   fontWeight={500}
                   gap={2}
                   onClick={() => handleOrderByChange("departement_commune")}
@@ -75,7 +75,7 @@ export const MapActions = ({
                 </MenuItem>
                 <MenuItem
                   color="bluefrance.113"
-                  fontSize="14px"
+                  fontSize={14}
                   fontWeight={500}
                   gap={2}
                   onClick={() => handleOrderByChange("libelle")}

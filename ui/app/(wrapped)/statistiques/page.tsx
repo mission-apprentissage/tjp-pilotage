@@ -1,7 +1,6 @@
 import { NotionAPI } from "notion-client";
 
 import { Doc } from "@/app/_components/NotionDoc";
-import { LandingFooter } from "@/app/(wrapped)/components/LandingFooter";
 
 export const revalidate = 60;
 
@@ -15,8 +14,7 @@ export default async function Statistiques() {
   const recordMap = await fetchData();
   return (
     <>
-      <Doc recordMap={recordMap} />
-      <LandingFooter />
+      <Doc recordMap={recordMap} pageTitle={"Statistiques - Orion"}/>
     </>
   );
 }

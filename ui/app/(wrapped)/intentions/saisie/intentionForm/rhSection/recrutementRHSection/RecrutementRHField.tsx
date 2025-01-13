@@ -11,8 +11,8 @@ export const RecrutementRHField = chakra(({ disabled, className }: { disabled?: 
   } = useFormContext<IntentionForms>();
 
   return (
-    <FormControl className={className} isInvalid={!!errors.recrutementRH} isRequired>
-      <FormLabel>Des recrutements ?</FormLabel>
+    <FormControl as="fieldset"  className={className} isInvalid={!!errors.recrutementRH} isRequired>
+      <FormLabel as="legend" >Des recrutements ?</FormLabel>
       <Controller
         name="recrutementRH"
         control={control}
@@ -22,6 +22,7 @@ export const RecrutementRHField = chakra(({ disabled, className }: { disabled?: 
         }}
         render={({ field: { onChange, value, onBlur, ref, disabled } }) => (
           <RadioGroup
+            id="recrutement"
             ms={6}
             isDisabled={disabled}
             as={Stack}

@@ -44,9 +44,9 @@ export const ColorationField = chakra(({ disabled, className }: { disabled?: boo
   const isColorationDisabled = !!libelleFCIL || disabled;
 
   return (
-    <FormControl className={className} isInvalid={!!errors.coloration} isRequired>
+    <FormControl as="fieldset" className={className} isInvalid={!!errors.coloration} isRequired>
       <Flex direction={"row"}>
-        <FormLabel>Coloration</FormLabel>
+        <FormLabel as="legend">Coloration</FormLabel>
         <GlossaireShortcut
           glossaireEntryKey={"coloration"}
           color="bluefrance.113"

@@ -48,8 +48,8 @@ export default function Home() {
                 fontWeight={700}
               >
                 <HStack alignItems="center" spacing="4px">
-                  <Icon icon="ri:barricade-fill" fontSize="12px" />
-                  <Text as="span" fontSize="14px" fontWeight={700} lineHeight="24px">
+                  <Icon icon="ri:barricade-fill" fontSize={12} />
+                  <Text as="span" fontSize={14} fontWeight={700} lineHeight="24px">
                     OUTIL EN CONSTRUCTION
                   </Text>
                 </HStack>
@@ -58,7 +58,7 @@ export default function Home() {
                 Orion : améliorer le parcours vers l’emploi <br />
                 des élèves de la voie professionnelle
               </Heading>
-              <Text fontSize="16px" display={{ base: "none", md: "block" }} padding="16px 16px 0 16px">
+              <Text fontSize={16} display={{ base: "none", md: "block" }} padding="16px 16px 0 16px">
                 Orion est une plateforme commune à tous les acteurs de la carte des formations des lycées
                 professionnels. Elle vous donne accès aux principales données éducatives de ces formations et aux
                 indicateurs InserJeunes (taux d’emploi à 6 mois, taux de poursuite d’études...) afin d’améliorer le
@@ -146,7 +146,7 @@ export default function Home() {
       <Hero variant="white">
         <Box paddingY="64px">
           <VStack spacing="48px">
-            <EditorialTitle>La voie professionnelle initiale scolaire en 2023</EditorialTitle>
+            <EditorialTitle headingLevel="h2">La voie professionnelle initiale scolaire en 2023</EditorialTitle>
             <Stack
               alignItems="start"
               justifyContent="center"
@@ -204,7 +204,7 @@ export default function Home() {
       </Hero>
       <Container maxWidth={"container.xl"} px={0}>
         <VStack paddingY="64px" spacing="48px" paddingX="24px">
-          <EditorialTitle>À propos d'Inserjeunes</EditorialTitle>
+          <EditorialTitle headingLevel="h2">À propos d'Inserjeunes</EditorialTitle>
           <Stack
             direction={{
               base: "column",
@@ -250,7 +250,7 @@ export default function Home() {
         </VStack>
       </Container>
       <VStack paddingY="64px" spacing="48px">
-        <EditorialTitle>Questions fréquentes</EditorialTitle>
+        <EditorialTitle headingLevel="h2">Questions fréquentes</EditorialTitle>
         <Box width="70%">
           <Accordion allowMultiple>
             <VStack width="100%" spacing="16px">

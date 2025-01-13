@@ -36,9 +36,7 @@ export const IndicateursSection = ({
       <Flex direction="column" align="space-between" flex={1}>
         <Box>
           <Heading as={"h1"} fontSize={"28px"}>
-            {libelleTerritoire}
-          </Heading>
-          <Heading as={"h2"} fontSize={"28px"}>
+            {libelleTerritoire}&nbsp;<br/>
             {libelleDiplome}
           </Heading>
         </Box>
@@ -60,7 +58,7 @@ export const IndicateursSection = ({
           sub={
             stats?.effectifEntree ? (
               <HStack>
-                <Text fontSize={"12px"} color={"grey.425"}>
+                <Text fontSize={12} color={"grey.425"}>
                   dont effectif en entrée {stats.effectifEntree}{" "}
                 </Text>
                 <GlossaireShortcut
