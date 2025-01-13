@@ -103,7 +103,7 @@ export const InformationHeader = ({ statut }: { statut?: DemandeStatutType }) =>
               }}
               mb={"auto"}
             >
-              <VisuallyHidden>Fermer</VisuallyHidden>
+              <VisuallyHidden fontSize={12}>Fermer</VisuallyHidden>
               <Icon icon="ri:close-fill" fontSize="24px" />
             </CloseButton>
           </Stack>

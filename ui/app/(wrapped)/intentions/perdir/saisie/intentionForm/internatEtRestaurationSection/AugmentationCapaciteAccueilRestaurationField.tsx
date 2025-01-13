@@ -12,8 +12,8 @@ export const AugmentationCapaciteAccueilRestaurationField = chakra(
     } = useFormContext<IntentionForms>();
 
     return (
-      <FormControl className={className} isInvalid={!!errors.augmentationCapaciteAccueilRestauration} isRequired>
-        <FormLabel>
+      <FormControl as="fieldset" className={className} isInvalid={!!errors.augmentationCapaciteAccueilRestauration} isRequired>
+        <FormLabel as="legend">
           Votre proposition est-elle susceptible d'augmenter les capacités d'accueil du service de restauration ?
         </FormLabel>
         <Controller

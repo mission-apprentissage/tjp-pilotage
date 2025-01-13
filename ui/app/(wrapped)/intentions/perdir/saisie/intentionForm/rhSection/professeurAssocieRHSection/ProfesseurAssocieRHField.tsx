@@ -24,9 +24,9 @@ export const ProfesseurAssocieRHField = chakra(
     } = useFormContext<IntentionForms>();
 
     return (
-      <FormControl className={className} isInvalid={!!errors.professeurAssocieRH} isRequired>
+      <FormControl as="fieldset" className={className} isInvalid={!!errors.professeurAssocieRH} isRequired>
         <Flex direction={"row"}>
-          <FormLabel>Un professeur associé ?</FormLabel>
+          <FormLabel as="legend">Un professeur associé ?</FormLabel>
           <GlossaireShortcut
             glossaireEntryKey={"professeur-associe"}
             color="bluefrance.113"

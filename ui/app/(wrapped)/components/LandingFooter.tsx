@@ -59,7 +59,7 @@ export const LandingFooter = () => {
             développe plusieurs services destinés à faciliter l’orientation et l’insertion des jeunes de la voie
             professionnelle
           </Text>
-          <HStack justifyContent="start" width="100%" spacing="8px 24px" fontWeight={700} fontSize="14px" wrap="wrap">
+          <HStack justifyContent="start" width="100%" spacing="8px 24px" fontWeight={700} fontSize={14} wrap="wrap">
             <LinkWithIcon href="https://gouvernement.fr">
               <Text as="span">gouvernement.fr</Text>
             </LinkWithIcon>
@@ -82,7 +82,7 @@ export const LandingFooter = () => {
       >
         <HStack
           width="100%"
-          fontSize="12px"
+          fontSize={12}
           color={"grey.425"}
           gap={{
             base: "8px 8px",
@@ -150,13 +150,13 @@ export const LandingFooter = () => {
           </Box>
         </HStack>
         <Flex justifyContent={"center"} width="100%">
-          <Text color={"grey.425"} fontSize="12px">
+          <Flex color={"grey.425"} fontSize={12}>
             Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont
-            proposés sous{" "}
+            proposés sous&nbsp;
             <LinkWithIcon href="https://github.com/etalab/licence-ouverte/blob/master/LO.md">
               licence etalab-2.0
             </LinkWithIcon>
-          </Text>
+          </Flex>
         </Flex>
       </Stack>
     </VStack>

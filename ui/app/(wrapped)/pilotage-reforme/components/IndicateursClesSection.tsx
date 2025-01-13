@@ -5,6 +5,7 @@ import {
   CardBody,
   Divider,
   Flex,
+  Heading,
   HStack,
   SimpleGrid,
   Skeleton,
@@ -286,11 +287,16 @@ const StatCard = ({
           justifyContent={tooltip ? "space-between" : "start"}
           mr="4"
           flex={1}
-          textTransform={"uppercase"}
-          color={"bluefrance.113"}
-          fontWeight={700}
         >
-          <Text>{label}</Text>
+          <Heading
+            as="h2"
+            fontSize={15}
+            fontWeight="500"
+            textTransform={"uppercase"}
+            color={"bluefrance.113"}
+          >
+            {label}
+          </Heading>
           {tooltip}
         </HStack>
         <Box fontWeight="bold" fontSize="40" color={"bluefrance.113"}>
@@ -331,16 +337,22 @@ const TauxTransfoCard = ({ tauxTransformation }: { tauxTransformation: number })
               alignItems="start"
             >
               <Box>
-                <Text fontSize="14px" fontWeight="500" lineHeight="24px" textTransform="uppercase">
+                <Heading
+                  as="h2"
+                  fontSize={15}
+                  fontWeight="500"
+                  lineHeight="24px"
+                  textTransform="uppercase"
+                >
                   Taux de transformation prévisionnel - Rentrée {NEXT_RENTREE}{" "}
-                </Text>
-                <Text fontSize="32px" fontWeight="700" lineHeight="40px">
+                </Heading>
+                <Heading as="h3" fontSize="32px" fontWeight="700" lineHeight="40px">
                   {formatNumber(tauxTransformation, 1)} %
-                </Text>
+                </Heading>
               </Box>
               <Box width="100%">
                 <ProgressBar percentage={percentage} />
-                <Text color={themeColors.grey[425]} fontSize="12px">
+                <Text color={themeColors.grey[425]} fontSize={12}>
                   {formatNumber(percentage, 1)}% de l'objectif
                 </Text>
               </Box>
@@ -363,9 +375,9 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
 
   return (
     <Flex direction={"column"} w="100%">
-      <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
+      <Heading as="h1" fontSize={20} fontWeight={700} lineHeight={"31px"}>
         INDICATEURS CLÉS DE LA RÉFORME
-      </Text>
+      </Heading>
       <VStack width="100%" spacing="18px" mt="12px">
         <TauxTransfoCard tauxTransformation={data?.tauxTransformation ?? 0} />
         <SimpleGrid spacing={3} columns={[2]} width="100%">

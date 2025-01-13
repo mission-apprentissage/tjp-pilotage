@@ -33,7 +33,7 @@ export const DefinitionTauxTransfoModal = ({ isOpen, onClose }: { isOpen: boolea
           <VStack width="100%" gap="24px">
             <Text
               fontWeight="700"
-              fontSize="14px"
+              fontSize={14}
               textTransform="uppercase"
               color={themeColors.bluefrance[113]}
               width="100%"
@@ -46,7 +46,7 @@ export const DefinitionTauxTransfoModal = ({ isOpen, onClose }: { isOpen: boolea
                 mx="10%"
                 backgroundColor={themeColors.bluefrance[975]}
                 width="80%"
-                fontSize="12px"
+                fontSize={12}
                 fontStyle="italic"
                 px="16px"
                 paddingTop="24px"

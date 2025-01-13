@@ -12,5 +12,5 @@ const fetchData = async () => {
 
 export default async function PolitiqueDeConfidentialite() {
   const recordMap = await fetchData();
-  return <Doc recordMap={recordMap} />;
+  return <Doc recordMap={recordMap} pageTitle={"Politique de confidentialité - Orion"}/>;
 }

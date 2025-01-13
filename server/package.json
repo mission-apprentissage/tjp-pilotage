@@ -66,7 +66,7 @@
     "node-cache": "^5.1.2",
     "nodemailer": "^6.9.15",
     "nodemailer-html-to-text": "^3.2.0",
-    "notion-to-md": "^3.1.1",
+    "notion-to-md": "^3.1.4",
     "openid-client": "^5.6.5",
     "pg": "^8.9.0",
     "pino": "^9.4.0",

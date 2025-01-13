@@ -1,4 +1,4 @@
-import { Flex, HStack, Text } from "@chakra-ui/react";
+import { Flex, Heading, HStack } from "@chakra-ui/react";
 
 import { ProgressBar } from "@/components/ProgressBar";
 import { themeDefinition } from "@/theme/theme";
@@ -37,9 +37,10 @@ export const NumberWithProgressBars = ({
     >
       <HStack width="100%" justifyContent="start" alignItems="start">
         {icon}
-        <Text
+        <Heading
+          as="h3"
           pb="8px"
-          fontSize="14px"
+          fontSize={14}
           fontStyle="normal"
           fontWeight="500"
           lineHeight="24px"
@@ -47,12 +48,12 @@ export const NumberWithProgressBars = ({
           color={themeColors.bluefrance[113]}
         >
           {title}
-        </Text>
+        </Heading>
         {tooltip}
       </HStack>
-      <Text fontSize="32px" fontWeight="800" color="grey.50">
+      <Heading as="h4" fontSize="32px" fontWeight="800" color="grey.50">
         {all}
-      </Text>
+      </Heading>
       <ProgressBar
         percentage={formatPercentageWithoutSign(demandeValidee / all)}
         rightLabel="Validées"

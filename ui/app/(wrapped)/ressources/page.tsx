@@ -14,5 +14,5 @@ const fetchData = async () => {
 
 export default async function Ressources() {
   const recordMap = await fetchData();
-  return <Doc recordMap={recordMap} />;
+  return <Doc recordMap={recordMap} pageTitle={"Ressources - Orion"}/>;
 }

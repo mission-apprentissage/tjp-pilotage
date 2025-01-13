@@ -62,7 +62,7 @@ export const InformationHeader = () => {
             <Icon icon="ri:information-fill" fontSize="24px" />
             <Text
               flexGrow={1}
-              fontSize="16px"
+              fontSize={16}
               fontWeight={700}
               display={{
                 base: "none",
@@ -75,7 +75,7 @@ export const InformationHeader = () => {
               </Link>
             </Text>
             <Text
-              fontSize="12px"
+              fontSize={12}
               display={{
                 base: "block",
                 md: "none",
@@ -97,8 +97,8 @@ export const InformationHeader = () => {
               width="auto"
               height="auto"
             >
-              <VisuallyHidden>Fermer</VisuallyHidden>
-              <Icon icon="ri:close-fill" fontSize="16px" />
+              <VisuallyHidden fontSize={12}>Fermer</VisuallyHidden>
+              <Icon icon="ri:close-fill" fontSize={16} />
             </CloseButton>
           </Stack>
         </Box>

@@ -66,20 +66,22 @@ export const AnimatedNumber = ({
         cancelAnimationFrame(animationFrame.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (animateOnViewportEnter && isInView) {
       animate(from, to);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInView]);
 
   return (
     <VStack ref={ref} width="240px" textAlign="center">
-      <Heading fontSize="40px">
+      <Heading as="h3" fontSize="40px">
         <NumberLabel number={formatNumber(number)} />
       </Heading>
-      <Text fontSize="14px">{subtitle}</Text>
+      <Text fontSize={14}>{subtitle}</Text>
     </VStack>
   );
 };

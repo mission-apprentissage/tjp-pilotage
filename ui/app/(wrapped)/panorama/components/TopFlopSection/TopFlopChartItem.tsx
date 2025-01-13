@@ -41,7 +41,7 @@ export const TopFlopChartItem = ({
         </Box>
       </Flex>
 
-      <PopoverContent _focusVisible={{ outline: "none" }} p="3" width="280px">
+      <PopoverContent _focusVisible={{ outline: "none" }} p="3" width="330px">
         <PopoverCloseButton />
         <FormationTooltipContent formation={formation} />
       </PopoverContent>

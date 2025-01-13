@@ -33,9 +33,9 @@ export const CmqImpliqueField = chakra(({ disabled, className }: { disabled?: bo
   if (!visible) return null;
 
   return (
-    <FormControl className={className} isInvalid={!!errors.cmqImplique} isRequired>
+    <FormControl as="fieldset" className={className} isInvalid={!!errors.cmqImplique} isRequired>
       <Flex direction={"row"}>
-        <FormLabel>Un CMQ est-il impliqué ?</FormLabel>
+        <FormLabel as="legend">Un CMQ est-il impliqué ?</FormLabel>
         <TooltipIcon
           mt={"1"}
           label={

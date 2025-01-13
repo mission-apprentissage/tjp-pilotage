@@ -58,70 +58,72 @@ export const FiltersSection = ({
               }
             }}
           />
-          <Select
-            placeholder="Région: Toutes"
-            onChange={(e) => handleRegionChange(e.target.value)}
-            bgColor={"white"}
-            value={currentFilters.codeRegion}
-            autoFocus={true}
-            borderWidth={"1px"}
-            borderStyle={"solid"}
-            borderColor={"grey.900"}
-            aria-label="Sélectionner une région"
-            flex={1}
-          >
-            {regionOptions?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-          <Select
-            placeholder="Académie: Toutes"
-            onChange={(e) => handleAcademieChange(e.target.value)}
-            bgColor={"white"}
-            value={currentFilters.codeAcademie}
-            autoFocus={true}
-            borderWidth={"1px"}
-            borderStyle={"solid"}
-            borderColor={"grey.900"}
-            aria-label="Sélectionner une académie"
-            flex={1}
-          >
-            {academieOptions?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-          <Select
-            placeholder="Département: Tous"
-            onChange={(e) => handleDepartementChange(e.target.value)}
-            bgColor={"white"}
-            value={currentFilters.codeDepartement}
-            autoFocus={true}
-            borderWidth={"1px"}
-            borderStyle={"solid"}
-            borderColor={"grey.900"}
-            aria-label="Sélectionner un département"
-            flex={1}
-          >
-            {departementOptions?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-          <Flex flex={"0 1 0%"} justifyContent={"center"} alignItems={"center"}>
-            <Button
-              variant="externalLink"
-              border={"none"}
-              leftIcon={<Icon icon={"ri:refresh-line"} />}
-              mt={"auto"}
-              onClick={handleResetFilters}
+          <Flex direction="row" gap={4} mt="auto">
+            <Select
+              placeholder="Région: Toutes"
+              onChange={(e) => handleRegionChange(e.target.value)}
+              bgColor={"white"}
+              value={currentFilters.codeRegion}
+              autoFocus={true}
+              borderWidth={"1px"}
+              borderStyle={"solid"}
+              borderColor={"grey.900"}
+              aria-label="Sélectionner une région"
+              flex={1}
             >
-              Réinitialiser
-            </Button>
+              {regionOptions?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+            <Select
+              placeholder="Académie: Toutes"
+              onChange={(e) => handleAcademieChange(e.target.value)}
+              bgColor={"white"}
+              value={currentFilters.codeAcademie}
+              autoFocus={true}
+              borderWidth={"1px"}
+              borderStyle={"solid"}
+              borderColor={"grey.900"}
+              aria-label="Sélectionner une académie"
+              flex={1}
+            >
+              {academieOptions?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+            <Select
+              placeholder="Département: Tous"
+              onChange={(e) => handleDepartementChange(e.target.value)}
+              bgColor={"white"}
+              value={currentFilters.codeDepartement}
+              autoFocus={true}
+              borderWidth={"1px"}
+              borderStyle={"solid"}
+              borderColor={"grey.900"}
+              aria-label="Sélectionner un département"
+              flex={1}
+            >
+              {departementOptions?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+            <Flex flex={"0 1 0%"} justifyContent={"center"} alignItems={"center"}>
+              <Button
+                variant="externalLink"
+                border={"none"}
+                leftIcon={<Icon icon={"ri:refresh-line"} />}
+                mt={"auto"}
+                onClick={handleResetFilters}
+              >
+                Réinitialiser
+              </Button>
+            </Flex>
           </Flex>
         </Flex>
       </Container>

@@ -27,10 +27,10 @@ const SingleValue = ({ ...props }: SingleValueProps<OptionType>) => {
   return (
     <components.SingleValue {...props}>
       <HStack>
-        <Text>
+        <Text fontSize={12}>
           {firstName} {lastName}{" "}
         </Text>
-        <Badge variant="info" size="sm">
+        <Badge variant="info" size="sm" fontSize={12}>
           {ROLES_LABELS[role](codeRegion).label}
         </Badge>
       </HStack>

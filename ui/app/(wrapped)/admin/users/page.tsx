@@ -153,44 +153,44 @@ export default () => {
           </Flex>
 
           <TableContainer overflowY="auto" flex={1}>
-            <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize="14px" gap="0">
+            <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize={14} gap="0">
               <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white">
                 <Tr>
-                  <Th w={0}><VisuallyHidden>Icône utilisateur</VisuallyHidden></Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("email")}>
+                  <Th w={0} fontSize={12}><VisuallyHidden>Icône utilisateur</VisuallyHidden></Th>
+                  <Th cursor="pointer" onClick={() => handleOrder("email")} fontSize={12}>
                     <OrderIcon {...order} column="email" />
                     {Columns.email}
                   </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("firstname")}>
+                  <Th cursor="pointer" onClick={() => handleOrder("firstname")} fontSize={12}>
                     <OrderIcon {...order} column="firstname" />
                     {Columns.firstname}
                   </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("lastname")}>
+                  <Th cursor="pointer" onClick={() => handleOrder("lastname")} fontSize={12}>
                     <OrderIcon {...order} column="lastname" />
                     {Columns.lastname}
                   </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("role")}>
+                  <Th cursor="pointer" onClick={() => handleOrder("role")} fontSize={12}>
                     <OrderIcon {...order} column="role" />
                     {Columns.role}
                   </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("fonction")}>
+                  <Th cursor="pointer" onClick={() => handleOrder("fonction")} fontSize={12}>
                     <OrderIcon {...order} column="role" />
                     {Columns.fonction}
                   </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("enabled")}>
+                  <Th cursor="pointer" onClick={() => handleOrder("enabled")} fontSize={12}>
                     <OrderIcon {...order} column="enabled" />
                     {Columns.enabled}
                   </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("libelleRegion")}>
+                  <Th cursor="pointer" onClick={() => handleOrder("libelleRegion")} fontSize={12}>
                     <OrderIcon {...order} column="libelleRegion" />
                     {Columns.libelleRegion}
                   </Th>
-                  <Th>{Columns.uais}</Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("createdAt")}>
+                  <Th fontSize={12}>{Columns.uais}</Th>
+                  <Th cursor="pointer" onClick={() => handleOrder("createdAt")} fontSize={12}>
                     <OrderIcon {...order} column="createdAt" />
                     {Columns.createdAt}
                   </Th>
-                  <Th isNumeric>actions</Th>
+                  <Th isNumeric fontSize={12}>actions</Th>
                 </Tr>
               </Thead>
               <Tbody>

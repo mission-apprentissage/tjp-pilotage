@@ -245,35 +245,35 @@ export const PageClient = () => {
         ) : data?.demandes.length ? (
           <>
             <TableContainer overflowY="auto" flex={1}>
-              <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" variant="striped" fontSize="14px" gap="0">
+              <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" variant="striped" fontSize={14} gap="0">
                 <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white" zIndex={"1"}>
                   <Tr>
-                    <Th cursor="pointer" onClick={() => handleOrder("updatedAt")}>
+                    <Th cursor="pointer" onClick={() => handleOrder("updatedAt")} fontSize={12}>
                       <OrderIcon {...order} column="updatedAt" />
                       {DEMANDES_COLUMNS.updatedAt}
                     </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("libelleFormation")}>
+                    <Th cursor="pointer" onClick={() => handleOrder("libelleFormation")} fontSize={12}>
                       <OrderIcon {...order} column="libelleFormation" />
                       {DEMANDES_COLUMNS.libelleFormation}
                     </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("libelleEtablissement")} w={400}>
+                    <Th cursor="pointer" onClick={() => handleOrder("libelleEtablissement")} w={400} fontSize={12}>
                       <OrderIcon {...order} column="libelleEtablissement" />
                       {DEMANDES_COLUMNS.libelleEtablissement}
                     </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("libelleDepartement")}>
+                    <Th cursor="pointer" onClick={() => handleOrder("libelleDepartement")} fontSize={12}>
                       <OrderIcon {...order} column="libelleDepartement" />
                       {DEMANDES_COLUMNS.libelleDepartement}
                     </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("statut")} textAlign={"center"}>
+                    <Th cursor="pointer" onClick={() => handleOrder("statut")} textAlign={"center"} fontSize={12}>
                       <OrderIcon {...order} column="statut" />
                       {DEMANDES_COLUMNS.statut}
                     </Th>
-                    <Th textAlign={"center"}>Actions</Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("typeDemande")} textAlign={"center"}>
+                    <Th textAlign={"center"} fontSize={12}>Actions</Th>
+                    <Th cursor="pointer" onClick={() => handleOrder("typeDemande")} textAlign={"center"} fontSize={12}>
                       <OrderIcon {...order} column="typeDemande" />
                       {DEMANDES_COLUMNS.typeDemande}
                     </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("userName")} w="15">
+                    <Th cursor="pointer" onClick={() => handleOrder("userName")} w="15" fontSize={12}>
                       <OrderIcon {...order} column="userName" />
                       {DEMANDES_COLUMNS.userName}
                     </Th>

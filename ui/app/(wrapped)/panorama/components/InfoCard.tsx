@@ -30,12 +30,12 @@ export const InfoCard = ({
   linkTracker: (filterName: string) => () => void;
 }) => {
   return (
-    <Card bg="grey.1000" padding={"1rem"}>
+    <Card bg="grey.1000" padding={2}>
       <CardBody>
         <Flex direction={"column"} justify={"space-between"} height={"100%"}>
           <Flex align="center">
             <Flex direction="column" align="flex-start" mr="4" flex={1} height="100%">
-              <Heading as="h4" fontSize={20}>
+              <Heading as="h3" fontSize={20}>
                 {title}
               </Heading>
               <Text flex={1} mt={2}>
@@ -83,7 +83,7 @@ export const InfoCard = ({
               </Button>
             )}
             {sourceText && (
-              <Text mt="auto" fontSize="xs" color="grey">
+              <Text mt="auto" fontSize="s" color="grey">
                 {sourceText}
               </Text>
             )}
