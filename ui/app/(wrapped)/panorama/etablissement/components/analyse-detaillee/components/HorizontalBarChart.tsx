@@ -148,6 +148,7 @@ export const HorizontalBarChart = ({
         },
       },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data]
   );
 
@@ -157,6 +158,7 @@ export const HorizontalBarChart = ({
       chartRef.current = echarts.init(containerRef.current);
     }
     chartRef.current.setOption(option, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (

@@ -169,6 +169,7 @@ export const EtablissementsProches = () => {
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 
   return (

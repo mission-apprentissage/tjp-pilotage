@@ -23,6 +23,7 @@ export function useStateParams<F extends object>({
       createParameterizedUrl(location.pathname, prefix ? { ...params, [prefix]: filters } : { ...params, ...filters }),
       { scroll: false }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   return [filters, setFilters];

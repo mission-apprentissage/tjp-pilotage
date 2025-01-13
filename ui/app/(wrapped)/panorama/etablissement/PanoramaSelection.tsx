@@ -14,6 +14,7 @@ export function PanoramaSelection({ wrongUai }: { readonly wrongUai?: string }) 
 
   useEffect(() => {
     if (uaisFilter) onUaiChanged(uaisFilter[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onUaiChanged = (uai: string) => {

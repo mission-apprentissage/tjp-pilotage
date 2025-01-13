@@ -48,6 +48,7 @@ export const ForgottenPasswordForm = () => {
 
   useEffect(() => {
     if (auth) router.replace("/");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
   return (

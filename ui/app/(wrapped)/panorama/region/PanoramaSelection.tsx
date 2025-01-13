@@ -19,6 +19,7 @@ export function PanoramaSelection({
 
   useEffect(() => {
     if (codeRegionFilter) onCodeRegionChanged(codeRegionFilter);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onCodeRegionChanged = (codeRegion: string) => {

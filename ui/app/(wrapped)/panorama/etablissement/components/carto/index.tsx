@@ -28,6 +28,7 @@ export const EtablissementMap = () => {
         width: mapContainer.current.clientWidth,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
