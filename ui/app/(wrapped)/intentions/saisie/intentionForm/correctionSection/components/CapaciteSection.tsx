@@ -77,6 +77,7 @@ export const CapaciteSection = ({ demande, disabled }: { demande: Intention; dis
       "capaciteScolaireColoree",
       demande?.correction?.capaciteScolaireColoree ?? demande?.capaciteScolaireColoree ?? 0
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const nouvellesPlacesScolaire = (() => {

@@ -251,6 +251,7 @@ export const CartoGraph = ({
         },
       ],
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [graphData, scope, getNameMap, getNameProperty]
   );
 
@@ -324,6 +325,7 @@ export const CartoGraph = ({
     } else {
       unSelectAll();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [option, graphData, codeRegionSelectionne, chartRef, handleClickOnSeries, handleClickOnBlankSpace]);
 
   useEffect(() => {
@@ -339,6 +341,7 @@ export const CartoGraph = ({
     } else {
       unSelectAll();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedScope, chartRef]);
 
   return (

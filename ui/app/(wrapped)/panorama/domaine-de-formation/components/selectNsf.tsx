@@ -1,5 +1,4 @@
 import { chakra, Flex, FormControl, FormLabel } from "@chakra-ui/react";
-import type { CSSProperties } from "react";
 import { useState } from "react";
 import type { CSSObjectWithLabel, StylesConfig } from "react-select";
 import Select from "react-select";
@@ -35,14 +34,12 @@ export const SelectNsf = chakra(
   ({
     defaultNsfs,
     defaultSelected = null,
-    hideLabel = false,
     className,
     isClearable = true,
     routeSelectedNsf,
   }: {
     defaultNsfs: NsfOptions;
     defaultSelected: NsfOption | null;
-    hideLabel?: boolean;
     className?: string;
     isClearable?: boolean;
     routeSelectedNsf: (selected: NsfOption) => void;
@@ -57,11 +54,6 @@ export const SelectNsf = chakra(
       if (selected) {
         routeSelectedNsf(selected);
       }
-    };
-
-    const labelStyle: CSSProperties = {
-      fontWeight: "bold",
-      display: hideLabel ? "none" : "block",
     };
 
     return (

@@ -5,6 +5,7 @@ import type { client } from "@/api.client";
 
 export type Query = (typeof client.inferArgs)["[GET]/etablissement/:uai/analyse-detaillee"]["query"];
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 const filtersSchema = z.object({
   codeNiveauDiplome: z.array(z.string()),
   voie: z.array(z.enum([...voie.options, "all"] as const)),

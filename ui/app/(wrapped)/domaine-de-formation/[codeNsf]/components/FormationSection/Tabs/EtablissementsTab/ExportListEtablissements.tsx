@@ -13,7 +13,16 @@ const extractDatas = (
   formation: Formation,
   domaineDeFormation: { codeNsf: string; libelleNsf: string }
 ) => {
-  const { libellesDispositifs, libelleEtablissement, commune, codeDepartement, secteur, isApprentissage, isScolaire, ...restEtablissement } = etablissement;
+  const {
+    libellesDispositifs,
+    libelleEtablissement,
+    commune,
+    codeDepartement,
+    secteur,
+    isApprentissage,
+    isScolaire,
+    ...restEtablissement
+  } = etablissement;
   const { libelle: libelleFormation, ...restFormation } = formation;
   const { codeNsf, libelleNsf, ...restDomaineDeFormation } = domaineDeFormation;
 

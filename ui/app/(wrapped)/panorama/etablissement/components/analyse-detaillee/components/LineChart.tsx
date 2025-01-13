@@ -147,6 +147,7 @@ export const LineChart = ({
       //@ts-ignore
       setMainKey(params.name);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, mainKey]);
 
   return (

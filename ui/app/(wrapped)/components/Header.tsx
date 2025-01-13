@@ -20,7 +20,11 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
   const queryClient = useQueryClient();
 
-  const { isOpen: isMenuDeconnexionOpen, onOpen: onMenuDeconnexionOpen, onClose: onMenuDeconnexionClose } = useDisclosure();
+  const {
+    isOpen: isMenuDeconnexionOpen,
+    onOpen: onMenuDeconnexionOpen,
+    onClose: onMenuDeconnexionClose
+  } = useDisclosure();
 
   const logout = async () => {
     await client.ref("[POST]/auth/logout").query({});

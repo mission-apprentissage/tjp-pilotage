@@ -43,6 +43,7 @@ export function Map({ uai, height, width }: MapProps) {
     if (!isLoading && etablissement) {
       setEtablissementMap(etablissement);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [etablissement, isLoading]);
 
   if (isLoading || !etablissementMap) {
