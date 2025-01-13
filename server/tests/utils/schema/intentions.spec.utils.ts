@@ -73,7 +73,7 @@ export function createIntentionBuilder(
 
       return createIntentionBuilder(user, result);
     },
-    toJSON: () => cleanNull(intention),
+    build: () => cleanNull(intention),
   };
 }
 

@@ -16,4 +16,4 @@ export const DemandeStatutEnum = DemandeStatutZodType.Enum;
 
 export type DemandeStatutType = z.infer<typeof DemandeStatutZodType>;
 
-export type DemandeStatutTypeSansSupprimee = Exclude<DemandeStatutType, "supprimée">;
+export type DemandeStatutWithoutSupprimee = Exclude<DemandeStatutType, "supprimée">;

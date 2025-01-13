@@ -1,14 +1,14 @@
-import type { Intention } from "@tests/intentions.spec.utils";
+import { usePg } from "@tests/utils/pg.test.utils";
+import type { Intention } from "@tests/utils/schema/intentions.spec.utils";
 import {
   clearIntentions,
   createIntentionBuilder,
-} from "@tests/intentions.spec.utils";
-import { usePg } from "@tests/pg.test.utils";
+} from "@tests/utils/schema/intentions.spec.utils";
 import {
   clearUsers,
   createUserBuilder,
   generateAuthCookie,
-} from "@tests/users.spec.utils";
+} from "@tests/utils/schema/users.spec.utils";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import type { IResErrorJson } from "shared/models/errors";
 import type { ROUTES } from "shared/routes/routes";
@@ -47,7 +47,7 @@ describe("[POST]/intention/submit", () => {
   });
 
   it("doit retourner une erreur 401 si l'utilisateur n'est pas authentifié", async () => {
-    const intention = createIntentionBuilder(adminUser).toJSON();
+    const intention = createIntentionBuilder(adminUser).build();
 
     const response = await submitIntention(app, intention);
 
@@ -57,7 +57,7 @@ describe("[POST]/intention/submit", () => {
   it("doit retourner une erreur 403 si l'utilisateur n'a pas un rôle lui permettant de soumettre une intention", async () => {
     const user = await createUserBuilder().withRole("invite").create();
 
-    const intention = await createIntentionBuilder(user).toJSON();
+    const intention = await createIntentionBuilder(user).build();
 
     const response = await submitIntention(app, intention, user);
 
@@ -67,7 +67,7 @@ describe("[POST]/intention/submit", () => {
   it("doit retourner une erreur 400 dans le cas ou le code uai n'est pas valide", async () => {
     const intention = createIntentionBuilder(adminUser)
       .withUai("1234567890")
-      .toJSON();
+      .build();
 
     const response = await submitIntention(app, intention, adminUser);
 
@@ -90,7 +90,7 @@ describe("[POST]/intention/submit", () => {
         .withCurrentCampagneId()
     ).injectInDB();
 
-    const response = await submitIntention(app, intention.toJSON(), perdir);
+    const response = await submitIntention(app, intention.build(), perdir);
 
     expect(response.statusCode).toBe(403);
   });
@@ -100,12 +100,12 @@ describe("[POST]/intention/submit", () => {
       await (
         await createIntentionBuilder(adminUser).withCurrentCampagneId()
       ).injectInDB()
-    ).toJSON();
+    ).build();
 
     const sameIntentionAsExisting = createIntentionBuilder(adminUser, intention)
       .withId()
       .withNumero()
-      .toJSON();
+      .build();
     const response = await submitIntention(
       app,
       sameIntentionAsExisting,
@@ -119,7 +119,7 @@ describe("[POST]/intention/submit", () => {
   it("doit créer une nouvelle intention avec succès", async () => {
     const intention = (
       await createIntentionBuilder(adminUser).withCurrentCampagneId()
-    ).toJSON();
+    ).build();
 
     const response = await submitIntention(app, intention, adminUser);
 
@@ -136,13 +136,13 @@ describe("[POST]/intention/submit", () => {
       await (
         await createIntentionBuilder(adminUser).withCurrentCampagneId()
       ).injectInDB()
-    ).toJSON();
+    ).build();
     const intentionWithStatutProposition = createIntentionBuilder(
       adminUser,
       intention
     )
       .withStatut("proposition")
-      .toJSON();
+      .build();
 
     const response = await submitIntention(
       app,
@@ -163,13 +163,13 @@ describe("[POST]/intention/submit", () => {
       await (
         await createIntentionBuilder(adminUser).withCurrentCampagneId()
       ).injectInDB()
-    ).toJSON();
+    ).build();
     const intentionWithStatutProposition = createIntentionBuilder(
       adminUser,
       intention
     )
       .withStatut("proposition")
-      .toJSON();
+      .build();
 
     const response = await submitIntention(
       app,
@@ -186,13 +186,13 @@ describe("[POST]/intention/submit", () => {
   });
 
   describe("ouverture_nette", () => {
-    it("le nombre de places ouvertes ne peut pas être égale à 0", async () => {
+    it("doit retourner une erreur si le nombre de places ouvertes est égale de zero", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
           typeDemande: "ouverture_nette",
           capaciteScolaire: 0,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -202,13 +202,13 @@ describe("[POST]/intention/submit", () => {
       });
     });
 
-    it("le nombre de places ouvertes doit être supérieur à 0", async () => {
+    it("doit être valide si le nombre de places ouvertes est supérieur à 0", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
           typeDemande: "ouverture_nette",
           capaciteScolaire: 1,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -217,13 +217,13 @@ describe("[POST]/intention/submit", () => {
   });
 
   describe("fermeture", () => {
-    it("la future capacité scolaire doit être égale à 0", async () => {
+    it("doit retourner une erreur si la capacité scolaire est supérieure à 0", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
           typeDemande: "fermeture",
           capaciteScolaire: 1,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -235,14 +235,14 @@ describe("[POST]/intention/submit", () => {
       });
     });
 
-    it("la future capacité en apprentissage doit être égale à 0", async () => {
+    it("doit retourner une erreur si la capacité en apprentissage est supérieur à zéro", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
           typeDemande: "fermeture",
           capaciteScolaire: 0,
           capaciteApprentissage: 1,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -254,7 +254,7 @@ describe("[POST]/intention/submit", () => {
       });
     });
 
-    it("la future capacité scolaire colorée doit être égale à 0", async () => {
+    it("doit retourner une erreur si la capacité scolaire colorée est supérieur à zéro", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
           typeDemande: "fermeture",
@@ -262,7 +262,7 @@ describe("[POST]/intention/submit", () => {
           capaciteApprentissage: 0,
           capaciteScolaireColoree: 1,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -276,7 +276,7 @@ describe("[POST]/intention/submit", () => {
       });
     });
 
-    it("la future capacité en apprentissage colorée doit être égale à 0", async () => {
+    it("doit retourner une erreur si la capacité en apprentissage colorée est supérieur à zéro", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
           typeDemande: "fermeture",
@@ -285,7 +285,7 @@ describe("[POST]/intention/submit", () => {
           capaciteScolaireColoree: 0,
           capaciteApprentissageColoree: 1,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -305,12 +305,12 @@ describe("[POST]/intention/submit", () => {
           typeDemande: "fermeture",
           capaciteScolaire: 0,
           capaciteScolaireActuelle: 10,
-          capaciteApprentissageActuelle: 0,
+          capaciteApprentissageActuelle: 3,
           capaciteApprentissage: 0,
           capaciteScolaireColoree: 0,
           capaciteApprentissageColoree: 0,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -319,14 +319,14 @@ describe("[POST]/intention/submit", () => {
   });
 
   describe("augmentation_nette", () => {
-    it("la future capacité scolaire doit être supérieure ou égale à la capacité actuelle", async () => {
+    it("doit retourner une erreur si la capacité scolaire est inférieur à la capacité actuelle", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
           typeDemande: "augmentation_nette",
           capaciteScolaireActuelle: 10,
           capaciteScolaire: 5,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -338,7 +338,7 @@ describe("[POST]/intention/submit", () => {
       });
     });
 
-    it("la somme des futures capacités doit être supérieure à la somme des capacités actuelles", async () => {
+    it("doit retourner une erreur si la somme des futures capacités est inférieur à la somme des capacités actuelles", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
           typeDemande: "augmentation_nette",
@@ -347,7 +347,7 @@ describe("[POST]/intention/submit", () => {
           capaciteScolaire: 10,
           capaciteApprentissage: 5,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -366,7 +366,7 @@ describe("[POST]/intention/submit", () => {
           capaciteScolaire: 15, // Augmentation de 5
           capaciteApprentissage: 5, // Reste identique
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -382,7 +382,7 @@ describe("[POST]/intention/submit", () => {
           capaciteScolaire: 10, // Reste identique
           capaciteApprentissage: 10, // Augmentation de 5
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -398,7 +398,7 @@ describe("[POST]/intention/submit", () => {
           capaciteScolaire: 15, // Augmentation de 5
           capaciteApprentissage: 10, // Augmentation de 5
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -407,14 +407,14 @@ describe("[POST]/intention/submit", () => {
   });
 
   describe("diminution", () => {
-    it("la future capacité scolaire doit être inférieure à la capacité actuelle", async () => {
+    it("doit retourner une erreur si la capacité scolaire est supérieur à la capacité actuelle", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
           typeDemande: "diminution",
           capaciteScolaireActuelle: 10,
           capaciteScolaire: 15,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -426,7 +426,7 @@ describe("[POST]/intention/submit", () => {
       });
     });
 
-    it("la somme des futures capacités doit être inférieure à la somme des capacités actuelles", async () => {
+    it("doit retourner une erreur si la somme des futures capacités est supérieur à la somme des capacités actuelles", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
           typeDemande: "diminution",
@@ -435,7 +435,7 @@ describe("[POST]/intention/submit", () => {
           capaciteScolaire: 8,
           capaciteApprentissage: 8, // La somme finale (16) est supérieure à la somme initiale (15)
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -456,7 +456,7 @@ describe("[POST]/intention/submit", () => {
           capaciteScolaire: 5,
           capaciteApprentissage: 5,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -474,7 +474,7 @@ describe("[POST]/intention/submit", () => {
           capaciteScolaire: 0,
           capaciteApprentissage: 0,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -499,7 +499,7 @@ describe("[POST]/intention/submit", () => {
           capaciteScolaire: 12,
           capaciteApprentissage: 7,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -518,7 +518,7 @@ describe("[POST]/intention/submit", () => {
           capaciteScolaire: 5, // Diminution de 5
           capaciteApprentissage: 10, // Augmentation de 5
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 
@@ -534,7 +534,7 @@ describe("[POST]/intention/submit", () => {
           capaciteScolaire: 5,
           capaciteApprentissage: 15,
         }).withCurrentCampagneId()
-      ).toJSON();
+      ).build();
 
       const response = await submitIntention(app, intention, adminUser);
 

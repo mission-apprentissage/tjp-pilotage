@@ -7,6 +7,7 @@ import config from "@/config";
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
+import { cleanNull } from "@/utils/noNull";
 
 type InsertableUser = Insertable<DB["user"]> & { role?: Role };
 
@@ -33,6 +34,7 @@ export function createUserBuilder(options: Partial<InsertableUser> = {}) {
 
       return user as RequestUser;
     },
+    build: () => cleanNull(defaultUser),
   };
 }
 

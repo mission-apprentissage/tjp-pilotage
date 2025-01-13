@@ -1,4 +1,4 @@
-import { usePg } from "@tests/pg.test.utils";
+import { usePg } from "@tests/utils/pg.test.utils";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import type { Server } from "@/server/server.js";
