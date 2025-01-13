@@ -1,7 +1,7 @@
-import { clearIntentions, createIntentionBuilder } from "@tests/intentions.spec.utils";
-import { usePg } from "@tests/pg.test.utils";
-import { createUserBuilder, generateAuthCookie } from "@tests/users.spec.utils";
-import type { DemandeStatutType, DemandeStatutTypeSansSupprimee } from "shared/enum/demandeStatutEnum";
+import { usePg } from "@tests/utils/pg.test.utils";
+import { clearIntentions, createIntentionBuilder } from "@tests/utils/schema/intentions.spec.utils";
+import { createUserBuilder, generateAuthCookie } from "@tests/utils/schema/users.spec.utils";
+import type { DemandeStatutType, DemandeStatutWithoutSupprimee } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { IResError } from "shared/models/errors";
 import type { ROUTES } from "shared/routes/routes";
@@ -174,7 +174,7 @@ describe("[GET]/intentions/count", () => {
               cfd: data.cfd ?? "32031309"
             }).withCurrentCampagneId())
               .injectInDB())
-              .toJSON();
+              .build();
 
             if (data.suiviParUtilisateur) {
               await createSuiviQuery({
@@ -210,7 +210,7 @@ describe("[GET]/intentions/count", () => {
         verifierResultat: (result: Response) => {
           expect(responseBody).toEqual(result);
         },
-        verifierNombreParStatut: (statut: DemandeStatutTypeSansSupprimee, nombre: number) => {
+        verifierNombreParStatut: (statut: DemandeStatutWithoutSupprimee, nombre: number) => {
           expect((responseBody as Response)[statut]).toBe(nombre);
         },
         verifierNombreTotal: (nombre: number) => {

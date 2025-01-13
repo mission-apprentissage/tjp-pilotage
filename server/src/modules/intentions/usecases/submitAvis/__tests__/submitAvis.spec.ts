@@ -1,12 +1,9 @@
-import type { Avis } from "@tests/avis.spec.utils";
-import { buildAvis } from "@tests/avis.spec.utils";
-import type {
-  Intention} from "@tests/intentions.spec.utils";
-import {
-  createIntentionBuilder
-} from "@tests/intentions.spec.utils";
-import { usePg } from "@tests/pg.test.utils";
-import { createUserBuilder, generateAuthCookie } from "@tests/users.spec.utils";
+import { usePg } from "@tests/utils/pg.test.utils";
+import type { Avis } from "@tests/utils/schema/avis.spec.utils";
+import { buildAvis } from "@tests/utils/schema/avis.spec.utils";
+import type { Intention } from "@tests/utils/schema/intentions.spec.utils";
+import { createIntentionBuilder } from "@tests/utils/schema/intentions.spec.utils";
+import { createUserBuilder, generateAuthCookie } from "@tests/utils/schema/users.spec.utils";
 import type { IResError } from "shared/models/errors";
 import type { ROUTES } from "shared/routes/routes";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
@@ -134,7 +131,7 @@ describe("[POST]/intention/avis/submit", () => {
               await (
                 await createIntentionBuilder(user, data).withCurrentCampagneId()
               ).injectInDB()
-            ).toJSON();
+            ).build();
 
             console.log(intention);
           }

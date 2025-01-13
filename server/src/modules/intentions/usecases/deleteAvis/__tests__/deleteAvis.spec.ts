@@ -1,9 +1,9 @@
-import type { Avis } from "@tests/avis.spec.utils";
-import { buildAvis, clearAvis } from "@tests/avis.spec.utils";
-import type { Intention } from "@tests/intentions.spec.utils";
-import { createIntentionBuilder } from "@tests/intentions.spec.utils";
-import { usePg } from "@tests/pg.test.utils";
-import { createUserBuilder, generateAuthCookie } from "@tests/users.spec.utils";
+import { usePg } from "@tests/utils/pg.test.utils";
+import type { Avis } from "@tests/utils/schema/avis.spec.utils";
+import { buildAvis, clearAvis } from "@tests/utils/schema/avis.spec.utils";
+import type { Intention } from "@tests/utils/schema/intentions.spec.utils";
+import { createIntentionBuilder } from "@tests/utils/schema/intentions.spec.utils";
+import { createUserBuilder, generateAuthCookie } from "@tests/utils/schema/users.spec.utils";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import type { RequestUser } from "@/modules/core/model/User";
@@ -134,7 +134,7 @@ describe("[DELETE]/intention/avis/:id", () => {
               await (
                 await createIntentionBuilder(user, data).withCurrentCampagneId()
               ).injectInDB()
-            ).toJSON();
+            ).build();
           }
         },
         intentionInexistante: async () => {
