@@ -42,7 +42,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
       formationSpecifique: "Formation spécifique",
       codeDispositif: "Code Dispositif",
       libelleDispositif: "Dispositif",
-      niveauDiplome: "Diplôme",
+      libelleNiveauDiplome: "Diplôme",
     },
   },
   // demande
@@ -176,7 +176,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
       libelleNsf: "Domaine de formation (NSF)",
       libelleFormation: "Formation",
       formationSpecifique: "Formation spécifique",
-      niveauDiplome: "Diplôme",
+      libelleNiveauDiplome: "Diplôme",
     },
   },
   // demande
@@ -278,7 +278,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
     options: {
       libelleNsf: "Domaine de formation (NSF)",
       libelleFormation: "Formation",
-      niveauDiplome: "Diplôme",
+      libelleNiveauDiplome: "Diplôme",
     },
   },
   // demande

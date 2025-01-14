@@ -155,12 +155,12 @@ export const HeadLineContent = ({
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
-        colonne={"niveauDiplome"}
+        colonne={"libelleNiveauDiplome"}
         onClick={handleOrder}
-        bgColor={getCellColor("niveauDiplome")}
+        bgColor={getCellColor("libelleNiveauDiplome")}
       >
-        <OrderIcon {...order} column="niveauDiplome" />
-        {STATS_DEMANDES_COLUMNS.niveauDiplome}
+        <OrderIcon {...order} column="libelleNiveauDiplome" />
+        {STATS_DEMANDES_COLUMNS.libelleNiveauDiplome}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}

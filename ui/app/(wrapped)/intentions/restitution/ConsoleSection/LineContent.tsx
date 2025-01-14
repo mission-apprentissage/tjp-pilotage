@@ -161,8 +161,12 @@ export const LineContent = ({
       >
         <BadgesFormationSpecifique formationSpecifique={demande.formationSpecifique} />
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"niveauDiplome"} bgColor={getCellColor("niveauDiplome")}>
-        {demande.niveauDiplome}
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleNiveauDiplome"}
+        bgColor={getCellColor("libelleNiveauDiplome")}
+      >
+        {demande.libelleNiveauDiplome}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
