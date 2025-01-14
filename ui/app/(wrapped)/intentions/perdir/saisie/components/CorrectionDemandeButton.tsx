@@ -36,6 +36,7 @@ import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { client } from "@/api.client";
 import type { MotifCorrectionCampagne } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
 import { MOTIFS_CORRECTION_LABELS } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
+import { isTypeAjustement } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { feature } from "@/utils/feature";
 import { usePermission } from "@/utils/security/usePermission";
 
@@ -100,7 +101,10 @@ export const CorrectionDemandeButton = chakra(
     const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
 
     const showCorrectionButton =
-      feature.correction && intention.statut === DemandeStatutEnum["demande validée"] && hasPermissionSubmitIntention;
+      feature.correction &&
+      intention.statut === DemandeStatutEnum["demande validée"] &&
+      hasPermissionSubmitIntention &&
+      !isTypeAjustement(intention.typeDemande);
 
     return (
       <>
