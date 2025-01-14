@@ -87,7 +87,7 @@ export const ExportListEtablissements = ({
   const onExportCsv = async () => {
     if (!etablissements.length) return;
 
-    trackEvent("domaine-de-formation-etablissements:export-csv");
+    trackEvent("domaine-de-formation:etablissements:export-csv");
 
     downloadCsv(
       formatExportFilename("domaine-de-formation_etablissements"),
@@ -99,7 +99,7 @@ export const ExportListEtablissements = ({
   const onExportExcel = async () => {
     if (!etablissements.length) return;
 
-    trackEvent("domaine-de-formation-etablissements:export-excel");
+    trackEvent("domaine-de-formation:etablissements:export-excel");
 
     downloadExcel(
       formatExportFilename("domaine-de-formation_etablissements"),

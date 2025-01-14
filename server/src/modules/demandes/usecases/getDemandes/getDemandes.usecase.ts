@@ -23,7 +23,6 @@ const getDemandesFactory =
         deps.getCampagne(anneeCampagne),
         deps.getFilters(activeFilters),
       ]);
-      console.log(demandes);
 
       return { ...demandes, currentCampagne, campagne, filters };
     };
