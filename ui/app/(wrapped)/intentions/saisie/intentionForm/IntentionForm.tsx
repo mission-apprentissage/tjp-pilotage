@@ -137,6 +137,17 @@ export const IntentionForm = ({
     return DemandeStatutEnum["projet de demande"];
   };
 
+  const getLabelSubmit = (
+    formId: string | undefined,
+    statut: DemandeStatutType,
+  ): string => {
+    if (statut === DemandeStatutEnum["demande validée"]) {
+      return "Valider ma demande";
+    }
+    if(formId) return "Sauvegarder les modifications";
+    return "Enregistrer le projet de demande";
+  };
+
   useEffect(() => {
     if (isCFDUaiSectionValid(getValues())) {
       submitCFDUAISection();
@@ -287,7 +298,7 @@ export const IntentionForm = ({
                             )}
                             leftIcon={<CheckIcon />}
                           >
-                            {formId ? "Sauvegarder les modifications" : "Enregistrer le projet de demande"}
+                            {getLabelSubmit(formId, getStatutSubmit(getValues()))}
                           </Button>
                         </Box>
                       }
