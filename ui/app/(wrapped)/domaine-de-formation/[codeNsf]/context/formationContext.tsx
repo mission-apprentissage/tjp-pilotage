@@ -1,5 +1,6 @@
 "use client";
 
+import { usePlausible } from "next-plausible";
 import { createContext, useContext, useMemo } from "react";
 import type { ScopeZone } from "shared";
 
@@ -52,6 +53,7 @@ type FormationContextProps = {
 export const FormationContext = createContext<FormationContextType>({} as FormationContextType);
 
 export function FormationContextProvider({ children, value, defaultCfd }: Readonly<FormationContextProps>) {
+  const trackEvent = usePlausible();
   const [currentFilters, setCurrentFilters] = useStateParams<Filters>({
     defaultValues: {
       presence: "",
@@ -67,6 +69,10 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
   });
 
   const handleResetFilters = () => {
+    trackEvent("domaine-de-formation:filtre", {
+      props: { filter_name: "reset" },
+    });
+
     setCurrentFilters((prev) => ({
       ...prev,
       codeRegion: "",
@@ -75,7 +81,11 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
     }));
   };
 
-  const handleRegionChange = (codeRegion: string) =>
+  const handleRegionChange = (codeRegion: string) =>{
+    trackEvent("domaine-de-formation:filtre", {
+      props: { filter_name: "codeRegion" },
+    });
+
     setCurrentFilters((prev) => ({
       ...prev,
       codeRegion,
@@ -85,9 +95,13 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
         ...prev.etab,
         bbox: undefined,
       },
-    }));
+    }));};
 
   const handleAcademieChange = (codeAcademie: string) => {
+    trackEvent("domaine-de-formation:filtre", {
+      props: { filter_name: "codeAcademie" },
+    });
+
     const academie = value.academies.find((a) => a.value === codeAcademie);
 
     if (academie) {
@@ -115,6 +129,10 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
   };
 
   const handleDepartementChange = (codeDepartement: string) => {
+    trackEvent("domaine-de-formation:filtre", {
+      props: { filter_name: "codeDepartement" },
+    });
+
     const departement = value.departements.find((d) => d.value === codeDepartement);
 
     if (departement) {
@@ -141,6 +159,10 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
   };
 
   const handlePresenceChange = (presence: Presence) => {
+    trackEvent("domaine-de-formation:filtre", {
+      props: { filter_name: "presence" },
+    });
+
     setCurrentFilters((prev) => ({
       ...prev,
       presence,
@@ -148,6 +170,10 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
   };
 
   const handleVoieChange = (voie: Voie) => {
+    trackEvent("domaine-de-formation:filtre", {
+      props: { filter_name: "voie" },
+    });
+
     setCurrentFilters((prev) => ({
       ...prev,
       voie,
@@ -155,6 +181,10 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
   };
 
   const handleTabFormationChange = (formationTab: FormationTab) => {
+    trackEvent("domaine-de-formation:filtre", {
+      props: { filter_name: "formationTab" },
+    });
+
     setCurrentFilters((prev) => ({
       ...prev,
       formationTab,
@@ -169,6 +199,10 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
   };
 
   const handleViewChange = (view: EtablissementsView) => {
+    trackEvent("domaine-de-formation:etablissements:view", {
+      props: { view },
+    });
+
     setCurrentFilters((prev) => ({
       ...prev,
       etab: { ...prev.etab, view },
@@ -183,6 +217,10 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
   };
 
   const handleCfdChange = (cfd: string) => {
+    trackEvent("domaine-de-formation:cfd", {
+      props: { cfd },
+    });
+
     setCurrentFilters((prev) => ({
       ...prev,
       cfd,
