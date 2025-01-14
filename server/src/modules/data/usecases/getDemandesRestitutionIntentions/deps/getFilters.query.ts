@@ -6,7 +6,8 @@ import { VoieEnum } from "shared/enum/voieEnum";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
-import type { Filters } from "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.usecase";
+import type { Filters } from
+  "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.usecase";
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
 import {
   isRestitutionIntentionRegionVisible,
@@ -153,7 +154,6 @@ export const getFilters = async ({
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
-    .innerJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
     .innerJoin("departement", "departement.codeRegion", "demande.codeRegion")
     .innerJoin("academie", "academie.codeRegion", "demande.codeRegion")
     .innerJoin("campagne", "campagne.id", "demande.campagneId")
