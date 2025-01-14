@@ -13,7 +13,6 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
-import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { SearchInput } from "@/components/SearchInput";
@@ -27,7 +26,7 @@ import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDES_COLUMN";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import type { STATS_DEMANDES_COLUMNS_OPTIONAL } from "./STATS_DEMANDES_COLUMN";
-import { STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
+import { STATS_DEMANDES_COLUMNS, STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
 import type {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,
@@ -296,7 +295,7 @@ export default () => {
     };
 
     const columns = {
-      ...FORMATION_ETABLISSEMENT_COLUMNS,
+      ...STATS_DEMANDES_COLUMNS,
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
