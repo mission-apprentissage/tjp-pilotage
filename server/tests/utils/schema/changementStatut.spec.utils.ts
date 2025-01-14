@@ -2,6 +2,7 @@
 // et de récupérer un changement de statut
 import type { Insertable } from "kysely";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
@@ -14,7 +15,8 @@ export function buildChangementStatut(user?: RequestUser, defaultChangementStatu
   const changementStatut: ChangementStatut = {
     id: defaultChangementStatut.id ?? generateId(),
     intentionNumero: defaultChangementStatut.intentionNumero ?? "",
-    statut: defaultChangementStatut.statut ?? "brouillon",
+    statut: defaultChangementStatut.statut ?? DemandeStatutEnum.brouillon,
+    statutPrecedent: defaultChangementStatut.statutPrecedent ?? DemandeStatutEnum.brouillon,
     updatedAt: defaultChangementStatut.updatedAt ?? new Date(),
     createdBy: defaultChangementStatut.createdBy ?? user?.id,
   };
