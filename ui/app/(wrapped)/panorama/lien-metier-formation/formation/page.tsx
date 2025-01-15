@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 import type { client } from "@/api.client";
 import { themeDefinition } from "@/theme/theme";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 
 import { AsyncFormationSearch } from "./components/AsyncFormationSearch";
 import { AsyncNsfSearch } from "./components/AsyncNsfSearch";
@@ -55,7 +55,7 @@ const DashboardFormation = () => {
   const onUpdateNsf = (nsf?: NsfOption) => {
     trackEvent("lien-metier-formation/formation:select-nsf");
     router.replace(
-      createParametrizedUrl(location.pathname, {
+      createParameterizedUrl(location.pathname, {
         domaine_formation: nsf ? encodeURI(nsf.label) : undefined,
         code_domaine_formation: nsf ? encodeURI(nsf.value) : undefined,
         formation: undefined,
@@ -68,7 +68,7 @@ const DashboardFormation = () => {
     trackEvent("lien-metier-formation/formation:select-formation");
     if (formation) {
       router.replace(
-        createParametrizedUrl(location.pathname, {
+        createParameterizedUrl(location.pathname, {
           domaine_formation: selectedNsf ? encodeURI(selectedNsf.label) : undefined,
           code_domaine_formation: selectedNsf ? encodeURI(selectedNsf.value) : undefined,
           formation: encodeURI(formation.label),
@@ -81,7 +81,7 @@ const DashboardFormation = () => {
 
     if (selectedNsf) {
       router.replace(
-        createParametrizedUrl(location.pathname, {
+        createParameterizedUrl(location.pathname, {
           domaine_formation: encodeURI(selectedNsf.label),
           code_domaine_formation: encodeURI(selectedNsf.value),
           formation: undefined,
@@ -92,7 +92,7 @@ const DashboardFormation = () => {
     }
 
     router.replace(
-      createParametrizedUrl(location.pathname, {
+      createParameterizedUrl(location.pathname, {
         domaine_formation: undefined,
         code_domaine_formation: undefined,
         formation: undefined,

@@ -8,7 +8,7 @@ import type {
 } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { Callout } from "@/components/Callout";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 
 export const DonneesIndisponiblesSection = ({
   dimensions,
@@ -33,7 +33,7 @@ export const DonneesIndisponiblesSection = ({
         actionButton={
           <Button
             as={NextLink}
-            href={createParametrizedUrl("/console/formations", {
+            href={createParameterizedUrl("/console/formations", {
               filters: {
                 cfd: [currentFormation?.cfd ?? ""],
                 codeDispositif: [currentFormation?.codeDispositif ?? ""],
@@ -63,7 +63,7 @@ export const DonneesIndisponiblesSection = ({
         actionButton={
           <Button
             as={NextLink}
-            href={createParametrizedUrl("/console/formations", {
+            href={createParameterizedUrl("/console/formations", {
               filters: {
                 cfd: [currentFormation?.cfd ?? ""],
                 codeDispositif: [currentFormation?.codeDispositif ?? ""],
@@ -93,7 +93,7 @@ export const DonneesIndisponiblesSection = ({
         actionButton={
           <Button
             as={NextLink}
-            href={createParametrizedUrl("/console/formations", {
+            href={createParameterizedUrl("/console/formations", {
               filters: {
                 cfd: [currentFormation?.cfd ?? ""],
                 codeDispositif: [currentFormation?.codeDispositif ?? ""],

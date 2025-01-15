@@ -1,7 +1,6 @@
 import fs from "node:fs";
 
 import { logspath } from "@/basepath";
-import { __dirname } from "@/utils/esmUtils";
 
 type Logs = string[];
 let logsReg: Logs = [];
@@ -41,11 +40,11 @@ export const logError = (
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   type === "UAI"
     ? loggerUai.log(
-        `${date};${code};${millesime};NOK;${response.status};${response.data?.msg ?? response.data?.message}`
-      )
+      `${date};${code};${millesime};NOK;${response.status};${response.data?.msg ?? response.data?.message}`
+    )
     : loggerReg.log(
-        `${date};${code};${millesime};NOK;${response.status};${response.data?.msg ?? response.data?.message}`
-      );
+      `${date};${code};${millesime};NOK;${response.status};${response.data?.msg ?? response.data?.message}`
+    );
 };
 
 export const loggerReg = {

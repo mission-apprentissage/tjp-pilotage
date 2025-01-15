@@ -13,15 +13,13 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
-import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { SearchInput } from "@/components/SearchInput";
 import { TableHeader } from "@/components/TableHeader";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
-import { formatArray } from "@/utils/formatUtils";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
@@ -108,7 +106,7 @@ export default () => {
     page?: typeof page;
     search?: typeof search;
   }) => {
-    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
+    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const trackEvent = usePlausible();
@@ -138,21 +136,21 @@ export default () => {
   ) => {
     if (value != null)
       switch (type) {
-        case "codeRegion":
-          setCodeRegionFilter((value as string[])[0] ?? "");
-          break;
-        case "codeDepartement":
-          setCodeDepartementFilter((value as string[])[0] ?? "");
-          break;
-        case "rentreeScolaire":
-          setRentreeScolaireFilter((value as string[])[0] ?? "");
-          break;
-        case "campagne":
-          setCampagneFilter((value as string[])[0] ?? "");
-          break;
-        case "statut":
-          setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
-          break;
+      case "codeRegion":
+        setCodeRegionFilter((value as string[])[0] ?? "");
+        break;
+      case "codeDepartement":
+        setCodeDepartementFilter((value as string[])[0] ?? "");
+        break;
+      case "rentreeScolaire":
+        setRentreeScolaireFilter((value as string[])[0] ?? "");
+        break;
+      case "campagne":
+        setCampagneFilter((value as string[])[0] ?? "");
+        break;
+      case "statut":
+        setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
+        break;
       }
   };
 
@@ -297,7 +295,7 @@ export default () => {
     };
 
     const columns = {
-      ...FORMATION_ETABLISSEMENT_COLUMNS,
+      ...STATS_DEMANDES_COLUMNS,
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),

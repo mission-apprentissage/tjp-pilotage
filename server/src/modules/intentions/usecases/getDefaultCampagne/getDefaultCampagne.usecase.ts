@@ -5,9 +5,9 @@ const getDefaultCampagneFactory =
       getCurrentCampagneQuery,
     }
   ) =>
-  async () => {
-    const currentCampagne = await deps.getCurrentCampagneQuery();
-    return currentCampagne;
-  };
+    async () => {
+      const currentCampagne = await deps.getCurrentCampagneQuery();
+      return currentCampagne;
+    };
 
 export const getDefaultCampagneUsecase = getDefaultCampagneFactory();

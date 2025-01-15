@@ -24,9 +24,9 @@ export const selectDenominateurPressionAgg = (
     WHEN ${sql<boolean>`${!withTauxDemande}`} AND
     ${sql.table(codeNiveauDiplomeAlias)}."codeNiveauDiplome" = '${sql.raw(CODE_NIVEAU_DIPLOME_DES_BTS)}' THEN NULL
     WHEN ${premierVoeuxAnnee(
-      sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
-      indicateurEntreeAlias
-    )} IS NOT NULL
+    sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
+    indicateurEntreeAlias
+  )} IS NOT NULL
     THEN ${capaciteAnnee(sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`, indicateurEntreeAlias)}
     END
   )`;
@@ -47,9 +47,9 @@ export const selectTauxPressionAgg = (
 
 export const selectDenominateurPression = (indicateurEntreeAlias: string) => sql<number>`
     CASE WHEN ${capaciteAnnee(
-      sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
-      indicateurEntreeAlias
-    )} IS NOT NULL
+    sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
+    indicateurEntreeAlias
+  )} IS NOT NULL
     THEN ${capaciteAnnee(sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`, indicateurEntreeAlias)}
     END`;
 
@@ -60,8 +60,8 @@ export const selectTauxPression = (
 ) => sql<number>`
     CASE
       WHEN ${sql<boolean>`${!withTauxDemande}`} AND ${sql.table(
-        codeNiveauDiplomeTableAlias
-      )}."codeNiveauDiplome" = '${sql.raw(CODE_NIVEAU_DIPLOME_DES_BTS)}' THEN NULL
+  codeNiveauDiplomeTableAlias
+)}."codeNiveauDiplome" = '${sql.raw(CODE_NIVEAU_DIPLOME_DES_BTS)}' THEN NULL
       WHEN ${selectDenominateurPression(indicateurEntreeAlias)} >= 0
       THEN (
         ${premierVoeuxAnnee(sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`, indicateurEntreeAlias)}

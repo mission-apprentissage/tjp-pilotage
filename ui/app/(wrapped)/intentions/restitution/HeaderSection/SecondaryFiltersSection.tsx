@@ -10,7 +10,6 @@ import {
   MenuItem,
   MenuList,
   Select,
-  Tag,
   Text,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
@@ -76,7 +75,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Formation</FormLabel>
             <Multiselect
               onClose={filterTracker("cfd")}
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("cfd", selected)}
@@ -91,7 +90,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Diplôme</FormLabel>
             <Multiselect
               onClose={filterTracker("codeNiveauDiplome")}
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
@@ -106,7 +105,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Département</FormLabel>
             <Multiselect
               onClose={filterTracker("codeDepartement")}
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("codeDepartement", selected)}
@@ -127,7 +126,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Établissement</FormLabel>
             <Multiselect
               onClose={filterTracker("uai")}
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("uai", selected)}
@@ -141,7 +140,7 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>Secteur</FormLabel>
             <Select
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.secteur ?? ""}
@@ -159,7 +158,7 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>Voie</FormLabel>
             <Select
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.voie ?? ""}
@@ -196,7 +195,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Type de demande</FormLabel>
             <Multiselect
               onClose={filterTracker("typeDemande")}
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("typeDemande", selected)}
@@ -266,7 +265,7 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>AMI/CMA</FormLabel>
             <Select
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.amiCMA?.toString() ?? ""}
@@ -284,7 +283,7 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>Coloration</FormLabel>
             <Select
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.coloration?.toString() ?? ""}
@@ -302,7 +301,7 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>Position quadrant</FormLabel>
             <Select
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.positionQuadrant?.toString() ?? ""}
@@ -341,7 +340,7 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>Formations spécifiques</FormLabel>
             <Multiselect
-              width={"64"}
+              width={"48"}
               size="md"
               variant="newInput"
               onChange={(selected) => handleFilters("formationSpecifique", selected)}

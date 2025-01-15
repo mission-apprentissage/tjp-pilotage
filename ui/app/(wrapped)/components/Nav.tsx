@@ -21,7 +21,7 @@ import { hasPermission, hasRole, isUserInRegionsExperimentation } from "shared";
 
 import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
 import { UaisFilterContext } from "@/app/layoutClient";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
 import { useAuth } from "@/utils/security/useAuth";
 
@@ -267,11 +267,11 @@ export const Nav = () => {
               <NavMenuLink
                 href={
                   uaisFilter
-                    ? createParametrizedUrl("/console/etablissements", {
-                        filters: {
-                          uai: uaisFilter,
-                        },
-                      })
+                    ? createParameterizedUrl("/console/etablissements", {
+                      filters: {
+                        uai: uaisFilter,
+                      },
+                    })
                     : "/console/etablissements"
                 }
                 segment="consoles/etablissements"

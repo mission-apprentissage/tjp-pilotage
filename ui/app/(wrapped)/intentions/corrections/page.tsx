@@ -14,7 +14,7 @@ import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { Loading } from "@/components/Loading";
 import { SearchInput } from "@/components/SearchInput";
 import { TableHeader } from "@/components/TableHeader";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { feature } from "@/utils/feature";
 import { GuardPermission } from "@/utils/security/GuardPermission";
@@ -100,7 +100,7 @@ export default () => {
     page?: typeof page;
     search?: typeof search;
   }) => {
-    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
+    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
@@ -136,15 +136,15 @@ export default () => {
   ) => {
     if (value != null)
       switch (type) {
-        case "codeRegion":
-          setCodeRegionFilter((value as string[])[0] ?? "");
-          break;
-        case "codeDepartement":
-          setCodeDepartementFilter((value as string[])[0] ?? "");
-          break;
-        case "campagne":
-          setCampagneFilter((value as string[])[0] ?? "");
-          break;
+      case "codeRegion":
+        setCodeRegionFilter((value as string[])[0] ?? "");
+        break;
+      case "codeDepartement":
+        setCodeDepartementFilter((value as string[])[0] ?? "");
+        break;
+      case "campagne":
+        setCampagneFilter((value as string[])[0] ?? "");
+        break;
       }
   };
 

@@ -3,7 +3,7 @@ import qs from "qs";
 import type { SetStateAction } from "react";
 import { useEffect, useState } from "react";
 
-import { createParametrizedUrl } from "./createParametrizedUrl";
+import { createParameterizedUrl } from "./createParameterizedUrl";
 
 export function useStateParams<F extends object>({
   defaultValues,
@@ -20,7 +20,7 @@ export function useStateParams<F extends object>({
 
   useEffect(() => {
     router.replace(
-      createParametrizedUrl(location.pathname, prefix ? { ...params, [prefix]: filters } : { ...params, ...filters }),
+      createParameterizedUrl(location.pathname, prefix ? { ...params, [prefix]: filters } : { ...params, ...filters }),
       { scroll: false }
     );
   }, [filters]);

@@ -16,7 +16,7 @@ import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/lay
 import { ConsoleSearchInput } from "@/components/ConsoleSearchInput";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 import { formatArray } from "@/utils/formatUtils";
@@ -119,7 +119,7 @@ export default function Formations() {
     order?: typeof order;
     page?: typeof page;
   }) => {
-    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
+    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const filters = searchParams.filters ?? {};
@@ -187,21 +187,21 @@ export default function Formations() {
       ...formation,
       ...(filters.codeRegion && region
         ? {
-            selectedCodeRegion: region.value,
-            selectedRegion: region.label,
-          }
+          selectedCodeRegion: region.value,
+          selectedRegion: region.label,
+        }
         : {}),
       ...(filters.codeAcademie && academies
         ? {
-            selectedCodeAcademie: formatArray(academies.map((academie) => academie.value)),
-            selectedAcademie: formatArray(academies.map((academie) => academie.label)),
-          }
+          selectedCodeAcademie: formatArray(academies.map((academie) => academie.value)),
+          selectedAcademie: formatArray(academies.map((academie) => academie.label)),
+        }
         : {}),
       ...(filters.codeDepartement && departements
         ? {
-            selectedCodeDepartement: formatArray(departements.map((departement) => departement.value)),
-            selectedDepartement: formatArray(departements.map((departement) => departement.label)),
-          }
+          selectedCodeDepartement: formatArray(departements.map((departement) => departement.value)),
+          selectedDepartement: formatArray(departements.map((departement) => departement.label)),
+        }
         : {}),
       actionPrioritaire: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
       transitionDemographique: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
@@ -283,33 +283,33 @@ export default function Formations() {
 
     // Valeurs par défaut pour les codes
     switch (type) {
-      case "codeRegion":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            codeAcademie: undefined,
-            codeDepartement: undefined,
-            commune: undefined,
-          };
-        }
-        break;
-      case "codeAcademie":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            codeDepartement: undefined,
-            commune: undefined,
-          };
-        }
-        break;
-      case "codeDepartement":
-        if (value !== undefined) {
-          newFilters = {
-            ...newFilters,
-            commune: undefined,
-          };
-        }
-        break;
+    case "codeRegion":
+      if (value !== undefined) {
+        newFilters = {
+          ...newFilters,
+          codeAcademie: undefined,
+          codeDepartement: undefined,
+          commune: undefined,
+        };
+      }
+      break;
+    case "codeAcademie":
+      if (value !== undefined) {
+        newFilters = {
+          ...newFilters,
+          codeDepartement: undefined,
+          commune: undefined,
+        };
+      }
+      break;
+    case "codeDepartement":
+      if (value !== undefined) {
+        newFilters = {
+          ...newFilters,
+          commune: undefined,
+        };
+      }
+      break;
     }
     filterTracker(type);
     setSearchParams({

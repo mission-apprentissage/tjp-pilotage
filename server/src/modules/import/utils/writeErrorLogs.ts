@@ -25,14 +25,14 @@ export const writeErrorLogs = async ({
       const zodError = error.error as ZodError;
       const rows: string[][] = [];
       switch (error.type) {
-        case ImportFileErrorType.FILE:
-          rows.push([error.path, ImportFileErrorType.FILE, "", "", error.error.message]);
-          break;
-        case ImportFileErrorType.LINE:
-          for (const issue of zodError.issues) {
-            rows.push([error.path, ImportFileErrorType.LINE, "" + error.line, issue.path.join(","), issue.message]);
-          }
-          break;
+      case ImportFileErrorType.FILE:
+        rows.push([error.path, ImportFileErrorType.FILE, "", "", error.error.message]);
+        break;
+      case ImportFileErrorType.LINE:
+        for (const issue of zodError.issues) {
+          rows.push([error.path, ImportFileErrorType.LINE, "" + error.line, issue.path.join(","), issue.message]);
+        }
+        break;
       }
       for (const row of rows) {
         await fs.appendFile(path, `\n${row.join(DELIMITER)}`);

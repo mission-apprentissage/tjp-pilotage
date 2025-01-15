@@ -1,4 +1,6 @@
-import { passwordRegex } from "./passwordRegex";
+import { describe, expect, test } from "vitest";
+
+import { passwordRegex } from "../passwordRegex";
 
 describe("Tests de la regex de mot de passe", () => {
   test("Valide un mot de passe correct", () => {

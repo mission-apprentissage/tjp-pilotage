@@ -116,10 +116,34 @@ export const up = async (db: Kysely<unknown>) => {
   });
 
   // disable les triggers qui utilisent trop de mémoire sur des opérations massives
-  await getKbdClient().executeQuery(sql`SET session_replication_role = replica;`.compile(db));
+  await getKbdClient().executeQuery(
+    sql`
+      -- Disable specific triggers on the demande table
+      ALTER TABLE demande DISABLE TRIGGER update_demande_refresh_demande_intention_materialized_view_t;
+      ALTER TABLE demande DISABLE TRIGGER update_demande_refresh_latest_demande_intention_materialized_vi;
+      ALTER TABLE demande DISABLE TRIGGER update_demande_refresh_materialized_view_t;
+
+      -- Disable specific triggers on the intention table
+      ALTER TABLE intention DISABLE TRIGGER update_intention_refresh_demande_intention_materialized_view_t;
+      ALTER TABLE intention DISABLE TRIGGER update_intention_refresh_latest_demande_intention_materialized_;
+      ALTER TABLE intention DISABLE TRIGGER update_intention_refresh_materialized_view_t;
+    `.compile(db)
+  );
   await getKbdClient().executeQuery(sql.raw(sqlQuery).compile(db));
   // enable les triggers
-  await getKbdClient().executeQuery(sql`SET session_replication_role = DEFAULT;`.compile(db));
+  await getKbdClient().executeQuery(
+    sql`
+          -- Re-enable specific triggers on the demande table
+      ALTER TABLE demande ENABLE TRIGGER update_demande_refresh_demande_intention_materialized_view_t;
+      ALTER TABLE demande ENABLE TRIGGER update_demande_refresh_latest_demande_intention_materialized_vi;
+      ALTER TABLE demande ENABLE TRIGGER update_demande_refresh_materialized_view_t;
+
+      -- Re-enable specific triggers on the intention table
+      ALTER TABLE intention ENABLE TRIGGER update_intention_refresh_demande_intention_materialized_view_t;
+      ALTER TABLE intention ENABLE TRIGGER update_intention_refresh_latest_demande_intention_materialized_;
+      ALTER TABLE intention ENABLE TRIGGER update_intention_refresh_materialized_view_t;
+    `.compile(db)
+  );
 
   await getKbdClient().executeQuery(
     sql`

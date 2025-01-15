@@ -8,7 +8,6 @@ import type { MotifRefusLabel } from "@/app/(wrapped)/intentions/utils/motifRefu
 import { getMotifRefusLabel } from "@/app/(wrapped)/intentions/utils/motifRefusDemandeUtils";
 import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
-import { BadgeActionPrioritaire } from "@/components/BadgeActionPrioritaire";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
@@ -32,9 +31,9 @@ const handleMotifLabel = ({
     motif === "autre"
       ? `Autre : ${autreMotif}`
       : getMotifLabel({
-          motif: motif as MotifLabel,
-          campagne: campagne as MotifCampagne,
-        })
+        motif: motif as MotifLabel,
+        campagne: campagne as MotifCampagne,
+      })
   );
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
 };
@@ -162,8 +161,12 @@ export const LineContent = ({
       >
         <BadgesFormationSpecifique formationSpecifique={demande.formationSpecifique} />
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"niveauDiplome"} bgColor={getCellColor("niveauDiplome")}>
-        {demande.niveauDiplome}
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleNiveauDiplome"}
+        bgColor={getCellColor("libelleNiveauDiplome")}
+      >
+        {demande.libelleNiveauDiplome}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
