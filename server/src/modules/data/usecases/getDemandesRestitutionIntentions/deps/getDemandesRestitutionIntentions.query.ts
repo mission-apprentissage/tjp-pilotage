@@ -97,6 +97,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     )
     .selectAll("demande")
     .select((eb) => [
+      sql<string>`count(*) over()`.as("count"),
       "dataFormation.libelleFormation",
       "dataFormation.typeFamille",
       "dispositif.libelleDispositif",
@@ -115,7 +116,6 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
       countDifferenceCapaciteScolaireColoree(eb).as("differenceCapaciteScolaireColoree"),
       countDifferenceCapaciteApprentissageColoree(eb).as("differenceCapaciteApprentissageColoree"),
-      sql<string>`count(*) over()`.as("count"),
       selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertionRegional"),
       selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteRegional"),
       selectTauxDevenirFavorable("indicateurRegionSortie").as("tauxDevenirFavorableRegional"),
