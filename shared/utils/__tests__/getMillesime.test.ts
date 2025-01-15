@@ -1,9 +1,11 @@
+import { describe, expect, it } from "vitest";
+
 import {
   getMillesime,
   getMillesimeFromRentreeScolaire,
   getMillesimePrecedent,
   getMillesimeSuivant,
-} from "./getMillesime";
+} from "../getMillesime";
 
 describe("getMillesime", () => {
   describe("getMillesimePrecedent", () => {

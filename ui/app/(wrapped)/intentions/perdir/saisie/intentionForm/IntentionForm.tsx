@@ -18,8 +18,7 @@ import {
 import { Icon } from "@iconify/react";
 import { isAxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
-import type { Dispatch, SetStateAction } from "react";
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
@@ -85,18 +84,18 @@ export const IntentionForm = ({
     onSuccess: async (body) => {
       let message = undefined;
       switch (body.statut) {
-        case DemandeStatutEnum["brouillon"]:
-          message = "Votre demande a bien été enregistrée en tant que brouillon";
-          break;
-        case DemandeStatutEnum["proposition"]:
-          message = "Votre proposition a bien été enregistrée";
-          break;
-        case DemandeStatutEnum["projet de demande"]:
-          message = "Votre projet de demande a bien été enregistré";
-          break;
-        default:
-          message = "Votre demande a bien été enregistrée";
-          break;
+      case DemandeStatutEnum["brouillon"]:
+        message = "Votre demande a bien été enregistrée en tant que brouillon";
+        break;
+      case DemandeStatutEnum["proposition"]:
+        message = "Votre proposition a bien été enregistrée";
+        break;
+      case DemandeStatutEnum["projet de demande"]:
+        message = "Votre projet de demande a bien été enregistré";
+        break;
+      default:
+        message = "Votre demande a bien été enregistrée";
+        break;
       }
 
       if (message) {
@@ -251,15 +250,15 @@ export const IntentionForm = ({
                 { title: "Recueil des demandes", to: "/intentions" },
                 pathname === "/intentions/perdir/saisie/new"
                   ? {
-                      title: "Nouvelle demande",
-                      to: "/intentions/perdir/saisie/new",
-                      active: true,
-                    }
+                    title: "Nouvelle demande",
+                    to: "/intentions/perdir/saisie/new",
+                    active: true,
+                  }
                   : {
-                      title: `Demande n°${formId}`,
-                      to: `/intentions/perdir/saisie/${formId}`,
-                      active: true,
-                    },
+                    title: `Demande n°${formId}`,
+                    to: `/intentions/perdir/saisie/${formId}`,
+                    active: true,
+                  },
               ]}
             />
             <CfdUaiSection

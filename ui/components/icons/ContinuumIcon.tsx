@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { createIcon } from "@chakra-ui/react";
 
 export const ContinuumIcon = createIcon({

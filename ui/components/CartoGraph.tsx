@@ -72,43 +72,43 @@ export const CartoGraph = ({
 
   const getGeoMap = () => {
     switch (scope) {
-      case ScopeEnum["région"]:
-        return JSON.parse(JSON.stringify(CarteFranceRegions));
-      case ScopeEnum["académie"]:
-        return JSON.parse(JSON.stringify(CarteFranceAcademies));
-      case ScopeEnum["département"]:
-        return JSON.parse(JSON.stringify(CarteFranceDepartements));
-      case ScopeEnum["national"]:
-      default:
-        return JSON.parse(JSON.stringify(CarteFranceRegions));
+    case ScopeEnum["région"]:
+      return JSON.parse(JSON.stringify(CarteFranceRegions));
+    case ScopeEnum["académie"]:
+      return JSON.parse(JSON.stringify(CarteFranceAcademies));
+    case ScopeEnum["département"]:
+      return JSON.parse(JSON.stringify(CarteFranceDepartements));
+    case ScopeEnum["national"]:
+    default:
+      return JSON.parse(JSON.stringify(CarteFranceRegions));
     }
   };
 
   const getNameProperty = (): string => {
     switch (scope) {
-      case ScopeEnum["région"]:
-        return "reg";
-      case ScopeEnum["académie"]:
-        return "code_academie";
-      case ScopeEnum["département"]:
-        return "dep";
-      case ScopeEnum["national"]:
-      default:
-        return "reg";
+    case ScopeEnum["région"]:
+      return "reg";
+    case ScopeEnum["académie"]:
+      return "code_academie";
+    case ScopeEnum["département"]:
+      return "dep";
+    case ScopeEnum["national"]:
+    default:
+      return "reg";
     }
   };
 
   const getNameMap = (): Record<string, string> => {
     switch (scope) {
-      case ScopeEnum["région"]:
-        return REGIONS_LABEL_MAPPING;
-      case ScopeEnum["académie"]:
-        return ACADEMIES_LABEL_MAPPING;
-      case ScopeEnum["département"]:
-        return DEPARTEMENTS_LABEL_MAPPING;
-      case ScopeEnum["national"]:
-      default:
-        return REGIONS_LABEL_MAPPING;
+    case ScopeEnum["région"]:
+      return REGIONS_LABEL_MAPPING;
+    case ScopeEnum["académie"]:
+      return ACADEMIES_LABEL_MAPPING;
+    case ScopeEnum["département"]:
+      return DEPARTEMENTS_LABEL_MAPPING;
+    case ScopeEnum["national"]:
+    default:
+      return REGIONS_LABEL_MAPPING;
     }
   };
 
@@ -142,11 +142,11 @@ export const CartoGraph = ({
     const piecesStep = customPiecesSteps
       ? customPiecesSteps
       : [
-          [0, min],
-          [min, Math.ceil(max - diff / 4)],
-          [Math.ceil(max - diff / 4), max],
-          [max, 100],
-        ];
+        [0, min],
+        [min, Math.ceil(max - diff / 4)],
+        [Math.ceil(max - diff / 4), max],
+        [max, 100],
+      ];
 
     return piecesStep.map((step, index, steps) => {
       const isLastStep = index + 1 === steps.length;
@@ -257,18 +257,18 @@ export const CartoGraph = ({
   const handleClickOnSeries = (name: string) => {
     if (handleClick)
       switch (scope) {
-        case ScopeEnum["région"]:
-          handleClick(findKey(REGIONS_LABEL_MAPPING, partial(isEqual, name)));
-          break;
-        case ScopeEnum["académie"]:
-          handleClick(findKey(ACADEMIES_LABEL_MAPPING, partial(isEqual, name)));
-          break;
-        case ScopeEnum["département"]:
-          handleClick(findKey(DEPARTEMENTS_LABEL_MAPPING, partial(isEqual, name)));
-          break;
-        case ScopeEnum["national"]:
-        default:
-          break;
+      case ScopeEnum["région"]:
+        handleClick(findKey(REGIONS_LABEL_MAPPING, partial(isEqual, name)));
+        break;
+      case ScopeEnum["académie"]:
+        handleClick(findKey(ACADEMIES_LABEL_MAPPING, partial(isEqual, name)));
+        break;
+      case ScopeEnum["département"]:
+        handleClick(findKey(DEPARTEMENTS_LABEL_MAPPING, partial(isEqual, name)));
+        break;
+      case ScopeEnum["national"]:
+      default:
+        break;
       }
   };
 

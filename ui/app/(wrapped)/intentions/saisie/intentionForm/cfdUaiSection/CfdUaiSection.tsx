@@ -19,60 +19,60 @@ import { UaiBlock } from "./UaiBlock";
 
 const TagDemande = ({ statut }: { statut?: string }) => {
   switch (statut) {
-    case DemandeStatutEnum["projet de demande"]:
-      return (
-        <Tag size="md" colorScheme={"yellow"} ml={4}>
+  case DemandeStatutEnum["projet de demande"]:
+    return (
+      <Tag size="md" colorScheme={"yellow"} ml={4}>
           Projet de demande
-        </Tag>
-      );
-    case DemandeStatutEnum["demande validée"]:
-      return (
-        <Tag size="md" colorScheme={"green"} ml={4}>
+      </Tag>
+    );
+  case DemandeStatutEnum["demande validée"]:
+    return (
+      <Tag size="md" colorScheme={"green"} ml={4}>
           Demande validée
-        </Tag>
-      );
-    case DemandeStatutEnum["refusée"]:
-      return (
-        <Tag size="md" colorScheme={"red"} ml={4}>
+      </Tag>
+    );
+  case DemandeStatutEnum["refusée"]:
+    return (
+      <Tag size="md" colorScheme={"red"} ml={4}>
           Demande refusée
-        </Tag>
-      );
-    default:
-      return (
-        <Tag size="md" colorScheme={"yellow"} ml={4}>
+      </Tag>
+    );
+  default:
+    return (
+      <Tag size="md" colorScheme={"yellow"} ml={4}>
           Projet de demande
-        </Tag>
-      );
+      </Tag>
+    );
   }
 };
 
 const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
   if (!campagne) return null;
   switch (campagne.statut) {
-    case CampagneStatutEnum["en cours"]:
-      return (
-        <Tag size="md" colorScheme={"green"} ml={4}>
+  case CampagneStatutEnum["en cours"]:
+    return (
+      <Tag size="md" colorScheme={"green"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
-        </Tag>
-      );
-    case CampagneStatutEnum["en attente"]:
-      return (
-        <Tag size="md" colorScheme={"purple"} ml={4}>
+      </Tag>
+    );
+  case CampagneStatutEnum["en attente"]:
+    return (
+      <Tag size="md" colorScheme={"purple"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
-        </Tag>
-      );
-    case CampagneStatutEnum["terminée"]:
-      return (
-        <Tag size="md" colorScheme={"red"} ml={4}>
+      </Tag>
+    );
+  case CampagneStatutEnum["terminée"]:
+    return (
+      <Tag size="md" colorScheme={"red"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
-        </Tag>
-      );
-    default:
-      return (
-        <Tag size="md" colorScheme={"yellow"} ml={4}>
+      </Tag>
+    );
+  default:
+    return (
+      <Tag size="md" colorScheme={"yellow"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
-        </Tag>
-      );
+      </Tag>
+    );
   }
 };
 
@@ -107,21 +107,21 @@ export const CfdUaiSection = ({
 
   const [dispositifs, setDispositifs] = useState<
     (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"] | undefined
-  >(formMetadata?.formation?.dispositifs);
+      >(formMetadata?.formation?.dispositifs);
 
   const uai = watch("uai");
 
   const [uaiInfo, setUaiInfo] = useState<
     (typeof client.infer)["[GET]/etablissement/search/:search"][number] | undefined
-  >(
-    formMetadata?.etablissement?.libelleEtablissement && uai
-      ? {
+      >(
+      formMetadata?.etablissement?.libelleEtablissement && uai
+        ? {
           label: formMetadata?.etablissement.libelleEtablissement,
           value: uai,
           commune: formMetadata?.etablissement.commune,
         }
-      : undefined
-  );
+        : undefined
+      );
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 

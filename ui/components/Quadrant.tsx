@@ -19,6 +19,8 @@ import type { FC, ReactNode } from "react";
 import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
+
 const quadrantLabelStyle = {
   show: true,
   distance: 14,
@@ -35,6 +37,8 @@ export const Quadrant = function <
     tauxPoursuite: number;
     tauxInsertion: number;
     positionQuadrant?: string;
+    libelleFormation: string;
+    libelleDispositif?: string;
   },
 >({
   className,
@@ -115,8 +119,8 @@ export const Quadrant = function <
 
   const series = data.map((formation) => ({
     value: [
-      dimensions?.includes("tauxPoursuite") ? formation.tauxPoursuite * 100 : 50,
-      dimensions?.includes("tauxInsertion") ? formation.tauxInsertion * 100 : 50,
+      dimensions?.includes("tauxPoursuite") ? Math.round(formation.tauxPoursuite * 10000) / 100 : 50,
+      dimensions?.includes("tauxInsertion") ? Math.round(formation.tauxInsertion * 10000) / 100 : 50,
     ],
     name: `${formation.cfd}_${formation.codeDispositif}`,
   }));
@@ -141,17 +145,21 @@ export const Quadrant = function <
   const repartitionsQuadrants =
     meanInsertion && meanPoursuite
       ? {
-          q1: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q1 && item.effectif).length,
-          q2: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q2 && item.effectif).length,
-          q3: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q3 && item.effectif).length,
-          q4: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q4 && item.effectif).length,
-        }
+        q1: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q1 && item.effectif).length,
+        q2: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q2 && item.effectif).length,
+        q3: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q3 && item.effectif).length,
+        q4: data.filter((item) => item.positionQuadrant === PositionQuadrantEnum.Q4 && item.effectif).length,
+      }
       : undefined;
 
   const option = useMemo<EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+        },
+      },
       grid: { top: 0, right: 0, bottom: 50, left: 60 },
-
       xAxis: [
         {
           type: "value",
@@ -254,69 +262,69 @@ export const Quadrant = function <
           markArea:
             moyennes.poursuite && moyennes.insertion
               ? {
-                  silent: true,
-                  animation: false,
-                  data: [
-                    [
-                      {
-                        coord: [0, 0],
-                        itemStyle: {
-                          color:
+                silent: true,
+                animation: false,
+                data: [
+                  [
+                    {
+                      coord: [0, 0],
+                      itemStyle: {
+                        color:
                             dimensions?.includes("tauxPoursuite") && dimensions?.includes("tauxInsertion")
                               ? redColor
                               : greyColor,
-                        },
-                        name: `Q4 - ${repartitionsQuadrants?.q4} formations`,
-                        label: {
-                          ...quadrantLabelStyle,
-                          position: "insideBottomLeft",
-                        },
                       },
-                      { coord: [moyennes.poursuite, moyennes.insertion] },
-                    ],
-                    [
-                      {
-                        coord: [moyennes.poursuite, moyennes.insertion],
-                        itemStyle: {
-                          color:
+                      name: `Q4 - ${repartitionsQuadrants?.q4} formations`,
+                      label: {
+                        ...quadrantLabelStyle,
+                        position: "insideBottomLeft",
+                      },
+                    },
+                    { coord: [moyennes.poursuite, moyennes.insertion] },
+                  ],
+                  [
+                    {
+                      coord: [moyennes.poursuite, moyennes.insertion],
+                      itemStyle: {
+                        color:
                             dimensions?.includes("tauxPoursuite") && dimensions?.includes("tauxInsertion")
                               ? greenColor
                               : greyColor,
-                        },
-                        name: `Q1 - ${repartitionsQuadrants?.q1} formations`,
-                        label: {
-                          ...quadrantLabelStyle,
-                          position: "insideTopRight",
-                        },
                       },
-                      { coord: [100, 100] },
-                    ],
-                    [
-                      {
-                        coord: [0, moyennes.insertion],
-                        itemStyle: { color: greyColor },
-                        name: `Q2 - ${repartitionsQuadrants?.q2} formations`,
-                        label: {
-                          ...quadrantLabelStyle,
-                          position: "insideTopLeft",
-                        },
+                      name: `Q1 - ${repartitionsQuadrants?.q1} formations`,
+                      label: {
+                        ...quadrantLabelStyle,
+                        position: "insideTopRight",
                       },
-                      { coord: [moyennes.poursuite, 100] },
-                    ],
-                    [
-                      {
-                        coord: [moyennes.poursuite, 0],
-                        itemStyle: { color: greyColor },
-                        name: `Q3 - ${repartitionsQuadrants?.q3} formations`,
-                        label: {
-                          ...quadrantLabelStyle,
-                          position: "insideBottomRight",
-                        },
-                      },
-                      { coord: [100, moyennes.insertion] },
-                    ],
+                    },
+                    { coord: [100, 100] },
                   ],
-                }
+                  [
+                    {
+                      coord: [0, moyennes.insertion],
+                      itemStyle: { color: greyColor },
+                      name: `Q2 - ${repartitionsQuadrants?.q2} formations`,
+                      label: {
+                        ...quadrantLabelStyle,
+                        position: "insideTopLeft",
+                      },
+                    },
+                    { coord: [moyennes.poursuite, 100] },
+                  ],
+                  [
+                    {
+                      coord: [moyennes.poursuite, 0],
+                      itemStyle: { color: greyColor },
+                      name: `Q3 - ${repartitionsQuadrants?.q3} formations`,
+                      label: {
+                        ...quadrantLabelStyle,
+                        position: "insideBottomRight",
+                      },
+                    },
+                    { coord: [100, moyennes.insertion] },
+                  ],
+                ],
+              }
               : undefined,
         },
       ],
@@ -327,7 +335,8 @@ export const Quadrant = function <
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option);
 
@@ -350,7 +359,7 @@ export const Quadrant = function <
 
   return (
     <Box position="relative" className={className} overflow="visible !important">
-      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0"></Box>
+      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0" role="figure"></Box>
 
       {InfoTootipContent && (
         <InfoTooltip>

@@ -122,7 +122,7 @@ program
   .command("migrations:latest")
   .description("Run migrations latest")
   .action(async () => {
-    await migrateToLatest();
+    await migrateToLatest(true);
   });
 
 program
@@ -163,7 +163,7 @@ program
   .action(async () => {
     console.log(path.join(__dirname(), "../src", "db/schema.ts"));
     exec(
-      `DATABASE_URL="${config.psql.uri}" npx kysely-codegen --schema public --out-file=${path.join(__dirname(), "../src", "db/schema.ts")} --dialect postgres && yarn prettier:fix`
+      `DATABASE_URL="${config.psql.uri}" npx kysely-codegen --schema public --out-file=${path.join(__dirname(), "../src", "db/schema.ts")} --dialect postgres`
     );
   });
 

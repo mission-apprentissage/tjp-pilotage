@@ -80,18 +80,18 @@ export const IntentionForm = ({
       let message: string | null = null;
 
       switch (body.statut) {
-        case DemandeStatutEnum["projet de demande"]:
-          message = "Projet de demande enregistré avec succès";
-          break;
-        case DemandeStatutEnum["demande validée"]:
-          message = "Demande validée avec succès";
-          break;
-        case DemandeStatutEnum["refusée"]:
-          message = "Demande refusée avec succès";
-          break;
-        case DemandeStatutEnum["supprimée"]:
-          message = "Demande supprimée avec succès";
-          break;
+      case DemandeStatutEnum["projet de demande"]:
+        message = "Projet de demande enregistré avec succès";
+        break;
+      case DemandeStatutEnum["demande validée"]:
+        message = "Demande validée avec succès";
+        break;
+      case DemandeStatutEnum["refusée"]:
+        message = "Demande refusée avec succès";
+        break;
+      case DemandeStatutEnum["supprimée"]:
+        message = "Demande supprimée avec succès";
+        break;
       }
 
       if (message) {
@@ -135,6 +135,17 @@ export const IntentionForm = ({
     if (isTypeAjustement(demande.typeDemande)) return DemandeStatutEnum["demande validée"];
     if (formId) return demande.statut;
     return DemandeStatutEnum["projet de demande"];
+  };
+
+  const getLabelSubmit = (
+    formId: string | undefined,
+    statut: DemandeStatutType,
+  ): string => {
+    if (statut === DemandeStatutEnum["demande validée"]) {
+      return "Valider ma demande";
+    }
+    if(formId) return "Sauvegarder les modifications";
+    return "Enregistrer le projet de demande";
   };
 
   useEffect(() => {
@@ -202,15 +213,15 @@ export const IntentionForm = ({
                 { title: "Recueil des demandes", to: "/intentions" },
                 pathname === "/intentions/saisie/new"
                   ? {
-                      title: "Nouvelle demande",
-                      to: "/intentions/saisie/new",
-                      active: true,
-                    }
+                    title: "Nouvelle demande",
+                    to: "/intentions/saisie/new",
+                    active: true,
+                  }
                   : {
-                      title: `Demande n°${formId}`,
-                      to: `/intentions/saisie/${formId}`,
-                      active: true,
-                    },
+                    title: `Demande n°${formId}`,
+                    to: `/intentions/saisie/${formId}`,
+                    active: true,
+                  },
               ]}
             />
             <CfdUaiSection
@@ -287,7 +298,7 @@ export const IntentionForm = ({
                             )}
                             leftIcon={<CheckIcon />}
                           >
-                            {formId ? "Sauvegarder les modifications" : "Enregistrer le projet de demande"}
+                            {getLabelSubmit(formId, getStatutSubmit(getValues()))}
                           </Button>
                         </Box>
                       }

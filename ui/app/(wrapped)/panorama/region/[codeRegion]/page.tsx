@@ -13,7 +13,7 @@ import { TauxInserJeunesSection } from "@/app/(wrapped)/panorama/components/Taux
 import { TopFlopSection } from "@/app/(wrapped)/panorama/components/TopFlopSection/TopFlopSection";
 import type { FiltersPanoramaFormation, OrderPanoramaFormation } from "@/app/(wrapped)/panorama/types";
 import { CodeRegionFilterContext } from "@/app/layoutClient";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 
 export default function Panorama({
   params: { codeRegion },
@@ -28,7 +28,7 @@ export default function Panorama({
   const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
 
   const setSearchParams = (params: Partial<FiltersPanoramaFormation>) => {
-    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
+    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const handleOrder = (column: OrderPanoramaFormation["orderBy"]) => {
@@ -103,10 +103,10 @@ export default function Panorama({
         stats={
           searchParams.codeNsf
             ? {
-                libelleRegion: stats?.libelleRegion,
-                codeRegion,
-                libelleDepartement: "",
-              }
+              libelleRegion: stats?.libelleRegion,
+              codeRegion,
+              libelleDepartement: "",
+            }
             : stats
         }
         libelleTerritoire={regionOptions?.find((item) => item.value === codeRegion)?.label}

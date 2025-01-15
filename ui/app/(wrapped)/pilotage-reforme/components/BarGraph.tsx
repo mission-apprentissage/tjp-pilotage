@@ -2,6 +2,7 @@ import { Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
 import { formatNumber } from "@/utils/formatUtils";
 
 export type BarGraphData = {
@@ -52,6 +53,11 @@ export const BarGraph = function <F extends BarGraphData>({
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+        },
+      },
       animationDelay: 1,
       responsive: true,
       maintainAspectRatio: true,
@@ -96,42 +102,42 @@ export const BarGraph = function <F extends BarGraphData>({
       },
       series: isFiltered
         ? [
-            {
-              name: "NATIONAL",
-              data: getNationalSerieData(),
-              type: "bar",
-              color: bf113,
-              barMaxWidth: 50,
-              itemStyle: {
-                borderRadius: [15, 15, 0, 0],
-              },
-              label: {
-                formatter: "{c}%",
-              },
+          {
+            name: "NATIONAL",
+            data: getNationalSerieData(),
+            type: "bar",
+            color: bf113,
+            barMaxWidth: 50,
+            itemStyle: {
+              borderRadius: [15, 15, 0, 0],
             },
-            {
-              name: libelleRegion?.toUpperCase() ?? "",
-              data: getFilteredSerieData(),
-              type: "bar",
-              color: be850,
-              barMaxWidth: 50,
-              itemStyle: {
-                borderRadius: [15, 15, 0, 0],
-              },
+            label: {
+              formatter: "{c}%",
             },
-          ]
+          },
+          {
+            name: libelleRegion?.toUpperCase() ?? "",
+            data: getFilteredSerieData(),
+            type: "bar",
+            color: be850,
+            barMaxWidth: 50,
+            itemStyle: {
+              borderRadius: [15, 15, 0, 0],
+            },
+          },
+        ]
         : [
-            {
-              name: "NATIONAL",
-              data: getNationalSerieData(),
-              type: "bar",
-              color: bf113,
-              barMaxWidth: 50,
-              itemStyle: {
-                borderRadius: [15, 15, 0, 0],
-              },
+          {
+            name: "NATIONAL",
+            data: getNationalSerieData(),
+            type: "bar",
+            color: bf113,
+            barMaxWidth: 50,
+            itemStyle: {
+              borderRadius: [15, 15, 0, 0],
             },
-          ],
+          },
+        ],
     }),
     [graphData]
   );
@@ -139,7 +145,8 @@ export const BarGraph = function <F extends BarGraphData>({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
   }, [graphData]);

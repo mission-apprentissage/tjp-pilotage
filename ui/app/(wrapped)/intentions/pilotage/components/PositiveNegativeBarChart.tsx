@@ -121,20 +121,20 @@ export const PositiveNegativeBarChart = ({
             <div style="min-width: fit-content;">
               <span>${params[0]?.name} :</span>
               ${
-                data[params[0]?.name].tauxTransformation
-                  ? `
+      data[params[0]?.name].tauxTransformation
+        ? `
                 <div>
                   (taux de transformation :
                   ${formatPercentage(data[params[0]?.name].tauxTransformation, 1)})
                 </div>
                 `
-                  : ""
-              }
+        : ""
+      }
               <br />
               <div style="display: inline-block; margin-top: 5px;">
                 <span style="border-radius: 100%; width:15px; height:15px; background-color:${
-                  params[0]?.color
-                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
+      params[0]?.color
+      }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Colorations :
                   <span style="font-weight: 700;">${params[0]?.data}</span>
@@ -143,8 +143,8 @@ export const PositiveNegativeBarChart = ({
               <br />
               <div style="display: inline-block; margin-top: 5px;">
                 <span style="border-radius: 100%; width:15px; height:15px; background-color:${
-                  params[2]?.color
-                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
+      params[2]?.color
+      }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Pl. ouvertes :
                   <span style="font-weight: 700;">${params[2]?.data}</span>
@@ -153,8 +153,8 @@ export const PositiveNegativeBarChart = ({
               <br />
               <div style="display: inline-block; margin-top: 5px;">
                 <span style="border-radius: 100%; width:15px; height:15px; background-color:${
-                  params[1]?.color
-                }; margin-right: 6px; margin-top: 1px; float: left;"></span>
+      params[1]?.color
+      }; margin-right: 6px; margin-top: 1px; float: left;"></span>
                 <span>
                   Pl. fermées :
                   <span style="font-weight: 700;"> ${-params[1]?.data}</span>

@@ -56,10 +56,10 @@ const Loader = () => {
 
 const generateGetScopedData =
   (code: string | undefined, data?: StatsPilotageIntentions) =>
-  (statut: Statut, indicateur: Indicateur): number => {
-    if (!code) return 0;
-    return data?.[statut]?.[`_${code}`]?.[indicateur] as number;
-  };
+    (statut: Statut, indicateur: Indicateur): number => {
+      if (!code) return 0;
+      return data?.[statut]?.[`_${code}`]?.[indicateur] as number;
+    };
 
 export const IndicateursClesSection = ({
   data,

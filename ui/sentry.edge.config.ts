@@ -5,7 +5,7 @@ import { publicConfig } from "./config.public";
 
 init({
   dsn: publicConfig.sentry.dsn,
-  tracesSampleRate: publicConfig.env === "local" ? 0.1 : 1.0,
+  tracesSampleRate: publicConfig.env === "production" ? 0.1 : 1.0,
   tracePropagationTargets: [/^https:\/\/[^/]*\.inserjeunes\.beta\.gouv\.fr/],
   environment: publicConfig.env,
   enabled: publicConfig.sentry.enabled,

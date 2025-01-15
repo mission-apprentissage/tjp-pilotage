@@ -6,6 +6,7 @@ import type {
 import type { z } from "zod";
 
 import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
+import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
 
 import type { getDenominateurQuery } from "./deps/getDenominateurQuery";
 import { getDomaines } from "./deps/getDomaines";
@@ -165,7 +166,12 @@ const formatResult = (repartition: Repartition, order: "asc" | "desc" = "desc", 
       tauxTransformation: item.effectif ? item.placesTransformees / item.effectif : undefined,
     }))
     .orderBy((item) => {
-      const value = orderBy ? item[orderBy as keyof typeof item] : item.libelle;
+      let value = orderBy ? item[orderBy as keyof typeof item] : item.libelle;
+
+      if (typeof value === "string") {
+        // unaccent to allow alphabetic order despite french accent
+        value = getNormalizedSearch(value);
+      }
 
       return !value ? 0 : value; // Treat null/undefined as 0
     }, order)
@@ -183,47 +189,47 @@ const getRepartitionPilotageIntentionsFactory =
       getPositionsQuadrant,
     }
   ) =>
-  async (activeFilters: Filters) => {
-    const campagne = await deps.getCurrentCampagneQuery();
-    const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
-    const [domaines, niveauxDiplome, zonesGeographiques, positionsQuadrant] = await Promise.all([
-      deps.getDomaines({
-        filters: {
-          ...activeFilters,
-          codeNsf: undefined,
-          campagne: anneeCampagne,
-        },
-      }),
-      deps.getNiveauxDiplome({
-        filters: {
-          ...activeFilters,
-          codeNiveauDiplome: undefined,
-          campagne: anneeCampagne,
-        },
-      }),
-      deps.getZonesGeographiques({
-        filters: {
-          ...activeFilters,
-          campagne: anneeCampagne,
-        },
-      }),
-      deps.getPositionsQuadrant({
-        filters: {
-          ...activeFilters,
-          campagne: anneeCampagne,
-        },
-      }),
-    ]);
+    async (activeFilters: Filters) => {
+      const campagne = await deps.getCurrentCampagneQuery();
+      const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
+      const [domaines, niveauxDiplome, zonesGeographiques, positionsQuadrant] = await Promise.all([
+        deps.getDomaines({
+          filters: {
+            ...activeFilters,
+            codeNsf: undefined,
+            campagne: anneeCampagne,
+          },
+        }),
+        deps.getNiveauxDiplome({
+          filters: {
+            ...activeFilters,
+            codeNiveauDiplome: undefined,
+            campagne: anneeCampagne,
+          },
+        }),
+        deps.getZonesGeographiques({
+          filters: {
+            ...activeFilters,
+            campagne: anneeCampagne,
+          },
+        }),
+        deps.getPositionsQuadrant({
+          filters: {
+            ...activeFilters,
+            campagne: anneeCampagne,
+          },
+        }),
+      ]);
 
-    return {
+      return {
       // Répartitions non ordonnées
-      top10Domaines: formatResult(domaines, "desc", "placesTransformees"),
-      niveauxDiplome: formatResult(niveauxDiplome, "desc", "placesTransformees"),
-      // Répartitions ordonnées
-      domaines: formatResult(domaines, activeFilters.order, activeFilters.orderBy),
-      zonesGeographiques: formatResult(zonesGeographiques, activeFilters.order, activeFilters.orderBy),
-      positionsQuadrant: formatResult(positionsQuadrant, activeFilters.order, activeFilters.orderBy),
+        top10Domaines: formatResult(domaines, "desc", "placesTransformees"),
+        niveauxDiplome: formatResult(niveauxDiplome, "desc", "placesTransformees"),
+        // Répartitions ordonnées
+        domaines: formatResult(domaines, activeFilters.order, activeFilters.orderBy),
+        zonesGeographiques: formatResult(zonesGeographiques, activeFilters.order, activeFilters.orderBy),
+        positionsQuadrant: formatResult(positionsQuadrant, activeFilters.order, activeFilters.orderBy),
+      };
     };
-  };
 
 export const getRepartitionPilotageIntentionsUsecase = getRepartitionPilotageIntentionsFactory();

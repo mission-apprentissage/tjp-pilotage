@@ -1,5 +1,6 @@
 import qs from "qs";
-export const createParametrizedUrl = (pathname: string, searchParams: object) => {
+
+export const createParameterizedUrl = (pathname: string, searchParams: object) => {
   return (
     pathname +
     qs.stringify(searchParams, {

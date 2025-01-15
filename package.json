@@ -18,6 +18,7 @@
   ],
   "dependencies": {
     "@sentry/cli": "^2.37.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "dotenv": "^16.4.5",
     "eslint-plugin-react": "^7.37.1",
     "global": "4.4.0",
@@ -34,6 +35,7 @@
     "migrations:latest": "yarn cli migrations:latest",
     "migrations:up": "yarn cli migrations:up",
     "migrations:create": "yarn cli migrations:create",
+    "migrations:down": "yarn cli migrations:down",
     "server:dev": "yarn workspace server dev",
     "ui:dev": "yarn workspace ui dev",
     "services:start": "docker compose up --remove-orphans -d --wait",
@@ -42,8 +44,6 @@
     "seed:update": ".bin/product seed:update",
     "lint": "eslint --ignore-path .gitignore --cache --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix",
-    "prettier:fix": "prettier --write -u .",
-    "prettier:check": "prettier --check -u .",
     "release": "semantic-release",
     "release:interactive": ".bin/product release:interactive",
     "release:manual": ".bin/product release:manual",
@@ -51,7 +51,7 @@
     "postinstall": "husky",
     "talisman:add-exception": "yarn node-talisman --githook pre-commit -i",
     "test": "vitest",
-    "test:ci": "yarn test --run",
+    "test:ci": "yarn test --run --silent",
     "test:ci:coverage": "yarn test:ci --coverage.include='ui' --coverage.include='server/src' --coverage.provider='v8' --coverage.enabled --coverage.all --coverage.exclude='**/tests' --coverage.exclude='**/.next'",
     "test:watch": "vitest --watch",
     "typecheck": "yarn foreach:parallel run typecheck",
@@ -90,31 +90,21 @@
     "eslint-plugin-n": "^17.11.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-unused-imports": "^3.0.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "eslint-plugin-zod": "^1.4.0",
     "exceljs": "^4.4.0",
     "lint-staged": "^15.2.10",
     "node-talisman": "^1.29.11",
-    "prettier": "^3.3.3",
     "semantic-release": "22.0.12",
     "semantic-release-slack-bot": "4.0.2",
     "typescript": "^5.6.3",
     "vite-tsconfig-paths": "^4.2.0",
-    "vitest": "^2.0.5"
-  },
-  "prettier": {
-    "printWidth": 120,
-    "bracketSpacing": true,
-    "trailingComma": "es5",
-    "arrowParens": "always"
+    "vitest": "^2.0.5",
+    "vitest-canvas-mock": "^0.3.3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --ignore-path .gitignore --cache --fix",
-      "prettier --write -u"
-    ],
-    "*": [
-      "prettier --write -u"
+      "eslint --ignore-path .gitignore --cache --fix"
     ],
     "yarn.lock": [
       "yarn dedupe"

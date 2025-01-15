@@ -99,7 +99,7 @@ export const getFormationsPilotageIntentionsQuery = ({
       join.on((eb) =>
         eb.and([
           eb(eb.ref("positionFormationRegionaleQuadrant.cfd"), "=", eb.ref("demande.cfd")),
-          eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("dataEtablissement.codeRegion")),
+          eb(eb.ref("positionFormationRegionaleQuadrant.codeRegion"), "=", eb.ref("demande.codeRegion")),
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
@@ -147,27 +147,27 @@ export const getFormationsPilotageIntentionsQuery = ({
           millesimeSortie: getMillesimeFromCampagne(campagne),
           cfdRef: "demande.cfd",
           codeDispositifRef: "demande.codeDispositif",
-          codeRegionRef: "dataEtablissement.codeRegion",
+          codeRegionRef: "demande.codeRegion",
         }).as("tauxInsertion"),
       withPoursuiteReg({
         eb,
         millesimeSortie: getMillesimeFromCampagne(campagne),
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
-        codeRegionRef: "dataEtablissement.codeRegion",
+        codeRegionRef: "demande.codeRegion",
       }).as("tauxPoursuite"),
       withTauxPressionReg({
         eb,
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
-        codeRegionRef: "dataEtablissement.codeRegion",
+        codeRegionRef: "demande.codeRegion",
       }).as("tauxPression"),
       withTauxDevenirFavorableReg({
         eb,
         millesimeSortie: getMillesimeFromCampagne(campagne),
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
-        codeRegionRef: "dataEtablissement.codeRegion",
+        codeRegionRef: "demande.codeRegion",
       }).as("tauxDevenirFavorable"),
       selectNbDemandes(eb).as("nbDemandes"),
       selectNbEtablissements(eb).as("nbEtablissements"),
@@ -181,12 +181,12 @@ export const getFormationsPilotageIntentionsQuery = ({
         millesimeSortie,
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
-        codeRegionRef: "dataEtablissement.codeRegion",
+        codeRegionRef: "demande.codeRegion",
       }).as("continuum"),
       isFormationActionPrioritaire({
-        cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.codeDispositif",
-        codeRegionRef: "etablissement.codeRegion",
+        cfdRef: "demande.cfd",
+        codeDispositifRef: "demande.codeDispositif",
+        codeRegionRef: "demande.codeRegion",
       }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
@@ -195,14 +195,14 @@ export const getFormationsPilotageIntentionsQuery = ({
     .where((wb) => {
       if (!type) return wb.val(true);
       switch (type) {
-        case "ouverture":
-          return wb(countPlacesOuvertes(wb), ">", 0);
-        case "fermeture":
-          return wb(countPlacesFermees(wb), ">", 0);
-        case "coloration":
-          return wb(countPlacesColoreesTransformees(wb), ">", 0);
-        default:
-          return wb.val(true);
+      case "ouverture":
+        return wb(countPlacesOuvertes(wb), ">", 0);
+      case "fermeture":
+        return wb(countPlacesFermees(wb), ">", 0);
+      case "coloration":
+        return wb(countPlacesColoreesTransformees(wb), ">", 0);
+      default:
+        return wb.val(true);
       }
     })
     .having((h) => {
@@ -213,7 +213,7 @@ export const getFormationsPilotageIntentionsQuery = ({
             eb,
             cfdRef: "demande.cfd",
             codeDispositifRef: "demande.codeDispositif",
-            codeRegionRef: "dataEtablissement.codeRegion",
+            codeRegionRef: "demande.codeRegion",
           }),
         tauxPression === "eleve" ? ">" : "<",
         tauxPression === "eleve" ? 1.3 : 0.7
@@ -287,6 +287,11 @@ export const getFormationsPilotageIntentionsQuery = ({
       "dispositif.libelleDispositif",
       "formationView.libelleFormation",
       "effectif",
+      "dataFormation.typeFamille",
+      "demande.codeRegion",
+      "formationView.isTransitionDemographique",
+      "formationView.isTransitionEcologique",
+      "formationView.isTransitionNumerique",
       ...partition,
     ])
     .orderBy("tauxDevenirFavorable", "desc")
