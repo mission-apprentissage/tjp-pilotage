@@ -77,9 +77,7 @@ export const getFormationsQuery = async ({
       join
         .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
         .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
-        .$call((join) =>
-          codeRegion ? join.onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion") : join
-        )
+        .onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion")
     )
     .$call((eb) => {
       if (!codeRegion) return eb;
@@ -361,7 +359,6 @@ export const getFormationsQuery = async ({
       }
       return q;
     })
-    .$narrowType<{ ["Action prioritaire"]: boolean }>()
     .orderBy("libelleFormation", "asc")
     .orderBy("libelleNiveauDiplome", "asc")
     .orderBy("libelleDispositif", "asc")
