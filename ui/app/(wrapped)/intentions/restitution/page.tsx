@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, chakra, Container, Flex } from "@chakra-ui/react";
+import { Button, chakra, Container, Flex, MenuButton } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -13,7 +13,6 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
-import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { SearchInput } from "@/components/SearchInput";
@@ -27,7 +26,7 @@ import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDES_COLUMN";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import type { STATS_DEMANDES_COLUMNS_OPTIONAL } from "./STATS_DEMANDES_COLUMN";
-import { STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
+import { STATS_DEMANDES_COLUMNS, STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
 import type {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,
@@ -70,9 +69,9 @@ const ColonneFiltersSection = chakra(
           })}
           value={colonneFilters ?? []}
           customButton={
-            <Button variant={"externalLink"} leftIcon={<Icon icon={"ri:table-line"} />} color="bluefrance.113">
+            <MenuButton as={Button} variant={"externalLink"} leftIcon={<Icon icon={"ri:table-line"} />} color="bluefrance.113">
               Modifier l'affichage des colonnes
-            </Button>
+            </MenuButton>
           }
         />
       </Flex>
@@ -296,7 +295,7 @@ export default () => {
     };
 
     const columns = {
-      ...FORMATION_ETABLISSEMENT_COLUMNS,
+      ...STATS_DEMANDES_COLUMNS,
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),

@@ -243,9 +243,7 @@ export const GroupedMultiselect = chakra(
         preventOverflow={false}
       >
         {customButton ? (
-          <MenuButton as={Flex} cursor={"pointer"} h={"fit-content"}>
-            {customButton}
-          </MenuButton>
+          customButton
         ) : (
           <MenuButton
             as={Button}
