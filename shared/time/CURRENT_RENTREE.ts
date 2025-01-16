@@ -1,1 +1,1 @@
-export const CURRENT_RENTREE = "2023";
+export const CURRENT_RENTREE = "2024";
