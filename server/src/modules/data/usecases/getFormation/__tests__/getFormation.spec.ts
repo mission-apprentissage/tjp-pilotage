@@ -63,16 +63,17 @@ describe("GET /api/formation/:cfd", () => {
   });
 
   it("doit retourner qu'un CFD n'est pas enseigné dans une région", async () => {
-    const cfdNotInScope = "32322112";
+    const cfdNotInScope = "46033401";
+    const codeRegion = "84";
     const response = await app.inject({
       method: "GET",
-      url: `/api/formation/${cfdNotInScope}`,
+      url: `/api/formation/${cfdNotInScope}?codeRegion=${codeRegion}`,
     });
 
     expect(response.statusCode).toBe(200);
     const result = await response.json<Response>();
     expect(result.cfd).toBe(cfdNotInScope);
-    expect(result.libelle).toBe("BTSA - Sciences et technologies des aliments spe produits laitiers");
+    expect(result.libelle).toBe("DIV-4 - Gestion touristique : hospitalites, accueil et experience client");
     expect(result.isInScope).toBe(false);
   });
 });
