@@ -23,6 +23,8 @@ fileignoreconfig:
   checksum: 28cdc80f0d836857ee9a802bff5a72a3ff3addad70a31b1ad4b7e98bc8db447c
 - filename: server/src/modules/core/usecases/redirectDne/redirectDne.test.ts
   checksum: 97116750d964c12ae4a0ffe9f5477d66526bf2f2e8ac8719ee399dc88faf7ae5
+- filename: server/static/files/lyceesACCE.csv
+  checksum: fb7cf48e834cf74f9673d2b96e55bb19b5f6edb5af0430d3ae69c89c589b7e1a
 - filename: server/static/files/offres_apprentissage.csv
   checksum: f8e173f11056708d2958e4f000428c2acb2281d9f19db55d9d72c5790bf0bf4b
 - filename: server/tests/test_origin/controllers/campagnes.controller.test.js_old
