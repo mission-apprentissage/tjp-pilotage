@@ -1,1 +1,1 @@
-export const CURRENT_IJ_MILLESIME = "2021_2022";
+export const CURRENT_IJ_MILLESIME = "2022_2023";
