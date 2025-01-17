@@ -146,7 +146,6 @@ export const GroupedMultiselect = chakra(
     variant?: string;
     customButton?: ReactNode;
   }) => {
-    const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
 
     const getDefaultMapOptions = () => {
       if (!defaultOptions) return new Map();
@@ -158,7 +157,7 @@ export const GroupedMultiselect = chakra(
         value.map((val) => {
           return [
             val,
-            (stateValue.current?.get?.(val) ||
+            (
               groupedOptions[
                 Object.keys(groupedOptions).find((key) =>
                   groupedOptions[key].options.find(({ value }) => val === value)
@@ -292,7 +291,6 @@ export const GroupedMultiselect = chakra(
               ) : (
                 <Button
                   onClick={() => {
-                    stateValue.current = new Map();
                     onChange?.(Array.from(new Map().keys()));
                   }}
                   bgColor={"transparent"}
@@ -334,7 +332,6 @@ export const GroupedMultiselect = chakra(
                             } else {
                               newMap.delete(value);
                             }
-                            stateValue.current = newMap;
                             onChange?.(Array.from(newMap.keys()));
                           }}
                           value={value}
