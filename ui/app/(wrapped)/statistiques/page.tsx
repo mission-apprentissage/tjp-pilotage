@@ -1,7 +1,7 @@
 import { NotionAPI } from "notion-client";
 
-import { Doc } from "@/app/_components/NotionDoc";
 import { LandingFooter } from "@/app/(wrapped)/components/LandingFooter";
+import { Doc } from "@/components/NotionDoc";
 
 export const revalidate = 60;
 
