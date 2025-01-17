@@ -48,21 +48,24 @@ const withoutSensibleFields = (obj: unknown, seen: Set<unknown>): unknown => {
 export function logMiddleware(): FastifyLoggerOptions | PinoLoggerOptions | false {
   if (config.log.forceLocalLogs && config.env === "local") {
     return {
+      level: config.log.level,
       transport: {
         target: "pino-pretty",
         options: {
           translateTime: "HH:MM:ss Z",
           ignore: "pid,hostname",
+          level: config.log.level,
         },
       },
     };
   }
 
-  if (process.env.NODE_ENV === "test" || config.env === "local") {
+  if (process.env.NODE_ENV === "test") {
     return false;
   }
 
   const defaultSettings = {
+    level: config.log.level,
     serializers: {
       req: (request: FastifyRequest) => {
         return {
