@@ -2,8 +2,8 @@
 import { Container } from "@chakra-ui/react";
 import type { ExtendedRecordMap } from "notion-types";
 
-import { Doc } from "@/app/_components/NotionDoc";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { Doc } from "@/components/NotionDoc";
 
 export const revalidate = 60;
 
