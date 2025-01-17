@@ -35,11 +35,11 @@ export const getDenominateurQuery = async ({ filters }: { filters: Filters }) =>
         ])
         .as("effectifs")
     )
-    .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "effectifs.codeNiveauDiplome")
-    .innerJoin("region", "region.codeRegion", "effectifs.codeRegion")
-    .innerJoin("departement", "departement.codeDepartement", "effectifs.codeDepartement")
-    .innerJoin("academie", "academie.codeAcademie", "effectifs.codeAcademie")
-    .innerJoin("nsf", "nsf.codeNsf", "effectifs.codeNsf")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "effectifs.codeNiveauDiplome")
+    .leftJoin("region", "region.codeRegion", "effectifs.codeRegion")
+    .leftJoin("departement", "departement.codeDepartement", "effectifs.codeDepartement")
+    .leftJoin("academie", "academie.codeAcademie", "effectifs.codeAcademie")
+    .leftJoin("nsf", "nsf.codeNsf", "effectifs.codeNsf")
     .select((eb) => [
       "annee",
       "rentreeScolaire",

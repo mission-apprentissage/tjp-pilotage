@@ -1,6 +1,6 @@
 import { NotionAPI } from "notion-client";
 
-import { Doc } from "@/app/_components/NotionDoc";
+import { Doc } from "@/components/NotionDoc";
 
 export const revalidate = 60;
 
