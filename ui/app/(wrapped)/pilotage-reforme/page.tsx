@@ -23,7 +23,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   const searchParams: {
     filters?: Partial<Filters>;
     order?: Partial<Order>;
-  } = qs.parse(queryParams.toString());
+  } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const filters = searchParams.filters ?? {};
   const order = searchParams.order ?? { order: "asc" };

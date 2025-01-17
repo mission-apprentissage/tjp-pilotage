@@ -126,16 +126,14 @@ export const Multiselect = chakra(
     gutter?: number;
     placement?: PlacementWithLogical;
   }) => {
-    const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
-
     const map = useMemo(() => {
       return new Map(
         value.map((val) => {
-          return [val, (stateValue.current?.get?.(val) || options.find(({ value }) => val === value)?.label) ?? val];
+          return [val, (options.find(({ value }) => val === value)?.label) ?? val];
         })
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value, options, stateValue.current]);
+    }, [value, options]);
 
     const [search, setSearch] = useState("");
 
@@ -224,7 +222,6 @@ export const Multiselect = chakra(
               {map.size > 0 && (
                 <Button
                   onClick={() => {
-                    stateValue.current = new Map();
                     onChange?.(Array.from(new Map().keys()));
                   }}
                   bgColor={"transparent"}
@@ -249,7 +246,6 @@ export const Multiselect = chakra(
                     } else {
                       newMap.delete(value);
                     }
-                    stateValue.current = newMap;
                     onChange?.(Array.from(newMap.keys()));
                   }}
                   value={value}
@@ -269,5 +265,4 @@ export const Multiselect = chakra(
         </Portal>
       </Menu>
     );
-  }
-);
+  });
