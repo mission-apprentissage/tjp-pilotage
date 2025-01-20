@@ -83,6 +83,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@anatine/zod-mock": "^3.13.4",
+    "@faker-js/faker": "^9.3.0",
     "@tsconfig/node22": "^22.0.0",
     "@types/cookie": "^0.5.1",
     "@types/ejs": "^3.1.5",

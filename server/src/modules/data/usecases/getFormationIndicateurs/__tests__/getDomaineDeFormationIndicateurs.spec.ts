@@ -1,8 +1,8 @@
+import { usePg } from "@tests/utils/pg.test.utils";
 import type { getFormationCfdIndicatorsSchema } from "shared/routes/schemas/get.formation.cfd.indicators.schema";
 import { beforeAll, describe, expect, it } from "vitest";
 import type { z } from "zod";
 
-import { usePg } from "@/../tests/pg.test.utils";
 import type { Server } from "@/server/server";
 import createServer from "@/server/server.js";
 
