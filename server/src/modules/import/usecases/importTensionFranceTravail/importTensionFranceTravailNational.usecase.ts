@@ -17,7 +17,7 @@ export const [importTensionFranceTravailNational] = inject(
   },
   (deps) => async () => {
     // Create new file
-    deps.createFranceTravailTensionFile(deps.filePathManager.getFranceTravailIndicateurTensionStatsFilePath());
+    await deps.createFranceTravailTensionFile(deps.filePathManager.getFranceTravailIndicateurTensionStatsFilePath());
 
     // Lister tous les ROMES pour lesquels il faut importer les données de tension
     const romes = (await deps.findAllRomeCodes()).map((r) => r.codeRome);
