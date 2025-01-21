@@ -31,8 +31,8 @@ export const AmiCmaEnCoursValidationField = chakra(
     if (!visible) return null;
 
     return (
-      <FormControl className={className} isInvalid={!!errors.amiCmaEnCoursValidation}>
-        <FormLabel>Demande en cours ?</FormLabel>
+      <FormControl as="fieldset" className={className} isInvalid={!!errors.amiCmaEnCoursValidation}>
+        <FormLabel as="legend">Demande en cours ?</FormLabel>
         <Controller
           name="amiCmaEnCoursValidation"
           control={control}

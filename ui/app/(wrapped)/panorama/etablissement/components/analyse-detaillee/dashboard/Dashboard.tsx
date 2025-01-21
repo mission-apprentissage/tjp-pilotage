@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading } from "@chakra-ui/react";
 
 import { InformationDonneeIncompletes } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/InformationDonneeIncompletes";
 import type {
@@ -30,9 +30,9 @@ export const Dashboard = ({
   return (
     <Flex flexDirection={"column"} mr={8} gap={16}>
       <Flex flexDirection={"column"} gap={2}>
-        <Text fontSize="18px" fontWeight={700} _firstLetter={{ textTransform: "uppercase" }}>
+        <Heading as="h2" fontSize={18} fontWeight={700} _firstLetter={{ textTransform: "uppercase" }}>
           {formation?.libelleFormation.replace("2nde commune", " ").replace("1ere commune", " ")}
-        </Text>
+        </Heading>
         <Flex direction={"row"} gap={2}>
           <BadgeTypeFamille typeFamille={formation?.typeFamille as TypeFamilleKeys} labelSize="long" size={"md"} />
           <Flex>

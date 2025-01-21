@@ -1,10 +1,10 @@
-import { Card, CardBody, CardHeader, Flex, Text } from "@chakra-ui/react";
+import {Card, CardBody, CardHeader, Flex, Heading, VisuallyHidden} from '@chakra-ui/react';
 
 import type { CorrectionsStats } from "@/app/(wrapped)/intentions/corrections/types";
 
 const formatEcart = (value: number) => {
-  if (value > 0) return <Text>{`+${value}`}</Text>;
-  return <Text>{value}</Text>;
+  if (value > 0) return `+${value}`;
+  return value;
 };
 
 const CountCard = ({
@@ -22,19 +22,23 @@ const CountCard = ({
     <CardHeader px={3} pt={2} pb={1}>
       <Flex direction="column" minH="42px">
         <Flex>
-          <Text fontSize="lg" fontWeight="bold" lineHeight={"20px"}>
+          <Heading as="h2" fontSize="lg" fontWeight="bold" lineHeight={"20px"}>
+            <VisuallyHidden>Libellé :</VisuallyHidden>
             {label}
-          </Text>
+          </Heading>
         </Flex>
-        <Text fontSize="sm">{subLabel}</Text>
+        <Heading as="h3" fontSize="sm">
+          <VisuallyHidden>Sous libellé :</VisuallyHidden>
+          {subLabel}
+        </Heading>
       </Flex>
     </CardHeader>
     <CardBody pb={3} pt={0} px={3}>
       <Flex direction="column">
         <Flex pb={4}>
-          <Text fontSize="48" fontWeight={"extrabold"}>
+          <Heading as="h4" fontSize="48" fontWeight={"extrabold"}>
             {isEcart ? formatEcart(value ?? 0) : (value ?? "0")}
-          </Text>
+          </Heading>
         </Flex>
       </Flex>
     </CardBody>

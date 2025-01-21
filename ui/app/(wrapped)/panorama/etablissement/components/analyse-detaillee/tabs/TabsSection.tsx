@@ -35,9 +35,9 @@ export const TabsSection = ({
         >
           <Flex direction={"column"} justify={"center"} alignItems={"center"} mx={"80px"}>
             {displayType === "dashboard" ? (
-              <Img src={`/icons/dashboard_selected.svg`} alt="dashboard" w={"32px"} h={"32px"} />
+              <Img src={`/icons/dashboard_selected.svg`} alt="Icône onglet tableau de bord sélectionné" w={"32px"} h={"32px"} />
             ) : (
-              <Img src={`/icons/dashboard.svg`} alt="dashboard" w={"32px"} h={"32px"} />
+              <Img src={`/icons/dashboard.svg`} alt="Icône onglet tableau de bord" w={"32px"} h={"32px"} />
             )}
             <Text>Tableau de bord</Text>
           </Flex>
@@ -54,9 +54,9 @@ export const TabsSection = ({
         >
           <Flex direction={"column"} justify={"center"} alignItems={"center"}>
             {displayType === "quadrant" ? (
-              <Img src={`/icons/quadrant_selected.svg`} alt="quadrant" w={"32px"} h={"32px"} />
+              <Img src={`/icons/quadrant_selected.svg`} alt="Icône onglet quadrant sélectionné" w={"32px"} h={"32px"} />
             ) : (
-              <Img src={`/icons/quadrant.svg`} alt="quadrant" w={"32px"} h={"32px"} />
+              <Img src={`/icons/quadrant.svg`} alt="Icône onglet quadrant" w={"32px"} h={"32px"} />
             )}
             <Text>Quadrant des formations</Text>
           </Flex>

@@ -10,10 +10,12 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
 export const CapaciteField = ({
+  id,
   name,
   className,
   isReadOnly,
 }: {
+  id: string;
   name:
     | "capaciteScolaireActuelle"
     | "capaciteScolaire"
@@ -53,6 +55,7 @@ export const CapaciteField = ({
               onFocus={(e) => e.currentTarget.select()}
             >
               <NumberInputField
+                id={id}
                 textAlign={"end"}
                 fontSize={"16px"}
                 fontWeight={700}

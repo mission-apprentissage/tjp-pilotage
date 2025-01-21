@@ -12,5 +12,5 @@ const fetchData = async () => {
 
 export default async function Documentation() {
   const recordMap = await fetchData();
-  return <Doc recordMap={recordMap} />;
+  return <Doc recordMap={recordMap} pageTitle={"Documentation - Orion"} />;
 }

@@ -1,3 +1,4 @@
 import { redirect } from "next/navigation";
 
-export default () => redirect("/panorama/region");
+const Page = () => redirect("/panorama/region");
+export default Page;

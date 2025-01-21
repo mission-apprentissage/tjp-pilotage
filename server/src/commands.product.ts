@@ -282,6 +282,26 @@ export function productCommands(cli: Command) {
     });
 
   cli
+    .command("importTensionFranceTravail")
+    .description("Import des données de tension (national/régional/départemental) depuis France Travail")
+    .argument("[usecase]")
+    .action(async (usecaseName: string) => {
+      const usecases = {
+        importTensionFranceTravailNational,
+        importTensionFranceTravailRegion,
+        importTensionFranceTravailDepartement,
+      };
+
+      if (usecaseName) {
+        await usecases[usecaseName as keyof typeof usecases]();
+      } else {
+        for (const usecase of Object.values(usecases)) {
+          await usecase();
+        }
+      }
+    });
+
+  cli
     .command("importTables")
     .argument("[usecase]")
     .action(async (usecaseName: string) => {
@@ -315,13 +335,16 @@ export function productCommands(cli: Command) {
       await refreshViews();
     });
 
-  cli.command("refreshViews").action(async () => {
-    await refreshViews();
-  });
-
   cli.command("importIJ").action(async () => {
     await importIJData();
   });
+
+  cli
+    .command("importPositionsQuadrant")
+    .description("Calcul des positions quadrants")
+    .action(async () => {
+      await importPositionsQuadrant();
+    });
 
   cli
     .command("importFormations")
@@ -342,30 +365,7 @@ export function productCommands(cli: Command) {
       await refreshViews();
     });
 
-  cli
-    .command("importTensionFranceTravail")
-    .description("Import des données de tension (national/régional/départemental) depuis France Travail")
-    .argument("[usecase]")
-    .action(async (usecaseName: string) => {
-      const usecases = {
-        importTensionFranceTravailNational,
-        importTensionFranceTravailRegion,
-        importTensionFranceTravailDepartement,
-      };
-
-      if (usecaseName) {
-        await usecases[usecaseName as keyof typeof usecases]();
-      } else {
-        for (const usecase of Object.values(usecases)) {
-          await usecase();
-        }
-      }
-    });
-
-  cli
-    .command("importPositionsQuadrant")
-    .description("Calcul des positions quadrants")
-    .action(async () => {
-      await importPositionsQuadrant();
-    });
+  cli.command("refreshViews").action(async () => {
+    await refreshViews();
+  });
 }

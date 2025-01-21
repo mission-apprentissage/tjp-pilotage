@@ -3,11 +3,23 @@ import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { CapaciteField } from "@/app/(wrapped)/intentions/saisie/components/CapaciteField";
+import type {Intention} from '@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/types';
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 import { isTypeColoration, isTypeOuverture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const CapaciteApprentissageColoreeActuelleField = chakra(
-  ({ id, disabled, className }: { id: string; disabled?: boolean; className?: string }) => {
+  ({
+    id,
+    demande,
+    disabled = false,
+    className
+  } :
+  {
+    id: string;
+    demande: Intention;
+    disabled?: boolean;
+    className?: string;
+  }) => {
     const { watch, setValue } = useFormContext<IntentionForms>();
 
     useEffect(
@@ -18,9 +30,9 @@ export const CapaciteApprentissageColoreeActuelleField = chakra(
         }).unsubscribe
     );
 
-    const typeDemande = watch("typeDemande");
-    const ouverture = isTypeOuverture(typeDemande);
-    const coloration = isTypeColoration(typeDemande) || watch("coloration");
+    const typeDemande = demande.typeDemande;
+    const ouverture = typeDemande !== undefined && isTypeOuverture(typeDemande);
+    const coloration = typeDemande !== undefined && isTypeColoration(typeDemande) || watch("coloration");
     const isReadOnly = disabled || ouverture || !coloration;
     if (!coloration) return <></>;
 

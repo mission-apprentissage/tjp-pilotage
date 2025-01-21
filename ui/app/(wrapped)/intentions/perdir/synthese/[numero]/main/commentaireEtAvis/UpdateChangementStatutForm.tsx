@@ -1,7 +1,8 @@
 import { CheckIcon } from "@chakra-ui/icons";
-import { Button, chakra, Flex, FormControl, Textarea } from "@chakra-ui/react";
+import { Button, chakra, Flex, FormControl, Textarea, VisuallyHidden } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
+import { useId } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
@@ -56,6 +57,8 @@ export const UpdateChangementStatutForm = chakra(
         },
       });
 
+    const updateCommentaireChangementStatutId = useId();
+
     return (
       <FormProvider {...form}>
         <Flex
@@ -71,7 +74,9 @@ export const UpdateChangementStatutForm = chakra(
           width={"50%"}
         >
           <FormControl isInvalid={!!errors.commentaire} isRequired>
+            <VisuallyHidden as="label" htmlFor={updateCommentaireChangementStatutId}>Commentaire</VisuallyHidden>
             <Textarea
+              id={updateCommentaireChangementStatutId}
               {...register("commentaire", {
                 required: false,
               })}

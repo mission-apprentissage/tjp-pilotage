@@ -12,5 +12,5 @@ const fetchData = async () => {
 
 export default async function MentionsLegales() {
   const recordMap = await fetchData();
-  return <Doc recordMap={recordMap} />;
+  return <Doc recordMap={recordMap} pageTitle={"Mentions légales - Orion"}/>;
 }

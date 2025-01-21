@@ -52,10 +52,10 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
           Fiche synthèse de la demande
         </Heading>
         <Flex direction={"row"} gap={3} my="auto">
-          <Tag colorScheme="purple" size={"sm"} h="fit-content">
+          <Tag colorScheme="purple" size={"sm"} h="fit-content" fontSize={12}>
             Campagne {demande.campagne?.annee}
           </Tag>
-          <Tag colorScheme="blue" size={"sm"} h="fit-content">
+          <Tag colorScheme="blue" size={"sm"} h="fit-content" fontSize={12}>
             {getTypeDemandeLabel(demande.typeDemande)}
           </Tag>
         </Flex>
@@ -65,9 +65,9 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
         <Flex direction={"column"} gap={6} maxW={"50%"}>
           <Flex direction={"column"} gap={3} bgColor={"blueecume.975"} p={4} h="fit-content">
             <Flex direction={"row"} gap={4}>
-              <Text w={["44", "48", "52"]} fontWeight={700}>
+              <Heading as="h3" w={["44", "48", "52"]} fontSize={14} fontWeight={700}>
                 Établissement
-              </Text>
+              </Heading>
               <Tooltip label={demande.libelleEtablissement}>
                 <Text w={["64", "72", "80", "96"]} fontSize={14} noOfLines={2}>
                   {demande.libelleEtablissement}
@@ -75,9 +75,9 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
               </Tooltip>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={["44", "48", "52"]} fontWeight={700}>
+              <Heading as="h3" w={["44", "48", "52"]} fontSize={14} fontWeight={700}>
                 Département
-              </Text>
+              </Heading>
               <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {formatDepartementLibelleWithCodeDepartement({
                   libelleDepartement: demande.libelleDepartement,
@@ -86,9 +86,9 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
               </Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={["44", "48", "52"]} fontWeight={700}>
+              <Heading as="h3" w={["44", "48", "52"]} fontSize={14} fontWeight={700}>
                 Diplôme
-              </Text>
+              </Heading>
               <Flex direction={"column"} gap={2} w={["64", "72", "80", "96"]}>
                 <Tooltip label={demande.libelleFormation}>
                   <Text fontSize={14}>{demande.libelleFormation}</Text>
@@ -97,36 +97,36 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
               </Flex>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={["44", "48", "52"]} fontWeight={700}>
+              <Heading as="h3" w={["44", "48", "52"]} fontSize={14} fontWeight={700}>
                 Dispositif
-              </Text>
+              </Heading>
               <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {demande.libelleDispositif}
               </Text>
             </Flex>
             {demande.libelleFCIL && (
               <Flex direction={"row"} gap={4}>
-                <Text w={["44", "48", "52"]} fontWeight={700}>
+                <Heading as="h3" w={["44", "48", "52"]} fontSize={14} fontWeight={700}>
                   Libellé de la FCIL
-                </Text>
+                </Heading>
                 <Text w={["64", "72", "80", "96"]} fontSize={14}>
                   {demande.libelleFCIL}
                 </Text>
               </Flex>
             )}
             <Flex direction={"row"} gap={4}>
-              <Text w={["44", "48", "52"]} fontWeight={700}>
+              <Heading as="h3" w={["44", "48", "52"]} fontSize={14} fontWeight={700}>
                 Auteur
-              </Text>
+              </Heading>
               <Flex w={["64", "72", "80", "96"]} direction={"row"} gap={2}>
                 <Text>{demande.createdBy?.fullname}</Text>
                 <RoleTag role={demande.createdBy?.role as Role} />
               </Flex>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={["44", "48", "52"]} fontWeight={700}>
+              <Heading as="h3" w={["44", "48", "52"]} fontSize={14} fontWeight={700}>
                 Créée le
-              </Text>
+              </Heading>
               <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {formatDate({
                   date: demande.createdAt,
@@ -136,9 +136,9 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
               </Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={["44", "48", "52"]} fontWeight={700}>
+              <Heading as="h3" w={["44", "48", "52"]} fontSize={14} fontWeight={700}>
                 Dernière modification le
-              </Text>
+              </Heading>
               <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {formatDate({
                   date: demande.updatedAt,
@@ -149,9 +149,9 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
             </Flex>
             {demande.updatedBy && (
               <Flex direction={"row"} gap={4}>
-                <Text w={["44", "48", "52"]} fontWeight={700}>
+                <Heading as="h3" w={["44", "48", "52"]} fontSize={14} fontWeight={700}>
                   Modifié par
-                </Text>
+                </Heading>
                 <Flex w={["64", "72", "80", "96"]} direction={"row"} gap={2}>
                   <Text>{demande.updatedBy?.fullname}</Text>
                   <RoleTag role={demande.updatedBy?.role as Role} />
@@ -161,7 +161,7 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
           </Flex>
           <Flex gap={3} bgColor={"blueecume.975"} p={4} direction={"column"}>
             <Flex>
-              <Heading as={"h6"} fontSize={14}>
+              <Heading as={"h3"} fontSize={14} fontWeight={700}>
                 Observations sur la demande
               </Heading>
             </Flex>
@@ -181,7 +181,7 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
         </Flex>
         <Flex direction={"column"} gap={3} p={4} flex={1}>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Heading as={"h6"} fontSize={14}>
+            <Heading as={"h3"} fontSize={14} fontWeight={700}>
               Numéro de demande
             </Heading>
             <Text fontWeight={700} fontSize={14}>
@@ -189,22 +189,22 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
             </Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Rentrée scolaire</Text>
+            <Heading as={"h3"} fontSize={14} fontWeight={700}>Rentrée scolaire</Heading>
             <Text fontSize={14}>{demande.rentreeScolaire}</Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Coloration ?</Text>
+            <Heading as={"h3"} fontSize={14} fontWeight={700}>Coloration ?</Heading>
             <Text fontSize={14}>{formatBoolean(demande.coloration)}</Text>
           </Flex>
           {demande.coloration && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text>Libellé de la coloration</Text>
+              <Heading as={"h3"} fontSize={14} fontWeight={700}>Libellé de la coloration</Heading>
               <Text fontSize={14}>{demande.libelleColoration}</Text>
             </Flex>
           )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Heading as={"h6"} fontSize={14}>
+            <Heading as={"h3"} fontSize={14} fontWeight={700}>
               Nb de places ouvertes en voie scolaire
             </Heading>
             <Text fontWeight={700} fontSize={14}>
@@ -212,24 +212,24 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
             </Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Capacité actuelle</Text>
+            <Heading as={"h4"} fontSize={14} fontWeight={400}>Capacité actuelle</Heading>
             <Text fontSize={14}>{demande.capaciteScolaireActuelle}</Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
-            <Text>- Dont place(s) colorée(s)</Text>
+            <Heading as={"h5"} fontSize={14} fontWeight={400}>- Dont place(s) colorée(s)</Heading>
             <Text>{demande.capaciteScolaireColoreeActuelle}</Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Nouvelle capacité</Text>
+            <Heading as={"h4"} fontSize={14} fontWeight={400}>Nouvelle capacité</Heading>
             <Text fontSize={14}>{demande.capaciteScolaire}</Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
-            <Text>- Dont place(s) colorée(s)</Text>
+            <Heading as={"h5"} fontSize={14} fontWeight={400}>- Dont place(s) colorée(s)</Heading>
             <Text>{demande.capaciteScolaireColoree}</Text>
           </Flex>
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Heading as={"h6"} fontSize={14}>
+            <Heading as={"h3"} fontSize={14} fontWeight={700}>
               Nb de places ouvertes en apprentissage
             </Heading>
             <Text fontWeight={700} fontSize={14}>
@@ -237,24 +237,24 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
             </Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Capacité actuelle</Text>
+            <Heading as={"h4"} fontSize={14} fontWeight={400}>Capacité actuelle</Heading>
             <Text fontSize={14}>{demande.capaciteApprentissageActuelle}</Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
-            <Text>- Dont place(s) colorée(s)</Text>
+            <Heading as={"h5"} fontSize={14} fontWeight={400}>- Dont place(s) colorée(s)</Heading>
             <Text>{demande.capaciteApprentissageColoreeActuelle}</Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Nouvelle capacité</Text>
+            <Heading as={"h4"} fontSize={14} fontWeight={400}>Nouvelle capacité</Heading>
             <Text fontSize={14}>{demande.capaciteApprentissage}</Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"} ms={4}>
-            <Text>- Dont place(s) colorée(s)</Text>
+            <Heading as={"h5"} fontSize={14} fontWeight={400}>- Dont place(s) colorée(s)</Heading>
             <Text>{demande.capaciteApprentissageColoree}</Text>
           </Flex>
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Heading as={"h6"} fontSize={14}>
+            <Heading as={"h3"} fontSize={14} fontWeight={700}>
               Motif(s)
             </Heading>
           </Flex>
@@ -263,82 +263,82 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
           </Flex>
           {hasMotifAutre(demande.motif) && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text fontSize={14}>Autre motif : {demande.autreMotif!}</Text>
+              <Heading as={"h3"} fontSize={14} fontWeight={400}>Autre motif : {demande.autreMotif!}</Heading>
             </Flex>
           )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Heading as={"h6"} fontSize={14}>
+            <Heading as={"h3"} fontSize={14} fontWeight={700}>
               Précisions
             </Heading>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>AMI/CMA ?</Text>
+            <Heading as={"h4"} fontSize={14} fontWeight={400}>AMI/CMA ?</Heading>
             <Text>{formatBoolean(demande.amiCma)}</Text>
           </Flex>
           {demande.amiCma && demande.amiCmaValide && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text>Financement validé en</Text>
+              <Heading as={"h5"} fontSize={14} fontWeight={400}>Financement validé en</Heading>
               <Text>{demande.amiCmaValideAnnee}</Text>
             </Flex>
           )}
           {demande.amiCma && demande.amiCmaEnCoursValidation && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text>Financement en cours de validation ?</Text>
+              <Heading as={"h5"} fontSize={14} fontWeight={400}>Financement en cours de validation ?</Heading>
               <Text>{formatBoolean(demande.amiCmaEnCoursValidation)}</Text>
             </Flex>
           )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={2}>
             <Icon icon="ri:parent-line" color="black" style={{ marginTop: "auto", marginBottom: "auto" }} />
-            <Heading as={"h6"} fontSize={14}>
+            <Heading as={"h3"} fontSize={14}>
               Besoin(s) RH exprimé(s)
             </Heading>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Recrutement(s) ?</Text>
+            <Heading as="h4" fontSize={14} fontWeight={400}>Recrutement(s) ?</Heading>
             <Text>{formatBoolean(demande.recrutementRH)}</Text>
           </Flex>
           {demande.recrutementRH && (
             <>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
-                <Text>Nombre de recrutements envisagés</Text>
+                <Heading as={"h5"} fontSize={14} fontWeight={400}>Nombre de recrutements envisagés</Heading>
                 <Text>{demande.nbRecrutementRH}</Text>
               </Flex>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
-                <Text>Discipline(s)</Text>
+                <Heading as={"h5"} fontSize={14} fontWeight={400}>Discipline(s)</Heading>
                 <Text>{formatArray([demande.discipline1RecrutementRH, demande.discipline2RecrutementRH])}</Text>
               </Flex>
             </>
           )}
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Reconversion(s) ?</Text>
+            <Heading as="h4" fontSize={14} fontWeight={400}>Reconversion(s) ?</Heading>
             <Text>{formatBoolean(demande.reconversionRH)}</Text>
           </Flex>
           {demande.reconversionRH && (
             <>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
-                <Text>Nombre de reconversions envisagées</Text>
+                <Heading as={"h5"} fontSize={14} fontWeight={400}>Nombre de reconversions envisagées</Heading>
                 <Text>{demande.nbReconversionRH}</Text>
               </Flex>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
-                <Text>Discipline(s)</Text>
+                <Heading as={"h5"} fontSize={14} fontWeight={400}>Discipline(s)</Heading>
                 <Text>{formatArray([demande.discipline1ReconversionRH, demande.discipline2ReconversionRH])}</Text>
               </Flex>
             </>
           )}
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Professeur(s) associé(s) ?</Text>
+            <Heading as="h4" fontSize={14} fontWeight={400}>Professeur(s) associé(s) ?</Heading>
             <Text>{formatBoolean(demande.professeurAssocieRH)}</Text>
           </Flex>
           {demande.professeurAssocieRH && (
             <>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
-                <Text>Nombre de professeurs associés envisagés</Text>
+                <Heading as={"h5"} fontSize={14} fontWeight={400}>Nombre de professeurs associés envisagés</Heading>
                 <Text>{demande.nbProfesseurAssocieRH}</Text>
               </Flex>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
-                <Text>Discipline(s)</Text>
+                <Heading as={"h5"} fontSize={14} fontWeight={400}>Discipline(s)</Heading>
                 <Text>
                   {formatArray([demande.discipline1ProfesseurAssocieRH, demande.discipline2ProfesseurAssocieRH])}
                 </Text>
@@ -346,17 +346,17 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
             </>
           )}
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Formation(s) ?</Text>
+            <Heading as="h4" fontSize={14} fontWeight={400}>Formation(s) ?</Heading>
             <Text>{formatBoolean(demande.formationRH)}</Text>
           </Flex>
           {demande.formationRH && (
             <>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
-                <Text>Nombre de formations envisagées</Text>
+                <Heading as={"h5"} fontSize={14} fontWeight={400}>Nombre de formations envisagées</Heading>
                 <Text>{demande.nbRecrutementRH}</Text>
               </Flex>
               <Flex direction={"row"} gap={4} justify={"space-between"}>
-                <Text>Discipline(s)</Text>
+                <Heading as={"h5"} fontSize={14} fontWeight={400}>Discipline(s)</Heading>
                 <Text>{formatArray([demande.discipline1FormationRH, demande.discipline2FormationRH])}</Text>
               </Flex>
             </>

@@ -72,6 +72,7 @@ export const CustomControls = () => {
 
       setMap(map);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 
   // Lors du chargement du filtre / rechargement d'une nouvelle liste
@@ -94,6 +95,7 @@ export const CustomControls = () => {
       });
       map.on("moveend", onZoomEnd);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [etablissementMap]);
 
   const onZoomEnd = () => {

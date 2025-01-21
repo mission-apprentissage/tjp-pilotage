@@ -1,4 +1,4 @@
-import { Flex, Text, VStack } from "@chakra-ui/react";
+import { Flex, Heading, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 
 import type {
@@ -44,9 +44,9 @@ export const HeaderSection = ({
   return (
     <VStack gap={8} width="100%" alignItems="start" color={"grey.50"}>
       <Flex direction={"row"} gap={3}>
-        <Text fontWeight="700" fontSize="20px" lineHeight="28px">
+        <Heading as="h1" fontWeight="700" fontSize="20px" lineHeight="28px">
           Indicateurs clés de la transformation
-        </Text>
+        </Heading>
       </Flex>
       <Flex direction={"row"} width="100%" h="100%" gap="16px">
         <Flex flex="1" direction={"column"} gap={6}>

@@ -34,7 +34,7 @@ export default function Changelog() {
       <Container maxWidth="70%" paddingY="48px">
         <VStack spacing="48px" width="100%">
           <VStack spacing="48px" width="100%">
-            <EditorialTitle>Mises à jour récentes dans Orion</EditorialTitle>
+            <EditorialTitle headingLevel="h1">Mises à jour récentes dans Orion</EditorialTitle>
             <VStack spacing="48px" width="100%">
               {isLoading && <EntryLoader />}
               {!isLoading &&
@@ -44,7 +44,7 @@ export default function Changelog() {
             </VStack>
           </VStack>
           <VStack spacing="48px" width="100%">
-            <EditorialTitle>Prochainement</EditorialTitle>
+            <EditorialTitle headingLevel="h1">Prochainement</EditorialTitle>
             <VStack spacing="48px" width="100%">
               {isLoading && <EntryLoader />}
               {!isLoading &&
