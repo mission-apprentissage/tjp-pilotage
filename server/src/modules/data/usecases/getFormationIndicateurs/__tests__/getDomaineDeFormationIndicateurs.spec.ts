@@ -214,24 +214,27 @@ describe("GET /api/formation/:cfd/indicators", () => {
       expect(result.tauxIJ.tauxPoursuite).toEqual(
         expect.arrayContaining([
           { apprentissage: 0.2967, libelle: "2019+20", scolaire: 0.509 },
-          { apprentissage: 0.4036, libelle: "2020+21", scolaire: 0.5379 },
+          { apprentissage: 0.4036, libelle: "2020+21", scolaire: 0.5382 },
           { apprentissage: 0.3954, libelle: "2021+22", scolaire: 0.5504 },
+          { apprentissage: 0.3791, libelle: "2022+23", scolaire: 0.5581 },
         ])
       );
 
       expect(result.tauxIJ.tauxInsertion).toEqual(
         expect.arrayContaining([
           { apprentissage: 0.5937, libelle: "2019+20", scolaire: 0.3496 },
-          { apprentissage: 0.6249, libelle: "2020+21", scolaire: 0.3531 },
+          { apprentissage: 0.6272, libelle: "2020+21", scolaire: 0.3546 },
           { apprentissage: 0.6137, libelle: "2021+22", scolaire: 0.4291 },
+          { apprentissage: 0.6037, libelle: "2022+23", scolaire: 0.4156 },
         ])
       );
 
       expect(result.tauxIJ.tauxDevenirFavorable).toEqual(
         expect.arrayContaining([
           { apprentissage: 0.7143, libelle: "2019+20", scolaire: 0.6807 },
-          { apprentissage: 0.7755, libelle: "2020+21", scolaire: 0.7011 },
+          { apprentissage: 0.7769, libelle: "2020+21", scolaire: 0.7019 },
           { apprentissage: 0.7664, libelle: "2021+22", scolaire: 0.7433 },
+          { apprentissage: 0.7539, libelle: "2022+23", scolaire: 0.7417 },
         ])
       );
     });
@@ -255,16 +258,18 @@ describe("GET /api/formation/:cfd/indicators", () => {
       expect(result.tauxIJ.tauxInsertion).toEqual(
         expect.arrayContaining([
           { apprentissage: 0.6362, libelle: "2019+20", scolaire: 0.4757 },
-          { apprentissage: 0.7, libelle: "2020+21", scolaire: 0.468 },
+          { apprentissage: 0.7, libelle: "2020+21", scolaire: 0.4691 },
           { apprentissage: 0.6719, libelle: "2021+22", scolaire: 0.4935 },
+          { apprentissage: 0.6429, libelle: "2022+23", scolaire: 0.4911 },
         ])
       );
 
       expect(result.tauxIJ.tauxDevenirFavorable).toEqual(
         expect.arrayContaining([
           { apprentissage: 0.7278, libelle: "2019+20", scolaire: 0.7428 },
-          { apprentissage: 0.8125, libelle: "2020+21", scolaire: 0.7594 },
+          { apprentissage: 0.8125, libelle: "2020+21", scolaire: 0.7599 },
           { apprentissage: 0.8047, libelle: "2021+22", scolaire: 0.7857 },
+          { apprentissage: 0.792, libelle: "2022+23", scolaire: 0.7876 },
         ])
       );
     });
@@ -283,22 +288,25 @@ describe("GET /api/formation/:cfd/indicators", () => {
           { apprentissage: 0.2518, libelle: "2019+20", scolaire: 0.5095 },
           { apprentissage: 0.375, libelle: "2020+21", scolaire: 0.5478 },
           { apprentissage: 0.4047, libelle: "2021+22", scolaire: 0.5769 },
+          { apprentissage: 0.4176, libelle: "2022+23", scolaire: 0.5826 },
         ])
       );
 
       expect(result.tauxIJ.tauxInsertion).toEqual(
         expect.arrayContaining([
           { apprentissage: 0.6362, libelle: "2019+20", scolaire: 0.4757 },
-          { apprentissage: 0.7, libelle: "2020+21", scolaire: 0.468 },
+          { apprentissage: 0.7, libelle: "2020+21", scolaire: 0.4691 },
           { apprentissage: 0.6719, libelle: "2021+22", scolaire: 0.4935 },
+          { apprentissage: 0.6429, libelle: "2022+23", scolaire: 0.4911 },
         ])
       );
 
       expect(result.tauxIJ.tauxDevenirFavorable).toEqual(
         expect.arrayContaining([
           { apprentissage: 0.7278, libelle: "2019+20", scolaire: 0.7428 },
-          { apprentissage: 0.8125, libelle: "2020+21", scolaire: 0.7594 },
+          { apprentissage: 0.8125, libelle: "2020+21", scolaire: 0.7599 },
           { apprentissage: 0.8047, libelle: "2021+22", scolaire: 0.7857 },
+          { apprentissage: 0.792, libelle: "2022+23", scolaire: 0.7876 },
         ])
       );
     });
@@ -324,16 +332,18 @@ describe("GET /api/formation/:cfd/indicators", () => {
       expect(result.tauxIJ.tauxInsertion).toEqual(
         expect.arrayContaining([
           { apprentissage: 0.6362, libelle: "2019+20", scolaire: 0.4757 },
-          { apprentissage: 0.7, libelle: "2020+21", scolaire: 0.468 },
+          { apprentissage: 0.7, libelle: "2020+21", scolaire: 0.4691 },
           { apprentissage: 0.6719, libelle: "2021+22", scolaire: 0.4935 },
+          { apprentissage: 0.6429, libelle: "2022+23", scolaire: 0.4911 },
         ])
       );
 
       expect(result.tauxIJ.tauxDevenirFavorable).toEqual(
         expect.arrayContaining([
           { apprentissage: 0.7278, libelle: "2019+20", scolaire: 0.7428 },
-          { apprentissage: 0.8125, libelle: "2020+21", scolaire: 0.7594 },
+          { apprentissage: 0.8125, libelle: "2020+21", scolaire: 0.7599 },
           { apprentissage: 0.8047, libelle: "2021+22", scolaire: 0.7857 },
+          { apprentissage: 0.792, libelle: "2022+23", scolaire: 0.7876 },
         ])
       );
     });
