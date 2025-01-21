@@ -37,11 +37,13 @@ export const intentionValidators = {
     if (!isTypeAjustement(intention.typeDemande) && !intention.motif?.length) {
       return "Le champ 'motif' est obligatoire";
     }
+    return undefined;
   },
   autreMotif: (intention) => {
     if (intention.motif?.includes("autre") && !intention.autreMotif) {
       return "Le champ 'autre motif' est obligatoire";
     }
+    return undefined;
   },
   libelleColoration: (intention) => {
     if (intention.coloration && !intention.libelleColoration) {
@@ -50,6 +52,7 @@ export const intentionValidators = {
     if (!intention.coloration && intention.libelleColoration) {
       return "Le champ 'libellé coloration' doit être vide";
     }
+    return undefined;
   },
   /**
    *
@@ -64,6 +67,7 @@ export const intentionValidators = {
     if (isTypeOuverture(intention.typeDemande) && intention.capaciteScolaireActuelle !== 0) {
       return "La capacité scolaire actuelle devrait être à 0 dans le cas d'une ouverture";
     }
+    return undefined;
   },
   /**
    *
@@ -120,6 +124,7 @@ export const intentionValidators = {
       intention.capaciteScolaire < intention.capaciteScolaireActuelle
     )
       return "La capacité scolaire devrait être supérieure ou égale à la capacité actuelle dans le cas d'un ajustement de rentrée";
+    return undefined;
   },
   /**
    *
@@ -146,6 +151,7 @@ export const intentionValidators = {
       intention.capaciteScolaireColoreeActuelle > intention.capaciteScolaireActuelle
     )
       return "La capacité scolaire colorée actuelle doit être inférieure ou égale à la capacité scolaire actuelle";
+    return undefined;
   },
   /**
    *
@@ -169,6 +175,7 @@ export const intentionValidators = {
       intention.capaciteScolaireColoree > intention.capaciteScolaire
     )
       return "La future capacité scolaire colorée doit être inférieure ou égale à la future capacité scolaire";
+    return undefined;
   },
   /**
    *
@@ -182,6 +189,7 @@ export const intentionValidators = {
 
     if (isTypeOuverture(intention.typeDemande) && intention.capaciteApprentissageActuelle !== 0)
       return "La capacité en apprentissage actuelle devrait être à 0 dans le cas d'une ouverture";
+    return undefined;
   },
   /**
    *
@@ -232,6 +240,7 @@ export const intentionValidators = {
       )
         return "La future capacité en apprentissage devrait être supérieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage";
     }
+    return undefined;
   },
   /**
    *
@@ -258,6 +267,7 @@ export const intentionValidators = {
       intention.capaciteApprentissageColoreeActuelle > intention.capaciteApprentissageActuelle
     )
       return "La capacité en apprentissage colorée actuelle doit être inférieure ou égale à la capacité en apprentissage actuelle";
+    return undefined;
   },
   /**
    *
@@ -284,6 +294,7 @@ export const intentionValidators = {
       intention.capaciteApprentissageColoree > intention.capaciteApprentissage
     )
       return "La future capacité en apprentissage colorée doit être inférieure ou égale à la future capacité en apprentissage";
+    return undefined;
   },
   /**
    *
@@ -291,10 +302,11 @@ export const intentionValidators = {
    * - supérieure à 0 dans le cas d'autre chose qu'une ouverture ou d'un ajustement
    */
   sommeCapaciteActuelle: (intention) => {
-    if (isTypeOuverture(intention.typeDemande) || isTypeAjustement(intention.typeDemande)) return;
+    if (isTypeOuverture(intention.typeDemande) || isTypeAjustement(intention.typeDemande)) return undefined;
 
     if (!intention.capaciteScolaireActuelle && !intention.capaciteApprentissageActuelle)
       return "La somme des capacités actuelles doit être supérieure à 0";
+    return undefined;
   },
   /**
    *
@@ -305,7 +317,7 @@ export const intentionValidators = {
    * - inférieure à la somme des capacités actuelles dans le cas d'une diminution
    */
   sommeCapacite: (intention) => {
-    if (isTypeFermeture(intention.typeDemande) || isTypeColoration(intention.typeDemande)) return;
+    if (isTypeFermeture(intention.typeDemande) || isTypeColoration(intention.typeDemande)) return undefined;
 
     if (!intention.capaciteApprentissage && !intention.capaciteScolaire) {
       return "La somme des futures capacités doit être supérieure à 0";
@@ -335,6 +347,7 @@ export const intentionValidators = {
       )
         return "La somme des capacités doit être inférieure à la somme des capacités actuelles dans le cas d'une diminution";
     }
+    return undefined;
   },
   /**
    * La somme des capacités colorées actuelles doit être :
@@ -350,6 +363,7 @@ export const intentionValidators = {
         intention.capaciteApprentissageActuelle + intention.capaciteScolaireActuelle
     )
       return "La somme des capacités colorées actuelles doit être inférieure ou égale à la somme des capacités actuelles";
+    return undefined;
   },
   /**
    * La somme des futures capacités colorées doit être :
@@ -373,15 +387,18 @@ export const intentionValidators = {
       intention.capaciteApprentissageColoree + intention.capaciteScolaireColoree === 0
     )
       return "La somme des futures capacités colorées doit être supérieure ou égale à 0 dans le cas d'une coloration";
+    return undefined;
   },
   motifRefus: (intention) => {
     if (intention.statut === DemandeStatutEnum["refusée"] && !intention.motifRefus?.length) {
       return "Le champ 'motif refus' est obligatoire";
     }
+    return undefined;
   },
   autreMotifRefus: (intention) => {
     if (intention.motifRefus?.includes("autre") && !intention.autreMotifRefus) {
       return "Le champ 'autre motif refus' est obligatoire";
     }
+    return undefined;
   },
-} satisfies Record<keyof Intention | string, (intention: Intention) => string | undefined>;
+} satisfies Record<keyof Intention | string, (intention: Intention) => string | void>;
