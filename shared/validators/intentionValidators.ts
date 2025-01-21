@@ -2,28 +2,29 @@
 import type { Args, ZodTypeProvider } from "@http-wizard/core";
 
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
+import type { DemandeType } from "../enum/demandeTypeEnum";
 import type { Router } from "../routes";
 
 type Intention = Args<Router["[POST]/intention/submit"]["schema"], ZodTypeProvider>["body"]["intention"];
 
-export const isTypeFermeture = (typeDemande: string) => ["fermeture"].includes(typeDemande);
+export const isTypeFermeture = (typeDemande: DemandeType) => ["fermeture"].includes(typeDemande);
 
-export const isTypeOuverture = (typeDemande: string) =>
+export const isTypeOuverture = (typeDemande: DemandeType) =>
   ["ouverture_compensation", "ouverture_nette"].includes(typeDemande);
 
-export const isTypeAugmentation = (typeDemande: string) =>
+export const isTypeAugmentation = (typeDemande: DemandeType) =>
   ["augmentation_compensation", "augmentation_nette"].includes(typeDemande);
 
-export const isTypeDiminution = (typeDemande: string) => ["diminution"].includes(typeDemande);
+export const isTypeDiminution = (typeDemande: DemandeType) => ["diminution"].includes(typeDemande);
 
-export const isTypeCompensation = (typeDemande: string) =>
+export const isTypeCompensation = (typeDemande: DemandeType) =>
   ["augmentation_compensation", "ouverture_compensation"].includes(typeDemande);
 
-export const isTypeTransfert = (typeDemande: string) => ["transfert"].includes(typeDemande);
+export const isTypeTransfert = (typeDemande: DemandeType) => ["transfert"].includes(typeDemande);
 
-export const isTypeColoration = (typeDemande: string) => ["coloration"].includes(typeDemande);
+export const isTypeColoration = (typeDemande: DemandeType) => ["coloration"].includes(typeDemande);
 
-export const isTypeAjustement = (typeDemande: string) => ["ajustement"].includes(typeDemande);
+export const isTypeAjustement = (typeDemande: DemandeType) => ["ajustement"].includes(typeDemande);
 
 const isPositiveNumber = (value: number | undefined): value is number => {
   if (!Number.isInteger(value)) return false;
