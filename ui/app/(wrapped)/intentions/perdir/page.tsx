@@ -1,3 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default () => redirect("/intentions/perdir/saisie");
+const Page = () => redirect("/intentions/perdir/saisie");
+
+export default Page;

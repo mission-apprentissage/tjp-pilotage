@@ -67,10 +67,11 @@ export const FiltersSection = ({
       </Flex>
 
       <Flex direction={"column"} gap={"8px"}>
-        <Text fontSize={14} fontWeight={400} lineHeight={"24px"}>
+        <Text fontSize={14} fontWeight={400} lineHeight={"24px"} as="label" htmlFor="select-voie">
           Voie
         </Text>
         <Select
+          id="select-voie"
           value={filters.voie?.[0] ?? "all"}
           onChange={(e) => onChangeFilter("voie", [e.target.value])}
           width="24rem"

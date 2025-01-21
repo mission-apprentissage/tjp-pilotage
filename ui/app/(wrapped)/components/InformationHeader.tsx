@@ -1,4 +1,4 @@
-import { Box, Button, Link, Stack, Text, VStack } from "@chakra-ui/react";
+import { Box, CloseButton, Link, Stack, Text, VisuallyHidden, VStack } from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
@@ -62,7 +62,7 @@ export const InformationHeader = () => {
             <Icon icon="ri:information-fill" fontSize="24px" />
             <Text
               flexGrow={1}
-              fontSize="16px"
+              fontSize={16}
               fontWeight={700}
               display={{
                 base: "none",
@@ -75,7 +75,7 @@ export const InformationHeader = () => {
               </Link>
             </Text>
             <Text
-              fontSize="12px"
+              fontSize={12}
               display={{
                 base: "block",
                 md: "none",
@@ -86,7 +86,7 @@ export const InformationHeader = () => {
                 Voir les détails
               </Link>
             </Text>
-            <Button
+            <CloseButton
               onClick={() => closeInfo(changelogEntry.id)}
               variant="inline"
               display="flex"
@@ -97,8 +97,9 @@ export const InformationHeader = () => {
               width="auto"
               height="auto"
             >
-              <Icon icon="ri:close-fill" fontSize="16px" />
-            </Button>
+              <VisuallyHidden fontSize={12}>Fermer</VisuallyHidden>
+              <Icon icon="ri:close-fill" fontSize={16} />
+            </CloseButton>
           </Stack>
         </Box>
       ))}

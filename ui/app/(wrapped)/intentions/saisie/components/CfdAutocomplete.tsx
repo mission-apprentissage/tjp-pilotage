@@ -34,12 +34,14 @@ const OptionLabel = ({ option }: { option: (typeof client.infer)["[GET]/diplome/
 };
 
 export const CfdAutocompleteInput = ({
+  id = "cfd-autocomplete",
   name,
   defaultValue,
   disabled,
   inError,
   onChange,
 }: {
+  id?: string;
   name: string;
   defaultValue?: OptionSchema;
   disabled?: boolean;
@@ -59,6 +61,7 @@ export const CfdAutocompleteInput = ({
 
   return (
     <AsyncSelect
+      inputId={id}
       instanceId={useId()}
       name={name}
       styles={selectStyle}

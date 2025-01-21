@@ -12,5 +12,10 @@ const fetchData = async () => {
 
 export default async function CGU() {
   const recordMap = await fetchData();
-  return <Doc recordMap={recordMap} />;
+  return <Doc
+    recordMap={recordMap}
+    pageTitle={
+      "Conditions Générales d'Utilisation - Orion"
+    }
+  />;
 }

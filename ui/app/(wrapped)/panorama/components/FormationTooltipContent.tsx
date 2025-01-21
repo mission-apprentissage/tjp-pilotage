@@ -25,7 +25,7 @@ export const FormationTooltipContent = ({ formation }: { formation: Formation })
       formation.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]]);
 
   return (
-    <Box bg="white" fontSize="xs" w={"100%"}>
+    <Box bg="white" fontSize="s" w={"100%"}>
       <InfoBlock mb="2" label="Formation concernée" value={formation?.libelleFormation} />
       <InfoBlock mb="2" label="Dispositif concerné" value={formation?.libelleDispositif} />
       <HStack mb="2" spacing={4}>

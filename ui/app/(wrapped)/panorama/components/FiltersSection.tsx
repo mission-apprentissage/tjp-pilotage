@@ -1,4 +1,4 @@
-import { Container, Flex, Select } from "@chakra-ui/react";
+import { Container, Flex, Select, VisuallyHidden } from "@chakra-ui/react";
 import type { OptionSchema } from "shared/schema/optionSchema";
 
 import type { FiltersPanoramaFormation } from "@/app/(wrapped)/panorama/types";
@@ -39,7 +39,11 @@ export const FiltersSection = ({
     >
       <Flex justify="flex-start" gap={"1rem"}>
         {/* TERRITOIRE */}
+        <VisuallyHidden as="label" htmlFor="select-territoire">
+          Sélectionner un territoire
+        </VisuallyHidden>
         <Select
+          id="select-territoire"
           onChange={(e) => onCodeChanged(e.target.value)}
           bgColor={"white"}
           value={code}
@@ -57,7 +61,11 @@ export const FiltersSection = ({
         </Select>
 
         {/* DIPLOME */}
+        <VisuallyHidden as="label" htmlFor="select-diplome">
+          Sélectionner un diplôme
+        </VisuallyHidden>
         <Select
+          id="select-diplome"
           borderWidth={"2px"}
           borderColor={"bluefrance.113"}
           borderStyle={"solid"}
@@ -77,7 +85,6 @@ export const FiltersSection = ({
             </option>
           ))}
         </Select>
-
         <Multiselect
           onChange={(selected) => handleFilters("codeNsf", selected)}
           width={"25%"}

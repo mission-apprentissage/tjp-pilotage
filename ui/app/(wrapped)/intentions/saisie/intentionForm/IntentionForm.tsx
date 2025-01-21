@@ -57,6 +57,7 @@ export const IntentionForm = ({
   const pathname = usePathname();
 
   const { setCampagne } = useContext(CampagneContext);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const campagneValue = useMemo(() => ({ campagne, setCampagne }), [campagne]);
 
   const form = useForm<IntentionForms>({
@@ -152,6 +153,7 @@ export const IntentionForm = ({
     if (isCFDUaiSectionValid(getValues())) {
       submitCFDUAISection();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const submitCFDUAISection = () => {

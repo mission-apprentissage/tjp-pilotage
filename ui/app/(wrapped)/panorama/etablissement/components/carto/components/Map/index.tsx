@@ -43,6 +43,7 @@ export function Map({ uai, height, width }: MapProps) {
     if (!isLoading && etablissement) {
       setEtablissementMap(etablissement);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [etablissement, isLoading]);
 
   if (isLoading || !etablissementMap) {
@@ -58,11 +59,12 @@ export function Map({ uai, height, width }: MapProps) {
       maxPitch={0}
       minPitch={0}
       fadeDuration={0}
+
     >
       <EtablissementsProches />
       <Etablissement />
       <ActiveEtablissement />
-      <ScaleControl />
+      <ScaleControl style={{fontSize: "14px"}} />
       <NavigationControl />
       <CustomControls />
     </MapGLMap>

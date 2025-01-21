@@ -9,8 +9,8 @@ import { describe, expect, it, vi } from "vitest";
 
 import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 
-const onExportCsv = vi.fn(async (f) => Promise.resolve());
-const onExportExcel = vi.fn(async (f) => Promise.resolve());
+const onExportCsv = vi.fn(async (_f) => Promise.resolve());
+const onExportExcel = vi.fn(async (_f) => Promise.resolve());
 
 describe("ui > components > AdvancedExportMenuButton", () => {
   it("Ne doit pas afficher le bouton exporter si aucune fonction d'export est fournie", () => {

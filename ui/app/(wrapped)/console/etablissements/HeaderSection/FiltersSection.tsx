@@ -1,18 +1,5 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  Divider,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Portal,
-  Select,
-  Tag,
-  Text,
-  Wrap,
-} from "@chakra-ui/react";
+import {Button, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Portal, Select, Tag, Text, VisuallyHidden,Wrap} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 import { useState } from "react";
@@ -159,42 +146,37 @@ export const FiltersSection = ({
             <MenuList py={0} borderColor="grey.900" borderTopRadius={0} minW={"fit-content"} zIndex={3}>
               {requetesEnregistrees && requetesEnregistrees.length > 0 && (
                 <>
-                  <Text p={2} color="grey.425">
-                    Vos requêtes favorites
-                  </Text>
-
-                  {requetesEnregistrees?.map((requete) => (
-                    <MenuItem
-                      p={2}
-                      key={requete.id}
-                      onClick={() => {
-                        setSearchParams({
-                          page: 0,
-                          filters: requete.filtres,
-                        });
-                        setRequeteEnregistreeActuelle(requete);
-                      }}
-                      onMouseEnter={() => setDeleteButtonToDisplay(requete.id)}
-                      onMouseLeave={() => setDeleteButtonToDisplay("")}
-                      gap={2}
-                    >
-                      <Tag size={"sm"} bgColor={requete.couleur} borderRadius={"100%"} />
-                      <Flex direction="row" whiteSpace={"nowrap"}>
-                        {requete.nom}
-                      </Flex>
-                      {deleteButtonToDisplay === requete.id && (
-                        <DeleteRequeteEnregistreeButton requeteEnregistree={requete} />
-                      )}
-                    </MenuItem>
-                  ))}
-                  <Divider />
+                  <MenuGroup title="Vos requêtes favorites" color="grey.425">
+                    {requetesEnregistrees?.map((requete) => (
+                      <MenuItem
+                        p={2}
+                        key={requete.id}
+                        onClick={() => {
+                          setSearchParams({
+                            page: 0,
+                            filters: requete.filtres,
+                          });
+                          setRequeteEnregistreeActuelle(requete);
+                        }}
+                        onMouseEnter={() => setDeleteButtonToDisplay(requete.id)}
+                        onMouseLeave={() => setDeleteButtonToDisplay("")}
+                        gap={2}
+                      >
+                        <Tag size={"sm"} bgColor={requete.couleur} borderRadius={"100%"} />
+                        <Flex direction="row" whiteSpace={"nowrap"}>
+                          {requete.nom}
+                        </Flex>
+                        {deleteButtonToDisplay === requete.id && (
+                          <DeleteRequeteEnregistreeButton requeteEnregistree={requete} />
+                        )}
+                      </MenuItem>
+                    ))}
+                  </MenuGroup>
+                  <MenuDivider/>
                 </>
               )}
               {feature.requetesSuggerees && (
-                <>
-                  <Text p={2} color="grey.425">
-                    Requêtes suggérées
-                  </Text>
+                <MenuGroup title="Requêtes suggérées" color="grey.425">
                   {REQUETES_SUGGEREES.filter((r) => r.active).map((requeteSuggeree) => (
                     <MenuItem
                       p={2}
@@ -212,12 +194,22 @@ export const FiltersSection = ({
                       <Flex direction="row">{requeteSuggeree.nom}</Flex>
                     </MenuItem>
                   ))}
-                </>
+                </MenuGroup>
               )}
+              {
+                (
+                  (!feature.requetesSuggerees || filteredRequetesSuggerees.length === 0)
+                  && (!requetesEnregistrees || requetesEnregistrees.length === 0)
+                ) && (
+                  <VisuallyHidden as={MenuItem} />
+                )
+              }
             </MenuList>
           </Portal>
         </Menu>
+        <VisuallyHidden as="label" htmlFor="console-filters-region">Filtrer par région</VisuallyHidden>
         <Select
+          id="console-filters-region"
           placeholder="Toutes les régions"
           size="md"
           variant="newInput"

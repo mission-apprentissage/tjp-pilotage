@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Highlight, Select, Skeleton, Text, useToken } from "@chakra-ui/react";
+import { Box, Center, Flex, Heading, Highlight, Select, Skeleton, Text, useToken, VisuallyHidden } from "@chakra-ui/react";
 import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
@@ -162,11 +162,13 @@ export const CartoSection = ({
       ) : (
         <Box>
           <Flex marginStart={"auto"} justifyContent="space-between">
-            <Text color={"bluefrance.113"} fontWeight={700}>
-              VISUALISATION TERRITORIALE
-            </Text>
+            <Heading as="h2" color={"bluefrance.113"} fontSize={14} fontWeight="500" lineHeight="24px" textTransform="uppercase">
+              Visualisation territoriale
+            </Heading>
             <Flex flexDirection={"column"} position={"relative"} zIndex={1}>
+              <VisuallyHidden as="label" htmlFor="select-indicateur-carto">Sélectionner un indicateur</VisuallyHidden>
               <Select
+                id="select-indicateur-carto"
                 width="64"
                 size="sm"
                 variant="newInput"

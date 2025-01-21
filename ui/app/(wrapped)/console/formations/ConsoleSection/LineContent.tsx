@@ -1,10 +1,11 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Badge, Box, chakra, Flex, IconButton, Link, Skeleton, Tag, Td, Text, Tr } from "@chakra-ui/react";
+import { Box, chakra, Flex, IconButton, Link, Skeleton, Tag, Td, Text, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { CURRENT_RENTREE } from "shared";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Line } from "@/app/(wrapped)/console/formations/types";
+import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
@@ -106,25 +107,13 @@ export const FormationLineContent = ({
     >
       <Flex>
         <Flex w={"fit-content"} my={"auto"}>
-          {formatAnneeCommuneLibelle(line, "long", "sm")}
+          {formatAnneeCommuneLibelle(line, "long", "sm", "12px")}
         </Flex>
-        {line.isFormationRenovee && (
-          <Badge
-            size="sm"
-            ms={2}
-            my={"auto"}
-            bgColor={"greenArchipel.950"}
-            color={"greenArchipel.391"}
-            h={"fit-content"}
-            flex={"shrink"}
-          >
-            RÉNOVÉE
-          </Badge>
-        )}
+        <BadgeFormationRenovee isFormationRenovee={!!line.isFormationRenovee} ms={2}/>
         {line.formationRenovee && (
           <Flex ms={2} my={"auto"} width={"fit-content"} h={"1.8rem"} whiteSpace={"nowrap"} direction={"column"}>
             {line.dateFermeture && (
-              <Tag size="sm" bgColor="grey.1000_active" color={"grey.425"} width={"fit-content"}>
+              <Tag size="sm" bgColor="grey.1000_active" color={"grey.425"} width={"fit-content"} fontSize={12}>
                 Fermeture au {line.dateFermeture}
               </Tag>
             )}
@@ -139,7 +128,7 @@ export const FormationLineContent = ({
               color="bluefrance.113"
             >
               <Flex my="auto">
-                <Text fontSize={"11px"}>Voir la formation rénovée</Text>
+                <Text fontSize={12}>Voir la formation rénovée</Text>
                 <ArrowForwardIcon ml={1} boxSize={"14px"} verticalAlign={"baseline"} />
               </Flex>
             </Link>

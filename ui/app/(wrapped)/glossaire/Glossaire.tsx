@@ -27,7 +27,7 @@ export const Glossaire = () => {
         leftIcon={<QuestionOutlineIcon height={"14px"} width={"14px"} />}
         onClick={() => openGlossaire()}
         color="bluefrance.113"
-        fontSize={"14px"}
+        fontSize={14}
       >
         Glossaire
       </Button>

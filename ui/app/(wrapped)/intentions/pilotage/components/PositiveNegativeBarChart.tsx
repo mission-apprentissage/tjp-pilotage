@@ -31,7 +31,7 @@ export const PositiveNegativeBarChart = ({
           pour les filtres sélectionnés
         </Heading>
         <Flex flex={1} backgroundColor={themeDefinition.colors.bluefrance[975]}>
-          <Img src="/illustrations/search.svg" />
+          <Img src="/illustrations/search.svg" alt="Icône rechercher"/>
         </Flex>
       </VStack>
     );
@@ -366,6 +366,7 @@ export const PositiveNegativeBarChart = ({
         },
       ],
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data]
   );
 
@@ -377,6 +378,7 @@ export const PositiveNegativeBarChart = ({
       chartRef.current = echarts.init(containerRef.current);
     }
     chartRef.current.setOption(option, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (

@@ -235,6 +235,7 @@ export const BarChart = ({
         },
       ],
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [positionsQuadrant]
   );
 
@@ -244,6 +245,7 @@ export const BarChart = ({
       chartRef.current = echarts.init(containerRef.current);
     }
     chartRef.current.setOption(option, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionsQuadrant]);
 
   if (!positionsQuadrant) return <></>;

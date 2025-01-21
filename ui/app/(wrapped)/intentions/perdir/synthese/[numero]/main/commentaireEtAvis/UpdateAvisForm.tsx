@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
+import { useId } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -82,6 +83,8 @@ export const UpdateAvisForm = chakra(
       });
 
     const isVisibleParTous = watch("isVisibleParTous");
+    const updateStatutAvisId = useId();
+    const updateFonctionAvisId = useId();
 
     return (
       <FormProvider {...form}>
@@ -98,7 +101,7 @@ export const UpdateAvisForm = chakra(
           width={"50%"}
         >
           <FormControl isInvalid={!!errors.statutAvis} isRequired>
-            <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
+            <FormLabel fontSize={12} fontWeight={400} color={"grey.425"} htmlFor={updateStatutAvisId}>
               Avis sur la proposition
             </FormLabel>
             <Controller
@@ -107,6 +110,7 @@ export const UpdateAvisForm = chakra(
               rules={{ required: "Ce champs est obligatoire" }}
               render={({ field: { onChange, value, name } }) => (
                 <Select
+                  inputId={updateStatutAvisId}
                   name={name}
                   onChange={(selected) => {
                     onChange(selected?.value);
@@ -135,7 +139,7 @@ export const UpdateAvisForm = chakra(
             {errors.statutAvis && <FormErrorMessage>{errors.statutAvis.message}</FormErrorMessage>}
           </FormControl>
           <FormControl isInvalid={!!errors.userFonction} isRequired>
-            <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
+            <FormLabel fontSize={12} fontWeight={400} color={"grey.425"} htmlFor={updateFonctionAvisId}>
               En tant que
             </FormLabel>
             <Controller
@@ -144,6 +148,7 @@ export const UpdateAvisForm = chakra(
               rules={{ required: "Ce champs est obligatoire" }}
               render={({ field: { onChange, value, name } }) => (
                 <CreatableSelect
+                  inputId={updateFonctionAvisId}
                   name={name}
                   onChange={(selected) => {
                     // @ts-expect-error TODO
@@ -223,7 +228,7 @@ export const UpdateAvisForm = chakra(
                 })}
                 whiteSpace={"nowrap"}
               >
-                <Text fontSize={"14px"} fontWeight={400}>
+                <Text fontSize={14} fontWeight={400}>
                   Rendre cet avis visible de tous
                 </Text>
               </Checkbox>
