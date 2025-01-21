@@ -28,7 +28,7 @@ describe("createUser usecase", () => {
       shootTemplate: vi.fn(async () => {}),
     };
     const createUser = createUserFactory(deps);
-    expect(async () =>
+    await expect(async () =>
       createUser({
         body: user,
         requestUser,
@@ -44,7 +44,7 @@ describe("createUser usecase", () => {
       verifyScope: vi.fn(() => true),
     };
     const createUser = createUserFactory(deps);
-    expect(async () =>
+    await expect(async () =>
       createUser({
         body: { ...user, email: "fakeEmail" },
         requestUser,
@@ -81,7 +81,7 @@ describe("createUser usecase", () => {
       ) as Array<keyof typeof PERMISSIONS>;
 
       for (const role of notAllowedRoles) {
-        expect(async () =>
+        await expect(async () =>
           createUser({
             body: user,
             requestUser: { ...requestUser, role },
@@ -142,8 +142,8 @@ describe("createUser usecase", () => {
         shootTemplate: vi.fn(async () => {}),
       };
       const createUser = createUserFactory(deps);
-      expect(async () =>
-        createUser({
+      await expect(async () =>
+        await createUser({
           body: { ...user, codeRegion: "76", role: "pilote_region" },
           requestUser: {
             ...requestUser,
