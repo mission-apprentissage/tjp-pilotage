@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable-next-line import/no-extraneous-dependencies */
 import { generateMock } from "@anatine/zod-mock";
 import { describe, expect,it } from "vitest";
@@ -143,16 +144,98 @@ describe("shared > validators > intentionValidators", () => {
       ${'augmentation_compensation'} | ${'augmentation_compensation'}
       ${'augmentation_nette'}        | ${'augmentation_nette'}
         `(`Pour $text`, ({ typeDemande }) => {
-        it("Doit remonter une erreur si la 'capaciteScolaireActuelle' est supérieure à la 'capaciteScolaire'", () => {
-          const intention = createIntention({ typeDemande, capaciteScolaire: 1, capaciteScolaireActuelle: 2 });
-          const result = intentionValidators.capaciteScolaire(intention);
-          expect(result).toBe("La capacité scolaire devrait être supérieure ou égale à la capacité actuelle dans le cas d'une augmentation");
+        describe("Si la 'capaciteScolaireActuelle' est un nombre positif", () => {
+          it("Doit remonter une erreur si la 'capaciteScolaireActuelle' est supérieure à la 'capaciteScolaire'", () => {
+            const intention = createIntention({ typeDemande, capaciteScolaire: 1, capaciteScolaireActuelle: 2 });
+            const result = intentionValidators.capaciteScolaire(intention);
+            expect(result).toBe("La capacité scolaire devrait être supérieure ou égale à la capacité actuelle dans le cas d'une augmentation");
+          });
+          it("Ne doit pas remonter d'erreur si la 'capaciteScolaire' est supérieure à la 'capaciteScolaireActuelle'", () => {
+            const intention = createIntention({ typeDemande, capaciteScolaire: 2, capaciteScolaireActuelle: 1 });
+            const result = intentionValidators.capaciteScolaire(intention);
+            expect(result).toBeUndefined();
+          });
         });
-        it("Ne doit pas remonter d'erreur si la 'capaciteScolaire' est un nombre entier positif", () => {
-          const intention = createIntention({ typeDemande, capaciteScolaire: 2, capaciteScolaireActuelle: 1 });
+      });
+    });
+
+    describe("Si 'typeDemande' est 'diminution'", () => {
+      describe("Si la 'capaciteScolaireActuelle' est un nombre positif", () => {
+        it("Doit remonter une erreur si la 'capaciteScolaireActuelle' est inférieure à la 'capaciteScolaire'", () => {
+          const intention = createIntention({ typeDemande: 'diminution', capaciteScolaire: 2, capaciteScolaireActuelle: 1 });
+          const result = intentionValidators.capaciteScolaire(intention);
+          expect(result).toBe("La capacité scolaire devrait être inférieure à la capacité actuelle dans le cas d'une diminution");
+        });
+        it("Ne doit pas remonter d'erreur si la 'capaciteScolaire' est inférieure à la 'capaciteScolaireActuelle'", () => {
+          const intention = createIntention({ typeDemande: 'diminution', capaciteScolaire: 1, capaciteScolaireActuelle: 2 });
           const result = intentionValidators.capaciteScolaire(intention);
           expect(result).toBeUndefined();
         });
+      });
+    });
+
+    describe("Si 'typeDemande' est 'transfert'", () => {
+      describe("Ne fonctionne qu'avec des nombres positifs", () => {
+        it("Doit remonter une erreur si la 'capaciteScolaire' est inférieure à 0", () => {
+          const intention = createIntention({ typeDemande: 'transfert', capaciteScolaire: -1, capaciteScolaireActuelle: 1, capaciteApprentissage: 1, capaciteApprentissageActuelle: 1 });
+          const result = intentionValidators.capaciteScolaire(intention);
+          expect(result).toBe("La capacité scolaire doit être un nombre entier positif");
+        });
+        it("Doit remonter une erreur si la 'capaciteScolaireActuelle' est inférieure à 0", () => {
+          const intention = createIntention({ typeDemande: 'transfert', capaciteScolaire: 1, capaciteScolaireActuelle: -1, capaciteApprentissage: 1, capaciteApprentissageActuelle: 1 });
+          const result = intentionValidators.capaciteScolaire(intention);
+          expect(result).toBe("Un transfert inclue toujours un passage de scolaire vers apprentissage ou d'apprentissage vers scolaire");
+        });
+        it("Doit remonter une erreur si la 'capaciteApprentissage' est inférieure à 0", () => {
+          const intention = createIntention({ typeDemande: 'transfert', capaciteScolaire: 1, capaciteScolaireActuelle: 1, capaciteApprentissage: -1, capaciteApprentissageActuelle: 1 });
+          const result = intentionValidators.capaciteScolaire(intention);
+          expect(result).toBe("Un transfert inclue toujours un passage de scolaire vers apprentissage ou d'apprentissage vers scolaire");
+        });
+        it("Doit remonter une erreur si la 'capaciteApprentissageActuelle' est inférieure à 0", () => {
+          const intention = createIntention({ typeDemande: 'transfert', capaciteScolaire: 1, capaciteScolaireActuelle: 1, capaciteApprentissage: 1, capaciteApprentissageActuelle: -1 });
+          const result = intentionValidators.capaciteScolaire(intention);
+          expect(result).toBe("Un transfert inclue toujours un passage de scolaire vers apprentissage ou d'apprentissage vers scolaire");
+        });
+      });
+
+      describe("Vérification des cas de transferts", () => {
+        it("Doit remonter une erreur s'il y a une augmentation des places scolaires et apprentissage", () => {
+          const intention = createIntention({ typeDemande: 'transfert', capaciteScolaire: 2, capaciteScolaireActuelle: 1, capaciteApprentissage: 2, capaciteApprentissageActuelle: 1 });
+          const result = intentionValidators.capaciteScolaire(intention);
+          expect(result).toBe("Si un transfert est effectué, la capacité scolaire ou l'apprentissage doivent être modifiée. Dans le cas d'un transfert vers l'apprentissage, la capacité en apprentissage devrait être supérieure à la capacité actuelle. Dans le cas d'un transfert vers le scolaire, la capacité scolaire devrait être supérieur à la capacité actuelle.");
+        });
+
+        it("Doit remonter une erreur s'il y a une diminution des places scolaires et apprentissage", () => {
+          const intention = createIntention({ typeDemande: 'transfert', capaciteScolaire: 0, capaciteScolaireActuelle: 1, capaciteApprentissage: 0, capaciteApprentissageActuelle: 1 });
+          const result = intentionValidators.capaciteScolaire(intention);
+          expect(result).toBe("Si un transfert est effectué, la capacité scolaire ou l'apprentissage doivent être modifiée. Dans le cas d'un transfert vers l'apprentissage, la capacité en apprentissage devrait être supérieure à la capacité actuelle. Dans le cas d'un transfert vers le scolaire, la capacité scolaire devrait être supérieur à la capacité actuelle.");
+        });
+
+        it("Ne doit pas remonter d'erreur lorsqu'il y a une diminution des places en scolaire et une augmentation en apprentissage", () => {
+          const intention = createIntention({ typeDemande: 'transfert', capaciteScolaire: 0, capaciteScolaireActuelle: 1, capaciteApprentissage: 2, capaciteApprentissageActuelle: 1 });
+          const result = intentionValidators.capaciteScolaire(intention);
+          expect(result).toBe(undefined);
+        });
+
+        it("Ne doit pas remonter d'erreur lorsqu'il y a une augmentation des places en scolaire et une diminution en apprentissage", () => {
+          const intention = createIntention({ typeDemande: 'transfert', capaciteScolaire: 2, capaciteScolaireActuelle: 1, capaciteApprentissage: 0, capaciteApprentissageActuelle: 1 });
+          const result = intentionValidators.capaciteScolaire(intention);
+          expect(result).toBe(undefined);
+        });
+      });
+    });
+
+    describe("Si 'typeDemande' est 'ajustement'", () => {
+      it("Doit remonter une erreur si la 'capaciteScolaire' est inférieure à 'capaciteScolaireActuelle'", () => {
+        const intention = createIntention({ typeDemande: 'ajustement', capaciteScolaireActuelle: 2, capaciteScolaire: 1 });
+        const result = intentionValidators.capaciteScolaire(intention);
+        expect(result).toBe("La capacité scolaire devrait être supérieure ou égale à la capacité actuelle dans le cas d'un ajustement de rentrée");
+      });
+
+      it("Ne doit pas remonter une erreur si la 'capaciteScolaire' est supérieure à 'capaciteScolaireActuelle'", () => {
+        const intention = createIntention({ typeDemande: 'ajustement', capaciteScolaireActuelle: 1, capaciteScolaire: 2 });
+        const result = intentionValidators.capaciteScolaire(intention);
+        expect(result).toBe(undefined);
       });
     });
   });
