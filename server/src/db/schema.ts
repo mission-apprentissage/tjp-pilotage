@@ -1,7 +1,8 @@
 import type { ColumnType } from "kysely";
 
-export type Generated<T> =
-  T extends ColumnType<infer S, infer I, infer U> ? ColumnType<S, I | undefined, U> : ColumnType<T, T | undefined, T>;
+export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
+  ? ColumnType<S, I | undefined, U>
+  : ColumnType<T, T | undefined, T>;
 
 export type Json = ColumnType<JsonValue, string, string>;
 
@@ -47,8 +48,18 @@ export interface Avis {
 export interface Campagne {
   id: Generated<string>;
   annee: string;
-  dateDebut: Timestamp | null;
-  dateFin: Timestamp | null;
+  dateDebut: Generated<Timestamp>;
+  dateFin: Generated<Timestamp>;
+  statut: string;
+}
+
+export interface CampagneRegion {
+  id: Generated<string>;
+  campagneId: string;
+  codeRegion: string;
+  withPerdir: Generated<boolean>;
+  dateDebut: Timestamp;
+  dateFin: Timestamp;
   statut: string;
 }
 
@@ -117,59 +128,7 @@ export interface DataEtablissement {
   codeDepartement: string | null;
   codeAcademie: string | null;
   codeRegion: string | null;
-  typeUai:
-    | "1ORD"
-    | "9999"
-    | "ADLE"
-    | "AGRI"
-    | "AIDE"
-    | "APPL"
-    | "CDES"
-    | "CDP"
-    | "CFA"
-    | "CFIS"
-    | "CFPA"
-    | "CLG"
-    | "CNED"
-    | "CONT"
-    | "CSAV"
-    | "DIV"
-    | "EFE"
-    | "EME"
-    | "EREA"
-    | "ERPD"
-    | "ETRA"
-    | "EUR"
-    | "EXP"
-    | "FORP"
-    | "GRET"
-    | "HOSP"
-    | "IEN"
-    | "ING"
-    | "IO"
-    | "IUFM"
-    | "JS"
-    | "LP"
-    | "LYC"
-    | "ONIS"
-    | "OUS"
-    | "PBAC"
-    | "PRES"
-    | "PRSU"
-    | "RECH"
-    | "RECT"
-    | "SDEN"
-    | "SEP"
-    | "SERV"
-    | "SES"
-    | "SET"
-    | "SGT"
-    | "SMUT"
-    | "SOC"
-    | "SPEC"
-    | "SSEF"
-    | "TSGE"
-    | "UNIV";
+  typeUai: "1ORD" | "9999" | "ADLE" | "AGRI" | "AIDE" | "APPL" | "CDES" | "CDP" | "CFA" | "CFIS" | "CFPA" | "CLG" | "CNED" | "CONT" | "CSAV" | "DIV" | "EFE" | "EME" | "EREA" | "ERPD" | "ETRA" | "EUR" | "EXP" | "FORP" | "GRET" | "HOSP" | "IEN" | "ING" | "IO" | "IUFM" | "JS" | "LP" | "LYC" | "ONIS" | "OUS" | "PBAC" | "PRES" | "PRSU" | "RECH" | "RECT" | "SDEN" | "SEP" | "SERV" | "SES" | "SET" | "SGT" | "SMUT" | "SOC" | "SPEC" | "SSEF" | "TSGE" | "UNIV";
 }
 
 export interface DataFormation {
@@ -911,6 +870,7 @@ export interface DB {
   actionPrioritaire: ActionPrioritaire;
   avis: Avis;
   campagne: Campagne;
+  campagneRegion: CampagneRegion;
   changeLog: ChangeLog;
   changementStatut: ChangementStatut;
   constatRentree: ConstatRentree;

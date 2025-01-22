@@ -37,7 +37,7 @@ const ScopedStatsTransfoSchema = z.object({
   ratioFermeture: z.number().optional(),
 });
 
-const QuerySchema = z.object({
+export const FiltersSchema = z.object({
   rentreeScolaire: z.array(z.string()).optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
   CPC: z.array(z.string()).optional(),
@@ -58,8 +58,6 @@ const QuerySchema = z.object({
   formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
 });
 
-export type QuerySchema = z.infer<typeof QuerySchema>;
-
 const StatsTransfoSchema = z.record(
   z.string(),
   ScopedStatsTransfoSchema.extend({
@@ -69,7 +67,7 @@ const StatsTransfoSchema = z.record(
 );
 
 export const getStatsPilotageIntentionsSchema = {
-  querystring: QuerySchema,
+  querystring: FiltersSchema,
   response: {
     200: z.object({
       ["projet de demande"]: StatsTransfoSchema,

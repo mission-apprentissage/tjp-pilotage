@@ -1,7 +1,7 @@
 import type { Permission, Role } from "./permissions";
 import { HIERARCHY, PERMISSIONS } from "./permissions";
 
-export const CODES_REGIONS_EXPE = [
+export const CODES_REGIONS_EXPE_2024 = [
   //Occitanie
   "76",
   // AURA
@@ -16,9 +16,9 @@ type KOfUnion<T> = {
   [D in KeyOfUnion<T>]: T extends { [Ks in D]: any } ? T[D] : never;
 };
 
-export const isUserInRegionsExperimentation = ({ user }: { user?: { codeRegion?: string } }) => {
+export const isUserInRegionsExperimentation2024 = ({ user }: { user?: { codeRegion?: string } }) => {
   if (!user?.codeRegion) return false;
-  return CODES_REGIONS_EXPE.includes(user.codeRegion);
+  return CODES_REGIONS_EXPE_2024.includes(user.codeRegion);
 };
 
 export const hasRole = ({ user, role }: { user?: { role?: Role }; role: Role }) => {

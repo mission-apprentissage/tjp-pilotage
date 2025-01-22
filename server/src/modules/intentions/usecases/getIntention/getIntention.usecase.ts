@@ -1,6 +1,13 @@
-import type { Filters } from "./getIntention.query";
+import type { FiltersSchema} from 'shared/routes/schemas/get.intention.numero.schema';
+import type {z} from 'zod';
+
+import type {RequestUser} from '@/modules/core/model/User';
+
 import { getIntentionQuery } from "./getIntention.query";
 
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+}
 const getIntentionFactory =
   (
     deps = {

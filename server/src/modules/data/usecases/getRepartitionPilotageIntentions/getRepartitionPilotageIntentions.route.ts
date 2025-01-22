@@ -18,8 +18,12 @@ export const getRepartitionPilotageIntentionsRoute = (server: Server) => {
       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
       handler: async (request, response) => {
         const { ...filters } = request.query;
+        const user = request.user!;
 
-        const result = await getRepartitionPilotageIntentionsUsecase(filters);
+        const result = await getRepartitionPilotageIntentionsUsecase({
+          ...filters,
+          user
+        });
         response.status(200).send(result);
       },
     });

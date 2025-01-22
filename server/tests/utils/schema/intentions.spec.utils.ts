@@ -7,8 +7,8 @@ import type { DemandeType } from "shared/enum/demandeTypeEnum";
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
-import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
 import { generateId, generateShortId } from "@/modules/utils/generateId";
+import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 import { cleanNull } from "@/utils/noNull";
 
 export type Intention = Insertable<DB["intention"]>;
@@ -52,7 +52,7 @@ export function createIntentionBuilder(
     withStatut: (statut: DemandeStatutType) =>
       createIntentionBuilder(user, { ...intention, statut }),
     withCurrentCampagneId: async () => {
-      const campagne = await getCurrentCampagneQuery();
+      const campagne = await getCurrentCampagne(user);
       return createIntentionBuilder(user, {
         ...intention,
         campagneId: campagne.id,

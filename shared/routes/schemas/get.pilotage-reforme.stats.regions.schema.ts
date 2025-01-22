@@ -10,14 +10,14 @@ const StatsRegionLineSchema = z.object({
   tauxInsertion: z.coerce.number().optional(),
 });
 
-const FiltersRegionsSchema = z.object({
+export const FiltersSchema = z.object({
   codeNiveauDiplome: z.array(z.string()).optional(),
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: StatsRegionLineSchema.keyof().optional(),
 });
 
 export const getPilotageReformeStatsRegionsSchema = {
-  querystring: FiltersRegionsSchema,
+  querystring: FiltersSchema,
   response: {
     200: z.object({
       filters: z.object({

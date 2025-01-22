@@ -1,11 +1,18 @@
 import { chain } from "lodash-es";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type {FiltersSchema} from 'shared/routes/schemas/get.pilotage-intentions.stats.schema';
+import type {z} from 'zod';
 
-import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
+import type { RequestUser } from "@/modules/core/model/User";
+import { getCurrentCampagne } from "@/modules/utils/getCurrentCampagne";
 
 import { getFiltersQuery } from "./deps/getFilters.query";
-import type { Filters } from "./deps/getStatsPilotageIntentions.query";
 import { getStatsPilotageIntentionsQuery } from "./deps/getStatsPilotageIntentions.query";
+
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+  campagne: string;
+}
 
 interface ActiveFilters extends Omit<Filters, "campagne"> {
   campagne?: string;
@@ -35,13 +42,13 @@ const formatResult = (result: GetScopedStatsPilotageIntentionsType) => {
 const getStatsPilotageIntentionsFactory =
   (
     deps = {
-      getStatsPilotageIntentionsQuery: getStatsPilotageIntentionsQuery,
-      getFiltersQuery: getFiltersQuery,
-      getCurrentCampagneQuery,
+      getStatsPilotageIntentionsQuery,
+      getFiltersQuery,
+      getCurrentCampagne,
     }
   ) =>
     async (activeFilters: ActiveFilters) => {
-      const currentCampagne = await getCurrentCampagneQuery();
+      const currentCampagne = await getCurrentCampagne(activeFilters.user);
       const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
       const [filters, projets, validees, all] = await Promise.all([
         deps.getFiltersQuery({

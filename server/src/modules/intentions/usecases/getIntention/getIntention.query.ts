@@ -3,11 +3,8 @@ import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import type { getIntentionSchema } from "shared/routes/schemas/get.intention.numero.schema";
-import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { RequestUser } from "@/modules/core/model/User";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
 import { castAvisStatut } from "@/modules/utils/castStatutAvis";
 import { castAvisType } from "@/modules/utils/castTypeAvis";
@@ -21,9 +18,7 @@ import { isIntentionNotDeleted, isIntentionSelectable } from "@/modules/utils/is
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
 
-export interface Filters extends z.infer<typeof getIntentionSchema.params> {
-  user: RequestUser;
-}
+import type { Filters } from "./getIntention.usecase";
 
 export const getIntentionQuery = async ({ numero, user }: Filters) => {
   const intention = await getKbdClient()

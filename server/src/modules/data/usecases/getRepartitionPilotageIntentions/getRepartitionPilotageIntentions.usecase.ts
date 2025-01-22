@@ -1,11 +1,13 @@
 import { chain, filter, get, keys, sumBy, union } from "lodash-es";
+import type {MILLESIMES_IJ} from 'shared';
 import type {
-  getRepartitionPilotageIntentionsSchema,
+  FiltersSchema,
   StatsSchema,
 } from "shared/routes/schemas/get.pilotage-intentions.repartition.schema";
 import type { z } from "zod";
 
-import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
+import type { RequestUser } from "@/modules/core/model/User";
+import { getCurrentCampagne } from "@/modules/utils/getCurrentCampagne";
 import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
 
 import type { getDenominateurQuery } from "./deps/getDenominateurQuery";
@@ -16,7 +18,15 @@ import { getPositionsQuadrant } from "./deps/getPositionsQuadrant";
 import { getZonesGeographiques } from "./deps/getZonesGeographiques";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface Filters extends z.infer<typeof getRepartitionPilotageIntentionsSchema.querystring> {}
+
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+  campagne: string;
+}
+export interface ActiveFilters extends Omit<Filters, "campagne"> {
+  campagne?: string;
+}
 
 /**
  * @typedef Numerateur - Représente les données de demande (places ouvertes, fermées, colorées, transformées)
@@ -182,15 +192,15 @@ const formatResult = (repartition: Repartition, order: "asc" | "desc" = "desc", 
 const getRepartitionPilotageIntentionsFactory =
   (
     deps = {
-      getCurrentCampagneQuery,
+      getCurrentCampagne,
       getDomaines,
       getNiveauxDiplome,
       getZonesGeographiques,
       getPositionsQuadrant,
     }
   ) =>
-    async (activeFilters: Filters) => {
-      const campagne = await deps.getCurrentCampagneQuery();
+    async (activeFilters: ActiveFilters) => {
+      const campagne = await deps.getCurrentCampagne(activeFilters.user);
       const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
       const [domaines, niveauxDiplome, zonesGeographiques, positionsQuadrant] = await Promise.all([
         deps.getDomaines({

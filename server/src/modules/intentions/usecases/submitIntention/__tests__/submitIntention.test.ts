@@ -67,6 +67,7 @@ const gestionnaire = {
   codeRegion: "75",
   id: "user-id",
   role: "gestionnaire_region",
+  email: "gestionnaire@mail.fr"
 } as const;
 
 describe("submitDemande usecase", () => {
@@ -130,6 +131,7 @@ describe("submitDemande usecase", () => {
           codeRegion: "other",
           id: "user-id",
           role: "pilote_region",
+          email: "pilote@mail.fr"
         },
         intention: {
           ...intention,

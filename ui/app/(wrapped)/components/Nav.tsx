@@ -17,7 +17,7 @@ import { useSelectedLayoutSegments } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import type { HTMLAttributeAnchorTarget, ReactNode } from "react";
 import { useContext } from "react";
-import { hasPermission, hasRole, isUserInRegionsExperimentation } from "shared";
+import { hasPermission, hasRole, isUserInRegionsExperimentation2024 } from "shared";
 
 import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
 import { UaisFilterContext } from "@/app/layoutClient";
@@ -163,7 +163,7 @@ export const Nav = () => {
   const hasAdminMenu =
     hasPermission(auth?.user.role, "users/lecture") || hasPermission(auth?.user.role, "campagnes/lecture");
 
-  const shouldDisplayIntentionExpeMenu = isUserInRegionsExperimentation({
+  const shouldDisplayIntentionExpeMenu = isUserInRegionsExperimentation2024({
     user: auth?.user,
   });
 
@@ -390,7 +390,8 @@ export const Nav = () => {
                   </NavMenuLink>
                 </MenuItem>
               )}
-              {hasPermission(auth?.user.role, "campagnes/lecture") && (
+              {(hasPermission(auth?.user.role, "campagnes/lecture") ||
+               hasPermission(auth?.user.role, "campagnes-region/lecture")) && (
                 <MenuItem p="0">
                   <NavMenuLink href="/admin/campagnes" segment="admin/campagnes">
                     Campagnes

@@ -1,4 +1,4 @@
-import { CODES_REGIONS_EXPE } from "shared";
+import { CODES_REGIONS_EXPE_2024 } from "shared";
 import type { Permission, PERMISSIONS, Role } from "shared/security/permissions";
 
 export const ROLES_LABELS: {
@@ -37,7 +37,7 @@ export const ROLES_LABELS: {
       "Il a un rôle d'expertise et de conseil. Il peut consulter les propositions et projets émis sur toute la région académique, il a accès à la console de restitution et à la page de pilotage. En région Occitanie et AURA il peut émettre un avis Expert ; il voit tous les avis déposés par les experts uniquement et les avis pilotes rendus publics.",
   }),
   perdir: (codeRegion) => {
-    if (codeRegion && CODES_REGIONS_EXPE.includes(codeRegion)) {
+    if (codeRegion && CODES_REGIONS_EXPE_2024.includes(codeRegion)) {
       return {
         label: "Perdir RA Test",
         description: "PERDIR des régions AURA et Occitanie",
@@ -83,14 +83,14 @@ export const OVERRIDES: {
 } = {
   perdir: {
     "intentions-perdir/ecriture": (codeRegion) => {
-      if (codeRegion && CODES_REGIONS_EXPE.includes(codeRegion)) {
+      if (codeRegion && CODES_REGIONS_EXPE_2024.includes(codeRegion)) {
         return true;
       }
 
       return false;
     },
     "intentions-perdir/lecture": (codeRegion) => {
-      if (codeRegion && CODES_REGIONS_EXPE.includes(codeRegion)) {
+      if (codeRegion && CODES_REGIONS_EXPE_2024.includes(codeRegion)) {
         return true;
       }
 

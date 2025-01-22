@@ -21,7 +21,7 @@ export default () => {
     }
   );
 
-  const { data: defaultCampagne } = client.ref("[GET]/demande/campagne/default").useQuery({});
+  const { data: currentCampagne } = client.ref("[GET]/campagne/current").useQuery({});
 
   if (isLoading && !!numero) return <IntentionSpinner />;
 
@@ -30,7 +30,7 @@ export default () => {
       {numero ? (
         data && (
           <IntentionForm
-            disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
+            disabled={currentCampagne?.statut !== CampagneStatutEnum["en cours"]}
             defaultValues={{
               cfd: data?.compensationCfd,
               codeDispositif: data?.compensationCodeDispositif,
@@ -42,18 +42,18 @@ export default () => {
               etablissement: data?.metadata?.etablissementCompensation,
               formation: data?.metadata?.formationCompensation,
             }}
-            campagne={defaultCampagne}
+            campagne={currentCampagne}
           />
         )
       ) : (
         <IntentionForm
-          disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
+          disabled={currentCampagne?.statut !== CampagneStatutEnum["en cours"]}
           defaultValues={{
-            campagneId: defaultCampagne?.id,
-            rentreeScolaire: defaultCampagne?.annee ? Number.parseInt(defaultCampagne?.annee) + 1 : undefined,
+            campagneId: currentCampagne?.id,
+            rentreeScolaire: currentCampagne?.annee ? Number.parseInt(currentCampagne?.annee) + 1 : undefined,
           }}
           formMetadata={{}}
-          campagne={defaultCampagne}
+          campagne={currentCampagne}
         />
       )}
     </GuardPermission>

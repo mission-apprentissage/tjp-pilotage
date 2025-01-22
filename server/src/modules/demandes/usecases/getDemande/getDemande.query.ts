@@ -2,11 +2,8 @@ import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import type { getDemandeSchema } from "shared/routes/schemas/get.demande.numero.schema";
-import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { RequestUser } from "@/modules/core/model/User";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
 import { countDifferenceCapaciteApprentissage, countDifferenceCapaciteScolaire } from "@/modules/utils/countCapacite";
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
@@ -14,9 +11,7 @@ import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDema
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
 
-export interface Filters extends z.infer<typeof getDemandeSchema.params> {
-  user: RequestUser;
-}
+import type { Filters } from "./getDemande.usecase";
 
 export const getDemandeQuery = async ({ numero, user }: Filters) => {
   const demande = await getKbdClient()

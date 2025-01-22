@@ -9,18 +9,18 @@ import { GuardPermission } from "@/utils/security/GuardPermission";
 
 // eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
-  const { data: defaultCampagne } = client.ref("[GET]/campagne/expe/default").useQuery({});
+  const { data: currentCampagne } = client.ref("[GET]/campagne/current").useQuery({});
 
   return (
     <GuardPermission permission="intentions-perdir/ecriture">
       <IntentionFilesProvider>
         <IntentionForm
-          disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
+          disabled={currentCampagne?.statut !== CampagneStatutEnum["en cours"]}
           defaultValues={{
-            campagneId: defaultCampagne?.id,
+            campagneId: currentCampagne?.id,
           }}
           formMetadata={{}}
-          campagne={defaultCampagne}
+          campagne={currentCampagne}
         />
       </IntentionFilesProvider>
     </GuardPermission>

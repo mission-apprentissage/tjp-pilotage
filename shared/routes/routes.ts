@@ -7,12 +7,12 @@ import { deleteChangementStatutSchema } from "./schemas/delete.intention.statut.
 import { deleteRequeteEnregistreeSchema } from "./schemas/delete.requeteEnregistree.id.schema";
 import { checkActivationTokenSchema } from "./schemas/get.auth.check-activation-token.schema";
 import { whoAmISchema } from "./schemas/get.auth.whoAmI.schema";
-import { getCurrentCampagneSchema as getCurrentCampagneExpeSchema } from "./schemas/get.campagne.expe.default.schema";
+import { getCurrentCampagneSchema } from "./schemas/get.campagne.current.schema";
 import { getCampagnesSchema } from "./schemas/get.campagnes.schema";
+import { getCampagnesRegionSchema } from "./schemas/get.campagnes-region.schema";
 import { searchCampusSchema } from "./schemas/get.campus.search.search.schema";
 import { getChangelogSchema } from "./schemas/get.changelog.schema";
 import { getCorrectionsSchema } from "./schemas/get.corrections.schema";
-import { getCurrentCampagneSchema } from "./schemas/get.demande.campagne.default.schema";
 import { getDemandeSchema } from "./schemas/get.demande.numero.schema";
 import { countDemandesSchema } from "./schemas/get.demandes.count.schema";
 import { getDemandesSchema } from "./schemas/get.demandes.schema";
@@ -71,6 +71,7 @@ import { logoutSchema } from "./schemas/post.auth.logout.schema";
 import { resetPasswordSchema } from "./schemas/post.auth.reset-password.schema";
 import { sendResetPasswordSchema } from "./schemas/post.auth.send-reset-password.schema";
 import { createCampagneSchema } from "./schemas/post.campagnes.campagneId.schema";
+import { createCampagneRegionSchema } from "./schemas/post.campagnes-region.campagneRegionId.schema";
 import { submitCorrectionSchema } from "./schemas/post.correction.submit.schema";
 import { submitIntentionAccessLogSchema } from "./schemas/post.demande.access.submit.schema";
 import { importDemandeSchema } from "./schemas/post.demande.import.numero.schema";
@@ -84,6 +85,7 @@ import { submitIntentionSchema } from "./schemas/post.intention.submit.schema";
 import { submitRequeteEnregistreeSchema } from "./schemas/post.requete.enregistrement.schema";
 import { createUserSchema } from "./schemas/post.users.userId.schema";
 import { editCampagneSchema } from "./schemas/put.campagnes.campagneId.schema";
+import { editCampagneRegionSchema } from "./schemas/put.campagnes-region.campagneRegionId.schema";
 import { uploadIntentionFilesSchema } from "./schemas/put.intention.numero.files.schema";
 import { editUserSchema } from "./schemas/put.users.userId.schema";
 import type { IRoutesDefinition } from "./types";
@@ -173,6 +175,26 @@ export const ROUTES = {
     url: "/campagnes/:campagneId",
     method: "PUT",
     schema: editCampagneSchema,
+  },
+  "[GET]/campagne/current": {
+    url: "/campagne/current",
+    method: "GET",
+    schema: getCurrentCampagneSchema,
+  },
+  "[GET]/campagnes-region": {
+    url: "/campagnes-region",
+    method: "GET",
+    schema: getCampagnesRegionSchema,
+  },
+  "[POST]/campagnes-region/:campagneRegionId": {
+    url: "/campagnes-region/:campagneRegionId",
+    method: "POST",
+    schema: createCampagneRegionSchema,
+  },
+  "[PUT]/campagnes-region/:campagneRegionId": {
+    url: "/campagnes-region/:campagneRegionId",
+    method: "PUT",
+    schema: editCampagneRegionSchema,
   },
   "[POST]/generate-metabase-dashboard-url": {
     url: "/generate-metabase-dashboard-url",
@@ -359,11 +381,6 @@ export const ROUTES = {
     method: "DELETE",
     schema: deleteSuiviSchema,
   },
-  "[GET]/demande/campagne/default": {
-    url: "/demande/campagne/default",
-    method: "GET",
-    schema: getCurrentCampagneSchema,
-  },
   "[GET]/demande/:numero": {
     url: "/demande/:numero",
     method: "GET",
@@ -448,11 +465,6 @@ export const ROUTES = {
     url: "/intention/suivi/:id",
     method: "DELETE",
     schema: deleteSuiviSchema,
-  },
-  "[GET]/campagne/expe/default": {
-    url: "/campagne/expe/default",
-    method: "GET",
-    schema: getCurrentCampagneExpeSchema,
   },
   "[GET]/edito": {
     url: "/edito",

@@ -2,13 +2,15 @@ import { z } from "zod";
 
 import { DemandeStatutEnum } from "../../enum/demandeStatutEnum";
 
+export const FiltersSchema = z.object({
+  anneeCampagne: z.string().optional(),
+  search: z.string().optional(),
+  codeAcademie: z.array(z.string()).optional(),
+  codeNiveauDiplome: z.array(z.string()).optional(),
+});
+
 export const countIntentionsSchema = {
-  querystring: z.object({
-    anneeCampagne: z.string().optional(),
-    search: z.string().optional(),
-    codeAcademie: z.array(z.string()).optional(),
-    codeNiveauDiplome: z.array(z.string()).optional(),
-  }),
+  querystring: FiltersSchema,
   response: {
     200: z.object({
       total: z.number(),

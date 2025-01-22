@@ -90,19 +90,21 @@ const DemandeItem = z.object({
   alreadyAccessed: z.boolean(),
 });
 
+export const FiltersSchema = z.object({
+  statut: z.union([DemandeStatutZodType.exclude(["supprimée"]), z.literal("suivies")]).optional(),
+  search: z.string().optional(),
+  suivies: z.coerce.boolean().optional(),
+  order: z.enum(["asc", "desc"]).optional(),
+  orderBy: DemandeItem.keyof().optional(),
+  offset: z.coerce.number().optional(),
+  limit: z.coerce.number().optional(),
+  campagne: z.string().optional(),
+  codeAcademie: z.array(z.string()).optional(),
+  codeNiveauDiplome: z.array(z.string()).optional(),
+});
+
 export const getDemandesSchema = {
-  querystring: z.object({
-    statut: z.union([DemandeStatutZodType.exclude(["supprimée"]), z.literal("suivies")]).optional(),
-    search: z.string().optional(),
-    suivies: z.coerce.boolean().optional(),
-    order: z.enum(["asc", "desc"]).optional(),
-    orderBy: DemandeItem.keyof().optional(),
-    offset: z.coerce.number().optional(),
-    limit: z.coerce.number().optional(),
-    campagne: z.string().optional(),
-    codeAcademie: z.array(z.string()).optional(),
-    codeNiveauDiplome: z.array(z.string()).optional(),
-  }),
+  querystring: FiltersSchema,
   response: {
     200: z.object({
       count: z.coerce.number(),

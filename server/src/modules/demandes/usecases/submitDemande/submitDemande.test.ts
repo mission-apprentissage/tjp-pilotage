@@ -12,12 +12,12 @@ const valideDeps = {
   findOneDataEtablissement: async () =>
     Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<Deps["findOneDataEtablissement"]>),
   findOneDataFormation: async () => Promise.resolve({ cfd: "cfd" } as AwaitedResult<Deps["findOneDataFormation"]>),
-  findOneDemande: async () =>
+  findOneDemandeQuery: async () =>
     Promise.resolve({
       numero: "numero-id",
       codeRegion: "codeRegion",
       createdBy: "user-id",
-    } as AwaitedResult<Deps["findOneDemande"]>),
+    } as AwaitedResult<Deps["findOneDemandeQuery"]>),
   findOneSimilarDemande: async () => Promise.resolve(),
 } as Deps;
 
@@ -52,6 +52,7 @@ const gestionnaire = {
   codeRegion: "75",
   id: "user-id",
   role: "gestionnaire_region",
+  email: "gestionnaire@mail.fr"
 } as const;
 
 describe("submitDemande usecase", () => {
@@ -115,6 +116,7 @@ describe("submitDemande usecase", () => {
           codeRegion: "other",
           id: "user-id",
           role: "pilote_region",
+          email: "pilote@mail.fr"
         },
         demande: {
           ...demande,

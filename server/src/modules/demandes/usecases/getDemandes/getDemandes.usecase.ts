@@ -1,21 +1,27 @@
+import type { FiltersSchema} from 'shared/routes/schemas/get.demandes.schema';
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import type {z} from 'zod';
 
-import { getCurrentCampagneQuery } from "@/modules/demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
+import type {RequestUser} from '@/modules/core/model/User';
+import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
-import type { Filters } from "./deps";
 import { getCampagne, getDemandes, getFilters } from "./deps";
+
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+}
 
 const getDemandesFactory =
   (
     deps = {
       getDemandes,
-      getCurrentCampagneQuery,
+      getCurrentCampagne,
       getCampagne,
       getFilters,
     }
   ) =>
     async (activeFilters: Filters) => {
-      const currentCampagne = await deps.getCurrentCampagneQuery();
+      const currentCampagne = await deps.getCurrentCampagne(activeFilters.user);
       const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
 
       const [demandes, campagne, filters] = await Promise.all([

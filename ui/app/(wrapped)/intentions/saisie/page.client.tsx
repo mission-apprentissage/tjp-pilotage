@@ -138,6 +138,9 @@ export const PageClient = () => {
     { keepPreviousData: true, cacheTime: 0 }
   );
 
+  const { data: defaultCampagne } = client.ref("[GET]/campagne/current").useQuery({});
+  console.log(defaultCampagne);
+
   const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
 
   const isCampagneEnCours = data?.campagne?.statut === CampagneStatutEnum["en cours"];

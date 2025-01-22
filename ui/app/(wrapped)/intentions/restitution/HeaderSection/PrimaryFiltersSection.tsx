@@ -64,7 +64,7 @@ export const PrimaryFiltersSection = ({
                         borderColor="grey.900"
                         bg={"white"}
                       >
-                        <Flex direction="row">
+                        <Flex direction="row" gap={2}>
                           <Text my={"auto"}>
                             {data?.filters.campagnes?.find((c) => c.value === activeFilters.campagne)?.value ?? ""}
                           </Text>
@@ -82,7 +82,7 @@ export const PrimaryFiltersSection = ({
                             key={campagne.value}
                             onClick={() => handleFilters("campagne", campagne.value)}
                           >
-                            <Flex direction="row">
+                            <Flex direction="row" gap={2}>
                               <Text my={"auto"}>Campagne {campagne.value}</Text>
                               <CampagneStatutTag statut={campagne.statut} />
                             </Flex>

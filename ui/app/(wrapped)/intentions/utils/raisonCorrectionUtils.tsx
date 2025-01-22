@@ -14,6 +14,11 @@ export const RAISONS_CORRECTION_LABELS = {
     annulation: "Annulation du projet",
     modification_capacite: "Modification de la capacité saisie initialement",
   },
+  "2025": {
+    report: "Report du projet",
+    annulation: "Annulation du projet",
+    modification_capacite: "Modification de la capacité saisie initialement",
+  },
 };
 
 export const getRaisonCorrectionLabel = ({

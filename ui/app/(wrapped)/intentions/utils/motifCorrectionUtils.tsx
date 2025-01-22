@@ -22,6 +22,15 @@ export const MOTIFS_CORRECTION_LABELS = {
     repartition_apprentissage_scolaire: "Nouvelle répartition apprentissage/scolaire",
     autre: "Autre motif (veuillez préciser)",
   },
+  "2025": {
+    pb_equipement: "Problème d'équipement",
+    pb_financement: "Problème de financement",
+    pb_locaux: "Problème de locaux",
+    defaillance_partenaire: "Défaillance d'un partenaire",
+    trop_peu_eleves: "Trop peu d'élèves affectés",
+    repartition_apprentissage_scolaire: "Nouvelle répartition apprentissage/scolaire",
+    autre: "Autre motif (veuillez préciser)",
+  }
 };
 
 export const getMotifCorrectionLabel = ({

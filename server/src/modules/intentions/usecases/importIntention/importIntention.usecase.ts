@@ -2,8 +2,8 @@ import Boom from "@hapi/boom";
 import { getPermissionScope, guardScope } from "shared";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { getCurrentCampagneQuery } from "@/modules/intentions/queries/getCurrentCampagne/getCurrentCampagne.query";
 import { findOneIntention } from "@/modules/intentions/repositories/findOneIntention.query";
+import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
 import { createIntentionQuery } from "./dependencies/createIntention.dep";
 import { getIntentionWithMetadata } from "./dependencies/getIntentionWithMetadata";
@@ -14,15 +14,15 @@ const importIntentionFactory =
     deps = {
       createIntentionQuery,
       findOneIntention,
-      getCurrentCampagneQuery,
+      getCurrentCampagne,
       getIntentionWithMetadata,
       hasAlreadyBeenImported,
     }
   ) =>
-    async ({ numero, user }: { user: Pick<RequestUser, "id" | "codeRegion" | "role" | "uais">; numero: string }) => {
+    async ({ numero, user }: { user: RequestUser; numero: string }) => {
       const [intention, campagne, alreadyImportedIntention] = await Promise.all([
         deps.findOneIntention(numero),
-        deps.getCurrentCampagneQuery(),
+        deps.getCurrentCampagne(user),
         deps.hasAlreadyBeenImported({ numero }),
       ]);
 

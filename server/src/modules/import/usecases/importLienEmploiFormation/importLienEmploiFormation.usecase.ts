@@ -138,6 +138,7 @@ export const importLienEmploiFormationFactory =
 
                 try {
                   await createFormationRome(data);
+                  // eslint-disable-next-line unused-imports/no-unused-vars
                 } catch (_err) {
                   console.log(
                     `\nProblème en ajoutant le couple CFD ${data.cfd} / ROME ${data.codeRome}. Il est probable que le CFD ou le code ROME n'existe pas dans notre base.`

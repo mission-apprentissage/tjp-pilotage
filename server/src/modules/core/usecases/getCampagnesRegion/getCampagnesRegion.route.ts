@@ -4,21 +4,21 @@ import { ROUTES } from "shared/routes/routes";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getDefaultCampagneUsecase } from "./getDefaultCampagne.usecase";
+import { getCampagnesRegion } from "./getCampagnesRegion.query";
 
-const ROUTE = ROUTES["[GET]/campagne/expe/default"];
+const ROUTE = ROUTES["[GET]/campagnes-region"];
 
-export const getCurrentCampagneRoute = (server: Server) => {
+export const getCampagnesRegionRoute = (server: Server) => {
   return createRoute(ROUTE.url, {
     method: ROUTE.method,
     schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions-perdir/lecture"),
+      preHandler: hasPermissionHandler("campagnes-region/lecture"),
       handler: async (_request, response) => {
-        const campagne = await getDefaultCampagneUsecase();
-        response.status(200).send(campagne);
+        const campagnes = await getCampagnesRegion();
+        response.status(200).send(campagnes);
       },
     });
   });

@@ -18,8 +18,10 @@ export const getFormationsPilotageIntentionsRoute = (server: Server) => {
       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
       handler: async (request, response) => {
         const { ...filters } = request.query;
+        const user = request.user!;
         const stats = await getFormationsPilotageIntentionsUsecase({
           ...filters,
+          user
         });
         response.status(200).send(stats);
       },

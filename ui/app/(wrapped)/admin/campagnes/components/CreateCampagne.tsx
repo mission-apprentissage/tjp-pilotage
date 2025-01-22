@@ -5,7 +5,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,6 +12,11 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Select,
   UnorderedList,
 } from "@chakra-ui/react";
@@ -23,20 +27,13 @@ import { toDate } from "date-fns";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { z } from "zod";
 
 import { client } from "@/api.client";
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
 
-export const EditCampagne = ({
-  isOpen,
-  onClose,
-  campagne,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  campagne: (typeof client.infer)["[GET]/campagnes"][number];
-}) => {
+export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const {
     getValues,
     setValue,
@@ -44,29 +41,21 @@ export const EditCampagne = ({
     formState: { errors },
     reset,
     handleSubmit,
-  } = useForm<(typeof client.inferArgs)["[PUT]/campagnes/:campagneId"]["body"]>({
+  } = useForm<(typeof client.inferArgs)["[POST]/campagnes/:campagneId"]["body"]>({
     shouldUseNativeValidation: false,
-    defaultValues: {
-      statut: campagne.statut,
-      dateFin: campagne.dateFin,
-      dateDebut: campagne.dateDebut,
-    },
   });
 
-  useEffect(() => {
-    reset(campagne, { keepDefaultValues: true });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, reset]);
+  useEffect(() => reset(undefined, { keepDefaultValues: true }), [isOpen, reset]);
 
   const queryClient = useQueryClient();
 
   const [serverErrors, setServerErrors] = useState<Record<string, string>>();
 
   const {
-    mutate: editCampagne,
+    mutate: createCampagne,
     isLoading,
     isError,
-  } = client.ref("[PUT]/campagnes/:campagneId").useMutation({
+  } = client.ref("[POST]/campagnes/:campagneId").useMutation({
     onSuccess: () => {
       queryClient.invalidateQueries(["[GET]/campagnes"]);
       onClose();
@@ -79,41 +68,50 @@ export const EditCampagne = ({
   });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={"lg"}>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent
         as="form"
         onSubmit={handleSubmit((form) =>
-          editCampagne({
+          createCampagne({
             body: {
               ...form,
               dateDebut: toDate(form.dateDebut).toISOString(),
               dateFin: toDate(form.dateFin).toISOString(),
             },
-            params: { campagneId: campagne?.id },
           })
         )}
       >
-        <ModalHeader>Éditer une campagne</ModalHeader>
+        <ModalHeader>Créer une campagne</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl mb="4" isInvalid={!!errors.annee} isRequired>
             <FormLabel>Année</FormLabel>
-            <Input
-              type="text"
-              {...register("annee", {
-                validate: (annee) =>
-                  z
-                    .string()
-                    .regex(/^\d{4}$/)
-                    .safeParse(annee).success || "Veuillez saisir une année valide",
-              })}
-            />
+            <NumberInput
+              defaultValue={parseInt(CURRENT_ANNEE_CAMPAGNE)}
+              min={parseInt(CURRENT_ANNEE_CAMPAGNE)}
+              onFocus={(e) => e.currentTarget.select()}
+            >
+              <NumberInputField
+                {...register("annee", {
+                  validate: (annee) =>
+                    z.coerce
+                      .string()
+                      .regex(/^\d{4}$/)
+                      .safeParse(annee).success || "Veuillez saisir une année valide",
+                })}
+              />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
             {!!errors.annee && <FormErrorMessage>{errors.annee.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.statut} isRequired>
             <FormLabel>Statut</FormLabel>
             <Select
+              width={[null, null, "72"]}
               {...register("statut", {
                 required: "Veuillez saisir un statut",
               })}
@@ -127,7 +125,7 @@ export const EditCampagne = ({
             {!!errors.statut && <FormErrorMessage>{errors.statut.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.dateDebut} isRequired>
-            <FormLabel>Date début</FormLabel>
+            <FormLabel htmlFor="input-date-debut">Date début</FormLabel>
             <SingleDatepicker
               date={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
               onDateChange={(date) => {
@@ -137,11 +135,22 @@ export const EditCampagne = ({
               }}
               maxDate={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
               configs={getDatePickerConfig()}
+              propsConfigs={{
+                inputProps: {
+                  id: "input-date-debut",
+                },
+                triggerBtnProps: {
+                  width: [null, null, "72"],
+                  fontSize: 14,
+                  fontWeight: 400,
+                  justifyContent: "start"
+                },
+              }}
             />
             {!!errors.dateDebut && <FormErrorMessage>{errors.dateDebut.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.dateFin} isRequired>
-            <FormLabel>Date de fin</FormLabel>
+            <FormLabel htmlFor="input-date-fin">Date de fin</FormLabel>
             <SingleDatepicker
               date={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
               onDateChange={(date) => {
@@ -151,6 +160,17 @@ export const EditCampagne = ({
               }}
               minDate={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
               configs={getDatePickerConfig()}
+              propsConfigs={{
+                inputProps: {
+                  id: "input-date-fin",
+                },
+                triggerBtnProps: {
+                  width: [null, null, "72"],
+                  fontSize: 14,
+                  fontWeight: 400,
+                  justifyContent: "start"
+                },
+              }}
             />
             {!!errors.dateFin && <FormErrorMessage>{errors.dateFin.message}</FormErrorMessage>}
           </FormControl>
@@ -163,7 +183,7 @@ export const EditCampagne = ({
                   ))}
                 </UnorderedList>
               ) : (
-                <AlertDescription>Erreur lors de l'édition</AlertDescription>
+                <AlertDescription>Erreur lors de la création</AlertDescription>
               )}
             </Alert>
           )}

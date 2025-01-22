@@ -42,10 +42,7 @@ const getMillesimesSortie = async () => {
 export const getStats = async ({
   codeRegion,
   codeNiveauDiplome,
-}: {
-  codeRegion?: string;
-  codeNiveauDiplome?: string[];
-}) => {
+}: Filters) => {
   const rentreesScolaires = await getRentreesScolaires();
   const rentreeScolaire = rentreesScolaires[0];
   const millesimesSortie = await getMillesimesSortie();

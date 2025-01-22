@@ -18,7 +18,11 @@ export const getPilotageReformeStatsRoute = (server: Server) => {
       preHandler: hasPermissionHandler("pilotage_reforme/lecture"),
       handler: async (request, response) => {
         const { ...filters } = request.query;
-        const stats = await getPilotageReformeStats(filters);
+        const user = request.user!;
+        const stats = await getPilotageReformeStats({
+          ...filters,
+          user,
+        });
         response.status(200).send(stats);
       },
     });
