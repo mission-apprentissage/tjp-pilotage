@@ -54,6 +54,7 @@ export function GlossaireProvider({
       setSelectedEntry,
       entries,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isOpen, selectedEntry, onOpenCallback, onCloseCallback, setSelectedEntry]
   );
 

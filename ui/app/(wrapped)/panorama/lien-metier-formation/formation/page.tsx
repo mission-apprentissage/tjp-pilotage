@@ -50,6 +50,7 @@ const DashboardFormation = () => {
     } else if (!formationSearchParam || !codeFormationSearchParam) {
       setSelectedFormation(undefined);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   const onUpdateNsf = (nsf?: NsfOption) => {

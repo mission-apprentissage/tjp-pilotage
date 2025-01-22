@@ -24,7 +24,7 @@ export default function Panorama({
 }) {
   const router = useRouter();
   const queryParams = useSearchParams();
-  const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(queryParams.toString());
+  const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
   const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
 
   const setSearchParams = (params: Partial<FiltersPanoramaFormation>) => {

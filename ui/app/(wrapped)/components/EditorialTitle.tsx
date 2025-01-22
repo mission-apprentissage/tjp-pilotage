@@ -4,12 +4,13 @@ import { themeDefinition } from "@/theme/theme";
 
 interface EditorialTitleProps {
   children: React.ReactNode;
+  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
-export const EditorialTitle = ({ children }: EditorialTitleProps) => {
+export const EditorialTitle = ({ children, headingLevel }: EditorialTitleProps) => {
   return (
     <Box>
-      <Heading fontSize="20px" as="h3" fontWeight={700} textAlign="center">
+      <Heading fontSize="20px" as={headingLevel} fontWeight={700} textAlign="center">
         {children}
       </Heading>
       <hr

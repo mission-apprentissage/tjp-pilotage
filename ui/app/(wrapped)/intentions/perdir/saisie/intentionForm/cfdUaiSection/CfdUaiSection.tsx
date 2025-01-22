@@ -176,7 +176,7 @@ export const CfdUaiSection = ({
             {!uaiInfo && <Text>Veuillez sélectionner un établissement.</Text>}
             {uaiInfo && (
               <>
-                <Badge mb="2" variant="success" size="sm">
+                <Badge mb="2" variant="success" size="sm" fontSize={12}>
                   Établissement validé
                 </Badge>
                 <Text fontSize="sm">{`Numéro UAI : ${uaiInfo.value}`}</Text>

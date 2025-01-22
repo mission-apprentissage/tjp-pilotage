@@ -19,7 +19,7 @@ const EFFECTIF_SIZES = [
 
 const { stats, formations } = generateMock(ROUTES["[GET]/pilotage-intentions/formations"].schema.response[200]);
 
-const setCurrentFormationId = vi.fn(({ cfd, dispositif }) => {});
+const setCurrentFormationId = vi.fn(({ _cfd, _dispositif }) => {});
 
 describe("ui > components > Quadrant", () => {
   beforeAll(() => {

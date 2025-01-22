@@ -1,9 +1,9 @@
 "use client";
 import { ChevronDownIcon, RepeatIcon } from "@chakra-ui/icons";
 import type { PlacementWithLogical, PositionProps } from "@chakra-ui/react";
-import { Box, Button, chakra, Flex, Input, Menu, MenuButton, MenuList, Portal, Text } from "@chakra-ui/react";
+import { Button, chakra, Flex, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal, Text, VisuallyHidden } from "@chakra-ui/react";
 import type { ChangeEventHandler, ReactNode } from "react";
-import { memo, useMemo, useRef, useState } from "react";
+import { memo, useId, useMemo, useRef, useState } from "react";
 import removeAccents from "remove-accents";
 
 const ButtonContent = ({ selected, children }: { selected: string[]; children: ReactNode }) => {
@@ -24,7 +24,7 @@ const Checkbox = ({
   checked: boolean;
 }) => {
   return (
-    <label style={{ display: "flex", alignItems: "center" }}>
+    <label style={{ display: "flex", alignItems: "center" }} role="menuitemcheckbox" aria-checked={checked}>
       <input checked={checked} value={value} onChange={onChange} hidden type="checkbox" />
       <CheckboxIcon checked={checked} />
       {children}
@@ -96,6 +96,7 @@ const CheckboxIcon = ({ checked }: { checked: boolean }) => {
 
 export const Multiselect = chakra(
   ({
+    inputId,
     children,
     options = [],
     onChange,
@@ -110,6 +111,7 @@ export const Multiselect = chakra(
     gutter,
     placement,
   }: {
+    inputId?: string;
     children: ReactNode;
     options?: { label: string; value: string }[];
     onChange?: (value: string[]) => void;
@@ -124,16 +126,14 @@ export const Multiselect = chakra(
     gutter?: number;
     placement?: PlacementWithLogical;
   }) => {
-    const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
-
     const map = useMemo(() => {
       return new Map(
         value.map((val) => {
-          return [val, (stateValue.current?.get?.(val) || options.find(({ value }) => val === value)?.label) ?? val];
+          return [val, (options.find(({ value }) => val === value)?.label) ?? val];
         })
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value, options, stateValue.current]);
+    }, [value, options]);
 
     const [search, setSearch] = useState("");
 
@@ -169,9 +169,10 @@ export const Multiselect = chakra(
 
     const showDefaultValue = () => hasDefaultValue && options.length === 1;
 
+    const id = inputId ?? useId();
+
     return (
       <Menu
-        isLazy={true}
         onOpen={() => {
           prepareOptions();
           handleSearch("");
@@ -201,32 +202,38 @@ export const Multiselect = chakra(
           </ButtonContent>
         </MenuButton>
         <Portal>
-          <MenuList maxWidth={450} pt="0" zIndex={menuZIndex}>
-            <Flex borderBottom="1px solid" borderBottomColor="grey.900">
+          <MenuList maxWidth={450} pt="0" zIndex={menuZIndex} role="menu">
+            <Flex role="menuitem">
+              {!inputId && (
+                <VisuallyHidden as="label" htmlFor={id}>
+                  Rechercher {children}
+                </VisuallyHidden>
+              )}
               <Input
+                id={id}
                 ref={inputRef}
                 placeholder="Rechercher dans la liste"
                 value={search}
                 onInput={async (e) => handleSearch((e.target as HTMLInputElement).value)}
+                variant="unstyled"
                 px="3"
                 py="2"
-                variant="unstyled"
               />
-              <Button
-                onClick={() => {
-                  stateValue.current = new Map();
-                  onChange?.(Array.from(new Map().keys()));
-                }}
-                bgColor={"transparent"}
-              >
-                {map.size > 0 && (
+              {map.size > 0 && (
+                <Button
+                  onClick={() => {
+                    onChange?.(Array.from(new Map().keys()));
+                  }}
+                  bgColor={"transparent"}
+                >
                   <Text fontSize={12} fontWeight={"normal"} color="bluefrance.113" p={2}>
                     <RepeatIcon ml={1} mr={1} verticalAlign={"bottom"} />
-                    Tout décocher
+                      Tout décocher
                   </Text>
-                )}
-              </Button>
+                </Button>
+              )}
             </Flex>
+            <MenuDivider m={0}/>
             <Flex direction="column" ref={ref} maxHeight={300} overflow="auto" sx={{ "> *": { px: "3", py: "1.5" } }}>
               {filteredOptions.slice(0, limit).map(({ value, label }) => (
                 <InputWapper
@@ -239,7 +246,6 @@ export const Multiselect = chakra(
                     } else {
                       newMap.delete(value);
                     }
-                    stateValue.current = newMap;
                     onChange?.(Array.from(newMap.keys()));
                   }}
                   value={value}
@@ -248,16 +254,15 @@ export const Multiselect = chakra(
                 </InputWapper>
               ))}
               {filteredOptions.length > limit && (
-                <Box px="3">
+                <MenuItem px="3">
                   <Button size="sm" w="100%" onClick={() => setLimit(limit + 100)}>
-                    Afficher plus
+                      Afficher plus
                   </Button>
-                </Box>
+                </MenuItem>
               )}
             </Flex>
           </MenuList>
         </Portal>
       </Menu>
     );
-  }
-);
+  });

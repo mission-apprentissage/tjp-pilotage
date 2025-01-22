@@ -1,4 +1,4 @@
-import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Select, Skeleton, VisuallyHidden } from "@chakra-ui/react";
 
 import type { Filters, IndicateurType, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage-reforme/types";
 import { CartoGraph } from "@/components/CartoGraph";
@@ -46,10 +46,18 @@ export const CartoSection = ({
       ) : (
         <Box>
           <Flex marginStart={"auto"} justifyContent="space-between">
-            <Text color={"bluefrance.113"} fontWeight={700}>
-              VISUALISATION TERRITORIALE
-            </Text>
+            <Heading
+              as="h2"
+              fontSize={15}
+              fontWeight="500"
+              textTransform={"uppercase"}
+              color={"bluefrance.113"}
+            >
+            Visualisation territoriale
+            </Heading>
+            <VisuallyHidden as="label" htmlFor="select-indicateur-carto">Indicateur</VisuallyHidden>
             <Select
+              id="select-indicateur-carto"
               width="64"
               size="sm"
               variant="newInput"

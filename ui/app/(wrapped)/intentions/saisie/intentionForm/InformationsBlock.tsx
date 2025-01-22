@@ -68,6 +68,7 @@ export const InformationsBlock = ({
 
   useEffect(() => {
     refs["correction"].current?.scrollIntoView({ behavior: "smooth" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCorrection]);
 
   const hasPermissionSubmitIntention = usePermission("intentions/ecriture");

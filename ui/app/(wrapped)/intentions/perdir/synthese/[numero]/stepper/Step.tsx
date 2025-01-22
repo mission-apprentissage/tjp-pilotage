@@ -1,4 +1,4 @@
-import { Box, chakra, Flex, Tag, Text, useToken } from "@chakra-ui/react";
+import { Box, chakra, Flex, Heading, Tag, Text, useToken, VisuallyHidden } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
 const StepIcon = chakra(
@@ -9,31 +9,37 @@ const StepIcon = chakra(
     if (incomplet) {
       return (
         <Box w="32px" h="28px" borderRadius={"100%"} bgColor={"orangeTerreBattue.850"}>
-          <Icon icon={"ri:close-line"} color={bluefrance113} width="100%" />
+          <Heading as="h2">
+            <VisuallyHidden>Étape {etape} incomplète</VisuallyHidden>
+            <Icon icon={"ri:close-line"} color={bluefrance113} width="100%" />
+          </Heading>
         </Box>
       );
     }
     if (etape === currentEtape) {
       return (
         <Box w="32px" h="28px" borderRadius={"100%"} bgColor={"blueecume.925"}>
-          <Text textAlign={"center"} fontSize={"18px"} fontWeight={700} color={"bluefrance.113"}>
+          <Heading as="h2" textAlign={"center"} fontSize={"18px"} fontWeight={700} color={"bluefrance.113"}>
             {etape}
-          </Text>
+          </Heading>
         </Box>
       );
     }
     if (currentEtape > etape) {
       return (
         <Box w="32px" h="28px" borderRadius={"100%"} bgColor={"success.950"}>
-          <Icon icon={"ri:check-line"} color={success425} width="100%" />
+          <Heading as="h2">
+            <VisuallyHidden>Étape {etape} validée</VisuallyHidden>
+            <Icon icon={"ri:check-line"} color={success425} width="100%" />
+          </Heading>
         </Box>
       );
     }
     return (
       <Box w="32px" h="28px" borderRadius={"100%"} bgColor={"grey.925"}>
-        <Text textAlign={"center"} fontSize={"18px"} fontWeight={700} color={"grey.625"}>
+        <Heading as="h2" textAlign={"center"} fontSize={"18px"} fontWeight={700} color={"grey.625"}>
           {etape}
-        </Text>
+        </Heading>
       </Box>
     );
   }
@@ -63,9 +69,9 @@ export const Step = ({
         <Box w="100%" h="2px" bgColor={currentEtape > etape ? "bluefrance.113" : "grey.625"} my={"auto"} />
       </Flex>
       <Flex direction={"row"} gap={2}>
-        <Text fontSize="lg" fontWeight="bold" color={currentEtape >= etape ? "black" : "grey.625"}>
+        <Heading as="h2" fontSize="lg" fontWeight="bold" color={currentEtape >= etape ? "black" : "grey.625"}>
           {titre}
-        </Text>
+        </Heading>
         {currentEtape === etape && (
           <Tag size={"md"} me={2} bgColor={"info.950"} color={"info.text"}>
             En cours
@@ -86,7 +92,7 @@ export const Step = ({
           </>
         )}
       </Flex>
-      <Text fontSize={"12px"} fontWeight={400} color={"grey.625"}>
+      <Text fontSize={12} fontWeight={400} color={"grey.625"}>
         {description}
       </Text>
     </Flex>

@@ -81,6 +81,7 @@ export const ChangementStatutForm = ({
       statut: intention.statut,
       commentaire: "",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intention]);
 
   const {

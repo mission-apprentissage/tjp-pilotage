@@ -1,13 +1,4 @@
-import {
-  chakra,
-  Checkbox,
-  CheckboxGroup,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Stack,
-} from "@chakra-ui/react";
+import {chakra, Checkbox, CheckboxGroup, Flex, FormControl, FormErrorMessage, FormLabel, Highlight, Stack, Text} from '@chakra-ui/react';
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
@@ -56,8 +47,8 @@ export const MotifField = chakra(
     if (!isMotifVisible) return null;
 
     return (
-      <FormControl className={className} isInvalid={!!errors.motif} isRequired>
-        <FormLabel>
+      <FormControl as="fieldset" className={className} isInvalid={!!errors.motif} isRequired>
+        <FormLabel as="legend" >
           Merci de préciser le(s) motif(s) de votre {getTypeDemandeLabel(typeDemande).toLowerCase()}
         </FormLabel>
         <Controller
@@ -86,7 +77,11 @@ export const MotifField = chakra(
                 </Stack>
                 {coloration && !isTypeColoration(typeDemande) && !isTypeFermeture(typeDemande) && (
                   <Flex direction={"column"} mt={8}>
-                    <FormLabel>Merci de préciser le(s) motif(s) de votre coloration</FormLabel>
+                    <Text mb={2} fontWeight={700}>
+                      <Highlight query={"*"} styles={{ color: "red" }}>
+                        Merci de préciser le(s) motif(s) de votre coloration *
+                      </Highlight>
+                    </Text>
                     <Stack spacing={[3]} ms={6}>
                       {getMotifOptions("coloration", campagne?.annee)?.map(({ value, label }) => (
                         <Checkbox

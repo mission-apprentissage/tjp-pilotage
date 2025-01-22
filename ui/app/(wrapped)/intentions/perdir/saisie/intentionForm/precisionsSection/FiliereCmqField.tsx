@@ -21,7 +21,7 @@ export const FiliereCmqField = chakra(({ disabled, className }: { disabled?: boo
   return (
     <Flex flex={1}>
       <FormControl className={className} isInvalid={!!errors.filiereCmq || !!errors.discipline2FormationRH}>
-        <FormLabel>Précisez la filière d'activité du campus</FormLabel>
+        <FormLabel htmlFor="autocomplete-filiere-cmq">Précisez la filière d'activité du campus</FormLabel>
         <Flex direction={"row"} gap={2}>
           <Controller
             name="filiereCmq"
@@ -29,6 +29,7 @@ export const FiliereCmqField = chakra(({ disabled, className }: { disabled?: boo
             rules={{ required: "Ce champ est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
               <FiliereAutoCompleteInput
+                id="autocomplete-filiere-cmq"
                 name={name}
                 active={!disabled}
                 inError={!!errors.filiereCmq}

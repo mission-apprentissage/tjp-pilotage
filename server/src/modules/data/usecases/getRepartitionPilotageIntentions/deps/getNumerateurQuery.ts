@@ -31,11 +31,11 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
         ])
         .as("demandes")
     )
-    .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "demandes.codeNiveauDiplome")
-    .innerJoin("region", "region.codeRegion", "demandes.codeRegion")
-    .innerJoin("departement", "departement.codeDepartement", "demandes.codeDepartement")
-    .innerJoin("academie", "academie.codeAcademie", "demandes.codeAcademie")
-    .innerJoin("nsf", "nsf.codeNsf", "demandes.codeNsf")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "demandes.codeNiveauDiplome")
+    .leftJoin("region", "region.codeRegion", "demandes.codeRegion")
+    .leftJoin("departement", "departement.codeDepartement", "demandes.codeDepartement")
+    .leftJoin("academie", "academie.codeAcademie", "demandes.codeAcademie")
+    .leftJoin("nsf", "nsf.codeNsf", "demandes.codeNsf")
     .select((eb) => [
       "annee",
       "rentreeScolaire",
@@ -58,8 +58,6 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
       eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
       eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
     ])
-    .where("demandes.codeNsf", "is not", null)
-    .where("demandes.codeNiveauDiplome", "is not", null)
     .execute()
     .then(cleanNull);
 };

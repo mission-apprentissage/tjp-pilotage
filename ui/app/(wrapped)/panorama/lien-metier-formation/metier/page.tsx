@@ -53,6 +53,7 @@ const DashboardMetier = () => {
     } else if (!metierSearchParam || !codeMetierSearchParam) {
       setSelectedMetier(undefined);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   const onUpdateDomaineProfessionnel = (domaineProfessionnel?: DomaineProfessionnelOption) => {

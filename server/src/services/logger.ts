@@ -67,13 +67,18 @@ function getTransport() {
         colorize: true,
         messageKey: "message",
         messageFormat: "{if module} [{module}] - {end} {message}",
+        level: config.log.level
       },
     };
   }
 
   return {
     target: "pino/file",
-    options: { destination: 1, ignore: "pid,hostname" },
+    options: {
+      destination: 1,
+      ignore: "pid,hostname",
+      level: config.log.level
+    },
   };
 }
 
@@ -109,7 +114,7 @@ export function createJobProcessorLogger(logger: PinoLogger<never>): ILogger {
 const logger = pino({
   name: config.productName,
   enabled: process.env.NODE_ENV !== "test",
-  level: config.env !== "production" ? "debug" : "info",
+  level: config.log.level,
   transport: getTransport(),
   messageKey: "message",
   formatters: {

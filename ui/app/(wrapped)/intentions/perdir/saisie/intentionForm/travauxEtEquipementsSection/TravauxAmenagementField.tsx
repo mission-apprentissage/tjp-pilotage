@@ -11,8 +11,8 @@ export const TravauxAmenagementField = chakra(({ disabled, className }: { disabl
   } = useFormContext<IntentionForms>();
 
   return (
-    <FormControl className={className} isInvalid={!!errors.travauxAmenagement} isRequired>
-      <FormLabel>Votre proposition implique-t-elle des travaux d'aménagement ?</FormLabel>
+    <FormControl as="fieldset" className={className} isInvalid={!!errors.travauxAmenagement} isRequired>
+      <FormLabel as="legend">Votre proposition implique-t-elle des travaux d'aménagement ?</FormLabel>
       <Controller
         name="travauxAmenagement"
         control={control}

@@ -108,6 +108,7 @@ export const ActiveEtablissement = () => {
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 
   return (

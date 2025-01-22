@@ -48,15 +48,15 @@ export default () => {
         </Button>
       </Flex>
       <TableContainer overflowY="auto" flex={1}>
-        <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize="14px" gap="0">
+        <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize={14} gap="0">
           <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white">
             <Tr>
-              <Th width={"10%"}>Id</Th>
-              <Th>Année</Th>
-              <Th textAlign={"center"}>Statut</Th>
-              <Th width={"10%"}>Date de début</Th>
-              <Th width={"10%"}>Date de fin</Th>
-              <Th width={"5%"} isNumeric>
+              <Th width={"10%"} fontSize={12}>Id</Th>
+              <Th fontSize={12}>Année</Th>
+              <Th textAlign={"center"} fontSize={12}>Statut</Th>
+              <Th width={"10%"} fontSize={12}>Date de début</Th>
+              <Th width={"10%"} fontSize={12}>Date de fin</Th>
+              <Th width={"5%"} isNumeric fontSize={12}>
                 Actions
               </Th>
             </Tr>

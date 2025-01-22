@@ -1,7 +1,7 @@
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { describe, expect, it, vi } from "vitest";
 
-import { submitIntentionFactory } from "./submitIntention.usecase";
+import { submitIntentionFactory } from "@/modules/intentions/usecases/submitIntention/submitIntention.usecase";
 
 type Deps = Parameters<typeof submitIntentionFactory>[0];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

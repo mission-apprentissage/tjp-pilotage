@@ -56,6 +56,9 @@ export const BarGraph = function <F extends BarGraphData>({
       aria: {
         label: {
           enabled: true,
+          data: {
+            maxCount: 100
+          }
         },
       },
       animationDelay: 1,
@@ -139,6 +142,7 @@ export const BarGraph = function <F extends BarGraphData>({
           },
         ],
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [graphData]
   );
 
@@ -149,6 +153,7 @@ export const BarGraph = function <F extends BarGraphData>({
       chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphData]);
 
   return (

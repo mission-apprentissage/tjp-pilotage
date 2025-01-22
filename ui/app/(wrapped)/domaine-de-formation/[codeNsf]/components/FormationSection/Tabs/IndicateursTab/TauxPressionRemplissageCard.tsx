@@ -1,4 +1,4 @@
-import { Box, Flex, Select, Text, useToken } from "@chakra-ui/react";
+import { Box, Flex, Select, Text, useToken, VisuallyHidden } from "@chakra-ui/react";
 import _ from "lodash";
 import { useMemo } from "react";
 import type { ScopeZone } from "shared";
@@ -155,7 +155,11 @@ export const TauxPressionRemplissageCard = ({
     >
       <Flex direction={"column"} gap={2}>
         <Flex justifyContent={"space-between"}>
+          <VisuallyHidden as="label" htmlFor="select-taux-attractivite">
+            Sélectionner un indicateur d'attractivité
+          </VisuallyHidden>
           <Select
+            id="select-taux-attractivite"
             width="64"
             size="sm"
             variant="newInput"

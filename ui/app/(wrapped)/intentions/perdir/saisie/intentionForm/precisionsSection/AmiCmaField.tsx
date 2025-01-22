@@ -33,9 +33,9 @@ export const AmiCmaField = chakra(({ disabled, className }: { disabled?: boolean
   if (!visible) return null;
 
   return (
-    <FormControl className={className} isInvalid={!!errors.amiCma} isRequired>
+    <FormControl as="fieldset" className={className} isInvalid={!!errors.amiCma} isRequired>
       <Flex direction={"row"}>
-        <FormLabel>AMI / CMA</FormLabel>
+        <FormLabel as="legend">AMI / CMA</FormLabel>
         <TooltipIcon
           mt={"1"}
           label={

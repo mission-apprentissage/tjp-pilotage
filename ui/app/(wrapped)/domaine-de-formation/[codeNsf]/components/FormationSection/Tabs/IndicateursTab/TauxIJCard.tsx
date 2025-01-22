@@ -1,4 +1,4 @@
-import { Box, Flex, Select, Text } from "@chakra-ui/react";
+import { Box, Flex, Select, Text, VisuallyHidden } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 import type { ScopeZone } from "shared";
 import { ScopeEnum } from "shared";
@@ -105,7 +105,9 @@ export const TauxIJCard = ({
     >
       <Flex direction={"column"} gap={2}>
         <Flex justifyContent={"space-between"}>
+          <VisuallyHidden as="label" htmlFor="select-taux-IJ">Sélectionner un indicateur inserjeunes</VisuallyHidden>
           <Select
+            id="select-taux-IJ"
             width="64"
             size="sm"
             variant="newInput"

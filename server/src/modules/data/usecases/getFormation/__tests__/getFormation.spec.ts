@@ -1,4 +1,4 @@
-import { usePg } from "@tests/pg.test.utils";
+import { usePg } from "@tests/utils/pg.test.utils";
 import type { getFormationCfdSchema } from "shared/routes/schemas/get.formation.cfd.schema";
 import { beforeAll, describe, expect, it } from "vitest";
 import type { z } from "zod";

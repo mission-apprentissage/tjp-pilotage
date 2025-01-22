@@ -75,7 +75,7 @@ export const MapEtablissements = ({
         activeUai={activeUai}
         onClose={() => setActiveUai(null)}
       />
-      <ScaleControl />
+      <ScaleControl style={{fontSize: "14px" }}/>
       <NavigationControl />
       <CustomControls setMap={setMap} setBbox={setBbox} />
     </MapGLMap>

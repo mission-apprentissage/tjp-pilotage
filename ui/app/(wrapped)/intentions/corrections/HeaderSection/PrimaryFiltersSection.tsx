@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  FormLabel,
   LightMode,
   Menu,
   MenuButton,
@@ -43,7 +42,7 @@ export const PrimaryFiltersSection = ({
             <Flex justifyContent={"start"} gap={4} flexDirection={"column"} py={3} w="100%">
               <Flex gap={4}>
                 <Box justifyContent={"start"}>
-                  <FormLabel color="white">CAMPAGNE</FormLabel>
+                  <Text color="white" mb={2} fontWeight={500}>CAMPAGNE</Text>
                   <Flex direction={"column"} gap={1}>
                     <Menu gutter={0} matchWidth={true} autoSelect={false}>
                       <MenuButton
@@ -92,7 +91,7 @@ export const PrimaryFiltersSection = ({
                   </Flex>
                 </Box>
                 <Box justifyContent={"start"} flex={1}>
-                  <FormLabel color="white">RENTRÉE SCOLAIRE</FormLabel>
+                  <Text color="white" mb={2} fontWeight={500}>RENTRÉE SCOLAIRE</Text>
                   <Flex direction={"column"} gap={1}>
                     <Menu gutter={0} matchWidth={true} autoSelect={false}>
                       <MenuButton
@@ -143,7 +142,7 @@ export const PrimaryFiltersSection = ({
               </Flex>
               <Flex gap={4} display={["none", null, "flex"]}>
                 <Box justifyContent={"start"} flex={1}>
-                  <FormLabel color="white">RÉGION</FormLabel>
+                  <Text color="white" mb={2} fontWeight={500}>RÉGION</Text>
                   <Multiselect
                     onClose={filterTracker("codeRegion")}
                     width={["100%", null, "64"]}
@@ -157,7 +156,7 @@ export const PrimaryFiltersSection = ({
                   </Multiselect>
                 </Box>
                 <Box justifyContent={"start"}>
-                  <FormLabel color="white">ACADÉMIE</FormLabel>
+                  <Text color="white" mb={2} fontWeight={500}>ACADÉMIE</Text>
                   <Multiselect
                     onClose={filterTracker("codeAcademie")}
                     width={"64"}

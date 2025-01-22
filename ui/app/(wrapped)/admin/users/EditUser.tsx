@@ -58,6 +58,7 @@ export const EditUser = ({
 
   useEffect(() => {
     reset(user, { keepDefaultValues: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, reset]);
 
   const { data: regions } = client.ref("[GET]/regions").useQuery({});
