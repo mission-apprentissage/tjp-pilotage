@@ -10,6 +10,7 @@ import type { SelectedScope } from "@/app/(wrapped)/intentions/pilotage/types";
 import CarteFranceAcademies from "@/public/fond_carte_academies.json";
 import CarteFranceDepartements from "@/public/fond_carte_departements.json";
 import CarteFranceRegions from "@/public/fond_carte_regions.json";
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
 import { formatPercentage } from "@/utils/formatUtils";
 
 const useColorPalette = (customColorPalette?: string[], objectif?: "haut" | "bas") => {
@@ -161,6 +162,14 @@ export const CartoGraph = ({
 
   const option = useMemo<EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+          data: {
+            maxCount: 100
+          }
+        }
+      },
       tooltip: {
         trigger: "item",
         showDelay: 0,
@@ -309,7 +318,8 @@ export const CartoGraph = ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option);
     chartRef.current.on("click", "series", (params) => {
@@ -346,7 +356,7 @@ export const CartoGraph = ({
 
   return (
     <AspectRatio ratio={1}>
-      <Box ref={containerRef} w="100%" height="100%" />
+      <Box ref={containerRef} w="100%" height="100%" role="figure" />
     </AspectRatio>
   );
 };
