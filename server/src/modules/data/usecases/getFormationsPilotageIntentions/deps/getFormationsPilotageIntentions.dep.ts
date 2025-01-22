@@ -1,15 +1,13 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import type { MILLESIMES_IJ } from "shared";
 import { CURRENT_IJ_MILLESIME } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import type { getFormationsPilotageIntentionsSchema } from "shared/routes/schemas/get.pilotage-intentions.formations.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
-import type { z } from "zod";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.usecase";
 import { hasContinuum } from "@/modules/data/utils/hasContinuum";
 import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
@@ -32,17 +30,13 @@ import { cleanNull } from "@/utils/noNull";
 
 import { getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery } from "./getEffectifsParCampagneCodeNiveauDiplomeCodeRegion.dep";
 
-export interface Filters extends z.infer<typeof getFormationsPilotageIntentionsSchema.querystring> {
-  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
-  campagne: string;
-}
-
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) => eb.fn.count<number>("demande.numero").distinct();
 
 const selectNbEtablissements = (eb: ExpressionBuilder<DB, "dataEtablissement">) =>
   eb.fn.count<number>("dataEtablissement.uai").distinct();
 
 export const getFormationsPilotageIntentionsQuery = ({
+  user,
   statut,
   type,
   rentreeScolaire,
@@ -68,6 +62,7 @@ export const getFormationsPilotageIntentionsQuery = ({
   })();
 
   const effectifs = getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery({
+    user,
     statut,
     type,
     rentreeScolaire,

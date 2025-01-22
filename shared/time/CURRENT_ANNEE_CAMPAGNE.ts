@@ -1,1 +1,1 @@
-export const CURRENT_ANNEE_CAMPAGNE = "2024";
+export const CURRENT_ANNEE_CAMPAGNE = "2025";

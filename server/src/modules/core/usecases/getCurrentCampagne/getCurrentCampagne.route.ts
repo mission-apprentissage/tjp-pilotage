@@ -4,9 +4,9 @@ import { ROUTES } from "shared/routes/routes";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getDefaultCampagneUsecase } from "./getDefaultCampagne.usecase";
+import { getCurrentCampagneUsecase } from "./getCurrentCampagne.usecase";
 
-const ROUTE = ROUTES["[GET]/demande/campagne/default"];
+const ROUTE = ROUTES["[GET]/campagne/current"];
 
 export const getCurrentCampagneRoute = (server: Server) => {
   return createRoute(ROUTE.url, {
@@ -15,10 +15,11 @@ export const getCurrentCampagneRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions/lecture"),
-      handler: async (_request, response) => {
-        const campagne = await getDefaultCampagneUsecase();
-        response.status(200).send(campagne);
+      preHandler: hasPermissionHandler("campagnes/lecture"),
+      handler: async (request, response) => {
+        const user = request.user!;
+        const campagneEnCours = await getCurrentCampagneUsecase(user);
+        response.status(200).send(campagneEnCours);
       },
     });
   });

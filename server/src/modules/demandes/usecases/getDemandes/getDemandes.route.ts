@@ -19,11 +19,10 @@ export const getDemandesRoute = (server: Server) => {
       preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
         const user = request.user!;
-        const { search, ...filters } = request.query;
+        const { ...filters } = request.query;
         const result = await getDemandesUsecase({
-          user,
           ...filters,
-          search,
+          user,
         });
 
         const scope = getPermissionScope(user.role, "intentions/ecriture");

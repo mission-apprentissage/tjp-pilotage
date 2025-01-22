@@ -5,19 +5,19 @@ export const CampagneStatutTag = ({ statut }: { statut?: string }) => {
   switch (statut) {
   case CampagneStatutEnum["en cours"]:
     return (
-      <Tag size="md" colorScheme={"green"} ml={2}>
+      <Tag size="md" colorScheme={"green"}>
         {statut}
       </Tag>
     );
   case CampagneStatutEnum["en attente"]:
     return (
-      <Tag size="md" colorScheme={"purple"} ml={2}>
+      <Tag size="md" colorScheme={"purple"}>
         {statut}
       </Tag>
     );
   case CampagneStatutEnum["terminée"]:
     return (
-      <Tag size="md" colorScheme={"red"} ml={2}>
+      <Tag size="md" colorScheme={"red"}>
         {statut}
       </Tag>
     );

@@ -17,7 +17,15 @@ export const getStatsPilotageIntentionsRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
       handler: async (request, response) => {
-        const statsTauxTransfo = await getStatsPilotageIntentionsUsecase(request.query);
+        const { ...filters } = request.query;
+        const user = request.user!;
+
+        const statsTauxTransfo = await getStatsPilotageIntentionsUsecase(
+          {
+            ...filters,
+            user,
+          }
+        );
         response.status(200).send(statsTauxTransfo);
       },
     });

@@ -18,7 +18,6 @@ export const editCampagneRoute = (server: Server) => {
       preHandler: hasPermissionHandler("campagnes/ecriture"),
       handler: async (request, response) => {
         await editCampagneUsecase({
-          campagneId: request.params.campagneId,
           campagne: request.body,
         });
         response.code(200).send();

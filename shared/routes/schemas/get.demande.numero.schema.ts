@@ -135,8 +135,12 @@ const DemandeSchema = z.object({
   formationSpecifique: FormationSpecifiqueFlagsSchema,
 });
 
+export const FiltersSchema = z.object({
+  numero: z.string()
+});
+
 export const getDemandeSchema = {
-  params: z.object({ numero: z.string() }),
+  params: FiltersSchema,
   response: {
     200: DemandeSchema.partial().merge(
       z.object({

@@ -64,7 +64,7 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       intention,
       user,
     }: {
-      user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
+      user: RequestUser;
       intention: Intention;
     }) => {
       const currentIntention = intention.numero ? await deps.findOneIntention(intention.numero) : undefined;

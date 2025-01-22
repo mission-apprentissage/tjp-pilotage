@@ -1,9 +1,8 @@
 import { sql } from "kysely";
 import { ScopeEnum } from "shared";
-import type { getStatsPilotageIntentionsSchema } from "shared/routes/schemas/get.pilotage-intentions.stats.schema";
-import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getStatsPilotageIntentions/getStatsPilotageIntentions.usecase";
 import {
   isInPerimetreIJAcademie,
   isInPerimetreIJDepartement,
@@ -12,10 +11,6 @@ import {
 import { genericOnConstatRentree } from "@/modules/data/utils/onConstatDeRentree";
 import { genericOnDemandes } from "@/modules/data/utils/onDemande";
 import { cleanNull } from "@/utils/noNull";
-
-export interface Filters extends z.infer<typeof getStatsPilotageIntentionsSchema.querystring> {
-  campagne: string;
-}
 
 const getNationalData = async (filters: Filters) => {
   return getKbdClient()
@@ -207,72 +202,13 @@ const getDepartementData = async (filters: Filters) => {
     .then(cleanNull);
 };
 
-export const getStatsPilotageIntentionsQuery = async ({
-  statut,
-  rentreeScolaire,
-  codeNiveauDiplome,
-  CPC,
-  codeNsf,
-  scope,
-  campagne,
-  secteur,
-  withColoration,
-  formationSpecifique,
-}: Filters) => {
-  switch (scope) {
-  case ScopeEnum["académie"]:
-    return getAcademieData({
-      statut,
-      rentreeScolaire,
-      codeNiveauDiplome,
-      CPC,
-      codeNsf,
-      campagne,
-      scope,
-      secteur,
-      withColoration,
-      formationSpecifique,
-    });
-
-  case ScopeEnum["département"]:
-    return getDepartementData({
-      statut,
-      rentreeScolaire,
-      codeNiveauDiplome,
-      CPC,
-      codeNsf,
-      campagne,
-      scope,
-      secteur,
-      withColoration,
-      formationSpecifique,
-    });
-  case ScopeEnum["région"]:
-    return getRegionData({
-      statut,
-      rentreeScolaire,
-      codeNiveauDiplome,
-      CPC,
-      codeNsf,
-      campagne,
-      scope,
-      secteur,
-      withColoration,
-      formationSpecifique,
-    });
+export const getStatsPilotageIntentionsQuery = async (filters: Filters) => {
+  switch (filters.scope) {
+  case ScopeEnum["académie"]: return getAcademieData(filters);
+  case ScopeEnum["département"]: return getDepartementData(filters);
+  case ScopeEnum["région"]: return getRegionData(filters);
   case ScopeEnum.national:
   default:
-    return getNationalData({
-      statut,
-      rentreeScolaire,
-      codeNiveauDiplome,
-      CPC,
-      codeNsf,
-      campagne,
-      scope,
-      secteur,
-      withColoration,
-      formationSpecifique,
-    });
+    return getNationalData(filters);
   }
 };

@@ -9,7 +9,7 @@ import type { z } from "zod";
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneDataEtablissement } from "@/modules/data/repositories/findOneDataEtablissement.query";
 import { findOneDataFormation } from "@/modules/demandes/repositories/findOneDataFormation.query";
-import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
 import { findOneSimilarDemande } from "@/modules/demandes/repositories/findOneSimilarDemande.query";
 import { generateId, generateShortId } from "@/modules/utils/generateId";
 import logger from "@/services/logger";
@@ -49,12 +49,12 @@ export const [submitDemande, submitDemandeFactory] = inject(
     createDemandeQuery,
     findOneDataEtablissement,
     findOneDataFormation,
-    findOneDemande,
+    findOneDemandeQuery,
     findOneSimilarDemande,
   },
   (deps) =>
-    async ({ demande, user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion">; demande: Demande }) => {
-      const currentDemande = demande.numero ? await deps.findOneDemande(demande.numero) : undefined;
+    async ({ demande, user }: { user: RequestUser; demande: Demande }) => {
+      const currentDemande = demande.numero ? await deps.findOneDemandeQuery(demande.numero) : undefined;
 
       const { cfd, uai } = demande;
 

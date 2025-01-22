@@ -17,7 +17,7 @@ const StatsAnneeSchema = z.object({
   scoped: StatsSchema,
 });
 
-const FiltersSchema = z.object({
+export const FiltersSchema = z.object({
   codeNiveauDiplome: z.array(z.string()).optional(),
   codeRegion: z.string().optional(),
 });

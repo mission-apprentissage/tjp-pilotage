@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 import { ROUTES } from "shared/routes/routes";
 
@@ -19,11 +18,11 @@ export const getDemandesRestitutionIntentionsRoute = (server: Server) => {
       preHandler: hasPermissionHandler("restitution-intentions/lecture"),
       handler: async (request, response) => {
         const { ...filters } = request.query;
-        if (!request.user) throw Boom.forbidden();
+        const user = request.user!;
 
         const result = await getDemandesRestitutionIntentionsUsecase({
           ...filters,
-          user: request.user,
+          user,
         });
         response.status(200).send(result);
       },

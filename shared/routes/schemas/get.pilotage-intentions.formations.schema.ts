@@ -33,25 +33,27 @@ const FormationTransformationStatsSchema = z.object({
     .optional(),
 });
 
+export const FiltersSchema = z.object({
+  rentreeScolaire: z.array(z.string()).optional(),
+  codeNiveauDiplome: z.array(z.string()).optional(),
+  codeNsf: z.array(z.string()).optional(),
+  codeRegion: z.string().optional(),
+  codeAcademie: z.string().optional(),
+  codeDepartement: z.string().optional(),
+  statut: z.array(DemandeStatutZodType.exclude(["refusée", "supprimée"])).optional(),
+  CPC: z.array(z.string()).optional(),
+  secteur: z.array(SecteurZodType).optional(),
+  type: z.enum(["ouverture", "fermeture", "coloration"]).optional(),
+  tauxPression: z.enum(["faible", "eleve"]).optional(),
+  campagne: z.string().optional(),
+  withColoration: z.string().optional(),
+  formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
+  order: z.enum(["asc", "desc"]).optional(),
+  orderBy: FormationTransformationStatsSchema.keyof().optional(),
+});
+
 export const getFormationsPilotageIntentionsSchema = {
-  querystring: z.object({
-    rentreeScolaire: z.array(z.string()).optional(),
-    codeNiveauDiplome: z.array(z.string()).optional(),
-    codeNsf: z.array(z.string()).optional(),
-    codeRegion: z.string().optional(),
-    codeAcademie: z.string().optional(),
-    codeDepartement: z.string().optional(),
-    statut: z.array(DemandeStatutZodType.exclude(["refusée", "supprimée"])).optional(),
-    CPC: z.array(z.string()).optional(),
-    secteur: z.array(SecteurZodType).optional(),
-    type: z.enum(["ouverture", "fermeture", "coloration"]).optional(),
-    tauxPression: z.enum(["faible", "eleve"]).optional(),
-    campagne: z.string().optional(),
-    withColoration: z.string().optional(),
-    formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
-    order: z.enum(["asc", "desc"]).optional(),
-    orderBy: FormationTransformationStatsSchema.keyof().optional(),
-  }),
+  querystring: FiltersSchema,
   response: {
     200: z.object({
       stats: z.object({

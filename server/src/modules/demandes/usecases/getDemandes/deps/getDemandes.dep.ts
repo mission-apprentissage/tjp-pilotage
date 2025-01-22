@@ -4,14 +4,13 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
+import type {Filters} from '@/modules/demandes/usecases/getDemandes/getDemandes.usecase';
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
 import { isAllowedToSeePreviousCampagnes } from "@/modules/utils/isAllowedToSeePreviousCampagnes";
 import { isDemandeCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
 import { isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
-
-import type { Filters } from "./getFilters.dep";
 
 export const getDemandes = async ({
   campagne,

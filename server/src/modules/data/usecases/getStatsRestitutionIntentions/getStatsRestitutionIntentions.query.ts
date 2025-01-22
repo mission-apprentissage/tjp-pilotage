@@ -1,12 +1,9 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import type { FiltersSchema } from "shared/routes/schemas/get.restitution-intentions.stats.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
-import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { RequestUser } from "@/modules/core/model/User";
 import {
   countPlacesColoreesFermees,
   countPlacesColoreesFermeesApprentissage,
@@ -28,13 +25,9 @@ import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionInte
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
-export interface Filters extends z.infer<typeof FiltersSchema> {
-  user: RequestUser;
-  // campagne est modifié pour qu'il y ait toujours une valeur dans le usecase
-  campagne: string;
-}
+import type { Filters } from "./getStatsRestitutionIntentions.usecase";
 
-const getStatsRestitutionIntentionsQuery = async ({
+export const getStatsRestitutionIntentionsQuery = async ({
   statut,
   codeRegion,
   rentreeScolaire,
@@ -349,8 +342,4 @@ const getStatsRestitutionIntentionsQuery = async ({
     .then(cleanNull);
 
   return countDemandes;
-};
-
-export const dependencies = {
-  getStatsRestitutionIntentionsQuery,
 };

@@ -89,6 +89,7 @@ const decodeCodeVerifierJwt = (token: string, secret: string) => {
     if (decoded.code_verifier) {
       return decoded.code_verifier;
     }
+    // eslint-disable-next-line unused-imports/no-unused-vars
   } catch (_e) {
     throw new Error("wrong codeVerifierJwt");
   }

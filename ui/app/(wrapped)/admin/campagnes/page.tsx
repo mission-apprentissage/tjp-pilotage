@@ -1,102 +1,18 @@
 "use client";
+import { redirect } from "next/navigation";
+import { hasPermission } from "shared";
 
-import { AddIcon, EditIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  Flex,
-  IconButton,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { toDate } from "date-fns";
-import { useMemo, useState } from "react";
+import { useAuth } from "@/utils/security/useAuth";
 
-import { client } from "@/api.client";
-import { CampagneStatutTag } from "@/components/CampagneStatutTag";
-import { GuardPermission } from "@/utils/security/GuardPermission";
+const Page = () => {
 
-import { CreateCampagne } from "./CreateCampagne";
-import { EditCampagne } from "./EditCampagne";
+  const { auth }  = useAuth();
+  const hasPermissionAdmin = hasPermission(auth?.user.role, "campagnes/ecriture");
+  const hasPermissionCampagneRegion = hasPermission(auth?.user.role, "campagnes-region/lecture");
 
-// eslint-disable-next-line react/display-name, import/no-anonymous-default-export
-export default () => {
-  const { data: campagnes } = client.ref("[GET]/campagnes").useQuery({});
-
-  const [campagneId, setCampagneId] = useState<string>();
-  const campagne = useMemo(() => campagnes?.find(({ id }) => id === campagneId), [campagnes, campagneId]);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  return (
-    <GuardPermission permission="campagnes/lecture">
-      <Flex px={4} py="2">
-        <Button
-          variant="primary"
-          ml="auto"
-          leftIcon={<AddIcon />}
-          onClick={() => {
-            setCampagneId(undefined);
-            onOpen();
-          }}
-        >
-          Ajouter une campagne
-        </Button>
-      </Flex>
-      <TableContainer overflowY="auto" flex={1}>
-        <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize={14} gap="0">
-          <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white">
-            <Tr>
-              <Th width={"10%"} fontSize={12}>Id</Th>
-              <Th fontSize={12}>Année</Th>
-              <Th textAlign={"center"} fontSize={12}>Statut</Th>
-              <Th width={"10%"} fontSize={12}>Date de début</Th>
-              <Th width={"10%"} fontSize={12}>Date de fin</Th>
-              <Th width={"5%"} isNumeric fontSize={12}>
-                Actions
-              </Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {campagnes?.map((campagne) => (
-              <Tr key={campagne.id}>
-                <Td width={"10%"} isTruncated>
-                  {campagne.id}
-                </Td>
-                <Td>{campagne.annee}</Td>
-                <Td textAlign={"center"}>
-                  <CampagneStatutTag statut={campagne.statut} />
-                </Td>
-                <Td width={"10%"}>
-                  {campagne.dateDebut ? toDate(campagne.dateDebut).toLocaleDateString("fr-FR") : "Non définie"}
-                </Td>
-                <Td width={"10%"}>
-                  {campagne.dateFin ? toDate(campagne.dateFin).toLocaleDateString("fr-FR") : "Non définie"}
-                </Td>
-                <Td width={"5%"} isNumeric>
-                  <IconButton
-                    position="unset"
-                    variant="ghost"
-                    onClick={() => {
-                      setCampagneId(campagne.id);
-                      onOpen();
-                    }}
-                    aria-label="editer"
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
-      {campagne && isOpen && <EditCampagne isOpen={isOpen} onClose={onClose} campagne={campagne} />}
-      {!campagne && isOpen && <CreateCampagne isOpen={isOpen} onClose={onClose} />}
-    </GuardPermission>
-  );
+  if(hasPermissionAdmin) return redirect("/admin/campagnes/national");
+  if(hasPermissionCampagneRegion) return redirect("/admin/campagnes/regional");
 };
+
+export default Page;
+

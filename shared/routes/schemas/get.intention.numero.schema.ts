@@ -164,8 +164,11 @@ const IntentionSchema = z.object({
   suiviId: z.string().optional(),
 });
 
+export const FiltersSchema = z.object({ numero: z.string() });
+
+
 export const getIntentionSchema = {
-  params: z.object({ numero: z.string() }),
+  params: FiltersSchema,
   response: {
     200: IntentionSchema.merge(
       z.object({

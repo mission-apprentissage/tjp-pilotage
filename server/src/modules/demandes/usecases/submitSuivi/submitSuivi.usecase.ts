@@ -3,14 +3,14 @@ import Boom from "@hapi/boom";
 import { inject } from "injecti";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+import {findOneDemandeQuery} from '@/modules/demandes/repositories/findOneDemande.query';
 
 import { createSuiviQuery } from "./submitSuivi.query";
 
 export const [submitSuiviUsecase, submitSuiviFactory] = inject(
   {
     createSuiviQuery,
-    findOneDemande,
+    findOneDemandeQuery,
   },
   (deps) =>
     async ({
@@ -20,7 +20,7 @@ export const [submitSuiviUsecase, submitSuiviFactory] = inject(
       user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
       intentionNumero: string;
     }) => {
-      const intentionData = await findOneDemande(intentionNumero);
+      const intentionData = await findOneDemandeQuery(intentionNumero);
       if (!intentionData) throw Boom.notFound("Intention non trouvée en base");
 
       const createdSuivi = await deps.createSuiviQuery({

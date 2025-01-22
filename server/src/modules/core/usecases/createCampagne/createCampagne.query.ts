@@ -3,7 +3,10 @@ import type { Insertable } from "kysely";
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
 
-export const insertCampagne = async ({ data }: { data: Insertable<DB["campagne"]> }) => {
+export const getCampagneByAnneeQuery = async ({ annee }: { annee: string }) =>
+  await getKbdClient().selectFrom("campagne").selectAll().where("campagne.annee", "=", annee).executeTakeFirst();
+
+export const insertCampagneQuery = async ({ data }: { data: Insertable<DB["campagne"]> }) => {
   await getKbdClient()
     .insertInto("campagne")
     .values(data)

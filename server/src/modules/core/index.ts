@@ -3,11 +3,17 @@ import type { Server } from "@/server/server";
 import { activateUserRoute } from "./usecases/activateUser/activateUser.route";
 import { checkActivationTokenRoute } from "./usecases/checkActivationToken/checkActivationToken.route";
 import { createCampagneRoute } from "./usecases/createCampagne/createCampagne.route";
+import { createCampagneRegionRoute } from "./usecases/createCampagneRegion/createCampagneRegion.route";
 import { createUserRoute } from "./usecases/createUser/createUser.route";
 import { editCampagneRoute } from "./usecases/editCampagne/editCampagne.route";
+import { editCampagneRegionRoute } from "./usecases/editCampagneRegion/editCampagneRegion.route";
 import { editUserRoute } from "./usecases/editUser/editUser.route";
-import { generateMetabaseDashboardUrlRoute } from "./usecases/generateMetabaseDashboardUrl/generateMetabaseDashboardUrl.route";
+import {
+  generateMetabaseDashboardUrlRoute
+} from "./usecases/generateMetabaseDashboardUrl/generateMetabaseDashboardUrl.route";
 import { getCampagnesRoute } from "./usecases/getCampagnes/getCampagnes.route";
+import { getCampagnesRegionRoute } from "./usecases/getCampagnesRegion/getCampagnesRegion.route";
+import { getCurrentCampagneRoute } from "./usecases/getCurrentCampagne/getCurrentCampagne.route";
 import { getDneAuthorizationUrlRoute } from "./usecases/getDneUrl/getDneUrl.route";
 import { getUsersRoute } from "./usecases/getUsers/getUsers.route";
 import { homeRoute } from "./usecases/home/home.route";
@@ -36,9 +42,13 @@ export const registerCoreModule = (server: Server) => {
     ...createUserRoute(server),
     ...getDneAuthorizationUrlRoute(server),
     ...redirectDneRoute(server),
+    ...getCurrentCampagneRoute(server),
     ...getCampagnesRoute(server),
     ...editCampagneRoute(server),
     ...createCampagneRoute(server),
+    ...getCampagnesRegionRoute(server),
+    ...editCampagneRegionRoute(server),
+    ...createCampagneRegionRoute(server),
     ...generateMetabaseDashboardUrlRoute(server),
     ...searchUserRoute(server),
     ...isMaintenanceRoute(server),

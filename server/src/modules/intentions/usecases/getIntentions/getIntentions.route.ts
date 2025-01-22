@@ -19,12 +19,11 @@ export const getIntentionsRoute = (server: Server) => {
       preHandler: hasPermissionHandler("intentions-perdir/lecture"),
       handler: async (request, response) => {
         const user = request.user!;
-        const { search, ...filters } = request.query;
+        const { ...filters } = request.query;
 
         const result = await getIntentionsUsecase({
-          user: user,
           ...filters,
-          search,
+          user,
         });
 
         const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");

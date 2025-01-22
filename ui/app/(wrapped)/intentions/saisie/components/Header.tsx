@@ -97,7 +97,7 @@ export const Header = ({
                   borderStyle="solid"
                   borderColor="grey.900"
                 >
-                  <Flex direction="row">
+                  <Flex direction="row" gap={2}>
                     <Text my={"auto"}>Campagne {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}</Text>
                     <CampagneStatutTag statut={campagnes?.find((c) => c.annee === anneeCampagne)?.statut} />
                   </Flex>
@@ -116,7 +116,7 @@ export const Header = ({
                         });
                       }}
                     >
-                      <Flex direction="row">
+                      <Flex direction="row" gap={2}>
                         <Text my={"auto"}>Campagne {campagne.annee}</Text>
                         <CampagneStatutTag statut={campagne.statut} />
                       </Flex>
