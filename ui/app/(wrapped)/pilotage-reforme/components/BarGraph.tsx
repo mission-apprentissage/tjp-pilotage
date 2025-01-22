@@ -56,6 +56,9 @@ export const BarGraph = function <F extends BarGraphData>({
       aria: {
         label: {
           enabled: true,
+          data: {
+            maxCount: 100
+          }
         },
       },
       animationDelay: 1,
