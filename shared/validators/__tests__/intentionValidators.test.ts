@@ -425,10 +425,65 @@ describe("shared > validators > intentionValidators", () => {
     });
   });
 
-  it("should validate sommeCapaciteActuelle", () => {
-    const intention = createIntention({ typeDemande: DemandeTypeEnum.augmentation_nette, capaciteScolaireActuelle: 0, capaciteApprentissageActuelle: 0 });
-    const result = intentionValidators.sommeCapaciteActuelle(intention);
-    expect(result).toBe("La somme des capacités actuelles doit être supérieure à 0");
+  describe("Validation de la 'sommeCapaciteActuelle'", () => {
+    describe.each`
+    typeDemande                 | text
+    ${DemandeTypeEnum.ouverture_compensation} | ${DemandeTypeEnum.ouverture_compensation}
+    ${DemandeTypeEnum.ouverture_nette}        | ${DemandeTypeEnum.ouverture_nette}
+    ${DemandeTypeEnum.ajustement}        | ${DemandeTypeEnum.ajustement}
+      `(`Si 'typeDemande' est '$text'`, ({ typeDemande }) => {
+      it("Ne doit pas remonter d'erreur", () => {
+        const intention = createIntention({ typeDemande });
+        const result = intentionValidators.sommeCapaciteActuelle(intention);
+        expect(result).toBe(undefined);
+      });
+    });
+
+    it("Doit remonter une erreur si la somme des 'capaciteScolaireActuelle' et 'capaciteApprentissageActuelle' est à 0", () => {
+      expect(
+        intentionValidators.sommeCapaciteActuelle(
+          createIntention({ typeDemande: DemandeTypeEnum.fermeture, capaciteScolaireActuelle: 0, capaciteApprentissageActuelle: 0 })
+        )
+      ).toBe('La somme des capacités actuelles doit être supérieure à 0');
+
+      expect(
+        intentionValidators.sommeCapaciteActuelle(
+          createIntention({ typeDemande: DemandeTypeEnum.fermeture, capaciteScolaireActuelle: undefined, capaciteApprentissageActuelle: 0 })
+        )
+      ).toBe('La somme des capacités actuelles doit être supérieure à 0');
+
+      expect(
+        intentionValidators.sommeCapaciteActuelle(
+          createIntention({ typeDemande: DemandeTypeEnum.fermeture, capaciteScolaireActuelle: 0, capaciteApprentissageActuelle: undefined })
+        )
+      ).toBe('La somme des capacités actuelles doit être supérieure à 0');
+
+      expect(
+        intentionValidators.sommeCapaciteActuelle(
+          createIntention({ typeDemande: DemandeTypeEnum.fermeture, capaciteScolaireActuelle: undefined, capaciteApprentissageActuelle: undefined })
+        )
+      ).toBe('La somme des capacités actuelles doit être supérieure à 0');
+    });
+
+    it("Ne doit pas remonter une erreur si la somme des 'capaciteScolaireActuelle' et 'capaciteApprentissageActuelle' est supérieure à 0", () => {
+      expect(
+        intentionValidators.sommeCapaciteActuelle(
+          createIntention({ typeDemande: DemandeTypeEnum.ajustement, capaciteScolaireActuelle: 1, capaciteApprentissageActuelle: 0 })
+        )
+      ).toBe(undefined);
+
+      expect(
+        intentionValidators.sommeCapaciteActuelle(
+          createIntention({ typeDemande: DemandeTypeEnum.ajustement, capaciteScolaireActuelle: 0, capaciteApprentissageActuelle: 1 })
+        )
+      ).toBe(undefined);
+
+      expect(
+        intentionValidators.sommeCapaciteActuelle(
+          createIntention({ typeDemande: DemandeTypeEnum.ajustement, capaciteScolaireActuelle: 1, capaciteApprentissageActuelle: 1 })
+        )
+      ).toBe(undefined);
+    });
   });
 
   it("should validate sommeCapacite", () => {

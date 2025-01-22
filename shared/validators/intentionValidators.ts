@@ -305,7 +305,9 @@ export const intentionValidators = {
   sommeCapaciteActuelle: (intention) => {
     if (isTypeOuverture(intention.typeDemande) || isTypeAjustement(intention.typeDemande)) return undefined;
 
-    if (!intention.capaciteScolaireActuelle && !intention.capaciteApprentissageActuelle)
+    if (typeof intention.capaciteScolaireActuelle != 'number'
+        || typeof intention.capaciteApprentissageActuelle != 'number'
+        || intention.capaciteApprentissageActuelle + intention.capaciteScolaireActuelle === 0)
       return "La somme des capacités actuelles doit être supérieure à 0";
     return undefined;
   },
