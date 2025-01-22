@@ -5,6 +5,7 @@ import type { PositionQuadrantType } from "shared/enum/positionQuadrantEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import type { RepartitionPilotageIntentionsPositionQuadrant } from "@/app/(wrapped)/intentions/pilotage/types";
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
 import { formatPercentage } from "@/utils/formatUtils";
 
 export const BarChart = ({
@@ -35,6 +36,14 @@ export const BarChart = ({
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+          data: {
+            maxCount: 100
+          }
+        }
+      },
       animationDelay: 0,
       responsive: true,
       maintainAspectRatio: true,
@@ -242,7 +251,8 @@ export const BarChart = ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -255,7 +265,7 @@ export const BarChart = ({
       <Box>
         <AspectRatio ratio={4}>
           <Box position="relative" overflow={"visible !important"}>
-            <Box ref={containerRef} h={300} w={"100%"}></Box>
+            <Box ref={containerRef} h={300} w={"100%"} role="figure"></Box>
           </Box>
         </AspectRatio>
       </Box>
