@@ -23,6 +23,10 @@ import type { Domaine_Professionnel } from "@/modules/import/fileTypes/DomainePr
 import { DomaineProfessionnelSchema } from "@/modules/import/fileTypes/DomaineProfessionnel";
 import type { FamillesMetiersLine } from "@/modules/import/fileTypes/FamilleMetiers";
 import { FamillesMetiersSchema } from "@/modules/import/fileTypes/FamilleMetiers";
+import type { IjRegionDataLine } from "@/modules/import/fileTypes/IjRegionDataLine";
+import { IjRegionDataSchema } from "@/modules/import/fileTypes/IjRegionDataLine";
+import type { IjUaiDataLine } from "@/modules/import/fileTypes/IjUaiDataLine";
+import { IjUaiDataSchema } from "@/modules/import/fileTypes/IjUaiDataLine";
 import type { LyceesACCELine } from "@/modules/import/fileTypes/LyceesACCELine";
 import { LyceesACCESchema } from "@/modules/import/fileTypes/LyceesACCELine";
 import type { Metier } from "@/modules/import/fileTypes/Metier";
@@ -90,6 +94,8 @@ export const Schemas = {
   tension_rome_region: TensionRomeSchema,
   tension_rome: TensionRomeSchema,
   actions_prioritaires: ActionsPrioritairesSchema,
+  ij_region_data: IjRegionDataSchema,
+  ij_uai_data: IjUaiDataSchema,
 };
 
 export type LineTypes = {
@@ -126,6 +132,8 @@ export type LineTypes = {
   tension_rome_region: Tension_Rome;
   tension_rome: Tension_Rome;
   actions_prioritaires: Actions_prioritaires;
+  ij_region_data: IjRegionDataLine;
+  ij_uai_data: IjUaiDataLine;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

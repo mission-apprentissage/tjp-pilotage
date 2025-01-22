@@ -14,6 +14,12 @@ export const ovhFilePathManagerFactory = (): FilePathManager => {
     getFranceTravailIndicateurTensionStatsFilePath: () => {
       return "files/tension_rome.csv";
     },
+    getIJRegionDataFilePath: () => {
+      return "files/ij_region_data.csv";
+    },
+    getIJUaiDataFilePath: () => {
+      return "files/ij_uai_data.csv";
+    },
   };
 };
 
