@@ -1,26 +1,26 @@
-enum Voies {
-  scolaire = "scolaire",
-  apprentissage = "apprentissage",
+
+export type IJData = {
+    nb_annee_term: number;
+    nb_en_emploi_12_mois: number;
+    nb_en_emploi_18_mois: number;
+    nb_en_emploi_24_mois: number;
+    nb_en_emploi_6_mois: number;
+    nb_poursuite_etudes: number;
+    nb_sortant: number;
+    taux_emploi_12_mois: number;
+    taux_emploi_18_mois: number;
+    taux_emploi_24_mois: number;
+    taux_emploi_6_mois: number;
+    taux_poursuite_etudes: number;
 }
+
 export type IJUaiData = {
-  [voie in Voies]: Record<
-    string,
-    {
-      nb_annee_term: number;
-      nb_en_emploi_12_mois: number;
-      nb_en_emploi_18_mois: number;
-      nb_en_emploi_24_mois: number;
-      nb_en_emploi_6_mois: number;
-      nb_poursuite_etudes: number;
-      nb_sortant: number;
-      taux_emploi_12_mois: number;
-      taux_emploi_18_mois: number;
-      taux_emploi_24_mois: number;
-      taux_emploi_6_mois: number;
-      taux_poursuite_etudes: number;
-    }
-  >;
-} & { [s: string]: { valeur_ajoutee_6_mois: number } };
+  ensemble: Record<string, IJDataWithValeurAjoutee>; // Valeurs possible pour ensemble: "ensemble", "apprentis", "voieprosco"
+  apprentissage: Record<string, IJData>;
+  scolaire: Record<string, IJData>;
+}
+
+export type IJDataWithValeurAjoutee = IJData & { valeur_ajoutee_6_mois?: number }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const formatUaiData = (rawData: any): IJUaiData => {
@@ -45,9 +45,12 @@ export const formatUaiData = (rawData: any): IJUaiData => {
       if (ensemble) {
         return {
           ...acc,
-          [ensemble]: {
-            ...acc["ensemble"],
-            [cur.id_mesure]: cur.valeur_mesure,
+          ["ensemble"]: {
+            ...acc.ensemble,
+            [ensemble]: {
+              ...acc.ensemble[ensemble],
+              [cur.id_mesure]: cur.valeur_mesure,
+            },
           },
         };
       }
@@ -79,6 +82,6 @@ export const formatUaiData = (rawData: any): IJUaiData => {
       }
       return acc;
     },
-    { scolaire: {}, apprentissage: {} } as IJUaiData
+    { scolaire: {}, apprentissage: {}, ensemble: {} } as IJUaiData
   );
 };

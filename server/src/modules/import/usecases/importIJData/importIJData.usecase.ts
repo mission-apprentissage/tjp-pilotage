@@ -104,7 +104,6 @@ export const [importIJDataForEtablissement] = inject(
     findUAIsApprentissage,
     getCfdRentrees,
     getCfdDispositifs,
-    fetchIJ,
   },
   (deps) => {
     return async ({ cfd, voie = "scolaire" }: { cfd: string; voie?: string }) => {

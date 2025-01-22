@@ -8,6 +8,20 @@ import { formatUaiData } from "./formatUaiData";
 import { instance, setInstanceBearerToken } from "./inserJeunes.provider";
 
 let loggingIn = false;
+let lockTimeout: NodeJS.Timeout | null = null;
+
+function clearLockAfterTimeout() {
+  if (lockTimeout) {
+    clearTimeout(lockTimeout);
+  }
+  lockTimeout = setTimeout(() => {
+    if (loggingIn) {
+      console.log("--- Force releasing lock after 30s timeout");
+      loggingIn = false;
+    }
+  }, 30000);
+}
+
 
 async function retryCondition(error: AxiosError) {
   const response = error?.response;
@@ -25,6 +39,7 @@ async function retryCondition(error: AxiosError) {
 
   if (!loggingIn) {
     loggingIn = true;
+    clearLockAfterTimeout(); // Ajouter le timeout quand on prend le lock
     console.log("--- Refreshing insertjeunes API token");
     const token = await login();
     setInstanceBearerToken(token);

@@ -8,6 +8,8 @@ export interface FilePathManager {
   getFranceTravailIndicateurTensionDepartementStatsFilePath: () => string;
   getFranceTravailIndicateurTensionRegionStatsFilePath: () => string;
   getFranceTravailIndicateurTensionStatsFilePath: () => string;
+  getIJRegionDataFilePath: () => string;
+  getIJUaiDataFilePath: () => string;
 }
 
 export const filePathManagerFactory = (): FilePathManager =>
