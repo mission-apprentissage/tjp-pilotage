@@ -197,6 +197,11 @@ describe("shared > validators > intentionValidators", () => {
           const result = intentionValidators.capaciteScolaire(intention);
           expect(result).toBe("Un transfert inclue toujours un passage de scolaire vers apprentissage ou d'apprentissage vers scolaire");
         });
+        it("Ne doit pas remonter cette erreur si les capacités sont des nombres positifs", () => {
+          const intention = createIntention({ typeDemande: DemandeTypeEnum.transfert, capaciteScolaire: 1, capaciteScolaireActuelle: 1, capaciteApprentissage: 1, capaciteApprentissageActuelle: 1 });
+          const result = intentionValidators.capaciteScolaire(intention);
+          expect(result).not.toBe("Un transfert inclue toujours un passage de scolaire vers apprentissage ou d'apprentissage vers scolaire");
+        });
       });
 
       describe("Vérification des cas de transferts", () => {
@@ -319,10 +324,105 @@ describe("shared > validators > intentionValidators", () => {
     });
   });
 
-  it("should validate capaciteApprentissage", () => {
-    const intention = createIntention({ typeDemande: DemandeTypeEnum.fermeture, capaciteApprentissage: 1 });
-    const result = intentionValidators.capaciteApprentissage(intention);
-    expect(result).toBe("La future capacité en apprentissage devrait être à 0 dans le cas d'une fermeture");
+
+  describe("Validation de la 'capaciteApprentissage'", () => {
+    it("Doit remonter une erreur si la 'capaciteApprentissage' est négative", () => {
+      const intention = createIntention({ capaciteApprentissage: -1 });
+      const result = intentionValidators.capaciteApprentissage(intention);
+      expect(result).toBe("La future capacité en apprentissage doit être un nombre entier positif");
+    });
+
+    describe("Si 'typeDemande' est 'fermeture'", () => {
+      it("Doit remonter une erreur si 'capaciteApprentissage' est différent de 0", () => {
+        const intention = createIntention({ typeDemande: "fermeture", capaciteApprentissage: 1 });
+        const result = intentionValidators.capaciteApprentissage(intention);
+        expect(result).toBe("La future capacité en apprentissage devrait être à 0 dans le cas d'une fermeture");
+      });
+    });
+
+    describe("Si 'typeDemande' est 'augmentation_compensation' ou 'augmentation_nette'", () => {
+      describe.each`
+      typeDemande                 | text
+      ${DemandeTypeEnum.augmentation_compensation} | ${DemandeTypeEnum.augmentation_compensation}
+      ${DemandeTypeEnum.augmentation_nette}        | ${DemandeTypeEnum.augmentation_nette}
+        `(`Pour $text`, ({ typeDemande }) => {
+        describe("Si la 'capaciteApprentissageActuelle' est un nombre positif", () => {
+          it("Doit remonter une erreur si la 'capaciteApprentissageActuelle' est supérieure à la 'capaciteApprentissage'", () => {
+            const intention = createIntention({ typeDemande, capaciteApprentissage: 1, capaciteApprentissageActuelle: 2 });
+            const result = intentionValidators.capaciteApprentissage(intention);
+            expect(result).toBe("La future capacité en apprentissage devrait être supérieure ou égale à la capacité actuelle dans le cas d'une augmentation");
+          });
+          it("Ne doit pas remonter d'erreur si la 'capaciteApprentissage' est supérieure à la 'capaciteApprentissageActuelle'", () => {
+            const intention = createIntention({ typeDemande, capaciteApprentissage: 2, capaciteApprentissageActuelle: 1 });
+            const result = intentionValidators.capaciteApprentissage(intention);
+            expect(result).toBeUndefined();
+          });
+        });
+      });
+    });
+
+    describe("Si 'typeDemande' est 'diminution'", () => {
+      describe("Si la 'capaciteApprentissageActuelle' est un nombre positif", () => {
+        it("Doit remonter une erreur si la 'capaciteApprentissageActuelle' est inférieure à la 'capaciteApprentissage'", () => {
+          const intention = createIntention({ typeDemande: DemandeTypeEnum.diminution, capaciteApprentissage: 2, capaciteApprentissageActuelle: 1 });
+          const result = intentionValidators.capaciteApprentissage(intention);
+          expect(result).toBe("La future capacité en apprentissage devrait être inférieure ou égale à la capacité actuelle dans le cas d'une diminution");
+        });
+        it("Ne doit pas remonter d'erreur si la 'capaciteApprentissage' est inférieure à la 'capaciteApprentissageActuelle'", () => {
+          const intention = createIntention({ typeDemande: DemandeTypeEnum.diminution, capaciteApprentissage: 1, capaciteApprentissageActuelle: 2 });
+          const result = intentionValidators.capaciteApprentissage(intention);
+          expect(result).toBeUndefined();
+        });
+      });
+    });
+
+    describe("Si 'typeDemande' est 'transfert'", () => {
+      describe("Ne fonctionne qu'avec des nombres positifs", () => {
+        it("Doit remonter une erreur si la 'capaciteApprentissage' est inférieure à 0", () => {
+          const intention = createIntention({ typeDemande: DemandeTypeEnum.transfert, capaciteApprentissage: -1, capaciteApprentissageActuelle: 1, capaciteScolaire: 1, capaciteScolaireActuelle: 1 });
+          const result = intentionValidators.capaciteApprentissage(intention);
+          expect(result).toBe("La future capacité en apprentissage doit être un nombre entier positif");
+
+          const intention2 = createIntention({ typeDemande: DemandeTypeEnum.transfert, capaciteApprentissage: 0, capaciteApprentissageActuelle: 1, capaciteScolaire: 1, capaciteScolaireActuelle: 1 });
+          const result2 = intentionValidators.capaciteApprentissage(intention2);
+          expect(result2).toBe("La future capacité en apprentissage devrait être supérieure à 0 dans le cas d'un transfert vers l'apprentissage");
+        });
+
+        it("Ne doit pas remonter d'erreur si la capaciteApprentissage est un nombre positif", () => {
+          const intention = createIntention({ typeDemande: DemandeTypeEnum.transfert, capaciteApprentissage: 1, capaciteApprentissageActuelle: 1, capaciteScolaire: 1, capaciteScolaireActuelle: 1 });
+          const result = intentionValidators.capaciteApprentissage(intention);
+          expect(result).not.toBe("La future capacité en apprentissage doit être un nombre entier positif");
+        });
+      });
+
+      describe("Vérification des cas de transferts", () => {
+        it("Doit remonter une erreur s'il y a une diminution des places en apprentissage", () => {
+          const intention = createIntention({ typeDemande: DemandeTypeEnum.transfert, capaciteApprentissage: 1, capaciteApprentissageActuelle: 2, capaciteScolaire: 0, capaciteScolaireActuelle: 1 });
+          const result = intentionValidators.capaciteApprentissage(intention);
+          expect(result).toBe("La future capacité en apprentissage devrait être supérieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage");
+        });
+
+        it("Ne doit pas remonter d'erreur lorsqu'il y a une augmentation des places en apprentissage", () => {
+          const intention = createIntention({ typeDemande: DemandeTypeEnum.transfert, capaciteApprentissage: 2, capaciteApprentissageActuelle: 1, capaciteScolaire: 2, capaciteScolaireActuelle: 1 });
+          const result = intentionValidators.capaciteApprentissage(intention);
+          expect(result).toBe(undefined);
+        });
+      });
+    });
+
+    describe("Si 'typeDemande' est 'ajustement'", () => {
+      it("Doit remonter une erreur si la 'capaciteApprentissage' est inférieure à 'capaciteApprentissageActuelle'", () => {
+        const intention = createIntention({ typeDemande: DemandeTypeEnum.ajustement, capaciteApprentissageActuelle: 2, capaciteApprentissage: 1 });
+        const result = intentionValidators.capaciteApprentissage(intention);
+        expect(result).toBe("La future capacité en apprentissage devrait être supérieure ou égale à la capacité actuelle dans le cas d'un ajustement de rentrée");
+      });
+
+      it("Ne doit pas remonter une erreur si la 'capaciteApprentissage' est supérieure à 'capaciteApprentissageActuelle'", () => {
+        const intention = createIntention({ typeDemande: DemandeTypeEnum.ajustement, capaciteApprentissageActuelle: 1, capaciteApprentissage: 2 });
+        const result = intentionValidators.capaciteApprentissage(intention);
+        expect(result).toBe(undefined);
+      });
+    });
   });
 
   it("should validate sommeCapaciteActuelle", () => {
@@ -337,15 +437,39 @@ describe("shared > validators > intentionValidators", () => {
     expect(result).toBe("La somme des futures capacités doit être supérieure à 0");
   });
 
-  it("should validate motifRefus", () => {
-    const intention = createIntention({ statut: DemandeStatutEnum["refusée"], motifRefus: undefined });
-    const result = intentionValidators.motifRefus(intention);
-    expect(result).toBe("Le champ 'motif refus' est obligatoire");
+  describe("Validation du champ 'motifRefus'", () => {
+    it("Doit remonter une erreur si le 'statut' est à 'refusée' et que le champ motifRefus est vide", () => {
+      const intentionRefuseeWithMotifRefusUndefined = createIntention({ statut: DemandeStatutEnum["refusée"], motifRefus: undefined });
+      expect(intentionValidators.motifRefus(intentionRefuseeWithMotifRefusUndefined)).toBe("Le champ 'motif refus' est obligatoire");
+
+      const intentionRefuseeWithMotifRefusStringVide = createIntention({ statut: DemandeStatutEnum["refusée"], motifRefus: [] });
+      expect(intentionValidators.motifRefus(intentionRefuseeWithMotifRefusStringVide)).toBe("Le champ 'motif refus' est obligatoire");
+    });
+
+    it("Ne doit pas remonter d'erreur si le 'statut' est à 'refusée' et que le champ motifRefus est renseigné", () => {
+      const intentionRefuseeWithMotifRefusStringVide = createIntention({ statut: DemandeStatutEnum["refusée"], motifRefus: ["test"] });
+      expect(intentionValidators.motifRefus(intentionRefuseeWithMotifRefusStringVide)).toBe(undefined);
+    });
   });
 
-  it("should validate autreMotifRefus", () => {
-    const intention = createIntention({ motifRefus: ["autre"], autreMotifRefus: "" });
-    const result = intentionValidators.autreMotifRefus(intention);
-    expect(result).toBe("Le champ 'autre motif refus' est obligatoire");
+  describe("Validation du champ 'autreMotifRefus'", () => {
+    it("Doit remonter une erreur si 'motifRefus' est à 'autre' mais que 'autreMotifRefus' est vide", () => {
+      const intentionAutreMotifRefusStringVide = createIntention({ motifRefus: ["autre"], autreMotifRefus: "" });
+      expect(
+        intentionValidators.autreMotifRefus(intentionAutreMotifRefusStringVide)
+      ).toBe("Le champ 'autre motif refus' est obligatoire");
+
+      const intentionAutreMotifRefusUndefined = createIntention({ motifRefus: ["autre"], autreMotifRefus: undefined });
+      expect(
+        intentionValidators.autreMotifRefus(intentionAutreMotifRefusUndefined)
+      ).toBe("Le champ 'autre motif refus' est obligatoire");
+    });
+
+    it("Ne doit pas remonter d'erreur si 'motifRefus' est à 'autre' mais que 'autreMotifRefus' est renseigné", () => {
+      const intentionAutreMotifRefusUndefined = createIntention({ motifRefus: ["autre"], autreMotifRefus: "test" });
+      expect(
+        intentionValidators.autreMotifRefus(intentionAutreMotifRefusUndefined)
+      ).toBe(undefined);
+    });
   });
 });
