@@ -23,12 +23,12 @@ const countIntentionsFactory =
   ) =>
     async (activeFilters: Filters) => {
       const currentCampagne = await deps.getCurrentCampagne(activeFilters.user);
-      const anneeCampagne = activeFilters.anneeCampagne ?? currentCampagne.annee;
+      const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
 
       const shouldFetchOnlyIntention = anneeCampagne !== CAMPAGNE_DEMANDE;
       return await deps.countIntentionsQuery({
-        anneeCampagne,
         ...activeFilters,
+        campagne: anneeCampagne,
         shouldFetchOnlyIntention,
       });
     };

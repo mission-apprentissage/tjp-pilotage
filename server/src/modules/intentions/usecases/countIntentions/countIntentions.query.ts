@@ -14,7 +14,7 @@ import type { Filters } from "./countIntentions.usecase";
 
 export const countIntentionsQuery = async ({
   user,
-  anneeCampagne,
+  campagne,
   shouldFetchOnlyIntention,
   search,
   codeAcademie,
@@ -28,14 +28,7 @@ export const countIntentionsQuery = async ({
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("user", "user.id", "intention.createdBy")
-    .innerJoin("campagne", (join) =>
-      join.onRef("campagne.id", "=", "intention.campagneId").$call((eb) => {
-        if (anneeCampagne) {
-          return eb.on("campagne.annee", "=", anneeCampagne);
-        }
-        return eb;
-      })
-    )
+    .innerJoin("campagne", "campagne.id", "intention.campagneId")
     .leftJoin("suivi", (join) =>
       join.onRef("suivi.intentionNumero", "=", "intention.numero").on("suivi.userId", "=", user.id)
     )
@@ -173,6 +166,12 @@ export const countIntentionsQuery = async ({
     .$call((eb) => {
       if (codeNiveauDiplome) {
         return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      }
+      return eb;
+    })
+    .$call((eb) => {
+      if (campagne) {
+        return eb.where("campagne.annee", "=", campagne);
       }
       return eb;
     })

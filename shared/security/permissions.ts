@@ -119,9 +119,9 @@ export const PERMISSIONS = {
   invite: {
     "intentions/lecture": { default: "role", draft: "role" },
     "restitution-intentions/lecture": { default: "role" },
-    "intentions-perdir/lecture": { default: "region", draft: "region" },
-    "intentions-perdir-statut/lecture": { default: "region" },
-    "intentions-perdir-avis/lecture": { default: "region" },
+    "intentions-perdir/lecture": { default: "role", draft: "role" },
+    "intentions-perdir-statut/lecture": { default: "role" },
+    "intentions-perdir-avis/lecture": { default: "role" },
     "enregistrement-requete/lecture": { default: "national" },
     "enregistrement-requete/ecriture": { default: "national" },
   },

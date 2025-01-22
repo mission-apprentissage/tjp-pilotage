@@ -159,6 +159,9 @@ export const Quadrant = function <
       aria: {
         label: {
           enabled: true,
+          data: {
+            maxCount: 100
+          }
         },
       },
       grid: { top: 0, right: 0, bottom: 50, left: 60 },

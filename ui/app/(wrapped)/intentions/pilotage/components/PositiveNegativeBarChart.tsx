@@ -9,6 +9,7 @@ import type {
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { themeDefinition } from "@/theme/theme";
 import { themeColors } from "@/theme/themeColors";
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
 import { formatPercentage } from "@/utils/formatUtils";
 
 export const PositiveNegativeBarChart = ({
@@ -101,6 +102,14 @@ export const PositiveNegativeBarChart = ({
   const option = useMemo<echarts.EChartsOption>(
     // TODO
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+          data: {
+            maxCount: 100
+          }
+        }
+      },
       animationDelay: 0.5,
       responsive: true,
       maintainAspectRatio: true,
@@ -375,7 +384,8 @@ export const PositiveNegativeBarChart = ({
     // TODO
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -384,7 +394,7 @@ export const PositiveNegativeBarChart = ({
   return (
     <AspectRatio ratio={2}>
       <Box position="relative" overflow={"visible !important"}>
-        <Box ref={containerRef} h={"100%"} w={"100%"}></Box>
+        <Box ref={containerRef} h={"100%"} w={"100%"} role="figure"></Box>
       </Box>
     </AspectRatio>
   );
