@@ -15,9 +15,10 @@ import {
   Portal,
   Tag,
   Text,
+  VisuallyHidden,
 } from "@chakra-ui/react";
 import type { ChangeEventHandler, ReactNode } from "react";
-import React, { memo, useMemo, useRef, useState } from "react";
+import React, { memo, useId, useMemo, useRef, useState } from "react";
 import removeAccents from "remove-accents";
 import type { OptionSchema } from "shared/schema/optionSchema";
 
@@ -146,7 +147,6 @@ export const GroupedMultiselect = chakra(
     variant?: string;
     customButton?: ReactNode;
   }) => {
-    const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
 
     const getDefaultMapOptions = () => {
       if (!defaultOptions) return new Map();
@@ -158,7 +158,7 @@ export const GroupedMultiselect = chakra(
         value.map((val) => {
           return [
             val,
-            (stateValue.current?.get?.(val) ||
+            (
               groupedOptions[
                 Object.keys(groupedOptions).find((key) =>
                   groupedOptions[key].options.find(({ value }) => val === value)
@@ -208,6 +208,7 @@ export const GroupedMultiselect = chakra(
     const filteredOptions = useMemo(filterOptions, [groupedOptions, search]);
     const ref = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const id = useId();
 
     const [limit, setLimit] = useState(150);
 
@@ -229,7 +230,6 @@ export const GroupedMultiselect = chakra(
 
     return (
       <Menu
-        isLazy={true}
         onOpen={() => {
           handleSearch("");
           setTimeout(() => inputRef.current?.focus(), 100);
@@ -242,9 +242,7 @@ export const GroupedMultiselect = chakra(
         preventOverflow={false}
       >
         {customButton ? (
-          <MenuButton as={Flex} cursor={"pointer"} h={"fit-content"}>
-            {customButton}
-          </MenuButton>
+          customButton
         ) : (
           <MenuButton
             as={Button}
@@ -265,7 +263,11 @@ export const GroupedMultiselect = chakra(
         <Portal>
           <MenuList zIndex={"sticky"} maxWidth={450} pt="0">
             <Flex borderBottom="1px solid" borderBottomColor="grey.900">
+              <VisuallyHidden as="label" htmlFor={id}>
+                Rechercher dans la liste
+              </VisuallyHidden>
               <Input
+                id={id}
                 ref={inputRef}
                 placeholder="Rechercher dans la liste"
                 value={search}
@@ -292,7 +294,6 @@ export const GroupedMultiselect = chakra(
               ) : (
                 <Button
                   onClick={() => {
-                    stateValue.current = new Map();
                     onChange?.(Array.from(new Map().keys()));
                   }}
                   bgColor={"transparent"}
@@ -334,7 +335,6 @@ export const GroupedMultiselect = chakra(
                             } else {
                               newMap.delete(value);
                             }
-                            stateValue.current = newMap;
                             onChange?.(Array.from(newMap.keys()));
                           }}
                           value={value}

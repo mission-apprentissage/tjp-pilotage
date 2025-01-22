@@ -75,8 +75,11 @@ export const connectToPgDb = async (uri: string) => {
     try {
       console.error("lost connection with DB!");
       logger.error({ error }, "pg pool lost connexion with database");
-      // eslint-disable-next-line no-empty
-    } catch (_e) {}
+      // eslint-disable-next-line unused-imports/no-unused-vars
+    } catch (_e)
+    // eslint-disable-next-line no-empty
+    {
+    }
   });
 
   kdb = new Kysely<DB>({

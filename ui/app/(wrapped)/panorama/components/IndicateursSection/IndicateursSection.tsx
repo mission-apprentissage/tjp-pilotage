@@ -36,9 +36,7 @@ export const IndicateursSection = ({
       <Flex direction="column" align="space-between" flex={1}>
         <Box>
           <Heading as={"h1"} fontSize={"28px"}>
-            {libelleTerritoire}
-          </Heading>
-          <Heading as={"h2"} fontSize={"28px"}>
+            {libelleTerritoire}&nbsp;<br/>
             {libelleDiplome}
           </Heading>
         </Box>
@@ -47,7 +45,7 @@ export const IndicateursSection = ({
             Retrouvez ici les principaux indicateurs sur votre territoire (Voie scolaire, Chiffres {CURRENT_RENTREE}).{" "}
           </Flex>
         </Flex>
-        <Img alignSelf={"end"} src="/design_search.svg" objectFit="cover" width={"auto"} height={"100%"} mt={"1rem"} />
+        <Img alignSelf={"end"} src="/design_search.svg" objectFit="cover" width={"auto"} height={"100%"} mt={"1rem"} alt=""/>
       </Flex>
       <SimpleGrid spacing={3} columns={[1, 3, 3]} flex={2}>
         <StatCard
@@ -60,7 +58,7 @@ export const IndicateursSection = ({
           sub={
             stats?.effectifEntree ? (
               <HStack>
-                <Text fontSize={"12px"} color={"grey.425"}>
+                <Text fontSize={12} color={"grey.425"}>
                   dont effectif en entrée {stats.effectifEntree}{" "}
                 </Text>
                 <GlossaireShortcut

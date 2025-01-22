@@ -33,11 +33,12 @@ const AsyncDomaineProfessionnelSearch = ({
 
   return (
     <>
-      <Text onClick={openSelect} pb="4px" cursor="pointer">
+      <Text as="label" onClick={openSelect} pb="4px" cursor="pointer" htmlFor="select-domaine-professionnel">
         Domaine professionnel
         <TooltipIcon ml="1" label="" onClick={() => openGlossaire("domaine-professionnel-emploi")} />
       </Text>
       <AsyncSelect
+        inputId="select-domaine-professionnel"
         ref={selectElementRef}
         instanceId={useId()}
         name={"select-domaine-professionnel"}

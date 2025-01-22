@@ -1,4 +1,4 @@
-import { Box, chakra, Text, Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
+import {Box, chakra, Text, Th, Thead, Tooltip, Tr, VisuallyHidden} from '@chakra-ui/react';
 import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
 
@@ -101,7 +101,9 @@ export const HeadLineContent = ({
   return (
     <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" zIndex={"docked"}>
       <Tr bg={"white"}>
-        <Th />
+        <Th>
+          <VisuallyHidden>Historique</VisuallyHidden>
+        </Th>
         <ConditionalTh colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} colonne="rentreeScolaire">
           {FORMATION_ETABLISSEMENT_COLUMNS.rentreeScolaire}
         </ConditionalTh>

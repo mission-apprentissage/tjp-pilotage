@@ -20,8 +20,8 @@ export const PartenaireEconomiqueField = chakra(
     if (!visible) return null;
 
     return (
-      <FormControl className={className} isInvalid={!!errors.partenairesEconomiquesImpliques} isRequired>
-        <FormLabel>Des partenaires économiques sont-ils impliqués ?</FormLabel>
+      <FormControl as="fieldset" className={className} isInvalid={!!errors.partenairesEconomiquesImpliques} isRequired>
+        <FormLabel as="legend">Des partenaires économiques sont-ils impliqués ?</FormLabel>
         <Controller
           name="partenairesEconomiquesImpliques"
           control={control}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Center, chakra, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
+import {Button, Center, chakra, Flex, MenuButton,Spinner, useDisclosure} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -84,14 +84,15 @@ const ColonneFilterSection = chakra(
           })}
           value={colonneFilters ?? []}
           customButton={
-            <Button
+            <MenuButton
+              as={Button}
               variant={"externalLink"}
               leftIcon={<Icon icon={"ri:table-line"} />}
               color="bluefrance.113"
               onClick={() => trackEvent("formations:affichage-colonnes")}
             >
               Modifier les colonnes
-            </Button>
+            </MenuButton>
           }
         />
       </Flex>

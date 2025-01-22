@@ -115,6 +115,7 @@ export const Quadrant = function <
         return new DOMRect(displayedDetail.x + containerRect.x - 10, displayedDetail.y + containerRect.y - 10, 20, 20);
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayedDetail]);
 
   const series = data.map((formation) => ({
@@ -142,6 +143,7 @@ export const Quadrant = function <
     })(),
   };
 
+
   const repartitionsQuadrants =
     meanInsertion && meanPoursuite
       ? {
@@ -157,6 +159,9 @@ export const Quadrant = function <
       aria: {
         label: {
           enabled: true,
+          data: {
+            maxCount: 100
+          }
         },
       },
       grid: { top: 0, right: 0, bottom: 50, left: 60 },
@@ -329,6 +334,7 @@ export const Quadrant = function <
         },
       ],
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data, moyennes, dimensions]
   );
 
@@ -349,12 +355,14 @@ export const Quadrant = function <
     return () => {
       chartRef.current?.off("click", selectFormationHandler);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [option, data]);
 
   useEffect(() => {
     if (!displayedDetail && currentFormation) {
       displayTooltip(currentFormation);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentFormation]);
 
   return (
@@ -397,7 +405,7 @@ export const FormationTooltipWrapper = forwardRef<HTMLDivElement, { children: Re
 
     return (
       <Box zIndex={10} ref={ref} {...props}>
-        <Card width={"280px"} ref={cardRef}>
+        <Card width={"330px"} ref={cardRef}>
           <CardBody p="4">{children}</CardBody>
         </Card>
       </Box>

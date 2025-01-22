@@ -2,6 +2,7 @@ import { AspectRatio, Box } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
 import { formatNumberToString, formatPercentage } from "@/utils/formatUtils";
 
 export const TauxPressionRemplissageGraph = ({
@@ -26,6 +27,14 @@ export const TauxPressionRemplissageGraph = ({
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+          data: {
+            maxCount: 100
+          }
+        }
+      },
       textStyle: {
         fontFamily: "Marianne, Arial",
       },
@@ -145,7 +154,8 @@ export const TauxPressionRemplissageGraph = ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
     chartRef.current.on("legendselectchanged", (params) => {
@@ -158,7 +168,7 @@ export const TauxPressionRemplissageGraph = ({
   return (
     <AspectRatio ratio={3.5} w={"100%"}>
       <Box position="relative" overflow="visible !important">
-        <Box ref={containerRef} height={"100%"} w={"100%"}></Box>
+        <Box ref={containerRef} height={"100%"} w={"100%"} role="figure"></Box>
       </Box>
     </AspectRatio>
   );

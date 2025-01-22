@@ -81,6 +81,7 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     if (isAdminRegion && filteredRegions && filteredRegions.length > 0) {
       setValue("codeRegion", filteredRegions[0].value);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredRegions]);
 
   return (

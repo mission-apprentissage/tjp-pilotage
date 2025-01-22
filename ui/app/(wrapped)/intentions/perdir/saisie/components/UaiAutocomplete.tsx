@@ -7,12 +7,14 @@ import { client } from "@/api.client";
 import { useAuth } from "@/utils/security/useAuth";
 
 export const UaiAutocomplete = ({
+  id = "uai-autocomplete",
   name,
   defaultValue,
   disabled,
   inError,
   onChange,
 }: {
+  id?: string;
   name: string;
   defaultValue?: { value: string; label?: string; commune?: string };
   disabled?: boolean;
@@ -30,6 +32,7 @@ export const UaiAutocomplete = ({
 
   return (
     <AsyncSelect
+      inputId={id}
       instanceId={useId()}
       name={name}
       styles={selectStyle}

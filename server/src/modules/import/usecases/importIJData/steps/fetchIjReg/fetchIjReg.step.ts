@@ -21,6 +21,7 @@ export const [fetchIjReg] = inject({ getRegionData, cacheIjReg, clearIjRegCache 
         millesimesOK.push(millesime);
         await deps.cacheIjReg({ data, codeRegion, millesime });
         d.push(data);
+        // eslint-disable-next-line unused-imports/no-unused-vars
       } catch (_err) {
         millesimesNOK.push(millesime);
       }
