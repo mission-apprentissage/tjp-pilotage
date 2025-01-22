@@ -54,6 +54,7 @@ export const ListeEtablissementsProches = () => {
         inline: "nearest",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [etablissementsList, activeUai]);
 
   return (

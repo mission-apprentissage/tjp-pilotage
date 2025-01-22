@@ -55,6 +55,7 @@ export const EditCampagne = ({
 
   useEffect(() => {
     reset(campagne, { keepDefaultValues: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, reset]);
 
   const queryClient = useQueryClient();

@@ -22,7 +22,16 @@
     "unused-imports"
   ],
   "rules": {
-    "max-len": ["warn", { "code": 120 }],
+    "max-len": [
+      "warn",
+      {
+        "code": 120,
+        "ignorePattern": "^import\\s.+\\sfrom\\s.+;$",
+        "ignoreComments": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
     "simple-import-sort/imports": "error",
     "no-extra-semi": "error",
     "semi": ["error", "always"],

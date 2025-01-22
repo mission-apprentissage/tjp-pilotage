@@ -1,3 +1,4 @@
 import { redirect } from "next/navigation";
 
-export default () => redirect("/panorama/lien-metier-formation/formation");
+const Page = () => redirect("/panorama/lien-metier-formation/formation");
+export default Page;

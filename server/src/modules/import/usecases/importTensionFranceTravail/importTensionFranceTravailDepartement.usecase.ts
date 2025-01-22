@@ -23,7 +23,7 @@ export const [importTensionFranceTravailDepartement] = inject(
   },
   (deps) => async () => {
     // Create new file
-    deps.createFranceTravailTensionFile(
+    await deps.createFranceTravailTensionFile(
       deps.filePathManager.getFranceTravailIndicateurTensionDepartementStatsFilePath()
     );
 

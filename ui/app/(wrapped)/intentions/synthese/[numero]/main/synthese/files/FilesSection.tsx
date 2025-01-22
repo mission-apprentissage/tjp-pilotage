@@ -63,7 +63,7 @@ export const FilesSection = ({ numero }: { numero: string }) => {
           textOverflow={"ellipsis"}
         >
           <Flex flex={"0 0 50px"}>
-            <Img src={"/illustrations/piece-jointe-visualization.svg"} height={"50px"} width={"auto"} />
+            <Img src={"/illustrations/piece-jointe-visualization.svg"} height={"50px"} width={"auto"} alt=""/>
           </Flex>
           <Flex direction={"column"} width="100%" justifyContent={"space-between"} minW={0}>
             <Text

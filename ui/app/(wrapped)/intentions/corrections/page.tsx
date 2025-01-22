@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, chakra, Container, Flex } from "@chakra-ui/react";
+import {Button, chakra, Container, Flex, MenuButton} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -62,9 +62,9 @@ const ColonneFiltersSection = chakra(
           })}
           value={colonneFilters ?? []}
           customButton={
-            <Button variant={"externalLink"} leftIcon={<Icon icon={"ri:table-line"} />} color="bluefrance.113">
+            <MenuButton as={Button} variant={"externalLink"} leftIcon={<Icon icon={"ri:table-line"} />} color="bluefrance.113">
               Modifier l'affichage des colonnes
-            </Button>
+            </MenuButton>
           }
         />
       </Flex>

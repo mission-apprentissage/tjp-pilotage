@@ -78,6 +78,7 @@ export const QuadrantSection = ({
 
   const offresDimensions: Array<"tauxPoursuite" | "tauxInsertion"> | undefined = useMemo(
     () => getOffreDimensions(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [offre]
   );
 

@@ -19,11 +19,13 @@ export const BadgeTypeFamille = ({
   typeFamille,
   labelSize = "short",
   size = "xs",
+  fontSize,
   children,
 }: {
   typeFamille?: TypeFamilleKeys;
   labelSize?: "short" | "long";
   size?: "xs" | "sm" | "md";
+  fontSize?: string;
   children?: React.ReactNode;
 }) => {
   if (!typeFamille) {
@@ -39,7 +41,7 @@ export const BadgeTypeFamille = ({
   }[typeFamille];
 
   return (
-    <Badge variant={typeFamilleVariant} size={size}>
+    <Badge variant={typeFamilleVariant} size={size} fontSize={fontSize}>
       {labelSize === "short" ? formatTypeFamilleCourt(typeFamille) : formatTypeFamilleLong(typeFamille)}
       {children && <> {children}</>}
     </Badge>

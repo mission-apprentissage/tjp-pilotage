@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Heading, Text } from "@chakra-ui/react";
 
 export const CounterChart = ({
   data,
@@ -11,7 +11,7 @@ export const CounterChart = ({
 }) => {
   if (typeof data === "undefined") {
     return (
-      <Text fontSize={"12px"} fontWeight={"400"} color={"grey.425"}>
+      <Text fontSize={12} fontWeight={"400"} color={"grey.425"}>
         Indisponible
       </Text>
     );
@@ -20,16 +20,16 @@ export const CounterChart = ({
   return (
     <Flex justify={"space-between"} direction={"row"} width={"100%"}>
       <Flex align={"flex-end"}>
-        <Text fontSize={"36px"} lineHeight={"36px"} fontWeight={"700"}>
+        <Heading as="h4" fontSize={"36px"} lineHeight={"36px"} fontWeight={"700"}>
           {data}
-        </Text>
+        </Heading>
         {type === "percentage" && (
-          <Text fontSize={"14px"} fontWeight={"400"}>
+          <Heading as="h4" fontSize={14} fontWeight={"400"}>
             &nbsp;%
-          </Text>
+          </Heading>
         )}
       </Flex>
-      <Flex align={"flex-end"} fontSize={"12px"}>
+      <Flex align={"flex-end"} fontSize={12}>
         {compareData}
       </Flex>
     </Flex>

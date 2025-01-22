@@ -1,4 +1,4 @@
-import { Box, CloseButton, Collapse, Stack, Text, VStack } from "@chakra-ui/react";
+import {Box, CloseButton, Collapse, Stack, Text, VisuallyHidden,VStack} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { hasRole } from "shared";
@@ -102,7 +102,10 @@ export const InformationHeader = ({ statut }: { statut?: DemandeStatutType }) =>
                 setShouldDisplay(false);
               }}
               mb={"auto"}
-            />
+            >
+              <VisuallyHidden>Fermer</VisuallyHidden>
+              <Icon icon="ri:close-fill" fontSize="24px" />
+            </CloseButton>
           </Stack>
         </Box>
       </VStack>

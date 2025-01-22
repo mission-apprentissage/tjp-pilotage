@@ -99,7 +99,7 @@ export default () => {
                     maxWidth="200px"
                     minWidth="200px"
                     borderBottom={"none"}
-                    fontSize="12px"
+                    fontSize={12}
                     fontWeight={700}
                   >
                     Rôle
@@ -111,14 +111,14 @@ export default () => {
                     left="200px"
                     width="275px"
                     borderBottom={"none"}
-                    fontSize="12px"
+                    fontSize={12}
                     fontWeight={700}
                     boxShadow={`inset -2px 0px 0px 0px ${themeDefinition.colors.grey[850]}`}
                   >
                     Description
                   </Th>
                   {PERMISSION_GROUPS.map((p) => (
-                    <Th key={p} borderBottom={"none"} fontSize="12px" fontWeight={700} textAlign={"center"}>
+                    <Th key={p} borderBottom={"none"} fontSize={12} fontWeight={700} textAlign={"center"}>
                       {PERMISSION_GROUP_LABELS[p]}
                     </Th>
                   ))}
@@ -141,7 +141,7 @@ export default () => {
                       left="0"
                       width="200px"
                       textTransform={"uppercase"}
-                      fontSize="14px"
+                      fontSize={14}
                       fontWeight={700}
                       borderBottom={"none"}
                     >

@@ -11,8 +11,8 @@ export const FormationRHField = chakra(({ disabled, className }: { disabled?: bo
   } = useFormContext<IntentionForms>();
 
   return (
-    <FormControl className={className} isInvalid={!!errors.formationRH} isRequired>
-      <FormLabel>Des formations ?</FormLabel>
+    <FormControl as="fieldset" className={className} isInvalid={!!errors.formationRH} isRequired>
+      <FormLabel as="legend">Des formations ?</FormLabel>
       <Controller
         name="formationRH"
         control={control}

@@ -133,6 +133,7 @@ export const Etablissement = () => {
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 
   if (!etablissementMap?.etablissement) {

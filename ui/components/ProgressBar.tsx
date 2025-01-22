@@ -17,26 +17,26 @@ const ProgressBar = ({
         <Flex
           w={`${percentage < 100 ? percentage : 100}%`}
           bgColor={colorScheme}
-          fontSize="10px"
+          fontSize={12}
           overflow={"visible"}
-          height="15px"
+          height="16px"
           borderLeftRadius={"inherit"}
           borderRightRadius={percentage >= 100 ? "inherit" : "none"}
         >
-          <Text textOverflow={"hidden"} whiteSpace={"nowrap"} lineHeight="12px" my="auto" fontSize="10px" ps={1}>
+          <Text textOverflow={"hidden"} whiteSpace={"nowrap"} lineHeight="12px" my="auto" fontSize={12} ps={1}>
             {leftLabel}
           </Text>
         </Flex>
         <Flex
           w={`${100 - percentage > 0 ? 100 - percentage : 0}%`}
-          fontSize="10px"
+          fontSize={12}
           overflow={"visible"}
-          height="15px"
+          height="16px"
           justifyContent={"end"}
           borderLeftRadius={percentage === 0 ? "inherit" : "none"}
           borderRightRadius={percentage >= 100 ? "inherit" : "none"}
         >
-          <Text textOverflow={"hidden"} whiteSpace={"nowrap"} lineHeight="12px" my="auto" fontSize="10px" pe={1}>
+          <Text textOverflow={"hidden"} whiteSpace={"nowrap"} lineHeight="14px" my="auto" fontSize={12} pe={1}>
             {rightLabel}
           </Text>
         </Flex>

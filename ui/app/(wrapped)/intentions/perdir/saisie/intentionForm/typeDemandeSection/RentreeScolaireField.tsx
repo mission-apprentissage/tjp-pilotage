@@ -1,17 +1,5 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Tag,
-  Text,
-} from "@chakra-ui/react";
+import {Button, Flex, FormControl, FormErrorMessage, Highlight,Menu, MenuButton, MenuItem, MenuList, Tag, Text} from '@chakra-ui/react';
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
@@ -33,10 +21,11 @@ export const RentreeScolaireField = ({
     setValue,
     watch,
   } = useFormContext<IntentionForms>();
-  const rentreeScolaire = watch("rentreeScolaire");
+
   const rentreeScolaireOptions = [0, 1, 2, 3, 4, 5].map(
     (offsetRentree: number) => parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) + offsetRentree
   );
+  const rentreeScolaire = watch("rentreeScolaire") ?? rentreeScolaireOptions[1];
 
   useEffect(
     () =>
@@ -54,9 +43,14 @@ export const RentreeScolaireField = ({
 
   return (
     <FormControl className={className} isInvalid={!!errors.rentreeScolaire} isRequired>
-      <FormLabel>Rentrée scolaire</FormLabel>
+      <Text mb={2} fontWeight={700}>
+        <Highlight query={"*"} styles={{ color: "red" }}>
+          Rentrée scolaire *
+        </Highlight>
+      </Text>
       <Menu gutter={0} matchWidth={true} autoSelect={false}>
         <MenuButton
+          id="rentree-scolaire"
           as={Button}
           variant={"selectButton"}
           rightIcon={<ChevronDownIcon />}

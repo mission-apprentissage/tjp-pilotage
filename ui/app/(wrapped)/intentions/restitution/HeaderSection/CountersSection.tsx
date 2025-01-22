@@ -1,4 +1,4 @@
-import { Box, Card, CardBody, CardHeader, Divider, Flex, Img, Text } from "@chakra-ui/react";
+import { Box, Card, CardBody, CardHeader, Divider, Flex, Heading, Img, Text, VisuallyHidden } from "@chakra-ui/react";
 
 import type { StatsRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 
@@ -25,17 +25,21 @@ const CountCard = ({
       <Flex flexDirection="column" minH="42px">
         <Flex>
           <Flex direction={"column"}>
-            <Text fontSize="lg" fontWeight="bold" lineHeight={"20px"}>
+            <Heading as="h2" fontSize="lg" fontWeight="bold" lineHeight={"20px"}>
+              <VisuallyHidden>Libellé :</VisuallyHidden>
               {label}
-            </Text>
-            <Text fontSize="sm">{subLabel}</Text>
+            </Heading>
+            <Heading as="h3" fontSize="sm">
+              <VisuallyHidden>Sous libellé :</VisuallyHidden>
+              {subLabel}
+            </Heading>
             {value?.colorationTotal !== undefined && (
               <Text fontSize="12" lineHeight={"20px"} fontWeight={400} color="grey.425">
                 (dont coloration)
               </Text>
             )}
           </Flex>
-          {iconSrc && <Img src={`/icons/${iconSrc}.svg`} height="30px" ms={"auto"} />}
+          {iconSrc && <Img src={`/icons/${iconSrc}.svg`} height="30px" ms={"auto"} alt=""/>}
         </Flex>
       </Flex>
     </CardHeader>
@@ -47,15 +51,15 @@ const CountCard = ({
               ({value?.colorationTotal})
             </Text>
           )}
-          <Text fontSize={36} fontWeight={700} mt={"auto"} lineHeight={"32px"} ms={"auto"}>
+          <Heading as="h4" fontSize={36} fontWeight={700} mt={"auto"} lineHeight={"32px"} ms={"auto"}>
             {value?.total ? value?.total : "0"}
-          </Text>
+          </Heading>
         </Flex>
         <Flex flexDirection="column" justifyContent={"end"}>
           <Flex justify={"space-between"} pb="2" mt={"auto"}>
-            <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
+            <Heading as="h4" justifyContent="end" fontSize={"12"} lineHeight={"4"} fontWeight={400}>
               scolaire
-            </Text>
+            </Heading>
             <Flex>
               {value?.colorationScolaire !== undefined && (
                 <Text fontSize={12} fontWeight={400} color="grey.425" me={3}>
@@ -71,9 +75,9 @@ const CountCard = ({
           </Flex>
           <Divider />
           <Flex justify={"space-between"} pt="2">
-            <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
+            <Heading as="h4" justifyContent="end" fontSize={"12"} lineHeight={"4"} fontWeight={400}>
               apprentissage
-            </Text>
+            </Heading>
             <Flex>
               {value?.colorationApprentissage !== undefined && (
                 <Text fontSize={12} fontWeight={400} color="grey.425" me={3}>
