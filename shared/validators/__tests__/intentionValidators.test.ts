@@ -285,10 +285,38 @@ describe("shared > validators > intentionValidators", () => {
     });
   });
 
-  it("should validate capaciteApprentissageActuelle", () => {
-    const intention = createIntention({ capaciteApprentissageActuelle: -1 });
-    const result = intentionValidators.capaciteApprentissageActuelle(intention);
-    expect(result).toBe("La capacité en apprentissage actuelle doit être un nombre entier positif");
+  describe("Validation de la 'capaciteApprentissageActuelle'", () => {
+    it("Doit remonter une erreur si la 'capaciteApprentissageActuelle' est négative", () => {
+      const intention = createIntention({ capaciteApprentissageActuelle: -1 });
+      const result = intentionValidators.capaciteApprentissageActuelle(intention);
+      expect(result).toBe("La capacité en apprentissage actuelle doit être un nombre entier positif");
+    });
+
+    describe("Si 'typeDemande' est 'ouverture_compensation' ou 'ouverture_nette'", () => {
+      describe.each`
+      typeDemande                 | text
+      ${DemandeTypeEnum.ouverture_nette}        | ${DemandeTypeEnum.ouverture_nette}
+      ${DemandeTypeEnum.ouverture_compensation} | ${DemandeTypeEnum.ouverture_compensation}
+        `(`Pour $text`, ({ typeDemande }) => {
+        it("Doit remonter une erreur si la 'capaciteApprentissageActuelle' différent de 0", () => {
+          const intention = createIntention({ typeDemande, capaciteApprentissageActuelle: 1 });
+          const result = intentionValidators.capaciteApprentissageActuelle(intention);
+          expect(result).toBe("La capacité en apprentissage actuelle devrait être à 0 dans le cas d'une ouverture");
+        });
+
+        it("Ne doit pas remonter d'erreur si la 'capaciteApprentissageActuelle' est à 0", () => {
+          const intention = createIntention({ typeDemande, capaciteApprentissageActuelle: 0 });
+          const result = intentionValidators.capaciteApprentissageActuelle(intention);
+          expect(result).toBe(undefined);
+        });
+      });
+    });
+
+    it("Ne doit pas remonter d'erreur si la 'capaciteApprentissageActuelle' est positive et le type de demande n'est pas une 'ouverture_nette' ou une 'ouverture_compensation'", () => {
+      const intention = createIntention({ typeDemande: DemandeTypeEnum.coloration, capaciteApprentissageActuelle: 1 });
+      const result = intentionValidators.capaciteApprentissageActuelle(intention);
+      expect(result).toBe(undefined);
+    });
   });
 
   it("should validate capaciteApprentissage", () => {
