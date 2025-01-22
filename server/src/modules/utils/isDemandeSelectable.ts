@@ -82,11 +82,18 @@ export const isIntentionSelectable =
           eb("intention.statut", "=", DemandeStatutEnum["proposition"]),
           draftFilter.uais ? eb.or(draftFilter.uais.map((uai) => eb("intention.uai", "=", uai))) : sql<boolean>`true`,
           draftFilter.codeRegion ? eb("intention.codeRegion", "=", draftFilter.codeRegion) : sql<boolean>`true`,
+          filter.role === "invite" ? sql<boolean>`false` : sql<boolean>`true`,
         ]),
         eb.and([
           eb("intention.statut", "!=", DemandeStatutEnum["proposition"]),
           filter.uais ? eb.or(filter.uais.map((uai) => eb("intention.uai", "=", uai))) : sql<boolean>`true`,
           filter.codeRegion ? eb("intention.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
+          filter.role === "invite" ? sql<boolean>`false` : sql<boolean>`true`,
+        ]),
+        eb.and([
+          filter.role === "invite" ? sql<boolean>`true` : sql<boolean>`false`,
+          filter.codeRegion ? eb("intention.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
+          eb("intention.statut", "in", [DemandeStatutEnum["demande validée"], DemandeStatutEnum["refusée"]]),
         ]),
       ]);
     };
@@ -100,12 +107,14 @@ const getIntentionSelectableFilters = (user?: Pick<RequestUser, "id" | "role" | 
     national: {},
     region: { codeRegion: user.codeRegion },
     uai: { uais: user.uais },
+    role: { role: user.role, codeRegion: user.codeRegion },
   }[scope?.draft];
 
   const filter = {
     national: {},
     region: { codeRegion: user.codeRegion },
     uai: { uais: user.uais },
+    role: { role: user.role, codeRegion: user.codeRegion },
   }[scope?.default];
 
   return { filter, draftFilter };

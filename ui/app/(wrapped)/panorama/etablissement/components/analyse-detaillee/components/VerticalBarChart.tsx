@@ -5,6 +5,7 @@ import { CURRENT_IJ_MILLESIME } from "shared";
 import { getMillesime } from "shared/utils/getMillesime";
 
 import { formatMillesime } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
 
 export const VerticalBarChart = ({
   title,
@@ -38,6 +39,14 @@ export const VerticalBarChart = ({
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+          data: {
+            maxCount: 100
+          }
+        }
+      },
       animationDelay: 0.5,
       responsive: true,
       maintainAspectRatio: true,
@@ -139,7 +148,8 @@ export const VerticalBarChart = ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,7 +158,7 @@ export const VerticalBarChart = ({
   return (
     <AspectRatio ratio={1.3} w={"100%"}>
       <Box position="relative" overflow="visible !important">
-        <Box ref={containerRef} h={"100%"} w={"100%"}></Box>
+        <Box ref={containerRef} h={"100%"} w={"100%"} role="figure"></Box>
       </Box>
     </AspectRatio>
   );

@@ -12,10 +12,10 @@ const countDemandesFactory =
   ) =>
     async (activeFilters: Filters) => {
       const currentCampagne = await deps.getCurrentCampagne(activeFilters.user);
-      const anneeCampagne = activeFilters.anneeCampagne ?? currentCampagne.annee;
+      const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
 
       return await deps.countDemandesQuery({
-        anneeCampagne,
+        campagne: anneeCampagne,
         ...activeFilters,
       });
     };
