@@ -69,6 +69,7 @@ export const ConsoleSection = ({
     const user = auth?.user;
     const scope = getPermissionScope(user?.role, "intentions-perdir/lecture");
     const isAllowed = guardScope(scope?.default, {
+      role: () => false,
       uai: () => user?.uais?.includes(intention.uai) ?? false,
       region: () => user?.codeRegion === intention.codeRegion,
       national: () => true,
