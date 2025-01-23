@@ -73,8 +73,7 @@ export const connectToPgDb = async (uri: string) => {
 
   pool.on("error", (error) => {
     try {
-      console.error("lost connection with DB!");
-      logger.error({ error }, "pg pool lost connexion with database");
+      logger.error({ error }, "[PSQL] pg pool lost connexion with database");
       // eslint-disable-next-line no-empty
     } catch (_e) {}
   });
@@ -96,6 +95,7 @@ export const connectToPgDb = async (uri: string) => {
 
 export const ensureInitialization = () => {
   if (!kdb) {
+    logger.error("[PSQL] Database connection does not exist. Please call connectToPgDb before.");
     throw new Error("Database connection does not exist. Please call connectToPgDb before.");
   }
   return kdb;
@@ -104,7 +104,7 @@ export const ensureInitialization = () => {
 export const getKbdClient = () => ensureInitialization();
 
 export const closePgDbConnection = async () => {
-  logger.warn("Closing PSQL");
+  logger.warn("[PSQL] Closing PSQL");
   if (process.env.NODE_ENV !== "test") {
     // Let 100ms for possible callback cleanup to register tasks in queue
     await sleep(200);
