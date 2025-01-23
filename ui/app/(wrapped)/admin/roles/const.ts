@@ -64,6 +64,7 @@ export const ROLES_LABELS: {
 export const PERMISSION_GROUP_LABELS: {
   [key: string]: string;
 } = {
+  "enregistrement-requete": "Enregistrement de requêtes",
   pilotage_reforme: "Pilotage de la réforme",
   intentions: "Demandes",
   "restitution-intentions": "Restitution des demandes",

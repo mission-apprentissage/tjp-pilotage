@@ -1,4 +1,4 @@
-import { Box, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import {Box, Heading,Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr} from '@chakra-ui/react';
 import { Fragment } from "react";
 
 import type { Order, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage-reforme/types";
@@ -53,9 +53,15 @@ export const VueRegionAcademieSection = ({
 }) => {
   return (
     <>
-      <Text fontSize={20} fontWeight={700} lineHeight={"34px"}>
-        VUE DÉTAILLÉE DES INDICATEURS PAR RÉGIONS
-      </Text>
+      <Heading
+        as="h1"
+        fontSize={20}
+        fontWeight={700}
+        lineHeight={"34px"}
+        textTransform={"uppercase"}
+      >
+        Vue détaillée des indicateurs par région
+      </Heading>
       <Box borderRadius={4} border={"1px solid"} borderColor="grey.900" p={4} mb={36} bg="white">
         {isLoading ? (
           <Loader />

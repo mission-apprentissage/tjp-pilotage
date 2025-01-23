@@ -15,3 +15,5 @@ export const DemandeStatutZodType = z.enum([
 export const DemandeStatutEnum = DemandeStatutZodType.Enum;
 
 export type DemandeStatutType = z.infer<typeof DemandeStatutZodType>;
+
+export type DemandeStatutWithoutSupprimee = Exclude<DemandeStatutType, "supprimée">;

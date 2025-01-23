@@ -19,6 +19,7 @@ export function PanoramaSelection({
 
   useEffect(() => {
     if (codeRegionFilter) onCodeRegionChanged(codeRegionFilter);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onCodeRegionChanged = (codeRegion: string) => {
@@ -43,7 +44,7 @@ export function PanoramaSelection({
           </Select>
         </FormControl>
         <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
-          <Img src="/graphs_statistics.png" objectFit="contain" />
+          <Img src="/graphs_statistics.png" objectFit="contain" alt=""/>
         </AspectRatio>
       </Flex>
     </Container>

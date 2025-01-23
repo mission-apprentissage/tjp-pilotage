@@ -1,4 +1,5 @@
-import { Box, Flex, HStack, Icon as ChakraIcon, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, HStack, Icon as ChakraIcon, VisuallyHidden } from "@chakra-ui/react";
+import React from "react";
 
 import { ProgressBar } from "@/components/ProgressBar";
 import { themeDefinition } from "@/theme/theme";
@@ -40,7 +41,7 @@ export const NumberWithLabel = ({
   round = 1,
 }: {
   icon?: React.ReactNode;
-  label?: string;
+  label?: React.ReactNode;
   scopeCode?: string;
   percentage?: number;
   nationalPercentage?: number;
@@ -51,20 +52,22 @@ export const NumberWithLabel = ({
     <Flex direction={"column"} alignItems="start" justifyContent="start" minWidth="200px" w={"100%"} gap={4}>
       <HStack>
         {icon}
-        <Text fontSize="14px" fontWeight="700" lineHeight="20px">
+        <Heading as="h3" fontSize={14} fontWeight="700" lineHeight="20px">
           {label}
-        </Text>
+        </Heading>
       </HStack>
       <Flex flex={1} direction={"column"} gap="16px" width="100%">
-        <Text fontSize="32px" lineHeight="40px" fontWeight="700" color={"grey.50"}>
+        <Heading as="h4" fontSize="32px" lineHeight="40px" fontWeight="700" color={"grey.50"}>
+          <VisuallyHidden>Valeur :</VisuallyHidden>
           {formatPercentage(percentage, round, "- %")}
-        </Text>
+        </Heading>
         {objective && (
           <Box width="100%">
             <ProgressBar percentage={formatPercentageWithoutSign(percentage ? percentage / objective : undefined, 1)} />
-            <Text color={themeDefinition.colors.grey[425]}>
+            <Heading as="h4" color={themeDefinition.colors.grey[425]} fontSize={"13px"} fontWeight={"400"} lineHeight={"20px"}>
+              <VisuallyHidden>Objectif :</VisuallyHidden>
               {formatPercentage(percentage ? percentage / objective : undefined, 1, "- %")} de l'objectif
-            </Text>
+            </Heading>
           </Box>
         )}
         {scopeCode && (
@@ -72,17 +75,19 @@ export const NumberWithLabel = ({
             <Flex mt={1.5}>
               <DrapeauFrancaisIcon />
             </Flex>
-            <Text
-              fontSize="14px"
+            <Heading
+              as="h4"
+              fontSize={14}
               lineHeight="20px"
               color={(percentage ? percentage - nationalPercentage > 0 : false) ? "success.425" : "error.425"}
               mb={"auto"}
             >
+              <VisuallyHidden>Différence par rapport à valeur nationale :</VisuallyHidden>
               {`${(percentage ? percentage - nationalPercentage > 0 : false) ? "+" : ""}${formatPercentageWithoutSign(
                 percentage ? percentage - nationalPercentage : undefined,
                 1
               )} pts`}
-            </Text>
+            </Heading>
           </Flex>
         )}
       </Flex>

@@ -1,5 +1,6 @@
 import { Search2Icon } from "@chakra-ui/icons";
-import { Button, chakra, Flex, Input } from "@chakra-ui/react";
+import { Button, chakra, Flex, Input, VisuallyHidden } from "@chakra-ui/react";
+import { useId } from "react";
 
 export const ConsoleSearchInput = chakra(
   ({
@@ -15,12 +16,18 @@ export const ConsoleSearchInput = chakra(
     onClick: () => void;
     placeholder: string;
   }) => {
+
+    const searchInputId = useId();
+
     return (
       <Flex className={className} borderBottom={"1px solid"} borderColor={"bluefrance.113"} ps={0} pe={2}>
         <Button variant={"unstyled"} size={"md"} onClick={() => onClick()} ps={0} me={"auto"}>
+          <VisuallyHidden>Rechercher</VisuallyHidden>
           <Search2Icon color="bluefrance.113" />
         </Button>
+        <VisuallyHidden as="label" htmlFor={searchInputId}>Rechercher</VisuallyHidden>
         <Input
+          id={searchInputId}
           variant={"unstyled"}
           type="text"
           placeholder={placeholder}

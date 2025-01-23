@@ -9,7 +9,7 @@ export const EntryLoader = () => {
       </GridItem>
       <GridItem>
         <VStack flexGrow={1} alignItems="start">
-          <HStack fontSize="14px" fontWeight="400">
+          <HStack fontSize={14} fontWeight="400">
             <Skeleton height="14px" width="100px" />
           </HStack>
           <SkeletonText noOfLines={2} width="100%" />

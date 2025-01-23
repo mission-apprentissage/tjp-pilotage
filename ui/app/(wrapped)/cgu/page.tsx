@@ -1,6 +1,6 @@
 import { NotionAPI } from "notion-client";
 
-import { Doc } from "@/app/_components/NotionDoc";
+import { Doc } from "@/components/NotionDoc";
 
 export const revalidate = 60;
 
@@ -12,5 +12,10 @@ const fetchData = async () => {
 
 export default async function CGU() {
   const recordMap = await fetchData();
-  return <Doc recordMap={recordMap} />;
+  return <Doc
+    recordMap={recordMap}
+    pageTitle={
+      "Conditions Générales d'Utilisation - Orion"
+    }
+  />;
 }

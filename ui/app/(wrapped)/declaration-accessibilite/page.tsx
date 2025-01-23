@@ -6,7 +6,7 @@ export default function DeclarationAccessibilite() {
     <>
       <Container maxW="container.xl" py="24px">
         <VStack gap="16px" alignItems="start">
-          <Heading as="h1">Declaration d’accessibilité</Heading>
+          <Heading as="h1">Déclaration d’accessibilité</Heading>
           <Text>
             Établie le <span>16 avril 2024</span>.
           </Text>

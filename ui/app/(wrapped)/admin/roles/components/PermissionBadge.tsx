@@ -39,7 +39,7 @@ const PermissionBadge = ({ rights, scope }: { rights: string[]; scope: Scope }) 
 
   if (rights.length === 0) {
     return (
-      <Badge variant="grey" size="md">
+      <Badge variant="grey" size="md" fontSize={12}>
         <Box pr="4px">
           <Icon icon="ri:eye-off-fill" />
         </Box>
@@ -51,7 +51,7 @@ const PermissionBadge = ({ rights, scope }: { rights: string[]; scope: Scope }) 
   if (rights.includes("lecture")) {
     i++;
     icons.push(
-      <Box pr="4px" key={`${i}-permission-badge-icon`}>
+      <Box pr="4px" key={`${i}-permission-badge-icon`} fontSize={12}>
         <Icon icon="ri:eye-fill" />
       </Box>
     );
@@ -60,14 +60,14 @@ const PermissionBadge = ({ rights, scope }: { rights: string[]; scope: Scope }) 
   if (rights.includes("ecriture")) {
     i++;
     icons.push(
-      <Box pr="4px" key={`${i}-permission-badge-icon`}>
+      <Box pr="4px" key={`${i}-permission-badge-icon`} fontSize={12}>
         <Icon icon="ri:pencil-fill" />
       </Box>
     );
   }
 
   return (
-    <Badge variant={getVariant()} size="md">
+    <Badge variant={getVariant()} size="md" fontSize={12}>
       {icons} {formatScopeLabel(scope)}
     </Badge>
   );

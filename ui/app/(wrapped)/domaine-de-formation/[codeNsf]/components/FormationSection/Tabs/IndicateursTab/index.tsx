@@ -107,7 +107,7 @@ export const IndicateursTab = () => {
       {dataFormation.isInScope ? (
         <>
           <Flex direction={"column"} gap={4} w={"100%"}>
-            <Heading as="h3" fontSize={"14px"} fontWeight={"bold"}>
+            <Heading as="h3" fontSize={14} fontWeight={"bold"}>
               DEVENIR DES ÉLÈVES
             </Heading>
             <TauxIJCard
@@ -122,7 +122,7 @@ export const IndicateursTab = () => {
           {dataFormation.isScolaire && (
             <Flex direction={"column"} gap={4}>
               <Flex direction={"row"} gap={"16px"} alignItems={"center"}>
-                <Heading as="h3" fontSize={"14px"} fontWeight={"bold"}>
+                <Heading as="h3" fontSize={14} fontWeight={"bold"}>
                   EFFECTIFS ET ATTRACTIVITÉ
                 </Heading>
                 <Badge>VOIE SCOLAIRE</Badge>
@@ -139,7 +139,7 @@ export const IndicateursTab = () => {
 
           <Flex direction={"column"} gap={4}>
             <Flex direction={"row"} gap={"16px"} alignItems={"center"}>
-              <Heading as="h3" fontSize={"14px"} fontWeight={"bold"}>
+              <Heading as="h3" fontSize={14} fontWeight={"bold"}>
                 TRANSFORMATION DE LA CARTE
               </Heading>
             </Flex>

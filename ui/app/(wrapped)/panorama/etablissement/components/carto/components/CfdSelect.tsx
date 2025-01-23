@@ -158,8 +158,9 @@ export const CfdSelect = () => {
       {!offre || (!analyseDetaillee && <Skeleton />)}
       {offre && analyseDetaillee && (
         <Stack gap="8px">
-          <Text>Formation</Text>
+          <Text as="label" htmlFor="select-cfd-carto">Formation</Text>
           <AsyncSelect
+            inputId="select-cfd-carto"
             // Rendre la key dépendente de l'offre, permet le rendu du composant à chaque fois que
             // l'offre sélectionnée dans analyse detaillée change
             key={`cfd-select-${offre}`}
