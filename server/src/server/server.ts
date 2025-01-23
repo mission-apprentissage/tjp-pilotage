@@ -120,7 +120,8 @@ export default async (): Promise<Server> => {
     logger: logMiddleware(),
     trustProxy: 1,
     caseSensitive: false,
-  }).withTypeProvider<ZodTypeProvider>();
+  })
+    .withTypeProvider<ZodTypeProvider>();
 
   return bind(app);
 };
