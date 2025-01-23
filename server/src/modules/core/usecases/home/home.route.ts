@@ -1,4 +1,4 @@
-import { createRoute } from "@http-wizard/core";
+import { createRoute } from "shared/http-wizard/core";
 import { ROUTES } from "shared/routes/routes";
 
 import config from "@/config";

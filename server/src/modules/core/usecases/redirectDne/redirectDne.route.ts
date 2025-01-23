@@ -1,5 +1,5 @@
-import { createRoute } from "@http-wizard/core";
 import type { FastifyRequest } from "fastify";
+import { createRoute } from "shared/http-wizard/core";
 import { ROUTES } from "shared/routes/routes";
 
 import { getDneUrl } from "@/modules/core/usecases/getDneUrl/getDneUrl.usecase";

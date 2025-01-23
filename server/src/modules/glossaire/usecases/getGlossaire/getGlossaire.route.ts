@@ -1,5 +1,5 @@
-import { createRoute } from "@http-wizard/core";
 import type NodeCache from "node-cache";
+import { createRoute } from "shared/http-wizard/core";
 import { ROUTES } from "shared/routes/routes";
 import type { GlossaireEntry } from "shared/routes/schemas/get.glossaire.schema";
 

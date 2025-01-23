@@ -1,9 +1,5 @@
-// @ts-nocheck -- TODO  Not all code paths return a value.
-
-import type { Args, ZodTypeProvider } from "@http-wizard/core";
-
-// import type { Router } from "server/src/server/routes/routes";
 import { RaisonCorrectionEnum } from "../enum/raisonCorrectionEnum";
+import type { Args, ZodTypeProvider } from "../http-wizard/core";
 import type { Router } from "../routes";
 
 export type Correction = Args<Router["[POST]/correction/submit"]["schema"], ZodTypeProvider>["body"]["correction"];

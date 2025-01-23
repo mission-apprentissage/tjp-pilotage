@@ -1,12 +1,8 @@
-// @ts-nocheck -- TODO  Not all code paths return a value.
-
-import type { Args, ZodTypeProvider } from "@http-wizard/core";
-
-// import type { Router } from "server/src/server/routes/routes";
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
+import type { Args, ZodTypeProvider } from "../http-wizard/core";
+import type { Router } from "../routes";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Intention = Args<any["[POST]/intention/submit"]["schema"], ZodTypeProvider>["body"]["intention"];
+type Intention = Args<Router["[POST]/intention/submit"]["schema"], ZodTypeProvider>["body"]["intention"];
 
 export const isTypeFermeture = (typeDemande: string) => ["fermeture"].includes(typeDemande);
 
