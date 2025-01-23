@@ -8,6 +8,7 @@ import type { z } from "zod";
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneIntention } from "@/modules/intentions/repositories/findOneIntention.query";
 import { updateIntentionWithHistory } from "@/modules/intentions/repositories/updateIntentionWithHistory.query";
+import logger from "@/services/logger";
 
 import { createChangementStatutQuery } from "./deps/createChangementStatut.query";
 import { shootChangementStatutEmail } from "./deps/shootChangementStatutEmail.deps";
@@ -32,13 +33,24 @@ export const [submitChangementStatutUsecase, submitChangementStatutFactory] = in
       const scope = getPermissionScope(user.role, "intentions-perdir-statut/ecriture");
 
       const intentionData = await findOneIntention(changementStatut.intentionNumero);
-      if (!intentionData) throw Boom.notFound("Intention non trouvée en base");
+      if (!intentionData) {
+        logger.error(
+          {
+            changementStatut,
+            user
+          },
+          "[SUBMIT_CHANGEMENT_STATUT] Intention non trouvée en base"
+        );
+        throw Boom.notFound("Intention non trouvée en base");
+      }
 
       const isAllowed = guardScope(scope?.default, {
         region: () => user.codeRegion === intentionData.codeRegion,
         national: () => true,
       });
-      if (!isAllowed) throw Boom.forbidden();
+      if (!isAllowed) {
+        throw Boom.forbidden();
+      }
 
       const newChangementStatut = {
         ...changementStatut,
