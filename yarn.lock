@@ -2489,6 +2489,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fastify/error@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@fastify/error@npm:4.0.0"
+  checksum: b18f5b067cf27e7c53f51c98c630f673dd5c0ada4d587b55e8865307fdf2be0c3f0ae395e271b3fb7545dc3fb9ba9e102b8c84b41ba4de8952066397f18a44fc
+  languageName: node
+  linkType: hard
+
 "@fastify/fast-json-stringify-compiler@npm:^4.3.0":
   version: 4.3.0
   resolution: "@fastify/fast-json-stringify-compiler@npm:4.3.0"
@@ -10711,15 +10718,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify-type-provider-zod@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "fastify-type-provider-zod@npm:2.1.0"
+"fastify-type-provider-zod@npm:4.0.2":
+  version: 4.0.2
+  resolution: "fastify-type-provider-zod@npm:4.0.2"
   dependencies:
-    zod-to-json-schema: ^3.23.0
+    "@fastify/error": ^4.0.0
+    zod-to-json-schema: ^3.23.3
   peerDependencies:
-    fastify: ^4.0.0
+    fastify: ^5.0.0
     zod: ^3.14.2
-  checksum: 361323d4f0728bbd203e526b234823468a8f17bbfbfdef1a526f78320bfdc2a4c6ced1f28572cee3be86612c7105edd67eb9436ae5fde92c0cbcb57b54ccc6f9
+  checksum: 9da4d86dcee88c318ca4699221c49a32a4fc7f5416136994d90399d4920da3208d8aebb370bb402f2be5f47faaf77f0861a96f9be610c4e07fb62a7d749be83a
   languageName: node
   linkType: hard
 
@@ -19237,7 +19245,7 @@ __metadata:
     env-var: ^7.5.0
     fastify: ^4.28.1
     fastify-qs: ^4.0.1
-    fastify-type-provider-zod: ^2.1.0
+    fastify-type-provider-zod: 4.0.2
     file-saver: ^2.0.5
     geolib: ^3.3.4
     glob: ^11.0.0
@@ -19272,7 +19280,7 @@ __metadata:
     vitest: ^2.1.3
     winston: ^3.10.0
     winston-transport: ^4.5.0
-    zod: ^3.23.8
+    zod: ^3.24.1
   languageName: unknown
   linkType: soft
 
@@ -19349,7 +19357,7 @@ __metadata:
     type-fest: ^4.26.1
     typescript: ^5.6.3
     vitest: ^2.1.3
-    zod: ^3.23.8
+    zod: ^3.24.1
     zod-to-json-schema: ^3.23.3
   languageName: unknown
   linkType: soft
@@ -21033,7 +21041,7 @@ __metadata:
     type-fest: ^4.26.1
     typescript: ^5.6.3
     vitest: ^2.1.3
-    zod: ^3.23.8
+    zod: ^3.24.1
   languageName: unknown
   linkType: soft
 
@@ -22223,7 +22231,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod-to-json-schema@npm:^3.23.0, zod-to-json-schema@npm:^3.23.3":
+"zod-to-json-schema@npm:^3.23.3":
   version: 3.23.5
   resolution: "zod-to-json-schema@npm:3.23.5"
   peerDependencies:
@@ -22232,10 +22240,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.23.8":
-  version: 3.23.8
-  resolution: "zod@npm:3.23.8"
-  checksum: 15949ff82118f59c893dacd9d3c766d02b6fa2e71cf474d5aa888570c469dbf5446ac5ad562bb035bf7ac9650da94f290655c194f4a6de3e766f43febd432c5c
+"zod@npm:^3.24.1":
+  version: 3.24.1
+  resolution: "zod@npm:3.24.1"
+  checksum: dcd5334725b29555593c186fd6505878bb7ccb4f5954f728d2de24bf71f9397492d83bdb69d5b8a376eb500a02273ae0691b57deb1eb8718df3f64c77cc5534a
   languageName: node
   linkType: hard
 
