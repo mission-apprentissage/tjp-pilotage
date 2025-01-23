@@ -157,6 +157,7 @@ export const useAnalyseDetaillee = () => {
   // Définie un filtre par défaut sur la voie
   useEffect(() => {
     handleFilters("voie", setDefaultVoieFilter(searchParams.filters, data));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   // Choix de la selection de la formation par défaut
@@ -169,6 +170,7 @@ export const useAnalyseDetaillee = () => {
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredDatas, searchParams]);
 
   // Filtre les formations disponibles en fonction des filters : voie et code niveau diplome
@@ -187,6 +189,7 @@ export const useAnalyseDetaillee = () => {
     if (!isLoading && filteredDatas) {
       setAnalyseDetaillee(filteredDatas);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredDatas, isLoading]);
 
   return {

@@ -37,15 +37,16 @@ export const ColorationField = chakra(({ disabled, className }: { disabled?: boo
 
   useEffect(() => {
     if (getValues("libelleFCIL")) setValue("coloration", false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const libelleFCIL = watch("libelleFCIL");
   const isColorationDisabled = !!libelleFCIL || disabled;
 
   return (
-    <FormControl className={className} isInvalid={!!errors.coloration} isRequired>
+    <FormControl as="fieldset" className={className} isInvalid={!!errors.coloration} isRequired>
       <Flex direction={"row"}>
-        <FormLabel>Coloration</FormLabel>
+        <FormLabel as="legend">Coloration</FormLabel>
         <GlossaireShortcut
           glossaireEntryKey={"coloration"}
           color="bluefrance.113"

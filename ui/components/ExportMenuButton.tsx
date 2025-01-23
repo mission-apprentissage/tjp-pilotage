@@ -7,12 +7,12 @@ import { useState } from "react";
 const ExportButton = ({ onExport, type = "csv" }: { onExport?: () => Promise<void>; type?: "csv" | "excel" }) => {
   if (!onExport) return null;
   return type === "csv" ? (
-    <MenuItem onClick={onExport} fontSize="14px" fontWeight={500} gap={2} p={2}>
+    <MenuItem onClick={onExport} fontSize={14} fontWeight={500} gap={2} p={2}>
       <Icon icon="ri:file-text-line" />
       Format CSV (.csv)
     </MenuItem>
   ) : (
-    <MenuItem onClick={onExport} fontSize="14px" fontWeight={500} gap={2} p={2}>
+    <MenuItem onClick={onExport} fontSize={14} fontWeight={500} gap={2} p={2}>
       <Icon icon="ri:file-excel-2-line" />
       Format Excel (.xlsx)
     </MenuItem>

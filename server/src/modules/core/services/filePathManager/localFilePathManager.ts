@@ -6,13 +6,13 @@ export const localFilePathManagerFactory = (): FilePathManager => {
       return `./public/upload/${id}/${filename}`;
     },
     getFranceTravailIndicateurTensionDepartementStatsFilePath: () => {
-      return "./public/files/tension_rome_departement.csv";
+      return "./static/files/tension_rome_departement.csv";
     },
     getFranceTravailIndicateurTensionRegionStatsFilePath: () => {
-      return "./public/files/tension_rome_region.csv";
+      return "./static/files/tension_rome_region.csv";
     },
     getFranceTravailIndicateurTensionStatsFilePath: () => {
-      return "./public/files/tension_rome.csv";
+      return "./static/files/tension_rome.csv";
     },
   };
 };

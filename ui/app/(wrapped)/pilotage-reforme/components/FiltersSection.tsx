@@ -1,4 +1,4 @@
-import { Box, Flex, FormLabel, Select, Skeleton } from "@chakra-ui/react";
+import {Box, Flex, Select, Skeleton, Text} from '@chakra-ui/react';
 
 import type { Filters, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
 import { Multiselect } from "@/components/Multiselect";
@@ -26,7 +26,7 @@ export const FiltersSection = ({
         <Box borderRadius={4}>
           <Flex justifyContent={"start"} gap={8} py={3}>
             <Box justifyContent={"start"}>
-              <FormLabel>Niveau de diplôme</FormLabel>
+              <Text>Niveau de diplôme</Text>
               <Multiselect
                 onClose={filterTracker("codeNiveauDiplome")}
                 width={["12rem", null, "72"]}
@@ -40,8 +40,9 @@ export const FiltersSection = ({
               </Multiselect>
             </Box>
             <Box justifyContent={"start"}>
-              <FormLabel>Régions</FormLabel>
+              <Text as="label" htmlFor="select-region">Régions</Text>
               <Select
+                id="select-region"
                 width={["12rem", null, "72"]}
                 size="md"
                 variant="newInput"

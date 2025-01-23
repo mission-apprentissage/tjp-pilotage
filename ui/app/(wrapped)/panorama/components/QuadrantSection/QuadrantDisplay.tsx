@@ -1,5 +1,3 @@
-"use client";
-
 import {
   AspectRatio,
   Box,
@@ -58,7 +56,7 @@ const EmptyCadran = () => {
         Aucune formation ne correspond à votre sélection, ou alors la donnée ne peut pas être affichée pour des raisons
         statistiques (effectif inférieur à 20, nouveau code formation, ...){" "}
       </Text>
-      <Img src="/search.svg" alt="illustration de recherche" />
+      <Img src="/search.svg" alt="Icône rechercher" />
     </Flex>
   );
 };

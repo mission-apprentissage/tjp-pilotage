@@ -33,7 +33,7 @@ vi.mock(import("next/navigation"), async (importOriginal) => {
 
 const response = generateMock(ROUTES["[GET]/auth/whoAmI"].schema.response[200])!;
 response.user.role = RoleEnum.invite;
-const contextValue = { auth: { user: response!.user }, setAuth: (auth: Auth | undefined) => {} };
+const contextValue = { auth: { user: response!.user }, setAuth: (_auth: Auth | undefined) => {} };
 
 describe("ui > components > security > GuardPermission", () => {
   afterEach(() => {

@@ -8,7 +8,7 @@ import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intention
 import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const CapaciteScolaireColoreeField = chakra(
-  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
+  ({ id, disabled, className }: { id: string; disabled?: boolean; className?: string }) => {
     const { watch, setValue } = useFormContext<IntentionForms>();
 
     useEffect(
@@ -25,6 +25,6 @@ export const CapaciteScolaireColoreeField = chakra(
     const isReadOnly = disabled || fermeture || !coloration;
     if (!coloration) return <></>;
 
-    return <CapaciteField name={"capaciteScolaireColoree"} className={className} isReadOnly={isReadOnly} />;
+    return <CapaciteField id={id} name={"capaciteScolaireColoree"} className={className} isReadOnly={isReadOnly} />;
   }
 );

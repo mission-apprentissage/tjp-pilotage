@@ -1,4 +1,4 @@
-import { Box, Button, chakra, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip } from "@chakra-ui/react";
+import { Box, chakra, CloseButton, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip, VisuallyHidden } from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import type { RefObject } from "react";
 import { useState } from "react";
@@ -36,7 +36,7 @@ const InfoAjustementSection = chakra(({ anneeCampagne }: { anneeCampagne: string
         <Icon icon="ri:information-fill" fontSize="24px" />
         <Text
           flexGrow={1}
-          fontSize="14px"
+          fontSize={14}
           fontWeight={400}
           display={{
             base: "none",
@@ -53,7 +53,7 @@ const InfoAjustementSection = chakra(({ anneeCampagne }: { anneeCampagne: string
             {`Pour apporter un ajustement à la rentrée scolaire ${anneeCampagne}, sélectionner ${anneeCampagne} dans le champ ci-dessus`}
           </Highlight>
         </Text>
-        <Button
+        <CloseButton
           onClick={() => setOpen(false)}
           variant="inline"
           display="flex"
@@ -64,8 +64,9 @@ const InfoAjustementSection = chakra(({ anneeCampagne }: { anneeCampagne: string
           width="auto"
           height="auto"
         >
+          <VisuallyHidden fontSize={12}>Fermer</VisuallyHidden>
           <Icon icon="ri:close-fill" fontSize="24px" />
-        </Button>
+        </CloseButton>
       </Stack>
     </Box>
   );
@@ -96,7 +97,6 @@ export const TypeDemandeSection = ({
           direction={"row"}
           gap={2}
           color={"bluefrance.113"}
-          textDecoration={"underline"}
           cursor={"pointer"}
           fontWeight={"700"}
           width={"fit-content"}

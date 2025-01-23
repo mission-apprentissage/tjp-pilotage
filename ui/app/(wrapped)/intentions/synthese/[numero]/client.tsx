@@ -39,6 +39,7 @@ export default ({
 
   useEffect(() => {
     submitIntentionAccessLog({ body: { intention: { numero: numero } } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const isCampagneEnCours = demande?.campagne?.statut === CampagneStatutEnum["en cours"];

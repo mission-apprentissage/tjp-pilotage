@@ -23,6 +23,7 @@ import {
   Stack,
   Text,
   useToken,
+  VisuallyHidden,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
@@ -369,7 +370,9 @@ export const QuadrantSection = ({
                 }}
                 variant="ghost"
               />
+              <VisuallyHidden as="label" htmlFor="select-type-transformation">Sélectionner un type de transformation</VisuallyHidden>
               <Select
+                id="select-type-transformation"
                 variant="newInput"
                 maxW={250}
                 value={filters.type ?? ""}

@@ -27,8 +27,8 @@ export const AmiCmaValideField = chakra(({ disabled, className }: { disabled?: b
   if (!visible) return null;
 
   return (
-    <FormControl className={className} isInvalid={!!errors.amiCmaValide}>
-      <FormLabel>Le financement est-il validé ?</FormLabel>
+    <FormControl as="fieldset" className={className} isInvalid={!!errors.amiCmaValide}>
+      <FormLabel as="legend">Le financement est-il validé ?</FormLabel>
       <Controller
         name="amiCmaValide"
         control={control}

@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, GridItem, Img, Text, Tooltip, useToken } from "@chakra-ui/react";
+import { Badge, Box, Flex, GridItem, Heading, Img, Text, Tooltip, useToken } from "@chakra-ui/react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
@@ -35,7 +35,7 @@ const getCompareData = (compareTo?: CompareTo) => {
   return (
     <Tooltip label={compareTo?.description}>
       <Flex color={color}>
-        <Img src={arrowImg} alt={direction} />
+        <Img src={arrowImg} alt={`Icône tendance ${direction}`} />
         <Text fontWeight={"bold"}>{value}</Text>
       </Flex>
     </Tooltip>
@@ -198,9 +198,9 @@ export const IndicateursSection = ({ indicateurs }: { indicateurs?: Indicateurs 
     <GridItem colSpan={12}>
       <Flex direction={"row"} justifyContent={"space-between"} alignItems={"center"} width={"100%"}>
         <Flex direction={"row"} alignItems={"center"}>
-          <Text fontSize={{ base: "14px" }} fontWeight={"bold"}>
+          <Heading as="h3" fontSize={{ base: "14px" }} fontWeight={"bold"}>
             INDICATEURS ÉTABLISSEMENT
-          </Text>
+          </Heading>
           <GlossaireShortcut
             display={"inline"}
             ml={2}

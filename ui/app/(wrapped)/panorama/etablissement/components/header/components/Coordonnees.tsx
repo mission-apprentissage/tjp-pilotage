@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, GridItem, Image, Text, useToken } from "@chakra-ui/react";
+import { Badge, Box, Flex, GridItem, Heading, Image, Text, useToken } from "@chakra-ui/react";
 
 import type { Informations } from "@/app/(wrapped)/panorama/etablissement/components/header/types";
 
@@ -17,10 +17,10 @@ export const Coordonnees = ({ informations }: { informations: Informations }) =>
   const [textDisabled] = useToken("colors", ["grey.625"]);
   return (
     <GridItem colSpan={7}>
-      <Text fontSize={{ base: "14px" }} pb={"16px"} fontWeight={"bold"}>
+      <Heading as="h3" fontSize={{ base: "14px" }} pb={"16px"} fontWeight={"bold"}>
         {secteur === "PU" && "ÉTABLISSEMENT PUBLIC"}
         {secteur === "PR" && "ÉTABLISSEMENT PRIVÉ"}
-      </Text>
+      </Heading>
       <Flex>
         <Image src={`/logo_etablissement.png`} height={"80px"} width={"80px"} alt="logo etablissement" mr={"16px"} />
         <Flex direction={"column"}>
