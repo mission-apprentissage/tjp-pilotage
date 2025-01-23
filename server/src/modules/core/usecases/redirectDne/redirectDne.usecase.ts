@@ -124,7 +124,7 @@ export const [redirectDne, redirectDneFactory] = inject(
         logger.error({
           error: new Error("missing user email"),
           userinfo,
-        }, "Error (SSO) : Il manque l'email de l'utilisateur");
+        }, "[SSO] Il manque l'email de l'utilisateur");
         throw new Error("missing user email");
       }
 
@@ -134,7 +134,7 @@ export const [redirectDne, redirectDneFactory] = inject(
           error: new Error("user not enabled"),
           userinfo,
           email,
-        }, "Error (SSO) : L'utilisateur existe et est désactivé");
+        }, "[SSO] L'utilisateur existe et est désactivé");
         throw new Error("user not enabled");
       }
 
@@ -144,7 +144,7 @@ export const [redirectDne, redirectDneFactory] = inject(
           error: new Error("missing rights"),
           userinfo,
           email,
-        }, "Error (SSO) : Il manque les droits perdir pour l'utilisateur");
+        }, "[SSO] Il manque les droits perdir pour l'utilisateur");
         throw new Error("missing right attributes");
       }
 
@@ -157,7 +157,7 @@ export const [redirectDne, redirectDneFactory] = inject(
           email,
           attributes,
           etablissement,
-        }, "Error (SSO): Il manque le code région pour l'établissement");
+        }, "[SSO] Il manque le code région pour l'établissement");
         throw new Error("missing codeRegion");
       }
 
@@ -179,14 +179,14 @@ export const [redirectDne, redirectDneFactory] = inject(
           {
             user: userToInsert,
           },
-          `Info (SSO) : Nouveau login`
+          `[SSO] Nouveau login`
         );
       } else {
         logger.info(
           {
             user: userToInsert,
           },
-          `Info (SSO) : Nouvel utilisateur DNE`
+          `[SSO] Nouvel utilisateur DNE`
         );
       }
 

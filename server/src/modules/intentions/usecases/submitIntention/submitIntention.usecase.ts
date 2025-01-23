@@ -38,14 +38,14 @@ const logDemande = (intention?: { statut: string }) => {
       {
         intention: intention,
       },
-      "Proposition enregistrée"
+      "[SUBMIT_INTENTION] Proposition enregistrée"
     );
     break;
   case DemandeStatutEnum["demande validée"]:
-    logger.info({ intention: intention }, "Demande validée");
+    logger.info({ intention: intention }, "[SUBMIT_INTENTION] Demande validée");
     break;
   case DemandeStatutEnum["refusée"]:
-    logger.info({ intention: intention }, "Demande refusée");
+    logger.info({ intention: intention }, "[SUBMIT_INTENTION] Demande refusée");
     break;
   }
 };

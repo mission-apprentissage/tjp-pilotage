@@ -45,6 +45,13 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
       ]);
 
       if (!campagne) {
+        logger.error(
+          {
+            correction,
+            user
+          },
+          "[SUBMIT_CORRECTION] Aucune campagne en cours dans laquelle importer la demande"
+        );
         throw Boom.badData("Aucune campagne en cours dans laquelle importer la demande", {
           errors: {
             aucune_campagne_en_cours: "Aucune campagne en cours dans laquelle importer la demande.",
@@ -53,6 +60,13 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
       }
 
       if (!demande) {
+        logger.error(
+          {
+            correction,
+            user
+          },
+          "[SUBMIT_CORRECTION] Aucune demande correspondant au numéro fourni"
+        );
         throw Boom.badRequest("Aucune demande correspondant au numéro fourni", {
           errors: {
             numero: correction.intentionNumero,
@@ -62,6 +76,13 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
       }
 
       if (correctionExistante) {
+        logger.error(
+          {
+            correction,
+            user
+          },
+          "[SUBMIT_CORRECTION] Une correction existe déjà pour cette demande"
+        );
         throw Boom.forbidden("Une correction existe déjà pour cette demande", {
           errors: {
             correction_existante_correspondante: `Une correction existe déjà pour la demande ${correctionExistante.intentionNumero} (id: ${correctionExistante.id}).`,
@@ -79,12 +100,13 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
 
       const errors = validateCorrection(cleanNull(correction), cleanNull(demande) as Demande);
       if (errors) {
-        logger.info(
+        logger.error(
           {
             errors,
             correction: correction,
+            user
           },
-          "Correction incorrecte"
+          "[SUBMIT_CORRECTION] Correction incorrecte"
         );
         throw Boom.badData("Donnée incorrectes", { errors });
       }
