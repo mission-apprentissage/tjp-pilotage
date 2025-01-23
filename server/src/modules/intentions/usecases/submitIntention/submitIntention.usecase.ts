@@ -88,12 +88,13 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
         notNumero: intention.numero,
       });
       if (sameIntention) {
-        logger.info(
+        logger.error(
           {
             sameIntention,
             intention,
+            user
           },
-          "Demande similaire existante"
+          "[SUBMIT_INTENTION] Demande similaire existante"
         );
         throw Boom.badRequest("Demande similaire existante", {
           id: sameIntention.id,
@@ -105,7 +106,14 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       }
 
       const dataFormation = await deps.findOneDataFormation({ cfd });
-      if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
+      if (!dataFormation) {
+        logger.error({
+          intention,
+          cfd,
+          user
+        }, "[SUBMIT_INTENTION] CFD non valide");
+        throw Boom.badRequest("CFD non valide");
+      }
 
       const intentionData = {
         ...currentIntention,
@@ -127,12 +135,13 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
 
       const errors = validateIntention(cleanNull(intentionData));
       if (errors) {
-        logger.info(
+        logger.error(
           {
             errors,
             intention: intentionData,
+            user
           },
-          "Intention incorrecte"
+          "[SUBMIT_INTENTION] Intention incorrecte"
         );
         throw Boom.badData("Donnée incorrectes", { errors });
       }
