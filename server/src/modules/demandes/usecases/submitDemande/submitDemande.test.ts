@@ -88,7 +88,7 @@ describe("submitDemande usecase", () => {
           statut: DemandeStatutEnum["demande validée"],
         },
       })
-    ).rejects.toThrow("Code diplome non valide");
+    ).rejects.toThrow("CFD non valide");
   });
 
   it("should throw an exception if the user tries to refuse without specifying motifRefus", async () => {
