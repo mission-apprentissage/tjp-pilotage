@@ -1,29 +1,23 @@
 import { Button, Divider, Flex, Text, useToken, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import type { Filters } from "@/app/(wrapped)/intentions/saisie/types";
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/canEditDemande";
 
 export const MenuBoiteReception = ({
   isRecapView = false,
-  hasPermissionSubmitIntention,
-  campagne,
+  isNouvelleDemandeDisabled,
   handleFilters,
   activeFilters,
 }: {
   isRecapView?: boolean;
-  hasPermissionSubmitIntention: boolean;
-  campagne?: { annee: string; statut: string };
+  isNouvelleDemandeDisabled: boolean;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   activeFilters: Partial<Filters>;
 }) => {
   const statut = activeFilters?.statut === undefined ? "none" : activeFilters?.statut;
-  const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
-  const isDisabled = !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
   const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery({
     query: activeFilters,
@@ -36,9 +30,9 @@ export const MenuBoiteReception = ({
       <Button
         mb={1.5}
         variant="primary"
-        isDisabled={isDisabled}
+        isDisabled={isNouvelleDemandeDisabled}
         leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
-        as={hasPermissionSubmitIntention && !isSaisieDisabled() ? NextLink : undefined}
+        as={isNouvelleDemandeDisabled ? NextLink : undefined}
         href="/intentions/saisie/new"
       >
         Nouvelle demande

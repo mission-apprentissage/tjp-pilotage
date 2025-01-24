@@ -16,8 +16,9 @@ export const getCampagnesRegionRoute = (server: Server) => {
     server.route({
       ...props,
       preHandler: hasPermissionHandler("campagnes-region/lecture"),
-      handler: async (_request, response) => {
-        const campagnes = await getCampagnesRegion();
+      handler: async (request, response) => {
+        const user = request.user!;
+        const campagnes = await getCampagnesRegion(user);
         response.status(200).send(campagnes);
       },
     });

@@ -54,6 +54,8 @@ export const PERMISSIONS = {
     "campagnes/lecture": { default: "national" },
     "campagnes-region/ecriture": { default: "region" },
     "campagnes-region/lecture": { default: "region" },
+    "enregistrement-requete/lecture": { default: "national" },
+    "enregistrement-requete/ecriture": { default: "national" },
   },
   region: {
     "intentions/lecture": { default: "region", draft: "region" },

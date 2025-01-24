@@ -61,7 +61,8 @@ export const EditCampagneRegion = ({
     formState: { errors },
     reset,
     handleSubmit,
-    control
+    control,
+    watch
   } = useForm<(typeof client.inferArgs)["[PUT]/campagnes-region/:campagneRegionId"]["body"]>({
     shouldUseNativeValidation: false,
     defaultValues: {
@@ -96,6 +97,9 @@ export const EditCampagneRegion = ({
       setServerErrors(errors);
     },
   });
+
+  const campagneId = watch("campagneId");
+  const parentCampagne = campagnes.find(({ id }) => id === campagneId);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={"lg"}>
@@ -133,13 +137,19 @@ export const EditCampagneRegion = ({
                 borderColor="grey.900"
                 bg={"white"}
               >
-                <Flex direction="row">
-                  <Flex direction="row" w="100%">
-                    <Text ms={2}>
-                      {campagneRegion.annee}
-                    </Text>
-                    <CampagneStatutTag statut={campagneRegion.statut} />
-                  </Flex>
+                <Flex direction="row" w="100%">
+                  {
+                    campagneId ?
+                      (
+                        <Flex direction={"row"} gap={2}>
+                          <Text>{parentCampagne?.annee}</Text>
+                          <CampagneStatutTag statut={parentCampagne?.statut} mb={"auto"} />
+                        </Flex>
+                      )
+                      : (
+                        <Text color="grey.625">Choisir une campagne</Text>
+                      )
+                  }
                 </Flex>
               </MenuButton>
               <MenuList py={0} borderTopRadius={0}>
@@ -149,11 +159,9 @@ export const EditCampagneRegion = ({
                     key={campagne.id}
                     onClick={() => setValue("campagneId", campagne.id)}
                   >
-                    <Flex direction="row" w="100%">
-                      <Text ms={2}>
-                        {campagne.annee}
-                      </Text>
-                      <CampagneStatutTag statut={campagne.statut} />
+                    <Flex direction="row" w="100%" gap={2}>
+                      <Text ms={2}>{campagne.annee}</Text>
+                      <CampagneStatutTag statut={campagne.statut} mb={"auto"} />
                     </Flex>
                   </MenuItem>
                 ))}

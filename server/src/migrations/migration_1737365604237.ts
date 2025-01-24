@@ -1,7 +1,6 @@
 import type {Kysely} from 'kysely';
 import { sql} from 'kysely';
 
-import { getKbdClient } from '@/db/db';
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
@@ -42,9 +41,6 @@ export const up = async (db: Kysely<unknown>) => {
 };
 
 export const down = async (db: Kysely<unknown>) => {
-
-  await getKbdClient().deleteFrom("campagne").where("annee", "=", "2025").execute();
-
   await db.schema
     .alterTable("campagne")
     .alterColumn("dateFin", (c) => c.dropDefault())
@@ -52,7 +48,6 @@ export const down = async (db: Kysely<unknown>) => {
     .alterColumn("dateDebut", (c) => c.dropDefault())
     .alterColumn("dateDebut", (c) => c.dropNotNull())
     .execute();
-
 
   await sql`DROP TRIGGER t ON ${sql.table("campagneRegion")};`.execute(db);
 
