@@ -7,7 +7,7 @@ import { LoginForm } from "./LoginForm";
 
 const ERROR_TYPE = "echec_dne_redirect";
 
-function LoginPage({ searchParams }: { params: object; searchParams: { error?: string } }) {
+const LoginPage = ({ searchParams }: { params: object; searchParams: { error?: string } }) => {
   return (
     <VStack spacing="16px" py="16px">
       {searchParams.error === ERROR_TYPE && <ErrorSSO />}
@@ -15,6 +15,6 @@ function LoginPage({ searchParams }: { params: object; searchParams: { error?: s
       {searchParams.error !== ERROR_TYPE && <AlertPerdir />}
     </VStack>
   );
-}
+};
 
 export default LoginPage;
