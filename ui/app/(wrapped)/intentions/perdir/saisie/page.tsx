@@ -1,12 +1,15 @@
+import { GuardExpe } from "@/utils/security/GuardExpe";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { PageClient } from "./page.client";
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default () => {
+const SaisiePage = () => {
   return (
     <GuardPermission permission="intentions-perdir/lecture">
-      <PageClient />
+      <GuardExpe isExpeRoute={true}>
+        <PageClient />
+      </GuardExpe>
     </GuardPermission>
   );
 };
+export default SaisiePage;
