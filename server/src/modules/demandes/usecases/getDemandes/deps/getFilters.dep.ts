@@ -5,6 +5,7 @@ import { getKbdClient } from "@/db/db";
 import type { DB } from "@/db/schema";
 import { isInPerimetreIJAcademie } from "@/modules/data/utils/isInPerimetreIJ";
 import type {Filters} from '@/modules/demandes/usecases/getDemandes/getDemandes.usecase';
+import {isAllowedToSeePreviousCampagnes} from '@/modules/utils/isAllowedToSeePreviousCampagnes';
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
 import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
 import { cleanNull } from "@/utils/noNull";
@@ -60,8 +61,23 @@ export const getFilters = async ({ user, codeAcademie, codeNiveauDiplome }: Filt
     })
     .execute();
 
+  const campagnesFilters = await getKbdClient()
+    .selectFrom("campagne")
+    .selectAll()
+    .where(isAllowedToSeePreviousCampagnes({ user }))
+    .orderBy("annee desc")
+    .execute()
+    .then((campagnes) =>
+      campagnes.map((campagne) => ({
+        ...campagne,
+        dateFin: campagne.dateFin.toISOString(),
+        dateDebut: campagne.dateDebut.toISOString(),
+      }))
+    );
+
   return {
     academies: academiesFilters.map(cleanNull),
     diplomes: diplomesFilters.map(cleanNull),
+    campagnes: campagnesFilters.map(cleanNull),
   };
 };

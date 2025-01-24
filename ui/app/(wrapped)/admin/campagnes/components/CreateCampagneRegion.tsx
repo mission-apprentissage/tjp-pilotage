@@ -103,25 +103,19 @@ export const CreateCampagneRegion = ({
                 borderColor="grey.900"
                 bg={"white"}
               >
-                <Flex direction="row">
-                  <Flex direction="row" w="100%">
-                    {
-                      campagneId ?
-                        (
-                          <>
-                            <Text ms={2}>
-                              {
-                                parentCampagne?.annee
-                              }
-                            </Text>
-                            <CampagneStatutTag statut={parentCampagne?.statut} />
-                          </>
-                        )
-                        : (
-                          <Text color="grey.625">Choisir une campagne</Text>
-                        )
-                    }
-                  </Flex>
+                <Flex direction="row" w="100%">
+                  {
+                    campagneId ?
+                      (
+                        <Flex direction={"row"} gap={2}>
+                          <Text>{parentCampagne?.annee}</Text>
+                          <CampagneStatutTag statut={parentCampagne?.statut} mb={"auto"} />
+                        </Flex>
+                      )
+                      : (
+                        <Text color="grey.625">Choisir une campagne</Text>
+                      )
+                  }
                 </Flex>
               </MenuButton>
               <MenuList py={0} borderTopRadius={0}>
@@ -131,11 +125,9 @@ export const CreateCampagneRegion = ({
                     key={campagne.id}
                     onClick={() => setValue("campagneId", campagne.id)}
                   >
-                    <Flex direction="row" w="100%">
-                      <Text ms={2}>
-                        {campagne.annee}
-                      </Text>
-                      <CampagneStatutTag statut={campagne.statut} />
+                    <Flex direction="row" w="100%" gap={2}>
+                      <Text ms={2}>{campagne.annee}</Text>
+                      <CampagneStatutTag statut={campagne.statut} mb={"auto"} />
                     </Flex>
                   </MenuItem>
                 ))}

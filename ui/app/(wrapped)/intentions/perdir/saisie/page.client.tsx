@@ -135,6 +135,8 @@ export const PageClient = () => {
     limit: qLimit,
   });
 
+
+  const currentCampagne = client.ref("[GET]/campagne/current").useQuery({});
   const { data, isLoading } = client.ref("[GET]/intentions").useQuery(
     {
       query: getIntentionsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),

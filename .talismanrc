@@ -27,6 +27,8 @@ fileignoreconfig:
   checksum: 6b274a2ee19a75deef9cb60d973f0c85eb70ec8b785ff470c446396cf75dafe3
 - filename: server/src/modules/intentions/usecases/submitIntention/__tests__/submitIntention.test.ts
   checksum: 9a045c12e469421b206286b86a49e81104ccf5b5e6a0b22c01cfa85d0be03c70
+- filename: server/static/files/lyceesACCE.csv
+  checksum: 10bcfb7324ef1968ff3c24f3047fc6ce8f148060e625b48ec1b6f7e7a4cde471
 - filename: server/static/files/offres_apprentissage.csv
   checksum: f8e173f11056708d2958e4f000428c2acb2281d9f19db55d9d72c5790bf0bf4b
 - filename: server/tests/test_origin/controllers/campagnes.controller.test.js_old

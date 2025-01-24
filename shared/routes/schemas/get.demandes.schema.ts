@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { CampagneSchema } from "../../schema/campagneSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
 const UserSchema = z.object({
@@ -109,25 +110,11 @@ export const getDemandesSchema = {
     200: z.object({
       count: z.coerce.number(),
       demandes: z.array(DemandeItem),
-      campagnes: z.array(
-        z.object({
-          annee: z.string(),
-          statut: z.string(),
-        })
-      ),
-      currentCampagne: z.object({
-        annee: z.string(),
-        statut: z.string(),
-        id: z.string(),
-      }),
-      campagne: z.object({
-        annee: z.string(),
-        statut: z.string(),
-        id: z.string(),
-      }),
+      campagne: CampagneSchema,
       filters: z.object({
         academies: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
+        campagnes: z.array(CampagneSchema),
       }),
     }),
   },

@@ -33,13 +33,13 @@ const logDemande = (demande?: { statut: string }) => {
   if (!demande) return;
   switch (demande.statut) {
   case DemandeStatutEnum["projet de demande"]:
-    logger.info({ demande: demande }, "Projet de demande enregistré");
+    logger.info({ demande: demande }, "[SUBMIT_DEMANDE] Projet de demande enregistré");
     break;
   case DemandeStatutEnum["demande validée"]:
-    logger.info({ demande: demande }, "Demande validée");
+    logger.info({ demande: demande }, "[SUBMIT_DEMANDE] Demande validée");
     break;
   case DemandeStatutEnum["refusée"]:
-    logger.info({ demande: demande }, "Demande refusée");
+    logger.info({ demande: demande }, "[SUBMIT_DEMANDE] Demande refusée");
     break;
   }
 };
@@ -59,7 +59,16 @@ export const [submitDemande, submitDemandeFactory] = inject(
       const { cfd, uai } = demande;
 
       const dataEtablissement = await deps.findOneDataEtablissement({ uai });
-      if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
+      if (!dataEtablissement) {
+        logger.error(
+          {
+            demande,
+            user
+          },
+          "[SUBMIT_DEMANDE] Code uai non valide"
+        );
+        throw Boom.badRequest("Code uai non valide");
+      }
       if (!dataEtablissement.codeRegion) throw Boom.badData();
 
       const scope = getPermissionScope(user.role, "intentions/ecriture");
@@ -74,7 +83,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
         notNumero: demande.numero,
       });
       if (sameDemande) {
-        logger.info({ sameDemande, demande }, "Demande similaire existante");
+        logger.error({ sameDemande, demande, user }, "[SUBMIT_DEMANDE] Demande similaire existante");
         throw Boom.badRequest("Demande similaire existante", {
           id: sameDemande.id,
           errors: {
@@ -90,7 +99,10 @@ export const [submitDemande, submitDemandeFactory] = inject(
           : undefined;
 
       const dataFormation = await deps.findOneDataFormation({ cfd });
-      if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
+      if (!dataFormation) {
+        logger.error({ demande, user }, "[SUBMIT_DEMANDE] CFD non valide");
+        throw Boom.badRequest("CFD non valide");
+      }
 
       const demandeData = {
         ...currentDemande,
@@ -117,7 +129,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
 
       const errors = validateDemande(cleanNull(demandeData));
       if (errors) {
-        logger.info({ errors, demande: demandeData }, "demande incorrecte");
+        logger.error({ errors, demande: demandeData, user }, "[SUBMIT_DEMANDE] Donnée incorrectes");
         throw Boom.badData("Donnée incorrectes", { errors });
       }
 

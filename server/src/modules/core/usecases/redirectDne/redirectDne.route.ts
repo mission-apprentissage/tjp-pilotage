@@ -72,7 +72,7 @@ export const redirectDneRoute = (server: Server) => {
             .redirect(`/panorama/etablissement/${user.uais[0]}`, 302)
             .send();
         } catch (error) {
-          logger.error({ error: error as Error }, "echec dne redirect");
+          logger.error({ error: error as Error }, "[SSO] echec dne redirect");
           response.redirect(302, `/auth/login?error=${ERROR_TYPE}`).send();
         }
       },

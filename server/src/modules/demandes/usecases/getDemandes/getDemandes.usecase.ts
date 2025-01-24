@@ -5,10 +5,15 @@ import type {z} from 'zod';
 import type {RequestUser} from '@/modules/core/model/User';
 import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
-import { getCampagne, getDemandes, getFilters } from "./deps";
+import { getDemandes, getFilters } from "./deps";
 
 export interface Filters extends z.infer<typeof FiltersSchema> {
   user: RequestUser;
+  campagne: string
+}
+
+export interface ActiveFilters extends Omit<Filters, "campagne"> {
+  campagne?: string;
 }
 
 const getDemandesFactory =
@@ -16,21 +21,19 @@ const getDemandesFactory =
     deps = {
       getDemandes,
       getCurrentCampagne,
-      getCampagne,
       getFilters,
     }
   ) =>
-    async (activeFilters: Filters) => {
+    async (activeFilters: ActiveFilters) => {
       const currentCampagne = await deps.getCurrentCampagne(activeFilters.user);
       const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
 
-      const [demandes, campagne, filters] = await Promise.all([
+      const [demandes, filters] = await Promise.all([
         deps.getDemandes({ ...activeFilters, campagne: anneeCampagne }),
-        deps.getCampagne(anneeCampagne),
-        deps.getFilters(activeFilters),
+        deps.getFilters({... activeFilters, campagne: anneeCampagne}),
       ]);
 
-      return { ...demandes, currentCampagne, campagne, filters };
+      return { ...demandes, campagne: currentCampagne, filters };
     };
 
 export const getDemandesUsecase = getDemandesFactory();

@@ -6,7 +6,6 @@ import { MAX_LIMIT } from "shared/utils/maxLimit";
 import { getKbdClient } from "@/db/db";
 import type {Filters} from '@/modules/demandes/usecases/getDemandes/getDemandes.usecase';
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
-import { isAllowedToSeePreviousCampagnes } from "@/modules/utils/isAllowedToSeePreviousCampagnes";
 import { isDemandeCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
 import { isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
@@ -36,12 +35,7 @@ export const getDemandes = async ({
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("user", "user.id", "demande.createdBy")
     .leftJoin("suivi", (join) => join.onRef("suivi.intentionNumero", "=", "demande.numero").on("userId", "=", user.id))
-    .innerJoin("campagne", (join) =>
-      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-        if (campagne) return eb.on("campagne.annee", "=", campagne);
-        return eb;
-      })
-    )
+    .leftJoin("campagne", "demande.campagneId", "campagne.id")
     .leftJoin("intentionAccessLog", (join) =>
       join
         .onRef("intentionAccessLog.intentionNumero", "=", "demande.numero")
@@ -164,17 +158,11 @@ export const getDemandes = async ({
       if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
+    .where("campagne.annee", "=", campagne)
     .orderBy("updatedAt desc")
     .where(isDemandeSelectable({ user }))
     .offset(offset)
     .limit(limit)
-    .execute();
-
-  const campagnes = await getKbdClient()
-    .selectFrom("campagne")
-    .selectAll()
-    .where(isAllowedToSeePreviousCampagnes({ user }))
-    .orderBy("annee desc")
     .execute();
 
   return {
@@ -190,6 +178,5 @@ export const getDemandes = async ({
       })
     ),
     count: parseInt(demandes[0]?.count) || 0,
-    campagnes: campagnes.map(cleanNull),
   };
 };

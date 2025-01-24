@@ -138,13 +138,15 @@ export const PageClient = () => {
     { keepPreviousData: true, cacheTime: 0 }
   );
 
-  const { data: defaultCampagne } = client.ref("[GET]/campagne/current").useQuery({});
-  console.log(defaultCampagne);
+  const { data: currentCampagne, isLoading: isLoadingCurrentCampagne } = client.ref("[GET]/campagne/current").useQuery({});
 
   const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
 
-  const isCampagneEnCours = data?.campagne?.statut === CampagneStatutEnum["en cours"];
-  const isDisabled = !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
+  const isCurrentCampagne = data?.campagne.id === currentCampagne?.id;
+  const isNouvelleDemandeDisabled = !isCurrentCampagne || isSaisieDisabled() || !hasPermissionSubmitIntention;
+
+  const isCampagneEnCours = data?.campagne.statut === CampagneStatutEnum["en cours"];
+  const isModificationsDisabled = !isCampagneEnCours || !isSaisieDisabled() || !hasPermissionSubmitIntention;
 
   const [searchDemande, setSearchDemande] = useState<string>(search);
 
@@ -222,9 +224,8 @@ export const PageClient = () => {
   return (
     <Container maxWidth="100%" flex={1} flexDirection={["column", null, "row"]} display={"flex"} minHeight={0} py={4}>
       <MenuBoiteReception
-        hasPermissionSubmitIntention={hasPermissionSubmitIntention}
+        isNouvelleDemandeDisabled={isNouvelleDemandeDisabled}
         isRecapView
-        campagne={data?.campagne}
         handleFilters={handleFilters}
         activeFilters={filters}
       />
@@ -236,14 +237,14 @@ export const PageClient = () => {
           getDemandesQueryParameters={getDemandesQueryParameters}
           searchDemande={searchDemande}
           setSearchDemande={setSearchDemande}
-          campagnes={data?.campagnes}
+          campagnes={data?.filters.campagnes}
           campagne={data?.campagne}
           filterTracker={filterTracker}
           handleFilters={handleFilters}
           diplomes={data?.filters.diplomes ?? []}
           academies={data?.filters.academies ?? []}
         />
-        {isLoading ? (
+        {(isLoading || isLoadingCurrentCampagne) ? (
           <IntentionSpinner />
         ) : data?.demandes.length ? (
           <>
@@ -288,10 +289,10 @@ export const PageClient = () => {
                       height={"60px"}
                       position={"relative"}
                       key={demande.numero}
-                      cursor={isSaisieDisabled() ? "initial" : "pointer"}
+                      cursor={isModificationsDisabled ? "initial" : "pointer"}
                       whiteSpace={"pre"}
                       onClick={() => {
-                        if (isSaisieDisabled()) return;
+                        if (isModificationsDisabled) return;
                         router.push(`/intentions/saisie/${demande.numero}`);
                       }}
                     >
@@ -459,10 +460,10 @@ export const PageClient = () => {
               <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
               {hasPermissionSubmitIntention && (
                 <Button
-                  isDisabled={isDisabled}
+                  isDisabled={isNouvelleDemandeDisabled}
                   variant="createButton"
                   size={"lg"}
-                  as={!isDisabled ? NextLink : undefined}
+                  as={!isNouvelleDemandeDisabled ? NextLink : undefined}
                   href="/intentions/saisie/new"
                   px={3}
                   mt={12}
