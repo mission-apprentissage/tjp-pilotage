@@ -328,13 +328,6 @@ export function productCommands(cli: Command) {
   });
 
   cli
-    .command("importPositionsQuadrant")
-    .description("Calcul des positions quadrants")
-    .action(async () => {
-      await importPositionsQuadrant();
-    });
-
-  cli
     .command("importFormations")
     .argument("[usecase]")
     .action(async (usecaseName: string) => {
