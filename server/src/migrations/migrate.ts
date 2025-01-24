@@ -63,7 +63,7 @@ export async function migrateUp() {
   }
 }
 
-export async function migrateToLatest(keepAlive?: boolean, exitProcessInSuccess = true) {
+export async function migrateToLatest(exitProcessInSuccess = true) {
   const migrator = makeMigrator();
 
   let remainingMigrations = await statusMigration();
@@ -107,9 +107,5 @@ export async function migrateToLatest(keepAlive?: boolean, exitProcessInSuccess 
     }
 
     process.exit(1);
-  }
-
-  if (!keepAlive) {
-    await getKbdClient().destroy();
   }
 }
