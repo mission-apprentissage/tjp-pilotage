@@ -1,3 +1,4 @@
+import { GuardExpe } from "@/utils/security/GuardExpe";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import PageClient from "./client";
@@ -10,7 +11,9 @@ const IntentionsPerDirSynthesePage = ({
   };
 }) => (
   <GuardPermission permission="intentions-perdir/lecture">
-    <PageClient params={params}></PageClient>
+    <GuardExpe isExpeRoute={true}>
+      <PageClient params={params}/>
+    </GuardExpe>
   </GuardPermission>
 );
 

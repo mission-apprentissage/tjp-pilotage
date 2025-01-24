@@ -21,6 +21,7 @@ export const [fetchIJ] = inject({ getUaiData, cacheIj, clearIjCache }, (deps) =>
       millesimesOK.push(MILLESIMES_IJ[i]);
       await deps.cacheIj({ data, uai, millesime });
       d.push(data);
+      // eslint-disable-next-line unused-imports/no-unused-vars
     } catch (_err) {
       millesimesNOK.push(MILLESIMES_IJ[i]);
     }

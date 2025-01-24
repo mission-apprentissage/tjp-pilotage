@@ -1,3 +1,4 @@
+import { GuardExpe } from "@/utils/security/GuardExpe";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { PageClient } from "./page.client";
@@ -5,7 +6,9 @@ import { PageClient } from "./page.client";
 const SaisiePage = () => {
   return (
     <GuardPermission permission="intentions/lecture">
-      <PageClient />
+      <GuardExpe isExpeRoute={false}>
+        <PageClient />
+      </GuardExpe>
     </GuardPermission>
   );
 };
