@@ -33,6 +33,7 @@ echo ""
 
 pg_dump $DB_URL --format=custom --data-only \
   --exclude-table='public."changeLog"' \
+  --exclude-table='public."job"' \
   --exclude-table='public."changementStatut"' \
   --exclude-table='public."demande"' \
   --exclude-table='public."intention"' \
