@@ -1,4 +1,5 @@
 import { Badge, Box, Text } from "@chakra-ui/react";
+import { CURRENT_RENTREE } from "shared";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
@@ -32,7 +33,7 @@ export const Effectifs = ({ effectifEntree, capacite }: { effectifEntree?: numbe
 
   return (
     <DashboardCard
-      label="Effectifs en entrée (Constat Rentrée 2023)"
+      label={`Effectifs en entrée (Constat Rentrée ${CURRENT_RENTREE})`}
       tooltip={
         <TooltipIcon
           ml="1"

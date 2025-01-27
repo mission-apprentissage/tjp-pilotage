@@ -13,3 +13,15 @@ export const openForRentreeScolaire = (eb: ExpressionBuilder<DB, "formationView"
     ]),
   ]);
 };
+
+export const openForRentreeScolaireIndicateurEntree = (
+  eb:ExpressionBuilder<DB, "formationView" | "indicateurEntree">
+) => {
+  return eb.and([
+    eb("formationView.dateOuverture", "<=", sql<Date>`(${eb.ref("indicateurEntree.rentreeScolaire")} || '-09-01')::Date`),
+    eb.or([
+      eb(sql<number>`date_part('year',${eb.ref("formationView.dateFermeture")})`, ">", sql<number>`${eb.ref("indicateurEntree.rentreeScolaire")}::float`),
+      eb("formationView.dateFermeture", "is", null),
+    ]),
+  ]);
+};
