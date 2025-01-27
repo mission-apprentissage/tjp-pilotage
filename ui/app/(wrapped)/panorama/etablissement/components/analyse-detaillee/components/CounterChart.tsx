@@ -23,7 +23,7 @@ export const CounterChart = ({
         <Heading as="h4" fontSize={"36px"} lineHeight={"36px"} fontWeight={"700"}>
           {data}
         </Heading>
-        {type === "percentage" && (
+        {type === "percentage" && data && data !== "-" && (
           <Heading as="h4" fontSize={14} fontWeight={"400"}>
             &nbsp;%
           </Heading>

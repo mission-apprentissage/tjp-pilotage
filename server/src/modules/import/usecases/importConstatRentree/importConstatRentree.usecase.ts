@@ -31,7 +31,7 @@ export const [importConstatRentree] = inject(
           }),
         async (constatRentreeLine, count) => {
           const mefStat11 = constatRentreeLine["Mef Bcp 11"];
-          const rentreeScolaireConstat = constatRentreeLine["Rentrée scolaire"].trim();
+          const rentreeScolaireConstat = constatRentreeLine["Rentrée scolaire"]?.trim();
 
           if (mefStat11 && rentreeScolaireConstat === rentreeScolaire) {
             const nMef = await findNMef({

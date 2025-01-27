@@ -26,7 +26,7 @@ echo ""
 # Générer le fichier de dump
 echo "🌱 Génération de la seed contenant le schéma de la DB"
 echo ""
-pg_dump $DB_URL --format=custom --clean --if-exists --create --schema-only --file $SCHEMA_DUMP_FILE
+pg_dump $DB_URL --format=custom --clean --if-exists --schema-only --file $SCHEMA_DUMP_FILE
 
 echo "🤖 Génération de la seed contenant les données de la DB"
 echo ""

@@ -28,13 +28,8 @@ export const startAndConnectPg = async () => {
   console.log("Refreshing views", testDb);
   await refreshViews();
 
-<<<<<<< HEAD
-  await migrateToLatest(true);
-  console.log("Migration terminée");
-=======
   console.log("Migrating to latest", testDb);
-  await migrateToLatest(true, false);
->>>>>>> 05b511c1 (test(int): correction des tests suite au nouveau constat de rentree)
+  await migrateToLatest(false);
 
   console.log("Rafraichissement des vues matérialisées");
   await refreshViews();

@@ -12,8 +12,8 @@ import { hasContinuum } from "@/modules/data/utils/hasContinuum";
 import { isInPerimetreIJEtablissement } from "@/modules/data/utils/isInPerimetreIJ";
 import { isScolaireFormationHistorique } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
-import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
-import { openForRentreeScolaire } from "@/modules/data/utils/openForRentreeScolaire";
+import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistantIndicateurEntree } from "@/modules/data/utils/notHistorique";
+import { openForRentreeScolaireIndicateurEntree } from "@/modules/data/utils/openForRentreeScolaire";
 import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
@@ -217,8 +217,8 @@ export const getFormationsQuery = async ({
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .where(isInPerimetreIJEtablissement)
-    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
-    .where((eb) => openForRentreeScolaire(eb, rentreeScolaire[0]))
+    .where(notHistoriqueUnlessCoExistantIndicateurEntree)
+    .where(openForRentreeScolaireIndicateurEntree)
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "is not", null),
