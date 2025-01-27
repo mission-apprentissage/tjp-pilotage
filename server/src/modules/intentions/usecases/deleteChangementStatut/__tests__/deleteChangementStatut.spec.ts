@@ -142,9 +142,10 @@ describe("[DELETE]/intention/changement-statut/:id", () => {
         },
         changementStatutExistant: async (input: Partial<ChangementStatut> = {}) => {
           if (user && intention) {
-            changementStatut = (
-              await buildChangementStatut(user, { intentionNumero: intention.numero, ...input }).injectInDB()
-            ).build();
+            changementStatut = (await buildChangementStatut(
+              user,
+              { intentionNumero: intention.numero, ...input }
+            ).injectInDB()).build();
           }
         },
         changementStatutInexistant: () => {

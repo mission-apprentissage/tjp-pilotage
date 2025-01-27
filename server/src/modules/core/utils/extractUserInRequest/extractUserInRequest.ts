@@ -27,7 +27,6 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
 
       if (!user?.enabled) return;
       request.user = cleanNull(user) as RequestUser;
-      // eslint-disable-next-line unused-imports/no-unused-vars
     } catch (error) {
       console.error(error);
       return;
