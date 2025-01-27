@@ -531,6 +531,12 @@ export interface IntentionAccessLog {
   updatedAt: Timestamp | null;
 }
 
+export interface Job {
+  name: string | null;
+  sub: string | null;
+  createdAt: Generated<Timestamp | null>;
+}
+
 export interface LatestDemandeIntentionNonMaterializedView {
   isIntention: boolean | null;
   numero: string | null;
@@ -899,6 +905,7 @@ export interface DB {
   indicateurSortie: IndicateurSortie;
   intention: Intention;
   intentionAccessLog: IntentionAccessLog;
+  job: Job;
   latestDemandeIntentionNonMaterializedView: LatestDemandeIntentionNonMaterializedView;
   latestDemandeNonMaterializedView: LatestDemandeNonMaterializedView;
   latestIntentionNonMaterializedView: LatestIntentionNonMaterializedView;

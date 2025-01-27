@@ -6,6 +6,7 @@ import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { client } from "@/api.client";
 import { IntentionSpinner } from "@/app/(wrapped)/intentions/saisie/components/IntentionSpinner";
 import { IntentionForm } from "@/app/(wrapped)/intentions/saisie/intentionForm/IntentionForm";
+import {GuardExpe} from '@/utils/security/GuardExpe';
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 // eslint-disable-next-line import/no-anonymous-default-export, react/display-name
@@ -27,35 +28,37 @@ export default () => {
 
   return (
     <GuardPermission permission="intentions/ecriture">
-      {numero ? (
-        data && (
+      <GuardExpe isExpeRoute={false}>
+        {numero ? (
+          data && (
+            <IntentionForm
+              disabled={currentCampagne?.statut !== CampagneStatutEnum["en cours"]}
+              defaultValues={{
+                cfd: data?.compensationCfd,
+                codeDispositif: data?.compensationCodeDispositif,
+                uai: data?.compensationUai,
+                rentreeScolaire: data?.compensationRentreeScolaire,
+                campagneId: data?.campagneId,
+              }}
+              formMetadata={{
+                etablissement: data?.metadata?.etablissementCompensation,
+                formation: data?.metadata?.formationCompensation,
+              }}
+              campagne={currentCampagne}
+            />
+          )
+        ) : (
           <IntentionForm
             disabled={currentCampagne?.statut !== CampagneStatutEnum["en cours"]}
             defaultValues={{
-              cfd: data?.compensationCfd,
-              codeDispositif: data?.compensationCodeDispositif,
-              uai: data?.compensationUai,
-              rentreeScolaire: data?.compensationRentreeScolaire,
-              campagneId: data?.campagneId,
+              campagneId: currentCampagne?.id,
+              rentreeScolaire: currentCampagne?.annee ? Number.parseInt(currentCampagne?.annee) + 1 : undefined,
             }}
-            formMetadata={{
-              etablissement: data?.metadata?.etablissementCompensation,
-              formation: data?.metadata?.formationCompensation,
-            }}
+            formMetadata={{}}
             campagne={currentCampagne}
           />
-        )
-      ) : (
-        <IntentionForm
-          disabled={currentCampagne?.statut !== CampagneStatutEnum["en cours"]}
-          defaultValues={{
-            campagneId: currentCampagne?.id,
-            rentreeScolaire: currentCampagne?.annee ? Number.parseInt(currentCampagne?.annee) + 1 : undefined,
-          }}
-          formMetadata={{}}
-          campagne={currentCampagne}
-        />
-      )}
+        )}
+      </GuardExpe>
     </GuardPermission>
   );
 };
