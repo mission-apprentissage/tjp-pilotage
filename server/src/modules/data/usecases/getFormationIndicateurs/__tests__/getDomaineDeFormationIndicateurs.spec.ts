@@ -47,10 +47,11 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
       expect(result.etablissements).toEqual(
         expect.arrayContaining([
-          { rentreeScolaire: "2020", nbEtablissements: 785 },
+          { rentreeScolaire: "2020", nbEtablissements: 778 },
           { rentreeScolaire: "2021", nbEtablissements: 797 },
           { rentreeScolaire: "2022", nbEtablissements: 802 },
           { rentreeScolaire: "2023", nbEtablissements: 806 },
+          { rentreeScolaire: "2024", nbEtablissements: 814 },
         ])
       );
     });
@@ -131,10 +132,10 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
       expect(result.effectifs).toEqual(
         expect.arrayContaining([
-          { rentreeScolaire: "2020", effectif: 23361 },
           { rentreeScolaire: "2021", effectif: 22823 },
           { rentreeScolaire: "2022", effectif: 22658 },
           { rentreeScolaire: "2023", effectif: 23268 },
+          { rentreeScolaire: "2024", effectif: 23598 },
         ])
       );
     });
