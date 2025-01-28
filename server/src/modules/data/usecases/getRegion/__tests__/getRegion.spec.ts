@@ -35,10 +35,10 @@ describe("[GET]/region/:codeRegion", () => {
     await fixture.when.getRegion();
 
     fixture.then.verifierLabelRegion("Auvergne-Rhône-Alpes");
-    fixture.then.verifierEffectifEntree(15962);
-    fixture.then.verifierEffectifTotal(30068);
-    fixture.then.verifierNbFormations(123);
-    fixture.then.verifierTauxRemplissage(0.8822);
+    fixture.then.verifierEffectifEntree(10154);
+    fixture.then.verifierEffectifTotal(18525);
+    fixture.then.verifierNbFormations(98);
+    fixture.then.verifierTauxRemplissage(0.8058);
     fixture.then.verifierTauxPoursuite(0.4975);
     fixture.then.verifierTauxInsertion(0.6417);
     fixture.then.verifierTauxDevenirFavorable(0.82);
