@@ -1,6 +1,5 @@
+import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
-
-import type { TypeDemande } from "./typeDemandeUtils";
 
 export type MotifCampagne = keyof typeof MOTIFS_LABELS;
 export type MotifLabel = keyof (typeof MOTIFS_LABELS)[MotifCampagne];
@@ -142,7 +141,7 @@ const motifsAjustement = ["ajustement_rentree"] as MotifLabel[];
 
 const motifsTriggerAutre = ["autre", "mise_en_place_partenariat"] as MotifLabel[];
 
-const motifs: Record<TypeDemande, MotifLabel[]> = {
+const motifs: Partial<Record<DemandeTypeType, MotifLabel[]>> = {
   ouverture_nette: motifsOuverture,
   augmentation_nette: motifsOuverture,
   fermeture: motifsFermeture,
@@ -167,7 +166,7 @@ export const getMotifsCampagne = (campagne: MotifCampagne = CURRENT_ANNEE_CAMPAG
   const motifsCampagne = MOTIFS_LABELS[campagne];
   return Object.keys(motifsCampagne) as MotifLabel[];
 };
-export const getMotifsTypeDemande = (typeDemande: TypeDemande): MotifLabel[] => getMotifs()[typeDemande];
+export const getMotifsTypeDemande = (typeDemande: DemandeTypeType): MotifLabel[] => getMotifs()[typeDemande] ?? [];
 export const getLabelsMotifsOuverture = () => motifsOuverture;
 export const getLabelsMotifsFermeture = () => motifsFermeture;
 export const getLabelsMotifsTransfert = () => motifsTransfert;

@@ -3,6 +3,7 @@ import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
+import type { Etablissement } from "@/app/(wrapped)/intentions/types";
 
 export const UaiAutocomplete = ({
   id = "uai-autocomplete",
@@ -17,7 +18,7 @@ export const UaiAutocomplete = ({
   defaultValue?: { value: string; label?: string; commune?: string };
   disabled?: boolean;
   inError: boolean;
-  onChange: (value?: (typeof client.infer)["[GET]/etablissement/search/:search"][number]) => void;
+  onChange: (value?: Etablissement) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({

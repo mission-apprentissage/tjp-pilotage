@@ -4,7 +4,10 @@ import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/p
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { getKbdClient } from "@/db/db";
+import { findOneCampagneRegionByCampagneId } from "@/modules/demandes/repositories/findOneCampagneRegionByCampagneId.query";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { castRaisonCorrection } from "@/modules/utils/castRaisonCorrection";
+import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import { countDifferenceCapaciteApprentissage, countDifferenceCapaciteScolaire } from "@/modules/utils/countCapacite";
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
@@ -21,7 +24,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
     .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
-    .selectAll()
+    .selectAll("demande")
     .select((eb) => [
       "dispositif.libelleDispositif",
       "dataFormation.libelleFormation",
@@ -35,9 +38,6 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
           .whereRef("correction.intentionNumero", "=", "demande.numero")
           .limit(1)
       ).as("correction"),
-      jsonObjectFrom(
-        eb.selectFrom("campagne").selectAll("campagne").whereRef("campagne.id", "=", "demande.campagneId").limit(1)
-      ).as("campagne"),
       jsonBuildObject({
         etablissement: jsonObjectFrom(
           eb
@@ -158,29 +158,29 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       });
     });
 
-  const codeDispositif =
-    demande?.codeDispositif &&
-    demande.metadata.formation?.dispositifs.find((item) => item.codeDispositif === demande?.codeDispositif)
-      ?.codeDispositif;
+  const campagne = await findOneCampagneRegionByCampagneId({
+    campagneId: demande.campagneId,
+    user,
+  });
 
-  return (
-    demande && {
-      ...demande,
-      metadata: {
-        ...demande.metadata,
-        formation: demande.metadata.formation,
-        etablissement: demande.metadata.etablissement,
-        formationCompensation: demande.metadata.formationCompensation,
-        etablissementCompensation: demande.metadata.etablissementCompensation,
-      },
-      statut: castDemandeStatutWithoutSupprimee(demande.statut),
-      createdAt: demande.createdAt?.toISOString(),
-      updatedAt: demande.updatedAt?.toISOString(),
-      campagne: {
-        ...demande.campagne,
-      },
-      codeDispositif,
-      formationSpecifique: formatFormationSpecifique(demande),
-    }
-  );
+  return {
+    ...demande,
+    campagne,
+    metadata: {
+      ...demande.metadata,
+      formation: demande.metadata.formation,
+      etablissement: demande.metadata.etablissement,
+      formationCompensation: demande.metadata.formationCompensation,
+      etablissementCompensation: demande.metadata.etablissementCompensation,
+    },
+    typeDemande: castTypeDemande(demande.typeDemande),
+    statut: castDemandeStatutWithoutSupprimee(demande.statut),
+    correction: {
+      ...demande.correction,
+      raison: castRaisonCorrection(demande.correction?.raison),
+    },
+    createdAt: demande.createdAt?.toISOString(),
+    updatedAt: demande.updatedAt?.toISOString(),
+    formationSpecifique: formatFormationSpecifique(demande),
+  };
 };

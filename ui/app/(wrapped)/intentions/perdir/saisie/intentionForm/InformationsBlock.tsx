@@ -17,12 +17,11 @@ import { useRouter } from "next/navigation";
 import type { ReactNode, RefObject } from "react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/validators/demandeValidators";
+import type { CampagneType } from "shared/schema/campagneSchema";
+import { isTypeDiminution, isTypeFermeture } from "shared/utils/typeDemandeUtils";
 
 import { client } from "@/api.client";
 import { SectionBlock } from "@/app/(wrapped)/intentions/perdir/saisie/components/SectionBlock";
-import type { Campagne } from "@/app/(wrapped)/intentions/perdir/saisie/types";
-import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 import type { IntentionForms } from "./defaultFormValues";
 import { InternatEtRestaurationSection } from "./internatEtRestaurationSection/InternatEtRestaurationSection";
@@ -43,7 +42,7 @@ export const InformationsBlock = ({
   formId?: string;
   disabled: boolean;
   footerActions: ReactNode;
-  campagne?: Campagne;
+  campagne: CampagneType;
 }) => {
   const { push } = useRouter();
   const { setValue, watch } = useFormContext<IntentionForms>();

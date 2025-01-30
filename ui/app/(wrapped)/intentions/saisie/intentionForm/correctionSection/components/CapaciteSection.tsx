@@ -1,10 +1,10 @@
 import {Box, Flex, FormErrorMessage, Heading, Input,Table, Tbody, Td, Th, Thead, Tr, VisuallyHidden} from '@chakra-ui/react';
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { isTypeColoration } from "shared/utils/typeDemandeUtils";
 
 import type { CorrectionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/defaultFormValues";
-import type { Intention } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/types";
-import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import type { Demande } from '@/app/(wrapped)/intentions/saisie/types';
 
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
 import { CapaciteApprentissageColoreeActuelleField } from "./CapaciteApprentissageColoreeActuelleField";
@@ -38,7 +38,7 @@ const differenceCapacité = (valueA: number | undefined = 0, valueB: number | un
   return valueA - valueB > 0 ? `+${valueA - valueB}` : valueA - valueB;
 };
 
-export const CapaciteSection = ({ demande, disabled }: { demande: Intention; disabled?: boolean }) => {
+export const CapaciteSection = ({ demande, disabled }: { demande: Demande; disabled?: boolean }) => {
   const {
     watch,
     formState: { errors },

@@ -6,43 +6,44 @@ import { useRouter } from "next/navigation";
 import { client } from "@/api.client";
 import { IntentionSpinner } from "@/app/(wrapped)/intentions/saisie/components/IntentionSpinner";
 import { IntentionForm } from "@/app/(wrapped)/intentions/saisie/intentionForm/IntentionForm";
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
+import { canEditDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { useAuth } from "@/utils/security/useAuth";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default ({
+export const PageClient = ({
   params: { numero },
 }: {
   params: {
     numero: string;
   };
 }) => {
+  const { auth } = useAuth();
   const { push } = useRouter();
-  const { data, isLoading } = client.ref("[GET]/demande/:numero").useQuery(
+  const { campagne } = useCurrentCampagne();
+  const { data: demande, isLoading } = client.ref("[GET]/demande/:numero").useQuery(
     { params: { numero: numero } },
     {
       cacheTime: 0,
       onError: (error: unknown) => {
         if (isAxiosError(error) && error.response?.data?.message) {
           console.error(error);
-          if (error.response?.status === 404) push(`/intentions/saisie?notfound=${numero}`);
+          if (error.response?.status === 404) push(`${getRoutingSaisieRecueilDemande({user: auth?.user, campagne})}?notfound=${numero}`);
         }
       },
     }
   );
 
-  if (isLoading) return <IntentionSpinner />;
+  if (isLoading || !demande) return <IntentionSpinner />;
+
   return (
-    <>
-      {data && (
-        <IntentionForm
-          disabled={!data.canEdit || isSaisieDisabled()}
-          formId={numero}
-          defaultValues={data}
-          demande={data}
-          formMetadata={data.metadata}
-          campagne={data.campagne}
-        />
-      )}
-    </>
+    <IntentionForm
+      disabled={canEditDemande({ demande, user: auth?.user })}
+      formId={numero}
+      defaultValues={demande}
+      demande={demande}
+      formMetadata={demande.metadata}
+      campagne={demande.campagne}
+    />
   );
 };

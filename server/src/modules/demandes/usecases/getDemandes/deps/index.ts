@@ -1,2 +1,3 @@
-export { getDemandes } from "./getDemandes.dep";
-export { getFilters } from "./getFilters.dep";
+export { getDemandesQuery } from "./getDemandes.dep";
+export { getFiltersQuery } from "./getFilters.dep";
+export { getCampagneQuery } from "./getCampagne.dep";

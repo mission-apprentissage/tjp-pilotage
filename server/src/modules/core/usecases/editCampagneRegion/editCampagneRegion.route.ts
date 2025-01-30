@@ -15,7 +15,7 @@ export const editCampagneRegionRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("campagnes/ecriture"),
+      preHandler: hasPermissionHandler("campagnes-region/ecriture"),
       handler: async (request, response) => {
         await editCampagneRegionUsecase({
           campagneRegion: request.body,

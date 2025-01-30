@@ -3,7 +3,10 @@ import { z } from "zod";
 import { AvisStatutZodType } from "../../enum/avisStatutEnum";
 import { AvisTypeZodType } from "../../enum/avisTypeEnum";
 import { DemandeStatutEnum, DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
+import { CampagneSchema } from "../../schema/campagneSchema";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
+
 const UserSchema = z.object({
   fullname: z.string().optional(),
   id: z.string().optional(),
@@ -44,7 +47,7 @@ const IntentionSchema = z.object({
   libelleFCIL: z.string().optional(),
   // Type de demande
   rentreeScolaire: z.coerce.number(),
-  typeDemande: z.string(),
+  typeDemande: DemandeTypeZodType,
   coloration: z.boolean(),
   libelleColoration: z.string().optional(),
   // Capacité
@@ -115,11 +118,7 @@ const IntentionSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   campagneId: z.string(),
-  campagne: z.object({
-    id: z.string().optional(),
-    annee: z.coerce.string().optional(),
-    statut: z.string().optional(),
-  }),
+  campagne: CampagneSchema,
   createdBy: UserSchema,
   updatedBy: UserSchema.optional(),
   libelleEtablissement: z.string().optional(),

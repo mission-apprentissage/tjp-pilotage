@@ -1,6 +1,7 @@
 import { Box, Center, Flex, Skeleton, Table, TableContainer, Tbody, Td, Text, Thead, Tr } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import type { CORRECTIONS_COLUMNS } from "@/app/(wrapped)/intentions/corrections/CORRECTIONS_COLUMN";
 import { GROUPED_CORRECTIONS_COLUMNS } from "@/app/(wrapped)/intentions/corrections/GROUPED_CORRECTIONS_COLUMN";
@@ -54,7 +55,7 @@ export const ConsoleSection = ({
   isLoading: boolean;
   order: OrderCorrections;
   handleOrder: (column: OrderCorrections["orderBy"]) => void;
-  campagne?: string;
+  campagne: CampagneType;
   colonneFilters: (keyof typeof CORRECTIONS_COLUMNS)[];
 }) => {
   const router = useRouter();

@@ -12,6 +12,7 @@ import { client } from "@/api.client";
 import {CampagneStatutTag} from '@/components/CampagneStatutTag';
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
 import { useAuth } from "@/utils/security/useAuth";
+import {useCurrentCampagne} from '@/utils/security/useCurrentCampagne';
 import { toBoolean } from "@/utils/toBoolean";
 
 export const CreateCampagneRegion = ({
@@ -47,14 +48,16 @@ export const CreateCampagneRegion = ({
   const queryClient = useQueryClient();
 
   const [serverErrors, setServerErrors] = useState<Record<string, string>>();
+  const { setCampagne } = useCurrentCampagne();
 
   const {
     mutate: createCampagneRegion,
     isLoading,
     isError,
   } = client.ref("[POST]/campagnes-region/:campagneRegionId").useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries(["[GET]/campagnes-region"]);
+      await client.ref("[GET]/campagne/current").query({}).then((campagne) => setCampagne(campagne));
       onClose();
     },
     //@ts-ignore
@@ -230,10 +233,10 @@ export const CreateCampagneRegion = ({
             />
             {!!errors.dateFin && <FormErrorMessage>{errors.dateFin.message}</FormErrorMessage>}
           </FormControl>
-          <FormControl as="fieldset" mb="4" isInvalid={!!errors.withPerdir} isRequired>
+          <FormControl as="fieldset" mb="4" isInvalid={!!errors.withSaisiePerdir} isRequired>
             <FormLabel as="legend" fontSize={"md"} fontWeight={"bold"}>Remplissage des demandes par les chefs d'établissement ?</FormLabel>
             <Controller
-              name="withPerdir"
+              name="withSaisiePerdir"
               control={control}
               rules={{
                 validate: (value) => typeof value === "boolean" || "Le champ est obligatoire",
@@ -255,7 +258,7 @@ export const CreateCampagneRegion = ({
                   </Radio>
                 </RadioGroup>
               )} />
-            {!!errors.withPerdir && <FormErrorMessage>{errors.withPerdir.message}</FormErrorMessage>}
+            {!!errors.withSaisiePerdir && <FormErrorMessage>{errors.withSaisiePerdir.message}</FormErrorMessage>}
           </FormControl>
           {isError && (
             <Alert status="error">

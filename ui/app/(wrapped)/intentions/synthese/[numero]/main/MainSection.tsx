@@ -3,8 +3,8 @@ import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 
 import type { client } from "@/api.client";
-import { canEditDemande } from "@/app/(wrapped)/intentions/saisie/utils/canEditDemande";
-import { usePermission } from "@/utils/security/usePermission";
+import { canEditDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
+import { useAuth } from "@/utils/security/useAuth";
 
 import { SyntheseSection } from "./synthese/SyntheseSection";
 
@@ -15,14 +15,15 @@ export const MainSection = ({
   demande: (typeof client.infer)["[GET]/demande/:numero"];
   isCampagneEnCours?: boolean;
 }) => {
-  const hasEditDemandePermission = usePermission("intentions/ecriture");
+
+  const { auth } = useAuth();
 
   return (
     <Flex bg="white" borderRadius={6} p={8} direction="column">
       {isCampagneEnCours && (
         <Flex direction={"row"} justify={"space-between"}>
           <Flex direction={"row"} gap={2}>
-            {canEditDemande({ demande, hasEditDemandePermission }) && (
+            {canEditDemande({ demande, user: auth?.user }) && (
               <Tooltip label="Modifier la demande">
                 <IconButton
                   as={NextLink}

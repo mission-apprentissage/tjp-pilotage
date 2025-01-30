@@ -1,7 +1,8 @@
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
-export type RaisonCorrectionCampagne = keyof typeof RAISONS_CORRECTION_LABELS;
-export type RaisonCorrectionLabel = keyof (typeof RAISONS_CORRECTION_LABELS)[RaisonCorrectionCampagne];
+
+export type AnneeCampagneRaisonCorrection = keyof typeof RAISONS_CORRECTION_LABELS;
+export type RaisonCorrectionLabel = keyof (typeof RAISONS_CORRECTION_LABELS)[AnneeCampagneRaisonCorrection];
 
 export const RAISONS_CORRECTION_LABELS = {
   "2023": {
@@ -21,19 +22,27 @@ export const RAISONS_CORRECTION_LABELS = {
   },
 };
 
-export const getRaisonCorrectionLabel = ({
+export const getRaisonCorrectionLabelParAnneeCampagne = ({
   raison,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
+  anneeCampagne = CURRENT_ANNEE_CAMPAGNE,
 }: {
   raison: RaisonCorrectionLabel;
-  campagne?: RaisonCorrectionCampagne;
+  anneeCampagne?: AnneeCampagneRaisonCorrection;
 }): string => {
-  return RAISONS_CORRECTION_LABELS[campagne][raison];
+  return RAISONS_CORRECTION_LABELS[anneeCampagne][raison];
 };
 
-export const getRaisonsCampagne = (
-  campagne: RaisonCorrectionCampagne = CURRENT_ANNEE_CAMPAGNE
+export const getRaisonsCorrectionParAnneeCampagne = (
+  anneeCampagne: AnneeCampagneRaisonCorrection
 ): RaisonCorrectionLabel[] => {
-  const raisonsCampagne = RAISONS_CORRECTION_LABELS[campagne];
+  const raisonsCampagne = RAISONS_CORRECTION_LABELS[anneeCampagne];
   return Object.keys(raisonsCampagne) as RaisonCorrectionLabel[];
+};
+
+export const getRaisonCorrectionOptionsParAnneeCampagne = (anneeCampagne: string) => {
+  return Object.entries(RAISONS_CORRECTION_LABELS[anneeCampagne as AnneeCampagneRaisonCorrection]).map(
+    ([value, label]) => ({
+      value,
+      label,
+    }));
 };

@@ -2,9 +2,11 @@
 
 import {redirect,} from 'next/navigation';
 import type { ReactNode } from "react";
-import {CODES_REGIONS_EXPE} from 'shared/security/securityUtils';
+
+import { isUserPartOfExpe } from '@/utils/getRoutingRecueilDemande';
 
 import {useAuth} from './useAuth';
+import { useCurrentCampagne } from './useCurrentCampagne';
 
 /**
  *
@@ -22,9 +24,10 @@ import {useAuth} from './useAuth';
 
 export const GuardExpe = ({ isExpeRoute, children }: { isExpeRoute: boolean; children: ReactNode }) => {
   const { auth } = useAuth();
+  const { campagne } = useCurrentCampagne();
   if (!auth?.user.codeRegion) return (<>{children}</>);
 
-  const isPartOfExpe = auth?.user.codeRegion && CODES_REGIONS_EXPE.includes(auth?.user.codeRegion ?? "");
+  const isPartOfExpe = isUserPartOfExpe({ user: auth?.user, campagne });
 
   if (isPartOfExpe && isExpeRoute) return (<>{children}</>);
   if (!isPartOfExpe && !isExpeRoute) return (<>{children}</>);

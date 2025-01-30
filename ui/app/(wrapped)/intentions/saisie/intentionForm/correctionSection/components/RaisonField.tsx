@@ -1,21 +1,14 @@
 import { chakra, FormControl, FormErrorMessage, FormLabel, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import type { CorrectionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/defaultFormValues";
-import type { Campagne } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/types";
-import type { RaisonCorrectionCampagne } from "@/app/(wrapped)/intentions/utils/raisonCorrectionUtils";
-import { RAISONS_CORRECTION_LABELS } from "@/app/(wrapped)/intentions/utils/raisonCorrectionUtils";
+import {getRaisonCorrectionOptionsParAnneeCampagne} from '@/app/(wrapped)/intentions/utils/raisonCorrectionUtils';
 
-const getRaisonCorrectionOptions = (campagne: string = CURRENT_ANNEE_CAMPAGNE) => {
-  return Object.entries(RAISONS_CORRECTION_LABELS[campagne as RaisonCorrectionCampagne]).map(([value, label]) => ({
-    value,
-    label,
-  }));
-};
+
 
 export const RaisonField = chakra(
-  ({ campagne, disabled, className }: { campagne?: Campagne; disabled?: boolean; className?: string }) => {
+  ({ campagne, disabled, className }: { campagne: CampagneType; disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       control,
@@ -33,7 +26,7 @@ export const RaisonField = chakra(
             return (
               <RadioGroup onChange={onChange} value={value} isDisabled={disabled}>
                 <Stack spacing={[3]} ms={6}>
-                  {getRaisonCorrectionOptions(campagne?.annee)?.map(({ value, label }) => (
+                  {getRaisonCorrectionOptionsParAnneeCampagne(campagne.annee)?.map(({ value, label }) => (
                     <Radio
                       ref={ref}
                       name={name}

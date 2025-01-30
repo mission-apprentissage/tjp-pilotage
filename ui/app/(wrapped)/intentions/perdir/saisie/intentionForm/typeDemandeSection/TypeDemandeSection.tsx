@@ -2,9 +2,8 @@ import { Box, chakra, CloseButton, Divider, Flex, Heading, Highlight, Stack, Tex
 import { Icon } from "@iconify/react";
 import type { RefObject } from "react";
 import { useState } from "react";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import type { CampagneType } from 'shared/schema/campagneSchema';
 
-import type { Campagne } from "@/app/(wrapped)/intentions/perdir/saisie/types";
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/perdir/SCROLL_OFFSETS";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
@@ -77,7 +76,7 @@ export const TypeDemandeSection = ({
   typeDemandeRef,
 }: {
   disabled: boolean;
-  campagne?: Campagne;
+  campagne: CampagneType;
   typeDemandeRef: RefObject<HTMLDivElement>;
 }) => {
   return (
@@ -90,8 +89,8 @@ export const TypeDemandeSection = ({
       </Heading>
       <Divider />
       <RentreeScolaireField disabled={disabled} campagne={campagne} />
-      <InfoAjustementSection anneeCampagne={campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE} />
-      <TypeDemandeField disabled={disabled} />
+      <InfoAjustementSection anneeCampagne={campagne.annee} />
+      <TypeDemandeField disabled={disabled} campagne={campagne} />
       <Tooltip label="Pour transférer des places d’un établissement vers un autre, vous devez faire 2 demandes : une fermeture dans l’établissement initial, et une ouverture dans le nouvel établissement (plusieurs demandes d’ouverture si les places sont transférées à plusieurs établissements)">
         <Flex
           direction={"row"}

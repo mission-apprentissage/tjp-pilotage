@@ -1,30 +1,29 @@
 import { Button, Divider, Flex, Text, useToken, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { client } from "@/api.client";
 import type { Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/perdir/saisie/utils/canEditIntention";
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { useAuth } from "@/utils/security/useAuth";
 
 export const MenuBoiteReception = ({
   isRecapView = false,
-  hasPermissionSubmitIntention,
-  campagne,
+  isNouvelleDemandeDisabled,
   handleFilters,
   activeFilters,
+  campagne
 }: {
   isRecapView?: boolean;
-  hasPermissionSubmitIntention: boolean;
-  campagne?: { annee: string; statut: string };
+  isNouvelleDemandeDisabled: boolean;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   activeFilters: Partial<Filters>;
+  campagne: CampagneType;
 }) => {
+  const { auth } = useAuth();
   const statut = activeFilters.statut === undefined ? "none" : activeFilters.statut;
-  const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
-
-  const isDisabled = !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
   const { data: countIntentions } = client.ref("[GET]/intentions/count").useQuery({
     query: {
@@ -39,10 +38,10 @@ export const MenuBoiteReception = ({
       <Button
         mb={1.5}
         variant="primary"
-        isDisabled={isDisabled}
+        isDisabled={isNouvelleDemandeDisabled}
         leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
-        as={hasPermissionSubmitIntention && !isSaisieDisabled() ? NextLink : undefined}
-        href="/intentions/perdir/saisie/new"
+        as={!isNouvelleDemandeDisabled ? NextLink : undefined}
+        href={`${getRoutingSaisieRecueilDemande({ user: auth?.user, campagne, suffix: "new" })}`}
       >
         Nouvelle demande
       </Button>

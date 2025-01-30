@@ -1,6 +1,6 @@
 import {Box, Flex, Heading,Select, Skeleton, VisuallyHidden} from '@chakra-ui/react';
 import _ from "lodash";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 import type { IndicateurType, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
 
@@ -22,7 +22,7 @@ export const EvolutionIndicateursClesSection = ({
   codeRegion?: string;
   indicateur: IndicateurType;
   handleIndicateurChange: (indicateur: string) => void;
-  indicateurOptions: (OptionSchema & { isDefault: boolean })[];
+  indicateurOptions: (OptionType & { isDefault: boolean })[];
 }) => {
   const graphData: BarGraphData = {};
 

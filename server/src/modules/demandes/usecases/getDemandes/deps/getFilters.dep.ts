@@ -10,7 +10,7 @@ import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
 import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
 import { cleanNull } from "@/utils/noNull";
 
-export const getFilters = async ({ user, codeAcademie, codeNiveauDiplome }: Filters) => {
+export const getFiltersQuery = async ({ user, codeAcademie, codeNiveauDiplome }: Filters) => {
   const inCodeAcademie = (eb: ExpressionBuilder<DB, "academie">) => {
     if (!codeAcademie) return sql<true>`true`;
     return eb("academie.codeAcademie", "in", codeAcademie);

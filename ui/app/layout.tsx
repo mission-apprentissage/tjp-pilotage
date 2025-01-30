@@ -58,6 +58,16 @@ const fetchGlossaire = async () => {
   }
 };
 
+const fetchCampagne = async () => {
+  const headersList = Object.fromEntries(headers().entries());
+  try {
+    return await serverClient.ref("[GET]/campagne/current").query({}, { headers: headersList });
+  } catch (e) {
+    console.log(e);
+    return undefined;
+  }
+};
+
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -66,8 +76,13 @@ async function Layout({ children }: LayoutProps) {
   const auth = await fetchAuth();
   const changelog = await fetchChangelog();
   const glossaire = await fetchGlossaire();
+  const campagne = await fetchCampagne();
   return (
-    <RootLayoutClient auth={auth || undefined} changelog={changelog || []} glossaire={glossaire || []}>
+    <RootLayoutClient
+      auth={auth || undefined}
+      changelog={changelog || []}
+      glossaire={glossaire || []}
+      campagne={campagne}>
       {children}
     </RootLayoutClient>
   );

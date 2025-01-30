@@ -2,15 +2,15 @@ import { FormControl, FormErrorMessage, FormLabel, LightMode, Select } from "@ch
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import type { client } from "@/api.client";
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import type { Formation } from "@/app/(wrapped)/intentions/types";
 
 export const DispositifBlock = ({
   active,
   options,
 }: {
   active: boolean;
-  options?: (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"];
+  options?: Formation["dispositifs"];
 }) => {
   const {
     formState: { errors },

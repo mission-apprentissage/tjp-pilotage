@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { publicConfig } from "@/config.public";
 import { theme } from "@/theme/theme";
@@ -26,6 +27,7 @@ interface RootLayoutClientProps {
   readonly auth?: Auth;
   readonly changelog: Changelog;
   readonly glossaire: GlossaireEntries;
+  readonly campagne?: CampagneType;
 }
 
 const useCrisp = () => {
@@ -83,11 +85,20 @@ export const UaisFilterContext = createContext<{
   setUaisFilter: () => {},
 });
 
+export const CurrentCampagneContext = createContext<{
+  campagne?: CampagneType;
+  setCampagne: Dispatch<SetStateAction<CampagneType | undefined>>;
+}>({
+  campagne: undefined,
+  setCampagne: () => {},
+});
+
 export default function RootLayoutClient({
   children,
   auth: initialAuth,
   changelog: initialChangelog,
   glossaire: initialGlossaire,
+  campagne: initialCampagne
 }: RootLayoutClientProps) {
   useCrisp();
   const tracking = useTracking();
@@ -104,12 +115,12 @@ export default function RootLayoutClient({
 
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
   const [changelog, setChangelog] = useState<Changelog>(initialChangelog);
+  const [campagne, setCampagne] = useState<CampagneType | undefined>(initialCampagne);
 
   const [codeRegionFilter, setCodeRegionFilter] = useState<string | undefined>(auth?.user.codeRegion);
   const [uaisFilter, setUaisFilter] = useState<Array<string> | undefined>(auth?.user.uais);
 
   const codeRegionFilterValue = useMemo(() => ({ codeRegionFilter, setCodeRegionFilter }), [codeRegionFilter]);
-
   const uaisFilterValue = useMemo(() => ({ uaisFilter, setUaisFilter }), [uaisFilter]);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -144,20 +155,22 @@ export default function RootLayoutClient({
               <AuthContext.Provider value={{ auth, setAuth }}>
                 <UaisFilterContext.Provider value={uaisFilterValue}>
                   <CodeRegionFilterContext.Provider value={codeRegionFilterValue}>
-                    <GlossaireProvider initialEntries={initialGlossaire}>
-                      <ChangelogContext.Provider value={{ changelog, setChangelog }}>
-                        <Flex
-                          direction="column"
-                          height="100vh"
-                          overflow="auto"
-                          position="relative"
-                          ref={containerRef}
-                          onScroll={handleScrolling}
-                        >
-                          {children}
-                        </Flex>
-                      </ChangelogContext.Provider>
-                    </GlossaireProvider>
+                    <CurrentCampagneContext.Provider value={{campagne, setCampagne}}>
+                      <GlossaireProvider initialEntries={initialGlossaire}>
+                        <ChangelogContext.Provider value={{ changelog, setChangelog }}>
+                          <Flex
+                            direction="column"
+                            height="100vh"
+                            overflow="auto"
+                            position="relative"
+                            ref={containerRef}
+                            onScroll={handleScrolling}
+                          >
+                            {children}
+                          </Flex>
+                        </ChangelogContext.Provider>
+                      </GlossaireProvider>
+                    </CurrentCampagneContext.Provider>
                   </CodeRegionFilterContext.Provider>
                 </UaisFilterContext.Provider>
               </AuthContext.Provider>

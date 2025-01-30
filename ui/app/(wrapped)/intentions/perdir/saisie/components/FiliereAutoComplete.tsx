@@ -1,9 +1,10 @@
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncCreatableSelect from "react-select/async-creatable";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType} from 'shared/schema/optionSchema';
 
 import { client } from "@/api.client";
+import type {Filiere} from '@/app/(wrapped)/intentions/perdir/saisie/types';
 
 export const FiliereAutoCompleteInput = ({
   id = "cfd-autocomplete",
@@ -15,10 +16,10 @@ export const FiliereAutoCompleteInput = ({
 }: {
   id?: string;
   name: string;
-  defaultValue?: OptionSchema;
+  defaultValue?: OptionType;
   active?: boolean;
   inError: boolean;
-  onChange: (value?: (typeof client.infer)["[GET]/filiere/search/:search"][number]) => void;
+  onChange: (value?: Filiere) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({

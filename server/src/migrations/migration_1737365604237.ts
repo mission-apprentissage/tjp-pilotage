@@ -8,9 +8,10 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("id", "uuid", (c) => c.notNull().defaultTo(db.fn("uuid_generate_v4")).unique())
     .addColumn("campagneId", "uuid", (c) => c.references("campagne.id").notNull())
     .addColumn("codeRegion", "varchar(2)", (c) => c.references("region.codeRegion").notNull())
-    .addColumn("withPerdir", "boolean", (c) => c.notNull().defaultTo(false))
+    .addColumn("withSaisiePerdir", "boolean", (c) => c.notNull().defaultTo(false))
     .addColumn("dateDebut", "timestamptz", (c) => c.notNull())
     .addColumn("dateFin", "timestamptz", (c) => c.notNull())
+    .addColumn("dateVote", "timestamptz")
     .addColumn("statut", "varchar(30)", (c) => c.notNull())
     .execute();
 
@@ -35,7 +36,7 @@ export const up = async (db: Kysely<unknown>) => {
 
   await db.executeQuery(
     sql`
-      INSERT INTO "campagne" ("annee", "statut", "dateDebut", "dateFin") VALUES ('2025', 'en attente', '2025-01-01', '2025-12-31');
+      INSERT INTO "campagne" ("annee", "statut", "dateDebut", "dateFin") VALUES ('2025', 'en attente', '2025-01-01', '2025-12-31') ON CONFLICT DO NOTHING;
     `.compile(db)
   );
 };

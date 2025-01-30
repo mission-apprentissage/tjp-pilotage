@@ -4,16 +4,17 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/intentions/usecases/getIntentions/getIntentions.usecase";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import { isAvisVisible } from "@/modules/utils/isAvisVisible";
 import { isIntentionCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
 import { isIntentionBrouillonVisible, isIntentionSelectable } from "@/modules/utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
-import type { Filters } from "./getFilters.dep";
 
-export const getIntentions = async (
+export const getIntentionsQuery = async (
   {
     campagne,
     statut,
@@ -26,7 +27,6 @@ export const getIntentions = async (
     order,
     orderBy,
   }: Filters,
-  shouldFetchOnlyIntention: boolean
 ) => {
   const search_array = getNormalizedSearchArray(search);
 
@@ -179,15 +179,10 @@ export const getIntentions = async (
       if (!orderBy || !order) return q;
       return q.orderBy(sql`${sql.ref(orderBy)}`, sql`${sql.raw(order)} NULLS LAST`);
     })
-    .$call((q) => {
-      if (shouldFetchOnlyIntention) return q.where("intention.isIntention", "=", true);
-      return q;
-    })
     .$call((eb) => {
       if (codeAcademie) {
         return eb.where("academie.codeAcademie", "in", codeAcademie);
       }
-
       return eb;
     })
     .$call((eb) => {
@@ -212,6 +207,7 @@ export const getIntentions = async (
         ...intention,
         avis: intention.avis.filter((c) => c).map((avis) => avis),
         statut: castDemandeStatutWithoutSupprimee(intention.statut),
+        typeDemande: castTypeDemande(intention.typeDemande),
         createdAt: intention.createdAt?.toISOString(),
         updatedAt: intention.updatedAt?.toISOString(),
         alreadyAccessed: intention.alreadyAccessed ?? true,

@@ -17,11 +17,11 @@ import {
 import { Icon } from "@iconify/react";
 import type { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import type { Dispatch, SetStateAction } from "react";
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { RaisonCorrectionType } from "shared/enum/raisonCorrectionEnum";
 import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { client } from "@/api.client";
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
@@ -34,15 +34,6 @@ import { CommentaireField } from "./components/CommentaireField";
 import { MotifField } from "./components/MotifField";
 import { RaisonField } from "./components/RaisonField";
 import type { CorrectionForms } from "./defaultFormValues";
-import type { Campagne } from "./types";
-
-export const CampagneContext = createContext<{
-  campagne?: Campagne;
-  setCampagne: Dispatch<SetStateAction<Campagne>>;
-}>({
-  campagne: undefined,
-  setCampagne: () => {},
-});
 
 export const CorrectionSection = ({
   correctionRef,
@@ -51,13 +42,13 @@ export const CorrectionSection = ({
 }: {
   correctionRef: React.RefObject<HTMLDivElement>;
   demande: Demande;
-  campagne?: Campagne;
+  campagne: CampagneType;
 }) => {
   const toast = useToast();
   const { push } = useRouter();
   const form = useForm<CorrectionForms>({
     defaultValues: {
-      raison: "modification_capacite",
+      raison: RaisonCorrectionEnum["modification_capacite"],
       coloration: demande.coloration ?? false,
       libelleColoration: demande.libelleColoration,
       capaciteScolaireActuelle: demande?.correction?.capaciteScolaireActuelle ?? demande.capaciteScolaireActuelle,

@@ -1,9 +1,10 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, LightMode } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import type { client } from "@/api.client";
 import { CfdAutocompleteInput } from "@/app/(wrapped)/intentions/perdir/saisie/components/CfdAutocomplete";
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
+import type { IntentionMetadata } from "@/app/(wrapped)/intentions/perdir/types";
+import type { Formation } from "@/app/(wrapped)/intentions/types";
 
 export const CfdBlock = ({
   setDispositifs,
@@ -11,9 +12,9 @@ export const CfdBlock = ({
   formMetaData,
   disabled,
 }: {
-  setDispositifs: (info?: (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"]) => void;
+  setDispositifs: (info?: Formation["dispositifs"]) => void;
   setIsFCIL: (isFcil: boolean) => void;
-  formMetaData?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
+  formMetaData?: IntentionMetadata;
   disabled: boolean;
 }) => {
   const {

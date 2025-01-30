@@ -11,6 +11,7 @@ import {
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 import type { MotifRefusLabel } from "@/app/(wrapped)/intentions/utils/motifRefusDemandeUtils";
@@ -18,7 +19,6 @@ import {
   getMotifsRefusTypeDemande,
   MOTIFS_REFUS_LABELS,
 } from "@/app/(wrapped)/intentions/utils/motifRefusDemandeUtils";
-import type { TypeDemande } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const MotifRefusBlock = chakra(({ disabled, className }: { disabled?: boolean; className?: string }) => {
   const {
@@ -40,7 +40,7 @@ export const MotifRefusBlock = chakra(({ disabled, className }: { disabled?: boo
       }).unsubscribe
   );
 
-  const getMotifOptions = (typeDemande: TypeDemande) => {
+  const getMotifOptions = (typeDemande: DemandeTypeType) => {
     return Object.entries(MOTIFS_REFUS_LABELS)
       .filter(([key]) => getMotifsRefusTypeDemande(typeDemande)?.includes(key as MotifRefusLabel))
       .map(([value, label]) => ({

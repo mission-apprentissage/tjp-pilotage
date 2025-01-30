@@ -5,10 +5,10 @@ import type { RefObject } from "react";
 import { useState } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import type { CampagneType } from 'shared/schema/campagneSchema';
 
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
-import type { Campagne, Demande } from "@/app/(wrapped)/intentions/saisie/types";
+import type {  Demande } from "@/app/(wrapped)/intentions/saisie/types";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
 import { feature } from "@/utils/feature";
@@ -84,7 +84,7 @@ export const TypeDemandeSection = ({
   typeDemandeRef,
 }: {
   disabled: boolean;
-  campagne?: Campagne;
+  campagne: CampagneType;
   demande?: Demande;
   typeDemandeRef: RefObject<HTMLDivElement>;
 }) => {
@@ -113,8 +113,8 @@ export const TypeDemandeSection = ({
       </Heading>
       <Divider />
       <RentreeScolaireField disabled={disabled} campagne={campagne} />
-      <InfoAjustementSection anneeCampagne={campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE} />
-      <TypeDemandeField disabled={disabled} maxWidth="752px" />
+      <InfoAjustementSection anneeCampagne={campagne.annee} />
+      <TypeDemandeField disabled={disabled} maxWidth="752px" campagne={campagne} />
       <Tooltip label="Pour transférer des places d’un établissement vers un autre, vous devez faire 2 demandes : une fermeture dans l’établissement initial, et une ouverture dans le nouvel établissement (plusieurs demandes d’ouverture si les places sont transférées à plusieurs établissements)">
         <Flex
           direction={"row"}

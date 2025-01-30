@@ -1,21 +1,16 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import type { getIntentionsSchema } from "shared/routes/schemas/get.intentions.schema";
-import type { z } from "zod";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
-import type { RequestUser } from "@/modules/core/model/User";
 import { isInPerimetreIJAcademie } from "@/modules/data/utils/isInPerimetreIJ";
+import type { Filters } from "@/modules/intentions/usecases/getIntentions/getIntentions.usecase";
+import {isAllowedToSeePreviousCampagnes} from '@/modules/utils/isAllowedToSeePreviousCampagnes';
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
 import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
 import { cleanNull } from "@/utils/noNull";
 
-export interface Filters extends z.infer<typeof getIntentionsSchema.querystring> {
-  user: RequestUser;
-}
-
-export const getFilters = async ({ user, codeAcademie, codeNiveauDiplome }: Filters) => {
+export const getFiltersQuery = async ({ user, codeAcademie, codeNiveauDiplome }: Filters) => {
   const inCodeAcademie = (eb: ExpressionBuilder<DB, "academie">) => {
     if (!codeAcademie) return sql<true>`true`;
     return eb("academie.codeAcademie", "in", codeAcademie);
@@ -66,8 +61,23 @@ export const getFilters = async ({ user, codeAcademie, codeNiveauDiplome }: Filt
     })
     .execute();
 
+  const campagnesFilters = await getKbdClient()
+    .selectFrom("campagne")
+    .selectAll()
+    .where(isAllowedToSeePreviousCampagnes({ user }))
+    .orderBy("annee desc")
+    .execute()
+    .then((campagnes) =>
+      campagnes.map((campagne) => ({
+        ...campagne,
+        dateFin: campagne.dateFin.toISOString(),
+        dateDebut: campagne.dateDebut.toISOString(),
+      }))
+    );
+
   return {
     academies: academiesFilters.map(cleanNull),
     diplomes: diplomesFilters.map(cleanNull),
+    campagnes: campagnesFilters.map(cleanNull),
   };
 };
