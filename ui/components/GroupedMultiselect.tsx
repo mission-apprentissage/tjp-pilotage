@@ -20,7 +20,7 @@ import {
 import type { ChangeEventHandler, ReactNode } from "react";
 import React, { memo, useId, useMemo, useRef, useState } from "react";
 import removeAccents from "remove-accents";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 const ButtonContent = ({ selected, children }: { selected: string[]; children: ReactNode }) => {
   if (!selected.length) return <>{children}</>;
@@ -133,10 +133,10 @@ export const GroupedMultiselect = chakra(
       string,
       {
         color?: string;
-        options: (OptionSchema & { isDisabled?: boolean })[];
+        options: (OptionType & { isDisabled?: boolean })[];
       }
     >;
-    readonly defaultOptions?: OptionSchema[];
+    readonly defaultOptions?: OptionType[];
     onChange?: (value: string[]) => void;
     onClose?: () => void;
     className?: string;

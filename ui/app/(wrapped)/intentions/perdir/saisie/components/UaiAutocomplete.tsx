@@ -4,6 +4,7 @@ import AsyncSelect from "react-select/async";
 import { hasRole } from "shared";
 
 import { client } from "@/api.client";
+import type {Etablissement} from '@/app/(wrapped)/intentions/types';
 import { useAuth } from "@/utils/security/useAuth";
 
 export const UaiAutocomplete = ({
@@ -19,7 +20,7 @@ export const UaiAutocomplete = ({
   defaultValue?: { value: string; label?: string; commune?: string };
   disabled?: boolean;
   inError: boolean;
-  onChange: (value?: (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][number]) => void;
+  onChange: (value?: Etablissement) => void;
 }) => {
   const { auth } = useAuth();
   const selectStyle = {

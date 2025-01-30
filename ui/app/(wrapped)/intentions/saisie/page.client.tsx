@@ -35,10 +35,14 @@ import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import { canImportDemande } from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { formatCodeDepartement, formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
+import { getRoutingSaisieRecueilDemande, getRoutingSyntheseRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { useAuth} from '@/utils/security/useAuth';
+import { useCurrentCampagne } from '@/utils/security/useCurrentCampagne';
 import { usePermission } from "@/utils/security/usePermission";
 import { useStateParams } from "@/utils/useFilters";
 
@@ -48,15 +52,18 @@ import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuBoiteReception } from "./components/MenuBoiteReception";
 import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
 import type { Filters, Order } from "./types";
-import { isSaisieDisabled } from "./utils/isSaisieDisabled";
 
 const PAGE_SIZE = 30;
 
 export const PageClient = () => {
+  const { auth } = useAuth();
+  const { campagne: currentCampagne } = useCurrentCampagne();
   const toast = useToast();
   const queryClient = useQueryClient();
   const router = useRouter();
   const trackEvent = usePlausible();
+  const hasPermissionEditIntention = usePermission("intentions/ecriture");
+
 
   const [searchParams, setSearchParams] = useStateParams<{
     filters?: Partial<Filters>;
@@ -75,7 +82,6 @@ export const PageClient = () => {
   const filters = searchParams.filters ?? {};
   const search = searchParams.filters?.search ?? "";
   const order = searchParams.order ?? { order: "asc" };
-  const campagne = searchParams.filters?.campagne;
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
   const notFound = searchParams.notfound;
 
@@ -124,11 +130,9 @@ export const PageClient = () => {
 
   const getDemandesQueryParameters = (qLimit?: number, qOffset?: number) => ({
     ...filters,
-    search,
     ...order,
     offset: qOffset,
     limit: qLimit,
-    campagne,
   });
 
   const { data, isLoading } = client.ref("[GET]/demandes").useQuery(
@@ -138,15 +142,12 @@ export const PageClient = () => {
     { keepPreviousData: true, cacheTime: 0 }
   );
 
-  const { data: currentCampagne, isLoading: isLoadingCurrentCampagne } = client.ref("[GET]/campagne/current").useQuery({});
-
-  const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
 
   const isCurrentCampagne = data?.campagne.id === currentCampagne?.id;
-  const isNouvelleDemandeDisabled = !isCurrentCampagne || isSaisieDisabled() || !hasPermissionSubmitIntention;
+  const isNouvelleDemandeDisabled = !isCurrentCampagne || !hasPermissionEditIntention;
 
   const isCampagneEnCours = data?.campagne.statut === CampagneStatutEnum["en cours"];
-  const isModificationsDisabled = !isCampagneEnCours || !isSaisieDisabled() || !hasPermissionSubmitIntention;
+  const isModificationsDisabled = !isCampagneEnCours || !hasPermissionEditIntention;
 
   const [searchDemande, setSearchDemande] = useState<string>(search);
 
@@ -237,14 +238,14 @@ export const PageClient = () => {
           getDemandesQueryParameters={getDemandesQueryParameters}
           searchDemande={searchDemande}
           setSearchDemande={setSearchDemande}
-          campagnes={data?.filters.campagnes}
           campagne={data?.campagne}
           filterTracker={filterTracker}
           handleFilters={handleFilters}
           diplomes={data?.filters.diplomes ?? []}
           academies={data?.filters.academies ?? []}
+          campagnes={data?.filters.campagnes}
         />
-        {(isLoading || isLoadingCurrentCampagne) ? (
+        {(isLoading) ? (
           <IntentionSpinner />
         ) : data?.demandes.length ? (
           <>
@@ -293,7 +294,11 @@ export const PageClient = () => {
                       whiteSpace={"pre"}
                       onClick={() => {
                         if (isModificationsDisabled) return;
-                        router.push(`/intentions/saisie/${demande.numero}`);
+                        router.push(getRoutingSaisieRecueilDemande({
+                          campagne: data?.campagne,
+                          user: auth?.user,
+                          suffix: demande.numero
+                        }));
                       }}
                     >
                       <Td textAlign={"center"}>
@@ -340,11 +345,23 @@ export const PageClient = () => {
                           <Tooltip label="Voir la demande">
                             <IconButton
                               as={NextLink}
-                              href={`/intentions/synthese/${demande.numero}`}
+                              href={
+                                getRoutingSyntheseRecueilDemande({
+                                  campagne: data?.campagne,
+                                  user: auth?.user,
+                                  suffix: demande.numero,
+                                })
+                              }
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                router.push(`/intentions/synthese/${demande.numero}`);
+                                router.push(
+                                  getRoutingSyntheseRecueilDemande({
+                                    campagne: data?.campagne,
+                                    user: auth?.user,
+                                    suffix: demande.numero,
+                                  })
+                                );
                               }}
                               aria-label="Voir la demande"
                               color={"bluefrance.113"}
@@ -386,9 +403,22 @@ export const PageClient = () => {
                                 <Tooltip label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}>
                                   <IconButton
                                     as={NextLink}
-                                    href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
-                                    passHref
-                                    onClick={(e) => e.stopPropagation()}
+                                    href={getRoutingSaisieRecueilDemande({
+                                      campagne: data?.campagne,
+                                      user: auth?.user,
+                                      suffix: demande.numeroDemandeImportee,
+                                    })}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      router.push(
+                                        getRoutingSaisieRecueilDemande({
+                                          campagne: data?.campagne,
+                                          user: auth?.user,
+                                          suffix: demande.numeroDemandeImportee,
+                                        })
+                                      );
+                                    }}
                                     aria-label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
                                     color={"bluefrance.113"}
                                     bgColor={"transparent"}
@@ -404,8 +434,13 @@ export const PageClient = () => {
                                     color={"bluefrance.113"}
                                     bgColor={"transparent"}
                                     onClick={(e) => {
+                                      if(!canImportDemande({
+                                        isAlreadyImported: demande.numeroDemandeImportee !== undefined,
+                                        isLoading: (isLoading || isSubmitting),
+                                        user: auth?.user,
+                                        campagne: data?.campagne,
+                                      })) return;
                                       setIsImporting(true);
-                                      if (demande.numeroDemandeImportee) return;
                                       e.preventDefault();
                                       e.stopPropagation();
                                       importDemande({
@@ -413,15 +448,17 @@ export const PageClient = () => {
                                       });
                                     }}
                                     isDisabled={
-                                      !!demande.numeroDemandeImportee ||
-                                      isSubmitting ||
-                                      isImporting ||
-                                      !hasPermissionSubmitIntention
+                                      canImportDemande({
+                                        isAlreadyImported: demande.numeroDemandeImportee !== undefined,
+                                        isLoading: (isSubmitting || isImporting),
+                                        user: auth?.user,
+                                        campagne: data?.campagne,
+                                      })
                                     }
                                   />
                                 </Tooltip>
                               )}
-                              <CorrectionDemandeButton demande={demande} />
+                              <CorrectionDemandeButton demande={demande} campagne={data?.campagne} />
                             </>
                           )}
                         </Flex>
@@ -458,7 +495,7 @@ export const PageClient = () => {
           <Center mt={12}>
             <Flex flexDirection={"column"}>
               <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-              {hasPermissionSubmitIntention && (
+              {hasPermissionEditIntention && (
                 <Button
                   isDisabled={isNouvelleDemandeDisabled}
                   variant="createButton"

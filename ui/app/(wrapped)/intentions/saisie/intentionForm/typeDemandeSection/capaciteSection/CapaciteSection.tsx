@@ -1,8 +1,8 @@
 import {Box, Flex, FormErrorMessage, Input, Table, Tbody, Td, Th, Thead, Tr, VisuallyHidden} from '@chakra-ui/react';
 import { useFormContext } from "react-hook-form";
+import { isTypeColoration } from "shared/utils/typeDemandeUtils";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
 import { CapaciteApprentissageColoreeActuelleField } from "./CapaciteApprentissageColoreeActuelleField";

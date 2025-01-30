@@ -1,7 +1,7 @@
 
 import Boom from "@hapi/boom";
 import {CampagneStatutEnum} from 'shared/enum/campagneStatutEnum';
-import type {CampagneSchema} from 'shared/schema/campagneSchema';
+import type { CampagneType } from 'shared/schema/campagneSchema';
 
 import {getKbdClient} from '@/db/db';
 import type { RequestUser } from "@/modules/core/model/User";
@@ -23,33 +23,47 @@ const getCampagnesEnCours = async () => {
     );
 };
 
-const getCampagneOfCampagneRegionEnCours = async ({
+const getCampagneRegionEnCours = async ({
   codeRegion
 } : {
   codeRegion: string
-}) => {
-  return getKbdClient()
-    .selectFrom("campagne")
-    .innerJoin("campagneRegion", "campagneRegion.campagneId", "campagne.id")
-    .where((eb) =>
-      eb.and([
-        eb("campagne.statut", "=", CampagneStatutEnum["en cours"]),
-        eb("campagneRegion.statut", "=", CampagneStatutEnum["en cours"]),
-        eb("campagneRegion.codeRegion", "=", codeRegion)
-      ])
-    )
-    .selectAll("campagne")
-    .executeTakeFirst()
-    .then((campagne) =>
-      campagne ?
-        cleanNull({
-          ...campagne,
-          dateDebut: campagne.dateDebut.toISOString(),
-          dateFin: campagne.dateFin.toISOString(),
-        }) :
-        undefined
-    );
-};
+}) => getKbdClient()
+  .selectFrom("campagneRegion")
+  .where((eb) =>
+    eb.and([
+      eb("statut", "=", CampagneStatutEnum["en cours"]),
+      eb("codeRegion", "=", codeRegion)
+    ])
+  )
+  .selectAll()
+  .executeTakeFirst()
+  .then((campagneRegion) =>
+    campagneRegion ?
+      cleanNull({
+        ...campagneRegion,
+        dateDebut: campagneRegion.dateDebut.toISOString(),
+        dateFin: campagneRegion.dateFin.toISOString(),
+        dateVote: campagneRegion.dateVote?.toISOString(),
+      }) :
+      undefined
+  );
+
+const getCampagneById = async ({
+  campagneId
+} : {
+  campagneId: string
+}) => getKbdClient()
+  .selectFrom("campagne")
+  .where("id", "=", campagneId)
+  .selectAll()
+  .executeTakeFirstOrThrow()
+  .then((campagne) =>
+    cleanNull({
+      ...campagne,
+      dateDebut: campagne.dateDebut.toISOString(),
+      dateFin: campagne.dateFin.toISOString(),
+    })
+  );
 
 /**
  *
@@ -62,7 +76,7 @@ const getCampagneOfCampagneRegionEnCours = async ({
  * @param user
  * @returns
  */
-export const getCurrentCampagne = async (user: RequestUser): Promise<CampagneSchema> => {
+export const getCurrentCampagne = async (user: RequestUser): Promise<CampagneType> => {
   const campagnesEnCours = await getCampagnesEnCours();
   if (!campagnesEnCours || campagnesEnCours.length === 0) {
     throw Boom.notFound(`Aucune campagne nationale en cours, veuillez en créer une dans l'écran dédié`);
@@ -70,8 +84,20 @@ export const getCurrentCampagne = async (user: RequestUser): Promise<CampagneSch
   if (campagnesEnCours.length === 1) return campagnesEnCours[0];
   const codeRegion = user.codeRegion;
   if(codeRegion) {
-    const campagneEnCours =  await getCampagneOfCampagneRegionEnCours({ codeRegion });
-    if (campagneEnCours) return campagneEnCours;
+    const campagneRegionEnCours = await getCampagneRegionEnCours({ codeRegion });
+    if (campagneRegionEnCours) {
+      const campagneEnCours = await getCampagneById(campagneRegionEnCours);
+      if (campagneEnCours) return {
+        id: campagneEnCours.id,
+        annee: campagneEnCours.annee,
+        dateDebut: campagneEnCours.dateDebut,
+        dateFin: campagneEnCours.dateFin,
+        statut: campagneEnCours.statut,
+        hasCampagneRegionEnCours: true,
+        withSaisiePerdir: campagneRegionEnCours.withSaisiePerdir,
+        dateVote: campagneRegionEnCours.dateVote,
+      };
+    }
   }
   return campagnesEnCours[0];
 };

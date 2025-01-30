@@ -1,4 +1,5 @@
 import { chakra, Td } from "@chakra-ui/react";
+import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
 
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 import type { DemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
@@ -175,7 +176,7 @@ export const LineContent = ({
         py="1"
         bgColor={getCellColor("typeDemande")}
       >
-        {getTypeDemandeLabel(demande.typeDemande)}
+        {getTypeDemandeLabel(demande.typeDemande as DemandeTypeType)}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

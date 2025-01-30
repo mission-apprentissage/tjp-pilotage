@@ -32,6 +32,7 @@ import { z } from "zod";
 
 import { client } from "@/api.client";
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
+import {useCurrentCampagne} from '@/utils/security/useCurrentCampagne';
 
 export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const {
@@ -50,14 +51,16 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
   const queryClient = useQueryClient();
 
   const [serverErrors, setServerErrors] = useState<Record<string, string>>();
+  const { setCampagne } = useCurrentCampagne();
 
   const {
     mutate: createCampagne,
     isLoading,
     isError,
   } = client.ref("[POST]/campagnes/:campagneId").useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries(["[GET]/campagnes"]);
+      await client.ref("[GET]/campagne/current").query({}).then((campagne) => setCampagne(campagne));
       onClose();
     },
     //@ts-ignore

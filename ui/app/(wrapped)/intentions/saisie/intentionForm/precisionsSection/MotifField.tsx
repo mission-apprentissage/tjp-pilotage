@@ -1,21 +1,20 @@
 import {chakra, Checkbox, CheckboxGroup, Flex, FormControl, FormErrorMessage, FormLabel, Highlight, Stack, Text} from '@chakra-ui/react';
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
-import { isTypeColoration } from "shared/validators/demandeValidators";
+import type { DemandeTypeType } from 'shared/enum/demandeTypeEnum';
+import type { CampagneType } from 'shared/schema/campagneSchema';
+import {
+  isTypeAjustement,
+  isTypeColoration,
+  isTypeFermeture
+} from "shared/utils/typeDemandeUtils";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-import type { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
 import type { MotifCampagne, MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getMotifsTypeDemande, MOTIFS_LABELS } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
-import type { TypeDemande } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
-import {
-  getTypeDemandeLabel,
-  isTypeAjustement,
-  isTypeFermeture,
-} from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import { getTypeDemandeLabel } from '@/app/(wrapped)/intentions/utils/typeDemandeUtils';
 
-const getMotifOptions = (typeDemande: TypeDemande, campagne: string = CURRENT_ANNEE_CAMPAGNE) => {
+const getMotifOptions = (typeDemande: DemandeTypeType, campagne: string) => {
   return Object.entries(MOTIFS_LABELS[campagne as MotifCampagne])
     .filter(([key]) => getMotifsTypeDemande(typeDemande)?.includes(key as MotifLabel))
     .map(([value, label]) => ({
@@ -25,7 +24,7 @@ const getMotifOptions = (typeDemande: TypeDemande, campagne: string = CURRENT_AN
 };
 
 export const MotifField = chakra(
-  ({ disabled, campagne, className }: { disabled?: boolean; campagne?: Campagne; className?: string }) => {
+  ({ disabled, campagne, className }: { disabled?: boolean; campagne: CampagneType; className?: string }) => {
     const {
       formState: { errors },
       control,
@@ -60,7 +59,7 @@ export const MotifField = chakra(
             return (
               <CheckboxGroup onChange={onChange} value={value}>
                 <Stack spacing={[3]} ms={6}>
-                  {getMotifOptions(typeDemande, campagne?.annee)?.map(({ value, label }) => (
+                  {getMotifOptions(typeDemande, campagne.annee)?.map(({ value, label }) => (
                     <Checkbox
                       ref={ref}
                       disabled={disabled}

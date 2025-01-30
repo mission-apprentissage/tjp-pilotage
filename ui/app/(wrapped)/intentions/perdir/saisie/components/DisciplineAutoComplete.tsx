@@ -1,9 +1,10 @@
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncCreatableSelect from "react-select/async-creatable";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType} from 'shared/schema/optionSchema';
 
 import { client } from "@/api.client";
+import type {Discipline} from '@/app/(wrapped)/intentions/types';
 
 export const DisciplineAutocompleteInput = ({
   id = "discipline-autocomplete",
@@ -15,10 +16,10 @@ export const DisciplineAutocompleteInput = ({
 }: {
   id?: string;
   name: string;
-  defaultValue?: OptionSchema;
+  defaultValue?: OptionType;
   active?: boolean;
   inError: boolean;
-  onChange: (value?: (typeof client.infer)["[GET]/discipline/search/:search"][number]) => void;
+  onChange: (value?: Discipline) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({

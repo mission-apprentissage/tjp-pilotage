@@ -1,40 +1,39 @@
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import type { FiltersSchema } from 'shared/routes/schemas/get.intentions.schema';
+import type {z} from 'zod';
 
+import type {RequestUser} from '@/modules/core/model/User';
 import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
-import type { Filters } from "./deps";
-import { getCampagne, getFilters, getIntentions } from "./deps";
+import { getCampagneQuery, getFiltersQuery, getIntentionsQuery } from "./deps";
 
-const CAMPAGNE_DEMANDE = "2023";
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+  campagne: string
+}
 
+export interface ActiveFilters extends Omit<Filters, "campagne"> {
+  campagne?: string;
+}
 const getIntentionsFactory =
   (
     deps = {
-      getCampagne,
       getCurrentCampagne,
-      getIntentions,
-      getFilters,
+      getCampagneQuery,
+      getIntentionsQuery,
+      getFiltersQuery,
     }
   ) =>
-    async (activeFilters: Filters) => {
+    async (activeFilters: ActiveFilters) => {
       const currentCampagne = await deps.getCurrentCampagne(activeFilters.user);
-      const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
-
-      const shouldFetchOnlyIntention = anneeCampagne !== CAMPAGNE_DEMANDE;
+      const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
 
       const [intentions, campagne, filters] = await Promise.all([
-        deps.getIntentions(
-          {
-            ...activeFilters,
-            campagne: anneeCampagne,
-          },
-          shouldFetchOnlyIntention
-        ),
-        deps.getCampagne(anneeCampagne),
-        deps.getFilters(activeFilters),
+        deps.getIntentionsQuery({ ...activeFilters, campagne: anneeCampagne }),
+        deps.getCampagneQuery({ ...activeFilters, anneeCampagne }),
+        deps.getFiltersQuery({...activeFilters, campagne: anneeCampagne}),
       ]);
 
-      return { ...intentions, currentCampagne, campagne, filters };
+      return { ...intentions, campagne, filters };
     };
 
 export const getIntentionsUsecase = getIntentionsFactory();

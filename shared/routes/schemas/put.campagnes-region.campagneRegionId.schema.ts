@@ -7,7 +7,7 @@ const CampagneRegionSchema = z.object({
   dateDebut: z.string().datetime(),
   campagneId: z.string(),
   codeRegion: z.string(),
-  withPerdir: z.boolean()
+  withSaisiePerdir: z.boolean()
 });
 
 export type CampagneRegionSchema = z.infer<typeof CampagneRegionSchema>;

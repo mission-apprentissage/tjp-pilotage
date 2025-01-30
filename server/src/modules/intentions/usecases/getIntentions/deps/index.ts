@@ -1,4 +1,3 @@
-export { getCampagne } from "./getCampagne.dep";
-export { getFilters } from "./getFilters.dep";
-export type { Filters } from "./getFilters.dep";
-export { getIntentions } from "./getIntentions.dep";
+export { getFiltersQuery } from "./getFilters.dep";
+export { getIntentionsQuery } from "./getIntentions.dep";
+export { getCampagneQuery } from "./getCampagne.dep";

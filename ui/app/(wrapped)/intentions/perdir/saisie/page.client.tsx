@@ -30,19 +30,21 @@ import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
-import { hasRole } from "shared";
 import type { AvisTypeType } from "shared/enum/avisTypeEnum";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import {canDeleteIntention,canEditIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { formatCodeDepartement, formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
+import { getRoutingSaisieRecueilDemande, getRoutingSyntheseRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { useAuth } from "@/utils/security/useAuth";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 import { usePermission } from "@/utils/security/usePermission";
 import { useStateParams } from "@/utils/useFilters";
 
@@ -55,12 +57,12 @@ import { MenuBoiteReception } from "./components/MenuBoiteReception";
 import { ProgressSteps } from "./components/ProgressSteps";
 import { INTENTIONS_COLUMNS } from "./INTENTIONS_COLUMNS";
 import type { Filters, Order } from "./types";
-import { canEditIntention, isSaisieDisabled } from "./utils/canEditIntention";
 
 const PAGE_SIZE = 30;
 
 export const PageClient = () => {
   const { auth } = useAuth();
+  const { campagne: currentCampagne } = useCurrentCampagne();
   const queryClient = useQueryClient();
   const toast = useToast();
   const router = useRouter();
@@ -84,7 +86,6 @@ export const PageClient = () => {
   const filters = searchParams.filters ?? {};
   const search = searchParams.filters?.search ?? "";
   const order = searchParams.order ?? { order: "asc" };
-  const campagne = searchParams.filters?.campagne;
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
   const notFound = searchParams.notfound;
 
@@ -97,7 +98,8 @@ export const PageClient = () => {
         title: `La demande ${notFound} n'a pas été trouvée`,
       });
     }
-  }, [notFound, toast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notFound]);
 
   const trackEvent = usePlausible();
 
@@ -135,8 +137,6 @@ export const PageClient = () => {
     limit: qLimit,
   });
 
-
-  const currentCampagne = client.ref("[GET]/campagne/current").useQuery({});
   const { data, isLoading } = client.ref("[GET]/intentions").useQuery(
     {
       query: getIntentionsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
@@ -144,10 +144,11 @@ export const PageClient = () => {
     { cacheTime: 0, keepPreviousData: true }
   );
 
-  const hasPermissionSubmitIntention = usePermission("intentions-perdir/ecriture");
+  const isCurrentCampagne = data?.campagne.id === currentCampagne?.id;
+  const isNouvelleDemandeDisabled = !isCurrentCampagne || !hasEditIntentionPermission;
 
-  const isCampagneEnCours = data?.campagne?.statut === CampagneStatutEnum["en cours"];
-  const isDisabled = !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
+  const isCampagneEnCours = data?.campagne.statut === CampagneStatutEnum["en cours"];
+  const isModificationsDisabled = !isCampagneEnCours || !hasEditIntentionPermission;
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 
@@ -223,26 +224,20 @@ export const PageClient = () => {
 
   const [isImporting, setIsImporting] = useState(false);
 
-  const canDelete = () => {
-    return (
-      hasPermissionSubmitIntention &&
-      !hasRole({ user: auth?.user, role: "expert_region" }) &&
-      !hasRole({ user: auth?.user, role: "region" })
-    );
-  };
+  if (!data) return <IntentionSpinner />;
 
   return (
     <Container maxWidth="100%" flex={1} flexDirection={["column", null, "row"]} display={"flex"} minHeight={0} py={4}>
       <MenuBoiteReception
-        hasPermissionSubmitIntention={hasPermissionSubmitIntention}
+        isNouvelleDemandeDisabled={isNouvelleDemandeDisabled}
         isRecapView
-        campagne={data?.campagne}
         handleFilters={handleFilters}
         activeFilters={filters}
+        campagne={data?.campagne}
       />
       <Box display={["none", null, "unset"]} borderLeft="solid 1px" borderColor="gray.100" height="100%" mr={4} />
       <Flex flex={1} flexDirection="column" overflow="visible" minHeight={0} minW={0}>
-        {isLoading ? (
+        {(isLoading) ? (
           <IntentionSpinner />
         ) : (
           <>
@@ -252,11 +247,11 @@ export const PageClient = () => {
               getIntentionsQueryParameters={getIntentionsQueryParameters}
               searchIntention={searchIntention}
               setSearchIntention={setSearchIntention}
-              campagnes={data?.campagnes}
               campagne={data?.campagne}
               filterTracker={filterTracker}
               academies={data?.filters.academies ?? []}
               diplomes={data?.filters.diplomes ?? []}
+              campagnes={data?.filters.campagnes}
               handleFilters={handleFilters}
             />
             {data?.intentions.length ? (
@@ -378,17 +373,21 @@ export const PageClient = () => {
                                 <IconButton
                                   as={NextLink}
                                   href={
-                                    campagne === "2023"
-                                      ? `/intentions/synthese/${intention.numero}`
-                                      : `/intentions/perdir/synthese/${intention.numero}`
+                                    getRoutingSyntheseRecueilDemande({
+                                      user: auth?.user,
+                                      campagne: data?.campagne,
+                                      suffix: intention.numero
+                                    })
                                   }
                                   onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
                                     router.push(
-                                      campagne === "2023"
-                                        ? `/intentions/synthese/${intention.numero}`
-                                        : `/intentions/perdir/synthese/${intention.numero}`
+                                      getRoutingSyntheseRecueilDemande({
+                                        user: auth?.user,
+                                        campagne: data?.campagne,
+                                        suffix: intention.numero
+                                      })
                                     );
                                   }}
                                   aria-label="Voir la demande"
@@ -397,31 +396,48 @@ export const PageClient = () => {
                                   icon={<Icon icon="ri:eye-line" width={"24px"} color={bluefrance113} />}
                                 />
                               </Tooltip>
-                              {canEditIntention({
-                                intention,
-                                hasEditIntentionPermission,
-                                isPerdir: hasRole({
+                              {
+                                canEditIntention({
+                                  intention : {
+                                    ...intention,
+                                    campagne: data?.campagne,
+                                  },
                                   user: auth?.user,
-                                  role: "perdir",
-                                }),
-                              }) && (
-                                <Tooltip label="Modifier la demande">
-                                  <IconButton
-                                    as={NextLink}
-                                    href={`/intentions/perdir/saisie/${intention.numero}`}
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      router.push(`/intentions/perdir/saisie/${intention.numero}`);
-                                    }}
-                                    aria-label="Modifier la demande"
-                                    color={"bluefrance.113"}
-                                    bgColor={"transparent"}
-                                    icon={<Icon icon="ri:pencil-line" width={"24px"} color={bluefrance113} />}
-                                  />
-                                </Tooltip>
-                              )}
-                              {canDelete() && <DeleteIntentionButton intention={intention} />}
+                                }) && (
+                                  <Tooltip label="Modifier la demande">
+                                    <IconButton
+                                      disabled={isModificationsDisabled}
+                                      as={NextLink}
+                                      href={
+                                        getRoutingSaisieRecueilDemande({
+                                          user: auth?.user,
+                                          campagne: data?.campagne,
+                                          suffix: intention.numero,
+                                        })
+                                      }
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        router.push(
+                                          getRoutingSaisieRecueilDemande({
+                                            user: auth?.user,
+                                            campagne: data?.campagne,
+                                            suffix: intention.numero
+                                          })
+                                        );
+                                      }}
+                                      aria-label="Modifier la demande"
+                                      color={"bluefrance.113"}
+                                      bgColor={"transparent"}
+                                      icon={<Icon icon="ri:pencil-line" width={"24px"} color={bluefrance113} />}
+                                    />
+                                  </Tooltip>
+                                )}
+                              {
+                                canDeleteIntention({ user: auth?.user }) && (
+                                  <DeleteIntentionButton intention={intention} />
+                                )
+                              }
                               <Tooltip label="Suivre la demande">
                                 <IconButton
                                   onClick={() => {
@@ -454,13 +470,22 @@ export const PageClient = () => {
                                     <IconButton
                                       as={NextLink}
                                       href={
-                                        campagne === "2023"
-                                          ? `/intentions/saisie/${intention.numeroDemandeImportee}`
-                                          : `/intentions/perdir/saisie/${intention.numeroDemandeImportee}`
+                                        getRoutingSaisieRecueilDemande({
+                                          user: auth?.user,
+                                          campagne: data?.campagne,
+                                          suffix: intention.numeroDemandeImportee,
+                                        })
                                       }
                                       onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
+                                        router.push(
+                                          getRoutingSaisieRecueilDemande({
+                                            user: auth?.user,
+                                            campagne: data?.campagne,
+                                            suffix: intention.numeroDemandeImportee,
+                                          })
+                                        );
                                       }}
                                       aria-label={`Voir l'intention dupliquée ${intention.numeroDemandeImportee}`}
                                       color={"bluefrance.113"}
@@ -472,8 +497,15 @@ export const PageClient = () => {
                                   <Tooltip label={"Dupliquer la demande"}>
                                     <IconButton
                                       onClick={(e) => {
+                                        if(
+                                          !canImportIntention({
+                                            isAlreadyImported: !!intention.numeroDemandeImportee,
+                                            isLoading: (isSubmitting || isImporting),
+                                            user: auth?.user,
+                                            campagne: data?.campagne,
+                                          })
+                                        ) return;
                                         setIsImporting(true);
-                                        if (intention.numeroDemandeImportee) return;
                                         e.preventDefault();
                                         e.stopPropagation();
                                         importDemande({
@@ -483,10 +515,12 @@ export const PageClient = () => {
                                         });
                                       }}
                                       isDisabled={
-                                        !!intention.numeroDemandeImportee ||
-                                        isSubmitting ||
-                                        isImporting ||
-                                        !hasPermissionSubmitIntention
+                                        !canImportIntention({
+                                          isAlreadyImported: !!intention.numeroDemandeImportee,
+                                          isLoading: (isSubmitting || isImporting),
+                                          user: auth?.user,
+                                          campagne: data?.campagne,
+                                        })
                                       }
                                       aria-label="Dupliquer la demande"
                                       color={"bluefrance.113"}
@@ -495,7 +529,7 @@ export const PageClient = () => {
                                     />
                                   </Tooltip>
                                 ))}
-                              <CorrectionDemandeButton intention={intention} />
+                              <CorrectionDemandeButton intention={intention} campagne={data?.campagne} />
                             </Flex>
                           </Td>
                           <Td textAlign={"center"}>
@@ -573,12 +607,12 @@ export const PageClient = () => {
               <Center mt={12}>
                 <Flex flexDirection={"column"}>
                   <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-                  {hasPermissionSubmitIntention && (
+                  {hasEditIntentionPermission && (
                     <Button
-                      isDisabled={isDisabled}
+                      isDisabled={isNouvelleDemandeDisabled}
                       variant="createButton"
                       size={"lg"}
-                      as={!isDisabled ? NextLink : undefined}
+                      as={!isNouvelleDemandeDisabled ? NextLink : undefined}
                       href="/intentions/perdir/saisie/new"
                       px={3}
                       mt={12}

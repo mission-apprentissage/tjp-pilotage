@@ -1,8 +1,8 @@
-/* eslint-disable max-len */
 /* eslint-disable-next-line import/no-extraneous-dependencies */
 import { generateMock } from "@anatine/zod-mock";
 import { describe, expect,it } from "vitest";
 
+import type { RaisonCorrectionType } from "../../enum/raisonCorrectionEnum";
 import { RaisonCorrectionEnum } from "../../enum/raisonCorrectionEnum";
 import { ROUTES } from "../../routes/routes";
 import { correctionValidators } from "../correctionValidators";
@@ -14,7 +14,10 @@ describe("shared > validators > correctionValidators", () => {
 
   describe("Validation de la raison", () => {
     it("Doit remonter une erreur si le raison n'est pas renseigné", () => {
-      const result = correctionValidators.raison({ ...validCorrection, raison: "" });
+      const result = correctionValidators.raison({
+        ...validCorrection,
+        raison: undefined as unknown as RaisonCorrectionType
+      });
       expect(result).toBe("Le champ 'raison' est obligatoire");
     });
 
@@ -61,24 +64,44 @@ describe("shared > validators > correctionValidators", () => {
 
     describe("Dans la cas d'une raison 'report' ou 'annulation'", () => {
       it("Doit remonter une erreur si la capacité scolaire n'est pas égale à la capacité actuelle", () => {
-        const invalidCorrectionAnnulation = { ...validCorrection, raison: RaisonCorrectionEnum.annulation, capaciteScolaire: 1, capaciteScolaireActuelle: 2 };
+        const invalidCorrectionAnnulation = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.annulation,
+          capaciteScolaire: 1,
+          capaciteScolaireActuelle: 2
+        };
         expect(
           correctionValidators.capaciteScolaire(invalidCorrectionAnnulation)
         ).toBe("La capacité scolaire doit être égale à la capacité scolaire actuelle dans le cas d'un report ou d'une annulation");
 
-        const invalidCorrectionReport = { ...validCorrection, raison: RaisonCorrectionEnum.report, capaciteScolaire: 1, capaciteScolaireActuelle: 2 };
+        const invalidCorrectionReport = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.report,
+          capaciteScolaire: 1,
+          capaciteScolaireActuelle: 2
+        };
         expect(
           correctionValidators.capaciteScolaire(invalidCorrectionReport)
         ).toBe("La capacité scolaire doit être égale à la capacité scolaire actuelle dans le cas d'un report ou d'une annulation");
       });
 
       it("Sinon ne doit pas remonter d'erreur", () => {
-        const validCorrectionAnnulation = { ...validCorrection, raison: RaisonCorrectionEnum.annulation, capaciteScolaire: 2, capaciteScolaireActuelle: 2 };
+        const validCorrectionAnnulation = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.annulation,
+          capaciteScolaire: 2,
+          capaciteScolaireActuelle: 2
+        };
         expect(
           correctionValidators.capaciteScolaire(validCorrectionAnnulation)
         ).toBeUndefined();
 
-        const validCorrectionReport = { ...validCorrection, raison: RaisonCorrectionEnum.report, capaciteScolaire: 2, capaciteScolaireActuelle: 2 };
+        const validCorrectionReport = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.report,
+          capaciteScolaire: 2,
+          capaciteScolaireActuelle: 2
+        };
         expect(
           correctionValidators.capaciteScolaire(validCorrectionReport)
         ).toBeUndefined();
@@ -99,24 +122,40 @@ describe("shared > validators > correctionValidators", () => {
 
     describe("Dans la cas d'une raison 'report' ou 'annulation'", () => {
       it("Doit remonter une erreur si la capacité scolaire colorée n'est pas égale à la capacité scolaire colorée actuelle", () => {
-        const invalidCorrectionAnnulation = { ...validCorrection, raison: RaisonCorrectionEnum.annulation, capaciteScolaireColoree: 1 };
+        const invalidCorrectionAnnulation = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.annulation,
+          capaciteScolaireColoree: 1
+        };
         expect(
           correctionValidators.capaciteScolaireColoree(invalidCorrectionAnnulation)
         ).toBe("La capacité scolaire colorée doit être égale à 0 dans le cas d'un report ou d'une annulation");
 
-        const invalidCorrectionReport = { ...validCorrection, raison: RaisonCorrectionEnum.report, capaciteScolaireColoree: 1 };
+        const invalidCorrectionReport = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.report,
+          capaciteScolaireColoree: 1
+        };
         expect(
           correctionValidators.capaciteScolaireColoree(invalidCorrectionReport)
         ).toBe("La capacité scolaire colorée doit être égale à 0 dans le cas d'un report ou d'une annulation");
       });
 
       it("Sinon ne doit pas remonter d'erreur", () => {
-        const validCorrectionAnnulation = { ...validCorrection, raison: RaisonCorrectionEnum.annulation, capaciteScolaireColoree: 0 };
+        const validCorrectionAnnulation = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.annulation,
+          capaciteScolaireColoree: 0
+        };
         expect(
           correctionValidators.capaciteScolaireColoree(validCorrectionAnnulation)
         ).toBeUndefined();
 
-        const validCorrectionReport = { ...validCorrection, raison: RaisonCorrectionEnum.report, capaciteScolaireColoree: 0 };
+        const validCorrectionReport = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.report,
+          capaciteScolaireColoree: 0
+        };
         expect(
           correctionValidators.capaciteScolaireColoree(validCorrectionReport)
         ).toBeUndefined();
@@ -147,19 +186,34 @@ describe("shared > validators > correctionValidators", () => {
           correctionValidators.capaciteApprentissage(invalidCorrectionAnnulation)
         ).toBe("La capacité en apprentissage doit être égale à la capacité en apprentissage actuelle dans le cas d'un report ou d'une annulation");
 
-        const invalidCorrectionReport = { ...validCorrection, raison: RaisonCorrectionEnum.report, capaciteApprentissage: 1, capaciteApprentissageActuelle: 2 };
+        const invalidCorrectionReport = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.report,
+          capaciteApprentissage: 1,
+          capaciteApprentissageActuelle: 2
+        };
         expect(
           correctionValidators.capaciteApprentissage(invalidCorrectionReport)
         ).toBe("La capacité en apprentissage doit être égale à la capacité en apprentissage actuelle dans le cas d'un report ou d'une annulation");
       });
 
       it("Sinon ne doit pas remonter d'erreur", () => {
-        const validCorrectionAnnulation = { ...validCorrection, raison: RaisonCorrectionEnum.annulation, capaciteApprentissage: 2, capaciteApprentissageActuelle: 2 };
+        const validCorrectionAnnulation = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.annulation,
+          capaciteApprentissage: 2,
+          capaciteApprentissageActuelle: 2
+        };
         expect(
           correctionValidators.capaciteApprentissage(validCorrectionAnnulation)
         ).toBeUndefined();
 
-        const validCorrectionReport = { ...validCorrection, raison: RaisonCorrectionEnum.report, capaciteApprentissage: 2, capaciteApprentissageActuelle: 2 };
+        const validCorrectionReport = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.report,
+          capaciteApprentissage: 2,
+          capaciteApprentissageActuelle: 2
+        };
         expect(
           correctionValidators.capaciteApprentissage(validCorrectionReport)
         ).toBeUndefined();
@@ -175,30 +229,49 @@ describe("shared > validators > correctionValidators", () => {
 
   describe("Validation de la capacité en apprentissage colorée", () => {
     it("Doit remonter une erreur si la capacité en apprentissage colorée est un nombre négatif", () => {
-      const result = correctionValidators.capaciteApprentissageColoree({ ...validCorrection, capaciteApprentissageColoree: -1 });
+      const result = correctionValidators.capaciteApprentissageColoree({
+        ...validCorrection,
+        capaciteApprentissageColoree: -1
+      });
       expect(result).toBe("La capacité en apprentissage colorée doit être un nombre entier positif");
     });
 
     describe("Dans la cas d'une raison 'report' ou 'annulation'", () => {
       it("Doit remonter une erreur si la capacité en apprentissage colorée n'est pas égale à la capacité en apprentissage colorée actuelle", () => {
-        const invalidCorrectionAnnulation = { ...validCorrection, raison: RaisonCorrectionEnum.annulation, capaciteApprentissageColoree: 1 };
+        const invalidCorrectionAnnulation = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.annulation,
+          capaciteApprentissageColoree: 1
+        };
         expect(
           correctionValidators.capaciteApprentissageColoree(invalidCorrectionAnnulation)
         ).toBe("La capacité en apprentissage colorée doit être égale à 0 dans le cas d'un report ou d'une annulation");
 
-        const invalidCorrectionReport = { ...validCorrection, raison: RaisonCorrectionEnum.report, capaciteApprentissageColoree: 1 };
+        const invalidCorrectionReport = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.report,
+          capaciteApprentissageColoree: 1
+        };
         expect(
           correctionValidators.capaciteApprentissageColoree(invalidCorrectionReport)
         ).toBe("La capacité en apprentissage colorée doit être égale à 0 dans le cas d'un report ou d'une annulation");
       });
 
       it("Sinon ne doit pas remonter d'erreur", () => {
-        const validCorrectionAnnulation = { ...validCorrection, raison: RaisonCorrectionEnum.annulation, capaciteApprentissageColoree: 0 };
+        const validCorrectionAnnulation = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.annulation,
+          capaciteApprentissageColoree: 0
+        };
         expect(
           correctionValidators.capaciteApprentissageColoree(validCorrectionAnnulation)
         ).toBeUndefined();
 
-        const validCorrectionReport = { ...validCorrection, raison: RaisonCorrectionEnum.report, capaciteApprentissageColoree: 0 };
+        const validCorrectionReport = {
+          ...validCorrection,
+          raison: RaisonCorrectionEnum.report,
+          capaciteApprentissageColoree: 0
+        };
         expect(
           correctionValidators.capaciteApprentissageColoree(validCorrectionReport)
         ).toBeUndefined();
@@ -206,7 +279,10 @@ describe("shared > validators > correctionValidators", () => {
     });
 
     it("Sinon ne doit pas remonter d'erreur", () => {
-      const result = correctionValidators.capaciteApprentissageColoree({ ...validCorrection, capaciteApprentissageColoree: 1 });
+      const result = correctionValidators.capaciteApprentissageColoree({
+        ...validCorrection,
+        capaciteApprentissageColoree: 1
+      });
       expect(result).toBeUndefined();
     });
   });

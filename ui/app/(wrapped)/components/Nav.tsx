@@ -17,13 +17,15 @@ import { useSelectedLayoutSegments } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import type { HTMLAttributeAnchorTarget, ReactNode } from "react";
 import { useContext } from "react";
-import { hasPermission, hasRole, isUserInRegionsExperimentation2024 } from "shared";
+import { hasPermission, hasRole } from "shared";
 
 import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
 import { UaisFilterContext } from "@/app/layoutClient";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { useAuth } from "@/utils/security/useAuth";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
 const NavLink = chakra(
   ({
@@ -153,6 +155,7 @@ const NavMenuButton = chakra(
 
 export const Nav = () => {
   const { auth } = useAuth();
+  const { campagne } = useCurrentCampagne();
   const { uaisFilter } = useContext(UaisFilterContext);
   const hasIntentionsMenu =
     hasPermission(auth?.user.role, "intentions/lecture") ||
@@ -163,25 +166,11 @@ export const Nav = () => {
   const hasAdminMenu =
     hasPermission(auth?.user.role, "users/lecture") || hasPermission(auth?.user.role, "campagnes/lecture");
 
-  const shouldDisplayIntentionExpeMenu = isUserInRegionsExperimentation2024({
-    user: auth?.user,
-  });
-
   const shouldDisplayBothIntentionMenus =
     hasRole({
       user: auth?.user,
       role: "admin",
     }) || hasRole({ user: auth?.user, role: "pilote" });
-
-  const hasOnlyFormulaireIntentionMenu =
-    hasPermission(auth?.user.role, "intentions/lecture") &&
-    !shouldDisplayIntentionExpeMenu &&
-    !shouldDisplayBothIntentionMenus;
-
-  const hasOnlyFormulaireIntentionExpeMenu =
-    hasPermission(auth?.user.role, "intentions-perdir/lecture") &&
-    shouldDisplayIntentionExpeMenu &&
-    !shouldDisplayBothIntentionMenus;
 
   const { isOpen: isMenuPanoramaOpen, onOpen: onMenuPanoramaOpen, onClose: onMenuPanoramaClose } = useDisclosure();
 
@@ -315,22 +304,11 @@ export const Nav = () => {
                   </MenuItem>
                 </>
               ) : (
-                <>
-                  {hasOnlyFormulaireIntentionMenu && (
-                    <MenuItem p="0" w="100%">
-                      <NavMenuLink href="/intentions/saisie" segment="saisie-intentions">
-                        Gestion des demandes
-                      </NavMenuLink>
-                    </MenuItem>
-                  )}
-                  {hasOnlyFormulaireIntentionExpeMenu && (
-                    <MenuItem p="0" w="100%">
-                      <NavMenuLink href="/intentions/perdir/saisie" segment="saisie-intentions-perdir">
-                        Gestion des demandes
-                      </NavMenuLink>
-                    </MenuItem>
-                  )}
-                </>
+                <MenuItem p="0" w="100%">
+                  <NavMenuLink href={getRoutingSaisieRecueilDemande({campagne, user: auth?.user})} segment="saisie-intentions">
+                    Gestion des demandes
+                  </NavMenuLink>
+                </MenuItem>
               )}
               {hasPermission(auth?.user.role, "pilotage-intentions/lecture") && (
                 <MenuItem p="0">

@@ -12,9 +12,9 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { isTypeColoration } from "shared/utils/typeDemandeUtils";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
-import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { toBoolean } from "@/utils/toBoolean";
 

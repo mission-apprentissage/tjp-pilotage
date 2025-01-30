@@ -27,6 +27,7 @@ import { z } from "zod";
 
 import { client } from "@/api.client";
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
+import {useCurrentCampagne} from '@/utils/security/useCurrentCampagne';
 
 export const EditCampagne = ({
   isOpen,
@@ -61,14 +62,16 @@ export const EditCampagne = ({
   const queryClient = useQueryClient();
 
   const [serverErrors, setServerErrors] = useState<Record<string, string>>();
+  const { setCampagne } = useCurrentCampagne();
 
   const {
     mutate: editCampagne,
     isLoading,
     isError,
   } = client.ref("[PUT]/campagnes/:campagneId").useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries(["[GET]/campagnes"]);
+      await client.ref("[GET]/campagne/current").query({}).then((campagne) => setCampagne(campagne));
       onClose();
     },
     //@ts-ignore

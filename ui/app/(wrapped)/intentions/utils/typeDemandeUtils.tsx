@@ -1,50 +1,37 @@
 import { ListItem, OrderedList, Text } from "@chakra-ui/react";
 import type { ReactNode } from "react";
+import type {DemandeTypeType} from "shared/enum/demandeTypeEnum";
+import { DemandeTypeEnum  } from "shared/enum/demandeTypeEnum";
+import { isTypeAjustement, isTypeColoration } from "shared/utils/typeDemandeUtils";
 
-export type TypeDemande = keyof typeof TYPES_DEMANDES_OPTIONS;
 
-export const shouldDisplayColoration = (typeDemande: TypeDemande, libelleFCIL?: string) => {
+export const shouldDisplayColoration = (typeDemande: DemandeTypeType, libelleFCIL?: string) => {
   if (!isTypeColoration(typeDemande)) return true;
   return !libelleFCIL;
 };
 
-export const shouldDisplayTypeDemande = (typeDemande: TypeDemande, anneeCampagne: string, rentreeScolaire?: number) => {
+export const shouldDisplayTypeDemande = (
+  typeDemande: DemandeTypeType,
+  anneeCampagne: string,
+  rentreeScolaire?: number
+) => {
   if (rentreeScolaire && parseInt(anneeCampagne) === rentreeScolaire) return isTypeAjustement(typeDemande);
   return TYPES_DEMANDES_OPTIONS[typeDemande].campagnes.includes(anneeCampagne) && !isTypeAjustement(typeDemande);
 };
 
-export const isTypeFermeture = (typeDemande: TypeDemande) => typeDemande === "fermeture";
-
-export const isTypeOuverture = (typeDemande: TypeDemande) =>
-  typeDemande === "ouverture_compensation" || typeDemande === "ouverture_nette";
-
-export const isTypeAugmentation = (typeDemande: TypeDemande) =>
-  typeDemande === "augmentation_compensation" || typeDemande === "augmentation_nette";
-
-export const isTypeDiminution = (typeDemande: TypeDemande) => typeDemande === "diminution";
-
-export const isTypeCompensation = (typeDemande: TypeDemande) =>
-  typeDemande === "augmentation_compensation" || typeDemande === "ouverture_compensation";
-
-export const isTypeTransfert = (typeDemande: TypeDemande) => typeDemande === "transfert";
-
-export const isTypeColoration = (typeDemande: TypeDemande) => typeDemande === "coloration";
-
-export const isTypeAjustement = (typeDemande: TypeDemande) => typeDemande === "ajustement";
-
-export const getTypeDemandeLabelFiltre = (typeDemande?: TypeDemande): string =>
+export const getTypeDemandeLabelFiltre = (typeDemande?: DemandeTypeType): string =>
   typeDemande ? (TYPES_DEMANDES_OPTIONS[typeDemande].labelFiltre ?? TYPES_DEMANDES_OPTIONS[typeDemande].label) : "";
 
-export const getTypeDemandeLabel = (typeDemande?: TypeDemande): string =>
+export const getTypeDemandeLabel = (typeDemande?: DemandeTypeType): string =>
   typeDemande ? TYPES_DEMANDES_OPTIONS[typeDemande].label : "";
 
-export const getTypeDemandeExemple = (typeDemande?: TypeDemande): ReactNode =>
+export const getTypeDemandeExemple = (typeDemande?: DemandeTypeType): ReactNode =>
   typeDemande ? TYPES_DEMANDES_OPTIONS[typeDemande].exemple : "";
 
 export const TYPES_DEMANDES_OPTIONS: Record<
-  string,
+  DemandeTypeType,
   {
-    value: string;
+    value: DemandeTypeType;
     labelFiltre?: string;
     label: string;
     campagnes: Array<string>;
@@ -52,8 +39,8 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     exemple: ReactNode;
   }
 > = {
-  ouverture_nette: {
-    value: "ouverture_nette",
+  [DemandeTypeEnum["ouverture_nette"]]: {
+    value: DemandeTypeEnum["ouverture_nette"],
     label: "Ouverture",
     campagnes: ["2023", "2024", "2025"],
     desc: "Utiliser ce formulaire pour tout cas de création d'une formation en voie scolaire ou apprentissage.",
@@ -69,8 +56,8 @@ export const TYPES_DEMANDES_OPTIONS: Record<
       </>
     ),
   },
-  augmentation_nette: {
-    value: "augmentation_nette",
+  [DemandeTypeEnum["augmentation_nette"]]: {
+    value: DemandeTypeEnum["augmentation_nette"],
     label: "Augmentation",
     campagnes: ["2023", "2024", "2025"],
     desc: "Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur une formation existante. Ne pas utiliser pour des places déjà ouvertes sur l'établissement.",
@@ -84,8 +71,8 @@ export const TYPES_DEMANDES_OPTIONS: Record<
       </>
     ),
   },
-  fermeture: {
-    value: "fermeture",
+  [DemandeTypeEnum["fermeture"]]: {
+    value: DemandeTypeEnum["fermeture"],
     label: "Fermeture",
     campagnes: ["2023", "2024", "2025"],
     desc: "Utiliser ce formulaire pour renseigner les places fermées en compensation d'une ouverture ou pour les fermetures nettes.",
@@ -99,8 +86,8 @@ export const TYPES_DEMANDES_OPTIONS: Record<
       </>
     ),
   },
-  ouverture_compensation: {
-    value: "ouverture_compensation",
+  [DemandeTypeEnum["ouverture_compensation"]]: {
+    value: DemandeTypeEnum["ouverture_compensation"],
     label: "Ouverture avec compensation",
     campagnes: ["2023"],
     desc: "Utiliser ce formulaire pour tout cas de transfert de capacité d'une formation vers une autre (voir exemple ci-contre).",
@@ -122,8 +109,8 @@ export const TYPES_DEMANDES_OPTIONS: Record<
       </>
     ),
   },
-  augmentation_compensation: {
-    value: "augmentation_compensation",
+  [DemandeTypeEnum["augmentation_compensation"]]: {
+    value: DemandeTypeEnum["augmentation_compensation"],
     label: "Augmentation avec compensation",
     campagnes: ["2023"],
     desc: "Utiliser ce formulaire pour tout cas d'augmentation de capacité sur une formation déjà ouverte et en lien avec une fermeture ou diminution de capacité.",
@@ -143,8 +130,8 @@ export const TYPES_DEMANDES_OPTIONS: Record<
       </>
     ),
   },
-  diminution: {
-    value: "diminution",
+  [DemandeTypeEnum["diminution"]]: {
+    value: DemandeTypeEnum["diminution"],
     label: "Diminution",
     campagnes: ["2023", "2024", "2025"],
     desc: "Utiliser ce formulaire pour renseigner les places fermées en compensation d'une ouverture, ou pour les diminutions nettes.",
@@ -158,8 +145,8 @@ export const TYPES_DEMANDES_OPTIONS: Record<
       </>
     ),
   },
-  transfert: {
-    value: "transfert",
+  [DemandeTypeEnum["transfert"]]: {
+    value: DemandeTypeEnum["transfert"],
     label: "Transfert",
     campagnes: ["2024", "2025"],
     desc: "Utiliser ce formulaire pour les transferts de place entre la voie scolaire et l'apprentissage.",
@@ -175,8 +162,8 @@ export const TYPES_DEMANDES_OPTIONS: Record<
       </>
     ),
   },
-  coloration: {
-    value: "coloration",
+  [DemandeTypeEnum["coloration"]]: {
+    value: DemandeTypeEnum["coloration"],
     labelFiltre: "Coloration / formations existantes",
     label: "Coloration",
     campagnes: ["2024", "2025"],
@@ -196,8 +183,8 @@ export const TYPES_DEMANDES_OPTIONS: Record<
       </>
     ),
   },
-  ajustement: {
-    value: "ajustement",
+  [DemandeTypeEnum["ajustement"]]: {
+    value: DemandeTypeEnum["ajustement"],
     label: "Ajustement de rentrée",
     campagnes: ["2024", "2025"],
     desc: "Ce formulaire doit être utilisé uniquement pour des ouvertures ou augmentations de places afin de répondre à l’afflux d’élèves sans affectation.",

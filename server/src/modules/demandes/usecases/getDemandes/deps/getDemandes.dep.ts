@@ -6,12 +6,13 @@ import { MAX_LIMIT } from "shared/utils/maxLimit";
 import { getKbdClient } from "@/db/db";
 import type {Filters} from '@/modules/demandes/usecases/getDemandes/getDemandes.usecase';
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import {castTypeDemande} from '@/modules/utils/castTypeDemande';
 import { isDemandeCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
 import { isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
-export const getDemandes = async ({
+export const getDemandesQuery = async ({
   campagne,
   statut,
   codeAcademie,
@@ -170,6 +171,7 @@ export const getDemandes = async ({
       cleanNull({
         ...demande,
         statut: castDemandeStatutWithoutSupprimee(demande.statut),
+        typeDemande: castTypeDemande(demande.typeDemande),
         createdAt: demande.createdAt?.toISOString(),
         updatedAt: demande.updatedAt?.toISOString(),
         numeroCompensation: demande.demandeCompensee?.numero,

@@ -2,39 +2,14 @@
 
 import type { Args, ZodTypeProvider } from "@http-wizard/core";
 
-// import type { Router } from "server/src/server/routes/routes";
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
+import type {Router} from '../routes';
+import { isTypeAjustement, isTypeAugmentation, isTypeColoration, isTypeDiminution, isTypeFermeture, isTypeOuverture, isTypeTransfert } from "../utils/typeDemandeUtils";
+import { isPositiveNumber } from "./utils";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Intention = Args<any["[POST]/intention/submit"]["schema"], ZodTypeProvider>["body"]["intention"];
+type Intention = Args<Router["[POST]/intention/submit"]["schema"], ZodTypeProvider>["body"]["intention"];
 
-export const isTypeFermeture = (typeDemande: string) => ["fermeture"].includes(typeDemande);
-
-export const isTypeOuverture = (typeDemande: string) =>
-  ["ouverture_compensation", "ouverture_nette"].includes(typeDemande);
-
-export const isTypeAugmentation = (typeDemande: string) =>
-  ["augmentation_compensation", "augmentation_nette"].includes(typeDemande);
-
-export const isTypeDiminution = (typeDemande: string) => ["diminution"].includes(typeDemande);
-
-export const isTypeCompensation = (typeDemande: string) =>
-  ["augmentation_compensation", "ouverture_compensation"].includes(typeDemande);
-
-export const isTypeTransfert = (typeDemande: string) => ["transfert"].includes(typeDemande);
-
-export const isTypeColoration = (typeDemande: string) => ["coloration"].includes(typeDemande);
-
-export const isTypeAjustement = (typeDemande: string) => ["ajustement"].includes(typeDemande);
-
-const isPositiveNumber = (value: number | undefined): value is number => {
-  if (!Number.isInteger(value)) return false;
-  if (value === undefined) return false;
-  if (value < 0) return false;
-  return true;
-};
-
-export const intentionValidators: Record<keyof Intention | string, (intention: Intention) => string | undefined> = {
+export const intentionValidators = {
   motif: (intention) => {
     if (!isTypeAjustement(intention.typeDemande) && !intention.motif?.length) {
       return "Le champ 'motif' est obligatoire";
@@ -386,4 +361,4 @@ export const intentionValidators: Record<keyof Intention | string, (intention: I
       return "Le champ 'autre motif refus' est obligatoire";
     }
   },
-};
+} satisfies Record<keyof Intention | string, (intention: Intention) => string | undefined>;

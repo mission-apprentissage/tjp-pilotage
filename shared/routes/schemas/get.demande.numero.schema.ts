@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
+import { RaisonCorrectionZodType } from "../../enum/raisonCorrectionEnum";
+import { CampagneSchema } from "../../schema/campagneSchema";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 const UserSchema = z.object({
   fullname: z.string().optional(),
@@ -38,7 +41,7 @@ const MetadataSchema = z.object({
 });
 
 const CorrectionSchema = z.object({
-  intentionNumero: z.string(),
+  intentionNumero: z.string().optional(),
   libelleColoration: z.string().optional(),
   coloration: z.boolean().optional(),
   capaciteScolaireActuelle: z.coerce.number().optional(),
@@ -51,9 +54,9 @@ const CorrectionSchema = z.object({
   capaciteApprentissageColoree: z.coerce.number().optional(),
   motif: z.string().optional(),
   autreMotif: z.string().optional(),
-  raison: z.string().optional(),
+  raison: RaisonCorrectionZodType,
   commentaire: z.string().optional(),
-  campagneId: z.string(),
+  campagneId: z.string().optional(),
 });
 
 const DemandeSchema = z.object({
@@ -63,7 +66,7 @@ const DemandeSchema = z.object({
   libelleFCIL: z.string().optional(),
   // Type de demande
   rentreeScolaire: z.coerce.number(),
-  typeDemande: z.string(),
+  typeDemande: DemandeTypeZodType,
   coloration: z.boolean(),
   libelleColoration: z.string().optional(),
   // Capacité
@@ -103,18 +106,14 @@ const DemandeSchema = z.object({
   // Observations / commentaires
   commentaire: z.string().optional(),
   // Statut
-  statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
+  statut: DemandeStatutZodType.exclude(["supprimée"]),
   motifRefus: z.array(z.string()).optional(),
   autreMotifRefus: z.string().optional(),
   // Autre
   numero: z.string(),
   createdAt: z.string(),
   campagneId: z.string(),
-  campagne: z.object({
-    id: z.string().optional(),
-    annee: z.coerce.string().optional(),
-    statut: z.string().optional(),
-  }),
+  campagne: CampagneSchema,
   // Historique
   poursuitePedagogique: z.boolean().optional(),
   compensationUai: z.string().optional(),
@@ -142,7 +141,7 @@ export const FiltersSchema = z.object({
 export const getDemandeSchema = {
   params: FiltersSchema,
   response: {
-    200: DemandeSchema.partial().merge(
+    200: DemandeSchema.merge(
       z.object({
         metadata: MetadataSchema,
         canEdit: z.boolean(),

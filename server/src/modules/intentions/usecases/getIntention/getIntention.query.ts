@@ -5,9 +5,11 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { getKbdClient } from "@/db/db";
+import { findOneCampagneRegionByCampagneId } from "@/modules/intentions/repositories/findOneCampagneRegionByCampagneId.query";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
 import { castAvisStatut } from "@/modules/utils/castStatutAvis";
 import { castAvisType } from "@/modules/utils/castTypeAvis";
+import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import {
   countDifferenceCapaciteApprentissageIntention,
   countDifferenceCapaciteScolaireIntention,
@@ -60,9 +62,6 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
             "user.role",
           ])
       ).as("updatedBy"),
-      jsonObjectFrom(
-        eb.selectFrom("campagne").selectAll("campagne").whereRef("campagne.id", "=", "intention.campagneId").limit(1)
-      ).as("campagne"),
       jsonBuildObject({
         etablissement: jsonObjectFrom(
           eb
@@ -180,8 +179,14 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     .execute()
     .then(cleanNull);
 
+  const campagne =  await findOneCampagneRegionByCampagneId({
+    campagneId: intention.campagneId,
+    user,
+  });
+
   return {
     ...intention,
+    campagne,
     metadata: {
       ...intention.metadata,
       formation: intention.metadata.formation,
@@ -189,10 +194,8 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     },
     createdAt: intention.createdAt?.toISOString(),
     updatedAt: intention.updatedAt?.toISOString(),
-    campagne: {
-      ...intention.campagne,
-    },
     statut: castDemandeStatutWithoutSupprimee(intention.statut),
+    typeDemande: castTypeDemande(intention.typeDemande),
     changementsStatut: changementsStatut.map((changementStatut) => ({
       ...changementStatut,
       statut: castDemandeStatutWithoutSupprimee(changementStatut.statut),

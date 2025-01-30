@@ -1,10 +1,9 @@
 import { chakra, Flex, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/validators/demandeValidators";
+import { isTypeDiminution, isTypeFermeture } from "shared/utils/typeDemandeUtils";
 
 import { FiliereAutoCompleteInput } from "@/app/(wrapped)/intentions/perdir/saisie/components/FiliereAutoComplete";
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
-import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const FiliereCmqField = chakra(({ disabled, className }: { disabled?: boolean; className?: string }) => {
   const {

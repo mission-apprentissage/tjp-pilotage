@@ -1,7 +1,6 @@
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
-export type MotifCorrectionCampagne = keyof typeof MOTIFS_CORRECTION_LABELS;
-export type MotifCorrectionLabel = keyof (typeof MOTIFS_CORRECTION_LABELS)[MotifCorrectionCampagne];
+export type AnneeCampagneMotifCorrection = keyof typeof MOTIFS_CORRECTION_LABELS;
+export type MotifCorrectionLabel = keyof (typeof MOTIFS_CORRECTION_LABELS)[AnneeCampagneMotifCorrection];
 
 export const MOTIFS_CORRECTION_LABELS = {
   "2023": {
@@ -35,17 +34,25 @@ export const MOTIFS_CORRECTION_LABELS = {
 
 export const getMotifCorrectionLabel = ({
   motifCorrection,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
+  anneeCampagne,
 }: {
   motifCorrection: MotifCorrectionLabel;
-  campagne?: MotifCorrectionCampagne;
+  anneeCampagne: AnneeCampagneMotifCorrection;
 }): string => {
-  return MOTIFS_CORRECTION_LABELS[campagne][motifCorrection];
+  return MOTIFS_CORRECTION_LABELS[anneeCampagne][motifCorrection];
 };
 
-export const getMotifsCampagne = (
-  campagne: MotifCorrectionCampagne = CURRENT_ANNEE_CAMPAGNE
+export const getMotifsParAnneeCampagne = (
+  anneeCampagne: AnneeCampagneMotifCorrection
 ): MotifCorrectionLabel[] => {
-  const motifsCampagne = MOTIFS_CORRECTION_LABELS[campagne];
-  return Object.keys(motifsCampagne) as MotifCorrectionLabel[];
+  const motifsParAnneeCampagne = MOTIFS_CORRECTION_LABELS[anneeCampagne];
+  return Object.keys(motifsParAnneeCampagne) as MotifCorrectionLabel[];
+};
+
+export const getMotifCorrectionOptionsParAnneeCampagne = (anneeCampagne: string) => {
+  return Object.entries(MOTIFS_CORRECTION_LABELS[anneeCampagne as AnneeCampagneMotifCorrection]).map(
+    ([value, label]) => ({
+      value,
+      label,
+    }));
 };

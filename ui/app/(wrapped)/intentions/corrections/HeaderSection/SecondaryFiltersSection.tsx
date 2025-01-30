@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Select,Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
@@ -183,7 +184,7 @@ export const SecondaryFiltersSection = ({
               options={data?.filters.typesDemande.map((typeDemande) => {
                 return {
                   value: typeDemande.value,
-                  label: getTypeDemandeLabel(typeDemande.value),
+                  label: getTypeDemandeLabel(typeDemande.value as DemandeTypeType),
                 };
               })}
               value={activeFilters.typeDemande ?? []}

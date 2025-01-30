@@ -31,7 +31,6 @@ export const getDemandeRoute = (server: Server) => {
         });
         response.status(200).send({
           ...demande,
-          statut: demande.statut,
           canEdit,
         });
       },

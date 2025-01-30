@@ -1,7 +1,7 @@
 import { Button, Container, Flex, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 import { useFormationContext } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/context/formationContext";
 import type { NsfOptions } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/types";
@@ -14,9 +14,9 @@ export const FiltersSection = ({
   defaultNsfs,
   currentNsf,
 }: {
-  regionOptions: OptionSchema[];
-  academieOptions: OptionSchema[];
-  departementOptions: OptionSchema[];
+  regionOptions: OptionType[];
+  academieOptions: OptionType[];
+  departementOptions: OptionType[];
   defaultNsfs: NsfOptions;
   currentNsf: string;
 }) => {

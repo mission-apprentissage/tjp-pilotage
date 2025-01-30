@@ -1,9 +1,10 @@
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType} from 'shared/schema/optionSchema';
 
 import { client } from "@/api.client";
+import type { Campus } from "@/app/(wrapped)/intentions/perdir/saisie/types";
 
 export const CampusAutocompleteInput = ({
   name,
@@ -13,10 +14,10 @@ export const CampusAutocompleteInput = ({
   onChange,
 }: {
   name: string;
-  defaultValue?: OptionSchema;
+  defaultValue?: OptionType;
   active?: boolean;
   inError: boolean;
-  onChange: (value?: (typeof client.infer)["[GET]/campus/search/:search"][number]) => void;
+  onChange: (value?: Campus) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({

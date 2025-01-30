@@ -2,12 +2,10 @@ import { Flex, IconButton, Tooltip, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import NextLink from "next/link";
-import { hasRole } from "shared";
 
 import { client } from "@/api.client";
-import { canEditIntention } from "@/app/(wrapped)/intentions/perdir/saisie/utils/canEditIntention";
+import { canEditIntention } from "@/app/(wrapped)/intentions/utils/permissionsIntentionUtils";
 import { useAuth } from "@/utils/security/useAuth";
-import { usePermission } from "@/utils/security/usePermission";
 
 import { CommentairesEtAvisSection } from "./commentaireEtAvis/CommentairesEtAvisSection";
 import { DisplayTypeEnum } from "./displayTypeEnum";
@@ -30,7 +28,6 @@ export const MainSection = ({
   const { auth } = useAuth();
   const toast = useToast();
   const queryClient = useQueryClient();
-  const hasEditIntentionPermission = usePermission("intentions-perdir/ecriture");
 
   const { mutate: submitSuivi } = client.ref("[POST]/intention/suivi").useMutation({
     onSuccess: (_body) => {
@@ -70,11 +67,7 @@ export const MainSection = ({
             displayCommentairesEtAvis={displayCommentairesEtAvis}
           />
           <Flex direction={"row"} gap={2}>
-            {canEditIntention({
-              intention,
-              hasEditIntentionPermission,
-              isPerdir: hasRole({ user: auth?.user, role: "perdir" }),
-            }) && (
+            {canEditIntention({intention, user: auth?.user}) && (
               <Tooltip label="Modifier la demande">
                 <IconButton
                   as={NextLink}

@@ -330,13 +330,16 @@ export default () => {
           count={data?.count}
           onPageChange={(newPage) => setSearchParams({ page: newPage })}
         />
-        <ConsoleSection
-          data={data}
-          isLoading={isLoading}
-          handleOrder={handleOrder}
-          order={order}
-          colonneFilters={colonneFilters}
-        />
+        {data && (
+          <ConsoleSection
+            data={data}
+            campagne={data.campagne}
+            isLoading={isLoading}
+            handleOrder={handleOrder}
+            order={order}
+            colonneFilters={colonneFilters}
+          />)
+        }
       </Container>
     </GuardPermission>
   );

@@ -1,10 +1,9 @@
 import { chakra, FormControl, FormErrorMessage, FormLabel, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/validators/demandeValidators";
+import { isTypeDiminution,isTypeFermeture } from "shared/utils/typeDemandeUtils";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
-import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { toBoolean } from "@/utils/toBoolean";
 
 export const AmiCmaEnCoursValidationField = chakra(

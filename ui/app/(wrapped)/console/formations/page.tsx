@@ -8,7 +8,7 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
@@ -72,7 +72,7 @@ const ColonneFilterSection = chakra(
               string,
               {
                 color: string;
-                options: (OptionSchema & { disabled?: boolean })[];
+                options: (OptionType & { disabled?: boolean })[];
               }
             >
           )}

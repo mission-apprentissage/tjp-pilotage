@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import type { Insertable } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
-import type { DemandeType } from "shared/enum/demandeTypeEnum";
+import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
@@ -60,7 +60,7 @@ export function createIntentionBuilder(
     },
     withCampagneId: (campagneId: string | null | undefined) =>
       createIntentionBuilder(user, { ...intention, campagneId }),
-    withTypeDemande: (typeDemande: DemandeType) =>
+    withTypeDemande: (typeDemande: DemandeTypeType) =>
       createIntentionBuilder(user, { ...intention, typeDemande }),
     withCodeRegion: (codeRegion: string | null | undefined) =>
       createIntentionBuilder(user, { ...intention, codeRegion }),

@@ -57,9 +57,10 @@ export interface CampagneRegion {
   id: Generated<string>;
   campagneId: string;
   codeRegion: string;
-  withPerdir: Generated<boolean>;
+  withSaisiePerdir: Generated<boolean>;
   dateDebut: Timestamp;
   dateFin: Timestamp;
+  dateVote: Timestamp | null;
   statut: string;
 }
 

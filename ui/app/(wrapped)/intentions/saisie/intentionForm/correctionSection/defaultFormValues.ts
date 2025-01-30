@@ -1,4 +1,4 @@
-export const defaultCorrectionForms: PartialCorrectionForms = {};
+import type { RaisonCorrectionType } from "shared/enum/raisonCorrectionEnum";
 
 export type PartialCorrectionForms = Partial<CorrectionForms>;
 
@@ -13,7 +13,7 @@ export type CorrectionForms = {
   capaciteApprentissageColoreeActuelle: number;
   capaciteApprentissageColoree: number;
   // Précisions
-  raison: string;
+  raison: RaisonCorrectionType;
   motif: string;
   autreMotif?: string;
   commentaire?: string;

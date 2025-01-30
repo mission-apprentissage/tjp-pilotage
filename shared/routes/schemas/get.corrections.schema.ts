@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import {CampagneSchema} from '../../schema/campagneSchema';
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
@@ -91,6 +92,7 @@ export const getCorrectionsSchema = {
       count: z.coerce.number(),
       stats: StatsCorrection,
       corrections: z.array(CorrectionItem),
+      campagne: CampagneSchema,
       filters: z.object({
         rentreesScolaires: z.array(OptionSchema),
         statuts: z.array(OptionSchema),

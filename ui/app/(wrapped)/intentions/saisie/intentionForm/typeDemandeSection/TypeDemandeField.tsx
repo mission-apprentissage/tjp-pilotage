@@ -13,16 +13,16 @@ import {
 } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
 import type { ComponentProps, ReactNode } from "react";
-import { useContext } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
-
-import { CampagneContext } from "@/app/(wrapped)/intentions/saisie/intentionForm/CampagneContext";
-import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import type { CampagneType } from "shared/schema/campagneSchema";
 import {
   isTypeColoration,
   isTypeDiminution,
   isTypeFermeture,
+} from "shared/utils/typeDemandeUtils";
+
+import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import {
   shouldDisplayTypeDemande,
   TYPES_DEMANDES_OPTIONS,
 } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
@@ -87,7 +87,7 @@ function RadioCard({
 }
 
 export const TypeDemandeField = chakra(
-  ({ disabled = false, className }: { disabled?: boolean; className?: string }) => {
+  ({ campagne, disabled = false, className }: { campagne: CampagneType; disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       control,
@@ -95,7 +95,6 @@ export const TypeDemandeField = chakra(
     } = useFormContext<IntentionForms>();
     const queryParams = useSearchParams();
     const compensation = queryParams.get("compensation");
-    const { campagne } = useContext(CampagneContext);
     const rentreeScolaire = watch("rentreeScolaire");
 
     return (
@@ -118,7 +117,7 @@ export const TypeDemandeField = chakra(
             >
               {Object.values(TYPES_DEMANDES_OPTIONS).map(
                 (item) =>
-                  shouldDisplayTypeDemande(item.value, campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE, rentreeScolaire) && (
+                  shouldDisplayTypeDemande(item.value, campagne.annee, rentreeScolaire) && (
                     <RadioCard
                       selected={value === item.value}
                       key={item.value}

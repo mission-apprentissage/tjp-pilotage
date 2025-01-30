@@ -18,11 +18,12 @@ import type { ReactNode, RefObject } from "react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { CampagneType } from "shared/schema/campagneSchema";
+import { isTypeAjustement } from "shared/utils/typeDemandeUtils";
 
 import { client } from "@/api.client";
 import { SectionBlock } from "@/app/(wrapped)/intentions/saisie/components/SectionBlock";
-import type { Campagne, Demande } from "@/app/(wrapped)/intentions/saisie/types";
-import { isTypeAjustement } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import type { Demande } from "@/app/(wrapped)/intentions/saisie/types";
 import { feature } from "@/utils/feature";
 import { usePermission } from "@/utils/security/usePermission";
 
@@ -46,7 +47,7 @@ export const InformationsBlock = ({
   formId?: string;
   disabled: boolean;
   footerActions: ReactNode;
-  campagne?: Campagne;
+  campagne: CampagneType;
   demande?: Demande;
 }) => {
   const { push } = useRouter();

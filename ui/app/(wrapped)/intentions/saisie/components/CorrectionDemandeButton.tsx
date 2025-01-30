@@ -30,17 +30,17 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { client } from "@/api.client";
-import type { MotifCorrectionCampagne } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
-import { MOTIFS_CORRECTION_LABELS } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
-import { feature } from "@/utils/feature";
-import { usePermission } from "@/utils/security/usePermission";
+import type { Demandes } from "@/app/(wrapped)/intentions/saisie/types";
+import { getMotifCorrectionOptionsParAnneeCampagne } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
+import { canShowCorrectionButtonDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
+import { useAuth } from "@/utils/security/useAuth";
 
 export const CorrectionDemandeButton = chakra(
-  ({ demande }: { demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0] }) => {
+  ({ demande, campagne }: { demande: Demandes[0], campagne: CampagneType }) => {
+    const { auth } = useAuth();
     const toast = useToast();
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -90,21 +90,16 @@ export const CorrectionDemandeButton = chakra(
 
     const [annulationDemandeStep, setAnnulationDemandeStep] = useState<1 | 2>(1);
 
-    const getMotifCorrectionLabel = (campagne: string = CURRENT_ANNEE_CAMPAGNE) => {
-      return Object.entries(MOTIFS_CORRECTION_LABELS[campagne as MotifCorrectionCampagne]).map(([value, label]) => ({
-        value,
-        label,
-      }));
-    };
-
-    const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
-
-    const showCorrectionButton =
-      feature.correction && demande.statut === DemandeStatutEnum["demande validée"] && hasPermissionSubmitIntention;
-
     return (
       <>
-        {showCorrectionButton &&
+        {canShowCorrectionButtonDemande(
+          {
+            demande: {
+              ...demande,
+              campagne
+            },
+            user: auth?.user
+          }) &&
           (isCorrected ? (
             <Tooltip label="Demande déjà corrigée">
               <Button
@@ -281,7 +276,7 @@ export const CorrectionDemandeButton = chakra(
                       })}
                       mb={4}
                     >
-                      {getMotifCorrectionLabel().map((motif) => (
+                      {getMotifCorrectionOptionsParAnneeCampagne(campagne.annee).map((motif) => (
                         <option key={motif.value} value={motif.value}>
                           {motif.label}
                         </option>
@@ -411,7 +406,7 @@ export const CorrectionDemandeButton = chakra(
                       isRequired={true}
                       mb={4}
                     >
-                      {getMotifCorrectionLabel().map((motif) => (
+                      {getMotifCorrectionOptionsParAnneeCampagne(campagne.annee).map((motif) => (
                         <option key={motif.value} value={motif.value}>
                           {motif.label}
                         </option>

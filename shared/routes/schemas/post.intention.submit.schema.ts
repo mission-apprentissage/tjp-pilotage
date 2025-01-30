@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
 import { unEscapeString } from "../../utils/escapeString";
 
 export const submitIntentionSchema = {
@@ -12,7 +13,7 @@ export const submitIntentionSchema = {
       libelleFCIL: z.string().optional(),
       // Type de demande
       rentreeScolaire: z.coerce.number(),
-      typeDemande: z.string(),
+      typeDemande: DemandeTypeZodType,
       coloration: z.boolean(),
       libelleColoration: z.string().optional(),
       // Capacité
