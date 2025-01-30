@@ -1,7 +1,6 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, chakra, Flex, IconButton, Link, Skeleton, Tag, Td, Text, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { CURRENT_RENTREE } from "shared";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Line } from "@/app/(wrapped)/console/formations/types";
@@ -86,7 +85,7 @@ export const FormationLineContent = ({
       )}
     </Td>
     <ConditionalTd colonne={"rentreeScolaire"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.rentreeScolaire ?? CURRENT_RENTREE}
+      {line.rentreeScolaire ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne={"libelleDispositif"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleDispositif ?? "-"}

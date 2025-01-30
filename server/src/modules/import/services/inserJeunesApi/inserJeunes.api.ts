@@ -12,11 +12,13 @@ let loggingIn = false;
 async function retryCondition(error: AxiosError) {
   const response = error?.response;
 
+  console.error(`Error (${response?.status})`, (response?.data as { msg: string })?.msg);
+
   if (isNetworkError(error)) {
     return true;
   }
 
-  if (![401, undefined].includes(response?.status)) {
+  if (![401, 500, undefined].includes(response?.status)) {
     console.log(`[ERROR] unknown.`, JSON.stringify(response));
     return false;
   }
@@ -47,7 +49,7 @@ export const login = async () => {
   const response = await instance.post("/login", undefined, {
     headers: {
       username: config.inserJeunes.username,
-      password: config.inserJeunes.username,
+      password: config.inserJeunes.password,
     },
   });
   const { access_token: token } = response.data;
@@ -58,8 +60,7 @@ export const getUaiData = async ({ uai, millesime }: { uai: string; millesime: s
   const response = await instance.get(`/UAI/${uai}/millesime/${millesime}`);
 
   if (response) {
-    const data = JSON.parse(response?.data);
-    return formatUaiData(data);
+    return formatUaiData(response?.data);
   }
 
   throw new Error("no data");
