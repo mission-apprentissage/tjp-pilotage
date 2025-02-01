@@ -9,7 +9,7 @@ import type {
   Indicateurs,
 } from "@/app/(wrapped)/panorama/etablissement/components/header/types";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumberToString } from "@/utils/formatUtils";
 
 import { DonneesIncompletes } from "./DonneesIncompletes";
 
@@ -71,7 +71,7 @@ const IndicateurValeurAjoutee = ({ indicateur }: { indicateur?: Indicateur }) =>
     }
   >
     <CounterChart
-      data={formatNumber(indicateur?.value)}
+      data={formatNumberToString(indicateur?.value, 0, "-")}
       type="absolute"
       compareData={getCompareData(indicateur?.compareTo)}
     />
@@ -104,7 +104,7 @@ const IndicateurTauxEmploi6mois = ({ indicateur }: { indicateur?: Indicateur }) 
     }
   >
     <CounterChart
-      data={formatNumber(indicateur?.value)}
+      data={formatNumberToString(indicateur?.value, 0, "-")}
       type="percentage"
       compareData={getCompareData(indicateur?.compareTo)}
     />
@@ -137,7 +137,7 @@ const IndicateurPoursuiteDetudes = ({ indicateur }: { indicateur?: Indicateur })
     }
   >
     <CounterChart
-      data={formatNumber(indicateur?.value)}
+      data={formatNumberToString(indicateur?.value, 0, "-")}
       type="percentage"
       compareData={getCompareData(indicateur?.compareTo)}
     />
@@ -174,7 +174,7 @@ const IndicateurTauxDevenirFavorable = ({ indicateur }: { indicateur?: Indicateu
       }
     >
       <CounterChart
-        data={formatNumber(indicateur?.value)}
+        data={formatNumberToString(indicateur?.value, 0, "-")}
         compareData={getCompareData(indicateur?.compareTo)}
         type="percentage"
       />

@@ -163,7 +163,11 @@ describe("shared > validators > correctionValidators", () => {
     });
 
     it("Sinon ne doit pas remonter d'erreur", () => {
-      const result = correctionValidators.capaciteScolaireColoree({ ...validCorrection, capaciteScolaireColoree: 1 });
+      const result = correctionValidators.capaciteScolaireColoree({
+        ...validCorrection,
+        raison: RaisonCorrectionEnum.modification_capacite,
+        capaciteScolaireColoree: 1
+      });
       expect(result).toBeUndefined();
     });
   });
@@ -221,7 +225,11 @@ describe("shared > validators > correctionValidators", () => {
     });
 
     it("Sinon ne doit pas remonter d'erreur", () => {
-      const result = correctionValidators.capaciteScolaire({ ...validCorrection, capaciteScolaire: 1 });
+      const result = correctionValidators.capaciteScolaire({
+        ...validCorrection,
+        raison: RaisonCorrectionEnum.modification_capacite,
+        capaciteScolaire: 1
+      });
       expect(result).toBeUndefined();
     });
   });
@@ -281,6 +289,7 @@ describe("shared > validators > correctionValidators", () => {
     it("Sinon ne doit pas remonter d'erreur", () => {
       const result = correctionValidators.capaciteApprentissageColoree({
         ...validCorrection,
+        raison: RaisonCorrectionEnum.modification_capacite,
         capaciteApprentissageColoree: 1
       });
       expect(result).toBeUndefined();

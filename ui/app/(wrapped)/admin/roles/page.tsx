@@ -17,8 +17,9 @@ import {
 } from "@chakra-ui/react";
 import _ from "lodash";
 import { useState } from "react";
+import type { Role } from "shared";
 import { getPermissionScope, PERMISSIONS } from "shared";
-import type { Permission, Role, Scope } from "shared/security/permissions";
+import type { Permission, Scope } from "shared/security/permissions";
 
 import { themeDefinition } from "@/theme/theme";
 import { GuardPermission } from "@/utils/security/GuardPermission";

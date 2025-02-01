@@ -16,12 +16,12 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { emailRegex } from "shared";
 
 import { client } from "@/api.client";
-import { AuthContext } from "@/app/(wrapped)/auth/authContext";
+import { useAuth } from "@/utils/security/useAuth";
 
 export const LoginForm = () => {
   const {
@@ -47,7 +47,7 @@ export const LoginForm = () => {
     },
   });
 
-  const { setAuth, auth } = useContext(AuthContext);
+  const { setAuth, auth } = useAuth();
 
   const router = useRouter();
 

@@ -13,7 +13,8 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
-import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
+import { CodeDepartementContext } from "@/app/context/codeDepartementContext";
+import { CodeRegionContext } from "@/app/context/codeRegionContext";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { SearchInput } from "@/components/SearchInput";
 import { TableHeader } from "@/components/TableHeader";
@@ -137,10 +138,10 @@ export default () => {
     if (value != null)
       switch (type) {
       case "codeRegion":
-        setCodeRegionFilter((value as string[])[0] ?? "");
+        setCodeRegion((value as string[])[0] ?? "");
         break;
       case "codeDepartement":
-        setCodeDepartementFilter((value as string[])[0] ?? "");
+        setCodeDepartement((value as string[])[0] ?? "");
         break;
       case "rentreeScolaire":
         setRentreeScolaireFilter((value as string[])[0] ?? "");
@@ -220,9 +221,8 @@ export default () => {
     }
   );
 
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
-
-  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
+  const { codeRegion, setCodeRegion } = useContext(CodeRegionContext);
+  const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
 
   const [rentreeScolaireFilter, setRentreeScolaireFilter] = useState<string>();
 
@@ -243,17 +243,17 @@ export default () => {
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeRegionFilter
+      codeRegion
     ) {
-      filters.codeRegion = [codeRegionFilter];
+      filters.codeRegion = [codeRegion];
     }
     if (
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeDepartementFilter
+      codeDepartement
     ) {
-      filters.codeDepartement = [codeDepartementFilter];
+      filters.codeDepartement = [codeDepartement];
     }
     if (filters?.campagne === undefined && campagneFilter !== "") {
       filters.campagne = campagneFilter;

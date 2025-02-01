@@ -1,5 +1,6 @@
+import type { Role } from "../enum/roleEnum";
+
 export type Scope = "national" | "region" | "uai" | "user" | "role";
-export type Role = keyof typeof PERMISSIONS;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type KeyOfUnion<T> = T extends any ? keyof T : never;
@@ -132,18 +133,6 @@ export const PERMISSIONS = {
     [s: string]: Record<string, Scope>;
   };
 };
-
-export enum RoleEnum {
-  admin = "admin",
-  pilote = "pilote",
-  admin_region = "admin_region",
-  region = "region",
-  pilote_region = "pilote_region",
-  gestionnaire_region = "gestionnaire_region",
-  expert_region = "expert_region",
-  perdir = "perdir",
-  invite = "invite",
-}
 
 export const HIERARCHY: {
   [key in Role]: {

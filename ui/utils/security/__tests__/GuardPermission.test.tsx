@@ -3,12 +3,12 @@ import "@testing-library/jest-dom/vitest";
 
 import { generateMock } from "@anatine/zod-mock";
 import { cleanup, render, screen } from "@testing-library/react";
+import { RoleEnum } from "shared";
 import { ROUTES } from "shared/routes/routes";
-import { RoleEnum } from "shared/security/permissions";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { Auth } from "@/app/(wrapped)/auth/authContext";
-import { AuthContext } from "@/app/(wrapped)/auth/authContext";
+import type { Auth } from "@/app/context/authContext";
+import { AuthContext } from "@/app/context/authContext";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 const router = {

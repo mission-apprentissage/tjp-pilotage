@@ -3,7 +3,7 @@ import "@testing-library/jest-dom/vitest";
 
 import { generateMock } from "@anatine/zod-mock";
 import { cleanup, render, screen } from "@testing-library/react";
-import type { Role} from "shared";
+import type {Role} from "shared";
 import { RoleEnum } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { ROUTES } from "shared/routes/routes";

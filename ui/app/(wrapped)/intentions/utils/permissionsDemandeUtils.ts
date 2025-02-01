@@ -4,13 +4,11 @@ import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
 import type {DemandeTypeType} from 'shared/enum/demandeTypeEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
-import type {Role} from 'shared/security/permissions';
+import type { UserType } from 'shared/schema/userSchema';
 import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
 
 import {feature} from '@/utils/feature';
 
-
-type User = { role?: Role }
 type Demande = {
    campagne: CampagneType,
    statut: DemandeStatutType,
@@ -18,7 +16,7 @@ type Demande = {
    canEdit: boolean
 }
 
-export const canCreateDemande = ({ user, campagne } : { user?: User, campagne: CampagneType }) =>
+export const canCreateDemande = ({ user, campagne } : { user?: UserType, campagne: CampagneType }) =>
   !feature.saisieDisabled &&
   campagne.statut === CampagneStatutEnum["en cours"] &&
   hasPermission(user?.role, "intentions/ecriture");
@@ -29,7 +27,7 @@ export const canEditDemande = ({
   user,
 } : {
   demande: Demande,
-  user?: User
+  user?: UserType
 }) => {
   const isCampagneEnCours = demande.campagne?.statut === CampagneStatutEnum["en cours"];
   const canUserEditDemande = demande.canEdit;
@@ -47,7 +45,7 @@ export const canEditDemande = ({
   );
 };
 
-export const canDeleteDemande = ({ user } : { user?: User }) =>  (
+export const canDeleteDemande = ({ user } : { user?: UserType }) =>  (
   hasPermission(user?.role, "intentions/ecriture") &&
     !hasRole({ user, role: "expert_region" }) &&
     !hasRole({ user, role: "region" })
@@ -61,7 +59,7 @@ export const canImportDemande = ({
 } : {
   isAlreadyImported: boolean,
   isLoading: boolean,
-  user?: User,
+  user?: UserType,
   campagne?: CampagneType
 }) =>  (
   !isAlreadyImported &&
@@ -75,7 +73,7 @@ export const canShowCorrectionButtonDemande = ({
   user,
 } : {
   demande: Demande,
-  user?: User
+  user?: UserType
 }) =>
   feature.correction &&
   demande.statut === DemandeStatutEnum["demande validée"] &&

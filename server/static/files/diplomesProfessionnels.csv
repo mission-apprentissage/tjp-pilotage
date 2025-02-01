@@ -1,554 +1,578 @@
-﻿Commission professionnelle consultative;Secteur;Sous-secteur;Niveau;Code diplôme;Diplôme;Intitulé de la spécialité (et options);Code RNCP;Date de l'arrêté de création;Première session;Dernière session;Commentaire
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;400-23304 B;BAC PRO;Aménagement et finition du bâtiment;4423;2006-05-09;2008;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Environnement;Niveau 4;400-23003 V;BAC PRO;Artisanat et métiers d'art option marchandisage visuel;36335;2007-03-20;2009;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 4;400-22402 M;BAC PRO;Artisanat et métiers d'art option verrerie scientifique et technique;36425;2005-07-11;2007;;.
-CPC industrie;Secteur;Sous-secteur;Niveau 4;40025412R;BAC PRO;carrossier peintre automobile;;2022-12-30;2026;;remplace le 400-25408 R
-CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 4;400-31107 T;BAC PRO;Conducteur transport routier marchandises;16770;2010-06-03;2013;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 4;400-25410 S;BAC PRO;Construction des carrosseries;14963;2010-04-08;2012;;est remplacé par le
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;400-22303 S;BAC PRO;Fonderie;6726;2009-04-30;2012;;Rénovation
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;400-25012 R;BAC PRO;Maintenance des systèmes de production connectés;35698;2020-12-09;2024;;Remplace le n°400-25007
-CPC Mer et navigation intérieure;Secteur;Sous-secteur;Niveau 4;40025223R;BAC PRO;Maintenance nautique;37698;;2026;;remplace le 400250090R
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;400-25510 P;BAC PRO;Métiers de l'électricité et de ses environnements connectes;25353;2016-03-01;2019;;.
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 4;400-33604 T;BAC PRO;Métiers de la coiffure;34420;2019-06-28;2023;;Création
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 4;400-31214 T;BAC PRO;Métiers du commerce et de la vente option B prospection clientèle et valorisation commerciale;32259;2018-12-17;2022;;Remplace le n°40031206
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 4;400-24301 S;BAC PRO;Métiers du cuir option chaussures;24738;2009-05-19;2011;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;40025518M;BAC PRO;Optique Photonique : Technologies de la Lumière;37490;2023-02-28;2026;;Création
-CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 4;400-31114 M;BAC PRO;Organisation de transport de marchandises;34954;2020-02-28;2023;;Remplace le n°400-31108
-CPC agriculture, agroalimentaire et aménagement des espaces;Secteur;Sous-secteur;Niveau 4;40022005U;BAC PRO;Production en Industries Pharmaceutiques, Alimentaires et Cosmétiques;37699;2023-04-27;2026;;remplace le n°400-22003 U
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;400-25514 R;BAC PRO;Systèmes numériques option B - audiovisuels, réseau et équipement domestiques;26334;2016-03-01;2019;2025;remplacé par le 40025519R
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;400-25515 R;BAC PRO;Systèmes numériques option C - réseaux informatiques et systèmes communicants;26335;2016-03-01;2019;2025;Rénovation
-CPC Industrie;Secteur Bois et dérivés;Sous-secteur;Niveau 4;400-23407 S;BAC PRO;Technicien de fabrication bois et matériaux associes;4099;2006-02-22;2008;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;400-25013 S;BAC PRO;Technicien en réalisation de produits mécaniques, option Réalisation et maintenance des outillages;35697;2020-12-09;2024;;Remplace les n° 40025005 et 40025107 et 40025106
-CPC Mer et navigation intérieure;Secteur;Sous-secteur;Niveau 4;;BAC PRO;Transport fluvial;;2023-07-18;2027;;remplace 400-31109 U
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 4;401-22313 V;BMA;Armurerie;37556;1992-08-20;1994;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Art textile et mode;Niveau 4;401-24108 V;BMA;Arts de la dentelle option aiguilles;5289;2007-03-20;2009;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Art textile et mode;Niveau 4;401-24106 V;BMA;Arts et techniques du tapis et de la tapisserie de lisse;1135;1993-08-05;1995;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 4;401-22408 V;BMA;Céramique;37552;1994-07-28;1996;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 4;401-23412 V;BMA;Ebéniste;18328;2014-02-03;2016;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 4;401-22319 V;BMA;Orfèvrerie option monture - tournure;en attente de va;2013-07-26;2016;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 4;401-22410 V;BMA;Souffleur de verre;en attente de va;2011-04-05;2013;;.
-CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 4;450-34402 T;BP;Agent technique de sécurité dans les transports;964;1997-09-03;1998;2024;abrogation session supplémentaire 2025
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 4;450-24106 S;BP;Ameublement tapisserie décoration;37236;1997-08-01;1998;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 4;450-22110 S;BP;Boucher;37310;2016-04-26;2018;;.
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 4;450-32203 W;BP;Libraire;7061;2009-04-09;2011;;.
-CPC Services et produits de consommation;Secteur;Sous-secteur;Niveau 4;450-33408T;BP;Sommelier;37384;2022-12-30;2025;;remplace le 450-33405 T
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;45023201;BP;Tailleur de pierres monuments historiques;36849;1945-01-01;1946;;
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 4;450-22002 R;BP;Techniques de laboratoire de recherche option A - biologie;1172;1999-01-12;2000;;abrogation CPC octobre 2023
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-25416 P;BTS;Architectures en métal : conception et réalisation;35336;2018-02-19;2020;;.
-CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-secteur;Niveau 5;320-31311 T;BTS;Assurance;35473;2017-02-13;2019;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 5;320-23012 M;BTS;Bâtiment;1122;2011-06-23;2013;;.
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 5;320-31215 T;BTS;Commerce international;35800;2020-11-25;2023;;Remplace le n°320-31211
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;320-32208 M;BTS;Edition;36965;2013-04-08;2015;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 5;320-34303 R;BTS;Environnement nucléaire;12766;2011-06-27;2013;;.
-CPC Construction;Secteur Bois et dérivés;Sous-secteur;Niveau 5;320-23305 N;BTS;Etude et réalisation d'agencement;35471;2016-02-16;2018;;.
-CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-secteur;Niveau 5;320-31409 T;BTS;Gestion de la PME;32360;2018-02-19;2020;;.
-CPC industrie;Secteur;Sous-secteur;Niveau 5;320-22406 S;BTS;industries céramiques;37197;2022-12-19;2025;;remplace le 320-22404 S
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 5;320-25218 R;BTS;Maintenance des matériels de construction et de manutention;31290;2017-02-13;2019;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 5;320-25217 R;BTS;Maintenance des véhicules option C : motocycles;35460;2016-02-11;2018;;.
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 5;320-31213 T;BTS;Management commercial opérationnel;34031;2018-10-15;2021;;-
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 5;320-33423 P;BTS;Management en hôtellerie et restauration option A management d'unité de restauration;37889;2018-02-15;2020;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;320-32329 V;BTS;Métiers de l'audiovisuel option métiers de l'image;37021;2013-06-04;2016;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;320-32330 V;BTS;Métiers de l'audiovisuel option métiers du son;37196;2013-06-04;2016;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;320-32332 V;BTS;Métiers de l'audiovisuel option montage et postproduction;37020;2013-06-04;2016;;.
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 5;320-33603 T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option A management;20693;2012-10-30;2015;2024;remplacé par le 320-33609 T
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 5;320-33605 T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option C cosmétologie;20693;2012-10-30;2015;2024;remplacé par le 320-33611 T
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 5;320-24207 M;BTS;Métiers de la mode - vêtements;36777;2012-02-07;2014;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 5;320-33107 W;BTS;Opticien lunetier;1084;1997-09-03;1999;;-
-CPC Construction;Secteur Bois et dérivés;Sous-secteur;Niveau 5;320-23412 M;BTS;Systèmes constructifs bois et habitat;18315;2014-02-10;2016;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-22311 M;BTS;Traitements des matériaux option a : traitements thermiques;1186;2001-08-06;2003;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 5;320-23206 S;BTS;Travaux publics;37199;2022-12-22;2025;;remplace le 320-23107 S
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 3;500-25306 M;CAP;Aéronautique option systèmes;37700;2013-08-19;2015;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 3;500-34002 M;CAP;Agent de prévention et de médiation;37240;2004-07-06;2006;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22361 V;CAP;Art et techniques de la bijouterie-joaillerie option bijouterie-joaillerie;36336;2008-03-18;2010;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22362 V;CAP;Art et techniques de la bijouterie-joaillerie option bijouterie-sertissage;36336;2008-03-18;2010;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22363 V;CAP;Art et techniques de la bijouterie-joaillerie option polissage-finition;36336;2008-03-18;2010;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts de la reliure;Niveau 3;500-32228 V;CAP;Arts de la reliure;37539;2017-10-31;2019;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 3;500-32313 V;CAP;Assistant technique en instruments de musique option guitare;36255;2001-09-05;2003;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 3;500-33411 T;CAP;Assistant technique en milieux familial et collectif;2817;2004-08-11;2007;2024;est remplacé par le 50033002T
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22350 V;CAP;Bronzier option B - ciseleur sur bronze;531;1977-07-13;1979;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-23420 S;CAP;Cannage et paillage en ameublement;534;1990-07-12;1992;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-23325 S;CAP;Carreleur mosaïste;35380;2019-04-15;2021;;-
-CPC Construction;Secteur Bois et dérivés;Sous-secteur;Niveau 3;500-23446 S;CAP;Charpentier bois;35113;2020-04-10;2022;;Remplace le n°500-23440 et 500-23439
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;500-22133 S;CAP;Chocolatier-confiseur;37303;2002-08-21;2004;;Rénovation en cours
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 3;500-23118 U;CAP;Conducteur d'engins : travaux publics et carrières;37891;2022-08-29;2025;;Rénovation en cours
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-23223 S;CAP;Couvreur;35889;2021-03-30;2023;;Remplace le n°500-23218
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 3;500-25524 S;CAP;Electricien;30328;2018-02-08;2020;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-23433 V;CAP;Encadreur;37242;1976-09-02;1978;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 3;500-22419 S;CAP;Fabrication industrielle des céramiques;579;1991-08-06;1992;2024;dernière session 2024 session supplémentaire 2025
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-23006 R;CAP;Interventions en maintenance technique des bâtiments;35696;2021-03-30;2023;;Remplace le  n°500-23002
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22339 V;CAP;Lapidaire option A - diamant;595;1974-09-20;1976;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-23224 S;CAP;Maçon;35715;2021-03-30;2023;;Remplace le n°500-23217
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24322 S;CAP;Maroquinerie;37900;2005-04-26;2007;;Rénovation en cours
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-23322 S;CAP;Menuisier aluminium verre;814;2002-10-25;2004;2024;est remplacé par le 50023329S
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-22360 S;CAP;Métiers de la fonderie;37898;2007-03-20;2009;;.
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24242 S;CAP;Métiers de la mode - chapelier-modiste;37244;2011-12-09;2014;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22340 V;CAP;Orfèvre option A - monteur en orfèvrerie;640;1973-10-15;1976;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22342 V;CAP;Orfèvre option C - polisseur aviveur en orfèvrerie;641;1973-10-15;1976;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22354 V;CAP;Orfèvre option D - planeur en orfèvrerie;643;1980-05-06;1981;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-25126 S;CAP;Outillages en outils à découper et à emboutir;646;1991-08-29;1993;;.
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24318 S;CAP;Sellerie générale;667;1998-12-17;2000;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 3;500-32227 V;CAP;Signalétique et décors graphiques;37305;2017-02-27;2019;;.
-CPC Mer et navigation intérieure;Secteur;Sous-secteur;Niveau 3;500-23451 S;CAP;TONNELIER;37671;2023-05-05;2025;;remplace le 500-23435 S
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-23435 S;CAP;Tonnellerie;679;1993-07-28;1994;2024;est remplacé par le 500-23451 S
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24319 S;CAP;Vêtement de peau;37250;1998-08-21;2000;;.
-CPC Services aux entreprises;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 5;322-25202 R;Diplôme;Expert en automobile;2829;2012-07-31;2014;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Environnement;Niveau 5;321-23002 V;DMA;Habitat option : ornements et objets;837;1987-07-07;1989;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 5;321-23410 V;DMA;Habitat option restauration de mobilier;5293;2007-05-09;2009;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Spectacles;Niveau 5;321-32316 M;DMA;Régie du spectacle option lumière;912;2002-07-09;2004;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Spectacles;Niveau 5;321-32317 M;DMA;Régie du spectacle option son;4000;2002-07-09;2004;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Art textile et mode;Niveau 5;321-24101 V;DMA;Textiles et céramiques option arts textiles;840;1987-07-17;1989;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 3;010-22405 U;MC3;Conducteur de machines de verrerie;723;1988-10-25;1991;;Rénovation/transformation en MC4?
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 3;010-22103 S;MC3;Employé traiteur;37566;1989-11-13;1990;;.
-CPC services et produits de consommation;secteur Tourisme, hôtellerie, restauration;;Niveau 3;010-33410T;MC3;Sommellerie;6985;1996-07-31;1997;2023;"remplacé par le 010-33414T session supplémentaire 2024"
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 4;010-25310 R;MC4;Aéronautique option hélicoptères à moteurs à turbines;37924;2015-02-18;2016;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts de la reliure;Niveau 4;010-22306 V;MC4;Art de la dorure à chaud;35639;2021-03-10;2022;;
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 4;010-31201 T;MC4;Assistance conseil - vente a distance;1173;2001-06-15;2001;;-
-CPC Sport et animation;Secteur;Sous-secteur;Niveau 4;010-33503 M;MC4;Encadrement secteur sportif option activités aquatiques et de la natation;36328;2022-01-14;2023;;
-CPC Sport et animation;Secteur;Sous-secteur;Niveau 4;010-33504 M;MC4;Encadrement secteur sportif option activités de la forme - cours collectifs;36328;2022-01-14;2023;;
-CPC Sport et animation;Secteur;Sous-secteur;Niveau 4;010-33505 M;MC4;Encadrement secteur sportif option activités de la forme - haltérophilie, musculation;36328;2022-01-14;2023;;
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;010-25122 S;MC4;Maquettes et prototypes;879;2002-08-01;2003;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;010-22704 S;MC4;Technicien en énergies renouvelables option A - énergie électrique;15009;2010-04-20;2011;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;010-25406 S;MC4;Technicien en soudage;24919;2015-11-26;2017;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 4;400-33004 T;BAC PRO;Accompagnement soins et services à la personne option B - en structure;12301;2011-05-11;2014;2024;Remplacé par le n°400-33007 T
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 4;400-25304 M;BAC PRO;Aéronautique option structure;37928;2013-04-12;2016;;.
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 4;400-33403 T;BAC PRO;Commercialisation et services en restauration;37909;2011-05-31;2014;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;400-20002 N;BAC PRO;Etude et définition de produits industriels;763;1999-07-28;2001;2024;Remplacé par le n°   (Modélisation et prototypage 3D)
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 4;400-32206 S;BAC PRO;Façonnage de produits imprimés, routage;12114;2011-04-26;2014;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;400-22706 R;BAC PRO;Maintenance  et Efficacité énergétique;35844;2021-05-20;2024;;Remplace le n°400-22704
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 4;400-25220 R;BAC PRO;Maintenance des matériels option B - matériels de travaux publics et de manutention;33030;2016-03-24;2019;;.
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 4;400-24006 T;BAC PRO;Métiers de l'entretien des textiles, option B : pressing;35807;2020-12-11;2024;;Remplace le n° 400-24002 et le n°450-24005
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 4;400-24203 S;BAC PRO;Métiers de la mode - vêtements;36777;2009-05-19;2011;;Rénovation en cours
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 4;400-24302 S;BAC PRO;Métiers du cuir option maroquinerie;24740;2009-05-19;2011;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 4;400-33101 T;BAC PRO;Optique lunetterie;9295;2009-05-19;2012;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur;Niveau 4;400-20102 U;BAC PRO;Pilote de ligne de production;36428;2012-03-30;2015;;
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;400-25513 R;BAC PRO;Systèmes numériques option A - sûreté et sécurité des infrastructures, de l'habitat et du tertiaire;25354;2016-03-01;2019;2025;remplacé par le 40025519R
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;400-23005 N;BAC PRO;Technicien d'études du bâtiment option B - assistant en architecture;5640;2008-04-08;2010;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;400-25014 S;BAC PRO;Technicien en réalisation de produits mécaniques, option Réalisation et suivi de productions;35697;2020-12-09;2024;;Remplace les n° 40025005 et 40025107 et 40025106
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 4;400-34305 R;BAC PRO;Techniques d'interventions sur installations nucléaires;19132;2014-03-12;2017;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;400-22302 S;BAC PRO;Traitements des matériaux;656;1999-07-28;2001;;A l'étude
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;40025109U;BAC PRO;Transports par câbles et remontées mécaniques;37309;2022-12-21;2026;;création
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 4;401-22317 V;BMA;Art du bijou options bijouterie sertissage;809;2010-02-18;2012;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 4;401-23305 V;BMA;Arts graphiques option B : décor peint;37946;2019-04-19;2021;;-
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 4;401-25402 S;BMA;Ferronnier d'art;37557;2014-03-12;2016;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 4;401-23409 V;BMA;Technicien en facture instrumentale option accordéon;36340;2003-07-08;2005;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Environnement;Niveau 4;401-23301 V;BMA;Volume staff et matériaux associés;811;1993-03-19;1995;;.
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 4;450-33407 T;BP;Arts du service et commercialisation en restauration;37558;2015-01-07;2017;;Rénovation en cours
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;450-23316 S;BP;Carreleur mosaïste;31216;2018-04-03;2020;;.
-CPC Construction;Secteur Bois et dérivés;Sous-secteur;Niveau 4;450-23409 S;BP;Charpentier bois;18321;2014-02-03;2016;;.
-CPC Mer et navigation intérieure;Secteur Bois et dérivés;Sous-secteur;Niveau 4;450-23407 S;BP;Charpentier de marine;4750;2007-03-20;2009;;.
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 4;450-33609 T;BP;Esthétique cosmétique parfumerie;34671;2019-06-05;2021;;-
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 4;450-33404 T;BP;Gouvernante;37493;1997-09-03;1997;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;450-23215 M;BP;Métiers de la piscine;31214;2017-03-01;2019;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;450-23314 S;BP;Métiers du plâtre et de l'isolation;32238;2016-05-13;2018;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 4;450-22501 S;BP;Mise en œuvre des caoutchoucs et des élastomères thermoplastiques;1002;1997-09-03;1998;;abrogation CPC septembre 2023
-CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-secteur;Niveau 5;320-31310 T;BTS;Banque conseiller de clientèle (particuliers);1174;2014-02-26;2016;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 5;320-22207 R;BTS;Bio analyses et contrôle;2705;2004-06-25;2006;;rénovation
-CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 5;320-22106 R;BTS;Bioqualité;35335;2020-03-02;2022;;Remplace le n°320-22103
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 5;320-22104 R;BTS;Biotechnologies;1033;2006-11-08;2009;;rénovation
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 5;32032003;BTS;Communication;37198;2022-12-19;2025;;Remplace le n°320-32002 P
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-22317 N;BTS;Conception des processus de réalisation de produits option B production sérielle;37464;2016-02-16;2018;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-20009 N;BTS;Conception des produits industriels;37374;2016-02-16;2018;;.
-CPC Mer et navigation intérieure;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-25413 S;BTS;Conception et industrialisation en construction navale;35459;2017-02-13;2019;;-
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;320-20111 N;BTS;Conception et réalisation des systèmes automatiques;37115;2011-06-23;2013;;.
-CPC Industrie;Secteur Bois et dérivés;Sous-secteur;Niveau 5;320-23411 M;BTS;Développement et réalisation bois;9074;2010-05-04;2012;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 5;320-33103 T;BTS;Diététique;35523;1987-11-06;1989;;A l'étude
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 5;320-22711 M;BTS;Fluides-énergies-domotique option C domotique et bâtiments communicants;20807;2014-02-26;2016;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-22314 M;BTS;Fonderie;35345;2016-02-16;2018;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 5;320-23109 M;BTS;Géologie appliquée;35337;2019-03-05;2021;;-
-CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 5;320-31103 T;BTS;Gestion des transports et logistique associée;35400;2018-10-11;2021;;-
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 5;320-22404 S;BTS;Industries céramiques;1066;1997-09-03;1998;2024;est remplacé par le 320-22406 S
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;320-32331 P;BTS;Métiers de l'audiovisuel option techniques d'ingénierie et exploitation des équipements;37022;2013-06-04;2016;;.
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 5;320-33604 T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option B formation-marques;20693;2012-10-30;2015;2024;remplacé par le 320-33610 T
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 5;320-33610 T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option B formation-marques;37375;2022-12-09;2025;;remplace le 320-33604 T
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 5;320-33607 T;BTS;Métiers de la coiffure;20687;2014-02-26;2016;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 5;320-34304 R;BTS;Métiers des services à l'environnement;20692;2013-04-08;2015;;.rénovation
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 5;320-22003 N;BTS;Pilotage de procédés;34830;2016-02-11;2018;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;320-25519 M;BTS;Systèmes photoniques;35394;2015-06-03;2017;;Rénovation en cours
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-22312 M;BTS;Traitements des matériaux option b : traitements de surfaces;1185;2001-08-06;2003;;.
-CPC Services aux entreprises;Secteur Chimie, bio-industrie, environnement;Sous-secteur Chimie, bio-industrie, environnement;Niveau 3;500-34301 T;CAP;Agent de la qualité de l'eau;508;1990-08-23;1992;;rénovation
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-25133 R;CAP;Agent vérificateur d'appareils extincteurs;509;2004-10-21;2006;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 3;500-22427 V;CAP;Arts et techniques du verre option décorateur sur verre;37302;1994-08-29;1996;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22351 V;CAP;Bronzier option C - tourneur sur bronze;532;1977-07-13;1979;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;500-22130 S;CAP;Charcutier-traiteur;37532;1999-10-25;2001;;Rénovation en cours
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22353 V;CAP;Emailleur d'art sur métaux;566;1980-02-28;1981;;.
-CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 3;500-31107 T;CAP;Emballeur professionnel;567;1983-09-29;1985;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 3;50023328S;CAP;Etancheur du bâtiment et des travaux publics;37892;2022-08-29;2025;;Remplace le 500-23321 S
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 3;500-31223 T;CAP;Fleuriste;31293;2018-02-16;2020;;.
-CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 3;500-25221 R;CAP;Maintenance des matériels option A - matériels agricoles;29656;2016-03-24;2018;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 3;500-25218 R;CAP;Maintenance des véhicules option A - voitures particulières;19118;2014-04-22;2016;;.
-CPC Mer et navigation intérieure;Secteur;Sous-secteur;Niveau 3;50025224R;CAP;Maintenance nautique;37670;2023-03-30;2025;;remplace le 500-25217 R
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;500-21305 W;CAP;Mareyage;37536;1996-08-19;1997;;.
-CPC Industrie;Secteur Bois et dérivés;Sous-secteur;Niveau 3;500-23447 S;CAP;Menuisier fabricant;36112;2020-11-20;2023;;Remplace le n°500-23441
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-25439 S;CAP;Métallier;37897;2021-03-30;2023;;Remplace le n°500-25431
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-25521 S;CAP;Métiers de l'enseigne et de la signalétique;572;2007-10-16;2009;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Gravure;Niveau 3;500-32223 S;CAP;Métiers de la gravure option D - marquage poinçonnage;625;1993-03-09;1995;;.
-CPC Construction;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-23302 S;CAP;Monteur en isolation thermique et acoustique;633;1987-06-15;1988;2024;Session supplémentaire en 2025 pour les ajournés
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 3;500-33106 S;CAP;Opérateur en appareillage orthopédique - Spécialité orthoprothèse;37486;1994-08-25;1996;;.Les mots : « certificat d'aptitude professionnelle ortho-prothésiste » sont remplacés par les mots : « certificat d'aptitude professionnelle Opérateur en appareillage orthopédique-spécialité orthoprothèse ».
-CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 3;500-31122 T;CAP;Opérateur-opératrice logistique;22689;2015-03-02;2017;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22341 V;CAP;Orfèvre option B - tourneur repousseur en orfèvrerie;642;1973-10-15;1976;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 3;500-23427 V;CAP;Ouvrier archetier;647;1959-07-10;1961;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 3;500-22509 S;CAP;Plasturgie;736;1999-07-27;2001;;abrogation à la CPC septembre 2023
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;500-31221 T;CAP;Poissonnier-écailler;37383;2007-03-20;2009;;.
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24321 S;CAP;Sellier harnacheur;37905;2014-04-29;2016;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 3;500-32225 V;CAP;Sérigraphie industrielle;671;1999-01-12;2000;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur;Niveau 3;500-33617 T;CAP;Taxidermiste;34672;2019-02-25;2021;;-
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 3;500-25134 U;CAP;Transport par câbles et remontées mécaniques;681;1999-10-21;2001;2024;Remplacé par le n°500-25138 U
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-23438 S;CAP;Vannerie;37899;2001-09-05;2003;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 5;321-22301 V;DMA;Art du bijou et du joyau;819;2001-07-05;2003;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts de la reliure;Niveau 5;321-32206 V;DMA;Arts graphiques option : reliure dorure;828;1998-07-30;2000;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;321-13301 F;DMA;Cinéma d'animation;821;1998-08-27;2000;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Environnement;Niveau 5;321-23004 V;DMA;Décor architectural option B : domaine du décor du mur;843;1987-07-16;1989;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Environnement;Niveau 5;321-23005 V;DMA;Décor architectural option C : domaine du métal;850;1987-07-16;1989;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Environnement;Niveau 5;321-23001 V;DMA;Habitat option : décors et mobiliers;836;1987-07-07;1989;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 5;321-22401 V;DMA;Textiles et céramiques option arts de la céramique artisanale;841;1987-07-17;1989;;.
-CPC cohésion sociale et santé;Secteur;Sous-secteur;Niveau 3;01033002T;MC3;Aide à domicile;37568;2023-02-10;2024;;remplace le 010-33001 T
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;01023204S;MC3;Zingueur;37920;2022-08-29;2024;;Remplace 010-23202 S
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 4;010-33413 T;MC4;Accueil - réception;37921;2008-03-31;2009;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 4;010-25311 R;MC4;Aéronautique option hélicoptères à moteurs à pistons;37924;2015-02-18;2016;;.
-CPC Sport et animation;Secteur;Sous-secteur;Niveau 4;010-33501 P;MC4;Animation-gestion de projets dans le secteur sportif;30833;2018-04-13;2019;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;01025509R;MC4;Cybersécurité;37488;2023-02-06;2024;;création
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;010-25123 R;MC4;Maintenance des installations oléo hydrauliques et pneumatiques;36332;2002-08-01;2003;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;01025510R;MC4;Production et réparation de produits électroniques;37569;2023-02-06;2024;;création
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;010-22703 U;MC4;Technicien des services à l'énergie;36334;2010-02-22;2011;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;010-25408 S;MC4;Technicien en chaudronnerie aéronautique et spatiale;35230;2017-01-12;2018;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 4;010-25409 S;MC4;Technicien en peinture aéronautique;37923;2020-02-18;2020;;Création
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;010-25407 S;MC4;Technicien en tuyauterie;27473;2017-01-12;2018;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 4;400-33007 T;BAC PRO;Accompagnement soins et services à la personne;37231;2022-02-02;2025;;Remplace le n°400-33003 T et le  n° 400-33004 T  Arrêté modifié en 2023 (Arrêté du 6 février 2023 modifiant l'arrêté du 2 février 2022 portant création de la spécialité « Accompagnement, soins et services à la personne » de baccalauréat professionnel et fixant ses modalités de délivrance) https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000047278220
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 4;400-22308 V;BAC PRO;Artisanat et métiers d'art - facteur d'orgues - option organier;35320;2020-12-15;2021;;-
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 4;400-32303 V;BAC PRO;Artisanat et métiers d'art option communication visuelle pluri média;37232;2011-04-26;2014;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 4;400-22403 M;BAC PRO;Artisanat et métiers d'art option métiers de l'enseigne et de la signalétique;36425;2005-07-11;2007;;Rénovation
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur;Niveau 4;400-24202 V;BAC PRO;Artisanat et métiers d'art option tapissier d'ameublement;751;1990-09-27;1992;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 4;400-22105 S;BAC PRO;Boulanger - pâtissier;37908;2009-07-02;2011;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Chimie, bio-industrie, environnement;Niveau 4;400-34303 T;BAC PRO;Gestion des pollutions et protection de l'environnement;14899;2012-07-17;2016;;en rénovation
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;400-23205 B;BAC PRO;Interventions sur le patrimoine bâti option A - maçonnerie;5534;2013-12-20;2016;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;400-23206 B;BAC PRO;Interventions sur le patrimoine bâti option B - charpente;5534;2013-12-20;2016;;.
-CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 4;400-25219 R;BAC PRO;Maintenance des matériels option A - matériels agricoles;33029;2016-03-24;2019;;.
-CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 4;400-25221 R;BAC PRO;Maintenance des matériels option C - matériels d'espaces verts;33031;2016-03-24;2019;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 4;400-22503 S;BAC PRO;Plastiques et composites;7585;2009-07-08;2011;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 4;400-31209 T;BAC PRO;Poissonnier écailler traiteur;37927;2009-06-24;2011;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 4;400-32208 S;BAC PRO;Réalisation de produits imprimés et pluri média option B - productions imprimées;18385;2014-03-12;2017;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;400-23004 P;BAC PRO;Technicien d'études du bâtiment option A - études et économie;5641;2008-04-08;2010;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 4;400-33103 S;BAC PRO;Technicien en appareillage orthopédique;24601;2015-12-22;2019;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;400-25411 N;BAC PRO;Technicien en chaudronnerie industrielle;29885;2018-02-26;2021;;-
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 4;400-33104 S;BAC PRO;Technicien en prothèse dentaire;34674;2020-04-25;2023;;Remplace le n° 400-33102
-CPC Construction;Secteur Bois et dérivés;Sous-secteur;Niveau 4;400-23405 S;BAC PRO;Technicien menuisier agenceur;2836;2005-07-11;2007;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 4;401-22316 V;BMA;Art du bijou option bijouterie joaillerie;809;2010-02-18;2012;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 4;401-22318 V;BMA;Art du bijou option bijouterie polissage finition;809;2010-02-18;2012;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 4;401-23304 V;BMA;Arts graphiques option A : signalétique;37946;2019-04-19;2021;;-
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Art textile et mode;Niveau 4;401-24210 V;BMA;Broderie;800;1994-07-13;1996;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;401-23201 S;BMA;Gravure sur pierre;36481;2013-11-06;2016;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 4;401-25101 V;BMA;Horlogerie;37945;2008-04-21;2010;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Gravure;Niveau 4;401-32207 S;BMA;Orfèvrerie option gravures - ciselure;en attente de va;2013-07-26;2016;;.
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 4;450-22109 S;BP;Arts de la cuisine;34956;2015-01-07;2017;;Rénovation en cours
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 4;450-33403 T;BP;Barman;37492;1998-07-23;1999;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;450-23105 U;BP;Conducteur d'engins : travaux publics et carrières;32240;2015-06-02;2017;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;450-22710 S;BP;Installateur, dépanneur en froid et conditionnement d'air;32241;2014-03-12;2016;;.
-CPC Construction;Secteur Bois et dérivés;Sous-secteur;Niveau 4;450-23408 S;BP;Menuisier;37238;2014-02-03;2016;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;450-22709 S;BP;Monteur en installations du génie climatique et sanitaire;32241;2014-03-14;2016;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 4;450-33104 S;BP;Préparateur en pharmacie;1008;1997-09-10;1999;2024;Abrogé par arrêté du 17/10/2022 session supplémentaire 2025
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 4;450-22003 R;BP;Techniques de laboratoire de recherche option B - physicochimie;1013;1999-01-12;2000;;abrogation CPC octobre 2023
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 4;450-24215 S;BP;Vêtement sur mesure option tailleur dame;37937;1994-11-21;1995;;.
-CPC Services aux entreprises;Secteur;Sous-secteur;Niveau 5;320-34502 P;BTS;Collaborateur juriste notarial;36685;2021-12-13;2024;;"Remplace le n° 320-34501 M  (ex """"notariat"""")"
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-25005 N;BTS;Conception et industrialisation en microtechnique;423;2003-07-31;2005;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-25415 M;BTS;Conception et réalisation en chaudronnerie industrielle;37405;2018-02-19;2020;;.
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 5;320-31216 T;BTS;Conseil et commercialisation de solutions techniques;35801;2020-11-25;2023;;Remplace le n°320-20008
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;320-25520 R;BTS;Electrotechnique;35346;2020-02-21;2022;;Remplace le n°320-25515 R
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;320-32211 S;BTS;Etudes de réalisation d'un projet de communication option B études de réalisation de produits imprimés;35474;2016-06-07;2019;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 5;320-22709 M;BTS;Fluides-énergies-domotique option A génie climatique et fluidique;20807;2014-02-26;2016;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-25412 M;BTS;Forge;37465;2016-02-16;2018;;.
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 5;320-24112 S;BTS;Innovation textile option B traitements;37962;2014-05-13;2016;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;320-25017 R;BTS;Maintenance des systèmes option D : systèmes ascenseurs et élévateurs;36968;2022-01-24;2024;;Création de l'option D
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 5;320-25215 R;BTS;Maintenance des véhicules option A : voitures particulières;35460;2016-02-11;2018;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 5;320-23013 P;BTS;Management économique de la construction;35802;2020-12-11;2023;;Remplace le n°320-23010
-CPC Mer et navigation intérieure;Secteur;Sous-secteur;Niveau 5;320-25013 R;BTS;Mécatronique navale;36969;2021-12-16;2024;;Création
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Chimie, bio-industrie, environnement;Niveau 5;320-20114 M;BTS;Métiers de l'eau;35344;2018-02-19;2020;;.
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 5;320-33609T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option A management;37375;2022-12-09;2025;;remplace le 320-33603 T
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Chimie, bio-industrie, environnement;Niveau 5;320-22208 S;BTS;Métiers de la chimie;35522;2016-02-08;2018;;.
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 5;320-24305 M;BTS;Métiers de la mode - chaussure et maroquinerie;36776;2012-02-07;2014;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 5;320-23108 N;BTS;Métiers du géomètre - topographe et de la modélisation numérique;34015;2016-02-16;2018;;.
-CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-secteur;Niveau 5;320-31309 T;BTS;Professions immobilières;14922;2012-04-05;2014;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 5;320-33110 S;BTS;Prothésiste dentaire;37376;2012-07-27;2014;;Rénovation
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 5;320-33002 P;BTS;Services et prestations des secteurs sanitaire et social;36939;2022-01-24;2024;;Remplace le n°320-33001 P
-CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-secteur;Niveau 5;320-32613 T;BTS;Services informatiques aux organisations option A solutions d'infrastructures, systèmes et réseaux;35340;2019-04-29;2022;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;320-20112 M;BTS;Systèmes numériques option A : informatique et réseaux;35341;2013-11-15;2016;;est remplacé par le 32020116M
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;320-25516 M;BTS;Systèmes numériques option B : électronique et communications;35341;2013-11-15;2016;;remplacé par le 32025521M
-CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 3;500-31117 U;CAP;"Conducteur routier ""marchandises""";5377;2007-06-21;2009;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 3;500-32308 V;CAP;Accordeur de piano;36339;1994-08-25;1995;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 3;500-25307 M;CAP;Aéronautique option structure;37700;2013-08-19;2015;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-25136 S;CAP;Armurerie (fabrication et réparation);513;2004-02-16;2005;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Art textile et mode;Niveau 3;500-24127 V;CAP;Arts de la broderie;514;1991-07-19;1993;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Art textile et mode;Niveau 3;500-24131 V;CAP;Arts de la dentelle option aiguille;35640;2004-07-29;2005;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-23431 V;CAP;Arts du bois option B - tourneur;37301;1983-05-27;1985;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-23432 V;CAP;Arts du bois option C - marqueteur;37301;1983-05-27;1985;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Art textile et mode;Niveau 3;500-24231 V;CAP;Arts du tapis et de la tapisserie de lisse;520;1991-07-19;1993;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 3;500-22425 V;CAP;Arts et techniques du verre option vitrailliste;37302;1994-08-29;1996;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;500-22135 T;CAP;Boucher;6993;2005-05-11;2007;2024;Est remplacé par le 50022143T
-CPC Industrie;Secteur;Sous-secteur;Niveau 3;50025440S;CAP;Carrossier automobile;;2022-12-30;2025;;remplace le 500-25434 S
-CPC Mer et navigation intérieure;Secteur Bois et dérivés;Sous-secteur;Niveau 3;500-23444 S;CAP;Charpentier de marine;2834;2005-03-31;2007;;
-CPC Mobilité et logistique;Secteur;Sous-secteur;Niveau 3;50031124U;CAP;conducteur agent d'accueil en autobus et autocar;;2023-03-12;2024;;remplace le 500-31114 T
-CPC Industrie;Secteur Bois et dérivés;Sous-secteur;Niveau 3;500-23443 U;CAP;Conducteur opérateur de scierie;37304;2004-02-16;2006;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 3;500-25432 S;CAP;Construction des carrosseries;4936;2007-03-20;2009;2024;Session supplémentaire 2025
-CPC Services et produits de consommation;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24320 S;CAP;Cordonnerie multiservice;37251;2005-03-17;2007;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22332 V;CAP;Doreur à la feuille ornemaniste;36683;1976-09-02;1978;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 3;500-34404 T;CAP;Gardien d'immeuble;586;2010-02-23;2011;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Chimie, bio-industrie, environnement;Niveau 3;500-22201 S;CAP;Industries chimiques;591;1991-08-07;1993;;Abrogation en CPC industrie octobre 2024
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-22714 S;CAP;Installateur en froid et conditionnement d'air;31334;2015-06-02;2017;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-25108 S;CAP;Instruments coupants et de chirurgie;594;1990-12-21;1992;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-23411 S;CAP;Menuisier en sièges;617;1955-07-01;1956;;.
-CPC Construction;Secteur Bois et dérivés;Sous-secteur;Niveau 3;500-23449 S;CAP;Menuisier installateur;35974;2020-11-20;2023;;Remplace le n°500-23442
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24241 S;CAP;Métiers de la mode - vêtement tailleur;37246;2011-04-08;2013;;.
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24007 T;CAP;Métiers de l’entretien des textiles, option A : blanchisserie;35808;2020-12-11;2023;;Remplace le n°500-24006
-CPC Sport et animation;Secteur Commercialisation et distribution;Sous-secteur;Niveau 3;500-33501 T;CAP;Métiers du football;619;1977-07-13;1978;;rénovation en cours
-CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 3;500-23005 S;CAP;Monteur de structures mobiles;636;1997-09-17;1999;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-22715 S;CAP;Monteur en installations thermiques;30951;2018-04-11;2020;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;500-22141 S;CAP;Pâtissier;35316;2019-03-06;2021;;.
-CPC Industrie;Secteur;Sous-secteur;Niveau 3;50025441S;CAP;Peintre automobile;;2022-12-30;2025;;remplace le 500-25433 S
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 3;500-25433 S;CAP;Peinture en carrosserie;4933;2007-03-20;2009;2024;remplacé par le 50025441S Session supplémentaire 2025
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 3;500-22142 M;CAP;Production et service en restaurations (rapide, collective, cafétéria);35317;2019-10-29;2022;;Remplace le n°50022129
-CPC Services aux entreprises;Secteur Chimie, bio-industrie, environnement;Sous-secteur Chimie, bio-industrie, environnement;Niveau 3;500-22005 U;CAP;Propreté de l'environnement urbain - collecte et recyclage;24650;2015-03-10;2017;;rénovation en cours
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-25438 S;CAP;Réalisations industrielles en chaudronnerie ou soudage option b - soudage;27470;2017-01-03;2019;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Art textile et mode;Niveau 3;500-24126 S;CAP;Rentrayeur option b - tapisserie;715;1975-05-30;1976;;.
-CPC Mer et navigation intérieure;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 3;500-25217 R;CAP;Réparation entretien des embarcations de plaisance;4937;2007-03-20;2009;2024;remplacé par le 500-25224 R
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 3;500-22430 V;CAP;Souffleur de verre option verrerie scientifique;6603;2009-05-12;2011;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Environnement;Niveau 3;500-23311 V;CAP;Staffeur ornemaniste;36427;1993-03-05;1995;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur;Niveau 3;500-23114 S;certificat (autre que diplôme);Certificat de préposé au tir;en cours;1997-05-26;1998;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Spectacles;Niveau 4;420-32306 V;Diplôme;Technicien des métiers du spectacle option machiniste constructeur;806;1997-03-10;1998;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;321-32207 V;DMA;Arts graphiques option : illustration;827;1998-07-30;2000;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Spectacles;Niveau 5;321-24204 S;DMA;Costumier réalisateur;842;1991-07-16;1995;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 5;321-22402 V;DMA;Décor architectural option arts du verre et du cristal;5291;2007-06-19;2009;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 5;321-23413 V;DMA;Facture instrumentale option piano;6899;2009-04-08;2011;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 5;321-25101 V;DMA;Horlogerie;830;1996-07-11;1998;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 5;321-23409 V;DMA;Lutherie;820;2000-05-31;2003;;.
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 3;010-22105 S;MC3;Cuisinier en desserts de restaurant;37380;1997-07-31;1998;;rénovation en cours
-CPC Services et produits de consommation;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;010-24201 R;MC3;Essayage-retouche-vente;37234;1996-10-22;1997;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;01022706T;MC3;Maintenance des équipements thermiques individuels;37919;2022-10-11;2024;;Remplace 010-22701 T
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 3;010-25118 S;MC3;Réalisation de circuits oléo-hydrauliques et pneumatiques;36333;2002-07-30;2003;;.
-CPC commerce;Secteur;Sous-secteur;Niveau 3;01022111W;MC3;Vendeur-Conseil en alimentation;37105;2022-06-23;2025;;remplace le 010-22106 W
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 4;010-25312 R;MC4;Aéronautique option avionique;37924;2015-02-18;2016;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur;Niveau 4;010-22001 R;MC4;Agent de contrôle non destructif;955;1995-10-09;1996;;.
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 4;010-33412 P;MC4;Organisateur de réceptions;37922;2005-05-09;2006;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;010-23304 S;MC4;Peinture décoration;738;2000-07-26;2002;;.
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 4;010-33414T;MC4;Sommellerie;37382;2022-12-30;2024;;Remplace le n° 010-33410T
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;010-25002 R;MC4;Technicien ascensoriste (service et modernisation);4105;2006-03-24;2007;;
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 4;400-33003 T;BAC PRO;Accompagnement soins et services à la personne option A - à domicile;12296;2011-05-11;2014;2024;Remplacé par le n°400-33007 T
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 4;400-25303 M;BAC PRO;Aéronautique option systèmes;37928;2013-04-12;2016;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur;Niveau 4;400-22309 V;BAC PRO;Artisanat et métiers d'art - facteur d'orgues - option tuyautier;35320;2020-12-15;2021;;-
-CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 4;400-22003 U;BAC PRO;Bio-industries de transformation;7586;2009-09-01;2012;2025;Rénovation
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 4;400-22106 T;BAC PRO;Cuisine;37910;2011-05-31;2014;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur;Niveau 4;40025519R;BAC PRO;Cybersécurité, Informatique et réseaux, Electronique;37489;2023-02-13;2026;;remplace le 4025513R et le 40025514R et le 40025515R
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 4;400-33603 T;BAC PRO;Esthétique cosmétique parfumerie;30312;2017-04-07;2020;2024;Remplacé par le n°400-33606 T
-CPC Services et produits de consommation;Secteur;Sous-secteur;Niveau 4;400-33606 T;BAC PRO;Esthétique Cosmétique Parfumerie;36331;2021-12-29;2025;;Remplace le n°400-33603 T
-CPC Construction;Secteur Bois et dérivés;Sous-secteur;Niveau 4;400-23408 P;BAC PRO;Etude et réalisation d'agencement;11934;2011-04-07;2014;;"Précédent initulé : """"Agencement de l'espace architectural"""""
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 4;400-25214 R;BAC PRO;Maintenance des véhicules option A - voitures particulières;19117;2014-03-19;2017;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 4;400-25215 R;BAC PRO;Maintenance des véhicules option B - véhicules de transport routier;19117;2014-03-19;2017;;.
-CPC Mer et navigation intérieure;Secteur;Sous-secteur;Niveau 4;400-25009 R;BAC PRO;Maintenance nautique;5860;2008-04-17;2010;2025;est remplacé par le n° 40025223R
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;400-23303 B;BAC PRO;Menuiserie aluminium-verre;4431;2006-05-09;2008;;.
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 4;400-24303 S;BAC PRO;Métiers du cuir option sellerie garnissage;31084;2016-01-05;2018;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;400-25006 S;BAC PRO;Microtechniques;2832;2003-12-23;2006;;A l'étude
-CPC Industrie;Secteur Métallurgie;Sous-secteur;Niveau 4;400-20009 N;BAC PRO;Modélisation et prototypage 3D;36191;2022-01-18;2025;;Remplace le n°400-20002 N (Etudes et définitions de produits industriels)
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 4;400-33602 T;BAC PRO;Perruquier posticheur;10304;2010-04-08;2012;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 4;400-32304 V;BAC PRO;Photographie;37233;2012-02-09;2015;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 4;400-25408 R;BAC PRO;Réparation des carrosseries;5859;2008-04-18;2010;2025;remplacé par le 40025412R session supplémentaire 2026
-CPC Construction;Secteur Bois et dérivés;Sous-secteur;Niveau 4;400-23404 S;BAC PRO;Technicien constructeur bois;2835;2005-07-11;2007;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;400-22705 S;BAC PRO;Technicien gaz;34745;2017-03-02;2020;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;400-23103 P;BAC PRO;Technicien géomètre topographe;4895;2007-03-20;2009;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;400-25108 S;BAC PRO;Technicien modeleur;421;2004-02-16;2006;;.
-CPC Mer et navigation intérieure;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 4;400-31109 U;BAC PRO;Transport fluvial;37915;2013-04-11;2015;2026;Rénovation en cours
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;400-23102 S;BAC PRO;Travaux publics;4420;2005-07-11;2007;2025;remplacé par le 40023210S
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;40023210S;BAC PRO;Travaux publics;37385;2023-01-17;2026;;remplace le 400-23102 S
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 4;401-23410 V;BMA;Technicien en facture instrumentale option guitare;36340;2003-07-08;2005;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 4;401-23411 V;BMA;Technicien en facture instrumentale option piano;36340;2003-07-08;2005;;.
-CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 4;450-34401 T;BP;Agent technique de prévention et de sécurité;965;1997-09-03;1998;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 4;450-22107 S;BP;Charcutier-traiteur;37559;1998-12-03;2000;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Chimie, bio-industrie, environnement;Niveau 4;450-22202 U;BP;Conducteur d'appareils des industries chimiques;418;2003-06-06;2005;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;450-23213 S;BP;Couvreur;32239;2015-04-28;2017;;.
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 4;450-31207 T;BP;Fleuriste;36005;2021-05-03;2024;;Remplace le n°450-31206
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 4;450-22306 V;BP;Gemmologue;37311;1999-07-27;2000;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;450-23216 S;BP;Maçon;31210;2018-04-03;2020;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;450-23313 S;BP;Menuisier aluminium-verre;31275;2014-03-12;2016;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;450-25411 S;BP;Métallier;32231;2014-03-12;2016;;-
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;450-23214 S;BP;Métiers de la pierre;32230;2015-06-24;2017;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;450-23315 S;BP;Peintre applicateur de revêtements;32235;2016-05-13;2018;;.
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 4;450-20101 U;BP;Pilote d'installation de production par procédés;37239;1998-09-09;1999;;.
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 4;450-33405 T;BP;Sommelier;1012;1997-09-03;1998;2024;remplacé par le 45033408T session supplémentaire 2025
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 5;320-25302 M;BTS;Aéronautique;37706;2009-04-09;2011;;en rénovation
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 5;320-33109 S;BTS;Analyses de biologie médicale;5298;2007-06-19;2009;;Rénovation
-CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-secteur;Niveau 5;320-31408 T;BTS;Comptabilité et gestion;35521;2014-11-03;2017;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-22318 N;BTS;Conception des processus de réalisation de produits option A production unitaire;37464;2016-02-16;2018;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 5;320-20113 R;BTS;Contrôle industriel et régulation automatique;35384;2016-02-16;2018;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 5;320-23205 P;BTS;Enveloppe des bâtiments : conception et réalisation;35461;2016-02-16;2018;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 5;320-22506 S;BTS;Europlastics et composites à référentiel commun européen option pilotage et optimisation de la production;35333;2016-02-29;2018;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 5;320-23306 P;BTS;Finitions, aménagement des bâtiments : conception et réalisation;35809;2020-12-11;2023;;Remplace le n°320-23304
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 5;320-22710 M;BTS;Fluides-énergies-domotique option B froid et conditionnement d'air;20807;2014-02-26;2016;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;320-25015 R;BTS;Maintenance des systèmes option B systèmes énergétiques et fluidiques;36968;2022-01-24;2024;;Remplace le n°320-25011 R
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 5;320-25216 R;BTS;Maintenance des véhicules option B : véhicules de transport routier;35460;2016-02-11;2018;;.
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 5;320-33424 P;BTS;Management en hôtellerie et restauration option B management d'unité de production culinaire;37889;2018-02-15;2020;;.
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 5;320-33425 P;BTS;Management en hôtellerie et restauration option C management d'hébergement;37889;2018-02-15;2020;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;320-32328 P;BTS;Métiers de l'audiovisuel option gestion de la production;37019;2013-06-04;2016;;.
-CPC Industrie;Secteur;Sous-secteur;Niveau 5;320-25219 R;BTS;Motorisation toutes énergies;36966;2022-01-24;2024;;Remplace le n° 320-25214 R
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 5;320-31212 T;BTS;Négociation et digitalisation de la relation client;34030;2018-02-19;2020;;-
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;320-32325 T;BTS;Photographie;36970;2010-03-26;2012;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 5;320-33001 P;BTS;Services et prestations des secteurs sanitaire et social;36939;2007-06-19;2022;;Rénovation
-CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-secteur;Niveau 5;320-32614 T;BTS;Services informatiques aux organisations option B solutions logicielles et applications métiers;35340;2019-04-29;2022;;.
-CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 5;320-25213 M;BTS;Techniques et services en matériels agricoles;1019;2013-04-08;2015;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 5;320-23107 S;BTS;Travaux publics;1109;2011-06-23;2013;2024;est remplacé par le 320-23206 S
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 3;500-25305 M;CAP;Aéronautique option avionique;37700;2013-08-19;2015;;.
-CPC Services aux entreprises;Secteur Chimie, bio-industrie, environnement;Sous-secteur Chimie, bio-industrie, environnement;Niveau 3;500-34307 T;CAP;Agent de propreté et d'hygiène;24655;2013-12-23;2016;;rénovation
-CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 3;500-34405 T;CAP;Agent de sécurité;18620;2010-04-21;2012;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Art textile et mode;Niveau 3;500-24130 V;CAP;Arts de la dentelle option fuseaux;35640;2004-07-29;2005;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 3;500-22428 V;CAP;Arts du verre et du cristal;36426;2009-06-30;2011;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 3;500-32311 V;CAP;Assistant technique en instruments de musique option instruments à vent;36255;2001-09-05;2003;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 3;500-32312 V;CAP;Assistant technique en instruments de musique option piano;36255;2001-09-05;2003;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;50022143T;CAP;Boucher;37535;2023-02-28;2025;;remplace le 500-22135 T
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22349 V;CAP;Bronzier option A - monteur en bronze;530;1977-07-13;1979;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 3;500-22510 S;CAP;Composites, plastiques chaudronnés;1167;2000-08-21;2002;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 3;500-23120 S;CAP;Constructeur de routes et d'aménagements urbains;35888;2021-03-30;2023;;Remplace le n°500-23115
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24313 S;CAP;Cordonnier bottier;37366;1993-07-07;1995;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;500-22140 S;CAP;Crémier fromager;37533;2017-07-04;2020;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-25123 U;CAP;Décolletage : opérateur régleur en décolletage;557;1990-01-09;1991;;.
-CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 3;500-31119 T;CAP;Déménageur sur véhicule utilitaire léger;31455;2010-06-10;2012;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 3;500-22002 S;CAP;Employé technique de laboratoire;570;1974-09-25;1975;;
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 3;500-33615 T;CAP;Esthétique cosmétique parfumerie;31041;2018-06-25;2020;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-25436 S;CAP;Ferronnier d'art;24652;2015-01-07;2017;;.
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24315 S;CAP;Fourrure;37243;1998-11-17;2000;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;500-22138 S;CAP;Glacier fabricant;37534;2014-02-21;2016;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 3;500-25222 R;CAP;Maintenance des matériels option B -matériels de construction et de manutention;29655;2016-03-24;2018;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 3;500-25219 R;CAP;Maintenance des véhicules option B - véhicules de transport routier;19118;2014-04-22;2016;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 3;500-25220 R;CAP;Maintenance des véhicules option C - motocycles;19118;2014-04-22;2016;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 3;500-23221 S;CAP;Marbrier du bâtiment et de la décoration;16128;2013-02-06;2015;;.
-CPC Industrie;Secteur Bois et dérivés;Sous-secteur;Niveau 3;500-22609 S;CAP;Mécanicien conducteur des scieries et des industries mécaniques du bois option b - mécanicien affûteur de sciage, tranchage, déroulage;605;1969-10-07;1971;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Gravure;Niveau 3;500-32220 S;CAP;Métiers de la gravure option A - gravure d'ornementation;620;1993-03-09;1995;;.
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24240 S;CAP;Métiers de la mode - vêtement flou;37245;2011-04-08;2013;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22324 S;CAP;Mouleur noyauteur - cuivre et bronze;637;1951-02-22;1953;;.
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 3;500-31123 M;CAP;Opérateur/opératrice de service - relation client et livraison;29262;2017-05-30;2018;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-23327 S;CAP;Peintre applicateur de revêtements;30956;2019-04-08;2021;;-
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-25437 S;CAP;Réalisations industrielles en chaudronnerie ou soudage option a - chaudronnerie;27468;2017-01-03;2019;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 3;500-25434 S;CAP;Réparation des carrosseries;4935;2007-03-19;2009;2024;est remplace par le 50025440S session supplémentaire 2025
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 3;500-23220 S;CAP;Tailleur de pierre;16129;2013-02-06;2015;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-24239 S;CAP;Tapissier -tapissière d’ameublement en décor;37247;2004-07-29;2007;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 3;500-22421 V;CAP;Tournage en céramique;36337;1993-08-20;1995;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Spectacles;Niveau 4;420-24210 V;Diplôme;Technicien des métiers du spectacle option techniques de l'habillage;1136;1997-03-10;1998;;
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;321-32205 V;DMA;Arts graphiques option : gravure;826;1998-07-30;2000;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 5;321-25401 V;DMA;Facture instrumentale option instruments à vent;6899;2009-04-08;2011;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Spectacles;Niveau 5;321-32313 V;DMA;Marionnette;839;1990-09-12;1993;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 6;322-33109 T;DTS;Imagerie médicale et radiologie thérapeutique;34541;2012-08-24;2015;;
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 3;010-22109 T;MC3;Art de la cuisine allégée;37567;2006-03-24;2007;2024;Abrogation en cours. session supplémentaire 2025
-CPC Arts, spectacles et médias;Secteur;Sous-secteur;Niveau 3;01022307V;MC3;Bijoux de mode;37381;2022-12-29;2024;;
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;010-22107 S;MC3;Boulangerie spécialisée;37313;2003-04-16;2004;;.
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 3;010-33605 T;MC3;Coiffure coupe couleur;29025;2015-03-23;2016;;.
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 3;010-33411 T;MC3;Employé barman;37379;1997-05-16;1998;;rénovation en cours.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;010-22110 S;MC3;Pâtisserie, glacerie, chocolaterie, confiserie spécialisées;37316;2009-04-09;2010;;Rénovation en cours
-CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 4;010-31101 W;MC4;Accueil dans les transports;953;1997-11-26;1998;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 4;010-25308 R;MC4;Aéronautique option avions à moteurs à turbines;37924;2015-02-18;2016;;.
-CPC Mer et navigation intérieure;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;010-25003 R;MC4;Mécatronique navale;37570;2015-11-26;2017;;.
-CPC Mer et navigation intérieure;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 4;010-25004 R;MC4;Opérateur polyvalent en interventions subaquatiques;36816;2021-04-30;2022;;Création
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 4;010-23306 W;MC4;Vendeur conseil en produits techniques pour l'habitat;21466;2014-12-17;2016;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 4;400-25302 M;BAC PRO;Aéronautique option avionique;37928;2013-04-12;2016;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 4;400-33006 M;BAC PRO;Animation - enfance et personnes âgées;34605;2019-07-22;2023;;Remplace le n°400-33002
-CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-secteur;Niveau 4;400-30004 T;BAC PRO;Assistance à la gestion des organisations et de leurs activités;34606;2020-02-18;2023;;Remplace le n°400-30001
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 4;400-25305 M;BAC PRO;Aviation générale;37914;2013-04-12;2016;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 4;400-22104 S;BAC PRO;Boucher charcutier traiteur;37602;2009-06-24;2011;;
-CPC Services aux entreprises;Secteur Chimie, bio-industrie, environnement;Sous-secteur Chimie, bio-industrie, environnement;Niveau 4;400-34304 T;BAC PRO;Hygiène, propreté et stérilisation;14893;2012-07-17;2016;;en rénovation.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;400-22707 S;BAC PRO;Installateur en chauffage, climatisation et énergies renouvelables;35845;2021-06-29;2024;;Remplace le n°400-22703
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;400-23207 B;BAC PRO;Interventions sur le patrimoine bâti option C - couverture;5534;2006-05-09;2008;;.
-CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 4;400-31106 M;BAC PRO;Logistique;32999;2010-06-03;2012;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 4;400-25216 R;BAC PRO;Maintenance des véhicules option C - motocycles;19117;2014-03-19;2017;;.
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 4;400-31212 M;BAC PRO;Métiers de l'accueil;32049;2018-12-17;2022;;Remplace le n°40031210
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 4;400-24005 T;BAC PRO;Métiers de l'entretien des textiles, option A : blanchisserie;35807;2020-12-11;2024;;Remplace le n° 400-24002 et le n°450-24004
-CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 4;400-34403 T;BAC PRO;Métiers de la sécurité;33069;2014-03-19;2017;;.
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 4;400-31213 T;BAC PRO;Métiers du commerce et de la vente option A animation et gestion de l'espace commercial;32208;2018-12-17;2022;;Remplace le n°40031202
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;400-25517 R;BAC PRO;Métiers du froid et des Energies renouvelables;35846;2021-03-10;2024;;Remplace le n°400-25509 R
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;400-23208 V;BAC PRO;Métiers et arts de la pierre;35638;2015-06-24;2018;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;400-25406 B;BAC PRO;Ouvrage du bâtiment : métallerie;4432;2006-05-09;2008;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Chimie, bio-industrie, environnement;Niveau 4;400-22004 U;BAC PRO;Procédés de la chimie, de l'eau et des papiers-cartons;14901;2012-04-13;2015;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 4;400-32207 S;BAC PRO;Réalisation de produits imprimés et pluri média option A - productions graphiques;18394;2014-03-12;2017;;.
-CPC Industrie;Secteur Bois et dérivés;Sous-secteur;Niveau 4;400-23406 S;BAC PRO;Technicien de scierie;4098;2006-02-22;2008;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;400-23203 S;BAC PRO;Technicien du bâtiment : organisation et réalisation du gros œuvre;4888;1997-09-03;1998;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts de la reliure;Niveau 4;401-32208 V;BMA;Art de la reliure et de la dorure;35195;2019-04-19;2021;;-
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Art textile et mode;Niveau 4;401-24107 V;BMA;Arts de la dentelle option fuseaux;5290;2007-03-20;2009;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 4;401-25401 V;BMA;Technicien en facture instrumentale option instruments à vents;36340;2003-07-08;2005;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 4;401-22409 V;BMA;Verrier décorateur;en attente valid;2011-04-05;2013;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 4;450-22108 S;BP;Boulanger;37491;2012-02-15;2014;;.
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 4;450-33608 T;BP;Coiffure;12281;2011-03-28;2013;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;450-25516 S;BP;Electricien;27774;2017-01-12;2019;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;450-23317 S;BP;Etanchéité du bâtiment et des travaux publics;31066;2018-04-03;2020;;-
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 4;450-24214 S;BP;Vêtement sur mesure option couture flou;37937;1994-11-21;1995;;.
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 4;450-24216 S;BP;Vêtement sur mesure option tailleur homme;37937;1994-11-21;1995;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-25001 P;BTS;Assistance technique d'ingénieur;1029;1998-07-30;1999;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-25414 S;BTS;Conception des processus de découpe et d'emboutissage;37378;2017-02-13;2019;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 5;320-25411 M;BTS;Conception et réalisation de carrosserie;1041;2013-04-08;2015;;Rénovation en cours
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;32020116M;BTS;Cybersécurité, Informatique et réseaux, Electronique option A informatique et réseaux;37391;2023-01-25;2025;;REMPLACE LE 320-20112 M
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;32025521M;BTS;Cybersécurité, Informatique et réseaux, Electronique option B électronique et réseaux;37391;2023-01-25;2025;;remplace le 320 25516 M
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 5;320-33206 T;BTS;Economie sociale et familiale;36938;2022-01-24;2024;;Remplace le n°320-33204 T
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;320-32210 S;BTS;Etudes de réalisation d'un projet de communication option A études de réalisation de produits pluri média;35474;2016-06-07;2019;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 5;320-22505 S;BTS;Europlastics et composites à référentiel commun européen option conception outillage;35333;2016-02-29;2018;;.
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 5;320-24111 S;BTS;Innovation textile option A structures;37962;2014-05-13;2016;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;320-25014 R;BTS;Maintenance des systèmes option A systèmes de production;36968;2022-01-24;2024;;Remplace le n°320-25010 R
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;320-25016 R;BTS;Maintenance des systèmes option C systèmes éoliens;36968;2022-01-24;2024;;Remplace le n°320-25012 R
-CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 5;320-34401 T;BTS;Management opérationnel de la sécurité;35393;2020-03-02;2022;;Création
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 5;320-33611 T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option C cosmétologie;37375;2022-12-09;2025;;remplace le 320-33605 T
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;320-20115 R;BTS;Métiers de la mesure;35803;2020-12-18;2023;;Remplace le n°320-22002 R
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 5;320-33108 S;BTS;Podo-orthésiste;1088;1997-07-28;1998;;REMPLACEMENT ANNEXE 2 ET 3  EN 2023
-CPC Cohésion sociale et santé;Secteur;Sous-secteur;Niveau 5;32033111;BTS;Prothésiste dentaire;37376;2023-01-25;2025;;REMPLACE celui de 2012   320-33110 S
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 5;320-33104 S;BTS;Prothésiste orthésiste;1097;1997-07-28;1998;;remplacement  annexe 2 et 3 en 2023
-CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-secteur;Niveau 5;320-32409 T;BTS;Support à l'action managériale;34029;2018-02-16;2020;;.
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 5;320-33426 M;BTS;Tourisme;37890;2019-03-05;2021;;-
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Spectacles;Niveau 3;500-32307 V;CAP;Accessoiriste réalisateur;37299;1993-08-26;1995;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 3;500-33205 T;CAP;Accompagnant éducatif petite enfance;28048;2020-11-30;2021;;-
-CPC Cohésion sociale et santé;Secteur;Sous-secteur;Niveau 3;50033002T;CAP;Agent accompagnant au grand age;37669;2023-02-06;2025;;remplace le 500-33411 T
-CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 3;500-31114 T;CAP;Agent d'accueil et de conduite routière, transport de voyageurs;2714;1998-08-21;2000;2024;Remplacé par le 50031124U session supplémentaire 2025
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 3;500-34303 T;CAP;Agent d'assainissement et de collecte des déchets liquides spéciaux;503;1994-03-11;1996;;abrogation.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-23430 V;CAP;Arts du bois option A - sculpteur ornemaniste;37301;1983-05-27;1985;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 3;500-23450 V;CAP;Assistant luthier du quatuor;35699;2021-05-03;2023;;Remplace le n°500-23428
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 3;500-32310 V;CAP;Assistant technique en instruments de musique option accordéon;36255;2001-09-05;2003;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;500-22137 S;CAP;Boulanger;37537;2014-02-21;2016;;.
-CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24316 S;CAP;Chaussure;37241;1998-12-08;2000;;
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 3;500-33412 T;CAP;Commercialisation et services en hôtel-café-restaurant;37554;2017-02-27;2019;;Rénovation en cours
-CPC Industrie;Secteur Métallurgie;Sous-secteur;Niveau 3;500-20101 U;CAP;Conducteur d'installations de production;36429;2012-03-30;2014;;.
-CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 3;500-31118 T;CAP;Conducteur livreur de marchandises;17131;2010-06-18;2012;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 3;500-23222 S;CAP;Constructeur d'ouvrages en béton armé;34742;2019-04-08;2021;;-
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 3;500-23119 S;CAP;Constructeur de réseaux de canalisations de travaux publics;35321;2019-04-15;2021;;-
-CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 3;500-22139 T;CAP;Cuisine;37553;2016-03-17;2018;;Rénovation en cours
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 3;500-22422 V;CAP;Décoration en céramique;36338;1993-08-20;1995;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-23445 S;CAP;Ebéniste;37538;2017-02-27;2019;;.
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 3;500-31224 T;CAP;Equipier polyvalent du commerce;34947;2019-10-29;2022;;Remplace les n° 500-31214, 500-31215, 500-31216, 500-31217, 500-31219, 500-31220
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 3;500-23321 S;CAP;Etancheur du bâtiment et des travaux publics;37892;2002-10-25;2004;2024;remplacé par le 50023328S
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-25137 V;CAP;Horlogerie;37896;2007-06-26;2009;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;500-22343 V;CAP;Lapidaire option B - pierres de couleur;596;1974-09-20;1976;;.
-CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Métallurgie;Sous-secteur Automobile, matériel agricole et de travaux publics;Niveau 3;500-25223 R;CAP;Maintenance des matériels option C: matériels d'espaces verts;29638;2016-03-24;2018;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;50023329S;CAP;Menuisier aluminium-verre;37893;2022-08-29;2025;;Remplace le 500-23322 S
-CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 3;500-33616 T;CAP;Métiers de la coiffure;34670;2019-06-05;2021;;-
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Gravure;Niveau 3;500-32221 S;CAP;Métiers de la gravure option B - gravure d'impression;621;1993-03-09;1995;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Gravure;Niveau 3;500-32222 S;CAP;Métiers de la gravure option C - gravure en modèle;622;1993-03-09;1995;;.
-CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24008 T;CAP;Métiers de l’entretien des textiles, option B : pressing;35808;2020-12-11;2023;;Remplace le n°500-24005
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-23326 S;CAP;Métiers du plâtre et de l'isolation;35319;2019-04-15;2021;;-
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-25421 S;CAP;Mise en forme des matériaux;658;1988-08-31;1989;;.
-CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 3;500-22505 S;CAP;Mise en œuvre des caoutchoucs et des élastomères thermoplastiques;628;1987-06-22;1988;;abrogation à la CPC industrie septembre 2023
-CPC Arts, spectacles et médias;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-22420 S;CAP;Modèles et moules céramiques;631;1991-08-29;1993;;.
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;500-23324 S;CAP;Monteur en installations sanitaires;30952;2018-04-11;2020;;.
-CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 3;500-33107 S;CAP;Opérateur en appareillage orthopédique Spécialité podo-orthèse;37487;1994-08-25;1996;;Les mots : « certificat d'aptitude professionnelle podo orthésiste » sont remplacés par les mots : « certificat d'aptitude professionnelle opérateur en appareillage orthopédique-spécialité podo-orthèse.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 3;500-25425 S;CAP;Outillages en moules métalliques;645;1991-08-29;1993;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;500-31222 T;CAP;Primeur;37604;2017-07-04;2020;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Art textile et mode;Niveau 3;500-24125 S;CAP;Rentrayeur option a - tapis;1132;1975-05-30;1976;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 3;500-22429 V;CAP;Souffleur de verre option enseigne lumineuse;7332;2009-05-12;2011;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-24238 S;CAP;Tapissier -tapissière d’ameublement en siège;37248;2004-07-29;2007;;.
-CPC Mer et navigation intérieure;Secteur;Sous-secteur;Niveau 3;;CAP;transport fluvial;;2023-07-18;2026;;remplace 500-31121 U
-CPC Mer et navigation intérieure;Secteur Transport, logistique, sécurité et autres services;Sous-secteur;Niveau 3;500-31121 U;CAP;Transport fluvial;37906;2011-04-26;2013;2025;Rénovation en cours
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 3;50025138U;CAP;Transports par câbles et remontées mécaniques;37306;2022-12-21;2025;;Remplace le 500-25134 U
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Spectacles;Niveau 4;420-32305 V;Diplôme;Brevet artistique des techniques du cirque;23909;1989-10-27;1992;;-
-CPC Mer et navigation intérieure;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 4;420-25404 N;Diplôme;Traceur en construction navale;en cours;1985-07-31;1986;;.
-CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;321-32208 V;DMA;Arts graphiques option : typographie;829;1998-07-30;2000;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Spectacles;Niveau 5;321-32301 V;DMA;Arts du cirque;838;1989-10-27;1992;;
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Environnement;Niveau 5;321-23003 V;DMA;Décor architectural option A : domaine du traitement plastique et de la transparence;845;1987-07-16;1989;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Environnement;Niveau 5;321-23006 V;DMA;Décor architectural option D : domaine des matériaux de synthèse;844;1987-07-16;1989;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 5;321-23411 V;DMA;Facture instrumentale option accordéon;6899;2009-04-08;2011;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Musique;Niveau 5;321-23412 V;DMA;Facture instrumentale option guitare;6899;2009-04-08;2011;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts de la reliure;Niveau 3;010-34201 M;MC3;Entretien des collections du patrimoine;37314;2008-03-04;2009;;.
-CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes;Niveau 3;010-22304 V;MC3;Joaillerie;36684;2002-01-08;2003;;.
-CPC Services et produits de consommation;Secteur Alimentation;Sous-secteur;Niveau 3;010-22108 S;MC3;Pâtisserie boulangère;37315;2004-05-04;2005;;Rénovation en cours
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 3;01023307S;MC3;Plâtrier;37198;2022-08-30;2024;;Remplace le 010-23302 S
-CPC Industrie;Secteur Métallurgie;Sous-secteur Aviation;Niveau 4;010-25309 R;MC4;Aéronautique option avions à moteurs à pistons;37924;2015-02-18;2016;;.
-CPC Sport et animation;Secteur;Sous-secteur;Niveau 4;010-33502 M;MC4;Encadrement secteur sportif option activités physiques pour tous;36328;2022-01-14;2023;;
-CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-secteur;Niveau 4;010-32601 M;MC4;Services numériques aux organisations;35517;2020-12-14;2022;;Création
-CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;010-22705 S;MC4;Technicien en énergies renouvelables option B - énergie thermique;15009;2010-04-20;2011;;.
-CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 4;010-25508 S;MC4;Technicien en réseaux électriques;27235;2012-02-10;2013;;.
+﻿Commission professionnelle consultative;Secteur;Niveau;Code diplôme;Diplôme;Intitulé de la spécialité (et options);Code RNCP;Date de l'arrêté de création;Première session;Dernière session;Commentaire;Famille de métiers;Session supplémentaire
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;400-24202 V;BAC PRO;Artisanat et métiers d'art option tapissier d'ameublement;751;1998-07-29;1999;;;;
+CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Niveau 4;400-31107 T;BAC PRO;Conducteur transport routier marchandises;16770;2010-06-03;2013;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25410 S;BAC PRO;Construction des carrosseries;14963;2010-04-08;2012;2026;remplacé par le 400-25413 S;;2027
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 4;400-22106 T;BAC PRO;Cuisine;37910;2011-05-31;2014;;;Métiers de l'hôtellerie-restauration;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25519 R;BAC PRO;Cybersécurité, Informatique et réseaux, Electronique;37489;2023-02-13;2026;;remplace le 4025513R et le 40025514R et le 40025515R;Métiers des transitions numérique et énergétique;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-22303 S;BAC PRO;Fonderie;6726;2009-04-30;2012;;en rénovation;Métiers de la réalisation d'ensembles mécaniques et industriels;
+CPC Construction;Secteur;Niveau 4;400-23104 P;BAC PRO;Géomètre;39269;2024-03-07;2027;;remplace le 400-23103 P;Métiers des études et de la modélisation numérique du bâtiment;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23206 B;BAC PRO;Interventions sur le patrimoine bâti option B - charpente;38745;2008-04-11;2010;;;Métiers de la construction durable, du bâtiment et des travaux publics;
+CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Métallurgie;Niveau 4;400-25219 R;BAC PRO;Maintenance des matériels option A - matériels agricoles;39327;2016-03-24;2019;;;Métiers de la maintenance des matériels et des véhicules;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25510 P;BAC PRO;Métiers de l'électricité et de ses environnements connectés;25353;2016-03-01;2019;2025;remplacé par le 400-25520 P;Métiers des transitions numérique et énergétique;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 4;400-33604 T;BAC PRO;Métiers de la coiffure;34420;2019-06-28;2023;;;Métiers de la beauté et du bien-être;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 4;400-24203 S;BAC PRO;Métiers de la mode - vêtements;37930;2009-05-19;2011;2026;remplacé par le  400-24204 S;;2027
+CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Niveau 4;400-34403 T;BAC PRO;Métiers de la sécurité;39133;2014-03-19;2017;;;;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 4;400-24303 S;BAC PRO;Métiers du cuir option sellerie garnissage;37230;2016-01-05;2018;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23208 V;BAC PRO;Métiers et arts de la pierre;38223;2015-06-24;2018;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 4;400-22503 S;BAC PRO;Plastiques et composites;38566;2009-07-08;2011;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 4;400-22004 U;BAC PRO;Procédés de la chimie, de l'eau et des papiers-cartons;38499;2012-04-13;2015;;;Métiers du pilotage et de la maintenance d'installations automatisées;
+CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur;Niveau 4;400-22005 U;BAC PRO;Production en Industries Pharmaceutiques, Alimentaires et Cosmétiques;37699;2023-04-27;2026;;remplace le n°400-22003 U;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 4;400-32208 S;BAC PRO;Réalisation de produits imprimés et pluri média option B - productions imprimées;38567;2014-03-12;2017;;;Métiers des industries graphiques et de la communication;
+CPC Industrie;Secteur Bois et dérivés;Niveau 4;400-23406 S;BAC PRO;Technicien de scierie;37307;2006-02-22;2008;;;Métiers du pilotage et de la maintenance d'installations automatisées;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-22302 S;BAC PRO;Traitements des matériaux;39516;1999-07-28;2001;;;Métiers de la réalisation d'ensembles mécaniques et industriels;
+CPC Mer et navigation intérieure;Secteur;Niveau 4;400-31115 U;BAC PRO;Transport fluvial;38570;2023-07-18;2027;;remplace le 400-31109 U;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-24108 V;BMA;Arts de la dentelle option aiguilles;38395;2007-03-20;2009;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-24107 V;BMA;Arts de la dentelle option fuseaux;38395;2007-03-20;2009;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-24210 V;BMA;Broderie;38714;1994-07-13;1996;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-23412 V;BMA;Ebéniste;37494;2014-02-03;2016;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-25402 S;BMA;Ferronnier d'art;37557;2014-03-12;2016;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-25401 V;BMA;Technicien en facture instrumentale option instruments à vents;36340;2003-07-08;2005;;;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 4;450-33407 T;BP;Arts du service et commercialisation en restauration;37558;2015-01-07;2017;2025;remplacé par le 450-33409 T;;
+CPC Industrie;Secteur;Niveau 4;450-22710 S;BP;Installateur, dépanneur en froid et conditionnement d'air;38635;2014-03-12;2016;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-23313 S;BP;Menuisier aluminium-verre;38728;2014-03-12;2016;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-23214 S;BP;Métiers de la pierre;38724;2015-06-24;2017;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-23314 S;BP;Métiers du plâtre et de l'isolation;38309;2016-05-13;2018;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-22709 S;BP;Monteur en installations du génie climatique et sanitaire;38726;2014-03-14;2016;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25303 M;BTS;Aéronautique;38576;2023-12-14;2026;;remplace le 320-25302 M;;
+CPC Industrie;Secteur;Niveau 5;320-22210 R;BTS;Biotechnologie en recherche et en production;38883;2024-03-12;2026;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-22104 R;BTS;Biotechnologies;1033;2006-11-08;2009;2025;remplacé par le 320-22210 R;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 5;320-32003 P;BTS;Communication;37198;2022-12-19;2025;;Remplace le n°320-32002 P;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-22317 N;BTS;Conception des processus de réalisation de produits option B production sérielle;37464;2016-02-16;2018;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-34303 R;BTS;Environnement nucléaire;12766;2011-06-27;2013;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;320-32211 S;BTS;Etudes de réalisation d'un projet de communication option B études de réalisation de produits imprimés;38421;2016-06-07;2019;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 5;320-23306 P;BTS;Finitions, aménagement des bâtiments : conception et réalisation;35809;2020-12-11;2023;;Remplace le n°320-23304;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 5;320-22711 M;BTS;Fluides-énergies-domotique option C domotique et bâtiments communicants;38361;2014-02-26;2016;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25412 M;BTS;Forge;37465;2016-02-16;2018;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25016 R;BTS;Maintenance des systèmes option C : systèmes éoliens;36968;2022-01-24;2024;;Remplace le n°320-25012 R;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25217 R;BTS;Maintenance des véhicules option C : motocycles;38367;2016-02-11;2018;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;320-32331 P;BTS;Métiers de l'audiovisuel option techniques d'ingénierie et exploitation des équipements;37022;2013-06-04;2016;;;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 5;320-33603 T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option A management;20693;2012-10-30;2015;2024;remplacé par le 320-33609 T;;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 5;320-24207 M;BTS;Métiers de la mode - vêtements;36777;2012-02-07;2014;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;320-32325 T;BTS;Photographie;36970;2010-03-26;2012;;;;
+CPC Industrie;Secteur;Niveau 5;320-25522 M;BTS;Photonique : Technologies et Sciences de la Lumière;38543;2023-12-14;2026;;remplace le 320-25519 M;;
+CPC Cohésion sociale et santé;Secteur;Niveau 5;320-33111 S;BTS;Prothésiste dentaire;37376;2023-01-25;2025;;REMPLACE celui de 2012   320-33110 S;;
+CPC Services aux entreprises;Secteur Services administratifs et financiers;Niveau 5;320-32614 T;BTS;Services informatiques aux organisations option B solutions logicielles et applications métiers;35340;2019-04-29;2022;;;;
+CPC Services aux entreprises;Secteur Services administratifs et financiers;Niveau 5;320-32409 T;BTS;Support à l'action managériale;38364;2018-02-16;2020;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25519 M;BTS;Systèmes photoniques;35394;2015-06-03;2017;2025;remplacé par le 320-25522 M;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 5;320-33426 M;BTS;Tourisme;37890;2019-03-05;2021;;-modifié en 2023 par Arrêté du 29 septembre 2023;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 5;320-23107 S;BTS;Travaux publics;1109;2011-06-23;2013;2024;est remplacé par le 320-23206 S;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32308 V;CAP;Accordeur de piano;36339;1994-08-25;1995;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25305 M;CAP;Aéronautique option avionique;37700;2013-08-19;2015;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25307 M;CAP;Aéronautique option structure;37700;2013-08-19;2015;;;;
+CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Niveau 3;500-31114 T;CAP;Agent d'accueil et de conduite routière, transport de voyageurs;2714;1998-08-21;2000;2024;Remplacé par le 50031124U;;2025
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 3;500-34303 T;CAP;Agent d'assainissement et de collecte des déchets liquides spéciaux;503;1994-03-11;1996;2024;abrogation par arrêté du 19 février 2024;;2025
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22363 V;CAP;Art et techniques de la bijouterie-joaillerie option polissage-finition;36336;2008-03-18;2010;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-24127 V;CAP;Arts de la broderie;514;1991-07-19;1993;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22425 V;CAP;Arts et techniques du verre option vitrailliste;37302;1994-08-29;1996;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32311 V;CAP;Assistant technique en instruments de musique option instruments à vent;36255;2004-10-27;2006;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;500-22135 T;CAP;Boucher;6993;2005-05-11;2007;2024;Est remplacé par le 50022143T;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22350 V;CAP;Bronzier option B - ciseleur sur bronze;531;1977-07-13;1979;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23420 S;CAP;Cannage et paillage en ameublement;534;1990-07-12;1992;;;;
+CPC Construction;Secteur Bois et dérivés;Niveau 3;500-23446 S;CAP;Charpentier bois;35113;2020-04-10;2022;;Remplace le n°500-23440 et 500-23439;;
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24316 S;CAP;Chaussure;37241;2005-04-22;2007;;;;
+CPC Services et produits de consommation;Secteur;Niveau 3;500-33413 T;CAP;Commercialisation et services en hôtel-café-restaurant;38424;2023-10-19;2026;;REMPLACE 500-33412 T;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23118 U;CAP;Conducteur d'engins de travaux publics et carrières;37891;2022-08-29;2025;;Rénovation en cours;;
+CPC Industrie;Secteur Bois et dérivés;Niveau 3;500-23443 U;CAP;Conducteur opérateur de scierie;37304;2004-02-16;2006;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25432 S;CAP;Construction des carrosseries;4936;2007-03-20;2009;2024;remplacé par le 500-25442 S;;2025
+CPC Services et produits de consommation;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24320 S;CAP;Cordonnerie multiservice;37251;2005-03-17;2007;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 3;500-22419 S;CAP;Fabrication industrielle des céramiques;579;1991-08-06;1992;2024;abrogé par arrêté du 31/07/2023;;2025
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 3;500-31223 T;CAP;Fleuriste;38400;2018-02-16;2020;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22339 V;CAP;Lapidaire option A - diamant;595;1974-09-20;1976;;;;
+CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Métallurgie;Niveau 3;500-25223 R;CAP;Maintenance des matériels option C: matériels d'espaces verts;39330;2016-03-24;2018;;;;
+CPC Mer et navigation intérieure;Secteur;Niveau 3;50025224R;CAP;Maintenance nautique;37670;2023-03-30;2025;;remplace le 500-25217 R réparation entretien des embarcations de plaisance;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23322 S;CAP;Menuisier aluminium-verre;814;2002-10-25;2004;2024;est remplacé par le 50023329S;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-25521 S;CAP;Métiers de l'enseigne et de la signalétique;572;2007-10-16;2009;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32221 S;CAP;Métiers de la gravure option B - gravure d'impression;621;1993-03-09;1995;;;;
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24241 S;CAP;Métiers de la mode - vêtement tailleur;37246;2011-04-08;2013;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25421 S;CAP;Mise en forme des matériaux;658;1988-08-31;1989;2025;abrogé par arrêté du 16 février 2024;;2026
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23324 S;CAP;Monteur en installations sanitaires;38305;2018-04-11;2020;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-22715 S;CAP;Monteur en installations thermiques;38306;2018-04-11;2020;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 3;500-33107 S;CAP;Opérateur en appareillage orthopédique Spécialité podo-orthèse;37487;1994-08-25;1996;;Les mots : « certificat d'aptitude professionnelle podo orthésiste » sont remplacés par les mots : « certificat d'aptitude professionnelle opérateur en appareillage orthopédique-spécialité podo-orthèse.;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 3;500-31123 M;CAP;Opérateur/opératrice de service - relation client et livraison;38403;2017-05-30;2018;;;;
+CPC Industrie;Secteur;Niveau 3;50025441S;CAP;Peintre automobile;37540;2022-12-30;2025;;remplace le 500-25433 S;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25433 S;CAP;Peinture en carrosserie;4933;2007-03-20;2009;2024;remplacé par le 50025441S;;2025
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 3;500-22509 S;CAP;Plasturgie;736;1999-07-27;2001;2024;abrogation par arrêté du 19 février 2024;;2025
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 3;500-32225 V;CAP;Sérigraphie industrielle;38411;1999-01-12;2000;;;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 3;56133605 T;CS3;Coiffure coupe couleur;38232;2015-03-23;2016;;;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 3;56122105 S;CS3;Cuisinier en desserts de restaurant;37380;1997-07-31;1998;;rénovation en cours;;
+CPC Construction;Secteur;Niveau 3;56123205 S;CS3;Echafaudeur;38873;2024-02-19;2025;;création ex nihilo;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 3;56122103 S;CS3;Employé traiteur;37566;1989-11-13;1990;;.;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;56134201 M;CS3;Entretien des collections du patrimoine;37314;2008-03-04;2009;;.;;
+CPC Construction;Secteur;Niveau 3;56122706 T;CS3;Maintenance des équipements thermiques individuels;37919;2022-10-11;2024;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;010-22108 S;CS3;Pâtisserie boulangère;37315;2004-05-04;2005;2024;remplacé par Techniques du tour en boulangerie et en pâtisserie code 561-22113 S;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;010-22110 S;CS3;Pâtisserie, glacerie, chocolaterie, confiserie spécialisées;37316;2009-04-09;2010;2024;remplacé par pâtisserie de boutique code 561-22112 S;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;56123307 S;CS3;Plâtrier;37918;2022-08-30;2024;;Remplace le 010-23302 S;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;56122113 S;CS3;Techniques du tour en boulangerie et en pâtisserie;38762;2024-01-05;2025;;remplace le 010-22108 S;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125312 R;CS4;Aéronautique option avionique;37924;2015-02-18;2016;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125310 R;CS4;Aéronautique option hélicoptères à moteurs à turbines;37924;2015-02-18;2016;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;46122306 V;CS4;Art de la dorure à chaud;35639;2021-03-10;2022;;Création;;
+CPC Mer et navigation intérieure;Secteur Transport, logistique, sécurité et autres services;Niveau 4;46125004 R;CS4;Opérateur polyvalent en interventions subaquatiques;36816;2021-04-30;2022;;Création;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125510 R;CS4;Production et réparation de produits électroniques;37569;2023-02-06;2024;;création;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 4;46133414 T;CS4;Sommellerie;37382;2022-12-30;2024;;Remplace le n° 010-33410T;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125407 S;CS4;Technicien en tuyauterie;38312;2017-01-12;2018;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;420-32305 V;Diplôme;Brevet artistique des techniques du cirque;23909;1989-10-27;1992;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-32301 V;DMA;Arts du cirque;838;1989-10-27;1992;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;321-32205 V;DMA;Arts graphiques option : gravure;826;1998-07-30;2000;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-22402 V;DMA;Décor architectural option arts du verre et du cristal;5291;2007-06-19;2009;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-23412 V;DMA;Facture instrumentale option guitare;6899;2009-04-08;2011;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-23001 V;DMA;Habitat option : décors et mobiliers;836;1987-07-07;1989;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-23002 V;DMA;Habitat option : ornements et objets;837;1987-07-07;1989;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-23410 V;DMA;Habitat option restauration de mobilier;5293;2007-05-09;2009;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-25101 V;DMA;Horlogerie;830;1996-07-11;1998;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-23409 V;DMA;Lutherie;820;2000-05-31;2003;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25303 M;BAC PRO;Aéronautique option systèmes;37928;2013-04-12;2016;;;Métiers de l'aéronautique;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;400-22403 M;BAC PRO;Artisanat et métiers d'art option métiers de l'enseigne et de la signalétique;36425;2005-07-11;2007;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;400-22402 M;BAC PRO;Artisanat et métiers d'art option verrerie scientifique et technique;36425;2005-07-11;2007;;;;
+CPC Services aux entreprises;Secteur Services administratifs et financiers;Niveau 4;400-30004 T;BAC PRO;Assistance à la gestion des organisations et de leurs activités;34606;2020-02-18;2023;;Remplace le n°400-30001;Métiers de la gestion administrative, du transport et de la logistique;
+CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Chimie, bio-industrie, environnement;Niveau 4;400-22003 U;BAC PRO;Bio-industries de transformation;7586;2009-09-01;2012;2025;remplacé par le 400-22005 U;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 4;400-33403 T;BAC PRO;Commercialisation et services en restauration;37909;2011-05-31;2014;;;Métiers de l'hôtellerie-restauration;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-20002 N;BAC PRO;Etude et définition de produits industriels;763;1999-07-28;2001;2024;Remplacé par le n°  400-20009 N;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 4;400-32206 S;BAC PRO;Façonnage de produits imprimés, routage;38422;2011-04-26;2014;;.;Métiers des industries graphiques et de la communication;
+CPC Services aux entreprises;Secteur;Niveau 4;400-34303 T;BAC PRO;Gestion des pollutions et protection de l'environnement;14899;2012-07-17;2016;;en rénovation;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-22707 S;BAC PRO;Installateur en chauffage, climatisation et énergies renouvelables;35845;2021-06-29;2024;;Remplace le n°400-22703;Métiers des transitions numérique et énergétique;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-22706 R;BAC PRO;Maintenance  et Efficacité énergétique;35844;2021-05-20;2024;;Remplace le n°400-22704;Métiers des transitions numérique et énergétique;
+CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Métallurgie;Niveau 4;400-25221 R;BAC PRO;Maintenance des matériels option C - matériels d'espaces verts;39327;2016-03-24;2019;;;Métiers de la maintenance des matériels et des véhicules;
+CPC Mer et navigation intérieure;Secteur Transport, logistique, sécurité et autres services;Niveau 4;400-25223 R;BAC PRO;Maintenance nautique;37698;2023-03-30;2026;;remplace le 400-25009 R;;
+CPC Mer et navigation intérieure;Secteur Transport, logistique, sécurité et autres services;Niveau 4;400-25009 R;BAC PRO;Maintenance nautique;5860;2008-04-17;2010;2025;est remplacé par le 400-25223 R;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 4;400-31212 M;BAC PRO;Métiers de l'accueil;38397;2018-12-17;2022;;Remplace le n°40031210;Métiers de la relation client;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 4;400-24005 T;BAC PRO;Métiers de l'entretien des textiles, option A : blanchisserie;35807;2020-12-11;2024;;Remplace le n° 400-24002 et le n°450-24004;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 4;400-31214 T;BAC PRO;Métiers du commerce et de la vente option B prospection clientèle et valorisation commerciale;38399;2018-12-17;2022;;Remplace le n°40031206;Métiers de la relation client;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25006 S;BAC PRO;Microtechniques;38423;2003-12-23;2006;;;Métiers de la réalisation d'ensembles mécaniques et industriels;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-20102 U;BAC PRO;Pilote de ligne de production;36428;2012-03-30;2015;;;Métiers du pilotage et de la maintenance d'installations automatisées;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23004 P;BAC PRO;Technicien d'études du bâtiment option A - études et économie;39033;2008-04-08;2010;;;Métiers des études et de la modélisation numérique du bâtiment;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 4;400-33104 S;BAC PRO;Technicien en prothèse dentaire;34674;2020-04-10;2023;;Remplace le n° 400-33102;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25014 S;BAC PRO;Technicien en réalisation de produits mécaniques, option Réalisation et suivi de productions;35697;2020-12-09;2024;;Remplace les n° 40025005 et 40025107 et 40025106;Métiers de la réalisation d'ensembles mécaniques et industriels;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23210 S;BAC PRO;Travaux publics;37385;2023-01-17;2026;;remplace le 400-23102 S;Métiers de la construction durable, du bâtiment et des travaux publics;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-22318 V;BMA;Art du bijou option bijouterie polissage finition;38649;2010-02-18;2012;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-22317 V;BMA;Art du bijou options bijouterie sertissage;38649;2010-02-18;2012;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-32207 S;BMA;Orfèvrerie option gravures - ciselure;38307;2013-07-26;2016;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-23409 V;BMA;Technicien en facture instrumentale option accordéon;36340;2003-07-08;2005;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-23411 V;BMA;Technicien en facture instrumentale option piano;36340;2003-07-08;2005;;;;
+CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Niveau 4;450-34402 T;BP;Agent technique de sécurité dans les transports;964;1997-09-03;1998;2024;abrogation par arrêté du 27 février 2023;;2025
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 4;450-33403 T;BP;Barman;37492;1998-07-23;1999;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-23316 S;BP;Carreleur mosaïste;38230;2018-04-03;2020;;;;
+CPC Mer et navigation intérieure;Secteur Bois et dérivés;Niveau 4;450-23407 S;BP;Charpentier de marine;38410;2007-03-20;2009;;;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 4;450-33608 T;BP;Coiffure;38231;2011-03-28;2013;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-23213 S;BP;Couvreur;38725;2015-04-28;2017;;;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 4;450-33609 T;BP;Esthétique cosmétique parfumerie;39291;2019-06-05;2021;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-23216 S;BP;Maçon;38303;2018-04-03;2020;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-25411 S;BP;Métallier;38727;2014-03-12;2016;;;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 4;450-33405 T;BP;Sommelier;23765;1995-09-03;1997;2024;remplacé par le 45033408T;;2025
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 4;450-24216 S;BP;Vêtement sur mesure option tailleur homme;37937;1998-07-23;1999;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25302 M;BTS;Aéronautique;37706;2009-04-09;2011;2025;remplacé par le 320-25303 M;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25001 P;BTS;Assistance technique d'ingénieur;37561;1998-07-30;1999;;;;
+CPC Services aux entreprises;Secteur Services administratifs et financiers;Niveau 5;320-31311 T;BTS;Assurance;38359;2017-02-13;2019;;;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 5;320-31215 T;BTS;Commerce international;35800;2020-11-25;2023;;Remplace le n°320-31211;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25005 N;BTS;Conception et industrialisation en microtechnique;38743;2003-07-31;2005;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-20111 N;BTS;Conception et réalisation des systèmes automatiques;37115;2011-06-23;2013;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25415 M;BTS;Conception et réalisation en chaudronnerie industrielle;37405;2018-02-19;2020;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-20113 R;BTS;Contrôle industriel et régulation automatique;38216;2016-02-16;2018;;;;
+CPC Industrie;Secteur Bois et dérivés;Niveau 5;320-23411 M;BTS;Développement et réalisation bois;38882;2010-05-04;2012;;;;
+CPC Services aux entreprises;Secteur Services administratifs et financiers;Niveau 5;320-31409 T;BTS;Gestion de la PME;38363;2018-02-19;2020;;;;
+CPC Industrie;Secteur;Niveau 5;32022406;BTS;Industries céramiques;37197;2022-12-19;2025;;Remplace le 320-22404 S;;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 5;320-24111 S;BTS;Innovation textile option A structures;37962;2014-05-13;2016;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25014 R;BTS;Maintenance des systèmes option A : systèmes de production;36968;2022-01-24;2024;;Remplace le n°320-25010 R;;
+CPC Mer et navigation intérieure;Secteur;Niveau 5;320-25013 R;BTS;Mécatronique navale;36969;2021-12-16;2024;;Création;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;320-32332 V;BTS;Métiers de l'audiovisuel option montage et postproduction;37020;2013-06-04;2016;;;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 5;320-33609T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option A management;37375;2022-12-09;2025;;remplace le 320-33603 T;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 5;320-33604 T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option B formation-marques;20693;2012-10-30;2015;2024;remplacé par le 320-33610 T;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-20115 R;BTS;Métiers de la mesure;35803;2020-12-18;2023;;Remplace le n°320-22002 R;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 5;320-33110 S;BTS;Prothésiste dentaire;14957;2012-07-27;2014;2024;Remplacé par le 320 33111 S;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 5;320-33104 S;BTS;Prothésiste orthésiste;1097;1997-07-28;1998;;remplacement  annexe 2 et 3 en 2023;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 5;320-23206 S;BTS;Travaux publics;37199;2022-12-22;2025;;remplace le 320-23107 S;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32307 V;CAP;Accessoiriste réalisateur;37299;1993-08-26;1995;;;;
+CPC Services aux entreprises;Secteur Chimie, bio-industrie, environnement;Niveau 3;500-34301 T;CAP;Agent de la qualité de l'eau;38741;1990-08-23;1992;;;;
+CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Niveau 3;500-34405 T;CAP;Agent de sécurité;38226;2010-04-21;2012;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25136 S;CAP;Armurerie (fabrication et réparation);38394;2004-02-16;2005;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-24130 V;CAP;Arts de la dentelle option fuseaux;35640;2004-07-29;2005;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23432 V;CAP;Arts du bois option C - marqueteur;37301;1983-05-27;1985;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23450 V;CAP;Assistant luthier du quatuor;35699;2021-05-03;2023;;Remplace le n°500-23428;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32312 V;CAP;Assistant technique en instruments de musique option piano;36255;2004-10-27;2006;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 3;500-33411 T;CAP;Assistant technique en milieux familial et collectif;2817;2004-08-11;2007;2024;est remplacé par le 50033002T;;2025
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;50022143T;CAP;Boucher;37535;2023-02-28;2025;;remplace le 500-22135 T;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22351 V;CAP;Bronzier option C - tourneur sur bronze;532;1977-07-13;1979;;;;
+CPC Industrie;Secteur;Niveau 3;50025440S;CAP;Carrossier automobile;37601;2022-12-30;2025;;remplace le 500-25434 S;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 3;500-22510 S;CAP;Composites, plastiques chaudronnés;38432;2000-08-21;2002;;;;
+CPC Mobilité et logistique;Secteur;Niveau 3;50031124U;CAP;conducteur agent d'accueil en autobus et autocar;37598;2023-03-12;2024;;remplace le 500-31114 T;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23119 S;CAP;Constructeur de réseaux de canalisations de travaux publics;35321;2019-04-15;2021;;en rénovation;;
+CPC Industrie;Secteur;Niveau 3;500-25442 S;CAP;Construction et aménagement de véhicules;;2024-04-02;2026;;remplace le 500-25432 S;;
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24313 S;CAP;Cordonnier bottier;37366;1993-07-07;1995;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22332 V;CAP;Doreur à la feuille ornemaniste;36683;1976-09-02;1978;;;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 3;500-33615 T;CAP;Esthétique cosmétique parfumerie;39030;2018-06-25;2020;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23321 S;CAP;Etancheur du bâtiment et des travaux publics;37892;2002-10-25;2004;2024;remplacé par le 50023328S;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-24132 V;CAP;Fleuriste de mode;39035;2024-02-22;2025;;;;
+CPC Industrie;Secteur;Niveau 3;500-22714 S;CAP;Installateur en froid et conditionnement d'air;38560;2015-06-02;2017;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25218 R;CAP;Maintenance des véhicules option A - voitures particulières;19118;2014-04-22;2016;;;;
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24322 S;CAP;Maroquinerie;37900;2005-04-26;2007;2025;remplacé par le 500-24323 S;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23411 S;CAP;Menuisier en sièges;617;1955-07-01;1956;;;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 3;500-33616 T;CAP;Métiers de la coiffure;39266;2019-06-05;2021;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32220 S;CAP;Métiers de la gravure option A - gravure d'ornementation;620;1993-03-09;1995;;;;
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24240 S;CAP;Métiers de la mode - vêtement flou;37245;2011-04-08;2013;;;;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24007 T;CAP;Métiers de l’entretien des textiles, option A : blanchisserie;35808;2020-12-11;2023;;Remplace le n°500-24006;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22340 V;CAP;Orfèvre option A - monteur en orfèvrerie;640;1973-10-15;1976;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25126 S;CAP;Outillages en outils à découper et à emboutir;646;1991-08-29;1993;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23327 S;CAP;Peintre applicateur de revêtements;39036;2019-04-08;2021;;;;
+CPC Mer et navigation intérieure;Secteur Métallurgie;Niveau 3;500-25217 R;CAP;Réparation entretien des embarcations de plaisance;4937;2007-03-20;2009;2024;remplacé par le 500-25224 R;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23220 S;CAP;Tailleur de pierre;38310;2013-02-06;2015;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-24238 S;CAP;Tapissier -tapissière d’ameublement en siège;37248;2004-07-29;2007;;;;
+CPC Arts, spectacles et médias;Secteur;Niveau 3;500-23451 S;CAP;Tonnelier;37671;2023-05-05;2025;;remplace le 500-23435 S;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-23114 S;certificat (autre que diplôme);Certificat de préposé au tir;en cours;1997-05-26;1998;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 3;56133002 T;CS3;Aide à domicile;37568;2023-02-10;2024;;remplace le 010-33001 T;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 3;56122109 T;CS3;Art de la cuisine allégée;37567;2006-03-24;2007;2024;Arrêté du 16 octobre 2023 portant abrogation de la spécialité « art de la cuisine allégée » de mention complémentaire.;;2025
+CPC Services et produits de consommation;Secteur Métiers de la mode et industries connexes;Niveau 3;56124201 R;CS3;Essayage-retouche-vente;37234;1996-10-22;1997;;.;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 4;46133413 T;CS4;Accueil - réception;37921;2008-03-31;2009;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125308 R;CS4;Aéronautique option avions à moteurs à turbines;37924;2015-02-18;2016;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46122001 R;CS4;Agent de contrôle non destructif;955;1995-10-09;1996;;;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 4;46131201 T;CS4;Assistance, conseil, vente à distance;38402;2001-06-15;2001;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125509 R;CS4;Cybersécurité;37488;2023-02-06;2024;;création;;
+CPC Sport et animation;Secteur;Niveau 4;46133503 M;CS4;Encadrement secteur sportif option activités aquatiques et de la natation;36328;2022-01-14;2023;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;46122704 S;CS4;Technicien en énergies renouvelables option A - énergie électrique;39297;2010-04-20;2011;;;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 4;46123306 W;CS4;Vendeur conseil en produits techniques pour l'habitat;38404;2014-12-17;2016;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;420-32306 V;Diplôme;Technicien des métiers du spectacle option machiniste constructeur;39029;1997-03-10;1998;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;420-24210 V;Diplôme;Technicien des métiers du spectacle option techniques de l'habillage;39029;1997-03-10;1998;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-23006 V;DMA;Décor architectural option D : domaine des matériaux de synthèse;844;1987-07-16;1989;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-32316 M;DMA;Régie du spectacle option lumière;912;2002-07-09;2004;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25302 M;BAC PRO;Aéronautique option avionique;37928;2013-04-12;2016;;;Métiers de l'aéronautique;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;400-22309 V;BAC PRO;Artisanat et métiers d'art - facteur d'orgues - option tuyautier;35320;2020-12-15;2021;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 4;400-22104 S;BAC PRO;Boucher charcutier traiteur;37602;2009-06-24;2011;;;Métiers de l'alimentation;
+CPC Industrie;Secteur;Niveau 4;400-25413 S;BAC PRO;Construction et aménagement de véhicules;;2024-04-02;2027;;remplace le 400-25410 S;;
+CPC Services et produits de consommation;Secteur;Niveau 4;400-33606 T;BAC PRO;Esthétique Cosmétique Parfumerie;36331;2021-12-29;2025;;Remplace le n°400-33603 T;Métiers de la beauté et du bien-être;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23207 B;BAC PRO;Interventions sur le patrimoine bâti option C - couverture;38745;2008-04-11;2010;;;Métiers de la construction durable, du bâtiment et des travaux publics;
+CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Niveau 4;400-31106 M;BAC PRO;Logistique;38302;2010-06-03;2012;;en rénovation;Métiers de la gestion administrative, du transport et de la logistique;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25216 R;BAC PRO;Maintenance des véhicules option C - motocycles;19117;2014-03-19;2017;;;Métiers de la maintenance des matériels et des véhicules;
+CPC Industrie;Secteur;Niveau 4;400-24204 S;BAC PRO;Métiers de la couture et de la confection;38729;2023-09-28;2027;;remplace le 400-24203 S;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 4;400-31213 T;BAC PRO;Métiers du commerce et de la vente option A animation et gestion de l'espace commercial;38399;2018-12-17;2022;;Remplace le n°40031202;Métiers de la relation client;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-20009 N;BAC PRO;Modélisation et prototypage 3D;36191;2022-01-18;2025;;Remplace le n°400-20002 N (Etudes et définitions de produits industriels);;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 4;400-33101 T;BAC PRO;Optique lunetterie;38456;2010-04-08;2012;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25518 M;BAC PRO;Optique Photonique : Technologies de la Lumière;37490;2023-02-28;2026;;Création;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-25406 B;BAC PRO;Ouvrage du bâtiment : métallerie;38396;2006-05-09;2008;;;Métiers de la construction durable, du bâtiment et des travaux publics;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 4;400-32304 V;BAC PRO;Photographie;37233;2012-02-09;2015;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25408 R;BAC PRO;Réparation des carrosseries;5859;2008-04-18;2010;2025;remplacé par le 40025412R;;2026
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25515 R;BAC PRO;Systèmes numériques option C - réseaux informatiques et systèmes communicants;26335;2016-03-01;2019;2025;remplacé par le 40025519R;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23203 S;BAC PRO;Technicien du bâtiment : organisation et réalisation du gros œuvre;4888;1997-09-03;2009;;;Métiers de la construction durable, du bâtiment et des travaux publics;
+CPC Construction;Secteur Bois et dérivés;Niveau 4;400-23405 S;BAC PRO;Technicien menuisier agenceur;37917;2005-07-11;2007;;;Métiers de l'agencement, de la menuiserie et de l'ameublement;
+CPC Mer et navigation intérieure;Secteur Transport, logistique, sécurité et autres services;Niveau 4;400-31109 U;BAC PRO;Transport fluvial;37915;2013-04-11;2015;2026;remplacé par le 400-31115 U;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-22313 V;BMA;Armurerie;37556;1992-08-20;1994;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-25101 V;BMA;Horlogerie;37945;2008-04-21;2010;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-22319 V;BMA;Orfèvrerie option monture - tournure;38307;2013-07-26;2016;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-22409 V;BMA;Verrier décorateur;38838;2011-04-05;2013;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-23301 V;BMA;Volume staff et matériaux associés;37555;1993-03-19;1995;;;;
+CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Niveau 4;450-34401 T;BP;Agent technique de prévention et de sécurité;38227;1997-09-03;1998;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;450-24106 S;BP;ameublement tapisserie décoration;37236;1997-08-01;1998;;.;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 4;450-22111 S;BP;Arts de la cuisine;38431;2023-10-19;2026;;remplace le 450-22109 S;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 4;450-22110 S;BP;Boucher;37310;2016-04-26;2018;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-23317 S;BP;Etanchéité du bâtiment et des travaux publics;38300;2018-04-03;2020;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;450-22306 V;BP;Gemmologue;37311;1999-07-27;2000;;;;
+CPC Construction;Secteur Bois et dérivés;Niveau 4;450-23408 S;BP;Menuisier;37238;2014-02-03;2016;;;;
+CPC Services et produits de consommation;Secteur;Niveau 4;450-33408T;BP;Sommelier;37384;2022-12-30;2025;;remplace le 450-33405 T;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;45023201;BP;Tailleur de pierres monuments historiques;36849;1945-01-01;1946;;Rénovation en cours;;
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 4;450-24214 S;BP;Vêtement sur mesure option couture flou;37937;1998-07-23;1999;;;;
+CPC Industrie;Secteur;Niveau 5;320-22209 R;BTS;Bioanalyses en laboratoire de contrôle;38884;2024-03-12;2026;;remplace le 320-22207 R;;
+CPC Services aux entreprises;Secteur;Niveau 5;320-34502 P;BTS;Collaborateur juriste notarial;36685;2021-12-13;2024;;"Remplace le n° 320-34501 M  (ex """"notariat"""")";;
+CPC Services aux entreprises;Secteur Services administratifs et financiers;Niveau 5;320-31408 T;BTS;Comptabilité et gestion;39159;2014-11-03;2017;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-22318 N;BTS;Conception des processus de réalisation de produits option A production unitaire;37464;2016-02-16;2018;;;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 5;320-31216 T;BTS;Conseil et commercialisation de solutions techniques;35801;2020-11-25;2023;;Remplace le n°320-20008;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 5;320-33103 T;BTS;Diététique;39153;1997-09-09;1989;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25520 R;BTS;Electrotechnique;35346;2020-02-21;2022;;Remplace le n°320-25515 R;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-22505 S;BTS;Europlastics et composites à référentiel commun européen option conception outillage;38416;2016-02-29;2018;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-22506 S;BTS;Europlastics et composites à référentiel commun européen option pilotage et optimisation de la production;38416;2016-02-29;2018;;;;
+CPC Industrie;Secteur;Niveau 5;320-22710 M;BTS;Fluides-énergies-domotique option B froid et conditionnement d'air;38361;2014-02-26;2016;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 5;320-23109 M;BTS;Géologie appliquée;39085;2019-03-05;2021;;;;
+CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Niveau 5;320-31103 T;BTS;Gestion des transports et logistique associée;38365;2018-10-11;2021;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25218 R;BTS;Maintenance des matériels de construction et de manutention;38577;2017-02-13;2019;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25215 R;BTS;Maintenance des véhicules option A : voitures particulières;38367;2016-02-11;2018;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 5;320-23013 P;BTS;Management économique de la construction;35802;2020-12-11;2023;;Remplace le n°320-23010;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 5;320-33424 P;BTS;Management en hôtellerie et restauration option B management d'unité de production culinaire;37889;2018-02-15;2020;;;;
+CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Niveau 5;320-34401 T;BTS;Management opérationnel de la sécurité;35393;2020-03-02;2022;;Création;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;320-32328 P;BTS;Métiers de l'audiovisuel option gestion de la production;37019;2013-06-04;2016;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;320-32330 V;BTS;Métiers de l'audiovisuel option métiers du son;37196;2013-06-04;2016;;;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 5;320-33611 T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option C cosmétologie;37375;2022-12-09;2025;;remplace le 320-33605 T;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 5;320-33107 W;BTS;Opticien lunetier;38360;1997-09-03;1999;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 5;320-33002 P;BTS;Services et prestations des secteurs sanitaire et social;36939;2022-01-24;2024;;Remplace le n°320-33001 P - modifié en 2023 par Arrêté du 10 octobre 2023;;
+CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Métallurgie;Niveau 5;320-25213 M;BTS;Techniques et services en matériels agricoles;38191;2013-04-08;2015;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25306 M;CAP;Aéronautique option systèmes;37700;2013-08-19;2015;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 3;500-34002 M;CAP;Agent de prévention et de médiation;37240;2004-07-06;2006;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32228 V;CAP;Arts de la reliure;37539;2017-10-31;2019;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23430 V;CAP;Arts du bois option A - sculpteur ornemaniste;37301;1983-05-27;1985;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22427 V;CAP;Arts et techniques du verre option décorateur sur verre;37302;1994-08-29;1996;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;500-22137 S;CAP;Boulanger;37537;2014-02-21;2016;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23325 S;CAP;Carreleur mosaïste;39328;2019-04-15;2021;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;500-22130 S;CAP;Charcutier-traiteur;37532;1999-10-25;2001;2025;remplacé par le 500-22144 S;;
+CPC Mer et navigation intérieure;Secteur Bois et dérivés;Niveau 3;500-23444 S;CAP;Charpentier de marine;38409;2005-03-31;2007;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;500-22133 S;CAP;Chocolatier-confiseur;37303;2002-08-21;2004;2025;remplacé par le 500-22145 S;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23222 S;CAP;Constructeur d'ouvrages en béton armé;34742;2019-04-08;2021;;en rénovation;;
+CPC Services et produits de consommation;Secteur;Niveau 3;500-22146 T;CAP;Cuisine;38430;2023-10-19;2026;;remplace le 500-22139 T;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23445 S;CAP;Ebéniste;37538;2017-02-27;2019;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22353 V;CAP;Emailleur d'art sur métaux;39031;1980-02-28;1981;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23433 V;CAP;Encadreur;37242;1976-09-02;1978;;;;
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24315 S;CAP;Fourrure;37243;1998-11-17;2000;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 3;500-34404 T;CAP;Gardien d'immeuble;38633;2010-02-23;2011;;en rénovation;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;500-22138 S;CAP;Glacier fabricant;37534;2014-02-21;2016;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25108 S;CAP;Instruments coupants et de chirurgie;594;1990-12-21;1992;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23006 R;CAP;Interventions en maintenance technique des bâtiments;35696;2021-03-30;2023;;Remplace le  n°500-23002;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22343 V;CAP;Lapidaire option B - pierres de couleur;596;1974-09-20;1976;;;;
+CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Métallurgie;Niveau 3;500-25221 R;CAP;Maintenance des matériels option A - matériels agricoles;39330;2016-03-24;2018;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25222 R;CAP;Maintenance des matériels option B -matériels de construction et de manutention;39330;2016-03-24;2018;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25219 R;CAP;Maintenance des véhicules option B - véhicules de transport routier;19118;2014-04-22;2016;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25220 R;CAP;Maintenance des véhicules option C - motocycles;19118;2014-04-22;2016;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23221 S;CAP;Marbrier du bâtiment et de la décoration;38393;2013-02-06;2015;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;500-21305 W;CAP;Mareyage;37536;1996-08-19;1997;;;;
+CPC Arts, spectacles et médias;Secteur;Niveau 3;500-24323 S;CAP;Maroquinerie;38712;2023-11-21;2026;;remplace le 500-24322 S;;
+CPC Industrie;Secteur Bois et dérivés;Niveau 3;500-22609 S;CAP;Mécanicien conducteur des scieries et des industries mécaniques du bois option b - mécanicien affûteur de sciage, tranchage, déroulage;605;1969-10-07;1971;;;;
+CPC Industrie;Secteur Bois et dérivés;Niveau 3;500-23447 S;CAP;Menuisier fabricant;36112;2020-11-20;2023;;Remplace le n°500-23441;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32223 S;CAP;Métiers de la gravure option D - marquage poinçonnage;625;1993-03-09;1995;;;;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24008 T;CAP;Métiers de l’entretien des textiles, option B : pressing;35808;2020-12-11;2023;;Remplace le n°500-24005;;
+CPC Sport et animation;Secteur;Niveau 3;500-33502 T;CAP;Métiers du football;38877;2024-02-27;2026;;remplace le  500-33501 T;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23326 S;CAP;Métiers du plâtre et de l'isolation;39032;2019-04-15;2021;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 3;500-22505 S;CAP;Mise en œuvre des caoutchoucs et des élastomères thermoplastiques;628;1987-06-22;1988;2024;abrogation par arrêté du 19 février 2024;;2025
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32306 T;CAP;Monteur en chapiteaux;632;1977-07-20;1979;2023;Arrêté du 24 octobre 2023 portant abrogation de la spécialité « Monteur en chapiteaux » de certificat d'aptitude professionnelle;;2024
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22354 V;CAP;Orfèvre option D - planeur en orfèvrerie;643;1980-05-06;1981;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23427 V;CAP;Ouvrier archetier;647;1959-07-10;1961;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;500-31221 T;CAP;Poissonnier-écailler;37383;2007-03-20;2009;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23311 V;CAP;Staffeur ornemaniste;36427;1993-03-05;1995;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-24239 S;CAP;Tapissier -tapissière d’ameublement en décor;37247;2004-07-29;2007;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-33617 T;CAP;Taxidermiste;34672;2019-02-25;2021;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23435 S;CAP;Tonnellerie;679;1993-07-28;1994;2024;est remplacé par le 500-23451 S;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22421 V;CAP;Tournage en céramique;36337;1993-08-20;1995;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;50025138U;CAP;Transports par câbles et remontées mécaniques;37306;2022-12-21;2025;;Remplace le 500-25134 U;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23438 S;CAP;Vannerie;37899;2004-10-27;2006;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 3;56122405 U;CS3;Conducteur de machines de verrerie;39191;1988-10-25;1991;;;;
+CPC Construction;Secteur;Niveau 3;56123308 S;CS3;Serrurier;38757;2023-12-14;2025;;création ex nihilo;;
+CPC Commerce;Secteur;Niveau 3;56122111 W;CS3;Vendeur-Conseil en alimentation;37105;2022-06-23;2023;;remplace le 010-22106 W;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;56123204 S;CS3;Zingueur;37920;2022-08-29;2024;;Remplace 010-23202 S;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125309 R;CS4;Aéronautique option avions à moteurs à pistons;37924;2015-02-18;2016;;;;
+CPC Sport et animation;Secteur;Niveau 4;46133505 M;CS4;Encadrement secteur sportif option activités de la forme - haltérophilie, musculation;36328;2022-01-14;2023;;;;
+CPC Mer et navigation intérieure;Secteur Métallurgie;Niveau 4;46125003 R;CS4;Mécatronique navale;37570;2015-11-26;2017;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;46123304 S;CS4;Peinture décoration;38711;2000-07-26;2002;;;;
+CPC Services aux entreprises;Secteur Services administratifs et financiers;Niveau 4;46132601 T;CS4;Services numériques aux organisations;35517;2020-12-14;2022;;Création;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125408 S;CS4;Technicien en chaudronnerie aéronautique et spatiale;38224;2017-01-12;2018;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;46122705 S;CS4;Technicien en énergies renouvelables option B - énergie thermique;39297;2010-04-20;2011;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125409 S;CS4;Technicien en peinture aéronautique;37923;2020-02-18;2020;;Création;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;321-13301 F;DMA;Cinéma d'animation;821;1998-08-27;2000;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-23005 V;DMA;Décor architectural option C : domaine du métal;850;1987-07-16;1989;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-25401 V;DMA;Facture instrumentale option instruments à vent;6899;2009-04-08;2011;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-23413 V;DMA;Facture instrumentale option piano;6899;2009-04-08;2011;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 4;400-33004 T;BAC PRO;Accompagnement soins et services à la personne option B - en structure;12301;2011-05-11;2014;2024;Remplacé par le n°400-33007 T;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25304 M;BAC PRO;Aéronautique option structure;37928;2013-04-12;2016;;;Métiers de l'aéronautique;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;400-23003 V;BAC PRO;Artisanat et métiers d'art option marchandisage visuel;36335;2007-03-20;2009;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25305 M;BAC PRO;Aviation générale;37914;2013-04-12;2016;;;Métiers de l'aéronautique;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 4;400-22105 S;BAC PRO;Boulanger - pâtissier;37908;2009-07-02;2011;;;Métiers de l'alimentation;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 4;400-33603 T;BAC PRO;Esthétique cosmétique parfumerie;30312;2017-04-07;2020;2024;Remplacé par le n°400-33606 T;;
+CPC Construction;Secteur Bois et dérivés;Niveau 4;400-23408 P;BAC PRO;Etude et réalisation d'agencement;37911;2011-04-07;2014;;;Métiers de l'agencement, de la menuiserie et de l'ameublement;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23205 B;BAC PRO;Interventions sur le patrimoine bâti option A - maçonnerie;38745;2008-04-11;2010;;;Métiers de la construction durable, du bâtiment et des travaux publics;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25012 R;BAC PRO;Maintenance des systèmes de production connectés;35698;2020-12-09;2024;;Remplace le n°400-25007;Métiers du pilotage et de la maintenance d'installations automatisées;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25214 R;BAC PRO;Maintenance des véhicules option A - voitures particulières;19117;2014-03-19;2017;;;Métiers de la maintenance des matériels et des véhicules;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25215 R;BAC PRO;Maintenance des véhicules option B - véhicules de transport routier;19117;2014-03-19;2017;;;Métiers de la maintenance des matériels et des véhicules;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23303 B;BAC PRO;Menuiserie aluminium-verre;4431;2006-05-09;2008;;;Métiers de la construction durable, du bâtiment et des travaux publics;
+CPC Industrie;Secteur;Niveau 4;400-25520 P;BAC PRO;Métiers de l’électricité et de ses environnements connectés;38878;2024-01-08;2026;;remplace le 400-25510 P;Métiers des transitions numérique et énergétique;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 4;400-33602 T;BAC PRO;Perruquier posticheur;38308;2010-04-08;2012;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 4;400-32207 S;BAC PRO;Réalisation de produits imprimés et pluri média option A - productions graphiques;38567;2014-03-12;2017;;;Métiers des industries graphiques et de la communication;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25513 R;BAC PRO;Systèmes numériques option A - sûreté et sécurité des infrastructures, de l'habitat et du tertiaire;25354;2016-03-01;2019;2025;remplacé par le 40025519R;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25514 R;BAC PRO;Systèmes numériques option B - audiovisuels, réseau et équipement domestiques;26334;2016-03-01;2019;2025;remplacé par le 40025519R;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25013 S;BAC PRO;Technicien en réalisation de produits mécaniques, option Réalisation et maintenance des outillages;35697;2020-12-09;2024;;Remplace les n° 40025005 et 40025107 et 40025106;Métiers de la réalisation d'ensembles mécaniques et industriels;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-22705 S;BAC PRO;Technicien gaz;38569;2017-03-02;2020;;en rénovation;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23103 P;BAC PRO;Technicien géomètre topographe;4895;2007-03-20;2009;2026;remplacé par le 400-23104 P;Métiers des études et de la modélisation numérique du bâtiment;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25109 U;BAC PRO;Transports par câbles et remontées mécaniques;37309;2022-12-21;2026;;création;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-22316 V;BMA;Art du bijou option bijouterie joaillerie;38649;2010-02-18;2012;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-24106 V;BMA;Arts et techniques du tapis et de la tapisserie de lisse;39521;1993-08-05;1995;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 4;401-23304 V;BMA;Arts graphiques option A : signalétique;37946;2019-04-19;2021;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 4;401-23305 V;BMA;Arts graphiques option B : décor peint;37946;2019-04-19;2021;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-22408 V;BMA;Céramique;37552;1994-07-28;1996;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;401-23201 S;BMA;Gravure sur pierre;39034;2013-11-06;2016;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-22410 V;BMA;Souffleur de verre;38634;2011-04-05;2013;;;;
+CPC Services et produits de consommation;Secteur;Niveau 4;450-33409 T;BP;Arts du service et commercialisation en restauration;38429;2023-10-19;2026;;remplace le 450-33407 T;;
+CPC Construction;Secteur Bois et dérivés;Niveau 4;450-23409 S;BP;Charpentier bois;37237;2014-02-03;2016;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-23105 U;BP;Conducteur d'engins : travaux publics et carrières;38715;2015-06-02;2017;;;;
+CPC Industrie;Secteur;Niveau 4;450-22517 S;BP;Électricien;38880;2024-01-08;2026;;remplace le 450-25516 S;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;450-25516 S;BP;Electricien(ne);27774;2017-01-12;2019;2025;remplacé par le 450-22517 S;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 4;450-33404 T;BP;Gouvernante;37493;1997-09-03;1998;;;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 4;450-32203 W;BP;Libraire;38301;2009-04-09;2011;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-23215 M;BP;Métiers de la piscine;38339;2017-03-01;2019;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 4;450-22501 S;BP;Mise en œuvre des caoutchoucs et des élastomères thermoplastiques;1002;1997-09-03;1998;2024;abrogation par arrêté du 19 février 2024;;2025
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 4;450-20101 U;BP;Pilote d'installation de production par procédés;37239;1998-09-09;1999;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 4;450-33104 S;BP;Préparateur en pharmacie;37312;1997-09-10;1999;2024;Abrogé par arrêté du 17/10/2022;;2025
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 4;450-22002 R;BP;Techniques de laboratoire de recherche option A - biologie;1172;1999-01-12;2000;;;;
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 4;450-24215 S;BP;Vêtement sur mesure option tailleur dame;37937;1998-07-23;1999;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25414 S;BTS;Conception des processus de découpe et d'emboutissage;37378;2017-02-13;2019;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-20009 N;BTS;Conception des produits industriels;37374;2016-02-16;2018;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;32025521M;BTS;Cybersécurité, Informatique et réseaux, Electronique option B électronique et réseaux;37391;2023-01-25;2025;;remplace le 320 25516 M;;
+CPC Construction;Secteur Bois et dérivés;Niveau 5;320-23305 N;BTS;Etude et réalisation d'agencement;38383;2016-02-16;2018;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;320-32210 S;BTS;Etudes de réalisation d'un projet de communication option A études de réalisation de produits pluri média;38421;2016-06-07;2019;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-22314 M;BTS;Fonderie;37956;2016-02-16;2018;;;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 5;320-31213 T;BTS;Management commercial opérationnel;38362;2018-10-15;2021;;;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 5;320-33425 P;BTS;Management en hôtellerie et restauration option C management d'hébergement;37889;2018-02-15;2020;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-20114 M;BTS;Métiers de l'eau;37964;2018-02-19;2020;;;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 5;320-33610 T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option B formation-marques;37375;2022-12-09;2025;;remplace le 320-33604 T;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-22208 S;BTS;Métiers de la chimie;38382;2016-02-08;2018;;;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 5;320-33607 T;BTS;Métiers de la coiffure;37963;2014-02-26;2016;;;;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 5;320-24305 M;BTS;Métiers de la mode - chaussure et maroquinerie;36776;2012-02-07;2014;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 5;320-23108 N;BTS;Métiers du géomètre - topographe et de la modélisation numérique;37707;2016-02-16;2018;;;;
+CPC Industrie;Secteur;Niveau 5;320-25219 R;BTS;Motorisation toutes énergies;36966;2022-01-24;2024;;Remplace le n° 320-25214 R;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 5;320-31212 T;BTS;Négociation et digitalisation de la relation client;38368;2018-02-19;2020;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-22003 N;BTS;Pilotage de procédés;38217;2016-02-11;2018;;;;
+CPC Services aux entreprises;Secteur;Niveau 5;320-31312 T;BTS;Professions immobilières;38380;2023-11-22;2026;;remplace le 320-31309 T;;
+CPC Construction;Secteur Bois et dérivés;Niveau 5;320-23412 M;BTS;Systèmes constructifs bois et habitat;38578;2014-02-10;2016;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-22312 M;BTS;Traitements des matériaux option b : traitements de surfaces;1185;2001-08-06;2003;;;;
+CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Niveau 3;500-31117 U;CAP;"Conducteur routier ""marchandises""";37894;2007-06-21;2009;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25133 R;CAP;Agent vérificateur d'appareils extincteurs;38228;2004-10-21;2006;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22362 V;CAP;Art et techniques de la bijouterie-joaillerie option bijouterie-sertissage;36336;2008-03-18;2010;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-24231 V;CAP;Arts du tapis et de la tapisserie de lisse;520;1991-07-19;1992;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22428 V;CAP;Arts du verre et du cristal;36426;2009-06-30;2011;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32310 V;CAP;Assistant technique en instruments de musique option accordéon;36255;2004-10-27;2006;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32313 V;CAP;Assistant technique en instruments de musique option guitare;36255;2004-10-27;2006;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;500-22144 S;CAP;Charcuterie-Traiteur;38631;2023-11-13;2026;;remplace le 500-22130 S;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-20101 U;CAP;Conducteur d'installations de production;36429;2012-03-30;2014;;;;
+CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Niveau 3;500-31118 T;CAP;Conducteur livreur de marchandises;37938;2010-06-18;2012;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23120 S;CAP;Constructeur de routes et d'aménagements urbains;35888;2021-03-30;2023;;Remplace le n°500-23115 - en rénovation;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23223 S;CAP;Couvreur;35889;2021-03-30;2023;;Remplace le n°500-23218;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;500-22140 S;CAP;Crémier fromager;37533;2017-07-04;2020;;;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 3;500-22139 T;CAP;Cuisine;37553;2016-03-17;2018;2025;remplacé par le 500-22146 T;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25123 U;CAP;Décolletage : opérateur régleur en décolletage;39342;1990-01-09;1991;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25524 S;CAP;Electricien;38401;2018-02-08;2020;;;;
+CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Niveau 3;500-31107 T;CAP;Emballeur professionnel;37941;1983-09-29;1985;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 3;500-22002 S;CAP;Employé technique de laboratoire;570;1974-09-25;1975;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-25436 S;CAP;Ferronnier d'art;38392;2015-01-07;2017;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-25137 V;CAP;Horlogerie;37896;2007-06-26;2009;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 3;500-22201 S;CAP;Industries chimiques;591;1991-08-07;1993;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;50023329S;CAP;Menuisier aluminium-verre;37893;2022-08-29;2025;;Remplace le 500-23322 S;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-32222 S;CAP;Métiers de la gravure option C - gravure en modèle;622;1993-03-09;1995;;;;
+CPC Sport et animation;Secteur Commercialisation et distribution;Niveau 3;500-33501 T;CAP;Métiers du football;619;1977-07-13;1978;2026;remplacé par le 500-33502 T;;
+CPC Arts, spectacles et médias;Secteur Métallurgie;Niveau 3;500-22420 S;CAP;Modèles et moules céramiques;631;1991-08-29;1993;;;;
+CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres services;Niveau 3;500-23005 S;CAP;Monteur de structures mobiles;37942;1997-09-17;1999;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 3;500-33106 S;CAP;Opérateur en appareillage orthopédique - Spécialité orthoprothèse;37486;1994-08-25;1996;;.Les mots : « certificat d'aptitude professionnelle ortho-prothésiste » sont remplacés par les mots : « certificat d'aptitude professionnelle Opérateur en appareillage orthopédique-spécialité orthoprothèse ».;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22341 V;CAP;Orfèvre option B - tourneur repousseur en orfèvrerie;642;1973-10-15;1976;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22342 V;CAP;Orfèvre option C - polisseur aviveur en orfèvrerie;641;1973-10-15;1976;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25425 S;CAP;Outillages en moules métalliques;645;1991-08-29;1993;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;500-22141 S;CAP;Pâtissier;38765;2019-03-06;2021;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-24133 V;CAP;Plumasserie;39134;2024-02-22;2025;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;500-31222 T;CAP;Primeur;37604;2017-07-04;2020;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25438 S;CAP;Réalisations industrielles en chaudronnerie ou soudage option b - soudage;38568;2017-01-03;2019;;;;
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24318 S;CAP;Sellerie générale;39037;1998-12-17;2000;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 3;500-32227 V;CAP;Signalétique et décors graphiques;37305;2017-02-27;2019;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22429 V;CAP;Souffleur de verre option enseigne lumineuse;7332;2009-05-25;2011;;;;
+CPC Mer et navigation intérieure;Secteur Transport, logistique, sécurité et autres services;Niveau 3;500-31121 U;CAP;Transport fluvial;37906;2011-04-26;2013;2025;remplacé par le 500-31125 U;;2026
+CPC Arts, spectacles et médias;Secteur;Niveau 3;56122307 V;CS3;Bijoux de mode;37381;2022-12-29;2024;;création nette;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;56122114 T;CS3;Vente-conseil en boucherie;38636;2023-11-13;2025;;création;;
+CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Niveau 4;46131101 W;CS4;Accueil dans les transports;38225;1997-11-26;1999;;;;
+CPC Sport et animation;Secteur;Niveau 4;46133502 M;CS4;Encadrement secteur sportif option activités physiques pour tous;36328;2022-01-14;2023;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125123 R;CS4;Maintenance des installations oléo hydrauliques et pneumatiques;36332;2002-08-01;2003;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125122 S;CS4;Maquettes et prototypes;38304;2002-08-01;2003;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46122703 U;CS4;Technicien des services à l'énergie;36334;2010-02-22;2011;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125508 S;CS4;Technicien(ne) en réseaux électriques;37235;2012-02-10;2013;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-22301 V;DMA;Art du bijou et du joyau;819;2001-07-05;2003;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;321-32207 V;DMA;Arts graphiques option : illustration;827;1998-07-30;2000;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;321-32208 V;DMA;Arts graphiques option : typographie;829;1998-07-30;2000;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-23003 V;DMA;Décor architectural option A : domaine du traitement plastique et de la transparence;845;1987-07-16;1989;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-23004 V;DMA;Décor architectural option B : domaine du décor du mur;843;1987-07-16;1989;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-23411 V;DMA;Facture instrumentale option accordéon;6899;2009-04-08;2011;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-32313 V;DMA;Marionnette;839;1990-09-12;1993;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-32317 M;DMA;Régie du spectacle option son;4000;2002-07-09;2004;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 4;400-33007 T;BAC PRO;Accompagnement soins et services à la personne;37231;2022-02-02;2025;;Remplace le n°400-33003 T et le  n° 400-33004 T;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 4;400-33003 T;BAC PRO;Accompagnement soins et services à la personne option A - à domicile;12296;2011-05-11;2014;2024;Remplacé par le n°400-33007 T;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23304 B;BAC PRO;Aménagement et finition du bâtiment;38229;2006-05-09;2008;;;Métiers de la construction durable, du bâtiment et des travaux publics;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 4;400-33006 M;BAC PRO;Animation - enfance et personnes âgées;34605;2019-07-22;2023;;Remplace le n°400-33002;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;400-22308 V;BAC PRO;Artisanat et métiers d'art - facteur d'orgues - option organier;35320;2020-12-15;2021;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 4;400-32303 V;BAC PRO;Artisanat et métiers d'art option communication visuelle pluri média;37232;2011-04-26;2014;;;;
+CPC Industrie;Secteur;Niveau 4;400-25412 R;BAC PRO;Carrossier peintre automobile;37913;2022-12-30;2026;;remplace le 400-25408 R;;
+CPC Services aux entreprises;Secteur Chimie, bio-industrie, environnement;Niveau 4;400-34304 T;BAC PRO;Hygiène, propreté et stérilisation;14893;2012-07-17;2016;;en rénovation.;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25220 R;BAC PRO;Maintenance des matériels option B - matériels de travaux publics et de manutention;39327;2016-03-24;2019;;;Métiers de la maintenance des matériels et des véhicules;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 4;400-24006 T;BAC PRO;Métiers de l'entretien des textiles, option B : pressing;35807;2020-12-11;2024;;Remplace le n° 400-24002 et le n°450-24005;;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 4;400-24301 S;BAC PRO;Métiers du cuir option chaussures;37230;2009-09-01;2011;;;;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 4;400-24302 S;BAC PRO;Métiers du cuir option maroquinerie;37230;2009-05-19;2011;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25517 R;BAC PRO;Métiers du Froid et des Energies Renouvelables;35846;2021-03-10;2024;;Remplace le n°400-25509 R;Métiers des transitions numérique et énergétique;
+CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Niveau 4;400-31114 M;BAC PRO;Organisation de transport de marchandises;34954;2020-02-28;2023;;Remplace le n°400-31108;Métiers de la gestion administrative, du transport et de la logistique;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 4;400-31209 T;BAC PRO;Poissonnier écailler traiteur;37927;2009-06-24;2011;;;Métiers de l'alimentation;
+CPC Construction;Secteur Bois et dérivés;Niveau 4;400-23404 S;BAC PRO;Technicien constructeur bois;37916;2005-07-11;2007;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23005 N;BAC PRO;Technicien d'études du bâtiment option B - assistant en architecture;39033;2008-04-08;2010;;;Métiers des études et de la modélisation numérique du bâtiment;
+CPC Industrie;Secteur Bois et dérivés;Niveau 4;400-23407 S;BAC PRO;Technicien de fabrication bois et matériaux associes;37308;2006-02-22;2008;;;Métiers de l'agencement, de la menuiserie et de l'ameublement;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 4;400-33103 S;BAC PRO;Technicien en appareillage orthopédique;37947;2015-12-22;2019;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25411 N;BAC PRO;Technicien en chaudronnerie industrielle;38337;2018-02-26;2021;;;Métiers de la réalisation d'ensembles mécaniques et industriels;
+CPC Industrie;Secteur Métallurgie;Niveau 4;400-25108 S;BAC PRO;Technicien modeleur;38313;2004-02-16;2006;;;Métiers de la réalisation d'ensembles mécaniques et industriels;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 4;400-34305 R;BAC PRO;Techniques d'interventions sur installations nucléaires;38573;2014-03-12;2017;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;400-23102 S;BAC PRO;Travaux publics;4420;2005-07-11;2007;2025;remplacé par le 40023210S;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-32208 V;BMA;Art de la reliure et de la dorure;39511;2019-04-19;2021;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 4;401-23410 V;BMA;Technicien en facture instrumentale option guitare;36340;2003-07-08;2005;;;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 4;450-22109 S;BP;Arts de la cuisine;34956;2015-01-07;2017;2025;remplacé par le 450-22111 S;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 4;450-22108 S;BP;Boulanger;37491;2012-02-15;2014;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 4;450-22107 S;BP;Charcutier-traiteur;37559;1998-12-03;2000;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 4;450-22202 U;BP;Conducteur d'appareils des industries chimiques;418;2003-06-06;2005;2024;abrogé par arrêté du 19 février 2024;;2025
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 4;450-31207 T;BP;Fleuriste;36005;2021-05-03;2024;;Remplace le n°450-31206;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 4;450-23315 S;BP;Peintre applicateur de revêtements;38740;2016-05-13;2018;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 4;450-22003 R;BP;Techniques de laboratoire de recherche option B - physicochimie;1013;1999-01-12;2000;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 5;320-33109 S;BTS;Analyses de biologie médicale;5298;2007-06-19;2009;;en rénovation;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25416 P;BTS;Architectures en métal : conception et réalisation;38218;2018-02-19;2020;;;;
+CPC Services aux entreprises;Secteur;Niveau 5;320-31313 T;BTS;Banque;38381;2023-11-22;2026;;remplace le 320-31310 T;;
+CPC Services aux entreprises;Secteur Services administratifs et financiers;Niveau 5;320-31310 T;BTS;Banque conseiller de clientèle (particuliers);1174;2014-02-26;2016;2025;est remplacé par le 320-31313 T;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 5;320-23012 M;BTS;Bâtiment;1122;2011-06-23;2013;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-22207 R;BTS;Bio analyses et contrôles;2705;2004-06-25;2006;2025;remplacé par le 320-22209 R;;
+CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-22106 R;BTS;Bioqualité;35335;2020-03-02;2022;;Remplace le n°320-22103;;
+CPC Mer et navigation intérieure;Secteur Métallurgie;Niveau 5;320-25413 S;BTS;Conception et industrialisation en construction navale;38366;2017-02-13;2019;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25411 M;BTS;Conception et réalisation de carrosserie;38419;2013-04-08;2015;;Rénovation en cours;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;32020116M;BTS;Cybersécurité, Informatique et réseaux, Electronique option A informatique et réseaux;37391;2023-01-25;2025;;REMPLACE LE 320-20112 M;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 5;320-33206 T;BTS;Economie sociale et familiale;36938;2022-01-24;2024;;Remplace le n°320-33204 T;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;320-32208 M;BTS;Edition;36965;2013-04-08;2015;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 5;320-23205 P;BTS;Enveloppe des bâtiments : conception et réalisation;37495;2016-02-16;2018;;;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 5;320-22709 M;BTS;Fluides-énergies-domotique option A génie climatique et fluidique;38361;2014-02-26;2016;;;;
+CPC Industrie;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-22404 S;BTS;Industries céramiques;1066;1997-09-03;1998;2024;remplacé par 32022406;;
+CPC Industrie;Secteur Métiers de la mode et industries connexes;Niveau 5;320-24112 S;BTS;Innovation textile option B traitements;37962;2014-05-13;2016;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25015 R;BTS;Maintenance des systèmes option B : systèmes énergétiques et fluidiques;36968;2022-01-24;2024;;Remplace le n°320-25011 R;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25017 R;BTS;Maintenance des systèmes option D : systèmes ascenseurs et élévateurs;36968;2022-01-24;2024;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-25216 R;BTS;Maintenance des véhicules option B : véhicules de transport routier;38367;2016-02-11;2018;;;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 5;320-33423 P;BTS;Management en hôtellerie et restauration option A management d'unité de restauration;37889;2018-02-15;2020;;;;
+CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Niveau 5;320-32329 V;BTS;Métiers de l'audiovisuel option métiers de l'image;37021;2013-06-04;2016;;;;
+CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Niveau 5;320-33605 T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option C cosmétologie;20693;2012-10-30;2015;2024;remplacé par le 320-33611 T;;
+CPC Services aux entreprises;Secteur Chimie, bio-industrie, environnement;Niveau 5;320-34304 R;BTS;Métiers des services à l'environnement;20692;2013-04-08;2015;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 5;320-33108 S;BTS;Podo-orthésiste;1088;1997-07-28;1998;;;;
+CPC Services aux entreprises;Secteur Services administratifs et financiers;Niveau 5;320-31309 T;BTS;Professions immobilières;14922;2012-04-05;2014;2025;remplacé par le 320-31312 T;;
+CPC Services aux entreprises;Secteur Services administratifs et financiers;Niveau 5;320-32613 T;BTS;Services informatiques aux organisations option A solutions d'infrastructures, systèmes et réseaux;35340;2019-04-29;2022;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 5;320-22311 M;BTS;Traitements des matériaux option a : traitements thermiques;1186;2001-08-06;2003;;;;
+CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Niveau 3;500-33205 T;CAP;Accompagnant éducatif petite enfance;38565;2020-11-30;2021;;;;
+CPC Cohésion sociale et santé;Secteur;Niveau 3;500-33002 T;CAP;Agent accompagnant au grand âge;37669;2023-02-06;2025;;remplace le 500-33411 T;;
+CPC Services aux entreprises;Secteur Chimie, bio-industrie, environnement;Niveau 3;500-34307 T;CAP;Agent de propreté et d'hygiène;24655;2013-12-23;2016;;en rénovation;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22361 V;CAP;Art et techniques de la bijouterie-joaillerie option bijouterie-joaillerie;36336;2008-03-18;2010;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-24131 V;CAP;Arts de la dentelle option aiguille;35640;2004-07-29;2005;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-23431 V;CAP;Arts du bois option B - tourneur;37301;1983-05-27;1985;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22349 V;CAP;Bronzier option A - monteur en bronze;530;1977-07-13;1979;;;;
+CPC Services et produits de consommation;Secteur;Niveau 3;500-22145 S;CAP;Chocolaterie-confiserie;38632;2023-11-13;2026;;remplace le 500-22133 S;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 3;500-33412 T;CAP;Commercialisation et services en hôtel-café-restaurant;37554;2017-02-27;2019;2025;remplacé par le 500-33413 T;;
+CPC Construction;Secteur;Niveau 3;500-23118 U;CAP;Conducteur d'engins : travaux publics et carrières;4463;2006-03-24;2008;2024;remplacé par 500-23118U;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22422 V;CAP;Décoration en céramique;36338;1993-08-20;1995;;;;
+CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Niveau 3;500-31119 T;CAP;Déménageur sur véhicule utilitaire léger;37895;2010-06-10;2012;;;;
+CPC Commerce;Secteur Commercialisation et distribution;Niveau 3;500-31224 T;CAP;Equipier polyvalent du commerce;34947;2019-10-29;2022;;Remplace les n° 500-31214, 500-31215, 500-31216, 500-31217, 500-31219, 500-31220;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;50023328S;CAP;Etancheur du bâtiment et des travaux publics;37892;2022-08-29;2025;;Remplace le 500-23321 S;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-23224 S;CAP;Maçon;35715;2021-03-30;2023;;Remplace le n°500-23217;;
+CPC Construction;Secteur Bois et dérivés;Niveau 3;500-23449 S;CAP;Menuisier installateur;35974;2020-11-20;2023;;Remplace le n°500-23442;;
+CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Niveau 3;500-25439 S;CAP;Métallier;37897;2021-03-30;2023;;Remplace le n°500-25431;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-22360 S;CAP;Métiers de la fonderie;37898;2007-03-20;2009;;;;
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24242 S;CAP;Métiers de la mode - chapelier-modiste;37244;2011-12-09;2014;;;;
+CPC Construction;Secteur Métallurgie;Niveau 3;500-23302 S;CAP;Monteur en isolation thermique et acoustique;633;1987-06-15;1988;2024;abrogé par arrêté du 21 12 2022;;2025
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22324 S;CAP;Mouleur noyauteur - cuivre et bronze;39296;1951-02-22;1953;;;;
+CPC Mobilité et logistique;Secteur Transport, logistique, sécurité et autres services;Niveau 3;500-31122 T;CAP;Opérateur-opératrice logistique;37672;2015-03-02;2017;;;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 3;500-22142 M;CAP;Production et service en restaurations (rapide, collective, cafétéria);35317;2019-10-29;2022;;Remplace le n°50022129;;
+CPC Services aux entreprises;Secteur Chimie, bio-industrie, environnement;Niveau 3;500-22005 U;CAP;Propreté de l'environnement urbain - collecte et recyclage;24650;2015-03-10;2017;;en rénovation;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25437 S;CAP;Réalisations industrielles en chaudronnerie ou soudage option a - chaudronnerie;38568;2017-01-03;2019;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-24125 S;CAP;Rentrayeur option a - tapis;39492;1975-05-30;1976;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-24126 S;CAP;Rentrayeur option b - tapisserie;39492;1975-05-30;1976;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25434 S;CAP;Réparation des carrosseries;4935;2007-03-19;2009;2024;est remplace par le 50025440S;;2025
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24321 S;CAP;Sellier harnacheur;37905;2014-04-29;2016;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;500-22430 V;CAP;Souffleur de verre option verrerie scientifique;6603;2009-02-25;2011;;;;
+CPC Mer et navigation intérieure;Secteur;Niveau 3;500-31125 U;CAP;Transport fluvial;38571;2023-07-18;2026;;remplace le 500-31121 U;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;500-25134 U;CAP;Transports par câbles et remontées mécaniques;681;1999-10-21;2001;2024;Remplacé par le n°;;
+CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Niveau 3;500-24319 S;CAP;Vêtement de peau;37250;1998-08-21;2000;;;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;56122107 S;CS3;Boulangerie spécialisée;37313;2003-04-16;2004;;;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 3;56133411 T;CS3;Employé barman;37379;1997-05-16;1998;;en rénovation;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 3;56122304 V;CS3;Joaillerie;36684;2002-01-08;2003;;.;;
+CPC Services et produits de consommation;Secteur Alimentation;Niveau 3;56122112 S;CS3;Pâtisserie de boutique;38761;2024-01-05;2025;;remplace le 010-22110 S;;
+CPC Industrie;Secteur Métallurgie;Niveau 3;56125118 S;CS3;Réalisation de circuits oléohydrauliques et pneumatiques;36333;2002-07-30;2003;;.;;
+CPC Construction;Secteur;Niveau 3;56123309 S;CS3;Solier;38758;2023-12-14;2025;;création ex nihilo;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125311 R;CS4;Aéronautique option hélicoptères à moteurs à pistons;37924;2015-02-18;2016;;;;
+CPC Sport et animation;Secteur;Niveau 4;46133501 P;CS4;Animation-gestion de projets dans le secteur sportif;30833;2018-04-13;2019;;;;
+CPC Sport et animation;Secteur;Niveau 4;46133504 M;CS4;Encadrement secteur sportif option activités de la forme - cours collectifs;36328;2022-01-14;2023;;;;
+CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Niveau 4;46133412 P;CS4;Organisateur de réceptions;37922;2005-05-09;2006;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125406 S;CS4;Technicien en soudage;38311;2015-11-26;2017;;;;
+CPC Industrie;Secteur Métallurgie;Niveau 4;46125002 R;CS4;Technicien(ne) ascensoriste (service et modernisation);39192;2006-03-24;2007;;;;
+CPC Services aux entreprises;Secteur Métallurgie;Niveau 5;322-25202 R;Diplôme;Expert en automobile;2829;2012-07-31;2014;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-32206 V;DMA;Arts graphiques option : reliure dorure;828;1998-07-30;2000;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-24204 S;DMA;Costumier réalisateur;842;1991-07-16;1995;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-22401 V;DMA;Textiles et céramiques option arts de la céramique artisanale;841;1987-07-17;1989;;;;
+CPC Arts, spectacles et médias;Secteur Arts appliqués;Niveau 5;321-24101 V;DMA;Textiles et céramiques option arts textiles;840;1987-07-17;1989;;;;
