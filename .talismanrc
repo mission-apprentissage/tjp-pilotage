@@ -77,6 +77,8 @@ fileignoreconfig:
   checksum: b13b0a1f3d9590d335062a88e76609c40ba790129e481f7e5c25fbdab6840617
 - filename: ui/src/utils/generateUri.ts
   checksum: 505911d86f3b3f4a9337504a691132dba83dec4a950f9ff0e8bf76f5787ab325
+- filename: ui/utils/__tests__/getRoutingRecueilDemande.test.ts
+  checksum: 51d6b6031ca8ff27924aaa9e716c9f9f7722e9919543e041adf7f34739ca968a
 scopeconfig:
 - scope: node
 custom_patterns:
