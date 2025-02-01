@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import type { Etablissement, EtablissementsOrderBy } from "shared/routes/schemas/get.formation.cfd.map.schema";
 
 import { getKbdClient } from "@/db/db";
@@ -30,7 +31,7 @@ export const getEtablissements = async ({
         .leftJoin("indicateurSortie", (join) =>
           join
             .onRef("indicateurSortie.formationEtablissementId", "=", "formationEtablissement.id")
-            .on("millesimeSortie", "=", "2021_2022")
+            .on("millesimeSortie", "=", CURRENT_IJ_MILLESIME)
         )
         .select([
           "cfd",
@@ -100,7 +101,7 @@ export const getEtablissements = async ({
           selectTauxPression("indicateurEntree", "niveauDiplome", true).as("tauxPression"),
         ])
         .where((eb) =>
-          eb.or([eb("rentreeScolaire", "=", "2023"), eb("formationEtablissement.voie", "=", "apprentissage")])
+          eb.or([eb("rentreeScolaire", "=", CURRENT_RENTREE), eb("formationEtablissement.voie", "=", "apprentissage")])
         )
     )
     .selectFrom("carto")

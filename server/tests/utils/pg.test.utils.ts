@@ -28,8 +28,8 @@ export const startAndConnectPg = async () => {
   console.log("Refreshing views", testDb);
   await refreshViews();
 
-  await migrateToLatest(true);
-  console.log("Migration terminée");
+  console.log("Migrating to latest", testDb);
+  await migrateToLatest(false);
 
   console.log("Rafraichissement des vues matérialisées");
   await refreshViews();
