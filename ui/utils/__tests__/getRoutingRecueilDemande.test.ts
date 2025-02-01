@@ -175,14 +175,14 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
     fixture.then.verifierRouteSaisieExpe();
   });
 
-  // it("Doit renvoyer la route expé pour la campagne 2024 si l'utilisateur est un perdir de l'expé", () => {
-  //   fixture.given.utilisateurPerdirExpe();
-  //   fixture.given.campagne2024();
+  it("Doit renvoyer la route expé pour la campagne 2024 si l'utilisateur est un perdir de l'expé", () => {
+    fixture.given.utilisateurPerdirExpe();
+    fixture.given.campagne2024();
 
-  //   fixture.when.accesRoutingSaisieRecueilDemande();
+    fixture.when.accesRoutingSaisieRecueilDemande();
 
-  //   fixture.then.verifierRouteSaisieExpe();
-  // });
+    fixture.then.verifierRouteSaisieExpe();
+  });
 
   it("Doit renvoyer la route expé pour la campagne 2025 même si l'utilisateur est hors expé", () => {
     fixture.given.utilisateurPerdirHorsExpe();

@@ -7,17 +7,19 @@ import NextLink from "next/link";
 import { useContext } from "react";
 
 import { client } from "@/api.client";
-import { AuthContext } from "@/app/(wrapped)/auth/authContext";
-import { CodeDepartementFilterContext, CodeRegionFilterContext, UaisFilterContext } from "@/app/layoutClient";
+import { CodeDepartementContext } from "@/app/context/codeDepartementContext";
+import { CodeRegionContext } from "@/app/context/codeRegionContext";
+import { UaisContext } from "@/app/context/uaiContext";
+import { useAuth } from "@/utils/security/useAuth";
 
 import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
 export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
-  const { auth, setAuth } = useContext(AuthContext);
-  const { setUaisFilter } = useContext(UaisFilterContext);
-  const { setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
-  const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
+  const { auth, setAuth } = useAuth();
+  const { setUais } = useContext(UaisContext);
+  const { setCodeDepartement } = useContext(CodeDepartementContext);
+  const { setCodeRegion } = useContext(CodeRegionContext);
   const queryClient = useQueryClient();
 
   const {
@@ -29,9 +31,9 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const logout = async () => {
     await client.ref("[POST]/auth/logout").query({});
     setAuth(undefined);
-    setUaisFilter(undefined);
-    setCodeDepartementFilter(undefined);
-    setCodeRegionFilter(undefined);
+    setUais(undefined);
+    setCodeDepartement(undefined);
+    setCodeRegion(undefined);
     queryClient.clear();
   };
 

@@ -8,19 +8,21 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Crisp } from "crisp-sdk-web";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
-import type { Dispatch, SetStateAction } from "react";
-import { createContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { publicConfig } from "@/config.public";
 import { theme } from "@/theme/theme";
 
-import type { Auth } from "./(wrapped)/auth/authContext";
-import { AuthContext } from "./(wrapped)/auth/authContext";
 import type { Changelog } from "./(wrapped)/changelog/changelogContext";
 import { ChangelogContext } from "./(wrapped)/changelog/changelogContext";
 import { GlossaireProvider } from "./(wrapped)/glossaire/glossaireContext";
 import type { GlossaireEntries } from "./(wrapped)/glossaire/types";
+import type { Auth} from "./context/authContext";
+import { AuthContext } from "./context/authContext";
+import { CodeRegionContext } from "./context/codeRegionContext";
+import { CurrentCampagneContext } from "./context/currentCampagneContext";
+import { UaisContext } from "./context/uaiContext";
 
 interface RootLayoutClientProps {
   readonly children: React.ReactNode;
@@ -61,38 +63,6 @@ const useTracking = () => {
   return !noTracking.current;
 };
 
-export const CodeRegionFilterContext = createContext<{
-  codeRegionFilter?: string;
-  setCodeRegionFilter: Dispatch<SetStateAction<string | undefined>>;
-}>({
-  codeRegionFilter: "",
-  setCodeRegionFilter: () => {},
-});
-
-export const CodeDepartementFilterContext = createContext<{
-  codeDepartementFilter?: string;
-  setCodeDepartementFilter: Dispatch<SetStateAction<string | undefined>>;
-}>({
-  codeDepartementFilter: "",
-  setCodeDepartementFilter: () => {},
-});
-
-export const UaisFilterContext = createContext<{
-  uaisFilter?: Array<string>;
-  setUaisFilter: Dispatch<SetStateAction<Array<string> | undefined>>;
-}>({
-  uaisFilter: [],
-  setUaisFilter: () => {},
-});
-
-export const CurrentCampagneContext = createContext<{
-  campagne?: CampagneType;
-  setCampagne: Dispatch<SetStateAction<CampagneType | undefined>>;
-}>({
-  campagne: undefined,
-  setCampagne: () => {},
-});
-
 export default function RootLayoutClient({
   children,
   auth: initialAuth,
@@ -117,11 +87,8 @@ export default function RootLayoutClient({
   const [changelog, setChangelog] = useState<Changelog>(initialChangelog);
   const [campagne, setCampagne] = useState<CampagneType | undefined>(initialCampagne);
 
-  const [codeRegionFilter, setCodeRegionFilter] = useState<string | undefined>(auth?.user.codeRegion);
-  const [uaisFilter, setUaisFilter] = useState<Array<string> | undefined>(auth?.user.uais);
-
-  const codeRegionFilterValue = useMemo(() => ({ codeRegionFilter, setCodeRegionFilter }), [codeRegionFilter]);
-  const uaisFilterValue = useMemo(() => ({ uaisFilter, setUaisFilter }), [uaisFilter]);
+  const [codeRegion, setCodeRegion] = useState<string | undefined>(auth?.user.codeRegion);
+  const [uais, setUais] = useState<Array<string> | undefined>(auth?.user.uais);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef<number>(0);
@@ -153,8 +120,8 @@ export default function RootLayoutClient({
           <CacheProvider>
             <ChakraProvider theme={theme}>
               <AuthContext.Provider value={{ auth, setAuth }}>
-                <UaisFilterContext.Provider value={uaisFilterValue}>
-                  <CodeRegionFilterContext.Provider value={codeRegionFilterValue}>
+                <UaisContext.Provider value={{uais, setUais}}>
+                  <CodeRegionContext.Provider value={{codeRegion, setCodeRegion}}>
                     <CurrentCampagneContext.Provider value={{campagne, setCampagne}}>
                       <GlossaireProvider initialEntries={initialGlossaire}>
                         <ChangelogContext.Provider value={{ changelog, setChangelog }}>
@@ -171,8 +138,8 @@ export default function RootLayoutClient({
                         </ChangelogContext.Provider>
                       </GlossaireProvider>
                     </CurrentCampagneContext.Provider>
-                  </CodeRegionFilterContext.Provider>
-                </UaisFilterContext.Provider>
+                  </CodeRegionContext.Provider>
+                </UaisContext.Provider>
               </AuthContext.Provider>
             </ChakraProvider>
           </CacheProvider>

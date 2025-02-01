@@ -9,7 +9,8 @@ import { useContext, useEffect, useState } from "react";
 import { PREVIOUS_ANNEE_CAMPAGNE } from "shared/time/PREVIOUS_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
-import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
+import { CodeDepartementContext } from '@/app/context/codeDepartementContext';
+import { CodeRegionContext } from '@/app/context/codeRegionContext';
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { Loading } from "@/components/Loading";
 import { SearchInput } from "@/components/SearchInput";
@@ -103,9 +104,8 @@ export default () => {
     router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
-
-  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
+  const { codeRegion, setCodeRegion } = useContext(CodeRegionContext);
+  const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
 
   const [campagneFilter, setCampagneFilter] = useState<string>(PREVIOUS_ANNEE_CAMPAGNE);
 
@@ -137,10 +137,10 @@ export default () => {
     if (value != null)
       switch (type) {
       case "codeRegion":
-        setCodeRegionFilter((value as string[])[0] ?? "");
+        setCodeRegion((value as string[])[0] ?? "");
         break;
       case "codeDepartement":
-        setCodeDepartementFilter((value as string[])[0] ?? "");
+        setCodeDepartement((value as string[])[0] ?? "");
         break;
       case "campagne":
         setCampagneFilter((value as string[])[0] ?? "");
@@ -211,17 +211,17 @@ export default () => {
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeRegionFilter
+      codeRegion
     ) {
-      filters.codeRegion = [codeRegionFilter];
+      filters.codeRegion = [codeRegion];
     }
     if (
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeDepartementFilter
+      codeDepartement
     ) {
-      filters.codeDepartement = [codeDepartementFilter];
+      filters.codeDepartement = [codeDepartement];
     }
     if (filters?.campagne === undefined && campagneFilter !== "") {
       filters.campagne = campagneFilter;

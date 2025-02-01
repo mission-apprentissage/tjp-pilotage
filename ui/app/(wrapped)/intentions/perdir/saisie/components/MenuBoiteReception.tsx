@@ -42,6 +42,7 @@ export const MenuBoiteReception = ({
         leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
         as={!isNouvelleDemandeDisabled ? NextLink : undefined}
         href={`${getRoutingSaisieRecueilDemande({ user: auth?.user, campagne, suffix: "new" })}`}
+        minHeight={"35px"}
       >
         Nouvelle demande
       </Button>

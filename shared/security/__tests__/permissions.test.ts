@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { Role } from "../permissions";
+import type { Role } from "../../enum/roleEnum";
 import { HIERARCHY, PERMISSIONS } from "../permissions";
 
 describe("Permissions", () => {

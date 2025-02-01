@@ -10,6 +10,9 @@ const instance = axios.create({
   baseURL: "https://www.inserjeunes.education.gouv.fr/api/v1.0",
   responseType: "json",
   timeout: 20000,
+  headers: {
+    'Accept': 'application/json'
+  }
 });
 
 instance.interceptors.request.use((config) => {

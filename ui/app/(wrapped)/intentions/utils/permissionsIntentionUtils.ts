@@ -1,10 +1,10 @@
+import type {Role} from 'shared';
 import {hasPermission, hasRole} from 'shared';
 import { CampagneStatutEnum } from 'shared/enum/campagneStatutEnum';
 import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
 import type {DemandeTypeType} from 'shared/enum/demandeTypeEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
-import type {Role} from 'shared/security/permissions';
 import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
 
 import {feature} from '@/utils/feature';

@@ -12,7 +12,7 @@ import { QuadrantSection } from "@/app/(wrapped)/panorama/components/QuadrantSec
 import { TauxInserJeunesSection } from "@/app/(wrapped)/panorama/components/TauxInserJeunesSection/TauxInserJeunesSection";
 import { TopFlopSection } from "@/app/(wrapped)/panorama/components/TopFlopSection/TopFlopSection";
 import type { FiltersPanoramaFormation, OrderPanoramaFormation } from "@/app/(wrapped)/panorama/types";
-import { CodeRegionFilterContext } from "@/app/layoutClient";
+import { CodeRegionContext } from "@/app/context/codeRegionContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 
 export default function Panorama({
@@ -25,7 +25,7 @@ export default function Panorama({
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
-  const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
+  const { setCodeRegion } = useContext(CodeRegionContext);
 
   const setSearchParams = (params: Partial<FiltersPanoramaFormation>) => {
     router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
@@ -55,7 +55,7 @@ export default function Panorama({
   };
 
   const onCodeRegionChanged = (codeRegion: string) => {
-    setCodeRegionFilter(codeRegion);
+    setCodeRegion(codeRegion);
     router.push(`/panorama/region/${codeRegion}?${qs.stringify(searchParams)}`);
   };
 

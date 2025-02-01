@@ -1,4 +1,5 @@
-import type { Permission, Role } from "./permissions";
+import type { Role } from "../enum/roleEnum";
+import type { Permission } from "./permissions";
 import { HIERARCHY, PERMISSIONS } from "./permissions";
 
 export const CODES_REGIONS_EXPE_2024 = [
