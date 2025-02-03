@@ -5,6 +5,7 @@ import { MILLESIMES_IJ_REG } from "shared";
 import { regionAcademiqueMapping } from "@/modules/import/domain/regionAcademiqueMapping";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { inserJeunesApi } from "@/modules/import/services/inserJeunesApi/inserJeunes.api";
+import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";
 
 import { createIndicateurRegionSortie } from "./createIndicateurRegionSortie.dep";
 import { findAnciennesFormation } from "./findAnciennesFormation.dep";
@@ -113,11 +114,17 @@ export const [importIndicateursRegionSortieApprentissage] = inject(
     }
 );
 
+// Règle dans le cas du continuum MC vers CS qui ont des codes dispositifs différents
+const isMCToCS = (cfd: string, cfdContinuum: string) => {
+  return ["461", "561"].includes(cfd.substring(0,3)) && cfdContinuum.substring(0,3) === "010";
+};
+
 const [getContinuumData] = inject(
   {
     findIndicateurRegionSortie,
     findAnciennesFormation,
     findNouvellesFormation,
+    getCfdDispositifs
   },
   (deps) =>
     async ({
@@ -138,19 +145,30 @@ const [getContinuumData] = inject(
         voie,
       });
       if (ancienneFormation.length !== 1) return;
+
       const cfdContinuum = ancienneFormation[0].ancienCFD;
+
       const nouvellesFormation = await deps.findNouvellesFormation({
         cfd: cfdContinuum,
         voie,
       });
       if (nouvellesFormation.length !== 1) return;
 
-      return await deps.findIndicateurRegionSortie({
-        cfd: cfdContinuum,
-        codeDispositif: codeDispositif,
-        codeRegion,
-        millesimeSortie,
-        voie,
+      const baseParams = { codeRegion, millesimeSortie, voie, cfd: cfdContinuum };
+
+      if (isMCToCS(cfd, cfdContinuum)) {
+        const dispositifs = await deps.getCfdDispositifs({ cfd: cfdContinuum });
+        if (dispositifs.length !== 1) return;
+
+        return deps.findIndicateurRegionSortie({
+          ...baseParams,
+          codeDispositif: dispositifs[0].codeDispositif,
+        });
+      }
+
+      return deps.findIndicateurRegionSortie({
+        ...baseParams,
+        codeDispositif,
       });
     }
 );
