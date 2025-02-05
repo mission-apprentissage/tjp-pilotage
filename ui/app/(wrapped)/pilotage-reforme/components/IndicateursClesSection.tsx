@@ -10,18 +10,19 @@ import {
   SimpleGrid,
   Skeleton,
   Text,
-  useDisclosure,
+  useToken,
   VStack,
 } from "@chakra-ui/react";
+import { OBJECTIF_TAUX_TRANSFO_REFORME } from "shared/objectives/TAUX_TRANSFO";
 import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
-import { DefinitionTauxTransfoModal } from "@/app/(wrapped)/components/DefinitionTauxTransfoModal";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import type { IndicateurType, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
-import { ProgressBar } from "@/components/ProgressBar";
+import type { IndicateurType, PilotageReformeStats, TauxTransformation } from "@/app/(wrapped)/pilotage-reforme/types";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumber, formatPercentageFixedDigits } from "@/utils/formatUtils";
+
+import { MultiProgressBar } from "./MultiProgressBar";
 
 const EFFECTIF_FEATURE_FLAG = false;
 
@@ -271,11 +272,11 @@ const StatCard = ({
   const getValue = (type: IndicateurType) => {
     switch (type) {
     case "tauxInsertion":
-      return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
+      return formatPercentageFixedDigits(data?.annees[0].scoped.tauxInsertion, 1, '-');
     case "tauxPoursuite":
-      return formatNumber((data?.annees[0].scoped.tauxPoursuite ?? 0) * 100);
+      return formatPercentageFixedDigits(data?.annees[0].scoped.tauxPoursuite, 1, '-');
     default:
-      return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
+      return formatPercentageFixedDigits(data?.annees[0].scoped.tauxInsertion, 1, '-');
     }
   };
 
@@ -300,7 +301,7 @@ const StatCard = ({
           {tooltip}
         </HStack>
         <Box fontWeight="bold" fontSize="40" color={"bluefrance.113"}>
-          {getValue(type) ? `${getValue(type)} %` : <Text textAlign={"center"}>-</Text>}
+          {getValue(type)}
         </Box>
         <Box fontWeight="bold" fontSize="2xl">
           {getDeltaAnneeNMoins1(type) != null ? <Delta delta={getDeltaAnneeNMoins1(type)} /> : <></>}
@@ -318,13 +319,19 @@ const StatCard = ({
   );
 };
 
-const TauxTransfoCard = ({ tauxTransformation }: { tauxTransformation: number }) => {
-  const percentage = (tauxTransformation * 100) / 6;
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const TauxTransfoCard = (
+  { tauxTransformationCumule,
+    tauxTransformationCumulePrevisionnel,
+    onModalOpen
+  } :
+  { tauxTransformationCumule?: TauxTransformation,
+    tauxTransformationCumulePrevisionnel?: TauxTransformation,
+    onModalOpen: () => void
+  }) => {
+  const [blue, cyan, grey] = useToken("colors", ["bluefrance.113", "blueecume.675_hover", "grey.925"]);
 
   return (
     <>
-      <DefinitionTauxTransfoModal isOpen={isOpen} onClose={onClose} />
       <VStack width="100%">
         <Card width="100%">
           <CardBody color="inherit" py="2" px="3" minHeight={40}>
@@ -336,7 +343,7 @@ const TauxTransfoCard = ({ tauxTransformation }: { tauxTransformation: number })
               color={themeColors.bluefrance[113]}
               alignItems="start"
             >
-              <Box>
+              <Flex direction="row" justifyContent={"space-between"} w={"100%"} alignItems={"center"}>
                 <Heading
                   as="h2"
                   fontSize={15}
@@ -344,33 +351,41 @@ const TauxTransfoCard = ({ tauxTransformation }: { tauxTransformation: number })
                   lineHeight="24px"
                   textTransform="uppercase"
                 >
-                  Taux de transformation prévisionnel - Rentrée {NEXT_RENTREE}{" "}
+                  Taux de transformation cumulé
                 </Heading>
-                <Heading as="h3" fontSize="32px" fontWeight="700" lineHeight="40px">
-                  {formatNumber(tauxTransformation, 1)} %
-                </Heading>
-              </Box>
+                <TooltipIcon
+                  label="Cliquez ici pour plus d’infos" onClick={onModalOpen}
+                />
+              </Flex>
               <Box width="100%">
-                <ProgressBar percentage={percentage} />
-                <Text color={themeColors.grey[425]} fontSize={12}>
-                  {formatNumber(percentage, 1)}% de l'objectif
-                </Text>
+                { tauxTransformationCumule && tauxTransformationCumulePrevisionnel && (
+                  <MultiProgressBar
+                    bars={[
+                      {value: OBJECTIF_TAUX_TRANSFO_REFORME, label: 'Objectif de la réforme', color: grey},
+                      {value: tauxTransformationCumulePrevisionnel?.taux, label: `Projets RS ${NEXT_RENTREE} inclus`, color: cyan, tooltip:`${tauxTransformationCumulePrevisionnel?.placesTransformees} / ${tauxTransformationCumulePrevisionnel?.effectifs}`},
+                      {value: tauxTransformationCumule?.taux, label: 'Demandes validées', color: blue, tooltip:`${tauxTransformationCumule?.placesTransformees} / ${tauxTransformationCumule?.effectifs}`}
+                    ].filter(bar => typeof bar?.value !== "undefined").sort((a, b) => b.value! - a.value!).map((taux, index) => ({...taux, order: index + 1} as {
+                      value: number;
+                      label: string;
+                      color: string;
+                      tooltip?: string | undefined;
+                      order: number;
+                  }))}
+                    max={Math.max(OBJECTIF_TAUX_TRANSFO_REFORME,
+                      tauxTransformationCumulePrevisionnel?.taux ?? 0,
+                      tauxTransformationCumule?.taux ?? 0)}
+                  />
+                )}
               </Box>
             </VStack>
           </CardBody>
         </Card>
-        <HStack width="100%" justifyContent="start" alignItems="end">
-          <Text color={themeColors.bluefrance[113]}>
-            <TooltipIcon mr="6px" label="Cliquez ici pour plus d’infos" onClick={() => onOpen()} />
-            Comprendre le calcul du taux de transformation
-          </Text>
-        </HStack>
       </VStack>
     </>
   );
 };
 
-const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
+const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats, onModalOpen: () => void }) => {
   const { openGlossaire } = useGlossaireContext();
 
   return (
@@ -379,7 +394,11 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
         INDICATEURS CLÉS DE LA RÉFORME
       </Heading>
       <VStack width="100%" spacing="18px" mt="12px">
-        <TauxTransfoCard tauxTransformation={data?.tauxTransformation ?? 0} />
+        <TauxTransfoCard
+          tauxTransformationCumule={data?.tauxTransformationCumule}
+          tauxTransformationCumulePrevisionnel={data?.tauxTransformationCumulePrevisionnel}
+          onModalOpen={onModalOpen}
+        />
         <SimpleGrid spacing={3} columns={[2]} width="100%">
           <StatCard
             label="taux d'emploi à 6 mois"
@@ -420,23 +439,13 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
   );
 };
 
-export const IndicateursClesSection = ({ data, isLoading }: { data?: PilotageReformeStats; isLoading: boolean }) => {
-  return (
-    <>
-      {isLoading ? (
-        <Loader></Loader>
-      ) : (
-        <Box>
-          {EFFECTIF_FEATURE_FLAG && (
-            <Flex>
-              <IndicateursEffectif data={data}></IndicateursEffectif>
-            </Flex>
-          )}
-          <Flex mt={EFFECTIF_FEATURE_FLAG ? 14 : 0}>
-            <IndicateursSortie data={data}></IndicateursSortie>
-          </Flex>
-        </Box>
-      )}
-    </>
-  );
+export const IndicateursClesSection = (
+  { data, isLoading, onModalOpen }:
+  { data?: PilotageReformeStats; isLoading: boolean; onModalOpen: () => void }) => {
+  if(isLoading){
+    return (<Loader />);
+  }
+
+  return (<IndicateursSortie data={data} onModalOpen={onModalOpen} />);
+
 };

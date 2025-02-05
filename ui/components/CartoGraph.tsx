@@ -115,49 +115,101 @@ export const CartoGraph = ({
 
   echarts.registerMap(scope, getGeoMap());
 
-  // Utilisée pour supprimer les valeurs extrèmes
-  const removeMin = (array: number[]): number[] => {
-    const min = Math.min(...array);
-    return array.filter((value) => value != min);
-  };
-
-  const removeMax = (array: number[]): number[] => {
-    const max = Math.max(...array);
-    return array.filter((value) => value != max);
-  };
-
   //TODO : améliorer la gestion de la graduation dynamique
   const getPieces = (): {
     min: number;
     max: number;
     label: string;
     color: string;
-  }[] => {
-    const data = Array.from(graphData?.map((it) => it.value ?? -1) ?? []).filter((value) => value != -1);
-    const min = Math.min(...removeMin(data));
-    const max = Math.max(...removeMax(data));
-    const diff = max - min;
+}[] => {
+    if(customPiecesSteps) {
+      const colorRange = colorPalette;
 
-    const colorRange = colorPalette;
+      return customPiecesSteps.map((step, index, steps) => {
+        const isLastStep = index + 1 === steps.length;
+        return {
+          min: step[0],
+          max: step[1],
+          label: isLastStep ? `> ${step[0]}%` : `< ${step[1]}%`,
+          color: colorRange[index],
+        };
+      });
+    }
 
-    const piecesStep = customPiecesSteps
-      ? customPiecesSteps
-      : [
-        [0, min],
-        [min, Math.ceil(max - diff / 4)],
-        [Math.ceil(max - diff / 4), max],
-        [max, 100],
-      ];
+    // Filtrer les valeurs valides et les trier
+    const validData = Array.from(graphData?.map((it) => it.value ?? -1) ?? [])
+      .filter((value) => value !== -1)
+      .sort((a, b) => a - b);
 
-    return piecesStep.map((step, index, steps) => {
-      const isLastStep = index + 1 === steps.length;
-      return {
-        min: step[0],
-        max: step[1],
-        label: isLastStep ? `> ${step[0]}%` : `< ${step[1]}%`,
-        color: colorRange[index],
-      };
-    });
+    if (validData.length === 0) return [];
+
+    // Cas où toutes les valeurs sont identiques
+    if (validData[0] === validData[validData.length - 1]) {
+      return [{
+        min: validData[0],
+        max: validData[0],
+        label: `${validData[0]}%`,
+        color: colorPalette[0]
+      }];
+    }
+
+    // Obtenir les valeurs uniques
+    const uniqueValues = Array.from(new Set(validData));
+
+    // Si nous avons 4 valeurs uniques ou moins, créer un ensemble pour chaque valeur
+    if (uniqueValues.length <= 4) {
+      return uniqueValues.map((value, index) => ({
+        min: value,
+        max: value,
+        label: `${value}%`,
+        color: colorPalette[index]
+      }));
+    }
+
+    // Pour plus de 4 valeurs, créer 4 quartiles
+    const getQuartileValue = (arr: number[], quartile: number): number => {
+      const position = (arr.length - 1) * (quartile / 4);
+      const base = Math.floor(position);
+      const rest = position - base;
+
+      if (rest === 0) {
+        return Math.round(arr [base]);
+      } else {
+        return Math.round(arr[base] + rest * (arr[base + 1] - arr[base]));
+      }
+    };
+
+    // Calculer les quartiles
+    const q1 = getQuartileValue(validData, 1); // 25%
+    const q2 = getQuartileValue(validData, 2); // 50%
+    const q3 = getQuartileValue(validData, 3); // 75%
+
+    return [
+      {
+        min: validData[0],
+        max: q1,
+        label: `≤ ${q1}%`,
+        color: colorPalette[0]
+      },
+      {
+        min: q1,
+        max: q2,
+        label: `≤ ${q2}%`,
+        color: colorPalette[1]
+      },
+      {
+        min: q2,
+        max: q3,
+        label: `≤ ${q3}%`,
+        color: colorPalette[2]
+      },
+      {
+        min: q3,
+        max: validData[validData.length - 1],
+        label: `> ${q3}%`,
+        color: colorPalette[3]
+      }
+    ];
   };
 
   const option = useMemo<EChartsOption>(

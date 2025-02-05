@@ -3,11 +3,11 @@ import { z } from "zod";
 import { OptionSchema } from "../../schema/optionSchema";
 
 const StatsSchema = z.object({
-  effectif: z.coerce.number().optional(),
-  nbFormations: z.coerce.number().optional(),
-  nbEtablissements: z.coerce.number().optional(),
-  tauxPoursuite: z.coerce.number().optional(),
-  tauxInsertion: z.coerce.number().optional(),
+  effectif: z.number().optional(),
+  nbFormations: z.number().optional(),
+  nbEtablissements: z.number().optional(),
+  tauxPoursuite: z.number().optional(),
+  tauxInsertion: z.number().optional(),
 });
 
 const StatsAnneeSchema = z.object({
@@ -18,8 +18,14 @@ const StatsAnneeSchema = z.object({
 });
 
 const FiltersSchema = z.object({
-  codeNiveauDiplome: z.array(z.string()).optional(),
+  codeNiveauDiplome: z.string().optional(),
   codeRegion: z.string().optional(),
+});
+
+const TauxTransformationSchema = z.object({
+  placesTransformees: z.number().optional(),
+  effectifs: z.number().optional(),
+  taux: z.number().optional(),
 });
 
 export const getPilotageReformeStatsSchema = {
@@ -30,8 +36,10 @@ export const getPilotageReformeStatsSchema = {
         regions: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
       }),
-      tauxTransformation: z.number(),
       annees: z.array(StatsAnneeSchema),
+      tauxTransformationCumule: TauxTransformationSchema,
+      tauxTransformationCumulePrevisionnel: TauxTransformationSchema,
+      rentreesScolaire: z.array(z.string()),
     }),
   },
 };

@@ -1,16 +1,19 @@
-import {Box, Heading,Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr} from '@chakra-ui/react';
-import { Fragment } from "react";
+import { Box, Flex, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from '@chakra-ui/react';
+import { useMemo } from 'react';
 
-import type { Order, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage-reforme/types";
+import type { Order, PilotageReformeStatsRegion, TauxTransformation } from "@/app/(wrapped)/pilotage-reforme/types";
+import { GlossaireShortcut } from '@/components/GlossaireShortcut';
 import { OrderIcon } from "@/components/OrderIcon";
 import { TooltipIcon } from "@/components/TooltipIcon";
-import { formatPercentage } from "@/utils/formatUtils";
+import { formatPercentageFixedDigits } from "@/utils/formatUtils";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
   libelleRegion: "Région",
-  tauxInsertion: "Emploi",
-  tauxPoursuite: "Poursuite",
+  tauxInsertion: "Taux d'emploi à 6 mois",
+  tauxPoursuite: "Taux de poursuite d'études",
   tauxChomage: "Taux de chômage",
+  tauxTransformationCumule: "Taux de transfo. cumulé",
+  tauxTransformationCumulePrevisionnel: "Taux de transfo. cumulé prévisionnel",
 };
 
 const Loader = () => (
@@ -44,13 +47,57 @@ export const VueRegionAcademieSection = ({
   order,
   codeRegion,
   handleOrder,
+  nationalStats,
+  onModalOpen,
 }: {
   data?: PilotageReformeStatsRegion;
   isLoading: boolean;
   order: Order;
   codeRegion?: string;
   handleOrder: (column: Order["orderBy"]) => void;
+  onModalOpen: () => void;
+  nationalStats: {
+    tauxTransformationCumule?: TauxTransformation;
+    tauxTransformationCumulePrevisionnel?: TauxTransformation;
+    tauxPoursuite?: number;
+    tauxInsertion?: number;
+    tauxChomage?: number;
+  }
 }) => {
+  const rows = useMemo(() => { return data?.statsRegions.map((region) => {
+    const trBgColor = region.codeRegion === codeRegion ? "blueecume.400_hover !important" : "";
+    const tdBgColor = region.codeRegion === codeRegion ? "inherit !important" : "";
+    const trColor = region.codeRegion === codeRegion ? "white" : "inherit";
+    const color = region.codeRegion === codeRegion ? "inherit" : "bluefrance.113";
+
+    return (
+      <Tr  key={`${region.codeRegion}_${region.libelleRegion}`} backgroundColor={trBgColor} color={trColor} fontWeight="700">
+        <Td backgroundColor={tdBgColor} color={color}>
+          {region.libelleRegion}
+        </Td>
+        <Td isNumeric backgroundColor={tdBgColor}>
+          <Tooltip label={ region.tauxTransformationCumule?.placesTransformees && region.tauxTransformationCumule?.effectifs && `${region.tauxTransformationCumule?.placesTransformees} / ${region.tauxTransformationCumule?.effectifs}`}>
+            {formatPercentageFixedDigits(region.tauxTransformationCumule?.taux, 1, "-")}
+          </Tooltip>
+        </Td>
+        <Td isNumeric backgroundColor={tdBgColor}>
+          <Tooltip label={ region.tauxTransformationCumulePrevisionnel?.placesTransformees && region.tauxTransformationCumulePrevisionnel?.effectifs && `${region.tauxTransformationCumulePrevisionnel?.placesTransformees} / ${region.tauxTransformationCumulePrevisionnel?.effectifs}`}>
+            {formatPercentageFixedDigits(region.tauxTransformationCumulePrevisionnel?.taux, 1, "-")}
+          </Tooltip>
+        </Td>
+        <Td isNumeric backgroundColor={tdBgColor}>
+          {formatPercentageFixedDigits(region.tauxPoursuite, 1, "-")}
+        </Td>
+        <Td isNumeric backgroundColor={tdBgColor}>
+          {formatPercentageFixedDigits(region.tauxInsertion, 1, "-")}
+        </Td>
+        <Td isNumeric backgroundColor={tdBgColor}>
+          {formatPercentageFixedDigits(region.tauxChomage, 1, "-")}
+        </Td>
+      </Tr>
+    );
+  });}, [data, codeRegion]);
+
   return (
     <>
       <Heading
@@ -74,52 +121,124 @@ export const VueRegionAcademieSection = ({
                     <OrderIcon {...order} column="libelleRegion" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.libelleRegion}
                   </Th>
-                  <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxPoursuite")}>
-                    <OrderIcon {...order} column="tauxPoursuite" />
-                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuite}
+                  <Th isNumeric cursor="pointer" pb="4"  onClick={() => handleOrder("tauxTransformationCumule")}>
+                    <Flex alignItems="center">
+                      <OrderIcon {...order} column="tauxTransformationCumule" />
+                      <Text align="left">
+                      Taux de transfo. cumulé
+                        <br/>
+                      (Demandes validées)
+                      </Text>
+                      <TooltipIcon
+                        display={"inline"}
+                        marginInline={1}
+                        label={
+                          <Box>
+                            <Text>Taux de transformation cumulé par région.</Text>
+                          </Box>
+                        }
+                        onClick={() => onModalOpen()}
+                      />
+                    </Flex>
                   </Th>
-                  <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxInsertion")}>
-                    <OrderIcon {...order} column="tauxInsertion" />
-                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion}
+                  <Th isNumeric cursor="pointer" pb="4" onClick={() => handleOrder("tauxTransformationCumulePrevisionnel")}>
+                    <Flex alignItems="center">
+                      <OrderIcon {...order} column="tauxTransformationCumulePrevisionnel" />
+                      <Text align="left">
+                        Taux de transfo. cumulé
+                        <br/>
+                        (Projets inclus)
+                      </Text>
+                      <TooltipIcon
+                        display={"inline"}
+                        marginInline={1}
+                        label={
+                          <Box>
+                            <Text>Taux de transformation cumulé par région.</Text>
+                          </Box>
+                        }
+                        onClick={() => onModalOpen()}
+                      />
+                    </Flex>
                   </Th>
-                  <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxChomage")}>
+                  <Th isNumeric cursor="pointer" pb="4"  onClick={() => handleOrder("tauxPoursuite")}>
+                    <Flex alignItems="center">
+                      <OrderIcon {...order} column="tauxPoursuite"/>
+                      <Text align="left">
+                          Taux de poursuite
+                        <br/>
+                          d'études
+                      </Text>
+                      <GlossaireShortcut
+                        display={"inline"}
+                        marginInline={1}
+                        iconSize={"12px"}
+                        glossaireEntryKey={"taux-poursuite-etudes"}
+                        tooltip={
+                          <Box>
+                            <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
+                            <Text>Cliquez pour plus d'infos.</Text>
+                          </Box>
+                        }
+                      />
+                    </Flex>
+                  </Th>
+                  <Th isNumeric cursor="pointer" pb="4"  onClick={() => handleOrder("tauxInsertion")}>
+                    <Flex alignItems="center">
+                      <OrderIcon {...order} column="tauxInsertion" />
+                      <Text align="left">
+                        Taux d'emploi
+                        <br/>
+                        à 6 mois
+                      </Text>
+                      <GlossaireShortcut
+                        display={"inline"}
+                        marginInline={1}
+                        iconSize={"12px"}
+                        glossaireEntryKey={"taux-emploi-6-mois"}
+                        tooltip={
+                          <Box>
+                            <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
+                            <Text>Cliquez pour plus d'infos.</Text>
+                          </Box>
+                        }
+                      />
+                    </Flex>
+                  </Th>
+                  <Th isNumeric cursor="pointer" pb="4" width="15%" onClick={() => handleOrder("tauxChomage")}>
                     <OrderIcon {...order} column="tauxChomage" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxChomage}
-                    <TooltipIcon ml="1" label="T4 2022" />
+                    <TooltipIcon ml="1" label="T4 2022"/>
                   </Th>
                 </Tr>
               </Thead>
               <Tbody>
-                <Fragment>
-                  {data?.statsRegions.map((region) => {
-                    const trBgColor = region.codeRegion === codeRegion ? "blueecume.400_hover !important" : "";
-
-                    const tdBgColor = region.codeRegion === codeRegion ? "inherit !important" : "";
-
-                    const trColor = region.codeRegion === codeRegion ? "white" : "inherit";
-
-                    const color = region.codeRegion === codeRegion ? "inherit" : "bluefrance.113";
-
-                    return (
-                      <Fragment key={`${region.codeRegion}_${region.libelleRegion}`}>
-                        <Tr backgroundColor={trBgColor} color={trColor} fontWeight="700">
-                          <Td backgroundColor={tdBgColor} color={color}>
-                            {region.libelleRegion}
-                          </Td>
-                          <Td isNumeric backgroundColor={tdBgColor}>
-                            {formatPercentage(region.tauxPoursuite ?? 0)}
-                          </Td>
-                          <Td isNumeric backgroundColor={tdBgColor}>
-                            {formatPercentage(region.tauxInsertion ?? 0)}
-                          </Td>
-                          <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.tauxChomage ?? "-"} %
-                          </Td>
-                        </Tr>
-                      </Fragment>
-                    );
-                  })}
-                </Fragment>
+                {rows}
+                {/* National stats */}
+                <Tr fontWeight="700" color={"bluefrance.113"} borderTop={"2px solid"} borderColor="bluefrance.113">
+                  <Td fontWeight="700">
+                    NATIONAL
+                  </Td>
+                  <Td isNumeric >
+                    <Tooltip label={ nationalStats?.tauxTransformationCumule?.placesTransformees && nationalStats?.tauxTransformationCumule?.effectifs && `${nationalStats?.tauxTransformationCumule?.placesTransformees} / ${nationalStats?.tauxTransformationCumule?.effectifs}`}>
+                      {formatPercentageFixedDigits(nationalStats.tauxTransformationCumule?.taux, 1, "-")}
+                    </Tooltip>
+                  </Td>
+                  <Td isNumeric >
+                    <Tooltip label={ nationalStats?.tauxTransformationCumulePrevisionnel?.placesTransformees && nationalStats?.tauxTransformationCumulePrevisionnel?.effectifs && `${nationalStats?.tauxTransformationCumulePrevisionnel?.placesTransformees} / ${nationalStats?.tauxTransformationCumulePrevisionnel?.effectifs}`}>
+                      {formatPercentageFixedDigits(nationalStats.tauxTransformationCumulePrevisionnel?.taux, 1, "-")}
+                    </Tooltip>
+                  </Td>
+                  <Td isNumeric >
+                    {formatPercentageFixedDigits(nationalStats.tauxPoursuite, 1, "-")}
+                  </Td>
+                  <Td isNumeric >
+                    {formatPercentageFixedDigits(nationalStats.tauxInsertion, 1, "-")}
+                  </Td>
+                  <Td isNumeric >
+                    {formatPercentageFixedDigits(nationalStats.tauxChomage, 1, "-")}
+                  </Td>
+                </Tr>
               </Tbody>
             </Table>
           </TableContainer>

@@ -31,13 +31,12 @@ import {
   countPlacesOuvertesTransitionEcologique,
   countPlacesTransformeesParCampagne,
 } from "@/modules/utils/countCapacite";
-import { isDemandeProjetOrValidee } from "@/modules/utils/isDemandeProjetOrValidee";
 import { isDemandeNotAjustementRentree } from "@/modules/utils/isDemandeSelectable";
 
 import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
 
 export const genericOnDemandes = ({
-  statut,
+  statut = [DemandeStatutEnum["projet de demande"], DemandeStatutEnum["demande validée"], DemandeStatutEnum["prêt pour le vote"]],
   rentreeScolaire,
   codeNiveauDiplome,
   CPC,
@@ -51,7 +50,7 @@ export const genericOnDemandes = ({
   formationSpecifique,
   withAjustementRentree = true,
 }: {
-  statut?: Array<DemandeStatutType>;
+  statut?: DemandeStatutType[];
   rentreeScolaire?: string[];
   codeNiveauDiplome?: string[];
   CPC?: string[];
@@ -123,7 +122,7 @@ export const genericOnDemandes = ({
     ])
     .where(isInPerimetreIJDataEtablissement)
     .$if(withAjustementRentree, (eb) => eb.where(isDemandeNotAjustementRentree))
-    .where("demande.statut", "in", [DemandeStatutEnum["projet de demande"], DemandeStatutEnum["demande validée"]])
+    .where("demande.statut", "in", statut)
     .$call((eb) => {
       if (campagne) return eb.where("campagne.annee", "=", campagne);
       return eb;
@@ -164,12 +163,6 @@ export const genericOnDemandes = ({
     .$call((q) => {
       if (!secteur || secteur.length === 0) return q;
       return q.where("dataEtablissement.secteur", "in", secteur);
-    })
-    .$call((q) => {
-      if (!statut || statut.length === 0) {
-        return q.where(isDemandeProjetOrValidee);
-      }
-      return q.where("demande.statut", "in", statut);
     })
     .$call((q) => {
       if (withColoration === undefined) return q;
