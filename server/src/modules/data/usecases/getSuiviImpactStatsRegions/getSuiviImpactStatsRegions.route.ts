@@ -4,21 +4,21 @@ import { ROUTES } from "shared/routes/routes";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getPilotageReformeStatsRegions } from "./getPilotageReformeStatsRegions.usecase";
+import { getSuiviImpactStatsRegions } from "./getSuiviImpactStatsRegions.usecase";
 
-const ROUTE = ROUTES["[GET]/pilotage-reforme/stats/regions"];
+const ROUTE = ROUTES["[GET]/suivi-impact/stats/regions"];
 
-export const getPilotageReformeStatsRegionsRoute = (server: Server) => {
+export const getSuiviImpactStatsRegionsRoute = (server: Server) => {
   return createRoute(ROUTE.url, {
     method: ROUTE.method,
     schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("pilotage_reforme/lecture"),
+      preHandler: hasPermissionHandler("suivi-impact/lecture"),
       handler: async (request, response) => {
         const { order, orderBy, ...rest } = request.query;
-        const stats = await getPilotageReformeStatsRegions({
+        const stats = await getSuiviImpactStatsRegions({
           ...rest,
           orderBy: order && orderBy ? { order, column: orderBy } : undefined,
         });

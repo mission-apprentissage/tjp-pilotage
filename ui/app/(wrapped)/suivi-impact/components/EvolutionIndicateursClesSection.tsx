@@ -1,29 +1,39 @@
-import {Box, Flex, Heading,Select, Skeleton, VisuallyHidden} from '@chakra-ui/react';
+import { Box, Flex, Heading, Select, Skeleton, VisuallyHidden } from '@chakra-ui/react';
 import _ from "lodash";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import { useState } from 'react';
 
-import type { IndicateurType, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
+import type { IndicateurOption, PilotageReformeStats } from "@/app/(wrapped)/suivi-impact/types";
 
 import type { BarGraphData } from "./BarGraph";
 import { BarGraph } from "./BarGraph";
+
+type IndicateurCleType = "tauxInsertion" | "tauxPoursuite";
 
 export const EvolutionIndicateursClesSection = ({
   data,
   isLoading,
   isFiltered = false,
   codeRegion,
-  indicateur,
-  handleIndicateurChange,
-  indicateurOptions,
 }: {
   data?: PilotageReformeStats;
   isLoading: boolean;
   isFiltered?: boolean | string;
   codeRegion?: string;
-  indicateur: IndicateurType;
-  handleIndicateurChange: (indicateur: string) => void;
-  indicateurOptions: (OptionSchema & { isDefault: boolean })[];
 }) => {
+  const [indicateur, setIndicateur] = useState<IndicateurCleType>("tauxInsertion");
+  const indicateurOptions: IndicateurOption[] = [
+    {
+      label: "Taux d'emploi à 6 mois",
+      value: "tauxInsertion",
+      isDefault: true,
+    },
+    {
+      label: "Taux de poursuite d'études",
+      value: "tauxPoursuite",
+      isDefault: false,
+    },
+  ];
+
   const graphData: BarGraphData = {};
 
   data?.annees.forEach((anneeData) => {
@@ -64,7 +74,7 @@ export const EvolutionIndicateursClesSection = ({
               size="sm"
               variant="newInput"
               bg={"grey.150"}
-              onChange={(e) => handleIndicateurChange(e.target.value)}
+              onChange={(e) => setIndicateur(e.target.value as IndicateurCleType)}
               value={indicateur}
             >
               {indicateurOptions.map((option) => (

@@ -10,150 +10,41 @@ import {
   SimpleGrid,
   Skeleton,
   Text,
-  useDisclosure,
+  useToken,
   VStack,
 } from "@chakra-ui/react";
+import { OBJECTIF_TAUX_TRANSFO_REFORME } from "shared/objectives/TAUX_TRANSFO";
 import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
-import { DefinitionTauxTransfoModal } from "@/app/(wrapped)/components/DefinitionTauxTransfoModal";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import type { IndicateurType, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
-import { ProgressBar } from "@/components/ProgressBar";
+import type { IndicateurType, PilotageReformeStats, TauxTransformation } from "@/app/(wrapped)/suivi-impact/types";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumber, formatPercentageFixedDigits } from "@/utils/formatUtils";
 
-const EFFECTIF_FEATURE_FLAG = false;
+import { MultiProgressBar } from "./MultiProgressBar";
 
 const Loader = () => {
   return (
-    <>
-      <Box mt={12}>
-        {EFFECTIF_FEATURE_FLAG && (
-          <Box height={"124px"} mb={24}>
-            <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
-            <Divider borderBottom={"2px solid"} opacity={"15%"} />
-            <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
-            <Divider borderBottom={"2px solid"} opacity={"15%"} />
-            <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
-          </Box>
-        )}
-        <Flex mt={8} height={"168px"}>
-          <SimpleGrid spacing={3} columns={[2]} width={"100%"}>
-            <Card height={40}>
-              <CardBody py="2" px="3">
-                <Skeleton opacity={0.3} height={"100%"} />
-              </CardBody>
-            </Card>
-            <Card height={40}>
-              <CardBody py="2" px="3">
-                <Skeleton opacity={0.3} height={"100%"} />
-              </CardBody>
-            </Card>
-          </SimpleGrid>
-        </Flex>
-      </Box>
-    </>
+    <Box mt={12}>
+      <Flex mt={8} height={"168px"}>
+        <SimpleGrid spacing={3} columns={[2]} width={"100%"}>
+          <Card height={40}>
+            <CardBody py="2" px="3">
+              <Skeleton opacity={0.3} height={"100%"} />
+            </CardBody>
+          </Card>
+          <Card height={40}>
+            <CardBody py="2" px="3">
+              <Skeleton opacity={0.3} height={"100%"} />
+            </CardBody>
+          </Card>
+        </SimpleGrid>
+      </Flex>
+    </Box>
   );
 };
 
-const DeltaIcon = ({ delta, children, ...props }: { delta: number; children: React.ReactNode }) => {
-  let deltaIcon;
-  if (delta) {
-    if (delta < 0)
-      deltaIcon = (
-        <Flex {...props} width="50%" justifyContent={"end"}>
-          <TriangleDownIcon mt={1} me={"auto"} boxSize={4} color={"pilotage.red"} />
-          {children}
-        </Flex>
-      );
-    else if (delta === 0) deltaIcon = <Flex {...props}>{children}</Flex>;
-    else
-      deltaIcon = (
-        <Flex {...props} width="50%" justifyContent={"end"}>
-          <TriangleUpIcon mt={1} me={"auto"} boxSize={4} color={"success.850"} />
-          {children}
-        </Flex>
-      );
-  } else {
-    deltaIcon = (
-      <Flex {...props} width="50%" justifyContent={"end"} color={"blueecume.400_active"}>
-        -
-      </Flex>
-    );
-  }
-
-  return deltaIcon;
-};
-
-const IndicateurCompare = ({
-  indicateuranneeN,
-  indicateuranneeNMoins1,
-}: {
-  indicateuranneeN?: number;
-  indicateuranneeNMoins1?: number;
-}) => {
-  return (
-    <>
-      <Text px={8} color={"blueecume.400_hover"} width={"40%"} textAlign="end" whiteSpace={"nowrap"}>
-        {indicateuranneeN ?? "-"}
-      </Text>
-      <DeltaIcon delta={(indicateuranneeN || 0) - (indicateuranneeNMoins1 || 0)}>
-        <Text color={"blueecume.400_active"} whiteSpace={"nowrap"}>
-          {indicateuranneeNMoins1 ? `${indicateuranneeNMoins1} / N-1` : "-"}
-        </Text>
-      </DeltaIcon>
-    </>
-  );
-};
-
-const IndicateurEffectifLine = ({
-  label,
-  indicateuranneeN,
-  indicateuranneeNMoins1,
-  isLastLine = false,
-}: {
-  label: string;
-  indicateuranneeN?: number;
-  indicateuranneeNMoins1?: number;
-  isLastLine?: boolean;
-}) => (
-  <>
-    <SimpleGrid spacing={3} columns={[2]} p={2} fontWeight={700}>
-      <Text align="start" textTransform={"uppercase"} color={"blueecume.400_active"}>
-        {label}
-      </Text>
-      <Flex justifyContent={"end"}>
-        <IndicateurCompare
-          indicateuranneeN={indicateuranneeN}
-          indicateuranneeNMoins1={indicateuranneeNMoins1}
-        ></IndicateurCompare>
-      </Flex>
-    </SimpleGrid>
-    {!isLastLine && <Divider borderBottom={"2px solid"} opacity={"15%"} />}
-  </>
-);
-
-const IndicateursEffectif = ({ data }: { data?: PilotageReformeStats }) => (
-  <Box flex={1}>
-    <IndicateurEffectifLine
-      label="effectif"
-      indicateuranneeN={data?.annees[0].scoped.effectif}
-      indicateuranneeNMoins1={data?.annees[1].scoped.effectif}
-    />
-    <IndicateurEffectifLine
-      label="nombre d'établissements"
-      indicateuranneeN={data?.annees[0].scoped.nbEtablissements}
-      indicateuranneeNMoins1={data?.annees[1].scoped.nbEtablissements}
-    />
-    <IndicateurEffectifLine
-      label="nombre de formations"
-      indicateuranneeN={data?.annees[0].scoped.nbFormations}
-      indicateuranneeNMoins1={data?.annees[1].scoped.nbFormations}
-      isLastLine={true}
-    />
-  </Box>
-);
 
 const DrapeauFrancaisIcon = ({ ...props }) => (
   <Icon boxSize={4} {...props}>
@@ -252,30 +143,29 @@ const StatCard = ({
   };
 
   const getDeltaAnneeNMoins1Nationale = (type: IndicateurType): number | null => {
-    switch (type) {
-    case "tauxInsertion":
-      if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].nationale.tauxInsertion)
-        return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].nationale.tauxInsertion) * 100;
-      return null;
-    case "tauxPoursuite":
-      if (data?.annees[0].scoped.tauxPoursuite && data?.annees[1].nationale.tauxPoursuite)
+    if(type === "tauxPoursuite") {
+      if (data?.annees[0].scoped.tauxPoursuite && data?.annees[1].nationale.tauxPoursuite) {
         return (data?.annees[0].scoped.tauxPoursuite - data?.annees[1].nationale.tauxPoursuite) * 100;
-      return null;
-    default:
-      if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].nationale.tauxInsertion)
-        return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].nationale.tauxInsertion) * 100;
+      }
+
       return null;
     }
+
+    if (data?.annees[0].scoped.tauxInsertion && data?.annees[1].nationale.tauxInsertion) {
+      return (data?.annees[0].scoped.tauxInsertion - data?.annees[1].nationale.tauxInsertion) * 100;
+    }
+
+    return null;
   };
 
   const getValue = (type: IndicateurType) => {
     switch (type) {
     case "tauxInsertion":
-      return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
+      return formatPercentageFixedDigits(data?.annees[0].scoped.tauxInsertion, 1, '-');
     case "tauxPoursuite":
-      return formatNumber((data?.annees[0].scoped.tauxPoursuite ?? 0) * 100);
+      return formatPercentageFixedDigits(data?.annees[0].scoped.tauxPoursuite, 1, '-');
     default:
-      return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
+      return formatPercentageFixedDigits(data?.annees[0].scoped.tauxInsertion, 1, '-');
     }
   };
 
@@ -300,7 +190,7 @@ const StatCard = ({
           {tooltip}
         </HStack>
         <Box fontWeight="bold" fontSize="40" color={"bluefrance.113"}>
-          {getValue(type) ? `${getValue(type)} %` : <Text textAlign={"center"}>-</Text>}
+          {getValue(type)}
         </Box>
         <Box fontWeight="bold" fontSize="2xl">
           {getDeltaAnneeNMoins1(type) != null ? <Delta delta={getDeltaAnneeNMoins1(type)} /> : <></>}
@@ -318,59 +208,71 @@ const StatCard = ({
   );
 };
 
-const TauxTransfoCard = ({ tauxTransformation }: { tauxTransformation: number }) => {
-  const percentage = (tauxTransformation * 100) / 6;
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const TauxTransfoCard = (
+  { tauxTransformationCumule,
+    tauxTransformationCumulePrevisionnel,
+    onModalOpen
+  } :
+  { tauxTransformationCumule?: TauxTransformation,
+    tauxTransformationCumulePrevisionnel?: TauxTransformation,
+    onModalOpen: () => void
+  }) => {
+  const [blue, cyan, grey] = useToken("colors", ["bluefrance.113", "blueecume.675_hover", "grey.925"]);
 
   return (
-    <>
-      <DefinitionTauxTransfoModal isOpen={isOpen} onClose={onClose} />
-      <VStack width="100%">
-        <Card width="100%">
-          <CardBody color="inherit" py="2" px="3" minHeight={40}>
-            <VStack
-              width="100%"
-              px="8px"
-              padding="8px"
-              gap="16px"
-              color={themeColors.bluefrance[113]}
-              alignItems="start"
-            >
-              <Box>
-                <Heading
-                  as="h2"
-                  fontSize={15}
-                  fontWeight="500"
-                  lineHeight="24px"
-                  textTransform="uppercase"
-                >
-                  Taux de transformation prévisionnel - Rentrée {NEXT_RENTREE}{" "}
-                </Heading>
-                <Heading as="h3" fontSize="32px" fontWeight="700" lineHeight="40px">
-                  {formatNumber(tauxTransformation, 1)} %
-                </Heading>
-              </Box>
-              <Box width="100%">
-                <ProgressBar percentage={percentage} />
-                <Text color={themeColors.grey[425]} fontSize={12}>
-                  {formatNumber(percentage, 1)}% de l'objectif
-                </Text>
-              </Box>
-            </VStack>
-          </CardBody>
-        </Card>
-        <HStack width="100%" justifyContent="start" alignItems="end">
-          <Text color={themeColors.bluefrance[113]}>
-            <TooltipIcon mr="6px" label="Cliquez ici pour plus d’infos" onClick={() => onOpen()} />
-            Comprendre le calcul du taux de transformation
-          </Text>
-        </HStack>
-      </VStack>
-    </>
+    <VStack width="100%">
+      <Card width="100%">
+        <CardBody color="inherit" py="2" px="3" minHeight={40}>
+          <VStack
+            width="100%"
+            px="8px"
+            padding="8px"
+            gap="16px"
+            color={themeColors.bluefrance[113]}
+            alignItems="start"
+          >
+            <Flex direction="row" justifyContent={"space-between"} w={"100%"} alignItems={"center"}>
+              <Heading
+                as="h2"
+                fontSize={15}
+                fontWeight="500"
+                lineHeight="24px"
+                textTransform="uppercase"
+              >
+              Taux de transformation cumulé
+              </Heading>
+              <TooltipIcon
+                label="Cliquez ici pour plus d’infos" onClick={onModalOpen}
+              />
+            </Flex>
+            <Box width="100%">
+              { tauxTransformationCumule && tauxTransformationCumulePrevisionnel && (
+                <MultiProgressBar
+                  bars={[
+                    {value: OBJECTIF_TAUX_TRANSFO_REFORME, label: 'Objectif de la réforme', color: grey},
+                    {value: tauxTransformationCumulePrevisionnel?.taux, label: `Projets RS ${NEXT_RENTREE} inclus`, color: cyan, tooltip:`${tauxTransformationCumulePrevisionnel?.placesTransformees} / ${tauxTransformationCumulePrevisionnel?.effectifs}`},
+                    {value: tauxTransformationCumule?.taux, label: 'Demandes validées', color: blue, tooltip:`${tauxTransformationCumule?.placesTransformees} / ${tauxTransformationCumule?.effectifs}`}
+                  ].filter(bar => typeof bar?.value !== "undefined").sort((a, b) => b.value! - a.value!).map((taux, index) => ({...taux, order: index + 1} as {
+                  value: number;
+                  label: string;
+                  color: string;
+                  tooltip?: string;
+                  order: number;
+              }))}
+                  max={Math.max(OBJECTIF_TAUX_TRANSFO_REFORME,
+                    tauxTransformationCumulePrevisionnel?.taux ?? 0,
+                    tauxTransformationCumule?.taux ?? 0)}
+                />
+              )}
+            </Box>
+          </VStack>
+        </CardBody>
+      </Card>
+    </VStack>
   );
 };
 
-const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
+const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats, onModalOpen: () => void }) => {
   const { openGlossaire } = useGlossaireContext();
 
   return (
@@ -379,7 +281,11 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
         INDICATEURS CLÉS DE LA RÉFORME
       </Heading>
       <VStack width="100%" spacing="18px" mt="12px">
-        <TauxTransfoCard tauxTransformation={data?.tauxTransformation ?? 0} />
+        <TauxTransfoCard
+          tauxTransformationCumule={data?.tauxTransformationCumule}
+          tauxTransformationCumulePrevisionnel={data?.tauxTransformationCumulePrevisionnel}
+          onModalOpen={onModalOpen}
+        />
         <SimpleGrid spacing={3} columns={[2]} width="100%">
           <StatCard
             label="taux d'emploi à 6 mois"
@@ -420,23 +326,13 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
   );
 };
 
-export const IndicateursClesSection = ({ data, isLoading }: { data?: PilotageReformeStats; isLoading: boolean }) => {
-  return (
-    <>
-      {isLoading ? (
-        <Loader></Loader>
-      ) : (
-        <Box>
-          {EFFECTIF_FEATURE_FLAG && (
-            <Flex>
-              <IndicateursEffectif data={data}></IndicateursEffectif>
-            </Flex>
-          )}
-          <Flex mt={EFFECTIF_FEATURE_FLAG ? 14 : 0}>
-            <IndicateursSortie data={data}></IndicateursSortie>
-          </Flex>
-        </Box>
-      )}
-    </>
-  );
+export const IndicateursClesSection = (
+  { data, isLoading, onModalOpen }:
+  { data?: PilotageReformeStats; isLoading: boolean; onModalOpen: () => void }) =>
+{
+  if(isLoading){
+    return (<Loader />);
+  }
+
+  return (<IndicateursSortie data={data} onModalOpen={onModalOpen} />);
 };
