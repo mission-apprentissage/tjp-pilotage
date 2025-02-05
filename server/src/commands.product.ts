@@ -383,6 +383,7 @@ export function productCommands(cli: Command) {
       await anonymizeUsers();
       await createJob({ name: "anonymizeUsers" });
     });
+
   cli.command("refreshViews").action(async () => {
     await refreshViews();
   });
