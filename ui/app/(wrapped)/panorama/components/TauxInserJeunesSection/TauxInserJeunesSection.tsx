@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 
 import type { PanoramaStatsTauxInsertion, PanoramaStatsTauxPoursuite } from "@/app/(wrapped)/panorama/types";
-import { BarGraph } from "@/app/(wrapped)/pilotage-reforme/components/BarGraph";
+import { BarGraph } from "@/app/(wrapped)/suivi-impact/components/BarGraph";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 
 export const TauxInserJeunesSection = ({

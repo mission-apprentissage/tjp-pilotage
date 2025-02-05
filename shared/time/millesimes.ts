@@ -10,3 +10,11 @@ export const getMillesimeFromCampagne = (campagne: string) => {
   const rentreeScolaire = parseInt(campagne);
   return `${rentreeScolaire - 3}_${rentreeScolaire - 2}`;
 };
+
+export const getFinDanneeScolaireMillesime = (millesimeSortie: string) => {
+  if(!millesimeSortie) {
+    return 0;
+  }
+
+  return parseInt(millesimeSortie.split("_")[1]);
+};
