@@ -38,7 +38,7 @@ export const PageClient = ({
 
   return (
     <IntentionForm
-      disabled={canEditDemande({ demande, user: auth?.user })}
+      disabled={!canEditDemande({ demande, user: auth?.user })}
       formId={numero}
       defaultValues={demande}
       demande={demande}
