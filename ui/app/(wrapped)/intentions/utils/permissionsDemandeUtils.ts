@@ -21,7 +21,6 @@ export const canCreateDemande = ({ user, campagne } : { user?: UserType, campagn
   campagne.statut === CampagneStatutEnum["en cours"] &&
   hasPermission(user?.role, "intentions/ecriture");
 
-
 export const canEditDemande = ({
   demande,
   user,
@@ -45,11 +44,11 @@ export const canEditDemande = ({
   );
 };
 
-export const canDeleteDemande = ({ user } : { user?: UserType }) =>  (
-  hasPermission(user?.role, "intentions/ecriture") &&
-    !hasRole({ user, role: "expert_region" }) &&
-    !hasRole({ user, role: "region" })
-);
+export const canDeleteDemande = ({ demande, user, } : { demande: Demande; user?: UserType }) =>
+  canEditDemande({user, demande}) &&
+  !hasRole({ user, role: "expert_region" }) &&
+  !hasRole({ user, role: "region" });
+
 
 export const canImportDemande = ({
   isAlreadyImported,

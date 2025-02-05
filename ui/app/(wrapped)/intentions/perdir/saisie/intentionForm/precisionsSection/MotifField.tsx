@@ -21,13 +21,13 @@ import {
 } from "shared/utils/typeDemandeUtils";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
-import type { MotifCampagne, MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
-import { getMotifsTypeDemande, MOTIFS_LABELS } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import type { AnneeCampagneMotifDemande, MotifDemandeLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import { getMotifsTypeDemande, MOTIFS_DEMANDE_LABEL } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
-const getMotifOptions = (typeDemande: DemandeTypeType, campagne: string) => {
-  return Object.entries(MOTIFS_LABELS[campagne as MotifCampagne])
-    .filter(([key]) => getMotifsTypeDemande(typeDemande)?.includes(key as MotifLabel))
+const getMotifOptions = (typeDemande: DemandeTypeType, anneeCampagne: string) => {
+  return Object.entries(MOTIFS_DEMANDE_LABEL[anneeCampagne as AnneeCampagneMotifDemande])
+    .filter(([key]) => getMotifsTypeDemande(typeDemande)?.includes(key as MotifDemandeLabel))
     .map(([value, label]) => ({
       value,
       label,

@@ -49,8 +49,8 @@ export const getMotifsParAnneeCampagne = (
   return Object.keys(motifsParAnneeCampagne) as MotifCorrectionLabel[];
 };
 
-export const getMotifCorrectionOptionsParAnneeCampagne = (anneeCampagne: string) => {
-  return Object.entries(MOTIFS_CORRECTION_LABELS[anneeCampagne as AnneeCampagneMotifCorrection]).map(
+export const getMotifCorrectionOptionsParAnneeCampagne = (anneeCampagne: AnneeCampagneMotifCorrection) => {
+  return Object.entries(MOTIFS_CORRECTION_LABELS[anneeCampagne]).map(
     ([value, label]) => ({
       value,
       label,

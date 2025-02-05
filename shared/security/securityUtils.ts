@@ -17,7 +17,8 @@ type KOfUnion<T> = {
   [D in KeyOfUnion<T>]: T extends { [Ks in D]: any } ? T[D] : never;
 };
 
-export const isUserInRegionsExperimentation2024 = ({ user }: { user?: { codeRegion?: string } }) => {
+export const isUserInRegionsExperimentation2024 = ({ user }: { user?: { codeRegion?: string, role?: Role } }) => {
+  if(hasRole({ user, role: "admin" }) || hasRole({ user, role : "pilote"})) return true;
   if (!user?.codeRegion) return false;
   return CODES_REGIONS_EXPE_2024.includes(user.codeRegion);
 };

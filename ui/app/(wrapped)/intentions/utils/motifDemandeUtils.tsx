@@ -1,10 +1,51 @@
 import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
-export type MotifCampagne = keyof typeof MOTIFS_LABELS;
-export type MotifLabel = keyof (typeof MOTIFS_LABELS)[MotifCampagne];
 
-export const MOTIFS_LABELS = {
+export type AnneeCampagneMotifDemande = keyof typeof MOTIFS_DEMANDE_LABEL;
+export type MotifDemandeLabel = keyof (typeof MOTIFS_DEMANDE_LABEL)[AnneeCampagneMotifDemande];
+
+export const getMotifDemandeLabel = ({
+  motif,
+  anneeCampagne,
+}: {
+  motif: MotifDemandeLabel;
+  anneeCampagne: AnneeCampagneMotifDemande;
+}): string => {
+  return MOTIFS_DEMANDE_LABEL[anneeCampagne][motif];
+};
+
+export const getMotifsDemande = () => motifs;
+export const getMotifsDemandeParAnneeCampagne = (anneeCampagne: AnneeCampagneMotifDemande): MotifDemandeLabel[] => {
+  const motifsCampagne = MOTIFS_DEMANDE_LABEL[anneeCampagne];
+  return Object.keys(motifsCampagne) as MotifDemandeLabel[];
+};
+export const getMotifsTypeDemande = (typeDemande: DemandeTypeType): MotifDemandeLabel[] =>
+  getMotifsDemande()[typeDemande] ?? [];
+export const getLabelsMotifsOuverture = () => motifsOuverture;
+export const getLabelsMotifsFermeture = () => motifsFermeture;
+export const getLabelsMotifsTransfert = () => motifsTransfert;
+export const getLabelsMotifsColoration = () => motifsColoration;
+export const getLabelsMotifsAjustement = () => motifsAjustement;
+export const getMotifsTriggerAutre = () => motifsTriggerAutre;
+
+export const hasMotifAutre = (values?: Array<string | undefined>) => {
+  return values?.filter(
+    (motif) =>
+      MOTIFS_DEMANDE_LABEL[2023][motif! as MotifDemandeLabel] !== undefined ||
+      MOTIFS_DEMANDE_LABEL[2024][motif! as MotifDemandeLabel] !== undefined ||
+      MOTIFS_DEMANDE_LABEL[2025][motif! as MotifDemandeLabel] !== undefined
+  );
+};
+
+export const getMotifDemandeOptionsParAnneeCampagne = (anneeCampagne: AnneeCampagneMotifDemande) => {
+  return Object.entries(MOTIFS_DEMANDE_LABEL[anneeCampagne]).map(
+    ([value, label]) => ({
+      value,
+      label,
+    }));
+};
+
+export const MOTIFS_DEMANDE_LABEL = {
   "2023": {
     taux_insertion_satisfaisant: "Taux d’insertion satisfaisant",
     taux_poursuite_satisfaisant: "Taux de poursuite satisfaisant",
@@ -103,7 +144,7 @@ const motifsOuverture = [
   "maintien_specifique",
   "sauvegarde_metier_rare",
   "autre",
-] as MotifLabel[];
+] as MotifDemandeLabel[];
 
 const motifsFermeture = [
   "taux_insertion_insatisfaisant",
@@ -118,7 +159,7 @@ const motifsFermeture = [
   "nombre_eleves_en_baisse",
   "besoins_economiques_en_baisse",
   "autre",
-] as MotifLabel[];
+] as MotifDemandeLabel[];
 
 const motifsTransfert = [
   "effectif_faible_scolaire",
@@ -127,7 +168,7 @@ const motifsTransfert = [
   "formation_situation_fragilite",
   "disponibilite_fonciere_insuffisante",
   "autre",
-] as MotifLabel[];
+] as MotifDemandeLabel[];
 
 const motifsColoration = [
   "perspective_insertion_professionnelle",
@@ -135,13 +176,13 @@ const motifsColoration = [
   "favorise_attractivite_formation",
   "projet_specifique_local",
   "autre",
-] as MotifLabel[];
+] as MotifDemandeLabel[];
 
-const motifsAjustement = ["ajustement_rentree"] as MotifLabel[];
+const motifsAjustement = ["ajustement_rentree"] as MotifDemandeLabel[];
 
-const motifsTriggerAutre = ["autre", "mise_en_place_partenariat"] as MotifLabel[];
+const motifsTriggerAutre = ["autre", "mise_en_place_partenariat"] as MotifDemandeLabel[];
 
-const motifs: Partial<Record<DemandeTypeType, MotifLabel[]>> = {
+const motifs: Partial<Record<DemandeTypeType, MotifDemandeLabel[]>> = {
   ouverture_nette: motifsOuverture,
   augmentation_nette: motifsOuverture,
   fermeture: motifsFermeture,
@@ -149,34 +190,4 @@ const motifs: Partial<Record<DemandeTypeType, MotifLabel[]>> = {
   transfert: motifsTransfert,
   coloration: motifsColoration,
   ajustement: motifsAjustement,
-};
-
-export const getMotifLabel = ({
-  motif,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
-}: {
-  motif: MotifLabel;
-  campagne?: MotifCampagne;
-}): string => {
-  return MOTIFS_LABELS[campagne][motif];
-};
-
-export const getMotifs = () => motifs;
-export const getMotifsCampagne = (campagne: MotifCampagne = CURRENT_ANNEE_CAMPAGNE): MotifLabel[] => {
-  const motifsCampagne = MOTIFS_LABELS[campagne];
-  return Object.keys(motifsCampagne) as MotifLabel[];
-};
-export const getMotifsTypeDemande = (typeDemande: DemandeTypeType): MotifLabel[] => getMotifs()[typeDemande] ?? [];
-export const getLabelsMotifsOuverture = () => motifsOuverture;
-export const getLabelsMotifsFermeture = () => motifsFermeture;
-export const getLabelsMotifsTransfert = () => motifsTransfert;
-export const getLabelsMotifsColoration = () => motifsColoration;
-export const getLabelsMotifsAjustement = () => motifsAjustement;
-export const getMotifsTriggerAutre = () => motifsTriggerAutre;
-
-export const hasMotifAutre = (values?: Array<string | undefined>) => {
-  return values?.filter(
-    (motif) =>
-      MOTIFS_LABELS[2023][motif! as MotifLabel] !== undefined || MOTIFS_LABELS[2024][motif! as MotifLabel] !== undefined
-  );
 };

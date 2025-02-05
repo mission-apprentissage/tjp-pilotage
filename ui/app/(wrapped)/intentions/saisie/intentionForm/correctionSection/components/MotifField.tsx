@@ -3,7 +3,8 @@ import { Controller, useFormContext } from "react-hook-form";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import type { CorrectionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/defaultFormValues";
-import {getMotifCorrectionOptionsParAnneeCampagne} from '@/app/(wrapped)/intentions/utils/motifCorrectionUtils';
+import type {AnneeCampagneMotifCorrection} from '@/app/(wrapped)/intentions/utils/motifCorrectionUtils';
+import { getMotifCorrectionOptionsParAnneeCampagne} from '@/app/(wrapped)/intentions/utils/motifCorrectionUtils';
 
 
 export const MotifField = chakra(
@@ -34,11 +35,14 @@ export const MotifField = chakra(
                 placeholder="Sélectionner un motif de correction"
                 disabled={disabled}
               >
-                {getMotifCorrectionOptionsParAnneeCampagne(campagne.annee).map((motif) => (
-                  <option key={motif.value} value={motif.value}>
-                    {motif.label}
-                  </option>
-                ))}
+                {
+                  getMotifCorrectionOptionsParAnneeCampagne(campagne.annee as AnneeCampagneMotifCorrection).map(
+                    (motif) => (
+                      <option key={motif.value} value={motif.value}>
+                        {motif.label}
+                      </option>
+                    ))
+                }
               </Select>
             );
           }}

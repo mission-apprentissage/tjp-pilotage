@@ -63,6 +63,10 @@ fileignoreconfig:
   checksum: 50bc89c2ce7e01f8b8ff7381b44abb68ed2979230dc7252009e2e77b85c11558
 - filename: ui/app/(wrapped)/glossaire/GlossaireEntries.ts
   checksum: 879121c075cb8d6f1bb728ed24706ea5c31b20bc7a0ba1d20747237ddbe42ec5
+- filename: ui/app/(wrapped)/intentions/utils/__tests__/permissionsDemandeUtils.test.ts
+  checksum: 7ba4215538419370f3dda7c00aa2bb72e2955852f4d1cfe190b66700ccf474d0
+- filename: ui/app/(wrapped)/intentions/utils/__tests__/permissionsIntentionUtils.test.ts
+  checksum: 223abc9b10ca3bfe8cd72f831b9a420a8fd96f2060c6ef80e25a31d72572d92d
 - filename: ui/app/(wrapped)/mentions-legales/page.tsx
   checksum: 9d41bf20ab3cb269091a285eefeae595ecfd38dad78dbda7859eef31e69e7bc7
 - filename: ui/app/(wrapped)/politique-de-confidentialite/page.tsx
@@ -79,6 +83,8 @@ fileignoreconfig:
   checksum: 505911d86f3b3f4a9337504a691132dba83dec4a950f9ff0e8bf76f5787ab325
 - filename: ui/utils/__tests__/getRoutingRecueilDemande.test.ts
   checksum: 51d6b6031ca8ff27924aaa9e716c9f9f7722e9919543e041adf7f34739ca968a
+- filename: ui/utils/__tests__/isPartOfExpe.test.ts
+  checksum: 9531f2e63bdb1de9927873a6df90d18c59cbee8a97831db93521495e1714eb40
 scopeconfig:
 - scope: node
 custom_patterns:

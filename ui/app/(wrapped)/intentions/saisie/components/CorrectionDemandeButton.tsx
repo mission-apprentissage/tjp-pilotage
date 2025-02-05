@@ -34,6 +34,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { client } from "@/api.client";
 import type { Demandes } from "@/app/(wrapped)/intentions/saisie/types";
+import type { AnneeCampagneMotifCorrection} from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
 import { getMotifCorrectionOptionsParAnneeCampagne } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
 import { canShowCorrectionButtonDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
 import { useAuth } from "@/utils/security/useAuth";
@@ -276,11 +277,14 @@ export const CorrectionDemandeButton = chakra(
                       })}
                       mb={4}
                     >
-                      {getMotifCorrectionOptionsParAnneeCampagne(campagne.annee).map((motif) => (
-                        <option key={motif.value} value={motif.value}>
-                          {motif.label}
-                        </option>
-                      ))}
+                      {
+                        getMotifCorrectionOptionsParAnneeCampagne(campagne.annee as AnneeCampagneMotifCorrection).map(
+                          (motif) => (
+                            <option key={motif.value} value={motif.value}>
+                              {motif.label}
+                            </option>
+                          ))
+                      }
                     </Select>
                     {!!formReport.formState.errors.motif && (
                       <FormErrorMessage>{formReport.formState.errors.motif.message}</FormErrorMessage>
@@ -406,11 +410,14 @@ export const CorrectionDemandeButton = chakra(
                       isRequired={true}
                       mb={4}
                     >
-                      {getMotifCorrectionOptionsParAnneeCampagne(campagne.annee).map((motif) => (
-                        <option key={motif.value} value={motif.value}>
-                          {motif.label}
-                        </option>
-                      ))}
+                      {
+                        getMotifCorrectionOptionsParAnneeCampagne(campagne.annee as AnneeCampagneMotifCorrection).map(
+                          (motif) => (
+                            <option key={motif.value} value={motif.value}>
+                              {motif.label}
+                            </option>
+                          ))
+                      }
                     </Select>
                   </FormControl>
                   <FormControl>

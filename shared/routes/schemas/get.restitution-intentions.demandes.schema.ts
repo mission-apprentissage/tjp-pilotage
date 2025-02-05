@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import { CampagneSchema } from "../../schema/campagneSchema";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
@@ -101,6 +102,7 @@ const DemandeSchema = z.object({
   createdAt: z.string(),
   campagneId: z.string(),
   isIntention: z.boolean(),
+  campagne: CampagneSchema,
 });
 
 export const FiltersSchema = z.object({

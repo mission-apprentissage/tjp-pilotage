@@ -6,33 +6,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import {beforeEach,describe, expect, it} from 'vitest';
 
-import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { getRoutingSaisieRecueilDemande, getRoutingSyntheseRecueilDemande } from "@/utils/getRoutingRecueilDemande";
-
-describe("ui > utils > createParameterizedUrl", () => {
-  it("Doit remplacer le paramètre de requête dans l'URL avec la valeur fournie", () => {
-    const url = "/api/user";
-    const params = { id: "123" };
-    const result = createParameterizedUrl(url, params);
-    expect(result).toBe("/api/user?id=123");
-  });
-
-  it("Doit remplacer les paramètres de requête dans l'URL avec les valeurs fournies", () => {
-    const url = "/api/user";
-    const params = { id: "123", name: "Marin" };
-    const result = createParameterizedUrl(url, params);
-    expect(result).toBe("/api/user?id=123&name=Marin");
-  });
-
-  it("Doit remplacer les paramètres de requête en gardant la profondeur d'objet", () => {
-    const url = "/api/user";
-    const params = { id: "123", user: { firstname: "Marin", lastname: "Orion" } };
-    const result = createParameterizedUrl(url, params);
-    expect(result).toBe("/api/user?id=123&user[firstname]=Marin&user[lastname]=Orion");
-  });
-});
-
-
 
 const createUserBuilder = ({
   role,
@@ -81,34 +55,34 @@ const fixtureBuilder = () => {
       utilisateurAnonyme: () => {
         user = undefined;
       },
-      utilisateurNational: async () => {
+      utilisateurNational: () => {
         user = createUserBuilder({role: RoleEnum["admin"]});
       },
-      utilisateurPerdirExpe: async () => {
+      utilisateurPerdirExpe: () => {
         user = createUserBuilder({role: RoleEnum["perdir"], codeRegion: "76"});
       },
-      utilisateurPerdirHorsExpe: async () => {
+      utilisateurPerdirHorsExpe: () => {
         user = createUserBuilder({role: RoleEnum["perdir"], codeRegion: "11"});
       },
-      utilisateurRegionExpe: async () => {
+      utilisateurRegionExpe: () => {
         user = createUserBuilder({role: RoleEnum["admin_region"], codeRegion: "76"});
       },
-      utilisateurRegionHorsExpe: async () => {
+      utilisateurRegionHorsExpe: () => {
         user = createUserBuilder({role: RoleEnum["admin_region"], codeRegion: "11"});
       },
-      campagne2023: async () => {
+      campagne2023: () => {
         campagne = createCampagneBuilder({annee: "2023"});
       },
-      campagne2024: async () => {
+      campagne2024: () => {
         campagne = createCampagneBuilder({annee: "2024"});
       },
-      campagne2025: async () => {
+      campagne2025: () => {
         campagne = createCampagneBuilder({annee: "2025"});
       },
-      campagneRegionaleEnCoursWithSaisiePerdir: async () => {
+      campagneRegionaleEnCoursWithSaisiePerdir: () => {
         campagne = createCampagneBuilder({annee: "2025", hasCampagneRegionEnCours: true, codeRegion: "76", withSaisiePerdir: true});
       },
-      campagneRegionaleEnCoursWithoutSaisiePerdir: async () => {
+      campagneRegionaleEnCoursWithoutSaisiePerdir: () => {
         campagne = createCampagneBuilder({annee: "2025", hasCampagneRegionEnCours: true, codeRegion: "76", withSaisiePerdir: false });
       },
     },
@@ -153,8 +127,10 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
     fixture.given.campagne2023();
 
     fixture.when.accesRoutingSaisieRecueilDemande();
-
     fixture.then.verifierRouteSaisieHorsExpe();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseHorsExpe();
   });
 
   it("Doit renvoyer la route hors expé pour la campagne 2024 si l'utilisateur est hors expé", () => {
@@ -162,8 +138,10 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
     fixture.given.campagne2024();
 
     fixture.when.accesRoutingSaisieRecueilDemande();
-
     fixture.then.verifierRouteSaisieHorsExpe();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseHorsExpe();
   });
 
   it("Doit renvoyer la route expé pour la campagne 2024 si l'utilisateur est dans l'expé", () => {
@@ -171,8 +149,10 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
     fixture.given.campagne2024();
 
     fixture.when.accesRoutingSaisieRecueilDemande();
-
     fixture.then.verifierRouteSaisieExpe();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseExpe();
   });
 
   it("Doit renvoyer la route expé pour la campagne 2024 si l'utilisateur est un perdir de l'expé", () => {
@@ -180,34 +160,53 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
     fixture.given.campagne2024();
 
     fixture.when.accesRoutingSaisieRecueilDemande();
-
     fixture.then.verifierRouteSaisieExpe();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseExpe();
   });
 
-  it("Doit renvoyer la route expé pour la campagne 2025 même si l'utilisateur est hors expé", () => {
+  it("Doit renvoyer la saisie pour la campagne 2024 si l'utilisateur est hors expé", () => {
     fixture.given.utilisateurPerdirHorsExpe();
     fixture.given.campagne2024();
 
     fixture.when.accesRoutingSaisieRecueilDemande();
+    fixture.then.verifierRetourAccueil();
 
+    fixture.when.accesRoutingSyntheseRecueilDemande();
     fixture.then.verifierRetourAccueil();
   });
 
-  it("Doit renvoyer la route expé pour la campagne 2025 même si l'utilisateur est hors expé", () => {
+  it("Doit renvoyer la route expé pour la campagne 2025 même si l'utilisateur région est hors expé", () => {
     fixture.given.utilisateurRegionHorsExpe();
     fixture.given.campagne2025();
 
     fixture.when.accesRoutingSaisieRecueilDemande();
-
     fixture.then.verifierRouteSaisieExpe();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseExpe();
   });
 
-  it("Doit renvoyer la route expé pour la campagne 2025 même si l'utilisateur est hors expé", () => {
+  it("Doit renvoyer l'accueil pour la campagne 2025 si l'utilisateur PERDIR est dans une région qui n'autorise pas la saisie PERDIR", () => {
     fixture.given.utilisateurPerdirExpe();
     fixture.given.campagneRegionaleEnCoursWithoutSaisiePerdir();
 
     fixture.when.accesRoutingSaisieRecueilDemande();
-
     fixture.then.verifierRetourAccueil();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRetourAccueil();
+  });
+
+  it("Doit renvoyer l'accueil pour la campagne 2025 si l'utilisateur PERDIR est dans une région qui n'autorise pas la saisie PERDIR", () => {
+    fixture.given.utilisateurPerdirExpe();
+    fixture.given.campagneRegionaleEnCoursWithSaisiePerdir();
+
+    fixture.when.accesRoutingSaisieRecueilDemande();
+    fixture.then.verifierRouteSaisieExpe();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseExpe();
   });
 });

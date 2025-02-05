@@ -112,6 +112,10 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       "departement.codeDepartement",
       "academie.libelleAcademie",
       "academie.codeAcademie",
+      "campagne.annee as anneeCampagne",
+      "campagne.statut as statutCampagne",
+      "campagne.dateDebut as dateDebutCampagne",
+      "campagne.dateFin as dateFinCampagne",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
       countDifferenceCapaciteScolaireColoree(eb).as("differenceCapaciteScolaireColoree"),
@@ -287,6 +291,13 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   return {
     demandes: demandes.map((demande) => ({
       ...demande,
+      campagne: {
+        id: demande.campagneId,
+        annee: demande.anneeCampagne,
+        statut: demande.statutCampagne,
+        dateDebut: demande.dateDebutCampagne?.toISOString(),
+        dateFin: demande.dateFinCampagne?.toISOString(),
+      },
       statut: castDemandeStatutWithoutSupprimee(demande.statut),
       createdAt: demande.createdAt?.toISOString(),
       updatedAt: demande.updatedAt?.toISOString(),
