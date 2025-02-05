@@ -8,10 +8,11 @@ const StatsRegionLineSchema = z.object({
   tauxChomage: z.coerce.number().optional(),
   tauxPoursuite: z.coerce.number().optional(),
   tauxInsertion: z.coerce.number().optional(),
+  tauxTransformationCumule: z.coerce.number().optional(),
 });
 
 const FiltersRegionsSchema = z.object({
-  codeNiveauDiplome: z.array(z.string()).optional(),
+  codeNiveauDiplome: z.string().optional(),
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: StatsRegionLineSchema.keyof().optional(),
 });

@@ -1,10 +1,7 @@
 import type { getPilotageReformeStatsSchema } from "shared/routes/schemas/get.pilotage-reforme.stats.schema";
 import type { z } from "zod";
 
-import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
-import { formatTauxTransformation } from "@/modules/data/utils/formatTauxTransformation";
-
-import { dependencies } from "./dependencies";
+import * as dependencies from "./deps";
 
 export interface Filters extends z.infer<typeof getPilotageReformeStatsSchema.querystring> {
   campagne: string;
@@ -12,28 +9,25 @@ export interface Filters extends z.infer<typeof getPilotageReformeStatsSchema.qu
 const getPilotageReformeStatsFactory =
   (
     deps = {
-      getCurrentCampagneQuery,
+      getFilters: dependencies.getFilters,
+      getTauxTransformationCumule: dependencies.getTauxTransformationCumule,
       getStats: dependencies.getStats,
-      findFiltersInDb: dependencies.findFiltersInDb,
-      getTauxTransformationData: dependencies.getTauxTransformationData,
+      getTauxTransformationCumulePrevisionnel: dependencies.getTauxTransformationCumulePrevisionnel,
     }
   ) =>
-    async (activeFilters: { codeNiveauDiplome?: string[]; orderBy?: { order: "asc" | "desc"; column: string } }) => {
-      const currentCampagne = await deps.getCurrentCampagneQuery();
-      const anneeCampagne = currentCampagne.annee;
-      const [stats, filters] = await Promise.all([deps.getStats(activeFilters), deps.findFiltersInDb()]);
-
-      const [{ placesTransformees, effectif }] = await deps.getTauxTransformationData({
-        ...activeFilters,
-        campagne: anneeCampagne,
-      });
-
-      const tauxTransformation = formatTauxTransformation(placesTransformees, effectif);
+    async (activeFilters: { codeNiveauDiplome?: string; codeRegion?: string }) => {
+      const [filters,stats, tauxTransformationCumule,  tauxTransformationCumulePrevisionnel] = await Promise.all([
+        deps.getFilters(),
+        deps.getStats(activeFilters),
+        deps.getTauxTransformationCumule(activeFilters),
+        deps.getTauxTransformationCumulePrevisionnel(activeFilters)
+      ]);
 
       return {
         ...stats,
-        tauxTransformation: tauxTransformation ?? 0,
         filters,
+        tauxTransformationCumule,
+        tauxTransformationCumulePrevisionnel
       };
     };
 

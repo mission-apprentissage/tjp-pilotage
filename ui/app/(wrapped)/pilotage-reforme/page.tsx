@@ -1,36 +1,29 @@
 "use client";
 
 import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
-import qs from "qs";
-import { useState } from "react";
 
 import { client } from "@/api.client";
-import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { withAuth } from "@/utils/security/withAuth";
+import { useStateParams } from "@/utils/useFilters";
 
 import { CartoSection } from "./components/CartoSection";
 import { EvolutionIndicateursClesSection } from "./components/EvolutionIndicateursClesSection";
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
 import { VueRegionAcademieSection } from "./components/VueRegionAcademieSection";
-import type { Filters, FiltersRegions, IndicateurType, Order } from "./types";
+import type { Filters, FiltersRegions, Order } from "./types";
 
-export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
-  const router = useRouter();
-  const queryParams = useSearchParams();
-  const searchParams: {
-    filters?: Partial<Filters>;
-    order?: Partial<Order>;
-  } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
+const usePilotageReformHook = () => {
+  const [searchParams, setSearchParams] = useStateParams<{filters: Filters, order: Order}>({
+    defaultValues: {
+      filters: {},
+      order: { order: "asc" },
+    },
+  });
   const filters = searchParams.filters ?? {};
   const order = searchParams.order ?? { order: "asc" };
-
-  const setSearchParams = (params: { filters?: typeof filters; order?: typeof order }) => {
-    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
-  };
 
   const trackEvent = usePlausible();
   const filterTracker = (filterName: keyof Filters) => () => {
@@ -42,11 +35,11 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   const handleOrder = (column: Order["orderBy"]) => {
     trackEvent("pilotage-reforme:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
-      setSearchParams({ order: { order: "desc", orderBy: column } });
+      setSearchParams({ ...searchParams, order: { order: "desc", orderBy: column } });
       return;
     }
     setSearchParams({
-      ...filters,
+      ...searchParams,
       order: {
         order: order?.order === "asc" ? "desc" : "asc",
         orderBy: column,
@@ -56,14 +49,15 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
 
   const handleFilters = (type: keyof Filters | keyof FiltersRegions, value: Filters[keyof Filters]) => {
     setSearchParams({
-      filters: { ...filters, [type]: value },
+      ...searchParams,
+      filters: { ...searchParams.filters, [type]: value },
     });
   };
 
   const { data, isLoading } = client.ref("[GET]/pilotage-reforme/stats").useQuery(
     {
       query: {
-        ...filters,
+        ...searchParams.filters,
       },
     },
     {
@@ -89,24 +83,40 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
 
   const isFiltered = filters.codeRegion;
 
-  const indicateurOptions = [
-    {
-      label: "Taux d'emploi à 6 mois",
-      value: "tauxInsertion",
-      isDefault: true,
-    },
-    {
-      label: "Taux de poursuite d'études",
-      value: "tauxPoursuite",
-      isDefault: false,
-    },
-  ];
-
-  const [indicateur, setIndicateur] = useState<IndicateurType>("tauxInsertion");
-
-  const handleIndicateurChange = (indicateur: string): void => {
-    if (indicateur === "tauxInsertion" || indicateur === "tauxPoursuite") setIndicateur(indicateur);
+  return {
+    filters,
+    order,
+    handleFilters,
+    handleOrder,
+    isFiltered,
+    data,
+    isLoading,
+    filterTracker,
+    dataRegions,
+    isLoadingRegions,
+    nationalStats: {
+      tauxTransformationCumule: (data?.tauxTransformationCumule ?? 0) / 100,
+      tauxPoursuite: (data?.annees[0].scoped.tauxPoursuite ?? 0),
+      tauxInsertion: (data?.annees[0].scoped.tauxInsertion ?? 0),
+      tauxChomage: (dataRegions?.statsRegions.reduce((acc, region) => acc + (region.tauxChomage ?? 0), 0) ?? 0) / (dataRegions?.statsRegions.length ?? 1),
+    }
   };
+};
+
+export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
+  const {
+    filters,
+    order,
+    handleFilters,
+    handleOrder,
+    isFiltered,
+    data,
+    isLoading,
+    filterTracker,
+    dataRegions,
+    isLoadingRegions,
+    nationalStats,
+  } = usePilotageReformHook();
 
   return (
     <Box bg="blueecume.950">
@@ -127,17 +137,11 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
                 isLoading={isLoading}
                 isFiltered={isFiltered}
                 codeRegion={filters.codeRegion}
-                indicateur={indicateur}
-                handleIndicateurChange={handleIndicateurChange}
-                indicateurOptions={indicateurOptions}
               />
             </Box>
             <CartoSection
               data={dataRegions}
               isLoading={isLoadingRegions}
-              indicateur={indicateur}
-              handleIndicateurChange={handleIndicateurChange}
-              indicateurOptions={indicateurOptions}
               activeFilters={filters}
               handleFilters={handleFilters}
             ></CartoSection>
@@ -149,7 +153,8 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
               isLoading={isLoadingRegions}
               handleOrder={handleOrder}
               codeRegion={filters.codeRegion}
-            ></VueRegionAcademieSection>
+              nationalStats={nationalStats}
+            />
           </SimpleGrid>
         </Box>
       </Container>

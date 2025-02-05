@@ -15,4 +15,13 @@ export type PilotageReformeStats = (typeof client.infer)["[GET]/pilotage-reforme
 
 export type PilotageReformeStatsRegion = (typeof client.infer)["[GET]/pilotage-reforme/stats/regions"];
 
-export type IndicateurType = "tauxInsertion" | "tauxPoursuite";
+export type IndicateurType = keyof Pick<
+  (typeof client.infer)["[GET]/pilotage-reforme/stats/regions"]["statsRegions"][number],
+  "tauxInsertion" | "tauxPoursuite" | "tauxTransformationCumule" | "tauxChomage"
+>;
+
+export type IndicateurOption = {
+  label: string;
+  value: IndicateurType;
+  isDefault: boolean;
+};

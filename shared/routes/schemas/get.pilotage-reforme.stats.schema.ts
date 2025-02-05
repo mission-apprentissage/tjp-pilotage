@@ -18,7 +18,7 @@ const StatsAnneeSchema = z.object({
 });
 
 const FiltersSchema = z.object({
-  codeNiveauDiplome: z.array(z.string()).optional(),
+  codeNiveauDiplome: z.string().optional(),
   codeRegion: z.string().optional(),
 });
 
@@ -30,8 +30,9 @@ export const getPilotageReformeStatsSchema = {
         regions: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
       }),
-      tauxTransformation: z.number(),
       annees: z.array(StatsAnneeSchema),
+      tauxTransformationCumule: z.number(),
+      tauxTransformationCumulePrevisionnel: z.number(),
     }),
   },
 };

@@ -1,16 +1,18 @@
-import {Box, Heading,Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr} from '@chakra-ui/react';
-import { Fragment } from "react";
+import { Box, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import { useMemo } from 'react';
 
 import type { Order, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage-reforme/types";
+import { GlossaireShortcut } from '@/components/GlossaireShortcut';
 import { OrderIcon } from "@/components/OrderIcon";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { formatPercentage } from "@/utils/formatUtils";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
   libelleRegion: "Région",
-  tauxInsertion: "Emploi",
-  tauxPoursuite: "Poursuite",
+  tauxInsertion: "Emploi à 6 mois",
+  tauxPoursuite: "Poursuite d'études",
   tauxChomage: "Taux de chômage",
+  tauxTransformationCumule: "Taux de transfo. cumulé",
 };
 
 const Loader = () => (
@@ -44,13 +46,47 @@ export const VueRegionAcademieSection = ({
   order,
   codeRegion,
   handleOrder,
+  nationalStats,
 }: {
   data?: PilotageReformeStatsRegion;
   isLoading: boolean;
   order: Order;
   codeRegion?: string;
   handleOrder: (column: Order["orderBy"]) => void;
+  nationalStats: {
+    tauxTransformationCumule: number;
+    tauxPoursuite: number;
+    tauxInsertion: number;
+    tauxChomage: number;
+  }
 }) => {
+  const rows = useMemo(() => { return data?.statsRegions.map((region) => {
+    const trBgColor = region.codeRegion === codeRegion ? "blueecume.400_hover !important" : "";
+    const tdBgColor = region.codeRegion === codeRegion ? "inherit !important" : "";
+    const trColor = region.codeRegion === codeRegion ? "white" : "inherit";
+    const color = region.codeRegion === codeRegion ? "inherit" : "bluefrance.113";
+
+    return (
+      <Tr  key={`${region.codeRegion}_${region.libelleRegion}`} backgroundColor={trBgColor} color={trColor} fontWeight="700">
+        <Td backgroundColor={tdBgColor} color={color}>
+          {region.libelleRegion}
+        </Td>
+        <Td isNumeric backgroundColor={tdBgColor}>
+          {formatPercentage(region.tauxTransformationCumule, 1, "-")}
+        </Td>
+        <Td isNumeric backgroundColor={tdBgColor}>
+          {formatPercentage(region.tauxPoursuite, 0, "-")}
+        </Td>
+        <Td isNumeric backgroundColor={tdBgColor}>
+          {formatPercentage(region.tauxInsertion, 0, "-")}
+        </Td>
+        <Td isNumeric backgroundColor={tdBgColor}>
+          {formatPercentage(region.tauxChomage, 1, "-")}
+        </Td>
+      </Tr>
+    );
+  });}, [data, codeRegion]);
+
   return (
     <>
       <Heading
@@ -74,52 +110,79 @@ export const VueRegionAcademieSection = ({
                     <OrderIcon {...order} column="libelleRegion" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.libelleRegion}
                   </Th>
+                  <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxTransformationCumule")}>
+                    <OrderIcon {...order} column="tauxTransformationCumule" />
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxTransformationCumule}
+                    <GlossaireShortcut
+                      display={"inline"}
+                      marginInline={1}
+                      iconSize={"16px"}
+                      tooltip={
+                        <Box>
+                          <Text>Taux de transformation cumulé par régions.</Text>
+                        </Box>
+                      }
+                    />
+                  </Th>
                   <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxPoursuite")}>
                     <OrderIcon {...order} column="tauxPoursuite" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuite}
+                    <GlossaireShortcut
+                      display={"inline"}
+                      marginInline={1}
+                      iconSize={"16px"}
+                      glossaireEntryKey={"taux-poursuite-etudes"}
+                      tooltip={
+                        <Box>
+                          <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
+                          <Text>Cliquez pour plus d'infos.</Text>
+                        </Box>
+                      }
+                    />
                   </Th>
                   <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxInsertion")}>
                     <OrderIcon {...order} column="tauxInsertion" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion}
+                    <GlossaireShortcut
+                      display={"inline"}
+                      marginInline={1}
+                      iconSize={"16px"}
+                      glossaireEntryKey={"taux-emploi-6-mois"}
+                      tooltip={
+                        <Box>
+                          <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
+                          <Text>Cliquez pour plus d'infos.</Text>
+                        </Box>
+                      }
+                    />
                   </Th>
                   <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxChomage")}>
                     <OrderIcon {...order} column="tauxChomage" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxChomage}
-                    <TooltipIcon ml="1" label="T4 2022" />
+                    <TooltipIcon ml="1" label="T4 2022"/>
                   </Th>
                 </Tr>
               </Thead>
               <Tbody>
-                <Fragment>
-                  {data?.statsRegions.map((region) => {
-                    const trBgColor = region.codeRegion === codeRegion ? "blueecume.400_hover !important" : "";
-
-                    const tdBgColor = region.codeRegion === codeRegion ? "inherit !important" : "";
-
-                    const trColor = region.codeRegion === codeRegion ? "white" : "inherit";
-
-                    const color = region.codeRegion === codeRegion ? "inherit" : "bluefrance.113";
-
-                    return (
-                      <Fragment key={`${region.codeRegion}_${region.libelleRegion}`}>
-                        <Tr backgroundColor={trBgColor} color={trColor} fontWeight="700">
-                          <Td backgroundColor={tdBgColor} color={color}>
-                            {region.libelleRegion}
-                          </Td>
-                          <Td isNumeric backgroundColor={tdBgColor}>
-                            {formatPercentage(region.tauxPoursuite ?? 0)}
-                          </Td>
-                          <Td isNumeric backgroundColor={tdBgColor}>
-                            {formatPercentage(region.tauxInsertion ?? 0)}
-                          </Td>
-                          <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.tauxChomage ?? "-"} %
-                          </Td>
-                        </Tr>
-                      </Fragment>
-                    );
-                  })}
-                </Fragment>
+                {rows}
+                {/* National stats */}
+                <Tr fontWeight="700" color={"bluefrance.113"} borderTop={"2px solid"} borderColor="bluefrance.113">
+                  <Td fontWeight="700">
+                    NATIONAL
+                  </Td>
+                  <Td isNumeric  >
+                    {formatPercentage((nationalStats.tauxTransformationCumule ?? 0), 1, "-")}
+                  </Td>
+                  <Td isNumeric >
+                    {formatPercentage(nationalStats.tauxPoursuite ?? 0, 0, "-")}
+                  </Td>
+                  <Td isNumeric >
+                    {formatPercentage(nationalStats.tauxInsertion ?? 0, 0, "-")}
+                  </Td>
+                  <Td isNumeric >
+                    {formatPercentage((nationalStats.tauxChomage  ?? 0), 1, "-")}
+                  </Td>
+                </Tr>
               </Tbody>
             </Table>
           </TableContainer>

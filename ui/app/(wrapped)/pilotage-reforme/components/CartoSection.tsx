@@ -1,19 +1,13 @@
 import { Box, Flex, Heading, Select, Skeleton, VisuallyHidden } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
 
-import type { Filters, IndicateurType, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage-reforme/types";
+import type { Filters, IndicateurOption, IndicateurType, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage-reforme/types";
 import { CartoGraph } from "@/components/CartoGraph";
 import { formatNumber } from "@/utils/formatUtils";
 
 interface CartoSelectionProps {
   data?: PilotageReformeStatsRegion;
   isLoading: boolean;
-  indicateur: IndicateurType;
-  handleIndicateurChange: (indicateur: string) => void;
-  indicateurOptions: {
-    label: string;
-    value: string;
-    isDefault: boolean;
-  }[];
   activeFilters: Filters;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
 }
@@ -21,18 +15,41 @@ interface CartoSelectionProps {
 export const CartoSection = ({
   data,
   isLoading,
-  indicateur,
-  handleIndicateurChange,
-  indicateurOptions,
   activeFilters,
   handleFilters,
 }: CartoSelectionProps) => {
-  const graphData = data?.statsRegions.map((region) => {
+
+  const [indicateur, setIndicateur] = useState<IndicateurType>("tauxInsertion");
+  const indicateurOptions: IndicateurOption[] = [
+    {
+      label: "Taux d'emploi à 6 mois",
+      value: "tauxInsertion",
+      isDefault: true,
+    },
+    {
+      label: "Taux de poursuite d'études",
+      value: "tauxPoursuite",
+      isDefault: false,
+    },
+    {
+      label: "Taux de transformation cumulé",
+      value: "tauxTransformationCumule",
+      isDefault: false,
+    },
+    {
+      label: "Taux de chômage",
+      value: "tauxChomage",
+      isDefault: false,
+    },
+  ];
+
+  const graphData = useMemo(() => data?.statsRegions.map((region) => {
     return {
       name: region.libelleRegion,
+      code: region.codeRegion,
       value: formatNumber((region[indicateur] ?? 0) * 100),
     };
-  });
+  }), [data, indicateur]) ;
 
   const handleClickOnRegion = (codeRegion: string | undefined) => {
     if (activeFilters.codeRegion && activeFilters.codeRegion === codeRegion) handleFilters("codeRegion", undefined);
@@ -58,11 +75,11 @@ export const CartoSection = ({
             <VisuallyHidden as="label" htmlFor="select-indicateur-carto">Indicateur</VisuallyHidden>
             <Select
               id="select-indicateur-carto"
-              width="64"
+              width="80"
               size="sm"
               variant="newInput"
               bg={"grey.150"}
-              onChange={(e) => handleIndicateurChange(e.target.value)}
+              onChange={(e) => setIndicateur(e.target.value as IndicateurType)}
               value={indicateur}
             >
               {indicateurOptions.map((option) => (

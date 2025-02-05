@@ -53,5 +53,8 @@
   "compareFolders.ignoreEmptyLines": true,
   "compareFolders.ignoreWhiteSpaces": true,
   "compareFolders.respectGitIgnore": true,
-  "eslint.useFlatConfig": false
+  "eslint.useFlatConfig": false,
+  "[sql]": {
+    "editor.defaultFormatter": "ReneSaarsoo.sql-formatter-vsc"
+  }
 }
