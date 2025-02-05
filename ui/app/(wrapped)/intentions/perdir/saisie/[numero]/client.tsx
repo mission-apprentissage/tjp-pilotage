@@ -41,7 +41,7 @@ export const PageClient = ({
   return (
     <IntentionFilesProvider numero={numero}>
       <IntentionForm
-        disabled={canEditIntention({intention, user: auth?.user})}
+        disabled={!canEditIntention({intention, user: auth?.user})}
         formId={numero}
         defaultValues={intention}
         formMetadata={intention.metadata}
