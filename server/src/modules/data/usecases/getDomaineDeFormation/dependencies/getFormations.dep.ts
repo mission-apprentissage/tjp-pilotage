@@ -42,8 +42,13 @@ export const getFormations = async ({
       wb
         .selectFrom("formations")
         .leftJoin("formationHistorique", "formationHistorique.cfd", "formations.cfd")
-        .where("formations.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`)
-        .where("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
+        .leftJoin("formationView as fva", "fva.cfd", "formationHistorique.ancienCFD")
+        .where(wb => wb.and([
+          wb("formations.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
+          wb("fva.dateFermeture", "is not", null),
+          wb("fva.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
+          wb("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
+        ]))
         .select("formationHistorique.cfd")
         .distinct()
     )
