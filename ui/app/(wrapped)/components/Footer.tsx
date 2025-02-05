@@ -8,7 +8,7 @@ import { MinimalFooter } from "./MinimalFooter";
 const LANDING_FOOTER_SEGMENTS = [
   "panorama",
   "pilotage",
-  "pilotage-reforme",
+  "suivi-impact",
   "ressources",
   "changelog",
   "declaration-accessibilite",
