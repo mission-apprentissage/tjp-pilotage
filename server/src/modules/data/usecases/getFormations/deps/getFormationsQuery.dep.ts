@@ -2,6 +2,7 @@ import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -201,9 +202,13 @@ export const getFormationsQuery = async ({
       "formationHistorique.cfd as formationRenovee",
       eb
         .selectFrom("formationHistorique")
-        .select("formationHistorique.cfd")
-        .whereRef("formationHistorique.cfd", "=", "formationView.cfd")
-        .where("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
+        .innerJoin("formationView as fva", "fva.cfd", "formationHistorique.ancienCFD")
+        .select("formationHistorique.ancienCFD")
+        .where(wb => wb.and([
+          wb(wb.ref("formationHistorique.cfd"), "=", wb.ref("formationView.cfd")),
+          wb("fva.dateFermeture", "is not", null),
+          wb("fva.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(rentreeScolaire[0])}`)
+        ]))
         .limit(1)
         .as("isFormationRenovee"),
       sql<string | null>`
