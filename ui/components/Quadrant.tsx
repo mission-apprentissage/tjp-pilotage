@@ -97,10 +97,8 @@ export const Quadrant = function <
 
   const displayTooltip = (formation: F) => {
     const [x, y] = chartRef.current?.convertToPixel("grid", [
-      // @ts-expect-error TODO
-      formation?.tauxPoursuite * 100 ?? 0,
-      // @ts-expect-error TODO
-      formation?.tauxInsertion * 100 ?? 0,
+      (formation?.tauxPoursuite ?? 0) * 100,
+      (formation?.tauxInsertion ?? 0) * 100,
     ]) ?? [0, 0];
     setDisplayedDetail({ x, y, formation });
   };

@@ -52,14 +52,12 @@ export const ConsoleSection = ({
   isLoading,
   order,
   handleOrder,
-  campagne,
   colonneFilters,
 }: {
   data?: DemandesRestitutionIntentions;
   isLoading: boolean;
   order: OrderDemandesRestitutionIntentions;
   handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
-  campagne?: string;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
 }) => {
   const router = useRouter();
@@ -134,7 +132,6 @@ export const ConsoleSection = ({
                     >
                       <LineContent
                         demande={demande}
-                        campagne={campagne}
                         colonneFilters={colonneFilters}
                         getCellColor={getCellColor}
                       />

@@ -109,7 +109,10 @@ describe("shared > validators > correctionValidators", () => {
     });
 
     it("Sinon ne doit pas remonter d'erreur", () => {
-      const result = correctionValidators.capaciteScolaire({ ...validCorrection, capaciteScolaire: 1 });
+      const result = correctionValidators.capaciteScolaire({
+        ...validCorrection,
+        raison: RaisonCorrectionEnum.modification_capacite,
+        capaciteScolaire: 1 });
       expect(result).toBeUndefined();
     });
   });

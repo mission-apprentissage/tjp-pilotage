@@ -5,7 +5,7 @@ import type {Role} from "shared";
 import { RoleEnum } from "shared";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
-import { isPerdirPartOfExpe, isUserPartOfExpe } from '@/utils/getRoutingRecueilDemande';
+import { isPerdirPartOfExpe, isUserPartOfExpe } from '@/utils/isPartOfExpe';
 
 import { useAuth } from './useAuth';
 import { useCurrentCampagne } from './useCurrentCampagne';

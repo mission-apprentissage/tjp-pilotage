@@ -36,7 +36,7 @@ import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
-import {canDeleteIntention,canEditIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import {canDeleteIntention, canEditIntention, canImportIntention, canShowCorrectionButtonIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -434,7 +434,13 @@ export const PageClient = () => {
                                   </Tooltip>
                                 )}
                               {
-                                canDeleteIntention({ user: auth?.user }) && (
+                                canDeleteIntention({
+                                  intention : {
+                                    ...intention,
+                                    campagne: data?.campagne,
+                                  },
+                                  user: auth?.user
+                                }) && (
                                   <DeleteIntentionButton intention={intention} />
                                 )
                               }
@@ -529,7 +535,13 @@ export const PageClient = () => {
                                     />
                                   </Tooltip>
                                 ))}
-                              <CorrectionDemandeButton intention={intention} campagne={data?.campagne} />
+                              {
+                                canShowCorrectionButtonIntention({
+                                  intention : {
+                                    ...intention,
+                                    campagne: data?.campagne
+                                  }
+                                }) && (<CorrectionDemandeButton intention={intention} campagne={data?.campagne} />)}
                             </Flex>
                           </Td>
                           <Td textAlign={"center"}>

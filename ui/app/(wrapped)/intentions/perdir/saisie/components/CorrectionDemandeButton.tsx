@@ -34,13 +34,11 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { client } from "@/api.client";
 import type { Intentions } from "@/app/(wrapped)/intentions/perdir/saisie/types";
+import type { AnneeCampagneMotifCorrection} from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
 import { getMotifCorrectionOptionsParAnneeCampagne } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
-import {canShowCorrectionButtonIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
-import { useAuth } from "@/utils/security/useAuth";
 
 export const CorrectionDemandeButton = chakra(
   ({ intention, campagne }: { intention: Intentions[number], campagne: CampagneType }) => {
-    const { auth } = useAuth();
     const toast = useToast();
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -93,13 +91,7 @@ export const CorrectionDemandeButton = chakra(
     return (
       <>
         {
-          canShowCorrectionButtonIntention({
-            intention : {
-              ...intention,
-              campagne
-            }, user: auth?.user
-          }) &&
-          (isCorrected ? (
+          isCorrected ? (
             <Tooltip label="demande déjà corrigée">
               <Button
                 ms={2}
@@ -184,7 +176,7 @@ export const CorrectionDemandeButton = chakra(
                 </MenuItem>
               </MenuList>
             </Menu>
-          ))}
+          )}
         <Modal
           isOpen={isOpenModalReport}
           onClose={() => {
@@ -275,11 +267,14 @@ export const CorrectionDemandeButton = chakra(
                       })}
                       mb={4}
                     >
-                      {getMotifCorrectionOptionsParAnneeCampagne(campagne.annee).map((motif) => (
-                        <option key={motif.value} value={motif.value}>
-                          {motif.label}
-                        </option>
-                      ))}
+                      {
+                        getMotifCorrectionOptionsParAnneeCampagne(campagne.annee as AnneeCampagneMotifCorrection).map(
+                          (motif) => (
+                            <option key={motif.value} value={motif.value}>
+                              {motif.label}
+                            </option>
+                          ))
+                      }
                     </Select>
                     {!!formReport.formState.errors.motif && (
                       <FormErrorMessage>{formReport.formState.errors.motif.message}</FormErrorMessage>
@@ -405,11 +400,14 @@ export const CorrectionDemandeButton = chakra(
                       isRequired={true}
                       mb={4}
                     >
-                      {getMotifCorrectionOptionsParAnneeCampagne(campagne.annee).map((motif) => (
-                        <option key={motif.value} value={motif.value}>
-                          {motif.label}
-                        </option>
-                      ))}
+                      {
+                        getMotifCorrectionOptionsParAnneeCampagne(campagne.annee as AnneeCampagneMotifCorrection).map(
+                          (motif) => (
+                            <option key={motif.value} value={motif.value}>
+                              {motif.label}
+                            </option>
+                          ))
+                      }
                     </Select>
                   </FormControl>
                   <FormControl>
