@@ -7,7 +7,7 @@ export type Permission = KeyOfUnion<(typeof PERMISSIONS)[keyof typeof PERMISSION
 
 export const PERMISSIONS = {
   admin: {
-    "pilotage_reforme/lecture": { default: "national" },
+    "suivi-impact/lecture": { default: "national" },
     "intentions/lecture": { default: "national", draft: "national" },
     "intentions/ecriture": { default: "national" },
     "restitution-intentions/lecture": { default: "national" },
@@ -27,7 +27,7 @@ export const PERMISSIONS = {
   },
   pilote: {
     "intentions/lecture": { default: "national", draft: "national" },
-    "pilotage_reforme/lecture": { default: "national" },
+    "suivi-impact/lecture": { default: "national" },
     "restitution-intentions/lecture": { default: "national" },
     "pilotage-intentions/lecture": { default: "national" },
     "intentions-perdir/lecture": { default: "national", draft: "national" },
