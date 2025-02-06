@@ -36,6 +36,8 @@ import type { IntentionMetadata } from "@/app/(wrapped)/intentions/perdir/types"
 import { getStepWorkflow } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
+import type { DetailedApiError } from "@/utils/apiError";
+import { getDetailedErrorMessage } from "@/utils/apiError";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
@@ -106,12 +108,8 @@ export const IntentionForm = ({
       push(`/intentions/perdir/saisie`);
     },
     onError: (e: unknown) => {
-      if (isAxiosError<{ errors: Record<string, string> }>(e)) {
-        const errors = e.response?.data?.errors ?? {
-          erreur: "Une erreur est survenue lors de la sauvegarde.",
-        };
-
-        setErrors(errors);
+      if(isAxiosError<DetailedApiError>(e)) {
+        setErrors(() => ({ ...getDetailedErrorMessage(e) }));
       }
     },
   });
