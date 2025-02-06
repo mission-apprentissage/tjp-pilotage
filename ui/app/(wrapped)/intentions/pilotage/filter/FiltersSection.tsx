@@ -319,15 +319,15 @@ export const FiltersSection = ({
           </Multiselect>
         </GridItem>
         <GridItem>
-          <Text as="label" htmlFor="select-coloration">
-            Inclure colorations
+          <Text as="label" htmlFor="select-coloration" fontWeight={500} mb={1}>
+            Coloration
             <TooltipIcon
               ms={2}
               label={
                 <Box>
                   <Text>
-                    Dans Orion, à partir de la campagne 2024, on désigne comme “Colorations” le fait de colorer des
-                    places existantes sans augmentation de capacité.
+                    Doit on considérer ou non les demandes ayant fait l'objet
+                    d'une augmentation ou diminution de places colorées ?
                   </Text>
                   <Text mt={4}>Cliquez pour plus d'infos.</Text>
                 </Box>
@@ -340,17 +340,17 @@ export const FiltersSection = ({
             id="select-coloration"
             width={"100%"}
             size="md"
-            variant="newInput"
-            value={filters.withColoration}
-            onChange={(e) => {
-              onUpdateFilter({
-                key: "withColoration",
-                selected: e.target.value,
-              });
-            }}
+            variant={"newInput"}
+            value={filters.coloration?.toString() ?? ""}
+            onChange={(e) => onUpdateFilter({key: "coloration", selected: e.target.value})}
+            borderBottomColor={filters.coloration != undefined ? "info.525" : ""}
+            placeholder="Avec / sans"
           >
-            <option value={"true"}>Oui</option>
-            <option value={"false"}>Non</option>
+            {data?.filters.colorations?.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </Select>
         </GridItem>
         <GridItem>

@@ -2,7 +2,6 @@ import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import type { MILLESIMES_IJ } from "shared";
 import { CURRENT_IJ_MILLESIME } from "shared";
-import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import type { getFormationsPilotageIntentionsSchema } from "shared/routes/schemas/get.pilotage-intentions.formations.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
@@ -56,7 +55,7 @@ export const getFormationsPilotageIntentionsQuery = ({
   CPC,
   secteur,
   campagne,
-  withColoration,
+  coloration,
   orderBy,
   order,
 }: Filters) => {
@@ -266,12 +265,10 @@ export const getFormationsPilotageIntentionsQuery = ({
       }
       return q.where("demande.statut", "in", statut);
     })
-    .$call((q) => {
-      if (!withColoration || withColoration === "false")
-        return q.where((w) =>
-          w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
-        );
-      return q;
+    .$call((eb) => {
+      if (coloration)
+        return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
+      return eb;
     })
     .$call((q) => {
       if (!orderBy || !order) return q;

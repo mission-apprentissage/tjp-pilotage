@@ -1,5 +1,6 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
+import {capitalize,values} from 'lodash-es';
 import { CURRENT_RENTREE } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
@@ -25,7 +26,7 @@ export const getFiltersQuery = async ({
   campagne,
   codeAcademie,
   codeRegion,
-  withColoration,
+  coloration,
 }: Filters) => {
   const inStatut = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!statut || statut === undefined) return sql<true>`true`;
@@ -72,7 +73,7 @@ export const getFiltersQuery = async ({
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .where(isDemandeNotDeletedOrRefused)
     .$call((q) => {
-      if (!withColoration || withColoration === "false")
+      if (!coloration || coloration === "false")
         return q.where((w) =>
           w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
         );
@@ -185,6 +186,10 @@ export const getFiltersQuery = async ({
     ])
     .execute();
 
+  const statutsFilters = values(DemandeStatutEnum).filter(
+    (statut) => statut !== DemandeStatutEnum["brouillon"] && statut !== DemandeStatutEnum["supprimée"]
+  );
+
   return {
     campagnes: campagnesFilters.map(cleanNull),
     rentreesScolaires: rentreesScolairesFilters.map(cleanNull),
@@ -195,12 +200,21 @@ export const getFiltersQuery = async ({
     nsfs: nsfFilters.map(cleanNull),
     niveauxDiplome: niveauxDiplomesFilters.map(cleanNull),
     secteurs: secteurFilters.map(cleanNull),
-    statuts: [
-      { value: DemandeStatutEnum["demande validée"], label: "Demande validée" },
+    statuts: statutsFilters.map((value) =>
+      cleanNull({
+        value,
+        label: capitalize(value),
+      })
+    ),
+    colorations: [
       {
-        value: DemandeStatutEnum["projet de demande"],
-        label: "Projet de demande",
+        label: "Avec",
+        value: "true",
       },
-    ],
+      {
+        label: "Sans",
+        value: "false",
+      },
+    ]
   };
 };
