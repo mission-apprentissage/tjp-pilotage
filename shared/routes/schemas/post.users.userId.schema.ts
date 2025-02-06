@@ -10,6 +10,7 @@ const BodySchema = z.object({
   role: RoleZodType,
   codeRegion: z.string().min(1).optional(),
   fonction: UserFonctionZodType.optional(),
+  uai: z.string().optional()
 });
 
 export type BodySchema = z.infer<typeof BodySchema>;
