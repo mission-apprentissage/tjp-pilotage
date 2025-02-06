@@ -36,12 +36,9 @@ import { client } from "@/api.client";
 import type { Demandes } from "@/app/(wrapped)/intentions/saisie/types";
 import type { AnneeCampagneMotifCorrection} from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
 import { getMotifCorrectionOptionsParAnneeCampagne } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
-import { canShowCorrectionButtonDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
-import { useAuth } from "@/utils/security/useAuth";
 
 export const CorrectionDemandeButton = chakra(
   ({ demande, campagne }: { demande: Demandes[0], campagne: CampagneType }) => {
-    const { auth } = useAuth();
     const toast = useToast();
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -93,100 +90,92 @@ export const CorrectionDemandeButton = chakra(
 
     return (
       <>
-        {canShowCorrectionButtonDemande(
-          {
-            demande: {
-              ...demande,
-              campagne
-            },
-            user: auth?.user
-          }) &&
-          (isCorrected ? (
-            <Tooltip label="Demande déjà corrigée">
-              <Button
-                ms={2}
-                disabled={isCorrected}
-                rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
-                bgColor={"transparent"}
-                border={"1px solid"}
-                borderColor={bluefrance113}
-                borderRadius="0"
-                p={2}
-                h={"fit-content"}
-                opacity={0.3}
-                cursor={"not-allowed"}
-              >
-                <Flex direction={"row"} gap={2}>
-                  <Text color={bluefrance113}>Corriger la demande</Text>
-                </Flex>
-              </Button>
-            </Tooltip>
-          ) : (
-            <Menu gutter={0} matchWidth={true}>
-              <MenuButton
-                ms={2}
-                as={Button}
-                rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
-                bgColor={"transparent"}
-                border={"1px solid"}
-                borderColor={bluefrance113}
-                borderRadius="0"
-                p={2}
-                h={"fit-content"}
+        {isCorrected ? (
+          <Tooltip label="Demande déjà corrigée">
+            <Button
+              ms={2}
+              disabled={isCorrected}
+              rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
+              bgColor={"transparent"}
+              border={"1px solid"}
+              borderColor={bluefrance113}
+              borderRadius="0"
+              p={2}
+              h={"fit-content"}
+              opacity={0.3}
+              cursor={"not-allowed"}
+            >
+              <Flex direction={"row"} gap={2}>
+                <Text color={bluefrance113}>Corriger la demande</Text>
+              </Flex>
+            </Button>
+          </Tooltip>
+        ) : (
+          <Menu gutter={0} matchWidth={true}>
+            <MenuButton
+              ms={2}
+              as={Button}
+              rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
+              bgColor={"transparent"}
+              border={"1px solid"}
+              borderColor={bluefrance113}
+              borderRadius="0"
+              p={2}
+              h={"fit-content"}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <Flex direction={"row"} gap={2}>
+                <Text color={bluefrance113}>Corriger la demande</Text>
+              </Flex>
+            </MenuButton>
+            <MenuList p={0}>
+              <MenuItem
+                px={2}
+                py={3}
                 onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
+                  router.push(`/intentions/saisie/${demande.numero}?correction=true`);
                 }}
               >
-                <Flex direction={"row"} gap={2}>
-                  <Text color={bluefrance113}>Corriger la demande</Text>
+                <Flex direction={"row"} h={"100%"} gap={2}>
+                  <Icon icon="ri:scales-3-line" color={bluefrance113} width={"18px"} />
+                  <Text color={bluefrance113}>Rectifier les capacités</Text>
                 </Flex>
-              </MenuButton>
-              <MenuList p={0}>
-                <MenuItem
-                  px={2}
-                  py={3}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    router.push(`/intentions/saisie/${demande.numero}?correction=true`);
-                  }}
-                >
-                  <Flex direction={"row"} h={"100%"} gap={2}>
-                    <Icon icon="ri:scales-3-line" color={bluefrance113} width={"18px"} />
-                    <Text color={bluefrance113}>Rectifier les capacités</Text>
-                  </Flex>
-                </MenuItem>
-                <MenuItem
-                  px={2}
-                  py={3}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onOpenModalReport();
-                  }}
-                >
-                  <Flex direction={"row"} h={"100%"} gap={2}>
-                    <Icon icon="ri:corner-up-left-line" color={bluefrance113} width={"18px"} />
-                    <Text color={bluefrance113}>Reporter la demande</Text>
-                  </Flex>
-                </MenuItem>
-                <MenuItem
-                  px={2}
-                  py={3}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onOpenModalAnnulation();
-                  }}
-                >
-                  <Flex direction={"row"} h={"100%"} gap={2}>
-                    <Icon icon="ri:close-line" color={bluefrance113} width={"18px"} />
-                    <Text color={bluefrance113}>Annuler la demande</Text>
-                  </Flex>
-                </MenuItem>
-              </MenuList>
-            </Menu>
-          ))}
+              </MenuItem>
+              <MenuItem
+                px={2}
+                py={3}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onOpenModalReport();
+                }}
+              >
+                <Flex direction={"row"} h={"100%"} gap={2}>
+                  <Icon icon="ri:corner-up-left-line" color={bluefrance113} width={"18px"} />
+                  <Text color={bluefrance113}>Reporter la demande</Text>
+                </Flex>
+              </MenuItem>
+              <MenuItem
+                px={2}
+                py={3}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onOpenModalAnnulation();
+                }}
+              >
+                <Flex direction={"row"} h={"100%"} gap={2}>
+                  <Icon icon="ri:close-line" color={bluefrance113} width={"18px"} />
+                  <Text color={bluefrance113}>Annuler la demande</Text>
+                </Flex>
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        )}
         <Modal
           isOpen={isOpenModalReport}
           onClose={() => {

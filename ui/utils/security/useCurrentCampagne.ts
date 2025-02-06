@@ -2,6 +2,6 @@
 
 import { useContext } from "react";
 
-import { CurrentCampagneContext } from "@/app/context/currentCampagneContext";
+import { CurrentCampagneContext } from "@/app/currentCampagneContext";
 
 export const useCurrentCampagne = () => useContext(CurrentCampagneContext);

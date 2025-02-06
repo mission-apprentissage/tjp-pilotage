@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import type {Role} from "shared";
-import { RoleEnum } from "shared";
+import { hasRole, RoleEnum } from "shared";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { isPerdirPartOfExpe, isUserPartOfExpe } from '@/utils/isPartOfExpe';
@@ -26,7 +26,7 @@ import { useCurrentCampagne } from './useCurrentCampagne';
 export const GuardExpe = ({ isExpeRoute, children }: { isExpeRoute: boolean; children: ReactNode }) => {
   const { auth } = useAuth();
   const { campagne } = useCurrentCampagne();
-  const isPerdir = auth?.user.role === RoleEnum["perdir"];
+  const isPerdir = hasRole({ user: auth?.user, role: RoleEnum["perdir"] });
   return isPerdir ?
     handlePerdir({ isExpeRoute, user: auth?.user, campagne, children }) :
     handleNotPerdir({ isExpeRoute, user: auth?.user, campagne, children });

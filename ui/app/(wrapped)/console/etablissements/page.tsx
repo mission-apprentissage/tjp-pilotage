@@ -11,9 +11,9 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
-import { CodeDepartementContext } from '@/app/context/codeDepartementContext';
-import { CodeRegionContext } from '@/app/context/codeRegionContext';
-import { UaisContext } from '@/app/context/uaiContext';
+import { CodeDepartementContext } from '@/app/codeDepartementContext';
+import { CodeRegionContext } from '@/app/codeRegionContext';
+import { UaisContext } from '@/app/uaiContext';
 import { ConsoleSearchInput } from "@/components/ConsoleSearchInput";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";

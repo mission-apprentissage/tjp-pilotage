@@ -7,8 +7,8 @@ import { RoleEnum } from "shared";
 import { ROUTES } from "shared/routes/routes";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { Auth } from "@/app/context/authContext";
-import { AuthContext } from "@/app/context/authContext";
+import type { Auth } from "@/app/authContext";
+import { AuthContext } from "@/app/authContext";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 const router = {

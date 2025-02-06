@@ -12,7 +12,7 @@ import { QuadrantSection } from "@/app/(wrapped)/panorama/components/QuadrantSec
 import { TauxInserJeunesSection } from "@/app/(wrapped)/panorama/components/TauxInserJeunesSection/TauxInserJeunesSection";
 import { TopFlopSection } from "@/app/(wrapped)/panorama/components/TopFlopSection/TopFlopSection";
 import type { FiltersPanoramaFormation, OrderPanoramaFormation } from "@/app/(wrapped)/panorama/types";
-import { CodeRegionContext } from "@/app/context/codeRegionContext";
+import { CodeRegionContext } from "@/app/codeRegionContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 
 export default function Panorama({

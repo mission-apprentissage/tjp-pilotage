@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertIcon, AspectRatio, Container, Flex, Img }
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
-import { UaisContext } from "@/app/context/uaiContext";
+import { UaisContext } from "@/app/uaiContext";
 
 import { UaiForm } from "./UaiForm";
 

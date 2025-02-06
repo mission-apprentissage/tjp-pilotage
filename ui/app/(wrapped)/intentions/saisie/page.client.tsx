@@ -35,7 +35,7 @@ import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
-import { canImportDemande } from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
+import {canCorrectDemande,canCreateDemande, canEditDemande, canImportDemande} from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
@@ -43,7 +43,6 @@ import { formatCodeDepartement, formatDepartementLibelleWithCodeDepartement } fr
 import { getRoutingSaisieRecueilDemande, getRoutingSyntheseRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { useAuth} from '@/utils/security/useAuth';
 import { useCurrentCampagne } from '@/utils/security/useCurrentCampagne';
-import { usePermission } from "@/utils/security/usePermission";
 import { useStateParams } from "@/utils/useFilters";
 
 import { CorrectionDemandeButton } from "./components/CorrectionDemandeButton";
@@ -57,13 +56,11 @@ const PAGE_SIZE = 30;
 
 export const PageClient = () => {
   const { auth } = useAuth();
-  const { campagne: currentCampagne } = useCurrentCampagne();
+  const { campagne } = useCurrentCampagne();
   const toast = useToast();
   const queryClient = useQueryClient();
   const router = useRouter();
   const trackEvent = usePlausible();
-  const hasPermissionEditIntention = usePermission("intentions/ecriture");
-
 
   const [searchParams, setSearchParams] = useStateParams<{
     filters?: Partial<Filters>;
@@ -143,11 +140,7 @@ export const PageClient = () => {
   );
 
 
-  const isCurrentCampagne = data?.campagne.id === currentCampagne?.id;
-  const isNouvelleDemandeDisabled = !isCurrentCampagne || !hasPermissionEditIntention;
-
-  const isCampagneEnCours = data?.campagne.statut === CampagneStatutEnum["en cours"];
-  const isModificationsDisabled = !isCampagneEnCours || !hasPermissionEditIntention;
+  const isNouvelleDemandeDisabled = !canCreateDemande({user: auth?.user, campagne: campagne!});
 
   const [searchDemande, setSearchDemande] = useState<string>(search);
 
@@ -285,202 +278,213 @@ export const PageClient = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {data?.demandes.map((demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]) => (
-                    <Tr
-                      height={"60px"}
-                      position={"relative"}
-                      key={demande.numero}
-                      cursor={isModificationsDisabled ? "initial" : "pointer"}
-                      whiteSpace={"pre"}
-                      onClick={() => {
-                        if (isModificationsDisabled) return;
-                        router.push(getRoutingSaisieRecueilDemande({
-                          campagne: data?.campagne,
-                          user: auth?.user,
-                          suffix: demande.numero
-                        }));
-                      }}
-                    >
-                      <Td textAlign={"center"}>
-                        <Tooltip label={`Le ${format(demande.updatedAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
-                          {format(demande.updatedAt, "d MMM HH:mm", {
-                            locale: fr,
-                          })}
-                        </Tooltip>
-                      </Td>
-                      <Td>
-                        <Text textOverflow={"ellipsis"} overflow={"hidden"} whiteSpace={"break-spaces"} noOfLines={2}>
-                          {demande.libelleFormation}
-                        </Text>
-                      </Td>
-                      <Td>
-                        <Text textOverflow={"ellipsis"} overflow={"hidden"} whiteSpace={"break-spaces"} noOfLines={2}>
-                          {demande.libelleEtablissement}
-                        </Text>
-                      </Td>
-                      <Td>
-                        <Tooltip
-                          label={formatDepartementLibelleWithCodeDepartement({
-                            libelleDepartement: demande.libelleDepartement,
-                            codeDepartement: demande.codeDepartement,
-                          })}
-                        >
-                          <Text
-                            textAlign={"center"}
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"break-spaces"}
-                            noOfLines={2}
-                          >
-                            {formatCodeDepartement(demande.codeDepartement)}
-                          </Text>
-                        </Tooltip>
-                      </Td>
+                  {data?.demandes.map((demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]) => {
 
-                      <Td textAlign={"center"} w={0}>
-                        <StatutTag statut={demande.statut} size="md" />
-                      </Td>
-                      <Td>
-                        <Flex direction={"row"} gap={0} justifyContent={"left"}>
-                          <Tooltip label="Voir la demande">
-                            <IconButton
-                              as={NextLink}
-                              href={
-                                getRoutingSyntheseRecueilDemande({
-                                  campagne: data?.campagne,
-                                  user: auth?.user,
-                                  suffix: demande.numero,
-                                })
-                              }
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                router.push(
-                                  getRoutingSyntheseRecueilDemande({
-                                    campagne: data?.campagne,
-                                    user: auth?.user,
-                                    suffix: demande.numero,
-                                  })
-                                );
-                              }}
-                              aria-label="Voir la demande"
-                              color={"bluefrance.113"}
-                              bgColor={"transparent"}
-                              icon={<Icon icon="ri:eye-line" width={"24px"} color={bluefrance113} />}
-                            />
+                    const linkSaisie = getRoutingSaisieRecueilDemande({
+                      campagne: data?.campagne,
+                      user: auth?.user,
+                      suffix: demande.numero,
+                    });
+
+                    const linkSaisieImported = getRoutingSaisieRecueilDemande({
+                      campagne: data?.campagne,
+                      user: auth?.user,
+                      suffix: demande.numeroDemandeImportee,
+                    });
+
+                    const linkSynthese = getRoutingSyntheseRecueilDemande({
+                      campagne: data?.campagne,
+                      user: auth?.user,
+                      suffix: demande.numero,
+                    });
+
+                    const isModificationDisabled = !canEditDemande({
+                      demande: {
+                        ...demande,
+                        campagne: data?.campagne,
+                      },
+                      user: auth?.user,
+                    });
+
+                    const isImportDisabled = !canImportDemande({
+                      isAlreadyImported: demande.numeroDemandeImportee !== undefined,
+                      isLoading: (isLoading || isSubmitting || isImporting),
+                      user: auth?.user,
+                      campagne: data?.campagne,
+                    });
+
+                    const isCorrectionDisabled = !canCorrectDemande(
+                      {
+                        demande: {
+                          ...demande,
+                          campagne: data?.campagne
+                        },
+                        user: auth?.user
+                      });
+
+
+                    return (
+                      <Tr
+                        height={"60px"}
+                        position={"relative"}
+                        key={demande.numero}
+                        cursor={isModificationDisabled ? "initial" : "pointer"
+                        }
+                        whiteSpace={"pre"}
+                        onClick={() => {
+                          if (isModificationDisabled) return;
+                          router.push(linkSaisie);
+                        }}
+                      >
+                        <Td textAlign={"center"}>
+                          <Tooltip label={`Le ${format(demande.updatedAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
+                            {format(demande.updatedAt, "d MMM HH:mm", {
+                              locale: fr,
+                            })}
                           </Tooltip>
-                          <Tooltip label="Suivre la demande">
-                            <IconButton
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                if (!demande.suiviId)
-                                  submitSuivi({
-                                    body: {
-                                      intentionNumero: demande.numero,
-                                    },
-                                  });
-                                else
-                                  deleteSuivi({
-                                    params: { id: demande.suiviId },
-                                  });
-                              }}
-                              aria-label="Suivre la demande"
-                              color={"bluefrance.113"}
-                              bgColor={"transparent"}
-                              icon={
-                                demande.suiviId ? (
-                                  <Icon width="24px" icon="ri:bookmark-fill" />
+                        </Td>
+                        <Td>
+                          <Text textOverflow={"ellipsis"} overflow={"hidden"} whiteSpace={"break-spaces"} noOfLines={2}>
+                            {demande.libelleFormation}
+                          </Text>
+                        </Td>
+                        <Td>
+                          <Text textOverflow={"ellipsis"} overflow={"hidden"} whiteSpace={"break-spaces"} noOfLines={2}>
+                            {demande.libelleEtablissement}
+                          </Text>
+                        </Td>
+                        <Td>
+                          <Tooltip
+                            label={formatDepartementLibelleWithCodeDepartement({
+                              libelleDepartement: demande.libelleDepartement,
+                              codeDepartement: demande.codeDepartement,
+                            })}
+                          >
+                            <Text
+                              textAlign={"center"}
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"break-spaces"}
+                              noOfLines={2}
+                            >
+                              {formatCodeDepartement(demande.codeDepartement)}
+                            </Text>
+                          </Tooltip>
+                        </Td>
+
+                        <Td textAlign={"center"} w={0}>
+                          <StatutTag statut={demande.statut} size="md" />
+                        </Td>
+                        <Td>
+                          <Flex direction={"row"} gap={0} justifyContent={"left"}>
+                            <Tooltip label="Voir la demande">
+                              <IconButton
+                                as={NextLink}
+                                href={linkSynthese}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  router.push(linkSynthese);
+                                }}
+                                aria-label="Voir la demande"
+                                color={"bluefrance.113"}
+                                bgColor={"transparent"}
+                                icon={<Icon icon="ri:eye-line" width={"24px"} color={bluefrance113} />}
+                              />
+                            </Tooltip>
+                            <Tooltip label="Suivre la demande">
+                              <IconButton
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  if (!demande.suiviId)
+                                    submitSuivi({
+                                      body: {
+                                        intentionNumero: demande.numero,
+                                      },
+                                    });
+                                  else
+                                    deleteSuivi({
+                                      params: { id: demande.suiviId },
+                                    });
+                                }}
+                                aria-label="Suivre la demande"
+                                color={"bluefrance.113"}
+                                bgColor={"transparent"}
+                                icon={
+                                  demande.suiviId ? (
+                                    <Icon width="24px" icon="ri:bookmark-fill" />
+                                  ) : (
+                                    <Icon width="24px" icon="ri:bookmark-line" />
+                                  )
+                                }
+                              />
+                            </Tooltip>
+                            {data?.campagne.statut === CampagneStatutEnum["terminée"] && (
+                              <>
+                                {demande.numeroDemandeImportee ? (
+                                  <Tooltip label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}>
+                                    <IconButton
+                                      as={NextLink}
+                                      href={linkSaisieImported}
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        router.push(linkSaisieImported);
+                                      }}
+                                      aria-label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
+                                      color={"bluefrance.113"}
+                                      bgColor={"transparent"}
+                                      me={"auto"}
+                                      icon={<Icon icon="ri:external-link-line" width={"24px"} color={bluefrance113} />}
+                                    />
+                                  </Tooltip>
                                 ) : (
-                                  <Icon width="24px" icon="ri:bookmark-line" />
-                                )
-                              }
+                                  <Tooltip label="Dupliquer la demande">
+                                    <IconButton
+                                      icon={<Icon icon="ri:file-copy-line" width={"24px"} color={bluefrance113} />}
+                                      aria-label="Dupliquer la demande"
+                                      color={"bluefrance.113"}
+                                      bgColor={"transparent"}
+                                      onClick={(e) => {
+                                        if(isImportDisabled) return;
+                                        setIsImporting(true);
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        importDemande({
+                                          params: { numero: demande.numero },
+                                        });
+                                      }}
+                                      isDisabled={isImportDisabled}
+                                    />
+                                  </Tooltip>
+                                )}
+                                {
+                                  !isCorrectionDisabled &&
+                                  (<CorrectionDemandeButton demande={demande} campagne={data?.campagne} />)
+                                }
+                              </>
+                            )}
+                          </Flex>
+                        </Td>
+                        <Td textAlign={"center"}>
+                          <Tag colorScheme="blue" size={"md"} h="fit-content">
+                            {getTypeDemandeLabel(demande.typeDemande)}
+                          </Tag>
+                        </Td>
+                        <Td w="15" textAlign={"center"}>
+                          <Tooltip label={demande.userName}>
+                            <Avatar
+                              name={demande.userName}
+                              colorScheme={getAvatarBgColor(demande.userName ?? "")}
+                              bg={getAvatarBgColor(demande.userName ?? "")}
+                              color={"white"}
+                              position={"unset"}
                             />
                           </Tooltip>
-                          {data?.campagne.statut === CampagneStatutEnum["terminée"] && (
-                            <>
-                              {demande.numeroDemandeImportee ? (
-                                <Tooltip label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}>
-                                  <IconButton
-                                    as={NextLink}
-                                    href={getRoutingSaisieRecueilDemande({
-                                      campagne: data?.campagne,
-                                      user: auth?.user,
-                                      suffix: demande.numeroDemandeImportee,
-                                    })}
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      router.push(
-                                        getRoutingSaisieRecueilDemande({
-                                          campagne: data?.campagne,
-                                          user: auth?.user,
-                                          suffix: demande.numeroDemandeImportee,
-                                        })
-                                      );
-                                    }}
-                                    aria-label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}
-                                    color={"bluefrance.113"}
-                                    bgColor={"transparent"}
-                                    me={"auto"}
-                                    icon={<Icon icon="ri:external-link-line" width={"24px"} color={bluefrance113} />}
-                                  />
-                                </Tooltip>
-                              ) : (
-                                <Tooltip label="Dupliquer la demande">
-                                  <IconButton
-                                    icon={<Icon icon="ri:file-copy-line" width={"24px"} color={bluefrance113} />}
-                                    aria-label="Dupliquer la demande"
-                                    color={"bluefrance.113"}
-                                    bgColor={"transparent"}
-                                    onClick={(e) => {
-                                      if(!canImportDemande({
-                                        isAlreadyImported: demande.numeroDemandeImportee !== undefined,
-                                        isLoading: (isLoading || isSubmitting),
-                                        user: auth?.user,
-                                        campagne: data?.campagne,
-                                      })) return;
-                                      setIsImporting(true);
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      importDemande({
-                                        params: { numero: demande.numero },
-                                      });
-                                    }}
-                                    isDisabled={
-                                      canImportDemande({
-                                        isAlreadyImported: demande.numeroDemandeImportee !== undefined,
-                                        isLoading: (isSubmitting || isImporting),
-                                        user: auth?.user,
-                                        campagne: data?.campagne,
-                                      })
-                                    }
-                                  />
-                                </Tooltip>
-                              )}
-                              <CorrectionDemandeButton demande={demande} campagne={data?.campagne} />
-                            </>
-                          )}
-                        </Flex>
-                      </Td>
-                      <Td textAlign={"center"}>
-                        <Tag colorScheme="blue" size={"md"} h="fit-content">
-                          {getTypeDemandeLabel(demande.typeDemande)}
-                        </Tag>
-                      </Td>
-                      <Td w="15" textAlign={"center"}>
-                        <Tooltip label={demande.userName}>
-                          <Avatar
-                            name={demande.userName}
-                            colorScheme={getAvatarBgColor(demande.userName ?? "")}
-                            bg={getAvatarBgColor(demande.userName ?? "")}
-                            color={"white"}
-                            position={"unset"}
-                          />
-                        </Tooltip>
-                      </Td>
-                    </Tr>
-                  ))}
+                        </Td>
+                      </Tr>
+                    );})}
                 </Tbody>
               </Table>
             </TableContainer>
@@ -495,7 +499,7 @@ export const PageClient = () => {
           <Center mt={12}>
             <Flex flexDirection={"column"}>
               <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-              {hasPermissionEditIntention && (
+              {!isNouvelleDemandeDisabled && (
                 <Button
                   isDisabled={isNouvelleDemandeDisabled}
                   variant="createButton"

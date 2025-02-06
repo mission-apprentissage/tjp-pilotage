@@ -11,7 +11,7 @@ import { InfoSection } from "@/app/(wrapped)/panorama/components/InfoSection";
 import { QuadrantSection } from "@/app/(wrapped)/panorama/components/QuadrantSection/QuadrantSection";
 import { TopFlopSection } from "@/app/(wrapped)/panorama/components/TopFlopSection/TopFlopSection";
 import type { FiltersPanoramaFormation, OrderPanoramaFormation } from "@/app/(wrapped)/panorama/types";
-import { CodeDepartementContext } from "@/app/context/codeDepartementContext";
+import { CodeDepartementContext } from "@/app/codeDepartementContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 
 export default function Panorama({

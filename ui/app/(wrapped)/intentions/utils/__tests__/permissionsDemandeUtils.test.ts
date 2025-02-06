@@ -10,7 +10,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import {beforeEach,describe, expect, it} from 'vitest';
 
-import { canCreateDemande, canDeleteDemande, canEditDemande, canImportDemande, canShowCorrectionButtonDemande } from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
+import { canCorrectDemande,canCreateDemande, canDeleteDemande, canEditDemande, canImportDemande } from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
 
 type Demande = { campagne: CampagneType, statut: DemandeStatutType, typeDemande: DemandeTypeType, canEdit: boolean }
 
@@ -165,7 +165,7 @@ const fixtureBuilder = () => {
         canCreate = canCreateDemande({campagne, user});
       },
       canShowCorrectionButton: () => {
-        canShowCorrectionButton = canShowCorrectionButtonDemande({demande, user});
+        canShowCorrectionButton = canCorrectDemande({demande, user});
       }
     },
     then: {
