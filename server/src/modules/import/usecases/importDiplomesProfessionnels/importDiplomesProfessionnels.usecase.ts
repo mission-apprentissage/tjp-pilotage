@@ -66,8 +66,7 @@ export const [importDiplomesProfessionnels] = inject(
     errorCount = 0;
     await streamIt(
       async (count) => deps.findOffresApprentissages({ offset: count, limit: 60 }),
-      async (offreApprentissage, count) => {
-        const cfd = formatCFDOffreApprentissage(offreApprentissage);
+      async (cfd, count) => {
         if (!cfd) return;
         try {
           await deps.createDiplomeProfessionnel({
