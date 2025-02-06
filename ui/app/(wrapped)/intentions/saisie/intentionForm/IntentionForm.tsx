@@ -33,6 +33,8 @@ import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/intentions/saisie/
 import type { Demande, DemandeMetadata } from "@/app/(wrapped)/intentions/saisie/types";
 import { canCreateDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import type { DetailedApiError } from "@/utils/apiError";
+import { getDetailedErrorMessage } from "@/utils/apiError";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
@@ -101,13 +103,9 @@ export const IntentionForm = ({
         });
       }
     },
-    onError: (e: unknown) => {
-      if (isAxiosError<{ errors: Record<string, string> }>(e)) {
-        const errors = e.response?.data?.errors ?? {
-          erreur: "Une erreur est survenue lors de la sauvegarde.",
-        };
-
-        setErrors(errors);
+    onError: (e) => {
+      if(isAxiosError<DetailedApiError>(e)) {
+        setErrors(() => ({ ...getDetailedErrorMessage(e) }));
       }
     },
   });
