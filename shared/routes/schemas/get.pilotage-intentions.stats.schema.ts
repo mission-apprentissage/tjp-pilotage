@@ -54,7 +54,7 @@ const QuerySchema = z.object({
   campagne: z.string().optional(),
   secteur: z.array(SecteurZodType).optional(),
   statut: z.array(DemandeStatutZodType.exclude(["refusée", "supprimée"])).optional(),
-  withColoration: z.string().optional(),
+  coloration: z.string().optional(),
   formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
 });
 
@@ -90,6 +90,7 @@ export const getStatsPilotageIntentionsSchema = {
         niveauxDiplome: z.array(OptionSchema),
         secteurs: z.array(OptionSchema),
         statuts: z.array(OptionSchema),
+        colorations: z.array(OptionSchema),
       }),
     }),
   },

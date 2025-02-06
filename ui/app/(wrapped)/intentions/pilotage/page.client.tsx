@@ -1,8 +1,11 @@
 "use client";
 
 import { Box, Container, useDisclosure, VStack } from "@chakra-ui/react";
+import _ from 'lodash';
 import { usePlausible } from "next-plausible";
 import { ScopeEnum } from "shared";
+import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
+import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
 
 import { client } from "@/api.client";
 import { DefinitionTauxTransfoModal } from "@/app/(wrapped)/components/DefinitionTauxTransfoModal";
@@ -31,7 +34,7 @@ export const PilotageNationalClient = () => {
       filters: {
         scope: ScopeEnum["région"],
         campagne: undefined,
-        withColoration: "true",
+        coloration: undefined
       },
       displayTypes: [DisplayTypeEnum.repartition, DisplayTypeEnum.zone_geographique],
     },
@@ -40,7 +43,7 @@ export const PilotageNationalClient = () => {
   const filters = searchParams.filters ?? {
     scope: ScopeEnum["région"],
     campagne: undefined,
-    withColoration: "true",
+    coloration: undefined
   };
   const order = searchParams.order ?? { order: "asc" };
 
@@ -103,10 +106,17 @@ export const PilotageNationalClient = () => {
   const setDefaultFilters = (data: StatsPilotageIntentions | undefined) => {
     if (!data) return;
     const rentreeScolaire = findDefaultRentreeScolaireForCampagne(data.campagne.annee, data.filters.rentreesScolaires);
+    const statut = _.values(DemandeStatutEnum).filter(
+      (statut) =>
+        statut !== DemandeStatutEnum["supprimée"] &&
+        statut !== DemandeStatutEnum["brouillon"] &&
+        statut !== DemandeStatutEnum["refusée"]
+    ) as Exclude<DemandeStatutType, "supprimée" | "brouillon" | "refusée">[];
 
     setFilters({
       campagne: data.campagne.annee,
       rentreeScolaire: rentreeScolaire ? [rentreeScolaire] : undefined,
+      statut,
       codeRegion: undefined,
       codeAcademie: undefined,
       codeDepartement: undefined,
@@ -115,7 +125,7 @@ export const PilotageNationalClient = () => {
       CPC: undefined,
       scope: ScopeEnum["région"],
       secteur: undefined,
-      statut: undefined,
+      coloration: undefined,
     });
   };
 

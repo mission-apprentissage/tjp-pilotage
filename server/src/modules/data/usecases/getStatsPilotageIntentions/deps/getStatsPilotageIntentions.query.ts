@@ -216,7 +216,7 @@ export const getStatsPilotageIntentionsQuery = async ({
   scope,
   campagne,
   secteur,
-  withColoration,
+  coloration,
   formationSpecifique,
 }: Filters) => {
   switch (scope) {
@@ -230,7 +230,7 @@ export const getStatsPilotageIntentionsQuery = async ({
       campagne,
       scope,
       secteur,
-      withColoration,
+      coloration,
       formationSpecifique,
     });
 
@@ -244,7 +244,7 @@ export const getStatsPilotageIntentionsQuery = async ({
       campagne,
       scope,
       secteur,
-      withColoration,
+      coloration,
       formationSpecifique,
     });
   case ScopeEnum["région"]:
@@ -257,7 +257,7 @@ export const getStatsPilotageIntentionsQuery = async ({
       campagne,
       scope,
       secteur,
-      withColoration,
+      coloration,
       formationSpecifique,
     });
   case ScopeEnum.national:
@@ -271,7 +271,7 @@ export const getStatsPilotageIntentionsQuery = async ({
       campagne,
       scope,
       secteur,
-      withColoration,
+      coloration,
       formationSpecifique,
     });
   }

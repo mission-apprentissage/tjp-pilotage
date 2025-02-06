@@ -1,8 +1,6 @@
 import { expressionBuilder, sql } from "kysely";
 import { VoieEnum } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
@@ -47,7 +45,7 @@ export const genericOnDemandes = ({
   codeRegion,
   codeAcademie,
   codeDepartement,
-  withColoration,
+  coloration,
   formationSpecifique,
   withAjustementRentree = true,
 }: {
@@ -61,7 +59,7 @@ export const genericOnDemandes = ({
   codeRegion?: string;
   codeAcademie?: string;
   codeDepartement?: string;
-  withColoration?: string;
+  coloration?: string;
   formationSpecifique?: Array<TypeFormationSpecifiqueType>;
   withAjustementRentree?: boolean;
 }) =>
@@ -123,7 +121,6 @@ export const genericOnDemandes = ({
     ])
     .where(isInPerimetreIJDataEtablissement)
     .$if(withAjustementRentree, (eb) => eb.where(isDemandeNotAjustementRentree))
-    .where("demande.statut", "in", [DemandeStatutEnum["projet de demande"], DemandeStatutEnum["demande validée"]])
     .$call((eb) => {
       if (campagne) return eb.where("campagne.annee", "=", campagne);
       return eb;
@@ -171,13 +168,10 @@ export const genericOnDemandes = ({
       }
       return q.where("demande.statut", "in", statut);
     })
-    .$call((q) => {
-      if (withColoration === undefined) return q;
-      if (withColoration === "false")
-        return q.where((w) =>
-          w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
-        );
-      return q;
+    .$call((eb) => {
+      if (coloration)
+        return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
+      return eb;
     })
     .$call((q) => {
       if (formationSpecifique?.length) {

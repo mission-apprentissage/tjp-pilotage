@@ -47,7 +47,7 @@ export const getFormationsPilotageIntentionsSchema = {
     type: z.enum(["ouverture", "fermeture", "coloration"]).optional(),
     tauxPression: z.enum(["faible", "eleve"]).optional(),
     campagne: z.string().optional(),
-    withColoration: z.string().optional(),
+    coloration: z.string().optional(),
     formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationTransformationStatsSchema.keyof().optional(),

@@ -269,7 +269,7 @@ export default () => {
           statut !== DemandeStatutEnum["supprimée"] &&
           statut !== DemandeStatutEnum["brouillon"] &&
           statut !== DemandeStatutEnum["refusée"]
-      ) as Exclude<DemandeStatutType, "supprimée">[];
+      ) as Exclude<DemandeStatutType, "supprimée" | "brouillon" | "refusée">[];
     }
     setSearchParams({ filters: filters });
   };
