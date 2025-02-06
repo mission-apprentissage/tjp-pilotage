@@ -9,8 +9,8 @@ import { useContext, useEffect, useState } from "react";
 import { PREVIOUS_ANNEE_CAMPAGNE } from "shared/time/PREVIOUS_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
-import { CodeDepartementContext } from '@/app/context/codeDepartementContext';
-import { CodeRegionContext } from '@/app/context/codeRegionContext';
+import { CodeDepartementContext } from '@/app/codeDepartementContext';
+import { CodeRegionContext } from '@/app/codeRegionContext';
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { Loading } from "@/components/Loading";
 import { SearchInput } from "@/components/SearchInput";

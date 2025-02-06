@@ -67,7 +67,7 @@ export const canImportDemande = ({
   hasPermission(user?.role, "intentions/ecriture")
 );
 
-export const canShowCorrectionButtonDemande = ({
+export const canCorrectDemande = ({
   demande,
   user,
 } : {

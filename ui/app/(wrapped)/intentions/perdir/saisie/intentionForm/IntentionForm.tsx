@@ -33,7 +33,6 @@ import { Conseils } from "@/app/(wrapped)/intentions/perdir/saisie/components/Co
 import { MenuFormulaire } from "@/app/(wrapped)/intentions/perdir/saisie/components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/intentions/perdir/SCROLL_OFFSETS";
 import type { IntentionMetadata } from "@/app/(wrapped)/intentions/perdir/types";
-import { canCreateIntention } from "@/app/(wrapped)/intentions/utils/permissionsIntentionUtils";
 import { getStepWorkflow } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
@@ -45,7 +44,7 @@ import { InformationsBlock } from "./InformationsBlock";
 import { useIntentionFilesContext } from "./observationsSection/filesSection/filesContext";
 
 export const IntentionForm = ({
-  disabled = true,
+  disabled,
   formId,
   defaultValues,
   formMetadata,
@@ -264,7 +263,7 @@ export const IntentionForm = ({
             formMetadata={formMetadata}
             onEditUaiCfdSection={onEditUaiCfdSection}
             active={step === 1}
-            disabled={canCreateIntention({ user: auth?.user, campagne })}
+            disabled={disabled}
             isFCIL={isFCIL}
             setIsFCIL={setIsFCIL}
             isCFDUaiSectionValid={isCFDUaiSectionValid}

@@ -20,7 +20,7 @@ import { useContext } from "react";
 import { hasPermission, hasRole } from "shared";
 
 import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
-import { UaisContext } from "@/app/context/uaiContext";
+import { UaisContext } from "@/app/uaiContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";

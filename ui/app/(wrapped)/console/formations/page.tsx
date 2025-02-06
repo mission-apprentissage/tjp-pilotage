@@ -12,8 +12,8 @@ import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
-import { CodeDepartementContext } from '@/app/context/codeDepartementContext';
-import { CodeRegionContext } from '@/app/context/codeRegionContext';
+import { CodeDepartementContext } from '@/app/codeDepartementContext';
+import { CodeRegionContext } from '@/app/codeRegionContext';
 import { ConsoleSearchInput } from "@/components/ConsoleSearchInput";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";

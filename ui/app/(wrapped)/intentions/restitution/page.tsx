@@ -13,8 +13,8 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
-import { CodeDepartementContext } from "@/app/context/codeDepartementContext";
-import { CodeRegionContext } from "@/app/context/codeRegionContext";
+import { CodeDepartementContext } from "@/app/codeDepartementContext";
+import { CodeRegionContext } from "@/app/codeRegionContext";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { SearchInput } from "@/components/SearchInput";
 import { TableHeader } from "@/components/TableHeader";

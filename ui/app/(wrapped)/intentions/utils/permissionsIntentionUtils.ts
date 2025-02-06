@@ -77,7 +77,7 @@ export const canImportIntention = ({
   hasPermission(user?.role, "intentions-perdir/ecriture")
 );
 
-export const canShowCorrectionButtonIntention = ({
+export const canCorrectIntention = ({
   intention,
   user,
 } : {

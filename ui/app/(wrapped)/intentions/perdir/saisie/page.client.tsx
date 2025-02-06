@@ -36,7 +36,7 @@ import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
-import {canDeleteIntention, canEditIntention, canImportIntention, canShowCorrectionButtonIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import {canCorrectIntention,canCreateIntention, canDeleteIntention, canEditIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -45,7 +45,6 @@ import { formatCodeDepartement, formatDepartementLibelleWithCodeDepartement } fr
 import { getRoutingSaisieRecueilDemande, getRoutingSyntheseRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
-import { usePermission } from "@/utils/security/usePermission";
 import { useStateParams } from "@/utils/useFilters";
 
 import { AvisTags } from "./components/AvisTags";
@@ -62,7 +61,7 @@ const PAGE_SIZE = 30;
 
 export const PageClient = () => {
   const { auth } = useAuth();
-  const { campagne: currentCampagne } = useCurrentCampagne();
+  const { campagne } = useCurrentCampagne();
   const queryClient = useQueryClient();
   const toast = useToast();
   const router = useRouter();
@@ -80,8 +79,6 @@ export const PageClient = () => {
       page: "0",
     },
   });
-
-  const hasEditIntentionPermission = usePermission("intentions-perdir/ecriture");
 
   const filters = searchParams.filters ?? {};
   const search = searchParams.filters?.search ?? "";
@@ -144,11 +141,7 @@ export const PageClient = () => {
     { cacheTime: 0, keepPreviousData: true }
   );
 
-  const isCurrentCampagne = data?.campagne.id === currentCampagne?.id;
-  const isNouvelleDemandeDisabled = !isCurrentCampagne || !hasEditIntentionPermission;
-
-  const isCampagneEnCours = data?.campagne.statut === CampagneStatutEnum["en cours"];
-  const isModificationsDisabled = !isCampagneEnCours || !hasEditIntentionPermission;
+  const isNouvelleDemandeDisabled = !canCreateIntention({ user: auth?.user, campagne: campagne! });
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 
@@ -307,191 +300,196 @@ export const PageClient = () => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {data?.intentions.map((intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0]) => (
-                        <Tr
-                          height={"60px"}
-                          key={intention.numero}
-                          whiteSpace={"pre"}
-                          fontWeight={intention.alreadyAccessed ? "400" : "700"}
-                          bg={intention.alreadyAccessed ? "grey.975" : "white"}
-                        >
-                          <Td textAlign={"center"}>
-                            <Tooltip label={`Le ${format(intention.updatedAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
-                              {format(intention.updatedAt, "d MMM HH:mm", {
-                                locale: fr,
-                              })}
-                            </Tooltip>
-                          </Td>
-                          <Td>
-                            <Tooltip label={intention.libelleFormation}>
-                              <Text
-                                textOverflow={"ellipsis"}
-                                overflow={"hidden"}
-                                whiteSpace={"break-spaces"}
-                                noOfLines={2}
-                              >
-                                {intention.libelleFormation}
-                              </Text>
-                            </Tooltip>
-                          </Td>
-                          <Td>
-                            <Tooltip label={intention.libelleEtablissement}>
-                              <Text
-                                textOverflow={"ellipsis"}
-                                overflow={"hidden"}
-                                whiteSpace={"break-spaces"}
-                                noOfLines={2}
-                              >
-                                {intention.libelleEtablissement}
-                              </Text>
-                            </Tooltip>
-                          </Td>
-                          <Td>
-                            <Text
-                              textAlign={"center"}
-                              textOverflow={"ellipsis"}
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              noOfLines={2}
-                            >
-                              <Tooltip
-                                label={formatDepartementLibelleWithCodeDepartement({
-                                  libelleDepartement: intention.libelleDepartement,
-                                  codeDepartement: intention.codeDepartement,
+                      {data?.intentions.map((intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0]) => {
+
+
+                        const linkSynthese = getRoutingSyntheseRecueilDemande({
+                          user: auth?.user,
+                          campagne: data?.campagne,
+                          suffix: intention.numero
+                        });
+
+                        const linkSaisie = getRoutingSaisieRecueilDemande({
+                          user: auth?.user,
+                          campagne: data?.campagne,
+                          suffix: intention.numero
+                        });
+
+                        const linkSaisieImported = getRoutingSaisieRecueilDemande({
+                          user: auth?.user,
+                          campagne: data?.campagne,
+                          suffix: intention.numeroDemandeImportee
+                        });
+
+                        const isModificationDisabled = !canEditIntention({
+                          intention : {
+                            ...intention,
+                            campagne: data?.campagne,
+                          },
+                          user: auth?.user,
+                        });
+
+                        const isDeleteDisabled = !canDeleteIntention({
+                          intention : {
+                            ...intention,
+                            campagne: data?.campagne,
+                          },
+                          user: auth?.user
+                        });
+
+                        const isImportDisabled = !canImportIntention({
+                          isAlreadyImported: !!intention.numeroDemandeImportee,
+                          isLoading: (isLoading || isSubmitting || isImporting),
+                          user: auth?.user,
+                          campagne: data?.campagne,
+                        });
+
+                        const isCorrectionDisabled = !canCorrectIntention({
+                          intention : {
+                            ...intention,
+                            campagne: data?.campagne
+                          }
+                        });
+
+                        return (
+                          <Tr
+                            height={"60px"}
+                            key={intention.numero}
+                            whiteSpace={"pre"}
+                            fontWeight={intention.alreadyAccessed ? "400" : "700"}
+                            bg={intention.alreadyAccessed ? "grey.975" : "white"}
+                          >
+                            <Td textAlign={"center"}>
+                              <Tooltip label={`Le ${format(intention.updatedAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
+                                {format(intention.updatedAt, "d MMM HH:mm", {
+                                  locale: fr,
                                 })}
+                              </Tooltip>
+                            </Td>
+                            <Td>
+                              <Tooltip label={intention.libelleFormation}>
+                                <Text
+                                  textOverflow={"ellipsis"}
+                                  overflow={"hidden"}
+                                  whiteSpace={"break-spaces"}
+                                  noOfLines={2}
+                                >
+                                  {intention.libelleFormation}
+                                </Text>
+                              </Tooltip>
+                            </Td>
+                            <Td>
+                              <Tooltip label={intention.libelleEtablissement}>
+                                <Text
+                                  textOverflow={"ellipsis"}
+                                  overflow={"hidden"}
+                                  whiteSpace={"break-spaces"}
+                                  noOfLines={2}
+                                >
+                                  {intention.libelleEtablissement}
+                                </Text>
+                              </Tooltip>
+                            </Td>
+                            <Td>
+                              <Text
+                                textAlign={"center"}
+                                textOverflow={"ellipsis"}
+                                overflow={"hidden"}
+                                whiteSpace={"break-spaces"}
+                                noOfLines={2}
                               >
-                                {formatCodeDepartement(intention.codeDepartement)}
-                              </Tooltip>
-                            </Text>
-                          </Td>
-                          <Td textAlign={"center"} w={0}>
-                            <StatutTag statut={intention.statut} size="md" />
-                          </Td>
-                          <Td textAlign={"center"}>
-                            <Flex direction={"row"} gap={0} justifyContent={"left"}>
-                              <Tooltip label="Voir la demande">
-                                <IconButton
-                                  as={NextLink}
-                                  href={
-                                    getRoutingSyntheseRecueilDemande({
-                                      user: auth?.user,
+                                <Tooltip
+                                  label={formatDepartementLibelleWithCodeDepartement({
+                                    libelleDepartement: intention.libelleDepartement,
+                                    codeDepartement: intention.codeDepartement,
+                                  })}
+                                >
+                                  {formatCodeDepartement(intention.codeDepartement)}
+                                </Tooltip>
+                              </Text>
+                            </Td>
+                            <Td textAlign={"center"} w={0}>
+                              <StatutTag statut={intention.statut} size="md" />
+                            </Td>
+                            <Td textAlign={"center"}>
+                              <Flex direction={"row"} gap={0} justifyContent={"left"}>
+                                <Tooltip label="Voir la demande">
+                                  <IconButton
+                                    as={NextLink}
+                                    href={linkSynthese}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      router.push(linkSynthese);
+                                    }}
+                                    aria-label="Voir la demande"
+                                    color={"bluefrance.113"}
+                                    bgColor={"transparent"}
+                                    icon={<Icon icon="ri:eye-line" width={"24px"} color={bluefrance113} />}
+                                  />
+                                </Tooltip>
+                                {
+                                  canEditIntention({
+                                    intention : {
+                                      ...intention,
                                       campagne: data?.campagne,
-                                      suffix: intention.numero
-                                    })
-                                  }
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    router.push(
-                                      getRoutingSyntheseRecueilDemande({
-                                        user: auth?.user,
-                                        campagne: data?.campagne,
-                                        suffix: intention.numero
-                                      })
-                                    );
-                                  }}
-                                  aria-label="Voir la demande"
-                                  color={"bluefrance.113"}
-                                  bgColor={"transparent"}
-                                  icon={<Icon icon="ri:eye-line" width={"24px"} color={bluefrance113} />}
-                                />
-                              </Tooltip>
-                              {
-                                canEditIntention({
-                                  intention : {
-                                    ...intention,
-                                    campagne: data?.campagne,
-                                  },
-                                  user: auth?.user,
-                                }) && (
-                                  <Tooltip label="Modifier la demande">
-                                    <IconButton
-                                      disabled={isModificationsDisabled}
-                                      as={NextLink}
-                                      href={
-                                        getRoutingSaisieRecueilDemande({
-                                          user: auth?.user,
-                                          campagne: data?.campagne,
-                                          suffix: intention.numero,
-                                        })
-                                      }
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        router.push(
-                                          getRoutingSaisieRecueilDemande({
-                                            user: auth?.user,
-                                            campagne: data?.campagne,
-                                            suffix: intention.numero
-                                          })
-                                        );
-                                      }}
-                                      aria-label="Modifier la demande"
-                                      color={"bluefrance.113"}
-                                      bgColor={"transparent"}
-                                      icon={<Icon icon="ri:pencil-line" width={"24px"} color={bluefrance113} />}
-                                    />
-                                  </Tooltip>
-                                )}
-                              {
-                                canDeleteIntention({
-                                  intention : {
-                                    ...intention,
-                                    campagne: data?.campagne,
-                                  },
-                                  user: auth?.user
-                                }) && (
-                                  <DeleteIntentionButton intention={intention} />
-                                )
-                              }
-                              <Tooltip label="Suivre la demande">
-                                <IconButton
-                                  onClick={() => {
-                                    if (!intention.suiviId)
-                                      submitSuivi({
-                                        body: {
-                                          intentionNumero: intention.numero,
-                                        },
-                                      });
-                                    else
-                                      deleteSuivi({
-                                        params: { id: intention.suiviId },
-                                      });
-                                  }}
-                                  aria-label="Suivre la demande"
-                                  color={"bluefrance.113"}
-                                  bgColor={"transparent"}
-                                  icon={
-                                    intention.suiviId ? (
-                                      <Icon width="24px" icon="ri:bookmark-fill" />
-                                    ) : (
-                                      <Icon width="24px" icon="ri:bookmark-line" />
-                                    )
-                                  }
-                                />
-                              </Tooltip>
-                              {data?.campagne.statut === CampagneStatutEnum["terminée"] &&
+                                    },
+                                    user: auth?.user,
+                                  }) && (
+                                    <Tooltip label="Modifier la demande">
+                                      <IconButton
+                                        disabled={isModificationDisabled}
+                                        as={NextLink}
+                                        href={linkSaisie}
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          router.push(linkSaisie);
+                                        }}
+                                        aria-label="Modifier la demande"
+                                        color={"bluefrance.113"}
+                                        bgColor={"transparent"}
+                                        icon={<Icon icon="ri:pencil-line" width={"24px"} color={bluefrance113} />}
+                                      />
+                                    </Tooltip>
+                                  )}
+                                { !isDeleteDisabled && (<DeleteIntentionButton intention={intention} />) }
+                                <Tooltip label="Suivre la demande">
+                                  <IconButton
+                                    onClick={() => {
+                                      if (!intention.suiviId)
+                                        submitSuivi({
+                                          body: {
+                                            intentionNumero: intention.numero,
+                                          },
+                                        });
+                                      else
+                                        deleteSuivi({
+                                          params: { id: intention.suiviId },
+                                        });
+                                    }}
+                                    aria-label="Suivre la demande"
+                                    color={"bluefrance.113"}
+                                    bgColor={"transparent"}
+                                    icon={
+                                      intention.suiviId ? (
+                                        <Icon width="24px" icon="ri:bookmark-fill" />
+                                      ) : (
+                                        <Icon width="24px" icon="ri:bookmark-line" />
+                                      )
+                                    }
+                                  />
+                                </Tooltip>
+                                {data?.campagne.statut === CampagneStatutEnum["terminée"] &&
                                 (intention.numeroDemandeImportee ? (
                                   <Tooltip label={`Voir l'intention dupliquée ${intention.numeroDemandeImportee}`}>
                                     <IconButton
                                       as={NextLink}
-                                      href={
-                                        getRoutingSaisieRecueilDemande({
-                                          user: auth?.user,
-                                          campagne: data?.campagne,
-                                          suffix: intention.numeroDemandeImportee,
-                                        })
-                                      }
+                                      href={linkSaisieImported}
                                       onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
-                                        router.push(
-                                          getRoutingSaisieRecueilDemande({
-                                            user: auth?.user,
-                                            campagne: data?.campagne,
-                                            suffix: intention.numeroDemandeImportee,
-                                          })
-                                        );
+                                        router.push(linkSaisieImported);
                                       }}
                                       aria-label={`Voir l'intention dupliquée ${intention.numeroDemandeImportee}`}
                                       color={"bluefrance.113"}
@@ -503,14 +501,7 @@ export const PageClient = () => {
                                   <Tooltip label={"Dupliquer la demande"}>
                                     <IconButton
                                       onClick={(e) => {
-                                        if(
-                                          !canImportIntention({
-                                            isAlreadyImported: !!intention.numeroDemandeImportee,
-                                            isLoading: (isSubmitting || isImporting),
-                                            user: auth?.user,
-                                            campagne: data?.campagne,
-                                          })
-                                        ) return;
+                                        if(isImportDisabled) return;
                                         setIsImporting(true);
                                         e.preventDefault();
                                         e.stopPropagation();
@@ -520,14 +511,7 @@ export const PageClient = () => {
                                           },
                                         });
                                       }}
-                                      isDisabled={
-                                        !canImportIntention({
-                                          isAlreadyImported: !!intention.numeroDemandeImportee,
-                                          isLoading: (isSubmitting || isImporting),
-                                          user: auth?.user,
-                                          campagne: data?.campagne,
-                                        })
-                                      }
+                                      isDisabled={isImportDisabled}
                                       aria-label="Dupliquer la demande"
                                       color={"bluefrance.113"}
                                       bgColor={"transparent"}
@@ -535,76 +519,72 @@ export const PageClient = () => {
                                     />
                                   </Tooltip>
                                 ))}
-                              {
-                                canShowCorrectionButtonIntention({
-                                  intention : {
-                                    ...intention,
-                                    campagne: data?.campagne
-                                  }
-                                }) && (<CorrectionDemandeButton intention={intention} campagne={data?.campagne} />)}
-                            </Flex>
-                          </Td>
-                          <Td textAlign={"center"}>
-                            <Tag colorScheme="blue" size={"md"} h="fit-content">
-                              {getTypeDemandeLabel(intention.typeDemande)}
-                            </Tag>
-                          </Td>
-
-                          <Td textAlign={"center"}>
-                            <Tooltip label={`Le ${format(intention.createdAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
-                              {format(intention.createdAt, "d MMM HH:mm", {
-                                locale: fr,
-                              })}
-                            </Tooltip>
-                          </Td>
-                          <Td>
-                            <Text
-                              textOverflow={"ellipsis"}
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              textAlign={"center"}
-                            >
-                              {intention.numero}
-                            </Text>
-                          </Td>
-                          <Td w="15" textAlign={"center"}>
-                            <Tooltip label={intention.userName}>
-                              <Avatar
-                                name={intention.userName}
-                                colorScheme={getAvatarBgColor(intention.userName ?? "")}
-                                bg={getAvatarBgColor(intention.userName ?? "")}
-                                color={"white"}
-                                position={"unset"}
-                              />
-                            </Tooltip>
-                          </Td>
-                          <Td>
-                            <Text textOverflow={"ellipsis"} overflow={"hidden"} whiteSpace={"break-spaces"}>
-                              {intention.inspecteurReferent}
-                            </Text>
-                          </Td>
-                          <Td>
-                            <ProgressSteps statut={intention.statut} />
-                          </Td>
-                          <Td>
-                            <HStack w={"100%"} justify={"center"}>
-                              <Tag size="md" color={"white"} bgColor={"bluefrance.525"} fontWeight={"bold"}>
-                                {
-                                  intention.avis.filter(
-                                    (avis) =>
-                                      getStepWorkflowAvis(avis.type as AvisTypeType) ===
-                                      getStepWorkflow(intention.statut)
-                                  ).length
+                                { !isCorrectionDisabled &&
+                                 (<CorrectionDemandeButton intention={intention} campagne={data?.campagne} />)
                                 }
+                              </Flex>
+                            </Td>
+                            <Td textAlign={"center"}>
+                              <Tag colorScheme="blue" size={"md"} h="fit-content">
+                                {getTypeDemandeLabel(intention.typeDemande)}
                               </Tag>
-                              <Text>({intention.avis.length} au total)</Text>
-                            </HStack>
-                          </Td>
-                          <Td>
-                            <AvisTags listeAvis={intention.avis} statut={intention.statut} />
-                          </Td>
-                        </Tr>
-                      ))}
+                            </Td>
+
+                            <Td textAlign={"center"}>
+                              <Tooltip label={`Le ${format(intention.createdAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
+                                {format(intention.createdAt, "d MMM HH:mm", {
+                                  locale: fr,
+                                })}
+                              </Tooltip>
+                            </Td>
+                            <Td>
+                              <Text
+                                textOverflow={"ellipsis"}
+                                overflow={"hidden"}
+                                whiteSpace={"break-spaces"}
+                                textAlign={"center"}
+                              >
+                                {intention.numero}
+                              </Text>
+                            </Td>
+                            <Td w="15" textAlign={"center"}>
+                              <Tooltip label={intention.userName}>
+                                <Avatar
+                                  name={intention.userName}
+                                  colorScheme={getAvatarBgColor(intention.userName ?? "")}
+                                  bg={getAvatarBgColor(intention.userName ?? "")}
+                                  color={"white"}
+                                  position={"unset"}
+                                />
+                              </Tooltip>
+                            </Td>
+                            <Td>
+                              <Text textOverflow={"ellipsis"} overflow={"hidden"} whiteSpace={"break-spaces"}>
+                                {intention.inspecteurReferent}
+                              </Text>
+                            </Td>
+                            <Td>
+                              <ProgressSteps statut={intention.statut} />
+                            </Td>
+                            <Td>
+                              <HStack w={"100%"} justify={"center"}>
+                                <Tag size="md" color={"white"} bgColor={"bluefrance.525"} fontWeight={"bold"}>
+                                  {
+                                    intention.avis.filter(
+                                      (avis) =>
+                                        getStepWorkflowAvis(avis.type as AvisTypeType) ===
+                                      getStepWorkflow(intention.statut)
+                                    ).length
+                                  }
+                                </Tag>
+                                <Text>({intention.avis.length} au total)</Text>
+                              </HStack>
+                            </Td>
+                            <Td>
+                              <AvisTags listeAvis={intention.avis} statut={intention.statut} />
+                            </Td>
+                          </Tr>
+                        );})}
                     </Tbody>
                   </Table>
                 </TableContainer>
@@ -619,7 +599,7 @@ export const PageClient = () => {
               <Center mt={12}>
                 <Flex flexDirection={"column"}>
                   <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-                  {hasEditIntentionPermission && (
+                  {!isNouvelleDemandeDisabled && (
                     <Button
                       isDisabled={isNouvelleDemandeDisabled}
                       variant="createButton"

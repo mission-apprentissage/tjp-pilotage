@@ -7,9 +7,9 @@ import NextLink from "next/link";
 import { useContext } from "react";
 
 import { client } from "@/api.client";
-import { CodeDepartementContext } from "@/app/context/codeDepartementContext";
-import { CodeRegionContext } from "@/app/context/codeRegionContext";
-import { UaisContext } from "@/app/context/uaiContext";
+import { CodeDepartementContext } from "@/app/codeDepartementContext";
+import { CodeRegionContext } from "@/app/codeRegionContext";
+import { UaisContext } from "@/app/uaiContext";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { InformationHeader } from "./InformationHeader";

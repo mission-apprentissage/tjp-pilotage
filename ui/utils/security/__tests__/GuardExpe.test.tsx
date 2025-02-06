@@ -10,9 +10,9 @@ import { ROUTES } from "shared/routes/routes";
 import type { CampagneType } from "shared/schema/campagneSchema";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { Auth } from "@/app/context/authContext";
-import { AuthContext } from "@/app/context/authContext";
-import { CurrentCampagneContext } from "@/app/context/currentCampagneContext";
+import type { Auth } from "@/app/authContext";
+import { AuthContext } from "@/app/authContext";
+import { CurrentCampagneContext } from "@/app/currentCampagneContext";
 import { GuardExpe } from "@/utils/security/GuardExpe";
 
 const getUserContext = (role: Role, codeRegion?: string) => {

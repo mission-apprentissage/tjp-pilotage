@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { IntentionForm } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/IntentionForm";
 import { IntentionFilesProvider } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/observationsSection/filesSection/filesContext";
+import { canCreateIntention } from "@/app/(wrapped)/intentions/utils/permissionsIntentionUtils";
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { GuardExpe } from '@/utils/security/GuardExpe';
 import { GuardPermission } from "@/utils/security/GuardPermission";
@@ -21,6 +22,7 @@ const Page = () => {
       <GuardExpe isExpeRoute={true}>
         <IntentionFilesProvider>
           <IntentionForm
+            disabled={!canCreateIntention({ user: auth?.user, campagne })}
             defaultValues={{
               campagneId: campagne.id,
               rentreeScolaire: Number.parseInt(campagne.annee) + 1,

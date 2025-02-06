@@ -11,7 +11,7 @@ export const [getCurrentCampagneUsecase] = inject(
   {
     getCurrentCampagne,
   },
-  (deps) => async (user: RequestUser) => {
+  (deps) => async (user?: RequestUser) => {
     const campagneEnCours = await deps.getCurrentCampagne(user);
     if (!campagneEnCours) {
       throw Boom.badRequest("Aucune campagne nationale n'est en cours", {

@@ -18,11 +18,11 @@ import type { Changelog } from "./(wrapped)/changelog/changelogContext";
 import { ChangelogContext } from "./(wrapped)/changelog/changelogContext";
 import { GlossaireProvider } from "./(wrapped)/glossaire/glossaireContext";
 import type { GlossaireEntries } from "./(wrapped)/glossaire/types";
-import type { Auth} from "./context/authContext";
-import { AuthContext } from "./context/authContext";
-import { CodeRegionContext } from "./context/codeRegionContext";
-import { CurrentCampagneContext } from "./context/currentCampagneContext";
-import { UaisContext } from "./context/uaiContext";
+import type { Auth} from "./authContext";
+import { AuthContext } from "./authContext";
+import { CodeRegionContext } from "./codeRegionContext";
+import { CurrentCampagneContext } from "./currentCampagneContext";
+import { UaisContext } from "./uaiContext";
 
 interface RootLayoutClientProps {
   readonly children: React.ReactNode;

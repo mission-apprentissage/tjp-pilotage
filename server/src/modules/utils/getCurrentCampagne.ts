@@ -76,13 +76,13 @@ const getCampagneById = async ({
  * @param user
  * @returns
  */
-export const getCurrentCampagne = async (user: RequestUser): Promise<CampagneType> => {
+export const getCurrentCampagne = async (user?: RequestUser): Promise<CampagneType> => {
   const campagnesEnCours = await getCampagnesEnCours();
   if (!campagnesEnCours || campagnesEnCours.length === 0) {
     throw Boom.notFound(`Aucune campagne nationale en cours, veuillez en créer une dans l'écran dédié`);
   }
   if (campagnesEnCours.length === 1) return campagnesEnCours[0];
-  const codeRegion = user.codeRegion;
+  const codeRegion = user?.codeRegion;
   if(codeRegion) {
     const campagneRegionEnCours = await getCampagneRegionEnCours({ codeRegion });
     if (campagneRegionEnCours) {
