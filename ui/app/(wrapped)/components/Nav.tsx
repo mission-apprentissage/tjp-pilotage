@@ -18,14 +18,33 @@ import { usePlausible } from "next-plausible";
 import type { HTMLAttributeAnchorTarget, ReactNode } from "react";
 import { useContext } from "react";
 import { hasPermission, hasRole } from "shared";
+import type { CampagneType } from "shared/schema/campagneSchema";
+import type { UserType } from "shared/schema/userSchema";
 
 import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
 import { UaisContext } from "@/app/uaiContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { isPerdirPartOfExpe } from "@/utils/isPartOfExpe";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
+
+const shouldDisplayIntentionsMenu = ({ user, campagne }: {user?: UserType, campagne?: CampagneType}) => {
+  if(!campagne || !user) return false;
+
+  if(
+    !hasPermission(user.role, "intentions/lecture") &&
+    !hasPermission(user.role, "intentions-perdir/lecture") &&
+    !hasPermission(user.role, "pilotage-intentions/lecture") &&
+    !hasPermission(user.role, "restitution-intentions/lecture")
+  ) return false;
+
+  if(hasRole({user, role: "perdir"})) return isPerdirPartOfExpe({user, campagne});
+
+  return true;
+
+};
 
 const NavLink = chakra(
   ({
@@ -157,11 +176,6 @@ export const Nav = () => {
   const { auth } = useAuth();
   const { campagne } = useCurrentCampagne();
   const { uais } = useContext(UaisContext);
-  const hasIntentionsMenu =
-    hasPermission(auth?.user.role, "intentions/lecture") ||
-    hasPermission(auth?.user.role, "intentions-perdir/lecture") ||
-    hasPermission(auth?.user.role, "pilotage-intentions/lecture") ||
-    hasPermission(auth?.user.role, "restitution-intentions/lecture");
 
   const hasAdminMenu =
     hasPermission(auth?.user.role, "users/lecture") || hasPermission(auth?.user.role, "campagnes/lecture");
@@ -271,7 +285,7 @@ export const Nav = () => {
           </MenuList>
         </Portal>
       </Menu>
-      {hasIntentionsMenu && (
+      {shouldDisplayIntentionsMenu({ user: auth?.user, campagne }) && (
         <Menu gutter={0} isOpen={isMenuIntentionOpen}>
           <NavMenuButton
             segment="intentions"
@@ -317,8 +331,7 @@ export const Nav = () => {
                   </NavMenuLink>
                 </MenuItem>
               )}
-              {(hasPermission(auth?.user.role, "intentions/lecture") ||
-                hasPermission(auth?.user.role, "intentions-perdir/lecture")) && (
+              {(hasPermission(auth?.user.role, "restitution-intentions/lecture")) && (
                 <MenuItem p="0" w="100%">
                   <NavMenuLink href="/intentions/restitution" segment="restitution-intentions" prefetch={false}>
                     Restitution des demandes
