@@ -15,7 +15,7 @@ export function DocumentationClient({ recordMap }: { readonly recordMap: Extende
           ml={4}
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: "/intentions/saisie" },
+            { title: "Recueil des demandes", to: "/intentions/perdir/saisie" },
             {
               title: "Documentation",
               to: "/intentions/saisie/documentation",
