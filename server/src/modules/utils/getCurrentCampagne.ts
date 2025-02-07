@@ -81,7 +81,6 @@ export const getCurrentCampagne = async (user?: RequestUser): Promise<CampagneTy
   if (!campagnesEnCours || campagnesEnCours.length === 0) {
     throw Boom.notFound(`Aucune campagne nationale en cours, veuillez en créer une dans l'écran dédié`);
   }
-  if (campagnesEnCours.length === 1) return campagnesEnCours[0];
   const codeRegion = user?.codeRegion;
   if(codeRegion) {
     const campagneRegionEnCours = await getCampagneRegionEnCours({ codeRegion });
@@ -94,6 +93,7 @@ export const getCurrentCampagne = async (user?: RequestUser): Promise<CampagneTy
         dateFin: campagneEnCours.dateFin,
         statut: campagneEnCours.statut,
         hasCampagneRegionEnCours: true,
+        codeRegion: campagneRegionEnCours.codeRegion,
         withSaisiePerdir: campagneRegionEnCours.withSaisiePerdir,
         dateVote: campagneRegionEnCours.dateVote,
       };

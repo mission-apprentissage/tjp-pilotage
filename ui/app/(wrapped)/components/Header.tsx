@@ -9,6 +9,7 @@ import { useContext } from "react";
 import { client } from "@/api.client";
 import { CodeDepartementContext } from "@/app/codeDepartementContext";
 import { CodeRegionContext } from "@/app/codeRegionContext";
+import { CurrentCampagneContext } from "@/app/currentCampagneContext";
 import { UaisContext } from "@/app/uaiContext";
 import { useAuth } from "@/utils/security/useAuth";
 
@@ -20,6 +21,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const { setUais } = useContext(UaisContext);
   const { setCodeDepartement } = useContext(CodeDepartementContext);
   const { setCodeRegion } = useContext(CodeRegionContext);
+  const { setCampagne } = useContext(CurrentCampagneContext);
   const queryClient = useQueryClient();
 
   const {
@@ -34,6 +36,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
     setUais(undefined);
     setCodeDepartement(undefined);
     setCodeRegion(undefined);
+    setCampagne(undefined);
     queryClient.clear();
   };
 
