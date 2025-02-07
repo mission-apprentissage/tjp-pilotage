@@ -7,7 +7,8 @@ export type ApiError = {
   statusCode: number;
 };
 
-export const getErrorMessage = <T extends ApiError = ApiError>(error: Error | AxiosError<T> | null, message?: string): string | null => {
+export const getErrorMessage = <T extends ApiError = ApiError>
+  (error: Error | AxiosError<T> | null, message?: string): string | null => {
   if (!error) {
     return null;
   }
