@@ -8,7 +8,9 @@ import { getCfdRentrees } from "@/modules/import/usecases/getCfdRentrees/getCfdR
 import { findDiplomesProfessionnels } from "@/modules/import/usecases/importIJData/findDiplomesProfessionnels.dep";
 import { streamIt } from "@/modules/import/utils/streamIt";
 
+import { deleteFormationEtablissement } from "./deleteFormationEtablissement";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
+import { findFormationEtablissement } from "./findFormationEtablissement";
 import { findUAIsApprentissage } from "./findUAIsApprentissage";
 import { importEtablissement } from "./steps/importEtablissement/importEtablissement.step";
 import { importFormation } from "./steps/importFormation/importFormation.step";
@@ -31,47 +33,47 @@ const parseCfd = (mef: string, duree: number): number => {
   const threeFirstChars = parseInt(mef.substring(0, 3));
 
   switch (threeFirstChars) {
-    case 320:
-      if (duree === 1) return 310;
-      if (duree === 2) return 311;
-      if (duree === 3) return 312;
-      return -1;
+  case 320:
+    if (duree === 1) return 310;
+    if (duree === 2) return 311;
+    if (duree === 3) return 312;
+    return -1;
 
-    case 323:
-      if (duree === 1) return 370;
-      return -1;
+  case 323:
+    if (duree === 1) return 370;
+    return -1;
 
-    case 400:
-      if (duree === 1 || duree === 2 || duree === 3) return 247;
-      return -1;
+  case 400:
+    if (duree === 1 || duree === 2 || duree === 3) return 247;
+    return -1;
 
-    case 401:
-      if (duree === 3) return 252;
-      return -1;
+  case 401:
+    if (duree === 3) return 252;
+    return -1;
 
-    case 403:
-      if (duree === 2) return 273;
-      return -1;
+  case 403:
+    if (duree === 2) return 273;
+    return -1;
 
-    case 450:
-      if (duree === 1 || duree === 2 || duree === 3) return 890;
-      return -1;
+  case 450:
+    if (duree === 1 || duree === 2 || duree === 3) return 890;
+    return -1;
 
-    case 500:
-      if (duree === 1) return 240;
-      if (duree === 2) return 241;
-      if (duree === 3) return 242;
-      return -1;
+  case 500:
+    if (duree === 1) return 240;
+    if (duree === 2) return 241;
+    if (duree === 3) return 242;
+    return -1;
 
-    case 503:
-      if (duree === 1) return 270;
-      return -1;
+  case 503:
+    if (duree === 1) return 270;
+    return -1;
 
-    case 561:
-      return 257;
+  case 561:
+    return 257;
 
-    case 461:
-      return 258;
+  case 461:
+    return 258;
   }
 
   return -1;
@@ -140,6 +142,8 @@ export const [importFormationEtablissements] = inject(
     findUAIsApprentissage,
     findRawData: rawDataRepository.findRawData,
     findRawDatas: rawDataRepository.findRawDatas,
+    findFormationEtablissement,
+    deleteFormationEtablissement
   },
   (deps) => {
     return async ({ cfd, voie = "scolaire" }: { cfd: string; voie?: string }) => {
@@ -197,11 +201,40 @@ export const [importFormationEtablissements] = inject(
             }
           }
 
-          for (const codeDispositif of codesDispositifs) {
+          if (codesDispositifs.length > 0) {
+            // Il faut supprimer les anciens CodeDispositif à null puisqu'on les a maintenant déduits
+            const oldFormationEtablissement = await deps.findFormationEtablissement({
+              uai, cfd, voie: "apprentissage", codeDispositif: null
+            });
+
+            if (oldFormationEtablissement) {
+              console.log("Ancienne formationEtablissement trouvée avec un dispositif à null, suppression en cascade...", oldFormationEtablissement.id);
+              await deps.deleteFormationEtablissement({ id: oldFormationEtablissement.id });
+              console.log("Suppression ok", oldFormationEtablissement.id);
+            }
+
+            for (const codeDispositif of codesDispositifs) {
+              const formationEtablissement = await deps.createFormationEtablissement({
+                uai,
+                cfd,
+                codeDispositif,
+                voie: "apprentissage",
+              });
+
+              for (const millesime of MILLESIMES_IJ) {
+                await deps.importIndicateurSortieApprentissage({
+                  uai,
+                  formationEtablissementId: formationEtablissement.id,
+                  millesime,
+                  cfd,
+                });
+              }
+            }
+          } else {
             const formationEtablissement = await deps.createFormationEtablissement({
               uai,
               cfd,
-              codeDispositif,
+              codeDispositif: null,
               voie: "apprentissage",
             });
 
