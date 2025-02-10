@@ -1,7 +1,7 @@
 import Boom from "@hapi/boom";
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import { getPermissionScope } from "shared";
+import { getPermissionScope, RoleEnum } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import type { DB } from "@/db/db";
@@ -12,7 +12,7 @@ export const isRestitutionIntentionVisible =
     (eb: ExpressionBuilder<DB, "demande">) => {
       const filter = getRestitutionIntentionsVisiblesFilters(user);
       return eb.and([
-        filter.role === "invite" ?
+        filter.role === RoleEnum["invite"] ?
           eb("demande.statut", "in", [
             DemandeStatutEnum["demande validée"],
             DemandeStatutEnum["refusée"]
@@ -31,22 +31,20 @@ export const isRestitutionIntentionVisible =
 export const isRestitutionIntentionRegionVisible =
   ({ user }: { user: RequestUser }) =>
     (eb: ExpressionBuilder<DB, "region">) => {
-      const filter = getRestitutionIntentionsVisiblesFilters(user);
-      return eb.and([filter.codeRegion ? eb("region.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`]);
+      const filters = getRestitutionIntentionsVisiblesFilters(user);
+      return eb.and([filters.codeRegion ? eb("region.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`]);
     };
 
 const getRestitutionIntentionsVisiblesFilters = (user?: RequestUser) => {
   if (!user) throw new Error("missing variable user");
   const scope = getPermissionScope(user?.role, "restitution-intentions/lecture");
-  if (!scope?.default) throw Boom.forbidden();
+  if (!scope) throw Boom.forbidden();
 
-  const filter = {
+  return {
     national: {},
-    region: { codeRegion: user.codeRegion },
+    région: { codeRegion: user.codeRegion },
     user: {},
     uai: { uais: user.uais },
     role: { codeRegion: user.codeRegion, role: user.role },
-  }[scope?.default];
-
-  return filter;
+  }[scope];
 };

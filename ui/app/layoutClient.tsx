@@ -30,6 +30,8 @@ interface RootLayoutClientProps {
   readonly changelog: Changelog;
   readonly glossaire: GlossaireEntries;
   readonly campagne?: CampagneType;
+  readonly codeRegion?: string;
+  readonly uais?: Array<string>;
 }
 
 const useCrisp = () => {
@@ -68,7 +70,9 @@ export default function RootLayoutClient({
   auth: initialAuth,
   changelog: initialChangelog,
   glossaire: initialGlossaire,
-  campagne: initialCampagne
+  campagne: initialCampagne,
+  codeRegion: initialCodeRegion,
+  uais: initialUais,
 }: RootLayoutClientProps) {
   useCrisp();
   const tracking = useTracking();
@@ -87,8 +91,8 @@ export default function RootLayoutClient({
   const [changelog, setChangelog] = useState<Changelog>(initialChangelog);
   const [campagne, setCampagne] = useState<CampagneType | undefined>(initialCampagne);
 
-  const [codeRegion, setCodeRegion] = useState<string | undefined>(auth?.user.codeRegion);
-  const [uais, setUais] = useState<Array<string> | undefined>(auth?.user.uais);
+  const [codeRegion, setCodeRegion] = useState<string | undefined>(initialCodeRegion);
+  const [uais, setUais] = useState<Array<string> | undefined>(initialUais);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef<number>(0);

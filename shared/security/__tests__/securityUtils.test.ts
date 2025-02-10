@@ -12,7 +12,7 @@ describe("securityUtils", () => {
         const typedRole: Role = role as unknown as Role;
         Object.keys(PERMISSIONS[typedRole]).forEach((permission) => {
           const scope = getPermissionScope(typedRole, permission as Permission);
-          expect(typeof scope?.default !== "undefined").toEqual(true);
+          expect(typeof scope !== "undefined").toEqual(true);
         });
       });
     });

@@ -44,8 +44,8 @@ export const [submitChangementStatutUsecase, submitChangementStatutFactory] = in
         throw Boom.notFound("Intention non trouvée en base");
       }
 
-      const isAllowed = guardScope(scope?.default, {
-        region: () => user.codeRegion === intentionData.codeRegion,
+      const isAllowed = guardScope(scope, {
+        région: () => user.codeRegion === intentionData.codeRegion,
         national: () => true,
       });
       if (!isAllowed) {

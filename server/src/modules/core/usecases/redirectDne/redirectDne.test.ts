@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { RoleEnum } from "shared";
 import { describe, expect, it, vi } from "vitest";
 
 import { redirectDneFactory } from "./redirectDne.usecase";
@@ -117,7 +118,7 @@ describe("redirectDne usecase", () => {
         email: ssoUserInfo.email,
         firstname: ssoUserInfo.given_name,
         lastname: ssoUserInfo.family_name,
-        role: "perdir",
+        role: RoleEnum["perdir"],
         uais: ["code-uai"],
         codeRegion: "75",
       }),
@@ -158,7 +159,7 @@ describe("redirectDne usecase", () => {
         email: ssoUserInfo.email,
         firstname: ssoUserInfo.given_name,
         lastname: ssoUserInfo.family_name,
-        role: "perdir",
+        role: RoleEnum["perdir"],
         uais: ["code-uai"],
         codeRegion: "75",
       }),
@@ -203,7 +204,7 @@ describe("redirectDne usecase", () => {
         email: ssoUserInfo.email,
         firstname: ssoUserInfo.given_name,
         lastname: ssoUserInfo.family_name,
-        role: "perdir",
+        role: RoleEnum["perdir"],
         uais: ["0693045K"],
         codeRegion: "75",
       }),
@@ -282,7 +283,7 @@ describe("redirectDne usecase", () => {
         email: ssoUserInfo.email,
         firstname: ssoUserInfo.given_name,
         lastname: ssoUserInfo.family_name,
-        role: "perdir",
+        role: RoleEnum["perdir"],
         uais: ["0693045K"],
         codeRegion: "75",
       }),

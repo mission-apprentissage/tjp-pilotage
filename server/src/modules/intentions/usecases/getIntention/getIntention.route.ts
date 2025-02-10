@@ -25,9 +25,9 @@ export const getIntentionRoute = (server: Server) => {
         });
 
         const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
-        const canEdit = guardScope(scope?.default, {
+        const canEdit = guardScope(scope, {
           uai: () => user.uais?.includes(intention.uai) ?? false,
-          region: () => user.codeRegion === intention.codeRegion,
+          région: () => user.codeRegion === intention.codeRegion,
           national: () => true,
         });
         response.status(200).send({

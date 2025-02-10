@@ -76,9 +76,9 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       if (!dataEtablissement.codeRegion) throw Boom.badData();
 
       const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
-      const isAllowed = guardScope(scope?.default, {
+      const isAllowed = guardScope(scope, {
         uai: () => user.uais?.includes(intention.uai) ?? false,
-        region: () => user.codeRegion === dataEtablissement.codeRegion,
+        région: () => user.codeRegion === dataEtablissement.codeRegion,
         national: () => true,
       });
       if (!isAllowed) throw Boom.forbidden();

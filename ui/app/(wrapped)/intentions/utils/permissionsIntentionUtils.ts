@@ -1,4 +1,4 @@
-import {hasPermission, hasRole} from 'shared';
+import {hasPermission, hasRole, RoleEnum} from 'shared';
 import { CampagneStatutEnum } from 'shared/enum/campagneStatutEnum';
 import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
@@ -32,7 +32,7 @@ export const canEditIntention = ({
     intention.statut !== DemandeStatutEnum["refusée"]
   );
 
-  if(hasRole({ user, role: "perdir" })) {
+  if(hasRole({ user, role: RoleEnum["perdir"] })) {
     const canPerdirEditStatut = canEditStatut && (
       intention.statut === DemandeStatutEnum["brouillon"] ||
       intention.statut === DemandeStatutEnum["proposition"] ||
@@ -57,8 +57,8 @@ export const canEditIntention = ({
 
 export const canDeleteIntention = ({ intention, user } : { intention: Intention; user?: UserType; }) =>
   canEditIntention({ intention, user }) &&
-  !hasRole({ user, role: "expert_region" }) &&
-  !hasRole({ user, role: "region" });
+  !hasRole({ user, role: RoleEnum["expert_region"] }) &&
+  !hasRole({ user, role: RoleEnum["region"] });
 
 export const canImportIntention = ({
   isAlreadyImported,

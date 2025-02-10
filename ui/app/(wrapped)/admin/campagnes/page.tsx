@@ -8,7 +8,7 @@ const Page = () => {
 
   const { auth }  = useAuth();
   const hasPermissionAdmin = hasPermission(auth?.user.role, "campagnes/ecriture");
-  const hasPermissionCampagneRegion = hasPermission(auth?.user.role, "campagnes-region/lecture");
+  const hasPermissionCampagneRegion = hasPermission(auth?.user.role, "campagnes-région/lecture");
 
   if(hasPermissionAdmin) return redirect("/admin/campagnes/national");
   if(hasPermissionCampagneRegion) return redirect("/admin/campagnes/regional");

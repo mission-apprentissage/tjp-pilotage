@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { hasRole } from "shared";
+import {hasRole, RoleEnum} from 'shared';
 
 import type { RequestUser } from "@/modules/core/model/User";
 
@@ -14,7 +14,7 @@ export const [searchEtablissementPerdirUsecase] = inject(
         search,
         filtered,
         codeRegion: user?.codeRegion,
-        uais: hasRole({ user, role: "perdir" }) ? user?.uais : undefined,
+        uais: hasRole({ user, role: RoleEnum["perdir"] }) ? user?.uais : undefined,
       });
       const suggestions = etablissements.map((etablissement) => ({
         value: etablissement.uai,

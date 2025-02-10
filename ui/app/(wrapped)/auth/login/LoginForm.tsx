@@ -16,12 +16,16 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { emailRegex } from "shared";
+import { emailRegex, hasRole, RoleEnum } from "shared";
 
 import { client } from "@/api.client";
+import { CodeRegionContext } from "@/app/codeRegionContext";
+import { UaisContext } from "@/app/uaiContext";
 import { useAuth } from "@/utils/security/useAuth";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
+
 
 export const LoginForm = () => {
   const {
@@ -33,6 +37,10 @@ export const LoginForm = () => {
     mode: "onBlur",
   });
 
+  const { setAuth, auth } = useAuth();
+  const { setCampagne } = useCurrentCampagne();
+  const { setCodeRegion } = useContext(CodeRegionContext);
+  const { setUais } = useContext(UaisContext);
   const { data: { url } = {} } = client.ref("[GET]/dne_url").useQuery({});
 
   const {
@@ -44,17 +52,19 @@ export const LoginForm = () => {
       const whoAmI = await client.ref("[GET]/auth/whoAmI").query({});
       if (!whoAmI) return;
       setAuth({ user: whoAmI.user });
+      setCodeRegion(whoAmI.user.codeRegion);
+      setUais(whoAmI.user.uais);
+      await client.ref("[GET]/campagne/current").query({}).then((campagne) => setCampagne(campagne));
     },
   });
 
-  const { setAuth, auth } = useAuth();
 
   const router = useRouter();
 
   useEffect(() => {
     if (auth)
       router.replace(
-        auth.user.role === "perdir" && auth.user.uais?.[0] ? `/panorama/etablissement/${auth.user.uais?.[0]}` : "/"
+        hasRole({ user : auth.user, role: RoleEnum["perdir"]}) && auth.user.uais?.[0] ? `/panorama/etablissement/${auth.user.uais?.[0]}` : "/"
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);

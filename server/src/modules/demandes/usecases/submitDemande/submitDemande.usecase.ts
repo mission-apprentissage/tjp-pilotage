@@ -72,8 +72,8 @@ export const [submitDemande, submitDemandeFactory] = inject(
       if (!dataEtablissement.codeRegion) throw Boom.badData();
 
       const scope = getPermissionScope(user.role, "intentions/ecriture");
-      const isAllowed = guardScope(scope?.default, {
-        region: () => user.codeRegion === dataEtablissement.codeRegion,
+      const isAllowed = guardScope(scope, {
+        région: () => user.codeRegion === dataEtablissement.codeRegion,
         national: () => true,
       });
       if (!isAllowed) throw Boom.forbidden();

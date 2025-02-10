@@ -26,8 +26,8 @@ export const [submitAvisUsecase, submitAvisFactory] = inject(
       const intentionData = await findOneIntention(avis.intentionNumero);
       if (!intentionData) throw Boom.notFound("Intention non trouvée en base");
 
-      const isAllowed = guardScope(scope?.default, {
-        region: () => user.codeRegion === intentionData.codeRegion,
+      const isAllowed = guardScope(scope, {
+        région: () => user.codeRegion === intentionData.codeRegion,
         national: () => true,
       });
       if (!isAllowed) throw Boom.forbidden();

@@ -1,38 +1,39 @@
 import { Badge, Box } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import type { Scope } from "shared/security/permissions";
+import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
+import {PermissionScopeEnum} from 'shared/enum/permissionScopeEnum';
 
 // Compteur pour id unique
 let i = 0;
 
-const formatScopeLabel = (scope: Scope) => {
+const formatScopeLabel = (scope: PermissionScope) => {
   switch (scope) {
-  case "national":
+  case PermissionScopeEnum["national"]:
     return "National";
-  case "region":
+  case PermissionScopeEnum["région"]:
     return "Régional";
-  case "uai":
+  case PermissionScopeEnum["uai"]:
     return "Établissement";
-  case "user":
+  case PermissionScopeEnum["user"]:
     return "Utilisateur";
-  case "role":
+  case PermissionScopeEnum["role"]:
     return "Limité";
   }
 };
 
-const PermissionBadge = ({ rights, scope }: { rights: string[]; scope: Scope }) => {
+const PermissionBadge = ({ rights, scope }: { rights: string[]; scope: PermissionScope }) => {
   const icons = [];
   const getVariant = () => {
     switch (scope) {
-    case "national":
+    case PermissionScopeEnum["national"]:
       return "lavander";
-    case "region":
+    case PermissionScopeEnum["région"]:
       return "info";
-    case "uai":
+    case PermissionScopeEnum["uai"]:
       return "draft";
-    case "user":
+    case PermissionScopeEnum["user"]:
       return "success";
-    case "role":
+    case PermissionScopeEnum["role"]:
       return "new";
     }
   };

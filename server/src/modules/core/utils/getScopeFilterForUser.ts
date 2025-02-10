@@ -1,15 +1,17 @@
 import { getPermissionScope } from "shared";
-import type { Permission, Scope } from "shared/security/permissions";
+import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
+import { PermissionScopeEnum} from 'shared/enum/permissionScopeEnum';
+import type { Permission } from "shared/security/permissions";
 
 import type { RequestUser } from "@/modules/core/model/User";
 
 interface ScopeWithFilter {
-  scope: Scope;
+  scope: PermissionScope;
   scopeFilter: Array<string>;
 }
 
 export const getScopeFilterForUser = (permission: Permission, user: RequestUser): ScopeWithFilter => {
-  const scope = getPermissionScope(user.role, permission)?.default;
+  const scope = getPermissionScope(user.role, permission);
   if (scope) {
     const scopeWithFilter: ScopeWithFilter = {
       scope,
@@ -17,14 +19,15 @@ export const getScopeFilterForUser = (permission: Permission, user: RequestUser)
     };
 
     switch (scope) {
-    case "region":
+    case PermissionScopeEnum["région"]:
       if (user.codeRegion) {
         scopeWithFilter.scopeFilter = [user.codeRegion];
       }
       break;
-    case "national":
-    case "uai":
-    case "role":
+    case PermissionScopeEnum["national"]:
+    case PermissionScopeEnum["uai"]:
+    case PermissionScopeEnum["role"]:
+    case PermissionScopeEnum["user"]:
     default:
       scopeWithFilter.scopeFilter = [];
       break;

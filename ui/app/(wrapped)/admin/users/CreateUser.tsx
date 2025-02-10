@@ -19,7 +19,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { Role } from "shared";
-import { getHierarchy } from "shared";
+import { getHierarchy, hasRole } from "shared";
+import {RoleEnum} from 'shared/enum/roleEnum';
 import { UserFonctionEnum } from "shared/enum/userFonction";
 import { z } from "zod";
 
@@ -42,7 +43,7 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       codeRegion: "",
       firstname: "",
       lastname: "",
-      role: "gestionnaire_region",
+      role: RoleEnum["gestionnaire_region"],
     },
   });
 
@@ -68,7 +69,7 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     createUser({ body: { ...v, codeRegion: v.codeRegion || undefined } });
 
   const roles = getHierarchy(auth?.user?.role as Role);
-  const isAdminRegion = auth?.user?.role === "admin_region";
+  const isAdminRegion = hasRole({user: auth?.user, role: RoleEnum["admin_region"]});
   const filteredRegions = (() => {
     if (!regions) return [];
     if (isAdminRegion) {

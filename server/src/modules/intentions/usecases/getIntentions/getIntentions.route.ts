@@ -32,9 +32,9 @@ export const getIntentionsRoute = (server: Server) => {
           ...result,
           intentions: result.intentions.map((intention) => ({
             ...intention,
-            canEdit: guardScope(scope?.default, {
+            canEdit: guardScope(scope, {
               uai: () => user.uais?.includes(intention.uai) ?? false,
-              region: () => user.codeRegion === intention.codeRegion,
+              région: () => user.codeRegion === intention.codeRegion,
               national: () => true,
             }),
           })),

@@ -1,6 +1,8 @@
-import type { Role } from "../enum/roleEnum";
-import type { Permission } from "./permissions";
-import { HIERARCHY, PERMISSIONS } from "./permissions";
+import type {PermissionScope} from '../enum/permissionScopeEnum';
+import type {Role} from "../enum/roleEnum";
+import { RoleEnum } from "../enum/roleEnum";
+import type { Permission} from "./permissions";
+import {HIERARCHY, PERMISSIONS} from './permissions';
 
 export const CODES_REGIONS_EXPE_2024 = [
   //Occitanie
@@ -18,7 +20,7 @@ type KOfUnion<T> = {
 };
 
 export const isUserInRegionsExperimentation2024 = ({ user }: { user?: { codeRegion?: string, role?: Role } }) => {
-  if(hasRole({ user, role: "admin" }) || hasRole({ user, role : "pilote"})) return true;
+  if(hasRole({ user, role: RoleEnum["admin"] }) || hasRole({ user, role : RoleEnum["pilote"]})) return true;
   if (!user?.codeRegion) return false;
   return CODES_REGIONS_EXPE_2024.includes(user.codeRegion);
 };
@@ -33,26 +35,22 @@ export const hasPermission = (role: Role | undefined, permission: Permission) =>
   return !!scope;
 };
 
-export const getPermissionScope = <P extends Permission>(role: Role | undefined, permission: P) => {
+export const getPermissionScope = (role: Role | undefined, permission: Permission): PermissionScope | undefined => {
   if (!role) return;
   const userPermissions = PERMISSIONS[role];
   if (!userPermissions || !(permission in userPermissions)) return;
 
   const permissionScope = (userPermissions as KOfUnion<typeof userPermissions>)[permission];
-  if (!permissionScope) return;
-
-  type D = KOfUnion<typeof userPermissions>[P];
-  // @ts-ignore
-  return permissionScope as { [DS in KeyOfUnion<D>]: KOfUnion<D>[DS] };
+  return permissionScope;
 };
 
-export function guardScope<S extends string>(
-  scope: S | undefined,
-  guards: { [C in S]: () => boolean }
-): scope is Exclude<S, undefined> {
+export const guardScope = (
+  scope: PermissionScope | undefined,
+  guards: Partial<Record<PermissionScope, () => boolean>>
+): boolean => {
   if (!scope) return false;
-  return guards[scope]();
-}
+  return guards[scope] ? guards[scope]() : false;
+};
 
 export function getHierarchy(role: Role): Array<Role> {
   if (HIERARCHY[role]) {

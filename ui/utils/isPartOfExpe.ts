@@ -1,5 +1,5 @@
 import type {Role} from 'shared';
-import { hasPermission, hasRole,isUserInRegionsExperimentation2024, } from 'shared';
+import {hasPermission, hasRole, isUserInRegionsExperimentation2024, RoleEnum} from 'shared';
 import type {CampagneType} from 'shared/schema/campagneSchema';
 
 
@@ -49,6 +49,6 @@ export const isUserPartOfExpe = ({
   campagne?: CampagneType
 }) => {
   if(!hasPermission(user?.role, "intentions-perdir/ecriture")) return false;
-  if(hasRole({ user, role: "perdir" })) return isPerdirPartOfExpe({ user, campagne });
+  if(hasRole({ user, role: RoleEnum["perdir"] })) return isPerdirPartOfExpe({ user, campagne });
   return isNotPerdirPartOfExpe({ user, campagne });
 };

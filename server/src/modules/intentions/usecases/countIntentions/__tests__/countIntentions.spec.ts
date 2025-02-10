@@ -3,6 +3,7 @@ import { clearIntentions, createIntentionBuilder } from "@tests/utils/schema/int
 import { createUserBuilder, generateAuthCookie } from "@tests/utils/schema/users.spec.utils";
 import type { DemandeStatutType, DemandeStatutWithoutSupprimee } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {RoleEnum} from 'shared/enum/roleEnum';
 import type { IResError } from "shared/models/errors";
 import type { ROUTES } from "shared/routes/routes";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
@@ -151,11 +152,11 @@ describe("[GET]/intentions/count", () => {
           user = undefined;
         },
         utilisateurNonAuthorise: async () => {
-          user = await createUserBuilder().withRole("invite").create();
+          user = await createUserBuilder().withRole(RoleEnum["invite"]).create();
         },
         utilisateurAutorise: async () => {
           user = await createUserBuilder()
-            .withRole("pilote_region")
+            .withRole(RoleEnum["pilote_region"])
             .create();
         },
         intentionsExistantes: async (data: {

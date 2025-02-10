@@ -36,7 +36,7 @@ export default () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <GuardPermission permission="campagnes-region/lecture">
+    <GuardPermission permission="campagnes-région/lecture">
       <Flex px={4} py="2">
         <Button
           variant="primary"

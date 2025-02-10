@@ -66,10 +66,10 @@ export const ConsoleSection = ({
   const showFormulairePerdir = (intention: { isIntention: boolean; uai: string; codeRegion: string }) => {
     const user = auth?.user;
     const scope = getPermissionScope(user?.role, "intentions-perdir/lecture");
-    const isAllowed = guardScope(scope?.default, {
+    const isAllowed = guardScope(scope, {
       role: () => false,
       uai: () => user?.uais?.includes(intention.uai) ?? false,
-      region: () => user?.codeRegion === intention.codeRegion,
+      région: () => user?.codeRegion === intention.codeRegion,
       national: () => true,
     });
 

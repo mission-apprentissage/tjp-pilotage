@@ -1,7 +1,7 @@
 import {Box, CloseButton, Collapse, Stack, Text, VisuallyHidden,VStack} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { hasRole } from "shared";
+import {hasRole, RoleEnum} from 'shared';
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
@@ -9,7 +9,7 @@ import { useAuth } from "@/utils/security/useAuth";
 
 export const InformationHeader = ({ statut }: { statut?: DemandeStatutType }) => {
   const { auth } = useAuth();
-  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
+  const isPerdir = hasRole({ user: auth?.user, role: RoleEnum["perdir"] });
 
   const bgColors = {
     success: "success.950",

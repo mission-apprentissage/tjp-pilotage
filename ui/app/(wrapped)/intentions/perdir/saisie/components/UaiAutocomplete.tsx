@@ -1,7 +1,7 @@
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
-import { hasRole } from "shared";
+import {hasRole, RoleEnum} from 'shared';
 
 import { client } from "@/api.client";
 import type {Etablissement} from '@/app/(wrapped)/intentions/types';
@@ -29,7 +29,7 @@ export const UaiAutocomplete = ({
       borderColor: inError ? "red" : undefined,
     }),
   };
-  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
+  const isPerdir = hasRole({ user: auth?.user, role: RoleEnum["perdir"] });
 
   return (
     <AsyncSelect
