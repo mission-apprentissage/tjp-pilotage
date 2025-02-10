@@ -1,19 +1,20 @@
 import { Badge } from "@chakra-ui/react";
+import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
 import {
   formatTypeFamilleCourt,
   formatTypeFamilleLong,
 } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 
-export const TYPE_FAMILL_KEYS = {
-  ["2nde_commune"]: "info",
-  ["1ere_commune"]: "info",
-  ["specialite"]: "purpleGlycine",
-  ["option"]: "purpleGlycine",
+export const TYPE_FAMILLE_KEYS = {
+  [TypeFamilleEnum["2nde_commune"]]: "info",
+  [TypeFamilleEnum["1ere_commune"]]: "info",
+  [TypeFamilleEnum["specialite"]]: "purpleGlycine",
+  [TypeFamilleEnum["option"]]: "purpleGlycine",
   ["fermeture"]: "grey",
 };
 
-export type TypeFamilleKeys = keyof typeof TYPE_FAMILL_KEYS;
+export type TypeFamilleKeys = keyof typeof TYPE_FAMILLE_KEYS;
 
 export const BadgeTypeFamille = ({
   typeFamille,
@@ -33,10 +34,10 @@ export const BadgeTypeFamille = ({
   }
 
   const typeFamilleVariant = {
-    ["2nde_commune"]: "info",
-    ["1ere_commune"]: "info",
-    ["specialite"]: "purpleGlycine",
-    ["option"]: "purpleGlycine",
+    [TypeFamilleEnum["2nde_commune"]]: "info",
+    [TypeFamilleEnum["1ere_commune"]]: "info",
+    [TypeFamilleEnum["specialite"]]: "purpleGlycine",
+    [TypeFamilleEnum["option"]]: "purpleGlycine",
     ["fermeture"]: "grey",
   }[typeFamille];
 

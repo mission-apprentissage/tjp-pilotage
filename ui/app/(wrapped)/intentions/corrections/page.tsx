@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
+import {SecteurEnum} from 'shared/enum/secteurEnum';
 import { PREVIOUS_ANNEE_CAMPAGNE } from "shared/time/PREVIOUS_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
@@ -270,7 +271,7 @@ export default () => {
           hour: "2-digit",
           minute: "2-digit",
         }),
-        secteur: correction.secteur === "PU" ? "Public" : "Privé",
+        secteur: correction.secteur === SecteurEnum["PU"] ? "Public" : "Privé",
       })),
       CORRECTIONS_COLUMNS
     );
@@ -293,7 +294,7 @@ export default () => {
           hour: "2-digit",
           minute: "2-digit",
         }),
-        secteur: correction.secteur === "PU" ? "Public" : "Privé",
+        secteur: correction.secteur === SecteurEnum["PU"] ? "Public" : "Privé",
       })),
       CORRECTIONS_COLUMNS
     );
