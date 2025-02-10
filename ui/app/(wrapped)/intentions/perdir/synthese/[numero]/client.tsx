@@ -90,7 +90,7 @@ export default ({
           me="auto"
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: "/intentions/perdir" },
+            { title: "Recueil des demandes", to: "/intentions/perdir/saisie" },
             {
               title: `Demande n°${intention?.numero}`,
               to: `/intentions/perdir/synthese/${intention?.numero}`,

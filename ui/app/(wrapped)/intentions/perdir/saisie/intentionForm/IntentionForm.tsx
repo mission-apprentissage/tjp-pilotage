@@ -38,6 +38,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
 import type { DetailedApiError } from "@/utils/apiError";
 import { getDetailedErrorMessage } from "@/utils/apiError";
+import {getRoutingSaisieRecueilDemande} from '@/utils/getRoutingRecueilDemande';
 import { useAuth } from "@/utils/security/useAuth";
 
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
@@ -241,16 +242,16 @@ export const IntentionForm = ({
             mb={4}
             pages={[
               { title: "Accueil", to: "/" },
-              { title: "Recueil des demandes", to: "/intentions" },
-              pathname === "/intentions/perdir/saisie/new"
+              { title: "Recueil des demandes", to: getRoutingSaisieRecueilDemande({campagne, user: auth?.user}) },
+              pathname === getRoutingSaisieRecueilDemande({campagne, user: auth?.user, suffix: "new"})
                 ? {
                   title: "Nouvelle demande",
-                  to: "/intentions/perdir/saisie/new",
+                  to: getRoutingSaisieRecueilDemande({campagne, user: auth?.user, suffix: "new"}),
                   active: true,
                 }
                 : {
                   title: `Demande n°${formId}`,
-                  to: `/intentions/perdir/saisie/${formId}`,
+                  to: getRoutingSaisieRecueilDemande({campagne, user: auth?.user, suffix: formId}),
                   active: true,
                 },
             ]}
