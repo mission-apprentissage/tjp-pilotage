@@ -1,5 +1,6 @@
 import { chakra, Td } from "@chakra-ui/react";
 import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
+import {SecteurEnum} from 'shared/enum/secteurEnum';
 
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 import type { DemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
@@ -131,7 +132,7 @@ export const LineContent = ({
         {demande.libelleAcademie}
       </ConditionalTd>
       <ConditionalTd colonneFilters={colonneFilters} colonne={"secteur"} bgColor={getCellColor("secteur")}>
-        {demande.secteur === "PU" ? "Public" : "Privé"}
+        {demande.secteur === SecteurEnum["PU"] ? "Public" : "Privé"}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

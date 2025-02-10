@@ -1,4 +1,5 @@
 import { chakra, Tag, Td } from "@chakra-ui/react";
+import { SecteurEnum } from "shared/enum/secteurEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import type { CORRECTIONS_COLUMNS } from "@/app/(wrapped)/intentions/corrections/CORRECTIONS_COLUMN";
@@ -133,7 +134,7 @@ export const LineContent = ({
         {correction.libelleAcademie}
       </ConditionalTd>
       <ConditionalTd colonneFilters={colonneFilters} colonne={"secteur"} bgColor={getCellColor("secteur")}>
-        {correction.secteur === "PU" ? "Public" : "Privé"}
+        {correction.secteur === SecteurEnum["PU"] ? "Public" : "Privé"}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

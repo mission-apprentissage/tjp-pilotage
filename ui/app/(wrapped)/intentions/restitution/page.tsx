@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import {SecteurEnum} from 'shared/enum/secteurEnum';
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
@@ -333,7 +334,7 @@ export default () => {
         `${demande.discipline1ProfesseurAssocieRH} ${
           demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
         }`,
-      secteur: demande.secteur === "PU" ? "Public" : "Privé",
+      secteur: demande.secteur === SecteurEnum["PU"] ? "Public" : "Privé",
       actionPrioritaire: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
       transitionDemographique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
       transitionEcologique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition écologique"]],

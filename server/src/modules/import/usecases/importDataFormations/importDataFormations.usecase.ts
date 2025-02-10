@@ -2,6 +2,7 @@
 import { inject } from "injecti";
 import { capitalize, isString, pickBy } from "lodash-es";
 import { DateTime } from "luxon";
+import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
 
 import type { DiplomeProfessionnelLine } from "@/modules/import/fileTypes/DiplomesProfessionnels";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
@@ -100,8 +101,8 @@ export const [importDataFormations] = inject(
         const isSpecialite = !!(await deps.findSpecialite(cfd));
 
         const getTypeFamille = () => {
-          if (is2ndeCommune) return isBTS ? "1ere_commune" : "2nde_commune";
-          if (isSpecialite) return isBTS ? "option" : "specialite";
+          if (is2ndeCommune) return isBTS ? TypeFamilleEnum["1ere_commune"] : TypeFamilleEnum["2nde_commune"];
+          if (isSpecialite) return isBTS ? TypeFamilleEnum["option"] : TypeFamilleEnum["specialite"];
           return undefined;
         };
 
@@ -175,8 +176,8 @@ export const [importDataFormations] = inject(
         const isSpecialite = !!(await deps.findSpecialite(cfd));
 
         const getTypeFamille = () => {
-          if (is2ndeCommune) return isBTS ? "1ere_commune" : "2nde_commune";
-          if (isSpecialite) return isBTS ? "option" : "specialite";
+          if (is2ndeCommune) return isBTS ? TypeFamilleEnum["1ere_commune"] : TypeFamilleEnum["2nde_commune"];
+          if (isSpecialite) return isBTS ? TypeFamilleEnum["option"] : TypeFamilleEnum["specialite"];
           return undefined;
         };
 

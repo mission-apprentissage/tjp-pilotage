@@ -3,6 +3,7 @@ import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
 import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
@@ -183,7 +184,7 @@ export const getFormationEtablissementsQuery = async ({
       `.as("dateFermeture"),
       eb
         .case()
-        .when(eb("formationView.typeFamille", "in", ["1ere_commune", "2nde_commune"]))
+        .when(eb("formationView.typeFamille", "in", [TypeFamilleEnum["1ere_commune"], TypeFamilleEnum["2nde_commune"]]))
         .then(
           sql<string>`
             COALESCE(
@@ -317,7 +318,7 @@ export const getFormationEtablissementsQuery = async ({
       return q.where((w) =>
         w.or([
           w("familleMetier.cfdFamille", "in", cfdFamille),
-          w.and([w("formationView.typeFamille", "=", "2nde_commune"), w("formationView.cfd", "in", cfdFamille)]),
+          w.and([w("formationView.typeFamille", "=", TypeFamilleEnum["2nde_commune"]), w("formationView.cfd", "in", cfdFamille)]),
         ])
       );
     })
