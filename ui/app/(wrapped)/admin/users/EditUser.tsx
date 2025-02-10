@@ -24,7 +24,7 @@ import { useForm } from "react-hook-form";
 import type { Role } from "shared";
 import {getHierarchy, hasRole} from 'shared';
 import {RoleEnum} from 'shared/enum/roleEnum';
-import { UserFonctionEnum } from "shared/enum/userFonction";
+import { UserFonctionEnum } from "shared/enum/userFonctionEnum";
 import { z } from "zod";
 
 import { client } from "@/api.client";
