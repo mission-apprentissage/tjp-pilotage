@@ -91,8 +91,8 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
       }
 
       const scope = getPermissionScope(user.role, "intentions/ecriture");
-      const isAllowed = guardScope(scope?.default, {
-        region: () => user.codeRegion === demande.codeRegion,
+      const isAllowed = guardScope(scope, {
+        région: () => user.codeRegion === demande.codeRegion,
         national: () => true,
       });
 

@@ -19,7 +19,8 @@ import _ from "lodash";
 import { useState } from "react";
 import type { Role } from "shared";
 import { getPermissionScope, PERMISSIONS } from "shared";
-import type { Permission, Scope } from "shared/security/permissions";
+import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
+import type { Permission } from "shared/security/permissions";
 
 import { themeDefinition } from "@/theme/theme";
 import { GuardPermission } from "@/utils/security/GuardPermission";
@@ -51,11 +52,11 @@ const formatPermissions = (permissions: Array<Permission>) => {
   return permissions.map((p) => p.split("/")[1]);
 };
 
-const getScopeFromGroup = (role: Role, group: string): Scope => {
+const getScopeFromGroup = (role: Role, group: string): PermissionScope => {
   const rolePermissions = PERMISSIONS[role];
   const permission = Object.keys(rolePermissions).filter((key) => key.split("/")[0] === group)[0] as Permission;
 
-  return getPermissionScope(role, permission)?.default ?? "national";
+  return getPermissionScope(role, permission) ?? "national";
 };
 
 const formatRights = (role: Role, label: string, user?: User) => {

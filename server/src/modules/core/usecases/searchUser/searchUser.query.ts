@@ -1,5 +1,6 @@
 import type { Role } from "shared";
-import type { Scope } from "shared/security/permissions";
+import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
+import { PermissionScopeEnum} from 'shared/enum/permissionScopeEnum';
 
 import { getKbdClient } from "@/db/db";
 import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
@@ -11,7 +12,7 @@ export const searchUserQuery = async ({
   scopeFilter,
 }: {
   search: string;
-  scope: Scope;
+  scope: PermissionScope;
   scopeFilter: Array<string>;
 }) => {
   const users = await getKbdClient()
@@ -19,7 +20,7 @@ export const searchUserQuery = async ({
     .selectAll()
     .where("email", "ilike", `%${getNormalizedSearch(search).trim()}%`)
     .$call((q) => {
-      if (scope === "region") {
+      if (scope === PermissionScopeEnum["région"]) {
         return q.where("user.codeRegion", "in", scopeFilter);
       }
       return q;

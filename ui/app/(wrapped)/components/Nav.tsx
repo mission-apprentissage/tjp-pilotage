@@ -17,7 +17,7 @@ import { useSelectedLayoutSegments } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import type { HTMLAttributeAnchorTarget, ReactNode } from "react";
 import { useContext } from "react";
-import { hasPermission, hasRole } from "shared";
+import {hasPermission, hasRole, RoleEnum} from 'shared';
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 
@@ -40,10 +40,9 @@ const shouldDisplayIntentionsMenu = ({ user, campagne }: {user?: UserType, campa
     !hasPermission(user.role, "restitution-intentions/lecture")
   ) return false;
 
-  if(hasRole({user, role: "perdir"})) return isPerdirPartOfExpe({user, campagne});
+  if(hasRole({user, role: RoleEnum["perdir"]})) return isPerdirPartOfExpe({user, campagne});
 
   return true;
-
 };
 
 const NavLink = chakra(
@@ -184,7 +183,7 @@ export const Nav = () => {
     hasRole({
       user: auth?.user,
       role: "admin",
-    }) || hasRole({ user: auth?.user, role: "pilote" });
+    }) || hasRole({ user: auth?.user, role: RoleEnum["pilote"] });
 
   const { isOpen: isMenuPanoramaOpen, onOpen: onMenuPanoramaOpen, onClose: onMenuPanoramaClose } = useDisclosure();
 
@@ -382,7 +381,7 @@ export const Nav = () => {
                 </MenuItem>
               )}
               {(hasPermission(auth?.user.role, "campagnes/lecture") ||
-               hasPermission(auth?.user.role, "campagnes-region/lecture")) && (
+               hasPermission(auth?.user.role, "campagnes-région/lecture")) && (
                 <MenuItem p="0">
                   <NavMenuLink href="/admin/campagnes" segment="admin/campagnes">
                     Campagnes

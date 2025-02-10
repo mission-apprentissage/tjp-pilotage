@@ -3,6 +3,7 @@ import { CampagneStatutEnum } from 'shared/enum/campagneStatutEnum';
 import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
 import type {DemandeTypeType} from 'shared/enum/demandeTypeEnum';
+import {RoleEnum} from 'shared/enum/roleEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 import type { UserType } from 'shared/schema/userSchema';
 import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
@@ -46,8 +47,8 @@ export const canEditDemande = ({
 
 export const canDeleteDemande = ({ demande, user, } : { demande: Demande; user?: UserType }) =>
   canEditDemande({user, demande}) &&
-  !hasRole({ user, role: "expert_region" }) &&
-  !hasRole({ user, role: "region" });
+  !hasRole({ user, role: RoleEnum["expert_region"] }) &&
+  !hasRole({ user, role: RoleEnum["region"] });
 
 
 export const canImportDemande = ({

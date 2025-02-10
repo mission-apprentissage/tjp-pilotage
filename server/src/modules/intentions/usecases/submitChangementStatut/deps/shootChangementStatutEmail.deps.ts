@@ -1,5 +1,6 @@
 import Boom from "@hapi/boom";
-import type { Role } from "shared";
+import type {Role} from 'shared';
+import { RoleEnum} from 'shared';
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
@@ -48,7 +49,7 @@ export const shootChangementStatutEmail = async (
       throw Boom.badRequest(`Impossible de trouver la formation avec le cfd ${intention.cfd}`);
     }
 
-    if ((owner.role as Role) === "perdir") {
+    if ((owner.role as Role) === RoleEnum["perdir"]) {
       console.debug(`Envoie de l'email intention_dossier_incomplet à ${owner.email}`);
       shootTemplate({
         to: owner.email,

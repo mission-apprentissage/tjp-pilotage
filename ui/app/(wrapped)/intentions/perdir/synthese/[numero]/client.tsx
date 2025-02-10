@@ -5,7 +5,7 @@ import { isAxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { useEffect } from "react";
-import { hasRole } from "shared";
+import {hasRole, RoleEnum} from 'shared';
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
@@ -31,7 +31,7 @@ export default ({
   };
 }) => {
   const { auth } = useAuth();
-  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
+  const isPerdir = hasRole({ user: auth?.user, role: RoleEnum["perdir"] });
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {

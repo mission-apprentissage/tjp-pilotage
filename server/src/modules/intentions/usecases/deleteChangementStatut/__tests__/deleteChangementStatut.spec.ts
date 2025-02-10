@@ -4,6 +4,7 @@ import { buildChangementStatut } from "@tests/utils/schema/changementStatut.spec
 import type { Intention } from "@tests/utils/schema/intentions.spec.utils";
 import { clearIntentions, createIntentionBuilder } from "@tests/utils/schema/intentions.spec.utils";
 import { createUserBuilder, generateAuthCookie } from "@tests/utils/schema/users.spec.utils";
+import { RoleEnum } from "shared";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import type { RequestUser } from "@/modules/core/model/User";
@@ -118,15 +119,15 @@ describe("[DELETE]/intention/changement-statut/:id", () => {
           user = undefined;
         },
         utilisateurNonAuthorise: async () => {
-          user = await createUserBuilder().withRole("invite").create();
+          user = await createUserBuilder().withRole(RoleEnum["invite"]).create();
         },
         utilisateurAutorise: async (data: Partial<RequestUser> = {}) => {
           user = await createUserBuilder(data)
-            .withRole("pilote_region")
+            .withRole(RoleEnum["pilote_region"])
             .create();
         },
         utilisateurNational: async () => {
-          user = await createUserBuilder().withRole("admin").create();
+          user = await createUserBuilder().withRole(RoleEnum["admin"]).create();
         },
         intentionExistante: async (data = {}) => {
           if (user) {

@@ -4,6 +4,7 @@ import { buildChangementStatut } from "@tests/utils/schema/changementStatut.spec
 import type { Intention } from "@tests/utils/schema/intentions.spec.utils";
 import { clearIntentions, createIntentionBuilder } from "@tests/utils/schema/intentions.spec.utils";
 import { createUserBuilder, generateAuthCookie } from "@tests/utils/schema/users.spec.utils";
+import {RoleEnum} from 'shared';
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { IResError } from "shared/models/errors";
 import type { ROUTES } from "shared/routes/routes";
@@ -136,18 +137,18 @@ describe("[POST]/intention/statut/submit", () => {
           user = undefined;
         },
         utilisateurNonAuthorise: async () => {
-          user = await createUserBuilder().withRole("invite").create();
+          user = await createUserBuilder().withRole(RoleEnum["invite"]).create();
         },
         utilisateurAutorise: async (data: Partial<RequestUser> = {}) => {
           user = await createUserBuilder(data)
-            .withRole("pilote_region")
+            .withRole(RoleEnum["pilote_region"])
             .create();
         },
         utilisateurNational: async () => {
-          user = await createUserBuilder().withRole("admin").create();
+          user = await createUserBuilder().withRole(RoleEnum["admin"]).create();
         },
         intentionExistante: async (data: Partial<Intention> = {}) => {
-          intentionOwner = await createUserBuilder().withRole("perdir").create();
+          intentionOwner = await createUserBuilder().withRole(RoleEnum["perdir"]).create();
           intention = (
             await (
               await createIntentionBuilder(intentionOwner, data).withCurrentCampagneId()

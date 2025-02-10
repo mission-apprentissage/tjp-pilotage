@@ -18,8 +18,8 @@ export const deleteAvisFactory =
       if (!intention) throw Boom.notFound("Intention non trouvée en base");
 
       const scope = getPermissionScope(user.role, "intentions-perdir-avis/ecriture");
-      const isAllowed = guardScope(scope?.default, {
-        region: () => user.codeRegion === intention.codeRegion,
+      const isAllowed = guardScope(scope, {
+        région: () => user.codeRegion === intention.codeRegion,
         national: () => true,
       });
       if (!isAllowed) throw Boom.forbidden();

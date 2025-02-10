@@ -25,8 +25,8 @@ export const getDemandeRoute = (server: Server) => {
         });
 
         const scope = getPermissionScope(user.role, "intentions/ecriture");
-        const canEdit = guardScope(scope?.default, {
-          region: () => user.codeRegion === demande.codeRegion,
+        const canEdit = guardScope(scope, {
+          région: () => user.codeRegion === demande.codeRegion,
           national: () => true,
         });
         response.status(200).send({

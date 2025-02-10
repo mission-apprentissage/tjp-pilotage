@@ -14,9 +14,9 @@ export const deleteIntentionFactory =
       if (!intention) throw Boom.notFound();
 
       const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
-      const isAllowed = guardScope(scope?.default, {
+      const isAllowed = guardScope(scope, {
         uai: () => user.uais?.includes(intention.uai) ?? false,
-        region: () => user.codeRegion === intention.codeRegion,
+        région: () => user.codeRegion === intention.codeRegion,
         national: () => true,
       });
       if (!isAllowed) throw Boom.forbidden();

@@ -9,6 +9,7 @@ import {
   createUserBuilder,
   generateAuthCookie,
 } from "@tests/utils/schema/users.spec.utils";
+import {RoleEnum} from 'shared';
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import type { IResErrorJson } from "shared/models/errors";
 import type { ROUTES } from "shared/routes/routes";
@@ -55,7 +56,7 @@ describe("[POST]/intention/submit", () => {
   });
 
   it("doit retourner une erreur 403 si l'utilisateur n'a pas un rôle lui permettant de soumettre une intention", async () => {
-    const user = await createUserBuilder().withRole("invite").create();
+    const user = await createUserBuilder().withRole(RoleEnum["invite"]).create();
 
     const intention = await createIntentionBuilder(user).build();
 
@@ -81,7 +82,7 @@ describe("[POST]/intention/submit", () => {
 
   it("doit retourner une erreur 403 si l'utilisateur saisie une intention sur un établissement autre que celui qui lui est associé", async () => {
     const perdir = await createUserBuilder()
-      .withRole("perdir")
+      .withRole(RoleEnum["perdir"])
       .withUais(["0820917B"])
       .create();
     const intention = await (

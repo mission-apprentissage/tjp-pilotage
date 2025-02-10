@@ -15,7 +15,7 @@ export const createCampagneRegionRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("campagnes-region/ecriture"),
+      preHandler: hasPermissionHandler("campagnes-région/ecriture"),
       handler: async (request, response) => {
         await createCampagneRegion(request.body);
 

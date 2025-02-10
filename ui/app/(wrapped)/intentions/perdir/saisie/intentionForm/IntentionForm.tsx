@@ -20,7 +20,7 @@ import { isAxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { hasRole } from "shared";
+import {hasRole, RoleEnum} from 'shared';
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
@@ -119,7 +119,7 @@ export const IntentionForm = ({
   const isDisabledForPerdir =
     hasRole({
       user: auth?.user,
-      role: "perdir",
+      role: RoleEnum["perdir"],
     }) &&
     !!defaultValues.statut &&
     getStepWorkflow(defaultValues.statut) > 1;
@@ -180,7 +180,7 @@ export const IntentionForm = ({
   const getStatutSubmit = (
     statutActuel?: Exclude<DemandeStatutType, "supprimée">
   ): Exclude<DemandeStatutType, "supprimée"> => {
-    if (hasRole({ user: auth?.user, role: "perdir" }) || hasRole({ user: auth?.user, role: "expert_region" })) {
+    if (hasRole({ user: auth?.user, role: RoleEnum["perdir"] }) || hasRole({ user: auth?.user, role: RoleEnum["expert_region"] })) {
       return DemandeStatutEnum["proposition"];
     }
     if (isTypeAjustement(typeDemande)) {
@@ -207,7 +207,7 @@ export const IntentionForm = ({
   };
 
   const canSubmitBrouillon = (statut?: Exclude<DemandeStatutType, "supprimée">): boolean => {
-    if (hasRole({ user: auth?.user, role: "perdir" }) || hasRole({ user: auth?.user, role: "expert_region" })) {
+    if (hasRole({ user: auth?.user, role: RoleEnum["perdir"] }) || hasRole({ user: auth?.user, role: RoleEnum["expert_region"] })) {
       return statut === undefined || statut === DemandeStatutEnum["brouillon"];
     }
     return false;

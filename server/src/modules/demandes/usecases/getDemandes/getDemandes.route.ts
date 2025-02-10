@@ -31,8 +31,8 @@ export const getDemandesRoute = (server: Server) => {
           ...result,
           demandes: result.demandes.map((demande) => ({
             ...demande,
-            canEdit: guardScope(scope?.default, {
-              region: () => user.codeRegion === demande.codeRegion,
+            canEdit: guardScope(scope, {
+              région: () => user.codeRegion === demande.codeRegion,
               national: () => true,
             }),
           })),
