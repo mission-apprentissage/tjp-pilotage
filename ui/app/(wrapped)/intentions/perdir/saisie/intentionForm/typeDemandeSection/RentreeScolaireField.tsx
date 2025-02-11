@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
@@ -32,6 +33,7 @@ export const RentreeScolaireField = ({
     formState: { errors },
     setValue,
     watch,
+    resetField
   } = useFormContext<IntentionForms>();
   const rentreeScolaire = watch("rentreeScolaire");
   const rentreeScolaireOptions = [0, 1, 2, 3, 4, 5].map(
@@ -47,7 +49,7 @@ export const RentreeScolaireField = ({
         if (rentreeScolaire === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE)) {
           setValue("typeDemande", "ajustement");
         } else if (typeDemande === "ajustement") {
-          setValue("typeDemande", "");
+          resetField("typeDemande");
         }
       }).unsubscribe
   );
