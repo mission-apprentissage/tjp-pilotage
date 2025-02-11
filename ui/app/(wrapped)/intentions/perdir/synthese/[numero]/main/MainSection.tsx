@@ -2,6 +2,7 @@ import { Flex, IconButton, Tooltip, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import NextLink from "next/link";
+import { isCampagneEnCours } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
 import { canEditIntention } from "@/app/(wrapped)/intentions/utils/permissionsIntentionUtils";
@@ -17,13 +18,11 @@ export const MainSection = ({
   displayType,
   displaySynthese,
   displayCommentairesEtAvis,
-  isCampagneEnCours,
 }: {
   intention: (typeof client.infer)["[GET]/intention/:numero"];
   displayType: DisplayTypeEnum;
   displaySynthese: () => void;
   displayCommentairesEtAvis: () => void;
-  isCampagneEnCours: boolean;
 }) => {
   const { auth } = useAuth();
   const toast = useToast();
@@ -59,7 +58,7 @@ export const MainSection = ({
 
   return (
     <Flex bg="white" borderRadius={6} p={8} direction="column">
-      {isCampagneEnCours && (
+      {isCampagneEnCours(intention.campagne) && (
         <Flex direction={"row"} justify={"space-between"}>
           <TabsSection
             displayType={displayType}

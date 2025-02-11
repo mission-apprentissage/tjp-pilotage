@@ -1,11 +1,11 @@
 import {hasPermission, hasRole} from 'shared';
-import { CampagneStatutEnum } from 'shared/enum/campagneStatutEnum';
 import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
-import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
 import type {DemandeTypeType} from 'shared/enum/demandeTypeEnum';
 import {RoleEnum} from 'shared/enum/roleEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 import type { UserType } from 'shared/schema/userSchema';
+import { isCampagneEnCours, isCampagneTerminee } from 'shared/utils/campagneUtils';
+import {isStatutDemandeValidee, isStatutRefusee} from 'shared/utils/statutDemandeUtils';
 import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
 
 import {feature} from '@/utils/feature';
@@ -19,7 +19,7 @@ type Demande = {
 
 export const canCreateDemande = ({ user, campagne } : { user?: UserType, campagne: CampagneType }) =>
   !feature.saisieDisabled &&
-  campagne.statut === CampagneStatutEnum["en cours"] &&
+  isCampagneEnCours(campagne) &&
   hasPermission(user?.role, "intentions/ecriture");
 
 export const canEditDemande = ({
@@ -29,18 +29,17 @@ export const canEditDemande = ({
   demande: Demande,
   user?: UserType
 }) => {
-  const isCampagneEnCours = demande.campagne?.statut === CampagneStatutEnum["en cours"];
   const canUserEditDemande = demande.canEdit;
   const canEditStatut = (
-    demande.statut !== DemandeStatutEnum["demande validée"] &&
-    demande.statut !== DemandeStatutEnum["refusée"]
+    !isStatutDemandeValidee(demande.statut) &&
+    !isStatutRefusee(demande.statut)
   );
 
   return (
     !feature.saisieDisabled &&
     canUserEditDemande &&
     canEditStatut &&
-    isCampagneEnCours &&
+    isCampagneEnCours(demande?.campagne) &&
     hasPermission(user?.role, "intentions/ecriture")
   );
 };
@@ -64,7 +63,7 @@ export const canImportDemande = ({
 }) =>  (
   !isAlreadyImported &&
   !isLoading &&
-  campagne?.statut === CampagneStatutEnum["terminée"] &&
+  isCampagneTerminee(campagne) &&
   hasPermission(user?.role, "intentions/ecriture")
 );
 
@@ -72,11 +71,13 @@ export const canCorrectDemande = ({
   demande,
   user,
 } : {
-  demande: Demande,
+  demande?: Demande,
   user?: UserType
 }) =>
   feature.correction &&
-  demande.statut === DemandeStatutEnum["demande validée"] &&
+  demande &&
+  isStatutDemandeValidee(demande.statut) &&
   hasPermission(user?.role, "intentions/ecriture") &&
+  isCampagneTerminee(demande?.campagne) &&
   !isTypeAjustement(demande.typeDemande);
 

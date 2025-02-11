@@ -46,7 +46,7 @@ export const CapaciteSection = ({ demande, disabled }: { demande: Demande; disab
   } = useFormContext<CorrectionForms>();
 
   const typeDemande = demande?.typeDemande;
-  const coloration = (typeDemande !== undefined && isTypeColoration(typeDemande)) || demande?.coloration;
+  const coloration = isTypeColoration(typeDemande) || demande?.coloration;
 
   const [capaciteScolaireActuelle, capaciteScolaire, capaciteApprentissageActuelle, capaciteApprentissage] = watch([
     "capaciteScolaireActuelle",

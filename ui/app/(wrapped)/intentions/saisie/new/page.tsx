@@ -3,6 +3,7 @@
 import {redirect} from 'next/navigation';
 
 import { IntentionForm } from "@/app/(wrapped)/intentions/saisie/intentionForm/IntentionForm";
+import { canCreateDemande } from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
 import {getRoutingSaisieRecueilDemande} from '@/utils/getRoutingRecueilDemande';
 import {GuardExpe} from '@/utils/security/GuardExpe';
 import { GuardPermission } from "@/utils/security/GuardPermission";
@@ -19,6 +20,7 @@ const Page = () => {
     <GuardPermission permission="intentions/ecriture">
       <GuardExpe isExpeRoute={false}>
         <IntentionForm
+          disabled={!canCreateDemande({ user: auth?.user, campagne })}
           defaultValues={{
             campagneId: campagne.id,
             rentreeScolaire:  Number.parseInt(campagne.annee) + 1,

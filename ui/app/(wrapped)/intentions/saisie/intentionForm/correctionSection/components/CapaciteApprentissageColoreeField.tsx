@@ -18,8 +18,8 @@ export const CapaciteApprentissageColoreeField = chakra(
     className?: string;
   }) => {
     const typeDemande = demande?.typeDemande;
-    const fermeture = typeDemande !== undefined && isTypeFermeture(typeDemande);
-    const coloration = typeDemande !== undefined && (isTypeColoration(typeDemande) || demande?.coloration);
+    const fermeture = isTypeFermeture(typeDemande);
+    const coloration = isTypeColoration(typeDemande) || demande?.coloration;
     const isReadOnly = fermeture || !coloration || disabled;
 
     if (!coloration) return <></>;

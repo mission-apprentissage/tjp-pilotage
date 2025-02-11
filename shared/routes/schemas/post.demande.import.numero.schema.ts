@@ -27,8 +27,6 @@ const FormationMetadataSchema = z
 const MetadataSchema = z.object({
   etablissement: EtablissementMetadataSchema,
   formation: FormationMetadataSchema,
-  etablissementCompensation: EtablissementMetadataSchema,
-  formationCompensation: FormationMetadataSchema,
 });
 
 const DemandeSchema = z.object({

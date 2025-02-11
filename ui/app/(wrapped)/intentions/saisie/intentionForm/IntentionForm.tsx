@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { isAxiosError } from "axios";
-import { usePathname, useRouter } from "next/navigation";
+import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
@@ -31,7 +31,7 @@ import { Conseils } from "@/app/(wrapped)/intentions/saisie/components/Conseils"
 import { MenuFormulaire } from "@/app/(wrapped)/intentions/saisie/components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
 import type { Demande, DemandeMetadata } from "@/app/(wrapped)/intentions/saisie/types";
-import { canCreateDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
+import { canCorrectDemande, canCreateDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import type { DetailedApiError } from "@/utils/apiError";
 import { getDetailedErrorMessage } from "@/utils/apiError";
@@ -179,6 +179,10 @@ export const IntentionForm = ({
     correction: correctionRef,
   } as Record<string, React.RefObject<HTMLDivElement>>;
 
+  const queryParams = useSearchParams();
+  const isCorrection = !!queryParams.get("correction");
+  const showCorrection = isCorrection && canCorrectDemande({demande, user: auth?.user});
+
   return (
     <FormProvider {...form}>
       <Box
@@ -240,7 +244,7 @@ export const IntentionForm = ({
               <Grid templateColumns={"repeat(3, 1fr)"} columnGap={8}>
                 <GridItem>
                   <Box position="sticky" z-index="sticky" top={STICKY_OFFSET} textAlign={"start"}>
-                    <MenuFormulaire refs={anchorsRefs} />
+                    <MenuFormulaire refs={anchorsRefs} showCorrection={showCorrection} />
                     <Box position="relative">
                       <Conseils />
                     </Box>
@@ -270,6 +274,7 @@ export const IntentionForm = ({
                     disabled={!canCreateDemande({user: auth?.user, campagne})}
                     campagne={campagne}
                     demande={demande}
+                    showCorrection={showCorrection}
                     footerActions={
                       <Box justifyContent={"center"} ref={statusComponentRef}>
                         <Button

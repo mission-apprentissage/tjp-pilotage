@@ -3,6 +3,7 @@ import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { demandeValidators, getPermissionScope, guardScope } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import type { submitDemandeSchema } from "shared/routes/schemas/post.demande.submit.schema";
 import type { z } from "zod";
 
@@ -94,7 +95,8 @@ export const [submitDemande, submitDemandeFactory] = inject(
       }
 
       const compensationRentreeScolaire =
-        demande.typeDemande === "augmentation_compensation" || demande.typeDemande === "ouverture_compensation"
+        demande.typeDemande === DemandeTypeEnum["augmentation_compensation"] ||
+        demande.typeDemande === DemandeTypeEnum["ouverture_compensation"]
           ? demande.rentreeScolaire
           : undefined;
 

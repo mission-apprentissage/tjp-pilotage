@@ -1,8 +1,9 @@
 import Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import type { CampagneRegionSchema } from "shared/routes/schemas/post.campagnes-region.campagneRegionId.schema";
+import type { CampagneType } from "shared/schema/campagneSchema";
+import {isCampagneEnCours} from 'shared/utils/campagneUtils';
 
 import { getCampagneEnCours } from "@/modules/core/queries/getCampagneEnCours";
 import { getCampagneRegionEnCours } from "@/modules/core/queries/getCampagneRegionEnCours";
@@ -42,7 +43,7 @@ export const [createCampagneRegion, createCampagneRegionFactory] = inject(
         });
     }
     const campagneRegionEnCours = await deps.getCampagneRegionEnCours(campagneRegion);
-    if (campagneRegionEnCours && campagneRegion.statut === CampagneStatutEnum["en cours"]) {
+    if (campagneRegionEnCours && isCampagneEnCours(campagneRegion as unknown as CampagneType)) {
       throw Boom.badRequest("Une campagne régionale est déjà en cours", {
         id: campagneRegionEnCours.id,
         errors: {

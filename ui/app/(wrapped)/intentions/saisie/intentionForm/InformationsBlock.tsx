@@ -13,7 +13,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import type { ReactNode, RefObject } from "react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -24,8 +24,6 @@ import { isTypeAjustement } from "shared/utils/typeDemandeUtils";
 import { client } from "@/api.client";
 import { SectionBlock } from "@/app/(wrapped)/intentions/saisie/components/SectionBlock";
 import type { Demande } from "@/app/(wrapped)/intentions/saisie/types";
-import { feature } from "@/utils/feature";
-import { usePermission } from "@/utils/security/usePermission";
 
 import { CorrectionSection } from "./correctionSection/CorrectionSection";
 import type { IntentionForms } from "./defaultFormValues";
@@ -42,6 +40,7 @@ export const InformationsBlock = ({
   footerActions,
   campagne,
   demande,
+  showCorrection
 }: {
   refs: Record<string, RefObject<HTMLDivElement>>;
   formId?: string;
@@ -49,6 +48,7 @@ export const InformationsBlock = ({
   footerActions: ReactNode;
   campagne: CampagneType;
   demande?: Demande;
+  showCorrection?: boolean;
 }) => {
   const { push } = useRouter();
   const { setValue, watch } = useFormContext<IntentionForms>();
@@ -63,23 +63,12 @@ export const InformationsBlock = ({
     },
   });
 
-  const queryParams = useSearchParams();
-  const isCorrection = queryParams.get("correction");
   const typeDemande = watch("typeDemande");
 
   useEffect(() => {
     refs["correction"].current?.scrollIntoView({ behavior: "smooth" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCorrection]);
-
-  const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
-
-  const showCorrection =
-    feature.correction &&
-    isCorrection &&
-    demande &&
-    demande.statut === DemandeStatutEnum["demande validée"] &&
-    hasPermissionSubmitIntention;
+  }, [showCorrection]);
 
   return (
     <Flex direction="column" gap={6} mt={6}>
@@ -93,7 +82,7 @@ export const InformationsBlock = ({
       </SectionBlock>
       {showCorrection && (
         <SectionBlock borderColor={"red"} borderWidth={"1px"}>
-          <CorrectionSection correctionRef={refs["correction"]} demande={demande} campagne={campagne} />
+          <CorrectionSection correctionRef={refs["correction"]} demande={demande!} campagne={campagne} />
         </SectionBlock>
       )}
       <SectionBlock>

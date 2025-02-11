@@ -471,7 +471,7 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région de l'expérimentation doit pouvoir effectuer une correction sur une demande validée", () => {
     fixture.given.utilisateurAdminRegionExpe();
-    fixture.given.campagne2024();
+    fixture.given.campagne2023Terminee();
     fixture.given.intentionValidee();
 
     fixture.when.canShowCorrectionButton();
@@ -481,7 +481,7 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région de l'expérimentation ne doit pas pouvoir effectuer une correction sur un projet de demande", () => {
     fixture.given.utilisateurAdminRegionExpe();
-    fixture.given.campagne2024();
+    fixture.given.campagne2023Terminee();
     fixture.given.intentionEditable();
 
     fixture.when.canShowCorrectionButton();
@@ -491,8 +491,28 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région de l'expérimentation ne doit pas pouvoir effectuer une correction sur un type de demande ajustement", () => {
     fixture.given.utilisateurAdminRegionExpe();
-    fixture.given.campagne2024();
+    fixture.given.campagne2023Terminee();
     fixture.given.intentionAjustement();
+
+    fixture.when.canShowCorrectionButton();
+
+    fixture.then.verifierCanNotShowCorrectionButton();
+  });
+
+  it("Un utilisateur admin région de l'expérimentation ne doit pas pouvoir effectuer une correction sur une demande d'une campagne en cours", () => {
+    fixture.given.utilisateurAdminRegionExpe();
+    fixture.given.campagne2024();
+    fixture.given.intentionValidee();
+
+    fixture.when.canShowCorrectionButton();
+
+    fixture.then.verifierCanNotShowCorrectionButton();
+  });
+
+  it("Un utilisateur admin région de l'expérimentation ne doit pas pouvoir effectuer une correction sur une demande d'une campagne en attente", () => {
+    fixture.given.utilisateurAdminRegionExpe();
+    fixture.given.campagne2025EnAttente();
+    fixture.given.intentionValidee();
 
     fixture.when.canShowCorrectionButton();
 

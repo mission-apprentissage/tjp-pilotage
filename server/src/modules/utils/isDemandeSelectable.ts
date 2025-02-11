@@ -6,6 +6,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import type { DB } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
+
 export const isDemandeSelectable =
   ({ user }: { user: RequestUser }) =>
     (eb: ExpressionBuilder<DB, "demande">) => {
@@ -35,7 +36,7 @@ const getDemandeSelectableFilters = (user?: RequestUser) => {
     région: { codeRegion: user.codeRegion },
     user: { userId: user.id },
     uai: { uais: user.uais ?? [] },
-    role: { role: user.role, codeRegion: user.codeRegion },
+    role: { role: user.role },
   }[scope];
 };
 
@@ -84,7 +85,7 @@ const getIntentionSelectableFilters = (user?: Pick<RequestUser, "id" | "role" | 
     national: {},
     région: { codeRegion: user.codeRegion },
     uai: { uais: user.uais },
-    role: { role: user.role, codeRegion: user.codeRegion },
+    role: { role: user.role },
     user: { userId: user.id },
   }[scope];
 };

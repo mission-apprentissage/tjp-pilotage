@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { DemandeStatutEnum, DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { scope, ScopeEnum } from "../../enum/scopeEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
@@ -70,8 +70,8 @@ export const getStatsPilotageIntentionsSchema = {
   querystring: FiltersSchema,
   response: {
     200: z.object({
-      ["projet de demande"]: StatsTransfoSchema,
-      ["demande validée"]: StatsTransfoSchema,
+      [DemandeStatutEnum["projet de demande"]]: StatsTransfoSchema,
+      [DemandeStatutEnum["demande validée"]]: StatsTransfoSchema,
       all: StatsTransfoSchema,
       campagne: z.object({
         annee: z.string(),

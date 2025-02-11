@@ -31,14 +31,16 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { CampagneType } from "shared/schema/campagneSchema";
+import type { UserType } from "shared/schema/userSchema";
 
 import { client } from "@/api.client";
 import type { Intentions } from "@/app/(wrapped)/intentions/perdir/saisie/types";
 import type { AnneeCampagneMotifCorrection} from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
 import { getMotifCorrectionOptionsParAnneeCampagne } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 
-export const CorrectionDemandeButton = chakra(
-  ({ intention, campagne }: { intention: Intentions[number], campagne: CampagneType }) => {
+export const CorrectionIntentionButton = chakra(
+  ({ user, intention, campagne }: { user?: UserType; intention: Intentions[number], campagne: CampagneType }) => {
     const toast = useToast();
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -138,7 +140,7 @@ export const CorrectionDemandeButton = chakra(
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    router.push(`/intentions/saisie/${intention.numero}?correction=true`);
+                    router.push(getRoutingSaisieRecueilDemande({campagne, user, suffix: `${intention.numero}?correction=true`}));
                   }}
                 >
                   <Flex direction={"row"} h={"100%"} gap={2}>

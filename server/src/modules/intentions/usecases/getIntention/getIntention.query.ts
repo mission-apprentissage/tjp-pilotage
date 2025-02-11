@@ -7,6 +7,7 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 import { getKbdClient } from "@/db/db";
 import { findOneCampagneRegionByCampagneId } from "@/modules/intentions/repositories/findOneCampagneRegionByCampagneId.query";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import {castRaisonCorrection} from '@/modules/utils/castRaisonCorrection';
 import { castAvisStatut } from "@/modules/utils/castStatutAvis";
 import { castAvisType } from "@/modules/utils/castTypeAvis";
 import { castTypeDemande } from "@/modules/utils/castTypeDemande";
@@ -42,6 +43,13 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     .selectAll("intention")
     .select((eb) => [
       "suivi.id as suiviId",
+      jsonObjectFrom(
+        eb
+          .selectFrom("correction")
+          .selectAll("correction")
+          .whereRef("correction.intentionNumero", "=", "intention.numero")
+          .limit(1)
+      ).as("correction"),
       jsonObjectFrom(
         eb
           .selectFrom("user")
@@ -210,6 +218,10 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       statutAvis: castAvisStatut(avis.statutAvis),
       typeAvis: castAvisType(avis.typeAvis),
     })),
+    correction: intention.correction ? {
+      ...intention.correction,
+      raison: castRaisonCorrection(intention.correction?.raison),
+    }: undefined,
     formationSpecifique: formatFormationSpecifique(intention),
   };
 };
