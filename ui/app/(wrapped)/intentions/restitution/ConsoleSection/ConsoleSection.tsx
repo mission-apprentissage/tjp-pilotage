@@ -61,10 +61,9 @@ export const ConsoleSection = ({
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
 }) => {
   const router = useRouter();
-  const { auth } = useAuth();
+  const { user } = useAuth();
 
   const showFormulairePerdir = (intention: { isIntention: boolean; uai: string; codeRegion: string }) => {
-    const user = auth?.user;
     const scope = getPermissionScope(user?.role, "intentions-perdir/lecture");
     const isAllowed = guardScope(scope, {
       role: () => false,

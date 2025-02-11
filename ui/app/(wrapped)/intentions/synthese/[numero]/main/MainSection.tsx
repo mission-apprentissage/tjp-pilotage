@@ -14,15 +14,14 @@ export const MainSection = ({
 }: {
   demande: (typeof client.infer)["[GET]/demande/:numero"];
 }) => {
-
-  const { auth } = useAuth();
+  const { user } = useAuth();
 
   return (
     <Flex bg="white" borderRadius={6} p={8} direction="column">
       {isCampagneEnCours(demande.campagne) && (
         <Flex direction={"row"} justify={"space-between"}>
           <Flex direction={"row"} gap={2}>
-            {canEditDemande({ demande, user: auth?.user }) && (
+            {canEditDemande({ demande, user }) && (
               <Tooltip label="Modifier la demande">
                 <IconButton
                   as={NextLink}

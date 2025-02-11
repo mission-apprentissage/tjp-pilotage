@@ -63,7 +63,7 @@ export const IntentionForm = ({
   campagne: CampagneType;
   intention?: Intention;
 }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const toast = useToast();
   const { push } = useRouter();
   const pathname = usePathname();
@@ -123,7 +123,7 @@ export const IntentionForm = ({
 
   const isDisabledForPerdir =
     hasRole({
-      user: auth?.user,
+      user,
       role: RoleEnum["perdir"],
     }) &&
     !!defaultValues.statut &&
@@ -187,7 +187,7 @@ export const IntentionForm = ({
   const getStatutSubmit = (
     statutActuel?: Exclude<DemandeStatutType, "supprimée">
   ): Exclude<DemandeStatutType, "supprimée"> => {
-    if (hasRole({ user: auth?.user, role: RoleEnum["perdir"] }) || hasRole({ user: auth?.user, role: RoleEnum["expert_region"] })) {
+    if (hasRole({ user, role: RoleEnum["perdir"] }) || hasRole({ user, role: RoleEnum["expert_region"] })) {
       return DemandeStatutEnum["proposition"];
     }
     if (isTypeAjustement(typeDemande)) {
@@ -214,7 +214,7 @@ export const IntentionForm = ({
   };
 
   const canSubmitBrouillon = (statut?: Exclude<DemandeStatutType, "supprimée">): boolean => {
-    if (hasRole({ user: auth?.user, role: RoleEnum["perdir"] }) || hasRole({ user: auth?.user, role: RoleEnum["expert_region"] })) {
+    if (hasRole({ user, role: RoleEnum["perdir"] }) || hasRole({ user, role: RoleEnum["expert_region"] })) {
       return statut === undefined || statut === DemandeStatutEnum["brouillon"];
     }
     return false;
@@ -222,7 +222,7 @@ export const IntentionForm = ({
 
   const queryParams = useSearchParams();
   const isCorrection = !!queryParams.get("correction");
-  const showCorrection = isCorrection && canCorrectIntention({intention, user: auth?.user});
+  const showCorrection = isCorrection && canCorrectIntention({intention, user});
 
   return (
     <FormProvider {...form}>
@@ -252,16 +252,16 @@ export const IntentionForm = ({
             mb={4}
             pages={[
               { title: "Accueil", to: "/" },
-              { title: "Recueil des demandes", to: getRoutingSaisieRecueilDemande({campagne, user: auth?.user}) },
-              pathname === getRoutingSaisieRecueilDemande({campagne, user: auth?.user, suffix: "new"})
+              { title: "Recueil des demandes", to: getRoutingSaisieRecueilDemande({campagne, user}) },
+              pathname === getRoutingSaisieRecueilDemande({campagne, user, suffix: "new"})
                 ? {
                   title: "Nouvelle demande",
-                  to: getRoutingSaisieRecueilDemande({campagne, user: auth?.user, suffix: "new"}),
+                  to: getRoutingSaisieRecueilDemande({campagne, user, suffix: "new"}),
                   active: true,
                 }
                 : {
                   title: `Demande n°${formId}`,
-                  to: getRoutingSaisieRecueilDemande({campagne, user: auth?.user, suffix: formId}),
+                  to: getRoutingSaisieRecueilDemande({campagne, user, suffix: formId}),
                   active: true,
                 },
             ]}

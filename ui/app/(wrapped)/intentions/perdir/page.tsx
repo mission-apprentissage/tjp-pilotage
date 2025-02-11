@@ -7,8 +7,8 @@ import {useAuth} from '@/utils/security/useAuth';
 
 
 const Page = () => {
-  const { auth } = useAuth();
-  const isPartOfExpe = CODES_REGIONS_EXPE_2024.includes(auth?.user.codeRegion ?? "");
+  const { codeRegion } = useAuth();
+  const isPartOfExpe = codeRegion && CODES_REGIONS_EXPE_2024.includes(codeRegion);
 
   return isPartOfExpe ? redirect("/intentions/perdir/saisie") : redirect("/intentions/saisie");
 };

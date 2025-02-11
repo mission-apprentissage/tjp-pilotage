@@ -21,6 +21,7 @@ import { client } from "@/api.client";
 import { CreateCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/CreateCampagneRegion";
 import { EditCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/EditCampagneRegion";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
+import { formatBoolean } from "@/utils/formatUtils";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 // eslint-disable-next-line react/display-name, import/no-anonymous-default-export
@@ -62,6 +63,7 @@ export default () => {
                   <Th textAlign={"center"}>Statut</Th>
                   <Th width={"10%"}>Date de début</Th>
                   <Th width={"10%"}>Date de fin</Th>
+                  <Th width={"10%"}>Saisie perdir</Th>
                   <Th width={"5%"} isNumeric>
                     Actions
                   </Th>
@@ -91,6 +93,9 @@ export default () => {
                           toDate(campagneRegion.dateFin).toLocaleDateString("fr-FR") :
                           "Non définie"
                       }
+                    </Td>
+                    <Td width={"10%"}>
+                      {formatBoolean(campagneRegion.withSaisiePerdir)}
                     </Td>
                     <Td width={"5%"} isNumeric>
                       <IconButton

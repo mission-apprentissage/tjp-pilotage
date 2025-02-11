@@ -26,7 +26,7 @@ export const CreateCampagneRegion = ({
   campagnes: (typeof client.infer)["[GET]/campagnes"];
   regions?: (typeof client.infer)["[GET]/regions"];
 }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const {
     getValues,
     setValue,
@@ -39,7 +39,7 @@ export const CreateCampagneRegion = ({
   } = useForm<(typeof client.inferArgs)["[POST]/campagnes-region/:campagneRegionId"]["body"]>({
     shouldUseNativeValidation: false,
     defaultValues: {
-      codeRegion: auth?.user.codeRegion,
+      codeRegion: user?.codeRegion,
     }
   });
 
@@ -154,7 +154,7 @@ export const CreateCampagneRegion = ({
             </Select>
             {!!errors.statut && <FormErrorMessage>{errors.statut.message}</FormErrorMessage>}
           </FormControl>
-          {!auth?.user.codeRegion &&
+          {!user?.codeRegion &&
           (
             <FormControl mb="4" isInvalid={!!errors.codeRegion} isRequired>
               <FormLabel>Région</FormLabel>

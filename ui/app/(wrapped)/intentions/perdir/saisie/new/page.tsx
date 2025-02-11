@@ -14,15 +14,15 @@ import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
 const Page = () => {
   const { campagne } = useCurrentCampagne();
-  const { auth } = useAuth();
-  if(!campagne) return redirect(getRoutingSaisieRecueilDemande({campagne, user: auth?.user}));
+  const { user } = useAuth();
+  if(!campagne) return redirect(getRoutingSaisieRecueilDemande({campagne, user}));
 
   return (
     <GuardPermission permission="intentions-perdir/ecriture">
       <GuardExpe isExpeRoute={true}>
         <IntentionFilesProvider>
           <IntentionForm
-            disabled={!canCreateIntention({ user: auth?.user, campagne })}
+            disabled={!canCreateIntention({ user, campagne })}
             defaultValues={{
               campagneId: campagne.id,
               rentreeScolaire: Number.parseInt(campagne.annee) + 1,

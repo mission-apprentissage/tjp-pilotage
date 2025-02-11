@@ -55,7 +55,7 @@ import type { Filters, Order } from "./types";
 const PAGE_SIZE = 30;
 
 export const PageClient = () => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const { campagne } = useCurrentCampagne();
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -140,7 +140,7 @@ export const PageClient = () => {
   );
 
 
-  const isNouvelleDemandeDisabled = !canCreateDemande({user: auth?.user, campagne: data?.campagne ?? campagne!});
+  const isNouvelleDemandeDisabled = !canCreateDemande({user, campagne: data?.campagne ?? campagne!});
 
   const [searchDemande, setSearchDemande] = useState<string>(search);
 
@@ -282,19 +282,19 @@ export const PageClient = () => {
 
                     const linkSaisie = getRoutingSaisieRecueilDemande({
                       campagne: data?.campagne,
-                      user: auth?.user,
+                      user,
                       suffix: demande.numero,
                     });
 
                     const linkSaisieImported = getRoutingSaisieRecueilDemande({
                       campagne: data?.campagne,
-                      user: auth?.user,
+                      user,
                       suffix: demande.numeroDemandeImportee,
                     });
 
                     const linkSynthese = getRoutingSyntheseRecueilDemande({
                       campagne: data?.campagne,
-                      user: auth?.user,
+                      user,
                       suffix: demande.numero,
                     });
 
@@ -303,13 +303,13 @@ export const PageClient = () => {
                         ...demande,
                         campagne: data?.campagne,
                       },
-                      user: auth?.user,
+                      user,
                     });
 
                     const isImportDisabled = !canImportDemande({
                       isAlreadyImported: demande.numeroDemandeImportee !== undefined,
                       isLoading: (isLoading || isSubmitting || isImporting),
-                      user: auth?.user,
+                      user,
                       campagne: data?.campagne,
                     });
 
@@ -319,7 +319,7 @@ export const PageClient = () => {
                           ...demande,
                           campagne: data?.campagne
                         },
-                        user: auth?.user
+                        user
                       });
 
                     return (
@@ -461,7 +461,7 @@ export const PageClient = () => {
                                 {
                                   !isCorrectionDisabled &&
                                   (<CorrectionDemandeButton
-                                    user={auth?.user}
+                                    user={user}
                                     demande={demande}
                                     campagne={data?.campagne}
                                   />)

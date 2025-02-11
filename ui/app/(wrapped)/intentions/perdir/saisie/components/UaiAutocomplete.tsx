@@ -22,14 +22,14 @@ export const UaiAutocomplete = ({
   inError: boolean;
   onChange: (value?: Etablissement) => void;
 }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
       ...styles,
       borderColor: inError ? "red" : undefined,
     }),
   };
-  const isPerdir = hasRole({ user: auth?.user, role: RoleEnum["perdir"] });
+  const isPerdir = hasRole({ user, role: RoleEnum["perdir"] });
 
   return (
     <AsyncSelect

@@ -24,7 +24,7 @@ export const MainSection = ({
   displaySynthese: () => void;
   displayCommentairesEtAvis: () => void;
 }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const toast = useToast();
   const queryClient = useQueryClient();
 
@@ -66,7 +66,7 @@ export const MainSection = ({
             displayCommentairesEtAvis={displayCommentairesEtAvis}
           />
           <Flex direction={"row"} gap={2}>
-            {canEditIntention({intention, user: auth?.user}) && (
+            {canEditIntention({intention, user}) && (
               <Tooltip label="Modifier la demande">
                 <IconButton
                   as={NextLink}

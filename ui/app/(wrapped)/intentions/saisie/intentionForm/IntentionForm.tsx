@@ -57,7 +57,7 @@ export const IntentionForm = ({
   campagne: CampagneType;
   demande?: Demande;
 }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const toast = useToast();
   const { push } = useRouter();
   const pathname = usePathname();
@@ -181,7 +181,7 @@ export const IntentionForm = ({
 
   const queryParams = useSearchParams();
   const isCorrection = !!queryParams.get("correction");
-  const showCorrection = isCorrection && canCorrectDemande({demande, user: auth?.user});
+  const showCorrection = isCorrection && canCorrectDemande({demande, user});
 
   return (
     <FormProvider {...form}>
@@ -211,16 +211,16 @@ export const IntentionForm = ({
             mb={4}
             pages={[
               { title: "Accueil", to: "/" },
-              { title: "Recueil des demandes", to: getRoutingSaisieRecueilDemande({campagne, user: auth?.user}) },
-              pathname === getRoutingSaisieRecueilDemande({campagne, user: auth?.user, suffix: "new"})
+              { title: "Recueil des demandes", to: getRoutingSaisieRecueilDemande({campagne, user}) },
+              pathname === getRoutingSaisieRecueilDemande({campagne, user, suffix: "new"})
                 ? {
                   title: "Nouvelle demande",
-                  to: getRoutingSaisieRecueilDemande({campagne, user: auth?.user, suffix: "new"}),
+                  to: getRoutingSaisieRecueilDemande({campagne, user, suffix: "new"}),
                   active: true,
                 }
                 : {
                   title: `Demande n°${formId}`,
-                  to: getRoutingSaisieRecueilDemande({campagne, user: auth?.user, suffix: formId}),
+                  to: getRoutingSaisieRecueilDemande({campagne, user, suffix: formId}),
                   active: true,
                 },
             ]}
@@ -231,7 +231,7 @@ export const IntentionForm = ({
             formMetadata={formMetadata}
             onEditUaiCfdSection={onEditUaiCfdSection}
             active={step === 1}
-            disabled={!canCreateDemande({user: auth?.user, campagne})}
+            disabled={!canCreateDemande({user, campagne})}
             isFCIL={isFCIL}
             setIsFCIL={setIsFCIL}
             isCFDUaiSectionValid={isCFDUaiSectionValid}
@@ -271,7 +271,7 @@ export const IntentionForm = ({
                   <InformationsBlock
                     refs={anchorsRefs}
                     formId={formId}
-                    disabled={!canCreateDemande({user: auth?.user, campagne})}
+                    disabled={!canCreateDemande({user, campagne})}
                     campagne={campagne}
                     demande={demande}
                     showCorrection={showCorrection}

@@ -8,12 +8,12 @@ import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
 
 const Page = () => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const { campagne } = useCurrentCampagne();
 
   redirect(
     getRoutingSaisieRecueilDemande({
-      user: auth?.user,
+      user,
       campagne,
     })
   );

@@ -18,7 +18,6 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import type { Role } from "shared";
 import { getHierarchy, hasRole } from "shared";
 import {RoleEnum} from 'shared/enum/roleEnum';
 import { UserFonctionEnum } from "shared/enum/userFonctionEnum";
@@ -29,7 +28,7 @@ import { getErrorMessage } from "@/utils/apiError";
 import { useAuth } from "@/utils/security/useAuth";
 
 export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const { auth } = useAuth();
+  const { user, role } = useAuth();
   const {
     register,
     formState: { errors },
@@ -68,12 +67,12 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   const onSubmit = (v: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]) =>
     createUser({ body: { ...v, codeRegion: v.codeRegion || undefined } });
 
-  const roles = getHierarchy(auth?.user?.role as Role);
-  const isAdminRegion = hasRole({user: auth?.user, role: RoleEnum["admin_region"]});
+  const roles = getHierarchy(role);
+  const isAdminRegion = hasRole({user, role: RoleEnum["admin_region"]});
   const filteredRegions = (() => {
     if (!regions) return [];
     if (isAdminRegion) {
-      return regions.filter((region) => region.value === auth?.user?.codeRegion);
+      return regions.filter((region) => region.value === user?.codeRegion);
     }
     return regions;
   })();

@@ -87,12 +87,12 @@ export const TypeDemandeSection = ({
   demande?: Demande;
   typeDemandeRef: RefObject<HTMLDivElement>;
 }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   const queryParams = useSearchParams();
   const isCorrection = queryParams.get("correction")
-   && canCorrectDemande({demande, user: auth?.user});
+   && canCorrectDemande({demande, user});
 
   return (
     <Flex ref={typeDemandeRef} scrollMarginTop={SCROLL_OFFSET} direction={"column"} gap={6}>
@@ -130,7 +130,7 @@ export const TypeDemandeSection = ({
               router.replace(
                 getRoutingSaisieRecueilDemande({
                   campagne: demande!.campagne,
-                  user: auth?.user,
+                  user,
                   suffix: `${demande!.numero}?correction=true`,
                 })
               );

@@ -38,15 +38,15 @@ import { usePermission } from "@/utils/security/usePermission";
 import { UpdateAvisForm } from "./UpdateAvisForm";
 
 export const AvisSection = chakra(({ avis, statut }: { avis: Avis; statut: DemandeStatutType }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const toast = useToast();
 
   const hasPermissionModificationAvis = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     if (usePermission("intentions-perdir-avis/ecriture")) {
       // TODO
-      if (hasRole({ user: auth?.user, role: RoleEnum["expert_region"] }) || hasRole({ user: auth?.user, role: RoleEnum["region"] })) {
-        if (avis.createdBy === auth?.user.id) return true;
+      if (hasRole({ user, role: RoleEnum["expert_region"] }) || hasRole({ user, role: RoleEnum["region"] })) {
+        if (avis.createdBy === user?.id) return true;
         return false;
       } else return true;
     }
