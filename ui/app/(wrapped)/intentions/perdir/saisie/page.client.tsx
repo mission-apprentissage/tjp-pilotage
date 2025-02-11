@@ -31,8 +31,8 @@ import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
 import type { AvisTypeType } from "shared/enum/avisTypeEnum";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { isCampagneTerminee } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
@@ -48,7 +48,7 @@ import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 import { useStateParams } from "@/utils/useFilters";
 
 import { AvisTags } from "./components/AvisTags";
-import { CorrectionDemandeButton } from "./components/CorrectionDemandeButton";
+import { CorrectionIntentionButton } from "./components/CorrectionIntentionButton";
 import { DeleteIntentionButton } from "./components/DeleteIntentionButton";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
@@ -141,7 +141,7 @@ export const PageClient = () => {
     { cacheTime: 0, keepPreviousData: true }
   );
 
-  const isNouvelleDemandeDisabled = !canCreateIntention({ user: auth?.user, campagne: campagne! });
+  const isNouvelleDemandeDisabled = !canCreateIntention({ user: auth?.user, campagne: data?.campagne ?? campagne! });
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 
@@ -348,7 +348,8 @@ export const PageClient = () => {
                           intention : {
                             ...intention,
                             campagne: data?.campagne
-                          }
+                          },
+                          user: auth?.user
                         });
 
                         return (
@@ -480,7 +481,7 @@ export const PageClient = () => {
                                     }
                                   />
                                 </Tooltip>
-                                {data?.campagne.statut === CampagneStatutEnum["terminée"] &&
+                                {isCampagneTerminee(data?.campagne) &&
                                 (intention.numeroDemandeImportee ? (
                                   <Tooltip label={`Voir l'intention dupliquée ${intention.numeroDemandeImportee}`}>
                                     <IconButton
@@ -519,8 +520,12 @@ export const PageClient = () => {
                                     />
                                   </Tooltip>
                                 ))}
-                                { !isCorrectionDisabled &&
-                                 (<CorrectionDemandeButton intention={intention} campagne={data?.campagne} />)
+                                {!isCorrectionDisabled &&
+                                 (<CorrectionIntentionButton
+                                   user={auth?.user}
+                                   intention={intention}
+                                   campagne={data?.campagne}
+                                 />)
                                 }
                               </Flex>
                             </Td>

@@ -44,6 +44,7 @@ export const PageClient = ({
         disabled={!canEditIntention({intention, user: auth?.user})}
         formId={numero}
         defaultValues={intention}
+        intention={intention}
         formMetadata={intention.metadata}
         campagne={intention.campagne}
       />

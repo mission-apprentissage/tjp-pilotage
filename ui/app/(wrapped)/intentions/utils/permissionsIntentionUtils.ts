@@ -1,11 +1,10 @@
 import {hasPermission, hasRole, RoleEnum} from 'shared';
-import { CampagneStatutEnum } from 'shared/enum/campagneStatutEnum';
 import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
-import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
 import type {DemandeTypeType} from 'shared/enum/demandeTypeEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 import type { UserType } from 'shared/schema/userSchema';
-import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
+import { isCampagneEnCours, isCampagneTerminee } from 'shared/utils/campagneUtils';
+import { isStatutBrouillon, isStatutDemandeValidee, isStatutDossierIncomplet, isStatutProposition,isStatutRefusee } from 'shared/utils/statutDemandeUtils';
 
 import {feature} from '@/utils/feature';
 import { isUserPartOfExpe} from '@/utils/isPartOfExpe';
@@ -14,7 +13,7 @@ import { isUserPartOfExpe} from '@/utils/isPartOfExpe';
 type Intention = { campagne: CampagneType, statut: DemandeStatutType, typeDemande: DemandeTypeType, canEdit: boolean }
 
 export const canCreateIntention = ({ user, campagne } : { user?: UserType, campagne: CampagneType }) => {
-  return !feature.saisieDisabled && isUserPartOfExpe({ user, campagne }) && campagne.statut === CampagneStatutEnum["en cours"];
+  return !feature.saisieDisabled && isUserPartOfExpe({ user, campagne }) && isCampagneEnCours(campagne);
 };
 
 export const canEditIntention = ({
@@ -25,25 +24,24 @@ export const canEditIntention = ({
   user?: UserType
 }) => {
   if(!isUserPartOfExpe({ user, campagne: intention.campagne })) return false;
-  const isCampagneEnCours = intention.campagne?.statut === CampagneStatutEnum["en cours"];
   const canUserEditIntention = intention.canEdit;
   const canEditStatut = (
-    intention.statut !== DemandeStatutEnum["demande validée"] &&
-    intention.statut !== DemandeStatutEnum["refusée"]
+    !isStatutDemandeValidee(intention.statut) &&
+    !isStatutRefusee(intention.statut)
   );
 
   if(hasRole({ user, role: RoleEnum["perdir"] })) {
     const canPerdirEditStatut = canEditStatut && (
-      intention.statut === DemandeStatutEnum["brouillon"] ||
-      intention.statut === DemandeStatutEnum["proposition"] ||
-      intention.statut === DemandeStatutEnum["dossier incomplet"]
+      isStatutBrouillon(intention.statut) ||
+      isStatutProposition(intention.statut) ||
+      isStatutDossierIncomplet(intention.statut)
     );
 
     return (
       !feature.saisieDisabled &&
       canUserEditIntention &&
       canPerdirEditStatut &&
-      isCampagneEnCours
+      isCampagneEnCours(intention.campagne)
     );
   }
 
@@ -51,7 +49,7 @@ export const canEditIntention = ({
     !feature.saisieDisabled &&
     canUserEditIntention &&
     canEditStatut &&
-    isCampagneEnCours
+    isCampagneEnCours(intention.campagne)
   );
 };
 
@@ -73,7 +71,7 @@ export const canImportIntention = ({
 }) =>  (
   !isAlreadyImported &&
   !isLoading &&
-  campagne?.statut === CampagneStatutEnum["terminée"] &&
+  isCampagneTerminee(campagne) &&
   hasPermission(user?.role, "intentions-perdir/ecriture")
 );
 
@@ -81,11 +79,12 @@ export const canCorrectIntention = ({
   intention,
   user,
 } : {
-  intention: Intention,
+  intention?: Intention,
   user?: UserType
 }) =>
   feature.correction &&
-  isUserPartOfExpe({ user, campagne: intention.campagne }) &&
-  intention.statut === DemandeStatutEnum["demande validée"] &&
-  !isTypeAjustement(intention.typeDemande);
-
+  intention &&
+  hasPermission(user?.role, "intentions-perdir/ecriture") &&
+  isCampagneTerminee(intention?.campagne) &&
+  isStatutDemandeValidee(intention.statut);
+  // !isTypeAjustement(intention.typeDemande);

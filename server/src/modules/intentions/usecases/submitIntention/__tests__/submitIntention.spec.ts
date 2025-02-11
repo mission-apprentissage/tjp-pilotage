@@ -10,7 +10,9 @@ import {
   generateAuthCookie,
 } from "@tests/utils/schema/users.spec.utils";
 import {RoleEnum} from 'shared';
-import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import type {DemandeStatutType} from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum  } from "shared/enum/demandeStatutEnum";
+import {DemandeTypeEnum} from 'shared/enum/demandeTypeEnum';
 import type { IResErrorJson } from "shared/models/errors";
 import type { ROUTES } from "shared/routes/routes";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
@@ -39,7 +41,7 @@ describe("[POST]/intention/submit", () => {
   }, 15_000);
 
   beforeEach(async () => {
-    adminUser = await createUserBuilder().withRole("admin").create();
+    adminUser = await createUserBuilder().withRole(RoleEnum["admin"]).create();
   });
 
   afterEach(async () => {
@@ -142,7 +144,7 @@ describe("[POST]/intention/submit", () => {
       adminUser,
       intention
     )
-      .withStatut("proposition")
+      .withStatut(DemandeStatutEnum["proposition"])
       .build();
 
     const response = await submitIntention(
@@ -155,7 +157,7 @@ describe("[POST]/intention/submit", () => {
 
     const result = response.json() as Response;
     expect(result.id).toBeTypeOf("string");
-    expect(result.statut).toEqual("proposition");
+    expect(result.statut).toEqual(DemandeStatutEnum["proposition"]);
     expect(result.numero).toEqual(intention.numero);
   });
 
@@ -169,7 +171,7 @@ describe("[POST]/intention/submit", () => {
       adminUser,
       intention
     )
-      .withStatut("proposition")
+      .withStatut(DemandeStatutEnum["proposition"])
       .build();
 
     const response = await submitIntention(
@@ -190,7 +192,7 @@ describe("[POST]/intention/submit", () => {
     it("doit retourner une erreur si le nombre de places ouvertes est égale de zero", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "ouverture_nette",
+          typeDemande: DemandeTypeEnum["ouverture_nette"],
           capaciteScolaire: 0,
         }).withCurrentCampagneId()
       ).build();
@@ -206,7 +208,7 @@ describe("[POST]/intention/submit", () => {
     it("doit être valide si le nombre de places ouvertes est supérieur à 0", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "ouverture_nette",
+          typeDemande: DemandeTypeEnum["ouverture_nette"],
           capaciteScolaire: 1,
         }).withCurrentCampagneId()
       ).build();
@@ -221,7 +223,7 @@ describe("[POST]/intention/submit", () => {
     it("doit retourner une erreur si la capacité scolaire est supérieure à 0", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "fermeture",
+          typeDemande: DemandeTypeEnum[DemandeTypeEnum["fermeture"]],
           capaciteScolaire: 1,
         }).withCurrentCampagneId()
       ).build();
@@ -239,7 +241,7 @@ describe("[POST]/intention/submit", () => {
     it("doit retourner une erreur si la capacité en apprentissage est supérieur à zéro", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "fermeture",
+          typeDemande: DemandeTypeEnum["fermeture"],
           capaciteScolaire: 0,
           capaciteApprentissage: 1,
         }).withCurrentCampagneId()
@@ -258,7 +260,7 @@ describe("[POST]/intention/submit", () => {
     it("doit retourner une erreur si la capacité scolaire colorée est supérieur à zéro", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "fermeture",
+          typeDemande: DemandeTypeEnum["fermeture"],
           capaciteScolaire: 0,
           capaciteApprentissage: 0,
           capaciteScolaireColoree: 1,
@@ -280,7 +282,7 @@ describe("[POST]/intention/submit", () => {
     it("doit retourner une erreur si la capacité en apprentissage colorée est supérieur à zéro", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "fermeture",
+          typeDemande: DemandeTypeEnum["fermeture"],
           capaciteScolaire: 0,
           capaciteApprentissage: 0,
           capaciteScolaireColoree: 0,
@@ -303,7 +305,7 @@ describe("[POST]/intention/submit", () => {
     it("doit accepter une intention de fermeture valide", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "fermeture",
+          typeDemande: DemandeTypeEnum["fermeture"],
           capaciteScolaire: 0,
           capaciteScolaireActuelle: 10,
           capaciteApprentissageActuelle: 3,
@@ -323,7 +325,7 @@ describe("[POST]/intention/submit", () => {
     it("doit retourner une erreur si la capacité scolaire est inférieur à la capacité actuelle", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "augmentation_nette",
+          typeDemande: DemandeTypeEnum["augmentation_nette"],
           capaciteScolaireActuelle: 10,
           capaciteScolaire: 5,
         }).withCurrentCampagneId()
@@ -342,7 +344,7 @@ describe("[POST]/intention/submit", () => {
     it("doit retourner une erreur si la somme des futures capacités est inférieur à la somme des capacités actuelles", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "augmentation_nette",
+          typeDemande: DemandeTypeEnum["augmentation_nette"],
           capaciteScolaireActuelle: 10,
           capaciteApprentissageActuelle: 5,
           capaciteScolaire: 10,
@@ -361,7 +363,7 @@ describe("[POST]/intention/submit", () => {
     it("doit accepter une intention d'augmentation valide avec augmentation de la capacité scolaire", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "augmentation_nette",
+          typeDemande: DemandeTypeEnum["augmentation_nette"],
           capaciteScolaireActuelle: 10,
           capaciteApprentissageActuelle: 5,
           capaciteScolaire: 15, // Augmentation de 5
@@ -377,7 +379,7 @@ describe("[POST]/intention/submit", () => {
     it("doit accepter une intention d'augmentation valide avec augmentation de la capacité en apprentissage", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "augmentation_nette",
+          typeDemande: DemandeTypeEnum["augmentation_nette"],
           capaciteScolaireActuelle: 10,
           capaciteApprentissageActuelle: 5,
           capaciteScolaire: 10, // Reste identique
@@ -393,7 +395,7 @@ describe("[POST]/intention/submit", () => {
     it("doit accepter une intention d'augmentation valide avec augmentation des deux capacités", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "augmentation_nette",
+          typeDemande: DemandeTypeEnum["augmentation_nette"],
           capaciteScolaireActuelle: 10,
           capaciteApprentissageActuelle: 5,
           capaciteScolaire: 15, // Augmentation de 5
@@ -411,7 +413,7 @@ describe("[POST]/intention/submit", () => {
     it("doit retourner une erreur si la capacité scolaire est supérieur à la capacité actuelle", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "diminution",
+          typeDemande: DemandeTypeEnum["diminution"],
           capaciteScolaireActuelle: 10,
           capaciteScolaire: 15,
         }).withCurrentCampagneId()
@@ -430,7 +432,7 @@ describe("[POST]/intention/submit", () => {
     it("doit retourner une erreur si la somme des futures capacités est supérieur à la somme des capacités actuelles", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "diminution",
+          typeDemande: DemandeTypeEnum["diminution"],
           capaciteScolaireActuelle: 10,
           capaciteApprentissageActuelle: 5,
           capaciteScolaire: 8,
@@ -451,7 +453,7 @@ describe("[POST]/intention/submit", () => {
     it("doit accepter une intention de diminution valide", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "diminution",
+          typeDemande: DemandeTypeEnum["diminution"],
           capaciteScolaireActuelle: 10,
           capaciteApprentissageActuelle: 5,
           capaciteScolaire: 5,
@@ -469,7 +471,7 @@ describe("[POST]/intention/submit", () => {
     it("doit avoir des capacités positives pour le scolaire et l'apprentissage", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "transfert",
+          typeDemande: DemandeTypeEnum["transfert"],
           capaciteScolaireActuelle: 0,
           capaciteApprentissageActuelle: 0,
           capaciteScolaire: 0,
@@ -494,7 +496,7 @@ describe("[POST]/intention/submit", () => {
     it("doit avoir une variation inverse entre le scolaire et l'apprentissage", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "transfert",
+          typeDemande: DemandeTypeEnum["transfert"],
           capaciteScolaireActuelle: 10,
           capaciteApprentissageActuelle: 5,
           capaciteScolaire: 12,
@@ -513,7 +515,7 @@ describe("[POST]/intention/submit", () => {
     it("doit accepter un transfert du scolaire vers l'apprentissage", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "transfert",
+          typeDemande: DemandeTypeEnum["transfert"],
           capaciteScolaireActuelle: 10,
           capaciteApprentissageActuelle: 5,
           capaciteScolaire: 5, // Diminution de 5
@@ -529,7 +531,7 @@ describe("[POST]/intention/submit", () => {
     it("doit accepter un transfert de l'apprentissage vers le scolaire", async () => {
       const intention = (
         await createIntentionBuilder(adminUser, {
-          typeDemande: "transfert",
+          typeDemande: DemandeTypeEnum["transfert"],
           capaciteScolaireActuelle: 10,
           capaciteApprentissageActuelle: 10,
           capaciteScolaire: 5,

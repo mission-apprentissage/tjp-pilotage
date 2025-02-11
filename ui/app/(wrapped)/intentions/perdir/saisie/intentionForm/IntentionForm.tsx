@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { isAxiosError } from "axios";
-import { usePathname, useRouter } from "next/navigation";
+import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {hasRole, RoleEnum} from 'shared';
@@ -26,13 +26,15 @@ import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 import { escapeString } from "shared/utils/escapeString";
+import { isStatutBrouillon, isStatutDemandeValidee, isStatutProjetDeDemande, isStatutProposition } from "shared/utils/statutDemandeUtils";
 import { isTypeAjustement, isTypeDiminution, isTypeFermeture } from "shared/utils/typeDemandeUtils";
 
 import { client } from "@/api.client";
 import { Conseils } from "@/app/(wrapped)/intentions/perdir/saisie/components/Conseils";
 import { MenuFormulaire } from "@/app/(wrapped)/intentions/perdir/saisie/components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/intentions/perdir/SCROLL_OFFSETS";
-import type { IntentionMetadata } from "@/app/(wrapped)/intentions/perdir/types";
+import type { Intention, IntentionMetadata } from "@/app/(wrapped)/intentions/perdir/types";
+import {canCorrectIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getStepWorkflow } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
@@ -52,12 +54,14 @@ export const IntentionForm = ({
   defaultValues,
   formMetadata,
   campagne,
+  intention
 }: {
   disabled?: boolean;
   formId?: string;
   defaultValues: PartialIntentionForms;
   formMetadata?: IntentionMetadata;
   campagne: CampagneType;
+  intention?: Intention;
 }) => {
   const { auth } = useAuth();
   const toast = useToast();
@@ -164,6 +168,7 @@ export const IntentionForm = ({
   const travauxEtEquipementsRef = useRef<HTMLDivElement>(null);
   const internatEtRestaurationRef = useRef<HTMLDivElement>(null);
   const commentaireEtPiecesJointesRef = useRef<HTMLDivElement>(null);
+  const correctionRef = useRef<HTMLDivElement>(null);
 
   const anchorsRefs = {
     typeDemande: typeDemandeRef,
@@ -172,6 +177,7 @@ export const IntentionForm = ({
     travauxEtEquipements: travauxEtEquipementsRef,
     internatEtRestauration: internatEtRestaurationRef,
     commentaireEtPiecesJointes: commentaireEtPiecesJointesRef,
+    correction: correctionRef,
   } as Record<string, React.RefObject<HTMLDivElement>>;
 
   const typeDemande = form.watch("typeDemande");
@@ -195,13 +201,13 @@ export const IntentionForm = ({
     statut: Exclude<DemandeStatutType, "supprimée">,
     statutPrecedent?: Exclude<DemandeStatutType, "supprimée">
   ): string => {
-    if (statut === DemandeStatutEnum["projet de demande"] || statut === DemandeStatutEnum["demande validée"]) {
+    if (isStatutProjetDeDemande(statut) || isStatutDemandeValidee(statut)) {
       return "Valider mon projet de demande";
     }
-    if (!statutPrecedent || statutPrecedent === DemandeStatutEnum["brouillon"]) {
+    if (!statutPrecedent || isStatutBrouillon(statutPrecedent)) {
       return "Enregistrer ma proposition";
     }
-    if (statut === DemandeStatutEnum["proposition"]) {
+    if (isStatutProposition(statut)) {
       return "Mettre à jour ma proposition";
     }
     return "Enregistrer ma proposition";
@@ -213,6 +219,10 @@ export const IntentionForm = ({
     }
     return false;
   };
+
+  const queryParams = useSearchParams();
+  const isCorrection = !!queryParams.get("correction");
+  const showCorrection = isCorrection && canCorrectIntention({intention, user: auth?.user});
 
   return (
     <FormProvider {...form}>
@@ -278,6 +288,7 @@ export const IntentionForm = ({
                     <MenuFormulaire
                       refs={anchorsRefs}
                       isTypeDemandeNotFermetureOuDiminution={isTypeDemandeNotFermetureOuDiminution}
+                      showCorrection={showCorrection}
                     />
                     <Box position="relative">
                       <Conseils />
@@ -307,6 +318,8 @@ export const IntentionForm = ({
                     formId={formId}
                     disabled={isFormDisabled}
                     campagne={campagne}
+                    intention={intention}
+                    showCorrection={showCorrection}
                     footerActions={
                       <Flex direction="row" gap={4} ref={statutComponentRef}>
                         {canSubmitBrouillon() && (

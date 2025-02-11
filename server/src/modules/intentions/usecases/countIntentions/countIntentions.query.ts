@@ -4,7 +4,6 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { getKbdClient } from "@/db/db";
 import {
   isIntentionBrouillonVisible,
-  isIntentionNotDeleted,
   isIntentionSelectable,
 } from "@/modules/utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
@@ -15,7 +14,6 @@ import type { Filters } from "./countIntentions.usecase";
 export const countIntentionsQuery = async ({
   user,
   campagne,
-  shouldFetchOnlyIntention,
   search,
   codeAcademie,
   codeNiveauDiplome,
@@ -132,10 +130,6 @@ export const countIntentionsQuery = async ({
         0
       )`.as("suivies")
     )
-    .$call((q) => {
-      if (shouldFetchOnlyIntention) return q.where("intention.isIntention", "=", true);
-      return q;
-    })
     .$call((eb) => {
       if (search)
         return eb.where((eb) =>
@@ -175,7 +169,6 @@ export const countIntentionsQuery = async ({
       }
       return eb;
     })
-    .where(isIntentionNotDeleted)
     .where(isIntentionSelectable({ user }))
     .where(isIntentionBrouillonVisible({ user }))
     .executeTakeFirstOrThrow()

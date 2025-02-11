@@ -26,6 +26,8 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import { client } from "@/api.client";
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
 import type { Demande } from "@/app/(wrapped)/intentions/saisie/types";
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { useAuth } from "@/utils/security/useAuth";
 
 import { AutreMotifField } from "./components/AutreMotifField";
 import { CapaciteConstanteSection } from "./components/CapaciteConstanteSection";
@@ -44,6 +46,7 @@ export const CorrectionSection = ({
   demande: Demande;
   campagne: CampagneType;
 }) => {
+  const { auth } = useAuth();
   const toast = useToast();
   const { push } = useRouter();
   const form = useForm<CorrectionForms>({
@@ -76,7 +79,7 @@ export const CorrectionSection = ({
     isSuccess,
   } = client.ref("[POST]/correction/submit").useMutation({
     onSuccess: (_body) => {
-      push(`/intentions/saisie?campagne=${campagne?.annee}`);
+      push(getRoutingSaisieRecueilDemande({campagne, user: auth?.user, suffix: `?campagne=${campagne?.annee}`}));
 
       let message: string | null = null;
       message = "Correction enregistrée avec succès";
@@ -96,6 +99,7 @@ export const CorrectionSection = ({
   });
 
   const isCorrectionDisabled = isSuccess || isSubmitting || !!demande.correction;
+  console.log(isSuccess, isSubmitting, !!demande.correction);
 
   const [raison, setRaison] = useState<RaisonCorrectionType>(RaisonCorrectionEnum["modification_capacite"]);
 

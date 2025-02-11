@@ -3,16 +3,15 @@ import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { RefObject } from "react";
 import { useState } from "react";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { CampagneType } from 'shared/schema/campagneSchema';
 
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
 import type {  Demande } from "@/app/(wrapped)/intentions/saisie/types";
+import { canCorrectDemande } from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
-import { feature } from "@/utils/feature";
-import { usePermission } from "@/utils/security/usePermission";
+import { getRoutingSaisieRecueilDemande } from '@/utils/getRoutingRecueilDemande';
+import { useAuth } from '@/utils/security/useAuth';
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { RentreeScolaireField } from "./RentreeScolaireField";
@@ -88,20 +87,12 @@ export const TypeDemandeSection = ({
   demande?: Demande;
   typeDemandeRef: RefObject<HTMLDivElement>;
 }) => {
+  const { auth } = useAuth();
   const router = useRouter();
 
   const queryParams = useSearchParams();
-  const isCorrection = queryParams.get("correction");
-
-  const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
-
-  const showButtonCorrection =
-    feature.correction &&
-    isCorrection &&
-    demande &&
-    demande.statut === DemandeStatutEnum["demande validée"] &&
-    campagne?.statut === CampagneStatutEnum["terminée"] &&
-    hasPermissionSubmitIntention;
+  const isCorrection = queryParams.get("correction")
+   && canCorrectDemande({demande, user: auth?.user});
 
   return (
     <Flex ref={typeDemandeRef} scrollMarginTop={SCROLL_OFFSET} direction={"column"} gap={6}>
@@ -129,20 +120,23 @@ export const TypeDemandeSection = ({
         </Flex>
       </Tooltip>
       <CapaciteSection disabled={disabled} />
-      {showButtonCorrection && (
+      {isCorrection && (
         <Flex justify={"right"}>
           <Button
             w="fit-content"
             bgColor="transparent"
             border="1px solid black"
             onClick={() => {
-              const link = isCorrection
-                ? `/intentions/saisie/${demande.numero}`
-                : `/intentions/saisie/${demande.numero}?correction=true`;
-              router.replace(link);
+              router.replace(
+                getRoutingSaisieRecueilDemande({
+                  campagne: demande!.campagne,
+                  user: auth?.user,
+                  suffix: `${demande!.numero}?correction=true`,
+                })
+              );
             }}
           >
-            {demande.correction ? "Consulter la correction" : "Rectifier les capacités"}
+            {demande!.correction ? "Consulter la correction" : "Rectifier les capacités"}
           </Button>
         </Flex>
       )}

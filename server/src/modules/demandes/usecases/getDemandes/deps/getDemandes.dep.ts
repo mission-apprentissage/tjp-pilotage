@@ -24,6 +24,7 @@ export const getDemandesQuery = async ({
   order,
   orderBy,
 }: Filters) => {
+  console.log(campagne);
   const search_array = getNormalizedSearchArray(search);
 
   const demandes = await getKbdClient()
@@ -36,7 +37,7 @@ export const getDemandesQuery = async ({
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
     .leftJoin("user", "user.id", "demande.createdBy")
     .leftJoin("suivi", (join) => join.onRef("suivi.intentionNumero", "=", "demande.numero").on("userId", "=", user.id))
-    .leftJoin("campagne", "demande.campagneId", "campagne.id")
+    .innerJoin("campagne", "demande.campagneId", "campagne.id")
     .leftJoin("intentionAccessLog", (join) =>
       join
         .onRef("intentionAccessLog.intentionNumero", "=", "demande.numero")
@@ -61,20 +62,12 @@ export const getDemandesQuery = async ({
       "departement.libelleDepartement",
       "academie.libelleAcademie",
       "region.libelleRegion",
-      "dispositif.libelleDispositif as libelleDispositif",
+      "dispositif.libelleDispositif",
       sql<string>`count(*) over()`.as("count"),
-      jsonObjectFrom(
-        eb
-          .selectFrom(["demande as demandeCompensee"])
-          .whereRef("demandeCompensee.cfd", "=", "demande.compensationCfd")
-          .whereRef("demandeCompensee.uai", "=", "demande.compensationUai")
-          .whereRef("demandeCompensee.codeDispositif", "=", "demande.compensationCodeDispositif")
-          .select(["demandeCompensee.numero", "demandeCompensee.typeDemande"])
-          .limit(1)
-      ).as("demandeCompensee"),
       eb
-        .selectFrom(({ selectFrom }) =>
-          selectFrom("demande as demandeImportee")
+        .selectFrom((eb) =>
+          eb
+            .selectFrom("demande as demandeImportee")
             .select(["numero", "statut", "numeroHistorique"])
             .whereRef("demandeImportee.numeroHistorique", "=", "demande.numero")
             .where(isDemandeCampagneEnCours(eb, "demandeImportee"))
@@ -174,8 +167,6 @@ export const getDemandesQuery = async ({
         typeDemande: castTypeDemande(demande.typeDemande),
         createdAt: demande.createdAt?.toISOString(),
         updatedAt: demande.updatedAt?.toISOString(),
-        numeroCompensation: demande.demandeCompensee?.numero,
-        typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
         alreadyAccessed: demande.alreadyAccessed ?? true,
       })
     ),

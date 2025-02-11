@@ -1,6 +1,7 @@
 import { Flex, IconButton, Tooltip } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
+import {isCampagneEnCours} from 'shared/utils/campagneUtils';
 
 import type { client } from "@/api.client";
 import { canEditDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
@@ -10,17 +11,15 @@ import { SyntheseSection } from "./synthese/SyntheseSection";
 
 export const MainSection = ({
   demande,
-  isCampagneEnCours,
 }: {
   demande: (typeof client.infer)["[GET]/demande/:numero"];
-  isCampagneEnCours?: boolean;
 }) => {
 
   const { auth } = useAuth();
 
   return (
     <Flex bg="white" borderRadius={6} p={8} direction="column">
-      {isCampagneEnCours && (
+      {isCampagneEnCours(demande.campagne) && (
         <Flex direction={"row"} justify={"space-between"}>
           <Flex direction={"row"} gap={2}>
             {canEditDemande({ demande, user: auth?.user }) && (

@@ -1,10 +1,7 @@
 import { chakra } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
 import { isTypeColoration, isTypeOuverture } from "shared/utils/typeDemandeUtils";
 
 import { CapaciteField } from "@/app/(wrapped)/intentions/saisie/components/CapaciteField";
-import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 import type { Demande } from "@/app/(wrapped)/intentions/saisie/types";
 
 export const CapaciteScolaireColoreeActuelleField = chakra(
@@ -20,19 +17,9 @@ export const CapaciteScolaireColoreeActuelleField = chakra(
     disabled?: boolean;
     className?: string;
   }) => {
-    const { watch, setValue } = useFormContext<IntentionForms>();
-
-    useEffect(
-      () =>
-        watch((_, { name }) => {
-          if (name !== "typeDemande") return;
-          setValue("capaciteScolaireColoreeActuelle", 0);
-        }).unsubscribe
-    );
-
     const typeDemande = demande.typeDemande;
-    const ouverture = typeDemande !== undefined && isTypeOuverture(typeDemande);
-    const coloration = typeDemande !== undefined && isTypeColoration(typeDemande) || watch("coloration");
+    const ouverture = isTypeOuverture(typeDemande);
+    const coloration = isTypeColoration(typeDemande) ||demande?.coloration;
     const isReadOnly = disabled || ouverture || !coloration;
     if (!coloration) return <></>;
 

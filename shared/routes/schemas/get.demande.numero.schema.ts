@@ -36,8 +36,6 @@ const FormationMetadataSchema = z
 const MetadataSchema = z.object({
   etablissement: EtablissementMetadataSchema,
   formation: FormationMetadataSchema,
-  etablissementCompensation: EtablissementMetadataSchema,
-  formationCompensation: FormationMetadataSchema,
 });
 
 const CorrectionSchema = z.object({
@@ -54,7 +52,7 @@ const CorrectionSchema = z.object({
   capaciteApprentissageColoree: z.coerce.number().optional(),
   motif: z.string().optional(),
   autreMotif: z.string().optional(),
-  raison: RaisonCorrectionZodType,
+  raison: RaisonCorrectionZodType.optional(),
   commentaire: z.string().optional(),
   campagneId: z.string().optional(),
 });

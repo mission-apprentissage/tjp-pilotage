@@ -75,42 +75,6 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
             .whereRef("dataFormation.cfd", "=", "demande.cfd")
             .limit(1)
         ),
-        etablissementCompensation: jsonObjectFrom(
-          eb
-            .selectFrom("dataEtablissement")
-            .selectAll("dataEtablissement")
-            .whereRef("dataEtablissement.uai", "=", "demande.compensationUai")
-            .limit(1)
-        ),
-        formationCompensation: jsonObjectFrom(
-          eb
-            .selectFrom("dataFormation")
-            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
-            .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
-              ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
-              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
-              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
-                "isFCIL"
-              ),
-            ])
-            .select((eb) =>
-              jsonArrayFrom(
-                eb
-                  .selectFrom("dispositif")
-                  .select(["libelleDispositif", "codeDispositif"])
-                  .leftJoin("rawData", (join) =>
-                    join
-                      .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
-                      .on("rawData.type", "=", "nMef")
-                  )
-                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
-                  .distinctOn("codeDispositif")
-              ).as("dispositifs")
-            )
-            .whereRef("dataFormation.cfd", "=", "demande.compensationCfd")
-            .limit(1)
-        ),
       }).as("metadata"),
       jsonObjectFrom(
         eb
@@ -170,15 +134,13 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       ...demande.metadata,
       formation: demande.metadata.formation,
       etablissement: demande.metadata.etablissement,
-      formationCompensation: demande.metadata.formationCompensation,
-      etablissementCompensation: demande.metadata.etablissementCompensation,
     },
     typeDemande: castTypeDemande(demande.typeDemande),
     statut: castDemandeStatutWithoutSupprimee(demande.statut),
-    correction: {
+    correction: demande.correction ? {
       ...demande.correction,
       raison: castRaisonCorrection(demande.correction?.raison),
-    },
+    }: undefined,
     createdAt: demande.createdAt?.toISOString(),
     updatedAt: demande.updatedAt?.toISOString(),
     formationSpecifique: formatFormationSpecifique(demande),

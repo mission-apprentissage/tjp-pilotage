@@ -30,8 +30,8 @@ import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import {isCampagneTerminee} from 'shared/utils/campagneUtils';
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
@@ -140,7 +140,7 @@ export const PageClient = () => {
   );
 
 
-  const isNouvelleDemandeDisabled = !canCreateDemande({user: auth?.user, campagne: campagne!});
+  const isNouvelleDemandeDisabled = !canCreateDemande({user: auth?.user, campagne: data?.campagne ?? campagne!});
 
   const [searchDemande, setSearchDemande] = useState<string>(search);
 
@@ -322,7 +322,6 @@ export const PageClient = () => {
                         user: auth?.user
                       });
 
-
                     return (
                       <Tr
                         height={"60px"}
@@ -420,7 +419,7 @@ export const PageClient = () => {
                                 }
                               />
                             </Tooltip>
-                            {data?.campagne.statut === CampagneStatutEnum["terminée"] && (
+                            {isCampagneTerminee(data?.campagne) && (
                               <>
                                 {demande.numeroDemandeImportee ? (
                                   <Tooltip label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`}>
@@ -461,7 +460,11 @@ export const PageClient = () => {
                                 )}
                                 {
                                   !isCorrectionDisabled &&
-                                  (<CorrectionDemandeButton demande={demande} campagne={data?.campagne} />)
+                                  (<CorrectionDemandeButton
+                                    user={auth?.user}
+                                    demande={demande}
+                                    campagne={data?.campagne}
+                                  />)
                                 }
                               </>
                             )}

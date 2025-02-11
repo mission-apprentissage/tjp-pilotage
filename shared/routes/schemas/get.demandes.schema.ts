@@ -46,8 +46,6 @@ const DemandeItem = z.object({
   compensationCodeDispositif: z.string().optional(),
   compensationUai: z.string().optional(),
   compensationRentreeScolaire: z.coerce.number().optional(),
-  numeroCompensation: z.string().optional(),
-  typeCompensation: z.string().optional(),
   // Précisions
   motif: z.array(z.string()).optional(),
   autreMotif: z.string().optional(),

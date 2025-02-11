@@ -407,7 +407,7 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsDemandeUtils", 
 
   it("Un utilisateur admin région doit pouvoir effectuer une correction sur une demande validée", () => {
     fixture.given.utilisateurAdminRegion();
-    fixture.given.campagne2024();
+    fixture.given.campagne2023Terminee();
     fixture.given.demandeValidee();
 
     fixture.when.canShowCorrectionButton();
@@ -417,7 +417,7 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsDemandeUtils", 
 
   it("Un utilisateur admin région ne doit pas pouvoir effectuer une correction sur un projet de demande", () => {
     fixture.given.utilisateurAdminRegion();
-    fixture.given.campagne2024();
+    fixture.given.campagne2023Terminee();
     fixture.given.demandeEditable();
 
     fixture.when.canShowCorrectionButton();
@@ -427,7 +427,7 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsDemandeUtils", 
 
   it("Un utilisateur admin région ne doit pas pouvoir effectuer une correction sur un type de demande ajustement", () => {
     fixture.given.utilisateurAdminRegion();
-    fixture.given.campagne2024();
+    fixture.given.campagne2023Terminee();
     fixture.given.demandeAjustement();
 
     fixture.when.canShowCorrectionButton();
@@ -437,7 +437,7 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsDemandeUtils", 
 
   it("Un utilisateur perdir ne doit pas pouvoir effectuer une correction sur une demande", () => {
     fixture.given.utilisateurPerdir();
-    fixture.given.campagne2024();
+    fixture.given.campagne2023Terminee();
     fixture.given.demandeValidee();
 
     fixture.when.canShowCorrectionButton();
@@ -447,7 +447,27 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsDemandeUtils", 
 
   it("Un utilisateur expert région ne doit pas pouvoir effectuer une correction sur une demande", () => {
     fixture.given.utilisateurRegion();
+    fixture.given.campagne2023Terminee();
+    fixture.given.demandeValidee();
+
+    fixture.when.canShowCorrectionButton();
+
+    fixture.then.verifierCanNotShowCorrectionButton();
+  });
+
+  it("Un utilisateur admin région ne doit pas pouvoir effectuer une correction sur une demande d'une campagne en cours", () => {
+    fixture.given.utilisateurAdminRegion();
     fixture.given.campagne2024();
+    fixture.given.demandeValidee();
+
+    fixture.when.canShowCorrectionButton();
+
+    fixture.then.verifierCanNotShowCorrectionButton();
+  });
+
+  it("Un utilisateur admin région ne doit pas pouvoir effectuer une correction sur une demande d'une campagne en attente", () => {
+    fixture.given.utilisateurAdminRegion();
+    fixture.given.campagne2025EnAttente();
     fixture.given.demandeValidee();
 
     fixture.when.canShowCorrectionButton();

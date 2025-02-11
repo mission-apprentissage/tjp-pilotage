@@ -27,6 +27,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { escapeString } from "shared/utils/escapeString";
+import {isStatutDossierComplet,isStatutProjetDeDemande, isStatutRefusee} from 'shared/utils/statutDemandeUtils';
 
 import { client } from "@/api.client";
 import {
@@ -53,8 +54,8 @@ const isStatutDisabled = ({
   statut: DemandeStatutType;
 }) => {
   if (statut != statutPrecedent && getStepWorkflow(statutPrecedent) === 4) return true;
-  if (statut === DemandeStatutEnum["refusée"]) return false;
-  if (statut === DemandeStatutEnum["projet de demande"] && statutPrecedent !== DemandeStatutEnum["dossier complet"])
+  if (isStatutRefusee(statut)) return false;
+  if (isStatutProjetDeDemande(statut) && !isStatutDossierComplet(statutPrecedent))
     return true;
   return (
     getOrderStatut(statutPrecedent) > getOrderStatut(statut) ||

@@ -31,7 +31,7 @@ const getDemandesFactory =
       const [demandes, campagne, filters] = await Promise.all([
         deps.getDemandesQuery({ ...activeFilters, campagne: anneeCampagne }),
         deps.getCampagneQuery({ ...activeFilters, anneeCampagne }),
-        deps.getFiltersQuery({... activeFilters, campagne: anneeCampagne}),
+        deps.getFiltersQuery({...activeFilters, campagne: anneeCampagne}),
       ]);
 
       return { ...demandes, campagne, filters };

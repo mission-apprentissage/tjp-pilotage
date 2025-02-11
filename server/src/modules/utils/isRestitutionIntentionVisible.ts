@@ -43,8 +43,8 @@ const getRestitutionIntentionsVisiblesFilters = (user?: RequestUser) => {
   return {
     national: {},
     région: { codeRegion: user.codeRegion },
-    user: {},
+    user: { userId: user.id },
     uai: { uais: user.uais },
-    role: { codeRegion: user.codeRegion, role: user.role },
+    role: { role: user.role },
   }[scope];
 };

@@ -85,8 +85,9 @@ export const getIntentionsQuery = async (
       )`.as("alreadyAccessed"),
       sql<string>`count(*) over()`.as("count"),
       eb
-        .selectFrom(({ selectFrom }) =>
-          selectFrom("intention as intentionImportee")
+        .selectFrom((eb) =>
+          eb
+            .selectFrom("intention as intentionImportee")
             .select(["numero", "statut", "numeroHistorique"])
             .whereRef("intentionImportee.numeroHistorique", "=", "intention.numero")
             .where(isIntentionCampagneEnCours(eb, "intentionImportee"))

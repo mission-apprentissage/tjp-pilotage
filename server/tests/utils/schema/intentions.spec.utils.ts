@@ -1,8 +1,10 @@
 import { faker } from "@faker-js/faker";
 import type { Insertable } from "kysely";
 import { CURRENT_RENTREE } from "shared";
-import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
-import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
+import type {DemandeStatutType} from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum  } from "shared/enum/demandeStatutEnum";
+import type {DemandeTypeType} from "shared/enum/demandeTypeEnum";
+import { DemandeTypeEnum  } from "shared/enum/demandeTypeEnum";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
@@ -20,7 +22,7 @@ export function createIntentionBuilder(
   const intention: Intention = {
     id: defaultIntention.id ?? generateId(),
     numero: defaultIntention.numero ?? generateShortId(),
-    statut: defaultIntention.statut ?? "brouillon",
+    statut: defaultIntention.statut ?? DemandeStatutEnum["brouillon"],
     updatedAt: defaultIntention.updatedAt ?? new Date(),
     createdBy: defaultIntention.createdBy ?? user.id,
     updatedBy: defaultIntention.updatedBy ?? user.id,
@@ -28,7 +30,7 @@ export function createIntentionBuilder(
     cfd: defaultIntention.cfd ?? "32031309", // Professions immobilières
     rentreeScolaire:
       defaultIntention.rentreeScolaire ?? Number(CURRENT_RENTREE),
-    typeDemande: defaultIntention.typeDemande ?? "ouverture_nette",
+    typeDemande: defaultIntention.typeDemande ?? DemandeTypeEnum["ouverture_nette"],
     mixte: defaultIntention?.mixte,
     coloration: defaultIntention?.coloration ?? false,
     reconversionRH: defaultIntention?.reconversionRH ?? false,
