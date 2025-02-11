@@ -20,7 +20,7 @@ export const PageClient = ({
   };
 }) => {
   const { push } = useRouter();
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const { campagne } = useCurrentCampagne();
 
   const { data: intention, isLoading } = client.ref("[GET]/intention/:numero").useQuery(
@@ -30,7 +30,7 @@ export const PageClient = ({
       onError: (error: unknown) => {
         if (isAxiosError(error) && error.response?.data?.message) {
           console.error(error);
-          if (error.response?.status === 404) push(`${getRoutingSaisieRecueilDemande({user: auth?.user, campagne })}?notfound=${numero}`);
+          if (error.response?.status === 404) push(`${getRoutingSaisieRecueilDemande({user, campagne })}?notfound=${numero}`);
         }
       },
     }
@@ -41,7 +41,7 @@ export const PageClient = ({
   return (
     <IntentionFilesProvider numero={numero}>
       <IntentionForm
-        disabled={!canEditIntention({intention, user: auth?.user})}
+        disabled={!canEditIntention({intention, user})}
         formId={numero}
         defaultValues={intention}
         intention={intention}

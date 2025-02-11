@@ -11,7 +11,7 @@ import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 export const revalidate = 60;
 
 export function DocumentationClient({ recordMap }: { readonly recordMap: ExtendedRecordMap }) {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const { campagne } = useCurrentCampagne();
 
   return (
@@ -21,10 +21,10 @@ export function DocumentationClient({ recordMap }: { readonly recordMap: Extende
           ml={4}
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: getRoutingSaisieRecueilDemande({ campagne, user: auth?.user }) },
+            { title: "Recueil des demandes", to: getRoutingSaisieRecueilDemande({ campagne, user }) },
             {
               title: "Documentation",
-              to: `${getRoutingSaisieRecueilDemande({ campagne, user: auth?.user })}documentation`,
+              to: `${getRoutingSaisieRecueilDemande({ campagne, user })}documentation`,
               active: true,
             },
           ]}

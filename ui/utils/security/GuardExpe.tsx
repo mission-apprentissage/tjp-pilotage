@@ -24,12 +24,12 @@ import { useCurrentCampagne } from './useCurrentCampagne';
  */
 
 export const GuardExpe = ({ isExpeRoute, children }: { isExpeRoute: boolean; children: ReactNode }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const { campagne } = useCurrentCampagne();
-  const isPerdir = hasRole({ user: auth?.user, role: RoleEnum["perdir"] });
+  const isPerdir = hasRole({ user, role: RoleEnum["perdir"] });
   return isPerdir ?
-    handlePerdir({ isExpeRoute, user: auth?.user, campagne, children }) :
-    handleNotPerdir({ isExpeRoute, user: auth?.user, campagne, children });
+    handlePerdir({ isExpeRoute, user, campagne, children }) :
+    handleNotPerdir({ isExpeRoute, user, campagne, children });
 };
 
 

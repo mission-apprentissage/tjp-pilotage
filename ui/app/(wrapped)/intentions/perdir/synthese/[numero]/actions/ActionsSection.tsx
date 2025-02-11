@@ -13,9 +13,8 @@ import { AvisForm } from "./AvisForm";
 import { ChangementStatutForm } from "./ChangementStatutForm";
 
 export const ActionsSection = ({ intention }: { intention: (typeof client.infer)["[GET]/intention/:numero"] }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const hasPermissionModificationStatut = usePermission("intentions-perdir-statut/ecriture");
-
   const hasPermissionEmissionAvis = usePermission("intentions-perdir-avis/ecriture");
 
   /**
@@ -26,9 +25,9 @@ export const ActionsSection = ({ intention }: { intention: (typeof client.infer)
    */
   const canSubmitAvis = () => {
     if (
-      (hasRole({ user: auth?.user, role: RoleEnum["expert_region"] }) &&
+      (hasRole({ user, role: RoleEnum["expert_region"] }) &&
         getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]) ||
-      (hasRole({ user: auth?.user, role: RoleEnum["region"] }) &&
+      (hasRole({ user, role: RoleEnum["region"] }) &&
         getTypeAvis(intention.statut) === AvisTypeEnum["consultatif"]) ||
       isChangementStatutAvisDisabled(intention.statut)
     )

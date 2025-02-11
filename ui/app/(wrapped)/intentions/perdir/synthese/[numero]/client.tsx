@@ -30,8 +30,8 @@ export default ({
     numero: string;
   };
 }) => {
-  const { auth } = useAuth();
-  const isPerdir = hasRole({ user: auth?.user, role: RoleEnum["perdir"] });
+  const { user } = useAuth();
+  const isPerdir = hasRole({ user, role: RoleEnum["perdir"] });
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {

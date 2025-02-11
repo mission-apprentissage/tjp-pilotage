@@ -54,7 +54,7 @@ export const EditCampagneRegion = ({
   campagnes: (typeof client.infer)["[GET]/campagnes"],
   regions?: (typeof client.infer)["[GET]/regions"]
 }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const {
     getValues,
     setValue,
@@ -188,7 +188,7 @@ export const EditCampagneRegion = ({
             </Select>
             {!!errors.statut && <FormErrorMessage>{errors.statut.message}</FormErrorMessage>}
           </FormControl>
-          {!auth?.user.codeRegion &&
+          {!user?.codeRegion &&
           (
             <FormControl mb="4" isInvalid={!!errors.codeRegion} isRequired>
               <FormLabel>Région</FormLabel>

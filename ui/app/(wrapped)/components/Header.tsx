@@ -17,7 +17,7 @@ import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
 export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
-  const { auth, setAuth } = useAuth();
+  const { user, setAuth } = useAuth();
   const { setUais } = useContext(UaisContext);
   const { setCodeDepartement } = useContext(CodeDepartementContext);
   const { setCodeRegion } = useContext(CodeRegionContext);
@@ -64,7 +64,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
             </Heading>
           </HStack>
           <Box ml="auto">
-            {!auth && (
+            {!user && (
               <Button
                 fontWeight="light"
                 as={NextLink}
@@ -77,7 +77,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
                 Se connecter
               </Button>
             )}
-            {!!auth && (
+            {!!user && (
               <Menu autoSelect={false} placement="bottom-end" closeOnBlur  isOpen={isMenuDeconnexionOpen} gutter={0}>
                 <MenuButton
                   ml="auto"
@@ -92,7 +92,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
                   <Box as="span" display={["none", null, "unset"]}>
                     Bienvenue,{" "}
                   </Box>
-                  {auth.user.email}
+                  {user.email}
                   <ChevronDownIcon ml="2" />
                 </MenuButton>
                 <Portal>

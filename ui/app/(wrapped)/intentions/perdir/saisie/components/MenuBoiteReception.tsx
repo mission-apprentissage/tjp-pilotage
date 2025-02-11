@@ -22,7 +22,7 @@ export const MenuBoiteReception = ({
   activeFilters: Partial<Filters>;
   campagne: CampagneType;
 }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const statut = activeFilters.statut === undefined ? "none" : activeFilters.statut;
 
   const { data: countIntentions } = client.ref("[GET]/intentions/count").useQuery({
@@ -41,7 +41,7 @@ export const MenuBoiteReception = ({
         isDisabled={isNouvelleDemandeDisabled}
         leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
         as={!isNouvelleDemandeDisabled ? NextLink : undefined}
-        href={`${getRoutingSaisieRecueilDemande({ user: auth?.user, campagne, suffix: "new" })}`}
+        href={`${getRoutingSaisieRecueilDemande({ user, campagne, suffix: "new" })}`}
         minHeight={"35px"}
       >
         Nouvelle demande

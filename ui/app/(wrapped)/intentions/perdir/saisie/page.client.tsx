@@ -60,7 +60,7 @@ import type { Filters, Order } from "./types";
 const PAGE_SIZE = 30;
 
 export const PageClient = () => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const { campagne } = useCurrentCampagne();
   const queryClient = useQueryClient();
   const toast = useToast();
@@ -141,7 +141,7 @@ export const PageClient = () => {
     { cacheTime: 0, keepPreviousData: true }
   );
 
-  const isNouvelleDemandeDisabled = !canCreateIntention({ user: auth?.user, campagne: data?.campagne ?? campagne! });
+  const isNouvelleDemandeDisabled = !canCreateIntention({ user, campagne: data?.campagne ?? campagne! });
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 
@@ -304,19 +304,19 @@ export const PageClient = () => {
 
 
                         const linkSynthese = getRoutingSyntheseRecueilDemande({
-                          user: auth?.user,
+                          user,
                           campagne: data?.campagne,
                           suffix: intention.numero
                         });
 
                         const linkSaisie = getRoutingSaisieRecueilDemande({
-                          user: auth?.user,
+                          user,
                           campagne: data?.campagne,
                           suffix: intention.numero
                         });
 
                         const linkSaisieImported = getRoutingSaisieRecueilDemande({
-                          user: auth?.user,
+                          user,
                           campagne: data?.campagne,
                           suffix: intention.numeroDemandeImportee
                         });
@@ -326,7 +326,7 @@ export const PageClient = () => {
                             ...intention,
                             campagne: data?.campagne,
                           },
-                          user: auth?.user,
+                          user,
                         });
 
                         const isDeleteDisabled = !canDeleteIntention({
@@ -334,13 +334,13 @@ export const PageClient = () => {
                             ...intention,
                             campagne: data?.campagne,
                           },
-                          user: auth?.user
+                          user
                         });
 
                         const isImportDisabled = !canImportIntention({
                           isAlreadyImported: !!intention.numeroDemandeImportee,
                           isLoading: (isLoading || isSubmitting || isImporting),
-                          user: auth?.user,
+                          user,
                           campagne: data?.campagne,
                         });
 
@@ -349,7 +349,7 @@ export const PageClient = () => {
                             ...intention,
                             campagne: data?.campagne
                           },
-                          user: auth?.user
+                          user
                         });
 
                         return (
@@ -435,7 +435,7 @@ export const PageClient = () => {
                                       ...intention,
                                       campagne: data?.campagne,
                                     },
-                                    user: auth?.user,
+                                    user,
                                   }) && (
                                     <Tooltip label="Modifier la demande">
                                       <IconButton
@@ -522,7 +522,7 @@ export const PageClient = () => {
                                 ))}
                                 {!isCorrectionDisabled &&
                                  (<CorrectionIntentionButton
-                                   user={auth?.user}
+                                   user={user}
                                    intention={intention}
                                    campagne={data?.campagne}
                                  />)

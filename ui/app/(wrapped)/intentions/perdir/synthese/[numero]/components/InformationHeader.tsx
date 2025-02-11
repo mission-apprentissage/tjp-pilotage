@@ -8,8 +8,8 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { useAuth } from "@/utils/security/useAuth";
 
 export const InformationHeader = ({ statut }: { statut?: DemandeStatutType }) => {
-  const { auth } = useAuth();
-  const isPerdir = hasRole({ user: auth?.user, role: RoleEnum["perdir"] });
+  const { user } = useAuth();
+  const isPerdir = hasRole({ user, role: RoleEnum["perdir"] });
 
   const bgColors = {
     success: "success.950",

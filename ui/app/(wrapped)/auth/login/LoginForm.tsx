@@ -37,7 +37,7 @@ export const LoginForm = () => {
     mode: "onBlur",
   });
 
-  const { setAuth, auth } = useAuth();
+  const { setAuth, user } = useAuth();
   const { setCampagne } = useCurrentCampagne();
   const { setCodeRegion } = useContext(CodeRegionContext);
   const { setUais } = useContext(UaisContext);
@@ -62,12 +62,12 @@ export const LoginForm = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (auth)
+    if (user)
       router.replace(
-        hasRole({ user : auth.user, role: RoleEnum["perdir"]}) && auth.user.uais?.[0] ? `/panorama/etablissement/${auth.user.uais?.[0]}` : "/"
+        hasRole({ user, role: RoleEnum["perdir"]}) && user.uais?.[0] ? `/panorama/etablissement/${user.uais?.[0]}` : "/"
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth]);
+  }, [user]);
 
   return (
     <Box maxW="360px" width="100%" mx="auto">

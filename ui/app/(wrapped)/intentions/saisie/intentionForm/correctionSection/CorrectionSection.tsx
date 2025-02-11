@@ -46,7 +46,7 @@ export const CorrectionSection = ({
   demande: Demande;
   campagne: CampagneType;
 }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const toast = useToast();
   const { push } = useRouter();
   const form = useForm<CorrectionForms>({
@@ -79,7 +79,7 @@ export const CorrectionSection = ({
     isSuccess,
   } = client.ref("[POST]/correction/submit").useMutation({
     onSuccess: (_body) => {
-      push(getRoutingSaisieRecueilDemande({campagne, user: auth?.user, suffix: `?campagne=${campagne?.annee}`}));
+      push(getRoutingSaisieRecueilDemande({campagne, user, suffix: `?campagne=${campagne?.annee}`}));
 
       let message: string | null = null;
       message = "Correction enregistrée avec succès";
