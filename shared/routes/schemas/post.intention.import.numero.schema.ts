@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
 
 const EtablissementMetadataSchema = z
   .object({
@@ -38,7 +39,7 @@ const IntentionSchema = z.object({
   codeDispositif: z.string(),
   libelleFCIL: z.string().optional(),
   rentreeScolaire: z.coerce.number(),
-  typeDemande: z.string(),
+  typeDemande: DemandeTypeZodType,
   compensationUai: z.string().optional(),
   compensationCfd: z.string().optional(),
   compensationCodeDispositif: z.string().optional(),

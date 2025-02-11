@@ -1,4 +1,5 @@
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { DemandeType } from "shared/enum/demandeTypeEnum";
 import { describe, expect, it, vi } from "vitest";
 
 import { submitIntentionFactory } from "./submitIntention.usecase";
@@ -30,7 +31,7 @@ const intention = {
   createdBy: "user-id",
   codeDispositif: "codeDispositif",
   rentreeScolaire: 2025,
-  typeDemande: "augmentation",
+  typeDemande: "augmentation_nette" as DemandeType,
   motif: ["autre"],
   autreMotif: "autre motif",
   poursuitePedagogique: false,

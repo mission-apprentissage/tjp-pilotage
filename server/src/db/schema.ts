@@ -1,4 +1,5 @@
 import type { ColumnType } from "kysely";
+import type { DemandeType } from "shared/enum/demandeTypeEnum";
 
 export type Generated<T> =
   T extends ColumnType<infer S, infer I, infer U> ? ColumnType<S, I | undefined, U> : ColumnType<T, T | undefined, T>;
@@ -192,7 +193,7 @@ export interface Demande {
   codeDispositif: string | null;
   uai: string;
   rentreeScolaire: number | null;
-  typeDemande: string | null;
+  typeDemande: DemandeType | null;
   motif: string[] | null;
   autreMotif: string | null;
   coloration: boolean | null;
@@ -255,7 +256,7 @@ export interface DemandeIntentionNonMaterializedView {
   codeDispositif: string | null;
   uai: string | null;
   rentreeScolaire: number | null;
-  typeDemande: string | null;
+  typeDemande: DemandeType | null;
   motif: string[] | null;
   autreMotif: string | null;
   coloration: boolean | null;
@@ -495,7 +496,7 @@ export interface Intention {
   codeDispositif: string | null;
   uai: string | null;
   rentreeScolaire: number | null;
-  typeDemande: string | null;
+  typeDemande: DemandeType | null;
   motif: string[] | null;
   autreMotif: string | null;
   coloration: boolean | null;
@@ -579,7 +580,7 @@ export interface LatestDemandeIntentionNonMaterializedView {
   codeDispositif: string | null;
   uai: string | null;
   rentreeScolaire: number | null;
-  typeDemande: string | null;
+  typeDemande: DemandeType | null;
   motif: string[] | null;
   autreMotif: string | null;
   coloration: boolean | null;
@@ -655,7 +656,7 @@ export interface LatestDemandeNonMaterializedView {
   codeDispositif: string | null;
   uai: string | null;
   rentreeScolaire: number | null;
-  typeDemande: string | null;
+  typeDemande: DemandeType | null;
   motif: string[] | null;
   autreMotif: string | null;
   coloration: boolean | null;
@@ -717,7 +718,7 @@ export interface LatestIntentionNonMaterializedView {
   codeDispositif: string | null;
   uai: string | null;
   rentreeScolaire: number | null;
-  typeDemande: string | null;
+  typeDemande: DemandeType | null;
   motif: string[] | null;
   autreMotif: string | null;
   coloration: boolean | null;
