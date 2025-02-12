@@ -5,7 +5,8 @@ import NextLink from "next/link";
 import { isCampagneEnCours } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
-import { canEditIntention } from "@/app/(wrapped)/intentions/utils/permissionsIntentionUtils";
+import { canEditDemandeIntention } from "@/app/(wrapped)/intentions/utils/permissionsIntentionUtils";
+import {getRoutingSaisieRecueilDemande} from '@/utils/getRoutingRecueilDemande';
 import { useAuth } from "@/utils/security/useAuth";
 
 import { CommentairesEtAvisSection } from "./commentaireEtAvis/CommentairesEtAvisSection";
@@ -66,11 +67,15 @@ export const MainSection = ({
             displayCommentairesEtAvis={displayCommentairesEtAvis}
           />
           <Flex direction={"row"} gap={2}>
-            {canEditIntention({intention, user}) && (
+            {canEditDemandeIntention({demandeIntention: intention, user}) && (
               <Tooltip label="Modifier la demande">
                 <IconButton
                   as={NextLink}
-                  href={`/intentions/perdir/saisie/${intention?.numero ?? ""}`}
+                  href={getRoutingSaisieRecueilDemande({
+                    campagne: intention.campagne,
+                    user,
+                    suffix: intention?.numero
+                  })}
                   aria-label="Modifier la demande"
                   color={"bluefrance.113"}
                   bgColor={"transparent"}

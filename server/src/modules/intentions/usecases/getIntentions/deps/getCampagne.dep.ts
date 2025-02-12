@@ -1,20 +1,20 @@
 import Boom from "@hapi/boom";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
 import {cleanNull} from '@/utils/noNull';
 
-const getCampagneRegionEnCours = async ({
-  anneeCampagne,
+const getCampagneRegion = async ({
+  campagneId,
   user
 } : {
-  anneeCampagne: string,
+  campagneId: string,
   user: RequestUser
 }) => getKbdClient()
   .selectFrom("campagneRegion")
-  .innerJoin("campagne", "campagne.id", "campagneRegion.campagneId")
-  .where("campagne.annee", "=", anneeCampagne)
+  .where("campagneRegion.campagneId", "=", campagneId)
   .$call((q) => {
     if(user?.codeRegion) return q.where("codeRegion", "=", user.codeRegion);
     return q.where((w) => w.val(false));
@@ -55,8 +55,8 @@ export const getCampagneQuery = async ({
       throw Boom.notFound(`Aucune campagne pour l'année ${anneeCampagne}`);
     });
 
-  const campagneRegion = await getCampagneRegionEnCours({
-    anneeCampagne, user
+  const campagneRegion = await getCampagneRegion({
+    campagneId: campagne.id, user
   });
 
   return {
@@ -65,8 +65,9 @@ export const getCampagneQuery = async ({
     dateDebut: campagne.dateDebut,
     dateFin: campagne.dateFin,
     statut: campagne.statut,
-    hasCampagneRegionEnCours: campagneRegion !== undefined,
+    hasCampagneRegionEnCours: campagneRegion?.statut === CampagneStatutEnum["en cours"],
     withSaisiePerdir: campagneRegion?.withSaisiePerdir,
     dateVote: campagneRegion?.dateVote,
+    codeRegion: campagneRegion?.codeRegion,
   };
 };

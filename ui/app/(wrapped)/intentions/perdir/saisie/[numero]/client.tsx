@@ -7,7 +7,7 @@ import { client } from "@/api.client";
 import { IntentionSpinner } from "@/app/(wrapped)/intentions/perdir/saisie/components/IntentionSpinner";
 import { IntentionForm } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/IntentionForm";
 import { IntentionFilesProvider } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/observationsSection/filesSection/filesContext";
-import { canEditIntention } from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import { canEditDemandeIntention } from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
@@ -41,7 +41,7 @@ export const PageClient = ({
   return (
     <IntentionFilesProvider numero={numero}>
       <IntentionForm
-        disabled={!canEditIntention({intention, user})}
+        disabled={!canEditDemandeIntention({demandeIntention: intention, user})}
         formId={numero}
         defaultValues={intention}
         intention={intention}

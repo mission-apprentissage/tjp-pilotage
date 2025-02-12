@@ -23,6 +23,7 @@ export const getCampagnesRegion = async (user: RequestUser) => {
           ...campagne,
           dateDebut: campagne.dateDebut?.toISOString(),
           dateFin: campagne.dateFin?.toISOString(),
+          dateVote: campagne.dateVote ? campagne.dateVote?.toISOString() : undefined,
         }))
       )
     );

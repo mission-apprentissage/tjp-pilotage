@@ -182,6 +182,7 @@ const IntentionSchema = z.object({
     })
   ),
   suiviId: z.string().optional(),
+  isIntention: z.boolean(),
 });
 
 export const FiltersSchema = z.object({ numero: z.string() });

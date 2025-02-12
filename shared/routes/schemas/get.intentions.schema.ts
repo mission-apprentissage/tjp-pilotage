@@ -116,6 +116,7 @@ const IntentionsItem = z.object({
   correction: z.string().optional(),
   alreadyAccessed: z.boolean(),
   avis: z.array(AvisSchema),
+  isIntention: z.boolean(),
 });
 
 export const FiltersSchema = z.object({

@@ -31,7 +31,7 @@ import { Conseils } from "@/app/(wrapped)/intentions/saisie/components/Conseils"
 import { MenuFormulaire } from "@/app/(wrapped)/intentions/saisie/components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
 import type { Demande, DemandeMetadata } from "@/app/(wrapped)/intentions/saisie/types";
-import { canCorrectDemande, canCreateDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
+import { canCorrectDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import type { DetailedApiError } from "@/utils/apiError";
 import { getDetailedErrorMessage } from "@/utils/apiError";
@@ -231,7 +231,7 @@ export const IntentionForm = ({
             formMetadata={formMetadata}
             onEditUaiCfdSection={onEditUaiCfdSection}
             active={step === 1}
-            disabled={!canCreateDemande({user, campagne})}
+            disabled={disabled}
             isFCIL={isFCIL}
             setIsFCIL={setIsFCIL}
             isCFDUaiSectionValid={isCFDUaiSectionValid}
@@ -271,7 +271,7 @@ export const IntentionForm = ({
                   <InformationsBlock
                     refs={anchorsRefs}
                     formId={formId}
-                    disabled={!canCreateDemande({user, campagne})}
+                    disabled={disabled}
                     campagne={campagne}
                     demande={demande}
                     showCorrection={showCorrection}

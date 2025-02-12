@@ -22,6 +22,7 @@ import type { Auth} from "./authContext";
 import { AuthContext } from "./authContext";
 import { CodeRegionContext } from "./codeRegionContext";
 import { CurrentCampagneContext } from "./currentCampagneContext";
+import { PreviousCampagneContext } from "./previousCampagneContext";
 import { UaisContext } from "./uaiContext";
 
 interface RootLayoutClientProps {
@@ -29,7 +30,8 @@ interface RootLayoutClientProps {
   readonly auth?: Auth;
   readonly changelog: Changelog;
   readonly glossaire: GlossaireEntries;
-  readonly campagne?: CampagneType;
+  readonly previousCampagne?: CampagneType;
+  readonly currentCampagne?: CampagneType;
   readonly codeRegion?: string;
   readonly uais?: Array<string>;
 }
@@ -70,7 +72,8 @@ export default function RootLayoutClient({
   auth: initialAuth,
   changelog: initialChangelog,
   glossaire: initialGlossaire,
-  campagne: initialCampagne,
+  currentCampagne: initialCurrentCampagne,
+  previousCampagne: initialPreviousCampagne,
   codeRegion: initialCodeRegion,
   uais: initialUais,
 }: RootLayoutClientProps) {
@@ -89,7 +92,8 @@ export default function RootLayoutClient({
 
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
   const [changelog, setChangelog] = useState<Changelog>(initialChangelog);
-  const [campagne, setCampagne] = useState<CampagneType | undefined>(initialCampagne);
+  const [currentCampagne, setCurrentCampagne] = useState<CampagneType | undefined>(initialCurrentCampagne);
+  const [previousCampagne, setPreviousCampagne] = useState<CampagneType | undefined>(initialPreviousCampagne);
 
   const [codeRegion, setCodeRegion] = useState<string | undefined>(initialCodeRegion);
   const [uais, setUais] = useState<Array<string> | undefined>(initialUais);
@@ -126,21 +130,29 @@ export default function RootLayoutClient({
               <AuthContext.Provider value={{ auth, setAuth }}>
                 <UaisContext.Provider value={{uais, setUais}}>
                   <CodeRegionContext.Provider value={{codeRegion, setCodeRegion}}>
-                    <CurrentCampagneContext.Provider value={{campagne, setCampagne}}>
-                      <GlossaireProvider initialEntries={initialGlossaire}>
-                        <ChangelogContext.Provider value={{ changelog, setChangelog }}>
-                          <Flex
-                            direction="column"
-                            height="100vh"
-                            overflow="auto"
-                            position="relative"
-                            ref={containerRef}
-                            onScroll={handleScrolling}
-                          >
-                            {children}
-                          </Flex>
-                        </ChangelogContext.Provider>
-                      </GlossaireProvider>
+                    <CurrentCampagneContext.Provider value={{
+                      campagne: currentCampagne,
+                      setCampagne: setCurrentCampagne
+                    }}>
+                      <PreviousCampagneContext.Provider value={{
+                        campagne: previousCampagne,
+                        setCampagne: setPreviousCampagne
+                      }}>
+                        <GlossaireProvider initialEntries={initialGlossaire}>
+                          <ChangelogContext.Provider value={{ changelog, setChangelog }}>
+                            <Flex
+                              direction="column"
+                              height="100vh"
+                              overflow="auto"
+                              position="relative"
+                              ref={containerRef}
+                              onScroll={handleScrolling}
+                            >
+                              {children}
+                            </Flex>
+                          </ChangelogContext.Provider>
+                        </GlossaireProvider>
+                      </PreviousCampagneContext.Provider>
                     </CurrentCampagneContext.Provider>
                   </CodeRegionContext.Provider>
                 </UaisContext.Provider>

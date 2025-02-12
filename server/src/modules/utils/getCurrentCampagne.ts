@@ -92,7 +92,7 @@ export const getCurrentCampagne = async (user?: RequestUser): Promise<CampagneTy
         dateDebut: campagneEnCours.dateDebut,
         dateFin: campagneEnCours.dateFin,
         statut: campagneEnCours.statut,
-        hasCampagneRegionEnCours: true,
+        hasCampagneRegionEnCours: campagneRegionEnCours.statut === CampagneStatutEnum["en cours"],
         codeRegion: campagneRegionEnCours.codeRegion,
         withSaisiePerdir: campagneRegionEnCours.withSaisiePerdir,
         dateVote: campagneRegionEnCours.dateVote,
@@ -101,3 +101,55 @@ export const getCurrentCampagne = async (user?: RequestUser): Promise<CampagneTy
   }
   return campagnesEnCours[0];
 };
+
+
+export const getPreviousCampagne = async () => {
+  return getKbdClient()
+    .selectFrom("campagne")
+    .where("statut", "=", CampagneStatutEnum["terminée"])
+    .selectAll()
+    .orderBy("annee", "desc")
+    .executeTakeFirstOrThrow()
+    .catch(() => {
+      throw Boom.notFound(`Aucune campagne nationale n'est terminée, veuillez en terminer une dans l'écran dédié`);
+    })
+    .then((campagne) => cleanNull({
+      ...campagne,
+      dateDebut: campagne.dateDebut.toISOString(),
+      dateFin: campagne.dateFin.toISOString(),
+    }));
+};
+
+export const getCampagnes = async (user?: RequestUser): Promise<Array<CampagneType>> => getKbdClient()
+  .selectFrom("campagne")
+  .leftJoin("campagneRegion", (join) =>
+    join
+      .onRef("campagneRegion.campagneId", "=", "campagne.id")
+      .$call((eb) => {
+        if(user?.codeRegion) return eb.on("campagneRegion.codeRegion", "=", user.codeRegion);
+        return eb.on((eb) => eb.val(false));
+      })
+  )
+  .selectAll("campagne")
+  .select([
+    "campagneRegion.statut as campagneRegionStatut",
+    "campagneRegion.codeRegion",
+    "campagneRegion.withSaisiePerdir",
+    "campagneRegion.dateVote"
+  ])
+  .orderBy("annee desc")
+  .execute()
+  .then((campagnes) =>
+    campagnes.map((campagne) => cleanNull({
+      id: campagne.id,
+      annee: campagne.annee,
+      dateDebut: campagne.dateDebut.toISOString(),
+      dateFin: campagne.dateFin.toISOString(),
+      statut: campagne.campagneRegionStatut ?? campagne.statut,
+      hasCampagneRegionEnCours: campagne.campagneRegionStatut === CampagneStatutEnum["en cours"],
+      codeRegion: campagne.codeRegion,
+      withSaisiePerdir: campagne.withSaisiePerdir,
+      dateVote: campagne.dateVote?.toISOString(),
+    })
+    ));
+

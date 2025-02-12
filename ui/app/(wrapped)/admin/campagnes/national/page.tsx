@@ -16,7 +16,6 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { toDate } from "date-fns";
 import { useMemo, useState } from "react";
 
 import { client } from "@/api.client";
@@ -25,6 +24,7 @@ import { CreateCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components
 import { EditCampagne } from "@/app/(wrapped)/admin/campagnes/components/EditCampagne";
 import { EditCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/EditCampagneRegion";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
+import {formatBoolean, formatDate} from '@/utils/formatUtils';
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 // eslint-disable-next-line react/display-name, import/no-anonymous-default-export
@@ -86,10 +86,10 @@ export default () => {
                     <CampagneStatutTag statut={campagne.statut} />
                   </Td>
                   <Td>
-                    {campagne.dateDebut ? toDate(campagne.dateDebut).toLocaleDateString("fr-FR") : "Non définie"}
+                    {formatDate({date: campagne.dateDebut, options: { dateStyle: "short" }, nullValue: "Non définie"})}
                   </Td>
                   <Td>
-                    {campagne.dateFin ? toDate(campagne.dateFin).toLocaleDateString("fr-FR") : "Non définie"}
+                    {formatDate({date: campagne.dateFin, options: { dateStyle: "short" }, nullValue: "Non définie"})}
                   </Td>
                   <Td>
                     <IconButton
@@ -131,9 +131,12 @@ export default () => {
                 <Th width={"4rem"}>Id</Th>
                 <Th width={"3rem"}>Année</Th>
                 <Th width={"3rem"}>Statut</Th>
-                <Th>Région</Th>
+                <Th width={"6rem"}>Région</Th>
+                <Th width={"3rem"}>Saisie perdir ?</Th>
+                <Th>Date de vote</Th>
                 <Th width={"3rem"}>Date de début</Th>
                 <Th width={"4rem"}>Date de fin</Th>
+                <Th width={"4rem"}>Actions</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -148,10 +151,29 @@ export default () => {
                   </Td>
                   <Td>{campagneRegion.region}</Td>
                   <Td>
-                    {campagneRegion.dateDebut ? toDate(campagneRegion.dateDebut).toLocaleDateString("fr-FR") : "Non définie"}
+                    {formatBoolean(campagneRegion.withSaisiePerdir)}
                   </Td>
                   <Td>
-                    {campagneRegion.dateFin ? toDate(campagneRegion.dateFin).toLocaleDateString("fr-FR") : "Non définie"}
+                    {formatDate({date: campagneRegion.dateVote, options: { dateStyle: "short" }, nullValue: "Non définie"})}
+                  </Td>
+                  <Td>
+                    {formatDate({date: campagneRegion.dateDebut, options: { dateStyle: "short" }, nullValue: "Non définie"})}
+                  </Td>
+                  <Td>
+                    {formatDate({date: campagneRegion.dateFin, options: { dateStyle: "short" }, nullValue: "Non définie"})}
+                  </Td>
+                  <Td>
+                    <IconButton
+                      position="unset"
+                      variant="ghost"
+                      onClick={() => {
+                        setCampagneRegionId(campagneRegion.id);
+                        onOpenCampagneRegion();
+                      }}
+                      aria-label="Éditer"
+                    >
+                      <EditIcon />
+                    </IconButton>
                   </Td>
                 </Tr>
               ))}

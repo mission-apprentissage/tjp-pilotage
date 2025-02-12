@@ -88,6 +88,7 @@ const DemandeItem = z.object({
   canEdit: z.boolean(),
   correction: z.string().optional(),
   alreadyAccessed: z.boolean(),
+  isIntention: z.boolean(),
 });
 
 export const FiltersSchema = z.object({

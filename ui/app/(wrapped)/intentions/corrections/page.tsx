@@ -7,11 +7,11 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 import {SecteurEnum} from 'shared/enum/secteurEnum';
-import { PREVIOUS_ANNEE_CAMPAGNE } from "shared/time/PREVIOUS_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
 import { CodeDepartementContext } from '@/app/codeDepartementContext';
 import { CodeRegionContext } from '@/app/codeRegionContext';
+import { PreviousCampagneContext } from '@/app/previousCampagneContext';
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { Loading } from "@/components/Loading";
 import { SearchInput } from "@/components/SearchInput";
@@ -77,8 +77,7 @@ const ColonneFiltersSection = chakra(
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default () => {
+const Page = () => {
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -107,8 +106,7 @@ export default () => {
 
   const { codeRegion, setCodeRegion } = useContext(CodeRegionContext);
   const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
-
-  const [campagneFilter, setCampagneFilter] = useState<string>(PREVIOUS_ANNEE_CAMPAGNE);
+  const { campagne } = useContext(PreviousCampagneContext);
 
   const trackEvent = usePlausible();
   const filterTracker = (filterName: keyof FiltersCorrections) => () => {
@@ -142,9 +140,6 @@ export default () => {
         break;
       case "codeDepartement":
         setCodeDepartement((value as string[])[0] ?? "");
-        break;
-      case "campagne":
-        setCampagneFilter((value as string[])[0] ?? "");
         break;
       }
   };
@@ -224,8 +219,8 @@ export default () => {
     ) {
       filters.codeDepartement = [codeDepartement];
     }
-    if (filters?.campagne === undefined && campagneFilter !== "") {
-      filters.campagne = campagneFilter;
+    if (filters?.campagne === undefined) {
+      filters.campagne = campagne?.annee;
     }
     setSearchParams({ filters: filters });
   };
@@ -242,12 +237,6 @@ export default () => {
       search: searchIntention,
     });
   };
-
-  useEffect(() => {
-    const campagneFilterNumber = parseInt(searchParams.filters?.campagne ?? "");
-    handleFilters("rentreeScolaire", campagneFilterNumber + 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams.filters?.campagne]);
 
   if (!feature.correction) {
     router.replace("/");
@@ -345,3 +334,4 @@ export default () => {
     </GuardPermission>
   );
 };
+export default Page;

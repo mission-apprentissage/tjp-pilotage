@@ -130,6 +130,7 @@ const DemandeSchema = z.object({
   differenceCapaciteApprentissage: z.coerce.number().optional(),
   correction: CorrectionSchema.optional(),
   formationSpecifique: FormationSpecifiqueFlagsSchema,
+  isIntention: z.boolean(),
 });
 
 export const FiltersSchema = z.object({
