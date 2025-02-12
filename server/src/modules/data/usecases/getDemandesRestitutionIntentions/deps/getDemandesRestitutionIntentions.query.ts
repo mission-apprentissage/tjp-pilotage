@@ -5,7 +5,8 @@ import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
-import type { Filters } from "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.usecase";
+import type { Filters } from
+  "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.usecase";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { nbEtablissementFormationRegion } from "@/modules/data/utils/nbEtablissementFormationRegion";
 import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
@@ -61,14 +62,14 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         return eb;
       })
     )
-    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
-    .innerJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .innerJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
-    .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
-    .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
-    .innerJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
+    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
+    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
+    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
     .leftJoin("indicateurRegionSortie", (join) =>
       join
@@ -96,6 +97,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     )
     .selectAll("demande")
     .select((eb) => [
+      sql<string>`count(*) over()`.as("count"),
       "dataFormation.libelleFormation",
       "dataFormation.typeFamille",
       "dispositif.libelleDispositif",
@@ -114,7 +116,6 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
       countDifferenceCapaciteScolaireColoree(eb).as("differenceCapaciteScolaireColoree"),
       countDifferenceCapaciteApprentissageColoree(eb).as("differenceCapaciteApprentissageColoree"),
-      sql<string>`count(*) over()`.as("count"),
       selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertionRegional"),
       selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteRegional"),
       selectTauxDevenirFavorable("indicateurRegionSortie").as("tauxDevenirFavorableRegional"),
@@ -147,7 +148,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("demande.cfd")}),
                   ' ',
-                  unaccent(${eb.ref("formationView.libelleFormation")}),
+                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
                   unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
                   ' ',
@@ -210,11 +211,11 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (codeNsf) return eb.where("formationView.codeNsf", "in", codeNsf);
+      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
       return eb;
     })
     .$call((eb) => {

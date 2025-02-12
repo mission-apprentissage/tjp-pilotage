@@ -145,7 +145,7 @@ export const CustomListItem = ({ etablissement, withDivider, children }: CustomL
           </HStack>
           <HStack justifyContent={"space-between"} width="100%">
             <HStack
-              fontSize="12px"
+              fontSize={12}
               color={themeDefinition.colors.grey[425]}
               divider={<Divider orientation="vertical" h="12px" w="1px" />}
             >
@@ -179,7 +179,7 @@ export const CustomListItem = ({ etablissement, withDivider, children }: CustomL
               </HStack>
               <HStack
                 gap="8px"
-                fontSize="12px"
+                fontSize={12}
                 divider={<Divider h="12px" w="1px" orientation="vertical" />}
                 color={themeDefinition.colors.grey[425]}
               >

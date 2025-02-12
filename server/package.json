@@ -16,6 +16,7 @@
     "dev": "tsup-node --env.TSUP_WATCH true",
     "build": "tsup-node --env.NODE_ENV production",
     "typecheck": "NODE_OPTIONS='--max-old-space-size=8192' tsc --noEmit",
+    "kysely": "npx kysely-codegen --schema public --out-file=./src/db/schema.ts --dialect postgres && yarn prettier:fix",
     "generate:seed": "./seed/generate-seed.sh"
   },
   "dependencies": {
@@ -66,7 +67,7 @@
     "node-cache": "^5.1.2",
     "nodemailer": "^6.9.15",
     "nodemailer-html-to-text": "^3.2.0",
-    "notion-to-md": "^3.1.1",
+    "notion-to-md": "^3.1.4",
     "openid-client": "^5.6.5",
     "pg": "^8.9.0",
     "pino": "^9.4.0",
@@ -83,6 +84,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@anatine/zod-mock": "^3.13.4",
+    "@faker-js/faker": "^9.3.0",
     "@tsconfig/node22": "^22.0.0",
     "@types/cookie": "^0.5.1",
     "@types/ejs": "^3.1.5",

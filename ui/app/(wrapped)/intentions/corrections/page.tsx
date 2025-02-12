@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, chakra, Container, Flex } from "@chakra-ui/react";
+import {Button, chakra, Container, Flex, MenuButton} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -14,7 +14,7 @@ import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { Loading } from "@/components/Loading";
 import { SearchInput } from "@/components/SearchInput";
 import { TableHeader } from "@/components/TableHeader";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { feature } from "@/utils/feature";
 import { GuardPermission } from "@/utils/security/GuardPermission";
@@ -62,9 +62,9 @@ const ColonneFiltersSection = chakra(
           })}
           value={colonneFilters ?? []}
           customButton={
-            <Button variant={"externalLink"} leftIcon={<Icon icon={"ri:table-line"} />} color="bluefrance.113">
+            <MenuButton as={Button} variant={"externalLink"} leftIcon={<Icon icon={"ri:table-line"} />} color="bluefrance.113">
               Modifier l'affichage des colonnes
-            </Button>
+            </MenuButton>
           }
         />
       </Flex>
@@ -100,7 +100,7 @@ export default () => {
     page?: typeof page;
     search?: typeof search;
   }) => {
-    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
+    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);

@@ -13,9 +13,25 @@
     "sourceType": "module",
     "project": ["tsconfig.json", "server/tsconfig.json", "shared/tsconfig.json", "ui/tsconfig.json"]
   },
-  "plugins": ["react", "@typescript-eslint", "simple-import-sort", "import", "@dword-design/import-alias"],
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "simple-import-sort",
+    "import",
+    "@dword-design/import-alias",
+    "unused-imports"
+  ],
   "rules": {
-    "max-len": ["warn", { "code": 120 }],
+    "max-len": [
+      "warn",
+      {
+        "code": 120,
+        "ignorePattern": "^import\\s.+\\sfrom\\s.+;$",
+        "ignoreComments": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
     "simple-import-sort/imports": "error",
     "no-extra-semi": "error",
     "semi": ["error", "always"],
@@ -46,16 +62,15 @@
     "@typescript-eslint/no-import-type-side-effects": "error",
     "@typescript-eslint/promise-function-async": "error",
     "@typescript-eslint/switch-exhaustiveness-check": "error",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
       {
-        "args": "all",
-        "argsIgnorePattern": "^_",
-        "caughtErrors": "all",
-        "caughtErrorsIgnorePattern": "^_",
-        "destructuredArrayIgnorePattern": "^_",
+        "vars": "all",
         "varsIgnorePattern": "^_",
-        "ignoreRestSiblings": true
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
       }
     ]
   },

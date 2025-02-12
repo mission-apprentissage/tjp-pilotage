@@ -13,28 +13,39 @@ const extractDatas = (
   formation: Formation,
   domaineDeFormation: { codeNsf: string; libelleNsf: string }
 ) => {
-  const { libelleEtablissement, commune, codeDepartement, ...restEtablissement } = etablissement;
+  const {
+    libellesDispositifs,
+    libelleEtablissement,
+    commune,
+    codeDepartement,
+    secteur,
+    isApprentissage,
+    isScolaire,
+    ...restEtablissement
+  } = etablissement;
   const { libelle: libelleFormation, ...restFormation } = formation;
+  const { codeNsf, libelleNsf, ...restDomaineDeFormation } = domaineDeFormation;
 
   return {
-    codeNsf: domaineDeFormation.codeNsf,
-    libelleNsf: domaineDeFormation.libelleNsf,
+    codeNsf: codeNsf,
+    libelleNsf: libelleNsf,
     libelleFormation: formatLibelleFormation({
-      libellesDispositifs: etablissement.libellesDispositifs,
-      libelleFormation: formation.libelle,
+      libellesDispositifs: libellesDispositifs,
+      libelleFormation: libelleFormation,
     }),
     ...restFormation,
     libelleEtablissement,
     commune: formatCommuneLibelleWithCodeDepartement({
-      commune: etablissement.commune,
-      codeDepartement: etablissement.codeDepartement,
+      commune: commune,
+      codeDepartement: codeDepartement,
     }),
-    ...restEtablissement,
-    secteur: formatSecteur(etablissement.secteur),
     voie: formatArray([
-      etablissement.isApprentissage ? "Apprentissage" : "",
-      etablissement.isScolaire ? "Scolaire" : "",
+      isApprentissage ? "Apprentissage" : "",
+      isScolaire ? "Scolaire" : "",
     ]),
+    ...restEtablissement,
+    secteur: formatSecteur(secteur),
+    ...restDomaineDeFormation
   };
 };
 
@@ -76,7 +87,7 @@ export const ExportListEtablissements = ({
   const onExportCsv = async () => {
     if (!etablissements.length) return;
 
-    trackEvent("domaine-de-formation-etablissements:export-csv");
+    trackEvent("domaine-de-formation:etablissements:export-csv");
 
     downloadCsv(
       formatExportFilename("domaine-de-formation_etablissements"),
@@ -88,7 +99,7 @@ export const ExportListEtablissements = ({
   const onExportExcel = async () => {
     if (!etablissements.length) return;
 
-    trackEvent("domaine-de-formation-etablissements:export-excel");
+    trackEvent("domaine-de-formation:etablissements:export-excel");
 
     downloadExcel(
       formatExportFilename("domaine-de-formation_etablissements"),

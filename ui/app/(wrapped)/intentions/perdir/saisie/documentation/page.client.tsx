@@ -2,8 +2,8 @@
 import { Container } from "@chakra-ui/react";
 import type { ExtendedRecordMap } from "notion-types";
 
-import { Doc } from "@/app/_components/NotionDoc";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { Doc } from "@/components/NotionDoc";
 
 export const revalidate = 60;
 
@@ -15,7 +15,7 @@ export function DocumentationClient({ recordMap }: { readonly recordMap: Extende
           ml={4}
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: "/intentions/saisie" },
+            { title: "Recueil des demandes", to: "/intentions/perdir/saisie" },
             {
               title: "Documentation",
               to: "/intentions/saisie/documentation",

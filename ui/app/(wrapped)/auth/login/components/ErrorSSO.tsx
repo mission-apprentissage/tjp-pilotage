@@ -50,7 +50,7 @@ const ErrorSSO = () => {
             <Heading as="h3" fontSize="20px" fontWeight={700} textAlign="left">
               Error lors de la connexion avec Arena
             </Heading>
-            <Text fontSize="16px">
+            <Text fontSize={16}>
               Orion utilise les services de la DNE pour vous fournir une connexion unique et sécurisée. Nous n’avons pas
               réussi à établir une connexion au portail Arena pour vous permettre d’accéder à Orion. Merci de ré-essayer
               ultérieurement ou de

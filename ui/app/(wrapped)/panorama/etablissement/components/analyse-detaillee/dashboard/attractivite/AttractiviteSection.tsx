@@ -1,4 +1,4 @@
-import { Badge, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
+import { Badge, Flex, Grid, GridItem, Heading } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
@@ -23,9 +23,9 @@ export const AttractiviteSection = ({
   return (
     <Flex gap={4} direction={"column"}>
       <Flex direction={"row"} justifyContent={"flex-start"} gap={"8px"} alignItems={"center"}>
-        <Text fontSize={14} fontWeight={700} textTransform={"uppercase"} lineHeight={"24px"}>
+        <Heading as="h3" fontSize={14} fontWeight={700} textTransform={"uppercase"} lineHeight={"24px"}>
           Attractivité de la formation
-        </Text>
+        </Heading>
         <Badge variant="info" maxH={5}>
           Rentrée {CURRENT_RENTREE}
         </Badge>

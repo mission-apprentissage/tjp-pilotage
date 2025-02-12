@@ -1,4 +1,4 @@
-import { AccordionButton, AccordionItem, AccordionPanel, Box, HStack, Text, useToken } from "@chakra-ui/react";
+import { AccordionButton, AccordionItem, AccordionPanel, Box, Heading, HStack, Text, useToken } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
 import { themeDefinition } from "@/theme/theme";
@@ -16,10 +16,10 @@ export const LandingAccordionItem = ({ label, children }: LandingAccordionItemPr
     <AccordionItem border="1px" borderColor={grey900Color} width="100%">
       {({ isExpanded }) => (
         <>
-          <Text as="h2" backgroundColor={isExpanded ? grey975Color : "auto"}>
+          <Heading as="h3" backgroundColor={isExpanded ? grey975Color : "auto"}>
             <AccordionButton>
               <HStack padding="16px" width="100%">
-                <Text as="span" flex="1" textAlign="left" fontSize="16px" fontWeight={isExpanded ? 500 : 400}>
+                <Text as="span" flex="1" textAlign="left" fontSize={16} fontWeight={isExpanded ? 500 : 400}>
                   {label}
                 </Text>
                 <Icon
@@ -29,7 +29,7 @@ export const LandingAccordionItem = ({ label, children }: LandingAccordionItemPr
                 />
               </HStack>
             </AccordionButton>
-          </Text>
+          </Heading>
           <AccordionPanel>
             <Box padding="8px 16px">{children}</Box>
           </AccordionPanel>

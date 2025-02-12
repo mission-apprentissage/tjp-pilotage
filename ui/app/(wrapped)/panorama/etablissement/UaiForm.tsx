@@ -26,12 +26,13 @@ export const UaiForm = ({
 
   return (
     <FormControl margin="auto" maxW="400px" as="form">
-      <FormLabel>Recherche d'un établissement</FormLabel>
+      <FormLabel htmlFor="panorama-etablissement-uai">Recherche d'un établissement</FormLabel>
       <Flex zIndex="overlay">
         {isLoading ? (
           <Skeleton height="38px" width="25rem" opacity={0.25} />
         ) : (
           <AsyncSelect
+            inputId={"panorama-etablissement-uai"}
             instanceId={"panorama-etablissement-uai"}
             styles={{
               ...selectStyle,

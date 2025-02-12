@@ -1,4 +1,4 @@
-import { Box, Skeleton, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Skeleton, Table, Tbody, Td, Text, Th, Thead, Tr, VisuallyHidden } from "@chakra-ui/react";
 import type { PositionQuadrantType } from "shared/enum/positionQuadrantEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
@@ -86,7 +86,11 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
         <Table variant="unstyled">
           <Thead>
             <Tr>
-              <Th maxWidth={"200px"}></Th>
+              <Th maxWidth={"200px"}>
+                <VisuallyHidden>
+                  Indicateurs
+                </VisuallyHidden>
+              </Th>
               <Th maxWidth={"100px"} px={3}>
                 <Text align="center">{PositionQuadrantEnum.Q1}</Text>
               </Th>

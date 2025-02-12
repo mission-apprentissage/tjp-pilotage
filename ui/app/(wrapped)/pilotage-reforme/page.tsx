@@ -7,7 +7,7 @@ import qs from "qs";
 import { useState } from "react";
 
 import { client } from "@/api.client";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { withAuth } from "@/utils/security/withAuth";
 
 import { CartoSection } from "./components/CartoSection";
@@ -23,13 +23,13 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   const searchParams: {
     filters?: Partial<Filters>;
     order?: Partial<Order>;
-  } = qs.parse(queryParams.toString());
+  } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const filters = searchParams.filters ?? {};
   const order = searchParams.order ?? { order: "asc" };
 
   const setSearchParams = (params: { filters?: typeof filters; order?: typeof order }) => {
-    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
+    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const trackEvent = usePlausible();

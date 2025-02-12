@@ -10,6 +10,7 @@ import type {
 } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/types";
 import { BadgeScope } from "@/components/BadgeScope";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
 
 import { displayEffectifsDatas, displayEtablissementsDatas } from "./displayIndicators";
 import { TauxPressionRemplissageCard } from "./TauxPressionRemplissageCard";
@@ -53,6 +54,14 @@ const VerticalBarChart = ({
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+          data: {
+            maxCount: 100
+          }
+        },
+      },
       textStyle: {
         fontFamily: "Marianne, Arial",
       },
@@ -143,14 +152,15 @@ const VerticalBarChart = ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
   }, [data, option]);
 
   return (
     <Box position="relative" overflow="visible !important" w={"100%"} h={"100%"}>
-      <Box ref={containerRef} h={"100%"} w={"100%"}></Box>
+      <Box ref={containerRef} h={"100%"} w={"100%"} role="figure"></Box>
     </Box>
   );
 };

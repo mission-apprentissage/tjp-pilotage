@@ -148,7 +148,7 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
           Exprimer un {getLabelAvis(intention.statut)}
         </Heading>
         <FormControl isInvalid={!!errors.userFonction} isRequired>
-          <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
+          <FormLabel fontSize={12} fontWeight={400} color={"grey.425"} htmlFor="userFonction">
             Exprimer un {getLabelAvis(intention.statut)} en tant que
           </FormLabel>
           <Controller
@@ -157,6 +157,7 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
             rules={{ required: "Ce champs est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
               <CreatableSelect<Option>
+                inputId="userFonction"
                 name={name}
                 onChange={(selected) => {
                   onChange(selected?.value);
@@ -185,16 +186,16 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
           {errors.userFonction && <FormErrorMessage>{errors.userFonction.message}</FormErrorMessage>}
         </FormControl>
         <FormControl isInvalid={!!errors.statutAvis} isRequired>
-          <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
+          <FormLabel fontSize={12} fontWeight={400} color={"grey.425"} htmlFor="statutAvis">
             Avis sur la proposition
           </FormLabel>
-
           <Controller
             name="statutAvis"
             control={control}
             rules={{ required: "Ce champs est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
               <Select<Option>
+                inputId="statutAvis"
                 name={name}
                 onChange={(selected) => {
                   onChange(selected?.value);
@@ -253,7 +254,7 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
               })}
               whiteSpace={"nowrap"}
             >
-              <Text fontSize={"14px"} fontWeight={400}>
+              <Text fontSize={14} fontWeight={400}>
                 Rendre cet avis visible de tous
               </Text>
             </Checkbox>

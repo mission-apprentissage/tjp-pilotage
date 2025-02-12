@@ -2,6 +2,8 @@ import { AspectRatio, Box } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
+
 export const SoldeDePlacesTransformeesGraph = ({
   xAxisData,
   series,
@@ -14,6 +16,14 @@ export const SoldeDePlacesTransformeesGraph = ({
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+          data: {
+            maxCount: 100
+          }
+        },
+      },
       textStyle: {
         fontFamily: "Marianne, Arial",
       },
@@ -73,7 +83,8 @@ export const SoldeDePlacesTransformeesGraph = ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
   }, [chartRef, option]);
@@ -81,7 +92,7 @@ export const SoldeDePlacesTransformeesGraph = ({
   return (
     <AspectRatio ratio={1.7} w={"100%"}>
       <Box position="relative" overflow="visible !important">
-        <Box ref={containerRef} h={"100%"} w={"100%"}></Box>
+        <Box ref={containerRef} h={"100%"} w={"100%"} role="figure"></Box>
       </Box>
     </AspectRatio>
   );

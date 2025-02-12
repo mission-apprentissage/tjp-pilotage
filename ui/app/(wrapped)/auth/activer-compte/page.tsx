@@ -3,7 +3,7 @@ import { serverClient } from "@/api.client";
 import { ActivateAccountError } from "./ActivateAccountError";
 import { ActivateAccountForm } from "./ActivateAccountForm";
 
-export default async function ({ searchParams: { activationToken } }: { searchParams: { activationToken: string } }) {
+const Page = async ({ searchParams: { activationToken } }: { searchParams: { activationToken: string } }) => {
   try {
     await serverClient.ref("[GET]/auth/check-activation-token").query({
       query: { activationToken },
@@ -18,4 +18,6 @@ export default async function ({ searchParams: { activationToken } }: { searchPa
   } catch (e: any) {
     return <ActivateAccountError message={e.response.data.message} />;
   }
-}
+};
+
+export default Page;

@@ -22,7 +22,7 @@ export const UaiBlock = ({
   return (
     <LightMode>
       <FormControl isInvalid={!!errors.uai} mb="auto" isRequired>
-        <FormLabel>Recherche d'un établissement</FormLabel>
+        <FormLabel htmlFor="uai-autocomplete">Recherche d'un établissement</FormLabel>
         <Box color="chakra-body-text">
           <Controller
             name="uai"
@@ -30,6 +30,7 @@ export const UaiBlock = ({
             rules={{ required: "Ce champ est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
               <UaiAutocomplete
+                id="uai-autocomplete"
                 name={name}
                 disabled={disabled}
                 inError={!!errors.uai}

@@ -13,7 +13,7 @@ import { TauxInserJeunesSection } from "@/app/(wrapped)/panorama/components/Taux
 import { TopFlopSection } from "@/app/(wrapped)/panorama/components/TopFlopSection/TopFlopSection";
 import type { FiltersPanoramaFormation, OrderPanoramaFormation } from "@/app/(wrapped)/panorama/types";
 import { CodeRegionFilterContext } from "@/app/layoutClient";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 
 export default function Panorama({
   params: { codeRegion },
@@ -24,11 +24,11 @@ export default function Panorama({
 }) {
   const router = useRouter();
   const queryParams = useSearchParams();
-  const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(queryParams.toString());
+  const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
   const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
 
   const setSearchParams = (params: Partial<FiltersPanoramaFormation>) => {
-    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
+    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const handleOrder = (column: OrderPanoramaFormation["orderBy"]) => {

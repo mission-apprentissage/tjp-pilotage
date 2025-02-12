@@ -18,8 +18,7 @@ import {
 import { Icon } from "@iconify/react";
 import { isAxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
-import type { Dispatch, SetStateAction } from "react";
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
@@ -37,6 +36,8 @@ import { getStepWorkflow } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { isTypeAjustement, isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
+import type { DetailedApiError } from "@/utils/apiError";
+import { getDetailedErrorMessage } from "@/utils/apiError";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { CampagneContext } from "./CampagneContext";
@@ -65,6 +66,7 @@ export const IntentionForm = ({
   const { handleFiles } = useIntentionFilesContext();
 
   const { setCampagne } = useContext(CampagneContext);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const campagneValue = useMemo(() => ({ campagne, setCampagne }), [campagne]);
 
   const form = useForm<IntentionForms>({
@@ -111,12 +113,8 @@ export const IntentionForm = ({
       push(`/intentions/perdir/saisie`);
     },
     onError: (e: unknown) => {
-      if (isAxiosError<{ errors: Record<string, string> }>(e)) {
-        const errors = e.response?.data?.errors ?? {
-          erreur: "Une erreur est survenue lors de la sauvegarde.",
-        };
-
-        setErrors(errors);
+      if(isAxiosError<DetailedApiError>(e)) {
+        setErrors(() => ({ ...getDetailedErrorMessage(e) }));
       }
     },
   });
@@ -151,6 +149,7 @@ export const IntentionForm = ({
     if (isCFDUaiSectionValid(getValues())) {
       submitCFDUAISection();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const submitCFDUAISection = () => {
@@ -248,7 +247,7 @@ export const IntentionForm = ({
               mb={4}
               pages={[
                 { title: "Accueil", to: "/" },
-                { title: "Recueil des demandes", to: "/intentions" },
+                { title: "Recueil des demandes", to: "/intentions/perdir/saisie" },
                 pathname === "/intentions/perdir/saisie/new"
                   ? {
                     title: "Nouvelle demande",

@@ -12,7 +12,7 @@ import { cleanNull } from "@/utils/noNull";
 export interface Filters extends z.infer<typeof countDemandesSchema.querystring> {
   user: RequestUser;
 }
-export const countDemandesQuery = async ({ user, anneeCampagne, codeAcademie, codeNiveauDiplome, search }: Filters) => {
+export const countDemandesQuery = async ({ user, campagne, codeAcademie, codeNiveauDiplome, search }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
 
   const countDemandes = getKbdClient()
@@ -22,14 +22,7 @@ export const countDemandesQuery = async ({ user, anneeCampagne, codeAcademie, co
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("user", "user.id", "demande.createdBy")
-    .innerJoin("campagne", (join) =>
-      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-        if (anneeCampagne) {
-          return eb.on("campagne.annee", "=", anneeCampagne);
-        }
-        return eb;
-      })
-    )
+    .innerJoin("campagne", "campagne.id", "demande.campagneId")
     .leftJoin("suivi", (join) =>
       join.onRef("suivi.intentionNumero", "=", "demande.numero").on("suivi.userId", "=", user.id)
     )
@@ -116,6 +109,12 @@ export const countDemandesQuery = async ({ user, anneeCampagne, codeAcademie, co
     })
     .$call((eb) => {
       if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      return eb;
+    })
+    .$call((eb) => {
+      if (campagne) {
+        return eb.where("campagne.annee", "=", campagne);
+      }
       return eb;
     })
     .where(isDemandeNotDeleted)

@@ -11,8 +11,8 @@ export const ReconversionRHField = chakra(({ disabled, className }: { disabled?:
   } = useFormContext<IntentionForms>();
 
   return (
-    <FormControl className={className} isInvalid={!!errors.reconversionRH} isRequired>
-      <FormLabel>Des reconversions ?</FormLabel>
+    <FormControl as="fieldset"  className={className} isInvalid={!!errors.reconversionRH} isRequired>
+      <FormLabel as="legend" >Des reconversions ?</FormLabel>
       <Controller
         name="reconversionRH"
         control={control}

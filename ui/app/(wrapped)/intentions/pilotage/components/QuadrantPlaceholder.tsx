@@ -26,7 +26,7 @@ const QuadrantPlaceholder = () => {
         dans les filtres en haut de page
       </Text>
       <Box width="160px" height="160px" borderRadius="120px" backgroundColor={themeDefinition.colors.bluefrance[975]}>
-        <Img src="/illustrations/search.svg" />
+        <Img src="/illustrations/search.svg" alt="Icône rechercher" />
       </Box>
     </VStack>
   );

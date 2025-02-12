@@ -77,9 +77,14 @@ export const getFormation = async ({
     getKbdClient()
       .selectFrom("formationHistorique")
       .leftJoin("formationView", "formationHistorique.cfd", "formationView.cfd")
-      .where("formationHistorique.cfd", "=", cfd)
-      .where("formationView.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`)
-      .where("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
+      .leftJoin("formationView as fva", "fva.cfd", "formationHistorique.ancienCFD")
+      .where(wb => wb.and([
+        wb("formationHistorique.cfd", '=', cfd),
+        wb("formationHistorique.ancienCFD", "in",(eb) => eb.selectFrom("formationEtablissement").select("cfd")),
+        wb("formationView.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}` ),
+        wb("fva.dateFermeture", "is not", null),
+        wb("fva.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
+      ]))
       .select("formationView.cfd")
       .distinct();
 

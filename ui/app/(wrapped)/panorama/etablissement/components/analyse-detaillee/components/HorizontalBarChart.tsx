@@ -4,6 +4,8 @@ import { useLayoutEffect, useMemo, useRef } from "react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
+
 export const HorizontalBarChart = ({
   title,
   data,
@@ -49,6 +51,14 @@ export const HorizontalBarChart = ({
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+          data: {
+            maxCount: 100
+          }
+        },
+      },
       animationDelay: 0.5,
       responsive: true,
       maintainAspectRatio: true,
@@ -148,21 +158,24 @@ export const HorizontalBarChart = ({
         },
       },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data]
   );
 
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (
     <AspectRatio ratio={3.5} w={"100%"}>
       <Box position="relative" overflow="visible !important">
-        <Box ref={containerRef} height={"100%"} w={"100%"}></Box>
+        <Box ref={containerRef} height={"100%"} w={"100%"} role="figure"></Box>
       </Box>
     </AspectRatio>
   );

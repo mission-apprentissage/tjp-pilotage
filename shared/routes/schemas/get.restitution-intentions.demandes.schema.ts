@@ -22,7 +22,7 @@ const DemandeSchema = z.object({
   libelleNsf: z.string().optional(),
   libelleFormation: z.string().optional(),
   formationSpecifique: FormationSpecifiqueFlagsSchema,
-  niveauDiplome: z.string().optional(),
+  libelleNiveauDiplome: z.string().optional(),
   libelleDispositif: z.string().optional(),
   codeDispositif: z.string(),
   cfd: z.string(),

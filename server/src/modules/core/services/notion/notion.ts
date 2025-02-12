@@ -2,6 +2,8 @@ import Boom from "@hapi/boom";
 import { APIErrorCode, Client, ClientErrorCode, isNotionClientError } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
 
+import logger from "@/services/logger";
+
 export const notionClient = new Client({
   auth: process.env.NOTION_TOKEN,
 });
@@ -21,10 +23,13 @@ const withNotionErrorHandling =
         if (isNotionClientError(error)) {
           switch (error.code) {
           case APIErrorCode.ObjectNotFound:
+            logger.error({ ...args, error }, "[API_NOTION] Base de donnée Notion introuvable");
             throw Boom.notFound("Base de donnée Notion introuvable");
           case APIErrorCode.Unauthorized:
+            logger.error({ ...args, error }, "[API_NOTION] Token Notion invalide");
             throw Boom.unauthorized("Token Notion invalide");
           case APIErrorCode.RateLimited:
+            logger.error({ ...args, error }, "[API_NOTION] Trop de requêtes Notion");
             throw Boom.tooManyRequests("Trop de requêtes Notion");
           case ClientErrorCode.RequestTimeout:
           case ClientErrorCode.ResponseError:
@@ -37,6 +42,7 @@ const withNotionErrorHandling =
           case APIErrorCode.InternalServerError:
           case APIErrorCode.ServiceUnavailable:
           default:
+            logger.error({ ...args, error }, "[API_NOTION] Trop de requêtes Notion");
             throw Boom.badImplementation("Erreur inattendue lors de la communication avec Notion", {
               error: error as Error,
               ...args,
@@ -44,6 +50,8 @@ const withNotionErrorHandling =
           }
         }
 
+
+        logger.error({ ...args }, "[API_NOTION] Erreur lors de l'appel à Notion avec les parametres suivants");
         throw Boom.badImplementation(
           "Erreur lors de l'appel à Notion avec les parametres suivants " + JSON.stringify(args)
         );

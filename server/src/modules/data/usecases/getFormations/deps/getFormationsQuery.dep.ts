@@ -2,6 +2,7 @@ import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -12,8 +13,8 @@ import { hasContinuum } from "@/modules/data/utils/hasContinuum";
 import { isInPerimetreIJEtablissement } from "@/modules/data/utils/isInPerimetreIJ";
 import { isScolaireFormationHistorique } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
-import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
-import { openForRentreeScolaire } from "@/modules/data/utils/openForRentreeScolaire";
+import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistantIndicateurEntree } from "@/modules/data/utils/notHistorique";
+import { openForRentreeScolaireIndicateurEntree } from "@/modules/data/utils/openForRentreeScolaire";
 import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
@@ -77,9 +78,7 @@ export const getFormationsQuery = async ({
       join
         .onRef("actionPrioritaire.cfd", "=", "formationEtablissement.cfd")
         .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
-        .$call((join) =>
-          codeRegion ? join.onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion") : join
-        )
+        .onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion")
     )
     .$call((eb) => {
       if (!codeRegion) return eb;
@@ -203,9 +202,13 @@ export const getFormationsQuery = async ({
       "formationHistorique.cfd as formationRenovee",
       eb
         .selectFrom("formationHistorique")
-        .select("formationHistorique.cfd")
-        .whereRef("formationHistorique.cfd", "=", "formationView.cfd")
-        .where("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
+        .innerJoin("formationView as fva", "fva.cfd", "formationHistorique.ancienCFD")
+        .select("formationHistorique.ancienCFD")
+        .where(wb => wb.and([
+          wb(wb.ref("formationHistorique.cfd"), "=", wb.ref("formationView.cfd")),
+          wb("fva.dateFermeture", "is not", null),
+          wb("fva.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(rentreeScolaire[0])}`)
+        ]))
         .limit(1)
         .as("isFormationRenovee"),
       sql<string | null>`
@@ -219,8 +222,8 @@ export const getFormationsQuery = async ({
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .where(isInPerimetreIJEtablissement)
-    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
-    .where((eb) => openForRentreeScolaire(eb, rentreeScolaire[0]))
+    .where(notHistoriqueUnlessCoExistantIndicateurEntree)
+    .where(openForRentreeScolaireIndicateurEntree)
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "is not", null),
@@ -361,7 +364,6 @@ export const getFormationsQuery = async ({
       }
       return q;
     })
-    .$narrowType<{ ["Action prioritaire"]: boolean }>()
     .orderBy("libelleFormation", "asc")
     .orderBy("libelleNiveauDiplome", "asc")
     .orderBy("libelleDispositif", "asc")

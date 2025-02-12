@@ -150,15 +150,15 @@ export const genericOnDemandes = ({
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (codeNsf) return eb.where("formationView.codeNsf", "in", codeNsf);
+      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
       return eb;
     })
     .$call((eb) => {
-      if (CPC) return eb.where("formationView.cpc", "in", CPC);
+      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
       return eb;
     })
     .$call((q) => {

@@ -24,7 +24,7 @@ export const STATS_DEMANDES_COLUMNS = {
   transitionNumerique: "Transition numérique ?",
   codeDispositif: "Code Dispositif",
   libelleDispositif: "Dispositif",
-  niveauDiplome: "Diplôme",
+  libelleNiveauDiplome: "Diplôme",
   // demande
   typeDemande: "Type de demande",
   motif: "Motif(s) de la demande",
@@ -118,7 +118,7 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<typeof STATS_DEMANDES_COLU
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
   formationSpecifique: "Formation spécifique",
-  niveauDiplome: "Diplôme",
+  libelleNiveauDiplome: "Diplôme",
   // demande
   typeDemande: "Type de demande",
   motif: "Motif(s) de la demande",
@@ -176,7 +176,7 @@ export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<typeof STATS_DEMANDES_COLUM
   commune: "Commune",
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
-  niveauDiplome: "Diplôme",
+  libelleNiveauDiplome: "Diplôme",
   typeDemande: "Type de demande",
   differenceCapaciteScolaire: "Nombre de places en voie scolaire",
   differenceCapaciteScolaireColoree: "Nombre de places colorées en voie scolaire",

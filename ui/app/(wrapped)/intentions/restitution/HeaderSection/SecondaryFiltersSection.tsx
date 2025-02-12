@@ -3,14 +3,12 @@ import {
   Box,
   Button,
   Flex,
-  FormLabel,
   Highlight,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Select,
-  Tag,
   Text,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
@@ -50,14 +48,14 @@ export const SecondaryFiltersSection = ({
       <Flex justifyContent={"start"} flexDirection={"column"} gap={4} py={3}>
         <Flex justifyContent={"start"} gap={4}>
           <Box justifyContent={"start"}>
-            <FormLabel>
+            <Text fontWeight={500} mb={1}>
               Domaine de formation (NSF)
               <TooltipIcon
                 ml="1"
                 label="Cliquez pour plus d'infos."
                 onClick={() => openGlossaire("domaine-de-formation-nsf")}
               />
-            </FormLabel>
+            </Text>
             <Multiselect
               onClose={filterTracker("codeNsf")}
               width={"64"}
@@ -73,10 +71,10 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Formation</FormLabel>
+            <Text fontWeight={500} mb={1}>Formation</Text>
             <Multiselect
               onClose={filterTracker("cfd")}
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("cfd", selected)}
@@ -88,10 +86,10 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Diplôme</FormLabel>
+            <Text fontWeight={500} mb={1}>Diplôme</Text>
             <Multiselect
               onClose={filterTracker("codeNiveauDiplome")}
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
@@ -103,10 +101,10 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Département</FormLabel>
+            <Text fontWeight={500} mb={1}>Département</Text>
             <Multiselect
               onClose={filterTracker("codeDepartement")}
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("codeDepartement", selected)}
@@ -124,10 +122,10 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Établissement</FormLabel>
+            <Text fontWeight={500} mb={1}>Établissement</Text>
             <Multiselect
               onClose={filterTracker("uai")}
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("uai", selected)}
@@ -139,9 +137,10 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Secteur</FormLabel>
+            <Text as="label" htmlFor="select-secteur" fontWeight={500} mb={1}>Secteur</Text>
             <Select
-              width={"64"}
+              id="select-secteur"
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.secteur ?? ""}
@@ -157,9 +156,10 @@ export const SecondaryFiltersSection = ({
             </Select>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Voie</FormLabel>
+            <Text as="label" htmlFor="select-voie" fontWeight={500} mb={1}>Voie</Text>
             <Select
-              width={"64"}
+              id="select-voie"
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.voie ?? ""}
@@ -177,7 +177,7 @@ export const SecondaryFiltersSection = ({
         </Flex>
         <Flex justifyContent={"start"} gap={4}>
           <Box justifyContent={"start"}>
-            <FormLabel>Statut</FormLabel>
+            <Text fontWeight={500} mb={1}>Statut</Text>
             <Multiselect
               onClose={filterTracker("statut")}
               width={"64"}
@@ -193,10 +193,10 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Type de demande</FormLabel>
+            <Text fontWeight={500} mb={1}>Type de demande</Text>
             <Multiselect
               onClose={filterTracker("typeDemande")}
-              width={"64"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("typeDemande", selected)}
@@ -214,7 +214,7 @@ export const SecondaryFiltersSection = ({
           </Box>
           {feature.showColorationFilter && (
             <Box justifyContent={"start"}>
-              <FormLabel>Coloration</FormLabel>
+              <Text fontWeight={500} mb={1}>Coloration</Text>
               <Menu gutter={6} matchWidth={false} autoSelect={true}>
                 <MenuButton
                   as={Button}
@@ -264,9 +264,10 @@ export const SecondaryFiltersSection = ({
             </Box>
           )}
           <Box justifyContent={"start"}>
-            <FormLabel>AMI/CMA</FormLabel>
+            <Text as="label" htmlFor="select-ami-cma" fontWeight={500} mb={1}>AMI/CMA</Text>
             <Select
-              width={"64"}
+              id="select-ami-cma"
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.amiCMA?.toString() ?? ""}
@@ -282,9 +283,10 @@ export const SecondaryFiltersSection = ({
             </Select>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Coloration</FormLabel>
+            <Text as="label" htmlFor="select-coloration" fontWeight={500} mb={1}>Coloration</Text>
             <Select
-              width={"64"}
+              id="select-coloration"
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.coloration?.toString() ?? ""}
@@ -300,9 +302,10 @@ export const SecondaryFiltersSection = ({
             </Select>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Position quadrant</FormLabel>
+            <Text as="label" htmlFor="select-position-quadrant" fontWeight={500} mb={1}>Position quadrant</Text>
             <Select
-              width={"64"}
+              id="select-position-quadrant"
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.positionQuadrant?.toString() ?? ""}
@@ -339,9 +342,9 @@ export const SecondaryFiltersSection = ({
             </Select>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Formations spécifiques</FormLabel>
+            <Text fontWeight={500} mb={1}>Formations spécifiques</Text>
             <Multiselect
-              width={"64"}
+              width={"48"}
               size="md"
               variant="newInput"
               onChange={(selected) => handleFilters("formationSpecifique", selected)}

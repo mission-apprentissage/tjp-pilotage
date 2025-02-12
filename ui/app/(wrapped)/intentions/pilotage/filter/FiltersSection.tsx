@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormLabel, Grid, GridItem, Select, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Grid, GridItem, Select, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { ScopeEnum } from "shared";
@@ -155,8 +155,9 @@ export const FiltersSection = ({
         w={"container.xl"}
       >
         <GridItem>
-          <FormLabel>Campagne</FormLabel>
+          <Text as="label" htmlFor="select-campagne">Campagne</Text>
           <Select
+            id="select-campagne"
             width={"100%"}
             size="md"
             variant="newInput"
@@ -175,7 +176,7 @@ export const FiltersSection = ({
           </Select>
         </GridItem>
         <GridItem>
-          <FormLabel>Rentrée scolaire</FormLabel>
+          <Text>Rentrée scolaire</Text>
           <Multiselect
             size="md"
             width={"100%"}
@@ -189,8 +190,9 @@ export const FiltersSection = ({
           </Multiselect>
         </GridItem>
         <GridItem>
-          <FormLabel>Granularité</FormLabel>
+          <Text as="label" htmlFor="select-granularite">Granularité</Text>
           <Select
+            id="select-granularite"
             width={"100%"}
             size="md"
             variant="newInput"
@@ -209,8 +211,9 @@ export const FiltersSection = ({
           </Select>
         </GridItem>
         <GridItem>
-          <FormLabel>Région</FormLabel>
+          <Text as="label" htmlFor="select-region">Région</Text>
           <Select
+            id="select-region"
             width={"100%"}
             size="md"
             variant="newInput"
@@ -228,8 +231,9 @@ export const FiltersSection = ({
           </Select>
         </GridItem>
         <GridItem>
-          <FormLabel>Académie</FormLabel>
+          <Text as="label" htmlFor="select-academie">Académie</Text>
           <Select
+            id="select-academie"
             width={"100%"}
             size="md"
             variant="newInput"
@@ -250,8 +254,9 @@ export const FiltersSection = ({
           </Select>
         </GridItem>
         <GridItem>
-          <FormLabel>Département</FormLabel>
+          <Text as="label" htmlFor="select-departement">Département</Text>
           <Select
+            id="select-departement"
             width={"100%"}
             size="md"
             variant="newInput"
@@ -272,7 +277,7 @@ export const FiltersSection = ({
           </Select>
         </GridItem>
         <GridItem>
-          <FormLabel>Diplôme</FormLabel>
+          <Text>Diplôme</Text>
           <Multiselect
             width={"100%"}
             size="md"
@@ -286,7 +291,7 @@ export const FiltersSection = ({
           </Multiselect>
         </GridItem>
         <GridItem>
-          <FormLabel>Domaine (NSF)</FormLabel>
+          <Text>Domaine (NSF)</Text>
           <Multiselect
             width={"100%"}
             size="md"
@@ -300,7 +305,7 @@ export const FiltersSection = ({
           </Multiselect>
         </GridItem>
         <GridItem>
-          <FormLabel>Statut de la demande</FormLabel>
+          <Text>Statut de la demande</Text>
           <Multiselect
             width={"100%"}
             size="md"
@@ -314,7 +319,7 @@ export const FiltersSection = ({
           </Multiselect>
         </GridItem>
         <GridItem>
-          <FormLabel>
+          <Text as="label" htmlFor="select-coloration">
             Inclure colorations
             <TooltipIcon
               ms={2}
@@ -330,8 +335,9 @@ export const FiltersSection = ({
               h={"24px"}
               onClick={() => openGlossaire("coloration")}
             />
-          </FormLabel>
+          </Text>
           <Select
+            id="select-coloration"
             width={"100%"}
             size="md"
             variant="newInput"
@@ -348,7 +354,7 @@ export const FiltersSection = ({
           </Select>
         </GridItem>
         <GridItem>
-          <FormLabel>Public / Privé</FormLabel>
+          <Text>Public / Privé</Text>
           <Multiselect
             width={"100%"}
             size="md"
@@ -362,7 +368,7 @@ export const FiltersSection = ({
           </Multiselect>
         </GridItem>
         <GridItem>
-          <FormLabel>Formations spécifiques</FormLabel>
+          <Text>Formations spécifiques</Text>
           <Multiselect
             width={"100%"}
             size="md"

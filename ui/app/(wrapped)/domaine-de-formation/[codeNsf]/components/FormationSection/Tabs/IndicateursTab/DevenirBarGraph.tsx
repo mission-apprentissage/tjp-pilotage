@@ -3,6 +3,7 @@ import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 import type { TauxIJValues } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/types";
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
 import { formatPercentage } from "@/utils/formatUtils";
 
 export type DevenirBarGraphData = {
@@ -56,6 +57,14 @@ export const DevenirBarGraph = function ({
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+          data: {
+            maxCount: 100
+          }
+        },
+      },
       textStyle: {
         fontFamily: "Marianne, Arial",
       },
@@ -151,14 +160,15 @@ export const DevenirBarGraph = function ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
   }, [chartRef, option]);
 
   return (
     <Box position="relative" overflow="visible !important" w={"100%"} height={"100%"}>
-      <Box ref={containerRef} height={"100%"} w={"100%"}></Box>
+      <Box ref={containerRef} height={"100%"} w={"100%"} role="figure"></Box>
     </Box>
   );
 };

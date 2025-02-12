@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Center, chakra, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
+import {Button, Center, chakra, Flex, MenuButton,Spinner, useDisclosure} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,7 +15,7 @@ import { CodeDepartementFilterContext, CodeRegionFilterContext, UaisFilterContex
 import { ConsoleSearchInput } from "@/components/ConsoleSearchInput";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 import { formatArray } from "@/utils/formatUtils";
@@ -81,14 +81,15 @@ const ColonneFilterSection = chakra(
           })}
           value={colonneFilters ?? []}
           customButton={
-            <Button
+            <MenuButton
+              as={Button}
               variant={"externalLink"}
               leftIcon={<Icon icon={"ri:table-line"} />}
               color="bluefrance.113"
               onClick={() => trackEvent("etablissements:affichage-colonnes")}
             >
               Modifier les colonnes
-            </Button>
+            </MenuButton>
           }
         />
       </Flex>
@@ -116,7 +117,7 @@ export default function Etablissements() {
     order?: typeof order;
     page?: typeof page;
   }) => {
-    router.replace(createParametrizedUrl(location.pathname, { ...searchParams, ...params }));
+    router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
   const filters = searchParams.filters ?? {};

@@ -5,7 +5,7 @@ import type { Informations } from "@/app/(wrapped)/panorama/etablissement/compon
 export const Libelle = ({ informations }: { informations: Informations }) => {
   return (
     <GridItem colSpan={7}>
-      <Heading as="h3" size="lg" fontSize={{ base: "24px", md: "28px" }}>
+      <Heading as="h2" size="lg" fontSize={{ base: "24px", md: "28px" }}>
         {informations?.libelleEtablissement}
       </Heading>
     </GridItem>
