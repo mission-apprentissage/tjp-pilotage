@@ -26,34 +26,19 @@ export const DisciplinesProfesseurAssocieRHField = chakra(
           className={className}
           isInvalid={!!errors.discipline1ProfesseurAssocieRH || !!errors.discipline2ProfesseurAssocieRH}
         >
-          <FormLabel>Dans quelle(s) discipline(s) ?</FormLabel>
           <Flex direction={"row"} gap={2}>
-            <Controller
-              name="discipline1ProfesseurAssocieRH"
-              control={control}
-              rules={{ required: "Ce champ est obligatoire" }}
-              render={({ field: { onChange, value, name } }) => (
-                <DisciplineAutocompleteInput
-                  name={name}
-                  active={!disabled}
-                  inError={!!errors.discipline1ProfesseurAssocieRH}
-                  defaultValue={{ label: value ?? "", value: value ?? "" }}
-                  onChange={(v) => {
-                    onChange(v?.value);
-                  }}
-                />
-              )}
-            />
-
-            {hasDoubleDiscipline ? (
+            <Flex direction={"column"} shrink={1}>
+              <FormLabel htmlFor="discipline-professeur-associe-autocomplete">Dans quelle(s) discipline(s) ?</FormLabel>
               <Controller
-                name="discipline2ProfesseurAssocieRH"
+                name="discipline1ProfesseurAssocieRH"
                 control={control}
+                rules={{ required: "Ce champ est obligatoire" }}
                 render={({ field: { onChange, value, name } }) => (
                   <DisciplineAutocompleteInput
+                    id="discipline-professeur-associe-autocomplete"
                     name={name}
                     active={!disabled}
-                    inError={!!errors.discipline2ProfesseurAssocieRH}
+                    inError={!!errors.discipline1ProfesseurAssocieRH}
                     defaultValue={{ label: value ?? "", value: value ?? "" }}
                     onChange={(v) => {
                       onChange(v?.value);
@@ -61,8 +46,30 @@ export const DisciplinesProfesseurAssocieRHField = chakra(
                   />
                 )}
               />
+            </Flex>
+
+            {hasDoubleDiscipline ? (
+              <Flex direction={"column"} flex={1}>
+                <FormLabel htmlFor="discipline-professeur-associe-2-autocomplete">Discipline 2</FormLabel>
+                <Controller
+                  name="discipline2ProfesseurAssocieRH"
+                  control={control}
+                  render={({ field: { onChange, value, name } }) => (
+                    <DisciplineAutocompleteInput
+                      id="discipline-professeur-associe-2-autocomplete"
+                      name={name}
+                      active={!disabled}
+                      inError={!!errors.discipline2ProfesseurAssocieRH}
+                      defaultValue={{ label: value ?? "", value: value ?? "" }}
+                      onChange={(v) => {
+                        onChange(v?.value);
+                      }}
+                    />
+                  )}
+                />
+              </Flex>
             ) : (
-              <Button w={56} leftIcon={<AddIcon />} onClick={() => setHasDoubleDiscipline(true)}>
+              <Button w={56} mt={"auto"} leftIcon={<AddIcon />} onClick={() => setHasDoubleDiscipline(true)}>
                 Ajouter une discipline
               </Button>
             )}

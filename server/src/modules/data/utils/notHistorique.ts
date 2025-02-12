@@ -88,3 +88,14 @@ export const notHistoriqueUnlessCoExistantIndicateurRegionSortie = (
       )
   );
 };
+
+export const notHistoriqueUnlessCoExistantIndicateurEntree = (
+  eb: ExpressionBuilder<DB, "indicateurEntree" | "formationView">,
+) => {
+  return  eb.or([
+    eb("formationView.dateFermeture", "is", null),
+    eb("formationView.dateFermeture", ">", sql<Date>`(${eb.ref("indicateurEntree.rentreeScolaire")} || '-09-01')::Date`),
+  ]);
+};
+
+

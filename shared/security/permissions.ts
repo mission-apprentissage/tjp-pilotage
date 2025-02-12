@@ -7,8 +7,6 @@ export type Permission = KeyOfUnion<(typeof PERMISSIONS)[keyof typeof PERMISSION
 
 export const PERMISSIONS = {
   admin: {
-    "enregistrement-requete/lecture": { default: "national" },
-    "enregistrement-requete/ecriture": { default: "national" },
     "pilotage_reforme/lecture": { default: "national" },
     "intentions/lecture": { default: "national", draft: "national" },
     "intentions/ecriture": { default: "national" },
@@ -24,10 +22,10 @@ export const PERMISSIONS = {
     "intentions-perdir-statut/lecture": { default: "national" },
     "intentions-perdir-avis/ecriture": { default: "national" },
     "intentions-perdir-avis/lecture": { default: "national" },
-  },
-  pilote: {
     "enregistrement-requete/lecture": { default: "national" },
     "enregistrement-requete/ecriture": { default: "national" },
+  },
+  pilote: {
     "intentions/lecture": { default: "national", draft: "national" },
     "pilotage_reforme/lecture": { default: "national" },
     "restitution-intentions/lecture": { default: "national" },
@@ -35,10 +33,10 @@ export const PERMISSIONS = {
     "intentions-perdir/lecture": { default: "national", draft: "national" },
     "intentions-perdir-statut/lecture": { default: "national" },
     "intentions-perdir-avis/lecture": { default: "national" },
-  },
-  admin_region: {
     "enregistrement-requete/lecture": { default: "national" },
     "enregistrement-requete/ecriture": { default: "national" },
+  },
+  admin_region: {
     "intentions/lecture": { default: "national", draft: "national" },
     "intentions/ecriture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "national" },
@@ -51,10 +49,10 @@ export const PERMISSIONS = {
     "intentions-perdir-statut/lecture": { default: "region" },
     "intentions-perdir-avis/ecriture": { default: "region" },
     "intentions-perdir-avis/lecture": { default: "region" },
-  },
-  region: {
     "enregistrement-requete/lecture": { default: "national" },
     "enregistrement-requete/ecriture": { default: "national" },
+  },
+  region: {
     "intentions/lecture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "region" },
     "pilotage-intentions/lecture": { default: "national" },
@@ -62,10 +60,10 @@ export const PERMISSIONS = {
     "intentions-perdir-statut/lecture": { default: "region" },
     "intentions-perdir-avis/ecriture": { default: "region" },
     "intentions-perdir-avis/lecture": { default: "region" },
-  },
-  pilote_region: {
     "enregistrement-requete/lecture": { default: "national" },
     "enregistrement-requete/ecriture": { default: "national" },
+  },
+  pilote_region: {
     "intentions/lecture": { default: "national", draft: "national" },
     "intentions/ecriture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "national" },
@@ -76,10 +74,10 @@ export const PERMISSIONS = {
     "intentions-perdir-statut/lecture": { default: "region" },
     "intentions-perdir-avis/ecriture": { default: "region" },
     "intentions-perdir-avis/lecture": { default: "region" },
-  },
-  gestionnaire_region: {
     "enregistrement-requete/lecture": { default: "national" },
     "enregistrement-requete/ecriture": { default: "national" },
+  },
+  gestionnaire_region: {
     "intentions/lecture": { default: "region", draft: "region" },
     "intentions/ecriture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "region" },
@@ -90,10 +88,10 @@ export const PERMISSIONS = {
     "intentions-perdir-statut/lecture": { default: "region" },
     "intentions-perdir-avis/ecriture": { default: "region" },
     "intentions-perdir-avis/lecture": { default: "region" },
-  },
-  expert_region: {
     "enregistrement-requete/lecture": { default: "national" },
     "enregistrement-requete/ecriture": { default: "national" },
+  },
+  expert_region: {
     "intentions/lecture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "region" },
     "pilotage-intentions/lecture": { default: "national" },
@@ -101,10 +99,10 @@ export const PERMISSIONS = {
     "intentions-perdir-statut/lecture": { default: "region" },
     "intentions-perdir-avis/ecriture": { default: "region" },
     "intentions-perdir-avis/lecture": { default: "region" },
-  },
-  perdir: {
     "enregistrement-requete/lecture": { default: "national" },
     "enregistrement-requete/ecriture": { default: "national" },
+  },
+  perdir: {
     "intentions/lecture": { default: "uai", draft: "uai" },
     "intentions-perdir/lecture": { default: "uai", draft: "uai" },
     "intentions-perdir/ecriture": { default: "uai", draft: "uai" },
@@ -112,21 +110,35 @@ export const PERMISSIONS = {
     "pilotage-intentions/lecture": { default: "uai" },
     "intentions-perdir-statut/lecture": { default: "uai" },
     "intentions-perdir-avis/lecture": { default: "uai" },
-  },
-  invite: {
     "enregistrement-requete/lecture": { default: "national" },
     "enregistrement-requete/ecriture": { default: "national" },
+  },
+  invite: {
     "intentions/lecture": { default: "role", draft: "role" },
     "restitution-intentions/lecture": { default: "role" },
-    "intentions-perdir/lecture": { default: "region", draft: "region" },
-    "intentions-perdir-statut/lecture": { default: "region" },
-    "intentions-perdir-avis/lecture": { default: "region" },
+    "intentions-perdir/lecture": { default: "role", draft: "role" },
+    "intentions-perdir-statut/lecture": { default: "role" },
+    "intentions-perdir-avis/lecture": { default: "role" },
+    "enregistrement-requete/lecture": { default: "national" },
+    "enregistrement-requete/ecriture": { default: "national" },
   },
 } satisfies {
   [R: string]: {
     [s: string]: Record<string, Scope>;
   };
 };
+
+export enum RoleEnum {
+  admin = "admin",
+  pilote = "pilote",
+  admin_region = "admin_region",
+  region = "region",
+  pilote_region = "pilote_region",
+  gestionnaire_region = "gestionnaire_region",
+  expert_region = "expert_region",
+  perdir = "perdir",
+  invite = "invite",
+}
 
 export const HIERARCHY: {
   [key in Role]: {

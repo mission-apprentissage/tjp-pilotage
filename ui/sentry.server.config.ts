@@ -2,7 +2,6 @@
 import {
   captureConsoleIntegration,
   extraErrorDataIntegration,
-  httpClientIntegration,
   httpIntegration,
   init,
 } from "@sentry/nextjs";

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 import type { client } from "@/api.client";
 import { themeDefinition } from "@/theme/theme";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 
 import { AsyncDomaineProfessionnelSearch } from "./components/AsyncDomaineProfessionnelSearch";
 import AsyncMetierSearch from "./components/AsyncMetierSearch";
@@ -53,12 +53,13 @@ const DashboardMetier = () => {
     } else if (!metierSearchParam || !codeMetierSearchParam) {
       setSelectedMetier(undefined);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   const onUpdateDomaineProfessionnel = (domaineProfessionnel?: DomaineProfessionnelOption) => {
     trackEvent("lien-metier-formation/metier:select-domaine-professionnel");
     router.replace(
-      createParametrizedUrl(location.pathname, {
+      createParameterizedUrl(location.pathname, {
         domaine_pro: domaineProfessionnel ? encodeURI(domaineProfessionnel.label) : undefined,
         code_domaine_pro: domaineProfessionnel ? encodeURI(domaineProfessionnel.value) : undefined,
         metier: undefined,
@@ -74,7 +75,7 @@ const DashboardMetier = () => {
 
     if (metier) {
       router.replace(
-        createParametrizedUrl(location.pathname, {
+        createParameterizedUrl(location.pathname, {
           domaine_pro: domaineProfessionnelSearchParam ? encodeURI(domaineProfessionnelSearchParam) : undefined,
           code_domaine_pro: codeDomaineProfessionnelSearchParam
             ? encodeURI(codeDomaineProfessionnelSearchParam)
@@ -89,7 +90,7 @@ const DashboardMetier = () => {
 
     if (selectedDomaineProfessionnel) {
       router.replace(
-        createParametrizedUrl(location.pathname, {
+        createParameterizedUrl(location.pathname, {
           domaine_pro: encodeURI(selectedDomaineProfessionnel.label),
           code_domaine_pro: encodeURI(selectedDomaineProfessionnel.value),
           metier: undefined,
@@ -101,7 +102,7 @@ const DashboardMetier = () => {
     }
 
     router.replace(
-      createParametrizedUrl(location.pathname, {
+      createParameterizedUrl(location.pathname, {
         domaine_formation: undefined,
         code_domaine_formation: undefined,
         formation: undefined,

@@ -15,6 +15,7 @@ const LANDING_FOOTER_SEGMENTS = [
   "politique-de-confidentialite",
   "cgu",
   "mentions-legales",
+  "statistiques"
 ];
 
 export const Footer = () => {

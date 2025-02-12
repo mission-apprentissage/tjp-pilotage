@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 
@@ -23,7 +24,7 @@ const FormationTransformationStatsSchema = z.object({
   placesColoreesOuvertes: z.coerce.number(),
   placesColoreesFermees: z.coerce.number(),
   placesTransformees: z.coerce.number(),
-  positionQuadrant: z.string().optional(),
+  positionQuadrant: PositionQuadrantZodType.optional(),
   continuum: z
     .object({
       cfd: z.string(),
@@ -54,8 +55,8 @@ export const getFormationsPilotageIntentionsSchema = {
   response: {
     200: z.object({
       stats: z.object({
-        tauxInsertion: z.coerce.number(),
-        tauxPoursuite: z.coerce.number(),
+        tauxInsertion: z.coerce.number().min(0).max(100),
+        tauxPoursuite: z.coerce.number().min(0).max(100),
       }),
       formations: z.array(FormationTransformationStatsSchema),
     }),

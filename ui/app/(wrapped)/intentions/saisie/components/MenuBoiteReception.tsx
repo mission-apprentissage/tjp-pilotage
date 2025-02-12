@@ -40,6 +40,7 @@ export const MenuBoiteReception = ({
         leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
         as={hasPermissionSubmitIntention && !isSaisieDisabled() ? NextLink : undefined}
         href="/intentions/saisie/new"
+        minHeight={"35px"}
       >
         Nouvelle demande
       </Button>

@@ -26,35 +26,19 @@ export const DisciplinesFormationRHField = chakra(
           className={className}
           isInvalid={!!errors.discipline1FormationRH || !!errors.discipline2FormationRH}
         >
-          <FormLabel>Dans quelle(s) discipline(s) ?</FormLabel>
           <Flex direction={"row"} gap={2}>
-            <Controller
-              name="discipline1FormationRH"
-              control={control}
-              rules={{ required: "Ce champ est obligatoire" }}
-              render={({ field: { onChange, value, name } }) => (
-                <DisciplineAutocompleteInput
-                  name={name}
-                  active={!disabled}
-                  inError={!!errors.discipline1FormationRH}
-                  defaultValue={{ label: value ?? "", value: value ?? "" }}
-                  onChange={(v) => {
-                    onChange(v?.value);
-                  }}
-                />
-              )}
-            />
-
-            {hasDoubleDiscipline ? (
+            <Flex direction={"column"} shrink={1}>
+              <FormLabel htmlFor="discipline-formation-autocomplete">Dans quelle(s) discipline(s) ?</FormLabel>
               <Controller
-                name="discipline2FormationRH"
+                name="discipline1FormationRH"
                 control={control}
                 rules={{ required: "Ce champ est obligatoire" }}
                 render={({ field: { onChange, value, name } }) => (
                   <DisciplineAutocompleteInput
+                    id="discipline-formation-autocomplete"
                     name={name}
                     active={!disabled}
-                    inError={!!errors.discipline2FormationRH}
+                    inError={!!errors.discipline1FormationRH}
                     defaultValue={{ label: value ?? "", value: value ?? "" }}
                     onChange={(v) => {
                       onChange(v?.value);
@@ -62,8 +46,31 @@ export const DisciplinesFormationRHField = chakra(
                   />
                 )}
               />
+            </Flex>
+
+            {hasDoubleDiscipline ? (
+              <Flex direction={"column"} flex={1}>
+                <FormLabel htmlFor="discipline-formation-2-autocomplete">Discipline 2</FormLabel>
+                <Controller
+                  name="discipline2FormationRH"
+                  control={control}
+                  rules={{ required: "Ce champ est obligatoire" }}
+                  render={({ field: { onChange, value, name } }) => (
+                    <DisciplineAutocompleteInput
+                      id="discipline-formation-2-autocomplete"
+                      name={name}
+                      active={!disabled}
+                      inError={!!errors.discipline2FormationRH}
+                      defaultValue={{ label: value ?? "", value: value ?? "" }}
+                      onChange={(v) => {
+                        onChange(v?.value);
+                      }}
+                    />
+                  )}
+                />
+              </Flex>
             ) : (
-              <Button w={56} leftIcon={<AddIcon />} onClick={() => setDoubleDiscipline(true)}>
+              <Button w={56} mt={"auto"} leftIcon={<AddIcon />} onClick={() => setDoubleDiscipline(true)}>
                 Ajouter une discipline
               </Button>
             )}

@@ -52,7 +52,7 @@ export const RHSection = ({
       </Heading>
       <Divider pt="4" mb="4" />
       <Flex gap={6} mb="4" direction={"column"}>
-        <Heading as="h3" fontSize={"14px"} fontWeight={700} mb={2}>
+        <Heading as="h3" fontSize={14} fontWeight={700} mb={2}>
           Sur le plan des ressources humaines, le projet implique t-il :{" "}
         </Heading>
         {sectionsRecrutementProfesseurAssocieFormationVisibles && (

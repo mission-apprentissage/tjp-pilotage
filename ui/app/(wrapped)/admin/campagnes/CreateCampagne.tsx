@@ -124,7 +124,7 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
             {!!errors.statut && <FormErrorMessage>{errors.statut.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.dateDebut} isRequired>
-            <FormLabel>Date début</FormLabel>
+            <FormLabel htmlFor="input-date-debut">Date début</FormLabel>
             <SingleDatepicker
               date={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
               onDateChange={(date) => {
@@ -134,11 +134,16 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
               }}
               maxDate={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
               configs={getDatePickerConfig()}
+              propsConfigs={{
+                inputProps: {
+                  id: "input-date-debut",
+                },
+              }}
             />
             {!!errors.dateDebut && <FormErrorMessage>{errors.dateDebut.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.dateFin} isRequired>
-            <FormLabel>Date de fin</FormLabel>
+            <FormLabel htmlFor="input-date-fin">Date de fin</FormLabel>
             <SingleDatepicker
               date={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
               onDateChange={(date) => {
@@ -148,6 +153,11 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
               }}
               minDate={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
               configs={getDatePickerConfig()}
+              propsConfigs={{
+                inputProps: {
+                  id: "input-date-fin",
+                },
+              }}
             />
             {!!errors.dateFin && <FormErrorMessage>{errors.dateFin.message}</FormErrorMessage>}
           </FormControl>

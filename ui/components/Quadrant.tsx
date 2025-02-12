@@ -19,6 +19,8 @@ import type { FC, ReactNode } from "react";
 import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import { frenchLocale } from "@/utils/echarts/frenchLocale";
+
 const quadrantLabelStyle = {
   show: true,
   distance: 14,
@@ -35,6 +37,8 @@ export const Quadrant = function <
     tauxPoursuite: number;
     tauxInsertion: number;
     positionQuadrant?: string;
+    libelleFormation: string;
+    libelleDispositif?: string;
   },
 >({
   className,
@@ -111,12 +115,13 @@ export const Quadrant = function <
         return new DOMRect(displayedDetail.x + containerRect.x - 10, displayedDetail.y + containerRect.y - 10, 20, 20);
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayedDetail]);
 
   const series = data.map((formation) => ({
     value: [
-      dimensions?.includes("tauxPoursuite") ? formation.tauxPoursuite * 100 : 50,
-      dimensions?.includes("tauxInsertion") ? formation.tauxInsertion * 100 : 50,
+      dimensions?.includes("tauxPoursuite") ? Math.round(formation.tauxPoursuite * 10000) / 100 : 50,
+      dimensions?.includes("tauxInsertion") ? Math.round(formation.tauxInsertion * 10000) / 100 : 50,
     ],
     name: `${formation.cfd}_${formation.codeDispositif}`,
   }));
@@ -138,6 +143,7 @@ export const Quadrant = function <
     })(),
   };
 
+
   const repartitionsQuadrants =
     meanInsertion && meanPoursuite
       ? {
@@ -150,8 +156,15 @@ export const Quadrant = function <
 
   const option = useMemo<EChartsOption>(
     () => ({
+      aria: {
+        label: {
+          enabled: true,
+          data: {
+            maxCount: 100
+          }
+        },
+      },
       grid: { top: 0, right: 0, bottom: 50, left: 60 },
-
       xAxis: [
         {
           type: "value",
@@ -321,13 +334,15 @@ export const Quadrant = function <
         },
       ],
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data, moyennes, dimensions]
   );
 
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current);
+      echarts.registerLocale("fr", frenchLocale);
+      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option);
 
@@ -340,17 +355,19 @@ export const Quadrant = function <
     return () => {
       chartRef.current?.off("click", selectFormationHandler);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [option, data]);
 
   useEffect(() => {
     if (!displayedDetail && currentFormation) {
       displayTooltip(currentFormation);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentFormation]);
 
   return (
     <Box position="relative" className={className} overflow="visible !important">
-      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0"></Box>
+      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0" role="figure"></Box>
 
       {InfoTootipContent && (
         <InfoTooltip>
@@ -388,7 +405,7 @@ export const FormationTooltipWrapper = forwardRef<HTMLDivElement, { children: Re
 
     return (
       <Box zIndex={10} ref={ref} {...props}>
-        <Card width={"280px"} ref={cardRef}>
+        <Card width={"330px"} ref={cardRef}>
           <CardBody p="4">{children}</CardBody>
         </Card>
       </Box>

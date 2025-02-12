@@ -7,6 +7,7 @@ import { ZodError } from "zod";
 
 import config from "@/config";
 import type { Server } from "@/server/server";
+import logger from "@/services/logger";
 
 export function boomify(rawError: FastifyError | Boom<unknown> | Error | ZodError): Boom<unknown> {
   if (isBoom(rawError)) {
@@ -67,6 +68,50 @@ export function formatResponseError(rawError: FastifyError | Boom<unknown> | Err
 export function errorMiddleware(server: Server) {
   server.setErrorHandler<FastifyError | Boom<unknown> | Error | ZodError, { Reply: IResError }>(
     (rawError, _request, reply) => {
+      const logGenericInfo = {
+        req: {
+          url: _request.url,
+          params: _request.params,
+          body: _request.body,
+          user: _request.user ? {
+            email: _request.user.email,
+            id: _request.user.id
+          } : undefined
+        },
+        res: {
+          statusCode: reply.statusCode
+        }
+      };
+
+      if (isBoom(rawError)) {
+        logger.error({
+          boomError: {
+            ...rawError
+          },
+          ...logGenericInfo
+        }, "[API] Boom");
+      } else if (rawError instanceof ResponseValidationError) {
+        const zodError = new ZodError(rawError.details.error);
+        logger.error({
+          zodError: zodError.format(),
+          message: rawError.message,
+          ...logGenericInfo,
+          rawError: rawError
+        }, "[API] Schema validation error");
+      } else if (rawError instanceof ZodError) {
+        logger.error({
+          zodError: rawError.format(),
+          message: rawError.message,
+          ...logGenericInfo,
+          rawError: rawError
+        }, "[API] Schema validation error");
+      } else {
+        logger.error({
+          error: rawError,
+          ...logGenericInfo
+        }, "[API] Unknown error");
+      }
+
       const payload: IResError = formatResponseError(rawError);
 
       if (payload.statusCode >= 500) {

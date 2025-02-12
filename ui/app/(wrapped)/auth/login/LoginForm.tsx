@@ -56,6 +56,7 @@ export const LoginForm = () => {
       router.replace(
         auth.user.role === "perdir" && auth.user.uais?.[0] ? `/panorama/etablissement/${auth.user.uais?.[0]}` : "/"
       );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
   return (

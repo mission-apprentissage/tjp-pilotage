@@ -73,7 +73,7 @@ export const SideSection = ({
               whiteSpace={"nowrap"}
               ms={1}
             >
-              <Text fontSize={"14px"}>2nde et 1ère communes</Text>
+              <Text fontSize={14}>2nde et 1ère communes</Text>
             </Checkbox>
           </Flex>
           <Divider />

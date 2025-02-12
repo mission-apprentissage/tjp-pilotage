@@ -6,12 +6,14 @@ import type { OptionSchema } from "shared/schema/optionSchema";
 import { client } from "@/api.client";
 
 export const FiliereAutoCompleteInput = ({
+  id = "cfd-autocomplete",
   name,
   defaultValue,
   active,
   inError,
   onChange,
 }: {
+  id?: string;
   name: string;
   defaultValue?: OptionSchema;
   active?: boolean;
@@ -35,6 +37,7 @@ export const FiliereAutoCompleteInput = ({
 
   return (
     <AsyncCreatableSelect
+      inputId={id}
       instanceId={useId()}
       name={name}
       styles={selectStyle}

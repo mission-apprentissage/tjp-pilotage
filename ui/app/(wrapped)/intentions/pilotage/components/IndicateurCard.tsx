@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 
 export const IndicateurCard = ({
   children,
@@ -23,9 +23,9 @@ export const IndicateurCard = ({
       gap={4}
     >
       <Flex direction={"row"} gap={2}>
-        <Text color={"bluefrance.113"} fontSize="14px" fontWeight="500" lineHeight="24px" textTransform="uppercase">
+        <Heading as="h2" color={"bluefrance.113"} fontSize={14} fontWeight="500" lineHeight="24px" textTransform="uppercase">
           {title}
-        </Text>
+        </Heading>
         {tooltip}
       </Flex>
       <Flex w={"100%"} h={"100%"}>

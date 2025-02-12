@@ -1,4 +1,4 @@
-import { Card, CardBody, chakra, Flex, Text, Tooltip } from "@chakra-ui/react";
+import { Card, CardBody, chakra, Flex, Heading, Tooltip } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
 export const StatCard = chakra(
@@ -28,20 +28,20 @@ export const StatCard = chakra(
         gap={["4px", null, "8px"]}
         flexDir={"column"}
       >
-        <Text fontSize={"14px"} display={"inline"}>
+        <Heading as="h2" fontSize={14} display={"inline"}>
           {label}
           {glossaire}
-        </Text>
+        </Heading>
         <Flex direction="column">
           <Tooltip label={tooltip} placement="left">
             <Flex direction={"row"} alignItems={"baseline"}>
-              <Text fontWeight="bold" fontSize="40px">
+              <Heading as="h3" fontWeight="bold" fontSize="40px">
                 {value ?? "-"}
-              </Text>
+              </Heading>
               {type === "percentage" && typeof value !== "undefined" && (
-                <Text fontSize={"22px"} fontWeight={"bold"}>
+                <Heading as="h3" fontSize={"22px"} fontWeight={"bold"}>
                   &nbsp;%
-                </Text>
+                </Heading>
               )}
             </Flex>
           </Tooltip>

@@ -6,6 +6,7 @@ import { getPermissionScope, guardScope } from "shared";
 import type { RequestUser } from "@/modules/core/model/User";
 import { getCurrentCampagneQuery } from "@/modules/demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
 import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+import logger from "@/services/logger";
 
 import { createDemandeQuery } from "./dependencies/createDemande.dep";
 import { getDemandeWithMetadata } from "./dependencies/getDemandeWithMetadata";
@@ -28,6 +29,11 @@ export const [importDemande, importDemandeFactory] = inject(
       ]);
 
       if (alreadyImportedDemande) {
+        logger.error({
+          numero,
+          user
+        }, "[IMPORT_DEMANDE] Cette demande a déjà été importée");
+
         throw Boom.badRequest("Cette demande a déjà été importée", {
           id: alreadyImportedDemande.id,
           errors: {
@@ -37,6 +43,11 @@ export const [importDemande, importDemandeFactory] = inject(
       }
 
       if (!campagne) {
+        logger.error({
+          numero,
+          user
+        }, "[IMPORT_DEMANDE] Aucune campagne en cours dans laquelle importer la demande");
+
         throw Boom.badData("Aucune campagne en cours dans laquelle importer la demande", {
           errors: {
             aucune_campagne_en_cours: "Aucune campagne en cours dans laquelle importer la demande.",
@@ -45,6 +56,10 @@ export const [importDemande, importDemandeFactory] = inject(
       }
 
       if (!demande) {
+        logger.error({
+          numero,
+          user
+        }, "[IMPORT_DEMANDE] Aucune demande correspondant au numéro fourni");
         throw Boom.badRequest("Aucune demande correspondant au numéro fourni", {
           errors: {
             numero: numero,

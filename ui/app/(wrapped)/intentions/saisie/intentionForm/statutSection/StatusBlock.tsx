@@ -11,7 +11,7 @@ export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
 
   return (
     <Flex direction="column">
-      <Text fontSize={20} mb={4} fontWeight={700}>
+      <Text as="label" htmlFor="select-statut" fontSize={20} mb={4} fontWeight={700}>
         Statut de la demande
       </Text>
       <Divider mb={4} />
@@ -20,7 +20,7 @@ export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
         control={control}
         rules={{ required: "Le type de demande est obligatoire." }}
         render={({ field: { onChange, name, value } }) => (
-          <Select w="xs" onChange={onChange} name={name} value={value} disabled={disabled}>
+          <Select id="select-statut" w="xs" onChange={onChange} name={name} value={value} disabled={disabled}>
             <option value={DemandeStatutEnum["projet de demande"]}>Projet de demande</option>
             <option value={DemandeStatutEnum["demande validée"]}>Validée</option>
             <option value={DemandeStatutEnum["refusée"]}>Refusée</option>

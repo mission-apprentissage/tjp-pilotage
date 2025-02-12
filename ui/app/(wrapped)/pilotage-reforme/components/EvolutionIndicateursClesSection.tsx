@@ -1,4 +1,4 @@
-import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
+import {Box, Flex, Heading,Select, Skeleton, VisuallyHidden} from '@chakra-ui/react';
 import _ from "lodash";
 import type { OptionSchema } from "shared/schema/optionSchema";
 
@@ -48,10 +48,18 @@ export const EvolutionIndicateursClesSection = ({
       ) : (
         <Box>
           <Flex marginStart={"auto"} justifyContent="space-between">
-            <Text color={"bluefrance.113"} fontWeight={700}>
-              ÉVOLUTION DES INDICATEURS CLÉS
-            </Text>
+            <Heading
+              as="h2"
+              fontSize={15}
+              fontWeight="500"
+              textTransform={"uppercase"}
+              color={"bluefrance.113"}
+            >
+              Évolution des indicateurs clés
+            </Heading>
+            <VisuallyHidden as="label" htmlFor="select-indicateur-evolution-indicateur-cles">Indicateur</VisuallyHidden>
             <Select
+              id="select-indicateur-evolution-indicateur-cles"
               width="64"
               size="sm"
               variant="newInput"

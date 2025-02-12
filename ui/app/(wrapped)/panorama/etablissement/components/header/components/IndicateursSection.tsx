@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, GridItem, Img, Text, Tooltip, useToken } from "@chakra-ui/react";
+import { Badge, Box, Flex, GridItem, Heading, Img, Text, Tooltip, useToken } from "@chakra-ui/react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
@@ -9,7 +9,7 @@ import type {
   Indicateurs,
 } from "@/app/(wrapped)/panorama/etablissement/components/header/types";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumberToString } from "@/utils/formatUtils";
 
 import { DonneesIncompletes } from "./DonneesIncompletes";
 
@@ -35,7 +35,7 @@ const getCompareData = (compareTo?: CompareTo) => {
   return (
     <Tooltip label={compareTo?.description}>
       <Flex color={color}>
-        <Img src={arrowImg} alt={direction} />
+        <Img src={arrowImg} alt={`Icône tendance ${direction}`} />
         <Text fontWeight={"bold"}>{value}</Text>
       </Flex>
     </Tooltip>
@@ -71,7 +71,7 @@ const IndicateurValeurAjoutee = ({ indicateur }: { indicateur?: Indicateur }) =>
     }
   >
     <CounterChart
-      data={formatNumber(indicateur?.value)}
+      data={formatNumberToString(indicateur?.value, 0, "-")}
       type="absolute"
       compareData={getCompareData(indicateur?.compareTo)}
     />
@@ -104,7 +104,7 @@ const IndicateurTauxEmploi6mois = ({ indicateur }: { indicateur?: Indicateur }) 
     }
   >
     <CounterChart
-      data={formatNumber(indicateur?.value)}
+      data={formatNumberToString(indicateur?.value, 0, "-")}
       type="percentage"
       compareData={getCompareData(indicateur?.compareTo)}
     />
@@ -137,7 +137,7 @@ const IndicateurPoursuiteDetudes = ({ indicateur }: { indicateur?: Indicateur })
     }
   >
     <CounterChart
-      data={formatNumber(indicateur?.value)}
+      data={formatNumberToString(indicateur?.value, 0, "-")}
       type="percentage"
       compareData={getCompareData(indicateur?.compareTo)}
     />
@@ -174,7 +174,7 @@ const IndicateurTauxDevenirFavorable = ({ indicateur }: { indicateur?: Indicateu
       }
     >
       <CounterChart
-        data={formatNumber(indicateur?.value)}
+        data={formatNumberToString(indicateur?.value, 0, "-")}
         compareData={getCompareData(indicateur?.compareTo)}
         type="percentage"
       />
@@ -198,9 +198,9 @@ export const IndicateursSection = ({ indicateurs }: { indicateurs?: Indicateurs 
     <GridItem colSpan={12}>
       <Flex direction={"row"} justifyContent={"space-between"} alignItems={"center"} width={"100%"}>
         <Flex direction={"row"} alignItems={"center"}>
-          <Text fontSize={{ base: "14px" }} fontWeight={"bold"}>
+          <Heading as="h3" fontSize={{ base: "14px" }} fontWeight={"bold"}>
             INDICATEURS ÉTABLISSEMENT
-          </Text>
+          </Heading>
           <GlossaireShortcut
             display={"inline"}
             ml={2}

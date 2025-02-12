@@ -1,6 +1,6 @@
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Link,Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import Link from "next/link";
+import NextLink from "next/link";
 
 import type {
   Formation,
@@ -58,21 +58,21 @@ export const DonneesManquantes = ({
         <Flex gap={1} direction={"column"}>
           <Text fontWeight={"bold"}>Données manquantes</Text>
           <Text>
-            Certaines données ne sont pas disponibles pour le territoire choisi ({" "}
-            <Link
-              href="https://aide.orion.inserjeunes.beta.gouv.fr/fr/article/pourquoi-certaines-donnees-sont-indisponibles-dans-orion-puqea5/"
-              target="_blank"
-            >
-              <Text as="span" decoration={"underline"} px={1}>
-                Pourquoi ?
-              </Text>
-            </Link>{" "}
-            ) .
+            Certaines données ne sont pas disponibles pour le territoire choisi
           </Text>
+          <Link
+            as={NextLink}
+            href="https://aide.orion.inserjeunes.beta.gouv.fr/fr/article/pourquoi-certaines-donnees-sont-indisponibles-dans-orion-puqea5/"
+            target="_blank"
+            px={1}
+          >
+              (Pourquoi ?).
+          </Link>
         </Flex>
       }
       actionButton={
         <Link
+          as={NextLink}
           href={`/console/formations?filters[codeNsf][0]=${codeNsf}${
             codeRegion ? `&filters[codeRegion][0]=${codeRegion}` : ""
           }&filters[cfd][0]=${cfd}&withAnneeCommune=true`}

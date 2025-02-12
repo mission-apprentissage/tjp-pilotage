@@ -1,6 +1,6 @@
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Link,Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import Link from "next/link";
+import NextLink from 'next/link';
 import { useMemo } from "react";
 import { CURRENT_RENTREE } from "shared";
 
@@ -118,15 +118,17 @@ export const InformationDonneeIncompletes = ({
         <Flex gap={1}>
           <Text>L'établissement ne dispose pas de certaines données pour cette formation</Text>
           <Link
+            as={NextLink}
             href="https://aide.orion.inserjeunes.beta.gouv.fr/fr/article/pourquoi-certaines-donnees-sont-indisponibles-dans-orion-puqea5/"
             target="_blank"
+            textDecoration={"underline"}
           >
-            <Text decoration={"underline"}>( Pourquoi ? )</Text>
+              (Pourquoi ?).
           </Link>
         </Flex>
       }
       actionButton={
-        <Link href={`/panorama/region/${codeRegion}`} passHref target="_blank">
+        <Link as={NextLink} href={`/panorama/region/${codeRegion}`} passHref target="_blank">
           <Button color="bluefrance.113">
             Consulter les données régionales de la formation
             <Icon icon="ri:arrow-right-line" width={"16px"} height={"16px"} style={{ marginLeft: "8px" }} />

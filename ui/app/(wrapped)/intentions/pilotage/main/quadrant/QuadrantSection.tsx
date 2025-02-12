@@ -23,6 +23,7 @@ import {
   Stack,
   Text,
   useToken,
+  VisuallyHidden,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
@@ -49,7 +50,7 @@ import { Quadrant } from "@/components/Quadrant";
 import { TableBadge } from "@/components/TableBadge";
 import { TableQuadrant } from "@/components/TableQuadrant";
 import { TooltipIcon } from "@/components/TooltipIcon";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
@@ -202,7 +203,7 @@ export const QuadrantSection = ({
       }
     }
 
-    return createParametrizedUrl("/intentions/restitution", {
+    return createParameterizedUrl("/intentions/restitution", {
       filters: urlFilters,
     });
   };
@@ -270,7 +271,7 @@ export const QuadrantSection = ({
           as={NextLink}
           target="_blank"
           rel="noreferrer"
-          href={createParametrizedUrl("/intentions/restitution", {
+          href={createParameterizedUrl("/intentions/restitution", {
             filters: {
               codeNiveauDiplome: mergedFilters.codeNiveauDiplome,
               codeRegion: [mergedFilters.codeRegion],
@@ -369,7 +370,9 @@ export const QuadrantSection = ({
                 }}
                 variant="ghost"
               />
+              <VisuallyHidden as="label" htmlFor="select-type-transformation">Sélectionner un type de transformation</VisuallyHidden>
               <Select
+                id="select-type-transformation"
                 variant="newInput"
                 maxW={250}
                 value={filters.type ?? ""}
@@ -514,7 +517,6 @@ export const QuadrantSection = ({
                       {`${formationsQuadrant?.length ?? "-"} certifications -
                                 ${
         formationsQuadrant?.reduce(
-          // @ts-expect-error TODO
           (acc, { placesTransformees }) => acc + (placesTransformees ?? 0),
           0
         ) ?? "-"
@@ -532,27 +534,21 @@ export const QuadrantSection = ({
                         meanInsertion={stats?.tauxInsertion}
                         meanPoursuite={stats?.tauxPoursuite}
                         currentFormationId={currentFormationId}
-                        data={formationsQuadrant?.map(
-                          // @ts-expect-error TODO
-                          (formation) => ({
-                            ...formation,
-                            codeDispositif: formation.codeDispositif ?? "",
-                            effectif: formation.placesTransformees,
-                            tauxInsertion: formation.tauxInsertion ?? 0,
-                            tauxPoursuite: formation.tauxPoursuite ?? 0,
-                          })
-                        )}
+                        data={formationsQuadrant?.map((formation) => ({
+                          ...formation,
+                          codeDispositif: formation.codeDispositif ?? "",
+                          effectif: formation.placesTransformees,
+                          tauxInsertion: formation.tauxInsertion ?? 0,
+                          tauxPoursuite: formation.tauxPoursuite ?? 0,
+                        }))}
                         effectifSizes={EFFECTIF_SIZES}
                       />
                     ) : (
                       <TableQuadrant
-                        formations={formationsQuadrant?.map(
-                          // @ts-expect-error TODO
-                          (formation) => ({
-                            ...formation,
-                            effectif: formation.placesTransformees,
-                          })
-                        )}
+                        formations={formationsQuadrant?.map((formation) => ({
+                          ...formation,
+                          effectif: formation.placesTransformees,
+                        }))}
                         handleClick={setCurrentFormationId}
                         currentFormationId={currentFormationId}
                         order={order}

@@ -80,7 +80,7 @@ const METADATA_MAP = {
     description: "Restitution des corrections de demandes de transformation de formation",
   },
   "/pilotage-reforme": {
-    title: "Pilotage de la réforme - Orion",
+    title: "Suivi de l'impact - Orion",
     description: "Pilotage de la réforme de la carte de formations",
   },
   "/admin/campagnes": {
@@ -130,6 +130,14 @@ const METADATA_MAP = {
   "/maintenance": {
     title: "Maintenance - Orion",
     description: "Maintenance",
+  },
+  "/panorama/domaine-de-formation": {
+    title: "Panorama domaine de formation - Orion",
+    description: "Panorama des formations enseignées dans un domaine de formation",
+  },
+  "/domaine-de-formation/": {
+    title: "Domaines de formation - Orion",
+    description: "Domaines de formation",
   },
   // Autres chemins possibles
 };
@@ -198,6 +206,9 @@ const extractBasePathname = (pathname: string) => {
   }
   if (pathname.includes("/intentions/perdir/saisie")) {
     return "/intentions/perdir/saisie";
+  }
+  if (pathname.includes("/domaine-de-formation/")) {
+    return "/domaine-de-formation";
   }
   return pathname;
 };

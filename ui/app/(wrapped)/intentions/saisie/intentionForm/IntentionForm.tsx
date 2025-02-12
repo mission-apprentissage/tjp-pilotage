@@ -31,6 +31,8 @@ import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/intentions/saisie/
 import type { Campagne, Demande } from "@/app/(wrapped)/intentions/saisie/types";
 import { isTypeAjustement } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import type { DetailedApiError } from "@/utils/apiError";
+import { getDetailedErrorMessage } from "@/utils/apiError";
 
 import { CampagneContext } from "./CampagneContext";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
@@ -57,6 +59,7 @@ export const IntentionForm = ({
   const pathname = usePathname();
 
   const { setCampagne } = useContext(CampagneContext);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const campagneValue = useMemo(() => ({ campagne, setCampagne }), [campagne]);
 
   const form = useForm<IntentionForms>({
@@ -101,13 +104,9 @@ export const IntentionForm = ({
         });
       }
     },
-    onError: (e: unknown) => {
-      if (isAxiosError<{ errors: Record<string, string> }>(e)) {
-        const errors = e.response?.data?.errors ?? {
-          erreur: "Une erreur est survenue lors de la sauvegarde.",
-        };
-
-        setErrors(errors);
+    onError: (e) => {
+      if(isAxiosError<DetailedApiError>(e)) {
+        setErrors(() => ({ ...getDetailedErrorMessage(e) }));
       }
     },
   });
@@ -137,10 +136,22 @@ export const IntentionForm = ({
     return DemandeStatutEnum["projet de demande"];
   };
 
+  const getLabelSubmit = (
+    formId: string | undefined,
+    statut: DemandeStatutType,
+  ): string => {
+    if (statut === DemandeStatutEnum["demande validée"]) {
+      return "Valider ma demande";
+    }
+    if(formId) return "Sauvegarder les modifications";
+    return "Enregistrer le projet de demande";
+  };
+
   useEffect(() => {
     if (isCFDUaiSectionValid(getValues())) {
       submitCFDUAISection();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const submitCFDUAISection = () => {
@@ -199,7 +210,7 @@ export const IntentionForm = ({
               mb={4}
               pages={[
                 { title: "Accueil", to: "/" },
-                { title: "Recueil des demandes", to: "/intentions" },
+                { title: "Recueil des demandes", to: "/intentions/saisie" },
                 pathname === "/intentions/saisie/new"
                   ? {
                     title: "Nouvelle demande",
@@ -287,7 +298,7 @@ export const IntentionForm = ({
                             )}
                             leftIcon={<CheckIcon />}
                           >
-                            {formId ? "Sauvegarder les modifications" : "Enregistrer le projet de demande"}
+                            {getLabelSubmit(formId, getStatutSubmit(getValues()))}
                           </Button>
                         </Box>
                       }

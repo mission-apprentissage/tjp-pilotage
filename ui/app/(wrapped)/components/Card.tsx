@@ -18,7 +18,7 @@ export const Card = ({ children, icon, link, title, linkHref }: CardProps) => {
       <Box width="64px" height="64px" borderRadius="120px" backgroundColor={themeDefinition.colors.bluefrance[975]}>
         {icon}
       </Box>
-      <Heading as="h3" color={themeDefinition.colors.bluefrance[113]} fontSize="20px" fontWeight={700}>
+      <Heading as="h2" color={themeDefinition.colors.bluefrance[113]} fontSize="20px" fontWeight={700}>
         {title}
       </Heading>
       {children}
@@ -32,7 +32,7 @@ export const Card = ({ children, icon, link, title, linkHref }: CardProps) => {
       >
         <span>{link}</span>
         <Box paddingLeft="8px">
-          <Icon icon="ri:arrow-right-line" fontSize="16px" />
+          <Icon icon="ri:arrow-right-line" fontSize={16} />
         </Box>
       </Link>
     </VStack>

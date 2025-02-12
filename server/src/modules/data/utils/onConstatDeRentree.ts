@@ -1,3 +1,4 @@
+import type { ExpressionBuilder } from "kysely";
 import { expressionBuilder } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 import { getCampagneFromRentreeScolaire } from "shared/time/campagne";
@@ -7,6 +8,19 @@ import type { DB } from "@/db/db";
 import { isInDenominateurTauxTransfo } from "@/modules/utils/isInDenominateurTauxTransfo";
 
 import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
+
+const definedConstatRentree = (
+  eb: ExpressionBuilder<DB, "constatRentree">,
+  campagne: string,
+  rentree: string = CURRENT_RENTREE
+) => eb
+  .selectFrom("constatRentree")
+  .distinctOn(["constatRentree.rentreeScolaire"])
+  .select(({ fn, ref, val }) => fn.coalesce(ref("constatRentree.rentreeScolaire"), val(rentree)).as("rs"))
+  .where("constatRentree.rentreeScolaire", "<=", campagne)
+  .limit(1)
+  .orderBy("constatRentree.rentreeScolaire", "desc");
+
 
 export const genericOnConstatRentree = ({
   codeNiveauDiplome,
@@ -34,6 +48,7 @@ export const genericOnConstatRentree = ({
     .leftJoin("constatRentree", (join) => join.onTrue())
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "constatRentree.uai")
     .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
+    .innerJoin((eb) => definedConstatRentree(eb, campagne ?? getCampagneFromRentreeScolaire(rentree), rentree).as("selectedRentreeScolaire"), (join) => join.onRef("constatRentree.rentreeScolaire", "=","selectedRentreeScolaire.rs"))
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join.on((eb) =>
         eb.and([
@@ -54,7 +69,6 @@ export const genericOnConstatRentree = ({
       if (campagne) return eb.where("campagne.annee", "=", campagne);
       return eb;
     })
-    .where("constatRentree.rentreeScolaire", "=", rentree)
     .$call((eb) => {
       if (codeRegion) return eb.where("dataEtablissement.codeRegion", "=", codeRegion);
       return eb;
