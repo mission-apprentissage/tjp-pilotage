@@ -20,19 +20,19 @@ import {
   Select,
   Stack,
   Text,
-  UnorderedList
+  useToast
 } from '@chakra-ui/react';
 import { useQueryClient } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
-import {useContext,useEffect, useState} from 'react';
+import {useContext,useEffect} from 'react';
 import {Controller,useForm} from 'react-hook-form';
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import {client} from '@/api.client';
 import {PreviousCampagneContext} from '@/app/previousCampagneContext';
 import {CampagneStatutTag} from '@/components/CampagneStatutTag';
+import {getErrorMessage} from '@/utils/apiError';
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
 import {useAuth} from '@/utils/security/useAuth';
 import { useCurrentCampagne } from '@/utils/security/useCurrentCampagne';
@@ -51,6 +51,7 @@ export const EditCampagneRegion = ({
   campagnes: (typeof client.infer)["[GET]/campagnes"],
   regions?: (typeof client.infer)["[GET]/regions"]
 }) => {
+  const toast = useToast();
   const { user } = useAuth();
   const {
     getValues,
@@ -78,7 +79,6 @@ export const EditCampagneRegion = ({
 
   const queryClient = useQueryClient();
 
-  const [serverErrors, setServerErrors] = useState<Record<string, string>>();
   const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
   const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
 
@@ -86,19 +86,20 @@ export const EditCampagneRegion = ({
     mutate: editCampagneRegion,
     isLoading,
     isError,
+    error,
   } = client.ref("[PUT]/campagnes-region/:campagneRegionId").useMutation({
     onSuccess: async () => {
+      toast({
+        variant: "left-accent",
+        status: "success",
+        title: "La campagne régionale a été modifiée avec succès",
+      });
       queryClient.invalidateQueries(["[GET]/campagnes-region"]);
       await client.ref("[GET]/campagne/current").query({}).then((campagne) => {
         setCurrentCampagne(campagne.current);
         setPreviousCampagne(campagne.previous);
       });
       onClose();
-    },
-    //@ts-ignore
-    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-      const errors = e.response?.data.errors;
-      setServerErrors(errors);
     },
   });
 
@@ -289,15 +290,7 @@ export const EditCampagneRegion = ({
           </FormControl>
           {isError && (
             <Alert status="error">
-              {serverErrors ? (
-                <UnorderedList>
-                  {Object.entries(serverErrors).map(([key, msg]) => (
-                    <li key={key}>{msg}</li>
-                  ))}
-                </UnorderedList>
-              ) : (
-                <AlertDescription>Erreur lors de l'édition</AlertDescription>
-              )}
+              <AlertDescription>{getErrorMessage(error)}</AlertDescription>
             </Alert>
           )}
         </ModalBody>

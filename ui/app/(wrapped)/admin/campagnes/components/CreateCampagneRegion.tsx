@@ -1,16 +1,16 @@
 import {ChevronDownIcon} from '@chakra-ui/icons';
-import {Alert, AlertDescription, Button, Flex, FormControl, FormErrorMessage, FormLabel, Highlight, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Select, Stack, Text,UnorderedList} from '@chakra-ui/react';
+import {Alert, AlertDescription, Button, Flex, FormControl, FormErrorMessage, FormLabel, Highlight, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Select, Stack, Text, useToast} from '@chakra-ui/react';
 import { useQueryClient } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
-import {useContext,useEffect, useState} from 'react';
+import {useContext,useEffect} from 'react';
 import { Controller, useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
 import {PreviousCampagneContext} from '@/app/previousCampagneContext';
 import {CampagneStatutTag} from '@/components/CampagneStatutTag';
+import {getErrorMessage} from '@/utils/apiError';
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
 import { useAuth } from "@/utils/security/useAuth";
 import {useCurrentCampagne} from '@/utils/security/useCurrentCampagne';
@@ -27,6 +27,7 @@ export const CreateCampagneRegion = ({
   campagnes: (typeof client.infer)["[GET]/campagnes"];
   regions?: (typeof client.infer)["[GET]/regions"];
 }) => {
+  const toast = useToast();
   const { user } = useAuth();
   const {
     getValues,
@@ -48,7 +49,6 @@ export const CreateCampagneRegion = ({
 
   const queryClient = useQueryClient();
 
-  const [serverErrors, setServerErrors] = useState<Record<string, string>>();
   const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
   const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
 
@@ -56,19 +56,20 @@ export const CreateCampagneRegion = ({
     mutate: createCampagneRegion,
     isLoading,
     isError,
+    error,
   } = client.ref("[POST]/campagnes-region/:campagneRegionId").useMutation({
     onSuccess: async () => {
+      toast({
+        variant: "left-accent",
+        status: "success",
+        title: "La campagne régionale a bien été créée",
+      });
       queryClient.invalidateQueries(["[GET]/campagnes-region"]);
       await client.ref("[GET]/campagne/current").query({}).then((campagne) => {
         setCurrentCampagne(campagne.current);
         setPreviousCampagne(campagne.previous);
       });
       onClose();
-    },
-    //@ts-ignore
-    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-      const errors = e.response?.data.errors;
-      setServerErrors(errors);
     },
   });
 
@@ -301,15 +302,7 @@ export const CreateCampagneRegion = ({
           </FormControl>
           {isError && (
             <Alert status="error">
-              {serverErrors ? (
-                <UnorderedList>
-                  {Object.entries(serverErrors).map(([key, msg]) => (
-                    <li key={key}>{msg}</li>
-                  ))}
-                </UnorderedList>
-              ) : (
-                <AlertDescription>Erreur lors de la création</AlertDescription>
-              )}
+              <AlertDescription>{getErrorMessage(error)}</AlertDescription>
             </Alert>
           )}
         </ModalBody>

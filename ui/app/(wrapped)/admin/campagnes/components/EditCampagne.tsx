@@ -14,19 +14,19 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  UnorderedList,
+  useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
-import {useContext,useEffect, useState} from 'react';
+import {useContext,useEffect} from 'react';
 import { useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { z } from "zod";
 
 import { client } from "@/api.client";
 import {PreviousCampagneContext} from '@/app/previousCampagneContext';
+import {getErrorMessage} from '@/utils/apiError';
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
 import {useCurrentCampagne} from '@/utils/security/useCurrentCampagne';
 
@@ -55,6 +55,8 @@ export const EditCampagne = ({
     },
   });
 
+  const toast = useToast();
+
   useEffect(() => {
     reset(campagne, { keepDefaultValues: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,7 +64,6 @@ export const EditCampagne = ({
 
   const queryClient = useQueryClient();
 
-  const [serverErrors, setServerErrors] = useState<Record<string, string>>();
   const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
   const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
 
@@ -70,19 +71,20 @@ export const EditCampagne = ({
     mutate: editCampagne,
     isLoading,
     isError,
+    error,
   } = client.ref("[PUT]/campagnes/:campagneId").useMutation({
     onSuccess: async () => {
+      toast({
+        variant: "left-accent",
+        status: "success",
+        title: "La campagne a été modifiée avec succès",
+      });
       queryClient.invalidateQueries(["[GET]/campagnes"]);
       await client.ref("[GET]/campagne/current").query({}).then((campagne) => {
         setCurrentCampagne(campagne.current);
         setPreviousCampagne(campagne.previous);
       });
       onClose();
-    },
-    //@ts-ignore
-    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-      const errors = e.response?.data.errors;
-      setServerErrors(errors);
     },
   });
 
@@ -187,15 +189,7 @@ export const EditCampagne = ({
           </FormControl>
           {isError && (
             <Alert status="error">
-              {serverErrors ? (
-                <UnorderedList>
-                  {Object.entries(serverErrors).map(([key, msg]) => (
-                    <li key={key}>{msg}</li>
-                  ))}
-                </UnorderedList>
-              ) : (
-                <AlertDescription>Erreur lors de l'édition</AlertDescription>
-              )}
+              <AlertDescription>{getErrorMessage(error)}</AlertDescription>
             </Alert>
           )}
         </ModalBody>
