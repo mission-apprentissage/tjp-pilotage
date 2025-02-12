@@ -22,6 +22,7 @@ import { emailRegex, hasRole, RoleEnum } from "shared";
 
 import { client } from "@/api.client";
 import { CodeRegionContext } from "@/app/codeRegionContext";
+import { PreviousCampagneContext } from "@/app/previousCampagneContext";
 import { UaisContext } from "@/app/uaiContext";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
@@ -38,7 +39,8 @@ export const LoginForm = () => {
   });
 
   const { setAuth, user } = useAuth();
-  const { setCampagne } = useCurrentCampagne();
+  const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
+  const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
   const { setCodeRegion } = useContext(CodeRegionContext);
   const { setUais } = useContext(UaisContext);
   const { data: { url } = {} } = client.ref("[GET]/dne_url").useQuery({});
@@ -54,7 +56,10 @@ export const LoginForm = () => {
       setAuth({ user: whoAmI.user });
       setCodeRegion(whoAmI.user.codeRegion);
       setUais(whoAmI.user.uais);
-      await client.ref("[GET]/campagne/current").query({}).then((campagne) => setCampagne(campagne));
+      await client.ref("[GET]/campagne/current").query({}).then((campagne) => {
+        setCurrentCampagne(campagne.current);
+        setPreviousCampagne(campagne.previous);
+      });
     },
   });
 

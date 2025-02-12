@@ -11,6 +11,7 @@ import { editUserRoute } from "./usecases/editUser/editUser.route";
 import {
   generateMetabaseDashboardUrlRoute
 } from "./usecases/generateMetabaseDashboardUrl/generateMetabaseDashboardUrl.route";
+import { getCampagneRoute } from "./usecases/getCampagne/getCampagne.route";
 import { getCampagnesRoute } from "./usecases/getCampagnes/getCampagnes.route";
 import { getCampagnesRegionRoute } from "./usecases/getCampagnesRegion/getCampagnesRegion.route";
 import { getCurrentCampagneRoute } from "./usecases/getCurrentCampagne/getCurrentCampagne.route";
@@ -44,6 +45,7 @@ export const registerCoreModule = (server: Server) => {
     ...redirectDneRoute(server),
     ...getCurrentCampagneRoute(server),
     ...getCampagnesRoute(server),
+    ...getCampagneRoute(server),
     ...editCampagneRoute(server),
     ...createCampagneRoute(server),
     ...getCampagnesRegionRoute(server),

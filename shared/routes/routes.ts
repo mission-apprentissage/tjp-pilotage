@@ -8,6 +8,7 @@ import { deleteRequeteEnregistreeSchema } from "./schemas/delete.requeteEnregist
 import { checkActivationTokenSchema } from "./schemas/get.auth.check-activation-token.schema";
 import { whoAmISchema } from "./schemas/get.auth.whoAmI.schema";
 import { getCurrentCampagneSchema } from "./schemas/get.campagne.current.schema";
+import {getCampagneSchema} from './schemas/get.campagne.schema';
 import { getCampagnesSchema } from "./schemas/get.campagnes.schema";
 import { getCampagnesRegionSchema } from "./schemas/get.campagnes-region.schema";
 import { searchCampusSchema } from "./schemas/get.campus.search.search.schema";
@@ -175,6 +176,11 @@ export const ROUTES = {
     url: "/campagnes/:campagneId",
     method: "PUT",
     schema: editCampagneSchema,
+  },
+  "[GET]/campagne/:campagneId": {
+    url: "/campagne/:campagneId",
+    method: "GET",
+    schema: getCampagneSchema,
   },
   "[GET]/campagne/current": {
     url: "/campagne/current",

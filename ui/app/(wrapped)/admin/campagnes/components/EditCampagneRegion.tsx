@@ -8,10 +8,6 @@ import {
   FormErrorMessage,
   FormLabel,
   Highlight,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -30,11 +26,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
-import { useEffect, useState } from "react";
+import {useContext,useEffect, useState} from 'react';
 import {Controller,useForm} from 'react-hook-form';
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import {client} from '@/api.client';
+import {PreviousCampagneContext} from '@/app/previousCampagneContext';
 import {CampagneStatutTag} from '@/components/CampagneStatutTag';
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
 import {useAuth} from '@/utils/security/useAuth';
@@ -82,7 +79,8 @@ export const EditCampagneRegion = ({
   const queryClient = useQueryClient();
 
   const [serverErrors, setServerErrors] = useState<Record<string, string>>();
-  const { setCampagne } = useCurrentCampagne();
+  const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
+  const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
 
   const {
     mutate: editCampagneRegion,
@@ -91,7 +89,10 @@ export const EditCampagneRegion = ({
   } = client.ref("[PUT]/campagnes-region/:campagneRegionId").useMutation({
     onSuccess: async () => {
       queryClient.invalidateQueries(["[GET]/campagnes-region"]);
-      await client.ref("[GET]/campagne/current").query({}).then((campagne) => setCampagne(campagne));
+      await client.ref("[GET]/campagne/current").query({}).then((campagne) => {
+        setCurrentCampagne(campagne.current);
+        setPreviousCampagne(campagne.previous);
+      });
       onClose();
     },
     //@ts-ignore
@@ -128,49 +129,24 @@ export const EditCampagneRegion = ({
                 Campagne nationale
               </Highlight>
             </Text>
-            <Menu gutter={0} matchWidth={true} autoSelect={false}>
-              <MenuButton
-                as={Button}
-                variant={"selectButton"}
-                rightIcon={<ChevronDownIcon />}
-                width={[null, null, "72"]}
-                size="md"
-                borderWidth="1px"
-                borderStyle="solid"
-                borderColor="grey.900"
-                bg={"white"}
-              >
-                <Flex direction="row" w="100%">
-                  {
-                    campagneId ?
-                      (
-                        <Flex direction={"row"} gap={2}>
-                          <Text>{parentCampagne?.annee}</Text>
-                          <CampagneStatutTag statut={parentCampagne?.statut} mb={"auto"} />
-                        </Flex>
-                      )
-                      : (
-                        <Text color="grey.625">Choisir une campagne</Text>
-                      )
-                  }
+            <Button
+              variant={"selectButton"}
+              rightIcon={<ChevronDownIcon />}
+              width={[null, null, "72"]}
+              size="md"
+              borderWidth="1px"
+              borderStyle="solid"
+              borderColor="grey.900"
+              bg={"white"}
+              isDisabled={true}
+            >
+              <Flex direction="row" w="100%">
+                <Flex direction={"row"} gap={2}>
+                  <Text>{parentCampagne?.annee}</Text>
+                  <CampagneStatutTag statut={parentCampagne?.statut} mb={"auto"} />
                 </Flex>
-              </MenuButton>
-              <MenuList py={0} borderTopRadius={0}>
-                {campagnes.map((campagne) => (
-                  <MenuItem
-                    p={2}
-                    key={campagne.id}
-                    onClick={() => setValue("campagneId", campagne.id)}
-                  >
-                    <Flex direction="row" w="100%" gap={2}>
-                      <Text ms={2}>{campagne.annee}</Text>
-                      <CampagneStatutTag statut={campagne.statut} mb={"auto"} />
-                    </Flex>
-                  </MenuItem>
-                ))}
-              </MenuList>
-            </Menu>
-            {!!errors.campagneId && <FormErrorMessage>{errors.campagneId.message}</FormErrorMessage>}
+              </Flex>
+            </Button>
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.statut} isRequired>
             <FormLabel>Statut</FormLabel>
@@ -257,8 +233,34 @@ export const EditCampagneRegion = ({
             />
             {!!errors.dateFin && <FormErrorMessage>{errors.dateFin.message}</FormErrorMessage>}
           </FormControl>
+          <FormControl mb="4">
+            <FormLabel htmlFor="input-date-vote">Date de vote</FormLabel>
+            <SingleDatepicker
+              date={getValues("dateVote") ? toDate(getValues("dateVote")!) : undefined}
+              onDateChange={(date) => {
+                setValue("dateVote", date.toISOString(), {
+                  shouldValidate: true,
+                });
+              }}
+              minDate={getValues("dateDebut") ? toDate(getValues("dateDebut")!) : undefined}
+              maxDate={getValues("dateFin") ? toDate(getValues("dateFin")!) : undefined}
+              configs={getDatePickerConfig()}
+              propsConfigs={{
+                inputProps: {
+                  id: "input-date-vote",
+                },
+                triggerBtnProps: {
+                  width: [null, null, "72"],
+                  fontSize: 14,
+                  fontWeight: 400,
+                  justifyContent: "start"
+                },
+              }}
+            />
+            {!!errors.dateVote && <FormErrorMessage>{errors.dateVote.message}</FormErrorMessage>}
+          </FormControl>
           <FormControl as="fieldset" mb="4" isInvalid={!!errors.withSaisiePerdir} isRequired>
-            <FormLabel as="legend">Remplissage des demandes par les chefs d'établissement ?</FormLabel>
+            <FormLabel as="legend" fontWeight={"bold"}>Remplissage des demandes par les chefs d'établissement ?</FormLabel>
             <Controller
               name="withSaisiePerdir"
               control={control}

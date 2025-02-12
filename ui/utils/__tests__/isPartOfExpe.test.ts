@@ -85,6 +85,9 @@ const fixtureBuilder = () => {
       campagneRegionaleEnCoursWithoutSaisiePerdir: () => {
         campagne = createCampagneBuilder({annee: "2025", hasCampagneRegionEnCours: true, codeRegion: "76", withSaisiePerdir: false });
       },
+      campagneRegionaleEnAttente: () => {
+        campagne = createCampagneBuilder({annee: "2025", hasCampagneRegionEnCours: false, codeRegion: "76", withSaisiePerdir: true });
+      },
     },
     when: {
       isUserPartOfExpe: () => {
@@ -230,6 +233,15 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
   it("Doit renvoyer faux pour un utilisateur perdir et la campagne 2025 dont une autre campagne régionale autorise la saisie", () => {
     fixture.given.utilisateurPerdirHorsExpe();
     fixture.given.campagneRegionaleEnCoursWithSaisiePerdir();
+
+    fixture.when.isUserPartOfExpe();
+
+    fixture.then.verifierUserNotPartOfExpe();
+  });
+
+  it("Doit renvoyer faux pour un utilisateur perdir et la campagne 2025 dont une autre campagne régionale autorise la saisie", () => {
+    fixture.given.utilisateurPerdirHorsExpe();
+    fixture.given.campagneRegionaleEnAttente();
 
     fixture.when.isUserPartOfExpe();
 

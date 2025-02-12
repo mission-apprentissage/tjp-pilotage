@@ -15,9 +15,14 @@ export const isPerdirPartOfExpe = ({
   campagne?: CampagneType
 }) => {
   if(campagne?.annee !== "2025") return isNotPerdirPartOfExpe({ user, campagne });
-  const isCampagneRegionale = campagne?.hasCampagneRegionEnCours;
-  const isCampagneRegionaleOfUser = user?.codeRegion === campagne?.codeRegion;
-  return isCampagneRegionale ? (isCampagneRegionaleOfUser && campagne.withSaisiePerdir) : true;
+  const isCampagneRegionale = campagne?.codeRegion;
+  if(isCampagneRegionale) {
+    const isCampagneRegionaleEnCours = campagne?.hasCampagneRegionEnCours;
+    const isCampagneRegionaleOfUser = user?.codeRegion === campagne?.codeRegion;
+    const isCampagneWithSaisiePerdir = campagne?.withSaisiePerdir;
+    return isCampagneRegionaleEnCours && isCampagneRegionaleOfUser && isCampagneWithSaisiePerdir;
+  }
+  return true;
 };
 
 export const isNotPerdirPartOfExpe = ({

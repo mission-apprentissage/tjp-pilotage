@@ -14,14 +14,13 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { toDate } from "date-fns";
 import { useMemo, useState } from "react";
 
 import { client } from "@/api.client";
 import { CreateCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/CreateCampagneRegion";
 import { EditCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/EditCampagneRegion";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
-import { formatBoolean } from "@/utils/formatUtils";
+import {formatBoolean, formatDate} from '@/utils/formatUtils';
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 // eslint-disable-next-line react/display-name, import/no-anonymous-default-export
@@ -61,9 +60,10 @@ export default () => {
                   <Th>Année</Th>
                   <Th>Région</Th>
                   <Th textAlign={"center"}>Statut</Th>
+                  <Th width={"10%"}>Saisie perdir ?</Th>
+                  <Th width={"10%"}>Date du vote</Th>
                   <Th width={"10%"}>Date de début</Th>
                   <Th width={"10%"}>Date de fin</Th>
-                  <Th width={"10%"}>Saisie perdir</Th>
                   <Th width={"5%"} isNumeric>
                     Actions
                   </Th>
@@ -81,21 +81,16 @@ export default () => {
                       <CampagneStatutTag statut={campagneRegion.statut} />
                     </Td>
                     <Td width={"10%"}>
-                      {
-                        campagneRegion.dateDebut ?
-                          toDate(campagneRegion.dateDebut).toLocaleDateString("fr-FR") :
-                          "Non définie"
-                      }
-                    </Td>
-                    <Td width={"10%"}>
-                      {
-                        campagneRegion.dateFin ?
-                          toDate(campagneRegion.dateFin).toLocaleDateString("fr-FR") :
-                          "Non définie"
-                      }
-                    </Td>
-                    <Td width={"10%"}>
                       {formatBoolean(campagneRegion.withSaisiePerdir)}
+                    </Td>
+                    <Td width={"10%"}>
+                      {formatDate({date: campagneRegion.dateVote, options: { dateStyle: "short" }, nullValue: "Non définie"})}
+                    </Td>
+                    <Td width={"10%"}>
+                      {formatDate({date: campagneRegion.dateDebut, options: { dateStyle: "short" }, nullValue: "Non définie"})}
+                    </Td>
+                    <Td width={"10%"}>
+                      {formatDate({date: campagneRegion.dateFin, options: { dateStyle: "short" }, nullValue: "Non définie"})}
                     </Td>
                     <Td width={"5%"} isNumeric>
                       <IconButton

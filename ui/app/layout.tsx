@@ -76,13 +76,15 @@ async function Layout({ children }: LayoutProps) {
   const auth = await fetchAuth();
   const changelog = await fetchChangelog();
   const glossaire = await fetchGlossaire();
-  const campagne = await fetchCampagne();
+  const campagnes = await fetchCampagne();
   return (
     <RootLayoutClient
       auth={auth || undefined}
       changelog={changelog || []}
       glossaire={glossaire || []}
-      campagne={campagne}>
+      currentCampagne={campagnes?.current}
+      previousCampagne={campagnes?.previous}
+    >
       {children}
     </RootLayoutClient>
   );

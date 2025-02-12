@@ -20,12 +20,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
-import { useEffect, useState } from "react";
+import {useContext,useEffect, useState} from 'react';
 import { useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { z } from "zod";
 
 import { client } from "@/api.client";
+import {PreviousCampagneContext} from '@/app/previousCampagneContext';
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
 import {useCurrentCampagne} from '@/utils/security/useCurrentCampagne';
 
@@ -62,7 +63,8 @@ export const EditCampagne = ({
   const queryClient = useQueryClient();
 
   const [serverErrors, setServerErrors] = useState<Record<string, string>>();
-  const { setCampagne } = useCurrentCampagne();
+  const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
+  const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
 
   const {
     mutate: editCampagne,
@@ -71,7 +73,10 @@ export const EditCampagne = ({
   } = client.ref("[PUT]/campagnes/:campagneId").useMutation({
     onSuccess: async () => {
       queryClient.invalidateQueries(["[GET]/campagnes"]);
-      await client.ref("[GET]/campagne/current").query({}).then((campagne) => setCampagne(campagne));
+      await client.ref("[GET]/campagne/current").query({}).then((campagne) => {
+        setCurrentCampagne(campagne.current);
+        setPreviousCampagne(campagne.previous);
+      });
       onClose();
     },
     //@ts-ignore

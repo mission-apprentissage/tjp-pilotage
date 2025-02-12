@@ -24,11 +24,10 @@ export const getDemandesQuery = async ({
   order,
   orderBy,
 }: Filters) => {
-  console.log(campagne);
   const search_array = getNormalizedSearchArray(search);
 
   const demandes = await getKbdClient()
-    .selectFrom("latestDemandeView as demande")
+    .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
@@ -46,6 +45,7 @@ export const getDemandesQuery = async ({
     )
     .selectAll("demande")
     .select((eb) => [
+      "demande.isIntention",
       "suivi.id as suiviId",
       sql<string>`CONCAT(
         ${eb.ref("user.firstname")},

@@ -3,13 +3,14 @@ import Boom from "@hapi/boom";
 import { inject } from "injecti";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
+import {getCurrentCampagne, getPreviousCampagne} from '@/modules/utils/getCurrentCampagne';
 
 
 
 export const [getCurrentCampagneUsecase] = inject(
   {
     getCurrentCampagne,
+    getPreviousCampagne
   },
   (deps) => async (user?: RequestUser) => {
     const campagneEnCours = await deps.getCurrentCampagne(user);
@@ -21,6 +22,11 @@ export const [getCurrentCampagneUsecase] = inject(
         },
       });
     }
-    return campagneEnCours;
+    const campagneTerminee = await getPreviousCampagne();
+
+    return {
+      current: campagneEnCours,
+      previous: campagneTerminee
+    };
   }
 );

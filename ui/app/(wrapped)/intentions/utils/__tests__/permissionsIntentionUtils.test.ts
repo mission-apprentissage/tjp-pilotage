@@ -4,15 +4,14 @@ import type { CampagneStatut} from 'shared/enum/campagneStatutEnum';
 import { CampagneStatutEnum } from 'shared/enum/campagneStatutEnum';
 import type { DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
-import type { DemandeTypeType} from 'shared/enum/demandeTypeEnum';
 import {DemandeTypeEnum} from 'shared/enum/demandeTypeEnum';
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import {beforeEach,describe, expect, it} from 'vitest';
 
-import { canCorrectIntention,canCreateIntention, canDeleteIntention, canEditIntention, canImportIntention } from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import type { DemandeIntention } from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import { canCorrectIntention,canCreateIntention, canDeleteIntention, canEditDemandeIntention, canImportIntention } from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 
-type Intention = { campagne: CampagneType, statut: DemandeStatutType, typeDemande: DemandeTypeType, canEdit: boolean }
 
 const createUserBuilder = ({
   role,
@@ -41,7 +40,7 @@ const createCampagneBuilder = ({
   withSaisiePerdir?: boolean,
   hasCampagneRegionEnCours?: boolean
 }): CampagneType => ({
-  id: "testid",
+  id: `testid-${annee}`,
   dateDebut: `${annee}-01-01`,
   dateFin: `${annee}-12-31`,
   annee,
@@ -55,22 +54,26 @@ const createIntentionBuilder = ({
   campagne,
   statut,
   typeDemande,
-  canEdit
-} : Intention): Intention => ({
+  canEdit,
+  isIntention
+} : DemandeIntention): DemandeIntention => ({
   campagne,
   statut,
   typeDemande,
-  canEdit
+  canEdit,
+  isIntention
 });
 
 const fixtureBuilder = () => {
   let user: UserType | undefined = undefined;
+  let currentCampagne: CampagneType = createCampagneBuilder({annee: "2025"});
   let campagne: CampagneType = createCampagneBuilder({annee: "2023"});
-  let intention: Intention = createIntentionBuilder({
+  let intention: DemandeIntention = createIntentionBuilder({
     campagne: createCampagneBuilder({annee: "2023"}),
     statut: DemandeStatutEnum["projet de demande"],
     typeDemande: DemandeTypeEnum["ouverture_nette"],
-    canEdit: true
+    canEdit: true,
+    isIntention: true
   });
   let isAlreadyImported: boolean | undefined = undefined;
   let canDelete: boolean | undefined = undefined;
@@ -78,7 +81,6 @@ const fixtureBuilder = () => {
   let canImport: boolean | undefined = undefined;
   let canCreate: boolean | undefined = undefined;
   let canShowCorrectionButton: boolean | undefined = undefined;
-
 
   return {
     given: {
@@ -109,6 +111,12 @@ const fixtureBuilder = () => {
       utilisateurRegionHorsExpe: () => {
         user = createUserBuilder({role: RoleEnum["expert_region"], codeRegion: "11"});
       },
+      currentCampagne2024: () => {
+        currentCampagne = createCampagneBuilder({annee: "2024"});
+      },
+      currentCampagne2025: () => {
+        currentCampagne = createCampagneBuilder({annee: "2025"});
+      },
       campagne2023: () => {
         campagne = createCampagneBuilder({annee: "2023"});
       },
@@ -135,7 +143,8 @@ const fixtureBuilder = () => {
           campagne,
           statut: statut ?? DemandeStatutEnum["projet de demande"],
           typeDemande: DemandeTypeEnum["ouverture_nette"],
-          canEdit: true
+          canEdit: true,
+          isIntention: true
         });
       },
       intentionNonEditable: (statut?: DemandeStatutType) => {
@@ -143,7 +152,8 @@ const fixtureBuilder = () => {
           campagne,
           statut: statut ?? DemandeStatutEnum["projet de demande"],
           typeDemande: DemandeTypeEnum["ouverture_nette"],
-          canEdit: false
+          canEdit: false,
+          isIntention: true
         });
       },
       intentionValidee: () => {
@@ -151,7 +161,8 @@ const fixtureBuilder = () => {
           campagne,
           statut: DemandeStatutEnum["demande validée"],
           typeDemande: DemandeTypeEnum["ouverture_nette"],
-          canEdit: true
+          canEdit: true,
+          isIntention: true
         });
       },
       intentionAjustement: () => {
@@ -159,7 +170,8 @@ const fixtureBuilder = () => {
           campagne,
           statut: DemandeStatutEnum["projet de demande"],
           typeDemande: DemandeTypeEnum["ajustement"],
-          canEdit: true
+          canEdit: true,
+          isIntention: true
         });
       },
       isAlreadyImported: () => {
@@ -181,11 +193,11 @@ const fixtureBuilder = () => {
           user
         });
       },
-      canEditIntention: () => {
-        canEdit = canEditIntention({intention, user});
+      canEditDemandeIntention: () => {
+        canEdit = canEditDemandeIntention({demandeIntention : intention, user});
       },
       canCreateIntention: () => {
-        canCreate = canCreateIntention({campagne, user});
+        canCreate = canCreateIntention({campagne, currentCampagne, user});
       },
       canShowCorrectionButton: () => {
         canShowCorrectionButton = canCorrectIntention({intention, user});
@@ -276,6 +288,7 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur qui n'a pas les permissions ne doit pas pouvoir importer une demande ou modifier une demande", () => {
     fixture.given.utilisateurInvite();
+    fixture.given.currentCampagne2024();
     fixture.given.campagne2023Terminee();
     fixture.given.intentionValidee();
     fixture.given.isNotAlreadyImported();
@@ -283,7 +296,7 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
     fixture.when.canImportIntention();
     fixture.then.verifierCanNotImport();
 
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanNotEdit();
 
     fixture.when.canCreateIntention();
@@ -298,13 +311,14 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur national doit pouvoir modifier une demande", () => {
     fixture.given.utilisateurNational();
+    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
     fixture.when.canCreateIntention();
     fixture.then.verifierCanCreate();
 
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanEdit();
 
     fixture.when.canDeleteIntention();
@@ -313,19 +327,21 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur national ne doit pas pouvoir modifier une demande non éditable", () => {
     fixture.given.utilisateurNational();
+    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
     fixture.given.intentionNonEditable();
 
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanNotEdit();
   });
 
   it("Un utilisateur national ne doit pas pouvoir créer ou modifier une demande pendant une campagne terminée", () => {
     fixture.given.utilisateurNational();
+    fixture.given.currentCampagne2024();
     fixture.given.campagne2023Terminee();
     fixture.given.intentionEditable();
 
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanNotEdit();
 
     fixture.when.canCreateIntention();
@@ -334,10 +350,11 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur national ne doit pas pouvoir créer ou modifier une demande pendant une campagne en attente", () => {
     fixture.given.utilisateurNational();
+    fixture.given.currentCampagne2024();
     fixture.given.campagne2025EnAttente();
     fixture.given.intentionEditable();
 
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanNotEdit();
 
     fixture.when.canCreateIntention();
@@ -346,10 +363,11 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région hors expérimentation ne doit pas pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
     fixture.given.utilisateurAdminRegionHorsExpe();
+    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanNotEdit();
 
     fixture.when.canCreateIntention();
@@ -358,10 +376,11 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur perdir hors expérimentation ne doit pas pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
     fixture.given.utilisateurPerdirHorsExpe();
+    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanNotEdit();
 
     fixture.when.canCreateIntention();
@@ -370,10 +389,24 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région de l'expérimentation doit pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
     fixture.given.utilisateurAdminRegionExpe();
+    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
+    fixture.then.verifierCanEdit();
+
+    fixture.when.canCreateIntention();
+    fixture.then.verifierCanCreate();
+  });
+
+  it("Un utilisateur admin région de l'expérimentation doit pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
+    fixture.given.utilisateurAdminRegionExpe();
+    fixture.given.currentCampagne2024();
+    fixture.given.campagne2024();
+    fixture.given.intentionEditable();
+
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanEdit();
 
     fixture.when.canCreateIntention();
@@ -385,23 +418,23 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
     fixture.given.campagne2024();
 
     fixture.given.intentionEditable(DemandeStatutEnum["projet de demande"]);
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanNotEdit();
 
     fixture.given.intentionEditable(DemandeStatutEnum["prêt pour le vote"]);
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanNotEdit();
 
     fixture.given.intentionEditable(DemandeStatutEnum["dossier complet"]);
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanNotEdit();
 
     fixture.given.intentionEditable(DemandeStatutEnum["demande validée"]);
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanNotEdit();
 
     fixture.given.intentionEditable(DemandeStatutEnum["refusée"]);
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanNotEdit();
   });
 
@@ -410,32 +443,35 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
     fixture.given.campagne2024();
 
     fixture.given.intentionEditable(DemandeStatutEnum["brouillon"]);
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanEdit();
 
     fixture.given.intentionEditable(DemandeStatutEnum["proposition"]);
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanEdit();
 
     fixture.given.intentionEditable(DemandeStatutEnum["dossier incomplet"]);
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanEdit();
   });
 
-  it("Un utilisateur perdir de l'expérimentation doit pouvoir modifier une demande qui lui appartient dans les statuts proposition / brouillon / dossier incomplet", () => {
-    fixture.given.utilisateurPerdirExpe();
+  it("Un utilisateur national ne doit pas pouvoir créer une demande lors d'une campagne qui n'est pas la dernière en cours", () => {
+    fixture.given.utilisateurNational();
+    fixture.given.currentCampagne2025();
     fixture.given.campagne2024();
+    fixture.given.intentionEditable();
 
-    fixture.given.intentionEditable(DemandeStatutEnum["brouillon"]);
-    fixture.when.canEditIntention();
-    fixture.then.verifierCanEdit();
+    fixture.when.canCreateIntention();
+    fixture.then.verifierCanNotCreate();
+  });
 
-    fixture.given.intentionEditable(DemandeStatutEnum["proposition"]);
-    fixture.when.canEditIntention();
-    fixture.then.verifierCanEdit();
+  it("Un utilisateur national doit pouvoir modifier une demande lors d'une campagne qui n'est pas la dernière en cours", () => {
+    fixture.given.utilisateurNational();
+    fixture.given.currentCampagne2025();
+    fixture.given.campagne2024();
+    fixture.given.intentionEditable();
 
-    fixture.given.intentionEditable(DemandeStatutEnum["dossier incomplet"]);
-    fixture.when.canEditIntention();
+    fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanEdit();
   });
 

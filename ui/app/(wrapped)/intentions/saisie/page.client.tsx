@@ -35,7 +35,8 @@ import {isCampagneTerminee} from 'shared/utils/campagneUtils';
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
-import {canCorrectDemande,canCreateDemande, canEditDemande, canImportDemande} from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
+import {canCorrectDemande,canCreateDemande, canImportDemande} from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
+import {canEditDemandeIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
@@ -139,9 +140,6 @@ export const PageClient = () => {
     { keepPreviousData: true, cacheTime: 0 }
   );
 
-
-  const isNouvelleDemandeDisabled = !canCreateDemande({user, campagne: data?.campagne ?? campagne!});
-
   const [searchDemande, setSearchDemande] = useState<string>(search);
 
   const getAvatarBgColor = (userName: string) => {
@@ -215,6 +213,10 @@ export const PageClient = () => {
 
   const [isImporting, setIsImporting] = useState(false);
 
+  if (!data) return <IntentionSpinner />;
+
+  const isNouvelleDemandeDisabled = !canCreateDemande({user, campagne: data.campagne, currentCampagne: campagne!});
+
   return (
     <Container maxWidth="100%" flex={1} flexDirection={["column", null, "row"]} display={"flex"} minHeight={0} py={4}>
       <MenuBoiteReception
@@ -222,6 +224,8 @@ export const PageClient = () => {
         isRecapView
         handleFilters={handleFilters}
         activeFilters={filters}
+        campagne={data?.campagne}
+        user={user!}
       />
       <Box display={["none", null, "unset"]} borderLeft="solid 1px" borderColor="gray.100" height="100%" mr={4} />
       <Flex flex={1} flexDirection="column" overflow="visible" minHeight={0} minW={0}>
@@ -298,8 +302,8 @@ export const PageClient = () => {
                       suffix: demande.numero,
                     });
 
-                    const isModificationDisabled = !canEditDemande({
-                      demande: {
+                    const isModificationDisabled = !canEditDemandeIntention({
+                      demandeIntention: {
                         ...demande,
                         campagne: data?.campagne,
                       },
@@ -507,8 +511,8 @@ export const PageClient = () => {
                   isDisabled={isNouvelleDemandeDisabled}
                   variant="createButton"
                   size={"lg"}
-                  as={!isNouvelleDemandeDisabled ? NextLink : undefined}
-                  href="/intentions/saisie/new"
+                  as={isNouvelleDemandeDisabled ? undefined : NextLink}
+                  href={getRoutingSaisieRecueilDemande({campagne, user, suffix: "new"})}
                   px={3}
                   mt={12}
                   mx={"auto"}

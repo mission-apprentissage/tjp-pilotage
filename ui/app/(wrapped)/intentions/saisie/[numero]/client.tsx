@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { client } from "@/api.client";
 import { IntentionSpinner } from "@/app/(wrapped)/intentions/saisie/components/IntentionSpinner";
 import { IntentionForm } from "@/app/(wrapped)/intentions/saisie/intentionForm/IntentionForm";
-import { canEditDemande } from "@/app/(wrapped)/intentions/utils/permissionsDemandeUtils";
+import {canEditDemandeIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
@@ -38,7 +38,7 @@ export const PageClient = ({
 
   return (
     <IntentionForm
-      disabled={!canEditDemande({ demande, user })}
+      disabled={!canEditDemandeIntention({ demandeIntention: demande, user })}
       formId={numero}
       defaultValues={demande}
       demande={demande}

@@ -70,6 +70,7 @@ export const getIntentionsQuery = async (
     )
     .selectAll("intention")
     .select((eb) => [
+      "intention.isIntention",
       "suivi.id as suiviId",
       sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("userName"),
       "dataFormation.libelleFormation",
@@ -200,8 +201,6 @@ export const getIntentionsQuery = async (
     .limit(limit)
     .execute();
 
-  const campagnes = await getKbdClient().selectFrom("campagne").selectAll().orderBy("annee desc").execute();
-
   return {
     intentions: intentions.map((intention) =>
       cleanNull({
@@ -215,6 +214,5 @@ export const getIntentionsQuery = async (
       })
     ),
     count: parseInt(intentions[0]?.count) || 0,
-    campagnes: campagnes.map(cleanNull),
   };
 };

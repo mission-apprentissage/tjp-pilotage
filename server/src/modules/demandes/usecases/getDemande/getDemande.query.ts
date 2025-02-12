@@ -18,7 +18,7 @@ import type { Filters } from "./getDemande.usecase";
 
 export const getDemandeQuery = async ({ numero, user }: Filters) => {
   const demande = await getKbdClient()
-    .selectFrom("latestDemandeView as demande")
+    .selectFrom("latestDemandeIntentionView as demande")
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")

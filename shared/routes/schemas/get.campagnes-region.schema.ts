@@ -6,6 +6,7 @@ const CampagneRegionSchema = z.object({
   statut: z.string(),
   dateDebut: z.string().datetime().optional(),
   dateFin: z.string().datetime().optional(),
+  dateVote: z.string().datetime().optional(),
   withSaisiePerdir: z.boolean(),
   codeRegion: z.string(),
   annee: z.string(),

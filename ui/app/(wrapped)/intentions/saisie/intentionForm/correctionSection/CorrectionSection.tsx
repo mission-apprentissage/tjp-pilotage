@@ -99,7 +99,6 @@ export const CorrectionSection = ({
   });
 
   const isCorrectionDisabled = isSuccess || isSubmitting || !!demande.correction;
-  console.log(isSuccess, isSubmitting, !!demande.correction);
 
   const [raison, setRaison] = useState<RaisonCorrectionType>(RaisonCorrectionEnum["modification_capacite"]);
 

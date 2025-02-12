@@ -5,24 +5,54 @@ import type { CampagneType } from 'shared/schema/campagneSchema';
 import type { UserType } from 'shared/schema/userSchema';
 import { isCampagneEnCours, isCampagneTerminee } from 'shared/utils/campagneUtils';
 import { isStatutBrouillon, isStatutDemandeValidee, isStatutDossierIncomplet, isStatutProposition,isStatutRefusee } from 'shared/utils/statutDemandeUtils';
+import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
 
 import {feature} from '@/utils/feature';
 import { isUserPartOfExpe} from '@/utils/isPartOfExpe';
 
+import { canEditDemande } from './permissionsDemandeUtils';
 
-type Intention = { campagne: CampagneType, statut: DemandeStatutType, typeDemande: DemandeTypeType, canEdit: boolean }
+export type DemandeIntention = {
+  campagne: CampagneType,
+  statut: DemandeStatutType,
+  typeDemande: DemandeTypeType,
+  canEdit: boolean,
+  isIntention: boolean
+}
 
-export const canCreateIntention = ({ user, campagne } : { user?: UserType, campagne: CampagneType }) => {
-  return !feature.saisieDisabled && isUserPartOfExpe({ user, campagne }) && isCampagneEnCours(campagne);
+export const canCreateIntention = ({
+  user,
+  currentCampagne,
+  campagne
+} : {
+  user?: UserType,
+  currentCampagne: CampagneType;
+  campagne: CampagneType
+}) => {
+  return !feature.saisieDisabled
+    && isUserPartOfExpe({ user, campagne })
+    && isCampagneEnCours(campagne)
+    && currentCampagne.id === campagne.id;
+};
+
+export const canEditDemandeIntention = ({
+  demandeIntention,
+  user
+} : {
+  demandeIntention: DemandeIntention,
+  user?: UserType
+}): boolean => {
+  if(demandeIntention.isIntention) return canEditIntention({ intention: demandeIntention, user });
+  return canEditDemande({ demande: demandeIntention, user });
 };
 
 export const canEditIntention = ({
   intention,
   user,
 } : {
-  intention: Intention,
+  intention: DemandeIntention,
   user?: UserType
-}) => {
+}): boolean => {
   if(!isUserPartOfExpe({ user, campagne: intention.campagne })) return false;
   const canUserEditIntention = intention.canEdit;
   const canEditStatut = (
@@ -53,7 +83,7 @@ export const canEditIntention = ({
   );
 };
 
-export const canDeleteIntention = ({ intention, user } : { intention: Intention; user?: UserType; }) =>
+export const canDeleteIntention = ({ intention, user } : { intention: DemandeIntention; user?: UserType; }) =>
   canEditIntention({ intention, user }) &&
   !hasRole({ user, role: RoleEnum["expert_region"] }) &&
   !hasRole({ user, role: RoleEnum["region"] });
@@ -79,12 +109,12 @@ export const canCorrectIntention = ({
   intention,
   user,
 } : {
-  intention?: Intention,
+  intention?: DemandeIntention,
   user?: UserType
 }) =>
   feature.correction &&
   intention &&
   hasPermission(user?.role, "intentions-perdir/ecriture") &&
   isCampagneTerminee(intention?.campagne) &&
-  isStatutDemandeValidee(intention.statut);
-  // !isTypeAjustement(intention.typeDemande);
+  isStatutDemandeValidee(intention.statut) &&
+  !isTypeAjustement(intention.typeDemande);

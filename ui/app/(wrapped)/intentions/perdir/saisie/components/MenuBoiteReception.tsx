@@ -3,26 +3,27 @@ import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
+import type { UserType } from "shared/schema/userSchema";
 
 import { client } from "@/api.client";
 import type { Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
-import { useAuth } from "@/utils/security/useAuth";
 
 export const MenuBoiteReception = ({
   isRecapView = false,
   isNouvelleDemandeDisabled,
   handleFilters,
   activeFilters,
-  campagne
+  campagne,
+  user
 }: {
   isRecapView?: boolean;
   isNouvelleDemandeDisabled: boolean;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   activeFilters: Partial<Filters>;
   campagne: CampagneType;
+  user: UserType;
 }) => {
-  const { user } = useAuth();
   const statut = activeFilters.statut === undefined ? "none" : activeFilters.statut;
 
   const { data: countIntentions } = client.ref("[GET]/intentions/count").useQuery({
@@ -40,8 +41,8 @@ export const MenuBoiteReception = ({
         variant="primary"
         isDisabled={isNouvelleDemandeDisabled}
         leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
-        as={!isNouvelleDemandeDisabled ? NextLink : undefined}
-        href={`${getRoutingSaisieRecueilDemande({ user, campagne, suffix: "new" })}`}
+        as={isNouvelleDemandeDisabled ? undefined : NextLink}
+        href={isNouvelleDemandeDisabled ? undefined : getRoutingSaisieRecueilDemande({campagne, user, suffix: `new?campagneId=${campagne?.id}`})}
         minHeight={"35px"}
       >
         Nouvelle demande

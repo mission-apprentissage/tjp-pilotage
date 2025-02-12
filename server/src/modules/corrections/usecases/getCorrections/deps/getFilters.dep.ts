@@ -1,6 +1,7 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import { capitalize, values } from "lodash-es";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { VoieEnum } from "shared/enum/voieEnum";
 
@@ -147,6 +148,7 @@ export const getFiltersQuery = async ({
     .$castTo<{ label: string; value: string; statut: string }>()
     .orderBy("label", "desc")
     .where("campagne.annee", "is not", null)
+    .where("campagne.statut", "=", CampagneStatutEnum["terminée"])
     .execute();
 
   const filtersBase = getKbdClient()

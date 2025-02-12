@@ -4,11 +4,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
-import { useEffect, useState } from "react";
+import {useContext,useEffect, useState} from 'react';
 import { Controller, useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
+import {PreviousCampagneContext} from '@/app/previousCampagneContext';
 import {CampagneStatutTag} from '@/components/CampagneStatutTag';
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
 import { useAuth } from "@/utils/security/useAuth";
@@ -48,7 +49,8 @@ export const CreateCampagneRegion = ({
   const queryClient = useQueryClient();
 
   const [serverErrors, setServerErrors] = useState<Record<string, string>>();
-  const { setCampagne } = useCurrentCampagne();
+  const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
+  const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
 
   const {
     mutate: createCampagneRegion,
@@ -57,7 +59,10 @@ export const CreateCampagneRegion = ({
   } = client.ref("[POST]/campagnes-region/:campagneRegionId").useMutation({
     onSuccess: async () => {
       queryClient.invalidateQueries(["[GET]/campagnes-region"]);
-      await client.ref("[GET]/campagne/current").query({}).then((campagne) => setCampagne(campagne));
+      await client.ref("[GET]/campagne/current").query({}).then((campagne) => {
+        setCurrentCampagne(campagne.current);
+        setPreviousCampagne(campagne.previous);
+      });
       onClose();
     },
     //@ts-ignore
@@ -232,6 +237,40 @@ export const CreateCampagneRegion = ({
               }}
             />
             {!!errors.dateFin && <FormErrorMessage>{errors.dateFin.message}</FormErrorMessage>}
+          </FormControl>
+          <FormControl mb="4">
+            <FormLabel htmlFor="input-date-vote">Date de vote</FormLabel>
+            <SingleDatepicker
+              date={getValues("dateVote") ? toDate(getValues("dateVote")!) : undefined}
+              onDateChange={(date) => {
+                setValue("dateVote", date.toISOString(), {
+                  shouldValidate: true,
+                });
+              }}
+              minDate={
+                parentCampagne?.dateDebut ?
+                  toDate(parentCampagne.dateDebut) :
+                  undefined
+              }
+              maxDate={
+                parentCampagne?.dateFin ?
+                  toDate(parentCampagne.dateFin) :
+                  undefined
+              }
+              configs={getDatePickerConfig()}
+              propsConfigs={{
+                inputProps: {
+                  id: "input-date-vote",
+                },
+                triggerBtnProps: {
+                  width: [null, null, "72"],
+                  fontSize: 14,
+                  fontWeight: 400,
+                  justifyContent: "start"
+                },
+              }}
+            />
+            {!!errors.dateVote && <FormErrorMessage>{errors.dateVote.message}</FormErrorMessage>}
           </FormControl>
           <FormControl as="fieldset" mb="4" isInvalid={!!errors.withSaisiePerdir} isRequired>
             <FormLabel as="legend" fontSize={"md"} fontWeight={"bold"}>Remplissage des demandes par les chefs d'établissement ?</FormLabel>
