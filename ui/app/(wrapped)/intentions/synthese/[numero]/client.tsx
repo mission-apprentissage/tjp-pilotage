@@ -59,7 +59,7 @@ export default ({
           me="auto"
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: "/intentions" },
+            { title: "Recueil des demandes", to: "/intentions/saisie" },
             {
               title: `Demande n°${demande?.numero}`,
               to: `/intentions/synthese/${demande?.numero}`,
