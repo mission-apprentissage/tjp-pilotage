@@ -247,7 +247,7 @@ export const IntentionForm = ({
               mb={4}
               pages={[
                 { title: "Accueil", to: "/" },
-                { title: "Recueil des demandes", to: "/intentions" },
+                { title: "Recueil des demandes", to: "/intentions/perdir/saisie" },
                 pathname === "/intentions/perdir/saisie/new"
                   ? {
                     title: "Nouvelle demande",
