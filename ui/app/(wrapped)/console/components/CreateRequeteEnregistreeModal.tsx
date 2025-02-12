@@ -27,14 +27,14 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 import { format } from "date-fns";
 import NextLink from "next/link";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { client } from "@/api.client";
+import {getErrorMessage} from '@/utils/apiError';
 import { useAuth } from "@/utils/security/useAuth";
 
 import { FilterTags } from "./FilterTags";
@@ -105,12 +105,12 @@ export const CreateRequeteEnregistreeModal = ({
 
   const queryClient = useQueryClient();
 
-  const [serverErrors, setServerErrors] = useState<Record<string, string>>();
 
   const {
     mutate: createRequeteEnregistree,
     isLoading,
     isError,
+    error
   } = client.ref("[POST]/requete/enregistrement").useMutation({
     onSuccess: () => {
       toast({
@@ -120,11 +120,6 @@ export const CreateRequeteEnregistreeModal = ({
       });
       queryClient.invalidateQueries(["[GET]/requetes"]);
       onClose();
-    },
-    //@ts-ignore
-    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-      const errors = e.response?.data.errors;
-      setServerErrors(errors);
     },
   });
 
@@ -206,15 +201,7 @@ export const CreateRequeteEnregistreeModal = ({
               </Flex>
               {isError && (
                 <Alert status="error">
-                  {serverErrors ? (
-                    <UnorderedList>
-                      {Object.entries(serverErrors).map(([key, msg]) => (
-                        <li key={key}>{msg}</li>
-                      ))}
-                    </UnorderedList>
-                  ) : (
-                    <AlertDescription>Erreur lors de la création</AlertDescription>
-                  )}
+                  <AlertDescription>{getErrorMessage(error)}</AlertDescription>
                 </Alert>
               )}
             </ModalBody>

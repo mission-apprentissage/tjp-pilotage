@@ -18,13 +18,12 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
-  UnorderedList,
+  useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
-import {useContext,useEffect, useState} from 'react';
+import {useContext,useEffect} from 'react';
 import { useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
@@ -32,10 +31,12 @@ import { z } from "zod";
 
 import { client } from "@/api.client";
 import {PreviousCampagneContext} from '@/app/previousCampagneContext';
+import {getErrorMessage} from '@/utils/apiError';
 import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
 import {useCurrentCampagne} from '@/utils/security/useCurrentCampagne';
 
 export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const toast = useToast();
   const {
     getValues,
     setValue,
@@ -51,7 +52,6 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
 
   const queryClient = useQueryClient();
 
-  const [serverErrors, setServerErrors] = useState<Record<string, string>>();
   const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
   const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
 
@@ -59,19 +59,20 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
     mutate: createCampagne,
     isLoading,
     isError,
+    error,
   } = client.ref("[POST]/campagnes/:campagneId").useMutation({
     onSuccess: async () => {
+      toast({
+        variant: "left-accent",
+        status: "success",
+        title: "La campagne a bien été créée",
+      });
       queryClient.invalidateQueries(["[GET]/campagnes"]);
       await client.ref("[GET]/campagne/current").query({}).then((campagne) => {
         setCurrentCampagne(campagne.current);
         setPreviousCampagne(campagne.previous);
       });
       onClose();
-    },
-    //@ts-ignore
-    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-      const errors = e.response?.data.errors;
-      setServerErrors(errors);
     },
   });
 
@@ -184,15 +185,7 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </FormControl>
           {isError && (
             <Alert status="error">
-              {serverErrors ? (
-                <UnorderedList>
-                  {Object.entries(serverErrors).map(([key, msg]) => (
-                    <li key={key}>{msg}</li>
-                  ))}
-                </UnorderedList>
-              ) : (
-                <AlertDescription>Erreur lors de la création</AlertDescription>
-              )}
+              <AlertDescription>{getErrorMessage(error)}</AlertDescription>
             </Alert>
           )}
         </ModalBody>
