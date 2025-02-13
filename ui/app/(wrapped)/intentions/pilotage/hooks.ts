@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { ScopeEnum } from "shared";
 
-import type { FiltersStatsPilotageIntentions } from "./types";
+import type { FiltersPilotageIntentions } from "./types";
 
 /**
  * Récupère le code du filtre en fonction du scope :
@@ -10,7 +10,7 @@ import type { FiltersStatsPilotageIntentions } from "./types";
  * - Si le scope est département, récupérer le code département
  * - Si le scope est national, ne pas récupérer de code
  */
-export const useScopeCode = (filters: FiltersStatsPilotageIntentions) => {
+export const useScopeCode = (filters: FiltersPilotageIntentions) => {
   const code = useMemo(() => {
     switch (filters.scope) {
     case ScopeEnum["région"]:

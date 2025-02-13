@@ -2,7 +2,7 @@ import { chakra, Td, Text, Tooltip } from "@chakra-ui/react";
 
 const SEUIL_RATIO_FERMETURE: number = 0.33;
 
-import type { RepartitionPilotageIntentionsLine } from "@/app/(wrapped)/intentions/pilotage/types";
+import type { PilotageIntentionsLine } from "@/app/(wrapped)/intentions/pilotage/types";
 import { formatLargeNumber, formatPercentage } from "@/utils/formatUtils";
 export const LineContent = chakra(
   ({
@@ -14,7 +14,7 @@ export const LineContent = chakra(
     tdBgColor?: string;
     tdColor?: string;
     getTauxTransfoBgColor: (tauxTransformation: number | undefined) => string | undefined;
-    line: RepartitionPilotageIntentionsLine;
+    line: PilotageIntentionsLine;
   }) => {
     return (
       <>

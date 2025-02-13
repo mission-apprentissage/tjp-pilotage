@@ -1,8 +1,8 @@
-import type { StatsPilotageIntentions } from "./types";
+import type { Filters } from "./types";
 
 export const findDefaultRentreeScolaireForCampagne = (
   annee: string,
-  rentreesScolaires: StatsPilotageIntentions["filters"]["rentreesScolaires"]
+  rentreesScolaires: Filters["rentreesScolaires"]
 ) => {
   if (rentreesScolaires) {
     const rentreeScolaire = rentreesScolaires.find((r) => parseInt(r.value) === parseInt(annee) + 1);

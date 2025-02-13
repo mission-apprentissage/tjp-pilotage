@@ -23,9 +23,9 @@ import { ScopeEnum } from "shared";
 import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage/main/displayTypeEnum";
 import type {
   FiltersStatsPilotageIntentions,
-  OrderRepartitionPilotageIntentions,
-  RepartitionPilotageIntentionsDomaines,
-  RepartitionPilotageIntentionsZonesGeographiques,
+  OrderPilotageIntentions,
+  PilotageIntentionsDomaines,
+  PilotageIntentionsZonesGeographiques,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { Legend } from "@/components/Legend";
@@ -93,10 +93,10 @@ export const AnalyseComparativeSection = ({
   displayZonesGeographiques,
   displayDomaines,
 }: {
-  zonesGeographiques?: RepartitionPilotageIntentionsZonesGeographiques;
-  domaines?: RepartitionPilotageIntentionsDomaines;
-  order: Partial<OrderRepartitionPilotageIntentions>;
-  setSearchParams: (params: { order?: Partial<OrderRepartitionPilotageIntentions> }) => void;
+  zonesGeographiques?: PilotageIntentionsZonesGeographiques;
+  domaines?: PilotageIntentionsDomaines;
+  order: Partial<OrderPilotageIntentions>;
+  setSearchParams: (params: { order?: Partial<OrderPilotageIntentions> }) => void;
   filters?: Partial<FiltersStatsPilotageIntentions>;
   displayType: DisplayTypeEnum;
   displayZonesGeographiques: () => void;
@@ -166,7 +166,7 @@ export const AnalyseComparativeSection = ({
     if (indicateur > 0.06) return customPalette[5];
   };
 
-  const handleOrder = (column: OrderRepartitionPilotageIntentions["orderBy"]) => {
+  const handleOrder = (column: OrderPilotageIntentions["orderBy"]) => {
     trackEvent("pilotage-transformation:formations-ordre", {
       props: { colonne: column },
     });

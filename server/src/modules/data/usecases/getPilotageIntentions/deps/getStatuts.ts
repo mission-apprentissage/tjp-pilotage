@@ -1,23 +1,21 @@
-import type {
-  Filters,
-  Repartition,
-} from "@/modules/data/usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.usecase";
+
+
+import type { Filters, Repartition } from "@/modules/data/usecases/getPilotageIntentions/getPilotageIntentions.usecase";
 
 import { getDenominateurQuery } from "./getDenominateurQuery";
 import { getNumerateurQuery } from "./getNumerateurQuery";
 
-export const getNiveauxDiplome = async ({ filters }: { filters: Filters }): Promise<Repartition> => {
+export const getStatuts = async ({ filters }: { filters: Filters }): Promise<Repartition> => {
   const [numerateur, denominateur] = await Promise.all([
     getNumerateurQuery({
       filters: {
         ...filters,
-        codeNiveauDiplome: undefined,
+        statut: undefined
       },
     }),
     getDenominateurQuery({
       filters: {
         ...filters,
-        codeNiveauDiplome: undefined,
       },
     }),
   ]);
@@ -26,8 +24,8 @@ export const getNiveauxDiplome = async ({ filters }: { filters: Filters }): Prom
     numerateur,
     denominateur,
     groupBy: {
-      code: "codeNiveauDiplome",
-      libelle: "libelleNiveauDiplome",
+      code: "statut",
+      libelle: "statut",
     },
   };
 };

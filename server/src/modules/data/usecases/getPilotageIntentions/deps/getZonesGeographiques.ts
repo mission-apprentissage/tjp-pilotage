@@ -1,9 +1,6 @@
 import { ScopeEnum } from "shared";
 
-import type {
-  Filters,
-  Repartition,
-} from "@/modules/data/usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.usecase";
+import type { Filters, Repartition } from "@/modules/data/usecases/getPilotageIntentions/getPilotageIntentions.usecase";
 
 import { getDenominateurQuery } from "./getDenominateurQuery";
 import { getNumerateurQuery } from "./getNumerateurQuery";

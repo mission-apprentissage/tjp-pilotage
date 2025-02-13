@@ -2,11 +2,11 @@ import { chakra, Flex, Skeleton } from "@chakra-ui/react";
 
 import { useScopeCode } from "@/app/(wrapped)/intentions/pilotage/hooks";
 import type {
-  FiltersStatsPilotageIntentions,
-  OrderRepartitionPilotageIntentions,
-  RepartitionPilotageIntentions,
-  StatsPilotageIntentions,
-} from "@/app/(wrapped)/intentions/pilotage/types";
+  FiltersPilotageIntentions,
+  OrderPilotageIntentions,
+  OrderQuadrantPilotageIntentions,
+  PilotageIntentions
+} from '@/app/(wrapped)/intentions/pilotage/types';
 
 import { DisplayTypeEnum } from "./displayTypeEnum";
 import { QuadrantSection } from "./quadrant/QuadrantSection";
@@ -39,11 +39,12 @@ export const MainSection = ({
   displayQuadrant,
   displayZonesGeographiques,
   displayDomaines,
-  quadrantData,
-  repartitionData,
+  data,
   filters,
   order,
+  orderQuadrant,
   setSearchParams,
+  setFilters,
   isLoading,
 }: {
   displayTypes: Array<DisplayTypeEnum>;
@@ -51,15 +52,20 @@ export const MainSection = ({
   displayQuadrant: () => void;
   displayZonesGeographiques: () => void;
   displayDomaines: () => void;
-  quadrantData?: StatsPilotageIntentions;
-  repartitionData?: RepartitionPilotageIntentions;
-  filters: FiltersStatsPilotageIntentions;
-  order: Partial<OrderRepartitionPilotageIntentions>;
-  setSearchParams: (params: { order?: Partial<OrderRepartitionPilotageIntentions> }) => void;
+  data?: PilotageIntentions;
+  filters: FiltersPilotageIntentions;
+  order: Partial<OrderPilotageIntentions>;
+  orderQuadrant: Partial<OrderQuadrantPilotageIntentions>;
+  setFilters: (filters: FiltersPilotageIntentions) => void;
+  setSearchParams: (params: {
+    order?: Partial<OrderPilotageIntentions>;
+    orderQuadrant?: Partial<OrderQuadrantPilotageIntentions>;
+  }) => void;
   isLoading?: boolean;
 }) => {
   const tabsDisplayType = displayTypes[0];
   const analyseComparativeDisplayType = displayTypes[1];
+  const scopeCode = useScopeCode(filters).code;
 
   return (
     <Flex direction="column" w={"100%"} mb={16}>
@@ -74,7 +80,7 @@ export const MainSection = ({
         <Flex p={8} bgColor={"white"} borderBottomRadius={4} borderTopRightRadius={4} borderLeftWidth={1}>
           {tabsDisplayType === DisplayTypeEnum.repartition ? (
             <RepartitionSection
-              repartitionData={repartitionData}
+              data={data}
               order={order}
               setSearchParams={setSearchParams}
               filters={filters}
@@ -84,14 +90,16 @@ export const MainSection = ({
             />
           ) : tabsDisplayType === DisplayTypeEnum.quadrant ? (
             <QuadrantSection
-              parentFilters={filters}
-              scopeFilters={quadrantData?.filters}
+              filters={filters}
+              filtersOptions={data?.filters}
+              setFilters={setFilters}
+              setSearchParams={setSearchParams}
+              orderQuadrant={orderQuadrant}
               scope={{
                 type: filters.scope,
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                value: useScopeCode(filters).code, // TODO
+                value: scopeCode,
               }}
-              repartitionData={repartitionData}
+              data={data}
             />
           ) : null}
         </Flex>

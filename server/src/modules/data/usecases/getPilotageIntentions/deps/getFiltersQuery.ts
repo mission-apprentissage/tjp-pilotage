@@ -7,6 +7,7 @@ import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getPilotageIntentions/getPilotageIntentions.usecase";
 import {
   isInPerimetreIJAcademie,
   isInPerimetreIJDepartement,
@@ -15,51 +16,39 @@ import {
 import { isDemandeNotDeletedOrRefused } from "@/modules/utils/isDemandeSelectable";
 import { cleanNull } from "@/utils/noNull";
 
-import type { Filters } from "./getStatsPilotageIntentions.query";
-
-export const getFiltersQuery = async ({
-  statut,
-  rentreeScolaire,
-  codeNiveauDiplome,
-  CPC,
-  codeNsf,
-  campagne,
-  codeAcademie,
-  codeRegion,
-  coloration,
-}: Filters) => {
+export const getFiltersQuery = async ({filters}: {filters: Filters}) => {
   const inStatut = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!statut || statut === undefined) return sql<true>`true`;
-    return eb("demande.statut", "in", statut);
+    if (!filters.statut) return sql<true>`true`;
+    return eb("demande.statut", "in", filters.statut);
   };
 
   const inRentreeScolaire = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!rentreeScolaire) return sql<true>`true`;
+    if (!filters.rentreeScolaire) return sql<true>`true`;
     return eb(
       "demande.rentreeScolaire",
       "in",
-      rentreeScolaire.map((rentree) => parseInt(rentree))
+      filters.rentreeScolaire.map((rentree) => parseInt(rentree))
     );
   };
 
   const inCodeNiveauDiplome = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!codeNiveauDiplome) return sql<true>`true`;
-    return eb("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+    if (!filters.codeNiveauDiplome) return sql<true>`true`;
+    return eb("dataFormation.codeNiveauDiplome", "in", filters.codeNiveauDiplome);
   };
 
   const inCPC = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!CPC) return sql<true>`true`;
-    return eb("dataFormation.cpc", "in", CPC);
+    if (!filters.CPC) return sql<true>`true`;
+    return eb("dataFormation.cpc", "in", filters.CPC);
   };
 
   const inNsf = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!codeNsf) return sql<true>`true`;
-    return eb("dataFormation.codeNsf", "in", codeNsf);
+    if (!filters.codeNsf) return sql<true>`true`;
+    return eb("dataFormation.codeNsf", "in", filters.codeNsf);
   };
 
   const inCampagne = (eb: ExpressionBuilder<DB, "campagne">) => {
-    if (!campagne) return sql<true>`true`;
-    return eb("campagne.annee", "=", campagne);
+    if (!filters.campagne) return sql<true>`true`;
+    return eb("campagne.annee", "=", filters.campagne);
   };
 
   const base = getKbdClient()
@@ -73,7 +62,7 @@ export const getFiltersQuery = async ({
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .where(isDemandeNotDeletedOrRefused)
     .$call((q) => {
-      if (!coloration || coloration === "false")
+      if (!filters.coloration || filters.coloration === "false")
         return q.where((w) =>
           w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
         );
@@ -114,8 +103,8 @@ export const getFiltersQuery = async ({
     .where("academie.codeAcademie", "is not", null)
     .where(isInPerimetreIJAcademie)
     .$call((q) => {
-      if (codeRegion) {
-        return q.where("region.codeRegion", "=", codeRegion);
+      if (filters.codeRegion) {
+        return q.where("region.codeRegion", "=", filters.codeRegion);
       }
 
       return q;
@@ -128,12 +117,12 @@ export const getFiltersQuery = async ({
     .where("departement.codeDepartement", "is not", null)
     .where(isInPerimetreIJDepartement)
     .$call((q) => {
-      if (codeRegion) {
-        return q.where("region.codeRegion", "=", codeRegion);
+      if (filters.codeRegion) {
+        return q.where("region.codeRegion", "=", filters.codeRegion);
       }
 
-      if (codeAcademie) {
-        return q.where("academie.codeAcademie", "=", codeAcademie);
+      if (filters.codeAcademie) {
+        return q.where("academie.codeAcademie", "=", filters.codeAcademie);
       }
 
       return q;

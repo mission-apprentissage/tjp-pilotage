@@ -7,7 +7,7 @@ import {
   getAvisStatusTagBgColor,
   getAvisStatusTagTextColor,
   TagIcon,
-} from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
+} from "@/app/(wrapped)/intentions/components/AvisStatutTag";
 import type { Avis } from "@/app/(wrapped)/intentions/perdir/saisie/types";
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 
