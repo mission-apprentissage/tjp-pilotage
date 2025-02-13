@@ -486,10 +486,146 @@ describe("shared > validators > intentionValidators", () => {
     });
   });
 
-  it("should validate sommeCapacite", () => {
-    const intention = createIntention({ typeDemande: DemandeTypeEnum.augmentation_nette, capaciteScolaire: 0, capaciteApprentissage: 0 });
-    const result = intentionValidators.sommeCapacite(intention);
-    expect(result).toBe("La somme des futures capacités doit être supérieure à 0");
+  describe("Validation de la 'sommeCapacite'", () => {
+    describe.each`
+    typeDemande                 | text
+    ${DemandeTypeEnum.fermeture} | ${DemandeTypeEnum.fermeture}
+    ${DemandeTypeEnum.coloration} | ${DemandeTypeEnum.coloration}
+      `(`Si 'typeDemande' est '$text'`, ({ typeDemande }) => {
+      it("Ne doit pas remonter d'erreur", () => {
+        expect(intentionValidators.sommeCapacite({
+          ...intention,
+          typeDemande
+        })).toBe(undefined);
+      });
+    });
+
+    describe("Pour les autres 'typeDemande'", () => {
+      it("Doit remonter une erreur si 'capaciteApprentissage' et 'capaciteScolaire' ne sont pas rensiegnées", () => {
+        expect(intentionValidators.sommeCapacite({
+          ...intention,
+          typeDemande: DemandeTypeEnum.augmentation_nette,
+          capaciteApprentissage: undefined,
+          capaciteScolaire: undefined
+        })).toBe('La somme des futures capacités doit être supérieure à 0');
+      });
+
+      it("Ne doit pas remonter une erreur si l'une des capacités ('capaciteApprentissage', 'capaciteScolaire', 'capaciteApprentissageActuelle', 'capaciteScolaireActuelle') est négative", () => {
+        expect(intentionValidators.sommeCapacite({
+          ...intention,
+          typeDemande: DemandeTypeEnum.augmentation_nette,
+          capaciteScolaire: -1,
+          capaciteApprentissage: 1,
+          capaciteApprentissageActuelle: 1,
+          capaciteScolaireActuelle: 1
+        })).toBe(undefined);
+
+        expect(intentionValidators.sommeCapacite({
+          ...intention,
+          typeDemande: DemandeTypeEnum.augmentation_nette,
+          capaciteScolaire: 1,
+          capaciteApprentissage: 1,
+          capaciteApprentissageActuelle: 1,
+          capaciteScolaireActuelle: -1
+        })).toBe(undefined);
+
+        expect(intentionValidators.sommeCapacite({
+          ...intention,
+          typeDemande: DemandeTypeEnum.augmentation_nette,
+          capaciteScolaire: 1,
+          capaciteApprentissage: 1,
+          capaciteApprentissageActuelle: -1,
+          capaciteScolaireActuelle: 1
+        })).toBe(undefined);
+
+        expect(intentionValidators.sommeCapacite({
+          ...intention,
+          typeDemande: DemandeTypeEnum.augmentation_nette,
+          capaciteScolaire: 1,
+          capaciteApprentissage: -1,
+          capaciteApprentissageActuelle: 1,
+          capaciteScolaireActuelle: 1
+        })).toBe(undefined);
+      });
+
+      describe("Si toutes les capacités sont renseignées et positives ('capaciteApprentissage', 'capaciteScolaire', 'capaciteApprentissageActuelle', 'capaciteScolaireActuelle')", () =>  {
+        describe.each`
+        typeDemande                 | text
+        ${DemandeTypeEnum.augmentation_compensation} | ${DemandeTypeEnum.augmentation_compensation}
+        ${DemandeTypeEnum.augmentation_nette} | ${DemandeTypeEnum.augmentation_nette}
+        `(`Si 'typeDemande' est '$text'`, ({ typeDemande }) => {
+          it("Doit remonter une erreur si la somme des capacités est inférieure à la somme des capacités actuelles", () => {
+            expect(intentionValidators.sommeCapacite({
+              ...intention,
+              typeDemande,
+              capaciteScolaire: 1,
+              capaciteApprentissage: 1,
+              capaciteApprentissageActuelle: 2,
+              capaciteScolaireActuelle: 1
+            })).toBe("La somme des capacités doit être supérieure à la somme des capacités actuelles dans le cas d'une augmentation");
+          });
+
+          it("Ne doit pas remonter une erreur si la somme des capacités est supérieure à la somme des capacités actuelles", () => {
+            expect(intentionValidators.sommeCapacite({
+              ...intention,
+              typeDemande,
+              capaciteScolaire: 1,
+              capaciteApprentissage: 2,
+              capaciteApprentissageActuelle: 1,
+              capaciteScolaireActuelle: 1
+            })).toBe(undefined);
+          });
+        });
+
+        describe("Si 'typeDemande' est 'ajustement'", () => {
+          it("Doit remonter une erreur si la somme des capacités est inférieure à la somme des capacités actuelles", () => {
+            expect(intentionValidators.sommeCapacite({
+              ...intention,
+              typeDemande: DemandeTypeEnum.ajustement,
+              capaciteScolaire: 1,
+              capaciteApprentissage: 1,
+              capaciteApprentissageActuelle: 2,
+              capaciteScolaireActuelle: 1
+            })).toBe("La somme des capacités doit être supérieure à la somme des capacités actuelles dans le cas d'un ajustement de rentrée");
+          });
+
+          it("Ne doit pas remonter une erreur si la somme des capacités est supérieure à la somme des capacités actuelles", () => {
+            expect(intentionValidators.sommeCapacite({
+              ...intention,
+              typeDemande: DemandeTypeEnum.ajustement,
+              capaciteScolaire: 1,
+              capaciteApprentissage: 2,
+              capaciteApprentissageActuelle: 1,
+              capaciteScolaireActuelle: 1
+            })).toBe(undefined);
+          });
+        });
+
+        describe("Si 'typeDemande' est 'diminution'", () => {
+          it("Doit remonter une erreur si la somme des capacités est supérieure à la somme des capacités actuelles", () => {
+            expect(intentionValidators.sommeCapacite({
+              ...intention,
+              typeDemande: DemandeTypeEnum.diminution,
+              capaciteScolaire: 1,
+              capaciteApprentissage: 2,
+              capaciteApprentissageActuelle: 1,
+              capaciteScolaireActuelle: 1
+            })).toBe("La somme des capacités doit être inférieure à la somme des capacités actuelles dans le cas d'une diminution");
+          });
+
+          it("Ne doit pas remonter une erreur si la somme des capacités est inférieure à la somme des capacités actuelles", () => {
+            expect(intentionValidators.sommeCapacite({
+              ...intention,
+              typeDemande: DemandeTypeEnum.diminution,
+              capaciteScolaire: 1,
+              capaciteApprentissage: 1,
+              capaciteApprentissageActuelle: 2,
+              capaciteScolaireActuelle: 1
+            })).toBe(undefined);
+          });
+        });
+      });
+    });
   });
 
   describe("Validation du champ 'motifRefus'", () => {
