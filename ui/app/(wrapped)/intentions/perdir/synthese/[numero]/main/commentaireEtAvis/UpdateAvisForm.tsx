@@ -22,9 +22,9 @@ import type { AvisTypeType } from "shared/enum/avisTypeEnum";
 import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 
 import { client } from "@/api.client";
-import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
-import { FonctionTag } from "@/app/(wrapped)/intentions/perdir/components/FonctionTag";
-import { RoleVisibleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleVisibleTag";
+import { AvisStatutTag } from "@/app/(wrapped)/intentions/components/AvisStatutTag";
+import { FonctionTag } from "@/app/(wrapped)/intentions/components/FonctionTag";
+import { RoleVisibleTag } from "@/app/(wrapped)/intentions/components/RoleVisibleTag";
 import type { AvisForm } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/actions/AvisForm";
 import { FONCTIONS } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/actions/FONCTIONS";
 

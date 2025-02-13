@@ -1,27 +1,31 @@
-import { Flex, Heading, HStack } from "@chakra-ui/react";
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import {Button,Collapse,Flex, Heading, HStack} from '@chakra-ui/react';
+import { useState } from 'react';
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
+import { getStatutBgColor } from "@/app/(wrapped)/intentions/components/StatutTag";
 import { ProgressBar } from "@/components/ProgressBar";
 import { themeDefinition } from "@/theme/theme";
 import { themeColors } from "@/theme/themeColors";
-import { formatPercentageWithoutSign } from "@/utils/formatUtils";
+import { formatNumber, formatPercentageWithoutSign } from "@/utils/formatUtils";
 
 export const NumberWithProgressBars = ({
-  all,
-  demandeValidee,
-  projetDeDemande,
+  statuts,
   title,
   icon,
   tooltip,
   children,
 }: {
-  all: number;
-  demandeValidee: number;
-  projetDeDemande: number;
+  statuts: Record<DemandeStatutType | "Total", number>;
   title: string;
   icon?: React.ReactNode;
   tooltip?: React.ReactNode;
   children?: React.ReactNode;
 }) => {
+
+  const [showMore, setShowMore] = useState(false);
+
   return (
     <Flex
       flex={1}
@@ -52,20 +56,65 @@ export const NumberWithProgressBars = ({
         {tooltip}
       </HStack>
       <Heading as="h4" fontSize="32px" fontWeight="800" color="grey.50">
-        {all}
+        {statuts["Total"]}
       </Heading>
       <ProgressBar
-        percentage={formatPercentageWithoutSign(demandeValidee / all)}
+        percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["demande validée"]]) / statuts["Total"])}
         rightLabel="Validées"
-        leftLabel={demandeValidee}
+        leftLabel={formatNumber(statuts[DemandeStatutEnum["demande validée"]])}
         colorScheme={themeColors.success[975]}
       />
       <ProgressBar
-        percentage={formatPercentageWithoutSign(projetDeDemande / all)}
-        rightLabel="En projet"
-        leftLabel={projetDeDemande}
+        percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["projet de demande"]]) / statuts["Total"])}
+        rightLabel="Projet de demande"
+        leftLabel={formatNumber(statuts[DemandeStatutEnum["projet de demande"]])}
         colorScheme={themeColors.orange.draft}
       />
+      <Button
+        variant="link"
+        size="sm"
+        ms={"auto"}
+        color={themeColors.bluefrance[113]}
+        onClick={() => setShowMore((showMore) => !showMore)}
+        rightIcon={showMore ? <ChevronUpIcon mt={"auto"}/> : <ChevronDownIcon mt={"auto"}/>}
+        iconSpacing={1}
+      >
+        {showMore ? "Voir moins" : "Voir plus"}
+      </Button>
+      <Collapse in={showMore} >
+        <Flex direction={"column"} gap="8px">
+          <ProgressBar
+            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["refusée"]]) / statuts["Total"])}
+            rightLabel="Refusées"
+            leftLabel={formatNumber(statuts[DemandeStatutEnum["refusée"]])}
+            colorScheme={themeColors.pinkmacaron[850]}
+          />
+          <ProgressBar
+            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["prêt pour le vote"]]) / statuts["Total"])}
+            rightLabel="Prêt pour le vote"
+            leftLabel={formatNumber(statuts[DemandeStatutEnum["prêt pour le vote"]])}
+            colorScheme={getStatutBgColor(DemandeStatutEnum["prêt pour le vote"])}
+          />
+          <ProgressBar
+            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["dossier incomplet"]]) / statuts["Total"])}
+            rightLabel="Dossier incomplet"
+            leftLabel={formatNumber(statuts[DemandeStatutEnum["dossier incomplet"]])}
+            colorScheme={getStatutBgColor(DemandeStatutEnum["dossier incomplet"])}
+          />
+          <ProgressBar
+            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["dossier complet"]]) / statuts["Total"])}
+            rightLabel="Dossier complet"
+            leftLabel={formatNumber(statuts[DemandeStatutEnum["dossier complet"]])}
+            colorScheme={getStatutBgColor(DemandeStatutEnum["dossier complet"])}
+          />
+          <ProgressBar
+            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["proposition"]]) / statuts["Total"])}
+            rightLabel="Proposition"
+            leftLabel={formatNumber(statuts[DemandeStatutEnum["proposition"]])}
+            colorScheme={getStatutBgColor(DemandeStatutEnum["proposition"])}
+          />
+        </Flex>
+      </Collapse>
       {children}
     </Flex>
   );

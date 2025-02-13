@@ -41,7 +41,7 @@ export const getFormationsPilotageIntentionsSchema = {
     codeRegion: z.string().optional(),
     codeAcademie: z.string().optional(),
     codeDepartement: z.string().optional(),
-    statut: z.array(DemandeStatutZodType.exclude(["refusée", "supprimée"])).optional(),
+    statut: z.array(DemandeStatutZodType.exclude(["brouillon", "supprimée"])).optional(),
     CPC: z.array(z.string()).optional(),
     secteur: z.array(SecteurZodType).optional(),
     type: z.enum(["ouverture", "fermeture", "coloration"]).optional(),

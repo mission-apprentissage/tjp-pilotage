@@ -2,9 +2,9 @@ import { Flex, Heading, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 
 import type {
-  FiltersStatsPilotageIntentions,
+  FiltersPilotageIntentions,
   FilterTracker,
-  StatsPilotageIntentions,
+  PilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 
 import type { IndicateurType } from "./CartoSection";
@@ -19,9 +19,9 @@ export const HeaderSection = ({
   filterTracker,
   isLoading,
 }: {
-  data?: StatsPilotageIntentions;
-  filters: FiltersStatsPilotageIntentions;
-  setFilters: (filters: FiltersStatsPilotageIntentions) => void;
+  data?: PilotageIntentions;
+  filters: FiltersPilotageIntentions;
+  setFilters: (filters: FiltersPilotageIntentions) => void;
   onOpenTauxTransfoDefinition: () => void;
   filterTracker: FilterTracker;
   isLoading?: boolean;

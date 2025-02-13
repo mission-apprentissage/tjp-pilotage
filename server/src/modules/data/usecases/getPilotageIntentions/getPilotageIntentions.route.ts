@@ -4,11 +4,11 @@ import { ROUTES } from "shared/routes/routes";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getStatsPilotageIntentionsUsecase } from "./getStatsPilotageIntentions.usecase";
+import { getPilotageIntentionsUsecase } from "./getPilotageIntentions.usecase";
 
-const ROUTE = ROUTES["[GET]/pilotage-intentions/stats"];
+const ROUTE = ROUTES["[GET]/pilotage-intentions"];
 
-export const getStatsPilotageIntentionsRoute = (server: Server) => {
+export const getPilotageIntentionsRoute = (server: Server) => {
   return createRoute(ROUTE.url, {
     method: ROUTE.method,
     schema: ROUTE.schema,
@@ -17,8 +17,10 @@ export const getStatsPilotageIntentionsRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
       handler: async (request, response) => {
-        const statsTauxTransfo = await getStatsPilotageIntentionsUsecase(request.query);
-        response.status(200).send(statsTauxTransfo);
+        const { ...filters } = request.query;
+
+        const result = await getPilotageIntentionsUsecase(filters);
+        response.status(200).send(result);
       },
     });
   });

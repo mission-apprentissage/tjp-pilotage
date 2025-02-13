@@ -4,14 +4,14 @@ import { useLayoutEffect, useMemo, useRef } from "react";
 import type { PositionQuadrantType } from "shared/enum/positionQuadrantEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
-import type { RepartitionPilotageIntentionsPositionQuadrant } from "@/app/(wrapped)/intentions/pilotage/types";
+import type { PilotageIntentionsPositionQuadrant } from "@/app/(wrapped)/intentions/pilotage/types";
 import { frenchLocale } from "@/utils/echarts/frenchLocale";
 import { formatPercentage } from "@/utils/formatUtils";
 
 export const BarChart = ({
   positionsQuadrant,
 }: {
-  positionsQuadrant?: RepartitionPilotageIntentionsPositionQuadrant;
+  positionsQuadrant?: PilotageIntentionsPositionQuadrant;
 }) => {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);

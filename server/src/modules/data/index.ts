@@ -18,12 +18,11 @@ import { getFormationIndicateursRoute } from "./usecases/getFormationIndicateurs
 import { getFormationsRoute } from "./usecases/getFormations/getFormations.route";
 import { getFormationsPilotageIntentionsRoute } from "./usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.route";
 import { getHeaderEtablissementRoute } from "./usecases/getHeaderEtablissement/getHeaderEtablissement.route";
+import { getPilotageIntentionsRoute } from "./usecases/getPilotageIntentions/getPilotageIntentions.route";
 import { getPilotageReformeStatsRoute } from "./usecases/getPilotageReformeStats/getPilotageReformeStats.route";
 import { getPilotageReformeStatsRegionsRoute } from "./usecases/getPilotageReformeStatsRegions/getPilotageReformeStatsRegions.route";
 import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
 import { getRegionsRoute } from "./usecases/getRegions/getRegions.route";
-import { getRepartitionPilotageIntentionsRoute } from "./usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.route";
-import { getStatsPilotageIntentionsRoute } from "./usecases/getStatsPilotageIntentions/getStatsPilotageIntentions.route";
 import { getStatsRestitutionIntentionsRoute } from "./usecases/getStatsRestitutionIntentions/getStatsRestitutionIntentions.route";
 import { searchCampusRoute } from "./usecases/searchCampus/searchCampus.route";
 import { searchDiplomeRoute } from "./usecases/searchDiplome/searchDiplome.route";
@@ -50,7 +49,7 @@ export const registerDataModule = (server: Server) => {
     ...getRegionRoute(server),
     ...getRegionsRoute(server),
     ...getFormationsPilotageIntentionsRoute(server),
-    ...getStatsPilotageIntentionsRoute(server),
+    ...getPilotageIntentionsRoute(server),
     ...getDemandesRestitutionIntentionsRoute(server),
     ...getStatsRestitutionIntentionsRoute(server),
     ...getPilotageReformeStatsRoute(server),
@@ -65,7 +64,6 @@ export const registerDataModule = (server: Server) => {
     ...searchDisciplineRoute(server),
     ...searchFiliereRoute(server),
     ...searchCampusRoute(server),
-    ...getRepartitionPilotageIntentionsRoute(server),
     ...getDomainesDeFormationRoute(server),
     ...getFormationRoute(server),
     ...getDomaineDeFormationRoute(server),

@@ -1,6 +1,12 @@
-import { Box, Flex, Heading, HStack, Icon as ChakraIcon, VisuallyHidden } from "@chakra-ui/react";
+import {Box, Flex, Heading, HStack, Icon as ChakraIcon, Popover, PopoverCloseButton, PopoverContent, PopoverTrigger, Text,VisuallyHidden} from '@chakra-ui/react';
+import { Icon } from '@iconify/react';
+import _ from 'lodash';
+import type { ReactNode } from "react";
 import React from "react";
+import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 
+import { getStatutBgColor } from '@/app/(wrapped)/intentions/components/StatutTag';
+import {getOrderStatut} from '@/app/(wrapped)/intentions/utils/statutUtils';
 import { ProgressBar } from "@/components/ProgressBar";
 import { themeDefinition } from "@/theme/theme";
 import { formatPercentage, formatPercentageWithoutSign } from "@/utils/formatUtils";
@@ -35,35 +41,54 @@ export const NumberWithLabel = ({
   icon,
   label,
   scopeCode,
+  statuts,
   percentage,
   nationalPercentage = 0,
   objective,
   round = 1,
+  tooltip
 }: {
   icon?: React.ReactNode;
   label?: React.ReactNode;
   scopeCode?: string;
+  statuts: Record<DemandeStatutType | "Total", number>;
   percentage?: number;
   nationalPercentage?: number;
   objective?: number;
   round?: number;
+  tooltip?: ReactNode
 }) => {
   return (
     <Flex direction={"column"} alignItems="start" justifyContent="start" minWidth="200px" w={"100%"} gap={4}>
       <HStack>
         {icon}
         <Heading as="h3" fontSize={14} fontWeight="700" lineHeight="20px">
-          {label}
+          {label} {tooltip}
         </Heading>
       </HStack>
       <Flex flex={1} direction={"column"} gap="16px" width="100%">
-        <Heading as="h4" fontSize="32px" lineHeight="40px" fontWeight="700" color={"grey.50"}>
-          <VisuallyHidden>Valeur :</VisuallyHidden>
-          {formatPercentage(percentage, round, "- %")}
-        </Heading>
+        <Flex direction={"row"} gap={2}>
+          <Heading as="h4" fontSize="32px" lineHeight="40px" fontWeight="700" color={"grey.50"}>
+            <VisuallyHidden>Valeur :</VisuallyHidden>
+            {formatPercentage(percentage, round, "- %")}
+          </Heading>
+          <Popover>
+            <PopoverTrigger>
+              <Flex cursor="pointer">
+                <Icon icon={"ri:zoom-in-line"} width={15} />
+              </Flex>
+            </PopoverTrigger>
+            <PopoverContent _focusVisible={{ outline: "none" }} p="3">
+              <PopoverCloseButton />
+              <DetailTooltip statuts={statuts} round={round} objective={objective}/>
+            </PopoverContent>
+          </Popover>
+        </Flex>
         {objective && (
           <Box width="100%">
-            <ProgressBar percentage={formatPercentageWithoutSign(percentage ? percentage / objective : undefined, 1)} />
+            <ProgressBar percentage={
+              formatPercentageWithoutSign(percentage ? percentage / objective : undefined, 1)}
+            />
             <Heading as="h4" color={themeDefinition.colors.grey[425]} fontSize={"13px"} fontWeight={"400"} lineHeight={"20px"}>
               <VisuallyHidden>Objectif :</VisuallyHidden>
               {formatPercentage(percentage ? percentage / objective : undefined, 1, "- %")} de l'objectif
@@ -94,3 +119,49 @@ export const NumberWithLabel = ({
     </Flex>
   );
 };
+
+
+const DetailTooltip = ({
+  statuts,
+  round,
+  objective
+} : {
+  statuts: Record<string, number>;
+  round: number;
+  objective?: number;
+}) =>
+  (
+    <Flex direction={"column"} gap={2} p={3}>
+      <Text fontSize={14} fontWeight="700" lineHeight="20px">
+        Détail par statut
+      </Text>
+      {
+        Object.entries(statuts)
+          .sort(
+            ([statutA], [statutB]) =>
+              getOrderStatut(statutA as DemandeStatutType) -
+              getOrderStatut(statutB as DemandeStatutType)
+          )
+          .map(([key, value]) => {
+            return (
+              <Flex direction={"column"} gap={2} key={key}>
+                {objective ? (
+                  <ProgressBar
+                    leftLabel={formatPercentage(value, round)}
+                    rightLabel={_.capitalize(key)}
+                    percentage={formatPercentageWithoutSign(value ? value / objective : undefined, round)}
+                    colorScheme={getStatutBgColor(key as DemandeStatutType)}
+                  />
+                ) : (
+                  <Flex direction={"row"} gap={2}>
+                    <Text>{_.capitalize(key)} :</Text>
+                    <Text>{formatPercentage(value, round)}</Text>
+                  </Flex>
+                )}
+              </Flex>
+            );
+          })
+      }
+    </Flex>
+  );
+

@@ -4,7 +4,7 @@ import _ from "lodash";
 import type { Role } from "shared";
 
 import type { client } from "@/api.client";
-import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
+import { RoleTag } from "@/app/(wrapped)/intentions/components/RoleTag";
 import type { MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getMotifLabel, hasMotifAutre } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";

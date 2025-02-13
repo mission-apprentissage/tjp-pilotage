@@ -3,9 +3,9 @@ import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 import type {
-  RepartitionPilotageIntentionsDomaines,
-  RepartitionPilotageIntentionsNiveauxDiplome,
-  RepartitionPilotageIntentionsZonesGeographiques,
+  PilotageIntentionsDomaines,
+  PilotageIntentionsNiveauxDiplome,
+  PilotageIntentionsZonesGeographiques,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { themeDefinition } from "@/theme/theme";
 import { themeColors } from "@/theme/themeColors";
@@ -20,9 +20,9 @@ export const PositiveNegativeBarChart = ({
   title: string;
   type: string;
   data?:
-    | RepartitionPilotageIntentionsDomaines
-    | RepartitionPilotageIntentionsZonesGeographiques
-    | RepartitionPilotageIntentionsNiveauxDiplome;
+    | PilotageIntentionsDomaines
+    | PilotageIntentionsZonesGeographiques
+    | PilotageIntentionsNiveauxDiplome;
 }) => {
   if (!data || !Object.keys(data).filter((key) => key !== "Total").length)
     return (

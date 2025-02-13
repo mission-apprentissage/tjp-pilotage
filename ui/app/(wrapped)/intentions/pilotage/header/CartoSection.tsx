@@ -4,9 +4,9 @@ import { ScopeEnum } from "shared";
 
 import { useScopeCode } from "@/app/(wrapped)/intentions/pilotage/hooks";
 import type {
-  FiltersStatsPilotageIntentions,
+  FiltersPilotageIntentions,
   FilterTracker,
-  StatsPilotageIntentions,
+  PilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { CartoGraph } from "@/components/CartoGraph";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
@@ -32,9 +32,9 @@ export const CartoSection = ({
     value: string;
     isDefault: boolean;
   }[];
-  filters: FiltersStatsPilotageIntentions;
-  handleFilters: (filters: Partial<FiltersStatsPilotageIntentions>) => void;
-  data: StatsPilotageIntentions | undefined;
+  filters: FiltersPilotageIntentions;
+  handleFilters: (filters: Partial<FiltersPilotageIntentions>) => void;
+  data?: PilotageIntentions;
   isLoading?: boolean;
   filterTracker: FilterTracker;
 }) => {
@@ -84,7 +84,7 @@ export const CartoSection = ({
       return [];
     }
 
-    return Object.values(data?.all).map((territoire) => ({
+    return Object.values(data?.zonesGeographiques).map((territoire) => ({
       name: territoire.libelle,
 
       parentName: territoire.libelleAcademie,

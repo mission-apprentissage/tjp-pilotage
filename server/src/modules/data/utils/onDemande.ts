@@ -29,7 +29,6 @@ import {
   countPlacesOuvertesTransitionEcologique,
   countPlacesTransformeesParCampagne,
 } from "@/modules/utils/countCapacite";
-import { isDemandeProjetOrValidee } from "@/modules/utils/isDemandeProjetOrValidee";
 import { isDemandeNotAjustementRentree } from "@/modules/utils/isDemandeSelectable";
 
 import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
@@ -158,24 +157,22 @@ export const genericOnDemandes = ({
       if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
       return eb;
     })
-    .$call((q) => {
-      if (!secteur || secteur.length === 0) return q;
-      return q.where("dataEtablissement.secteur", "in", secteur);
+    .$call((eb) => {
+      if (secteur) return eb.where("dataEtablissement.secteur", "in", secteur);
+      return eb;
     })
-    .$call((q) => {
-      if (!statut || statut.length === 0) {
-        return q.where(isDemandeProjetOrValidee);
-      }
-      return q.where("demande.statut", "in", statut);
+    .$call((eb) => {
+      if (statut) return eb.where("demande.statut", "in", statut);
+      return eb;
     })
     .$call((eb) => {
       if (coloration)
         return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
       return eb;
     })
-    .$call((q) => {
+    .$call((eb) => {
       if (formationSpecifique?.length) {
-        return q.where((w) =>
+        return eb.where((w) =>
           w.or([
             formationSpecifique.includes(TypeFormationSpecifiqueEnum["Action prioritaire"])
               ? w("actionPrioritaire.cfd", "is not", null)
@@ -192,5 +189,5 @@ export const genericOnDemandes = ({
           ])
         );
       }
-      return q;
+      return eb;
     });

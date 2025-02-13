@@ -6,27 +6,15 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type {
-  FiltersStatsPilotageIntentions,
+  FiltersPilotageIntentions,
   FilterTracker,
-  StatsPilotageIntentions,
+  PilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
+import { findDefaultRentreeScolaireForCampagne } from "@/app/(wrapped)/intentions/pilotage/utils";
 import { getStickyNavHeight } from "@/app/(wrapped)/utils/getStickyNavOffset";
 import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
-
-const findDefaultRentreeScolaireForCampagne = (
-  annee: string,
-  rentreesScolaires: StatsPilotageIntentions["filters"]["rentreesScolaires"]
-) => {
-  if (rentreesScolaires) {
-    const rentreeScolaire = rentreesScolaires.find((r) => parseInt(r.value) === parseInt(annee) + 1);
-
-    if (rentreeScolaire) return rentreeScolaire.value;
-  }
-
-  return undefined;
-};
 
 export const FiltersSection = ({
   filters,
@@ -35,18 +23,18 @@ export const FiltersSection = ({
   filterTracker,
   data,
 }: {
-  filters: FiltersStatsPilotageIntentions;
-  setFilters: (filters: FiltersStatsPilotageIntentions) => void;
+  filters: FiltersPilotageIntentions;
+  setFilters: (filters: FiltersPilotageIntentions) => void;
   setDefaultFilters: () => void;
-  data: StatsPilotageIntentions | undefined;
   filterTracker: FilterTracker;
+  data?: PilotageIntentions;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const onUpdateFilter = <T,>({
     key,
     selected,
   }: {
-    key: keyof FiltersStatsPilotageIntentions;
+    key: keyof FiltersPilotageIntentions;
     selected: T | T[] | null;
   }) => {
     let value = undefined;
@@ -61,7 +49,7 @@ export const FiltersSection = ({
       value = undefined;
     }
 
-    let newFilters: Partial<FiltersStatsPilotageIntentions> = {
+    let newFilters: Partial<FiltersPilotageIntentions> = {
       [key]: value,
     };
 

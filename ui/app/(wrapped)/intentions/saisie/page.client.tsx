@@ -34,7 +34,7 @@ import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
-import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import { StatutTag } from "@/app/(wrapped)/intentions/components/StatutTag";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
