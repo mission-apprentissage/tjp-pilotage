@@ -85,7 +85,7 @@
         minute: "0"
         hour: "2"
         weekday: "1"
-        job: "sudo /opt/app/scripts/anonymize-users.sh"
+        job: "sudo /opt/app/scripts/anonymize-users.sh >> /var/log/cron.log 2>&1; /opt/app/tools/monitoring/export-cron-status-prom.sh -c 'Anonymize users' -v $?"
 
     - name: "Verification des certificats SSL"
       shell:
