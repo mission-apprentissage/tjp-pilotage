@@ -71,7 +71,10 @@
         "args": "after-used",
         "argsIgnorePattern": "^_"
       }
-    ]
+    ],
+    "react/react-in-jsx-scope": "off",
+    "react/no-unescaped-entities": "off",
+    "import/namespace": "warn"
   },
   "settings": {
     "import/resolver": {
