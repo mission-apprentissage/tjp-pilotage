@@ -43,6 +43,7 @@
     "services:clean": "yarn services:stop; docker system prune --volumes",
     "seed:update": ".bin/product seed:update",
     "lint": "eslint --ignore-path .gitignore --cache --ext .js,.jsx,.ts,.tsx .",
+    "lint:ci": "eslint --ignore-path .gitignore --cache --ext .js,.jsx,.ts,.tsx -c ./.eslintrc.ci.json .",
     "lint:fix": "yarn lint --fix",
     "release": "semantic-release",
     "release:interactive": ".bin/product release:interactive",
