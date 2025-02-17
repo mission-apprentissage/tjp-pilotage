@@ -198,8 +198,8 @@ export default () => {
             <CreateCampagneRegion
               isOpen={isOpenCampagneRegion}
               onClose={onCloseCampagneRegion}
-              campagnes={campagnes}
               regions={regions}
+
             />
           )}
         </>

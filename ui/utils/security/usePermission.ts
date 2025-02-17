@@ -1,5 +1,5 @@
 import { hasPermission } from "shared";
-import type { Permission } from "shared/security/permissions";
+import type { Permission } from "shared/enum/permissionEnum";
 
 import { useAuth } from "./useAuth";
 

@@ -1,7 +1,7 @@
 import { getPermissionScope } from "shared";
+import type { Permission } from "shared/enum/permissionEnum";
 import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
 import { PermissionScopeEnum} from 'shared/enum/permissionScopeEnum';
-import type { Permission } from "shared/security/permissions";
 
 import type { RequestUser } from "@/modules/core/model/User";
 
