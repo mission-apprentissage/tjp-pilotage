@@ -63,7 +63,7 @@ jobs:
         run: yarn dedupe --check
 
       - name: lint
-        run: yarn lint
+        run: yarn lint:ci
 
       - name: start postgres service
         run: docker compose up -d --wait postgres
