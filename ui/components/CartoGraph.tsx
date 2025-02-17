@@ -373,7 +373,6 @@ export const CartoGraph = ({
       echarts.registerLocale("fr", frenchLocale);
       chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
     }
-    console.log({option});
     chartRef.current.setOption(option);
     chartRef.current.on("click", "series", (params) => {
       handleClickOnSeries(params.name);

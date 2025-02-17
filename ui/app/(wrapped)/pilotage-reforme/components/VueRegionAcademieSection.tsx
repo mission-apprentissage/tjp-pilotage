@@ -120,7 +120,7 @@ export const VueRegionAcademieSection = ({
                       marginInline={1}
                       label={
                         <Box>
-                          <Text>Taux de transformation cumulé par régions.</Text>
+                          <Text>Taux de transformation cumulé par région.</Text>
                         </Box>
                       }
                       onClick={() => onModalOpen()}

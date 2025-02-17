@@ -19,10 +19,12 @@ export const getFilters = async () => {
     .where("region.codeRegion", "is not", null)
     .execute();
 
-  const diplomes = filtersBase
-    .select(["niveauDiplome.libelleNiveauDiplome as label", "niveauDiplome.codeNiveauDiplome as value"])
-    .where("niveauDiplome.codeNiveauDiplome", "is not", null)
-    .where("niveauDiplome.codeNiveauDiplome", "in", ["500", "320", "400", "461", "561", '010'])
+  const diplomes = getKbdClient().selectFrom("niveauDiplome")
+    .select(["libelleNiveauDiplome as label", "codeNiveauDiplome as value"])
+    .where("codeNiveauDiplome", "is not", null)
+    .where("codeNiveauDiplome", "in", ["500", "320", "400", "461", "561", '010'])
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc")
     .execute();
 
   return {
