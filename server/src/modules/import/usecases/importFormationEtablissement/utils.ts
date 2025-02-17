@@ -1,5 +1,5 @@
 
-export const parseCfd = (mef: string, duree: number): number => {
+export const extractCfdFromMefAndDuree = (mef: string, duree: number): number => {
   const threeFirstChars = parseInt(mef.substring(0, 3));
 
   switch (threeFirstChars) {
