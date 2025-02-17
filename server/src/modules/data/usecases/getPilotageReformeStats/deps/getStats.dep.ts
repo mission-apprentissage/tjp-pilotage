@@ -6,7 +6,7 @@ import { getKbdClient } from "@/db/db";
 import { effectifAnnee } from "@/modules/data/utils/effectifAnnee";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommune, notAnneeCommuneIndicateurRegionSortie } from "@/modules/data/utils/notAnneeCommune";
-import { notHistorique, notHistoriqueIndicateurRegionSortie } from "@/modules/data/utils/notHistorique";
+import { notHistorique } from "@/modules/data/utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "@/modules/data/utils/tauxPoursuite";
 
@@ -95,7 +95,6 @@ export const getStats = async ({
       .where("indicateurRegionSortie.cfdContinuum", "is", null)
       .where(isScolaireIndicateurRegionSortie)
       .where(notAnneeCommuneIndicateurRegionSortie)
-      .where(notHistoriqueIndicateurRegionSortie)
       .select([
         selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
         selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),

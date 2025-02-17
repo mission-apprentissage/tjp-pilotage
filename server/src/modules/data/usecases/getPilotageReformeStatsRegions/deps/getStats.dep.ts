@@ -12,7 +12,6 @@ import { effectifTauxTransformationCumule } from "@/modules/data/utils/effectifT
 import { isInPerimetreIJRegion } from "@/modules/data/utils/isInPerimetreIJ";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommuneIndicateurRegionSortie } from "@/modules/data/utils/notAnneeCommune";
-import { notHistoriqueIndicateurRegionSortie } from "@/modules/data/utils/notHistorique";
 import { genericOnDemandes } from "@/modules/data/utils/onDemande";
 import { selectTauxInsertion6moisAgg } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "@/modules/data/utils/tauxPoursuite";
@@ -59,7 +58,6 @@ export const getStatsRegions = async ({
       })
       .where("indicateurRegionSortie.cfdContinuum", "is", null)
       .where(notAnneeCommuneIndicateurRegionSortie)
-      .where(notHistoriqueIndicateurRegionSortie)
       .where(isScolaireIndicateurRegionSortie)
       .where(dernierTauxDeChomage)
       .select([
