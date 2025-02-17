@@ -1,5 +1,4 @@
 import { chakra, Tag } from "@chakra-ui/react";
-import React from "react";
 import type { Role } from "shared";
 
 import { formatRole } from "@/app/(wrapped)/intentions/utils/roleUtils";

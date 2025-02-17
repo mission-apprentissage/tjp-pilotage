@@ -1,5 +1,4 @@
 import { chakra, Tag } from "@chakra-ui/react";
-import React from "react";
 
 export const FonctionTag = chakra(({ className, fonction }: { className?: string; fonction?: string }) => {
   if (!fonction) return null;

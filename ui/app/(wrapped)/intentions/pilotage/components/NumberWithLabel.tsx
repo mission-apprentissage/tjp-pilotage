@@ -1,5 +1,4 @@
 import { Box, Flex, Heading, HStack, Icon as ChakraIcon, VisuallyHidden } from "@chakra-ui/react";
-import React from "react";
 
 import { ProgressBar } from "@/components/ProgressBar";
 import { themeDefinition } from "@/theme/theme";

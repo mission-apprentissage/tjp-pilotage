@@ -4,7 +4,6 @@ import { Flex, Tab, TabList, Tabs, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import React from "react";
 
 const getTabIndex = (segment: string | null) => {
   if (segment === "formation") return 0;
