@@ -1,5 +1,5 @@
 import {ChevronDownIcon} from '@chakra-ui/icons';
-import {Alert, AlertDescription, Button, Flex, FormControl, FormErrorMessage, FormLabel, Highlight, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Select, Stack, Text, useToast} from '@chakra-ui/react';
+import {Alert, AlertDescription, Button, Flex, FormControl, FormErrorMessage, FormLabel, Highlight, Menu, MenuButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Select, Stack, Text, useToast} from '@chakra-ui/react';
 import { useQueryClient } from "@tanstack/react-query";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
@@ -19,16 +19,17 @@ import { toBoolean } from "@/utils/toBoolean";
 export const CreateCampagneRegion = ({
   isOpen,
   onClose,
-  campagnes,
   regions
 }: {
   isOpen: boolean;
   onClose: () => void;
-  campagnes: (typeof client.infer)["[GET]/campagnes"];
   regions?: (typeof client.infer)["[GET]/regions"];
 }) => {
   const toast = useToast();
   const { user } = useAuth();
+  const { campagne: currentCampagneNationale, setCampagne: setCurrentCampagne } = useCurrentCampagne();
+  const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
+
   const {
     getValues,
     setValue,
@@ -37,20 +38,17 @@ export const CreateCampagneRegion = ({
     reset,
     handleSubmit,
     control,
-    watch
   } = useForm<(typeof client.inferArgs)["[POST]/campagnes-region/:campagneRegionId"]["body"]>({
     shouldUseNativeValidation: false,
     defaultValues: {
       codeRegion: user?.codeRegion,
+      campagneId: currentCampagneNationale?.id
     }
   });
 
   useEffect(() => reset(undefined, { keepDefaultValues: true }), [isOpen, reset]);
 
   const queryClient = useQueryClient();
-
-  const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
-  const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
 
   const {
     mutate: createCampagneRegion,
@@ -72,9 +70,6 @@ export const CreateCampagneRegion = ({
       onClose();
     },
   });
-
-  const campagneId = watch("campagneId");
-  const parentCampagne = campagnes.find(({ id }) => id === campagneId);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -111,36 +106,15 @@ export const CreateCampagneRegion = ({
                 borderStyle="solid"
                 borderColor="grey.900"
                 bg={"white"}
+                isDisabled={true}
               >
                 <Flex direction="row" w="100%">
-                  {
-                    campagneId ?
-                      (
-                        <Flex direction={"row"} gap={2}>
-                          <Text>{parentCampagne?.annee}</Text>
-                          <CampagneStatutTag statut={parentCampagne?.statut} mb={"auto"} />
-                        </Flex>
-                      )
-                      : (
-                        <Text color="grey.625">Choisir une campagne</Text>
-                      )
-                  }
+                  <Flex direction={"row"} gap={2}>
+                    <Text>{currentCampagneNationale?.annee}</Text>
+                    <CampagneStatutTag statut={currentCampagneNationale?.statut} />
+                  </Flex>
                 </Flex>
               </MenuButton>
-              <MenuList py={0} borderTopRadius={0}>
-                {campagnes.map((campagne) => (
-                  <MenuItem
-                    p={2}
-                    key={campagne.id}
-                    onClick={() => setValue("campagneId", campagne.id)}
-                  >
-                    <Flex direction="row" w="100%" gap={2}>
-                      <Text ms={2}>{campagne.annee}</Text>
-                      <CampagneStatutTag statut={campagne.statut} mb={"auto"} />
-                    </Flex>
-                  </MenuItem>
-                ))}
-              </MenuList>
             </Menu>
             {!!errors.campagneId && <FormErrorMessage>{errors.campagneId.message}</FormErrorMessage>}
           </FormControl>
@@ -189,8 +163,8 @@ export const CreateCampagneRegion = ({
                 });
               }}
               minDate={
-                parentCampagne?.dateDebut ?
-                  toDate(parentCampagne.dateDebut) :
+                currentCampagneNationale?.dateDebut ?
+                  toDate(currentCampagneNationale.dateDebut) :
                   undefined
               }
               maxDate={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
@@ -220,8 +194,8 @@ export const CreateCampagneRegion = ({
               }}
               minDate={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
               maxDate={
-                parentCampagne?.dateFin ?
-                  toDate(parentCampagne.dateFin) :
+                currentCampagneNationale?.dateFin ?
+                  toDate(currentCampagneNationale.dateFin) :
                   undefined
               }
               configs={getDatePickerConfig()}
@@ -249,13 +223,13 @@ export const CreateCampagneRegion = ({
                 });
               }}
               minDate={
-                parentCampagne?.dateDebut ?
-                  toDate(parentCampagne.dateDebut) :
+                currentCampagneNationale?.dateDebut ?
+                  toDate(currentCampagneNationale.dateDebut) :
                   undefined
               }
               maxDate={
-                parentCampagne?.dateFin ?
-                  toDate(parentCampagne.dateFin) :
+                currentCampagneNationale?.dateFin ?
+                  toDate(currentCampagneNationale.dateFin) :
                   undefined
               }
               configs={getDatePickerConfig()}

@@ -50,6 +50,8 @@ export const canEditDemande = ({
     !isStatutRefusee(demande.statut)
   );
 
+  console.log(canUserEditDemande);
+
   return (
     !feature.saisieDisabled &&
     canUserEditDemande &&

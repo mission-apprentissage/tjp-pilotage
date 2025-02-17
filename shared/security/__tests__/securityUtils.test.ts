@@ -1,7 +1,7 @@
+import type { Permission } from "shared/enum/permissionEnum";
 import { describe, expect, it } from "vitest";
 
 import type { Role } from "../../enum/roleEnum";
-import type { Permission } from "../permissions";
 import { HIERARCHY, PERMISSIONS } from "../permissions";
 import { getPermissionScope, hasRightOverRole } from "../securityUtils";
 

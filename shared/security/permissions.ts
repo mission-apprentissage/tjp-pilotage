@@ -1,11 +1,10 @@
+import type {Permission} from '../enum/permissionEnum';
 import type  {PermissionScope } from '../enum/permissionScopeEnum';
 import { PermissionScopeEnum } from '../enum/permissionScopeEnum';
 import type { Role } from "../enum/roleEnum";
 import { RoleEnum } from "../enum/roleEnum";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type KeyOfUnion<T> = T extends any ? keyof T : never;
-export type Permission = KeyOfUnion<(typeof PERMISSIONS)[keyof typeof PERMISSIONS]>;
+export type PermissionForRole = Partial<Record<Permission, PermissionScope>>;
 
 export const PERMISSIONS = {
   admin: {
@@ -41,7 +40,7 @@ export const PERMISSIONS = {
     "enregistrement-requete/ecriture": PermissionScopeEnum["national"],
   },
   admin_region: {
-    "intentions/lecture": PermissionScopeEnum["national"],
+    "intentions/lecture": PermissionScopeEnum["région"],
     "intentions/ecriture": PermissionScopeEnum["région"],
     "restitution-intentions/lecture": PermissionScopeEnum["national"],
     "pilotage-intentions/lecture": PermissionScopeEnum["national"],
@@ -71,11 +70,11 @@ export const PERMISSIONS = {
     "enregistrement-requete/ecriture": PermissionScopeEnum["national"],
   },
   pilote_region: {
-    "intentions/lecture": PermissionScopeEnum["national"],
+    "intentions/lecture": PermissionScopeEnum["région"],
     "intentions/ecriture": PermissionScopeEnum["région"],
     "restitution-intentions/lecture": PermissionScopeEnum["national"],
     "pilotage-intentions/lecture": PermissionScopeEnum["national"],
-    "intentions-perdir/lecture": PermissionScopeEnum["national"],
+    "intentions-perdir/lecture": PermissionScopeEnum["région"],
     "intentions-perdir/ecriture": PermissionScopeEnum["région"],
     "intentions-perdir-statut/ecriture": PermissionScopeEnum["région"],
     "intentions-perdir-statut/lecture": PermissionScopeEnum["région"],
@@ -129,11 +128,10 @@ export const PERMISSIONS = {
     "enregistrement-requete/lecture": PermissionScopeEnum["national"],
     "enregistrement-requete/ecriture": PermissionScopeEnum["national"],
   },
-} satisfies {
-  [R: string]: {
-    [s: string]: PermissionScope;
-  };
-};
+} satisfies Record<
+  Role,
+  PermissionForRole
+>;
 
 export const HIERARCHY: {
   [key in Role]: {

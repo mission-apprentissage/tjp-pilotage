@@ -55,7 +55,7 @@ const createDemandeBuilder = ({
   statut,
   typeDemande,
   canEdit,
-  isIntention
+  isIntention = false
 } : DemandeIntention): DemandeIntention => ({
   campagne,
   statut,
@@ -127,7 +127,7 @@ const fixtureBuilder = () => {
           statut: statut ?? DemandeStatutEnum["projet de demande"],
           typeDemande: DemandeTypeEnum["ouverture_nette"],
           canEdit: true,
-          isIntention: true
+          isIntention: false
         });
       },
       demandeNonEditable: (statut?: DemandeStatutType) => {
@@ -136,7 +136,7 @@ const fixtureBuilder = () => {
           statut: statut ?? DemandeStatutEnum["projet de demande"],
           typeDemande: DemandeTypeEnum["ouverture_nette"],
           canEdit: false,
-          isIntention: true
+          isIntention: false
         });
       },
       demandeValidee: () => {
@@ -145,7 +145,7 @@ const fixtureBuilder = () => {
           statut: DemandeStatutEnum["demande validée"],
           typeDemande: DemandeTypeEnum["ouverture_nette"],
           canEdit: true,
-          isIntention: true
+          isIntention: false
         });
       },
       demandeAjustement: () => {
@@ -154,7 +154,7 @@ const fixtureBuilder = () => {
           statut: DemandeStatutEnum["projet de demande"],
           typeDemande: DemandeTypeEnum["ajustement"],
           canEdit: true,
-          isIntention: true
+          isIntention: false
         });
       },
       isAlreadyImported: () => {
@@ -512,6 +512,17 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsDemandeUtils", 
     fixture.when.canShowCorrectionButton();
 
     fixture.then.verifierCanNotShowCorrectionButton();
+  });
+
+  it("Un utilisateur admin région ne doit pas pouvoir créer une demande ", () => {
+    fixture.given.utilisateurAdminRegion();
+    fixture.given.currentCampagne2024();
+    fixture.given.campagne2024();
+    fixture.given.demandeEditable();
+
+    fixture.when.canEditDemandeIntention();
+
+    fixture.then.verifierCanEdit();
   });
 
 });

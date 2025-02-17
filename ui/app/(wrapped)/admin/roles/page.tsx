@@ -19,8 +19,8 @@ import _ from "lodash";
 import { useState } from "react";
 import type { Role } from "shared";
 import { getPermissionScope, PERMISSIONS } from "shared";
+import type { Permission } from "shared/enum/permissionEnum";
 import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
-import type { Permission } from "shared/security/permissions";
 
 import { themeDefinition } from "@/theme/theme";
 import { GuardPermission } from "@/utils/security/GuardPermission";

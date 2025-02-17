@@ -124,7 +124,7 @@ export default () => {
             />
           )}
           {!campagneRegion && isOpen && (
-            <CreateCampagneRegion isOpen={isOpen} onClose={onClose} campagnes={campagnes} regions={regions}/>
+            <CreateCampagneRegion isOpen={isOpen} onClose={onClose} regions={regions}/>
           )}
         </>
       )}
