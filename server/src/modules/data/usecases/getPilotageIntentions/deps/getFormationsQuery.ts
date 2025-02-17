@@ -216,8 +216,8 @@ export const getFormationsQuery = ({ filters }: { filters: Filters }) => {
       return eb;
     })
     .$call((q) => {
-      if (!filters.orderByQuadrant || !filters.orderQuadrant) return q;
-      return q.orderBy(sql.ref(filters.orderByQuadrant), sql`${sql.raw(filters.orderQuadrant)} NULLS LAST`);
+      if (!filters.orderByFormations || !filters.orderFormations) return q;
+      return q.orderBy(sql.ref(filters.orderByFormations), sql`${sql.raw(filters.orderFormations)} NULLS LAST`);
     })
     .where(isDemandeNotDeletedOrRefused)
     .$narrowType<{ tauxPoursuite: number; tauxInsertion: number }>()

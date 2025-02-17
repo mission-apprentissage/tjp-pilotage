@@ -1,4 +1,4 @@
-import { chakra, Th, Tooltip, Tr } from "@chakra-ui/react";
+import { Th, Tooltip, Tr } from "@chakra-ui/react";
 
 import type {
   FiltersPilotageIntentions,
@@ -6,7 +6,7 @@ import type {
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { OrderIcon } from "@/components/OrderIcon";
 
-export const HeadlineContent = chakra(
+export const HeadlineContent =
   ({
     order,
     filters,
@@ -70,5 +70,4 @@ export const HeadlineContent = chakra(
         </Th>
       </Tr>
     );
-  }
-);
+  };

@@ -100,8 +100,8 @@ export const FiltersSchema = z.object({
   tauxPression: z.enum(["faible", "eleve"]).optional(),
   coloration: z.string().optional(),
   formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
-  orderQuadrant: z.enum(["asc", "desc"]).optional(),
-  orderByQuadrant: FormationTransformationStatsSchema.keyof().optional(),
+  orderFormations: z.enum(["asc", "desc"]).optional(),
+  orderByFormations: FormationTransformationStatsSchema.keyof().optional(),
 });
 
 export const getPilotageIntentionsSchema = {
@@ -128,11 +128,6 @@ export const getPilotageIntentionsSchema = {
         statuts: z.array(OptionSchema),
         colorations: z.array(OptionSchema),
       }),
-      stats: z.object({
-        tauxInsertion: z.coerce.number().min(0).max(100),
-        tauxPoursuite: z.coerce.number().min(0).max(100),
-      }),
-      formations: z.array(FormationTransformationStatsSchema),
       campagne: z.object({
         annee: z.string(),
         statut: z.string(),

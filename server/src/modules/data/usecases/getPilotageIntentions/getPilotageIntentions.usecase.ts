@@ -73,9 +73,7 @@ const getPilotageIntentionsFactory =
         positionsQuadrant,
         statuts,
         statutsNational,
-        formations,
         filters,
-        stats
       ] = await Promise.all([
         deps.getDomaines({
           filters: {
@@ -117,24 +115,12 @@ const getPilotageIntentionsFactory =
             campagne: anneeCampagne,
           },
         }),
-        deps.getFormationsQuery({
-          filters: {
-            ...activeFilters,
-            campagne: anneeCampagne,
-          }
-        }),
         deps.getFiltersQuery({
           filters :{
             ...activeFilters,
             campagne: anneeCampagne,
           }
         }),
-        deps.getStatsSortieQuery({
-          filters: {
-            ...activeFilters,
-            campagne: anneeCampagne,
-          }
-        })
       ]);
 
       return {
@@ -147,8 +133,6 @@ const getPilotageIntentionsFactory =
         domaines: formatResult(domaines, activeFilters.order, activeFilters.orderBy),
         zonesGeographiques: formatResult(zonesGeographiques, activeFilters.order, activeFilters.orderBy),
         positionsQuadrant: formatResult(positionsQuadrant, activeFilters.order, activeFilters.orderBy),
-        formations,
-        stats,
         filters,
         campagne,
       };

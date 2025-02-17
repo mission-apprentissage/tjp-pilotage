@@ -8,13 +8,13 @@ import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext"
 import { IndicateurCard } from "@/app/(wrapped)/intentions/pilotage/components/IndicateurCard";
 import { NumberWithLabel } from "@/app/(wrapped)/intentions/pilotage/components/NumberWithLabel";
 import { NumberWithProgressBars } from "@/app/(wrapped)/intentions/pilotage/components/NumberWithProgressBars";
-import { useScopeCode } from "@/app/(wrapped)/intentions/pilotage/hooks";
 import type {
   FiltersPilotageIntentions,
   IndicateurRepartition,
   PilotageIntentions,
   PilotageIntentionsStatuts,
 } from '@/app/(wrapped)/intentions/pilotage/types';
+import {getScopeCode} from '@/app/(wrapped)/intentions/pilotage/utils';
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
 import { formatPercentage } from "@/utils/formatUtils";
@@ -89,13 +89,6 @@ export const IndicateursClesSection = ({
   onOpenTauxTransfoDefinition: () => void;
 }) => {
   const { openGlossaire } = useGlossaireContext();
-  const { code } = useScopeCode(filters);
-
-  // const getScopedData = useMemo(
-  //   () => (code ? generateGetScopedData(data) : generateGetScopedData(nationalData)),
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [generateGetScopedData, data, nationalData, code]
-  // );
 
   if (isLoading || !filters.campagne || !filters.rentreeScolaire) return <Loader />;
 
@@ -122,7 +115,7 @@ export const IndicateursClesSection = ({
               <NumberWithLabel
                 label="Projets de demande"
                 icon={<Icon icon="ri:file-text-line" />}
-                scopeCode={code}
+                scopeCode={getScopeCode(filters)}
                 statuts={getDataIndicateur({ data: data, indicateur: "tauxTransformation" })}
                 percentage={getScopedData({
                   statuts: data?.statuts,
@@ -148,7 +141,7 @@ export const IndicateursClesSection = ({
               <NumberWithLabel
                 label="Demandes validées"
                 icon={<Icon icon="ri:checkbox-circle-line" />}
-                scopeCode={code}
+                scopeCode={getScopeCode(filters)}
                 statuts={getDataIndicateur({ data: data, indicateur: "tauxTransformation" })}
                 percentage={getScopedData({
                   statuts: data?.statuts,
@@ -168,7 +161,7 @@ export const IndicateursClesSection = ({
         <IndicateurCard title="Ratio de fermetures">
           <NumberWithLabel
             label={<VisuallyHidden>Ratio de fermetures</VisuallyHidden>}
-            scopeCode={code}
+            scopeCode={getScopeCode(filters)}
             statuts={getDataIndicateur({ data: data, indicateur: "ratioFermeture" })}
             percentage={getScopedData({
               statuts: data?.statuts,

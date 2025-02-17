@@ -27,17 +27,12 @@ import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
-import { CURRENT_RENTREE, ScopeEnum } from "shared";
+import { CURRENT_RENTREE } from "shared";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import QuadrantPlaceholder from "@/app/(wrapped)/intentions/pilotage/components/QuadrantPlaceholder";
-import type {
-  Filters,
-  FiltersPilotageIntentions,
-  OrderQuadrantPilotageIntentions,
-  PilotageIntentions,
-  SelectedScope,
-} from "@/app/(wrapped)/intentions/pilotage/types";
+import type {Filters, FiltersPilotageIntentions, FormationsPilotageIntentions, OrderFormationsPilotageIntentions,PilotageIntentions, StatsSortiePilotageIntentions} from '@/app/(wrapped)/intentions/pilotage/types';
+import {getScopeCode} from '@/app/(wrapped)/intentions/pilotage/utils';
 import { InfoTooltipContent } from "@/app/(wrapped)/panorama/components/QuadrantSection/InfoTooltipContent";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { GraphWrapper } from "@/components/GraphWrapper";
@@ -62,21 +57,23 @@ const EFFECTIF_SIZES = [
 ];
 
 export const QuadrantSection = ({
-  orderQuadrant,
-  scope,
+  orderFormations,
   filters,
   filtersOptions,
   setFilters,
-  setSearchParams,
+  setOrderFormations,
   data,
+  formations,
+  statsSortie
 }: {
-  orderQuadrant: Partial<OrderQuadrantPilotageIntentions>;
-  scope?: SelectedScope;
+  orderFormations: Partial<OrderFormationsPilotageIntentions>;
   filters: FiltersPilotageIntentions;
   filtersOptions?: Filters;
   setFilters: (filters: FiltersPilotageIntentions) => void;
-  setSearchParams: (params: { orderQuadrant?: Partial<OrderQuadrantPilotageIntentions> }) => void;
+  setOrderFormations: (orderFormations: OrderFormationsPilotageIntentions) => void;
   data?: PilotageIntentions;
+  formations?: FormationsPilotageIntentions;
+  statsSortie?: StatsSortiePilotageIntentions;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const bluefrance113 = useToken("colors", "bluefrance.113");
@@ -89,42 +86,32 @@ export const QuadrantSection = ({
   };
 
   const [currentFormationId, setCurrentFormationId] = useState<string | undefined>();
-  const mergedFilters = {
-    ...filters,
-    codeRegion: scope?.type === ScopeEnum["région"] ? scope.value : undefined,
-    codeAcademie: scope?.type === ScopeEnum["académie"] ? scope.value : undefined,
-    codeDepartement: scope?.type === ScopeEnum["département"] ? scope.value : undefined,
-  };
 
   const formationsQuadrant =
-    data?.formations?.filter(
+    formations?.filter(
       (formation) => formation.tauxInsertion && formation.tauxPoursuite && formation.placesTransformees
     ) ?? [];
 
   const formation = useMemo(
-    () => data?.formations?.find((item) => `${item.cfd}_${item.codeDispositif}` === currentFormationId),
-    [currentFormationId, data]
+    () => formations?.find((item) => `${item.cfd}_${item.codeDispositif}` === currentFormationId),
+    [currentFormationId, formations]
   );
 
   const getLibelleTerritoire = (territoires?: Array<{ label: string; value: string }>, code?: string) => {
-    if (scope?.value) return _.find(territoires, (territoire) => territoire.value === code)?.label;
-    return undefined;
+    return _.find(territoires, (territoire) => territoire.value === code)?.label;
   };
 
-  const handleOrder = (column: OrderQuadrantPilotageIntentions["orderByQuadrant"]) => {
-    trackEvent("tableau-quadrant-intentions:ordre", {
+  const handleOrder = (column: OrderFormationsPilotageIntentions["orderByFormations"]) => {
+    trackEvent("pilotage-transformation:formations-ordre", {
       props: { colonne: column },
     });
-    if (orderQuadrant?.orderByQuadrant !== column) {
-      setSearchParams({ orderQuadrant: { orderQuadrant: "desc", orderByQuadrant: column } });
+    if (orderFormations?.orderByFormations !== column) {
+      setOrderFormations({ orderFormations: "desc", orderByFormations: column });
       return;
     }
-    setSearchParams({
-      ...filters,
-      orderQuadrant: {
-        orderQuadrant: orderQuadrant?.orderQuadrant === "asc" ? "desc" : "asc",
-        orderByQuadrant: column,
-      },
+    setOrderFormations({
+      orderFormations: orderFormations?.orderFormations === "asc" ? "desc" : "asc",
+      orderByFormations: column,
     });
   };
 
@@ -137,18 +124,21 @@ export const QuadrantSection = ({
   };
 
   const shouldShowQuadrant = !(
-    (!mergedFilters.codeDepartement && !mergedFilters.codeAcademie && !mergedFilters.codeRegion) ||
-    !mergedFilters.codeNiveauDiplome ||
-    mergedFilters.codeNiveauDiplome.length === 0 ||
-    mergedFilters.codeNiveauDiplome.length > 1
+    (!filters.codeDepartement && !filters.codeAcademie && !filters.codeRegion) ||
+    !filters.codeNiveauDiplome ||
+    filters.codeNiveauDiplome.length === 0 ||
+    filters.codeNiveauDiplome.length > 1
   );
 
   const generateRestitutionUrl = (cfd: string, dispositifId?: string) => {
     const urlFilters: Record<string, unknown> = {
-      campagne: mergedFilters.campagne ?? undefined,
-      rentreeScolaire: mergedFilters.rentreeScolaire ?? CURRENT_RENTREE,
+      campagne: filters.campagne ?? undefined,
+      rentreeScolaire: filters.rentreeScolaire ?? CURRENT_RENTREE,
       cfd: [cfd],
       codeDispositif: [dispositifId],
+      codeRegion: getScopeCode(filters),
+      codeAcademie: getScopeCode(filters),
+      codeDepartement: getScopeCode(filters),
     };
 
     if (filters?.type) {
@@ -156,20 +146,6 @@ export const QuadrantSection = ({
         urlFilters.typeDemande = ["ouverture_nette", "ouverture_compensation"];
       } else {
         urlFilters.typeDemande = ["fermeture", "diminution"];
-      }
-    }
-
-    if (scope?.value !== undefined) {
-      if (scope?.type === ScopeEnum["région"]) {
-        urlFilters.codeRegion = [scope.value];
-      }
-
-      if (scope?.type === ScopeEnum["académie"]) {
-        urlFilters.codeAcademie = [scope.value];
-      }
-
-      if (scope?.type === ScopeEnum["département"]) {
-        urlFilters.codeDepartement = [scope.value];
       }
     }
 
@@ -223,7 +199,7 @@ export const QuadrantSection = ({
         <Divider my="4" mb={6} bgColor={"grey.900"} />
         <Flex mt={12} width="80%" mx={"auto"}>
           <PlacesTransformeesParPositionQuadrantSection
-            formations={data?.formations}
+            formations={formations}
             positionsQuadrant={data?.positionsQuadrant}
           />
         </Flex>
@@ -235,16 +211,16 @@ export const QuadrantSection = ({
           rel="noreferrer"
           href={createParameterizedUrl("/intentions/restitution", {
             filters: {
-              codeNiveauDiplome: mergedFilters.codeNiveauDiplome,
-              codeRegion: [mergedFilters.codeRegion],
-              codeAcademie: [mergedFilters.codeAcademie],
-              codeDepartement: [mergedFilters.codeDepartement],
-              rentreeScolaire: mergedFilters.rentreeScolaire?.[0],
-              campagne: mergedFilters.campagne,
-              codeNsf: mergedFilters.codeNsf,
-              statut: mergedFilters.statut,
+              codeNiveauDiplome: filters.codeNiveauDiplome,
+              codeRegion: [filters.codeRegion],
+              codeAcademie: [filters.codeAcademie],
+              codeDepartement: [filters.codeDepartement],
+              rentreeScolaire: filters.rentreeScolaire?.[0],
+              campagne: filters.campagne,
+              codeNsf: filters.codeNsf,
+              statut: filters.statut,
               secteur:
-                mergedFilters.secteur && mergedFilters.secteur?.length === 1 ? mergedFilters.secteur[0] : undefined,
+                filters.secteur && filters.secteur?.length === 1 ? filters.secteur[0] : undefined,
             },
           })}
           color={"bluefrance.113"}
@@ -261,23 +237,14 @@ export const QuadrantSection = ({
             <Flex direction={"row"} gap={4}>
               <ExportMenuButton
                 onExportCsv={async () => {
-                  if (!data?.formations) return;
+                  if (!formations) return;
                   downloadCsv(
                     "formations_transformees",
-                    data?.formations.map((formation) => ({
+                    formations.map((formation) => ({
                       ...formation,
-                      libelleRegion:
-                        scope?.type === ScopeEnum["région"]
-                          ? getLibelleTerritoire(filtersOptions?.regions, scope.value)
-                          : undefined,
-                      libelleAcademie:
-                        scope?.type === ScopeEnum["académie"]
-                          ? getLibelleTerritoire(filtersOptions?.academies, scope.value)
-                          : undefined,
-                      libelleDepartement:
-                        scope?.type === ScopeEnum["département"]
-                          ? getLibelleTerritoire(filtersOptions?.departements, scope.value)
-                          : undefined,
+                      libelleRegion: getLibelleTerritoire(filtersOptions?.regions, getScopeCode(filters)),
+                      libelleAcademie: getLibelleTerritoire(filtersOptions?.academies, getScopeCode(filters)),
+                      libelleDepartement: getLibelleTerritoire(filtersOptions?.departements, getScopeCode(filters)),
                     })),
                     {
                       libelleFormation: "Formation",
@@ -296,23 +263,14 @@ export const QuadrantSection = ({
                   );
                 }}
                 onExportExcel={async () => {
-                  if (!data?.formations) return;
+                  if (!formations) return;
                   downloadExcel(
                     "formations_transformees",
-                    data?.formations.map((formation) => ({
+                    formations.map((formation) => ({
                       ...formation,
-                      libelleRegion:
-                        scope?.type === ScopeEnum["région"]
-                          ? getLibelleTerritoire(filtersOptions?.regions, scope.value)
-                          : undefined,
-                      libelleAcademie:
-                        scope?.type === ScopeEnum["académie"]
-                          ? getLibelleTerritoire(filtersOptions?.academies, scope.value)
-                          : undefined,
-                      libelleDepartement:
-                        scope?.type === ScopeEnum["département"]
-                          ? getLibelleTerritoire(filtersOptions?.departements, scope.value)
-                          : undefined,
+                      libelleRegion: getLibelleTerritoire(filtersOptions?.regions, getScopeCode(filters)),
+                      libelleAcademie: getLibelleTerritoire(filtersOptions?.academies, getScopeCode(filters)),
+                      libelleDepartement: getLibelleTerritoire(filtersOptions?.departements, getScopeCode(filters)),
                     })),
                     {
                       libelleFormation: "Formation",
@@ -484,12 +442,12 @@ export const QuadrantSection = ({
               </Flex>
               <AspectRatio flex={1} ratio={1}>
                 <>
-                  {data?.formations &&
+                  {formations &&
                     (typeVue === "quadrant" ? (
                       <Quadrant
                         onClick={({ cfd, codeDispositif }) => setCurrentFormationId(`${cfd}_${codeDispositif}`)}
-                        meanInsertion={data?.stats?.tauxInsertion}
-                        meanPoursuite={data?.stats?.tauxPoursuite}
+                        meanInsertion={statsSortie?.tauxInsertion}
+                        meanPoursuite={statsSortie?.tauxPoursuite}
                         currentFormationId={currentFormationId}
                         data={formationsQuadrant?.map((formation) => ({
                           ...formation,
@@ -508,13 +466,13 @@ export const QuadrantSection = ({
                         }))}
                         handleClick={setCurrentFormationId}
                         currentFormationId={currentFormationId}
-                        order={{ order: orderQuadrant.orderQuadrant, orderBy: orderQuadrant.orderByQuadrant }}
+                        order={{ order: orderFormations.orderFormations, orderBy: orderFormations.orderByFormations }}
                         handleOrder={(column?: string) =>
-                          handleOrder(column as OrderQuadrantPilotageIntentions["orderByQuadrant"])
+                          handleOrder(column as OrderFormationsPilotageIntentions["orderByFormations"])
                         }
                       />
                     ))}
-                  {!data?.formations && <Skeleton opacity="0.3" height="100%" />}
+                  {!formations && <Skeleton opacity="0.3" height="100%" />}
                 </>
               </AspectRatio>
             </Box>

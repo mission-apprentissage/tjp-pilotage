@@ -1,12 +1,6 @@
 import { chakra, Flex, Skeleton } from "@chakra-ui/react";
 
-import { useScopeCode } from "@/app/(wrapped)/intentions/pilotage/hooks";
-import type {
-  FiltersPilotageIntentions,
-  OrderPilotageIntentions,
-  OrderQuadrantPilotageIntentions,
-  PilotageIntentions
-} from '@/app/(wrapped)/intentions/pilotage/types';
+import type {FiltersPilotageIntentions, FormationsPilotageIntentions, OrderFormationsPilotageIntentions, OrderPilotageIntentions, PilotageIntentions, StatsSortiePilotageIntentions} from '@/app/(wrapped)/intentions/pilotage/types';
 
 import { DisplayTypeEnum } from "./displayTypeEnum";
 import { QuadrantSection } from "./quadrant/QuadrantSection";
@@ -40,11 +34,14 @@ export const MainSection = ({
   displayZonesGeographiques,
   displayDomaines,
   data,
+  formations,
+  statsSortie,
   filters,
-  order,
-  orderQuadrant,
-  setSearchParams,
   setFilters,
+  order,
+  orderFormations,
+  setOrder,
+  setOrderFormations,
   isLoading,
 }: {
   displayTypes: Array<DisplayTypeEnum>;
@@ -53,19 +50,18 @@ export const MainSection = ({
   displayZonesGeographiques: () => void;
   displayDomaines: () => void;
   data?: PilotageIntentions;
+  formations?: FormationsPilotageIntentions;
+  statsSortie?: StatsSortiePilotageIntentions;
   filters: FiltersPilotageIntentions;
-  order: Partial<OrderPilotageIntentions>;
-  orderQuadrant: Partial<OrderQuadrantPilotageIntentions>;
   setFilters: (filters: FiltersPilotageIntentions) => void;
-  setSearchParams: (params: {
-    order?: Partial<OrderPilotageIntentions>;
-    orderQuadrant?: Partial<OrderQuadrantPilotageIntentions>;
-  }) => void;
+  order: Partial<OrderPilotageIntentions>;
+  orderFormations: Partial<OrderFormationsPilotageIntentions>;
+  setOrder: (order: OrderPilotageIntentions) => void;
+  setOrderFormations: (orderFormations: OrderFormationsPilotageIntentions) => void;
   isLoading?: boolean;
 }) => {
   const tabsDisplayType = displayTypes[0];
   const analyseComparativeDisplayType = displayTypes[1];
-  const scopeCode = useScopeCode(filters).code;
 
   return (
     <Flex direction="column" w={"100%"} mb={16}>
@@ -82,7 +78,7 @@ export const MainSection = ({
             <RepartitionSection
               data={data}
               order={order}
-              setSearchParams={setSearchParams}
+              setOrder={setOrder}
               filters={filters}
               displayType={analyseComparativeDisplayType}
               displayZonesGeographiques={displayZonesGeographiques}
@@ -93,13 +89,11 @@ export const MainSection = ({
               filters={filters}
               filtersOptions={data?.filters}
               setFilters={setFilters}
-              setSearchParams={setSearchParams}
-              orderQuadrant={orderQuadrant}
-              scope={{
-                type: filters.scope,
-                value: scopeCode,
-              }}
+              setOrderFormations={setOrderFormations}
+              orderFormations={orderFormations}
               data={data}
+              formations={formations}
+              statsSortie={statsSortie}
             />
           ) : null}
         </Flex>

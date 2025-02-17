@@ -1,13 +1,12 @@
 import { z } from "zod";
 
-import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
-import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import {DemandeStatutZodType} from '../../enum/demandeStatutEnum';
 import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
-import { SecteurZodType } from "../../enum/secteurEnum";
+import {SecteurZodType} from '../../enum/secteurEnum';
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 
 const FormationTransformationStatsSchema = z.object({
-  libelleFormation: z.string().optional(),
+  libelleFormation: z.string(),
   formationSpecifique: FormationSpecifiqueFlagsSchema,
   libelleDispositif: z.string().optional(),
   tauxInsertion: z.coerce.number().optional(),
@@ -33,25 +32,25 @@ const FormationTransformationStatsSchema = z.object({
     .optional(),
 });
 
+export const FiltersSchema = z.object({
+  rentreeScolaire: z.array(z.string()).optional(),
+  codeNiveauDiplome: z.array(z.string()).optional(),
+  codeNsf: z.array(z.string()).optional(),
+  codeRegion: z.string().optional(),
+  codeAcademie: z.string().optional(),
+  codeDepartement: z.string().optional(),
+  campagne: z.string().optional(),
+  secteur: z.array(SecteurZodType).optional(),
+  statut: z.array(DemandeStatutZodType.exclude(["refusée", "supprimée"])).optional(),
+  coloration: z.string().optional(),
+  type: z.enum(["ouverture", "fermeture", "coloration"]).optional(),
+  tauxPression: z.enum(["faible", "eleve"]).optional(),
+  orderFormations: z.enum(["asc", "desc"]).optional(),
+  orderByFormations: FormationTransformationStatsSchema.keyof().optional(),
+});
+
 export const getFormationsPilotageIntentionsSchema = {
-  querystring: z.object({
-    rentreeScolaire: z.array(z.string()).optional(),
-    codeNiveauDiplome: z.array(z.string()).optional(),
-    codeNsf: z.array(z.string()).optional(),
-    codeRegion: z.string().optional(),
-    codeAcademie: z.string().optional(),
-    codeDepartement: z.string().optional(),
-    statut: z.array(DemandeStatutZodType.exclude(["brouillon", "supprimée"])).optional(),
-    CPC: z.array(z.string()).optional(),
-    secteur: z.array(SecteurZodType).optional(),
-    type: z.enum(["ouverture", "fermeture", "coloration"]).optional(),
-    tauxPression: z.enum(["faible", "eleve"]).optional(),
-    campagne: z.string().optional(),
-    coloration: z.string().optional(),
-    formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
-    order: z.enum(["asc", "desc"]).optional(),
-    orderBy: FormationTransformationStatsSchema.keyof().optional(),
-  }),
+  querystring: FiltersSchema,
   response: {
     200: z.object({
       stats: z.object({

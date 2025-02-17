@@ -2,12 +2,12 @@ import { Box, Center, Flex, Heading, Highlight, Select, Skeleton, Text, useToken
 import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
-import { useScopeCode } from "@/app/(wrapped)/intentions/pilotage/hooks";
 import type {
   FiltersPilotageIntentions,
   FilterTracker,
   PilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
+import { getScopeCode } from "@/app/(wrapped)/intentions/pilotage/utils";
 import { CartoGraph } from "@/components/CartoGraph";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
@@ -38,8 +38,6 @@ export const CartoSection = ({
   isLoading?: boolean;
   filterTracker: FilterTracker;
 }) => {
-  const { code: scopeCode } = useScopeCode(filters);
-
   const customPalette = [
     useToken("colors", "pilotage.red"),
     useToken("colors", "pilotage.orange"),
@@ -115,14 +113,14 @@ export const CartoSection = ({
 
       return handleFilters({
         scope: filters.scope,
-        codeRegion: filters.scope !== ScopeEnum["région"] ? undefined : code,
-        codeAcademie: filters.scope !== ScopeEnum["académie"] ? undefined : code,
-        codeDepartement: filters.scope !== ScopeEnum["département"] ? undefined : code,
+        codeRegion: getScopeCode(filters),
+        codeAcademie: getScopeCode(filters),
+        codeDepartement: getScopeCode(filters),
       });
     },
     // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [handleFilters, filters, scopeCode]
+    [handleFilters, filters]
   );
 
   if (!Object.keys(ScopeEnum).includes(filters.scope))
@@ -198,7 +196,7 @@ export const CartoSection = ({
               handleClick={handleClickOnTerritoire}
               selectedScope={{
                 type: filters.scope,
-                value: scopeCode ?? "national",
+                value: getScopeCode(filters) ?? "national",
               }}
             />
           </Box>

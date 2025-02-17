@@ -45,13 +45,12 @@ export type SelectedScope = {
 export type FormationsPilotageIntentionsQuery =
   (typeof client.inferArgs)["[GET]/pilotage-intentions/formations"]["query"];
 
-export type FiltersFormationsPilotageIntentionsQuery = Omit<FormationsPilotageIntentionsQuery, "order" | "orderBy">;
+export type FiltersFormationsPilotageIntentions = Omit<FormationsPilotageIntentionsQuery, "order" | "orderBy">;
 
-export type FormationsPilotageIntentions = (typeof client.infer)["[GET]/pilotage-intentions"]["formations"];
-export type StatsSortiePilotageIntentions = (typeof client.infer)["[GET]/pilotage-intentions"]["stats"];
+export type FormationsPilotageIntentions = (typeof client.infer)["[GET]/pilotage-intentions/formations"]["formations"];
+export type StatsSortiePilotageIntentions = (typeof client.infer)["[GET]/pilotage-intentions/formations"]["stats"];
 
-export type OrderFormationsPilotageIntentions = Pick<FormationsPilotageIntentionsQuery, "order" | "orderBy">;
-export type OrderQuadrantPilotageIntentions = Pick<PilotageIntentionsQuery, "orderQuadrant" | "orderByQuadrant">;
+export type OrderFormationsPilotageIntentions = Pick<FormationsPilotageIntentionsQuery, "orderFormations" | "orderByFormations">;
 
 export type FilterTracker = (
   filterName: keyof FiltersPilotageIntentions,
