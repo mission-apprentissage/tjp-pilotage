@@ -5,7 +5,7 @@ import type { Order, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage
 import { GlossaireShortcut } from '@/components/GlossaireShortcut';
 import { OrderIcon } from "@/components/OrderIcon";
 import { TooltipIcon } from "@/components/TooltipIcon";
-import { formatPercentage } from "@/utils/formatUtils";
+import { formatPercentageFixedDigits } from "@/utils/formatUtils";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
   libelleRegion: "Région",
@@ -74,16 +74,16 @@ export const VueRegionAcademieSection = ({
           {region.libelleRegion}
         </Td>
         <Td isNumeric backgroundColor={tdBgColor}>
-          {formatPercentage(region.tauxTransformationCumule, 1, "-")}
+          {formatPercentageFixedDigits(region.tauxTransformationCumule, 1, "-")}
         </Td>
         <Td isNumeric backgroundColor={tdBgColor}>
-          {formatPercentage(region.tauxPoursuite, 0, "-")}
+          {formatPercentageFixedDigits(region.tauxPoursuite, 1, "-")}
         </Td>
         <Td isNumeric backgroundColor={tdBgColor}>
-          {formatPercentage(region.tauxInsertion, 0, "-")}
+          {formatPercentageFixedDigits(region.tauxInsertion, 1, "-")}
         </Td>
         <Td isNumeric backgroundColor={tdBgColor}>
-          {formatPercentage(region.tauxChomage, 1, "-")}
+          {formatPercentageFixedDigits(region.tauxChomage, 1, "-")}
         </Td>
       </Tr>
     );
@@ -173,16 +173,16 @@ export const VueRegionAcademieSection = ({
                     NATIONAL
                   </Td>
                   <Td isNumeric  >
-                    {formatPercentage(nationalStats.tauxTransformationCumule, 1, "-")}
+                    {formatPercentageFixedDigits(nationalStats.tauxTransformationCumule, 1, "-")}
                   </Td>
                   <Td isNumeric >
-                    {formatPercentage(nationalStats.tauxPoursuite, 0, "-")}
+                    {formatPercentageFixedDigits(nationalStats.tauxPoursuite, 1, "-")}
                   </Td>
                   <Td isNumeric >
-                    {formatPercentage(nationalStats.tauxInsertion, 0, "-")}
+                    {formatPercentageFixedDigits(nationalStats.tauxInsertion, 1, "-")}
                   </Td>
                   <Td isNumeric >
-                    {formatPercentage(nationalStats.tauxChomage, 1, "-")}
+                    {formatPercentageFixedDigits(nationalStats.tauxChomage, 1, "-")}
                   </Td>
                 </Tr>
               </Tbody>

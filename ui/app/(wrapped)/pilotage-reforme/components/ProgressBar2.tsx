@@ -1,6 +1,8 @@
 import { Box, Text } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 
+import { formatPercentageFixedDigits } from "@/utils/formatUtils";
+
 const calculateTransform = (
   labelElement: HTMLElement,
   containerElement: HTMLElement,
@@ -44,8 +46,6 @@ export const ProgressBar2 = (
     const visibleLabels: { [key: string]: boolean } = {};
     const overflowingLabels: { [key: string]: boolean } = {};
     const labels = Object.keys(labelRefs.current);
-
-    console.log({labels});
 
     labels.forEach((label, i) => {
       let isVisible = true;
@@ -120,7 +120,7 @@ export const ProgressBar2 = (
               whiteSpace="nowrap"
             >
               <Text fontSize="32px" align={"right"}>
-                <strong>{bar.value}%</strong>
+                <strong>{formatPercentageFixedDigits(bar.value, 1, '-')}</strong>
               </Text>
               <Text align="right" color="#161616" fontWeight={"bold"}>
                 {bar.label}

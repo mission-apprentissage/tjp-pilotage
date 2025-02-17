@@ -20,7 +20,7 @@ import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext"
 import type { IndicateurType, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumber, formatPercentageFixedDigits } from "@/utils/formatUtils";
 
 import { ProgressBar2 } from "./ProgressBar2";
 
@@ -272,11 +272,11 @@ const StatCard = ({
   const getValue = (type: IndicateurType) => {
     switch (type) {
     case "tauxInsertion":
-      return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
+      return formatPercentageFixedDigits(data?.annees[0].scoped.tauxInsertion, 1, '-');
     case "tauxPoursuite":
-      return formatNumber((data?.annees[0].scoped.tauxPoursuite ?? 0) * 100);
+      return formatPercentageFixedDigits(data?.annees[0].scoped.tauxPoursuite, 1, '-');
     default:
-      return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
+      return formatPercentageFixedDigits(data?.annees[0].scoped.tauxInsertion, 1, '-');
     }
   };
 
@@ -301,7 +301,7 @@ const StatCard = ({
           {tooltip}
         </HStack>
         <Box fontWeight="bold" fontSize="40" color={"bluefrance.113"}>
-          {getValue(type) ? `${getValue(type)} %` : <Text textAlign={"center"}>-</Text>}
+          {getValue(type)}
         </Box>
         <Box fontWeight="bold" fontSize="2xl">
           {getDeltaAnneeNMoins1(type) != null ? <Delta delta={getDeltaAnneeNMoins1(type)} /> : <></>}
@@ -354,12 +354,12 @@ const TauxTransfoCard = (
               </Flex>
               <Box width="100%">
                 <ProgressBar2 bars={[
-                  {value: OBJECTIF_TAUX_TRANSFO_REFORME * 100, label: 'Objectif de la réforme', color: grey},
+                  {value: OBJECTIF_TAUX_TRANSFO_REFORME, label: 'Objectif de la réforme', color: grey},
                   {value: tauxTransformationPrevisionnel, label: `Projets RS ${NEXT_RENTREE} inclus`, color: cyan},
                   {value: tauxTransformation, label: 'Demandes validées', color: blue}
                 ].sort((a, b) => b.value - a.value).map((taux, index) => ({...taux, order: index + 1}))
                 }
-                max={Math.max(OBJECTIF_TAUX_TRANSFO_REFORME * 100, tauxTransformationPrevisionnel, tauxTransformation)}
+                max={Math.max(OBJECTIF_TAUX_TRANSFO_REFORME, tauxTransformationPrevisionnel, tauxTransformation)}
                 />
               </Box>
             </VStack>

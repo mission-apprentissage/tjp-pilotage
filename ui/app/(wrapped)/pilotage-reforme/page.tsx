@@ -89,7 +89,7 @@ const usePilotageReformHook = () => {
 
   const nationalStats = useMemo(() => {
     return {
-      tauxTransformationCumule: data?.tauxTransformationCumule ? data?.tauxTransformationCumule / 100 : undefined,
+      tauxTransformationCumule: data?.tauxTransformationCumule ? data?.tauxTransformationCumule : undefined,
       tauxPoursuite: data?.annees[0].scoped.tauxPoursuite ? data?.annees[0].scoped.tauxPoursuite : undefined,
       tauxInsertion: data?.annees[0].scoped.tauxInsertion ? data?.annees[0].scoped.tauxInsertion : undefined,
       tauxChomage: dataRegions?.statsRegions.some((region) => region.tauxChomage) ?

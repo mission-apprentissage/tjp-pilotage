@@ -3,5 +3,5 @@ export const formatTauxTransformation = (transformes: number, effectif: number |
     return 0;
   }
 
-  return Math.round((transformes / effectif) * 10000) / 100;
+  return Number.parseFloat((transformes / effectif).toFixed(4));
 };
