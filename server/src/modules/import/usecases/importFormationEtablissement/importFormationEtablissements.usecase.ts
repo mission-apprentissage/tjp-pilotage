@@ -26,7 +26,7 @@ import {
   importIndicateursRegionSortie,
   importIndicateursRegionSortieApprentissage,
 } from "./steps/importIndicateursSortieRegionaux/importIndicateursSortieRegionaux.step";
-import { parseCfd } from "./utils";
+import { extractCfdFromMefAndDuree } from "./utils";
 
 const processedUais = new Set<string>();
 
@@ -145,7 +145,7 @@ export const [importFormationEtablissements] = inject(
             }
           } else {
             // déduire le code dispositif du cfd
-            const codeDispositif = parseCfd(offreApprentissage?.["Formation: code CFD"], dureeCollectee);
+            const codeDispositif = extractCfdFromMefAndDuree(offreApprentissage?.["Formation: code CFD"], dureeCollectee);
             if (codeDispositif > -1) {
               codesDispositifs.push(codeDispositif.toString());
             }
