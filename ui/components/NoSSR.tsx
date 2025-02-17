@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
-import React from "react";
+import * as React from "react";
 
 const NoSsr = (props: { children: ReactNode }) => <React.Fragment>{props.children}</React.Fragment>;
 

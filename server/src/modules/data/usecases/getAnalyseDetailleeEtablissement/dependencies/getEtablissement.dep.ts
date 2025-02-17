@@ -1,4 +1,4 @@
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 import { sql } from "kysely";
 
 import { getKbdClient } from "@/db/db";

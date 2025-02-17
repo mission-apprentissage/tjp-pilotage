@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
-import qs from "qs";
+import * as qs from "qs";
 import { useContext, useEffect, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";

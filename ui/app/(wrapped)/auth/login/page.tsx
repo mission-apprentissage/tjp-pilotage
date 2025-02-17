@@ -1,5 +1,4 @@
 import { VStack } from "@chakra-ui/react";
-import React from "react";
 
 import AlertPerdir from "./components/AlertPerdir";
 import ErrorSSO from "./components/ErrorSSO";

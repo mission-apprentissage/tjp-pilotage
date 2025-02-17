@@ -1,4 +1,4 @@
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneRequeteEnregistreeQuery } from "@/modules/requetesEnregistrees/repositories/findOneRequeteEnregistree.query";
