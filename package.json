@@ -65,6 +65,8 @@
     "import:tables": "yarn cli importTables",
     "import:ij": "yarn cli importIJ",
     "import:formations": "yarn cli importFormations",
+    "import:users": "yarn cli importUsers",
+    "import:users:dryRun": "yarn cli importUsers --dryRun true",
     "migrate:up": "yarn cli migrateDB",
     "migrate:down": "yarn cli migrateDownDB"
   },

@@ -1,5 +1,6 @@
 import type { Command } from "commander";
 import { parse } from "csv-parse/sync";
+import fs from 'fs';
 import { mapValues } from "lodash-es";
 import path from "path";
 import type { Role } from "shared";
@@ -44,13 +45,14 @@ import { __dirname } from "./utils/esmUtils";
 export function productCommands(cli: Command) {
   cli
     .command("importUsers")
-    .description("usage: cat << EOF | xargs -0 -I arg yarn cli importUsers arg")
+    .description("usage: yarn cli importUsers")
+    .description(`place file in ${basepath}/import/users.csv`)
     .description("csv: role;codeRegion;lastname;firstname;email")
-    .argument("<json>")
     .option("--dryRun <boolean>", "parse the data only", false)
-    .action(async (input: string, { dryRun }) => {
+    .action(async ({ dryRun }) => {
+      const fileContent = fs.readFileSync(`${basepath}/import/users.csv`).toString();
       const data = (
-        parse(input, {
+        parse(fileContent, {
           columns: true,
           skip_empty_lines: true,
           trim: true,
