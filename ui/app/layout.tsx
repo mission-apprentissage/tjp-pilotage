@@ -24,7 +24,6 @@ export async function generateMetadata(
   return {
     title,
     description,
-    robots: "none",
   };
 }
 
