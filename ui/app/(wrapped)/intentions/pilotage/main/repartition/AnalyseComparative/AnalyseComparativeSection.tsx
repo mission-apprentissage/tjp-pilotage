@@ -87,7 +87,7 @@ export const AnalyseComparativeSection = ({
   zonesGeographiques,
   domaines,
   order,
-  setSearchParams,
+  setOrder,
   filters,
   displayType,
   displayZonesGeographiques,
@@ -96,7 +96,7 @@ export const AnalyseComparativeSection = ({
   zonesGeographiques?: PilotageIntentionsZonesGeographiques;
   domaines?: PilotageIntentionsDomaines;
   order: Partial<OrderPilotageIntentions>;
-  setSearchParams: (params: { order?: Partial<OrderPilotageIntentions> }) => void;
+  setOrder: (order: OrderPilotageIntentions) => void;
   filters?: Partial<FiltersStatsPilotageIntentions>;
   displayType: DisplayTypeEnum;
   displayZonesGeographiques: () => void;
@@ -171,14 +171,12 @@ export const AnalyseComparativeSection = ({
       props: { colonne: column },
     });
     if (order?.orderBy !== column) {
-      setSearchParams({ order: { order: "desc", orderBy: column } });
+      setOrder({ order: "desc", orderBy: column });
       return;
     }
-    setSearchParams({
-      order: {
-        order: order?.order === "asc" ? "desc" : "asc",
-        orderBy: column,
-      },
+    setOrder({
+      order: order?.order === "asc" ? "desc" : "asc",
+      orderBy: column,
     });
   };
 

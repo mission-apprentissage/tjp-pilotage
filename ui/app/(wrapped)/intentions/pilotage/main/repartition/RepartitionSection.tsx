@@ -13,7 +13,7 @@ import { FiliereNiveauDiplomeSection } from "./FiliereNiveauDiplomeSection";
 export const RepartitionSection = ({
   data,
   order,
-  setSearchParams,
+  setOrder,
   filters,
   displayType,
   displayZonesGeographiques,
@@ -21,7 +21,7 @@ export const RepartitionSection = ({
 }: {
   data?: PilotageIntentions;
   order: Partial<OrderPilotageIntentions>;
-  setSearchParams: (params: { order?: Partial<OrderPilotageIntentions> }) => void;
+  setOrder: (order: OrderPilotageIntentions) => void;
   filters?: Partial<FiltersPilotageIntentions>;
   displayType: DisplayTypeEnum;
   displayZonesGeographiques: () => void;
@@ -34,7 +34,7 @@ export const RepartitionSection = ({
         zonesGeographiques={data?.zonesGeographiques}
         domaines={data?.domaines}
         order={order}
-        setSearchParams={setSearchParams}
+        setOrder={setOrder}
         filters={filters}
         displayType={displayType}
         displayZonesGeographiques={displayZonesGeographiques}

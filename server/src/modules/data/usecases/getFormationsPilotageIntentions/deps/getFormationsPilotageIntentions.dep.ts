@@ -1,15 +1,13 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import type { MILLESIMES_IJ } from "shared";
-import { CURRENT_IJ_MILLESIME } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import type { getFormationsPilotageIntentionsSchema } from "shared/routes/schemas/get.pilotage-intentions.formations.schema";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
-import type { z } from "zod";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.usecase";
 import { hasContinuum } from "@/modules/data/utils/hasContinuum";
+import { genericOnConstatRentree } from "@/modules/data/utils/onConstatDeRentree";
 import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
@@ -24,65 +22,22 @@ import {
   countPlacesTransformeesParCampagne,
 } from "@/modules/utils/countCapacite";
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
-import { isDemandeProjetOrValidee } from "@/modules/utils/isDemandeProjetOrValidee";
 import { isDemandeNotDeletedOrRefused } from "@/modules/utils/isDemandeSelectable";
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
-
-import { getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery } from "./getEffectifsParCampagneCodeNiveauDiplomeCodeRegion.dep";
-
-export interface Filters extends z.infer<typeof getFormationsPilotageIntentionsSchema.querystring> {
-  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
-  campagne: string;
-}
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) => eb.fn.count<number>("demande.numero").distinct();
 
 const selectNbEtablissements = (eb: ExpressionBuilder<DB, "dataEtablissement">) =>
   eb.fn.count<number>("dataEtablissement.uai").distinct();
 
-export const getFormationsPilotageIntentionsQuery = ({
-  statut,
-  type,
-  rentreeScolaire,
-  millesimeSortie = CURRENT_IJ_MILLESIME,
-  codeRegion,
-  codeAcademie,
-  codeDepartement,
-  tauxPression,
-  codeNiveauDiplome,
-  codeNsf,
-  CPC,
-  secteur,
-  campagne,
-  coloration,
-  orderBy,
-  order,
-}: Filters) => {
+export const getFormationsQuery = ({ filters }: { filters: Filters }) => {
   const partition = (() => {
-    if (codeDepartement) return ["dataEtablissement.codeDepartement"] as const;
-    if (codeAcademie) return ["dataEtablissement.codeAcademie"] as const;
-    if (codeRegion) return ["dataEtablissement.codeRegion"] as const;
+    if (filters.codeDepartement) return ["dataEtablissement.codeDepartement"] as const;
+    if (filters.codeAcademie) return ["dataEtablissement.codeAcademie"] as const;
+    if (filters.codeRegion) return ["dataEtablissement.codeRegion"] as const;
     return [];
   })();
-
-  const effectifs = getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery({
-    statut,
-    type,
-    rentreeScolaire,
-    millesimeSortie,
-    codeRegion,
-    codeAcademie,
-    codeDepartement,
-    tauxPression,
-    codeNiveauDiplome,
-    codeNsf,
-    CPC,
-    secteur,
-    campagne,
-    orderBy,
-    order,
-  });
 
   return getKbdClient()
     .selectFrom("latestDemandeIntentionView as demande")
@@ -102,29 +57,21 @@ export const getFormationsPilotageIntentionsQuery = ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
-            eb.val(getMillesimeFromCampagne(campagne))
+            eb.val(getMillesimeFromCampagne(filters.campagne))
           ),
         ])
       )
     )
     .leftJoin(
-      getKbdClient()
-        .selectFrom(effectifs.as("effectifsParCampagneCodeNiveauDiplomeCodeRegion"))
+      genericOnConstatRentree(filters)
         .select((eb) => [
-          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.annee",
-          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.cfd",
-          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeRegion",
-          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeNiveauDiplome",
-          sql<number>`SUM(${eb.ref("effectifsParCampagneCodeNiveauDiplomeCodeRegion.denominateur")})`.as(
-            "denominateur"
-          ),
+          eb.ref("campagne.annee").as("annee"),
+          eb.ref("dataFormation.codeNiveauDiplome").as("codeNiveauDiplome"),
+          eb.ref("dataEtablissement.codeRegion").as("codeRegion"),
+          eb.ref("constatRentree.cfd").as("cfd"),
+          sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("effectif"),
         ])
-        .groupBy([
-          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.annee",
-          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.cfd",
-          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeRegion",
-          "effectifsParCampagneCodeNiveauDiplomeCodeRegion.codeNiveauDiplome",
-        ])
+        .groupBy(["annee", "constatRentree.cfd", "dataFormation.codeNiveauDiplome", "dataEtablissement.codeRegion"])
         .as("effectifs"),
       (join) =>
         join
@@ -134,23 +81,22 @@ export const getFormationsPilotageIntentionsQuery = ({
           .onRef("demande.codeRegion", "=", "effectifs.codeRegion")
     )
     .select((eb) => [
-      sql<number>`COALESCE(${eb.ref("effectifs.denominateur")}, 0)`.as("effectif"),
+      sql<number>`COALESCE(${eb.ref("effectifs.effectif")}, 0)`.as("effectif"),
       selectPositionQuadrant(eb).as("positionQuadrant"),
-      "formationView.libelleFormation",
+      "dataFormation.libelleFormation",
       "dispositif.libelleDispositif",
       "demande.cfd",
       "demande.codeDispositif",
-      (eb) =>
-        withInsertionReg({
-          eb,
-          millesimeSortie: getMillesimeFromCampagne(campagne),
-          cfdRef: "demande.cfd",
-          codeDispositifRef: "demande.codeDispositif",
-          codeRegionRef: "demande.codeRegion",
-        }).as("tauxInsertion"),
+      withInsertionReg({
+        eb,
+        millesimeSortie: getMillesimeFromCampagne(filters.campagne),
+        cfdRef: "demande.cfd",
+        codeDispositifRef: "demande.codeDispositif",
+        codeRegionRef: "demande.codeRegion",
+      }).as("tauxInsertion"),
       withPoursuiteReg({
         eb,
-        millesimeSortie: getMillesimeFromCampagne(campagne),
+        millesimeSortie: getMillesimeFromCampagne(filters.campagne),
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "demande.codeRegion",
@@ -163,7 +109,7 @@ export const getFormationsPilotageIntentionsQuery = ({
       }).as("tauxPression"),
       withTauxDevenirFavorableReg({
         eb,
-        millesimeSortie: getMillesimeFromCampagne(campagne),
+        millesimeSortie: getMillesimeFromCampagne(filters.campagne),
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "demande.codeRegion",
@@ -177,7 +123,7 @@ export const getFormationsPilotageIntentionsQuery = ({
       eb.fn.sum<number>(countPlacesTransformeesParCampagne(eb)).as("placesTransformees"),
       hasContinuum({
         eb,
-        millesimeSortie,
+        millesimeSortie: getMillesimeFromCampagne(filters.campagne),
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "demande.codeRegion",
@@ -192,8 +138,8 @@ export const getFormationsPilotageIntentionsQuery = ({
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
     .where((wb) => {
-      if (!type) return wb.val(true);
-      switch (type) {
+      if (!filters.type) return wb.val(true);
+      switch (filters.type) {
       case "ouverture":
         return wb(countPlacesOuvertes(wb), ">", 0);
       case "fermeture":
@@ -205,7 +151,7 @@ export const getFormationsPilotageIntentionsQuery = ({
       }
     })
     .having((h) => {
-      if (!tauxPression) return h.val(true);
+      if (!filters.tauxPression) return h.val(true);
       return h(
         (eb) =>
           withTauxPressionReg({
@@ -214,65 +160,60 @@ export const getFormationsPilotageIntentionsQuery = ({
             codeDispositifRef: "demande.codeDispositif",
             codeRegionRef: "demande.codeRegion",
           }),
-        tauxPression === "eleve" ? ">" : "<",
-        tauxPression === "eleve" ? 1.3 : 0.7
+        filters.tauxPression === "eleve" ? ">" : "<",
+        filters.tauxPression === "eleve" ? 1.3 : 0.7
       );
     })
     .$call((eb) => {
-      if (rentreeScolaire)
+      if (filters.rentreeScolaire)
         return eb.where(
           "demande.rentreeScolaire",
           "in",
-          rentreeScolaire.map((rentree) => parseInt(rentree))
+          filters.rentreeScolaire.map((rentree) => parseInt(rentree))
         );
       return eb;
     })
     .$call((eb) => {
-      if (CPC) return eb.where("formationView.cpc", "in", CPC);
+      if (filters.codeNsf) return eb.where("formationView.codeNsf", "in", filters.codeNsf);
       return eb;
     })
     .$call((eb) => {
-      if (codeNsf) return eb.where("formationView.codeNsf", "in", codeNsf);
+      if (filters.codeNiveauDiplome)
+        return eb.where("formationView.codeNiveauDiplome", "in", filters.codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) return eb.where("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
+      if (filters.codeRegion) return eb.where("dataEtablissement.codeRegion", "=", filters.codeRegion);
       return eb;
     })
     .$call((eb) => {
-      if (codeRegion) return eb.where("dataEtablissement.codeRegion", "=", codeRegion);
+      if (filters.codeDepartement) return eb.where("dataEtablissement.codeDepartement", "=", filters.codeDepartement);
       return eb;
     })
     .$call((eb) => {
-      if (codeDepartement) return eb.where("dataEtablissement.codeDepartement", "=", codeDepartement);
+      if (filters.codeAcademie) return eb.where("dataEtablissement.codeAcademie", "=", filters.codeAcademie);
       return eb;
     })
     .$call((eb) => {
-      if (codeAcademie) return eb.where("dataEtablissement.codeAcademie", "=", codeAcademie);
+      if (filters.campagne) return eb.where("campagne.annee", "=", filters.campagne);
       return eb;
     })
     .$call((eb) => {
-      if (campagne) return eb.where("campagne.annee", "=", campagne);
+      if (filters.secteur) return eb.where("dataEtablissement.secteur", "in", filters.secteur);
       return eb;
-    })
-    .$call((q) => {
-      if (!secteur || secteur.length === 0) return q;
-      return q.where("dataEtablissement.secteur", "in", secteur);
-    })
-    .$call((q) => {
-      if (!statut || statut.length === 0) {
-        return q.where(isDemandeProjetOrValidee);
-      }
-      return q.where("demande.statut", "in", statut);
     })
     .$call((eb) => {
-      if (coloration)
-        return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
+      if (filters.statut) return eb.where("demande.statut", "in", filters.statut);
       return eb;
     })
-    .$call((q) => {
-      if (!orderBy || !order) return q;
-      return q.orderBy(sql.ref(orderBy), sql`${sql.raw(order)} NULLS LAST`);
+    .$call((eb) => {
+      if (filters.coloration)
+        return eb.where("demande.coloration", "=", filters.coloration === "true" ? sql<true>`true` : sql<false>`false`);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filters.orderByFormations && filters.orderFormations) return eb.orderBy(sql.ref(filters.orderByFormations), sql`${sql.raw(filters.orderFormations)} NULLS LAST`);
+      return eb;
     })
     .where(isDemandeNotDeletedOrRefused)
     .$narrowType<{ tauxPoursuite: number; tauxInsertion: number }>()
@@ -281,8 +222,13 @@ export const getFormationsPilotageIntentionsQuery = ({
       "demande.cfd",
       "formationView.cfd",
       "demande.codeDispositif",
+      "demande.codeRegion",
       "dispositif.libelleDispositif",
-      "formationView.libelleFormation",
+      "dataFormation.libelleFormation",
+      "dataFormation.typeFamille",
+      "formationView.isTransitionDemographique",
+      "formationView.isTransitionEcologique",
+      "formationView.isTransitionNumerique",
       "effectif",
       "dataFormation.typeFamille",
       "demande.codeRegion",
