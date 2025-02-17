@@ -47,17 +47,19 @@ export const VueRegionAcademieSection = ({
   codeRegion,
   handleOrder,
   nationalStats,
+  onModalOpen,
 }: {
   data?: PilotageReformeStatsRegion;
   isLoading: boolean;
   order: Order;
   codeRegion?: string;
   handleOrder: (column: Order["orderBy"]) => void;
+  onModalOpen: () => void;
   nationalStats: {
-    tauxTransformationCumule: number;
-    tauxPoursuite: number;
-    tauxInsertion: number;
-    tauxChomage: number;
+    tauxTransformationCumule?: number;
+    tauxPoursuite?: number;
+    tauxInsertion?: number;
+    tauxChomage?: number;
   }
 }) => {
   const rows = useMemo(() => { return data?.statsRegions.map((region) => {
@@ -113,15 +115,15 @@ export const VueRegionAcademieSection = ({
                   <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxTransformationCumule")}>
                     <OrderIcon {...order} column="tauxTransformationCumule" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxTransformationCumule}
-                    <GlossaireShortcut
+                    <TooltipIcon
                       display={"inline"}
                       marginInline={1}
-                      iconSize={"16px"}
-                      tooltip={
+                      label={
                         <Box>
                           <Text>Taux de transformation cumulé par régions.</Text>
                         </Box>
                       }
+                      onClick={() => onModalOpen()}
                     />
                   </Th>
                   <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxPoursuite")}>
@@ -130,7 +132,7 @@ export const VueRegionAcademieSection = ({
                     <GlossaireShortcut
                       display={"inline"}
                       marginInline={1}
-                      iconSize={"16px"}
+                      iconSize={"12px"}
                       glossaireEntryKey={"taux-poursuite-etudes"}
                       tooltip={
                         <Box>
@@ -146,7 +148,7 @@ export const VueRegionAcademieSection = ({
                     <GlossaireShortcut
                       display={"inline"}
                       marginInline={1}
-                      iconSize={"16px"}
+                      iconSize={"12px"}
                       glossaireEntryKey={"taux-emploi-6-mois"}
                       tooltip={
                         <Box>
@@ -171,16 +173,16 @@ export const VueRegionAcademieSection = ({
                     NATIONAL
                   </Td>
                   <Td isNumeric  >
-                    {formatPercentage((nationalStats.tauxTransformationCumule ?? 0), 1, "-")}
+                    {formatPercentage(nationalStats.tauxTransformationCumule, 1, "-")}
                   </Td>
                   <Td isNumeric >
-                    {formatPercentage(nationalStats.tauxPoursuite ?? 0, 0, "-")}
+                    {formatPercentage(nationalStats.tauxPoursuite, 0, "-")}
                   </Td>
                   <Td isNumeric >
-                    {formatPercentage(nationalStats.tauxInsertion ?? 0, 0, "-")}
+                    {formatPercentage(nationalStats.tauxInsertion, 0, "-")}
                   </Td>
                   <Td isNumeric >
-                    {formatPercentage((nationalStats.tauxChomage  ?? 0), 1, "-")}
+                    {formatPercentage(nationalStats.tauxChomage, 1, "-")}
                   </Td>
                 </Tr>
               </Tbody>

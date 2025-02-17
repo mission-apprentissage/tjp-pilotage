@@ -1,13 +1,15 @@
 "use client";
 
-import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Box, Container, Flex, SimpleGrid, useDisclosure } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
+import { useMemo } from "react";
 
 import { client } from "@/api.client";
 import { withAuth } from "@/utils/security/withAuth";
 import { useStateParams } from "@/utils/useFilters";
 
 import { CartoSection } from "./components/CartoSection";
+import { DefinitionTauxTransformationCumuleModal } from "./components/DefinitionTauxTransformationCumuleModal";
 import { EvolutionIndicateursClesSection } from "./components/EvolutionIndicateursClesSection";
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
@@ -16,6 +18,8 @@ import type { Filters, FiltersRegions, Order } from "./types";
 
 
 const usePilotageReformHook = () => {
+  const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure();
+
   const [searchParams, setSearchParams] = useStateParams<{filters: Filters, order: Order}>({
     defaultValues: {
       filters: {},
@@ -83,6 +87,17 @@ const usePilotageReformHook = () => {
 
   const isFiltered = filters.codeRegion;
 
+  const nationalStats = useMemo(() => {
+    return {
+      tauxTransformationCumule: data?.tauxTransformationCumule ? data?.tauxTransformationCumule / 100 : undefined,
+      tauxPoursuite: data?.annees[0].scoped.tauxPoursuite ? data?.annees[0].scoped.tauxPoursuite : undefined,
+      tauxInsertion: data?.annees[0].scoped.tauxInsertion ? data?.annees[0].scoped.tauxInsertion : undefined,
+      tauxChomage: dataRegions?.statsRegions.some((region) => region.tauxChomage) ?
+        (dataRegions?.statsRegions.reduce((acc, region) => acc + (region.tauxChomage ?? 0), 0) ?? 0) / (dataRegions?.statsRegions.length ?? 1)
+        : undefined,
+    };
+  }, [data, dataRegions]);
+
   return {
     filters,
     order,
@@ -94,12 +109,10 @@ const usePilotageReformHook = () => {
     filterTracker,
     dataRegions,
     isLoadingRegions,
-    nationalStats: {
-      tauxTransformationCumule: (data?.tauxTransformationCumule ?? 0) / 100,
-      tauxPoursuite: (data?.annees[0].scoped.tauxPoursuite ?? 0),
-      tauxInsertion: (data?.annees[0].scoped.tauxInsertion ?? 0),
-      tauxChomage: (dataRegions?.statsRegions.reduce((acc, region) => acc + (region.tauxChomage ?? 0), 0) ?? 0) / (dataRegions?.statsRegions.length ?? 1),
-    }
+    nationalStats,
+    isModalOpen,
+    onModalOpen,
+    onModalClose,
   };
 };
 
@@ -116,6 +129,9 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
     dataRegions,
     isLoadingRegions,
     nationalStats,
+    isModalOpen,
+    onModalOpen,
+    onModalClose,
   } = usePilotageReformHook();
 
   return (
@@ -131,7 +147,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
         <Box>
           <Flex gap={8} mt={8} flexDirection={["column", null, "row"]}>
             <Box flex={1}>
-              <IndicateursClesSection data={data} isLoading={isLoading} />
+              <IndicateursClesSection data={data} isLoading={isLoading} onModalOpen={onModalOpen} />
               <EvolutionIndicateursClesSection
                 data={data}
                 isLoading={isLoading}
@@ -144,7 +160,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
               isLoading={isLoadingRegions}
               activeFilters={filters}
               handleFilters={handleFilters}
-            ></CartoSection>
+            />
           </Flex>
           <SimpleGrid spacing={5} columns={[1]} mt={14}>
             <VueRegionAcademieSection
@@ -154,10 +170,12 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
               handleOrder={handleOrder}
               codeRegion={filters.codeRegion}
               nationalStats={nationalStats}
+              onModalOpen={onModalOpen}
             />
           </SimpleGrid>
         </Box>
       </Container>
+      <DefinitionTauxTransformationCumuleModal isOpen={isModalOpen} onClose={onModalClose} />
     </Box>
   );
 });

@@ -12,6 +12,20 @@ interface CartoSelectionProps {
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
 }
 
+const getCustomPalette = (indicateur: IndicateurType) : number[][] | undefined => {
+  switch (indicateur) {
+  case "tauxTransformationCumule":
+    return [
+      [0, 10],
+      [10, 15],
+      [15, 20],
+      [20, 100],
+    ];
+  default:
+    return undefined;
+  }
+};
+
 export const CartoSection = ({
   data,
   isLoading,
@@ -93,6 +107,7 @@ export const CartoSection = ({
             graphData={graphData}
             handleClick={handleClickOnRegion}
             codeRegionSelectionne={activeFilters.codeRegion}
+            customPiecesSteps={getCustomPalette(indicateur)}
           />
         </Box>
       )}

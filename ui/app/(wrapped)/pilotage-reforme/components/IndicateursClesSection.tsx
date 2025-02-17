@@ -10,11 +10,11 @@ import {
   SimpleGrid,
   Skeleton,
   Text,
-  useDisclosure,
   useToken,
   VStack,
 } from "@chakra-ui/react";
 import { OBJECTIF_TAUX_TRANSFO_REFORME } from "shared/objectives/TAUX_TRANSFO";
+import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { IndicateurType, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
@@ -22,7 +22,6 @@ import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
 import { formatNumber } from "@/utils/formatUtils";
 
-import { DefinitionTauxTransformationCumuleModal } from "./DefinitionTauxTransformationCumuleModal";
 import { ProgressBar2 } from "./ProgressBar2";
 
 const EFFECTIF_FEATURE_FLAG = false;
@@ -321,15 +320,13 @@ const StatCard = ({
 };
 
 const TauxTransfoCard = (
-  { tauxTransformation, tauxTransformationPrevisionnel } :
-  { tauxTransformation: number, tauxTransformationPrevisionnel: number }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  { tauxTransformation, tauxTransformationPrevisionnel, onModalOpen } :
+  { tauxTransformation: number, tauxTransformationPrevisionnel: number, onModalOpen: () => void }) => {
 
   const [blue, cyan, grey] = useToken("colors", ["bluefrance.113", "blueecume.675_hover", "grey.925"]);
 
   return (
     <>
-      <DefinitionTauxTransformationCumuleModal isOpen={isOpen} onClose={onClose} />
       <VStack width="100%">
         <Card width="100%">
           <CardBody color="inherit" py="2" px="3" minHeight={40}>
@@ -352,13 +349,13 @@ const TauxTransfoCard = (
                   Taux de transformation cumulé
                 </Heading>
                 <TooltipIcon
-                  label="Cliquez ici pour plus d’infos" onClick={() => onOpen()}
+                  label="Cliquez ici pour plus d’infos" onClick={onModalOpen}
                 />
               </Flex>
               <Box width="100%">
                 <ProgressBar2 bars={[
                   {value: OBJECTIF_TAUX_TRANSFO_REFORME * 100, label: 'Objectif de la réforme', color: grey},
-                  {value: tauxTransformationPrevisionnel, label: 'Projets RS 2026 inclus', color: cyan},
+                  {value: tauxTransformationPrevisionnel, label: `Projets RS ${NEXT_RENTREE} inclus`, color: cyan},
                   {value: tauxTransformation, label: 'Demandes validées', color: blue}
                 ].sort((a, b) => b.value - a.value).map((taux, index) => ({...taux, order: index + 1}))
                 }
@@ -373,7 +370,7 @@ const TauxTransfoCard = (
   );
 };
 
-const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
+const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats, onModalOpen: () => void }) => {
   const { openGlossaire } = useGlossaireContext();
 
   return (
@@ -385,6 +382,7 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
         <TauxTransfoCard
           tauxTransformation={data?.tauxTransformationCumule ?? 0}
           tauxTransformationPrevisionnel={data?.tauxTransformationCumulePrevisionnel ?? 0}
+          onModalOpen={onModalOpen}
         />
         <SimpleGrid spacing={3} columns={[2]} width="100%">
           <StatCard
@@ -426,13 +424,13 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
   );
 };
 
-export const IndicateursClesSection = ({ data, isLoading }: { data?: PilotageReformeStats; isLoading: boolean }) => {
+export const IndicateursClesSection = (
+  { data, isLoading, onModalOpen }:
+  { data?: PilotageReformeStats; isLoading: boolean; onModalOpen: () => void }) => {
   if(isLoading){
     return (<Loader />);
   }
 
-  return (<Box>
-    <IndicateursSortie data={data} />
-  </Box>);
+  return (<IndicateursSortie data={data} onModalOpen={onModalOpen} />);
 
 };
