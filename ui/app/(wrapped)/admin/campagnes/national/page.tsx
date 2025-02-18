@@ -1,21 +1,7 @@
 "use client";
 
-import { AddIcon, EditIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  Divider,
-  Flex,
-  Heading,
-  IconButton,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  useDisclosure,
-} from "@chakra-ui/react";
+import {AddIcon, DeleteIcon,EditIcon} from '@chakra-ui/icons';
+import {Button, Divider, Flex, Heading, IconButton, Table, TableContainer, Tbody, Td, Th, Thead, Tooltip,Tr, useDisclosure} from '@chakra-ui/react';
 import { useMemo, useState } from "react";
 
 import { client } from "@/api.client";
@@ -32,6 +18,7 @@ export default () => {
   const { data: campagnes } = client.ref("[GET]/campagnes").useQuery({});
   const { data: campagnesRegion } = client.ref("[GET]/campagnes-region").useQuery({});
   const { data: regions } = client.ref("[GET]/regions").useQuery({});
+  const { data: latestCampagne } = client.ref("[GET]/campagne/latest").useQuery({});
 
   const [campagneId, setCampagneId] = useState<string>();
   const [campagneRegionId, setCampagneRegionId] = useState<string>();
@@ -41,9 +28,14 @@ export default () => {
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
-    isOpen: isOpenCampagneRegion,
-    onOpen: onOpenCampagneRegion,
-    onClose: onCloseCampagneRegion
+    isOpen: isOpenEditCampagneRegion,
+    onOpen: onOpenEditCampagneRegion,
+    onClose: onCloseEditCampagneRegion
+  } = useDisclosure();
+  const {
+    isOpen: isOpenDeleteCampagneRegion,
+    onOpen: onOpenDeleteCampagneRegion,
+    onClose: onCloseDeleteCampagneRegion
   } = useDisclosure();
 
   return (
@@ -118,7 +110,7 @@ export default () => {
             leftIcon={<AddIcon />}
             onClick={() => {
               setCampagneRegionId(undefined);
-              onOpenCampagneRegion();
+              onOpenEditCampagneRegion();
             }}
           >
             Ajouter une campagne régionale
@@ -163,17 +155,32 @@ export default () => {
                     {formatDate({date: campagneRegion.dateFin, options: { dateStyle: "short" }, nullValue: "Non définie"})}
                   </Td>
                   <Td>
-                    <IconButton
-                      position="unset"
-                      variant="ghost"
-                      onClick={() => {
-                        setCampagneRegionId(campagneRegion.id);
-                        onOpenCampagneRegion();
-                      }}
-                      aria-label="Éditer"
-                    >
-                      <EditIcon />
-                    </IconButton>
+                    <Tooltip label="Éditer la campagne régionale">
+                      <IconButton
+                        position="unset"
+                        variant="ghost"
+                        onClick={() => {
+                          setCampagneRegionId(campagneRegion.id);
+                          onOpenEditCampagneRegion();
+                        }}
+                        aria-label={`Éditer la campagne régionale ${campagneRegion.id}`}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip label="Supprimer la campagne régionale">
+                      <IconButton
+                        position="unset"
+                        variant="ghost"
+                        onClick={() => {
+                          setCampagneRegionId(campagneRegion.id);
+                          onOpenDeleteCampagneRegion();
+                        }}
+                        aria-label={`Supprimer la campagne régionale ${campagneRegion.id}`}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
                   </Td>
                 </Tr>
               ))}
@@ -185,21 +192,31 @@ export default () => {
       {!campagne && isOpen && <CreateCampagne isOpen={isOpen} onClose={onClose} />}
       {campagnes && campagnes.length > 0 && (
         <>
-          {campagneRegion && isOpenCampagneRegion && (
+          {campagneRegion && isOpenEditCampagneRegion && (
             <EditCampagneRegion
-              isOpen={isOpenCampagneRegion}
-              onClose={onCloseCampagneRegion}
+              isOpen={isOpenEditCampagneRegion}
+              onClose={onCloseEditCampagneRegion}
               campagneRegion={campagneRegion}
               campagnes={campagnes}
               regions={regions}
             />
           )}
-          {!campagneRegion && isOpenCampagneRegion && (
-            <CreateCampagneRegion
-              isOpen={isOpenCampagneRegion}
-              onClose={onCloseCampagneRegion}
+          {campagneRegion && isOpenDeleteCampagneRegion && (
+            <EditCampagneRegion
+              isOpen={isOpenDeleteCampagneRegion}
+              onClose={onCloseDeleteCampagneRegion}
+              campagneRegion={campagneRegion}
+              campagnes={campagnes}
               regions={regions}
-
+            />
+          )}
+          {!campagneRegion && isOpenEditCampagneRegion && (
+            <CreateCampagneRegion
+              isOpen={isOpenEditCampagneRegion}
+              onClose={onCloseEditCampagneRegion}
+              regions={regions}
+              campagnes={campagnes}
+              latestCampagne={latestCampagne}
             />
           )}
         </>

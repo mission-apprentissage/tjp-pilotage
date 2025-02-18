@@ -5,6 +5,7 @@ import { checkActivationTokenRoute } from "./usecases/checkActivationToken/check
 import { createCampagneRoute } from "./usecases/createCampagne/createCampagne.route";
 import { createCampagneRegionRoute } from "./usecases/createCampagneRegion/createCampagneRegion.route";
 import { createUserRoute } from "./usecases/createUser/createUser.route";
+import { deleteCampagneRegionRoute } from "./usecases/deleteCampagneRegion/deleteCampagneRegion.route";
 import { editCampagneRoute } from "./usecases/editCampagne/editCampagne.route";
 import { editCampagneRegionRoute } from "./usecases/editCampagneRegion/editCampagneRegion.route";
 import { editUserRoute } from "./usecases/editUser/editUser.route";
@@ -16,6 +17,7 @@ import { getCampagnesRoute } from "./usecases/getCampagnes/getCampagnes.route";
 import { getCampagnesRegionRoute } from "./usecases/getCampagnesRegion/getCampagnesRegion.route";
 import { getCurrentCampagneRoute } from "./usecases/getCurrentCampagne/getCurrentCampagne.route";
 import { getDneAuthorizationUrlRoute } from "./usecases/getDneUrl/getDneUrl.route";
+import { getLatestCampagneRoute } from "./usecases/getLatestCampagne/getLatestCampagne.route";
 import { getUsersRoute } from "./usecases/getUsers/getUsers.route";
 import { homeRoute } from "./usecases/home/home.route";
 import { isMaintenanceRoute } from "./usecases/isMaintenance/isMaintenance.route";
@@ -44,12 +46,14 @@ export const registerCoreModule = (server: Server) => {
     ...getDneAuthorizationUrlRoute(server),
     ...redirectDneRoute(server),
     ...getCurrentCampagneRoute(server),
+    ...getLatestCampagneRoute(server),
     ...getCampagnesRoute(server),
     ...getCampagneRoute(server),
     ...editCampagneRoute(server),
     ...createCampagneRoute(server),
     ...getCampagnesRegionRoute(server),
     ...editCampagneRegionRoute(server),
+    ...deleteCampagneRegionRoute(server),
     ...createCampagneRegionRoute(server),
     ...generateMetabaseDashboardUrlRoute(server),
     ...searchUserRoute(server),

@@ -11,7 +11,7 @@ import {beforeEach,describe, expect, it} from 'vitest';
 
 import { canCorrectDemande, canCreateDemande, canDeleteDemande, canImportDemande } from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
 import type { DemandeIntention } from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
-import { canEditDemandeIntention } from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import {canEditDemandeIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 
 const createUserBuilder = ({
   role,
@@ -120,6 +120,12 @@ const fixtureBuilder = () => {
       },
       campagne2025EnAttente: () => {
         campagne = createCampagneBuilder({annee: "2025", statut: CampagneStatutEnum["en attente"]});
+      },
+      campagneRegionaleEnCoursWithSaisiePerdir: () => {
+        campagne = createCampagneBuilder({annee: "2025", hasCampagneRegionEnCours: true, codeRegion: "76", withSaisiePerdir: true});
+      },
+      campagneRegionaleEnCoursWithoutSaisiePerdir: () => {
+        campagne = createCampagneBuilder({annee: "2025", hasCampagneRegionEnCours: true, codeRegion: "76", withSaisiePerdir: false });
       },
       demandeEditable: (statut?: DemandeStatutType) => {
         demande = createDemandeBuilder({
@@ -293,9 +299,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsDemandeUtils", 
     fixture.given.campagne2024();
     fixture.given.demandeEditable();
 
-    fixture.when.canCreateDemande();
-    fixture.then.verifierCanCreate();
-
     fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanEdit();
 
@@ -346,6 +349,12 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsDemandeUtils", 
 
     fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanEdit();
+  });
+
+  it("Un utilisateur admin région doit pouvoir créer une demande pendant la campagne en cours si celle ci a une campagne régionale ", () => {
+    fixture.given.utilisateurAdminRegion();
+    fixture.given.currentCampagne2025();
+    fixture.given.campagneRegionaleEnCoursWithSaisiePerdir();
 
     fixture.when.canCreateDemande();
     fixture.then.verifierCanCreate();

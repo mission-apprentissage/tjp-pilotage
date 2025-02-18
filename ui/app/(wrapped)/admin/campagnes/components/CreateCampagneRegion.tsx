@@ -1,5 +1,5 @@
 import {ChevronDownIcon} from '@chakra-ui/icons';
-import {Alert, AlertDescription, Button, Flex, FormControl, FormErrorMessage, FormLabel, Highlight, Menu, MenuButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Select, Stack, Text, useToast} from '@chakra-ui/react';
+import {Alert, AlertDescription, Button, Flex, FormControl, FormErrorMessage, FormLabel, Highlight, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Select, Stack, Text, useToast} from '@chakra-ui/react';
 import { useQueryClient } from "@tanstack/react-query";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
@@ -19,15 +19,19 @@ import { toBoolean } from "@/utils/toBoolean";
 export const CreateCampagneRegion = ({
   isOpen,
   onClose,
-  regions
+  regions,
+  campagnes,
+  latestCampagne
 }: {
   isOpen: boolean;
   onClose: () => void;
   regions?: (typeof client.infer)["[GET]/regions"];
+  campagnes?: (typeof client.infer)["[GET]/campagnes"];
+  latestCampagne?: (typeof client.infer)["[GET]/campagne/latest"];
 }) => {
   const toast = useToast();
   const { user } = useAuth();
-  const { campagne: currentCampagneNationale, setCampagne: setCurrentCampagne } = useCurrentCampagne();
+  const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
   const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
 
   const {
@@ -42,7 +46,7 @@ export const CreateCampagneRegion = ({
     shouldUseNativeValidation: false,
     defaultValues: {
       codeRegion: user?.codeRegion,
-      campagneId: currentCampagneNationale?.id
+      campagneId: latestCampagne?.id
     }
   });
 
@@ -110,11 +114,21 @@ export const CreateCampagneRegion = ({
               >
                 <Flex direction="row" w="100%">
                   <Flex direction={"row"} gap={2}>
-                    <Text>{currentCampagneNationale?.annee}</Text>
-                    <CampagneStatutTag statut={currentCampagneNationale?.statut} />
+                    <Text>{latestCampagne?.annee}</Text>
+                    <CampagneStatutTag statut={latestCampagne?.statut} />
                   </Flex>
                 </Flex>
               </MenuButton>
+              <MenuList>
+                {campagnes?.map((campagne) => (
+                  <MenuItem key={campagne.id} onClick={() => setValue("campagneId", campagne.id)}>
+                    <Flex direction={"row"} gap={2}>
+                      <Text>{campagne.annee}</Text>
+                      <CampagneStatutTag statut={campagne.statut} />
+                    </Flex>
+                  </MenuItem>
+                ))}
+              </MenuList>
             </Menu>
             {!!errors.campagneId && <FormErrorMessage>{errors.campagneId.message}</FormErrorMessage>}
           </FormControl>
@@ -163,11 +177,16 @@ export const CreateCampagneRegion = ({
                 });
               }}
               minDate={
-                currentCampagneNationale?.dateDebut ?
-                  toDate(currentCampagneNationale.dateDebut) :
+                latestCampagne?.dateDebut ?
+                  toDate(latestCampagne.dateDebut) :
                   undefined
               }
-              maxDate={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
+              maxDate={
+                getValues("dateFin") ? toDate(getValues("dateFin")) :
+                  latestCampagne?.dateFin ?
+                    toDate(latestCampagne.dateFin) :
+                    undefined
+              }
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {
@@ -192,10 +211,14 @@ export const CreateCampagneRegion = ({
                   shouldValidate: true,
                 });
               }}
-              minDate={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
+              minDate={
+                getValues("dateDebut") ? toDate(getValues("dateDebut")) :
+                  latestCampagne?.dateDebut ?
+                    toDate(latestCampagne.dateDebut) :
+                    undefined}
               maxDate={
-                currentCampagneNationale?.dateFin ?
-                  toDate(currentCampagneNationale.dateFin) :
+                latestCampagne?.dateFin ?
+                  toDate(latestCampagne.dateFin) :
                   undefined
               }
               configs={getDatePickerConfig()}
@@ -223,14 +246,16 @@ export const CreateCampagneRegion = ({
                 });
               }}
               minDate={
-                currentCampagneNationale?.dateDebut ?
-                  toDate(currentCampagneNationale.dateDebut) :
-                  undefined
+                getValues("dateDebut") ? toDate(getValues("dateDebut")) :
+                  latestCampagne?.dateDebut ?
+                    toDate(latestCampagne.dateDebut) :
+                    undefined
               }
               maxDate={
-                currentCampagneNationale?.dateFin ?
-                  toDate(currentCampagneNationale.dateFin) :
-                  undefined
+                getValues("dateFin") ? toDate(getValues("dateFin")) :
+                  latestCampagne?.dateFin ?
+                    toDate(latestCampagne.dateFin) :
+                    undefined
               }
               configs={getDatePickerConfig()}
               propsConfigs={{
@@ -248,7 +273,9 @@ export const CreateCampagneRegion = ({
             {!!errors.dateVote && <FormErrorMessage>{errors.dateVote.message}</FormErrorMessage>}
           </FormControl>
           <FormControl as="fieldset" mb="4" isInvalid={!!errors.withSaisiePerdir} isRequired>
-            <FormLabel as="legend" fontSize={"md"} fontWeight={"bold"}>Remplissage des demandes par les chefs d'établissement ?</FormLabel>
+            <FormLabel as="legend" fontSize={"md"} fontWeight={"bold"}>
+              Saisie des demandes par les chefs d'établissement ?
+            </FormLabel>
             <Controller
               name="withSaisiePerdir"
               control={control}

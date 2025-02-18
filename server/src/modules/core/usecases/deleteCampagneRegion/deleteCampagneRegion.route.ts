@@ -4,22 +4,23 @@ import { ROUTES } from "shared/routes/routes";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getCurrentCampagneUsecase } from "./getCurrentCampagne.usecase";
+import { deleteCampagneRegion } from "./deleteCampagneRegion.usecase";
 
-const ROUTE = ROUTES["[GET]/campagne/current"];
+const ROUTE = ROUTES["[DELETE]/campagne-region/:id"];
 
-export const getCurrentCampagneRoute = (server: Server) => {
+export const deleteCampagneRegionRoute = (server: Server) => {
   return createRoute(ROUTE.url, {
     method: ROUTE.method,
     schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("campagnes/lecture"),
+      preHandler: hasPermissionHandler("campagnes-région/ecriture"),
       handler: async (request, response) => {
-        const user = request.user;
-        const campagneEnCours = await getCurrentCampagneUsecase(user);
-        response.status(200).send(campagneEnCours);
+        const user = request.user!;
+        await deleteCampagneRegion({ id: request.params.id, user });
+
+        response.code(200).send();
       },
     });
   });

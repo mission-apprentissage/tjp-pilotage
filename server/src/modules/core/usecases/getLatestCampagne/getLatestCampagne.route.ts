@@ -4,11 +4,12 @@ import { ROUTES } from "shared/routes/routes";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getCurrentCampagneUsecase } from "./getCurrentCampagne.usecase";
+import { getLatestCampagneUsecase } from "./getLatestCampagne.usecase";
 
-const ROUTE = ROUTES["[GET]/campagne/current"];
 
-export const getCurrentCampagneRoute = (server: Server) => {
+const ROUTE = ROUTES["[GET]/campagne/latest"];
+
+export const getLatestCampagneRoute = (server: Server) => {
   return createRoute(ROUTE.url, {
     method: ROUTE.method,
     schema: ROUTE.schema,
@@ -16,10 +17,9 @@ export const getCurrentCampagneRoute = (server: Server) => {
     server.route({
       ...props,
       preHandler: hasPermissionHandler("campagnes/lecture"),
-      handler: async (request, response) => {
-        const user = request.user;
-        const campagneEnCours = await getCurrentCampagneUsecase(user);
-        response.status(200).send(campagneEnCours);
+      handler: async (_request, response) => {
+        const latestCampagne = await getLatestCampagneUsecase();
+        response.status(200).send(latestCampagne);
       },
     });
   });

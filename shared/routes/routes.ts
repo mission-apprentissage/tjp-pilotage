@@ -1,3 +1,4 @@
+import { deleteCampagneRegionSchema } from "./schemas/delete.campagneRegion.id.schema";
 import { deleteDemandeSchema } from "./schemas/delete.demande.numero.schema";
 import { deleteSuiviSchema } from "./schemas/delete.demande.suivi.id.schema";
 import { deleteAvisSchema } from "./schemas/delete.intention.avis.id.schema";
@@ -8,6 +9,7 @@ import { deleteRequeteEnregistreeSchema } from "./schemas/delete.requeteEnregist
 import { checkActivationTokenSchema } from "./schemas/get.auth.check-activation-token.schema";
 import { whoAmISchema } from "./schemas/get.auth.whoAmI.schema";
 import { getCurrentCampagneSchema } from "./schemas/get.campagne.current.schema";
+import {getLatestCampagneSchema} from './schemas/get.campagne.latest.schema';
 import {getCampagneSchema} from './schemas/get.campagne.schema';
 import { getCampagnesSchema } from "./schemas/get.campagnes.schema";
 import { getCampagnesRegionSchema } from "./schemas/get.campagnes-region.schema";
@@ -187,6 +189,11 @@ export const ROUTES = {
     method: "GET",
     schema: getCurrentCampagneSchema,
   },
+  "[GET]/campagne/latest": {
+    url: "/campagne/latest",
+    method: "GET",
+    schema: getLatestCampagneSchema,
+  },
   "[GET]/campagnes-region": {
     url: "/campagnes-region",
     method: "GET",
@@ -201,6 +208,11 @@ export const ROUTES = {
     url: "/campagnes-region/:campagneRegionId",
     method: "PUT",
     schema: editCampagneRegionSchema,
+  },
+  "[DELETE]/campagne-region/:id": {
+    url: "/campagne-region/:id",
+    method: "DELETE",
+    schema: deleteCampagneRegionSchema,
   },
   "[POST]/generate-metabase-dashboard-url": {
     url: "/generate-metabase-dashboard-url",
