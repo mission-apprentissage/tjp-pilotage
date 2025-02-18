@@ -61,7 +61,7 @@ export const CartoSection = ({
     return {
       name: region.libelleRegion,
       code: region.codeRegion,
-      value: formatNumber((region[indicateur] ?? 0) * 100),
+      value: indicateur === "tauxTransformationCumule" || indicateur === "tauxTransformationCumulePrevisionnel" ? formatNumber((region[indicateur]?.taux ?? 0) * 100) : formatNumber((region[indicateur] ?? 0) * 100),
     };
   }), [data, indicateur]) ;
 

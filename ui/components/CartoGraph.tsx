@@ -173,9 +173,9 @@ export const CartoGraph = ({
       const rest = position - base;
 
       if (rest === 0) {
-        return arr[base];
+        return Math.round(arr [base]);
       } else {
-        return arr[base] + rest * (arr[base + 1] - arr[base]);
+        return Math.round(arr[base] + rest * (arr[base + 1] - arr[base]));
       }
     };
 
