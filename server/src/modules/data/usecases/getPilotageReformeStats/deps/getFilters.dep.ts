@@ -22,7 +22,7 @@ export const getFilters = async () => {
   const diplomes = getKbdClient().selectFrom("niveauDiplome")
     .select(["libelleNiveauDiplome as label", "codeNiveauDiplome as value"])
     .where("codeNiveauDiplome", "is not", null)
-    .where("codeNiveauDiplome", "in", ["500", "320", "400", "461", "561", '010'])
+    .where("codeNiveauDiplome", "in", ["500", "320", "400", "461", "561", '010', '241','401', '381', '481', '581'])
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc")
     .execute();
