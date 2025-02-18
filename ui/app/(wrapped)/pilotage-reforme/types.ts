@@ -15,6 +15,8 @@ export type PilotageReformeStats = (typeof client.infer)["[GET]/pilotage-reforme
 
 export type PilotageReformeStatsRegion = (typeof client.infer)["[GET]/pilotage-reforme/stats/regions"];
 
+export type TauxTransformation = (typeof client.infer)["[GET]/pilotage-reforme/stats"]["tauxTransformationCumule"]
+
 export type IndicateurType = keyof Pick<
   (typeof client.infer)["[GET]/pilotage-reforme/stats/regions"]["statsRegions"][number],
   "tauxInsertion" | "tauxPoursuite" | "tauxTransformationCumule" | "tauxChomage"

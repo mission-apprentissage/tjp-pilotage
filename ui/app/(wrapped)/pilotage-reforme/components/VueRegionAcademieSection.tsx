@@ -1,7 +1,7 @@
-import { Box, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from '@chakra-ui/react';
 import { useMemo } from 'react';
 
-import type { Order, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage-reforme/types";
+import type { Order, PilotageReformeStatsRegion, TauxTransformation } from "@/app/(wrapped)/pilotage-reforme/types";
 import { GlossaireShortcut } from '@/components/GlossaireShortcut';
 import { OrderIcon } from "@/components/OrderIcon";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -56,7 +56,7 @@ export const VueRegionAcademieSection = ({
   handleOrder: (column: Order["orderBy"]) => void;
   onModalOpen: () => void;
   nationalStats: {
-    tauxTransformationCumule?: number;
+    tauxTransformationCumule?: TauxTransformation;
     tauxPoursuite?: number;
     tauxInsertion?: number;
     tauxChomage?: number;
@@ -74,7 +74,9 @@ export const VueRegionAcademieSection = ({
           {region.libelleRegion}
         </Td>
         <Td isNumeric backgroundColor={tdBgColor}>
-          {formatPercentageFixedDigits(region.tauxTransformationCumule, 1, "-")}
+          <Tooltip label={`${region.tauxTransformationCumule?.placesTransformees} / ${region.tauxTransformationCumule?.effectifs}`}>
+            {formatPercentageFixedDigits(region.tauxTransformationCumule?.taux, 1, "-")}
+          </Tooltip>
         </Td>
         <Td isNumeric backgroundColor={tdBgColor}>
           {formatPercentageFixedDigits(region.tauxPoursuite, 1, "-")}
@@ -173,7 +175,9 @@ export const VueRegionAcademieSection = ({
                     NATIONAL
                   </Td>
                   <Td isNumeric  >
-                    {formatPercentageFixedDigits(nationalStats.tauxTransformationCumule, 1, "-")}
+                    <Tooltip label={`${nationalStats?.tauxTransformationCumule?.placesTransformees} / ${nationalStats?.tauxTransformationCumule?.effectifs}`}>
+                      {formatPercentageFixedDigits(nationalStats.tauxTransformationCumule?.taux, 1, "-")}
+                    </Tooltip>
                   </Td>
                   <Td isNumeric >
                     {formatPercentageFixedDigits(nationalStats.tauxPoursuite, 1, "-")}

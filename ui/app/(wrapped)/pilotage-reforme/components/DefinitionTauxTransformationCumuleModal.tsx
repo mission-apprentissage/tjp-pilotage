@@ -1,9 +1,12 @@
 import { Divider, Highlight, HStack, ListItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, UnorderedList, VStack } from "@chakra-ui/react";
 import { FIRST_ANNEE_CAMPAGNE } from "shared/time/FIRST_ANNEE_CAMPAGNE";
+import { rentreeScolaireCampagnes } from "shared/time/rentreeScolaireCampagnes";
 
 import { themeColors } from "@/theme/themeColors";
 
-export const DefinitionTauxTransformationCumuleModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+export const DefinitionTauxTransformationCumuleModal = (
+  { isOpen, onClose }:
+  { isOpen: boolean; onClose: () => void }) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -48,7 +51,7 @@ export const DefinitionTauxTransformationCumuleModal = ({ isOpen, onClose }: { i
                   <VStack lineHeight="20px">
                     <Text fontWeight="700">
                       <Highlight styles={{ color: "info.text" }} query={""}>
-                        Pl. transformées Rentrées 2024 + 2025 + 2026
+                        {`Pl. transformées Rentrées ${rentreeScolaireCampagnes().join(" + ")}`}
                       </Highlight>
                     </Text>
                     <Text>issues des demandes validées</Text>
@@ -68,7 +71,7 @@ export const DefinitionTauxTransformationCumuleModal = ({ isOpen, onClose }: { i
                   <Text>
                     Pl. <b>transformées</b> = Pl. <b>ouvertes</b> + Pl. <b>fermées</b> + Pl. <b>existantes colorées</b> (à partir de la Rentrée Scolaire 2025).
                     <br/>
-                    Pour la Rentrée scolaire "année N", le nombre de places transformées au numérateur correspon aux transofmrations <b>prévues</b> (sur la base des demandes validées) et non <b>constatées.</b>
+                    Pour la Rentrée scolaire "année N", le nombre de places transformées au numérateur correspond aux transformations <b>prévues</b> (sur la base des demandes validées) et non <b>constatées.</b>
                   </Text>
                 </ListItem>
                 <ListItem>

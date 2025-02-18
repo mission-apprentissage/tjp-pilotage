@@ -1,5 +1,6 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
+import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_RENTREE } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
@@ -69,7 +70,10 @@ export const getStatsRegions = async ({
       ])
       .groupBy(["region.codeRegion", "region.libelleRegion", "indicateurRegion.tauxChomage"]))
     .with("tauxTransformationCumule", (qb) => qb.selectFrom(
-      genericOnDemandes({  rentreeScolaire: rentreeScolaireCampagnes() })
+      genericOnDemandes({
+        rentreeScolaire: rentreeScolaireCampagnes(),
+        codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined,
+      })
         .where("demande.statut", "=", DemandeStatutEnum["demande validée"])
         .where("campagne.statut", "=", CampagneStatutEnum["terminée"])
         .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])
@@ -104,7 +108,11 @@ export const getStatsRegions = async ({
       sql<number>`ROUND(CAST((${eb.ref("indicateursIJ.tauxChomage")}::float / ${eb.val(100)}::float) AS numeric), 5)`.as("tauxChomage"),
       eb.ref("indicateursIJ.tauxInsertion").as("tauxInsertion"),
       eb.ref("indicateursIJ.tauxPoursuite").as("tauxPoursuite"),
-      eb.ref("tauxTransformationCumule.tauxTransformationCumule").as("tauxTransformationCumule"),
+      jsonBuildObject({
+        placesTransformees: eb.ref("tauxTransformationCumule.placesTransformees"),
+        effectifs: eb.ref("tauxTransformationCumule.effectif"),
+        taux: eb.ref("tauxTransformationCumule.tauxTransformationCumule"),
+      }).as("tauxTransformationCumule"),
     ])
     .$call((q) => {
       if (!orderBy) return q;

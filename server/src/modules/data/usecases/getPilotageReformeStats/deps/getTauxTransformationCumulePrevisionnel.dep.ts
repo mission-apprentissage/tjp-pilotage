@@ -16,7 +16,11 @@ export const getTauxTransformationCumulePrevisionnel = async ({
 }) => {
   const tauxTransfoCumulePrevisionnel = await getKbdClient()
     .selectFrom(
-      genericOnDemandes({ codeRegion, rentreeScolaire: rentreeScolaireCampagnes() })
+      genericOnDemandes({
+        codeRegion,
+        rentreeScolaire: rentreeScolaireCampagnes(),
+        codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined
+      })
         .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])
         .groupBy(["demande.codeRegion"])
         .as("demandes")
@@ -40,8 +44,12 @@ export const getTauxTransformationCumulePrevisionnel = async ({
     return prev;
   }, {effectifs: 0, placesTransformees: 0});
 
-  return formatTauxTransformation(
-    tauxTransfoCumulePrevisionnelNational.placesTransformees,
-    tauxTransfoCumulePrevisionnelNational.effectifs
-  );
+  return {
+    placesTransformees: tauxTransfoCumulePrevisionnelNational.placesTransformees,
+    effectifs: tauxTransfoCumulePrevisionnelNational.effectifs,
+    taux: formatTauxTransformation(
+      tauxTransfoCumulePrevisionnelNational.placesTransformees,
+      tauxTransfoCumulePrevisionnelNational.effectifs
+    ),
+  };
 };

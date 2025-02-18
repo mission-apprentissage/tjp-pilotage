@@ -22,6 +22,12 @@ const FiltersSchema = z.object({
   codeRegion: z.string().optional(),
 });
 
+const TauxTransformationSchema = z.object({
+  placesTransformees: z.number(),
+  effectifs: z.number(),
+  taux: z.number(),
+});
+
 export const getPilotageReformeStatsSchema = {
   querystring: FiltersSchema,
   response: {
@@ -31,8 +37,8 @@ export const getPilotageReformeStatsSchema = {
         diplomes: z.array(OptionSchema),
       }),
       annees: z.array(StatsAnneeSchema),
-      tauxTransformationCumule: z.number(),
-      tauxTransformationCumulePrevisionnel: z.number(),
+      tauxTransformationCumule: TauxTransformationSchema,
+      tauxTransformationCumulePrevisionnel: TauxTransformationSchema,
     }),
   },
 };

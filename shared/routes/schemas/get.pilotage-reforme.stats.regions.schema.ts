@@ -2,13 +2,19 @@ import { z } from "zod";
 
 import { OptionSchema } from "../../schema/optionSchema";
 
+const TauxTransformationSchema = z.object({
+  placesTransformees: z.number().optional(),
+  effectifs: z.number().optional(),
+  taux: z.number().optional(),
+});
+
 const StatsRegionLineSchema = z.object({
   codeRegion: z.string(),
   libelleRegion: z.string().optional(),
   tauxChomage: z.coerce.number().optional(),
   tauxPoursuite: z.coerce.number().optional(),
   tauxInsertion: z.coerce.number().optional(),
-  tauxTransformationCumule: z.coerce.number().optional(),
+  tauxTransformationCumule: TauxTransformationSchema.optional(),
 });
 
 const FiltersRegionsSchema = z.object({

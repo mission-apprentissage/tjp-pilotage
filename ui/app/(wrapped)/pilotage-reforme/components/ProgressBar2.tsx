@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Tooltip } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 
 import { formatPercentageFixedDigits } from "@/utils/formatUtils";
@@ -35,7 +35,7 @@ const calculateTransform = (
 
 
 export const ProgressBar2 = (
-  { bars, max = 100 } : { bars: {value: number, color: string, label: string,  order: number}[], max: number,}) => {
+  { bars, max = 100 } : { bars: {value: number, color: string, label: string,  order: number, tooltip?: string}[], max: number,}) => {
 
   const [visibleLabels, setVisibleLabels] = useState<{ [key: string]: boolean }>({});
   const [overflowingLabels, setOverflowingLabels] = useState<{ [key: string]: boolean }>({});
@@ -119,9 +119,11 @@ export const ProgressBar2 = (
               maxWidth="100%"
               whiteSpace="nowrap"
             >
-              <Text fontSize="32px" align={"right"}>
-                <strong>{formatPercentageFixedDigits(bar.value, 1, '-')}</strong>
-              </Text>
+              <Tooltip label={bar.tooltip}>
+                <Text fontSize="32px" align={"right"}>
+                  <strong>{formatPercentageFixedDigits(bar.value, 1, '-')}</strong>
+                </Text>
+              </Tooltip>
               <Text align="right" color="#161616" fontWeight={"bold"}>
                 {bar.label}
               </Text>

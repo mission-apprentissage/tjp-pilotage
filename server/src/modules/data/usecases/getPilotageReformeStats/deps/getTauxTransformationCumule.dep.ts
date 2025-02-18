@@ -18,7 +18,7 @@ export const getTauxTransformationCumule = async ({
 }) => {
   const tauxTransfoCumule = await getKbdClient()
     .selectFrom(
-      genericOnDemandes({ codeRegion, rentreeScolaire: rentreeScolaireCampagnes() })
+      genericOnDemandes({ codeRegion, rentreeScolaire: rentreeScolaireCampagnes(), codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined })
         .where("demande.statut", "=", DemandeStatutEnum["demande validée"])
         .where("campagne.statut", "=", CampagneStatutEnum["terminée"])
         .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])
@@ -44,9 +44,13 @@ export const getTauxTransformationCumule = async ({
     return prev;
   }, {effectifs: 0, placesTransformees: 0});
 
-
-  return formatTauxTransformation(
-    tauxTransformationCumuleNational.placesTransformees,
-    tauxTransformationCumuleNational.effectifs
-  );
+  return {
+    placesTransformees: tauxTransformationCumuleNational.placesTransformees,
+    effectifs: tauxTransformationCumuleNational.effectifs,
+    taux: formatTauxTransformation(
+      tauxTransformationCumuleNational.placesTransformees,
+      tauxTransformationCumuleNational.effectifs
+    ),
+  };
 };
+

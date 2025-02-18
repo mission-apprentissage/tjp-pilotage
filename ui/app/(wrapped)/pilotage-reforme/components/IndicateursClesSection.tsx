@@ -17,7 +17,7 @@ import { OBJECTIF_TAUX_TRANSFO_REFORME } from "shared/objectives/TAUX_TRANSFO";
 import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import type { IndicateurType, PilotageReformeStats } from "@/app/(wrapped)/pilotage-reforme/types";
+import type { IndicateurType, PilotageReformeStats, TauxTransformation } from "@/app/(wrapped)/pilotage-reforme/types";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
 import { formatNumber, formatPercentageFixedDigits } from "@/utils/formatUtils";
@@ -320,8 +320,14 @@ const StatCard = ({
 };
 
 const TauxTransfoCard = (
-  { tauxTransformation, tauxTransformationPrevisionnel, onModalOpen } :
-  { tauxTransformation: number, tauxTransformationPrevisionnel: number, onModalOpen: () => void }) => {
+  { tauxTransformationCumule,
+    tauxTransformationCumulePrevisionnel,
+    onModalOpen
+  } :
+  { tauxTransformationCumule?: TauxTransformation,
+    tauxTransformationCumulePrevisionnel?: TauxTransformation,
+    onModalOpen: () => void
+  }) => {
 
   const [blue, cyan, grey] = useToken("colors", ["bluefrance.113", "blueecume.675_hover", "grey.925"]);
 
@@ -353,14 +359,19 @@ const TauxTransfoCard = (
                 />
               </Flex>
               <Box width="100%">
-                <ProgressBar2 bars={[
-                  {value: OBJECTIF_TAUX_TRANSFO_REFORME, label: 'Objectif de la réforme', color: grey},
-                  {value: tauxTransformationPrevisionnel, label: `Projets RS ${NEXT_RENTREE} inclus`, color: cyan},
-                  {value: tauxTransformation, label: 'Demandes validées', color: blue}
-                ].sort((a, b) => b.value - a.value).map((taux, index) => ({...taux, order: index + 1}))
-                }
-                max={Math.max(OBJECTIF_TAUX_TRANSFO_REFORME, tauxTransformationPrevisionnel, tauxTransformation)}
-                />
+                { tauxTransformationCumule && tauxTransformationCumulePrevisionnel && (
+                  <ProgressBar2 bars={[
+                    {value: OBJECTIF_TAUX_TRANSFO_REFORME, label: 'Objectif de la réforme', color: grey},
+                    {value: tauxTransformationCumulePrevisionnel?.taux, label: `Projets RS ${NEXT_RENTREE} inclus`, color: cyan, tooltip:`${tauxTransformationCumulePrevisionnel?.placesTransformees} / ${tauxTransformationCumulePrevisionnel?.effectifs}`},
+                    {value: tauxTransformationCumule?.taux, label: 'Demandes validées', color: blue, tooltip:`${tauxTransformationCumule?.placesTransformees} / ${tauxTransformationCumule?.effectifs}`}
+                  ].sort((a, b) => b.value - a.value).map((taux, index) => ({...taux, order: index + 1}))
+                  }
+                  max={
+                    Math.max(OBJECTIF_TAUX_TRANSFO_REFORME,
+                      tauxTransformationCumulePrevisionnel?.taux,
+                      tauxTransformationCumule?.taux)}
+                  />
+                )}
               </Box>
             </VStack>
           </CardBody>
@@ -380,8 +391,8 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
       </Heading>
       <VStack width="100%" spacing="18px" mt="12px">
         <TauxTransfoCard
-          tauxTransformation={data?.tauxTransformationCumule ?? 0}
-          tauxTransformationPrevisionnel={data?.tauxTransformationCumulePrevisionnel ?? 0}
+          tauxTransformationCumule={data?.tauxTransformationCumule}
+          tauxTransformationCumulePrevisionnel={data?.tauxTransformationCumulePrevisionnel}
           onModalOpen={onModalOpen}
         />
         <SimpleGrid spacing={3} columns={[2]} width="100%">
