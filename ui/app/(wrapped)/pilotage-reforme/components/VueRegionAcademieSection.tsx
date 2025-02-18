@@ -1,4 +1,4 @@
-import { Box, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from '@chakra-ui/react';
+import { Box, Flex, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from '@chakra-ui/react';
 import { useMemo } from 'react';
 
 import type { Order, PilotageReformeStatsRegion, TauxTransformation } from "@/app/(wrapped)/pilotage-reforme/types";
@@ -9,10 +9,11 @@ import { formatPercentageFixedDigits } from "@/utils/formatUtils";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
   libelleRegion: "Région",
-  tauxInsertion: "Emploi à 6 mois",
-  tauxPoursuite: "Poursuite d'études",
+  tauxInsertion: "Taux d'emploi à 6 mois",
+  tauxPoursuite: "Taux de poursuite d'études",
   tauxChomage: "Taux de chômage",
   tauxTransformationCumule: "Taux de transfo. cumulé",
+  tauxTransformationCumulePrevisionnel: "Taux de transfo. cumulé prévisionnel",
 };
 
 const Loader = () => (
@@ -57,6 +58,7 @@ export const VueRegionAcademieSection = ({
   onModalOpen: () => void;
   nationalStats: {
     tauxTransformationCumule?: TauxTransformation;
+    tauxTransformationCumulePrevisionnel?: TauxTransformation;
     tauxPoursuite?: number;
     tauxInsertion?: number;
     tauxChomage?: number;
@@ -76,6 +78,11 @@ export const VueRegionAcademieSection = ({
         <Td isNumeric backgroundColor={tdBgColor}>
           <Tooltip label={`${region.tauxTransformationCumule?.placesTransformees} / ${region.tauxTransformationCumule?.effectifs}`}>
             {formatPercentageFixedDigits(region.tauxTransformationCumule?.taux, 1, "-")}
+          </Tooltip>
+        </Td>
+        <Td isNumeric backgroundColor={tdBgColor}>
+          <Tooltip label={`${region.tauxTransformationCumulePrevisionnel?.placesTransformees} / ${region.tauxTransformationCumulePrevisionnel?.effectifs}`}>
+            {formatPercentageFixedDigits(region.tauxTransformationCumulePrevisionnel?.taux, 1, "-")}
           </Tooltip>
         </Td>
         <Td isNumeric backgroundColor={tdBgColor}>
@@ -114,53 +121,91 @@ export const VueRegionAcademieSection = ({
                     <OrderIcon {...order} column="libelleRegion" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.libelleRegion}
                   </Th>
-                  <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxTransformationCumule")}>
-                    <OrderIcon {...order} column="tauxTransformationCumule" />
-                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxTransformationCumule}
-                    <TooltipIcon
-                      display={"inline"}
-                      marginInline={1}
-                      label={
-                        <Box>
-                          <Text>Taux de transformation cumulé par région.</Text>
-                        </Box>
-                      }
-                      onClick={() => onModalOpen()}
-                    />
+                  <Th isNumeric cursor="pointer" pb="4"  onClick={() => handleOrder("tauxTransformationCumule")}>
+                    <Flex alignItems="center">
+                      <OrderIcon {...order} column="tauxTransformationCumule" />
+                      <Text align="left">
+                      Taux de transfo. cumulé
+                        <br/>
+                      (Demandes validées)
+                      </Text>
+                      <TooltipIcon
+                        display={"inline"}
+                        marginInline={1}
+                        label={
+                          <Box>
+                            <Text>Taux de transformation cumulé par région.</Text>
+                          </Box>
+                        }
+                        onClick={() => onModalOpen()}
+                      />
+                    </Flex>
                   </Th>
-                  <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxPoursuite")}>
-                    <OrderIcon {...order} column="tauxPoursuite" />
-                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuite}
-                    <GlossaireShortcut
-                      display={"inline"}
-                      marginInline={1}
-                      iconSize={"12px"}
-                      glossaireEntryKey={"taux-poursuite-etudes"}
-                      tooltip={
-                        <Box>
-                          <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                          <Text>Cliquez pour plus d'infos.</Text>
-                        </Box>
-                      }
-                    />
+                  <Th isNumeric cursor="pointer" pb="4" onClick={() => handleOrder("tauxTransformationCumulePrevisionnel")}>
+                    <Flex alignItems="center">
+                      <OrderIcon {...order} column="tauxTransformationCumulePrevisionnel" />
+                      <Text align="left">
+                        Taux de transfo. cumulé
+                        <br/>
+                        (Projets inclus)
+                      </Text>
+                      <TooltipIcon
+                        display={"inline"}
+                        marginInline={1}
+                        label={
+                          <Box>
+                            <Text>Taux de transformation cumulé par région.</Text>
+                          </Box>
+                        }
+                        onClick={() => onModalOpen()}
+                      />
+                    </Flex>
                   </Th>
-                  <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxInsertion")}>
-                    <OrderIcon {...order} column="tauxInsertion" />
-                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion}
-                    <GlossaireShortcut
-                      display={"inline"}
-                      marginInline={1}
-                      iconSize={"12px"}
-                      glossaireEntryKey={"taux-emploi-6-mois"}
-                      tooltip={
-                        <Box>
-                          <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-                          <Text>Cliquez pour plus d'infos.</Text>
-                        </Box>
-                      }
-                    />
+                  <Th isNumeric cursor="pointer" pb="4"  onClick={() => handleOrder("tauxPoursuite")}>
+                    <Flex alignItems="center">
+                      <OrderIcon {...order} column="tauxPoursuite"/>
+                      <Text align="left">
+                          Taux de poursuite
+                        <br/>
+                          d'études
+                      </Text>
+                      <GlossaireShortcut
+                        display={"inline"}
+                        marginInline={1}
+                        iconSize={"12px"}
+                        glossaireEntryKey={"taux-poursuite-etudes"}
+                        tooltip={
+                          <Box>
+                            <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
+                            <Text>Cliquez pour plus d'infos.</Text>
+                          </Box>
+                        }
+                      />
+                    </Flex>
                   </Th>
-                  <Th isNumeric cursor="pointer" pb="4" width="20%" onClick={() => handleOrder("tauxChomage")}>
+                  <Th isNumeric cursor="pointer" pb="4"  onClick={() => handleOrder("tauxInsertion")}>
+                    <Flex alignItems="center">
+                      <OrderIcon {...order} column="tauxInsertion" />
+                      <Text align="left">
+                        Taux d'emploi
+                        <br/>
+                        à 6 mois
+                      </Text>
+                      <GlossaireShortcut
+                        display={"inline"}
+                        marginInline={1}
+                        iconSize={"12px"}
+                        glossaireEntryKey={"taux-emploi-6-mois"}
+                        tooltip={
+                          <Box>
+                            <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
+                            <Text>Cliquez pour plus d'infos.</Text>
+                          </Box>
+                        }
+                      />
+                    </Flex>
+                  </Th>
+                  <Th isNumeric cursor="pointer" pb="4" width="15%" onClick={() => handleOrder("tauxChomage")}>
                     <OrderIcon {...order} column="tauxChomage" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxChomage}
                     <TooltipIcon ml="1" label="T4 2022"/>
@@ -177,6 +222,11 @@ export const VueRegionAcademieSection = ({
                   <Td isNumeric  >
                     <Tooltip label={`${nationalStats?.tauxTransformationCumule?.placesTransformees} / ${nationalStats?.tauxTransformationCumule?.effectifs}`}>
                       {formatPercentageFixedDigits(nationalStats.tauxTransformationCumule?.taux, 1, "-")}
+                    </Tooltip>
+                  </Td>
+                  <Td isNumeric >
+                    <Tooltip label={`${nationalStats?.tauxTransformationCumulePrevisionnel?.placesTransformees} / ${nationalStats?.tauxTransformationCumulePrevisionnel?.effectifs}`}>
+                      {formatPercentageFixedDigits(nationalStats.tauxTransformationCumulePrevisionnel?.taux, 1, "-")}
                     </Tooltip>
                   </Td>
                   <Td isNumeric >

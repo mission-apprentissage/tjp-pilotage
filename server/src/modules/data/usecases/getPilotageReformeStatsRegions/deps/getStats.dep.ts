@@ -86,7 +86,7 @@ export const getStatsRegions = async ({
       )
       .select((eb) => [
         eb.ref("demandes.codeRegion").as("codeRegion"),
-        eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
+        eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectifs"),
         eb.fn.coalesce("demandes.placesTransformees", eb.val(0)).as("placesTransformees"),
         sql<number>`CASE
             WHEN ${eb.ref("effectifs.effectif")} IS NULL THEN NULL
@@ -97,10 +97,43 @@ export const getStatsRegions = async ({
             )
           END`.as("tauxTransformationCumule")
       ])
-      .$castTo<{codeRegion: string; effectif: number; placesTransformees: number; tauxTransformationCumule: number;}>())
+      .$castTo<{codeRegion: string; effectifs: number; placesTransformees: number; tauxTransformationCumule: number;}>())
+    .with("tauxTransformationCumulePrevisionnel", (qb) => qb.selectFrom(
+      genericOnDemandes({
+        rentreeScolaire: rentreeScolaireCampagnes(),
+        codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined,
+      })
+        .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])
+        .groupBy(["demande.codeRegion"])
+        .as("demandes")
+    )
+      .leftJoin(
+        effectifTauxTransformationCumule({codeNiveauDiplome}).as("effectifs"),
+        (join) => join.onRef("demandes.codeRegion", "=", "effectifs.codeRegion")
+      )
+      .select((eb) => [
+        eb.ref("demandes.codeRegion").as("codeRegion"),
+        eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectifs"),
+        eb.fn.coalesce("demandes.placesTransformees", eb.val(0)).as("placesTransformees"),
+        sql<number>`CASE
+              WHEN ${eb.ref("effectifs.effectif")} IS NULL THEN NULL
+              ELSE ROUND( CAST(
+                (${eb.fn.coalesce("demandes.placesTransformees", eb.val(0))}::float /
+                ${eb.fn.coalesce("effectifs.effectif", eb.val(0))}::float) AS numeric),
+                5
+              )
+            END`.as("tauxTransformationCumulePrevisionnel")
+      ])
+      .$castTo<{
+        codeRegion: string;
+        effectifs: number;
+        placesTransformees: number;
+        tauxTransformationCumulePrevisionnel: number;
+      }>())
     .selectFrom("region")
     .leftJoin("indicateursIJ", "indicateursIJ.codeRegion", "region.codeRegion")
     .leftJoin("tauxTransformationCumule", "tauxTransformationCumule.codeRegion", "region.codeRegion")
+    .leftJoin("tauxTransformationCumulePrevisionnel", "tauxTransformationCumulePrevisionnel.codeRegion", "region.codeRegion")
     .where(isInPerimetreIJRegion)
     .select((eb) => [
       eb.ref("region.codeRegion").as("codeRegion"),
@@ -110,12 +143,20 @@ export const getStatsRegions = async ({
       eb.ref("indicateursIJ.tauxPoursuite").as("tauxPoursuite"),
       jsonBuildObject({
         placesTransformees: eb.ref("tauxTransformationCumule.placesTransformees"),
-        effectifs: eb.ref("tauxTransformationCumule.effectif"),
+        effectifs: eb.ref("tauxTransformationCumule.effectifs"),
         taux: eb.ref("tauxTransformationCumule.tauxTransformationCumule"),
       }).as("tauxTransformationCumule"),
+      jsonBuildObject({
+        placesTransformees: eb.ref("tauxTransformationCumulePrevisionnel.placesTransformees"),
+        effectifs: eb.ref("tauxTransformationCumulePrevisionnel.effectifs"),
+        taux: eb.ref("tauxTransformationCumulePrevisionnel.tauxTransformationCumulePrevisionnel"),
+      }).as("tauxTransformationCumulePrevisionnel"),
     ])
     .$call((q) => {
       if (!orderBy) return q;
+      if (orderBy.column === "tauxTransformationCumule" || orderBy.column === "tauxTransformationCumulePrevisionnel") {
+        return q.orderBy(sql.ref(`${orderBy.column}.${orderBy.column}`), sql`${sql.raw(orderBy.order)} NULLS LAST`);
+      }
       return q.orderBy(sql.ref(orderBy.column), sql`${sql.raw(orderBy.order)} NULLS LAST`);
     })
     .execute();

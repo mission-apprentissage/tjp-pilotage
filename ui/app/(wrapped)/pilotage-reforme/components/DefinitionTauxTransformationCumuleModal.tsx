@@ -70,13 +70,16 @@ export const DefinitionTauxTransformationCumuleModal = (
                 <ListItem>
                   <Text>
                     Pl. <b>transformées</b> = Pl. <b>ouvertes</b> + Pl. <b>fermées</b> + Pl. <b>existantes colorées</b> (à partir de la Rentrée Scolaire 2025).
-                    <br/>
-                    Pour la Rentrée scolaire "année N", le nombre de places transformées au numérateur correspond aux transformations <b>prévues</b> (sur la base des demandes validées) et non <b>constatées.</b>
                   </Text>
                 </ListItem>
                 <ListItem>
                   <Text>
-                    Le calcul tient compte des places transformées en <b>voie scolaire</b> et en <b>apprentissage</b> (diplômes retenus : CAP, Bac Pro, MC/CS, BTS, FCIL, BT, BP, DNMADE, BMA). Le dénominateur concerne les effectifs <b>en entrée de formation.</b>
+                  Pour la Rentrée scolaire "année N", le nombre de places transformées au numérateur correspond aux transformations <b>prévues</b> (sur la base des demandes validées à l'issue de la concertation entre régions académiques - régions).
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text>
+                    Le calcul tient compte des places transformées en <b>voie scolaire</b> et en <b>apprentissage</b> (diplômes retenus : CAP, Bac Pro, MC/CS, BTS, FCIL, DNMADE, BMA). Le dénominateur concerne les effectifs <b>en entrée de formation.</b>
                   </Text>
                 </ListItem>
               </UnorderedList>

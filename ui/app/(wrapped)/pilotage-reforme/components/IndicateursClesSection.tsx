@@ -364,12 +364,12 @@ const TauxTransfoCard = (
                     {value: OBJECTIF_TAUX_TRANSFO_REFORME, label: 'Objectif de la réforme', color: grey},
                     {value: tauxTransformationCumulePrevisionnel?.taux, label: `Projets RS ${NEXT_RENTREE} inclus`, color: cyan, tooltip:`${tauxTransformationCumulePrevisionnel?.placesTransformees} / ${tauxTransformationCumulePrevisionnel?.effectifs}`},
                     {value: tauxTransformationCumule?.taux, label: 'Demandes validées', color: blue, tooltip:`${tauxTransformationCumule?.placesTransformees} / ${tauxTransformationCumule?.effectifs}`}
-                  ].sort((a, b) => b.value - a.value).map((taux, index) => ({...taux, order: index + 1}))
+                  ].filter(bar => typeof bar?.value !== "undefined").sort((a, b) => b.value! - a.value!).map((taux, index) => ({...taux, order: index + 1}))
                   }
                   max={
                     Math.max(OBJECTIF_TAUX_TRANSFO_REFORME,
-                      tauxTransformationCumulePrevisionnel?.taux,
-                      tauxTransformationCumule?.taux)}
+                      tauxTransformationCumulePrevisionnel?.taux ?? 0,
+                      tauxTransformationCumule?.taux ?? 0)}
                   />
                 )}
               </Box>

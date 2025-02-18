@@ -23,9 +23,9 @@ const FiltersSchema = z.object({
 });
 
 const TauxTransformationSchema = z.object({
-  placesTransformees: z.number(),
-  effectifs: z.number(),
-  taux: z.number(),
+  placesTransformees: z.number().optional(),
+  effectifs: z.number().optional(),
+  taux: z.number().optional(),
 });
 
 export const getPilotageReformeStatsSchema = {

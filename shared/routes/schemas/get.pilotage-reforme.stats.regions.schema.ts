@@ -15,6 +15,7 @@ const StatsRegionLineSchema = z.object({
   tauxPoursuite: z.coerce.number().optional(),
   tauxInsertion: z.coerce.number().optional(),
   tauxTransformationCumule: TauxTransformationSchema.optional(),
+  tauxTransformationCumulePrevisionnel: TauxTransformationSchema.optional(),
 });
 
 const FiltersRegionsSchema = z.object({

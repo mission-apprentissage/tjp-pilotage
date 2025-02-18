@@ -35,7 +35,11 @@ const calculateTransform = (
 
 
 export const ProgressBar2 = (
-  { bars, max = 100 } : { bars: {value: number, color: string, label: string,  order: number, tooltip?: string}[], max: number,}) => {
+  { bars, max = 100 } :
+  { bars: {value: number, color: string, label: string,  order: number, tooltip?: string}[],
+    max: number,
+  }) => {
+  console.log({bars});
 
   const [visibleLabels, setVisibleLabels] = useState<{ [key: string]: boolean }>({});
   const [overflowingLabels, setOverflowingLabels] = useState<{ [key: string]: boolean }>({});
@@ -47,19 +51,25 @@ export const ProgressBar2 = (
     const overflowingLabels: { [key: string]: boolean } = {};
     const labels = Object.keys(labelRefs.current);
 
+    console.log({labels});
+
     labels.forEach((label, i) => {
       let isVisible = true;
       const el1 = labelRefs.current[label];
 
-      labels.forEach((otherLabel, j) => {
-        if (i !== j) {
-          const el2 = labelRefs.current[otherLabel];
-          if (elementsOverlap(el1, el2) && bars.find(b => b.label === otherLabel)!.order > bars.find(b => b.label === label)!.order) {
-            isVisible = false;
+      if(labels.length > 1) {
+        labels.forEach((otherLabel, j) => {
+          if (i !== j) {
+            const el2 = labelRefs.current[otherLabel];
+            const overlap = elementsOverlap(el1, el2);
+            const sameLabelOrder = bars.find(b => b.label === otherLabel)?.order ?? 0;
+            const otherLabelOrder = bars.find(b => b.label === label)?.order ?? 0;
+            if (overlap && sameLabelOrder > otherLabelOrder) {
+              isVisible = false;
+            }
           }
-        }
-      });
-
+        });
+      }
       visibleLabels[label] = isVisible;
 
       if (containerRef.current) {

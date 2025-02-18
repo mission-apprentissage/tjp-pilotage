@@ -123,7 +123,7 @@ export const genericOnDemandes = ({
     ])
     .where(isInPerimetreIJDataEtablissement)
     .$if(withAjustementRentree, (eb) => eb.where(isDemandeNotAjustementRentree))
-    .where("demande.statut", "in", [DemandeStatutEnum["projet de demande"], DemandeStatutEnum["demande validée"]])
+    .where("demande.statut", "in", [DemandeStatutEnum["projet de demande"], DemandeStatutEnum["demande validée"], DemandeStatutEnum["prêt pour le vote"]])
     .$call((eb) => {
       if (campagne) return eb.where("campagne.annee", "=", campagne);
       return eb;

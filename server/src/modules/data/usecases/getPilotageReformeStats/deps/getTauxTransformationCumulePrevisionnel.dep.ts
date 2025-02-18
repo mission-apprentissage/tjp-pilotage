@@ -5,6 +5,7 @@ import { getKbdClient } from "@/db/db";
 import { effectifTauxTransformationCumule } from "@/modules/data/utils/effectifTauxTransformationCumule";
 import { formatTauxTransformation } from "@/modules/data/utils/formatTauxTransformation";
 import { genericOnDemandes } from "@/modules/data/utils/onDemande";
+import logger from "@/services/logger";
 import { cleanNull } from "@/utils/noNull";
 
 export const getTauxTransformationCumulePrevisionnel = async ({
@@ -14,7 +15,7 @@ export const getTauxTransformationCumulePrevisionnel = async ({
   codeRegion?: string;
   codeNiveauDiplome?: string;
 }) => {
-  const tauxTransfoCumulePrevisionnel = await getKbdClient()
+  const tauxTransfoCumulePrevisionnelNational = await getKbdClient()
     .selectFrom(
       genericOnDemandes({
         codeRegion,
@@ -30,26 +31,21 @@ export const getTauxTransformationCumulePrevisionnel = async ({
       (join) => join.onRef("demandes.codeRegion", "=", "effectifs.codeRegion")
     )
     .select((eb) => [
-      eb.ref("demandes.codeRegion").as("codeRegion"),
-      eb.fn.coalesce("effectifs.effectif", eb.val(0)).as("effectif"),
-      eb.fn.coalesce("demandes.placesTransformees", eb.val(0)).as("placesTransformees"),
+      eb.fn.sum("effectifs.effectif").as("effectifs"),
+      eb.fn.sum("demandes.placesTransformees").as("placesTransformees"),
     ])
-    .$castTo<{codeRegion: string; effectif: number; placesTransformees: number;}>()
-    .execute()
+    .$castTo<{effectifs: number | null; placesTransformees: number | null;}>()
+    .executeTakeFirst()
     .then(cleanNull);
 
-  const tauxTransfoCumulePrevisionnelNational = tauxTransfoCumulePrevisionnel.reduce((prev, curr) => {
-    prev.effectifs += Number(curr.effectif);
-    prev.placesTransformees += curr.placesTransformees;
-    return prev;
-  }, {effectifs: 0, placesTransformees: 0});
+  logger.info({ tauxTransfoCumulePrevisionnelNational });
 
   return {
-    placesTransformees: tauxTransfoCumulePrevisionnelNational.placesTransformees,
-    effectifs: tauxTransfoCumulePrevisionnelNational.effectifs,
+    placesTransformees: tauxTransfoCumulePrevisionnelNational?.placesTransformees,
+    effectifs: tauxTransfoCumulePrevisionnelNational?.effectifs,
     taux: formatTauxTransformation(
-      tauxTransfoCumulePrevisionnelNational.placesTransformees,
-      tauxTransfoCumulePrevisionnelNational.effectifs
+      tauxTransfoCumulePrevisionnelNational?.placesTransformees,
+      tauxTransfoCumulePrevisionnelNational?.effectifs
     ),
   };
 };
