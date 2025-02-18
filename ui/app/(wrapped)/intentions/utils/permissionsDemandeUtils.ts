@@ -12,29 +12,24 @@ import type {DemandeIntention} from './permissionsIntentionUtils';
 
 export const canCreateDemande = ({
   user,
+  currentCampagne,
   campagne,
-  currentCampagne
 } : {
   user?: UserType,
+  currentCampagne?: CampagneType
   campagne: CampagneType;
-  currentCampagne: CampagneType
 }) => {
-  const isCampagneRegionale = campagne?.codeRegion;
-  if(isCampagneRegionale) {
-    const isCampagneRegionaleEnCours = campagne?.hasCampagneRegionEnCours;
-    const isCampagneRegionaleOfUser = user?.codeRegion === campagne?.codeRegion;
-    const isCampagneWithSaisiePerdir = campagne?.withSaisiePerdir;
-    return !feature.saisieDisabled &&
-      isCampagneEnCours(campagne) &&
-      currentCampagne.id === campagne.id &&
-      hasPermission(user?.role, "intentions/ecriture") &&
-      isCampagneRegionaleEnCours && isCampagneRegionaleOfUser && isCampagneWithSaisiePerdir;
-  }
+  const isCampagneRegionale = !!campagne?.codeRegion;
+  const isCampagneRegionaleEnCours = !!campagne?.hasCampagneRegionEnCours;
+  const isCampagneRegionaleOfUser = user?.codeRegion === campagne?.codeRegion;
+  const isCurrentCampagne = currentCampagne?.id === campagne.id;
 
   return !feature.saisieDisabled &&
-    isCampagneEnCours(campagne) &&
-    currentCampagne.id === campagne.id &&
-    hasPermission(user?.role, "intentions/ecriture");
+    hasPermission(user?.role, "intentions/ecriture") &&
+    isCurrentCampagne &&
+    isCampagneRegionale &&
+    isCampagneRegionaleEnCours &&
+    isCampagneRegionaleOfUser;
 };
 
 export const canEditDemande = ({

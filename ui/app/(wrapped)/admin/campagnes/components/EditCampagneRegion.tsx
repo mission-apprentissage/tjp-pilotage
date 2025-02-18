@@ -79,7 +79,7 @@ export const EditCampagneRegion = ({
 
   const queryClient = useQueryClient();
 
-  const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
+  const { campagne: currentCampagneNationale, setCampagne: setCurrentCampagne } = useCurrentCampagne();
   const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
 
   const {
@@ -193,7 +193,17 @@ export const EditCampagneRegion = ({
                   shouldValidate: true,
                 });
               }}
-              maxDate={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
+              minDate={
+                currentCampagneNationale?.dateDebut ?
+                  toDate(currentCampagneNationale.dateDebut) :
+                  undefined
+              }
+              maxDate={
+                getValues("dateFin") ? toDate(getValues("dateFin")) :
+                  currentCampagneNationale?.dateFin ?
+                    toDate(currentCampagneNationale.dateFin) :
+                    undefined
+              }
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {
@@ -218,7 +228,17 @@ export const EditCampagneRegion = ({
                   shouldValidate: true,
                 });
               }}
-              minDate={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
+              minDate={
+                getValues("dateDebut") ? toDate(getValues("dateDebut")) :
+                  currentCampagneNationale?.dateDebut ?
+                    toDate(currentCampagneNationale.dateDebut) :
+                    undefined
+              }
+              maxDate={
+                currentCampagneNationale?.dateFin ?
+                  toDate(currentCampagneNationale.dateFin) :
+                  undefined
+              }
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {
@@ -243,8 +263,18 @@ export const EditCampagneRegion = ({
                   shouldValidate: true,
                 });
               }}
-              minDate={getValues("dateDebut") ? toDate(getValues("dateDebut")!) : undefined}
-              maxDate={getValues("dateFin") ? toDate(getValues("dateFin")!) : undefined}
+              minDate={
+                getValues("dateDebut") ? toDate(getValues("dateDebut")!) :
+                  currentCampagneNationale?.dateDebut ?
+                    toDate(currentCampagneNationale.dateDebut) :
+                    undefined
+              }
+              maxDate={
+                getValues("dateFin") ? toDate(getValues("dateFin")!) :
+                  currentCampagneNationale?.dateFin ?
+                    toDate(currentCampagneNationale.dateFin) :
+                    undefined
+              }
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {
@@ -261,7 +291,7 @@ export const EditCampagneRegion = ({
             {!!errors.dateVote && <FormErrorMessage>{errors.dateVote.message}</FormErrorMessage>}
           </FormControl>
           <FormControl as="fieldset" mb="4" isInvalid={!!errors.withSaisiePerdir} isRequired>
-            <FormLabel as="legend" fontWeight={"bold"}>Remplissage des demandes par les chefs d'établissement ?</FormLabel>
+            <FormLabel as="legend" fontWeight={"bold"}>Saisie des demandes par les chefs d'établissement ?</FormLabel>
             <Controller
               name="withSaisiePerdir"
               control={control}

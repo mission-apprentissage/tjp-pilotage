@@ -1,6 +1,6 @@
 "use client";
 
-import { AddIcon, EditIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Button,
   Flex,
@@ -11,6 +11,7 @@ import {
   Td,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -18,6 +19,7 @@ import { useMemo, useState } from "react";
 
 import { client } from "@/api.client";
 import { CreateCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/CreateCampagneRegion";
+import { DeleteCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/DeleteCampagneRegion";
 import { EditCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/EditCampagneRegion";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import {formatBoolean, formatDate} from '@/utils/formatUtils';
@@ -28,12 +30,14 @@ export default () => {
   const { data: campagnesRegion } = client.ref("[GET]/campagnes-region").useQuery({});
   const { data: campagnes } = client.ref("[GET]/campagnes").useQuery({});
   const { data: regions } = client.ref("[GET]/regions").useQuery({});
+  const { data: latestCampagne } = client.ref("[GET]/campagne/latest").useQuery({});
 
   const [campagneRegionId, setCampagneRegionId] = useState<string>();
   const campagneRegion = useMemo(() =>
     campagnesRegion?.find(({ id }) => id === campagneRegionId), [campagnesRegion, campagneRegionId]
   );
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure();
+  const { isOpen: isOpenDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useDisclosure();
 
   return (
     <GuardPermission permission="campagnes-région/lecture">
@@ -44,7 +48,7 @@ export default () => {
           leftIcon={<AddIcon />}
           onClick={() => {
             setCampagneRegionId(undefined);
-            onOpen();
+            onOpenEdit();
           }}
         >
           Ajouter une campagne régionale
@@ -93,17 +97,32 @@ export default () => {
                       {formatDate({date: campagneRegion.dateFin, options: { dateStyle: "short" }, nullValue: "Non définie"})}
                     </Td>
                     <Td width={"5%"} isNumeric>
-                      <IconButton
-                        position="unset"
-                        variant="ghost"
-                        onClick={() => {
-                          setCampagneRegionId(campagneRegion.id);
-                          onOpen();
-                        }}
-                        aria-label="editer"
-                      >
-                        <EditIcon />
-                      </IconButton>
+                      <Tooltip label="Éditer la campagne régionale">
+                        <IconButton
+                          position="unset"
+                          variant="ghost"
+                          onClick={() => {
+                            setCampagneRegionId(campagneRegion.id);
+                            onOpenEdit();
+                          }}
+                          aria-label={`Éditer la campagne régionale ${campagneRegion.id}`}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip label="Supprimer la campagne régionale">
+                        <IconButton
+                          position="unset"
+                          variant="ghost"
+                          onClick={() => {
+                            setCampagneRegionId(campagneRegion.id);
+                            onOpenDelete();
+                          }}
+                          aria-label={`Supprimer la campagne régionale ${campagneRegion.id}`}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
                     </Td>
                   </Tr>
                 ))}
@@ -114,17 +133,31 @@ export default () => {
       }
       {campagnes && campagnes.length > 0 && (
         <>
-          {campagneRegion && isOpen && (
+          {campagneRegion && isOpenEdit && (
             <EditCampagneRegion
-              isOpen={isOpen}
-              onClose={onClose}
+              isOpen={isOpenEdit}
+              onClose={onCloseEdit}
               campagneRegion={campagneRegion}
               campagnes={campagnes}
               regions={regions}
             />
           )}
-          {!campagneRegion && isOpen && (
-            <CreateCampagneRegion isOpen={isOpen} onClose={onClose} regions={regions}/>
+          {campagneRegion && isOpenDelete && (
+            <DeleteCampagneRegion
+              isOpen={isOpenDelete}
+              onClose={onCloseDelete}
+              campagneRegion={campagneRegion}
+              regions={regions}
+            />
+          )}
+          {!campagneRegion && isOpenEdit && (
+            <CreateCampagneRegion
+              isOpen={isOpenEdit}
+              onClose={onCloseEdit}
+              regions={regions}
+              campagnes={campagnes}
+              latestCampagne={latestCampagne}
+            />
           )}
         </>
       )}

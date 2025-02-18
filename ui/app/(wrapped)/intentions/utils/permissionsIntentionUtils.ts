@@ -26,13 +26,20 @@ export const canCreateIntention = ({
   campagne
 } : {
   user?: UserType,
-  currentCampagne: CampagneType;
+  currentCampagne?: CampagneType;
   campagne: CampagneType
 }) => {
-  return !feature.saisieDisabled
-    && isUserPartOfExpe({ user, campagne })
-    && isCampagneEnCours(campagne)
-    && currentCampagne.id === campagne.id;
+  const isCampagneRegionale = !!campagne?.codeRegion;
+  const isCampagneRegionaleEnCours = !!campagne?.hasCampagneRegionEnCours;
+  const isCampagneRegionaleOfUser = user?.codeRegion === campagne?.codeRegion;
+  const isCurrentCampagne = currentCampagne?.id === campagne.id;
+
+  return !feature.saisieDisabled &&
+    isUserPartOfExpe({ user, campagne }) &&
+    isCurrentCampagne &&
+    isCampagneRegionale &&
+    isCampagneRegionaleEnCours &&
+    isCampagneRegionaleOfUser;
 };
 
 export const canEditDemandeIntention = ({

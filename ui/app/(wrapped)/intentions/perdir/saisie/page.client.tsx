@@ -61,7 +61,7 @@ const PAGE_SIZE = 30;
 
 export const PageClient = () => {
   const { user } = useAuth();
-  const { campagne } = useCurrentCampagne();
+  const { campagne: currentCampagne } = useCurrentCampagne();
   const queryClient = useQueryClient();
   const toast = useToast();
   const router = useRouter();
@@ -217,7 +217,7 @@ export const PageClient = () => {
   const [isImporting, setIsImporting] = useState(false);
 
   if (!data) return <IntentionSpinner />;
-  const isNouvelleDemandeDisabled = !canCreateIntention({ user, campagne: data.campagne, currentCampagne: campagne! });
+  const isNouvelleDemandeDisabled = !canCreateIntention({ user, campagne: data.campagne, currentCampagne });
 
   return (
     <Container maxWidth="100%" flex={1} flexDirection={["column", null, "row"]} display={"flex"} minHeight={0} py={4}>

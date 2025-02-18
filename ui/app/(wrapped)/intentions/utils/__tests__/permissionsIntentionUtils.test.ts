@@ -315,9 +315,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
-    fixture.when.canCreateIntention();
-    fixture.then.verifierCanCreate();
-
     fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanEdit();
 
@@ -387,7 +384,7 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
     fixture.then.verifierCanNotCreate();
   });
 
-  it("Un utilisateur admin région de l'expérimentation doit pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
+  it("Un utilisateur admin région de l'expérimentation doit pouvoir modifier une demande pendant une campagne nationale", () => {
     fixture.given.utilisateurAdminRegionExpe();
     fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
@@ -395,22 +392,52 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
     fixture.when.canEditDemandeIntention();
     fixture.then.verifierCanEdit();
+  });
+
+  it("Un utilisateur admin région de l'expérimentation doit pouvoir modifier une demande pendant une campagne nationale", () => {
+    fixture.given.utilisateurAdminRegionExpe();
+    fixture.given.currentCampagne2024();
+    fixture.given.campagne2024();
+    fixture.given.intentionEditable();
+
+    fixture.when.canEditDemandeIntention();
+    fixture.then.verifierCanEdit();
+  });
+
+  it("Un utilisateur admin région de l'expérimentation ne doit pas pouvoir créer une demande pendant la campagne 2024", () => {
+    fixture.given.utilisateurAdminRegionExpe();
+    fixture.given.currentCampagne2024();
+    fixture.given.campagne2024();
+
+    fixture.when.canCreateIntention();
+    fixture.then.verifierCanNotCreate();
+  });
+
+  it("Un utilisateur admin région de l'expérimentation doit pouvoir créer une demande pendant la campagne en cours si celle ci a une campagne régionale ", () => {
+    fixture.given.utilisateurAdminRegionExpe();
+    fixture.given.currentCampagne2025();
+    fixture.given.campagneRegionaleEnCoursWithoutSaisiePerdir();
 
     fixture.when.canCreateIntention();
     fixture.then.verifierCanCreate();
   });
 
-  it("Un utilisateur admin région de l'expérimentation doit pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
-    fixture.given.utilisateurAdminRegionExpe();
-    fixture.given.currentCampagne2024();
-    fixture.given.campagne2024();
-    fixture.given.intentionEditable();
-
-    fixture.when.canEditDemandeIntention();
-    fixture.then.verifierCanEdit();
+  it("Un utilisateur admin région de l'expérimentation doit pouvoir créer une demande pendant la campagne en cours si celle ci a une campagne régionale ", () => {
+    fixture.given.utilisateurPerdirExpe();
+    fixture.given.currentCampagne2025();
+    fixture.given.campagneRegionaleEnCoursWithSaisiePerdir();
 
     fixture.when.canCreateIntention();
     fixture.then.verifierCanCreate();
+  });
+
+  it("Un utilisateur admin région de l'expérimentation doit pouvoir créer une demande pendant la campagne en cours si celle ci a une campagne régionale ", () => {
+    fixture.given.utilisateurPerdirExpe();
+    fixture.given.currentCampagne2025();
+    fixture.given.campagneRegionaleEnCoursWithoutSaisiePerdir();
+
+    fixture.when.canCreateIntention();
+    fixture.then.verifierCanNotCreate();
   });
 
   it("Un utilisateur perdir de l'expérimentation ne doit pas pouvoir modifier une demande qui lui appartient dans les statuts projet de demande / prêt pour le vote / dossier complet / demande validée / refusée", () => {

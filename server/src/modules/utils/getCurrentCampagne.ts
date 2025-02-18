@@ -71,7 +71,7 @@ const getCampagneById = async ({
  * Si une seule campagne est en cours on la renvoie
  * Si plusieurs campagnes sont en cours
  *  Si l'utilisateur est rattaché à une région et qu'une campagne régionale est en cours pour cette région, on renvoie la campagne nationale associée
- *  Sinon on renvoie la plus vieille campagne nationale en cours
+ *  Sinon on renvoie la campagne nationale en cours la plus récente
  *
  * @param user
  * @returns

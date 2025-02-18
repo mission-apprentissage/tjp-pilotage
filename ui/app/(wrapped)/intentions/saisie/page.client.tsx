@@ -57,7 +57,7 @@ const PAGE_SIZE = 30;
 
 export const PageClient = () => {
   const { user } = useAuth();
-  const { campagne } = useCurrentCampagne();
+  const { campagne: currentCampagne } = useCurrentCampagne();
   const toast = useToast();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -215,7 +215,7 @@ export const PageClient = () => {
 
   if (!data) return <IntentionSpinner />;
 
-  const isNouvelleDemandeDisabled = !canCreateDemande({user, campagne: data.campagne, currentCampagne: campagne!});
+  const isNouvelleDemandeDisabled = !canCreateDemande({user, campagne: data.campagne, currentCampagne});
 
   return (
     <Container maxWidth="100%" flex={1} flexDirection={["column", null, "row"]} display={"flex"} minHeight={0} py={4}>
@@ -513,7 +513,7 @@ export const PageClient = () => {
                   variant="createButton"
                   size={"lg"}
                   as={isNouvelleDemandeDisabled ? undefined : NextLink}
-                  href={getRoutingSaisieRecueilDemande({campagne, user, suffix: "new"})}
+                  href={getRoutingSaisieRecueilDemande({campagne: data?.campagne, user, suffix: "new"})}
                   px={3}
                   mt={12}
                   mx={"auto"}
