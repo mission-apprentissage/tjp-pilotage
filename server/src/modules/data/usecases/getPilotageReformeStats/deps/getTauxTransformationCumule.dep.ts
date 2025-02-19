@@ -1,4 +1,4 @@
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import { sql } from "kysely";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { rentreeScolaireCampagnes } from "shared/time/rentreeScolaireCampagnes";
 
@@ -22,10 +22,9 @@ export const getTauxTransformationCumule = async ({
       genericOnDemandes({
         codeRegion,
         rentreeScolaire: rentreeScolaireCampagnes(),
-        codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined
+        codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined,
+        statut: [DemandeStatutEnum["demande validée"]]
       })
-        .where("demande.statut", "=", DemandeStatutEnum["demande validée"])
-        .where("campagne.statut", "=", CampagneStatutEnum["terminée"])
         .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])
         .groupBy(["demande.codeRegion"])
         .as("demandes")
@@ -39,6 +38,7 @@ export const getTauxTransformationCumule = async ({
       eb.fn.sum("demandes.placesTransformees").as("placesTransformees"),
     ])
     .$castTo<{effectifs: number | null; placesTransformees: number | null;}>()
+    .modifyEnd(sql.raw(`\n-- Taux de transformation cumulé national`))
     .executeTakeFirst()
     .then(cleanNull);
 

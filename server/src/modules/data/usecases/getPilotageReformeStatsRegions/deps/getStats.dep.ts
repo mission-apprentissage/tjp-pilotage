@@ -73,8 +73,8 @@ export const getStatsRegions = async ({
       genericOnDemandes({
         rentreeScolaire: rentreeScolaireCampagnes(),
         codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined,
+        statut: [DemandeStatutEnum["demande validée"]],
       })
-        .where("demande.statut", "=", DemandeStatutEnum["demande validée"])
         .where("campagne.statut", "=", CampagneStatutEnum["terminée"])
         .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])
         .groupBy(["demande.codeRegion"])
@@ -159,6 +159,7 @@ export const getStatsRegions = async ({
       }
       return q.orderBy(sql.ref(orderBy.column), sql`${sql.raw(orderBy.order)} NULLS LAST`);
     })
+    .modifyEnd(sql.raw('\n-- Taux de transformation régional'))
     .execute();
 
   return stats.map(cleanNull);
