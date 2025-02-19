@@ -92,7 +92,6 @@ export const getCurrentCampagne = async (user?: RequestUser): Promise<CampagneTy
         dateDebut: campagneEnCours.dateDebut,
         dateFin: campagneEnCours.dateFin,
         statut: campagneEnCours.statut,
-        hasCampagneRegionEnCours: campagneRegionEnCours.statut === CampagneStatutEnum["en cours"],
         codeRegion: campagneRegionEnCours.codeRegion,
         withSaisiePerdir: campagneRegionEnCours.withSaisiePerdir,
         dateVote: campagneRegionEnCours.dateVote,
@@ -125,6 +124,7 @@ export const getCampagnes = async (user?: RequestUser): Promise<Array<CampagneTy
   .leftJoin("campagneRegion", (join) =>
     join
       .onRef("campagneRegion.campagneId", "=", "campagne.id")
+      .on("campagneRegion.statut", "=", CampagneStatutEnum["en cours"])
       .$call((eb) => {
         if(user?.codeRegion) return eb.on("campagneRegion.codeRegion", "=", user.codeRegion);
         return eb.on((eb) => eb.val(false));
@@ -146,7 +146,6 @@ export const getCampagnes = async (user?: RequestUser): Promise<Array<CampagneTy
       dateDebut: campagne.dateDebut.toISOString(),
       dateFin: campagne.dateFin.toISOString(),
       statut: campagne.campagneRegionStatut ?? campagne.statut,
-      hasCampagneRegionEnCours: campagne.campagneRegionStatut === CampagneStatutEnum["en cours"],
       codeRegion: campagne.codeRegion,
       withSaisiePerdir: campagne.withSaisiePerdir,
       dateVote: campagne.dateVote?.toISOString(),

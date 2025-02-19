@@ -65,8 +65,8 @@ export const getCampagneQuery = async ({
     dateDebut: campagne.dateDebut,
     dateFin: campagne.dateFin,
     statut: campagne.statut,
-    hasCampagneRegionEnCours: campagneRegion !== undefined,
     withSaisiePerdir: campagneRegion?.withSaisiePerdir,
     dateVote: campagneRegion?.dateVote,
+    codeRegion: campagneRegion?.codeRegion,
   };
 };

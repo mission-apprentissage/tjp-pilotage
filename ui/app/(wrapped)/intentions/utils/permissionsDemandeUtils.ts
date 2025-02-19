@@ -20,7 +20,6 @@ export const canCreateDemande = ({
   campagne: CampagneType;
 }) => {
   const isCampagneRegionale = !!campagne?.codeRegion;
-  const isCampagneRegionaleEnCours = !!campagne?.hasCampagneRegionEnCours;
   const isCampagneRegionaleOfUser = user?.codeRegion === campagne?.codeRegion;
   const isCurrentCampagne = currentCampagne?.id === campagne.id;
 
@@ -28,7 +27,6 @@ export const canCreateDemande = ({
     hasPermission(user?.role, "intentions/ecriture") &&
     isCurrentCampagne &&
     isCampagneRegionale &&
-    isCampagneRegionaleEnCours &&
     isCampagneRegionaleOfUser;
 };
 
@@ -44,8 +42,6 @@ export const canEditDemande = ({
     !isStatutDemandeValidee(demande.statut) &&
     !isStatutRefusee(demande.statut)
   );
-
-  console.log(canUserEditDemande);
 
   return (
     !feature.saisieDisabled &&
@@ -91,5 +87,6 @@ export const canCorrectDemande = ({
   isStatutDemandeValidee(demande.statut) &&
   hasPermission(user?.role, "intentions/ecriture") &&
   isCampagneTerminee(demande?.campagne) &&
+  !hasRole({user, role: RoleEnum["perdir"]}) &&
   !isTypeAjustement(demande.typeDemande);
 

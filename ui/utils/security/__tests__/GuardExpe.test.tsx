@@ -25,13 +25,11 @@ const getUserContext = (role: Role, codeRegion?: string) => {
 const getCampagneContext = ({
   annee,
   codeRegion,
-  withSaisiePerdir,
-  hasCampagneRegionEnCours
+  withSaisiePerdir
 } : {
   annee: string,
   codeRegion?: string,
-  withSaisiePerdir?: boolean,
-  hasCampagneRegionEnCours?: boolean
+  withSaisiePerdir?: boolean
 }) => {
   return {
     campagne: {
@@ -42,7 +40,6 @@ const getCampagneContext = ({
       annee,
       codeRegion,
       withSaisiePerdir,
-      hasCampagneRegionEnCours,
     },
     setCampagne: (_campagne: CampagneType | undefined) => {}
   };
@@ -163,7 +160,6 @@ describe("ui > components > security > GuardExpe", () => {
           annee: "2025",
           codeRegion: "76",
           withSaisiePerdir: true,
-          hasCampagneRegionEnCours: true
         })}>
           <GuardExpe isExpeRoute={true}>
             <p>has_permission</p>
@@ -183,7 +179,6 @@ describe("ui > components > security > GuardExpe", () => {
           annee: "2025",
           codeRegion: "76",
           withSaisiePerdir: false,
-          hasCampagneRegionEnCours: true
         })}>
           <GuardExpe isExpeRoute={true}>
             <p>has_permission</p>
@@ -204,7 +199,6 @@ describe("ui > components > security > GuardExpe", () => {
           annee: "2025",
           codeRegion: "76",
           withSaisiePerdir: false,
-          hasCampagneRegionEnCours: true
         })}>
           <GuardExpe isExpeRoute={false}>
             <p>has_permission</p>
@@ -225,7 +219,6 @@ describe("ui > components > security > GuardExpe", () => {
           annee: "2025",
           codeRegion: "76",
           withSaisiePerdir: true,
-          hasCampagneRegionEnCours: true
         })}>
           <GuardExpe isExpeRoute={false}>
             <p>has_permission</p>

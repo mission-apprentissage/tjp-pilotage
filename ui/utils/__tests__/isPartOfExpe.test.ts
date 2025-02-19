@@ -27,13 +27,11 @@ const createCampagneBuilder = ({
   statut = CampagneStatutEnum["en cours"],
   codeRegion,
   withSaisiePerdir,
-  hasCampagneRegionEnCours
 } : {
   annee: string,
   statut?: CampagneStatut,
   codeRegion?: string,
   withSaisiePerdir?: boolean,
-  hasCampagneRegionEnCours?: boolean
 }): CampagneType => ({
   id: "testid",
   dateDebut: `${annee}-01-01`,
@@ -42,7 +40,6 @@ const createCampagneBuilder = ({
   statut,
   codeRegion,
   withSaisiePerdir,
-  hasCampagneRegionEnCours,
 });
 
 const fixtureBuilder = () => {
@@ -80,13 +77,10 @@ const fixtureBuilder = () => {
         campagne = createCampagneBuilder({annee: "2025"});
       },
       campagneRegionaleEnCoursWithSaisiePerdir: () => {
-        campagne = createCampagneBuilder({annee: "2025", hasCampagneRegionEnCours: true, codeRegion: "76", withSaisiePerdir: true});
+        campagne = createCampagneBuilder({annee: "2025", codeRegion: "76", withSaisiePerdir: true});
       },
       campagneRegionaleEnCoursWithoutSaisiePerdir: () => {
-        campagne = createCampagneBuilder({annee: "2025", hasCampagneRegionEnCours: true, codeRegion: "76", withSaisiePerdir: false });
-      },
-      campagneRegionaleEnAttente: () => {
-        campagne = createCampagneBuilder({annee: "2025", hasCampagneRegionEnCours: false, codeRegion: "76", withSaisiePerdir: true });
+        campagne = createCampagneBuilder({annee: "2025", codeRegion: "76", withSaisiePerdir: false });
       },
     },
     when: {
@@ -233,15 +227,6 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
   it("Doit renvoyer faux pour un utilisateur perdir et la campagne 2025 dont une autre campagne régionale autorise la saisie", () => {
     fixture.given.utilisateurPerdirHorsExpe();
     fixture.given.campagneRegionaleEnCoursWithSaisiePerdir();
-
-    fixture.when.isUserPartOfExpe();
-
-    fixture.then.verifierUserNotPartOfExpe();
-  });
-
-  it("Doit renvoyer faux pour un utilisateur perdir et la campagne 2025 dont une autre campagne régionale autorise la saisie", () => {
-    fixture.given.utilisateurPerdirHorsExpe();
-    fixture.given.campagneRegionaleEnAttente();
 
     fixture.when.isUserPartOfExpe();
 

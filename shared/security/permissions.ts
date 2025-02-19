@@ -68,6 +68,7 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": PermissionScopeEnum["région"],
     "enregistrement-requete/lecture": PermissionScopeEnum["national"],
     "enregistrement-requete/ecriture": PermissionScopeEnum["national"],
+    "campagnes-région/lecture": PermissionScopeEnum["région"],
   },
   pilote_region: {
     "intentions/lecture": PermissionScopeEnum["région"],
@@ -96,6 +97,7 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": PermissionScopeEnum["région"],
     "enregistrement-requete/lecture": PermissionScopeEnum["national"],
     "enregistrement-requete/ecriture": PermissionScopeEnum["national"],
+    "campagnes-région/lecture": PermissionScopeEnum["national"],
   },
   expert_region: {
     "intentions/lecture": PermissionScopeEnum["région"],
@@ -113,7 +115,6 @@ export const PERMISSIONS = {
     "intentions-perdir/lecture": PermissionScopeEnum["uai"],
     "intentions-perdir/ecriture": PermissionScopeEnum["uai"],
     "restitution-intentions/lecture": PermissionScopeEnum["uai"],
-    "pilotage-intentions/lecture": PermissionScopeEnum["uai"],
     "intentions-perdir-statut/lecture": PermissionScopeEnum["uai"],
     "intentions-perdir-avis/lecture": PermissionScopeEnum["uai"],
     "enregistrement-requete/lecture": PermissionScopeEnum["national"],
