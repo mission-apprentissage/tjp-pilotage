@@ -2,7 +2,6 @@ import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_RENTREE } from "shared";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { rentreeScolaireCampagnes } from "shared/time/rentreeScolaireCampagnes";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
@@ -73,9 +72,8 @@ export const getStatsRegions = async ({
       genericOnDemandes({
         rentreeScolaire: rentreeScolaireCampagnes(),
         codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined,
+        statut: [DemandeStatutEnum["demande validée"]],
       })
-        .where("demande.statut", "=", DemandeStatutEnum["demande validée"])
-        .where("campagne.statut", "=", CampagneStatutEnum["terminée"])
         .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])
         .groupBy(["demande.codeRegion"])
         .as("demandes")
@@ -159,6 +157,7 @@ export const getStatsRegions = async ({
       }
       return q.orderBy(sql.ref(orderBy.column), sql`${sql.raw(orderBy.order)} NULLS LAST`);
     })
+    .modifyEnd(sql.raw('\n-- Taux de transformation régional'))
     .execute();
 
   return stats.map(cleanNull);

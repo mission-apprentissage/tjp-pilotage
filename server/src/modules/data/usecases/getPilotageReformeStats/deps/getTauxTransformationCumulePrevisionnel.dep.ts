@@ -1,4 +1,5 @@
 
+import { sql } from "kysely";
 import { rentreeScolaireCampagnes } from "shared/time/rentreeScolaireCampagnes";
 
 import { getKbdClient } from "@/db/db";
@@ -35,6 +36,7 @@ export const getTauxTransformationCumulePrevisionnel = async ({
       eb.fn.sum("demandes.placesTransformees").as("placesTransformees"),
     ])
     .$castTo<{effectifs: number | null; placesTransformees: number | null;}>()
+    .modifyEnd(sql.raw('\n-- Taux de transformation prévisionnel national'))
     .executeTakeFirst()
     .then(cleanNull);
 
