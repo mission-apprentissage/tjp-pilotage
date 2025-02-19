@@ -1,4 +1,5 @@
-import * as jwt from "jsonwebtoken";
+/* eslint-disable-next-line import/default */
+import jwt from "jsonwebtoken";
 import { RoleEnum } from "shared";
 import { describe, expect, it, vi } from "vitest";
 
