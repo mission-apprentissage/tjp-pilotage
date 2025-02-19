@@ -53,5 +53,6 @@
   "compareFolders.ignoreEmptyLines": true,
   "compareFolders.ignoreWhiteSpaces": true,
   "compareFolders.respectGitIgnore": true,
-  "eslint.useFlatConfig": false
+  "eslint.useFlatConfig": false,
+  "eslint.options": { "overrideConfigFile": ".eslintrc.json" }
 }

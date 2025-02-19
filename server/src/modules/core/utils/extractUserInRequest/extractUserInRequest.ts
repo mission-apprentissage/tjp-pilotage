@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/node";
 import type { FastifyRequest } from "fastify";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
+/* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 
 import config from "@/config";

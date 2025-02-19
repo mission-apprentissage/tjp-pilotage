@@ -1,3 +1,4 @@
+/* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 import { describe, expect, it } from "vitest";
 
