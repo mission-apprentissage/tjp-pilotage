@@ -22,7 +22,7 @@ import {
 } from "shared/utils/typeDemandeUtils";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
-import {shouldDisplayAjustement,shouldDisplayColoration, shouldDisplayTypeDemande, TYPES_DEMANDES_OPTIONS} from '@/app/(wrapped)/intentions/utils/typeDemandeUtils';
+import {shouldDisplayColoration, shouldDisplayTypeDemande, TYPES_DEMANDES_OPTIONS} from '@/app/(wrapped)/intentions/utils/typeDemandeUtils';
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { useAuth } from "@/utils/security/useAuth";
 
@@ -118,8 +118,7 @@ export const TypeDemandeField = chakra(
             >
               {Object.values(TYPES_DEMANDES_OPTIONS).filter((typeDemande) =>
                 shouldDisplayTypeDemande(typeDemande.value, campagne.annee, rentreeScolaire) &&
-                shouldDisplayColoration(typeDemande.value, libelleFCIL) &&
-                shouldDisplayAjustement(typeDemande.value, user)
+                shouldDisplayColoration(typeDemande.value, libelleFCIL)
               ).map(
                 (item) =>
                   (
