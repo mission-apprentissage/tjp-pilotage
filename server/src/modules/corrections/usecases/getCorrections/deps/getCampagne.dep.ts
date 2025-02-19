@@ -1,4 +1,4 @@
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { getKbdClient } from "@/db/db";

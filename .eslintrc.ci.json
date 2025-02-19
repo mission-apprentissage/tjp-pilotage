@@ -38,6 +38,7 @@
     "indent": ["warn", 2],
     "no-prototype-builtins": "error",
     "no-trailing-spaces": "error",
+    "import/no-cycle": ["error", { "ignoreExternal": true }],
     "import/no-relative-packages": "error",
     "import/no-useless-path-segments": ["error"],
     "import/consistent-type-specifier-style": ["error", "prefer-top-level"],

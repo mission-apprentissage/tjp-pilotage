@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import type { Insertable } from "kysely";
 import type {Role} from "shared";
 import { RoleEnum } from "shared";

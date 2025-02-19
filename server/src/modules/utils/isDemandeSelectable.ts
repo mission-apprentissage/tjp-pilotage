@@ -1,4 +1,4 @@
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import {getPermissionScope, RoleEnum} from 'shared';

@@ -1,6 +1,6 @@
 import "@/config";
 
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 import { describe, expect, it, vi } from "vitest";
 
 import type { getPageAsMarkdown, getPageProperties } from "@/modules/core/services/notion/notion";

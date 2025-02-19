@@ -4,7 +4,7 @@ import {Button, chakra, Container, Flex, MenuButton} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
-import qs from "qs";
+import * as qs from "qs";
 import { useContext, useEffect, useState } from "react";
 import {SecteurEnum} from 'shared/enum/secteurEnum';
 

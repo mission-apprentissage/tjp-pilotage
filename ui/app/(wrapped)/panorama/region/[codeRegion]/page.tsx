@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import qs from "qs";
+import * as qs from "qs";
 import { useContext } from "react";
 
 import { client } from "@/api.client";

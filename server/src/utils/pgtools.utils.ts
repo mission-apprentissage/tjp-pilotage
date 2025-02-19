@@ -1,5 +1,5 @@
-import type Ipg from "pg";
-import pg from "pg";
+import type * as Ipg from "pg";
+import * as pg from "pg";
 import type { EmptyObject } from "type-fest";
 
 const { Client } = pg;
@@ -109,7 +109,7 @@ function createFunction(action: "CREATE" | "DROP") {
       }
       throw err;
     } finally {
-      if (!openedClient) pgClient.end();
+      if (!openedClient) await pgClient.end();
     }
   };
 }
