@@ -22,7 +22,7 @@ import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
 import { formatNumber, formatPercentageFixedDigits } from "@/utils/formatUtils";
 
-import { ProgressBar2 } from "./ProgressBar2";
+import { MultiProgressBar } from "./MultiProgressBar";
 
 const EFFECTIF_FEATURE_FLAG = false;
 
@@ -359,33 +359,24 @@ const TauxTransfoCard = (
               </Flex>
               <Box width="100%">
                 { tauxTransformationCumule && tauxTransformationCumulePrevisionnel && (
-                  <ProgressBar2 bars={[
-                    {value: OBJECTIF_TAUX_TRANSFO_REFORME, label: 'Objectif de la réforme', color: grey},
-                    {value: tauxTransformationCumulePrevisionnel?.taux, label: `Projets RS ${NEXT_RENTREE} inclus`, color: cyan, tooltip:`${tauxTransformationCumulePrevisionnel?.placesTransformees} / ${tauxTransformationCumulePrevisionnel?.effectifs}`},
-                    {value: tauxTransformationCumule?.taux, label: 'Demandes validées', color: blue, tooltip:`${tauxTransformationCumule?.placesTransformees} / ${tauxTransformationCumule?.effectifs}`}
-                  ].filter(bar => typeof bar?.value !== "undefined").sort((a, b) => b.value! - a.value!).map((taux, index) => ({...taux, order: index + 1} as {
-                    value: number;
-                    label: string;
-                    color: string;
-                    tooltip?: string | undefined;
-                    order: number;
-                }))
-                  }
-                  max={
-                    Math.max(OBJECTIF_TAUX_TRANSFO_REFORME,
+                  <MultiProgressBar
+                    bars={[
+                      {value: OBJECTIF_TAUX_TRANSFO_REFORME, label: 'Objectif de la réforme', color: grey},
+                      {value: tauxTransformationCumulePrevisionnel?.taux, label: `Projets RS ${NEXT_RENTREE} inclus`, color: cyan, tooltip:`${tauxTransformationCumulePrevisionnel?.placesTransformees} / ${tauxTransformationCumulePrevisionnel?.effectifs}`},
+                      {value: tauxTransformationCumule?.taux, label: 'Demandes validées', color: blue, tooltip:`${tauxTransformationCumule?.placesTransformees} / ${tauxTransformationCumule?.effectifs}`}
+                    ].filter(bar => typeof bar?.value !== "undefined").sort((a, b) => b.value! - a.value!).map((taux, index) => ({...taux, order: index + 1} as {
+                      value: number;
+                      label: string;
+                      color: string;
+                      tooltip?: string | undefined;
+                      order: number;
+                  }))}
+                    max={Math.max(OBJECTIF_TAUX_TRANSFO_REFORME,
                       tauxTransformationCumulePrevisionnel?.taux ?? 0,
                       tauxTransformationCumule?.taux ?? 0)}
                   />
                 )}
               </Box>
-              {/* <Box width="100%">
-                { tauxTransformationCumule && tauxTransformationCumulePrevisionnel && (
-                  <MultiProgressBar
-                    bars={[{value: 0.5, label: 'Demandes validées', color: blue, tooltip:`${tauxTransformationCumule?.placesTransformees} / ${tauxTransformationCumule?.effectifs}`, order: 1}]}
-                    max={1}
-                  />
-                )}
-              </Box> */}
             </VStack>
           </CardBody>
         </Card>

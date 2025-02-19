@@ -3,167 +3,220 @@ import { useEffect, useRef, useState } from "react";
 
 import { formatPercentageFixedDigits } from "@/utils/formatUtils";
 
-const calculateTransform = (
+type Bar = {
+  value: number;
+  color: string;
+  label: string;
+  order: number;
+  tooltip?: string;
+};
+
+function elementsOverlap(el1: HTMLElement, el2: HTMLElement): boolean {
+  const rect1 = el1.getBoundingClientRect();
+  const rect2 = el2.getBoundingClientRect();
+
+  return !(
+    rect1.right < rect2.left ||
+    rect1.left > rect2.right ||
+    rect1.bottom < rect2.top ||
+    rect1.top > rect2.bottom
+  );
+}
+
+function calculateTransform(
   labelElement: HTMLElement,
   containerElement: HTMLElement,
   leftPosition: number
-): string => {
+): string {
   const labelRect = labelElement.getBoundingClientRect();
   const containerRect = containerElement.getBoundingClientRect();
   const labelWidth = labelRect.width;
   const containerWidth = containerRect.width;
 
-  // Position absolue du label par rapport au conteneur
   const absolutePosition = (leftPosition / 100) * containerWidth;
 
-  // Si le label dépasse à droite
   if (absolutePosition + labelWidth > containerWidth) {
-    // Calculer le décalage nécessaire pour que le label reste dans le conteneur
     const overflow = absolutePosition + labelWidth - containerWidth;
     const translatePercentage = (overflow / labelWidth) * 100;
     return `translateX(-${Math.min(translatePercentage, 100)}%)`;
   }
 
-  // Si le label dépasse à gauche
-  if(labelRect.left - containerRect.left < 0) {
-    // Calculer le nombre de pixels par lesquels le label déborde
+  if (labelRect.left - containerRect.left < 0) {
     const overflowPixels = containerRect.left - labelRect.left;
-    // Calculer le ratio de dépassement par rapport à la largeur du label (plafonné à 1)
     const overflowRatio = Math.min(overflowPixels / labelWidth, 1);
-    // Interpoler linéairement entre -100% (aucun dépassement visible) et 0% (dépassement complet)
     const translatePercentage = -100 * (1 - overflowRatio);
     return `translateX(${translatePercentage}%)`;
   }
 
-  // Comportement par défaut
-  return 'translateX(-100%)';
-};
+  return "translateX(-100%)";
+}
 
+export function MultiProgressBar({
+  bars,
+  max = 100
+}: {
+  bars: Bar[];
+  max: number;
+}) {
+  const [visibleLabels, setVisibleLabels] = useState<Set<string>>(new Set());
+  const [hoveredBar, setHoveredBar] = useState<string | null>(null);
+  const [temporarilyHiddenLabels, setTemporarilyHiddenLabels] = useState<Set<string>>(new Set());
 
-export const MultiProgressBar = (
-  { bars, max = 100 } :
-  { bars: {value: number, color: string, label: string,  order: number, tooltip?: string}[],
-    max: number,
-  }) => {
-  console.log({bars});
-
-  const [visibleLabels, setVisibleLabels] = useState<{ [key: string]: boolean }>({});
-  const [overflowingLabels, setOverflowingLabels] = useState<{ [key: string]: boolean }>({});
   const labelRefs = useRef<{ [key: string]: HTMLElement }>({});
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Calcule les labels qui doivent être visibles par défaut
   useEffect(() => {
-    const labels = Object.keys(labelRefs.current);
+    if (!containerRef.current) return;
 
-    console.log({labels});
+    const visibleSet = new Set<string>();
+    const sortedBars = [...bars].sort((a, b) => a.order - b.order);
 
-    labels.forEach((label, i) => {
-      let isVisible = true;
-      const el1 = labelRefs.current[label];
+    // Initialiser tous les labels comme visibles
+    sortedBars.forEach(bar => visibleSet.add(bar.label));
 
-      if(labels.length > 1) {
-        labels.forEach((otherLabel, j) => {
-          if (i !== j) {
-            const el2 = labelRefs.current[otherLabel];
-            const overlap = elementsOverlap(el1, el2);
-            const sameLabelOrder = bars.find(b => b.label === otherLabel)?.order ?? 0;
-            const otherLabelOrder = bars.find(b => b.label === label)?.order ?? 0;
-            if (overlap && sameLabelOrder > otherLabelOrder) {
-              isVisible = false;
-            }
-          }
-        });
+    // Vérifier les chevauchements
+    for (let i = 0; i < sortedBars.length; i++) {
+      const currentLabel = sortedBars[i].label;
+      const currentElement = labelRefs.current[currentLabel];
+
+      if (!currentElement || !visibleSet.has(currentLabel)) continue;
+
+      for (let j = i + 1; j < sortedBars.length; j++) {
+        const nextLabel = sortedBars[j].label;
+        const nextElement = labelRefs.current[nextLabel];
+
+        if (!nextElement || !visibleSet.has(nextLabel)) continue;
+
+        if (elementsOverlap(currentElement, nextElement)) {
+          // Le label avec l'ordre le plus bas devient invisible
+          visibleSet.delete(currentLabel);
+          break;
+        }
       }
-      visibleLabels[label] = isVisible;
+    }
 
-      if (containerRef.current) {
-        overflowingLabels[label] = isOverflowing(el1, containerRef.current);
+    setVisibleLabels(visibleSet);
+  }, [bars]);
+
+  // Gère le masquage temporaire des labels qui se chevauchent avec le label survolé
+  useEffect(() => {
+    if (!hoveredBar || !containerRef.current) {
+      setTemporarilyHiddenLabels(new Set());
+      return;
+    }
+
+    const hoveredElement = labelRefs.current[hoveredBar];
+    if (!hoveredElement) return;
+
+    const hiddenSet = new Set<string>();
+
+    // Vérifie les chevauchements avec le label survolé
+    bars.forEach(bar => {
+      if (bar.label === hoveredBar) return;
+
+      const element = labelRefs.current[bar.label];
+      if (!element) return;
+
+      if (elementsOverlap(hoveredElement, element)) {
+        hiddenSet.add(bar.label);
       }
     });
 
-    setVisibleLabels(visibleLabels);
-    setOverflowingLabels(overflowingLabels);
-  }, [bars, setVisibleLabels, setOverflowingLabels, visibleLabels, overflowingLabels]);
+    setTemporarilyHiddenLabels(hiddenSet);
+  }, [hoveredBar, bars]);
 
-  const elementsOverlap = (el1: HTMLElement, el2: HTMLElement) => {
-    const rect1 = el1.getBoundingClientRect();
-    const rect2 = el2.getBoundingClientRect();
-
-    return !(
-      rect1.right < rect2.left ||
-      rect1.left > rect2.right ||
-      rect1.bottom < rect2.top ||
-      rect1.top > rect2.bottom
-    );
-  };
-
-  const isOverflowing = (child: HTMLElement, parent: HTMLElement) => {
-    const childRect = child.getBoundingClientRect();
-    const parentRect = parent.getBoundingClientRect();
-
-    return (
-      childRect.left < parentRect.left ||
-      childRect.right > parentRect.right ||
-      childRect.top < parentRect.top ||
-      childRect.bottom > parentRect.bottom
-    );
+  const isLabelVisible = (label: string) => {
+    if (hoveredBar === label) return true;
+    if (temporarilyHiddenLabels.has(label)) return false;
+    return visibleLabels.has(label);
   };
 
   return (
     <Box width="100%" position="relative" overflow="hidden" ref={containerRef}>
+      {/* Zone des labels */}
       <Box position="relative" width="100%" height="70px">
-        {bars.map((bar, index) => {
+        {bars.map((bar) => {
           const leftPosition = (bar.value / max) * 100;
           return (
             <Box
-              id={`label-for-${bar.label}`}
-              backgroundColor={"white"}
-              key={index}
-              top="0"
+              key={bar.label}
               position="absolute"
               left={`${Math.min(Math.max(leftPosition, 0), 100)}%`}
               transform={
                 labelRefs.current[bar.label] && containerRef.current
-                  ? calculateTransform(labelRefs.current[bar.label], containerRef.current, leftPosition)
+                  ? calculateTransform(
+                    labelRefs.current[bar.label],
+                    containerRef.current,
+                    leftPosition
+                  )
                   : "translateX(-100%)"
               }
-              zIndex={bar.order}
-              ref={(el) => { if (el) labelRefs.current[bar.label] = el; }}
+              opacity={isLabelVisible(bar.label) ? 1 : 0}
+              transition="opacity 0.2s"
+              ref={(el) => {
+                if (el) labelRefs.current[bar.label] = el;
+              }}
               maxWidth="100%"
               whiteSpace="nowrap"
+              zIndex={bar.order}
             >
               <Tooltip label={bar.tooltip}>
-                <Text fontSize="32px" align={"right"}>
-                  <strong>{formatPercentageFixedDigits(bar.value, 1, '-')}</strong>
+                <Text fontSize="32px" align="right">
+                  <strong>
+                    {formatPercentageFixedDigits(bar.value, 1, "-")}
+                  </strong>
                 </Text>
               </Tooltip>
-              <Text align="right" color="#161616" fontWeight={"bold"}>
+              <Text align="right" color="#161616" fontWeight="bold">
                 {bar.label}
               </Text>
             </Box>
           );
         })}
       </Box>
+
+      {/* Repères de position */}
       <Box position="relative" width="100%" height="17px">
         {bars.map((bar) => (
-          <Box key={bar.label} position="absolute" top="0"  left={`${Math.max(((bar.value * 100 / max) - 1), 0.3)}%`} width={`2px`} height="15px" borderRadius="full" backgroundColor="#161616" />
+          <Box
+            key={`tick-${bar.label}`}
+            position="absolute"
+            top="0"
+            left={`${Math.max((bar.value * 100) / max - 1, 0.3)}%`}
+            width="2px"
+            height="15px"
+            borderRadius="full"
+            backgroundColor="#161616"
+            opacity={isLabelVisible(bar.label) ? 1 : 0}
+          />
         ))}
       </Box>
-      <Box width="100%" position="relative" height="20px" bg="gray.100" borderRadius="full">
+
+      {/* Barres de progression */}
+      <Box
+        width="100%"
+        position="relative"
+        height="20px"
+        bg="gray.100"
+        borderRadius="full"
+      >
         {bars.map((bar) => (
           <Box
-            key={bar.label}
+            key={`progress-${bar.label}`}
             position="absolute"
             top="0"
             left="0"
-            height={"21px"}
-            width={`${Math.max((bar.value * 100 / max), 1)}%`}
+            height="21px"
+            width={`${Math.max((bar.value * 100) / max, 1)}%`}
             bg={bar.color}
             borderRadius="full"
-            cursor={"pointer"}
+            cursor="pointer"
+            onMouseEnter={() => setHoveredBar(bar.label)}
+            onMouseLeave={() => setHoveredBar(null)}
           />
         ))}
       </Box>
     </Box>
   );
-};
+}
