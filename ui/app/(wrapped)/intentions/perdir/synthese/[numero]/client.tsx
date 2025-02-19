@@ -3,6 +3,7 @@
 import { Container, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { isAxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
+/* eslint-disable-next-line import/default */
 import qs from "qs";
 import { useEffect } from "react";
 import { hasRole } from "shared";

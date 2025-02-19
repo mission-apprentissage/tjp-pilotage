@@ -1,4 +1,5 @@
-import type Ipg from "pg";
+import type * as Ipg from "pg";
+/* eslint-disable-next-line import/default */
 import pg from "pg";
 import type { EmptyObject } from "type-fest";
 
@@ -109,7 +110,7 @@ function createFunction(action: "CREATE" | "DROP") {
       }
       throw err;
     } finally {
-      if (!openedClient) pgClient.end();
+      if (!openedClient) await pgClient.end();
     }
   };
 }

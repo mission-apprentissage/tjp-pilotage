@@ -1,3 +1,4 @@
+/* eslint-disable-next-line import/default */
 import env from "env-var";
 
 const environement = env.get("ENV").required().asEnum(["local", "recette1", "recette2", "production", "test"]);
