@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import * as jwt from "jsonwebtoken";
+/* eslint-disable-next-line import/default */
+import jwt from "jsonwebtoken";
 import { generators } from "openid-client";
 
 import config from "@/config";
