@@ -1,4 +1,4 @@
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 import type { QueryFilters } from "shared/routes/schemas/get.domaine-de-formation.codeNsf.schema";
 
 import { getFilters, getFormations, getNsf } from "./dependencies";

@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { flatten, uniq } from "lodash-es";
 import type { UserinfoResponse } from "openid-client";
 

@@ -1,4 +1,4 @@
-import qs from "qs";
+import * as qs from "qs";
 
 export const createParameterizedUrl = (pathname: string, searchParams: object) => {
   return (

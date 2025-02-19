@@ -18,7 +18,7 @@ import {
   VisuallyHidden,
 } from "@chakra-ui/react";
 import type { ChangeEventHandler, ReactNode } from "react";
-import React, { memo, useId, useMemo, useRef, useState } from "react";
+import { memo, useId, useMemo, useRef, useState } from "react";
 import removeAccents from "remove-accents";
 import type { OptionSchema } from "shared/schema/optionSchema";
 

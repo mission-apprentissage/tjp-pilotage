@@ -1,5 +1,5 @@
 import { useRouter, useSearchParams } from "next/navigation";
-import qs from "qs";
+import * as qs from "qs";
 import type { SetStateAction } from "react";
 import { useEffect, useState } from "react";
 
