@@ -22,6 +22,7 @@ import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
 import { formatNumber, formatPercentageFixedDigits } from "@/utils/formatUtils";
 
+import { MultiProgressBar } from "./MultiProgressBar";
 import { ProgressBar2 } from "./ProgressBar2";
 
 const EFFECTIF_FEATURE_FLAG = false;
@@ -376,6 +377,14 @@ const TauxTransfoCard = (
                     Math.max(OBJECTIF_TAUX_TRANSFO_REFORME,
                       tauxTransformationCumulePrevisionnel?.taux ?? 0,
                       tauxTransformationCumule?.taux ?? 0)}
+                  />
+                )}
+              </Box>
+              <Box width="100%">
+                { tauxTransformationCumule && tauxTransformationCumulePrevisionnel && (
+                  <MultiProgressBar
+                    bars={[{value: 0.05, label: 'Demandes validées', color: blue, tooltip:`${tauxTransformationCumule?.placesTransformees} / ${tauxTransformationCumule?.effectifs}`, order: 1}]}
+                    max={1}
                   />
                 )}
               </Box>
