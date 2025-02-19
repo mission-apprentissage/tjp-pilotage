@@ -22,7 +22,6 @@ import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
 import { formatNumber, formatPercentageFixedDigits } from "@/utils/formatUtils";
 
-import { MultiProgressBar } from "./MultiProgressBar";
 import { ProgressBar2 } from "./ProgressBar2";
 
 const EFFECTIF_FEATURE_FLAG = false;
@@ -329,7 +328,6 @@ const TauxTransfoCard = (
     tauxTransformationCumulePrevisionnel?: TauxTransformation,
     onModalOpen: () => void
   }) => {
-
   const [blue, cyan, grey] = useToken("colors", ["bluefrance.113", "blueecume.675_hover", "grey.925"]);
 
   return (
@@ -380,14 +378,14 @@ const TauxTransfoCard = (
                   />
                 )}
               </Box>
-              <Box width="100%">
+              {/* <Box width="100%">
                 { tauxTransformationCumule && tauxTransformationCumulePrevisionnel && (
                   <MultiProgressBar
-                    bars={[{value: 0.05, label: 'Demandes validées', color: blue, tooltip:`${tauxTransformationCumule?.placesTransformees} / ${tauxTransformationCumule?.effectifs}`, order: 1}]}
+                    bars={[{value: 0.5, label: 'Demandes validées', color: blue, tooltip:`${tauxTransformationCumule?.placesTransformees} / ${tauxTransformationCumule?.effectifs}`, order: 1}]}
                     max={1}
                   />
                 )}
-              </Box>
+              </Box> */}
             </VStack>
           </CardBody>
         </Card>

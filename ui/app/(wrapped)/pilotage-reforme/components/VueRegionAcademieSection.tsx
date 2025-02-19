@@ -219,7 +219,7 @@ export const VueRegionAcademieSection = ({
                   <Td fontWeight="700">
                     NATIONAL
                   </Td>
-                  <Td isNumeric  >
+                  <Td isNumeric >
                     <Tooltip label={ nationalStats?.tauxTransformationCumule?.placesTransformees && nationalStats?.tauxTransformationCumule?.effectifs && `${nationalStats?.tauxTransformationCumule?.placesTransformees} / ${nationalStats?.tauxTransformationCumule?.effectifs}`}>
                       {formatPercentageFixedDigits(nationalStats.tauxTransformationCumule?.taux, 1, "-")}
                     </Tooltip>

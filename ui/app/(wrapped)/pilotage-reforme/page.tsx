@@ -15,7 +15,56 @@ import { EvolutionIndicateursClesSection } from "./components/EvolutionIndicateu
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
 import { VueRegionAcademieSection } from "./components/VueRegionAcademieSection";
-import type { Filters, FiltersRegions, Order } from "./types";
+import type { Filters, FiltersRegions, Order, PilotageReformeStats, PilotageReformeStatsRegion } from "./types";
+
+export function calcNationalStats(data: PilotageReformeStats | undefined, dataRegions: PilotageReformeStatsRegion | undefined) {
+  return {
+    tauxTransformationCumule: dataRegions?.statsRegions?.length
+      ? (() => {
+        const { totalEffectifs, totalPlacesTransformees } = dataRegions.statsRegions.reduce(
+          (acc, region) => ({
+            totalEffectifs: acc.totalEffectifs + (region.tauxTransformationCumule?.effectifs ?? 0),
+            totalPlacesTransformees: acc.totalPlacesTransformees + (region.tauxTransformationCumule?.placesTransformees ?? 0),
+          }),
+          { totalEffectifs: 0, totalPlacesTransformees: 0 }
+        );
+        return {
+          effectifs: totalEffectifs,
+          placesTransformees: totalPlacesTransformees,
+          taux: totalEffectifs > 0 ? totalPlacesTransformees / totalEffectifs : undefined,
+        };
+      })()
+      : undefined,
+
+    tauxTransformationCumulePrevisionnel: dataRegions?.statsRegions?.length
+      ? (() => {
+        const { totalEffectifs, totalPlacesTransformees } = dataRegions.statsRegions.reduce(
+          (acc, region) => ({
+            totalEffectifs: acc.totalEffectifs + (region.tauxTransformationCumulePrevisionnel?.effectifs ?? 0),
+            totalPlacesTransformees: acc.totalPlacesTransformees + (region.tauxTransformationCumulePrevisionnel?.placesTransformees ?? 0),
+          }),
+          { totalEffectifs: 0, totalPlacesTransformees: 0 }
+        );
+        return {
+          effectifs: totalEffectifs,
+          placesTransformees: totalPlacesTransformees,
+          taux: totalEffectifs > 0 ? totalPlacesTransformees / totalEffectifs : undefined,
+        };
+      })()
+      : undefined,
+
+    tauxPoursuite: data?.annees?.[0]?.nationale?.tauxPoursuite
+      ? data.annees[0].nationale.tauxPoursuite
+      : undefined,
+    tauxInsertion: data?.annees?.[0]?.nationale?.tauxInsertion
+      ? data.annees[0].nationale.tauxInsertion
+      : undefined,
+    tauxChomage: dataRegions?.statsRegions?.some((region) => region.tauxChomage)
+      ? (dataRegions.statsRegions.reduce((acc, region) => acc + (region.tauxChomage ?? 0), 0) ?? 0) /
+        (dataRegions.statsRegions.length ?? 1)
+      : undefined,
+  };
+}
 
 
 const usePilotageReformHook = () => {
@@ -88,17 +137,7 @@ const usePilotageReformHook = () => {
 
   const isFiltered = filters.codeRegion;
 
-  const nationalStats = useMemo(() => {
-    return {
-      tauxTransformationCumule: data?.tauxTransformationCumule ? data?.tauxTransformationCumule : undefined,
-      tauxTransformationCumulePrevisionnel: data?.tauxTransformationCumulePrevisionnel ? data?.tauxTransformationCumulePrevisionnel : undefined,
-      tauxPoursuite: data?.annees[0].scoped.tauxPoursuite ? data?.annees[0].scoped.tauxPoursuite : undefined,
-      tauxInsertion: data?.annees[0].scoped.tauxInsertion ? data?.annees[0].scoped.tauxInsertion : undefined,
-      tauxChomage: dataRegions?.statsRegions.some((region) => region.tauxChomage) ?
-        (dataRegions?.statsRegions.reduce((acc, region) => acc + (region.tauxChomage ?? 0), 0) ?? 0) / (dataRegions?.statsRegions.length ?? 1)
-        : undefined,
-    };
-  }, [data, dataRegions]);
+  const nationalStats = useMemo(() => calcNationalStats(data, dataRegions), [data, dataRegions]);
 
   const displayEmptyDataBoard = useMemo(() => {
     return filters.codeNiveauDiplome && ["381", "481", "581", "241", "561", "461"].includes(filters.codeNiveauDiplome);
