@@ -1,6 +1,6 @@
 import Boom from "@hapi/boom";
-import { createRoute } from "@http-wizard/core";
 import { ROUTES } from "shared/routes/routes";
+import { createRoute } from "shared/utils/http-wizzard/core";
 
 import { getScopeFilterForUser } from "@/modules/core/utils/getScopeFilterForUser";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";

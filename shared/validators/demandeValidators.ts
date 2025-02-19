@@ -1,12 +1,8 @@
-// @ts-nocheck -- TODO  Not all code paths return a value.
-
-import type { Args, ZodTypeProvider } from "@http-wizard/core";
-
-// import type { Router } from "server/src/server/routes/routes";
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
+import type { Router } from "../routes";
+import type { Args, ZodTypeProvider } from "../utils/http-wizzard/core";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Demande = Args<any["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
+type Demande = Args<Router["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
 
 export const isTypeFermeture = (typeDemande: string) => ["fermeture"].includes(typeDemande);
 
@@ -34,21 +30,24 @@ const isPositiveNumber = (value: number | undefined): value is number => {
   return true;
 };
 
-export const demandeValidators: Record<keyof Demande | string, (demande: Demande) => string | undefined> = {
+export const demandeValidators = {
   motif: (demande) => {
     if (!isTypeAjustement(demande.typeDemande) && !demande.motif?.length) {
       return "Le champ 'motif' est obligatoire";
     }
+    return;
   },
   autreMotif: (demande) => {
     if (demande.motif?.includes("autre") && !demande.autreMotif) {
       return "Le champ 'autre motif' est obligatoire";
     }
+    return;
   },
   poursuitePedagogique: (demande) => {
     if (isTypeFermeture(demande.typeDemande) && demande.poursuitePedagogique) {
       return "Le champ 'poursuite pédagogique' devrait être à non";
     }
+    return;
   },
   libelleColoration: (demande) => {
     if (demande.coloration && !demande.libelleColoration) {
@@ -57,6 +56,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
     if (!demande.coloration && demande.libelleColoration) {
       return "Le champ 'libellé coloration' doit être vide";
     }
+    return;
   },
   /**
    *
@@ -71,6 +71,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
     if (isTypeOuverture(demande.typeDemande) && demande.capaciteScolaireActuelle !== 0) {
       return "La capacité scolaire actuelle devrait être à 0 dans le cas d'une ouverture";
     }
+    return;
   },
   /**
    *
@@ -131,6 +132,8 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
       demande.capaciteScolaire < demande.capaciteScolaireActuelle
     )
       return "La capacité scolaire devrait être supérieure ou égale à la capacité actuelle dans le cas d'un ajustement de rentrée";
+
+    return;
   },
   /**
    *
@@ -153,6 +156,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
       demande.capaciteScolaireColoreeActuelle > demande.capaciteScolaireActuelle
     )
       return "La capacité scolaire colorée actuelle doit être inférieure ou égale à la capacité scolaire actuelle";
+    return;
   },
   /**
    *
@@ -176,6 +180,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
       demande.capaciteScolaireColoree > demande.capaciteScolaire
     )
       return "La future capacité scolaire colorée doit être inférieure ou égale à la future capacité scolaire";
+    return;
   },
   /**
    *
@@ -189,6 +194,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
 
     if (isTypeOuverture(demande.typeDemande) && demande.capaciteApprentissageActuelle !== 0)
       return "La capacité en apprentissage actuelle devrait être à 0 dans le cas d'une ouverture";
+    return;
   },
   /**
    *
@@ -229,6 +235,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
       demande.capaciteApprentissage > demande.capaciteApprentissageActuelle
     )
       return "La capacité en apprentissage devrait être inférieure ou égale à la capacité actuelle dans le cas d'une diminution";
+    return;
   },
   /**
    *
@@ -255,6 +262,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
       demande.capaciteApprentissageColoreeActuelle > demande.capaciteApprentissageActuelle
     )
       return "La capacité en apprentissage colorée actuelle doit être inférieure ou égale à la capacité en apprentissage actuelle";
+    return;
   },
   /**
    *
@@ -277,6 +285,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
       demande.capaciteApprentissageColoree > demande.capaciteApprentissage
     )
       return "La future capacité en apprentissage colorée doit être inférieure ou égale à la future capacité en apprentissage";
+    return;
   },
   /**
    *
@@ -288,6 +297,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
 
     if (!demande.capaciteScolaireActuelle && !demande.capaciteApprentissageActuelle)
       return "La somme des capacités actuelles doit être supérieure à 0";
+    return;
   },
   /**
    *
@@ -328,6 +338,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
       )
         return "La somme des capacités doit être inférieure à la somme des capacités actuelles dans le cas d'une diminution";
     }
+    return;
   },
   /**
    * La somme des capacités colorées actuelles doit être :
@@ -343,6 +354,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
         demande.capaciteApprentissageActuelle + demande.capaciteScolaireActuelle
     )
       return "La somme des capacités colorées actuelles doit être inférieure ou égale à la somme des capacités actuelles";
+    return;
   },
   /**
    * La somme des futures capacités colorées doit être :
@@ -366,6 +378,7 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
       demande.capaciteApprentissageColoree + demande.capaciteScolaireColoree === 0
     )
       return "La somme des futures capacités colorées doit être supérieure ou égale à 0 dans le cas d'une coloration";
+    return;
   },
   compensation: (demande) => {
     if (!isTypeCompensation(demande.typeDemande)) return;
@@ -373,15 +386,18 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
     if (!demande.compensationCodeDispositif) return "Le dispositif de compensation est obligatoire";
     if (!demande.compensationUai) return "L'établissement de compensation est obligatoire";
     if (!demande.compensationRentreeScolaire) return "La rentrée scolaire de compensation est obligatoire";
+    return;
   },
   motifRefus: (demande) => {
     if (demande.statut === DemandeStatutEnum["refusée"] && !demande.motifRefus?.length) {
       return "Le champ 'motif refus' est obligatoire";
     }
+    return;
   },
   autreMotifRefus: (demande) => {
     if (demande.motifRefus?.includes("autre") && !demande.autreMotifRefus) {
       return "Le champ 'autre motif refus' est obligatoire";
     }
+    return;
   },
-};
+} satisfies Record<keyof Demande | string, (demande: Demande) => string | undefined>;

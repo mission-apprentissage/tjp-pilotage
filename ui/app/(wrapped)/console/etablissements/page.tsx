@@ -151,7 +151,7 @@ export default function Etablissements() {
   );
 
   const { data: requetesEnregistrees } = client.ref("[GET]/requetes").useQuery({
-    query: { page: "formationEtablissement" },
+    query: { page: "formationEtablissement" }
   });
 
   const getDataForExport = (data: QueryResult) => {
