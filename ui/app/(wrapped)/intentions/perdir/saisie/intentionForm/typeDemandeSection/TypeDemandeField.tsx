@@ -44,7 +44,6 @@ function RadioCard({
   invalid: boolean;
   tooltip: ReactNode;
 } & ComponentProps<"div">) {
-  const { user } = useAuth();
   const bf113 = useToken("colors", "bluefrance.113");
 
   return (
@@ -87,6 +86,7 @@ function RadioCard({
 
 export const TypeDemandeField = chakra(
   ({ campagne, disabled = false, className }: { campagne: CampagneType, disabled?: boolean; className?: string }) => {
+    const { user } = useAuth();
     const {
       formState: { errors },
       control,
@@ -119,7 +119,7 @@ export const TypeDemandeField = chakra(
               {Object.values(TYPES_DEMANDES_OPTIONS).filter((typeDemande) =>
                 shouldDisplayTypeDemande(typeDemande.value, campagne.annee, rentreeScolaire) &&
                 shouldDisplayColoration(typeDemande.value, libelleFCIL) &&
-                shouldDisplayAjustement(typeDemande.value, user)
+                shouldDisplayAjustement(typeDemande.value, user!)
               ).map(
                 (item) =>
                   (
