@@ -1,7 +1,6 @@
 import { createRoute } from "@http-wizard/core";
 import { ROUTES } from "shared/routes/routes";
 
-import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
 import { getLatestCampagneUsecase } from "./getLatestCampagne.usecase";
@@ -16,7 +15,6 @@ export const getLatestCampagneRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("campagnes/lecture"),
       handler: async (_request, response) => {
         const latestCampagne = await getLatestCampagneUsecase();
         response.status(200).send(latestCampagne);

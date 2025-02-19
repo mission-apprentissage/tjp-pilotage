@@ -1,3 +1,4 @@
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { getKbdClient } from "@/db/db";
@@ -13,6 +14,7 @@ const getCampagneRegionByCampagneId = async ({
 }) => getKbdClient()
   .selectFrom("campagneRegion")
   .where("campagneRegion.campagneId", "=", campagneId)
+  .where("campagneRegion.statut", "=", CampagneStatutEnum["en cours"])
   .$call((q) => {
     if(user?.codeRegion) return q.where("codeRegion", "=", user.codeRegion);
     return q.where((w) => w.val(false));
@@ -60,8 +62,8 @@ export const findOneCampagneRegionByCampagneId = async ({
     dateDebut: campagne.dateDebut,
     dateFin: campagne.dateFin,
     statut: campagne.statut,
-    hasCampagneRegionEnCours: campagneRegion !== undefined,
     withSaisiePerdir: campagneRegion?.withSaisiePerdir,
     dateVote: campagneRegion?.dateVote,
+    codeRegion: campagneRegion?.codeRegion,
   };
 };

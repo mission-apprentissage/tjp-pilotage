@@ -29,17 +29,21 @@ export const canCreateIntention = ({
   currentCampagne?: CampagneType;
   campagne: CampagneType
 }) => {
+  // Si la campagne est régionale,
+
+  // si l'utilisateur est bien dans la région de la campagne
+  // et si celle-ci autorise la saisie PERDIR
   const isCampagneRegionale = !!campagne?.codeRegion;
-  const isCampagneRegionaleEnCours = !!campagne?.hasCampagneRegionEnCours;
   const isCampagneRegionaleOfUser = user?.codeRegion === campagne?.codeRegion;
   const isCurrentCampagne = currentCampagne?.id === campagne.id;
+  const withSaisiePerdir = hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne?.withSaisiePerdir : true;
 
   return !feature.saisieDisabled &&
     isUserPartOfExpe({ user, campagne }) &&
     isCurrentCampagne &&
     isCampagneRegionale &&
-    isCampagneRegionaleEnCours &&
-    isCampagneRegionaleOfUser;
+    isCampagneRegionaleOfUser &&
+    withSaisiePerdir;
 };
 
 export const canEditDemandeIntention = ({
@@ -60,28 +64,45 @@ export const canEditIntention = ({
   intention: DemandeIntention,
   user?: UserType
 }): boolean => {
+  // Si l'utilisateur n'est pas autorisé à éditer les intentions
   if(!isUserPartOfExpe({ user, campagne: intention.campagne })) return false;
   const canUserEditIntention = intention.canEdit;
   const canEditStatut = (
     !isStatutDemandeValidee(intention.statut) &&
     !isStatutRefusee(intention.statut)
   );
-
+  // Si l'utilisateur est PERDIR,
   if(hasRole({ user, role: RoleEnum["perdir"] })) {
+    // On vérifie si la demande est dans un statut qui peut être modifié par le PERDIR
     const canPerdirEditStatut = canEditStatut && (
       isStatutBrouillon(intention.statut) ||
       isStatutProposition(intention.statut) ||
       isStatutDossierIncomplet(intention.statut)
     );
 
+    // Si une campagne est régionale, on vérifie si l'utilisateur est bien dans la région de la campagne et quel celle-ci autorise la saisie PERDIR
+    const isCampagneRegionale = !!intention.campagne?.codeRegion;
+    const isCampagneRegionaleOfUser = user?.codeRegion === intention.campagne?.codeRegion;
+    const withSaisiePerdir = (
+      isCampagneRegionale && isCampagneRegionaleOfUser
+    ) ? !!intention.campagne?.withSaisiePerdir : true;
+
+    // Si la saisie n'est pas désactivée,
+    // si l'utilisateur peut modifier la demande,
+    // si le statut de la demande peut être modifié par le PERDIR,
+    // si la campagne autorise la saisie PERDIR
     return (
       !feature.saisieDisabled &&
       canUserEditIntention &&
       canPerdirEditStatut &&
-      isCampagneEnCours(intention.campagne)
+      withSaisiePerdir
     );
   }
 
+  // Si l'utilisateur n'est pas PERDIR,
+  // si la saisie n'est pas désactivée,
+  // si l'utilisateur peut modifier la demande,
+  // si le statut de la demande peut être modifié par l'utilisateur
   return (
     !feature.saisieDisabled &&
     canUserEditIntention &&
@@ -124,4 +145,5 @@ export const canCorrectIntention = ({
   hasPermission(user?.role, "intentions-perdir/ecriture") &&
   isCampagneTerminee(intention?.campagne) &&
   isStatutDemandeValidee(intention.statut) &&
+  !hasRole({user, role: RoleEnum["perdir"]}) &&
   !isTypeAjustement(intention.typeDemande);

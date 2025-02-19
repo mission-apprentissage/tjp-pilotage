@@ -22,8 +22,9 @@ import {
 } from "shared/utils/typeDemandeUtils";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
-import {shouldDisplayColoration, shouldDisplayTypeDemande, TYPES_DEMANDES_OPTIONS} from '@/app/(wrapped)/intentions/utils/typeDemandeUtils';
+import {shouldDisplayAjustement,shouldDisplayColoration, shouldDisplayTypeDemande, TYPES_DEMANDES_OPTIONS} from '@/app/(wrapped)/intentions/utils/typeDemandeUtils';
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+import { useAuth } from "@/utils/security/useAuth";
 
 function RadioCard({
   value,
@@ -43,6 +44,7 @@ function RadioCard({
   invalid: boolean;
   tooltip: ReactNode;
 } & ComponentProps<"div">) {
+  const { user } = useAuth();
   const bf113 = useToken("colors", "bluefrance.113");
 
   return (
@@ -114,10 +116,13 @@ export const TypeDemandeField = chakra(
               onChange={onChange}
               value={value}
             >
-              {Object.values(TYPES_DEMANDES_OPTIONS).map(
+              {Object.values(TYPES_DEMANDES_OPTIONS).filter((typeDemande) =>
+                shouldDisplayTypeDemande(typeDemande.value, campagne.annee, rentreeScolaire) &&
+                shouldDisplayColoration(typeDemande.value, libelleFCIL) &&
+                shouldDisplayAjustement(typeDemande.value, user)
+              ).map(
                 (item) =>
-                  shouldDisplayTypeDemande(item.value, campagne.annee, rentreeScolaire) &&
-                  shouldDisplayColoration(item.value, libelleFCIL) && (
+                  (
                     <RadioCard
                       selected={value === item.value}
                       key={item.value}

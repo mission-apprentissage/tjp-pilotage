@@ -1,13 +1,22 @@
 import { ListItem, OrderedList, Text } from "@chakra-ui/react";
 import type { ReactNode } from "react";
+import { hasRole, RoleEnum } from "shared";
 import type {DemandeTypeType} from "shared/enum/demandeTypeEnum";
 import { DemandeTypeEnum  } from "shared/enum/demandeTypeEnum";
+import type { UserType } from "shared/schema/userSchema";
 import { isTypeAjustement, isTypeColoration } from "shared/utils/typeDemandeUtils";
 
 
 export const shouldDisplayColoration = (typeDemande: DemandeTypeType, libelleFCIL?: string) => {
   if (!isTypeColoration(typeDemande)) return true;
   return !libelleFCIL;
+};
+
+export const shouldDisplayAjustement = (typeDemande: DemandeTypeType, user?: UserType) => {
+  if(!user) return false;
+  if (!isTypeAjustement(typeDemande)) return true;
+  if (hasRole({ user, role: RoleEnum["perdir"] })) return false;
+  return true;
 };
 
 export const shouldDisplayTypeDemande = (
