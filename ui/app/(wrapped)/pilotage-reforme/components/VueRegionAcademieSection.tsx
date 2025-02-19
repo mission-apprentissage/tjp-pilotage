@@ -76,12 +76,12 @@ export const VueRegionAcademieSection = ({
           {region.libelleRegion}
         </Td>
         <Td isNumeric backgroundColor={tdBgColor}>
-          <Tooltip label={`${region.tauxTransformationCumule?.placesTransformees} / ${region.tauxTransformationCumule?.effectifs}`}>
+          <Tooltip label={ region.tauxTransformationCumule?.placesTransformees && region.tauxTransformationCumule?.effectifs && `${region.tauxTransformationCumule?.placesTransformees} / ${region.tauxTransformationCumule?.effectifs}`}>
             {formatPercentageFixedDigits(region.tauxTransformationCumule?.taux, 1, "-")}
           </Tooltip>
         </Td>
         <Td isNumeric backgroundColor={tdBgColor}>
-          <Tooltip label={`${region.tauxTransformationCumulePrevisionnel?.placesTransformees} / ${region.tauxTransformationCumulePrevisionnel?.effectifs}`}>
+          <Tooltip label={ region.tauxTransformationCumulePrevisionnel?.placesTransformees && region.tauxTransformationCumulePrevisionnel?.effectifs && `${region.tauxTransformationCumulePrevisionnel?.placesTransformees} / ${region.tauxTransformationCumulePrevisionnel?.effectifs}`}>
             {formatPercentageFixedDigits(region.tauxTransformationCumulePrevisionnel?.taux, 1, "-")}
           </Tooltip>
         </Td>
@@ -220,12 +220,12 @@ export const VueRegionAcademieSection = ({
                     NATIONAL
                   </Td>
                   <Td isNumeric  >
-                    <Tooltip label={`${nationalStats?.tauxTransformationCumule?.placesTransformees} / ${nationalStats?.tauxTransformationCumule?.effectifs}`}>
+                    <Tooltip label={ nationalStats?.tauxTransformationCumule?.placesTransformees && nationalStats?.tauxTransformationCumule?.effectifs && `${nationalStats?.tauxTransformationCumule?.placesTransformees} / ${nationalStats?.tauxTransformationCumule?.effectifs}`}>
                       {formatPercentageFixedDigits(nationalStats.tauxTransformationCumule?.taux, 1, "-")}
                     </Tooltip>
                   </Td>
                   <Td isNumeric >
-                    <Tooltip label={`${nationalStats?.tauxTransformationCumulePrevisionnel?.placesTransformees} / ${nationalStats?.tauxTransformationCumulePrevisionnel?.effectifs}`}>
+                    <Tooltip label={ nationalStats?.tauxTransformationCumulePrevisionnel?.placesTransformees && nationalStats?.tauxTransformationCumulePrevisionnel?.effectifs && `${nationalStats?.tauxTransformationCumulePrevisionnel?.placesTransformees} / ${nationalStats?.tauxTransformationCumulePrevisionnel?.effectifs}`}>
                       {formatPercentageFixedDigits(nationalStats.tauxTransformationCumulePrevisionnel?.taux, 1, "-")}
                     </Tooltip>
                   </Td>

@@ -10,6 +10,7 @@ import { useStateParams } from "@/utils/useFilters";
 
 import { CartoSection } from "./components/CartoSection";
 import { DefinitionTauxTransformationCumuleModal } from "./components/DefinitionTauxTransformationCumuleModal";
+import { EmptyDataBoard } from "./components/EmptyDataBoard";
 import { EvolutionIndicateursClesSection } from "./components/EvolutionIndicateursClesSection";
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
@@ -99,6 +100,10 @@ const usePilotageReformHook = () => {
     };
   }, [data, dataRegions]);
 
+  const displayEmptyDataBoard = useMemo(() => {
+    return filters.codeNiveauDiplome && ["381", "481", "581", "241", "561", "461"].includes(filters.codeNiveauDiplome);
+  }, [filters.codeNiveauDiplome]);
+
   return {
     filters,
     order,
@@ -114,6 +119,7 @@ const usePilotageReformHook = () => {
     isModalOpen,
     onModalOpen,
     onModalClose,
+    displayEmptyDataBoard
   };
 };
 
@@ -133,6 +139,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
     isModalOpen,
     onModalOpen,
     onModalClose,
+    displayEmptyDataBoard
   } = usePilotageReformHook();
 
   return (
@@ -145,36 +152,40 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
           isLoading={isLoading}
           data={data}
         />
-        <Box>
-          <Flex gap={8} mt={8} flexDirection={["column", null, "row"]}>
-            <Box flex={1}>
-              <IndicateursClesSection data={data} isLoading={isLoading} onModalOpen={onModalOpen} />
-              <EvolutionIndicateursClesSection
-                data={data}
-                isLoading={isLoading}
-                isFiltered={isFiltered}
-                codeRegion={filters.codeRegion}
+        {displayEmptyDataBoard ? (
+          <EmptyDataBoard />
+        ): (
+          <Box>
+            <Flex gap={8} mt={8} flexDirection={["column", null, "row"]}>
+              <Box flex={1}>
+                <IndicateursClesSection data={data} isLoading={isLoading} onModalOpen={onModalOpen} />
+                <EvolutionIndicateursClesSection
+                  data={data}
+                  isLoading={isLoading}
+                  isFiltered={isFiltered}
+                  codeRegion={filters.codeRegion}
+                />
+              </Box>
+              <CartoSection
+                data={dataRegions}
+                isLoading={isLoadingRegions}
+                activeFilters={filters}
+                handleFilters={handleFilters}
               />
-            </Box>
-            <CartoSection
-              data={dataRegions}
-              isLoading={isLoadingRegions}
-              activeFilters={filters}
-              handleFilters={handleFilters}
-            />
-          </Flex>
-          <SimpleGrid spacing={5} columns={[1]} mt={14}>
-            <VueRegionAcademieSection
-              data={dataRegions}
-              order={order}
-              isLoading={isLoadingRegions}
-              handleOrder={handleOrder}
-              codeRegion={filters.codeRegion}
-              nationalStats={nationalStats}
-              onModalOpen={onModalOpen}
-            />
-          </SimpleGrid>
-        </Box>
+            </Flex>
+            <SimpleGrid spacing={5} columns={[1]} mt={14}>
+              <VueRegionAcademieSection
+                data={dataRegions}
+                order={order}
+                isLoading={isLoadingRegions}
+                handleOrder={handleOrder}
+                codeRegion={filters.codeRegion}
+                nationalStats={nationalStats}
+                onModalOpen={onModalOpen}
+              />
+            </SimpleGrid>
+          </Box>
+        )}
       </Container>
       <DefinitionTauxTransformationCumuleModal isOpen={isModalOpen} onClose={onModalClose} />
     </Box>
