@@ -1,5 +1,6 @@
 import type { FastifyRequest } from "fastify";
-import * as jwt from "jsonwebtoken";
+/* eslint-disable-next-line import/default */
+import jwt from "jsonwebtoken";
 import { describe, expect, it } from "vitest";
 
 import { extractUserInRequestFactory } from "./extractUserInRequest";

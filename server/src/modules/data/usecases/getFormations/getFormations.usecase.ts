@@ -22,6 +22,7 @@ const getFormationsFactory =
     }
   ) =>
     async (activeFilters: Partial<Filters>) => {
+      console.log(activeFilters);
       const [{ formations, count }, filters, formationsRenoveesEnseignees] = await Promise.all([
         deps.getFormationsQuery(activeFilters),
         deps.getFiltersQuery(activeFilters),
