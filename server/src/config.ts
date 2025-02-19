@@ -1,4 +1,5 @@
-import * as env from "env-var";
+/* eslint-disable-next-line import/default */
+import env from "env-var";
 
 const environement = env.get("ENV").required().asEnum(["local", "recette1", "recette2", "production", "test"]);
 const publicUrl = env.get("PUBLIC_URL").required().asString();

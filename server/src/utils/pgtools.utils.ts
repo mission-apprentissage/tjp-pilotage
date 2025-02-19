@@ -1,5 +1,6 @@
 import type * as Ipg from "pg";
-import * as pg from "pg";
+/* eslint-disable-next-line import/default */
+import pg from "pg";
 import type { EmptyObject } from "type-fest";
 
 const { Client } = pg;

@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
-import * as jwt from "jsonwebtoken";
+/* eslint-disable-next-line import/default */
+import jwt from "jsonwebtoken";
 import type { Insertable } from "kysely";
 import type { Role } from "shared";
 
