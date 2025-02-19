@@ -12,8 +12,7 @@ export const shouldDisplayColoration = (typeDemande: DemandeTypeType, libelleFCI
   return !libelleFCIL;
 };
 
-export const shouldDisplayAjustement = (typeDemande: DemandeTypeType, user?: UserType) => {
-  if(!user) return false;
+export const shouldDisplayAjustement = (typeDemande: DemandeTypeType, user: UserType) => {
   if (!isTypeAjustement(typeDemande)) return true;
   if (hasRole({ user, role: RoleEnum["perdir"] })) return false;
   return true;
