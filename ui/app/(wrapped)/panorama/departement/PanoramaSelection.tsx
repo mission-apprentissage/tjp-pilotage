@@ -2,7 +2,8 @@
 
 import { AspectRatio, Container, Flex, FormControl, FormLabel, Img, Select } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import * as qs from "qs";
+/* eslint-disable-next-line import/default */
+import qs from "qs";
 import { useContext, useEffect } from "react";
 
 import type { client } from "@/api.client";
