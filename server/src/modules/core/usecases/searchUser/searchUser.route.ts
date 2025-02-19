@@ -1,4 +1,4 @@
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 import { ROUTES } from "shared/routes/routes";
 

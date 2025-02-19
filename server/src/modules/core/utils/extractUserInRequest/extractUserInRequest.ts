@@ -2,7 +2,7 @@ import * as Sentry from "@sentry/node";
 import type { FastifyRequest } from "fastify";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 
 import config from "@/config";
 import type { RequestUser } from "@/modules/core/model/User";

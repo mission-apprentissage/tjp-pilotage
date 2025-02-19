@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import {Button, Flex, FormControl, FormErrorMessage, Highlight,Menu, MenuButton, MenuItem, MenuList, Tag, Text} from '@chakra-ui/react';
+import { Button, Flex, FormControl, FormErrorMessage, Highlight,Menu, MenuButton, MenuItem, MenuList, Tag, Text } from '@chakra-ui/react';
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";

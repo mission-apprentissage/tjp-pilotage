@@ -1,4 +1,4 @@
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 // eslint-disable-next-line n/no-extraneous-import, import/no-extraneous-dependencies
 import { inject } from "injecti";
 

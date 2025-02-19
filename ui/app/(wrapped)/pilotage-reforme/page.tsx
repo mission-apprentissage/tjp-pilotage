@@ -3,7 +3,7 @@
 import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
-import qs from "qs";
+import * as qs from "qs";
 import { useState } from "react";
 
 import { client } from "@/api.client";
