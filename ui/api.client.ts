@@ -1,9 +1,9 @@
-import type { ZodTypeProvider } from "@http-wizard/core";
-import { createQueryClient } from "@http-wizard/react-query";
 import axios from "axios";
 import type { Router } from "shared/routes/index";
+import type { ZodTypeProvider } from "shared/utils/http-wizzard/core";
 
 import { publicConfig } from "./config.public";
+import { createQueryClient } from "./utils/http-wizzard/react-query";
 
 export const client = createQueryClient<Router, ZodTypeProvider>({
   instance: axios.create({

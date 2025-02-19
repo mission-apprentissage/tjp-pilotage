@@ -1,10 +1,6 @@
-// @ts-nocheck -- TODO  Not all code paths return a value.
-
-import type { Args, ZodTypeProvider } from "@http-wizard/core";
-
-// import type { Router } from "server/src/server/routes/routes";
 import { RaisonCorrectionEnum } from "../enum/raisonCorrectionEnum";
 import type { Router } from "../routes";
+import type { Args, ZodTypeProvider } from "../utils/http-wizzard/core";
 
 export type Correction = Args<Router["[POST]/correction/submit"]["schema"], ZodTypeProvider>["body"]["correction"];
 
@@ -29,16 +25,19 @@ export const correctionValidators = {
     if (!correction.raison?.length) {
       return "Le champ 'raison' est obligatoire";
     }
+    return;
   },
   motif: (correction) => {
     if (!correction.motif?.length) {
       return "Le champ 'motif' est obligatoire";
     }
+    return;
   },
   autreMotif: (correction) => {
     if (correction.motif?.includes("autre") && !correction.autreMotif) {
       return "Le champ 'autre motif' est obligatoire";
     }
+    return;
   },
   /**
    *
@@ -55,6 +54,7 @@ export const correctionValidators = {
         return "La capacité scolaire doit être égale à la capacité scolaire actuelle dans le cas d'un report ou d'une annulation";
       }
     }
+    return;
   },
   /**
    *
@@ -71,6 +71,7 @@ export const correctionValidators = {
         return "La capacité scolaire colorée doit être égale à 0 dans le cas d'un report ou d'une annulation";
       }
     }
+    return;
   },
   /**
    *
@@ -87,6 +88,7 @@ export const correctionValidators = {
         return "La capacité en apprentissage doit être égale à la capacité en apprentissage actuelle dans le cas d'un report ou d'une annulation";
       }
     }
+    return;
   },
   /**
    *
@@ -102,6 +104,7 @@ export const correctionValidators = {
         return "La capacité en apprentissage colorée doit être égale à 0 dans le cas d'un report ou d'une annulation";
       }
     }
+    return;
   },
   /**
    *
@@ -118,6 +121,7 @@ export const correctionValidators = {
     ) {
       return "Les capacités corrigées doivent être différentes des capacités avant correction dans le cas d'une modification de capacité";
     }
+    return;
   },
   /**
    * La somme des capacités colorées actuelles doit être :
@@ -133,6 +137,8 @@ export const correctionValidators = {
         correction.capaciteApprentissageActuelle + correction.capaciteScolaireActuelle
     )
       return "La somme des capacités colorées actuelles doit être inférieure ou égale à la somme des capacités actuelles";
+
+    return;
   },
   /**
    * La somme des futures capacités colorées doit être :
@@ -148,6 +154,7 @@ export const correctionValidators = {
         correction.capaciteApprentissage + correction.capaciteScolaire
     )
       return "La somme des futures capacités colorées doit être inférieure ou égale à la somme des futures capacités";
+    return;
   },
 } satisfies Record<
 keyof Correction | string,
