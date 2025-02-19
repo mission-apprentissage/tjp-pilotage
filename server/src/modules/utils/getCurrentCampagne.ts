@@ -1,5 +1,5 @@
 
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 import {CampagneStatutEnum} from 'shared/enum/campagneStatutEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 

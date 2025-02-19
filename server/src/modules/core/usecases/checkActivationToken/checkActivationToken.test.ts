@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { describe, expect, it } from "vitest";
 
 import { checkActivationTokenFactory } from "./checkActivationToken.usecase";

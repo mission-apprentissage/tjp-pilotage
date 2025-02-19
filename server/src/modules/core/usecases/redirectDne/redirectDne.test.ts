@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { RoleEnum } from "shared";
 import { describe, expect, it, vi } from "vitest";
 

@@ -1,9 +1,9 @@
-import ejs from "ejs";
+import * as ejs from "ejs";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { omit } from "lodash-es";
 import mjml from "mjml";
-import nodemailer from "nodemailer";
+import * as nodemailer from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
 import path from "path";

@@ -3,7 +3,7 @@
 import { Container, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { isAxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
-import qs from "qs";
+import * as qs from "qs";
 import { useEffect } from "react";
 import {hasRole, RoleEnum} from 'shared';
 import { isCampagneEnCours } from "shared/utils/campagneUtils";

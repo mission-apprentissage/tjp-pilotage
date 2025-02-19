@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { describe, expect, it, vi } from "vitest";
 
 import { resetPasswordFactory } from "./resetPassword.usecase";

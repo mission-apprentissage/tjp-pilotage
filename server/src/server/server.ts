@@ -17,7 +17,7 @@ import type {
 import { fastify } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
-import qs from "qs";
+import * as qs from "qs";
 import { MAX_FILE_SIZE } from "shared";
 
 import config from "@/config";
