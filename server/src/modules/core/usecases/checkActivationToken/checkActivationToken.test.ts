@@ -1,4 +1,5 @@
-import * as jwt from "jsonwebtoken";
+/* eslint-disable-next-line import/default */
+import jwt from "jsonwebtoken";
 import { describe, expect, it } from "vitest";
 
 import { checkActivationTokenFactory } from "./checkActivationToken.usecase";
