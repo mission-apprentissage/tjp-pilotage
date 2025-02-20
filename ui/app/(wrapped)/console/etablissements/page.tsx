@@ -20,6 +20,7 @@ import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 import { formatArray } from "@/utils/formatUtils";
+import { useAuth } from '@/utils/security/useAuth';
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
@@ -103,6 +104,7 @@ export default function Etablissements() {
   const trackEvent = usePlausible();
   const router = useRouter();
   const queryParams = useSearchParams();
+  const { auth } = useAuth();
   const searchParams: {
     filters?: Partial<Filters>;
     search?: string;
@@ -153,6 +155,8 @@ export default function Etablissements() {
 
   const { data: requetesEnregistrees } = client.ref("[GET]/requetes").useQuery({
     query: { page: "formationEtablissement" }
+  }, {
+    enabled: !!auth?.user
   });
 
   const getDataForExport = (data: QueryResult) => {
