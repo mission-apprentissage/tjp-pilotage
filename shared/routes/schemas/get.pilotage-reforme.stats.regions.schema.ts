@@ -32,6 +32,7 @@ export const getPilotageReformeStatsRegionsSchema = {
         diplomes: z.array(OptionSchema),
       }),
       statsRegions: z.array(StatsRegionLineSchema),
+      rentreesScolaire: z.array(z.string()),
     }),
   },
 };

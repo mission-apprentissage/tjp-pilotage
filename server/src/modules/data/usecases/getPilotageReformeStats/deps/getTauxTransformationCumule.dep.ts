@@ -1,6 +1,5 @@
 import { sql } from "kysely";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { rentreeScolaireCampagnes } from "shared/time/rentreeScolaireCampagnes";
 
 import { getKbdClient } from "@/db/db";
 import { effectifTauxTransformationCumule } from "@/modules/data/utils/effectifTauxTransformationCumule";
@@ -10,17 +9,19 @@ import { cleanNull } from "@/utils/noNull";
 
 
 export const getTauxTransformationCumule = async ({
+  rentreesScolaire,
   codeRegion,
   codeNiveauDiplome,
 }: {
   codeRegion?: string;
   codeNiveauDiplome?: string;
+  rentreesScolaire: string[];
 }) => {
   const tauxTransformationCumuleNational = await getKbdClient()
     .selectFrom(
       genericOnDemandes({
         codeRegion,
-        rentreeScolaire: rentreeScolaireCampagnes(),
+        rentreeScolaire: rentreesScolaire,
         codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined,
         statut: [DemandeStatutEnum["demande validée"]]
       })

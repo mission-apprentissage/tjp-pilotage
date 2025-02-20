@@ -9,6 +9,7 @@ export interface Filters extends z.infer<typeof getPilotageReformeStatsSchema.qu
 const getPilotageReformeStatsFactory =
   (
     deps = {
+      getRentreesScolaire: dependencies.getRentreesScolaire,
       getFilters: dependencies.getFilters,
       getTauxTransformationCumule: dependencies.getTauxTransformationCumule,
       getStats: dependencies.getStats,
@@ -16,17 +17,21 @@ const getPilotageReformeStatsFactory =
     }
   ) =>
     async (activeFilters: { codeNiveauDiplome?: string; codeRegion?: string }) => {
+
+      const rentreesScolaire = await deps.getRentreesScolaire();
+
       const [filters,stats, tauxTransformationCumule,  tauxTransformationCumulePrevisionnel] = await Promise.all([
         deps.getFilters(),
         deps.getStats(activeFilters),
-        deps.getTauxTransformationCumule(activeFilters),
-        deps.getTauxTransformationCumulePrevisionnel(activeFilters)
+        deps.getTauxTransformationCumule({ rentreesScolaire, ...activeFilters }),
+        deps.getTauxTransformationCumulePrevisionnel({ rentreesScolaire, ...activeFilters })
       ]);
 
 
       return {
         ...stats,
         filters,
+        rentreesScolaire,
         tauxTransformationCumule,
         tauxTransformationCumulePrevisionnel
       };

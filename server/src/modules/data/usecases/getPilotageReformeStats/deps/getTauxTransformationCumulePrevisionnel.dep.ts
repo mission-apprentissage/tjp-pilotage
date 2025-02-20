@@ -1,6 +1,5 @@
 
 import { sql } from "kysely";
-import { rentreeScolaireCampagnes } from "shared/time/rentreeScolaireCampagnes";
 
 import { getKbdClient } from "@/db/db";
 import { effectifTauxTransformationCumule } from "@/modules/data/utils/effectifTauxTransformationCumule";
@@ -10,17 +9,19 @@ import logger from "@/services/logger";
 import { cleanNull } from "@/utils/noNull";
 
 export const getTauxTransformationCumulePrevisionnel = async ({
+  rentreesScolaire,
   codeRegion,
   codeNiveauDiplome,
 }: {
   codeRegion?: string;
   codeNiveauDiplome?: string;
+  rentreesScolaire: string[];
 }) => {
   const tauxTransfoCumulePrevisionnelNational = await getKbdClient()
     .selectFrom(
       genericOnDemandes({
         codeRegion,
-        rentreeScolaire: rentreeScolaireCampagnes(),
+        rentreeScolaire: rentreesScolaire,
         codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined
       })
         .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])

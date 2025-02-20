@@ -39,6 +39,7 @@ export const getPilotageReformeStatsSchema = {
       annees: z.array(StatsAnneeSchema),
       tauxTransformationCumule: TauxTransformationSchema,
       tauxTransformationCumulePrevisionnel: TauxTransformationSchema,
+      rentreesScolaire: z.array(z.string()),
     }),
   },
 };

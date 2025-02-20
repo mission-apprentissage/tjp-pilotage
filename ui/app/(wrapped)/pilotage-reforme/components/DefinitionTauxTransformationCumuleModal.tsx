@@ -1,12 +1,11 @@
 import { Box, Divider, Highlight, HStack, ListItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, UnorderedList, useToken, VStack } from "@chakra-ui/react";
 import { FIRST_ANNEE_CAMPAGNE } from "shared/time/FIRST_ANNEE_CAMPAGNE";
-import { rentreeScolaireCampagnes } from "shared/time/rentreeScolaireCampagnes";
 
 import { themeColors } from "@/theme/themeColors";
 
 export const DefinitionTauxTransformationCumuleModal = (
-  { isOpen, onClose }:
-  { isOpen: boolean; onClose: () => void }) => {
+  { isOpen, onClose, rentreesScolaire }:
+  { isOpen: boolean; onClose: () => void; rentreesScolaire: string[] }) => {
   const [blue, cyan, grey] = useToken("colors", ["bluefrance.113", "blueecume.675_hover", "grey.925"]);
 
   return (
@@ -32,7 +31,6 @@ export const DefinitionTauxTransformationCumuleModal = (
             >
               Taux de transformation cumulé
             </Text>
-
             <Box width="100%" position="relative" height="24px" bg="gray.100" borderRadius="8px">
               <Box position="absolute" left="0" top="0" bottom="0" width="100%" height="100%" bg={grey} borderRadius="8px"/>
               <Box position="absolute" left="0" top="0" bottom="0" width="75%" height="100%" bg={cyan} borderRadius="8px"/>
@@ -85,7 +83,7 @@ export const DefinitionTauxTransformationCumuleModal = (
                   <VStack lineHeight="20px">
                     <Text fontWeight="700" align="center" style={{ textWrap: "nowrap" }}>
                       <Highlight styles={{ color: "info.text" }} query={""}>
-                        {`Pl. transformées RS ${rentreeScolaireCampagnes().join(" + ")}`}
+                        {`Pl. transformées RS ${rentreesScolaire.join(" + ")}`}
                       </Highlight>
                     </Text>
                     <Text>issues des demandes validées</Text>
@@ -111,7 +109,7 @@ export const DefinitionTauxTransformationCumuleModal = (
                 <HStack alignItems="center">
                   <Text lineHeight="20px">=</Text>
                   <VStack lineHeight="20px">
-                    <Text fontWeight={"bold"} align="center" style={{ textWrap: "balance" }}>{`Pl. transformées RS ${rentreeScolaireCampagnes().join(" + ")}`}</Text>
+                    <Text fontWeight={"bold"} align="center" style={{ textWrap: "balance" }}>{`Pl. transformées RS ${rentreesScolaire.join(" + ")}`}</Text>
                     <Text align="center" style={{ textWrap: "balance" }}>issues des demandes en "projet" , "prêt pour le vote" et "validées"</Text>
                     <Divider borderColor="black" />
                     <Text fontWeight="700">Effectif en entrée de formation</Text>

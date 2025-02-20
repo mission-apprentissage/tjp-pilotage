@@ -3,7 +3,6 @@ import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_RENTREE } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { rentreeScolaireCampagnes } from "shared/time/rentreeScolaireCampagnes";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { getKbdClient } from "@/db/db";
@@ -33,9 +32,11 @@ const dernierTauxDeChomage = (eb: ExpressionBuilder<DB, "indicateurRegion">) => 
 export const getStatsRegions = async ({
   codeNiveauDiplome,
   orderBy = { order: "asc", column: "libelleRegion" },
+  rentreesScolaire,
 }: {
   codeNiveauDiplome?: string;
   orderBy?: { order: "asc" | "desc"; column: string };
+  rentreesScolaire: string[];
 }) => {
   const rentreeScolaire = CURRENT_RENTREE;
 
@@ -69,7 +70,7 @@ export const getStatsRegions = async ({
       .groupBy(["region.codeRegion", "region.libelleRegion",]))
     .with("tauxTransformationCumule", (qb) => qb.selectFrom(
       genericOnDemandes({
-        rentreeScolaire: rentreeScolaireCampagnes(),
+        rentreeScolaire: rentreesScolaire,
         codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined,
         statut: [DemandeStatutEnum["demande validée"]],
       })
@@ -97,7 +98,7 @@ export const getStatsRegions = async ({
       .$castTo<{codeRegion: string; effectifs: number; placesTransformees: number; tauxTransformationCumule: number;}>())
     .with("tauxTransformationCumulePrevisionnel", (qb) => qb.selectFrom(
       genericOnDemandes({
-        rentreeScolaire: rentreeScolaireCampagnes(),
+        rentreeScolaire: rentreesScolaire,
         codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined,
       })
         .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])

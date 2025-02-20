@@ -67,7 +67,7 @@ export function calcNationalStats(data: PilotageReformeStats | undefined, dataRe
 }
 
 
-const usePilotageReformHook = () => {
+const usePilotageReformeHook = () => {
   const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure();
 
   const [searchParams, setSearchParams] = useStateParams<{filters: Filters, order: Order}>({
@@ -179,7 +179,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
     onModalOpen,
     onModalClose,
     displayEmptyDataBoard
-  } = usePilotageReformHook();
+  } = usePilotageReformeHook();
 
   return (
     <Box bg="blueecume.950">
@@ -226,7 +226,11 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
           </Box>
         )}
       </Container>
-      <DefinitionTauxTransformationCumuleModal isOpen={isModalOpen} onClose={onModalClose} />
+      <DefinitionTauxTransformationCumuleModal
+        isOpen={isModalOpen}
+        onClose={onModalClose}
+        rentreesScolaire={data?.rentreesScolaire ?? []}
+      />
     </Box>
   );
 });
