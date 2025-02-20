@@ -39,7 +39,7 @@ export const DefinitionTauxTransformationCumuleModal = (
               <Box position="absolute" left="0" top="0" bottom="0" width="25%" height="100%" bg={blue} borderRadius="8px"/>
             </Box>
             <Box position="relative" width="100%" height="17px">
-              <Box position="absolute" top="-4px"  left="05%" height="15px" borderRadius="full" _before={{
+              <Box position="absolute" top="-4px"  left="10%" height="15px" borderRadius="full" _before={{
                 content: '""',
                 position: "absolute",
                 top: "-7px",
@@ -70,7 +70,7 @@ export const DefinitionTauxTransformationCumuleModal = (
             <HStack width="100%" mt={"32px"}>
               {/* DEMANDES VALIDEES */}
               <VStack
-                width="fit-content"
+                width="33%"
                 fontSize={12}
                 fontStyle="italic"
                 px="8px"
@@ -98,7 +98,7 @@ export const DefinitionTauxTransformationCumuleModal = (
 
               {/* PROJETS RS INCLUS */}
               <VStack
-                width="fit-content"
+                width="66%"
                 fontSize={12}
                 fontStyle="italic"
                 px="8px"
@@ -111,26 +111,8 @@ export const DefinitionTauxTransformationCumuleModal = (
                 <HStack alignItems="center">
                   <Text lineHeight="20px">=</Text>
                   <VStack lineHeight="20px">
-                    <HStack>
-                      <HStack>
-                        <Text fontSize={"24px"}>(</Text>
-                        <VStack gap={0}>
-                          <Text fontWeight={"bold"} align="center" style={{ textWrap: "balance" }}>{`Pl. transformées RS ${rentreeScolaireCampagnes().join(" + ")}`}</Text>
-                          <Text align="center" style={{ textWrap: "balance" }}>issues des demandes validées</Text>
-                        </VStack>
-                        <Text fontSize={"24px"}>)</Text>
-                      </HStack>
-                      <Text fontWeight={"bold"}>+</Text>
-                      <HStack>
-                        <Text fontSize={"24px"}> (</Text>
-                        <VStack gap={0}>
-                          <Text fontWeight={"bold"} align="center" style={{ textWrap: "balance" }}>Pl. transformées RS 26</Text>
-                          <Text align="center" style={{ textWrap: "balance" }}>incluant les demandes en "projet" et "prêt pour le vote"</Text>
-                        </VStack>
-                        <Text fontSize={"24px"}>)</Text>
-                      </HStack>
-                    </HStack>
-
+                    <Text fontWeight={"bold"} align="center" style={{ textWrap: "balance" }}>{`Pl. transformées RS ${rentreeScolaireCampagnes().join(" + ")}`}</Text>
+                    <Text align="center" style={{ textWrap: "balance" }}>issues des demandes en "projet" , "prêt pour le vote" et "validées"</Text>
                     <Divider borderColor="black" />
                     <Text fontWeight="700">Effectif en entrée de formation</Text>
                     <Text>Constat de rentrée {FIRST_ANNEE_CAMPAGNE}</Text>

@@ -23,6 +23,7 @@ const getPilotageReformeStatsFactory =
         deps.getTauxTransformationCumulePrevisionnel(activeFilters)
       ]);
 
+
       return {
         ...stats,
         filters,

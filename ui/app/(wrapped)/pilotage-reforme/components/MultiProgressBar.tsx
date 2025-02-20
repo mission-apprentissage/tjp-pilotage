@@ -51,13 +51,13 @@ function calculateTransform(
   return "translateX(-100%)";
 }
 
-export function MultiProgressBar({
+export const MultiProgressBar = ({
   bars,
   max = 100
 }: {
   bars: Bar[];
   max: number;
-}) {
+}) => {
   const [visibleLabels, setVisibleLabels] = useState<Set<string>>(new Set());
   const [hoveredBar, setHoveredBar] = useState<string | null>(null);
   const [temporarilyHiddenLabels, setTemporarilyHiddenLabels] = useState<Set<string>>(new Set());
@@ -219,4 +219,4 @@ export function MultiProgressBar({
       </Box>
     </Box>
   );
-}
+};
