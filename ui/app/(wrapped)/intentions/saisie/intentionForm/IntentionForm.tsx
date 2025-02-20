@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { isAxiosError } from "axios";
-import {usePathname, useRouter, useSearchParams} from 'next/navigation';
+import { useRouter, useSearchParams} from 'next/navigation';
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
@@ -60,7 +60,6 @@ export const IntentionForm = ({
   const { user } = useAuth();
   const toast = useToast();
   const { push } = useRouter();
-  const pathname = usePathname();
 
   const form = useForm<IntentionForms>({
     defaultValues,
@@ -212,15 +211,15 @@ export const IntentionForm = ({
             pages={[
               { title: "Accueil", to: "/" },
               { title: "Recueil des demandes", to: getRoutingSaisieRecueilDemande({campagne, user}) },
-              pathname === getRoutingSaisieRecueilDemande({campagne, user, suffix: "new"})
+              formId
                 ? {
-                  title: "Nouvelle demande",
-                  to: getRoutingSaisieRecueilDemande({campagne, user, suffix: "new"}),
+                  title: `Demande n°${formId}`,
+                  to: getRoutingSaisieRecueilDemande({campagne, user, suffix: formId}),
                   active: true,
                 }
                 : {
-                  title: `Demande n°${formId}`,
-                  to: getRoutingSaisieRecueilDemande({campagne, user, suffix: formId}),
+                  title: "Nouvelle demande",
+                  to: getRoutingSaisieRecueilDemande({campagne, user, suffix: "new"}),
                   active: true,
                 },
             ]}

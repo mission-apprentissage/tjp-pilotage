@@ -172,7 +172,7 @@ describe("ui > components > security > GuardExpe", () => {
     expect(textToFind).not.toBe(null);
   });
 
-  it("Doit rediriger le perdir vers l'accueil dans le cas où sa région n'accepte pas la saisie perdir pour cette campagne", async () => {
+  it("Doit laisser passer le perdir même si sa région n'accepte pas la saisie perdir pour cette campagne", async () => {
     render(
       <AuthContext.Provider value={getUserContext(RoleEnum["perdir"], "76")}>
         <CurrentCampagneContext.Provider value={getCampagneContext({
@@ -188,11 +188,10 @@ describe("ui > components > security > GuardExpe", () => {
     );
 
     const textToBeNull = screen.queryByText("has_permission");
-    expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/");
+    expect(textToBeNull).not.toBe(null);
   });
 
-  it("Doit rediriger le perdir vers l'accueil dans le cas où sa région n'accepte pas la saisie perdir pour cette campagne et l'utilisateur tente d'accéder à une route hors expérimentation", async () => {
+  it("Doit rediriger le perdir vers la saisie expé même si sa région n'accepte pas la saisie perdir pour cette campagne et l'utilisateur tente d'accéder à une route hors expérimentation", async () => {
     render(
       <AuthContext.Provider value={getUserContext(RoleEnum["perdir"], "76")}>
         <CurrentCampagneContext.Provider value={getCampagneContext({
@@ -209,7 +208,7 @@ describe("ui > components > security > GuardExpe", () => {
 
     const textToBeNull = screen.queryByText("has_permission");
     expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/");
+    expect(redirectMock).toHaveBeenCalledWith("/intentions/perdir/saisie");
   });
 
   it("Doit rediriger le perdir vers la saisie expe dans le cas où sa région accepte la saisie perdir pour cette campagne et l'utilisateur tente d'accéder à une route hors expérimentation", async () => {

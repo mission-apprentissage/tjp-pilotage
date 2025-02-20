@@ -2,7 +2,6 @@ import type {Role} from 'shared';
 import {hasPermission, hasRole, isUserInRegionsExperimentation2024, RoleEnum} from 'shared';
 import type {CampagneType} from 'shared/schema/campagneSchema';
 
-
 export const isPerdirPartOfExpe = ({
   user,
   campagne
@@ -16,8 +15,11 @@ export const isPerdirPartOfExpe = ({
 }): boolean => {
   if(campagne?.annee !== "2025") return isNotPerdirPartOfExpe({ user, campagne });
   const isCampagneRegionale = !!campagne?.codeRegion;
-  const isCampagneRegionaleOfUser = user?.codeRegion === campagne?.codeRegion;
-  return isCampagneRegionale && isCampagneRegionaleOfUser;
+  if(isCampagneRegionale) {
+    const isCampagneRegionaleOfUser = user?.codeRegion === campagne?.codeRegion;
+    return isCampagneRegionaleOfUser;
+  }
+  return true;
 };
 
 export const isNotPerdirPartOfExpe = ({

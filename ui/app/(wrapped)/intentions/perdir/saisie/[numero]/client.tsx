@@ -9,6 +9,7 @@ import { IntentionForm } from "@/app/(wrapped)/intentions/perdir/saisie/intentio
 import { IntentionFilesProvider } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/observationsSection/filesSection/filesContext";
 import { canEditDemandeIntention } from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { GuardSaisieExpe } from "@/utils/security/GuardSaisieExpe";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
@@ -39,15 +40,17 @@ export const PageClient = ({
   if (isLoading || !intention) return <IntentionSpinner />;
 
   return (
-    <IntentionFilesProvider numero={numero}>
-      <IntentionForm
-        disabled={!canEditDemandeIntention({demandeIntention: intention, user})}
-        formId={numero}
-        defaultValues={intention}
-        intention={intention}
-        formMetadata={intention.metadata}
-        campagne={intention.campagne}
-      />
-    </IntentionFilesProvider>
+    <GuardSaisieExpe campagne={intention.campagne}>
+      <IntentionFilesProvider numero={numero}>
+        <IntentionForm
+          disabled={!canEditDemandeIntention({demandeIntention: intention, user})}
+          formId={numero}
+          defaultValues={intention}
+          intention={intention}
+          formMetadata={intention.metadata}
+          campagne={intention.campagne}
+        />
+      </IntentionFilesProvider>
+    </GuardSaisieExpe>
   );
 };

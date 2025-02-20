@@ -76,11 +76,17 @@ const fixtureBuilder = () => {
       campagne2025: () => {
         campagne = createCampagneBuilder({annee: "2025"});
       },
-      campagneRegionaleEnCoursWithSaisiePerdir: () => {
+      campagneRegionaleExpeEnCoursWithSaisiePerdir: () => {
         campagne = createCampagneBuilder({annee: "2025", codeRegion: "76", withSaisiePerdir: true});
       },
-      campagneRegionaleEnCoursWithoutSaisiePerdir: () => {
+      campagneRegionaleExpeEnCoursWithoutSaisiePerdir: () => {
         campagne = createCampagneBuilder({annee: "2025", codeRegion: "76", withSaisiePerdir: false });
+      },
+      campagneRegionaleHorsExpeEnCoursWithSaisiePerdir: () => {
+        campagne = createCampagneBuilder({annee: "2025", codeRegion: "11", withSaisiePerdir: true});
+      },
+      campagneRegionaleHorsExpeEnCoursWithoutSaisiePerdir: () => {
+        campagne = createCampagneBuilder({annee: "2025", codeRegion: "11", withSaisiePerdir: false });
       },
     },
     when: {
@@ -168,10 +174,10 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
     fixture.given.campagne2024();
 
     fixture.when.accesRoutingSaisieRecueilDemande();
-    fixture.then.verifierRetourAccueil();
+    fixture.then.verifierRouteSaisieHorsExpe();
 
     fixture.when.accesRoutingSyntheseRecueilDemande();
-    fixture.then.verifierRetourAccueil();
+    fixture.then.verifierRouteSyntheseHorsExpe();
   });
 
   it("Doit renvoyer la route expé pour la campagne 2025 même si l'utilisateur région est hors expé", () => {
@@ -185,20 +191,42 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
     fixture.then.verifierRouteSyntheseExpe();
   });
 
-  it("Doit renvoyer l'accueil pour la campagne 2025 si l'utilisateur PERDIR est dans une région qui n'autorise pas la saisie PERDIR", () => {
+  it("Doit renvoyer la route expé pour la campagne 2025 même si l'utilisateur est un PERDIR ", () => {
     fixture.given.utilisateurPerdirExpe();
-    fixture.given.campagneRegionaleEnCoursWithoutSaisiePerdir();
+    fixture.given.campagneRegionaleExpeEnCoursWithSaisiePerdir();
 
     fixture.when.accesRoutingSaisieRecueilDemande();
-    fixture.then.verifierRetourAccueil();
+    fixture.then.verifierRouteSaisieExpe();
 
     fixture.when.accesRoutingSyntheseRecueilDemande();
-    fixture.then.verifierRetourAccueil();
+    fixture.then.verifierRouteSyntheseExpe();
   });
 
-  it("Doit renvoyer l'accueil pour la campagne 2025 si l'utilisateur PERDIR est dans une région qui n'autorise pas la saisie PERDIR", () => {
+  it("Doit renvoyer la route expé pour la campagne 2025 même si l'utilisateur est un PERDIR et que sa région n'autorise pas la saisie perdir", () => {
     fixture.given.utilisateurPerdirExpe();
-    fixture.given.campagneRegionaleEnCoursWithSaisiePerdir();
+    fixture.given.campagneRegionaleExpeEnCoursWithoutSaisiePerdir();
+
+    fixture.when.accesRoutingSaisieRecueilDemande();
+    fixture.then.verifierRouteSaisieExpe();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseExpe();
+  });
+
+  it("Doit renvoyer la route expé pour la campagne 2025 même si l'utilisateur est un PERDIR hors expé", () => {
+    fixture.given.utilisateurPerdirHorsExpe();
+    fixture.given.campagneRegionaleHorsExpeEnCoursWithSaisiePerdir();
+
+    fixture.when.accesRoutingSaisieRecueilDemande();
+    fixture.then.verifierRouteSaisieExpe();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseExpe();
+  });
+
+  it("Doit renvoyer la route expé pour la campagne 2025 même si l'utilisateur est un PERDIR hors expé et que sa région n'autorise pas la saisie perdir", () => {
+    fixture.given.utilisateurPerdirHorsExpe();
+    fixture.given.campagneRegionaleHorsExpeEnCoursWithoutSaisiePerdir();
 
     fixture.when.accesRoutingSaisieRecueilDemande();
     fixture.then.verifierRouteSaisieExpe();

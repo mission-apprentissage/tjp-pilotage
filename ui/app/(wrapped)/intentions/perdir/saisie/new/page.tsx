@@ -8,8 +8,8 @@ import { IntentionFilesProvider } from "@/app/(wrapped)/intentions/perdir/saisie
 import { canCreateIntention } from "@/app/(wrapped)/intentions/utils/permissionsIntentionUtils";
 import {Loading} from '@/components/Loading';
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
-import { GuardExpe } from '@/utils/security/GuardExpe';
 import { GuardPermission } from "@/utils/security/GuardPermission";
+import { GuardSaisieExpe } from '@/utils/security/GuardSaisieExpe';
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
@@ -30,7 +30,7 @@ const Page = () => {
 
   return (
     <GuardPermission permission="intentions-perdir/ecriture">
-      <GuardExpe isExpeRoute={true}>
+      <GuardSaisieExpe campagne={campagne}>
         <IntentionFilesProvider>
           <IntentionForm
             disabled={!canCreateIntention({ user, campagne, currentCampagne })}
@@ -42,7 +42,7 @@ const Page = () => {
             campagne={campagne}
           />
         </IntentionFilesProvider>
-      </GuardExpe>
+      </GuardSaisieExpe>
     </GuardPermission>
   );
 };

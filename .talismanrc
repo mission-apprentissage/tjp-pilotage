@@ -85,6 +85,8 @@ fileignoreconfig:
   checksum: 51d6b6031ca8ff27924aaa9e716c9f9f7722e9919543e041adf7f34739ca968a
 - filename: ui/utils/__tests__/isPartOfExpe.test.ts
   checksum: 9531f2e63bdb1de9927873a6df90d18c59cbee8a97831db93521495e1714eb40
+- filename: ui/utils/security/__tests__/GuardSaisieExpe.test.tsx
+  checksum: 26e715515a91e89432de7a0f83edce0b9765e92e4a15f3e731de1abb56090d9e
 scopeconfig:
 - scope: node
 custom_patterns:
