@@ -6,7 +6,6 @@ import { getKbdClient } from "@/db/db";
 import { effectifTauxTransformationCumule } from "@/modules/data/utils/effectifTauxTransformationCumule";
 import { formatTauxTransformation } from "@/modules/data/utils/formatTauxTransformation";
 import { genericOnDemandes } from "@/modules/data/utils/onDemande";
-import logger from "@/services/logger";
 import { cleanNull } from "@/utils/noNull";
 
 
@@ -41,8 +40,6 @@ export const getTauxTransformationCumule = async ({
     .modifyEnd(sql.raw(`\n-- Taux de transformation cumulé national`))
     .executeTakeFirst()
     .then(cleanNull);
-
-  logger.info({ tauxTransformationCumuleNational });
 
   return {
     placesTransformees: tauxTransformationCumuleNational?.placesTransformees,

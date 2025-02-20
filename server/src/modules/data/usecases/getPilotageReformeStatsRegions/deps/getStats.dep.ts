@@ -40,6 +40,7 @@ export const getStatsRegions = async ({
   const rentreeScolaire = CURRENT_RENTREE;
 
   const stats = await getKbdClient()
+    .with("chomage", (qb) => qb.selectFrom("indicateurRegion").where(dernierTauxDeChomage).select(["tauxChomage", "codeRegion"]))
     .with("indicateursIJ", (qb) => qb.selectFrom("indicateurRegionSortie")
       .leftJoin("formationScolaireView as formationView", "formationView.cfd", "indicateurRegionSortie.cfd")
       .leftJoin("indicateurRegion", "indicateurRegion.codeRegion", "indicateurRegionSortie.codeRegion")
@@ -59,15 +60,13 @@ export const getStatsRegions = async ({
       .where("indicateurRegionSortie.cfdContinuum", "is", null)
       .where(notAnneeCommuneIndicateurRegionSortie)
       .where(isScolaireIndicateurRegionSortie)
-      .where(dernierTauxDeChomage)
       .select([
         "region.codeRegion",
         "region.libelleRegion",
-        "indicateurRegion.tauxChomage",
         selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
         selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
       ])
-      .groupBy(["region.codeRegion", "region.libelleRegion", "indicateurRegion.tauxChomage"]))
+      .groupBy(["region.codeRegion", "region.libelleRegion",]))
     .with("tauxTransformationCumule", (qb) => qb.selectFrom(
       genericOnDemandes({
         rentreeScolaire: rentreeScolaireCampagnes(),
@@ -132,11 +131,12 @@ export const getStatsRegions = async ({
     .leftJoin("indicateursIJ", "indicateursIJ.codeRegion", "region.codeRegion")
     .leftJoin("tauxTransformationCumule", "tauxTransformationCumule.codeRegion", "region.codeRegion")
     .leftJoin("tauxTransformationCumulePrevisionnel", "tauxTransformationCumulePrevisionnel.codeRegion", "region.codeRegion")
+    .leftJoin("chomage", "chomage.codeRegion", "region.codeRegion")
     .where(isInPerimetreIJRegion)
     .select((eb) => [
       eb.ref("region.codeRegion").as("codeRegion"),
       eb.ref("region.libelleRegion").as("libelleRegion"),
-      sql<number>`ROUND(CAST((${eb.ref("indicateursIJ.tauxChomage")}::float / ${eb.val(100)}::float) AS numeric), 5)`.as("tauxChomage"),
+      sql<number>`ROUND(CAST((${eb.ref("chomage.tauxChomage")}::float / ${eb.val(100)}::float) AS numeric), 5)`.as("tauxChomage"),
       eb.ref("indicateursIJ.tauxInsertion").as("tauxInsertion"),
       eb.ref("indicateursIJ.tauxPoursuite").as("tauxPoursuite"),
       jsonBuildObject({
