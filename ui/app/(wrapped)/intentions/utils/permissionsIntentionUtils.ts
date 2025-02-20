@@ -30,19 +30,16 @@ export const canCreateIntention = ({
   campagne: CampagneType
 }) => {
   // Si la campagne est régionale,
-
   // si l'utilisateur est bien dans la région de la campagne
   // et si celle-ci autorise la saisie PERDIR
-  const isCampagneRegionale = !!campagne?.codeRegion;
-  const isCampagneRegionaleOfUser = user?.codeRegion === campagne?.codeRegion;
   const isCurrentCampagne = currentCampagne?.id === campagne.id;
+  const isCampagneRegionale = !!campagne?.codeRegion;
   const withSaisiePerdir = hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne?.withSaisiePerdir : true;
 
   return !feature.saisieDisabled &&
     isUserPartOfExpe({ user, campagne }) &&
     isCurrentCampagne &&
     isCampagneRegionale &&
-    isCampagneRegionaleOfUser &&
     withSaisiePerdir;
 };
 

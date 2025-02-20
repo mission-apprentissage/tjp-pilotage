@@ -16,7 +16,8 @@ export const getCampagneRoute = (server: Server) => {
       ...props,
       handler: async (request, response) => {
         const { campagneId } = request.params;
-        const campagne = await getCampagneById({ campagneId });
+        const user = request.user;
+        const campagne = await getCampagneById({ campagneId, user });
         response.status(200).send(campagne);
       },
     });

@@ -76,11 +76,17 @@ const fixtureBuilder = () => {
       campagne2025: () => {
         campagne = createCampagneBuilder({annee: "2025"});
       },
-      campagneRegionaleEnCoursWithSaisiePerdir: () => {
+      campagneRegionaleExpeEnCoursWithSaisiePerdir: () => {
         campagne = createCampagneBuilder({annee: "2025", codeRegion: "76", withSaisiePerdir: true});
       },
-      campagneRegionaleEnCoursWithoutSaisiePerdir: () => {
+      campagneRegionaleExpeEnCoursWithoutSaisiePerdir: () => {
         campagne = createCampagneBuilder({annee: "2025", codeRegion: "76", withSaisiePerdir: false });
+      },
+      campagneRegionaleHorsExpeEnCoursWithSaisiePerdir: () => {
+        campagne = createCampagneBuilder({annee: "2025", codeRegion: "11", withSaisiePerdir: true});
+      },
+      campagneRegionaleHorsExpeEnCoursWithoutSaisiePerdir: () => {
+        campagne = createCampagneBuilder({annee: "2025", codeRegion: "11", withSaisiePerdir: true});
       },
     },
     when: {
@@ -206,30 +212,39 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
     fixture.then.verifierUserPartOfExpe();
   });
 
-  it("Doit renvoyer faux pour un utilisateur perdir et la campagne 2025 dont la campagne régionale n'autorise pas la saisie", () => {
+  it("Doit renvoyer vrai pour un utilisateur perdir et la campagne 2025 même si sa région n'autorise pas la saisie", () => {
     fixture.given.utilisateurPerdirExpe();
-    fixture.given.campagneRegionaleEnCoursWithoutSaisiePerdir();
-
-    fixture.when.isUserPartOfExpe();
-
-    fixture.then.verifierUserNotPartOfExpe();
-  });
-
-  it("Doit renvoyer vrai pour un utilisateur perdir et la campagne 2025 dont la campagne régionale autorise la saisie", () => {
-    fixture.given.utilisateurPerdirExpe();
-    fixture.given.campagneRegionaleEnCoursWithSaisiePerdir();
+    fixture.given.campagneRegionaleExpeEnCoursWithoutSaisiePerdir();
 
     fixture.when.isUserPartOfExpe();
 
     fixture.then.verifierUserPartOfExpe();
   });
 
-  it("Doit renvoyer faux pour un utilisateur perdir et la campagne 2025 dont une autre campagne régionale autorise la saisie", () => {
-    fixture.given.utilisateurPerdirHorsExpe();
-    fixture.given.campagneRegionaleEnCoursWithSaisiePerdir();
+  it("Doit renvoyer vrai pour un utilisateur perdir et la campagne 2025 dont la campagne régionale autorise la saisie", () => {
+    fixture.given.utilisateurPerdirExpe();
+    fixture.given.campagneRegionaleExpeEnCoursWithSaisiePerdir();
 
     fixture.when.isUserPartOfExpe();
 
-    fixture.then.verifierUserNotPartOfExpe();
+    fixture.then.verifierUserPartOfExpe();
+  });
+
+  it("Doit renvoyer vrai pour un utilisateur perdir hors de l'expé et la campagne 2025", () => {
+    fixture.given.utilisateurPerdirHorsExpe();
+    fixture.given.campagneRegionaleHorsExpeEnCoursWithSaisiePerdir();
+
+    fixture.when.isUserPartOfExpe();
+
+    fixture.then.verifierUserPartOfExpe();
+  });
+
+  it("Doit renvoyer vrai pour un utilisateur perdir hors de l'expé et la campagne 2025 même si sa région n'autorise pas la saisie", () => {
+    fixture.given.utilisateurPerdirHorsExpe();
+    fixture.given.campagneRegionaleHorsExpeEnCoursWithSaisiePerdir();
+
+    fixture.when.isUserPartOfExpe();
+
+    fixture.then.verifierUserPartOfExpe();
   });
 });
