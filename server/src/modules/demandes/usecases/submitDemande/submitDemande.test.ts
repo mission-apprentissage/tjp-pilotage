@@ -1,5 +1,5 @@
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import type { DemandeType } from "shared/enum/demandeTypeEnum";
+import {DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { describe, expect, it, vi } from "vitest";
 
 import { submitDemandeFactory } from "./submitDemande.usecase";
@@ -30,7 +30,7 @@ const demande = {
   createdBy: "user-id",
   codeDispositif: "codeDispositif",
   rentreeScolaire: 2025,
-  typeDemande: "augmentation_nette" as DemandeType,
+  typeDemande: DemandeTypeEnum["augmentation_nette"],
   motif: ["autre"],
   autreMotif: "autre motif",
   poursuitePedagogique: false,
