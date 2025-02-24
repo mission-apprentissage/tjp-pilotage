@@ -22,7 +22,7 @@ export const FiltersSection = ({
           <Skeleton opacity="0.3" width="100%" height={"100%"} py={4} px={8} />
         </Box>
       ) : (
-        <Box borderRadius={4}>
+        <Box borderRadius={4} zIndex="9" position="sticky" top={"52px"} left={0} bg="blueecume.950">
           <Flex justifyContent={"start"} gap={8} py={3}>
             <Box justifyContent={"start"}>
               <Text>Niveau de diplôme</Text>
