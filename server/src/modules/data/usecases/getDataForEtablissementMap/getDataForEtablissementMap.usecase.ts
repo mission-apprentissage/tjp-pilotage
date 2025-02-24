@@ -1,4 +1,4 @@
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 import type { getDataForEtablissementMapSchema } from "shared/routes/schemas/get.etablissement.uai.map.schema";
 import type { z } from "zod";
 

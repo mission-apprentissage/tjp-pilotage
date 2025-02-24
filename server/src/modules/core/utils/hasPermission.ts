@@ -1,4 +1,4 @@
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 import type { HookHandlerDoneFunction } from "fastify";
 import type { FastifyReplyType, FastifyRequestType } from "fastify/types/type-provider";
 import { hasPermission } from "shared";

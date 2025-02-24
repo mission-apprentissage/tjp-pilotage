@@ -1,6 +1,6 @@
 import { number as numberFormatter } from "@json2csv/formatters";
 import { Parser } from "@json2csv/plainjs";
-// eslint-disable-next-line import/no-extraneous-dependencies
+// eslint-disable-next-line import/no-extraneous-dependencies, import/default
 import Excel from "exceljs";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { saveAs } from "file-saver";

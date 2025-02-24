@@ -42,7 +42,8 @@
     "services:stop": "docker compose down",
     "services:clean": "yarn services:stop; docker system prune --volumes",
     "seed:update": ".bin/product seed:update",
-    "lint": "eslint --ignore-path .gitignore --cache --ext .js,.jsx,.ts,.tsx .",
+    "lint": "eslint --ignore-path .gitignore --cache --ext .js,.jsx,.ts,.tsx -c ./.eslintrc.json .",
+    "lint:ci": "eslint --ignore-path .gitignore --cache --ext .js,.jsx,.ts,.tsx -c ./.eslintrc.ci.json .",
     "lint:fix": "yarn lint --fix",
     "release": "semantic-release",
     "release:interactive": ".bin/product release:interactive",
@@ -65,6 +66,8 @@
     "import:tables": "yarn cli importTables",
     "import:ij": "yarn cli importIJ",
     "import:formations": "yarn cli importFormations",
+    "import:users": "yarn cli importUsers",
+    "import:users:dryRun": "yarn cli importUsers --dryRun true",
     "migrate:up": "yarn cli migrateDB",
     "migrate:down": "yarn cli migrateDownDB"
   },

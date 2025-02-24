@@ -374,6 +374,8 @@ export const getFormationsQuery = async ({
     .execute()
     .then(cleanNull);
 
+  console.log(result);
+
   return {
     count: result[0]?.count ?? 0,
     formations: result.map((formation) => ({

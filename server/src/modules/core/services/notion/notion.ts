@@ -1,4 +1,4 @@
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 import { APIErrorCode, Client, ClientErrorCode, isNotionClientError } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
 

@@ -1,4 +1,4 @@
-import he from "he";
+import * as he from "he";
 
 const { encode, decode } = he;
 

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
 import { OptionSchema } from "../../schema/optionSchema";
 
 const UserSchema = z.object({
@@ -26,7 +27,7 @@ const DemandeItem = z.object({
   libelleFCIL: z.string().optional(),
   // Type de demande
   rentreeScolaire: z.coerce.number().optional(),
-  typeDemande: z.string().optional(),
+  typeDemande: DemandeTypeZodType.optional(),
   coloration: z.boolean().optional(),
   libelleColoration: z.string().optional(),
   // Capacités

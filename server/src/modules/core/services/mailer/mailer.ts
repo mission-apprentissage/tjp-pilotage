@@ -1,8 +1,10 @@
+/* eslint-disable-next-line import/default */
 import ejs from "ejs";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { omit } from "lodash-es";
 import mjml from "mjml";
+/* eslint-disable-next-line import/default */
 import nodemailer from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";

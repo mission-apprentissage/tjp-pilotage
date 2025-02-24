@@ -1,3 +1,5 @@
+import type { DemandeType } from "shared/enum/demandeTypeEnum";
+
 import {
   isTypeAugmentation,
   isTypeDiminution,
@@ -5,8 +7,8 @@ import {
   isTypeOuverture,
 } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
-export const capaciteDoitEtreInferieure = (typeDemande: string) =>
+export const capaciteDoitEtreInferieure = (typeDemande: DemandeType) =>
   isTypeFermeture(typeDemande) || isTypeDiminution(typeDemande);
 
-export const capaciteDoitEtreSuperieure = (typeDemande: string) =>
+export const capaciteDoitEtreSuperieure = (typeDemande: DemandeType) =>
   isTypeAugmentation(typeDemande) || isTypeOuverture(typeDemande);
