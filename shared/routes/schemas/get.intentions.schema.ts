@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
-import {CampagneSchema} from '../../schema/campagneSchema';
+import { CampagneSchema } from '../../schema/campagneSchema';
 import { OptionSchema } from "../../schema/optionSchema";
 
 const UserSchema = z.object({

@@ -4,7 +4,7 @@ import { AvisStatutZodType } from "../../enum/avisStatutEnum";
 import { AvisTypeZodType } from "../../enum/avisTypeEnum";
 import { DemandeStatutEnum, DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
-import {RaisonCorrectionZodType} from '../../enum/raisonCorrectionEnum';
+import { RaisonCorrectionZodType } from '../../enum/raisonCorrectionEnum';
 import { CampagneSchema } from "../../schema/campagneSchema";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 

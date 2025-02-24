@@ -184,7 +184,9 @@ const motifsTriggerAutre = ["autre", "mise_en_place_partenariat"] as MotifDemand
 
 const motifs: Partial<Record<DemandeTypeType, MotifDemandeLabel[]>> = {
   ouverture_nette: motifsOuverture,
+  ouverture_compensation: motifsOuverture,
   augmentation_nette: motifsOuverture,
+  augmentation_compensation: motifsOuverture,
   fermeture: motifsFermeture,
   diminution: motifsFermeture,
   transfert: motifsTransfert,
