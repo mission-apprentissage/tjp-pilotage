@@ -7,12 +7,12 @@ import {getKbdClient} from '@/db/db';
 import type { RequestUser } from "@/modules/core/model/User";
 import { cleanNull } from '@/utils/noNull';
 
-const getCampagnesEnCours = async () => {
+const getCampagnesEnCours = async (order: "desc" | "asc" = "asc") => {
   return getKbdClient()
     .selectFrom("campagne")
     .where("statut", "=", CampagneStatutEnum["en cours"])
     .selectAll()
-    .orderBy("annee", "asc")
+    .orderBy("annee", order)
     .execute()
     .then((campagnes) =>
       campagnes.map((campagne) => cleanNull({
@@ -77,8 +77,9 @@ const getCampagneById = async ({
  * @returns
  */
 export const getCurrentCampagne = async (user?: RequestUser): Promise<CampagneType> => {
-  const campagnesEnCours = await getCampagnesEnCours();
-  if (!campagnesEnCours || campagnesEnCours.length === 0) {
+  const campagnesEnCoursAsc = await getCampagnesEnCours();
+  const campagnesEnCoursDesc = await getCampagnesEnCours("desc");
+  if (!campagnesEnCoursAsc || campagnesEnCoursAsc.length === 0) {
     throw Boom.notFound(`Aucune campagne nationale en cours, veuillez en créer une dans l'écran dédié`);
   }
   const codeRegion = user?.codeRegion;
@@ -97,8 +98,9 @@ export const getCurrentCampagne = async (user?: RequestUser): Promise<CampagneTy
         dateVote: campagneRegionEnCours.dateVote,
       };
     }
+    return campagnesEnCoursAsc[0];
   }
-  return campagnesEnCours[0];
+  return campagnesEnCoursDesc[0];
 };
 
 

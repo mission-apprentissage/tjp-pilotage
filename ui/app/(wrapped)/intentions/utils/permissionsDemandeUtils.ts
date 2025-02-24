@@ -2,6 +2,7 @@ import {hasPermission, hasRole} from 'shared';
 import {RoleEnum} from 'shared/enum/roleEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 import type { UserType } from 'shared/schema/userSchema';
+import {isUserNational} from 'shared/security/securityUtils';
 import { isCampagneEnCours, isCampagneTerminee } from 'shared/utils/campagneUtils';
 import {isStatutDemandeValidee, isStatutRefusee} from 'shared/utils/statutDemandeUtils';
 import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
@@ -19,9 +20,10 @@ export const canCreateDemande = ({
   currentCampagne?: CampagneType
   campagne: CampagneType;
 }) => {
+  const isCurrentCampagne = currentCampagne?.id === campagne.id;
+  if(isUserNational({ user }) && isCurrentCampagne) return true;
   const isCampagneRegionale = !!campagne?.codeRegion;
   const isCampagneRegionaleOfUser = user?.codeRegion === campagne?.codeRegion;
-  const isCurrentCampagne = currentCampagne?.id === campagne.id;
 
   return !feature.saisieDisabled &&
     hasPermission(user?.role, "intentions/ecriture") &&

@@ -10,15 +10,17 @@ import type { RequestUser } from "@/modules/core/model/User";
 export const isRestitutionIntentionVisible =
   ({ user }: { user: RequestUser }) =>
     (eb: ExpressionBuilder<DB, "demande">) => {
-      const filter = getRestitutionIntentionsVisiblesFilters(user);
+      const filters = getRestitutionIntentionsVisiblesFilters(user);
+
+      if(filters.role === RoleEnum["invite"]) return eb
+        .and([
+          filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
+          eb("demande.statut", "in", [DemandeStatutEnum["demande validée"], DemandeStatutEnum["refusée"]]),
+        ]);
+
       return eb.and([
-        filter.role === RoleEnum["invite"] ?
-          eb("demande.statut", "in", [
-            DemandeStatutEnum["demande validée"],
-            DemandeStatutEnum["refusée"]
-          ]) : sql<boolean>`true`,
-        filter.codeRegion ? eb("demande.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
-        filter.uais ? eb.or(filter.uais.map((uai) => eb("demande.uai", "=", uai))) : sql<boolean>`true`,
+        filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
+        filters.uais ? eb("demande.uai", "in", filters.uais) : sql<boolean>`true`,
         eb.or([
           eb.and([
             eb("demande.statut", "=", DemandeStatutEnum["brouillon"]), eb("demande.createdBy", "=", user.id)
@@ -43,8 +45,8 @@ const getRestitutionIntentionsVisiblesFilters = (user?: RequestUser) => {
   return {
     national: {},
     région: { codeRegion: user.codeRegion },
-    user: { userId: user.id },
     uai: { uais: user.uais },
-    role: { role: user.role },
+    role: { role: user.role, codeRegion: user.codeRegion },
+    user: { userId: user.id },
   }[scope];
 };

@@ -114,7 +114,7 @@ export const InformationsBlock = ({
   return (
     <Flex direction="column" gap={6} mt={6}>
       <SectionBlock>
-        <TypeDemandeSection typeDemandeRef={refs["typeDemande"]} disabled={disabled} campagne={campagne} />
+        <TypeDemandeSection typeDemandeRef={refs["typeDemande"]} disabled={disabled} intention={intention} campagne={campagne} />
       </SectionBlock>
       {showCorrection && (
         <SectionBlock borderColor={"red"} borderWidth={"1px"}>

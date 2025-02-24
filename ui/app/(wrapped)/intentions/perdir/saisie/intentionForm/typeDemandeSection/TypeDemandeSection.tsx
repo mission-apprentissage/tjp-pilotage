@@ -1,12 +1,19 @@
-import { Box, chakra, CloseButton, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip, VisuallyHidden } from '@chakra-ui/react';
+import {Box, Button,chakra, CloseButton, Divider, Flex, Heading, Highlight, Stack, Text, Tooltip, VisuallyHidden} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
+import {useRouter, useSearchParams} from 'next/navigation';
 import type { RefObject } from "react";
 import { useState } from "react";
+import {DemandeTypeEnum} from 'shared/enum/demandeTypeEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/perdir/SCROLL_OFFSETS";
+import type { Intention } from '@/app/(wrapped)/intentions/perdir/types';
+import { canCorrectIntention } from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import {shouldDisplayAjustement} from '@/app/(wrapped)/intentions/utils/typeDemandeUtils';
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
+import {getRoutingSaisieRecueilDemande} from '@/utils/getRoutingRecueilDemande';
+import {useAuth} from '@/utils/security/useAuth';
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { RentreeScolaireField } from "./RentreeScolaireField";
@@ -72,13 +79,22 @@ const InfoAjustementSection = chakra(({ anneeCampagne }: { anneeCampagne: string
 });
 export const TypeDemandeSection = ({
   disabled,
+  intention,
   campagne,
   typeDemandeRef,
 }: {
   disabled: boolean;
+  intention?: Intention;
   campagne: CampagneType;
   typeDemandeRef: RefObject<HTMLDivElement>;
 }) => {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const queryParams = useSearchParams();
+  const isCorrection = queryParams.get("correction")
+   && canCorrectIntention({intention, user});
+
   return (
     <Flex ref={typeDemandeRef} scrollMarginTop={SCROLL_OFFSET} direction={"column"} gap={6}>
       <Heading as="h2" fontSize="xl">
@@ -89,7 +105,7 @@ export const TypeDemandeSection = ({
       </Heading>
       <Divider />
       <RentreeScolaireField disabled={disabled} campagne={campagne} />
-      <InfoAjustementSection anneeCampagne={campagne.annee} />
+      {shouldDisplayAjustement(DemandeTypeEnum["ajustement"], user!) && (<InfoAjustementSection anneeCampagne={campagne.annee} />)}
       <TypeDemandeField disabled={disabled} campagne={campagne} />
       <Tooltip label="Pour transférer des places d’un établissement vers un autre, vous devez faire 2 demandes : une fermeture dans l’établissement initial, et une ouverture dans le nouvel établissement (plusieurs demandes d’ouverture si les places sont transférées à plusieurs établissements)">
         <Flex
@@ -105,6 +121,26 @@ export const TypeDemandeSection = ({
         </Flex>
       </Tooltip>
       <CapaciteSection disabled={disabled} />
+      {isCorrection && (
+        <Flex justify={"right"}>
+          <Button
+            w="fit-content"
+            bgColor="transparent"
+            border="1px solid black"
+            onClick={() => {
+              router.replace(
+                getRoutingSaisieRecueilDemande({
+                  campagne: intention!.campagne,
+                  user,
+                  suffix: `${intention!.numero}?correction=true`,
+                })
+              );
+            }}
+          >
+            {intention!.correction ? "Consulter la correction" : "Rectifier les capacités"}
+          </Button>
+        </Flex>
+      )}
     </Flex>
   );
 };
