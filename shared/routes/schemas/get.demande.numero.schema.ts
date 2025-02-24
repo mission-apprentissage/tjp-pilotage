@@ -5,6 +5,7 @@ import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
 import { RaisonCorrectionZodType } from "../../enum/raisonCorrectionEnum";
 import { CampagneSchema } from "../../schema/campagneSchema";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
+
 const UserSchema = z.object({
   fullname: z.string().optional(),
   id: z.string().optional(),

@@ -3,6 +3,7 @@ import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/p
 
 import { getKbdClient } from "@/db/db";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import { cleanNull } from "@/utils/noNull";
 
 export const getDemandeWithMetadata = async (id: string) => {
@@ -68,6 +69,7 @@ export const getDemandeWithMetadata = async (id: string) => {
         etablissement: cleanNull(demande.metadata.etablissement),
       }),
       statut: castDemandeStatutWithoutSupprimee(demande.statut),
+      typeDemande: castTypeDemande(demande.typeDemande),
       createdAt: demande.createdAt?.toISOString(),
       codeDispositif,
     })

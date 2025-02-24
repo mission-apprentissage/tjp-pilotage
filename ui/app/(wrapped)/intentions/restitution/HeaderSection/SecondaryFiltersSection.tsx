@@ -201,7 +201,7 @@ export const SecondaryFiltersSection = ({
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("typeDemande", selected)}
-              options={data?.filters.typesDemande.map((typeDemande: { value: string; label: string }) => {
+              options={data?.filters.typesDemande.map((typeDemande) => {
                 return {
                   value: typeDemande.value,
                   label: getTypeDemandeLabel(typeDemande.value as DemandeTypeType),

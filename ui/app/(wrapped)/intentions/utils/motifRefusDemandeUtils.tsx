@@ -58,4 +58,5 @@ const motifs: Partial<Record<DemandeTypeType, MotifRefusLabel[]>> = {
   diminution: motifsRefusFermeture,
   transfert: motifsRefusOuverture,
   coloration: motifsRefusOuverture,
-};
+  ajustement: motifsRefusOuverture
+} satisfies { [key in DemandeTypeType]: MotifRefusLabel[] };

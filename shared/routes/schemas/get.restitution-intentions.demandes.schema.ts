@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { CampagneSchema } from "../../schema/campagneSchema";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
@@ -27,7 +28,7 @@ const DemandeSchema = z.object({
   codeDispositif: z.string(),
   cfd: z.string(),
   // Demande
-  typeDemande: z.string(),
+  typeDemande: DemandeTypeZodType,
   motif: z.array(z.string()),
   autreMotif: z.string().optional(),
   rentreeScolaire: z.coerce.number().optional(),

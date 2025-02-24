@@ -15,16 +15,19 @@ export const demandeValidators = {
     if (!isTypeAjustement(demande.typeDemande) && !demande.motif?.length) {
       return "Le champ 'motif' est obligatoire";
     }
+    return undefined;
   },
   autreMotif: (demande) => {
     if (demande.motif?.includes("autre") && !demande.autreMotif) {
       return "Le champ 'autre motif' est obligatoire";
     }
+    return undefined;
   },
   poursuitePedagogique: (demande) => {
     if (isTypeFermeture(demande.typeDemande) && demande.poursuitePedagogique) {
       return "Le champ 'poursuite pédagogique' devrait être à non";
     }
+    return undefined;
   },
   libelleColoration: (demande) => {
     if (demande.coloration && !demande.libelleColoration) {
@@ -33,6 +36,7 @@ export const demandeValidators = {
     if (!demande.coloration && demande.libelleColoration) {
       return "Le champ 'libellé coloration' doit être vide";
     }
+    return undefined;
   },
   /**
    *
@@ -47,6 +51,7 @@ export const demandeValidators = {
     if (isTypeOuverture(demande.typeDemande) && demande.capaciteScolaireActuelle !== 0) {
       return "La capacité scolaire actuelle devrait être à 0 dans le cas d'une ouverture";
     }
+    return undefined;
   },
   /**
    *
@@ -107,6 +112,7 @@ export const demandeValidators = {
       demande.capaciteScolaire < demande.capaciteScolaireActuelle
     )
       return "La capacité scolaire devrait être supérieure ou égale à la capacité actuelle dans le cas d'un ajustement de rentrée";
+    return undefined;
   },
   /**
    *
@@ -129,6 +135,7 @@ export const demandeValidators = {
       demande.capaciteScolaireColoreeActuelle > demande.capaciteScolaireActuelle
     )
       return "La capacité scolaire colorée actuelle doit être inférieure ou égale à la capacité scolaire actuelle";
+    return undefined;
   },
   /**
    *
@@ -152,6 +159,7 @@ export const demandeValidators = {
       demande.capaciteScolaireColoree > demande.capaciteScolaire
     )
       return "La future capacité scolaire colorée doit être inférieure ou égale à la future capacité scolaire";
+    return undefined;
   },
   /**
    *
@@ -165,6 +173,7 @@ export const demandeValidators = {
 
     if (isTypeOuverture(demande.typeDemande) && demande.capaciteApprentissageActuelle !== 0)
       return "La capacité en apprentissage actuelle devrait être à 0 dans le cas d'une ouverture";
+    return undefined;
   },
   /**
    *
@@ -205,6 +214,7 @@ export const demandeValidators = {
       demande.capaciteApprentissage > demande.capaciteApprentissageActuelle
     )
       return "La capacité en apprentissage devrait être inférieure ou égale à la capacité actuelle dans le cas d'une diminution";
+    return undefined;
   },
   /**
    *
@@ -231,6 +241,7 @@ export const demandeValidators = {
       demande.capaciteApprentissageColoreeActuelle > demande.capaciteApprentissageActuelle
     )
       return "La capacité en apprentissage colorée actuelle doit être inférieure ou égale à la capacité en apprentissage actuelle";
+    return undefined;
   },
   /**
    *
@@ -253,6 +264,7 @@ export const demandeValidators = {
       demande.capaciteApprentissageColoree > demande.capaciteApprentissage
     )
       return "La future capacité en apprentissage colorée doit être inférieure ou égale à la future capacité en apprentissage";
+    return undefined;
   },
   /**
    *
@@ -264,6 +276,7 @@ export const demandeValidators = {
 
     if (!demande.capaciteScolaireActuelle && !demande.capaciteApprentissageActuelle)
       return "La somme des capacités actuelles doit être supérieure à 0";
+    return undefined;
   },
   /**
    *
@@ -304,6 +317,7 @@ export const demandeValidators = {
       )
         return "La somme des capacités doit être inférieure à la somme des capacités actuelles dans le cas d'une diminution";
     }
+    return undefined;
   },
   /**
    * La somme des capacités colorées actuelles doit être :
@@ -319,6 +333,7 @@ export const demandeValidators = {
         demande.capaciteApprentissageActuelle + demande.capaciteScolaireActuelle
     )
       return "La somme des capacités colorées actuelles doit être inférieure ou égale à la somme des capacités actuelles";
+    return undefined;
   },
   /**
    * La somme des futures capacités colorées doit être :
@@ -342,6 +357,7 @@ export const demandeValidators = {
       demande.capaciteApprentissageColoree + demande.capaciteScolaireColoree === 0
     )
       return "La somme des futures capacités colorées doit être supérieure ou égale à 0 dans le cas d'une coloration";
+    return undefined;
   },
   compensation: (demande) => {
     if (!isTypeCompensation(demande.typeDemande)) return;
@@ -349,15 +365,18 @@ export const demandeValidators = {
     if (!demande.compensationCodeDispositif) return "Le dispositif de compensation est obligatoire";
     if (!demande.compensationUai) return "L'établissement de compensation est obligatoire";
     if (!demande.compensationRentreeScolaire) return "La rentrée scolaire de compensation est obligatoire";
+    return undefined;
   },
   motifRefus: (demande) => {
     if (demande.statut === DemandeStatutEnum["refusée"] && !demande.motifRefus?.length) {
       return "Le champ 'motif refus' est obligatoire";
     }
+    return undefined;
   },
   autreMotifRefus: (demande) => {
     if (demande.motifRefus?.includes("autre") && !demande.autreMotifRefus) {
       return "Le champ 'autre motif refus' est obligatoire";
     }
+    return undefined;
   },
 } satisfies Record<keyof Demande | string, (demande: Demande) => string | undefined>;

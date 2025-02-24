@@ -1,7 +1,7 @@
 import { ListItem, OrderedList, Text } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import { hasRole, RoleEnum } from "shared";
-import type {DemandeTypeType} from "shared/enum/demandeTypeEnum";
+import type {DemandeTypeType } from "shared/enum/demandeTypeEnum";
 import { DemandeTypeEnum  } from "shared/enum/demandeTypeEnum";
 import type { UserType } from "shared/schema/userSchema";
 import { isTypeAjustement, isTypeColoration } from "shared/utils/typeDemandeUtils";
