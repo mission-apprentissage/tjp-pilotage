@@ -2,12 +2,15 @@
 import { inject } from "injecti";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "shared";
 
+import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "@/modules/import/usecases/getCfdRentrees/getCfdRentrees.usecase";
 import { findDiplomesProfessionnels } from "@/modules/import/usecases/importIJData/findDiplomesProfessionnels.dep";
 import { streamIt } from "@/modules/import/utils/streamIt";
 
+import { deleteFormationEtablissement } from "./deleteFormationEtablissement";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
+import { findFormationEtablissement } from "./findFormationEtablissement";
 import { findUAIsApprentissage } from "./findUAIsApprentissage";
 import { importEtablissement } from "./steps/importEtablissement/importEtablissement.step";
 import { importFormation } from "./steps/importFormation/importFormation.step";
@@ -23,6 +26,7 @@ import {
   importIndicateursRegionSortie,
   importIndicateursRegionSortieApprentissage,
 } from "./steps/importIndicateursSortieRegionaux/importIndicateursSortieRegionaux.step";
+import { extractCfdFromMefAndDuree } from "./utils";
 
 const processedUais = new Set<string>();
 
@@ -87,6 +91,10 @@ export const [importFormationEtablissements] = inject(
     importIndicateurSortieApprentissage,
     importIndicateursRegionSortieApprentissage,
     findUAIsApprentissage,
+    findRawData: rawDataRepository.findRawData,
+    findRawDatas: rawDataRepository.findRawDatas,
+    findFormationEtablissement,
+    deleteFormationEtablissement
   },
   (deps) => {
     return async ({ cfd, voie = "scolaire" }: { cfd: string; voie?: string }) => {
@@ -102,20 +110,92 @@ export const [importFormationEtablissements] = inject(
             }
             processedUais.add(uai);
           }
-          const formationEtablissement = await deps.createFormationEtablissement({
-            uai,
-            cfd,
-            codeDispositif: null,
-            voie: "apprentissage",
+
+          // Récupération du codeDispositif pour les formations en apprentissage
+          // à partir du contenu du fichier offres_apprentissage
+          const offreApprentissage = await deps.findRawData({
+            type: "offres_apprentissage",
+            filter: { "Formation: code CFD": cfd },
           });
 
-          for (const millesime of MILLESIMES_IJ) {
-            await deps.importIndicateurSortieApprentissage({
-              uai,
-              formationEtablissementId: formationEtablissement.id,
-              millesime,
-              cfd,
+          if (!offreApprentissage) continue;
+
+          const codesDispositifs: Array<string> = [];
+          const mefs = offreApprentissage["Formation: codes MEF"]?.split(",").map((mef) => mef.trim()) ?? [];
+          const dureeCollectee = offreApprentissage?.["Formation: durée collectée"]
+            ? parseInt(offreApprentissage?.["Formation: durée collectée"])
+            : -1;
+
+          if (mefs.length > 0) {
+            /**
+             * Chercher ce MEF dans le fichier nMef le couple (FORMATION_DIPLOME, DISPOSITIF_FORMATION) qui correspond au (cfd, codeDispositif)
+             */
+            for (const mef of mefs) {
+              const nMefs = await deps.findRawDatas({
+                type: "nMef",
+                filter: {
+                  MEF: mef,
+                  FORMATION_DIPLOME: cfd,
+                },
+              });
+
+              nMefs.forEach((nMef) => {
+                codesDispositifs.push(nMef.DISPOSITIF_FORMATION);
+              });
+            }
+          } else {
+            // déduire le code dispositif du cfd
+            const codeDispositif = extractCfdFromMefAndDuree(offreApprentissage?.["Formation: code CFD"], dureeCollectee);
+            if (codeDispositif > -1) {
+              codesDispositifs.push(codeDispositif.toString());
+            }
+          }
+
+          if (codesDispositifs.length > 0) {
+            // Il faut supprimer les anciens CodeDispositif à null puisqu'on les a maintenant déduits
+            const oldFormationEtablissement = await deps.findFormationEtablissement({
+              uai, cfd, voie: "apprentissage", codeDispositif: null
             });
+
+            if (oldFormationEtablissement) {
+              console.log("Ancienne formationEtablissement trouvée avec un dispositif à null, suppression en cascade...", oldFormationEtablissement.id);
+              await deps.deleteFormationEtablissement({ id: oldFormationEtablissement.id });
+              console.log("Suppression ok", oldFormationEtablissement.id);
+            }
+
+            for (const codeDispositif of codesDispositifs) {
+              const formationEtablissement = await deps.createFormationEtablissement({
+                uai,
+                cfd,
+                codeDispositif,
+                voie: "apprentissage",
+              });
+
+              for (const millesime of MILLESIMES_IJ) {
+                await deps.importIndicateurSortieApprentissage({
+                  uai,
+                  formationEtablissementId: formationEtablissement.id,
+                  millesime,
+                  cfd,
+                });
+              }
+            }
+          } else {
+            const formationEtablissement = await deps.createFormationEtablissement({
+              uai,
+              cfd,
+              codeDispositif: null,
+              voie: "apprentissage",
+            });
+
+            for (const millesime of MILLESIMES_IJ) {
+              await deps.importIndicateurSortieApprentissage({
+                uai,
+                formationEtablissementId: formationEtablissement.id,
+                millesime,
+                cfd,
+              });
+            }
           }
         }
       } else {

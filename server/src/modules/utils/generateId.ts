@@ -1,5 +1,5 @@
-import * as uuid from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
-export const generateId = () => uuid.v4().replace(/-/g, "");
+export const generateId = () => uuidv4().replace(/-/g, "");
 
-export const generateShortId = () => uuid.v4().replace(/-/g, "").slice(0, 8).toUpperCase();
+export const generateShortId = () => uuidv4().replace(/-/g, "").slice(0, 8).toUpperCase();

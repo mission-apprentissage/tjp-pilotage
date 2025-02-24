@@ -1,4 +1,4 @@
-import {Box, Flex, Heading, HStack, Icon as ChakraIcon, Popover, PopoverCloseButton, PopoverContent, PopoverTrigger, Text,VisuallyHidden} from '@chakra-ui/react';
+import { Box, Flex, Heading, HStack, Icon as ChakraIcon, Popover, PopoverCloseButton, PopoverContent, PopoverTrigger, Text,VisuallyHidden} from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
 import _ from 'lodash';
 import type { ReactNode } from "react";

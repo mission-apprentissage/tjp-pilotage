@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
@@ -65,7 +66,7 @@ export const FiltersSchema = z.object({
   codeDepartement: z.array(z.string()).optional(),
   uai: z.array(z.string()).optional(),
   rentreeScolaire: z.string().optional(),
-  typeDemande: z.array(z.string()).optional(),
+  typeDemande: z.array(DemandeTypeZodType).optional(),
   statut: z.array(DemandeStatutZodType.exclude(["supprimée"])).optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
   cfd: z.array(z.string()).optional(),
@@ -98,7 +99,10 @@ export const getCorrectionsSchema = {
         academies: z.array(OptionSchema),
         departements: z.array(OptionSchema),
         etablissements: z.array(OptionSchema),
-        typesDemande: z.array(OptionSchema),
+        typesDemande: z.array(z.object({
+          label: DemandeTypeZodType,
+          value: DemandeTypeZodType,
+        })),
         diplomes: z.array(OptionSchema),
         formations: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),

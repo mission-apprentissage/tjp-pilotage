@@ -1,4 +1,4 @@
-import Boom from "@hapi/boom";
+import * as Boom from "@hapi/boom";
 import type { Params, QueryFilters } from "shared/routes/schemas/get.formation.cfd.map.schema";
 
 import { getBoundaries, getEtablissements, getFormation } from "./dependencies";

@@ -1,5 +1,6 @@
 import { ListItem, OrderedList, Text } from "@chakra-ui/react";
 import type { ReactNode } from "react";
+import type { DemandeType } from "shared/enum/demandeTypeEnum";
 
 export type TypeDemande = keyof typeof TYPES_DEMANDES_OPTIONS;
 
@@ -42,9 +43,9 @@ export const getTypeDemandeExemple = (typeDemande?: TypeDemande): ReactNode =>
   typeDemande ? TYPES_DEMANDES_OPTIONS[typeDemande].exemple : "";
 
 export const TYPES_DEMANDES_OPTIONS: Record<
-  string,
+  DemandeType,
   {
-    value: string;
+    value: DemandeType;
     labelFiltre?: string;
     label: string;
     campagnes: Array<string>;

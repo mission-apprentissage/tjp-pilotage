@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import {Button, Flex, FormControl, FormErrorMessage, Highlight,Menu, MenuButton, MenuItem, MenuList, Tag, Text} from '@chakra-ui/react';
+import { Button, Flex, FormControl, FormErrorMessage, Highlight,Menu, MenuButton, MenuItem, MenuList, Tag, Text } from '@chakra-ui/react';
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
@@ -20,6 +20,7 @@ export const RentreeScolaireField = ({
     formState: { errors },
     setValue,
     watch,
+    resetField
   } = useFormContext<IntentionForms>();
 
   const rentreeScolaireOptions = [0, 1, 2, 3, 4, 5].map(
@@ -36,7 +37,7 @@ export const RentreeScolaireField = ({
         if (rentreeScolaire === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE)) {
           setValue("typeDemande", "ajustement");
         } else if (typeDemande === "ajustement") {
-          setValue("typeDemande", "");
+          resetField("typeDemande");
         }
       }).unsubscribe
   );

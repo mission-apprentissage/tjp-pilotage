@@ -1,0 +1,91 @@
+{
+  "env": {
+    "es2022": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": ["tsconfig.json", "server/tsconfig.json", "shared/tsconfig.json", "ui/tsconfig.json"]
+  },
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "simple-import-sort",
+    "import",
+    "@dword-design/import-alias",
+    "unused-imports"
+  ],
+  "rules": {
+    "max-len": [
+      "warn",
+      {
+        "code": 120,
+        "ignorePattern": "^import\\s.+\\sfrom\\s.+;$",
+        "ignoreComments": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
+    "simple-import-sort/imports": "error",
+    "no-extra-semi": "error",
+    "semi": ["error", "always"],
+    "indent": ["warn", 2],
+    "no-prototype-builtins": "error",
+    "no-trailing-spaces": "error",
+    "import/no-cycle": ["error", { "ignoreExternal": true }],
+    "import/no-relative-packages": "error",
+    "import/no-useless-path-segments": ["error"],
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/*.test.ts",
+          "**/*.test.tsx",
+          "**/*.spec.ts",
+          "**/tests/**/*.ts",
+          "**/tests/*.ts",
+          "**/fixtures/**/*.ts",
+          "**/tsup.config.ts",
+          "**/vitest.workspace.ts"
+        ]
+      }
+    ],
+    "@typescript-eslint/consistent-type-imports": ["error", { "prefer": "type-imports" }],
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-import-type-side-effects": "error",
+    "@typescript-eslint/promise-function-async": "error",
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "react/react-in-jsx-scope": "off",
+    "react/no-unescaped-entities": "off",
+    "import/namespace": "warn"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": ["server/tsconfig.json", "shared/tsconfig.json", "ui/tsconfig.json"]
+      }
+    },
+    "react": {
+      "version": "detect"
+    }
+  },
+  "ignorePatterns": ["release.config.js"]
+}

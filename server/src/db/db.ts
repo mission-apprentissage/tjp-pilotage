@@ -1,4 +1,5 @@
 import { Kysely, PostgresDialect } from "kysely";
+/* eslint-disable-next-line import/default */
 import pg from "pg";
 const { Pool, types } = pg;
 

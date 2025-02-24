@@ -4,6 +4,7 @@ import {Button, chakra, Container, Flex, MenuButton} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
+/* eslint-disable-next-line import/default */
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 import { PREVIOUS_ANNEE_CAMPAGNE } from "shared/time/PREVIOUS_ANNEE_CAMPAGNE";
