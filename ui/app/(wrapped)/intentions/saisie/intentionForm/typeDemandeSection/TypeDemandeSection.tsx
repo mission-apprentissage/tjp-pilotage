@@ -3,11 +3,13 @@ import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { RefObject } from "react";
 import { useState } from "react";
+import { DemandeTypeEnum } from 'shared/enum/demandeTypeEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
 import type {  Demande } from "@/app/(wrapped)/intentions/saisie/types";
 import { canCorrectDemande } from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
+import { shouldDisplayAjustement } from '@/app/(wrapped)/intentions/utils/typeDemandeUtils';
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
 import { getRoutingSaisieRecueilDemande } from '@/utils/getRoutingRecueilDemande';
@@ -104,7 +106,7 @@ export const TypeDemandeSection = ({
       </Heading>
       <Divider />
       <RentreeScolaireField disabled={disabled} campagne={campagne} />
-      <InfoAjustementSection anneeCampagne={campagne.annee} />
+      {shouldDisplayAjustement(DemandeTypeEnum["ajustement"], user!) && (<InfoAjustementSection anneeCampagne={campagne.annee} />)}
       <TypeDemandeField disabled={disabled} maxWidth="752px" campagne={campagne} />
       <Tooltip label="Pour transférer des places d’un établissement vers un autre, vous devez faire 2 demandes : une fermeture dans l’établissement initial, et une ouverture dans le nouvel établissement (plusieurs demandes d’ouverture si les places sont transférées à plusieurs établissements)">
         <Flex

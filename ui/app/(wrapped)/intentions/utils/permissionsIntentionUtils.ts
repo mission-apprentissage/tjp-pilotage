@@ -3,6 +3,7 @@ import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 import type {DemandeTypeType} from 'shared/enum/demandeTypeEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 import type { UserType } from 'shared/schema/userSchema';
+import {isUserNational} from 'shared/security/securityUtils';
 import { isCampagneEnCours, isCampagneTerminee } from 'shared/utils/campagneUtils';
 import { isStatutBrouillon, isStatutDemandeValidee, isStatutDossierIncomplet, isStatutProposition,isStatutRefusee } from 'shared/utils/statutDemandeUtils';
 import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
@@ -33,6 +34,7 @@ export const canCreateIntention = ({
   // si l'utilisateur est bien dans la région de la campagne
   // et si celle-ci autorise la saisie PERDIR
   const isCurrentCampagne = currentCampagne?.id === campagne.id;
+  if(isUserNational({ user }) && isCurrentCampagne) return true;
   const isCampagneRegionale = !!campagne?.codeRegion;
   const withSaisiePerdir = hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne?.withSaisiePerdir : true;
 

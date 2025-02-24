@@ -155,7 +155,13 @@ const getPathnameFromMetadataState = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   state: any
 ): string | undefined => {
-  const res = Object.getOwnPropertySymbols(state || {})
+  const symbols = Object.getOwnPropertySymbols(state || {});
+
+  if (symbols.length === 0) {
+    return undefined;
+  }
+
+  const res = symbols
     .map((p) => state[p])
     .find((state) => Object.prototype.hasOwnProperty.call(state, "urlPathname"));
 

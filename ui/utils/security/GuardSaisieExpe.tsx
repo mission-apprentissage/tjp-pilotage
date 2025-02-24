@@ -5,6 +5,8 @@ import type { ReactNode } from "react";
 import { hasRole, RoleEnum } from "shared";
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
+import {isUserNational} from 'shared/security/securityUtils';
+import { isCampagneEnCours } from "shared/utils/campagneUtils";
 
 import {feature} from '@/utils/feature';
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
@@ -42,6 +44,7 @@ const handleNewSaisie = (
   { campagne: CampagneType; currentCampagne?: CampagneType; user?: UserType; children: ReactNode }
 ): ReactNode => {
   const isCurrentCampagne = currentCampagne?.id === campagne.id;
+  if(isUserNational({ user }) && isCurrentCampagne) return (<>{children}</>);
   const isCampagneRegionale = !!campagne?.codeRegion;
   const withSaisiePerdir = hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne?.withSaisiePerdir : true;
 
@@ -57,6 +60,9 @@ const handleEditSaisie = (
   { campagne, user, children }:
   { campagne: CampagneType; user?: UserType; children: ReactNode }
 ): ReactNode => {
+  if(isUserNational({ user })) return isCampagneEnCours(campagne) ?
+    (<>{children}</>) :
+    redirect(getRoutingSaisieRecueilDemande({ campagne, user }));
   const isCampagneRegionale = !!campagne?.codeRegion;
   const withSaisiePerdir = (hasRole({ user, role: RoleEnum["perdir"] }) && isCampagneRegionale) ? !!campagne?.withSaisiePerdir : true;
 

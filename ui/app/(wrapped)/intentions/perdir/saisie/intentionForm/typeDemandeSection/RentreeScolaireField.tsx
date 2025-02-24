@@ -6,6 +6,8 @@ import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
+import {shouldDisplayAjustement} from '@/app/(wrapped)/intentions/utils/typeDemandeUtils';
+import { useAuth } from "@/utils/security/useAuth";
 
 export const RentreeScolaireField = ({
   disabled,
@@ -16,6 +18,7 @@ export const RentreeScolaireField = ({
   className?: string;
   campagne: CampagneType;
 }) => {
+  const { user } = useAuth();
   const {
     formState: { errors },
     setValue,
@@ -23,7 +26,8 @@ export const RentreeScolaireField = ({
     resetField
   } = useFormContext<IntentionForms>();
 
-  const rentreeScolaireOptions = [0, 1, 2, 3, 4, 5].map(
+  const offsetsRentree = shouldDisplayAjustement(DemandeTypeEnum["ajustement"], user!) ? [0, 1, 2, 3, 4, 5] : [1, 2, 3, 4, 5];
+  const rentreeScolaireOptions = offsetsRentree.map(
     (offsetRentree: number) => parseInt(campagne.annee) + offsetRentree
   );
   const rentreeScolaire = watch("rentreeScolaire") ?? rentreeScolaireOptions[1];

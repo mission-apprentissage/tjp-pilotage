@@ -200,15 +200,10 @@ export const IntentionForm = ({
     statut: Exclude<DemandeStatutType, "supprimée">,
     statutPrecedent?: Exclude<DemandeStatutType, "supprimée">
   ): string => {
-    if (isStatutProjetDeDemande(statut) || isStatutDemandeValidee(statut)) {
-      return "Valider mon projet de demande";
-    }
-    if (!statutPrecedent || isStatutBrouillon(statutPrecedent)) {
-      return "Enregistrer ma proposition";
-    }
-    if (isStatutProposition(statut)) {
-      return "Mettre à jour ma proposition";
-    }
+    if (isStatutDemandeValidee(statut)) return "Valider mon projet de demande";
+    if (isStatutProjetDeDemande(statut)) return "Enregistrer mon projet de demande";
+    if (!statutPrecedent || isStatutBrouillon(statutPrecedent)) return "Enregistrer ma proposition";
+    if (isStatutProposition(statut)) return "Mettre à jour ma proposition";
     return "Enregistrer ma proposition";
   };
 
