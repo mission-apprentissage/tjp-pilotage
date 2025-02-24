@@ -26,7 +26,7 @@ fileignoreconfig:
 - filename: server/static/files/lyceesACCE.csv
   checksum: 10bcfb7324ef1968ff3c24f3047fc6ce8f148060e625b48ec1b6f7e7a4cde471
 - filename: server/static/files/offres_apprentissage.csv
-  checksum: f8e173f11056708d2958e4f000428c2acb2281d9f19db55d9d72c5790bf0bf4b
+  checksum: d50238cbe4e0a97922ecd069d11ffb75607b0bdb059fe1c33d63b3261fb4b27c
 - filename: server/tests/test_origin/controllers/campagnes.controller.test.js_old
   checksum: 546c306130034fdce2c4165b1f31656dfa883bc8808f0e8b1fa5a5461da1cb08
 - filename: server/tests/test_origin/controllers/users.controller.test.js_old
