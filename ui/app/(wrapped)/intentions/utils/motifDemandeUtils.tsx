@@ -1,3 +1,4 @@
+import type { DemandeType } from "shared/enum/demandeTypeEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import type { TypeDemande } from "./typeDemandeUtils";
@@ -110,15 +111,17 @@ const motifsAjustement = ["ajustement_rentree"] as MotifLabel[];
 
 const motifsTriggerAutre = ["autre", "mise_en_place_partenariat"] as MotifLabel[];
 
-const motifs: Record<TypeDemande, MotifLabel[]> = {
+const motifs = {
   ouverture_nette: motifsOuverture,
+  ouverture_compensation: motifsOuverture,
   augmentation_nette: motifsOuverture,
+  augmentation_compensation: motifsOuverture,
   fermeture: motifsFermeture,
   diminution: motifsFermeture,
   transfert: motifsTransfert,
   coloration: motifsColoration,
   ajustement: motifsAjustement,
-};
+} satisfies { [key in DemandeType]?: MotifLabel[] };
 
 export const getMotifLabel = ({
   motif,
