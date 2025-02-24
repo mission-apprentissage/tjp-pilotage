@@ -18,8 +18,8 @@ describe('server > src > modules > import > usecases > importFormationEtablissem
       });
 
       it("Doit retourner -1 sinon", () => {
-        expect(extractCfdFromMefAndDuree('320000', 4)).toBe(312);
-        expect(extractCfdFromMefAndDuree('320000', 0)).toBe(312);
+        expect(extractCfdFromMefAndDuree('320000', 4)).toBe(-1);
+        expect(extractCfdFromMefAndDuree('320000', 0)).toBe(-1);
       });
     });
 
