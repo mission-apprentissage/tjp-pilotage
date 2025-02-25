@@ -1,5 +1,5 @@
-import { createRoute } from "@http-wizard/core";
 import { whoAmISchema } from "shared/routes/schemas/get.auth.whoAmI.schema";
+import { createRoute } from "shared/utils/http-wizard/core";
 
 import type { Server } from "@/server/server";
 

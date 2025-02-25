@@ -22,6 +22,7 @@ import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 import { formatArray } from "@/utils/formatUtils";
+import { useAuth } from '@/utils/security/useAuth';
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { FORMATION_COLUMNS, FORMATION_COLUMNS_DEFAULT } from "./FORMATION_COLUMNS";
@@ -114,6 +115,7 @@ export default function Formations() {
     page?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
   const trackEvent = usePlausible();
+  const { auth } = useAuth();
 
   const setSearchParams = (params: {
     filters?: typeof filters;
@@ -155,6 +157,8 @@ export default function Formations() {
 
   const { data: requetesEnregistrees } = client.ref("[GET]/requetes").useQuery({
     query: { page: "formation" },
+  }, {
+    enabled: !!auth?.user
   });
 
   const getDataForExport = (data: Formations) => {
