@@ -87,14 +87,31 @@ export const findEtablissementGeoloc = async ({
   }
 
   const search = [lyceeACCE?.adresse_uai, [lyceeACCE?.code_postal_uai, lyceeACCE?.commune_libe].join(" ")]
-    .filter((n) => n)
+    .filter((n) => !!n)
     .join(", ");
+
+  if (search.trim().length === 0) {
+    console.log(
+      `Pas assez d'information pour trouver la géoloc de cet établissement: ${uai} / ${lyceeACCE?.appellation_officielle}, "${search}"`
+    );
+
+    return {
+      adresse: lyceeACCE?.adresse_uai,
+      codePostal: lyceeACCE?.code_postal_uai,
+      commune: lyceeACCE?.commune_libe,
+      latitude: undefined,
+      longitude: undefined,
+      source: "depp_acce",
+    };
+  }
+
   const resultFromBAN = await findAddress({
     search,
     limit: 1,
   });
 
   const [longitude, latitude] = resultFromBAN?.features[0]?.geometry?.coordinates ?? [];
+
 
   if (!latitude || !longitude) {
     console.log(

@@ -20,6 +20,7 @@ export const RentreeScolaireField = ({
     formState: { errors },
     setValue,
     watch,
+    resetField
   } = useFormContext<IntentionForms>();
 
   const rentreeScolaireOptions = [0, 1, 2, 3, 4, 5].map(
@@ -36,7 +37,7 @@ export const RentreeScolaireField = ({
         if (rentreeScolaire === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE)) {
           setValue("typeDemande", "ajustement");
         } else if (typeDemande === "ajustement") {
-          setValue("typeDemande", "");
+          resetField("typeDemande");
         }
       }).unsubscribe
   );

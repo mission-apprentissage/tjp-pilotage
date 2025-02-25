@@ -3,6 +3,7 @@ import { z } from "zod";
 import { AvisStatutZodType } from "../../enum/avisStatutEnum";
 import { AvisTypeZodType } from "../../enum/avisTypeEnum";
 import { DemandeStatutEnum, DemandeStatutZodType } from "../../enum/demandeStatutEnum";
+import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 const UserSchema = z.object({
   fullname: z.string().optional(),
@@ -44,7 +45,7 @@ const IntentionSchema = z.object({
   libelleFCIL: z.string().optional(),
   // Type de demande
   rentreeScolaire: z.coerce.number(),
-  typeDemande: z.string(),
+  typeDemande: DemandeTypeZodType,
   coloration: z.boolean(),
   libelleColoration: z.string().optional(),
   // Capacité

@@ -25,19 +25,19 @@ export const correctionValidators = {
     if (!correction.raison?.length) {
       return "Le champ 'raison' est obligatoire";
     }
-    return;
+    return undefined;
   },
   motif: (correction) => {
     if (!correction.motif?.length) {
       return "Le champ 'motif' est obligatoire";
     }
-    return;
+    return undefined;
   },
   autreMotif: (correction) => {
     if (correction.motif?.includes("autre") && !correction.autreMotif) {
       return "Le champ 'autre motif' est obligatoire";
     }
-    return;
+    return undefined;
   },
   /**
    *
@@ -54,7 +54,7 @@ export const correctionValidators = {
         return "La capacité scolaire doit être égale à la capacité scolaire actuelle dans le cas d'un report ou d'une annulation";
       }
     }
-    return;
+    return undefined;
   },
   /**
    *
@@ -71,7 +71,7 @@ export const correctionValidators = {
         return "La capacité scolaire colorée doit être égale à 0 dans le cas d'un report ou d'une annulation";
       }
     }
-    return;
+    return undefined;
   },
   /**
    *
@@ -88,7 +88,7 @@ export const correctionValidators = {
         return "La capacité en apprentissage doit être égale à la capacité en apprentissage actuelle dans le cas d'un report ou d'une annulation";
       }
     }
-    return;
+    return undefined;
   },
   /**
    *
@@ -104,7 +104,7 @@ export const correctionValidators = {
         return "La capacité en apprentissage colorée doit être égale à 0 dans le cas d'un report ou d'une annulation";
       }
     }
-    return;
+    return undefined;
   },
   /**
    *
@@ -121,7 +121,7 @@ export const correctionValidators = {
     ) {
       return "Les capacités corrigées doivent être différentes des capacités avant correction dans le cas d'une modification de capacité";
     }
-    return;
+    return undefined;
   },
   /**
    * La somme des capacités colorées actuelles doit être :
@@ -137,8 +137,7 @@ export const correctionValidators = {
         correction.capaciteApprentissageActuelle + correction.capaciteScolaireActuelle
     )
       return "La somme des capacités colorées actuelles doit être inférieure ou égale à la somme des capacités actuelles";
-
-    return;
+    return undefined;
   },
   /**
    * La somme des futures capacités colorées doit être :
@@ -154,9 +153,6 @@ export const correctionValidators = {
         correction.capaciteApprentissage + correction.capaciteScolaire
     )
       return "La somme des futures capacités colorées doit être inférieure ou égale à la somme des futures capacités";
-    return;
+    return undefined;
   },
-} satisfies Record<
-keyof Correction | string,
-(correction: Correction, demande: Demande) => string | undefined
->;
+} satisfies Record<keyof Correction | string,(correction: Correction, demande: Demande) => string | undefined | void>;
