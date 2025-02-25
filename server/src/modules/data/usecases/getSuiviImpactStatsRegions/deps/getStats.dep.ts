@@ -1,7 +1,7 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
-import { CURRENT_RENTREE } from "shared";
+import { ANNEE_CHOMAGE, CURRENT_RENTREE } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
@@ -18,13 +18,13 @@ import { cleanNull } from "@/utils/noNull";
 
 /**
  * On prend le taux de chomage du dernier trimestre de l'année
- * définit le taux de chomage annuel. Or, à cette date (13/02/2024)
+ * définit le taux de chomage annuel. Or, à cette date (13/02/2025)
  * le taux de chomage du T4 n'est pas encore disponible, nous
- * prenons donc celui de 2022, et inscrivons la valeur en "dur".
+ * prenons donc celui de 2023, et inscrivons la valeur en "dur".
  */
 const dernierTauxDeChomage = (eb: ExpressionBuilder<DB, "indicateurRegion">) => {
   return eb.or([
-    eb("indicateurRegion.rentreeScolaire", "=", "2022"),
+    eb("indicateurRegion.rentreeScolaire", "=", ANNEE_CHOMAGE),
     eb("indicateurRegion.rentreeScolaire", "is", null),
   ]);
 };
