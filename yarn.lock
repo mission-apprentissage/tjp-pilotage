@@ -2634,25 +2634,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@http-wizard/core@npm:^1.3.16, @http-wizard/core@npm:^1.3.20":
-  version: 1.3.20
-  resolution: "@http-wizard/core@npm:1.3.20"
-  peerDependencies:
-    axios: ^1.4.0
-  checksum: 771a65d829b70247b824847ac882415bf77f783ca1da1b98c899f892e3120e74fff788d557b989b044b2db1e1e44f53bf9c631de9d0f98770d7c6d68cd448c6f
-  languageName: node
-  linkType: hard
-
-"@http-wizard/react-query@npm:^1.3.20":
-  version: 1.3.20
-  resolution: "@http-wizard/react-query@npm:1.3.20"
-  peerDependencies:
-    "@http-wizard/core": 1.3.20
-    "@tanstack/react-query": 5.x
-  checksum: 656868b935700d6b40d0fefbc3fbc0515362e5735b8af39ea2d1a85f9776bb88ba8dcbeec69b8787404e4340e7ab736c98c99a974e96c34092869b7f2553ae19
-  languageName: node
-  linkType: hard
-
 "@humanwhocodes/config-array@npm:^0.13.0":
   version: 0.13.0
   resolution: "@humanwhocodes/config-array@npm:0.13.0"
@@ -19217,7 +19198,6 @@ __metadata:
     "@fastify/swagger": ^8.15.0
     "@fastify/swagger-ui": ^4.1.1
     "@hapi/boom": ^10.0.1
-    "@http-wizard/core": ^1.3.16
     "@notionhq/client": ^2.2.15
     "@sentry/node": ^8.34.0
     "@sentry/profiling-node": ^8.34.0
@@ -19358,7 +19338,6 @@ __metadata:
   dependencies:
     "@anatine/zod-mock": ^3.13.4
     "@faker-js/faker": ^9.3.0
-    "@http-wizard/core": ^1.3.20
     "@tsconfig/node22": ^22.0.0
     "@types/he": ^1.2.3
     "@types/node": ^22.5.5
@@ -21003,8 +20982,6 @@ __metadata:
     "@emotion/react": ^11.13.3
     "@emotion/styled": ^11.13.0
     "@faker-js/faker": ^9.3.0
-    "@http-wizard/core": ^1.3.20
-    "@http-wizard/react-query": ^1.3.20
     "@iconify/react": ^4.1.1
     "@json2csv/formatters": ^7.0.6
     "@json2csv/plainjs": ^7.0.6
