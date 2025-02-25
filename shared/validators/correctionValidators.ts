@@ -1,8 +1,7 @@
 // @ts-nocheck -- TODO  Not all code paths return a value.
 
-import type { Args, ZodTypeProvider } from "@http-wizard/core";
-
 import type { Router } from "../routes";
+import type { Args, ZodTypeProvider } from "../utils/http-wizard/core";
 import { isRaisonAnnulation, isRaisonModificationCapacite, isRaisonReport } from "../utils/raisonCorrectionUtils";
 import { isPositiveNumber } from "./utils";
 

@@ -1,6 +1,6 @@
-import { createRoute } from "@http-wizard/core";
 import type { UserFonction } from "shared/enum/userFonctionEnum";
 import { ROUTES } from "shared/routes/routes";
+import { createRoute } from "shared/utils/http-wizard/core";
 
 import { getScopeFilterForUser } from "@/modules/core/utils/getScopeFilterForUser";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
