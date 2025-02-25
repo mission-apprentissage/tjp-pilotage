@@ -2,7 +2,6 @@
 import { inject } from "injecti";
 
 import type { DiplomeProfessionnelLine } from "@/modules/import/fileTypes/DiplomesProfessionnels";
-import type { Offres_apprentissage } from "@/modules/import/fileTypes/Offres_apprentissage";
 import { streamIt } from "@/modules/import/utils/streamIt";
 
 import { createDiplomeProfessionnel } from "./createDiplomeProfessionnel.dep";
@@ -12,14 +11,6 @@ import { findOffresApprentissages } from "./findOffresApprentissages";
 const formatCFDDiplomeProfessionnel = (line: DiplomeProfessionnelLine) => {
   if (!line["Code diplôme"]) return;
   const cfd = line["Code diplôme"].replace("-", "").slice(0, 8);
-
-  if (isNaN(parseInt(cfd))) return;
-  return cfd;
-};
-
-const formatCFDOffreApprentissage = (line: Offres_apprentissage) => {
-  if (!line["Formation: code CFD"]) return;
-  const cfd = line["Formation: code CFD"];
 
   if (isNaN(parseInt(cfd))) return;
   return cfd;
@@ -66,8 +57,7 @@ export const [importDiplomesProfessionnels] = inject(
     errorCount = 0;
     await streamIt(
       async (count) => deps.findOffresApprentissages({ offset: count, limit: 60 }),
-      async (offreApprentissage, count) => {
-        const cfd = formatCFDOffreApprentissage(offreApprentissage);
+      async (cfd, count) => {
         if (!cfd) return;
         try {
           await deps.createDiplomeProfessionnel({

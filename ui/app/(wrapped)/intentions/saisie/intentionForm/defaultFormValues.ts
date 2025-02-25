@@ -1,4 +1,5 @@
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import type { DemandeType } from "shared/enum/demandeTypeEnum";
 
 export const defaultIntentionForms: PartialIntentionForms = {};
 
@@ -12,7 +13,7 @@ export type IntentionForms = {
   libelleFCIL?: string;
   // Type de demande
   rentreeScolaire: number;
-  typeDemande: string;
+  typeDemande: DemandeType;
   // Capacité
   mixte: boolean;
   capaciteScolaireActuelle?: number;
