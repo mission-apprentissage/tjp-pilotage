@@ -14,7 +14,7 @@ export const extractCfdFromMefAndDuree = (mef: string, duree: number): number =>
     return -1;
 
   case 363:
-    return 378;
+    return 372;
 
   case 400:
     if (duree === 1 || duree === 2 || duree === 3) return 247;
