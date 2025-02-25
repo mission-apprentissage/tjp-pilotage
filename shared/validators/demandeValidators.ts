@@ -1,7 +1,7 @@
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
 import type { DemandeType } from "../enum/demandeTypeEnum";
 import type { Router } from "../routes";
-import type { Args, ZodTypeProvider } from "../utils/http-wizzard/core";
+import type { Args, ZodTypeProvider } from "../utils/http-wizard/core";
 
 type Demande = Args<Router["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
 

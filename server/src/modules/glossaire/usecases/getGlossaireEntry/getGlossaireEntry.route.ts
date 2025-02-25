@@ -1,7 +1,7 @@
 import type NodeCache from "node-cache";
 import { ROUTES } from "shared/routes/routes";
 import type { GlossaireEntry } from "shared/routes/schemas/get.glossaire.id.schema";
-import { createRoute } from "shared/utils/http-wizzard/core";
+import { createRoute } from "shared/utils/http-wizard/core";
 
 import type { Server } from "@/server/server";
 import { CACHE_KEYS } from "@/utils/cacheKeys";

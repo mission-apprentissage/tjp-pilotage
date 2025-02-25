@@ -1,6 +1,6 @@
 import { RaisonCorrectionEnum } from "../enum/raisonCorrectionEnum";
 import type { Router } from "../routes";
-import type { Args, ZodTypeProvider } from "../utils/http-wizzard/core";
+import type { Args, ZodTypeProvider } from "../utils/http-wizard/core";
 
 export type Correction = Args<Router["[POST]/correction/submit"]["schema"], ZodTypeProvider>["body"]["correction"];
 

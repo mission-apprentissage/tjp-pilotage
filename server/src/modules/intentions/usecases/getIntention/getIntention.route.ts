@@ -1,6 +1,6 @@
 import { getPermissionScope, guardScope } from "shared";
 import { ROUTES } from "shared/routes/routes";
-import { createRoute } from "shared/utils/http-wizzard/core";
+import { createRoute } from "shared/utils/http-wizard/core";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
