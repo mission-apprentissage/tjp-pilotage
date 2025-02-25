@@ -1,13 +1,9 @@
-// @ts-nocheck -- TODO  Not all code paths return a value.
-
-import type { Args, ZodTypeProvider } from "@http-wizard/core";
-
-// import type { Router } from "server/src/server/routes/routes";
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
 import type { DemandeType } from "../enum/demandeTypeEnum";
+import type { Router } from "../routes";
+import type { Args, ZodTypeProvider } from "../utils/http-wizard/core";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Demande = Args<any["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
+type Demande = Args<Router["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
 
 export const isTypeFermeture = (typeDemande: DemandeType) => ["fermeture"].includes(typeDemande);
 
@@ -35,7 +31,7 @@ const isPositiveNumber = (value: number | undefined): value is number => {
   return true;
 };
 
-export const demandeValidators: Record<keyof Demande | string, (demande: Demande) => string | undefined> = {
+export const demandeValidators = {
   motif: (demande) => {
     if (!isTypeAjustement(demande.typeDemande) && !demande.motif?.length) {
       return "Le champ 'motif' est obligatoire";
@@ -404,4 +400,4 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
     }
     return undefined;
   },
-};
+} satisfies Record<keyof Demande | string, (demande: Demande) => string | undefined>;
