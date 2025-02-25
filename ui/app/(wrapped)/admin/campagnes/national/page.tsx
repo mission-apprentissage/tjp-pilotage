@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import { client } from "@/api.client";
 import { CreateCampagne } from "@/app/(wrapped)/admin/campagnes/components/CreateCampagne";
 import { CreateCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/CreateCampagneRegion";
+import { DeleteCampagneRegion } from '@/app/(wrapped)/admin/campagnes/components/DeleteCampagneRegion';
 import { EditCampagne } from "@/app/(wrapped)/admin/campagnes/components/EditCampagne";
 import { EditCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/EditCampagneRegion";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
@@ -202,11 +203,10 @@ export default () => {
             />
           )}
           {campagneRegion && isOpenDeleteCampagneRegion && (
-            <EditCampagneRegion
+            <DeleteCampagneRegion
               isOpen={isOpenDeleteCampagneRegion}
               onClose={onCloseDeleteCampagneRegion}
               campagneRegion={campagneRegion}
-              campagnes={campagnes}
               regions={regions}
             />
           )}

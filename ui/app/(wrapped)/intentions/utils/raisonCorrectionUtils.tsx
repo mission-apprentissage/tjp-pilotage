@@ -1,4 +1,3 @@
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 
 export type AnneeCampagneRaisonCorrection = keyof typeof RAISONS_CORRECTION_LABELS;
@@ -24,10 +23,10 @@ export const RAISONS_CORRECTION_LABELS = {
 
 export const getRaisonCorrectionLabelParAnneeCampagne = ({
   raison,
-  anneeCampagne = CURRENT_ANNEE_CAMPAGNE,
+  anneeCampagne,
 }: {
   raison: RaisonCorrectionLabel;
-  anneeCampagne?: AnneeCampagneRaisonCorrection;
+  anneeCampagne: AnneeCampagneRaisonCorrection;
 }): string => {
   return RAISONS_CORRECTION_LABELS[anneeCampagne][raison];
 };

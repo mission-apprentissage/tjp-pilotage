@@ -26,7 +26,6 @@ import { toDate } from "date-fns";
 import {useContext,useEffect} from 'react';
 import { useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { z } from "zod";
 
 import { client } from "@/api.client";
@@ -97,8 +96,6 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
           <FormControl mb="4" isInvalid={!!errors.annee} isRequired>
             <FormLabel>Année</FormLabel>
             <NumberInput
-              defaultValue={parseInt(CURRENT_ANNEE_CAMPAGNE)}
-              min={parseInt(CURRENT_ANNEE_CAMPAGNE)}
               onFocus={(e) => e.currentTarget.select()}
             >
               <NumberInputField

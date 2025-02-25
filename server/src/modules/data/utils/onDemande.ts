@@ -5,7 +5,6 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import type { DB } from "@/db/db";
@@ -56,7 +55,7 @@ export const genericOnDemandes = ({
   codeNiveauDiplome?: string[];
   CPC?: string[];
   codeNsf?: string[];
-  campagne?: string;
+  campagne: string;
   secteur?: string[];
   codeRegion?: string;
   codeAcademie?: string;
@@ -93,7 +92,7 @@ export const genericOnDemandes = ({
           eb(
             eb.ref("positionFormationRegionaleQuadrant.millesimeSortie"),
             "=",
-            eb.val(getMillesimeFromCampagne(campagne ?? CURRENT_ANNEE_CAMPAGNE))
+            eb.val(getMillesimeFromCampagne(campagne))
           ),
         ])
       )

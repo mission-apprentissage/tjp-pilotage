@@ -69,8 +69,10 @@ const getCampagneById = async ({
  *
  * Si aucune campagne n'est en cours on renvoie undefined
  * Si une seule campagne est en cours on la renvoie
- * Si plusieurs campagnes sont en cours
- *  Si l'utilisateur est rattaché à une région et qu'une campagne régionale est en cours pour cette région, on renvoie la campagne nationale associée
+ * Sinon si plusieurs campagnes sont en cours
+ *  Si l'utilisateur est rattaché à une région
+ *    Si une campagne régionale est en cours pour cette région, on renvoie la campagne nationale associée
+ *    Sinon on renvoie la campagne nationale en cours la plus ancienne
  *  Sinon on renvoie la campagne nationale en cours la plus récente
  *
  * @param user
