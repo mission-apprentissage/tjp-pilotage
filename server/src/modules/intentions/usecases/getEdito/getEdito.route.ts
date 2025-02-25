@@ -1,5 +1,5 @@
 import { ROUTES } from "shared/routes/routes";
-import { createRoute } from "shared/utils/http-wizzard/core";
+import { createRoute } from "shared/utils/http-wizard/core";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import type { Server } from "@/server/server";

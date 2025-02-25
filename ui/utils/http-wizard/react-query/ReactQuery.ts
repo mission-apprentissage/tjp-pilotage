@@ -22,10 +22,10 @@ import type {
   OkResponse,
   Ref,
   RouteDefinition,
-  TypeProvider} from 'shared/utils/http-wizzard/core';
+  TypeProvider} from 'shared/utils/http-wizard/core';
 import {
   createClient
-} from 'shared/utils/http-wizzard/core';
+} from 'shared/utils/http-wizard/core';
 
 export type ClientWithReactQuery<
   Definitions extends Record<string, RouteDefinition>,
