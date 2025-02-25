@@ -1,5 +1,6 @@
 import { Box, Flex, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from '@chakra-ui/react';
 import { useMemo } from 'react';
+import { ANNEE_CHOMAGE } from 'shared';
 
 import type { Order, PilotageReformeStatsRegion, TauxTransformation } from "@/app/(wrapped)/suivi-impact/types";
 import { GlossaireShortcut } from '@/components/GlossaireShortcut';
@@ -208,7 +209,7 @@ export const VueRegionAcademieSection = ({
                   <Th isNumeric cursor="pointer" pb="4" width="15%" onClick={() => handleOrder("tauxChomage")}>
                     <OrderIcon {...order} column="tauxChomage" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxChomage}
-                    <TooltipIcon ml="1" label="T4 2022"/>
+                    <TooltipIcon ml="1" label={`T4 ${ANNEE_CHOMAGE}`}/>
                   </Th>
                 </Tr>
               </Thead>

@@ -18,7 +18,7 @@ export const [importIndicateursDepartement] = inject(
       /**
        * Ajout des indicateurs sur le taux de chomage regionnal
        */
-      for (const rentreeScolaire of ["2020", "2021", "2022"]) {
+      for (const rentreeScolaire of ["2020", "2021", "2022", "2023"]) {
         const line = await deps.findRawData({
           type: `chomage_departemental_INSEE`,
           filter: { codeDepartement, rentreeScolaire },
