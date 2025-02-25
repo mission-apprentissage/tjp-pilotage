@@ -38,7 +38,7 @@ export const MenuBoiteReception = ({
         variant="primary"
         isDisabled={isDisabled}
         leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
-        as={hasPermissionSubmitIntention && !isSaisieDisabled() ? NextLink : undefined}
+        as={isDisabled ? undefined : NextLink}
         href="/intentions/saisie/new"
         minHeight={"35px"}
       >
