@@ -1,38 +1,81 @@
 import { Box, Flex, Heading, Select, Skeleton, VisuallyHidden } from "@chakra-ui/react";
+import { useCallback, useMemo, useState } from "react";
 
-import type { Filters, IndicateurType, PilotageReformeStatsRegion } from "@/app/(wrapped)/pilotage-reforme/types";
+import type { Filters, IndicateurOption, IndicateurType, PilotageReformeStatsRegion, PilotageReformeStatsRegionData } from "@/app/(wrapped)/suivi-impact/types";
 import { CartoGraph } from "@/components/CartoGraph";
 import { formatNumber } from "@/utils/formatUtils";
 
 interface CartoSelectionProps {
   data?: PilotageReformeStatsRegion;
   isLoading: boolean;
-  indicateur: IndicateurType;
-  handleIndicateurChange: (indicateur: string) => void;
-  indicateurOptions: {
-    label: string;
-    value: string;
-    isDefault: boolean;
-  }[];
   activeFilters: Filters;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
 }
 
+const getCustomPalette = (indicateur: IndicateurType) : number[][] | undefined => {
+  if(indicateur === "tauxTransformationCumule"){
+    return [
+      [0, 10],
+      [10, 15],
+      [15, 20],
+      [20, 10000],
+    ];
+  }
+
+  return undefined;
+};
+
 export const CartoSection = ({
   data,
   isLoading,
-  indicateur,
-  handleIndicateurChange,
-  indicateurOptions,
   activeFilters,
   handleFilters,
 }: CartoSelectionProps) => {
-  const graphData = data?.statsRegions.map((region) => {
+
+  const [indicateur, setIndicateur] = useState<IndicateurType>("tauxInsertion");
+  const indicateurOptions: IndicateurOption[] = [
+    {
+      label: "Taux d'emploi à 6 mois",
+      value: "tauxInsertion",
+      isDefault: true,
+    },
+    {
+      label: "Taux de poursuite d'études",
+      value: "tauxPoursuite",
+      isDefault: false,
+    },
+    {
+      label: "Taux de transformation cumulé",
+      value: "tauxTransformationCumule",
+      isDefault: false,
+    },
+    {
+      label: "Taux de chômage",
+      value: "tauxChomage",
+      isDefault: false,
+    },
+  ];
+
+  const getDataValue = useCallback((region: PilotageReformeStatsRegionData ) => {
+    let taux : number | undefined;
+
+    if(indicateur === "tauxTransformationCumule" || indicateur === "tauxTransformationCumulePrevisionnel"){
+      taux = region[indicateur]?.taux;
+    }
+    else {
+      taux = region[indicateur];
+    }
+
+    return typeof taux === "undefined" ? undefined : formatNumber(taux * 100, 1);
+  }, [indicateur]);
+
+  const graphData = useMemo(() => data?.statsRegions.map((region) => {
     return {
       name: region.libelleRegion,
-      value: formatNumber((region[indicateur] ?? 0) * 100),
+      code: region.codeRegion,
+      value: getDataValue(region),
     };
-  });
+  }), [data, getDataValue]) ;
 
   const handleClickOnRegion = (codeRegion: string | undefined) => {
     if (activeFilters.codeRegion && activeFilters.codeRegion === codeRegion) handleFilters("codeRegion", undefined);
@@ -58,11 +101,11 @@ export const CartoSection = ({
             <VisuallyHidden as="label" htmlFor="select-indicateur-carto">Indicateur</VisuallyHidden>
             <Select
               id="select-indicateur-carto"
-              width="64"
+              width="80"
               size="sm"
               variant="newInput"
               bg={"grey.150"}
-              onChange={(e) => handleIndicateurChange(e.target.value)}
+              onChange={(e) => setIndicateur(e.target.value as IndicateurType)}
               value={indicateur}
             >
               {indicateurOptions.map((option) => (
@@ -76,6 +119,7 @@ export const CartoSection = ({
             graphData={graphData}
             handleClick={handleClickOnRegion}
             codeRegionSelectionne={activeFilters.codeRegion}
+            customPiecesSteps={getCustomPalette(indicateur)}
           />
         </Box>
       )}

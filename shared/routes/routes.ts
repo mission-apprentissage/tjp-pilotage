@@ -56,13 +56,13 @@ import { getDataForPanoramaRegionSchema } from "./schemas/get.panorama.stats.reg
 import { getFormationsPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.formations.schema";
 import { getRepartitionPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.repartition.schema";
 import { getStatsPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.stats.schema";
-import { getPilotageReformeStatsRegionsSchema } from "./schemas/get.pilotage-reforme.stats.regions.schema";
-import { getPilotageReformeStatsSchema } from "./schemas/get.pilotage-reforme.stats.schema";
 import { getRegionSchema } from "./schemas/get.region.codeRegion.schema";
 import { getRegionsSchema } from "./schemas/get.regions.schema";
 import { getRequetesEnregistreesSchema } from "./schemas/get.requetes.schema";
 import { getDemandesRestitutionIntentionsSchema } from "./schemas/get.restitution-intentions.demandes.schema";
 import { getStatsRestitutionIntentionsSchema } from "./schemas/get.restitution-intentions.stats.schema";
+import { getSuiviImpactStatsRegionsSchema } from "./schemas/get.suivi-impact.stats.regions.schema";
+import { getSuiviImpactStatsSchema } from "./schemas/get.suivi-impact.stats.schema";
 import { searchUserSchema } from "./schemas/get.user.search.search.schema";
 import { getUsersSchema } from "./schemas/get.users.schema";
 import { activateUserSchema } from "./schemas/post.auth.activate.schema";
@@ -264,15 +264,15 @@ export const ROUTES = {
     method: "GET",
     schema: getHeaderEtablissementSchema,
   },
-  "[GET]/pilotage-reforme/stats": {
-    url: "/pilotage-reforme/stats",
+  "[GET]/suivi-impact/stats": {
+    url: "/suivi-impact/stats",
     method: "GET",
-    schema: getPilotageReformeStatsSchema,
+    schema: getSuiviImpactStatsSchema,
   },
-  "[GET]/pilotage-reforme/stats/regions": {
-    url: "/pilotage-reforme/stats/regions",
+  "[GET]/suivi-impact/stats/regions": {
+    url: "/suivi-impact/stats/regions",
     method: "GET",
-    schema: getPilotageReformeStatsRegionsSchema,
+    schema: getSuiviImpactStatsRegionsSchema,
   },
   "[GET]/region/:codeRegion": {
     url: "/region/:codeRegion",

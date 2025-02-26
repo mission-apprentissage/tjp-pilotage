@@ -358,8 +358,8 @@ export const Nav = () => {
           </Portal>
         </Menu>
       )}
-      {hasPermission(auth?.user.role, "pilotage_reforme/lecture") && (
-        <NavLink href="/pilotage-reforme" segment="pilotage-reforme">
+      {hasPermission(auth?.user.role, "suivi-impact/lecture") && (
+        <NavLink href="/suivi-impact" segment="suivi-impact">
           Suivi de l'impact
         </NavLink>
       )}
