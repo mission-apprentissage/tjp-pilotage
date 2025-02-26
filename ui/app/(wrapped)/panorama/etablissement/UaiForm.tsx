@@ -22,13 +22,13 @@ export const UaiForm = ({
     }),
   };
 
-  const { isLoading } = client.ref("[GET]/etablissement/:uai").useQuery({ params: { uai: uai ?? "" } });
+  const { isLoading } = client.ref("[GET]/etablissement/:uai").useQuery({ params: { uai: uai! } }, { enabled: !!uai });
 
   return (
     <FormControl margin="auto" maxW="400px" as="form">
       <FormLabel htmlFor="panorama-etablissement-uai">Recherche d'un établissement</FormLabel>
       <Flex zIndex="overlay">
-        {isLoading ? (
+        {(isLoading && uai) ? (
           <Skeleton height="38px" width="25rem" opacity={0.25} />
         ) : (
           <AsyncSelect
