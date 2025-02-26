@@ -69,7 +69,6 @@ export const PERMISSIONS = {
     [PermissionEnum["intentions-perdir-avis/lecture"]]: PermissionScopeEnum["région"],
     [PermissionEnum["enregistrement-requete/lecture"]]: PermissionScopeEnum["national"],
     [PermissionEnum["enregistrement-requete/ecriture"]]: PermissionScopeEnum["national"],
-    [PermissionEnum["campagnes-région/lecture"]]: PermissionScopeEnum["région"],
   },
   pilote_region: {
     [PermissionEnum["intentions/lecture"]]: PermissionScopeEnum["région"],
@@ -99,7 +98,6 @@ export const PERMISSIONS = {
     [PermissionEnum["intentions-perdir-avis/lecture"]]: PermissionScopeEnum["région"],
     [PermissionEnum["enregistrement-requete/lecture"]]: PermissionScopeEnum["national"],
     [PermissionEnum["enregistrement-requete/ecriture"]]: PermissionScopeEnum["national"],
-    [PermissionEnum["campagnes-région/lecture"]]: PermissionScopeEnum["national"],
   },
   expert_region: {
     [PermissionEnum["intentions/lecture"]]: PermissionScopeEnum["région"],

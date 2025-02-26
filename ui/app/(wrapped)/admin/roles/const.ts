@@ -14,50 +14,41 @@ export const ROLES_LABELS: Record<Role, (filter?: string) => {
     pilote: () => ({
       label: "Pilote National",
       description:
-      "Il se situe dans les administrations centrales ou dans un cabinet ministériel. Il a un rôle de pilotage et de supervision. Il a accès à toutes les demandes en consultation mais il ne peut ni modifier, ni émettre un avis. Il a un rôle de supervision, de pilotage. Il s’assure que les actions menées en région permettent d’atteindre les objectifs fixés par la réforme.",
+      "Il se situe en administration centrale ou dans un cabinet ministériel. Il a un rôle de pilotage et de supervision. Il a accès à toutes les demandes en consultation mais il ne peut ni modifier, ni émettre un avis. Il a un rôle de supervision, de pilotage. Il s’assure que les actions menées en région permettent d’atteindre les objectifs fixés par la réforme.",
     }),
     admin_region: () => ({
       label: "Admin RA",
       description:
-      "Il se situe en Région académique. Il est chargé de mission auprès du DRAFPIC et a une très bonne connaissance des acteurs de la carte, ce qui lui permet de pouvoir administrer les différents niveaux de permission dans Orion. Il a les mêmes permissions qu'un gestionnaire pour ce qui concerne la gestion des demandes.",
+      "Il se situe en Région académique ; il a une très bonne connaissance des acteurs de la carte, ce qui lui permet de pouvoir administrer les différents niveaux de permission dans Orion. Il a les mêmes permissions qu'un gestionnaire pour ce qui concerne la gestion des demandes.",
     }),
     gestionnaire_region: () => ({
       label: "Gestionnaire RA",
       description:
-      "Il se situe en académie. Il est chargé de mission ou conseiller à la formation. Il a un rôle opérationnel. Il a accès à tous les champs en saisie afin de pouvoir effectuer les saisies pour les différents acteurs si besoin.",
+      "Il se situe en académie. Il est chargé d'études ou conseiller à la formation. Il a un rôle opérationnel. Il a ales mêmes droits qu'un Pilote RA de pouvoir effectuer les saisies pour les différents acteurs si besoin.",
     }),
     pilote_region: () => ({
       label: "Pilote RA",
       description:
-      "Il a un rôle d’analyse et de décision. Il peut saisir des projets, valider les demandes. Il a accès à la console de restitution et à la page de pilotage. En région Occitanie et AURA : il peut émettre un avis Pilote (dont avis obligatoire DRAFPIC et décision Recteur) ; il voit tous les avis déposés par les pilotes et les experts.",
+      "Il a un rôle d’analyse et de décision. Il peut saisir des projets, valider les demandes. Il a accès à la console de restitution et à la page de pilotage. Il peut émettre un avis Pilote (dont avis obligatoire DRAFPIC et décision Recteur) ; il voit tous les avis déposés par les pilotes et les experts.",
     }),
     expert_region: () => ({
       label: "Expert RA",
       description:
-      "Il a un rôle d'expertise et de conseil. Il peut consulter les propositions et projets émis sur toute la région académique, il a accès à la console de restitution et à la page de pilotage. En région Occitanie et AURA il peut émettre un avis Expert ; il voit tous les avis déposés par les experts uniquement et les avis pilotes rendus publics.",
+      "Il a un rôle d'expertise et de conseil. Il peut consulter les propositions et projets émis sur toute la région académique, il a accès à la console de restitution et à la page de pilotage. Il peut émettre un avis Expert en phase d'instruction ; il ne peut consulter que l'avis qu'il a déposé..",
     }),
-    perdir: (codeRegion) => {
-      if (codeRegion && CODES_REGIONS_EXPE_2024.includes(codeRegion)) {
-        return {
-          label: "Perdir RA Test",
-          description: "PERDIR des régions AURA et Occitanie",
-        };
-      }
-
-      return {
-        label: "Perdir",
-        description: "PERDIR",
-      };
-    },
+    perdir: () => ({
+      label: "Perdir",
+      description: "Il accède à Orion en mode connecté via Arena. Il peut saisir des demandes si sa région autorise la saisie par les PERDIR, consulte les avis préalables de la RA et de la Région, consulte la décision Recteur et le vote CR. Il a accès aux Demandes de son établissement dans la Restitution. Il a accès à la page Pilotage",
+    }),
     region: () => ({
       label: "Région",
       description:
-      "Membre du conseil régional en Occitanie ou AURA il a un rôle d'analyse et de décision. Il émet un avis préalable sur les propositions puis sur les projets de demande. Il peut consulter les avis des Experts, l'avis du DRAFPIC et la décision du Recteur.",
+      "Au sein de la Région (collectivité) il a un rôle d'analyse et de décision. Il émet un avis préalable sur les dossiers complets puis sur les projets de demande. Il peut consulter la décision du Recteur et le vote du CSA.",
     }),
     invite: () => ({
       label: "Invité",
       description:
-      "Il a un rôle dans la formation professionnelle initiale, en région ou en académie (membre du conseil régional, directeur de CMQ…). Il peut visualiser les demandes validées ou refusées.",
+      "Il a un rôle dans la formation professionnelle initiale, en région ou en académie (membre du conseil régional, directeur de CMQ…). Il  peut consulter uniquement les demandes validées ou refusées pour la campagnes en cours et les précedentes. Il a accès à la console de restitution et à la page de pilotage.",
     }),
   };
 
@@ -71,6 +62,7 @@ export const PERMISSION_GROUP_LABELS: {
   "pilotage-intentions": "Pilotage des demandes",
   "users": "Utilisateurs",
   "campagnes": "Campagnes",
+  "campagnes-région": "Campagnes régionales",
   "intentions-perdir": "Saisie par les perdirs",
   "intentions-perdir-avis": "Avis sur les intentions",
   "intentions-perdir-statut": "Changement de statut sur les intentions",
