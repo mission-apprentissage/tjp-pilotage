@@ -52,7 +52,7 @@ export default () => {
       <Flex px={4} py="2" justify={"end"}>
         <Tooltip
           label={hasCampagneEnCours ?
-            "Vous ne pouvez pas ajouter de campagne régionale car une campagne régionale existe déjà pour la campagne en cours" :
+            "Une campagne régionale existe déjà pour votre région. Vous pouvez uniquement modifier la campagne existante." :
             undefined
           }
           shouldWrapChildren
