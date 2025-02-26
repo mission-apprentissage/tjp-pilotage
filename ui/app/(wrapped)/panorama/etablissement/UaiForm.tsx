@@ -1,8 +1,11 @@
 import { Flex, FormControl, FormLabel, Skeleton } from "@chakra-ui/react";
+import _ from "lodash";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
+
+type Options = (typeof client.infer)["[GET]/etablissement/search/:search"];
 
 export const UaiForm = ({
   uai,
@@ -22,13 +25,21 @@ export const UaiForm = ({
     }),
   };
 
-  const { isLoading } = client.ref("[GET]/etablissement/:uai").useQuery({ params: { uai: uai ?? "" } });
+  const searchEtablissement = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+    if (inputValue.length >= 3)
+      client.ref("[GET]/etablissement/search/:search").query({
+        params: { search: inputValue },
+        query: { filtered: true },
+      }).then((options) => callback(options));
+  }, 300);
+
+  const { isLoading } = client.ref("[GET]/etablissement/:uai").useQuery({ params: { uai: uai! } }, { enabled: !!uai });
 
   return (
     <FormControl margin="auto" maxW="400px" as="form">
       <FormLabel htmlFor="panorama-etablissement-uai">Recherche d'un établissement</FormLabel>
       <Flex zIndex="overlay">
-        {isLoading ? (
+        {(isLoading && uai) ? (
           <Skeleton height="38px" width="25rem" opacity={0.25} />
         ) : (
           <AsyncSelect
@@ -43,13 +54,7 @@ export const UaiForm = ({
               IndicatorSeparator: () => null,
             }}
             onChange={(selected) => selected && onUaiChanged(selected.value)}
-            loadOptions={(inputValue: string) => {
-              if (inputValue.length >= 3)
-                return client.ref("[GET]/etablissement/search/:search").query({
-                  params: { search: inputValue },
-                  query: { filtered: true },
-                });
-            }}
+            loadOptions={searchEtablissement}
             loadingMessage={({ inputValue }) =>
               inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
             }

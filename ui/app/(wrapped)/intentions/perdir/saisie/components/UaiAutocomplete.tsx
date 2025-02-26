@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
@@ -5,6 +6,8 @@ import { hasRole } from "shared";
 
 import { client } from "@/api.client";
 import { useAuth } from "@/utils/security/useAuth";
+
+type Options = (typeof client.infer)["[GET]/etablissement/perdir/search/:search"];
 
 export const UaiAutocomplete = ({
   id = "uai-autocomplete",
@@ -30,6 +33,15 @@ export const UaiAutocomplete = ({
   };
   const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
 
+  const searchEtablissement = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+    if (inputValue.length >= 3 || isPerdir) {
+      client
+        .ref("[GET]/etablissement/perdir/search/:search")
+        .query({ params: { search: inputValue }, query: {} })
+        .then(options => callback(options));
+    }
+  }, 300);
+
   return (
     <AsyncSelect
       inputId={id}
@@ -50,12 +62,7 @@ export const UaiAutocomplete = ({
         } as (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][0])
       }
       defaultOptions={isPerdir}
-      loadOptions={(inputValue: string) => {
-        if (inputValue.length >= 3 || isPerdir)
-          return client
-            .ref("[GET]/etablissement/perdir/search/:search")
-            .query({ params: { search: inputValue }, query: {} });
-      }}
+      loadOptions={searchEtablissement}
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
       }
