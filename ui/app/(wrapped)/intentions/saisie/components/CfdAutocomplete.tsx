@@ -1,10 +1,13 @@
 import { Flex, Tag, Text } from "@chakra-ui/react";
+import _ from "lodash";
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
+
+type Options = (typeof client.infer)["[GET]/diplome/search/:search"];
 
 export const cfdRegex = /^\d{8}$/;
 
@@ -59,6 +62,15 @@ export const CfdAutocompleteInput = ({
     <OptionLabel option={option} />
   );
 
+  const searchDiplome = _.debounce((search: string, callback: (options: Options) => void) => {
+    if (search.length >= 3) {
+      client
+        .ref("[GET]/diplome/search/:search")
+        .query({ params: { search }, query: {} })
+        .then(options => callback(options));
+    }
+  }, 300);
+
   return (
     <AsyncSelect
       inputId={id}
@@ -87,10 +99,7 @@ export const CfdAutocompleteInput = ({
           cfd: "",
         } as (typeof client.infer)["[GET]/diplome/search/:search"][number])
       }
-      loadOptions={(search) => {
-        if (search.length >= 3)
-          return client.ref("[GET]/diplome/search/:search").query({ params: { search }, query: {} });
-      }}
+      loadOptions={searchDiplome}
       formatOptionLabel={formatOptionLabel}
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"

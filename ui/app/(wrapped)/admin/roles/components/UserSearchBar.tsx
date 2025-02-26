@@ -1,5 +1,6 @@
 import { Badge, HStack, Skeleton, Text, VisuallyHidden } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import _ from "lodash";
 import { useEffect } from "react";
 import type { CSSObjectWithLabel, SingleValueProps } from "react-select";
 import { components } from "react-select";
@@ -63,6 +64,22 @@ const UserSearchBar = ({ updateUser, user }: UserSearchBarProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, defaultValues]);
 
+  const searchUser = _.debounce((inputValue: string, callback: (options: Array<OptionType>) => void) => {
+    if (inputValue.length >= 3) {
+      client.ref("[GET]/user/search/:search").query({
+        params: { search: inputValue },
+      })
+        .then(users => {
+          const formattedUsers = users.map((u) => ({
+            label: u.email,
+            value: { ...u, role: u.role! },
+          }));
+          callback(formattedUsers);
+        })
+        .catch(() => callback([]));
+    }
+  }, 300);
+
   return (
     <>
       <VisuallyHidden as="label" htmlFor="search-input">
@@ -103,20 +120,7 @@ const UserSearchBar = ({ updateUser, user }: UserSearchBarProps) => {
             label: user.email,
             value: user,
           }}
-          loadOptions={async (inputValue: string) => {
-            if (inputValue.length >= 3) {
-              const users = await client.ref("[GET]/user/search/:search").query({
-                params: { search: inputValue },
-              });
-
-              return users.map((u) => ({
-                label: u.email,
-                value: { ...u, role: u.role! },
-              }));
-            }
-
-            return [];
-          }}
+          loadOptions={searchUser}
           loadingMessage={({ inputValue }) =>
             inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
           }

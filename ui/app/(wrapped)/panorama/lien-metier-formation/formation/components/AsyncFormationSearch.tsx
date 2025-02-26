@@ -1,6 +1,7 @@
 "use client";
 
 import { Flex, Text } from "@chakra-ui/react";
+import _ from "lodash";
 import { useId, useRef } from "react";
 import type { GroupBase, SelectInstance, SingleValueProps } from "react-select";
 import { components } from "react-select";
@@ -16,6 +17,7 @@ interface AsyncFormationSearchProps {
 }
 
 type Option = FormationOption | string;
+type Options = (typeof client.infer)["[GET]/nsf-diplome/search/:search"];
 
 const OptionLabel = ({ option }: { option: FormationOption }) => {
   return (
@@ -60,6 +62,13 @@ const AsyncFormationSearch = ({ codeNsf, formation, onSelectFormation }: AsyncFo
     if (selectElementRef.current) selectElementRef.current.openMenu("first");
   };
 
+  const searchNsfDiplome = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+    client
+      .ref("[GET]/nsf-diplome/search/:search")
+      .query({ params: { search: inputValue }, query: { codeNsf } })
+      .then(options => callback(options));
+  }, 300);
+
   return (
     <>
       <Text as="label" onClick={openSelect} pb="4px" cursor="pointer" htmlFor="select-diplome">
@@ -88,11 +97,7 @@ const AsyncFormationSearch = ({ codeNsf, formation, onSelectFormation }: AsyncFo
         onChange={(selected) => {
           if (typeof selected !== "string") onSelectFormation(selected ?? undefined);
         }}
-        loadOptions={(inputValue: string) => {
-          return client
-            .ref("[GET]/nsf-diplome/search/:search")
-            .query({ params: { search: inputValue }, query: { codeNsf } });
-        }}
+        loadOptions={searchNsfDiplome}
         loadingMessage={({ inputValue }) =>
           inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
         }
