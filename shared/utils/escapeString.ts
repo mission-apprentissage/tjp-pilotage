@@ -1,4 +1,5 @@
-import * as he from "he";
+/* eslint-disable-next-line import/default */
+import he from "he";
 
 const { encode, decode } = he;
 
