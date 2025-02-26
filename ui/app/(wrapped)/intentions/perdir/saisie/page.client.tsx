@@ -604,18 +604,20 @@ export const PageClient = () => {
                     label={getMessageAccompagnementCampagne({ campagne: data?.campagne, currentCampagne })}
                     shouldWrapChildren
                   >
-                    <Button
-                      isDisabled={isNouvelleDemandeDisabled}
-                      variant="createButton"
-                      size={"lg"}
-                      as={isNouvelleDemandeDisabled ? undefined : NextLink}
-                      href={getRoutingSaisieRecueilDemande({ campagne: data?.campagne, user, suffix: "new" })}
-                      px={3}
-                      mt={12}
-                      mx={"auto"}
-                    >
-                        Nouvelle demande
-                    </Button>
+                    <Flex>
+                      <Button
+                        isDisabled={isNouvelleDemandeDisabled}
+                        variant="createButton"
+                        size={"lg"}
+                        as={isNouvelleDemandeDisabled ? undefined : NextLink}
+                        href={getRoutingSaisieRecueilDemande({ campagne: data?.campagne, user, suffix: "new" })}
+                        px={3}
+                        mt={12}
+                        mx={"auto"}
+                      >
+                          Nouvelle demande
+                      </Button>
+                    </Flex>
                   </Tooltip>
                 </Flex>
               </Center>
