@@ -24,6 +24,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { hasRole } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import {RoleEnum} from 'shared/enum/roleEnum';
 
 import { client } from "@/api.client";
@@ -43,7 +44,7 @@ export const AvisSection = chakra(({ avis, statut }: { avis: Avis; statut: Deman
 
   const hasPermissionModificationAvis = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    if (usePermission("intentions-perdir-avis/ecriture")) {
+    if (usePermission(PermissionEnum["intentions-perdir-avis/ecriture"])) {
       // TODO
       if (hasRole({ user, role: RoleEnum["expert_region"] }) || hasRole({ user, role: RoleEnum["region"] })) {
         if (avis.createdBy === user?.id) return true;

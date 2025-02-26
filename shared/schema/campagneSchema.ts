@@ -6,6 +6,7 @@ export const CampagneSchema = z.object({
   dateFin: z.string().datetime(),
   dateDebut: z.string().datetime(),
   annee: z.string().regex(/^\d{4}$/),
+  campagneRegionId: z.string().optional(),
   codeRegion: z.string().optional(),
   withSaisiePerdir: z.boolean().optional(),
   dateVote: z.string().datetime().optional(),

@@ -1,4 +1,5 @@
 import { getPermissionScope, guardScope } from "shared";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -16,7 +17,7 @@ export const getDemandesRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions/lecture"),
+      preHandler: hasPermissionHandler(PermissionEnum["intentions/lecture"]),
       handler: async (request, response) => {
         const user = request.user!;
         const { ...filters } = request.query;
@@ -25,7 +26,7 @@ export const getDemandesRoute = (server: Server) => {
           user,
         });
 
-        const scope = getPermissionScope(user.role, "intentions/ecriture");
+        const scope = getPermissionScope(user.role, PermissionEnum["intentions/ecriture"]);
 
         response.status(200).send({
           ...result,

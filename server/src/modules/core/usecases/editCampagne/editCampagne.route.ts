@@ -1,3 +1,4 @@
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -15,7 +16,7 @@ export const editCampagneRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("campagnes/ecriture"),
+      preHandler: hasPermissionHandler(PermissionEnum["campagnes/ecriture"]),
       handler: async (request, response) => {
         await editCampagneUsecase({
           campagne: request.body,

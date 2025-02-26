@@ -1,4 +1,5 @@
 import { NotionAPI } from "notion-client";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
@@ -17,7 +18,7 @@ const fetchData = async () => {
 export default async function Documentation() {
   const recordMap = await fetchData();
   return (
-    <GuardPermission permission="intentions/lecture">
+    <GuardPermission permission={PermissionEnum["intentions/lecture"]}>
       <DocumentationClient recordMap={recordMap} />
     </GuardPermission>
   );

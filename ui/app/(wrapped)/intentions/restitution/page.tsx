@@ -11,6 +11,7 @@ import { useContext, useEffect, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import {SecteurEnum} from 'shared/enum/secteurEnum';
 
 import { client } from "@/api.client";
@@ -370,7 +371,7 @@ export default () => {
   };
 
   return (
-    <GuardPermission permission="restitution-intentions/lecture">
+    <GuardPermission permission={PermissionEnum["restitution-intentions/lecture"]}>
       <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20} flex={1}>
         <HeaderSection
           countData={countData}

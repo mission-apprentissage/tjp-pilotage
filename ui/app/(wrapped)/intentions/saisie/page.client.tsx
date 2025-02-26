@@ -35,6 +35,7 @@ import {isCampagneTerminee} from 'shared/utils/campagneUtils';
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import {getMessageAccompagnementCampagne} from '@/app/(wrapped)/intentions/utils/messageAccompagnementUtils';
 import {canCorrectDemande,canCreateDemande, canImportDemande} from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
 import {canEditDemandeIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
@@ -505,22 +506,27 @@ export const PageClient = () => {
           </>
         ) : (
           <Center mt={12}>
-            <Flex flexDirection={"column"}>
-              <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-              {!isNouvelleDemandeDisabled && (
-                <Button
-                  isDisabled={isNouvelleDemandeDisabled}
-                  variant="createButton"
-                  size={"lg"}
-                  as={isNouvelleDemandeDisabled ? undefined : NextLink}
-                  href={getRoutingSaisieRecueilDemande({campagne: data?.campagne, user, suffix: "new"})}
-                  px={3}
-                  mt={12}
-                  mx={"auto"}
-                >
-                  Nouvelle demande
-                </Button>
-              )}
+            <Flex direction={"column"}>
+              <Text fontSize={"2xl"} textAlign={"center"}>Pas de demande à afficher</Text>
+              <Tooltip
+                label={getMessageAccompagnementCampagne({ campagne: data?.campagne, currentCampagne })}
+                shouldWrapChildren
+              >
+                <Flex>
+                  <Button
+                    isDisabled={isNouvelleDemandeDisabled}
+                    variant="createButton"
+                    size={"lg"}
+                    as={isNouvelleDemandeDisabled ? undefined : NextLink}
+                    href={getRoutingSaisieRecueilDemande({campagne: data?.campagne, user, suffix: "new"})}
+                    px={3}
+                    mt={12}
+                    mx="auto"
+                  >
+                    Nouvelle demande
+                  </Button>
+                </Flex>
+              </Tooltip>
             </Flex>
           </Center>
         )}

@@ -95,6 +95,7 @@ export const getCurrentCampagne = async (user?: RequestUser): Promise<CampagneTy
         dateDebut: campagneEnCours.dateDebut,
         dateFin: campagneEnCours.dateFin,
         statut: campagneEnCours.statut,
+        campagneRegionId: campagneRegionEnCours.id,
         codeRegion: campagneRegionEnCours.codeRegion,
         withSaisiePerdir: campagneRegionEnCours.withSaisiePerdir,
         dateVote: campagneRegionEnCours.dateVote,

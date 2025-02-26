@@ -6,6 +6,7 @@ import { usePlausible } from "next-plausible";
 /* eslint-disable-next-line import/default */
 import qs from "qs";
 import { useState } from "react";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import { client } from "@/api.client";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
@@ -18,7 +19,7 @@ import { IndicateursClesSection } from "./components/IndicateursClesSection";
 import { VueRegionAcademieSection } from "./components/VueRegionAcademieSection";
 import type { Filters, FiltersRegions, IndicateurType, Order } from "./types";
 
-export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
+export default withAuth(PermissionEnum["pilotage_reforme/lecture"], function PilotageReforme() {
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {

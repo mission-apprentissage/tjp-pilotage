@@ -1,4 +1,5 @@
 import * as Boom from "@hapi/boom";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -16,7 +17,7 @@ export const submitDemandeRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions/ecriture"),
+      preHandler: hasPermissionHandler(PermissionEnum["intentions/ecriture"]),
       handler: async (request, response) => {
         const { demande } = request.body;
         if (!request.user) throw Boom.unauthorized();

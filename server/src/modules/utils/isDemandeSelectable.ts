@@ -3,6 +3,7 @@ import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import {getPermissionScope, RoleEnum} from 'shared';
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import type { DB } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
@@ -75,7 +76,7 @@ export const isIntentionSelectable =
 
 const getIntentionSelectableFilters = (user?: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">) => {
   if (!user) throw new Error("missing variable user");
-  const scope = getPermissionScope(user?.role, "intentions-perdir/lecture");
+  const scope = getPermissionScope(user?.role, PermissionEnum["intentions-perdir/lecture"]);
   if (!scope) throw Boom.forbidden();
 
   return {

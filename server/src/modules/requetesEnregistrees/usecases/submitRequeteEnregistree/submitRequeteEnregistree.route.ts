@@ -1,3 +1,4 @@
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -15,7 +16,7 @@ export const submitRequeteEnregistreeRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("enregistrement-requete/ecriture"),
+      preHandler: hasPermissionHandler(PermissionEnum["enregistrement-requete/ecriture"]),
       handler: async (request, response) => {
         const requeteEnregistree = request.body;
 

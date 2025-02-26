@@ -1,6 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import { hasRole } from "shared";
 import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import {RoleEnum} from 'shared/enum/roleEnum';
 
 import type { client } from "@/api.client";
@@ -14,8 +15,8 @@ import { ChangementStatutForm } from "./ChangementStatutForm";
 
 export const ActionsSection = ({ intention }: { intention: (typeof client.infer)["[GET]/intention/:numero"] }) => {
   const { user } = useAuth();
-  const hasPermissionModificationStatut = usePermission("intentions-perdir-statut/ecriture");
-  const hasPermissionEmissionAvis = usePermission("intentions-perdir-avis/ecriture");
+  const hasPermissionModificationStatut = usePermission(PermissionEnum["intentions-perdir-statut/ecriture"]);
+  const hasPermissionEmissionAvis = usePermission(PermissionEnum["intentions-perdir-avis/ecriture"]);
 
   /**
    * Les user région ne peuvent pas donner d'avis consultatif

@@ -14,6 +14,8 @@ export const UserFonctionZodType = z.enum([
   "SGRA",
   "CSA",
   "Recteur",
+  "DGESCO",
+  "Cabinet"
 ]);
 
 export const UserFonctionEnum = UserFonctionZodType.Enum;

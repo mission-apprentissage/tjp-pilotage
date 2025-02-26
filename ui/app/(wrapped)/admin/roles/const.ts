@@ -1,6 +1,7 @@
 import type { Role } from "shared";
 import { CODES_REGIONS_EXPE_2024 } from "shared";
-import type { Permission } from "shared/enum/permissionEnum";
+import type {Permission} from "shared/enum/permissionEnum";
+import { PermissionEnum } from "shared/enum/permissionEnum";
 
 export const ROLES_LABELS: Record<Role, (filter?: string) => {
     label: string;
@@ -83,14 +84,14 @@ Partial<
   >
 > = {
   perdir: {
-    "intentions-perdir/ecriture": (codeRegion) => {
+    [PermissionEnum["intentions-perdir/ecriture"]]: (codeRegion) => {
       if (codeRegion && CODES_REGIONS_EXPE_2024.includes(codeRegion)) {
         return true;
       }
 
       return false;
     },
-    "intentions-perdir/lecture": (codeRegion) => {
+    [PermissionEnum["intentions-perdir/lecture"]]: (codeRegion) => {
       if (codeRegion && CODES_REGIONS_EXPE_2024.includes(codeRegion)) {
         return true;
       }

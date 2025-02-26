@@ -1,5 +1,6 @@
 import * as Boom from "@hapi/boom";
 import { getPermissionScope, guardScope } from "shared";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneIntention } from "@/modules/intentions/repositories/findOneIntention.query";
@@ -13,7 +14,7 @@ export const deleteIntentionFactory =
       const intention = await deps.findOneIntention(numero);
       if (!intention) throw Boom.notFound();
 
-      const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
+      const scope = getPermissionScope(user.role, PermissionEnum["intentions-perdir/ecriture"]);
       const isAllowed = guardScope(scope, {
         uai: () => user.uais?.includes(intention.uai) ?? false,
         région: () => user.codeRegion === intention.codeRegion,

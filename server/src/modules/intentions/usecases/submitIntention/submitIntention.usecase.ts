@@ -3,6 +3,7 @@ import * as Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { getPermissionScope, guardScope, intentionValidators } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import type { submitIntentionSchema } from "shared/routes/schemas/post.intention.submit.schema";
 import type { z } from "zod";
 
@@ -75,7 +76,7 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
       if (!dataEtablissement.codeRegion) throw Boom.badData();
 
-      const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
+      const scope = getPermissionScope(user.role, PermissionEnum["intentions-perdir/ecriture"]);
       const isAllowed = guardScope(scope, {
         uai: () => user.uais?.includes(intention.uai) ?? false,
         région: () => user.codeRegion === dataEtablissement.codeRegion,

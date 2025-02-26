@@ -1,3 +1,4 @@
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -15,7 +16,7 @@ export const deleteCampagneRegionRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("campagnes-région/ecriture"),
+      preHandler: hasPermissionHandler(PermissionEnum["campagnes-région/ecriture"]),
       handler: async (request, response) => {
         const user = request.user!;
         await deleteCampagneRegion({ id: request.params.id, user });

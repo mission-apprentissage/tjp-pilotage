@@ -1,6 +1,7 @@
 "use client";
 
 import {redirect, useSearchParams} from 'next/navigation';
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import {client} from '@/api.client';
 import { IntentionForm } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/IntentionForm";
@@ -29,7 +30,7 @@ const Page = () => {
   if(!campagne) return redirect(getRoutingSaisieRecueilDemande({campagne, user}));
 
   return (
-    <GuardPermission permission="intentions-perdir/ecriture">
+    <GuardPermission permission={PermissionEnum["intentions-perdir/ecriture"]}>
       <GuardSaisieExpe campagne={campagne}>
         <IntentionFilesProvider>
           <IntentionForm

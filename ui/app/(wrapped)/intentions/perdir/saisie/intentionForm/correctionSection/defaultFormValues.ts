@@ -3,6 +3,7 @@ import type { RaisonCorrectionType } from "shared/enum/raisonCorrectionEnum";
 export type PartialCorrectionForms = Partial<CorrectionForms>;
 
 export type CorrectionForms = {
+  intentionNumero: string;
   // Capacité
   capaciteScolaireActuelle: number;
   capaciteScolaire: number;

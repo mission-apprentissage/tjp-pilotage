@@ -255,7 +255,7 @@ export const EditCampagneRegion = ({
             {!!errors.dateFin && <FormErrorMessage>{errors.dateFin.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4">
-            <FormLabel htmlFor="input-date-vote">Date de vote</FormLabel>
+            <FormLabel htmlFor="input-date-vote">Date du vote CR</FormLabel>
             <SingleDatepicker
               date={getValues("dateVote") ? toDate(getValues("dateVote")!) : undefined}
               onDateChange={(date) => {
