@@ -1,5 +1,6 @@
 import * as Boom from "@hapi/boom";
 import { getPermissionScope, guardScope } from "shared";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneIntention } from "@/modules/intentions/repositories/findOneIntention.query";
@@ -17,7 +18,7 @@ export const deleteAvisFactory =
       const intention = await deps.findOneIntention(avis.intentionNumero);
       if (!intention) throw Boom.notFound("Intention non trouvée en base");
 
-      const scope = getPermissionScope(user.role, "intentions-perdir-avis/ecriture");
+      const scope = getPermissionScope(user.role, PermissionEnum["intentions-perdir-avis/ecriture"]);
       const isAllowed = guardScope(scope, {
         région: () => user.codeRegion === intention.codeRegion,
         national: () => true,

@@ -3,8 +3,7 @@ import { createRoute } from "shared/utils/http-wizard/core";
 
 import type { Server } from "@/server/server";
 
-import { getLatestCampagneUsecase } from "./getLatestCampagne.usecase";
-
+import { getLatestCampagneQuery } from './getLatestCampagne.query';
 
 const ROUTE = ROUTES["[GET]/campagne/latest"];
 
@@ -16,7 +15,7 @@ export const getLatestCampagneRoute = (server: Server) => {
     server.route({
       ...props,
       handler: async (_request, response) => {
-        const latestCampagne = await getLatestCampagneUsecase();
+        const latestCampagne = await getLatestCampagneQuery();
         response.status(200).send(latestCampagne);
       },
     });

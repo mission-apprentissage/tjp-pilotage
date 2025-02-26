@@ -55,6 +55,12 @@ const fixtureBuilder = () => {
       utilisateurNational: () => {
         user = createUserBuilder({role: RoleEnum["admin"]});
       },
+      utilisateurExpertExpe: () => {
+        user = createUserBuilder({role: RoleEnum["expert_region"], codeRegion: "76"});
+      },
+      utilisateurExpertHorsExpe: () => {
+        user = createUserBuilder({role: RoleEnum["expert_region"], codeRegion: "11"});
+      },
       utilisateurPerdirExpe: () => {
         user = createUserBuilder({role: RoleEnum["perdir"], codeRegion: "76"});
       },
@@ -230,6 +236,30 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
 
     fixture.when.accesRoutingSaisieRecueilDemande();
     fixture.then.verifierRouteSaisieExpe();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseExpe();
+  });
+
+  it("Doit renvoyer la route expé pour la campagne 2024 si l'expert faisait partie de l'expé", () => {
+    fixture.given.utilisateurExpertExpe();
+    fixture.given.campagne2024();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseExpe();
+  });
+
+  it("Doit renvoyer la route hors expé pour la campagne 2024 si l'expert faisait partie de l'expé", () => {
+    fixture.given.utilisateurExpertHorsExpe();
+    fixture.given.campagne2024();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseHorsExpe();
+  });
+
+  it("Doit renvoyer la route expé pour la campagne 2025 si l'expert même si l'expert ne faisait pas partie de l'expé 2024", () => {
+    fixture.given.utilisateurExpertHorsExpe();
+    fixture.given.campagne2025();
 
     fixture.when.accesRoutingSyntheseRecueilDemande();
     fixture.then.verifierRouteSyntheseExpe();

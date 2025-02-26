@@ -1,3 +1,4 @@
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -15,7 +16,7 @@ export const submitChangementStatutRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions-perdir-statut/ecriture"),
+      preHandler: hasPermissionHandler(PermissionEnum["intentions-perdir-statut/ecriture"]),
       handler: async (request, response) => {
         const { changementStatut } = request.body;
 

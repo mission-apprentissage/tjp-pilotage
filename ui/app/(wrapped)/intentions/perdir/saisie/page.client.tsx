@@ -36,6 +36,7 @@ import { isCampagneTerminee } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/intentions/utils/messageAccompagnementUtils";
 import {canCorrectIntention, canCreateIntention, canDeleteIntention,canEditDemandeIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
@@ -597,9 +598,12 @@ export const PageClient = () => {
               </>
             ) : (
               <Center mt={12}>
-                <Flex flexDirection={"column"}>
+                <Flex direction={"column"}>
                   <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-                  {!isNouvelleDemandeDisabled && (
+                  <Tooltip
+                    label={getMessageAccompagnementCampagne({ campagne: data?.campagne, currentCampagne })}
+                    shouldWrapChildren
+                  >
                     <Button
                       isDisabled={isNouvelleDemandeDisabled}
                       variant="createButton"
@@ -610,9 +614,9 @@ export const PageClient = () => {
                       mt={12}
                       mx={"auto"}
                     >
-                      Nouvelle demande
+                        Nouvelle demande
                     </Button>
-                  )}
+                  </Tooltip>
                 </Flex>
               </Center>
             )}

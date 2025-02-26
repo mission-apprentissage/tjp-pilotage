@@ -3,6 +3,7 @@ import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import { getPermissionScope, RoleEnum } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import type { DB } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
@@ -39,7 +40,7 @@ export const isRestitutionIntentionRegionVisible =
 
 const getRestitutionIntentionsVisiblesFilters = (user?: RequestUser) => {
   if (!user) throw new Error("missing variable user");
-  const scope = getPermissionScope(user?.role, "restitution-intentions/lecture");
+  const scope = getPermissionScope(user?.role, PermissionEnum["restitution-intentions/lecture"]);
   if (!scope) throw Boom.forbidden();
 
   return {

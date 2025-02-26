@@ -19,7 +19,8 @@ import _ from "lodash";
 import { useState } from "react";
 import type { Role } from "shared";
 import { getPermissionScope, PERMISSIONS } from "shared";
-import type { Permission } from "shared/enum/permissionEnum";
+import type {Permission} from 'shared/enum/permissionEnum';
+import { PermissionEnum} from 'shared/enum/permissionEnum';
 import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
 
 import { themeDefinition } from "@/theme/theme";
@@ -79,7 +80,7 @@ export default () => {
   const [selectedUser, setSelectedUser] = useState<User>();
 
   return (
-    <GuardPermission permission="users/lecture">
+    <GuardPermission permission={PermissionEnum["users/lecture"]}>
       <Box py="16px" px="64px" width="100%" display={"block"}>
         <VStack gap="16px" width="100%">
           <HStack gap="22px" width="100%" px="8px">

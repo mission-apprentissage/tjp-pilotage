@@ -16,6 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import { client } from "@/api.client";
 import { CreateCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/CreateCampagneRegion";
@@ -24,9 +25,12 @@ import { EditCampagneRegion } from "@/app/(wrapped)/admin/campagnes/components/E
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import {formatBoolean, formatDate} from '@/utils/formatUtils';
 import { GuardPermission } from "@/utils/security/GuardPermission";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
 // eslint-disable-next-line react/display-name, import/no-anonymous-default-export
 export default () => {
+
+  const { campagne: currentCampagne } = useCurrentCampagne();
   const { data: campagnesRegion } = client.ref("[GET]/campagnes-region").useQuery({});
   const { data: campagnes } = client.ref("[GET]/campagnes").useQuery({});
   const { data: regions } = client.ref("[GET]/regions").useQuery({});
@@ -39,20 +43,34 @@ export default () => {
   const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure();
   const { isOpen: isOpenDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useDisclosure();
 
+  const hasCampagneEnCours = campagnesRegion?.some(
+    (campagneRegion) => campagneRegion.id === currentCampagne?.campagneRegionId
+  );
+
   return (
-    <GuardPermission permission="campagnes-région/lecture">
-      <Flex px={4} py="2">
-        <Button
-          variant="primary"
-          ml="auto"
-          leftIcon={<AddIcon />}
-          onClick={() => {
-            setCampagneRegionId(undefined);
-            onOpenEdit();
-          }}
+    <GuardPermission permission={PermissionEnum["campagnes-région/lecture"]}>
+      <Flex px={4} py="2" justify={"end"}>
+        <Tooltip
+          label={hasCampagneEnCours ?
+            "Vous ne pouvez pas ajouter de campagne régionale car une campagne régionale existe déjà pour la campagne en cours" :
+            undefined
+          }
+          shouldWrapChildren
+          placement="bottom-start"
         >
-          Ajouter une campagne régionale
-        </Button>
+          <Button
+            variant="primary"
+            ml="auto"
+            leftIcon={<AddIcon />}
+            onClick={() => {
+              setCampagneRegionId(undefined);
+              onOpenEdit();
+            }}
+            isDisabled={hasCampagneEnCours}
+          >
+            Ajouter une campagne régionale
+          </Button>
+        </Tooltip>
       </Flex>
       {
         campagnesRegion && (
@@ -65,7 +83,7 @@ export default () => {
                   <Th>Région</Th>
                   <Th textAlign={"center"}>Statut</Th>
                   <Th width={"10%"}>Saisie perdir ?</Th>
-                  <Th width={"10%"}>Date du vote</Th>
+                  <Th width={"10%"}>Date du vote CR</Th>
                   <Th width={"10%"}>Date de début</Th>
                   <Th width={"10%"}>Date de fin</Th>
                   <Th width={"5%"} isNumeric>
@@ -97,7 +115,9 @@ export default () => {
                       {formatDate({date: campagneRegion.dateFin, options: { dateStyle: "short" }, nullValue: "Non définie"})}
                     </Td>
                     <Td width={"5%"} isNumeric>
-                      <Tooltip label="Éditer la campagne régionale">
+                      <Tooltip
+                        label="Éditer la campagne régionale"
+                        placement="bottom-start">
                         <IconButton
                           position="unset"
                           variant="ghost"
@@ -110,7 +130,9 @@ export default () => {
                           <EditIcon />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip label="Supprimer la campagne régionale">
+                      <Tooltip
+                        label="Supprimer la campagne régionale"
+                        placement="bottom-start">
                         <IconButton
                           position="unset"
                           variant="ghost"

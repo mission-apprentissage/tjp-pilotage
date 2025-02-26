@@ -1,9 +1,13 @@
 
 import type { Role } from "shared";
 import { hasPermission } from "shared";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { isUserPartOfExpe } from "./isPartOfExpe";
+
+const ROUTE_HORS_EXPE = "/intentions";
+const ROUTE_EXPE = "/intentions/perdir";
 
 export const getRoutingSaisieRecueilDemande = ({
   campagne,
@@ -17,10 +21,10 @@ export const getRoutingSaisieRecueilDemande = ({
   }
   suffix?: string;
 }) => {
-  if(!hasPermission(user?.role, "intentions/ecriture") && !hasPermission(user?.role, "intentions/lecture")) return "/";
+  if(!hasPermission(user?.role, PermissionEnum["intentions/ecriture"]) && !hasPermission(user?.role, PermissionEnum["intentions/lecture"])) return "/";
   return isUserPartOfExpe({ user, campagne }) ?
-    `/intentions/perdir/saisie${suffix ? `/${suffix}` : ""}` :
-    `/intentions/saisie${suffix ? `/${suffix}` : ""}`;
+    `${ROUTE_EXPE}/saisie${suffix ? `/${suffix}` : ""}` :
+    `${ROUTE_HORS_EXPE}/saisie${suffix ? `/${suffix}` : ""}`;
 };
 
 export const getRoutingSyntheseRecueilDemande = ({
@@ -35,9 +39,9 @@ export const getRoutingSyntheseRecueilDemande = ({
   },
   suffix?: string;
 }) => {
-  if(!hasPermission(user?.role, "intentions/ecriture") && !hasPermission(user?.role, "intentions/lecture")) return "/";
+  if(!hasPermission(user?.role, PermissionEnum["intentions/ecriture"]) && !hasPermission(user?.role, PermissionEnum["intentions/lecture"])) return "/";
   return isUserPartOfExpe({ user, campagne }) ?
-    `/intentions/perdir/synthese${suffix ? `/${suffix}` : ""}` :
-    `/intentions/synthese${suffix ? `/${suffix}` : ""}`;
+    `${ROUTE_EXPE}/synthese${suffix ? `/${suffix}` : ""}` :
+    `${ROUTE_HORS_EXPE}/synthese${suffix ? `/${suffix}` : ""}`;
 };
 

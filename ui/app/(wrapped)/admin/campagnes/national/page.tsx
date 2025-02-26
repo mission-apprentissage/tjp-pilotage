@@ -3,6 +3,7 @@
 import {AddIcon, DeleteIcon,EditIcon} from '@chakra-ui/icons';
 import {Button, Divider, Flex, Heading, IconButton, Table, TableContainer, Tbody, Td, Th, Thead, Tooltip,Tr, useDisclosure} from '@chakra-ui/react';
 import { useMemo, useState } from "react";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import { client } from "@/api.client";
 import { CreateCampagne } from "@/app/(wrapped)/admin/campagnes/components/CreateCampagne";
@@ -40,7 +41,7 @@ export default () => {
   } = useDisclosure();
 
   return (
-    <GuardPermission permission="campagnes/lecture">
+    <GuardPermission permission={PermissionEnum["campagnes/lecture"]}>
       <Flex direction="column" p={4} gap={5}>
         <Flex py="2" justifyContent={"space-between"}>
           <Heading as="h2" fontSize={18} color="bluefrance.113">Campagnes nationales</Heading>
@@ -85,17 +86,21 @@ export default () => {
                     {formatDate({date: campagne.dateFin, options: { dateStyle: "short" }, nullValue: "Non définie"})}
                   </Td>
                   <Td>
-                    <IconButton
-                      position="unset"
-                      variant="ghost"
-                      onClick={() => {
-                        setCampagneId(campagne.id);
-                        onOpen();
-                      }}
-                      aria-label="Éditer"
-                    >
-                      <EditIcon />
-                    </IconButton>
+                    <Tooltip
+                      label="Éditer la campagne nationale"
+                      placement="bottom-start">
+                      <IconButton
+                        position="unset"
+                        variant="ghost"
+                        onClick={() => {
+                          setCampagneId(campagne.id);
+                          onOpen();
+                        }}
+                        aria-label="Éditer"
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
                   </Td>
                 </Tr>
               ))}
@@ -156,7 +161,9 @@ export default () => {
                     {formatDate({date: campagneRegion.dateFin, options: { dateStyle: "short" }, nullValue: "Non définie"})}
                   </Td>
                   <Td>
-                    <Tooltip label="Éditer la campagne régionale">
+                    <Tooltip
+                      label="Éditer la campagne régionale"
+                      placement="bottom-start">
                       <IconButton
                         position="unset"
                         variant="ghost"
@@ -169,7 +176,9 @@ export default () => {
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip label="Supprimer la campagne régionale">
+                    <Tooltip
+                      label="Supprimer la campagne régionale"
+                      placement="bottom-start">
                       <IconButton
                         position="unset"
                         variant="ghost"

@@ -87,6 +87,9 @@ const fixtureBuilder = () => {
       utilisateurInvite: () => {
         user = createUserBuilder({role: RoleEnum["invite"]});
       },
+      utilisateurExpert: () => {
+        user = createUserBuilder({role: RoleEnum["expert_region"]});
+      },
       utilisateurNational: () => {
         user = createUserBuilder({role: RoleEnum["admin"]});
       },
@@ -281,6 +284,33 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
     fixture.when.canImportIntention();
     fixture.then.verifierCanNotImport();
+  });
+
+  it("Un utilisateur expert ne doit pas pouvoir créer ou modifier une demande dans la campagne 2024", () => {
+    fixture.given.utilisateurExpert();
+    fixture.given.currentCampagne2024();
+    fixture.given.campagne2024();
+
+    fixture.when.canCreateIntention();
+    fixture.then.verifierCanNotCreate();
+
+    fixture.given.intentionEditable();
+    fixture.when.canEditDemandeIntention();
+    fixture.then.verifierCanNotEdit();
+  });
+
+  it("Un utilisateur expert ne doit pas pouvoir créer ou modifier une demande dans la campagne 2025", () => {
+    fixture.given.utilisateurExpert();
+    fixture.given.currentCampagne2025();
+    fixture.given.campagne2025();
+    fixture.given.campagneRegionaleEnCoursWithSaisiePerdir();
+
+    fixture.when.canCreateIntention();
+    fixture.then.verifierCanNotCreate();
+
+    fixture.given.intentionEditable();
+    fixture.when.canEditDemandeIntention();
+    fixture.then.verifierCanNotEdit();
   });
 
   it("Un utilisateur qui n'a pas les permissions ne doit pas pouvoir importer une demande ou modifier une demande", () => {

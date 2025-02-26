@@ -3,7 +3,7 @@ import {Alert, AlertDescription, Button, Flex, FormControl, FormErrorMessage, Fo
 import { useQueryClient } from "@tanstack/react-query";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
-import {useContext,useEffect} from 'react';
+import {useContext, useEffect, useMemo, useState} from 'react';
 import { Controller, useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
@@ -75,6 +75,9 @@ export const CreateCampagneRegion = ({
     },
   });
 
+  const [ campagneId, setCampagneId ] = useState<string | undefined>(latestCampagne?.id);
+  const campagne = useMemo(() => campagnes?.find(({ id }) => id === campagneId), [campagnes, campagneId]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -110,18 +113,29 @@ export const CreateCampagneRegion = ({
                 borderStyle="solid"
                 borderColor="grey.900"
                 bg={"white"}
-                isDisabled={true}
+                isDisabled={!!latestCampagne}
               >
-                <Flex direction="row" w="100%">
-                  <Flex direction={"row"} gap={2}>
-                    <Text>{latestCampagne?.annee}</Text>
-                    <CampagneStatutTag statut={latestCampagne?.statut} />
+                {
+                  <Flex direction="row" w="100%">
+                    {campagneId ? (
+                      <Flex direction={"row"} gap={2}>
+                        <Text>{campagne?.annee}</Text>
+                        <CampagneStatutTag statut={campagne?.statut} />
+                      </Flex>
+                    ) : (
+                      <Text>- Sélectionner une campagne</Text>
+                    )}
                   </Flex>
-                </Flex>
+                }
               </MenuButton>
               <MenuList>
                 {campagnes?.map((campagne) => (
-                  <MenuItem key={campagne.id} onClick={() => setValue("campagneId", campagne.id)}>
+                  <MenuItem
+                    key={campagne.id}
+                    onClick={() => {
+                      setValue("campagneId", campagne.id);
+                      setCampagneId(campagne.id);
+                    }}>
                     <Flex direction={"row"} gap={2}>
                       <Text>{campagne.annee}</Text>
                       <CampagneStatutTag statut={campagne.statut} />
@@ -237,7 +251,7 @@ export const CreateCampagneRegion = ({
             {!!errors.dateFin && <FormErrorMessage>{errors.dateFin.message}</FormErrorMessage>}
           </FormControl>
           <FormControl mb="4">
-            <FormLabel htmlFor="input-date-vote">Date de vote</FormLabel>
+            <FormLabel htmlFor="input-date-vote">Date du vote CR</FormLabel>
             <SingleDatepicker
               date={getValues("dateVote") ? toDate(getValues("dateVote")!) : undefined}
               onDateChange={(date) => {

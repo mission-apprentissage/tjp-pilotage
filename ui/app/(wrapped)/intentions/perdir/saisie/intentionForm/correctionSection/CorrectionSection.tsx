@@ -52,16 +52,21 @@ export const CorrectionSection = ({
   const form = useForm<CorrectionForms>({
     defaultValues: {
       raison: RaisonCorrectionEnum["modification_capacite"],
-      coloration: intention.coloration ?? false,
+      intentionNumero: intention.numero,
+      coloration: intention.coloration,
       libelleColoration: intention.libelleColoration,
-      capaciteScolaireActuelle: intention?.correction?.capaciteScolaireActuelle ?? intention.capaciteScolaireActuelle,
-      capaciteScolaire: intention?.correction?.capaciteScolaire ?? intention.capaciteScolaire,
-      capaciteScolaireColoree: intention?.correction?.capaciteScolaireColoree ?? intention.capaciteScolaireColoree,
+      capaciteScolaireActuelle: intention.correction?.capaciteScolaireActuelle ?? intention.capaciteScolaireActuelle,
+      capaciteScolaire: intention.correction?.capaciteScolaire ?? intention.capaciteScolaire,
+      capaciteScolaireColoree: intention.correction?.capaciteScolaireColoree ?? intention.capaciteScolaireColoree,
+      capaciteScolaireColoreeActuelle:
+        intention.correction?.capaciteScolaireColoreeActuelle ?? intention.capaciteScolaireColoreeActuelle,
       capaciteApprentissageActuelle:
-        intention?.correction?.capaciteApprentissageActuelle ?? intention.capaciteApprentissageActuelle,
-      capaciteApprentissage: intention?.correction?.capaciteApprentissage ?? intention.capaciteApprentissage,
+        intention.correction?.capaciteApprentissageActuelle ?? intention.capaciteApprentissageActuelle,
+      capaciteApprentissage: intention.correction?.capaciteApprentissage ?? intention.capaciteApprentissage,
       capaciteApprentissageColoree:
-        intention?.correction?.capaciteApprentissageColoree ?? intention.capaciteApprentissageColoree,
+        intention.correction?.capaciteApprentissageColoree ?? intention.capaciteApprentissageColoree,
+      capaciteApprentissageColoreeActuelle:
+        intention.correction?.capaciteApprentissageColoreeActuelle ?? intention.capaciteApprentissageColoreeActuelle,
       ...intention.correction,
     },
     mode: "onTouched",
@@ -128,13 +133,10 @@ export const CorrectionSection = ({
         <Box
           as="form"
           noValidate
-          onSubmit={handleSubmit((values) =>
+          onSubmit={handleSubmit((correction) =>
             submitCorrection({
               body: {
-                correction: {
-                  intentionNumero: intention.numero ?? "",
-                  ...values,
-                },
+                correction
               },
             })
           )}
@@ -184,19 +186,15 @@ export const CorrectionSection = ({
                       if (isRaisonModificationCapacite()) {
                         return submitCorrection({
                           body: {
-                            correction: {
-                              ...correction,
-                              intentionNumero: intention.numero ?? "",
-                            },
+                            correction
                           },
                         });
                       }
                       return submitCorrection({
                         body: {
                           correction: {
-                            ...correction,
                             ...intention,
-                            intentionNumero: intention.numero ?? "",
+                            ...correction,
                             capaciteScolaireActuelle: intention.capaciteScolaireActuelle ?? 0,
                             capaciteScolaire: intention.capaciteScolaireActuelle ?? 0,
                             capaciteApprentissageActuelle: intention.capaciteApprentissageActuelle ?? 0,
@@ -205,7 +203,6 @@ export const CorrectionSection = ({
                             capaciteScolaireColoree: 0,
                             capaciteApprentissageColoreeActuelle: 0,
                             capaciteApprentissageColoree: 0,
-                            motif: correction.motif,
                           },
                         },
                       });

@@ -1,3 +1,5 @@
+import {PermissionEnum} from 'shared/enum/permissionEnum';
+
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { PageClient } from "./client";
@@ -9,7 +11,7 @@ const Page = ({
     numero: string;
   };
 }) => (
-  <GuardPermission permission="intentions-perdir/lecture">
+  <GuardPermission permission={PermissionEnum["intentions-perdir/lecture"]}>
     <PageClient params={params} />
   </GuardPermission>
 );

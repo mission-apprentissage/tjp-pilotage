@@ -1,6 +1,7 @@
 import {hasPermission, hasRole, RoleEnum} from 'shared';
 import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 import type {DemandeTypeType} from 'shared/enum/demandeTypeEnum';
+import { PermissionEnum } from 'shared/enum/permissionEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 import type { UserType } from 'shared/schema/userSchema';
 import {isUserNational} from 'shared/security/securityUtils';
@@ -39,6 +40,7 @@ export const canCreateIntention = ({
   const withSaisiePerdir = hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne?.withSaisiePerdir : true;
 
   return !feature.saisieDisabled &&
+    hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"]) &&
     isUserPartOfExpe({ user, campagne }) &&
     isCurrentCampagne &&
     isCampagneRegionale &&
@@ -92,6 +94,7 @@ export const canEditIntention = ({
     // si la campagne autorise la saisie PERDIR
     return (
       !feature.saisieDisabled &&
+      hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"]) &&
       canUserEditIntention &&
       canPerdirEditStatut &&
       withSaisiePerdir
@@ -104,6 +107,7 @@ export const canEditIntention = ({
   // si le statut de la demande peut être modifié par l'utilisateur
   return (
     !feature.saisieDisabled &&
+    hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"]) &&
     canUserEditIntention &&
     canEditStatut &&
     isCampagneEnCours(intention.campagne)
@@ -129,7 +133,7 @@ export const canImportIntention = ({
   !isAlreadyImported &&
   !isLoading &&
   isCampagneTerminee(campagne) &&
-  hasPermission(user?.role, "intentions-perdir/ecriture")
+  hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"])
 );
 
 export const canCorrectIntention = ({
@@ -141,7 +145,7 @@ export const canCorrectIntention = ({
 }) =>
   feature.correction &&
   intention &&
-  hasPermission(user?.role, "intentions-perdir/ecriture") &&
+  hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"]) &&
   isCampagneTerminee(intention?.campagne) &&
   isStatutDemandeValidee(intention.statut) &&
   !hasRole({user, role: RoleEnum["perdir"]}) &&
