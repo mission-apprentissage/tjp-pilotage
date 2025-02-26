@@ -65,12 +65,12 @@ export const PERMISSION_GROUP_LABELS: {
   [key: string]: string;
 } = {
   "enregistrement-requete": "Enregistrement de requêtes",
-  pilotage_reforme: "Pilotage de la réforme",
-  intentions: "Demandes",
+  "suivi-impact": "Suivi de l'impact",
+  "intentions": "Demandes",
   "restitution-intentions": "Restitution des demandes",
   "pilotage-intentions": "Pilotage des demandes",
-  users: "Utilisateurs",
-  campagnes: "Campagnes",
+  "users": "Utilisateurs",
+  "campagnes": "Campagnes",
   "intentions-perdir": "Saisie par les perdirs",
   "intentions-perdir-avis": "Avis sur les intentions",
   "intentions-perdir-statut": "Changement de statut sur les intentions",

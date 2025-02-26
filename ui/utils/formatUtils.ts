@@ -68,6 +68,19 @@ export const formatPercentage = (
   }).format(value);
 };
 
+export const formatPercentageFixedDigits = (
+  value?: number | null,
+  numberOfDigits: number = 0,
+  nullValue: string = "0 %"
+): string => {
+  if (value === undefined || value === null || Number.isNaN(value)) return nullValue;
+  return new Intl.NumberFormat("fr-FR", {
+    style: "percent",
+    maximumFractionDigits: numberOfDigits,
+    minimumFractionDigits: numberOfDigits,
+  }).format(value);
+};
+
 export const formatPercentageWithoutSign = (
   value?: number,
   numberOfDigits: number = 0,

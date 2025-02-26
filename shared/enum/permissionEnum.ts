@@ -2,7 +2,7 @@ import { z } from "zod";
 
 
 export const permissionZodType = z.enum([
-  "pilotage_reforme/lecture",
+  "suivi-impact/lecture",
   "intentions/lecture",
   "intentions/ecriture",
   "restitution-intentions/lecture",

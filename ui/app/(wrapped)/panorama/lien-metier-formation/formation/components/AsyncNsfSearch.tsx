@@ -1,6 +1,7 @@
 "use client";
 
 import { Text } from "@chakra-ui/react";
+import _ from "lodash";
 import { useId, useRef } from "react";
 import type { GroupBase, SelectInstance } from "react-select";
 import AsyncSelect from "react-select/async";
@@ -16,6 +17,7 @@ interface AsyncNsfSearchProps {
 }
 
 type Option = NsfOption | string;
+type Options = (typeof client.infer)["[GET]/nsf/search/:search"];
 
 const AsyncNsfSearch = ({ onSelectNsf, nsf }: AsyncNsfSearchProps) => {
   const { openGlossaire } = useGlossaireContext();
@@ -26,6 +28,15 @@ const AsyncNsfSearch = ({ onSelectNsf, nsf }: AsyncNsfSearchProps) => {
   };
 
   const { data: defaultNsfValues } = client.ref("[GET]/nsf/search/:search").useQuery({ params: { search: "" } });
+
+  const searchNsf = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+    if (inputValue.length >= 3) {
+      client
+        .ref("[GET]/nsf/search/:search")
+        .query({ params: { search: inputValue } })
+        .then(options => callback(options));
+    }
+  }, 300);
 
   return (
     <>
@@ -46,10 +57,7 @@ const AsyncNsfSearch = ({ onSelectNsf, nsf }: AsyncNsfSearchProps) => {
           if (typeof selected !== "string") onSelectNsf(selected ?? undefined);
         }}
         defaultOptions={defaultNsfValues ?? []}
-        loadOptions={(inputValue: string) => {
-          if (inputValue.length >= 3)
-            return client.ref("[GET]/nsf/search/:search").query({ params: { search: inputValue } });
-        }}
+        loadOptions={searchNsf}
         loadingMessage={({ inputValue }) =>
           inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
         }

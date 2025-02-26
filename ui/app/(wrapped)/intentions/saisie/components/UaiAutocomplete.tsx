@@ -1,9 +1,12 @@
+import _ from "lodash";
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
 import type { Etablissement } from "@/app/(wrapped)/intentions/types";
+
+type Options = (typeof client.infer)["[GET]/etablissement/search/:search"];
 
 export const UaiAutocomplete = ({
   id = "uai-autocomplete",
@@ -27,6 +30,15 @@ export const UaiAutocomplete = ({
     }),
   };
 
+  const searchEtablissement = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+    if (inputValue.length >= 3) {
+      client
+        .ref("[GET]/etablissement/perdir/search/:search")
+        .query({ params: { search: inputValue }, query: {} })
+        .then(options => callback(options));
+    }
+  }, 300);
+
   return (
     <AsyncSelect
       inputId={id}
@@ -46,10 +58,7 @@ export const UaiAutocomplete = ({
           ...defaultValue,
         } as (typeof client.infer)["[GET]/etablissement/search/:search"][0])
       }
-      loadOptions={(inputValue: string) => {
-        if (inputValue.length >= 3)
-          return client.ref("[GET]/etablissement/search/:search").query({ params: { search: inputValue }, query: {} });
-      }}
+      loadOptions={searchEtablissement}
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
       }
