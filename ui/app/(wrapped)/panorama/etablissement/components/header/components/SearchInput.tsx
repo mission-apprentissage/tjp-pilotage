@@ -1,11 +1,14 @@
 import { Search2Icon } from "@chakra-ui/icons";
 import { Flex, GridItem, Skeleton, useToken, VisuallyHidden } from "@chakra-ui/react";
+import _ from "lodash";
 import { useRouter } from "next/navigation";
 import type { ControlProps, CSSObjectWithLabel } from "react-select";
 import { components } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
+
+type Options = (typeof client.infer)["[GET]/etablissement/search/:search"];
 
 const Control = ({
   children,
@@ -35,6 +38,15 @@ export const SearchInput = ({ uai }: { uai: string }) => {
 
   const { isLoading } = client.ref("[GET]/etablissement/:uai").useQuery({ params: { uai: uai } });
 
+  const searchEtablissement = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+    if (inputValue.length >= 3) {
+      client
+        .ref("[GET]/etablissement/perdir/search/:search")
+        .query({ params: { search: inputValue }, query: { filtered: true } })
+        .then(options => callback(options));
+    }
+  }, 300);
+
   return (
     <GridItem colSpan={5} justifySelf={"end"}>
       <Flex zIndex={"dropdown"}>
@@ -63,13 +75,7 @@ export const SearchInput = ({ uai }: { uai: string }) => {
                 Control,
               }}
               onChange={(selected) => selected && router.push(selected.value)}
-              loadOptions={(inputValue: string) => {
-                if (inputValue.length >= 3)
-                  return client.ref("[GET]/etablissement/search/:search").query({
-                    params: { search: inputValue },
-                    query: { filtered: true },
-                  });
-              }}
+              loadOptions={searchEtablissement}
               loadingMessage={({ inputValue }) =>
                 inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
               }

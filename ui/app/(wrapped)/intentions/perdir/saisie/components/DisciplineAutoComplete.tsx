@@ -1,9 +1,12 @@
+import _ from "lodash";
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import type { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
+
+type Options = (typeof client.infer)["[GET]/discipline/search/:search"];
 
 export const DisciplineAutocompleteInput = ({
   id = "discipline-autocomplete",
@@ -35,6 +38,15 @@ export const DisciplineAutocompleteInput = ({
     }),
   };
 
+  const searchDiscipline = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+    if (inputValue.length >= 3) {
+      client
+        .ref("[GET]/discipline/search/:search")
+        .query({ params: { search: inputValue } })
+        .then((options) => callback(options));
+    }
+  }, 300);
+
   return (
     <AsyncCreatableSelect
       inputId={id}
@@ -54,10 +66,7 @@ export const DisciplineAutocompleteInput = ({
           ...defaultValue,
         } as (typeof client.infer)["[GET]/discipline/search/:search"][number])
       }
-      loadOptions={(inputValue: string) => {
-        if (inputValue.length >= 3)
-          return client.ref("[GET]/discipline/search/:search").query({ params: { search: inputValue } });
-      }}
+      loadOptions={searchDiscipline}
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
       }
