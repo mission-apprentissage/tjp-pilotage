@@ -1,6 +1,7 @@
 "use client";
 
 import { Text } from "@chakra-ui/react";
+import _ from "lodash";
 import { useId, useRef } from "react";
 import type { GroupBase, SelectInstance } from "react-select";
 import AsyncSelect from "react-select/async";
@@ -9,6 +10,8 @@ import { client } from "@/api.client";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { DomaineProfessionnelOption } from "@/app/(wrapped)/panorama/lien-metier-formation/metier/page";
 import { TooltipIcon } from "@/components/TooltipIcon";
+
+type Options = (typeof client.infer)["[GET]/domaine-professionnel/search/:search"];
 
 interface AsyncNsfSearchProps {
   domaineProfessionnel?: DomaineProfessionnelOption;
@@ -31,6 +34,15 @@ const AsyncDomaineProfessionnelSearch = ({
     .ref("[GET]/domaine-professionnel/search/:search")
     .useQuery({ params: { search: "" } });
 
+  const searchDomaineProfessionnel = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+    if (inputValue.length >= 3) {
+      client
+        .ref("[GET]/domaine-professionnel/search/:search")
+        .query({ params: { search: inputValue } })
+        .then(options => callback(options));
+    }
+  }, 300);
+
   return (
     <>
       <Text as="label" onClick={openSelect} pb="4px" cursor="pointer" htmlFor="select-domaine-professionnel">
@@ -50,10 +62,7 @@ const AsyncDomaineProfessionnelSearch = ({
           onSelectDomaineProfessionnel(selected ?? undefined);
         }}
         defaultOptions={defaultDomaineProfessionnelValue ?? []}
-        loadOptions={(inputValue: string) => {
-          if (inputValue.length >= 3)
-            return client.ref("[GET]/domaine-professionnel/search/:search").query({ params: { search: inputValue } });
-        }}
+        loadOptions={searchDomaineProfessionnel}
         loadingMessage={({ inputValue }) =>
           inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
         }
