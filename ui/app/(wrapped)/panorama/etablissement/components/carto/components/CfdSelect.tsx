@@ -3,6 +3,7 @@ import _ from "lodash";
 import { useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useEffect, useMemo, useState } from "react";
+import type { GroupBase } from "react-select";
 import AsyncSelect from "react-select/async";
 import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
@@ -99,7 +100,7 @@ export const CfdSelect = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [analyseDetailleeOffre]);
 
-  const loadOptions = async (search: string) => {
+  const loadOptions = _.debounce((search: string, callback: (groups: Array<GroupBase<Option>>) => void) => {
     const cfdAnalyseDetaillee = Object.values(analyseDetaillee?.formations ?? {}).map(formatOffreToCfdSearchResult);
 
     const searchResults = _.uniqBy(
@@ -110,25 +111,27 @@ export const CfdSelect = () => {
       ),
       "value"
     );
-    const queryResult: TCfdSearchResult[] = await client
+    client
       .ref("[GET]/diplome/search/:search")
-      .query({ params: { search }, query: {} });
+      .query({ params: { search }, query: {} })
+      .then((queryResult: TCfdSearchResult[]) => {
 
-    const filteredQueryResult = queryResult.filter(
-      (result) => searchResults.findIndex((local) => local.value === result.value) === -1
-    );
+        const filteredQueryResult = queryResult.filter(
+          (result) => searchResults.findIndex((local) => local.value === result.value) === -1
+        );
 
-    return [
-      {
-        label: `FORMATIONS DE L'ÉTABLISSEMENT (${searchResults.length})`,
-        options: searchResults.map(formatSearchResultToOption),
-      },
-      {
-        label: `AUTRES (${filteredQueryResult.length}${filteredQueryResult.length === 20 && "+"})`,
-        options: filteredQueryResult.map(formatSearchResultToOption),
-      },
-    ];
-  };
+        callback([
+          {
+            label: `FORMATIONS DE L'ÉTABLISSEMENT (${searchResults.length})`,
+            options: searchResults.map(formatSearchResultToOption),
+          },
+          {
+            label: `AUTRES (${filteredQueryResult.length}${filteredQueryResult.length === 20 ? "+" : ""})`,
+            options: filteredQueryResult.map(formatSearchResultToOption),
+          },
+        ]);
+      });
+  }, 300);
 
   const getFormationTypeFamille = (option: Option): TypeFamilleKeys | undefined => {
     if (option.isSpecialite) {

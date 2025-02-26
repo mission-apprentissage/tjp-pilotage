@@ -346,8 +346,8 @@ export const Nav = () => {
           </Portal>
         </Menu>
       )}
-      {hasPermission(role, PermissionEnum["pilotage_reforme/lecture"]) && (
-        <NavLink href="/pilotage-reforme" segment="pilotage-reforme">
+      {hasPermission(role, PermissionEnum["suivi-impact/lecture"]) && (
+        <NavLink href="/suivi-impact" segment="suivi-impact">
           Suivi de l'impact
         </NavLink>
       )}

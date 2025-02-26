@@ -9,7 +9,7 @@ export type PermissionForRole = Partial<Record<Permission, PermissionScope>>;
 
 export const PERMISSIONS = {
   admin: {
-    [PermissionEnum["pilotage_reforme/lecture"]]: PermissionScopeEnum["national"],
+    [PermissionEnum["suivi-impact/lecture"]]: PermissionScopeEnum["national"],
     [PermissionEnum["intentions/lecture"]]: PermissionScopeEnum["national"],
     [PermissionEnum["intentions/ecriture"]]: PermissionScopeEnum["national"],
     [PermissionEnum["restitution-intentions/lecture"]]: PermissionScopeEnum["national"],
@@ -31,7 +31,7 @@ export const PERMISSIONS = {
   },
   pilote: {
     [PermissionEnum["intentions/lecture"]]: PermissionScopeEnum["national"],
-    [PermissionEnum["pilotage_reforme/lecture"]]: PermissionScopeEnum["national"],
+    [PermissionEnum["suivi-impact/lecture"]]: PermissionScopeEnum["national"],
     [PermissionEnum["restitution-intentions/lecture"]]: PermissionScopeEnum["national"],
     [PermissionEnum["pilotage-intentions/lecture"]]: PermissionScopeEnum["national"],
     [PermissionEnum["intentions-perdir/lecture"]]: PermissionScopeEnum["national"],
@@ -75,7 +75,7 @@ export const PERMISSIONS = {
     [PermissionEnum["intentions/lecture"]]: PermissionScopeEnum["région"],
     [PermissionEnum["intentions/ecriture"]]: PermissionScopeEnum["région"],
     [PermissionEnum["restitution-intentions/lecture"]]: PermissionScopeEnum["national"],
-    [PermissionEnum["pilotage_reforme/lecture"]]: PermissionScopeEnum["national"],
+    [PermissionEnum["suivi-impact/lecture"]]: PermissionScopeEnum["national"],
     [PermissionEnum["pilotage-intentions/lecture"]]: PermissionScopeEnum["national"],
     [PermissionEnum["intentions-perdir/lecture"]]: PermissionScopeEnum["région"],
     [PermissionEnum["intentions-perdir/ecriture"]]: PermissionScopeEnum["région"],

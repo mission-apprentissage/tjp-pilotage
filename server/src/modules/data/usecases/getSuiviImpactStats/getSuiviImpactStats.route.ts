@@ -5,23 +5,23 @@ import { createRoute } from "shared/utils/http-wizard/core";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getPilotageReformeStatsRegions } from "./getPilotageReformeStatsRegions.usecase";
+import {getSuiviImpactStatsUsecase } from './getSuiviImpactStats.usecase';
 
-const ROUTE = ROUTES["[GET]/pilotage-reforme/stats/regions"];
 
-export const getPilotageReformeStatsRegionsRoute = (server: Server) => {
+const ROUTE = ROUTES["[GET]/suivi-impact/stats"];
+
+export const getSuiviImpactStatsRoute = (server: Server) => {
   return createRoute(ROUTE.url, {
     method: ROUTE.method,
     schema: ROUTE.schema,
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler(PermissionEnum["pilotage_reforme/lecture"]),
+      preHandler: hasPermissionHandler(PermissionEnum["suivi-impact/lecture"]),
       handler: async (request, response) => {
-        const { order, orderBy, ...rest } = request.query;
-        const stats = await getPilotageReformeStatsRegions({
-          ...rest,
-          orderBy: order && orderBy ? { order, column: orderBy } : undefined,
+        const { ...filters } = request.query;
+        const stats = await getSuiviImpactStatsUsecase({
+          ...filters,
         });
         response.status(200).send(stats);
       },

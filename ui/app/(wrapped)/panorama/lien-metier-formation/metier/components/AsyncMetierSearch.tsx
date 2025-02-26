@@ -1,6 +1,7 @@
 "use client";
 
 import { Text } from "@chakra-ui/react";
+import _ from "lodash";
 import { useId, useRef } from "react";
 import type { GroupBase, SelectInstance } from "react-select";
 import AsyncSelect from "react-select/async";
@@ -17,6 +18,7 @@ interface AsyncMetierSearchProps {
 }
 
 type Option = MetierOption | string;
+type Options = (typeof client.infer)["[GET]/metier/search/:search"];
 
 const AsyncMetierSearch = ({ codeDomaineProfessionnel, metier, onSelectMetier }: AsyncMetierSearchProps) => {
   const { openGlossaire } = useGlossaireContext();
@@ -32,6 +34,16 @@ const AsyncMetierSearch = ({ codeDomaineProfessionnel, metier, onSelectMetier }:
       selectElementRef.current.openMenu("first");
     }
   };
+
+  const searchMetier = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+    client.
+      ref("[GET]/metier/search/:search")
+      .query({
+        params: { search: inputValue },
+        query: { codeDomaineProfessionnel },
+      })
+      .then(options => callback(options));
+  }, 300);
 
   return (
     <>
@@ -52,12 +64,7 @@ const AsyncMetierSearch = ({ codeDomaineProfessionnel, metier, onSelectMetier }:
         onChange={(selected) => {
           if (typeof selected !== "string") onSelectMetier(selected ?? undefined);
         }}
-        loadOptions={(inputValue: string) => {
-          return client.ref("[GET]/metier/search/:search").query({
-            params: { search: inputValue },
-            query: { codeDomaineProfessionnel },
-          });
-        }}
+        loadOptions={searchMetier}
         loadingMessage={({ inputValue }) =>
           inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
         }
