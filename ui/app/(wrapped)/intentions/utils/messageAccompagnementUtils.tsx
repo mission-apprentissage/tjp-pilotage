@@ -1,4 +1,5 @@
 import type { CampagneType } from "shared/schema/campagneSchema";
+import { isCampagneTerminee } from "shared/utils/campagneUtils";
 
 
 const CAMPAGNE_UNIQUEMENT_MODIFICATION = `La création de nouvelles demandes n'est plus possible
@@ -15,6 +16,8 @@ const PAS_DE_CAMPAGNE_REGIONALE_EN_COURS = `Pour la campagne $ANNEE_CAMPAGNE, un
   doit d'abord être créée par l'administrateur avant de pouvoir soumettre une nouvelle demande.
 `;
 
+const CAMPAGNE_TERMINEE = `La campagne $ANNEE_CAMPAGNE est terminée, il n'est plus possible de saisir des demandes sur cette campagne.`;
+
 export const getMessageAccompagnementCampagne = ({
   campagne,
   currentCampagne
@@ -22,6 +25,9 @@ export const getMessageAccompagnementCampagne = ({
   campagne: CampagneType;
   currentCampagne?: CampagneType;
 }) => {
+  if(isCampagneTerminee(campagne))
+    return CAMPAGNE_TERMINEE
+      .replace("$ANNEE_CAMPAGNE", campagne.annee);
   if(campagne.id !== currentCampagne?.id && currentCampagne?.codeRegion)
     return CAMPAGNE_UNIQUEMENT_MODIFICATION
       .replace("$ANNEE_CAMPAGNE", campagne.annee)
