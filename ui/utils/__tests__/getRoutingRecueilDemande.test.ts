@@ -45,6 +45,7 @@ const createCampagneBuilder = ({
 const fixtureBuilder = () => {
   let user: UserType | undefined = undefined;
   let campagne: CampagneType | undefined = undefined;
+  let demande: {isIntention: boolean} | undefined = undefined;
   let route: string | undefined = undefined;
 
   return {
@@ -94,13 +95,19 @@ const fixtureBuilder = () => {
       campagneRegionaleHorsExpeEnCoursWithoutSaisiePerdir: () => {
         campagne = createCampagneBuilder({annee: "2025", codeRegion: "11", withSaisiePerdir: false });
       },
+      demandeIsIntention: () => {
+        demande = {isIntention: true};
+      },
+      demandeIsNotIntention: () => {
+        demande = {isIntention: false};
+      },
     },
     when: {
       accesRoutingSaisieRecueilDemande: (suffix?: string) => {
-        route = getRoutingSaisieRecueilDemande({campagne, user, suffix});
+        route = getRoutingSaisieRecueilDemande({campagne,demande, user, suffix});
       },
       accesRoutingSyntheseRecueilDemande: (suffix?: string) => {
-        route = getRoutingSyntheseRecueilDemande({campagne, user, suffix});
+        route = getRoutingSyntheseRecueilDemande({campagne, demande, user, suffix});
       }
     },
     then: {
@@ -263,5 +270,29 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
 
     fixture.when.accesRoutingSyntheseRecueilDemande();
     fixture.then.verifierRouteSyntheseExpe();
+  });
+
+  it("Doit renvoyer la route expé pour la campagne 2024 si on est dans le cadre d'une demande qui est une intention", () => {
+    fixture.given.utilisateurNational();
+    fixture.given.campagne2024();
+    fixture.given.demandeIsIntention();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseExpe();
+
+    fixture.when.accesRoutingSaisieRecueilDemande();
+    fixture.then.verifierRouteSaisieExpe();
+  });
+
+  it("Doit renvoyer la route hors expé pour la campagne 2024 si on est dans le cadre d'une demande qui n'est pas une intention", () => {
+    fixture.given.utilisateurNational();
+    fixture.given.campagne2024();
+    fixture.given.demandeIsNotIntention();
+
+    fixture.when.accesRoutingSyntheseRecueilDemande();
+    fixture.then.verifierRouteSyntheseHorsExpe();
+
+    fixture.when.accesRoutingSaisieRecueilDemande();
+    fixture.then.verifierRouteSaisieHorsExpe();
   });
 });

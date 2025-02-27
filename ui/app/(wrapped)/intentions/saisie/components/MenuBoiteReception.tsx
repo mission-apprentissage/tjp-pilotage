@@ -38,7 +38,7 @@ export const MenuBoiteReception = ({
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
       <Tooltip
-        label={getMessageAccompagnementCampagne({ campagne, currentCampagne })}
+        label={getMessageAccompagnementCampagne({ campagne, currentCampagne, user })}
         shouldWrapChildren
         placement="bottom-start"
       >

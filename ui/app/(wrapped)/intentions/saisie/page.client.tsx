@@ -287,18 +287,21 @@ export const PageClient = () => {
 
                     const linkSaisie = getRoutingSaisieRecueilDemande({
                       campagne: data?.campagne,
+                      demande,
                       user,
                       suffix: demande.numero,
                     });
 
                     const linkSaisieImported = getRoutingSaisieRecueilDemande({
                       campagne: data?.campagne,
+                      demande,
                       user,
                       suffix: demande.numeroDemandeImportee,
                     });
 
                     const linkSynthese = getRoutingSyntheseRecueilDemande({
                       campagne: data?.campagne,
+                      demande,
                       user,
                       suffix: demande.numero,
                     });
@@ -509,7 +512,7 @@ export const PageClient = () => {
             <Flex direction={"column"}>
               <Text fontSize={"2xl"} textAlign={"center"}>Pas de demande à afficher</Text>
               <Tooltip
-                label={getMessageAccompagnementCampagne({ campagne: data?.campagne, currentCampagne })}
+                label={getMessageAccompagnementCampagne({ campagne: data?.campagne, currentCampagne, user })}
                 shouldWrapChildren
               >
                 <Flex>

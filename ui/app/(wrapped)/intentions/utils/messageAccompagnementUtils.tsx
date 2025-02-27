@@ -1,5 +1,8 @@
 import type { CampagneType } from "shared/schema/campagneSchema";
-import { isCampagneTerminee } from "shared/utils/campagneUtils";
+import type { UserType } from "shared/schema/userSchema";
+import { isCampagneEnAttente, isCampagneTerminee } from "shared/utils/campagneUtils";
+
+import { canCreateIntention } from "./permissionsIntentionUtils";
 
 
 const CAMPAGNE_UNIQUEMENT_MODIFICATION = `La création de nouvelles demandes n'est plus possible
@@ -17,14 +20,21 @@ const PAS_DE_CAMPAGNE_REGIONALE_EN_COURS = `Pour la campagne $ANNEE_CAMPAGNE, un
 `;
 
 const CAMPAGNE_TERMINEE = `La campagne $ANNEE_CAMPAGNE est terminée, il n'est plus possible de saisir des demandes sur cette campagne.`;
+const CAMPAGNE_EN_ATTENTE = `La campagne $ANNEE_CAMPAGNE n'a pas encore débutée et est en attente, la campagne débutera prochainement`;
 
 export const getMessageAccompagnementCampagne = ({
+  user,
   campagne,
   currentCampagne
 } : {
+  user?: UserType;
   campagne: CampagneType;
   currentCampagne?: CampagneType;
 }) => {
+  if(canCreateIntention({user, campagne, currentCampagne})) return;
+  if(isCampagneEnAttente(campagne))
+    return CAMPAGNE_EN_ATTENTE
+      .replace("$ANNEE_CAMPAGNE", campagne.annee);
   if(isCampagneTerminee(campagne))
     return CAMPAGNE_TERMINEE
       .replace("$ANNEE_CAMPAGNE", campagne.annee);

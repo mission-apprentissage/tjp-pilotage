@@ -301,26 +301,11 @@ export const Nav = () => {
               onMouseLeave={onMenuIntentionClose}
               zIndex={"dropdown"}
             >
-              {shouldDisplayBothIntentionMenus ? (
-                <>
-                  <MenuItem p="0" w="100%">
-                    <NavMenuLink href="/intentions/saisie" segment="saisie-intentions">
-                      Gestion des demandes
-                    </NavMenuLink>
-                  </MenuItem>
-                  <MenuItem p="0" w="100%">
-                    <NavMenuLink href="/intentions/perdir/saisie" segment="saisie-intentions-perdir">
-                      Gestion des demandes (EXPE)
-                    </NavMenuLink>
-                  </MenuItem>
-                </>
-              ) : (
-                <MenuItem p="0" w="100%">
-                  <NavMenuLink href={getRoutingSaisieRecueilDemande({campagne, user})} segment="saisie-intentions">
+              <MenuItem p="0" w="100%">
+                <NavMenuLink href={getRoutingSaisieRecueilDemande({campagne, user})} segment="saisie-intentions">
                     Gestion des demandes
-                  </NavMenuLink>
-                </MenuItem>
-              )}
+                </NavMenuLink>
+              </MenuItem>
               {hasPermission(role, PermissionEnum["pilotage-intentions/lecture"]) && (
                 <MenuItem p="0">
                   <NavMenuLink href="/intentions/pilotage" segment="pilotage-intentions" prefetch={false}>
