@@ -304,23 +304,25 @@ export const PageClient = () => {
                     <Tbody>
                       {data?.intentions.map((intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0]) => {
 
-
-                        const linkSynthese = getRoutingSyntheseRecueilDemande({
-                          user,
-                          campagne: data?.campagne,
-                          suffix: intention.numero
-                        });
-
                         const linkSaisie = getRoutingSaisieRecueilDemande({
                           user,
                           campagne: data?.campagne,
+                          demande: intention,
                           suffix: intention.numero
                         });
 
                         const linkSaisieImported = getRoutingSaisieRecueilDemande({
                           user,
                           campagne: data?.campagne,
+                          demande: intention,
                           suffix: intention.numeroDemandeImportee
+                        });
+
+                        const linkSynthese = getRoutingSyntheseRecueilDemande({
+                          user,
+                          campagne: data?.campagne,
+                          demande: intention,
+                          suffix: intention.numero
                         });
 
                         const isModificationDisabled = !canEditDemandeIntention({
@@ -601,7 +603,7 @@ export const PageClient = () => {
                 <Flex direction={"column"}>
                   <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
                   <Tooltip
-                    label={getMessageAccompagnementCampagne({ campagne: data?.campagne, currentCampagne })}
+                    label={getMessageAccompagnementCampagne({ campagne: data?.campagne, currentCampagne, user })}
                     shouldWrapChildren
                   >
                     <Flex>

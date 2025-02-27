@@ -11,10 +11,14 @@ const ROUTE_EXPE = "/intentions/perdir";
 
 export const getRoutingSaisieRecueilDemande = ({
   campagne,
+  demande,
   user,
   suffix = ""
 } : {
   campagne?:CampagneType,
+  demande?: {
+    isIntention: boolean
+  },
   user?: {
     codeRegion?: string
     role?: Role
@@ -22,6 +26,7 @@ export const getRoutingSaisieRecueilDemande = ({
   suffix?: string;
 }) => {
   if(!hasPermission(user?.role, PermissionEnum["intentions/ecriture"]) && !hasPermission(user?.role, PermissionEnum["intentions/lecture"])) return "/";
+  if(demande && demande.isIntention === false) return `${ROUTE_HORS_EXPE}/saisie${suffix ? `/${suffix}` : ""}`;
   return isUserPartOfExpe({ user, campagne }) ?
     `${ROUTE_EXPE}/saisie${suffix ? `/${suffix}` : ""}` :
     `${ROUTE_HORS_EXPE}/saisie${suffix ? `/${suffix}` : ""}`;
@@ -29,10 +34,14 @@ export const getRoutingSaisieRecueilDemande = ({
 
 export const getRoutingSyntheseRecueilDemande = ({
   campagne,
+  demande,
   user,
   suffix = ""
 } : {
   campagne?: CampagneType,
+  demande?: {
+    isIntention: boolean
+  },
   user?: {
     codeRegion?: string,
     role?: Role
@@ -40,6 +49,7 @@ export const getRoutingSyntheseRecueilDemande = ({
   suffix?: string;
 }) => {
   if(!hasPermission(user?.role, PermissionEnum["intentions/ecriture"]) && !hasPermission(user?.role, PermissionEnum["intentions/lecture"])) return "/";
+  if(demande && demande.isIntention === false) return `${ROUTE_HORS_EXPE}/synthese${suffix ? `/${suffix}` : ""}`;
   return isUserPartOfExpe({ user, campagne }) ?
     `${ROUTE_EXPE}/synthese${suffix ? `/${suffix}` : ""}` :
     `${ROUTE_HORS_EXPE}/synthese${suffix ? `/${suffix}` : ""}`;
