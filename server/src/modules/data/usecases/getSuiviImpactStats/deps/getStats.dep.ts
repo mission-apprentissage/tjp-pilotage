@@ -35,7 +35,8 @@ const getMillesimesSortie = async () => {
 
 const selectStatsEffectif = async (
   { isScoped = false, annee = 0, rentreeScolaire, codeRegion, codeNiveauDiplome }:
-  { isScoped: boolean; annee: number, rentreeScolaire: string, codeRegion?: string, codeNiveauDiplome?: string }) => getKbdClient()
+  { isScoped: boolean; annee: number, rentreeScolaire: string, codeRegion?: string, codeNiveauDiplome?: string }
+) => getKbdClient()
   .selectFrom("formationEtablissement")
   .leftJoin("formationScolaireView as formationView", "formationView.cfd", "formationEtablissement.cfd")
   .innerJoin("indicateurEntree", (join) =>
@@ -66,8 +67,10 @@ const selectStatsEffectif = async (
   .executeTakeFirstOrThrow()
   .then(cleanNull);
 
-const selectStatsSortie = async ({ isScoped = false, annee = 0, rentreeScolaire, codeRegion, codeNiveauDiplome }:
-  { isScoped: boolean; annee: number, rentreeScolaire: string, codeRegion?: string, codeNiveauDiplome?: string }) =>
+const selectStatsSortie = async (
+  { isScoped = false, annee = 0, rentreeScolaire, codeRegion, codeNiveauDiplome } :
+  { isScoped: boolean; annee: number, rentreeScolaire: string, codeRegion?: string, codeNiveauDiplome?: string }
+) =>
   getKbdClient()
     .selectFrom("indicateurRegionSortie")
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "indicateurRegionSortie.cfd")
@@ -96,10 +99,7 @@ const selectStatsSortie = async ({ isScoped = false, annee = 0, rentreeScolaire,
     .executeTakeFirstOrThrow()
     .then(cleanNull);
 
-export const getStats = async ({
-  codeRegion,
-  codeNiveauDiplome,
-}: {
+export const getStats = async (filters: {
   codeRegion?: string;
   codeNiveauDiplome?: string;
 }) => {
@@ -116,12 +116,12 @@ export const getStats = async ({
       annee: finDanneeScolaireMillesime,
       millesime: millesimeSortie.split("_"),
       scoped: {
-        ...(await selectStatsEffectif({ isScoped: true, annee: offset, rentreeScolaire, codeRegion, codeNiveauDiplome })),
-        ...(await selectStatsSortie({ isScoped: true, annee: offset + 1, rentreeScolaire, codeRegion, codeNiveauDiplome })),
+        ...(await selectStatsEffectif({ isScoped: true, annee: offset, rentreeScolaire, ...filters })),
+        ...(await selectStatsSortie({ isScoped: true, annee: offset + 1, rentreeScolaire, ...filters })),
       },
       nationale: {
-        ...(await selectStatsEffectif({ isScoped: false, annee: offset, rentreeScolaire, codeRegion, codeNiveauDiplome })),
-        ...(await selectStatsSortie({ isScoped: false, annee: offset + 1, rentreeScolaire, codeRegion, codeNiveauDiplome })),
+        ...(await selectStatsEffectif({ isScoped: false, annee: offset, rentreeScolaire, ...filters })),
+        ...(await selectStatsSortie({ isScoped: false, annee: offset + 1, rentreeScolaire, ...filters })),
       },
     };
   };

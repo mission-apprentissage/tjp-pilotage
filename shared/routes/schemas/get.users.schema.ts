@@ -1,21 +1,20 @@
 import { z } from "zod";
 
-import { userFonction } from "../../enum/userFonction";
-import type { Role } from "../../security/permissions";
-import { PERMISSIONS } from "../../security/permissions";
+import { RoleZodType } from "../../enum/roleEnum";
+import {  UserFonctionZodType } from "../../enum/userFonctionEnum";
 
 export const UserSchema = z.object({
   id: z.string(),
   firstname: z.string().optional(),
   lastname: z.string().optional(),
   email: z.string(),
-  role: z.enum(Object.keys(PERMISSIONS) as [Role]).optional(),
+  role: RoleZodType.optional(),
   codeRegion: z.string().optional(),
   libelleRegion: z.string().optional(),
   createdAt: z.string().optional(),
   uais: z.array(z.string()).optional(),
   enabled: z.boolean(),
-  fonction: userFonction.optional(),
+  fonction: UserFonctionZodType.optional(),
 });
 
 export const getUsersSchema = {

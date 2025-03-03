@@ -3,8 +3,8 @@ import type { FiltersSchema } from "shared/routes/schemas/get.restitution-intent
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
 import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
+import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
 import { getDemandesRestitutionIntentionsQuery } from "./deps/getDemandesRestitutionIntentions.query";
 import { getFilters } from "./deps/getFilters.query";
@@ -22,13 +22,13 @@ const getDemandesRestitutionIntentionsFactory =
   (
     deps = {
       getDemandesRestitutionIntentionsQuery,
-      getFilters: getFilters,
-      getCurrentCampagneQuery,
+      getFilters,
+      getCurrentCampagne,
       getStatsSortieParRegionsEtNiveauDiplomeQuery,
     }
   ) =>
     async (activeFilters: ActiveFilters) => {
-      const campagne = await deps.getCurrentCampagneQuery();
+      const campagne = await deps.getCurrentCampagne(activeFilters.user);
       const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
       const [{ count, demandes }, filters] = await Promise.all([
         deps.getDemandesRestitutionIntentionsQuery({

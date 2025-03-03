@@ -18,10 +18,15 @@ import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { emailRegex } from "shared";
+import { emailRegex, hasRole, RoleEnum } from "shared";
 
 import { client } from "@/api.client";
-import { AuthContext } from "@/app/(wrapped)/auth/authContext";
+import { CodeRegionContext } from "@/app/codeRegionContext";
+import { PreviousCampagneContext } from "@/app/previousCampagneContext";
+import { UaisContext } from "@/app/uaiContext";
+import { useAuth } from "@/utils/security/useAuth";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
+
 
 export const LoginForm = () => {
   const {
@@ -33,6 +38,11 @@ export const LoginForm = () => {
     mode: "onBlur",
   });
 
+  const { setAuth, user } = useAuth();
+  const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
+  const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
+  const { setCodeRegion } = useContext(CodeRegionContext);
+  const { setUais } = useContext(UaisContext);
   const { data: { url } = {} } = client.ref("[GET]/dne_url").useQuery({});
 
   const {
@@ -44,20 +54,25 @@ export const LoginForm = () => {
       const whoAmI = await client.ref("[GET]/auth/whoAmI").query({});
       if (!whoAmI) return;
       setAuth({ user: whoAmI.user });
+      setCodeRegion(whoAmI.user.codeRegion);
+      setUais(whoAmI.user.uais);
+      await client.ref("[GET]/campagne/current").query({}).then((campagne) => {
+        setCurrentCampagne(campagne.current);
+        setPreviousCampagne(campagne.previous);
+      });
     },
   });
 
-  const { setAuth, auth } = useContext(AuthContext);
 
   const router = useRouter();
 
   useEffect(() => {
-    if (auth)
+    if (user)
       router.replace(
-        auth.user.role === "perdir" && auth.user.uais?.[0] ? `/panorama/etablissement/${auth.user.uais?.[0]}` : "/"
+        hasRole({ user, role: RoleEnum["perdir"]}) && user.uais?.[0] ? `/panorama/etablissement/${user.uais?.[0]}` : "/"
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth]);
+  }, [user]);
 
   return (
     <Box maxW="360px" width="100%" mx="auto">

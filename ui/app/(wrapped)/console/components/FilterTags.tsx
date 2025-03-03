@@ -34,7 +34,7 @@ export const FilterTags = chakra(
     handleFilters?: (type: keyof Filters, value: Filters[keyof Filters]) => void;
     isEditable?: boolean;
   }) => {
-    const { auth } = useAuth();
+    const { user } = useAuth();
     /**
      *  Flatten filters object to array of { key, value }
      *
@@ -67,8 +67,8 @@ export const FilterTags = chakra(
     };
 
     const shouldShowUserIcon = ({ key, value }: { key: string; value: string }) =>
-      (key === "uai" && auth?.user?.uais?.includes(value)) ||
-      (key === "codeRegion" && auth?.user?.codeRegion === value);
+      (key === "uai" && user?.uais?.includes(value)) ||
+      (key === "codeRegion" && user?.codeRegion === value);
 
     const [shouldShowAllFilters, setShouldShowAllFilters] = useState<boolean>(false);
 

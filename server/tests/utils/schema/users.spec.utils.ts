@@ -2,7 +2,8 @@ import { faker } from "@faker-js/faker";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 import type { Insertable } from "kysely";
-import type { Role } from "shared";
+import type {Role} from "shared";
+import { RoleEnum } from "shared";
 
 import config from "@/config";
 import type { DB } from "@/db/db";
@@ -17,7 +18,7 @@ export function createUserBuilder(options: Partial<InsertableUser> = {}) {
     email: options.email ?? faker.internet.email(),
     firstname: options.firstname ?? faker.person.firstName(),
     lastname: options.lastname ?? faker.person.lastName(),
-    role: options.role ?? "admin",
+    role: options.role ?? RoleEnum["admin"],
     enabled: options.enabled ?? true,
     ...options,
   };

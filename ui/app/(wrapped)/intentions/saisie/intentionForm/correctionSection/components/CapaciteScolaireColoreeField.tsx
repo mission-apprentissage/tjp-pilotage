@@ -1,9 +1,8 @@
 import { chakra } from "@chakra-ui/react";
-import { isTypeFermeture } from "shared/validators/demandeValidators";
+import { isTypeColoration, isTypeFermeture } from "shared/utils/typeDemandeUtils";
 
 import { CapaciteField } from "@/app/(wrapped)/intentions/saisie/components/CapaciteField";
-import type { Intention } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/types";
-import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import type { Demande } from "@/app/(wrapped)/intentions/saisie/types";
 
 export const CapaciteScolaireColoreeField = chakra(
   ({
@@ -14,13 +13,13 @@ export const CapaciteScolaireColoreeField = chakra(
   } :
   {
     id: string;
-    demande: Intention;
+    demande: Demande;
     disabled?: boolean;
     className?: string;
   }) => {
     const typeDemande = demande.typeDemande;
-    const fermeture = typeDemande !== undefined && isTypeFermeture(typeDemande);
-    const coloration = typeDemande !== undefined && (isTypeColoration(typeDemande) || demande?.coloration);
+    const fermeture = isTypeFermeture(typeDemande);
+    const coloration = isTypeColoration(typeDemande) || demande?.coloration;
     const isReadOnly = fermeture || !coloration || disabled;
     if (!coloration) return <></>;
     if (fermeture) return <></>;

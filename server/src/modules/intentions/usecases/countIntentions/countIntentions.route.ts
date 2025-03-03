@@ -1,3 +1,4 @@
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -15,12 +16,13 @@ export const countIntentionsRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions-perdir/lecture"),
+      preHandler: hasPermissionHandler(PermissionEnum["intentions-perdir/lecture"]),
       handler: async (request, response) => {
-        const { user, query: filters } = request;
+        const user = request.user!;
+        const { ...filters } = request.query;
         const result = await countIntentionsUsecase({
-          user: user!,
           ...filters,
+          user,
         });
         response.status(200).send(result);
       },

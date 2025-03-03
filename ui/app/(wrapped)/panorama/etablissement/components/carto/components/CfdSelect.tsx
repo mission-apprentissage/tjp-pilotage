@@ -5,6 +5,7 @@ import { usePlausible } from "next-plausible";
 import { useEffect, useMemo, useState } from "react";
 import type { GroupBase } from "react-select";
 import AsyncSelect from "react-select/async";
+import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
 import { client } from "@/api.client";
 import type { AnalyseDetaillee } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
@@ -134,11 +135,11 @@ export const CfdSelect = () => {
 
   const getFormationTypeFamille = (option: Option): TypeFamilleKeys | undefined => {
     if (option.isSpecialite) {
-      return "specialite";
+      return TypeFamilleEnum["specialite"];
     }
 
     if (option.isOption) {
-      return "option";
+      return TypeFamilleEnum["option"];
     }
 
     if (option.dateFermeture) {
@@ -146,11 +147,11 @@ export const CfdSelect = () => {
     }
 
     if (option.is1ereCommune) {
-      return "1ere_commune";
+      return TypeFamilleEnum["1ere_commune"];
     }
 
     if (option.is2ndeCommune) {
-      return "2nde_commune";
+      return TypeFamilleEnum["2nde_commune"];
     }
 
     return undefined;

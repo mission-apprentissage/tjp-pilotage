@@ -1,3 +1,4 @@
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -15,7 +16,7 @@ export const submitAvisRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions-perdir-avis/ecriture"),
+      preHandler: hasPermissionHandler(PermissionEnum["intentions-perdir-avis/ecriture"]),
       handler: async (request, response) => {
         const { avis } = request.body;
 

@@ -1,7 +1,6 @@
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
+import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
-const PREMIERE_COMMUNE = "1ere_commune";
-const SECONDE_COMMUNE = "2nde_commune";
 
 export const UNDEFINED_QUADRANT = "-";
 
@@ -16,7 +15,7 @@ export const getPositionQuadrant = (
     tauxPoursuite?: number;
   }
 ): string => {
-  if (formation.typeFamille === PREMIERE_COMMUNE || formation.typeFamille === SECONDE_COMMUNE)
+  if (formation.typeFamille === TypeFamilleEnum["1ere_commune"] || formation.typeFamille === TypeFamilleEnum["2nde_commune"])
     return UNDEFINED_QUADRANT;
 
   if (

@@ -17,15 +17,17 @@ import {
 import { Icon } from "@iconify/react";
 import type { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import type { Dispatch, SetStateAction } from "react";
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { RaisonCorrectionType } from "shared/enum/raisonCorrectionEnum";
 import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { client } from "@/api.client";
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
 import type { Demande } from "@/app/(wrapped)/intentions/saisie/types";
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { useAuth } from "@/utils/security/useAuth";
 
 import { AutreMotifField } from "./components/AutreMotifField";
 import { CapaciteConstanteSection } from "./components/CapaciteConstanteSection";
@@ -34,15 +36,6 @@ import { CommentaireField } from "./components/CommentaireField";
 import { MotifField } from "./components/MotifField";
 import { RaisonField } from "./components/RaisonField";
 import type { CorrectionForms } from "./defaultFormValues";
-import type { Campagne } from "./types";
-
-export const CampagneContext = createContext<{
-  campagne?: Campagne;
-  setCampagne: Dispatch<SetStateAction<Campagne>>;
-}>({
-  campagne: undefined,
-  setCampagne: () => {},
-});
 
 export const CorrectionSection = ({
   correctionRef,
@@ -51,23 +44,29 @@ export const CorrectionSection = ({
 }: {
   correctionRef: React.RefObject<HTMLDivElement>;
   demande: Demande;
-  campagne?: Campagne;
+  campagne: CampagneType;
 }) => {
+  const { user } = useAuth();
   const toast = useToast();
   const { push } = useRouter();
   const form = useForm<CorrectionForms>({
     defaultValues: {
-      raison: "modification_capacite",
-      coloration: demande.coloration ?? false,
+      raison: RaisonCorrectionEnum["modification_capacite"],
+      intentionNumero: demande.numero,
+      coloration: demande.coloration,
       libelleColoration: demande.libelleColoration,
-      capaciteScolaireActuelle: demande?.correction?.capaciteScolaireActuelle ?? demande.capaciteScolaireActuelle,
-      capaciteScolaire: demande?.correction?.capaciteScolaire ?? demande.capaciteScolaire,
-      capaciteScolaireColoree: demande?.correction?.capaciteScolaireColoree ?? demande.capaciteScolaireColoree,
+      capaciteScolaireActuelle: demande.correction?.capaciteScolaireActuelle ?? demande.capaciteScolaireActuelle,
+      capaciteScolaire: demande.correction?.capaciteScolaire ?? demande.capaciteScolaire,
+      capaciteScolaireColoree: demande.correction?.capaciteScolaireColoree ?? demande.capaciteScolaireColoree,
+      capaciteScolaireColoreeActuelle: demande.correction?.capaciteScolaireColoreeActuelle ??
+        demande.capaciteScolaireColoreeActuelle,
       capaciteApprentissageActuelle:
-        demande?.correction?.capaciteApprentissageActuelle ?? demande.capaciteApprentissageActuelle,
-      capaciteApprentissage: demande?.correction?.capaciteApprentissage ?? demande.capaciteApprentissage,
+        demande.correction?.capaciteApprentissageActuelle ?? demande.capaciteApprentissageActuelle,
+      capaciteApprentissage: demande.correction?.capaciteApprentissage ?? demande.capaciteApprentissage,
       capaciteApprentissageColoree:
-        demande?.correction?.capaciteApprentissageColoree ?? demande.capaciteApprentissageColoree,
+        demande.correction?.capaciteApprentissageColoree ?? demande.capaciteApprentissageColoree,
+      capaciteApprentissageColoreeActuelle:
+          demande.correction?.capaciteApprentissageColoreeActuelle ?? demande.capaciteApprentissageColoreeActuelle,
       ...demande.correction,
     },
     mode: "onTouched",
@@ -85,7 +84,7 @@ export const CorrectionSection = ({
     isSuccess,
   } = client.ref("[POST]/correction/submit").useMutation({
     onSuccess: (_body) => {
-      push(`/intentions/saisie?campagne=${campagne?.annee}`);
+      push(getRoutingSaisieRecueilDemande({campagne, user, suffix: `?campagne=${campagne?.annee}`}));
 
       let message: string | null = null;
       message = "Correction enregistrée avec succès";
@@ -134,13 +133,10 @@ export const CorrectionSection = ({
         <Box
           as="form"
           noValidate
-          onSubmit={handleSubmit((values) =>
+          onSubmit={handleSubmit((correction) =>
             submitCorrection({
               body: {
-                correction: {
-                  intentionNumero: demande.numero ?? "",
-                  ...values,
-                },
+                correction
               },
             })
           )}
@@ -190,19 +186,15 @@ export const CorrectionSection = ({
                       if (isRaisonModificationCapacite()) {
                         return submitCorrection({
                           body: {
-                            correction: {
-                              ...correction,
-                              intentionNumero: demande.numero ?? "",
-                            },
+                            correction
                           },
                         });
                       }
                       return submitCorrection({
                         body: {
                           correction: {
-                            ...correction,
                             ...demande,
-                            intentionNumero: demande.numero ?? "",
+                            ...correction,
                             capaciteScolaireActuelle: demande.capaciteScolaireActuelle ?? 0,
                             capaciteScolaire: demande.capaciteScolaireActuelle ?? 0,
                             capaciteApprentissageActuelle: demande.capaciteApprentissageActuelle ?? 0,
@@ -211,7 +203,6 @@ export const CorrectionSection = ({
                             capaciteScolaireColoree: 0,
                             capaciteApprentissageColoreeActuelle: 0,
                             capaciteApprentissageColoree: 0,
-                            motif: correction.motif,
                           },
                         },
                       });

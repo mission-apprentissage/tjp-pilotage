@@ -8,8 +8,8 @@ import { correctionValidators } from "shared/validators/correctionValidators";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { getCurrentCampagneQuery } from "@/modules/demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
-import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
+import { getCurrentCampagne } from "@/modules/utils/getCurrentCampagne";
 import logger from "@/services/logger";
 import { cleanNull } from "@/utils/noNull";
 
@@ -32,15 +32,15 @@ const validateCorrection = (correction: Correction, demande: Demande) => {
 export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
   {
     createCorrectionQuery,
-    findOneDemande,
-    getCurrentCampagneQuery,
+    findOneDemandeQuery,
+    getCurrentCampagne,
     getCorrectionByIntentionNumeroQuery,
   },
   (deps) =>
-    async ({ correction, user }: { correction: Correction; user: Pick<RequestUser, "id" | "codeRegion" | "role"> }) => {
+    async ({ correction, user }: { correction: Correction; user: RequestUser }) => {
       const [demande, campagne, correctionExistante] = await Promise.all([
-        deps.findOneDemande(correction.intentionNumero),
-        deps.getCurrentCampagneQuery(),
+        deps.findOneDemandeQuery(correction.intentionNumero),
+        deps.getCurrentCampagne(user),
         deps.getCorrectionByIntentionNumeroQuery(correction.intentionNumero),
       ]);
 
@@ -91,8 +91,8 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
       }
 
       const scope = getPermissionScope(user.role, "intentions/ecriture");
-      const isAllowed = guardScope(scope?.default, {
-        region: () => user.codeRegion === demande.codeRegion,
+      const isAllowed = guardScope(scope, {
+        région: () => user.codeRegion === demande.codeRegion,
         national: () => true,
       });
 

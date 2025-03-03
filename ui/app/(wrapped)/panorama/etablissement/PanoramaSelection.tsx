@@ -4,16 +4,16 @@ import { Alert, AlertDescription, AlertIcon, AspectRatio, Container, Flex, Img }
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
-import { UaisFilterContext } from "@/app/layoutClient";
+import { UaisContext } from "@/app/uaiContext";
 
 import { UaiForm } from "./UaiForm";
 
 export function PanoramaSelection({ wrongUai }: { readonly wrongUai?: string }) {
   const router = useRouter();
-  const { uaisFilter } = useContext(UaisFilterContext);
+  const { uais } = useContext(UaisContext);
 
   useEffect(() => {
-    if (uaisFilter) onUaiChanged(uaisFilter[0]);
+    if (uais) onUaiChanged(uais[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -24,7 +24,7 @@ export function PanoramaSelection({ wrongUai }: { readonly wrongUai?: string }) 
   return (
     <Container px="8" as="section" pb="12" pt="6" bg="grey.975" maxWidth={"container.xl"} h={"100%"}>
       <Flex align="center" direction="column">
-        <UaiForm uai={uaisFilter?.[0]} onUaiChanged={onUaiChanged} inError={!!wrongUai} />
+        <UaiForm uai={uais?.[0]} onUaiChanged={onUaiChanged} inError={!!wrongUai} />
         <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
           <Img src="/graphs_statistics.png" objectFit="contain" alt="" />
         </AspectRatio>

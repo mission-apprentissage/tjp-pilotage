@@ -31,6 +31,7 @@ import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 import { CURRENT_RENTREE, ScopeEnum } from "shared";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
 import { client } from "@/api.client";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -183,9 +184,15 @@ export const QuadrantSection = ({
 
     if (filters?.type) {
       if (filters.type === "ouverture") {
-        urlFilters.typeDemande = ["ouverture_nette", "ouverture_compensation"];
+        urlFilters.typeDemande = [
+          DemandeTypeEnum["ouverture_nette"],
+          DemandeTypeEnum["ouverture_compensation"]
+        ];
       } else {
-        urlFilters.typeDemande = ["fermeture", "diminution"];
+        urlFilters.typeDemande = [
+          DemandeTypeEnum["fermeture"],
+          DemandeTypeEnum["diminution"]
+        ];
       }
     }
 

@@ -94,9 +94,9 @@ function createFunction(action: "CREATE" | "DROP") {
       if (action === "CREATE") {
         try {
           await pgClient.query(`DROP DATABASE "${escapedDatabaseName}"`); // ensure drop
-          // eslint-disable-next-line unused-imports/no-unused-vars
-        } catch (_error) {
+        } catch (err) {
           // silent db does not exist
+          console.error(err);
         }
       }
 

@@ -2,11 +2,11 @@ import { Divider, Flex, Heading } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import type { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { QuestionBlock } from "@/app/(wrapped)/intentions/saisie/components/QuestionBlock";
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
-import type { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
 
 import { AmiCmaEnCoursValidationField } from "./AmiCmaEnCoursValidationField";
 import { AmiCmaField } from "./AmiCmaField";
@@ -22,7 +22,7 @@ export const PrecisionsSection = ({
 }: {
   disabled: boolean;
   motifsEtPrecisionsRef: RefObject<HTMLDivElement>;
-  campagne?: Campagne;
+  campagne: CampagneType;
 }) => {
   const { watch } = useFormContext<IntentionForms>();
 

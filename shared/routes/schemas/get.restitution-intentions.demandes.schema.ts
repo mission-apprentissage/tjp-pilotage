@@ -3,6 +3,7 @@ import { z } from "zod";
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import { CampagneSchema } from "../../schema/campagneSchema";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
@@ -102,6 +103,7 @@ const DemandeSchema = z.object({
   createdAt: z.string(),
   campagneId: z.string(),
   isIntention: z.boolean(),
+  campagne: CampagneSchema,
 });
 
 export const FiltersSchema = z.object({
@@ -110,7 +112,7 @@ export const FiltersSchema = z.object({
   codeDepartement: z.array(z.string()).optional(),
   uai: z.array(z.string()).optional(),
   rentreeScolaire: z.string().optional(),
-  typeDemande: z.array(DemandeTypeZodType).optional(),
+  typeDemande: z.array(z.string()).optional(),
   statut: z.array(DemandeStatutZodType.exclude(["supprimée"])).optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
   cfd: z.array(z.string()).optional(),
@@ -140,10 +142,7 @@ export const getDemandesRestitutionIntentionsSchema = {
         academies: z.array(OptionSchema),
         departements: z.array(OptionSchema),
         etablissements: z.array(OptionSchema),
-        typesDemande: z.array(z.object({
-          label: DemandeTypeZodType,
-          value: DemandeTypeZodType
-        })),
+        typesDemande: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
         formations: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),

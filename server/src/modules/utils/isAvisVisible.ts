@@ -1,6 +1,7 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
+import {RoleEnum} from 'shared/enum/roleEnum';
 
 import type { DB } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
@@ -23,12 +24,11 @@ export const isAvisVisible =
             .where("user.id", "=", user.id)
             .select((eb) =>
               sql<boolean>`${eb("user.role", "in", [
-                "admin",
-                "admin_region",
-                "gestionnaire",
-                "gestionnaire_region",
-                "pilote",
-                "pilote_region",
+                RoleEnum["admin"],
+                RoleEnum["admin_region"],
+                RoleEnum["gestionnaire_region"],
+                RoleEnum["pilote"],
+                RoleEnum["pilote_region"],
               ])}`.as("isUserAllowedToSeeAvis")
             ),
         ]),

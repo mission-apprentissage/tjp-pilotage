@@ -3,6 +3,7 @@ import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/p
 
 import { getKbdClient } from "@/db/db";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import { cleanNull } from "@/utils/noNull";
 
 export const getDemandeWithMetadata = async (id: string) => {
@@ -47,42 +48,6 @@ export const getDemandeWithMetadata = async (id: string) => {
             .whereRef("dataFormation.cfd", "=", "demande.cfd")
             .limit(1)
         ),
-        etablissementCompensation: jsonObjectFrom(
-          eb
-            .selectFrom("dataEtablissement")
-            .selectAll("dataEtablissement")
-            .whereRef("dataEtablissement.uai", "=", "demande.compensationUai")
-            .limit(1)
-        ),
-        formationCompensation: jsonObjectFrom(
-          eb
-            .selectFrom("dataFormation")
-            .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
-            .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
-            ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
-            ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
-              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
-                "isFCIL"
-              ),
-            ])
-            .select((eb) =>
-              jsonArrayFrom(
-                eb
-                  .selectFrom("dispositif")
-                  .select(["libelleDispositif", "codeDispositif"])
-                  .leftJoin("rawData", (join) =>
-                    join
-                      .onRef(sql`"data"->>'DISPOSITIF_FORMATION'`, "=", "dispositif.codeDispositif")
-                      .on("rawData.type", "=", "nMef")
-                  )
-                  .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
-                  .distinctOn("codeDispositif")
-              ).as("dispositifs")
-            )
-            .whereRef("dataFormation.cfd", "=", "demande.compensationCfd")
-            .limit(1)
-        ),
       }).as("metadata"),
     ])
     .where("demande.id", "=", id)
@@ -102,10 +67,9 @@ export const getDemandeWithMetadata = async (id: string) => {
         ...demande.metadata,
         formation: cleanNull(demande.metadata.formation),
         etablissement: cleanNull(demande.metadata.etablissement),
-        formationCompensation: cleanNull(demande.metadata.formationCompensation),
-        etablissementCompensation: cleanNull(demande.metadata.etablissementCompensation),
       }),
       statut: castDemandeStatutWithoutSupprimee(demande.statut),
+      typeDemande: castTypeDemande(demande.typeDemande),
       createdAt: demande.createdAt?.toISOString(),
       codeDispositif,
     })

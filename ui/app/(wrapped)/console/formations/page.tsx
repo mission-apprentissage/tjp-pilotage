@@ -9,11 +9,12 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
-import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
+import { CodeDepartementContext } from '@/app/codeDepartementContext';
+import { CodeRegionContext } from '@/app/codeRegionContext';
 import { ConsoleSearchInput } from "@/components/ConsoleSearchInput";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";
@@ -74,7 +75,7 @@ const ColonneFilterSection = chakra(
               string,
               {
                 color: string;
-                options: (OptionSchema & { disabled?: boolean })[];
+                options: (OptionType & { disabled?: boolean })[];
               }
             >
           )}
@@ -266,14 +267,13 @@ export default function Formations() {
     });
   };
 
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
-
-  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
+  const { codeRegion, setCodeRegion } = useContext(CodeRegionContext);
+  const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
 
   const handleFiltersContext = (type: keyof Filters, value: Filters[keyof Filters]) => {
-    if (type === "codeRegion" && value != null) setCodeRegionFilter((value as string[])[0] ?? "");
+    if (type === "codeRegion" && value != null) setCodeRegion((value as string[])[0] ?? "");
 
-    if (type === "codeDepartement" && value != null) setCodeDepartementFilter((value as string[])[0] ?? "");
+    if (type === "codeDepartement" && value != null) setCodeDepartement((value as string[])[0] ?? "");
   };
 
   const filterTracker = (filterName: keyof Filters) => () => {
@@ -326,12 +326,12 @@ export default function Formations() {
   };
 
   useEffect(() => {
-    if (codeRegionFilter && !filters.codeRegion?.length) {
-      filters.codeRegion = [codeRegionFilter];
+    if (codeRegion && !filters.codeRegion?.length) {
+      filters.codeRegion = [codeRegion];
       setSearchParams({ filters: filters });
     }
-    if (codeDepartementFilter && !filters.codeDepartement?.length) {
-      filters.codeDepartement = [codeDepartementFilter];
+    if (codeDepartement && !filters.codeDepartement?.length) {
+      filters.codeDepartement = [codeDepartement];
       setSearchParams({ filters: filters });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

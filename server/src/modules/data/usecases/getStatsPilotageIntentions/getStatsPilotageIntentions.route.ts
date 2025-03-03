@@ -1,3 +1,4 @@
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -15,9 +16,17 @@ export const getStatsPilotageIntentionsRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
+      preHandler: hasPermissionHandler(PermissionEnum["pilotage-intentions/lecture"]),
       handler: async (request, response) => {
-        const statsTauxTransfo = await getStatsPilotageIntentionsUsecase(request.query);
+        const { ...filters } = request.query;
+        const user = request.user!;
+
+        const statsTauxTransfo = await getStatsPilotageIntentionsUsecase(
+          {
+            ...filters,
+            user,
+          }
+        );
         response.status(200).send(statsTauxTransfo);
       },
     });

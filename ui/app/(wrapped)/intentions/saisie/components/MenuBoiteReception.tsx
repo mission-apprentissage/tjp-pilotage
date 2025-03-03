@@ -1,29 +1,33 @@
-import { Button, Divider, Flex, Text, useToken, VStack } from "@chakra-ui/react";
+import {Button, Divider, Flex, Text, Tooltip,useToken, VStack} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { CampagneType } from "shared/schema/campagneSchema";
+import type { UserType } from "shared/schema/userSchema";
 
 import { client } from "@/api.client";
 import type { Filters } from "@/app/(wrapped)/intentions/saisie/types";
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/canEditDemande";
+import {getMessageAccompagnementCampagne} from '@/app/(wrapped)/intentions/utils/messageAccompagnementUtils';
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { useCurrentCampagne } from '@/utils/security/useCurrentCampagne';
 
 export const MenuBoiteReception = ({
   isRecapView = false,
-  hasPermissionSubmitIntention,
-  campagne,
+  isNouvelleDemandeDisabled,
   handleFilters,
   activeFilters,
+  campagne,
+  user
 }: {
   isRecapView?: boolean;
-  hasPermissionSubmitIntention: boolean;
-  campagne?: { annee: string; statut: string };
+  isNouvelleDemandeDisabled: boolean;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   activeFilters: Partial<Filters>;
+  campagne: CampagneType;
+  user: UserType;
 }) => {
+  const { campagne: currentCampagne } = useCurrentCampagne();
   const statut = activeFilters?.statut === undefined ? "none" : activeFilters?.statut;
-  const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
-  const isDisabled = !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
   const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery({
     query: activeFilters,
@@ -33,17 +37,26 @@ export const MenuBoiteReception = ({
 
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
-      <Button
-        mb={1.5}
-        variant="primary"
-        isDisabled={isDisabled}
-        leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
-        as={isDisabled ? undefined : NextLink}
-        href="/intentions/saisie/new"
-        minHeight={"35px"}
+      <Tooltip
+        label={getMessageAccompagnementCampagne({ campagne, currentCampagne, user })}
+        shouldWrapChildren
+        placement="bottom-start"
       >
-        Nouvelle demande
-      </Button>
+        <Flex>
+          <Button
+            mb={1.5}
+            variant="primary"
+            isDisabled={isNouvelleDemandeDisabled}
+            leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
+            as={isNouvelleDemandeDisabled ? undefined : NextLink}
+            href={isNouvelleDemandeDisabled ? undefined : getRoutingSaisieRecueilDemande({campagne, user, suffix: `new?campagneId=${campagne?.id}`})}
+            minHeight={"35px"}
+            w={"100%"}
+          >
+            Nouvelle demande
+          </Button>
+        </Flex>
+      </Tooltip>
       <VStack flex="1" align="flex-start" spacing={1}>
         {/* Toutes */}
         <Button

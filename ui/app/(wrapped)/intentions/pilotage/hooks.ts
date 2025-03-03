@@ -19,7 +19,7 @@ export const useScopeCode = (filters: FiltersStatsPilotageIntentions) => {
       return filters.codeAcademie;
     case ScopeEnum["département"]:
       return filters.codeDepartement;
-    case "national":
+    case ScopeEnum["national"]:
       return "national";
     default:
       return undefined;

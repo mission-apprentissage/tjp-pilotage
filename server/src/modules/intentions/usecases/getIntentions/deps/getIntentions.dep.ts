@@ -4,16 +4,17 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/intentions/usecases/getIntentions/getIntentions.usecase";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import { isAvisVisible } from "@/modules/utils/isAvisVisible";
 import { isIntentionCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
 import { isIntentionBrouillonVisible, isIntentionSelectable } from "@/modules/utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
-import type { Filters } from "./getFilters.dep";
 
-export const getIntentions = async (
+export const getIntentionsQuery = async (
   {
     campagne,
     statut,
@@ -26,7 +27,6 @@ export const getIntentions = async (
     order,
     orderBy,
   }: Filters,
-  shouldFetchOnlyIntention: boolean
 ) => {
   const search_array = getNormalizedSearchArray(search);
 
@@ -70,6 +70,7 @@ export const getIntentions = async (
     )
     .selectAll("intention")
     .select((eb) => [
+      "intention.isIntention",
       "suivi.id as suiviId",
       sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref("user.lastname")})`.as("userName"),
       "dataFormation.libelleFormation",
@@ -85,8 +86,9 @@ export const getIntentions = async (
       )`.as("alreadyAccessed"),
       sql<string>`count(*) over()`.as("count"),
       eb
-        .selectFrom(({ selectFrom }) =>
-          selectFrom("intention as intentionImportee")
+        .selectFrom((eb) =>
+          eb
+            .selectFrom("intention as intentionImportee")
             .select(["numero", "statut", "numeroHistorique"])
             .whereRef("intentionImportee.numeroHistorique", "=", "intention.numero")
             .where(isIntentionCampagneEnCours(eb, "intentionImportee"))
@@ -179,15 +181,10 @@ export const getIntentions = async (
       if (!orderBy || !order) return q;
       return q.orderBy(sql`${sql.ref(orderBy)}`, sql`${sql.raw(order)} NULLS LAST`);
     })
-    .$call((q) => {
-      if (shouldFetchOnlyIntention) return q.where("intention.isIntention", "=", true);
-      return q;
-    })
     .$call((eb) => {
       if (codeAcademie) {
         return eb.where("academie.codeAcademie", "in", codeAcademie);
       }
-
       return eb;
     })
     .$call((eb) => {
@@ -204,20 +201,18 @@ export const getIntentions = async (
     .limit(limit)
     .execute();
 
-  const campagnes = await getKbdClient().selectFrom("campagne").selectAll().orderBy("annee desc").execute();
-
   return {
     intentions: intentions.map((intention) =>
       cleanNull({
         ...intention,
         avis: intention.avis.filter((c) => c).map((avis) => avis),
         statut: castDemandeStatutWithoutSupprimee(intention.statut),
+        typeDemande: castTypeDemande(intention.typeDemande),
         createdAt: intention.createdAt?.toISOString(),
         updatedAt: intention.updatedAt?.toISOString(),
         alreadyAccessed: intention.alreadyAccessed ?? true,
       })
     ),
     count: parseInt(intentions[0]?.count) || 0,
-    campagnes: campagnes.map(cleanNull),
   };
 };

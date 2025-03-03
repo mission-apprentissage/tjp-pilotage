@@ -69,13 +69,22 @@ export default defineWorkspace([
       include: ["./**/*.test.{ts,tsx}"],
       clearMocks: true,
       environment: "jsdom",
+      globals: true,
       setupFiles: ["./vitest.config.js"],
       poolOptions: {
         threads: {
           singleThread: true,
         },
       },
+      env: {
+        NEXT_PUBLIC_ENV: "local",
+        NEXT_PUBLIC_VERSION:"0.0.0-local",
+        NEXT_PUBLIC_PRODUCT_NAME:"orion",
+        NEXT_PUBLIC_PRODUCT_REPO:"tjp-pilotage",
+        NEXT_PUBLIC_API_PORT: "5001",
+      }
     },
+    envDir: "./ui",
     resolve: {},
   },
 ]);

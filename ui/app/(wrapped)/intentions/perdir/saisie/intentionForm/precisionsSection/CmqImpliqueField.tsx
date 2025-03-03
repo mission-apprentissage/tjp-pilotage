@@ -11,11 +11,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/validators/demandeValidators";
+import { isTypeDiminution, isTypeFermeture } from "shared/utils/typeDemandeUtils";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
-import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { toBoolean } from "@/utils/toBoolean";
 

@@ -1,8 +1,8 @@
 import { chakra } from "@chakra-ui/react";
+import { isTypeOuverture } from "shared/utils/typeDemandeUtils";
 
 import { CapaciteField } from "@/app/(wrapped)/intentions/saisie/components/CapaciteField";
-import type { Intention } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/types";
-import { isTypeOuverture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import type { Demande } from "@/app/(wrapped)/intentions/saisie/types";
 
 export const CapaciteApprentissageActuelleField = chakra(
   ({
@@ -13,12 +13,12 @@ export const CapaciteApprentissageActuelleField = chakra(
   } :
   {
     id: string;
-    demande: Intention;
+    demande: Demande;
     disabled?: boolean;
     className?: string;
   }) => {
     const typeDemande = demande?.typeDemande;
-    const isReadOnly = (typeDemande !== undefined && isTypeOuverture(typeDemande)) || disabled;
+    const isReadOnly = isTypeOuverture(typeDemande) || disabled;
 
     return <CapaciteField id={id} name={"capaciteApprentissageActuelle"} className={className} isReadOnly={isReadOnly} />;
   }

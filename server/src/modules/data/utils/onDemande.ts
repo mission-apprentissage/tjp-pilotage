@@ -5,7 +5,6 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import type { DB } from "@/db/db";
@@ -34,6 +33,9 @@ import {
 import { isDemandeNotAjustementRentree } from "@/modules/utils/isDemandeSelectable";
 
 import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
+
+
+const CURRENT_ANNEE_CAMPAGNE = "2025";
 
 export const genericOnDemandes = ({
   statut = [DemandeStatutEnum["projet de demande"], DemandeStatutEnum["demande validée"], DemandeStatutEnum["prêt pour le vote"]],

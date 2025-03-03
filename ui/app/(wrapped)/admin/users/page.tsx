@@ -23,6 +23,7 @@ import {
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 import { hasRightOverRole } from "shared";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -117,7 +118,7 @@ export default () => {
   };
 
   return (
-    <GuardPermission permission="users/lecture">
+    <GuardPermission permission={PermissionEnum["users/lecture"]}>
       {data?.users && (
         <>
           <Flex px={4} py="2">

@@ -1,30 +1,40 @@
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import type { FiltersSchema} from 'shared/routes/schemas/get.demandes.schema';
+import type {z} from 'zod';
 
-import { getCurrentCampagneQuery } from "@/modules/demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
+import type {RequestUser} from '@/modules/core/model/User';
+import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
-import type { Filters } from "./deps";
-import { getCampagne, getDemandes, getFilters } from "./deps";
+import { getCampagneQuery, getDemandesQuery, getFiltersQuery } from "./deps";
+
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+  campagne: string
+}
+
+export interface ActiveFilters extends Omit<Filters, "campagne"> {
+  campagne?: string;
+}
 
 const getDemandesFactory =
   (
     deps = {
-      getDemandes,
-      getCurrentCampagneQuery,
-      getCampagne,
-      getFilters,
+      getDemandesQuery,
+      getCampagneQuery,
+      getCurrentCampagne,
+      getFiltersQuery,
     }
   ) =>
-    async (activeFilters: Filters) => {
-      const currentCampagne = await deps.getCurrentCampagneQuery();
-      const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
+    async (activeFilters: ActiveFilters) => {
+      const currentCampagne = await deps.getCurrentCampagne(activeFilters.user);
+      const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
 
       const [demandes, campagne, filters] = await Promise.all([
-        deps.getDemandes({ ...activeFilters, campagne: anneeCampagne }),
-        deps.getCampagne(anneeCampagne),
-        deps.getFilters(activeFilters),
+        deps.getDemandesQuery({ ...activeFilters, campagne: anneeCampagne }),
+        deps.getCampagneQuery({ ...activeFilters, anneeCampagne }),
+        deps.getFiltersQuery({...activeFilters, campagne: anneeCampagne}),
       ]);
 
-      return { ...demandes, currentCampagne, campagne, filters };
+      return { ...demandes, campagne, filters };
     };
 
 export const getDemandesUsecase = getDemandesFactory();

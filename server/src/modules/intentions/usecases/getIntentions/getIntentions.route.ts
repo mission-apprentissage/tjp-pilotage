@@ -1,4 +1,5 @@
 import { getPermissionScope, guardScope } from "shared";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -16,26 +17,25 @@ export const getIntentionsRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions-perdir/lecture"),
+      preHandler: hasPermissionHandler(PermissionEnum["intentions-perdir/lecture"]),
       handler: async (request, response) => {
         const user = request.user!;
-        const { search, ...filters } = request.query;
+        const { ...filters } = request.query;
 
         const result = await getIntentionsUsecase({
-          user: user,
           ...filters,
-          search,
+          user,
         });
 
-        const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
+        const scope = getPermissionScope(user.role, PermissionEnum["intentions-perdir/ecriture"]);
 
         response.status(200).send({
           ...result,
           intentions: result.intentions.map((intention) => ({
             ...intention,
-            canEdit: guardScope(scope?.default, {
+            canEdit: guardScope(scope, {
               uai: () => user.uais?.includes(intention.uai) ?? false,
-              region: () => user.codeRegion === intention.codeRegion,
+              région: () => user.codeRegion === intention.codeRegion,
               national: () => true,
             }),
           })),

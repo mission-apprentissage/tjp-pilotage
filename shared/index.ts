@@ -1,6 +1,7 @@
 export { ScopeEnum, type ScopeZone } from "./enum/scopeEnum";
 export { VoieEnum, type Voie } from "./enum/voieEnum";
-export { PERMISSIONS, type Role } from "./security/permissions";
+export { RoleEnum, type Role } from "./enum/roleEnum";
+export { PERMISSIONS } from "./security/permissions";
 export * from "./security/securityUtils";
 export { ANNEE_CHOMAGE } from "./time/ANNEE_CHOMAGE";
 export { CURRENT_IJ_MILLESIME } from "./time/CURRENT_IJ_MILLESIME";

@@ -1,6 +1,7 @@
 import { CURRENT_IJ_MILLESIME } from "shared";
 
 import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.usecase";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommuneIndicateurRegionSortie } from "@/modules/data/utils/notAnneeCommune";
 import { notHistoriqueIndicateurRegionSortie } from "@/modules/data/utils/notHistorique";
@@ -13,13 +14,7 @@ export const getRegionStatsQuery = async ({
   codeDepartement,
   codeNiveauDiplome,
   millesimeSortie = CURRENT_IJ_MILLESIME,
-}: {
-  codeRegion?: string;
-  codeAcademie?: string;
-  codeDepartement?: string;
-  millesimeSortie?: string;
-  codeNiveauDiplome?: string[];
-}) => {
+}: Filters) => {
   const statsSortie = await getKbdClient()
     .selectFrom("indicateurRegionSortie")
     .innerJoin("formationScolaireView as formationView", "formationView.cfd", "indicateurRegionSortie.cfd")

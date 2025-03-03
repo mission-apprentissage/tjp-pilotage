@@ -1,7 +1,7 @@
 import type { ExpressionBuilder } from "kysely";
 import type { PositionQuadrantType } from "shared/enum/positionQuadrantEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
-import { TypeFamilleEnum } from "shared/enum/typeFamille";
+import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
 
 import type { DB } from "@/db/db";
 

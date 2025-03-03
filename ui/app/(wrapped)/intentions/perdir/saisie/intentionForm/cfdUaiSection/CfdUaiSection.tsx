@@ -4,21 +4,22 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
-import type { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
 import type {
   IntentionForms,
   PartialIntentionForms,
 } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
-import type { Campagne } from "@/app/(wrapped)/intentions/perdir/saisie/types";
+import type { IntentionMetadata} from '@/app/(wrapped)/intentions/perdir/types';
+import type { Etablissement, Formation } from "@/app/(wrapped)/intentions/types";
 
 import { CfdBlock } from "./CfdBlock";
 import { DispositifBlock } from "./DispositifBlock";
 import { LibelleFCILField } from "./LibelleFCILField";
 import { UaiBlock } from "./UaiBlock";
 
-const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
+const TagCampagne = ({ campagne }: { campagne?: CampagneType }) => {
   if (!campagne) return null;
   switch (campagne.statut) {
   case CampagneStatutEnum["en cours"]:
@@ -62,12 +63,12 @@ export const CfdUaiSection = ({
   isCFDUaiSectionValid,
   statutComponentRef,
 }: {
-  campagne?: Campagne;
+  campagne?: CampagneType;
   formId?: string;
   active: boolean;
   disabled?: boolean;
   defaultValues: PartialIntentionForms;
-  formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
+  formMetadata?: IntentionMetadata;
   onEditUaiCfdSection: () => void;
   isFCIL: boolean;
   setIsFCIL: (isFcil: boolean) => void;
@@ -77,22 +78,20 @@ export const CfdUaiSection = ({
 }) => {
   const { watch, getValues } = useFormContext<IntentionForms>();
 
-  const [dispositifs, setDispositifs] = useState<
-    (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"] | undefined
+  const [dispositifs, setDispositifs] = useState<Formation["dispositifs"] | undefined
       >(formMetadata?.formation?.dispositifs);
 
   const uai = watch("uai");
 
-  const [uaiInfo, setUaiInfo] = useState<
-    (typeof client.infer)["[GET]/etablissement/search/:search"][number] | undefined
+  const [uaiInfo, setUaiInfo] = useState<Etablissement | undefined
       >(
-      formMetadata?.etablissement?.libelleEtablissement && uai
-        ? {
-          label: formMetadata?.etablissement.libelleEtablissement,
-          value: uai,
-          commune: formMetadata?.etablissement.commune,
-        }
-        : undefined
+        formMetadata?.etablissement?.libelleEtablissement && uai
+          ? {
+            label: formMetadata?.etablissement.libelleEtablissement,
+            value: uai,
+            commune: formMetadata?.etablissement.commune,
+          }
+          : undefined
       );
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);

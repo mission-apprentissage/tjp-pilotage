@@ -1,36 +1,11 @@
 /* eslint-disable max-len */
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
-import type { DemandeType } from "../enum/demandeTypeEnum";
-import type { Router } from "../routes";
+import type { Router } from '../routes';
 import type { Args, ZodTypeProvider } from "../utils/http-wizard/core";
+import { isTypeAjustement, isTypeAugmentation, isTypeColoration, isTypeDiminution, isTypeFermeture, isTypeOuverture, isTypeTransfert } from "../utils/typeDemandeUtils";
+import { isPositiveNumber } from "./utils";
 
 type Intention = Args<Router["[POST]/intention/submit"]["schema"], ZodTypeProvider>["body"]["intention"];
-
-export const isTypeFermeture = (typeDemande: DemandeType) => ["fermeture"].includes(typeDemande);
-
-export const isTypeOuverture = (typeDemande: DemandeType) =>
-  ["ouverture_compensation", "ouverture_nette"].includes(typeDemande);
-
-export const isTypeAugmentation = (typeDemande: DemandeType) =>
-  ["augmentation_compensation", "augmentation_nette"].includes(typeDemande);
-
-export const isTypeDiminution = (typeDemande: DemandeType) => ["diminution"].includes(typeDemande);
-
-export const isTypeCompensation = (typeDemande: DemandeType) =>
-  ["augmentation_compensation", "ouverture_compensation"].includes(typeDemande);
-
-export const isTypeTransfert = (typeDemande: DemandeType) => ["transfert"].includes(typeDemande);
-
-export const isTypeColoration = (typeDemande: DemandeType) => ["coloration"].includes(typeDemande);
-
-export const isTypeAjustement = (typeDemande: DemandeType) => ["ajustement"].includes(typeDemande);
-
-const isPositiveNumber = (value: number | undefined): value is number => {
-  if (!Number.isInteger(value)) return false;
-  if (value === undefined) return false;
-  if (value < 0) return false;
-  return true;
-};
 
 export const intentionValidators = {
   motif: (intention) => {
@@ -403,4 +378,4 @@ export const intentionValidators = {
     }
     return undefined;
   },
-} satisfies Record<keyof Intention | string, (intention: Intention) => string | void>;
+} satisfies Record<keyof Intention | string, (intention: Intention) => string | undefined>;

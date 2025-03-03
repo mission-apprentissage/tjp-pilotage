@@ -2,7 +2,13 @@ import { Box, Button, Flex } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import type { RefObject } from "react";
 
-export const MenuFormulaire = ({ refs }: { refs: Record<string, RefObject<HTMLDivElement>> }) => {
+export const MenuFormulaire = ({
+  refs,
+  showCorrection
+} : {
+  refs: Record<string, RefObject<HTMLDivElement>>;
+  showCorrection?: boolean
+}) => {
   const jumpToAnchor = (anchor: string) => {
     refs[anchor]?.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -34,6 +40,24 @@ export const MenuFormulaire = ({ refs }: { refs: Record<string, RefObject<HTMLDi
         >
           Type de demande
         </Button>
+        {showCorrection && (
+          <Button
+            onClick={() => jumpToAnchor("correction")}
+            width={"100%"}
+            justifyContent={"start"}
+            fontSize={16}
+            fontWeight={700}
+            px={4}
+            py={3}
+            bg={"bluefrance.975"}
+            borderColor={"red"}
+            borderWidth={"1px"}
+            _hover={{ bg: "blueecume.925_hover" }}
+            leftIcon={<Icon icon="ri:edit-line" color="black" />}
+          >
+          Correction
+          </Button>
+        )}
         <Button
           onClick={() => jumpToAnchor("motifsEtPrecisions")}
           width={"100%"}

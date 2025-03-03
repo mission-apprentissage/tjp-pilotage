@@ -1,4 +1,5 @@
 import type { ExpressionBuilder } from "kysely";
+import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
 
 import type { DB } from "@/db/db";
 
@@ -7,10 +8,7 @@ export const notAnneeCommuneFormationEtablissement = (eb: ExpressionBuilder<DB, 
 };
 export const notAnneeCommune = (eb: ExpressionBuilder<DB, "formationView">) => {
   return eb.or([
-    eb.and([
-      eb("formationView.typeFamille", "<>", "2nde_commune"),
-      eb("formationView.typeFamille", "<>", "1ere_commune"),
-    ]),
+    eb("formationView.typeFamille", "not in", [TypeFamilleEnum["1ere_commune"], TypeFamilleEnum["2nde_commune"]]),
     eb("formationView.typeFamille", "is", null),
   ]);
 };
@@ -21,7 +19,7 @@ export const notAnneeCommuneIndicateurRegionSortie = (eb: ExpressionBuilder<DB, 
 
 export const notSpecialite = (eb: ExpressionBuilder<DB, "formationView">) => {
   return eb.or([
-    eb.and([eb("formationView.typeFamille", "<>", "specialite"), eb("formationView.typeFamille", "<>", "option")]),
+    eb("formationView.typeFamille", "not in", [TypeFamilleEnum["specialite"], TypeFamilleEnum["option"]]),
     eb("formationView.typeFamille", "is", null),
   ]);
 };

@@ -1,7 +1,7 @@
 import { getKbdClient } from "@/db/db";
 import { cleanNull } from "@/utils/noNull";
 
-export const getCampagnes = async () => {
+export const getCampagnesQuery = async () => {
   return getKbdClient()
     .selectFrom("campagne")
     .selectAll()

@@ -12,7 +12,7 @@ import { InfoSection } from "@/app/(wrapped)/panorama/components/InfoSection";
 import { QuadrantSection } from "@/app/(wrapped)/panorama/components/QuadrantSection/QuadrantSection";
 import { TopFlopSection } from "@/app/(wrapped)/panorama/components/TopFlopSection/TopFlopSection";
 import type { FiltersPanoramaFormation, OrderPanoramaFormation } from "@/app/(wrapped)/panorama/types";
-import { CodeDepartementFilterContext } from "@/app/layoutClient";
+import { CodeDepartementContext } from "@/app/codeDepartementContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 
 export default function Panorama({
@@ -25,7 +25,7 @@ export default function Panorama({
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
-  const { setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
+  const { setCodeDepartement } = useContext(CodeDepartementContext);
 
   const setSearchParams = (params: FiltersPanoramaFormation) => {
     router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
@@ -55,7 +55,7 @@ export default function Panorama({
   };
 
   const onCodeDepartementChanged = (codeDepartement: string) => {
-    setCodeDepartementFilter(codeDepartement);
+    setCodeDepartement(codeDepartement);
 
     router.push(`/panorama/departement/${codeDepartement}?${qs.stringify(searchParams)}`);
   };

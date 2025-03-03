@@ -1,13 +1,12 @@
-import type { DemandeType } from "shared/enum/demandeTypeEnum";
-
-import type { TypeDemande } from "./typeDemandeUtils";
+import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
 
 export type MotifRefusLabel = keyof typeof MOTIFS_REFUS_LABELS;
 
 export const getMotifRefusLabel = (motif: MotifRefusLabel): string => MOTIFS_REFUS_LABELS[motif];
 
 export const getMotifsRefus = () => motifs;
-export const getMotifsRefusTypeDemande = (typeDemande: TypeDemande) => getMotifsRefus()[typeDemande];
+export const getMotifsRefusTypeDemande = (typeDemande: DemandeTypeType): MotifRefusLabel[] =>
+  getMotifsRefus()[typeDemande] ?? [];
 export const getLabelsMotifsRefusOuverture = () => motifsRefusOuverture;
 export const getLabelsMotifsRefusFermeture = () => motifsRefusFermeture;
 
@@ -50,7 +49,7 @@ const motifsRefusFermeture: MotifRefusLabel[] = [
   "autre",
 ];
 
-const motifs = {
+const motifs: Partial<Record<DemandeTypeType, MotifRefusLabel[]>> = {
   ouverture_nette: motifsRefusOuverture,
   ouverture_compensation: motifsRefusOuverture,
   augmentation_nette: motifsRefusOuverture,
@@ -60,4 +59,4 @@ const motifs = {
   transfert: motifsRefusOuverture,
   coloration: motifsRefusOuverture,
   ajustement: motifsRefusOuverture
-} satisfies { [key in DemandeType]: MotifRefusLabel[] };
+} satisfies { [key in DemandeTypeType]: MotifRefusLabel[] };
