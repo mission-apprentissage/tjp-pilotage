@@ -79,7 +79,7 @@ export const EditCampagneRegion = ({
 
   const queryClient = useQueryClient();
 
-  const { campagne: currentCampagneNationale, setCampagne: setCurrentCampagne } = useCurrentCampagne();
+  const { setCampagne: setCurrentCampagne } = useCurrentCampagne();
   const { setCampagne: setPreviousCampagne } = useContext(PreviousCampagneContext);
 
   const {
@@ -193,17 +193,6 @@ export const EditCampagneRegion = ({
                   shouldValidate: true,
                 });
               }}
-              minDate={
-                currentCampagneNationale?.dateDebut ?
-                  toDate(currentCampagneNationale.dateDebut) :
-                  undefined
-              }
-              maxDate={
-                getValues("dateFin") ? toDate(getValues("dateFin")) :
-                  currentCampagneNationale?.dateFin ?
-                    toDate(currentCampagneNationale.dateFin) :
-                    undefined
-              }
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {
@@ -228,17 +217,6 @@ export const EditCampagneRegion = ({
                   shouldValidate: true,
                 });
               }}
-              minDate={
-                getValues("dateDebut") ? toDate(getValues("dateDebut")) :
-                  currentCampagneNationale?.dateDebut ?
-                    toDate(currentCampagneNationale.dateDebut) :
-                    undefined
-              }
-              maxDate={
-                currentCampagneNationale?.dateFin ?
-                  toDate(currentCampagneNationale.dateFin) :
-                  undefined
-              }
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {
@@ -263,18 +241,6 @@ export const EditCampagneRegion = ({
                   shouldValidate: true,
                 });
               }}
-              minDate={
-                getValues("dateDebut") ? toDate(getValues("dateDebut")!) :
-                  currentCampagneNationale?.dateDebut ?
-                    toDate(currentCampagneNationale.dateDebut) :
-                    undefined
-              }
-              maxDate={
-                getValues("dateFin") ? toDate(getValues("dateFin")!) :
-                  currentCampagneNationale?.dateFin ?
-                    toDate(currentCampagneNationale.dateFin) :
-                    undefined
-              }
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {

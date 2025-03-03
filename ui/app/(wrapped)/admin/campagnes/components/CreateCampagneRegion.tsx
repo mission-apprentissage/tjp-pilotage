@@ -3,7 +3,7 @@ import {Alert, AlertDescription, Button, Flex, FormControl, FormErrorMessage, Fo
 import { useQueryClient } from "@tanstack/react-query";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
-import {useContext, useEffect, useMemo, useState} from 'react';
+import {useContext, useMemo, useState} from 'react';
 import { Controller, useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
@@ -39,7 +39,6 @@ export const CreateCampagneRegion = ({
     setValue,
     register,
     formState: { errors },
-    reset,
     handleSubmit,
     control,
   } = useForm<(typeof client.inferArgs)["[POST]/campagnes-region/:campagneRegionId"]["body"]>({
@@ -49,8 +48,6 @@ export const CreateCampagneRegion = ({
       campagneId: latestCampagne?.id
     }
   });
-
-  useEffect(() => reset(undefined, { keepDefaultValues: true }), [isOpen, reset]);
 
   const queryClient = useQueryClient();
 
@@ -190,17 +187,6 @@ export const CreateCampagneRegion = ({
                   shouldValidate: true,
                 });
               }}
-              minDate={
-                latestCampagne?.dateDebut ?
-                  toDate(latestCampagne.dateDebut) :
-                  undefined
-              }
-              maxDate={
-                getValues("dateFin") ? toDate(getValues("dateFin")) :
-                  latestCampagne?.dateFin ?
-                    toDate(latestCampagne.dateFin) :
-                    undefined
-              }
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {
@@ -225,16 +211,6 @@ export const CreateCampagneRegion = ({
                   shouldValidate: true,
                 });
               }}
-              minDate={
-                getValues("dateDebut") ? toDate(getValues("dateDebut")) :
-                  latestCampagne?.dateDebut ?
-                    toDate(latestCampagne.dateDebut) :
-                    undefined}
-              maxDate={
-                latestCampagne?.dateFin ?
-                  toDate(latestCampagne.dateFin) :
-                  undefined
-              }
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {
@@ -259,18 +235,6 @@ export const CreateCampagneRegion = ({
                   shouldValidate: true,
                 });
               }}
-              minDate={
-                getValues("dateDebut") ? toDate(getValues("dateDebut")) :
-                  latestCampagne?.dateDebut ?
-                    toDate(latestCampagne.dateDebut) :
-                    undefined
-              }
-              maxDate={
-                getValues("dateFin") ? toDate(getValues("dateFin")) :
-                  latestCampagne?.dateFin ?
-                    toDate(latestCampagne.dateFin) :
-                    undefined
-              }
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {
