@@ -139,7 +139,6 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
                   shouldValidate: true,
                 });
               }}
-              maxDate={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {
@@ -164,7 +163,6 @@ export const CreateCampagne = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
                   shouldValidate: true,
                 });
               }}
-              minDate={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {

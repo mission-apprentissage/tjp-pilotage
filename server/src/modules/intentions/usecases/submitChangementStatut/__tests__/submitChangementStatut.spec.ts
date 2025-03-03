@@ -214,8 +214,6 @@ describe("[POST]/intention/statut/submit", () => {
 
           const changementDeStatut = changementDeStatuts[0];
 
-          console.log("changementDeStatut", changementDeStatut);
-
           expect(changementDeStatut).toBeDefined();
           expect(changementDeStatut?.createdBy).toBe(user?.id);
           expect(changementDeStatut?.statut).toBe(changementStatut.statut);

@@ -146,7 +146,6 @@ export const EditCampagne = ({
                   shouldValidate: true,
                 });
               }}
-              maxDate={getValues("dateFin") ? toDate(getValues("dateFin")) : undefined}
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {
@@ -171,7 +170,6 @@ export const EditCampagne = ({
                   shouldValidate: true,
                 });
               }}
-              minDate={getValues("dateDebut") ? toDate(getValues("dateDebut")) : undefined}
               configs={getDatePickerConfig()}
               propsConfigs={{
                 inputProps: {

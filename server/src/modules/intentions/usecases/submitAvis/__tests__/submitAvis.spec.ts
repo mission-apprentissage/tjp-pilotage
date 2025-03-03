@@ -133,8 +133,6 @@ describe("[POST]/intention/avis/submit", () => {
                 await createIntentionBuilder(user, data).withCurrentCampagneId()
               ).injectInDB()
             ).build();
-
-            console.log(intention);
           }
         },
       },
