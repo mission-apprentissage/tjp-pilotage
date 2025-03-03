@@ -85,7 +85,11 @@ const METADATA_MAP = {
   },
   "/admin/campagnes": {
     title: "Administration des campagnes - Orion",
-    description: "Pilotage de la réforme de la carte de formations",
+    description: "Administration des campagnes",
+  },
+  "/admin/campagnes/regional": {
+    title: "Administration des campagnes régionales - Orion",
+    description: "Administration des campagnes régionales",
   },
   "/admin/users": {
     title: "Administration des utilisateurs - Orion",
@@ -155,7 +159,13 @@ const getPathnameFromMetadataState = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   state: any
 ): string | undefined => {
-  const res = Object.getOwnPropertySymbols(state || {})
+  const symbols = Object.getOwnPropertySymbols(state || {});
+
+  if (symbols.length === 0) {
+    return undefined;
+  }
+
+  const res = symbols
     .map((p) => state[p])
     .find((state) => Object.prototype.hasOwnProperty.call(state, "urlPathname"));
 

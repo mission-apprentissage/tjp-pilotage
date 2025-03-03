@@ -1,9 +1,11 @@
 import { chakra, Td } from "@chakra-ui/react";
+import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
+import {SecteurEnum} from 'shared/enum/secteurEnum';
 
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 import type { DemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
-import type { MotifCampagne, MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
-import { getMotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import type { AnneeCampagneMotifDemande, MotifDemandeLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import { getMotifDemandeLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import type { MotifRefusLabel } from "@/app/(wrapped)/intentions/utils/motifRefusDemandeUtils";
 import { getMotifRefusLabel } from "@/app/(wrapped)/intentions/utils/motifRefusDemandeUtils";
 import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
@@ -17,22 +19,22 @@ import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 const formatBooleanValue = (value?: boolean) => (value ? "Oui" : "Non");
 
-const handleMotifLabel = ({
+const handleMotifDemandeLabel = ({
   motifs,
+  anneeCampagne,
   autreMotif,
-  campagne,
 }: {
   motifs?: string[];
-  campagne?: string;
+  anneeCampagne?: string;
   autreMotif?: string;
 }) => {
   if (!motifs || motifs.length === 0) return undefined;
   const formattedMotifs = motifs?.map((motif) =>
     motif === "autre"
       ? `Autre : ${autreMotif}`
-      : getMotifLabel({
-        motif: motif as MotifLabel,
-        campagne: campagne as MotifCampagne,
+      : getMotifDemandeLabel({
+        motif: motif as MotifDemandeLabel,
+        anneeCampagne: anneeCampagne as AnneeCampagneMotifDemande,
       })
   );
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
@@ -84,12 +86,10 @@ const ConditionalTd = chakra(
 
 export const LineContent = ({
   demande,
-  campagne,
   colonneFilters,
   getCellColor,
 }: {
   demande: DemandesRestitutionIntentions["demandes"][0];
-  campagne?: string;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
   getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
 }) => {
@@ -132,7 +132,7 @@ export const LineContent = ({
         {demande.libelleAcademie}
       </ConditionalTd>
       <ConditionalTd colonneFilters={colonneFilters} colonne={"secteur"} bgColor={getCellColor("secteur")}>
-        {demande.secteur === "PU" ? "Public" : "Privé"}
+        {demande.secteur === SecteurEnum["PU"] ? "Public" : "Privé"}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -175,7 +175,7 @@ export const LineContent = ({
         py="1"
         bgColor={getCellColor("typeDemande")}
       >
-        {getTypeDemandeLabel(demande.typeDemande)}
+        {getTypeDemandeLabel(demande.typeDemande as DemandeTypeType)}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -186,10 +186,10 @@ export const LineContent = ({
         isTruncated={true}
         bgColor={getCellColor("motif")}
       >
-        {handleMotifLabel({
+        {handleMotifDemandeLabel({
           motifs: demande.motif,
           autreMotif: demande.autreMotif,
-          campagne: campagne,
+          anneeCampagne: demande.campagne.annee,
         })}
       </ConditionalTd>
       <ConditionalTd

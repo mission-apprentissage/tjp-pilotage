@@ -1,32 +1,32 @@
 import { Flex, IconButton, Tooltip } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
+import {isCampagneEnCours} from 'shared/utils/campagneUtils';
 
 import type { client } from "@/api.client";
-import { canEditDemande } from "@/app/(wrapped)/intentions/saisie/utils/canEditDemande";
-import { usePermission } from "@/utils/security/usePermission";
+import {canEditDemandeIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { useAuth } from "@/utils/security/useAuth";
 
 import { SyntheseSection } from "./synthese/SyntheseSection";
 
 export const MainSection = ({
   demande,
-  isCampagneEnCours,
 }: {
   demande: (typeof client.infer)["[GET]/demande/:numero"];
-  isCampagneEnCours?: boolean;
 }) => {
-  const hasEditDemandePermission = usePermission("intentions/ecriture");
+  const { user } = useAuth();
 
   return (
     <Flex bg="white" borderRadius={6} p={8} direction="column">
-      {isCampagneEnCours && (
+      {isCampagneEnCours(demande.campagne) && (
         <Flex direction={"row"} justify={"space-between"}>
           <Flex direction={"row"} gap={2}>
-            {canEditDemande({ demande, hasEditDemandePermission }) && (
+            {canEditDemandeIntention({ demandeIntention: demande, user }) && (
               <Tooltip label="Modifier la demande">
                 <IconButton
                   as={NextLink}
-                  href={`/intentions/saisie/${demande?.numero ?? ""}`}
+                  href={getRoutingSaisieRecueilDemande({ campagne: demande.campagne, user, suffix: demande?.numero })}
                   aria-label="Modifier la demande"
                   color={"bluefrance.113"}
                   bgColor={"transparent"}

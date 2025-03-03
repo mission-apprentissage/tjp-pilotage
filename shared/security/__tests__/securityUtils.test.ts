@@ -1,6 +1,7 @@
+import type { Permission } from "shared/enum/permissionEnum";
 import { describe, expect, it } from "vitest";
 
-import type { Permission, Role } from "../permissions";
+import type { Role } from "../../enum/roleEnum";
 import { HIERARCHY, PERMISSIONS } from "../permissions";
 import { getPermissionScope, hasRightOverRole } from "../securityUtils";
 
@@ -11,7 +12,7 @@ describe("securityUtils", () => {
         const typedRole: Role = role as unknown as Role;
         Object.keys(PERMISSIONS[typedRole]).forEach((permission) => {
           const scope = getPermissionScope(typedRole, permission as Permission);
-          expect(typeof scope?.default !== "undefined").toEqual(true);
+          expect(typeof scope !== "undefined").toEqual(true);
         });
       });
     });

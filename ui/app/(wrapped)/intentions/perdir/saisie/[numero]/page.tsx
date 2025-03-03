@@ -1,19 +1,19 @@
-import {GuardExpe} from '@/utils/security/GuardExpe';
+import {PermissionEnum} from 'shared/enum/permissionEnum';
+
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import PageClient from "./client";
+import { PageClient } from "./client";
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default ({
+const Page = ({
   params,
 }: {
   params: {
     numero: string;
   };
 }) => (
-  <GuardPermission permission="intentions-perdir/lecture">
-    <GuardExpe isExpeRoute={true}>
-      <PageClient params={params} />
-    </GuardExpe>
+  <GuardPermission permission={PermissionEnum["intentions-perdir/lecture"]}>
+    <PageClient params={params} />
   </GuardPermission>
 );
+
+export default Page;

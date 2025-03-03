@@ -3,12 +3,13 @@ import "@testing-library/jest-dom/vitest";
 
 import { generateMock } from "@anatine/zod-mock";
 import { cleanup, render, screen } from "@testing-library/react";
+import { RoleEnum } from "shared";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
-import { RoleEnum } from "shared/security/permissions";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { Auth } from "@/app/(wrapped)/auth/authContext";
-import { AuthContext } from "@/app/(wrapped)/auth/authContext";
+import type { Auth } from "@/app/authContext";
+import { AuthContext } from "@/app/authContext";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 const router = {
@@ -43,7 +44,7 @@ describe("ui > components > security > GuardPermission", () => {
   it("Doit laisser passer les utilisateurs ayant les droits", async () => {
     render(
       <AuthContext.Provider value={contextValue}>
-        <GuardPermission permission="enregistrement-requete/lecture">
+        <GuardPermission permission={PermissionEnum["enregistrement-requete/lecture"]}>
           <p>has_permission</p>
         </GuardPermission>
       </AuthContext.Provider>
@@ -56,7 +57,7 @@ describe("ui > components > security > GuardPermission", () => {
   it("Doit bloquer les utilisateurs n'ayant pas les droits et les rediriger", async () => {
     render(
       <AuthContext.Provider value={contextValue}>
-        <GuardPermission permission="pilotage-intentions/lecture">
+        <GuardPermission permission={PermissionEnum["pilotage-intentions/lecture"]}>
           <p>has_permission</p>
         </GuardPermission>
       </AuthContext.Provider>

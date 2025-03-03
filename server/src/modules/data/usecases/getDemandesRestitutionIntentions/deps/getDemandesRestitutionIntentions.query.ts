@@ -15,6 +15,7 @@ import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6moi
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteApprentissageColoree,
@@ -112,6 +113,10 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       "departement.codeDepartement",
       "academie.libelleAcademie",
       "academie.codeAcademie",
+      "campagne.annee as anneeCampagne",
+      "campagne.statut as statutCampagne",
+      "campagne.dateDebut as dateDebutCampagne",
+      "campagne.dateFin as dateFinCampagne",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
       countDifferenceCapaciteScolaireColoree(eb).as("differenceCapaciteScolaireColoree"),
@@ -287,7 +292,15 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   return {
     demandes: demandes.map((demande) => ({
       ...demande,
+      campagne: {
+        id: demande.campagneId,
+        annee: demande.anneeCampagne,
+        statut: demande.statutCampagne,
+        dateDebut: demande.dateDebutCampagne?.toISOString(),
+        dateFin: demande.dateFinCampagne?.toISOString(),
+      },
       statut: castDemandeStatutWithoutSupprimee(demande.statut),
+      typeDemande: castTypeDemande(demande.typeDemande),
       createdAt: demande.createdAt?.toISOString(),
       updatedAt: demande.updatedAt?.toISOString(),
       formationSpecifique: formatFormationSpecifique(demande),

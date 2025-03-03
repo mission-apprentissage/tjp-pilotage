@@ -6,8 +6,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 /* eslint-disable-next-line import/default */
 import qs from "qs";
 import { useEffect } from "react";
-import { hasRole } from "shared";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import {hasRole, RoleEnum} from 'shared';
+import { isCampagneEnCours } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/intentions/utils/statutUtils";
@@ -31,8 +31,8 @@ export default ({
     numero: string;
   };
 }) => {
-  const { auth } = useAuth();
-  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
+  const { user } = useAuth();
+  const isPerdir = hasRole({ user, role: RoleEnum["perdir"] });
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -74,8 +74,6 @@ export default ({
       displayType: DisplayTypeEnum.commentairesEtAvis,
     });
 
-  const isCampagneEnCours = intention?.campagne?.statut === CampagneStatutEnum["en cours"];
-
   if (isLoading) return <SyntheseSpinner />;
   if (!intention) return null;
 
@@ -99,13 +97,12 @@ export default ({
             },
           ]}
         />
-        {isCampagneEnCours ? (
+        {isCampagneEnCours(intention.campagne) ? (
           <Flex direction={"column"} gap={8}>
             <StepperSection intention={intention} />
             <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
               <GridItem colSpan={isChangementStatutAvisDisabled(intention.statut) && !isPerdir ? 4 : 3}>
                 <MainSection
-                  isCampagneEnCours={isCampagneEnCours}
                   intention={intention}
                   displayType={searchParams.displayType ?? DisplayTypeEnum.synthese}
                   displaySynthese={displaySynthese}
@@ -130,7 +127,6 @@ export default ({
             displayType={searchParams.displayType ?? DisplayTypeEnum.synthese}
             displaySynthese={displaySynthese}
             displayCommentairesEtAvis={displayCommentairesEtAvis}
-            isCampagneEnCours={isCampagneEnCours}
           />
         )}
       </Flex>

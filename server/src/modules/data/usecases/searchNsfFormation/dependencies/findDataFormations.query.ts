@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
+import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 import type { searchNsfFormationSchema } from "shared/routes/schemas/get.nsf-diplome.search.search.schema";
 import type { z } from "zod";
 
@@ -48,8 +49,8 @@ export const findManyInDataFormationQuery = async ({
         ),
         eb.or([
           eb("formationView.typeFamille", "is", null),
-          eb("formationView.typeFamille", "=", "specialite"),
-          eb("formationView.typeFamille", "=", "option"),
+          eb("formationView.typeFamille", "=", TypeFamilleEnum["specialite"]),
+          eb("formationView.typeFamille", "=", TypeFamilleEnum["option"]),
         ]),
       ])
     )

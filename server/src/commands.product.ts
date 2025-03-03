@@ -106,8 +106,16 @@ export function productCommands(cli: Command) {
     .requiredOption("--lastname <string>")
     .requiredOption("--role <string>")
     .option("--codeRegion <string>")
+    .option("--uai <string>")
     .action(
-      async (options: { email: string; firstname: string; lastname: string; role: Role; codeRegion?: string }) => {
+      async (options: {
+        email: string;
+        firstname: string;
+        lastname: string;
+        role: Role;
+        codeRegion?: string;
+        uai?: string;
+    }) => {
         await createUser({ body: options });
         await createJob({ name: "createUser" });
       }

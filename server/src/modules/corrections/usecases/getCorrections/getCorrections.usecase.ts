@@ -3,7 +3,7 @@ import type { FiltersSchema } from "shared/routes/schemas/get.corrections.schema
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { getCurrentCampagneQuery } from "@/modules/corrections/queries/getCurrentCampagne/getCurrentCampagne.query";
+import { getCurrentCampagne } from '@/modules/utils/getCurrentCampagne';
 
 import { getCampagneQuery, getCorrectionsQuery, getFiltersQuery, getStatsCorrectionsQuery } from "./deps";
 
@@ -22,15 +22,16 @@ const getCorrectionsFactory =
     deps = {
       getCorrectionsQuery,
       getStatsCorrectionsQuery,
-      getCurrentCampagneQuery,
+      getCurrentCampagne,
       getCampagneQuery,
       getFiltersQuery,
     }
   ) =>
     async (activeFilters: ActiveFilters) => {
-      const campagne = await deps.getCurrentCampagneQuery();
-      const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
-      const [stats, { count, corrections }, filters] = await Promise.all([
+      const currentCampagne = await deps.getCurrentCampagne(activeFilters.user);
+      const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
+
+      const [stats, corrections, campagne, filters] = await Promise.all([
         deps.getStatsCorrectionsQuery({
           ...activeFilters,
           campagne: anneeCampagne,
@@ -39,6 +40,10 @@ const getCorrectionsFactory =
           ...activeFilters,
           campagne: anneeCampagne,
         }),
+        deps.getCampagneQuery({
+          ...activeFilters,
+          anneeCampagne,
+        }),
         deps.getFiltersQuery({
           ...activeFilters,
           campagne: anneeCampagne,
@@ -46,8 +51,8 @@ const getCorrectionsFactory =
       ]);
 
       return {
-        corrections,
-        count,
+        ...corrections,
+        campagne,
         stats,
         filters,
       };

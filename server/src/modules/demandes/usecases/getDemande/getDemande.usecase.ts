@@ -1,5 +1,13 @@
-import type { Filters } from "./getDemande.query";
+import type {FiltersSchema} from 'shared/routes/schemas/get.demande.numero.schema';
+import type {z} from 'zod';
+
+import type {RequestUser} from '@/modules/core/model/User';
+
 import { getDemandeQuery } from "./getDemande.query";
+
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+}
 
 const getDemandeFactory =
   (
@@ -8,6 +16,7 @@ const getDemandeFactory =
     }
   ) =>
     async ({ numero, user }: Filters) => {
+
       return await deps.getDemandeQuery({
         numero: numero,
         user,

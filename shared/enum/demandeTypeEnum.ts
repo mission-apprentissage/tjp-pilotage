@@ -14,4 +14,4 @@ export const DemandeTypeZodType = z.enum([
 
 export const DemandeTypeEnum = DemandeTypeZodType.Enum;
 
-export type DemandeType = z.infer<typeof DemandeTypeZodType>;
+export type DemandeTypeType = z.infer<typeof DemandeTypeZodType>;

@@ -1,3 +1,4 @@
+import {RoleEnum} from 'shared/enum/roleEnum';
 import { describe, expect, it, vi } from "vitest";
 
 import { editUserFactory } from "./editUser.usecase";
@@ -5,7 +6,7 @@ const user = {
   email: "test@test.fr",
   firstname: "firstname",
   lastname: "lastname",
-  role: "admin",
+  role: RoleEnum["admin"],
   codeRegion: "84",
   enabled: true,
 } as const;
@@ -16,7 +17,7 @@ const requestUser = {
   firstname: "firstname",
   lastname: "lastname",
   password: "password",
-  role: "admin",
+  role: RoleEnum["admin"],
 } as const;
 
 describe("createUser usecase", () => {
@@ -51,14 +52,14 @@ describe("createUser usecase", () => {
           editUser({
             userId: "test",
             data: user,
-            requestUser: { ...requestUser, role: "admin_region" },
+            requestUser: { ...requestUser, role: RoleEnum["admin_region"] },
           })
         ).rejects.toThrow("cannot edit user with this role");
         await expect(async () =>
           editUser({
             userId: "test",
-            data: { ...user, role: "admin_region" },
-            requestUser: { ...requestUser, role: "admin_region" },
+            data: { ...user, role: RoleEnum["admin_region"] },
+            requestUser: { ...requestUser, role: RoleEnum["admin_region"] },
           })
         ).rejects.toThrow("cannot edit user with this role");
       });
@@ -71,10 +72,10 @@ describe("createUser usecase", () => {
         await expect(async () =>
           editUser({
             userId: "test",
-            data: { ...user, codeRegion: "84", role: "pilote_region" },
+            data: { ...user, codeRegion: "84", role: RoleEnum["pilote_region"] },
             requestUser: {
               ...requestUser,
-              role: "admin_region",
+              role: RoleEnum["admin_region"],
               codeRegion: "76",
             },
           })

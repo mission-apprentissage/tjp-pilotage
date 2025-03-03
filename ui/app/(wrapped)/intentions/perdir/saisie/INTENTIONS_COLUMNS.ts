@@ -1,5 +1,6 @@
-import type { client } from "@/api.client";
 import type { ExportColumns } from "@/utils/downloadExport";
+
+import type { Intentions } from "./types";
 
 export const INTENTIONS_COLUMNS = {
   numero: "N°Demande",
@@ -65,7 +66,7 @@ export const INTENTIONS_COLUMNS = {
   avis9: "Avis 10",
   lastChangementStatutCommentaire: "Commentaire du dernier changement de statut",
 } satisfies ExportColumns<
-  (typeof client.infer)["[GET]/intentions"]["intentions"][number] & {
+  Intentions[number] & {
     [key: `avis${number}`]: string;
   }
 >;

@@ -30,17 +30,17 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import type { CampagneType } from "shared/schema/campagneSchema";
+import type { UserType } from "shared/schema/userSchema";
 
 import { client } from "@/api.client";
-import type { MotifCorrectionCampagne } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
-import { MOTIFS_CORRECTION_LABELS } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
-import { feature } from "@/utils/feature";
-import { usePermission } from "@/utils/security/usePermission";
+import type { Demandes } from "@/app/(wrapped)/intentions/saisie/types";
+import type { AnneeCampagneMotifCorrection} from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
+import { getMotifCorrectionOptionsParAnneeCampagne } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 
 export const CorrectionDemandeButton = chakra(
-  ({ demande }: { demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0] }) => {
+  ({ user, demande, campagne }: { user?: UserType; demande: Demandes[0], campagne: CampagneType }) => {
     const toast = useToast();
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -90,107 +90,99 @@ export const CorrectionDemandeButton = chakra(
 
     const [annulationDemandeStep, setAnnulationDemandeStep] = useState<1 | 2>(1);
 
-    const getMotifCorrectionLabel = (campagne: string = CURRENT_ANNEE_CAMPAGNE) => {
-      return Object.entries(MOTIFS_CORRECTION_LABELS[campagne as MotifCorrectionCampagne]).map(([value, label]) => ({
-        value,
-        label,
-      }));
-    };
-
-    const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
-
-    const showCorrectionButton =
-      feature.correction && demande.statut === DemandeStatutEnum["demande validée"] && hasPermissionSubmitIntention;
-
     return (
       <>
-        {showCorrectionButton &&
-          (isCorrected ? (
-            <Tooltip label="Demande déjà corrigée">
-              <Button
-                ms={2}
-                disabled={isCorrected}
-                rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
-                bgColor={"transparent"}
-                border={"1px solid"}
-                borderColor={bluefrance113}
-                borderRadius="0"
-                p={2}
-                h={"fit-content"}
-                opacity={0.3}
-                cursor={"not-allowed"}
-              >
-                <Flex direction={"row"} gap={2}>
-                  <Text color={bluefrance113}>Corriger la demande</Text>
-                </Flex>
-              </Button>
-            </Tooltip>
-          ) : (
-            <Menu gutter={0} matchWidth={true}>
-              <MenuButton
-                ms={2}
-                as={Button}
-                rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
-                bgColor={"transparent"}
-                border={"1px solid"}
-                borderColor={bluefrance113}
-                borderRadius="0"
-                p={2}
-                h={"fit-content"}
+        {isCorrected ? (
+          <Tooltip label="Demande déjà corrigée">
+            <Button
+              ms={2}
+              disabled={isCorrected}
+              rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
+              bgColor={"transparent"}
+              border={"1px solid"}
+              borderColor={bluefrance113}
+              borderRadius="0"
+              p={2}
+              h={"fit-content"}
+              opacity={0.3}
+              cursor={"not-allowed"}
+            >
+              <Flex direction={"row"} gap={2}>
+                <Text color={bluefrance113}>Corriger la demande</Text>
+              </Flex>
+            </Button>
+          </Tooltip>
+        ) : (
+          <Menu gutter={0} matchWidth={true}>
+            <MenuButton
+              ms={2}
+              as={Button}
+              rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
+              bgColor={"transparent"}
+              border={"1px solid"}
+              borderColor={bluefrance113}
+              borderRadius="0"
+              p={2}
+              h={"fit-content"}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <Flex direction={"row"} gap={2}>
+                <Text color={bluefrance113}>Corriger la demande</Text>
+              </Flex>
+            </MenuButton>
+            <MenuList p={0}>
+              <MenuItem
+                px={2}
+                py={3}
                 onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
+                  router.push(
+                    getRoutingSaisieRecueilDemande({
+                      campagne,
+                      user,
+                      suffix: `${demande.numero}?correction=true`
+                    }));
                 }}
               >
-                <Flex direction={"row"} gap={2}>
-                  <Text color={bluefrance113}>Corriger la demande</Text>
+                <Flex direction={"row"} h={"100%"} gap={2}>
+                  <Icon icon="ri:scales-3-line" color={bluefrance113} width={"18px"} />
+                  <Text color={bluefrance113}>Rectifier les capacités</Text>
                 </Flex>
-              </MenuButton>
-              <MenuList p={0}>
-                <MenuItem
-                  px={2}
-                  py={3}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    router.push(`/intentions/saisie/${demande.numero}?correction=true`);
-                  }}
-                >
-                  <Flex direction={"row"} h={"100%"} gap={2}>
-                    <Icon icon="ri:scales-3-line" color={bluefrance113} width={"18px"} />
-                    <Text color={bluefrance113}>Rectifier les capacités</Text>
-                  </Flex>
-                </MenuItem>
-                <MenuItem
-                  px={2}
-                  py={3}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onOpenModalReport();
-                  }}
-                >
-                  <Flex direction={"row"} h={"100%"} gap={2}>
-                    <Icon icon="ri:corner-up-left-line" color={bluefrance113} width={"18px"} />
-                    <Text color={bluefrance113}>Reporter la demande</Text>
-                  </Flex>
-                </MenuItem>
-                <MenuItem
-                  px={2}
-                  py={3}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onOpenModalAnnulation();
-                  }}
-                >
-                  <Flex direction={"row"} h={"100%"} gap={2}>
-                    <Icon icon="ri:close-line" color={bluefrance113} width={"18px"} />
-                    <Text color={bluefrance113}>Annuler la demande</Text>
-                  </Flex>
-                </MenuItem>
-              </MenuList>
-            </Menu>
-          ))}
+              </MenuItem>
+              <MenuItem
+                px={2}
+                py={3}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onOpenModalReport();
+                }}
+              >
+                <Flex direction={"row"} h={"100%"} gap={2}>
+                  <Icon icon="ri:corner-up-left-line" color={bluefrance113} width={"18px"} />
+                  <Text color={bluefrance113}>Reporter la demande</Text>
+                </Flex>
+              </MenuItem>
+              <MenuItem
+                px={2}
+                py={3}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onOpenModalAnnulation();
+                }}
+              >
+                <Flex direction={"row"} h={"100%"} gap={2}>
+                  <Icon icon="ri:close-line" color={bluefrance113} width={"18px"} />
+                  <Text color={bluefrance113}>Annuler la demande</Text>
+                </Flex>
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        )}
         <Modal
           isOpen={isOpenModalReport}
           onClose={() => {
@@ -281,11 +273,14 @@ export const CorrectionDemandeButton = chakra(
                       })}
                       mb={4}
                     >
-                      {getMotifCorrectionLabel().map((motif) => (
-                        <option key={motif.value} value={motif.value}>
-                          {motif.label}
-                        </option>
-                      ))}
+                      {
+                        getMotifCorrectionOptionsParAnneeCampagne(campagne.annee as AnneeCampagneMotifCorrection).map(
+                          (motif) => (
+                            <option key={motif.value} value={motif.value}>
+                              {motif.label}
+                            </option>
+                          ))
+                      }
                     </Select>
                     {!!formReport.formState.errors.motif && (
                       <FormErrorMessage>{formReport.formState.errors.motif.message}</FormErrorMessage>
@@ -411,11 +406,14 @@ export const CorrectionDemandeButton = chakra(
                       isRequired={true}
                       mb={4}
                     >
-                      {getMotifCorrectionLabel().map((motif) => (
-                        <option key={motif.value} value={motif.value}>
-                          {motif.label}
-                        </option>
-                      ))}
+                      {
+                        getMotifCorrectionOptionsParAnneeCampagne(campagne.annee as AnneeCampagneMotifCorrection).map(
+                          (motif) => (
+                            <option key={motif.value} value={motif.value}>
+                              {motif.label}
+                            </option>
+                          ))
+                      }
                     </Select>
                   </FormControl>
                   <FormControl>

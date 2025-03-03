@@ -1,12 +1,12 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { CampagneType } from "shared/schema/campagneSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/saisie/DEMANDES_COLUMNS";
-import type { Campagnes, Filters } from "@/app/(wrapped)/intentions/saisie/types";
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
+import type { Filters } from "@/app/(wrapped)/intentions/saisie/types";
 import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { Multiselect } from "@/components/Multiselect";
@@ -20,27 +20,27 @@ export const Header = ({
   getDemandesQueryParameters,
   searchDemande,
   setSearchDemande,
-  campagnes,
   campagne,
-  diplomes,
-  academies,
   filterTracker,
   handleFilters,
+  diplomes,
+  academies,
+  campagnes,
 }: {
   activeFilters: Filters;
   setSearchParams: (params: { filters: Partial<Filters> }) => void;
   getDemandesQueryParameters: (qLimit?: number, qOffset?: number) => Partial<Filters>;
   searchDemande?: string;
   setSearchDemande: (search: string) => void;
-  campagnes?: Campagnes;
   campagne?: {
     annee: string;
     statut: string;
   };
   filterTracker: (filterName: keyof Filters) => () => void;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-  diplomes: OptionSchema[];
-  academies: OptionSchema[];
+  diplomes: OptionType[];
+  academies: OptionType[];
+  campagnes?: CampagneType[];
 }) => {
   const trackEvent = usePlausible();
   const anneeCampagne = activeFilters.campagne ?? campagne?.annee;
@@ -67,23 +67,6 @@ export const Header = ({
   return (
     <Flex gap={2} mb={2}>
       <Flex direction={"column"} gap={1} flex={1}>
-        {isSaisieDisabled() && (
-          <Flex
-            borderLeftWidth={5}
-            borderLeftColor={"bluefrance.113"}
-            bgColor={"grey.975"}
-            direction={"column"}
-            gap={2}
-            padding={5}
-            mb={8}
-          >
-            <Text fontWeight={700}>Campagne de saisie 2023 terminée</Text>
-            <Text fontWeight={400}>
-              La campagne de saisie 2023 est terminée, vous pourrez saisir vos demandes pour la campagne de saisie 2024
-              d'ici le 15 avril.
-            </Text>
-          </Flex>
-        )}
         <Flex direction={"row"} flex={1} justifyContent={"space-between"}>
           <Flex direction={"row"} gap={2} flex={1}>
             <Flex direction={"column"}>
@@ -97,7 +80,7 @@ export const Header = ({
                   borderStyle="solid"
                   borderColor="grey.900"
                 >
-                  <Flex direction="row">
+                  <Flex direction="row" gap={2}>
                     <Text my={"auto"}>Campagne {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}</Text>
                     <CampagneStatutTag statut={campagnes?.find((c) => c.annee === anneeCampagne)?.statut} />
                   </Flex>
@@ -116,7 +99,7 @@ export const Header = ({
                         });
                       }}
                     >
-                      <Flex direction="row">
+                      <Flex direction="row" gap={2}>
                         <Text my={"auto"}>Campagne {campagne.annee}</Text>
                         <CampagneStatutTag statut={campagne.statut} />
                       </Flex>

@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import NextLink from 'next/link';
 import { useMemo } from "react";
 import { CURRENT_RENTREE } from "shared";
+import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
 import type {
   ChiffresEntreeOffre,
@@ -25,7 +26,7 @@ const isAnyDataMissingOfChiffresEntreeOffre = (chiffresEntreeOffre?: ChiffresEnt
 
 const isAnyDataMissingOfChiffresIJ = (formation?: Formation, chiffresIJOffre?: ChiffresIJOffre) => {
   if (!chiffresIJOffre) {
-    if (formation && (formation.typeFamille === "2nde_commune" || formation.typeFamille === "1ere_commune")) {
+    if (formation && (formation.typeFamille === TypeFamilleEnum["2nde_commune"] || formation.typeFamille === TypeFamilleEnum[TypeFamilleEnum["1ere_commune"]])) {
       return false;
     }
     return true;
@@ -48,15 +49,15 @@ const isAnyDataMissingOfEffectifs = (formation?: Formation, chiffresEntreeOffre?
     return true;
   }
 
-  if (formation.typeFamille === "2nde_commune") {
+  if (formation.typeFamille ===TypeFamilleEnum["2nde_commune"]) {
     return typeof chiffresEntreeOffre.effectifAnnee1 === "undefined";
   }
 
-  if (formation.typeFamille === "1ere_commune") {
+  if (formation.typeFamille === TypeFamilleEnum["1ere_commune"]) {
     return typeof chiffresEntreeOffre.effectifAnnee1 === "undefined";
   }
 
-  if (formation.typeFamille === "specialite") {
+  if (formation.typeFamille === TypeFamilleEnum["specialite"]) {
     if (chiffresEntreeOffre.dateOuverture - Number(CURRENT_RENTREE) === 0) {
       return typeof chiffresEntreeOffre.effectifAnnee2 === "undefined";
     }
@@ -67,7 +68,7 @@ const isAnyDataMissingOfEffectifs = (formation?: Formation, chiffresEntreeOffre?
     );
   }
 
-  if (formation.typeFamille === "option") {
+  if (formation.typeFamille === TypeFamilleEnum["option"]) {
     return typeof chiffresEntreeOffre.effectifAnnee2 === "undefined";
   }
 

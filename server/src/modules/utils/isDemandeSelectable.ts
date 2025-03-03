@@ -1,58 +1,42 @@
 import * as Boom from "@hapi/boom";
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import { getPermissionScope } from "shared";
+import {getPermissionScope, RoleEnum} from 'shared';
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import type { DB } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
+
 export const isDemandeSelectable =
   ({ user }: { user: RequestUser }) =>
     (eb: ExpressionBuilder<DB, "demande">) => {
-      const { filter, draftFilter } = getDemandeSelectableFilters(user);
+      const filters = getDemandeSelectableFilters(user);
 
-      return eb.or([
-        eb.and([
-          eb("demande.statut", "=", DemandeStatutEnum["proposition"]),
-          draftFilter.codeRegion ? eb("demande.codeRegion", "=", draftFilter.codeRegion) : sql<boolean>`true`,
-          draftFilter.role == "invite" ? sql<boolean>`false` : sql<boolean>`true`,
-        ]),
-        eb.and([
-          eb("demande.statut", "!=", DemandeStatutEnum["proposition"]),
-          filter.codeRegion ? eb("demande.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
-          filter.uais ? eb("demande.uai", "in", filter.uais) : sql<boolean>`true`,
-          filter.role === "invite" ? sql<boolean>`false` : sql<boolean>`true`,
-        ]),
-        eb.and([
-          filter.role === "invite" ? sql<boolean>`true` : sql<boolean>`false`,
-          filter.codeRegion ? eb("demande.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
+      if(filters.role === RoleEnum["invite"]) return eb
+        .and([
+          filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
           eb("demande.statut", "in", [DemandeStatutEnum["demande validée"], DemandeStatutEnum["refusée"]]),
-        ]),
+        ]);
+
+      return eb.and([
+        filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
+        filters.uais ? eb("demande.uai", "in", filters.uais) : sql<boolean>`true`,
       ]);
     };
 
 const getDemandeSelectableFilters = (user?: RequestUser) => {
   if (!user) throw new Error("missing variable user");
   const scope = getPermissionScope(user?.role, "intentions/lecture");
-  if (!scope?.draft) throw Boom.forbidden();
+  if (!scope) throw Boom.forbidden();
 
-  const draftFilter = {
+  return {
     national: {},
-    region: { codeRegion: user.codeRegion },
+    région: { codeRegion: user.codeRegion },
     user: { userId: user.id },
     uai: { uais: user.uais ?? [] },
     role: { role: user.role, codeRegion: user.codeRegion },
-  }[scope?.draft];
-
-  const filter = {
-    national: {},
-    region: { codeRegion: user.codeRegion },
-    user: { userId: user.id },
-    uai: { uais: user.uais ?? [] },
-    role: { role: user.role, codeRegion: user.codeRegion },
-  }[scope?.default];
-
-  return { filter, draftFilter };
+  }[scope];
 };
 
 export const isDemandeNotDeleted = (eb: ExpressionBuilder<DB, "demande">) =>
@@ -76,48 +60,32 @@ export const isIntentionBrouillonVisible =
 export const isIntentionSelectable =
   ({ user }: { user: RequestUser }) =>
     (eb: ExpressionBuilder<DB, "intention">) => {
-      const { filter, draftFilter } = getIntentionSelectableFilters(user);
-      return eb.or([
-        eb.and([
-          eb("intention.statut", "=", DemandeStatutEnum["proposition"]),
-          draftFilter.uais ? eb.or(draftFilter.uais.map((uai) => eb("intention.uai", "=", uai))) : sql<boolean>`true`,
-          draftFilter.codeRegion ? eb("intention.codeRegion", "=", draftFilter.codeRegion) : sql<boolean>`true`,
-          filter.role === "invite" ? sql<boolean>`false` : sql<boolean>`true`,
-        ]),
-        eb.and([
-          eb("intention.statut", "!=", DemandeStatutEnum["proposition"]),
-          filter.uais ? eb.or(filter.uais.map((uai) => eb("intention.uai", "=", uai))) : sql<boolean>`true`,
-          filter.codeRegion ? eb("intention.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
-          filter.role === "invite" ? sql<boolean>`false` : sql<boolean>`true`,
-        ]),
-        eb.and([
-          filter.role === "invite" ? sql<boolean>`true` : sql<boolean>`false`,
-          filter.codeRegion ? eb("intention.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
+      const filters = getIntentionSelectableFilters(user);
+
+      if(filters.role === RoleEnum["invite"]) return eb
+        .and([
+          filters.codeRegion ? eb("intention.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
           eb("intention.statut", "in", [DemandeStatutEnum["demande validée"], DemandeStatutEnum["refusée"]]),
-        ]),
+        ]);
+
+      return eb.and([
+        filters.codeRegion ? eb("intention.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
+        filters.uais ? eb("intention.uai", "in", filters.uais) : sql<boolean>`true`,
       ]);
     };
 
 const getIntentionSelectableFilters = (user?: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">) => {
   if (!user) throw new Error("missing variable user");
-  const scope = getPermissionScope(user?.role, "intentions-perdir/lecture");
-  if (!scope?.draft) throw Boom.forbidden();
+  const scope = getPermissionScope(user?.role, PermissionEnum["intentions-perdir/lecture"]);
+  if (!scope) throw Boom.forbidden();
 
-  const draftFilter = {
+  return {
     national: {},
-    region: { codeRegion: user.codeRegion },
+    région: { codeRegion: user.codeRegion },
     uai: { uais: user.uais },
     role: { role: user.role, codeRegion: user.codeRegion },
-  }[scope?.draft];
-
-  const filter = {
-    national: {},
-    region: { codeRegion: user.codeRegion },
-    uai: { uais: user.uais },
-    role: { role: user.role, codeRegion: user.codeRegion },
-  }[scope?.default];
-
-  return { filter, draftFilter };
+    user: { userId: user.id },
+  }[scope];
 };
 
 export const isIntentionNotDeleted = (eb: ExpressionBuilder<DB, "intention">) =>

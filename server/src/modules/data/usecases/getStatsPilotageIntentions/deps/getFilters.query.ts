@@ -6,6 +6,7 @@ import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getStatsPilotageIntentions/getStatsPilotageIntentions.usecase";
 import {
   isInPerimetreIJAcademie,
   isInPerimetreIJDepartement,
@@ -13,8 +14,6 @@ import {
 } from "@/modules/data/utils/isInPerimetreIJ";
 import { isDemandeNotDeletedOrRefused } from "@/modules/utils/isDemandeSelectable";
 import { cleanNull } from "@/utils/noNull";
-
-import type { Filters } from "./getStatsPilotageIntentions.query";
 
 export const getFiltersQuery = async ({
   statut,

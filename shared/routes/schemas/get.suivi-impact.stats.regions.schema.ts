@@ -17,7 +17,7 @@ const StatsRegionLineSchema = z.object({
   tauxTransformationCumulePrevisionnel: TauxTransformationSchema.optional(),
 });
 
-const FiltersRegionsSchema = z.object({
+export const FiltersRegionsSchema = z.object({
   codeNiveauDiplome: z.string().optional(),
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: StatsRegionLineSchema.keyof().optional(),

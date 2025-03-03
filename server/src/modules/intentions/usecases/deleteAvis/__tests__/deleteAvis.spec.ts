@@ -4,6 +4,7 @@ import { buildAvis, clearAvis } from "@tests/utils/schema/avis.spec.utils";
 import type { Intention } from "@tests/utils/schema/intentions.spec.utils";
 import { createIntentionBuilder } from "@tests/utils/schema/intentions.spec.utils";
 import { createUserBuilder, generateAuthCookie } from "@tests/utils/schema/users.spec.utils";
+import {RoleEnum} from 'shared/enum/roleEnum';
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import type { RequestUser } from "@/modules/core/model/User";
@@ -118,15 +119,15 @@ describe("[DELETE]/intention/avis/:id", () => {
           user = undefined;
         },
         utilisateurNonAuthorise: async () => {
-          user = await createUserBuilder().withRole("invite").create();
+          user = await createUserBuilder().withRole(RoleEnum["invite"]).create();
         },
         utilisateurPiloteRegion: async (data: Partial<RequestUser> = {}) => {
           user = await createUserBuilder(data)
-            .withRole("pilote_region")
+            .withRole(RoleEnum["pilote_region"])
             .create();
         },
         utilisateurNational: async () => {
-          user = await createUserBuilder().withRole("admin").create();
+          user = await createUserBuilder().withRole(RoleEnum["admin"]).create();
         },
         intentionExistante: async (data: Partial<Intention> = {}) => {
           if (user) {

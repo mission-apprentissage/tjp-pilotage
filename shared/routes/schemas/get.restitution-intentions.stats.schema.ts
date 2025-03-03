@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
-import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 
 const CountCapaciteStatsDemandesSchema = z.object({
@@ -19,7 +18,7 @@ export const FiltersSchema = z.object({
   codeDepartement: z.array(z.string()).optional(),
   uai: z.array(z.string()).optional(),
   rentreeScolaire: z.string().optional(),
-  typeDemande: z.array(DemandeTypeZodType).optional(),
+  typeDemande: z.array(z.string()).optional(),
   statut: z.array(DemandeStatutZodType.exclude(["supprimée"])).optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
   cfd: z.array(z.string()).optional(),

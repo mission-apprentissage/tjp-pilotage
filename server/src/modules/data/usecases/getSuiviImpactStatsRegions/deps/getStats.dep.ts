@@ -7,6 +7,7 @@ import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 
 import { getKbdClient } from "@/db/db";
 import type { DB } from "@/db/schema";
+import type { Filters } from "@/modules/data/usecases/getSuiviImpactStatsRegions/getSuiviImpactStatsRegions.usecase";
 import { effectifTauxTransformationCumule } from "@/modules/data/utils/effectifTauxTransformationCumule";
 import { isInPerimetreIJRegion } from "@/modules/data/utils/isInPerimetreIJ";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
@@ -29,15 +30,7 @@ const dernierTauxDeChomage = (eb: ExpressionBuilder<DB, "indicateurRegion">) => 
   ]);
 };
 
-export const getStatsRegions = async ({
-  codeNiveauDiplome,
-  orderBy = { order: "asc", column: "libelleRegion" },
-  rentreesScolaire,
-}: {
-  codeNiveauDiplome?: string;
-  orderBy?: { order: "asc" | "desc"; column: string };
-  rentreesScolaire: string[];
-}) => {
+export const getStatsRegions = async (filters: Filters) => {
   const rentreeScolaire = CURRENT_RENTREE;
 
   const stats = await getKbdClient()
@@ -46,13 +39,13 @@ export const getStatsRegions = async ({
       .leftJoin("formationScolaireView as formationView", "formationView.cfd", "indicateurRegionSortie.cfd")
       .leftJoin("indicateurRegion", "indicateurRegion.codeRegion", "indicateurRegionSortie.codeRegion")
       .leftJoin("region", "region.codeRegion", "indicateurRegionSortie.codeRegion")
-      .$call((q) => {
-        if (!codeNiveauDiplome) return q;
-        return q.where("formationView.codeNiveauDiplome", "in", [codeNiveauDiplome]);
+      .$call((eb) => {
+        if (filters.codeNiveauDiplome) eb.where("formationView.codeNiveauDiplome", "in", [filters.codeNiveauDiplome]);
+        return eb;
       })
-      .$call((q) => {
-        if (!rentreeScolaire?.length) return q;
-        return q.where(
+      .$call((eb) => {
+        if (!rentreeScolaire?.length) return eb;
+        return eb.where(
           "indicateurRegionSortie.millesimeSortie",
           "=",
           getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: 0 })
@@ -70,8 +63,8 @@ export const getStatsRegions = async ({
       .groupBy(["region.codeRegion", "region.libelleRegion",]))
     .with("tauxTransformationCumule", (qb) => qb.selectFrom(
       genericOnDemandes({
-        rentreeScolaire: rentreesScolaire,
-        codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined,
+        ...filters,
+        codeNiveauDiplome: filters.codeNiveauDiplome ? [filters.codeNiveauDiplome] : undefined,
         statut: [DemandeStatutEnum["demande validée"]],
       })
         .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])
@@ -79,7 +72,7 @@ export const getStatsRegions = async ({
         .as("demandes")
     )
       .leftJoin(
-        effectifTauxTransformationCumule({codeNiveauDiplome}).as("effectifs"),
+        effectifTauxTransformationCumule(filters).as("effectifs"),
         (join) => join.onRef("demandes.codeRegion", "=", "effectifs.codeRegion")
       )
       .select((eb) => [
@@ -95,18 +88,23 @@ export const getStatsRegions = async ({
             )
           END`.as("tauxTransformationCumule")
       ])
-      .$castTo<{codeRegion: string; effectifs: number; placesTransformees: number; tauxTransformationCumule: number;}>())
+      .$castTo<{
+        codeRegion: string;
+         effectifs: number;
+         placesTransformees: number;
+         tauxTransformationCumule: number;
+      }>())
     .with("tauxTransformationCumulePrevisionnel", (qb) => qb.selectFrom(
       genericOnDemandes({
-        rentreeScolaire: rentreesScolaire,
-        codeNiveauDiplome: codeNiveauDiplome ? [codeNiveauDiplome] : undefined,
+        ...filters,
+        codeNiveauDiplome: filters.codeNiveauDiplome ? [filters.codeNiveauDiplome] : undefined,
       })
         .select((eb) => [eb.ref("demande.codeRegion").as("codeRegion")])
         .groupBy(["demande.codeRegion"])
         .as("demandes")
     )
       .leftJoin(
-        effectifTauxTransformationCumule({codeNiveauDiplome}).as("effectifs"),
+        effectifTauxTransformationCumule(filters).as("effectifs"),
         (join) => join.onRef("demandes.codeRegion", "=", "effectifs.codeRegion")
       )
       .select((eb) => [
@@ -152,11 +150,11 @@ export const getStatsRegions = async ({
       }).as("tauxTransformationCumulePrevisionnel"),
     ])
     .$call((q) => {
-      if (!orderBy) return q;
-      if (orderBy.column === "tauxTransformationCumule" || orderBy.column === "tauxTransformationCumulePrevisionnel") {
-        return q.orderBy(sql.ref(`${orderBy.column}.${orderBy.column}`), sql`${sql.raw(orderBy.order)} NULLS LAST`);
+      if (!filters.orderBy || !filters.order) return q;
+      if (filters.orderBy === "tauxTransformationCumule" || filters.orderBy === "tauxTransformationCumulePrevisionnel") {
+        return q.orderBy(sql.ref(`${filters.orderBy}.${filters.orderBy}`), sql`${sql.raw(filters.order)} NULLS LAST`);
       }
-      return q.orderBy(sql.ref(orderBy.column), sql`${sql.raw(orderBy.order)} NULLS LAST`);
+      return q.orderBy(sql.ref(filters.orderBy), sql`${sql.raw(filters.order)} NULLS LAST`);
     })
     .modifyEnd(sql.raw('\n-- Taux de transformation régional'))
     .execute();

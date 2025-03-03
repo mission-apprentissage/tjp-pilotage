@@ -2,29 +2,34 @@ import * as Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
+import type {FiltersSchema} from 'shared/routes/schemas/post.intention.import.numero.schema';
+import type {z} from 'zod';
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { getCurrentCampagneQuery } from "@/modules/demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
-import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
+import { getCurrentCampagne } from "@/modules/utils/getCurrentCampagne";
 import logger from "@/services/logger";
 
 import { createDemandeQuery } from "./dependencies/createDemande.dep";
 import { getDemandeWithMetadata } from "./dependencies/getDemandeWithMetadata";
 import { hasAlreadyBeenImported } from "./dependencies/hasAlreadyBeenImported";
 
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+}
 export const [importDemande, importDemandeFactory] = inject(
   {
     createDemandeQuery,
-    findOneDemande,
-    getCurrentCampagneQuery,
+    findOneDemandeQuery,
+    getCurrentCampagne,
     getDemandeWithMetadata,
     hasAlreadyBeenImported,
   },
   (deps) =>
-    async ({ numero, user }: { user: Pick<RequestUser, "id" | "codeRegion" | "role">; numero: string }) => {
+    async ({ numero, user }: Filters) => {
       const [demande, campagne, alreadyImportedDemande] = await Promise.all([
-        deps.findOneDemande(numero),
-        deps.getCurrentCampagneQuery(),
+        deps.findOneDemandeQuery(numero),
+        deps.getCurrentCampagne(user),
         deps.hasAlreadyBeenImported({ numero }),
       ]);
 
@@ -69,8 +74,8 @@ export const [importDemande, importDemandeFactory] = inject(
       }
 
       const scope = getPermissionScope(user.role, "intentions/ecriture");
-      const isAllowed = guardScope(scope?.default, {
-        region: () => user.codeRegion === demande.codeRegion,
+      const isAllowed = guardScope(scope, {
+        région: () => user.codeRegion === demande.codeRegion,
         national: () => true,
       });
 

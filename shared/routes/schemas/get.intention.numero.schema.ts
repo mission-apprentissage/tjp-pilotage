@@ -4,7 +4,10 @@ import { AvisStatutZodType } from "../../enum/avisStatutEnum";
 import { AvisTypeZodType } from "../../enum/avisTypeEnum";
 import { DemandeStatutEnum, DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
+import { RaisonCorrectionZodType } from '../../enum/raisonCorrectionEnum';
+import { CampagneSchema } from "../../schema/campagneSchema";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
+
 const UserSchema = z.object({
   fullname: z.string().optional(),
   id: z.string().optional(),
@@ -38,6 +41,25 @@ const MetadataSchema = z.object({
   formation: FormationMetadataSchema,
 });
 
+const CorrectionSchema = z.object({
+  intentionNumero: z.string().optional(),
+  libelleColoration: z.string().optional(),
+  coloration: z.boolean().optional(),
+  capaciteScolaireActuelle: z.coerce.number().optional(),
+  capaciteScolaire: z.coerce.number().optional(),
+  capaciteScolaireColoreeActuelle: z.coerce.number().optional(),
+  capaciteScolaireColoree: z.coerce.number().optional(),
+  capaciteApprentissageActuelle: z.coerce.number().optional(),
+  capaciteApprentissage: z.coerce.number().optional(),
+  capaciteApprentissageColoreeActuelle: z.coerce.number().optional(),
+  capaciteApprentissageColoree: z.coerce.number().optional(),
+  motif: z.string().optional(),
+  autreMotif: z.string().optional(),
+  raison: RaisonCorrectionZodType.optional(),
+  commentaire: z.string().optional(),
+  campagneId: z.string().optional(),
+});
+
 const IntentionSchema = z.object({
   uai: z.string(),
   cfd: z.string(),
@@ -58,6 +80,8 @@ const IntentionSchema = z.object({
   capaciteApprentissage: z.coerce.number().optional(),
   capaciteApprentissageColoreeActuelle: z.coerce.number().optional(),
   capaciteApprentissageColoree: z.coerce.number().optional(),
+  differenceCapaciteScolaire: z.coerce.number().optional(),
+  differenceCapaciteApprentissage: z.coerce.number().optional(),
   // Précisions
   motif: z.array(z.string()),
   autreMotif: z.string().optional(),
@@ -116,11 +140,7 @@ const IntentionSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   campagneId: z.string(),
-  campagne: z.object({
-    id: z.string().optional(),
-    annee: z.coerce.string().optional(),
-    statut: z.string().optional(),
-  }),
+  campagne: CampagneSchema,
   createdBy: UserSchema,
   updatedBy: UserSchema.optional(),
   libelleEtablissement: z.string().optional(),
@@ -129,8 +149,7 @@ const IntentionSchema = z.object({
   libelleFormation: z.string(),
   libelleDispositif: z.string(),
   formationSpecifique: FormationSpecifiqueFlagsSchema,
-  differenceCapaciteScolaire: z.coerce.number().optional(),
-  differenceCapaciteApprentissage: z.coerce.number().optional(),
+  correction: CorrectionSchema.optional(),
   changementsStatut: z.array(
     z.object({
       id: z.string(),
@@ -163,10 +182,14 @@ const IntentionSchema = z.object({
     })
   ),
   suiviId: z.string().optional(),
+  isIntention: z.boolean(),
 });
 
+export const FiltersSchema = z.object({ numero: z.string() });
+
+
 export const getIntentionSchema = {
-  params: z.object({ numero: z.string() }),
+  params: FiltersSchema,
   response: {
     200: IntentionSchema.merge(
       z.object({

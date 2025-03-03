@@ -2,10 +2,12 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Flex, FormControl, FormErrorMessage, Highlight,Menu, MenuButton, MenuItem, MenuList, Tag, Text } from '@chakra-ui/react';
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import {DemandeTypeEnum} from 'shared/enum/demandeTypeEnum';
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-import type { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
+import {shouldDisplayAjustement} from '@/app/(wrapped)/intentions/utils/typeDemandeUtils';
+import { useAuth } from "@/utils/security/useAuth";
 
 export const RentreeScolaireField = ({
   disabled,
@@ -14,17 +16,19 @@ export const RentreeScolaireField = ({
 }: {
   disabled?: boolean;
   className?: string;
-  campagne?: Campagne;
+  campagne: CampagneType;
 }) => {
+  const { user } = useAuth();
   const {
     formState: { errors },
     setValue,
+    resetField,
     watch,
-    resetField
   } = useFormContext<IntentionForms>();
 
-  const rentreeScolaireOptions = [0, 1, 2, 3, 4, 5].map(
-    (offsetRentree: number) => parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) + offsetRentree
+  const offsetsRentree = shouldDisplayAjustement(DemandeTypeEnum["ajustement"], user!) ? [0, 1, 2, 3, 4, 5] : [1, 2, 3, 4, 5];
+  const rentreeScolaireOptions = offsetsRentree.map(
+    (offsetRentree: number) => parseInt(campagne.annee) + offsetRentree
   );
 
   const rentreeScolaire = watch("rentreeScolaire") ?? rentreeScolaireOptions[1];
@@ -34,7 +38,7 @@ export const RentreeScolaireField = ({
       watch(({ rentreeScolaire, typeDemande }, { name }) => {
         if (name !== "rentreeScolaire") return;
         // Le type de demande ajustement est possible uniquement pour la rentrée scolaire actuelle
-        if (rentreeScolaire === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE)) {
+        if (rentreeScolaire === parseInt(campagne.annee)) {
           setValue("typeDemande", "ajustement");
         } else if (typeDemande === "ajustement") {
           resetField("typeDemande");
@@ -65,7 +69,7 @@ export const RentreeScolaireField = ({
         >
           <Flex direction="row">
             <Text ms={2}>{rentreeScolaire}</Text>
-            {rentreeScolaire === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) && (
+            {rentreeScolaire === parseInt(campagne.annee) && (
               <Tag mx={3} colorScheme="red">
                 Ajustement RS {rentreeScolaire}
               </Tag>
@@ -81,7 +85,7 @@ export const RentreeScolaireField = ({
             >
               <Flex direction="row" w="100%">
                 <Text ms={2}>{rentreeScolaireOption}</Text>
-                {rentreeScolaireOption === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) && (
+                {rentreeScolaireOption === parseInt(campagne.annee) && (
                   <Tag mx={3} colorScheme="red">
                     Ajustement RS {rentreeScolaireOption}
                   </Tag>

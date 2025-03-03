@@ -8,7 +8,7 @@ import { useContext, useEffect } from "react";
 
 import type { client } from "@/api.client";
 import { DEFAULT_SEARCH_PARAMS } from "@/app/(wrapped)/panorama/types";
-import { CodeRegionFilterContext } from "@/app/layoutClient";
+import { CodeRegionContext } from "@/app/codeRegionContext";
 
 export function PanoramaSelection({
   regionOptions,
@@ -16,15 +16,15 @@ export function PanoramaSelection({
   readonly regionOptions: (typeof client.infer)["[GET]/regions"];
 }) {
   const router = useRouter();
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
+  const { codeRegion, setCodeRegion } = useContext(CodeRegionContext);
 
   useEffect(() => {
-    if (codeRegionFilter) onCodeRegionChanged(codeRegionFilter);
+    if (codeRegion) onCodeRegionChanged(codeRegion);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onCodeRegionChanged = (codeRegion: string) => {
-    setCodeRegionFilter(codeRegion);
+    setCodeRegion(codeRegion);
     router.push(`/panorama/region/${codeRegion}?${qs.stringify(DEFAULT_SEARCH_PARAMS)}`);
   };
 

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import type { Role } from "../permissions";
+import { PermissionScopeEnum } from "../../enum/permissionScopeEnum";
+import type {Role} from "../../enum/roleEnum";
+import { RoleEnum } from "../../enum/roleEnum";
 import { HIERARCHY, PERMISSIONS } from "../permissions";
 
 describe("Permissions", () => {
@@ -32,15 +34,18 @@ describe("Permissions", () => {
   describe("Cohérence des permissions", () => {
     it("devrait avoir des scopes valides", () => {
       // Given
-      const validScopes = ["national", "region", "uai", "user", "role"];
+      const validScopes = [
+        PermissionScopeEnum["national"],
+        PermissionScopeEnum["région"],
+        PermissionScopeEnum["uai"],
+        PermissionScopeEnum["user"],
+        PermissionScopeEnum["role"]
+      ];
 
       // Then
       Object.values(PERMISSIONS).forEach((rolePermissions) => {
         Object.values(rolePermissions).forEach((permission) => {
-          expect(validScopes).toContain(permission.default);
-          if (permission.draft) {
-            expect(validScopes).toContain(permission.draft);
-          }
+          expect(validScopes).toContain(permission);
         });
       });
     });
@@ -58,7 +63,7 @@ describe("Permissions", () => {
     it("un admin_region peut avoir tous les rôles sauf admin et pilote en sub", () => {
       // Given
       const admin_region = HIERARCHY.admin_region;
-      const allowedSubs = Object.keys(PERMISSIONS).filter((role) => role !== "admin" && role !== "pilote");
+      const allowedSubs = Object.keys(PERMISSIONS).filter((role) => role !== RoleEnum["admin"] && role !== RoleEnum["pilote"]);
 
       // Then
       expect(admin_region.sub.every((role) => allowedSubs.includes(role))).toBe(true);

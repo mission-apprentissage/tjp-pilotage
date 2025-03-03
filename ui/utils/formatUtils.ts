@@ -3,6 +3,7 @@ export const formatDate = ({
   date,
   options,
   dateTimeSeparator,
+  nullValue = ""
 }: {
   date?: string;
   options?: {
@@ -10,8 +11,9 @@ export const formatDate = ({
     timeStyle?: "short" | "medium" | "long" | "full";
   };
   dateTimeSeparator?: string;
+  nullValue?: string;
 }) => {
-  if (!date) return "";
+  if (!date) return nullValue;
   if (!dateTimeSeparator) return new Date(date).toLocaleString("fr-FR", options);
   const [datePart, timePart] = new Date(date).toLocaleString("fr-FR", options).split(" ");
   return `${datePart}${dateTimeSeparator}${timePart ?? ""}`;

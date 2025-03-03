@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import type { client } from "@/api.client";
 import type {
   IntentionForms,
   PartialIntentionForms,
 } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-import type { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
+import type { DemandeMetadata } from "@/app/(wrapped)/intentions/saisie/types";
 
 import { CfdBlock } from "./CfdBlock";
 import { DispositifBlock } from "./DispositifBlock";
@@ -46,7 +47,7 @@ const TagDemande = ({ statut }: { statut?: string }) => {
   }
 };
 
-const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
+const TagCampagne = ({ campagne }: { campagne?: CampagneType }) => {
   if (!campagne) return null;
   switch (campagne.statut) {
   case CampagneStatutEnum["en cours"]:
@@ -90,12 +91,12 @@ export const CfdUaiSection = ({
   isCFDUaiSectionValid,
   statusComponentRef,
 }: {
-  campagne?: Campagne;
+  campagne?: CampagneType;
   formId?: string;
   active: boolean;
   disabled?: boolean;
   defaultValues: PartialIntentionForms;
-  formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
+  formMetadata?: DemandeMetadata;
   onEditUaiCfdSection: () => void;
   isFCIL: boolean;
   setIsFCIL: (isFcil: boolean) => void;

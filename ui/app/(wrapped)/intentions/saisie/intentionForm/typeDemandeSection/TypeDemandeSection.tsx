@@ -3,16 +3,17 @@ import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { RefObject } from "react";
 import { useState } from "react";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import { DemandeTypeEnum } from 'shared/enum/demandeTypeEnum';
+import type { CampagneType } from 'shared/schema/campagneSchema';
 
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
-import type { Campagne, Demande } from "@/app/(wrapped)/intentions/saisie/types";
+import type {  Demande } from "@/app/(wrapped)/intentions/saisie/types";
+import { canCorrectDemande } from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
+import { shouldDisplayAjustement } from '@/app/(wrapped)/intentions/utils/typeDemandeUtils';
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
-import { feature } from "@/utils/feature";
-import { usePermission } from "@/utils/security/usePermission";
+import { getRoutingSaisieRecueilDemande } from '@/utils/getRoutingRecueilDemande';
+import { useAuth } from '@/utils/security/useAuth';
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { RentreeScolaireField } from "./RentreeScolaireField";
@@ -84,24 +85,16 @@ export const TypeDemandeSection = ({
   typeDemandeRef,
 }: {
   disabled: boolean;
-  campagne?: Campagne;
+  campagne: CampagneType;
   demande?: Demande;
   typeDemandeRef: RefObject<HTMLDivElement>;
 }) => {
+  const { user } = useAuth();
   const router = useRouter();
 
   const queryParams = useSearchParams();
-  const isCorrection = queryParams.get("correction");
-
-  const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
-
-  const showButtonCorrection =
-    feature.correction &&
-    isCorrection &&
-    demande &&
-    demande.statut === DemandeStatutEnum["demande validée"] &&
-    campagne?.statut === CampagneStatutEnum["terminée"] &&
-    hasPermissionSubmitIntention;
+  const isCorrection = queryParams.get("correction")
+   && canCorrectDemande({demande, user});
 
   return (
     <Flex ref={typeDemandeRef} scrollMarginTop={SCROLL_OFFSET} direction={"column"} gap={6}>
@@ -113,8 +106,8 @@ export const TypeDemandeSection = ({
       </Heading>
       <Divider />
       <RentreeScolaireField disabled={disabled} campagne={campagne} />
-      <InfoAjustementSection anneeCampagne={campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE} />
-      <TypeDemandeField disabled={disabled} maxWidth="752px" />
+      {shouldDisplayAjustement(DemandeTypeEnum["ajustement"], user!) && (<InfoAjustementSection anneeCampagne={campagne.annee} />)}
+      <TypeDemandeField disabled={disabled} maxWidth="752px" campagne={campagne} />
       <Tooltip label="Pour transférer des places d’un établissement vers un autre, vous devez faire 2 demandes : une fermeture dans l’établissement initial, et une ouverture dans le nouvel établissement (plusieurs demandes d’ouverture si les places sont transférées à plusieurs établissements)">
         <Flex
           direction={"row"}
@@ -129,20 +122,23 @@ export const TypeDemandeSection = ({
         </Flex>
       </Tooltip>
       <CapaciteSection disabled={disabled} />
-      {showButtonCorrection && (
+      {isCorrection && (
         <Flex justify={"right"}>
           <Button
             w="fit-content"
             bgColor="transparent"
             border="1px solid black"
             onClick={() => {
-              const link = isCorrection
-                ? `/intentions/saisie/${demande.numero}`
-                : `/intentions/saisie/${demande.numero}?correction=true`;
-              router.replace(link);
+              router.replace(
+                getRoutingSaisieRecueilDemande({
+                  campagne: demande!.campagne,
+                  user,
+                  suffix: `${demande!.numero}?correction=true`,
+                })
+              );
             }}
           >
-            {demande.correction ? "Consulter la correction" : "Rectifier les capacités"}
+            {demande!.correction ? "Consulter la correction" : "Rectifier les capacités"}
           </Button>
         </Flex>
       )}

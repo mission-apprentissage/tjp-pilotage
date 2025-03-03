@@ -7,10 +7,13 @@ import { usePlausible } from "next-plausible";
 /* eslint-disable-next-line import/default */
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
-import { PREVIOUS_ANNEE_CAMPAGNE } from "shared/time/PREVIOUS_ANNEE_CAMPAGNE";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
+import {SecteurEnum} from 'shared/enum/secteurEnum';
 
 import { client } from "@/api.client";
-import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
+import { CodeDepartementContext } from '@/app/codeDepartementContext';
+import { CodeRegionContext } from '@/app/codeRegionContext';
+import { PreviousCampagneContext } from '@/app/previousCampagneContext';
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { Loading } from "@/components/Loading";
 import { SearchInput } from "@/components/SearchInput";
@@ -76,8 +79,7 @@ const ColonneFiltersSection = chakra(
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default () => {
+const Page = () => {
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -104,11 +106,9 @@ export default () => {
     router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
 
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
-
-  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
-
-  const [campagneFilter, setCampagneFilter] = useState<string>(PREVIOUS_ANNEE_CAMPAGNE);
+  const { codeRegion, setCodeRegion } = useContext(CodeRegionContext);
+  const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
+  const { campagne } = useContext(PreviousCampagneContext);
 
   const trackEvent = usePlausible();
   const filterTracker = (filterName: keyof FiltersCorrections) => () => {
@@ -138,13 +138,10 @@ export default () => {
     if (value != null)
       switch (type) {
       case "codeRegion":
-        setCodeRegionFilter((value as string[])[0] ?? "");
+        setCodeRegion((value as string[])[0] ?? "");
         break;
       case "codeDepartement":
-        setCodeDepartementFilter((value as string[])[0] ?? "");
-        break;
-      case "campagne":
-        setCampagneFilter((value as string[])[0] ?? "");
+        setCodeDepartement((value as string[])[0] ?? "");
         break;
       }
   };
@@ -212,20 +209,20 @@ export default () => {
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeRegionFilter
+      codeRegion
     ) {
-      filters.codeRegion = [codeRegionFilter];
+      filters.codeRegion = [codeRegion];
     }
     if (
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeDepartementFilter
+      codeDepartement
     ) {
-      filters.codeDepartement = [codeDepartementFilter];
+      filters.codeDepartement = [codeDepartement];
     }
-    if (filters?.campagne === undefined && campagneFilter !== "") {
-      filters.campagne = campagneFilter;
+    if (filters?.campagne === undefined) {
+      filters.campagne = campagne?.annee;
     }
     setSearchParams({ filters: filters });
   };
@@ -242,12 +239,6 @@ export default () => {
       search: searchIntention,
     });
   };
-
-  useEffect(() => {
-    const campagneFilterNumber = parseInt(searchParams.filters?.campagne ?? "");
-    handleFilters("rentreeScolaire", campagneFilterNumber + 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams.filters?.campagne]);
 
   if (!feature.correction) {
     router.replace("/");
@@ -271,7 +262,7 @@ export default () => {
           hour: "2-digit",
           minute: "2-digit",
         }),
-        secteur: correction.secteur === "PU" ? "Public" : "Privé",
+        secteur: correction.secteur === SecteurEnum["PU"] ? "Public" : "Privé",
       })),
       CORRECTIONS_COLUMNS
     );
@@ -294,14 +285,14 @@ export default () => {
           hour: "2-digit",
           minute: "2-digit",
         }),
-        secteur: correction.secteur === "PU" ? "Public" : "Privé",
+        secteur: correction.secteur === SecteurEnum["PU"] ? "Public" : "Privé",
       })),
       CORRECTIONS_COLUMNS
     );
   };
 
   return (
-    <GuardPermission permission="restitution-intentions/lecture">
+    <GuardPermission permission={PermissionEnum["restitution-intentions/lecture"]}>
       <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20} flex={1}>
         <HeaderSection
           countData={data?.stats}
@@ -331,14 +322,18 @@ export default () => {
           count={data?.count}
           onPageChange={(newPage) => setSearchParams({ page: newPage })}
         />
-        <ConsoleSection
-          data={data}
-          isLoading={isLoading}
-          handleOrder={handleOrder}
-          order={order}
-          colonneFilters={colonneFilters}
-        />
+        {data && (
+          <ConsoleSection
+            data={data}
+            campagne={data.campagne}
+            isLoading={isLoading}
+            handleOrder={handleOrder}
+            order={order}
+            colonneFilters={colonneFilters}
+          />)
+        }
       </Container>
     </GuardPermission>
   );
 };
+export default Page;

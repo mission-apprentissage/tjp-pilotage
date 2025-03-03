@@ -1,12 +1,12 @@
 import { sql } from "kysely";
 
 import { getKbdClient } from "@/db/db";
+import type { Filters } from "@/modules/data/usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.usecase";
 import { isInPerimetreIJDataEtablissement } from "@/modules/data/utils/isInPerimetreIJ";
 import { isInDenominateurTauxTransfo } from "@/modules/utils/isInDenominateurTauxTransfo";
 
-import type { Filters } from "./getFormationsPilotageIntentions.dep";
 
-export const getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery = ({ ...filters }: Filters) => {
+export const getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery = (filters: Filters) => {
   return getKbdClient()
     .selectFrom("campagne")
     .leftJoin("constatRentree", (join) => join.onTrue())

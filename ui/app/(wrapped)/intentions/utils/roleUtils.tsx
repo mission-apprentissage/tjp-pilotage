@@ -1,24 +1,25 @@
-import type { Role } from "shared";
+import type {Role} from 'shared';
+import { RoleEnum} from 'shared';
 
 export const formatRole = (role: Role): string => {
   switch (role) {
-  case "admin":
+  case RoleEnum["admin"]:
     return "Administrateur";
-  case "pilote":
+  case RoleEnum["pilote"]:
     return "Pilote";
-  case "pilote_region":
+  case RoleEnum["pilote_region"]:
     return "Pilote région";
-  case "gestionnaire_region":
+  case RoleEnum["gestionnaire_region"]:
     return "Gestionnaire région";
-  case "region":
+  case RoleEnum["region"]:
     return "Utilisateur région";
-  case "expert_region":
+  case RoleEnum["expert_region"]:
     return "Gestionnaire région";
-  case "admin_region":
+  case RoleEnum["admin_region"]:
     return "Admin région";
-  case "perdir":
+  case RoleEnum["perdir"]:
     return "Perdir";
-  case "invite":
+  case RoleEnum["invite"]:
     return "Invité";
   default:
     return "";

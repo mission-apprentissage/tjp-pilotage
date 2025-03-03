@@ -1,14 +1,16 @@
+import {PermissionEnum} from 'shared/enum/permissionEnum';
+import { PermissionScopeEnum } from "shared/enum/permissionScopeEnum";
 import type { BodySchema } from "shared/routes/schemas/put.users.userId.schema";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { getScopeFilterForUser } from "@/modules/core/utils/getScopeFilterForUser";
 
 export function canEditUserInScope({ body, requestUser }: { body: BodySchema; requestUser: RequestUser }) {
-  const { scope, scopeFilter } = getScopeFilterForUser("users/ecriture", requestUser);
+  const { scope, scopeFilter } = getScopeFilterForUser(PermissionEnum["users/ecriture"], requestUser);
   switch (scope) {
-  case "national":
+  case PermissionScopeEnum["national"]:
     return true;
-  case "region":
+  case PermissionScopeEnum["région"]:
     return body.codeRegion !== null && scopeFilter.includes(body.codeRegion);
   default:
     return false;

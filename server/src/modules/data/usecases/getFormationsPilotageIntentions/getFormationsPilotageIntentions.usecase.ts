@@ -1,7 +1,11 @@
+import type {MILLESIMES_IJ} from 'shared';
+import type {FiltersSchema} from 'shared/routes/schemas/get.pilotage-intentions.formations.schema';
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
+import type {z} from 'zod';
 
-import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
+import type {RequestUser} from '@/modules/core/model/User';
 import { getStatsSortieQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
+import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
 import {
   getCodeRegionFromAcademieQuery,
@@ -10,8 +14,12 @@ import {
   getFormationsPilotageIntentionsQuery,
   getRegionStatsQuery,
 } from "./deps";
-import type { Filters } from "./deps/getFormationsPilotageIntentions.dep";
 
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+  campagne: string;
+}
 interface ActiveFilters extends Omit<Filters, "campagne"> {
   campagne?: string;
 }
@@ -25,11 +33,11 @@ const getQuadrantPilotageIntentionsFactory =
       getCodeRegionFromDepartementQuery,
       getCodeRegionFromAcademieQuery,
       getStatsSortieQuery,
-      getCurrentCampagneQuery,
+      getCurrentCampagne,
     }
   ) =>
     async (activeFilters: ActiveFilters) => {
-      const campagne = await deps.getCurrentCampagneQuery();
+      const campagne = await deps.getCurrentCampagne(activeFilters.user);
       const anneeCampagne = activeFilters.campagne ?? campagne.annee;
       let codeRegion = activeFilters.codeRegion;
 
