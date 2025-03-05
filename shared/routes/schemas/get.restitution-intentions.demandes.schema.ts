@@ -27,6 +27,7 @@ const DemandeSchema = z.object({
   libelleDispositif: z.string().optional(),
   codeDispositif: z.string(),
   cfd: z.string(),
+  isBTS: z.boolean(),
   // Demande
   typeDemande: DemandeTypeZodType,
   motif: z.array(z.string()),
@@ -104,6 +105,12 @@ const DemandeSchema = z.object({
   campagneId: z.string(),
   isIntention: z.boolean(),
   campagne: CampagneSchema,
+  // Pilotage
+  pilotageCapacite: z.number().optional(),
+  pilotageEffectif: z.number().optional(),
+  pilotageTauxPression: z.number().optional(),
+  pilotageTauxRemplissage: z.number().optional(),
+  pilotagePremierVoeu: z.number().optional()
 });
 
 export const FiltersSchema = z.object({
@@ -164,6 +171,7 @@ export const getDemandesRestitutionIntentionsSchema = {
         statut: z.string(),
       }),
       count: z.coerce.number(),
+      rentreesPilotage: z.array(z.string()),
     }),
   },
 };

@@ -145,6 +145,18 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
       motifRefus: "Motif(s) de refus",
     },
   },
+  // Pilotage
+  ["pilotage"]: {
+    color: themeDefinition.colors.grey[950],
+    cellColor: themeDefinition.colors.grey[1000],
+    options: {
+      pilotageCapacite: "Capacité RS {0}",
+      pilotageEffectif: "Effectif RS {0}",
+      pilotageTauxRemplissage: "Remplissage RS {0}",
+      pilotageTauxPression: "Tx Pression RS {0}",
+      pilotageTauxDemande: "Tx Demande RS {0}",
+    },
+  },
 } as Record<
   string,
   {
@@ -156,7 +168,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
 
 export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   string,
-  { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL> }
+  { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL>}
 > = {
   // établissement
   ["établissement"]: {
@@ -256,6 +268,18 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
     options: {
       statut: "Statut",
       motifRefus: "Motif(s) de refus",
+    },
+  },
+  // Pilotage
+  ["pilotage"]: {
+    color: themeDefinition.colors.bluefrance[950],
+    options: {
+      // Suivi du taux de remplissage des demandes
+      pilotageCapacite: "Capacité RS {0}",
+      pilotageEffectif: "Effectif RS {0}",
+      pilotageTauxRemplissage: "Remplissage RS {0}",
+      pilotageTauxPression: "Tx Pression RS {0}",
+      pilotageTauxDemande: "Tx Demande RS {0}",
     },
   },
 } as Record<string, { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL> }>;

@@ -91,6 +91,12 @@ export const STATS_DEMANDES_COLUMNS = {
   statut: "Statut",
   motifRefus: "Motif(s) de refus",
   autreMotifRefus: "Autre motif de refus",
+  // Suivi du taux de remplissage des demandes
+  pilotageCapacite: "Capacité RS {0}",
+  pilotageEffectif: "Effectif RS {0}",
+  pilotageTauxRemplissage: "Remplissage RS {0}",
+  pilotageTauxPression: "Tx Pression RS {0}",
+  pilotageTauxDemande: "Tx Demande RS {0}",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/restitution-intentions/demandes"]["demandes"][number] & {
     disciplinesRecrutementRH: string;
@@ -103,6 +109,7 @@ export const STATS_DEMANDES_COLUMNS = {
     transitionDemographique: boolean;
     transitionEcologique: boolean;
     transitionNumerique: boolean;
+    pilotageTauxDemande: number;
   }
 >;
 
@@ -169,6 +176,12 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<typeof STATS_DEMANDES_COLU
   statut: "Statut",
   motifRefus: "Motif(s) de refus",
   autreMotifRefus: "Autre motif de refus",
+  // Suivi du taux de remplissage des demandes
+  pilotageCapacite: "Capacité RS {0}",
+  pilotageEffectif: "Effectif RS {0}",
+  pilotageTauxRemplissage: "Remplissage RS {0}",
+  pilotageTauxPression: "Tx Pression RS {0}",
+  pilotageTauxDemande: "Tx Demande RS {0}",
 } as Partial<typeof STATS_DEMANDES_COLUMNS>;
 
 export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL> = {

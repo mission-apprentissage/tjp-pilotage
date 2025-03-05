@@ -11,8 +11,8 @@ import { useContext, useEffect, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import {PermissionEnum} from 'shared/enum/permissionEnum';
-import {SecteurEnum} from 'shared/enum/secteurEnum';
+import { PermissionEnum } from 'shared/enum/permissionEnum';
+import { SecteurEnum } from 'shared/enum/secteurEnum';
 
 import { client } from "@/api.client";
 import { CodeDepartementContext } from "@/app/codeDepartementContext";
@@ -41,9 +41,13 @@ const ColonneFiltersSection = chakra(
   ({
     colonneFilters,
     handleColonneFilters,
+    displayPilotageColumns,
+    currentRS,
   }: {
     colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[];
     handleColonneFilters: (value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]) => void;
+    displayPilotageColumns: boolean;
+    currentRS: string;
   }) => {
     return (
       <Flex justifyContent={"start"} direction="row">
@@ -52,19 +56,42 @@ const ColonneFiltersSection = chakra(
           size="md"
           variant={"newInput"}
           onChange={(selected) => handleColonneFilters(selected as (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[])}
-          groupedOptions={Object.entries(GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL).reduce(
-            (acc, [group, { color, options }]) => {
-              acc[group] = {
-                color,
-                options: Object.entries(options).map(([value, label]) => ({
-                  label,
-                  value,
-                })),
-              };
-              return acc;
-            },
+          groupedOptions={Object.entries(GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL)
+            .filter(([key]) => key !== "pilotage" || displayPilotageColumns)
+            .map((groupedOptions) =>
+            {
+              const [key, {color, options}] = groupedOptions;
+
+              if(key === "pilotage") {
+                const pilotageOptions: [string, {
+                  color: string;
+                  options: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL>;
+              }] = [key, {color, options: {
+                ...options,
+                pilotageCapacite: options.pilotageCapacite?.replace("{0}", currentRS),
+                pilotageEffectif: options.pilotageEffectif?.replace("{0}", currentRS),
+                pilotageTauxRemplissage: options.pilotageTauxRemplissage?.replace("{0}", currentRS),
+                pilotageTauxPression: options.pilotageTauxPression?.replace("{0}", currentRS),
+                pilotageTauxDemande: options.pilotageTauxDemande?.replace("{0}", currentRS),
+              }}];
+                return pilotageOptions;
+              }
+
+              return groupedOptions;
+            })
+            .reduce(
+              (acc, [group, { color, options }]) => {
+                acc[group] = {
+                  color,
+                  options: Object.entries(options).map(([value, label]) => ({
+                    label,
+                    value,
+                  })),
+                };
+                return acc;
+              },
             {} as Record<string, { color: string; options: { label: string; value: string }[] }>
-          )}
+            )}
           defaultOptions={Object.entries(STATS_DEMANDES_COLUMNS_DEFAULT)?.map(([value, label]) => {
             return {
               label,
@@ -113,6 +140,8 @@ export default () => {
   }) => {
     router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
+
+  const [displayPilotageColumns, setDisplayPilotageColumns] = useState(false);
 
   const trackEvent = usePlausible();
   const filterTracker = (filterName: keyof FiltersDemandesRestitutionIntentions) => () => {
@@ -285,16 +314,27 @@ export default () => {
       selectedDepartement: "Departement sélectionnée",
     };
 
-    const columns = {
+    let columns = {
       ...STATS_DEMANDES_COLUMNS,
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
     };
 
+    if(displayPilotageColumns) {
+      columns = {
+        ...columns,
+        pilotageCapacite: STATS_DEMANDES_COLUMNS.pilotageCapacite.replace("{0}", filters.rentreeScolaire ?? ""),
+        pilotageEffectif: STATS_DEMANDES_COLUMNS.pilotageEffectif.replace("{0}", filters.rentreeScolaire ?? ""),
+        pilotageTauxRemplissage: STATS_DEMANDES_COLUMNS.pilotageTauxRemplissage.replace("{0}", filters.rentreeScolaire ?? ""),
+        pilotageTauxPression: STATS_DEMANDES_COLUMNS.pilotageTauxPression.replace("{0}", filters.rentreeScolaire ?? ""),
+        pilotageTauxDemande: STATS_DEMANDES_COLUMNS.pilotageTauxDemande.replace("{0}", filters.rentreeScolaire ?? ""),
+      };
+    }
+
     let demandes = [];
 
-    demandes = data.demandes.map((demande) => ({
+    demandes = data.demandes.map((demande) => { let updatedDemand = {
       ...demande,
       createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
         hour: "2-digit",
@@ -329,7 +369,21 @@ export default () => {
       transitionDemographique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
       transitionEcologique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition écologique"]],
       transitionNumerique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition numérique"]],
-    }));
+    };
+
+    if(displayPilotageColumns) {
+      updatedDemand = {
+        ...updatedDemand,
+        pilotageCapacite: demande.pilotageCapacite,
+        pilotageEffectif: demande.pilotageEffectif,
+        pilotageTauxRemplissage: demande.pilotageTauxRemplissage,
+        pilotageTauxPression: demande.isBTS ? undefined :  demande.pilotageTauxPression,
+        pilotageTauxDemande: demande.isBTS ? demande.pilotageTauxPression : undefined,
+      };
+    }
+
+    return updatedDemand;
+    });
 
     return {
       columns,
@@ -343,7 +397,7 @@ export default () => {
       query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
 
-    const { columns, demandes } = getDataForExport(data);
+    const { columns, demandes } = getDataForExport({data});
     downloadCsv(formatExportFilename("restitution_export"), demandes, columns);
   };
 
@@ -353,7 +407,7 @@ export default () => {
       query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
 
-    const { columns, demandes } = getDataForExport(data);
+    const { columns, demandes } = getDataForExport({data});
     downloadExcel(formatExportFilename("restitution_export"), demandes, columns);
   };
 
@@ -369,6 +423,10 @@ export default () => {
       search: searchIntention,
     });
   };
+
+  useEffect(() => {
+    setDisplayPilotageColumns(data?.rentreesPilotage?.includes(filters.rentreeScolaire ?? "") ?? false);
+  }, [data?.rentreesPilotage, filters.rentreeScolaire]);
 
   return (
     <GuardPermission permission={PermissionEnum["restitution-intentions/lecture"]}>
@@ -392,7 +450,7 @@ export default () => {
             />
           }
           ColonneFilter={
-            <ColonneFiltersSection colonneFilters={colonneFilters} handleColonneFilters={handleColonneFilters} />
+            <ColonneFiltersSection colonneFilters={colonneFilters} handleColonneFilters={handleColonneFilters} displayPilotageColumns={displayPilotageColumns} currentRS={filters.rentreeScolaire ?? ""} />
           }
           onExportCsv={onExportCsv}
           onExportExcel={onExportExcel}
@@ -407,6 +465,8 @@ export default () => {
           handleOrder={handleOrder}
           order={order}
           colonneFilters={colonneFilters}
+          displayPilotageColumns={displayPilotageColumns}
+          currentRS={filters.rentreeScolaire ?? ""}
         />
       </Container>
     </GuardPermission>
