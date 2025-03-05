@@ -7,6 +7,7 @@ export const OffresApprentissageSchema = z
     "Formateur: UAI": z.string().optional(),
     "Formation: code CFD": z.string(),
     "Formation: niveau BCN": z.string(),
+    // Rentrées scolaires effectives
     "Offre: Tags": z.string(),
     "Formation: codes MEF": z.string().optional(),
     "Formation: durée collectée": z.string().optional(),

@@ -1,10 +1,12 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "shared";
+import { MILLESIMES_IJ, RENTREES_SCOLAIRES, VoieEnum } from "shared";
 
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "@/modules/import/usecases/getCfdRentrees/getCfdRentrees.usecase";
+import { countDiplomesProfessionnels } from "@/modules/import/usecases/importIJData/countDiplomesProfessionnels.dep";
+import { countFamillesMetiers } from "@/modules/import/usecases/importIJData/countFamillesMetiers.dep";
 import { findDiplomesProfessionnels } from "@/modules/import/usecases/importIJData/findDiplomesProfessionnels.dep";
 import { streamIt } from "@/modules/import/utils/streamIt";
 
@@ -36,15 +38,24 @@ export const [importFormations] = inject(
     importFormationHistorique,
     findDiplomesProfessionnels,
     findFamillesMetiers,
+    countDiplomesProfessionnels,
+    countFamillesMetiers
   },
   (deps) => {
     return async () => {
+      const { nbDiplomesProfessionnels } = await deps.countDiplomesProfessionnels();
+      const { nbFamillesMetiers } = await deps.countFamillesMetiers();
+      const total = nbDiplomesProfessionnels + nbFamillesMetiers;
+      let nbDiplomesProfessionnelsDone = 0;
+
+      console.log(`Début de l'import des données sur les ${total} formations`);
+
       await streamIt(
         (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
         async (item, count) => {
           const cfd = item.cfd;
           const voie = item.voie;
-          console.log("cfd", `(${voie})`, cfd, count);
+          console.log("--", "cfd", `(${voie})`, cfd, `-- ${Math.round(count/total * 10000)/100}%`);
           if (!cfd) return;
           const ancienCfds = await deps.importFormationHistorique({
             cfd,
@@ -54,6 +65,7 @@ export const [importFormations] = inject(
             await importFormationEtablissements({ cfd: ancienCfd, voie });
           }
           await importFormationEtablissements({ cfd, voie });
+          nbDiplomesProfessionnelsDone++;
         },
         { parallel: 20 }
       );
@@ -62,7 +74,7 @@ export const [importFormations] = inject(
         (count) => deps.findFamillesMetiers({ offset: count, limit: 60 }),
         async (item, count) => {
           const cfd = item.cfd;
-          console.log("cfd famille", cfd, count);
+          console.log("--", "cfd famille", cfd, `-- (${Math.round((count+nbDiplomesProfessionnelsDone)/total * 10000)/100}%)`);
           if (!cfd) return;
           const formation = await deps.importFormation({ cfd });
           const ancienCfds = await deps.importFormationHistorique({ cfd });
@@ -97,8 +109,8 @@ export const [importFormationEtablissements] = inject(
     deleteFormationEtablissement
   },
   (deps) => {
-    return async ({ cfd, voie = "scolaire" }: { cfd: string; voie?: string }) => {
-      if (voie === "apprentissage") {
+    return async ({ cfd, voie = VoieEnum.scolaire }: { cfd: string; voie?: string }) => {
+      if (voie === VoieEnum.apprentissage) {
         await deps.importIndicateursRegionSortieApprentissage({ cfd });
         const uais = await deps.findUAIsApprentissage({ cfd });
         if (!uais) return;
@@ -125,6 +137,7 @@ export const [importFormationEtablissements] = inject(
           const dureeCollectee = offreApprentissage?.["Formation: durée collectée"]
             ? parseInt(offreApprentissage?.["Formation: durée collectée"])
             : -1;
+          const rentreesScolaires = offreApprentissage["Offre: Tags"].split(',').map((tag) => tag.trim());
 
           if (mefs.length > 0) {
             /**
@@ -154,7 +167,7 @@ export const [importFormationEtablissements] = inject(
           if (codesDispositifs.length > 0) {
             // Il faut supprimer les anciens CodeDispositif à null puisqu'on les a maintenant déduits
             const oldFormationEtablissement = await deps.findFormationEtablissement({
-              uai, cfd, voie: "apprentissage", codeDispositif: null
+              uai, cfd, voie: VoieEnum.apprentissage, codeDispositif: null
             });
 
             if (oldFormationEtablissement) {
@@ -168,8 +181,20 @@ export const [importFormationEtablissements] = inject(
                 uai,
                 cfd,
                 codeDispositif,
-                voie: "apprentissage",
+                voie: VoieEnum.apprentissage,
               });
+
+              for (const rentreeScolaire of rentreesScolaires) {
+                await deps.importIndicateurEntree({
+                  formationEtablissementId: formationEtablissement.id,
+                  rentreeScolaire,
+                  cfd,
+                  uai,
+                  anneesEnseignement: [],
+                  anneesDispositif: {},
+                  voie: VoieEnum.apprentissage
+                });
+              }
 
               for (const millesime of MILLESIMES_IJ) {
                 await deps.importIndicateurSortieApprentissage({
@@ -185,8 +210,20 @@ export const [importFormationEtablissements] = inject(
               uai,
               cfd,
               codeDispositif: null,
-              voie: "apprentissage",
+              voie: VoieEnum.apprentissage,
             });
+
+            for (const rentreeScolaire of rentreesScolaires) {
+              await deps.importIndicateurEntree({
+                formationEtablissementId: formationEtablissement.id,
+                rentreeScolaire,
+                cfd,
+                uai,
+                anneesEnseignement: [],
+                anneesDispositif: {},
+                voie: VoieEnum.apprentissage
+              });
+            }
 
             for (const millesime of MILLESIMES_IJ) {
               await deps.importIndicateurSortieApprentissage({
@@ -246,6 +283,7 @@ export const [importFormationEtablissements] = inject(
                 uai,
                 anneesEnseignement,
                 anneesDispositif,
+                voie: VoieEnum.scolaire
               });
 
               for (const millesime of MILLESIMES_IJ) {
