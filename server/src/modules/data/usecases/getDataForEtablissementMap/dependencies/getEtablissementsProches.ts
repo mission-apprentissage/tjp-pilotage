@@ -26,12 +26,7 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
         "etablissement.libelleEtablissement"
       )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as("libelleEtablissement"),
     ])
-    .where((eb) =>
-      eb.or([
-        eb("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE),
-        eb("indicateurEntree.rentreeScolaire", "is", null),
-      ])
-    )
+    .where("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE)
     .$call((q) => {
       if (bbox !== undefined) {
         return q.where((eb) =>
