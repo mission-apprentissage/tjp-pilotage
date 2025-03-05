@@ -11,8 +11,8 @@ import { useContext, useEffect, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import {PermissionEnum} from 'shared/enum/permissionEnum';
-import {SecteurEnum} from 'shared/enum/secteurEnum';
+import { PermissionEnum } from 'shared/enum/permissionEnum';
+import { SecteurEnum } from 'shared/enum/secteurEnum';
 
 import { client } from "@/api.client";
 import { CodeDepartementContext } from "@/app/codeDepartementContext";
@@ -41,9 +41,11 @@ const ColonneFiltersSection = chakra(
   ({
     colonneFilters,
     handleColonneFilters,
+    displayPilotageColumns,
   }: {
     colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[];
     handleColonneFilters: (value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]) => void;
+    displayPilotageColumns: boolean;
   }) => {
     return (
       <Flex justifyContent={"start"} direction="row">
@@ -52,19 +54,21 @@ const ColonneFiltersSection = chakra(
           size="md"
           variant={"newInput"}
           onChange={(selected) => handleColonneFilters(selected as (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[])}
-          groupedOptions={Object.entries(GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL).reduce(
-            (acc, [group, { color, options }]) => {
-              acc[group] = {
-                color,
-                options: Object.entries(options).map(([value, label]) => ({
-                  label,
-                  value,
-                })),
-              };
-              return acc;
-            },
+          groupedOptions={Object.entries(GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL)
+            .filter(([key]) => key !== "pilotage" || displayPilotageColumns)
+            .reduce(
+              (acc, [group, { color, options }]) => {
+                acc[group] = {
+                  color,
+                  options: Object.entries(options).map(([value, label]) => ({
+                    label,
+                    value,
+                  })),
+                };
+                return acc;
+              },
             {} as Record<string, { color: string; options: { label: string; value: string }[] }>
-          )}
+            )}
           defaultOptions={Object.entries(STATS_DEMANDES_COLUMNS_DEFAULT)?.map(([value, label]) => {
             return {
               label,
@@ -113,6 +117,8 @@ export default () => {
   }) => {
     router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
+
+  const [displayPilotageColumns, setDisplayPilotageColumns] = useState(false);
 
   const trackEvent = usePlausible();
   const filterTracker = (filterName: keyof FiltersDemandesRestitutionIntentions) => () => {
@@ -370,6 +376,10 @@ export default () => {
     });
   };
 
+  useEffect(() => {
+    setDisplayPilotageColumns(data?.rentreesPilotage?.includes(filters.rentreeScolaire ?? "") ?? false);
+  }, [data?.rentreesPilotage, filters.rentreeScolaire]);
+
   return (
     <GuardPermission permission={PermissionEnum["restitution-intentions/lecture"]}>
       <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20} flex={1}>
@@ -392,7 +402,7 @@ export default () => {
             />
           }
           ColonneFilter={
-            <ColonneFiltersSection colonneFilters={colonneFilters} handleColonneFilters={handleColonneFilters} />
+            <ColonneFiltersSection colonneFilters={colonneFilters} handleColonneFilters={handleColonneFilters} displayPilotageColumns={displayPilotageColumns} />
           }
           onExportCsv={onExportCsv}
           onExportExcel={onExportExcel}
@@ -407,6 +417,7 @@ export default () => {
           handleOrder={handleOrder}
           order={order}
           colonneFilters={colonneFilters}
+          displayPilotageColumns={displayPilotageColumns}
         />
       </Container>
     </GuardPermission>

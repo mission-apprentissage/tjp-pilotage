@@ -62,11 +62,13 @@ export const HeadLineContent = ({
   handleOrder,
   colonneFilters,
   getCellColor,
+  displayPilotageColumns,
 }: {
   order: OrderDemandesRestitutionIntentions;
   handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
   getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
+  displayPilotageColumns: boolean;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   return (
@@ -582,6 +584,91 @@ export const HeadLineContent = ({
       <ConditionalTh colonneFilters={colonneFilters} colonne={"motifRefus"} bgColor={getCellColor("motifRefus")}>
         {STATS_DEMANDES_COLUMNS.motifRefus}
       </ConditionalTh>
+      {displayPilotageColumns && (
+        <>
+          <ConditionalTh colonneFilters={colonneFilters} colonne={"pilotageCapacite"} bgColor={getCellColor("pilotageCapacite")}>
+            {STATS_DEMANDES_COLUMNS.pilotageCapacite}
+            <TooltipIcon
+              ml="2"
+              label={
+                <>
+                  <p>Capacité théorique issue d'Affelnet pour la rentrée 2024, voie scolaire</p>
+                  <p>Cliquer pour plus d'infos.</p>
+                </>
+              }
+              onClick={() => openGlossaire("capacite")}
+            />
+          </ConditionalTh>
+          <ConditionalTh
+            colonneFilters={colonneFilters}
+            colonne={"pilotageEffectif"}
+            bgColor={getCellColor("pilotageEffectif")}
+          >
+            {STATS_DEMANDES_COLUMNS.pilotageEffectif}
+            <TooltipIcon
+              ml="2"
+              label={
+                <>
+                  <p>Effectif en entrée de formation issue du Constat de Rentrée 2024, comptant uniquement les élèves en voie scolaire</p>
+                  <p>Cliquer pour plus d'infos.</p>
+                </>
+              }
+              onClick={() => openGlossaire("effectif-en-entree")}
+            />
+          </ConditionalTh>
+          <ConditionalTh
+            colonneFilters={colonneFilters}
+            colonne={"pilotageTauxRemplissage"}
+            bgColor={getCellColor("pilotageTauxRemplissage")}
+          >
+            {STATS_DEMANDES_COLUMNS.pilotageTauxRemplissage}
+            <TooltipIcon
+              ml="2"
+              label={
+                <>
+                  <p>Taux de remplissage par rapport à la capacité théorique d'Affelnet pour la rentrée 2024, voie scolaire</p>
+                  <p>Cliquer pour plus d'infos.</p>
+                </>
+              }
+              onClick={() => openGlossaire("taux-de-remplissage")}
+            />
+          </ConditionalTh>
+          <ConditionalTh
+            colonneFilters={colonneFilters}
+            colonne={"pilotageTauxPression"}
+            bgColor={getCellColor("pilotageTauxPression")}
+          >
+            {STATS_DEMANDES_COLUMNS.pilotageTauxPression}
+            <TooltipIcon
+              ml="2"
+              label={
+                <>
+                  <p>Taux de pression (ou de demande dans le cas des BTS) issue d'Affelnet pour la rentrée 2024, voie scolaire</p>
+                  <p>Cliquer pour plus d'infos.</p>
+                </>
+              }
+              onClick={() => openGlossaire("taux-de-pression")}
+            />
+          </ConditionalTh>
+          <ConditionalTh
+            colonneFilters={colonneFilters}
+            colonne={"pilotageTauxDemande"}
+            bgColor={getCellColor("pilotageTauxDemande")}
+          >
+            {STATS_DEMANDES_COLUMNS.pilotageTauxDemande}
+            <TooltipIcon
+              ml="2"
+              label={
+                <>
+                  <p>Taux de pression (ou de demande dans le cas des BTS) issue d'Affelnet pour la rentrée 2024, voie scolaire</p>
+                  <p>Cliquer pour plus d'infos.</p>
+                </>
+              }
+              onClick={() => openGlossaire("taux-de-pression")}
+            />
+          </ConditionalTh>
+        </>
+      )}
     </>
   );
 };

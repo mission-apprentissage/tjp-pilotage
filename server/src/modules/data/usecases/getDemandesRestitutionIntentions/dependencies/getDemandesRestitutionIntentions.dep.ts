@@ -5,15 +5,18 @@ import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
-import type { Filters } from
-  "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.usecase";
+import type { Filters } from "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.usecase";
+import { capaciteAnnee } from "@/modules/data/utils/capaciteAnnee";
+import { effectifAnnee } from "@/modules/data/utils/effectifAnnee";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { nbEtablissementFormationRegion } from "@/modules/data/utils/nbEtablissementFormationRegion";
+import { premiersVoeuxAnnee } from "@/modules/data/utils/premiersVoeuxAnnee";
 import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { selectTauxDevenirFavorable } from "@/modules/data/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
-import { selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
+import { selectTauxPression, selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
+import { selectTauxRemplissage } from "@/modules/data/utils/tauxRemplissage";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
 import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import {
@@ -96,6 +99,27 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
         .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
     )
+    .leftJoin((eb) => eb.selectFrom("formationScolaireView")
+      .innerJoin("formationEtablissement", (join) =>
+        join
+          .onRef("formationEtablissement.cfd", "=", "formationScolaireView.cfd")
+          .onRef("formationEtablissement.voie", "=", "formationScolaireView.voie")
+      )
+      .innerJoin("indicateurEntree", "indicateurEntree.formationEtablissementId", "formationEtablissement.id")
+      .select(sb => [
+        sql<number>`CAST(${sb.ref("indicateurEntree.rentreeScolaire")} AS INT)`.as("rentreeScolaire"),
+        sb.ref("formationScolaireView.cfd").as("cfd"),
+        sb.ref("formationEtablissement.codeDispositif").as("codeDispositif"),
+        sb.ref("formationScolaireView.voie").as("voie"),
+        sb.ref("formationEtablissement.uai").as("uai"),
+        capaciteAnnee({ alias: "indicateurEntree"}).as("capacite"),
+        effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
+        premiersVoeuxAnnee({alias: "indicateurEntree"}).as("premierVoeu"),
+        selectTauxPression("indicateurEntree", "formationScolaireView", true).as("pression"),
+        selectTauxRemplissage("indicateurEntree").as("remplissage")
+      ]).as("tauxEntree"),
+    (join) => join.onRef("tauxEntree.cfd", "=", "demande.cfd").onRef("tauxEntree.rentreeScolaire", "=", "demande.rentreeScolaire").onRef("tauxEntree.codeDispositif", "=", "demande.codeDispositif").onRef("tauxEntree.uai", "=", "demande.uai")
+    )
     .selectAll("demande")
     .select((eb) => [
       sql<string>`count(*) over()`.as("count"),
@@ -141,6 +165,12 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
+      eb.ref("tauxEntree.capacite").as("pilotageCapacite"),
+      eb.ref("tauxEntree.effectifEntree").as("pilotageEffectif"),
+      eb.ref("tauxEntree.pression").as("pilotageTauxPression"),
+      eb.ref("tauxEntree.remplissage").as("pilotageTauxRemplissage"),
+      eb.ref("tauxEntree.premierVoeu").as("pilotagePremierVoeu"),
+      sql<boolean>`LEFT(${eb.ref("demande.cfd")}, 3) = '320'`.as("isBTS"),
     ])
     .$call((eb) => {
       if (search)

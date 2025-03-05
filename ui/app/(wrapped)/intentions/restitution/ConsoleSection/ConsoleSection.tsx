@@ -54,12 +54,14 @@ export const ConsoleSection = ({
   order,
   handleOrder,
   colonneFilters,
+  displayPilotageColumns,
 }: {
   data?: DemandesRestitutionIntentions;
   isLoading: boolean;
   order: OrderDemandesRestitutionIntentions;
   handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
+  displayPilotageColumns: boolean;
 }) => {
   const router = useRouter();
   const { user } = useAuth();
@@ -112,6 +114,7 @@ export const ConsoleSection = ({
                 handleOrder={handleOrder}
                 colonneFilters={colonneFilters}
                 getCellColor={getCellColor}
+                displayPilotageColumns={displayPilotageColumns}
               />
             </Tr>
           </Thead>
@@ -134,6 +137,7 @@ export const ConsoleSection = ({
                         demande={demande}
                         colonneFilters={colonneFilters}
                         getCellColor={getCellColor}
+                        displayPilotageColumns={displayPilotageColumns}
                       />
                     </Tr>
                   </Fragment>
