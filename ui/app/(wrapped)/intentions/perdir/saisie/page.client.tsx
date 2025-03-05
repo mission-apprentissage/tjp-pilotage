@@ -31,14 +31,16 @@ import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
+import { hasPermission } from "shared";
 import type { AvisTypeType } from "shared/enum/avisTypeEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { PermissionEnum } from "shared/enum/permissionEnum";
 import { isCampagneTerminee } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
 import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/intentions/utils/messageAccompagnementUtils";
-import {canCorrectIntention, canCreateIntention, canDeleteIntention,canEditDemandeIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import {canCheckIntention, canCorrectIntention, canCreateIntention, canDeleteIntention,canEditDemandeIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -61,15 +63,9 @@ import type { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
 
-const canIntentionBeChecked = ({
-  intention,
-  checkedIntentions,
-}:{
-  intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0],
-  checkedIntentions: Record<string, { statut: DemandeStatutType }>,
-}) => {
-  if(Object.values(checkedIntentions).length === 0) return true;
-  return Object.values(checkedIntentions).every(({ statut }) => statut === intention.statut);
+export type CheckedIntentionsType = {
+  statut: DemandeStatutType;
+  intentions: Array<string>;
 };
 
 export const PageClient = () => {
@@ -227,7 +223,8 @@ export const PageClient = () => {
     },
   });
 
-  const [ checkedIntentions, setCheckedIntentions ] = useState<Record<string, {statut: DemandeStatutType}>>({});
+  const [ checkedIntentions, setCheckedIntentions ] = useState<CheckedIntentionsType | undefined>();
+  const canCheckIntentions = hasPermission(user?.role, PermissionEnum["intentions-perdir-statut/ecriture"]);
 
   const [isImporting, setIsImporting] = useState(false);
   const [isModifyingGroup, setIsModifyingGroup] = useState(false);
@@ -275,18 +272,27 @@ export const PageClient = () => {
                   <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize={14} gap="0">
                     <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white" zIndex={"1"}>
                       <Tr>
-                        <Th textAlign={"center"}>
-                          <Checkbox
-                            onChange={(e) => {
-                              if(e.target.value) setCheckedIntentions({});
-                            }}
-                            colorScheme={"bluefrance"}
-                            size={"lg"}
-                            iconColor={"bluefrance.113"}
-                            isChecked={!!Object.keys(checkedIntentions).length}
-                            display={Object.keys(checkedIntentions).length ? "block" : "none"}
-                          />
-                        </Th>
+                        {canCheckIntentions && (
+                          <Th textAlign={"center"}>
+                            <Checkbox
+                              onChange={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setCheckedIntentions(undefined);
+                              }}
+                              borderRadius={4}
+                              borderColor={"bluefrance.113"}
+                              bgColor={"white"}
+                              _checked={{
+                                bgColor: "bluefrance.113",
+                              }}
+                              colorScheme="bluefrance"
+                              iconColor={"white"}
+                              isChecked={!!checkedIntentions?.intentions.length}
+                              display={checkedIntentions?.intentions.length && canCheckIntentions ? "block" : "none"}
+                            />
+                          </Th>
+                        )}
                         <Th cursor="pointer" onClick={() => handleOrder("updatedAt")} fontSize={12}>
                           <OrderIcon {...order} column="updatedAt" />
                           {INTENTIONS_COLUMNS.updatedAt}
@@ -388,9 +394,17 @@ export const PageClient = () => {
                           user
                         });
 
-                        const isChecked = Object.keys(checkedIntentions).includes(intention.numero);
-                        const canBeChecked = !isModificationDisabled &&
-                          canIntentionBeChecked({intention, checkedIntentions});
+                        const isChecked = checkedIntentions !== undefined &&
+                          checkedIntentions.intentions.length > 0 &&
+                          checkedIntentions.intentions.includes(intention.numero);
+                        const canBeChecked = !isModificationDisabled && canCheckIntention({
+                          intention: {
+                            ...intention,
+                            campagne: data?.campagne
+                          },
+                          checkedIntentions,
+                          user
+                        });
 
                         return (
                           <Tr
@@ -400,25 +414,63 @@ export const PageClient = () => {
                             fontWeight={intention.alreadyAccessed ? "400" : "700"}
                             bg={intention.alreadyAccessed ? "grey.975" : "white"}
                           >
-                            <Td textAlign={"center"}>
-                              <Checkbox
-                                onChange={(e) => {
-                                  e.preventDefault();
-                                  setCheckedIntentions((prevState: Record<string, { statut: DemandeStatutType}>) => {
-                                    if (isChecked) {
-                                      const { [intention.numero]: _, ...rest } = prevState;
-                                      return rest;
-                                    }
-                                    return { ...prevState, [intention.numero]: { statut: intention.statut } };
-                                  });
-                                }}
-                                isChecked={isChecked}
-                                colorScheme={"bluefrance"}
-                                size={"lg"}
-                                iconColor={"bluefrance.113"}
-                                isDisabled={!canBeChecked}
-                              />
-                            </Td>
+                            {canCheckIntentions && (
+                              <Td textAlign={"center"}>
+                                <Tooltip isDisabled={canBeChecked}
+                                  closeOnScroll={true}
+                                  label={
+                                    isModificationDisabled ?
+                                      "Cette demande a un statut qui ne permet pas sa sélection pour modification." :
+                                      "Vous avez sélectionné une demande dont le statut est différent, ce qui ne permet pas de modifier le statut de manière groupée."}
+                                  shouldWrapChildren
+                                >
+                                  <Checkbox
+                                    onChange={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      setCheckedIntentions((prevState: CheckedIntentionsType | undefined) => {
+                                        if (!prevState || !prevState.intentions.length) {
+                                          // Si checkedIntentions est undefined on initialise avec le statut donné
+                                          return {
+                                            statut: intention.statut,
+                                            intentions: [intention.numero],
+                                          };
+                                        }
+
+                                        const { intentions } = prevState;
+                                        if (intentions.includes(intention.numero)) {
+                                          // Si l'intention est la seule sélectionnée, on retire le statut
+                                          if(intentions.length === 1) {
+                                            return undefined;
+                                          }
+                                          // Si l'intention est déjà présente, on la retire
+                                          return {
+                                            ...prevState,
+                                            intentions: intentions.filter((i) => i !== intention.statut),
+                                          };
+                                        } else {
+                                          // Sinon, on l'ajoute
+                                          return {
+                                            ...prevState,
+                                            intentions: [...intentions, intention.numero],
+                                          };
+                                        }
+                                      });
+                                    }}
+                                    borderRadius={4}
+                                    borderColor={"bluefrance.113"}
+                                    bgColor={"white"}
+                                    _checked={{
+                                      bgColor: "bluefrance.113",
+                                    }}
+                                    colorScheme="bluefrance"
+                                    iconColor={"white"}
+                                    isChecked={isChecked}
+                                    isDisabled={!canBeChecked}
+                                  />
+                                </Tooltip>
+                              </Td>
+                            )}
                             <Td textAlign={"center"}>
                               <Tooltip label={`Le ${format(intention.updatedAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
                                 {format(intention.updatedAt, "d MMM HH:mm", {
@@ -473,7 +525,7 @@ export const PageClient = () => {
                             </Td>
                             <Td textAlign={"center"}>
                               <Flex direction={"row"} gap={0} justifyContent={"left"}>
-                                <Tooltip label="Voir la demande">
+                                <Tooltip label="Voir la demande" shouldWrapChildren>
                                   <IconButton
                                     as={NextLink}
                                     href={linkSynthese}
@@ -490,7 +542,7 @@ export const PageClient = () => {
                                 </Tooltip>
                                 {
                                   !isModificationDisabled && (
-                                    <Tooltip label="Modifier la demande">
+                                    <Tooltip label="Modifier la demande" shouldWrapChildren>
                                       <IconButton
                                         disabled={isModificationDisabled}
                                         as={NextLink}
@@ -508,7 +560,7 @@ export const PageClient = () => {
                                     </Tooltip>
                                   )}
                                 { !isDeleteDisabled && (<DeleteIntentionButton intention={intention} />) }
-                                <Tooltip label="Suivre la demande">
+                                <Tooltip label="Suivre la demande" shouldWrapChildren>
                                   <IconButton
                                     onClick={() => {
                                       if (!intention.suiviId)
@@ -536,7 +588,7 @@ export const PageClient = () => {
                                 </Tooltip>
                                 {isCampagneTerminee(data?.campagne) &&
                                 (intention.numeroDemandeImportee ? (
-                                  <Tooltip label={`Voir l'intention dupliquée ${intention.numeroDemandeImportee}`}>
+                                  <Tooltip label={`Voir l'intention dupliquée ${intention.numeroDemandeImportee}`} shouldWrapChildren>
                                     <IconButton
                                       as={NextLink}
                                       href={linkSaisieImported}
@@ -552,7 +604,7 @@ export const PageClient = () => {
                                     />
                                   </Tooltip>
                                 ) : (
-                                  <Tooltip label={"Dupliquer la demande"}>
+                                  <Tooltip label={"Dupliquer la demande"} shouldWrapChildren>
                                     <IconButton
                                       onClick={(e) => {
                                         if(isImportDisabled) return;
