@@ -5,7 +5,7 @@ import type { submitIntentionAccessLogSchema } from "shared/routes/schemas/post.
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+import { findOneDemandeQuery} from '@/modules/demandes/repositories/findOneDemande.query';
 import { updateDemandeWithHistory } from "@/modules/demandes/repositories/updateDemandeWithHistory.query";
 
 import { createIntentionAccessLog } from "./deps/createIntentionAccessLog.query";
@@ -16,7 +16,7 @@ export const [submitIntentionAccessLogUsecase, submitIntentionAccessLogFactory] 
   {
     createIntentionAccessLog,
     updateDemandeWithHistory,
-    findOneDemande,
+    findOneDemandeQuery,
   },
   (deps) =>
     async ({
@@ -26,7 +26,7 @@ export const [submitIntentionAccessLogUsecase, submitIntentionAccessLogFactory] 
       user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
       intention: Intention;
     }) => {
-      const demandeData = await findOneDemande(intention.numero);
+      const demandeData = await findOneDemandeQuery(intention.numero);
       if (!demandeData) throw Boom.notFound("Demande non trouvée en base");
 
       const newIntentionAccessLog = {

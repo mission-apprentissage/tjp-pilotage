@@ -1,15 +1,21 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { CODES_REGIONS_EXPE } from "shared/security/securityUtils";
 
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { useAuth } from "@/utils/security/useAuth";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
 
 const Page = () => {
-  const { auth } = useAuth();
-  const isPartOfExpe = CODES_REGIONS_EXPE.includes(auth?.user.codeRegion ?? "");
+  const { user } = useAuth();
+  const { campagne } = useCurrentCampagne();
 
-  return isPartOfExpe ? redirect("/intentions/perdir/saisie") : redirect("/intentions/saisie");
+  redirect(
+    getRoutingSaisieRecueilDemande({
+      user,
+      campagne,
+    })
+  );
 };
 export default Page;

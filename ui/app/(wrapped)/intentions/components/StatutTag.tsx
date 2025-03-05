@@ -1,6 +1,5 @@
 import { chakra, Tag } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import React from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 

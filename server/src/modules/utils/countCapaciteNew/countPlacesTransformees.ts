@@ -1,6 +1,5 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import type { DB } from "@/db/db";
 
@@ -231,21 +230,21 @@ export const countPlacesTransformeesParCampagne = ({ eb }: { eb: ExpressionBuild
 export const getTauxTransformation = ({
   demandeAlias,
   effectifAlias,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
+  campagne,
 }: {
   demandeAlias: string;
   effectifAlias: string;
-  campagne?: string;
+  campagne: string;
 }) => {
   switch (campagne) {
   case "2023":
     return sql<number>`
-        ${sql.table(demandeAlias)}.placesTransformees::INTEGER /
+        ${sql.table(demandeAlias)}.placesTransformeesCampagne2023::INTEGER /
         ${sql.table(effectifAlias)}.effectif::INTEGER
       `;
   default:
     return sql<number>`
-        ${sql.table(demandeAlias)}.placesTransformeesCampagne2023::INTEGER /
+        ${sql.table(demandeAlias)}.placesTransformees::INTEGER /
         ${sql.table(effectifAlias)}.effectif::FLOAT
       `;
   }

@@ -1,5 +1,6 @@
-import { createRoute } from "@http-wizard/core";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
+import { createRoute } from "shared/utils/http-wizard/core";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
@@ -15,7 +16,7 @@ export const deleteIntentionFilesRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions-perdir/ecriture"),
+      preHandler: hasPermissionHandler(PermissionEnum["intentions-perdir/ecriture"]),
       handler: async (request, response) => {
         const { numero } = request.params;
         const { files } = request.body;

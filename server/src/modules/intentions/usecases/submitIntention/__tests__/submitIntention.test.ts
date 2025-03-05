@@ -1,5 +1,6 @@
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import {DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
+import {RoleEnum} from 'shared/enum/roleEnum';
 import { describe, expect, it, vi } from "vitest";
 
 import { submitIntentionFactory } from "@/modules/intentions/usecases/submitIntention/submitIntention.usecase";
@@ -67,7 +68,8 @@ const intention = {
 const gestionnaire = {
   codeRegion: "75",
   id: "user-id",
-  role: "gestionnaire_region",
+  role: RoleEnum["gestionnaire_region"],
+  email: "gestionnaire@mail.fr"
 } as const;
 
 describe("submitDemande usecase", () => {
@@ -130,7 +132,8 @@ describe("submitDemande usecase", () => {
         user: {
           codeRegion: "other",
           id: "user-id",
-          role: "pilote_region",
+          role: RoleEnum["pilote_region"],
+          email: "pilote@mail.fr"
         },
         intention: {
           ...intention,

@@ -2,6 +2,7 @@ import * as Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import type { submitAvisSchema } from "shared/routes/schemas/post.intention.avis.submit.schema";
 import type { z } from "zod";
 
@@ -21,13 +22,13 @@ export const [submitAvisUsecase, submitAvisFactory] = inject(
   },
   (deps) =>
     async ({ user, avis }: { user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">; avis: Avis }) => {
-      const scope = getPermissionScope(user.role, "intentions-perdir-avis/ecriture");
+      const scope = getPermissionScope(user.role, PermissionEnum["intentions-perdir-avis/ecriture"]);
 
       const intentionData = await findOneIntention(avis.intentionNumero);
       if (!intentionData) throw Boom.notFound("Intention non trouvée en base");
 
-      const isAllowed = guardScope(scope?.default, {
-        region: () => user.codeRegion === intentionData.codeRegion,
+      const isAllowed = guardScope(scope, {
+        région: () => user.codeRegion === intentionData.codeRegion,
         national: () => true,
       });
       if (!isAllowed) throw Boom.forbidden();

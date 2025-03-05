@@ -1,5 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import type { ReactNode } from "react";
+import {SecteurEnum} from 'shared/enum/secteurEnum';
+import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
@@ -16,7 +18,7 @@ export const formatAnneeCommuneLibelle = (
   fontSize?: string,
 ): React.ReactNode => {
   switch (formation.typeFamille) {
-  case "2nde_commune":
+  case TypeFamilleEnum["2nde_commune"]:
     return format2ndeCommuneLibelle({
       libelleFormation: formation.libelleFormation,
       typeFamille: formation.typeFamille,
@@ -24,7 +26,7 @@ export const formatAnneeCommuneLibelle = (
       size,
       fontSize
     });
-  case "1ere_commune":
+  case TypeFamilleEnum["1ere_commune"]:
     return format1ereCommuneLibelle({
       libelleFormation : formation.libelleFormation,
       typeFamille: formation.typeFamille,
@@ -32,7 +34,7 @@ export const formatAnneeCommuneLibelle = (
       size,
       fontSize
     });
-  case "specialite":
+  case TypeFamilleEnum["specialite"]:
     return formatSpecialiteLibelle({
       libelleFormation : formation.libelleFormation,
       typeFamille: formation.typeFamille,
@@ -40,7 +42,7 @@ export const formatAnneeCommuneLibelle = (
       size,
       fontSize
     });
-  case "option":
+  case TypeFamilleEnum["option"]:
     return formatOptionLibelle({
       libelleFormation : formation.libelleFormation,
       typeFamille: formation.typeFamille,
@@ -192,8 +194,8 @@ export const formatLibelleFormation = (etablissement: { libellesDispositifs: str
  * @returns Public, Privé
  */
 export const formatSecteur = (secteur: string) => {
-  if (secteur === "PU") return "Public";
-  if (secteur === "PR") return "Privé";
+  if (secteur === SecteurEnum["PU"]) return "Public";
+  if (secteur === SecteurEnum["PR"]) return "Privé";
   return secteur;
 };
 

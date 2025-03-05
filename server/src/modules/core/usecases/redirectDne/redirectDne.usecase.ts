@@ -6,6 +6,7 @@ import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 import { flatten, uniq } from "lodash-es";
 import type { UserinfoResponse } from "openid-client";
+import {RoleEnum} from 'shared';
 
 import config from "@/config";
 import { getDneClient } from "@/modules/core/services/dneClient/dneClient";
@@ -75,7 +76,7 @@ const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
 
     if (uais.length > 0) {
       return {
-        role: "perdir",
+        role: RoleEnum["perdir"],
         uais,
       };
     }

@@ -1,36 +1,51 @@
 "use client";
 
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import {redirect, useSearchParams} from 'next/navigation';
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
-import { client } from "@/api.client";
-import { IntentionSpinner } from "@/app/(wrapped)/intentions/perdir/saisie/components/IntentionSpinner";
+import {client} from '@/api.client';
 import { IntentionForm } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/IntentionForm";
 import { IntentionFilesProvider } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/observationsSection/filesSection/filesContext";
-import { GuardExpe } from '@/utils/security/GuardExpe';
+import { canCreateIntention } from "@/app/(wrapped)/intentions/utils/permissionsIntentionUtils";
+import {Loading} from '@/components/Loading';
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { GuardPermission } from "@/utils/security/GuardPermission";
+import { GuardSaisieExpe } from '@/utils/security/GuardSaisieExpe';
+import { useAuth } from "@/utils/security/useAuth";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default () => {
-  const { data: defaultCampagne, isLoading } = client.ref("[GET]/campagne/expe/default").useQuery({});
+const Page = () => {
+  const { user } = useAuth();
+  const { campagne: currentCampagne } = useCurrentCampagne();
+  const queryParams = useSearchParams();
+
+  if(!currentCampagne) return redirect(getRoutingSaisieRecueilDemande({campagne: currentCampagne, user}));
+  const campagneId = queryParams.get("campagneId") ?? currentCampagne.id;
+
+  const { data: campagne, isLoading } = client.ref("[GET]/campagne/:campagneId").useQuery({
+    params: { campagneId },
+  });
+
+  if(isLoading) return <Loading />;
+  if(!campagne) return redirect(getRoutingSaisieRecueilDemande({campagne, user}));
 
   return (
-    <GuardPermission permission="intentions-perdir/ecriture">
-      <GuardExpe isExpeRoute={true}>
+    <GuardPermission permission={PermissionEnum["intentions-perdir/ecriture"]}>
+      <GuardSaisieExpe campagne={campagne}>
         <IntentionFilesProvider>
-          {isLoading && <IntentionSpinner />}
-          {!isLoading && defaultCampagne && (
-            <IntentionForm
-              disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
-              defaultValues={{
-                campagneId: defaultCampagne?.id,
-                rentreeScolaire: defaultCampagne?.annee ? Number.parseInt(defaultCampagne?.annee) + 1 : undefined,
-              }}
-              formMetadata={{}}
-              campagne={defaultCampagne}
-            />
-          )}
+          <IntentionForm
+            disabled={!canCreateIntention({ user, campagne, currentCampagne })}
+            defaultValues={{
+              campagneId,
+              rentreeScolaire: Number.parseInt(campagne.annee) + 1,
+            }}
+            formMetadata={{}}
+            campagne={campagne}
+          />
         </IntentionFilesProvider>
-      </GuardExpe>
+      </GuardSaisieExpe>
     </GuardPermission>
   );
 };
+
+export default Page;

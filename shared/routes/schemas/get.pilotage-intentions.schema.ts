@@ -5,6 +5,7 @@ import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEn
 import {PositionQuadrantZodType} from '../../enum/positionQuadrantEnum';
 import { scope, ScopeEnum } from "../../enum/scopeEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
+import { CampagneSchema } from "../../schema/campagneSchema";
 import {FormationSpecifiqueFlagsSchema} from '../../schema/formationSpecifiqueFlagsSchema';
 import {OptionSchema} from '../../schema/optionSchema';
 
@@ -116,7 +117,7 @@ export const getPilotageIntentionsSchema = {
       statutsNational: StatsPilotageIntentionSchema,
       positionsQuadrant: StatsPilotageIntentionSchema,
       filters: z.object({
-        campagnes: z.array(OptionSchema),
+        campagnes: z.array(CampagneSchema),
         rentreesScolaires: z.array(OptionSchema),
         regions: z.array(OptionSchema),
         academies: z.array(OptionSchema),
@@ -128,10 +129,7 @@ export const getPilotageIntentionsSchema = {
         statuts: z.array(OptionSchema),
         colorations: z.array(OptionSchema),
       }),
-      campagne: z.object({
-        annee: z.string(),
-        statut: z.string(),
-      }),
+      campagne: CampagneSchema
     }),
   },
 };

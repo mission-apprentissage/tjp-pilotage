@@ -1,9 +1,13 @@
+import _ from "lodash";
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType} from 'shared/schema/optionSchema';
 
 import { client } from "@/api.client";
+import type { Campus } from "@/app/(wrapped)/intentions/perdir/saisie/types";
+
+type Options = (typeof client.infer)["[GET]/campus/search/:search"];
 
 export const CampusAutocompleteInput = ({
   name,
@@ -13,10 +17,10 @@ export const CampusAutocompleteInput = ({
   onChange,
 }: {
   name: string;
-  defaultValue?: OptionSchema;
+  defaultValue?: OptionType;
   active?: boolean;
   inError: boolean;
-  onChange: (value?: (typeof client.infer)["[GET]/campus/search/:search"][number]) => void;
+  onChange: (value?: Campus) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -32,6 +36,13 @@ export const CampusAutocompleteInput = ({
       width: "35rem",
     }),
   };
+
+  const searchCampus = _.debounce(
+    (inputValue: string, callback: (options: Options) => void) => {
+      client.ref("[GET]/campus/search/:search")
+        .query({ params: { search: inputValue } })
+        .then(options => callback(options));
+    }, 300);
 
   return (
     <AsyncSelect
@@ -51,9 +62,7 @@ export const CampusAutocompleteInput = ({
           ...defaultValue,
         } as (typeof client.infer)["[GET]/campus/search/:search"][number])
       }
-      loadOptions={(inputValue: string) =>
-        client.ref("[GET]/campus/search/:search").query({ params: { search: inputValue } })
-      }
+      loadOptions={searchCampus}
       defaultOptions
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 1 ? "Recherche..." : "Veuillez rentrer au moins 1 lettre"

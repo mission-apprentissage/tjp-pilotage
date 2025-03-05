@@ -4,7 +4,6 @@ import { Container, Flex } from "@chakra-ui/react";
 import { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
@@ -42,7 +41,6 @@ export default ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const isCampagneEnCours = demande?.campagne?.statut === CampagneStatutEnum["en cours"];
 
   if (isLoading) return <SyntheseSpinner />;
   if (!demande) return null;
@@ -67,7 +65,7 @@ export default ({
             },
           ]}
         />
-        <MainSection demande={demande} isCampagneEnCours={isCampagneEnCours} />
+        <MainSection demande={demande} />
       </Flex>
     </Flex>
   );

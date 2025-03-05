@@ -1,5 +1,5 @@
 import { sql } from "kysely";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 import { getKbdClient } from "@/db/db";
 import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
@@ -20,7 +20,7 @@ export const findDomaineProfessionnelQuery = async ({ search, limit = 100 }: { s
         eb("domaineProfessionnel.libelleDomaineProfessionnel", "is not", null),
       ])
     )
-    .$castTo<OptionSchema>()
+    .$castTo<OptionType>()
     .where(
       (eb) => sql`unaccent(${eb.ref("domaineProfessionnel.libelleDomaineProfessionnel")})`,
       "ilike",

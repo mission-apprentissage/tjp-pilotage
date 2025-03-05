@@ -7,17 +7,21 @@ import NextLink from "next/link";
 import { useContext } from "react";
 
 import { client } from "@/api.client";
-import { AuthContext } from "@/app/(wrapped)/auth/authContext";
-import { CodeDepartementFilterContext, CodeRegionFilterContext, UaisFilterContext } from "@/app/layoutClient";
+import { CodeDepartementContext } from "@/app/codeDepartementContext";
+import { CodeRegionContext } from "@/app/codeRegionContext";
+import { CurrentCampagneContext } from "@/app/currentCampagneContext";
+import { UaisContext } from "@/app/uaiContext";
+import { useAuth } from "@/utils/security/useAuth";
 
 import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
 export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
-  const { auth, setAuth } = useContext(AuthContext);
-  const { setUaisFilter } = useContext(UaisFilterContext);
-  const { setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
-  const { setCodeRegionFilter } = useContext(CodeRegionFilterContext);
+  const { user, setAuth } = useAuth();
+  const { setUais } = useContext(UaisContext);
+  const { setCodeDepartement } = useContext(CodeDepartementContext);
+  const { setCodeRegion } = useContext(CodeRegionContext);
+  const { setCampagne } = useContext(CurrentCampagneContext);
   const queryClient = useQueryClient();
 
   const {
@@ -29,9 +33,10 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const logout = async () => {
     await client.ref("[POST]/auth/logout").query({});
     setAuth(undefined);
-    setUaisFilter(undefined);
-    setCodeDepartementFilter(undefined);
-    setCodeRegionFilter(undefined);
+    setUais(undefined);
+    setCodeDepartement(undefined);
+    setCodeRegion(undefined);
+    setCampagne(undefined);
     queryClient.clear();
   };
 
@@ -59,7 +64,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
             </Heading>
           </HStack>
           <Box ml="auto">
-            {!auth && (
+            {!user && (
               <Button
                 fontWeight="light"
                 as={NextLink}
@@ -72,7 +77,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
                 Se connecter
               </Button>
             )}
-            {!!auth && (
+            {!!user && (
               <Menu autoSelect={false} placement="bottom-end" closeOnBlur  isOpen={isMenuDeconnexionOpen} gutter={0}>
                 <MenuButton
                   ml="auto"
@@ -87,7 +92,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
                   <Box as="span" display={["none", null, "unset"]}>
                     Bienvenue,{" "}
                   </Box>
-                  {auth.user.email}
+                  {user.email}
                   <ChevronDownIcon ml="2" />
                 </MenuButton>
                 <Portal>

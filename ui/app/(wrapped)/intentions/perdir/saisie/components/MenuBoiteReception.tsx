@@ -1,30 +1,34 @@
-import { Button, Divider, Flex, Text, useToken, VStack } from "@chakra-ui/react";
+import {Button, Divider, Flex, Text, Tooltip,useToken, VStack} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { CampagneType } from "shared/schema/campagneSchema";
+import type { UserType } from "shared/schema/userSchema";
 
 import { client } from "@/api.client";
 import type { Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/perdir/saisie/utils/canEditIntention";
+import {getMessageAccompagnementCampagne} from '@/app/(wrapped)/intentions/utils/messageAccompagnementUtils';
+import { canCreateIntention } from "@/app/(wrapped)/intentions/utils/permissionsIntentionUtils";
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
 export const MenuBoiteReception = ({
   isRecapView = false,
-  hasPermissionSubmitIntention,
-  campagne,
+  isNouvelleDemandeDisabled,
   handleFilters,
   activeFilters,
+  campagne,
+  user
 }: {
   isRecapView?: boolean;
-  hasPermissionSubmitIntention: boolean;
-  campagne?: { annee: string; statut: string };
+  isNouvelleDemandeDisabled: boolean;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   activeFilters: Partial<Filters>;
+  campagne: CampagneType;
+  user: UserType;
 }) => {
+  const { campagne: currentCampagne } = useCurrentCampagne();
   const statut = activeFilters.statut === undefined ? "none" : activeFilters.statut;
-  const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
-
-  const isDisabled = !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
   const { data: countIntentions } = client.ref("[GET]/intentions/count").useQuery({
     query: {
@@ -36,17 +40,26 @@ export const MenuBoiteReception = ({
 
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
-      <Button
-        mb={1.5}
-        variant="primary"
-        isDisabled={isDisabled}
-        leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
-        as={hasPermissionSubmitIntention && !isSaisieDisabled() ? NextLink : undefined}
-        href="/intentions/perdir/saisie/new"
-        minHeight={"35px"}
+      <Tooltip
+        label={getMessageAccompagnementCampagne({ campagne, currentCampagne, user })}
+        shouldWrapChildren
+        placement="bottom-start"
       >
-        Nouvelle demande
-      </Button>
+        <Flex>
+          <Button
+            mb={1.5}
+            variant="primary"
+            isDisabled={isNouvelleDemandeDisabled}
+            leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
+            as={isNouvelleDemandeDisabled ? undefined : NextLink}
+            href={isNouvelleDemandeDisabled ? undefined : getRoutingSaisieRecueilDemande({campagne, user, suffix: `new?campagneId=${campagne?.id}`})}
+            minHeight={"35px"}
+            w={"100%"}
+          >
+            Nouvelle demande
+          </Button>
+        </Flex>
+      </Tooltip>
       <VStack flex="1" align="flex-start" spacing={1}>
         {/* Toutes */}
         <Button
@@ -321,36 +334,38 @@ export const MenuBoiteReception = ({
             Demandes suivies
           </Text>
         </Button>
-        <Button
-          bgColor={"unset"}
-          size="sm"
-          onClick={() => handleFilters("statut", DemandeStatutEnum["brouillon"])}
-          width={"100%"}
-          iconSpacing={2}
-          leftIcon={<Icon icon={"ri:draft-line"} color={bluefrance113} width={"24px"} />}
-          rightIcon={
+        {canCreateIntention({user, currentCampagne, campagne}) && (
+          <Button
+            bgColor={"unset"}
+            size="sm"
+            onClick={() => handleFilters("statut", DemandeStatutEnum["brouillon"])}
+            width={"100%"}
+            iconSpacing={2}
+            leftIcon={<Icon icon={"ri:draft-line"} color={bluefrance113} width={"24px"} />}
+            rightIcon={
+              <Text
+                fontWeight={isRecapView && statut === DemandeStatutEnum["brouillon"] ? "bold" : "normal"}
+                fontSize={14}
+              >
+                {countIntentions?.[DemandeStatutEnum["brouillon"]]}
+              </Text>
+            }
+            isActive={statut === DemandeStatutEnum["brouillon"]}
+            _active={{
+              borderRadius: "none",
+              bg: "bluefrance.950",
+            }}
+            p={5}
+          >
             <Text
               fontWeight={isRecapView && statut === DemandeStatutEnum["brouillon"] ? "bold" : "normal"}
               fontSize={14}
+              me={"auto"}
             >
-              {countIntentions?.[DemandeStatutEnum["brouillon"]]}
-            </Text>
-          }
-          isActive={statut === DemandeStatutEnum["brouillon"]}
-          _active={{
-            borderRadius: "none",
-            bg: "bluefrance.950",
-          }}
-          p={5}
-        >
-          <Text
-            fontWeight={isRecapView && statut === DemandeStatutEnum["brouillon"] ? "bold" : "normal"}
-            fontSize={14}
-            me={"auto"}
-          >
             Brouillons
-          </Text>
-        </Button>
+            </Text>
+          </Button>
+        )}
       </VStack>
     </Flex>
   );

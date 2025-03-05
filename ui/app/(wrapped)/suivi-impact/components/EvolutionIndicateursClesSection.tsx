@@ -1,0 +1,92 @@
+import { Box, Flex, Heading, Select, Skeleton, VisuallyHidden } from '@chakra-ui/react';
+import _ from "lodash";
+import { useState } from 'react';
+
+import type { IndicateurOption, PilotageReformeStats } from "@/app/(wrapped)/suivi-impact/types";
+
+import type { BarGraphData } from "./BarGraph";
+import { BarGraph } from "./BarGraph";
+
+type IndicateurCleType = "tauxInsertion" | "tauxPoursuite";
+
+export const EvolutionIndicateursClesSection = ({
+  data,
+  isLoading,
+  isFiltered = false,
+  codeRegion,
+}: {
+  data?: PilotageReformeStats;
+  isLoading: boolean;
+  isFiltered?: boolean | string;
+  codeRegion?: string;
+}) => {
+  const [indicateur, setIndicateur] = useState<IndicateurCleType>("tauxInsertion");
+  const indicateurOptions: IndicateurOption[] = [
+    {
+      label: "Taux d'emploi à 6 mois",
+      value: "tauxInsertion",
+      isDefault: true,
+    },
+    {
+      label: "Taux de poursuite d'études",
+      value: "tauxPoursuite",
+      isDefault: false,
+    },
+  ];
+
+  const graphData: BarGraphData = {};
+
+  data?.annees.forEach((anneeData) => {
+    graphData[anneeData.annee.toString()] = {
+      annee: anneeData.annee.toString(),
+      libelleAnnee: anneeData.millesime.join("+"),
+      filtered: typeof anneeData.scoped[indicateur] !== "undefined" ? (anneeData.scoped[indicateur] ?? 0) * 100 : undefined,
+      nationale: typeof anneeData.nationale[indicateur] !== "undefined" ? (anneeData.nationale[indicateur] ?? 0) * 100 : undefined,
+    };
+  });
+
+  const getLibelleRegion = (regions?: Array<{ label: string; value: string }>, codeRegion?: string) => {
+    return _.find(regions, (region) => region.value === codeRegion)?.label;
+  };
+
+  const libelleRegion = isFiltered ? getLibelleRegion(data?.filters?.regions, codeRegion) : "";
+
+  return (
+    <Box borderRadius={4} border={"1px solid"} borderColor="grey.900" bg="white" p={3} height={"328"} mt={8}>
+      {isLoading ? (
+        <Skeleton opacity="0.3" height="100%" />
+      ) : (
+        <Box>
+          <Flex marginStart={"auto"} justifyContent="space-between">
+            <Heading
+              as="h2"
+              fontSize={15}
+              fontWeight="500"
+              textTransform={"uppercase"}
+              color={"bluefrance.113"}
+            >
+              Évolution des indicateurs clés
+            </Heading>
+            <VisuallyHidden as="label" htmlFor="select-indicateur-evolution-indicateur-cles">Indicateur</VisuallyHidden>
+            <Select
+              id="select-indicateur-evolution-indicateur-cles"
+              width="64"
+              size="sm"
+              variant="newInput"
+              bg={"grey.150"}
+              onChange={(e) => setIndicateur(e.target.value as IndicateurCleType)}
+              value={indicateur}
+            >
+              {indicateurOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label.toUpperCase()}
+                </option>
+              ))}
+            </Select>
+          </Flex>
+          <BarGraph graphData={graphData} isFiltered={isFiltered} libelleRegion={libelleRegion} />
+        </Box>
+      )}
+    </Box>
+  );
+};

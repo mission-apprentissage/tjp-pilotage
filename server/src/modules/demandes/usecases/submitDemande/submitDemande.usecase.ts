@@ -3,13 +3,14 @@ import * as Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { demandeValidators, getPermissionScope, guardScope } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import type { submitDemandeSchema } from "shared/routes/schemas/post.demande.submit.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneDataEtablissement } from "@/modules/data/repositories/findOneDataEtablissement.query";
 import { findOneDataFormation } from "@/modules/demandes/repositories/findOneDataFormation.query";
-import { findOneDemande } from "@/modules/demandes/repositories/findOneDemande.query";
+import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
 import { findOneSimilarDemande } from "@/modules/demandes/repositories/findOneSimilarDemande.query";
 import { generateId, generateShortId } from "@/modules/utils/generateId";
 import logger from "@/services/logger";
@@ -49,12 +50,12 @@ export const [submitDemande, submitDemandeFactory] = inject(
     createDemandeQuery,
     findOneDataEtablissement,
     findOneDataFormation,
-    findOneDemande,
+    findOneDemandeQuery,
     findOneSimilarDemande,
   },
   (deps) =>
-    async ({ demande, user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion">; demande: Demande }) => {
-      const currentDemande = demande.numero ? await deps.findOneDemande(demande.numero) : undefined;
+    async ({ demande, user }: { user: RequestUser; demande: Demande }) => {
+      const currentDemande = demande.numero ? await deps.findOneDemandeQuery(demande.numero) : undefined;
 
       const { cfd, uai } = demande;
 
@@ -72,8 +73,8 @@ export const [submitDemande, submitDemandeFactory] = inject(
       if (!dataEtablissement.codeRegion) throw Boom.badData();
 
       const scope = getPermissionScope(user.role, "intentions/ecriture");
-      const isAllowed = guardScope(scope?.default, {
-        region: () => user.codeRegion === dataEtablissement.codeRegion,
+      const isAllowed = guardScope(scope, {
+        région: () => user.codeRegion === dataEtablissement.codeRegion,
         national: () => true,
       });
       if (!isAllowed) throw Boom.forbidden();
@@ -94,7 +95,8 @@ export const [submitDemande, submitDemandeFactory] = inject(
       }
 
       const compensationRentreeScolaire =
-        demande.typeDemande === "augmentation_compensation" || demande.typeDemande === "ouverture_compensation"
+        demande.typeDemande === DemandeTypeEnum["augmentation_compensation"] ||
+        demande.typeDemande === DemandeTypeEnum["ouverture_compensation"]
           ? demande.rentreeScolaire
           : undefined;
 

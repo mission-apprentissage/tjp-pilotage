@@ -1,3 +1,6 @@
+import {PermissionEnum} from 'shared/enum/permissionEnum';
+import { PermissionScopeEnum } from 'shared/enum/permissionScopeEnum';
+import {RoleEnum} from 'shared/enum/roleEnum';
 import { describe, expect, it } from "vitest";
 
 import { getScopeFilterForUser } from "./getScopeFilterForUser";
@@ -9,25 +12,25 @@ const requestUser = {
   lastname: "lastname",
   password: "password",
   codeRegion: "84",
-  role: "admin_region",
+  role: RoleEnum["admin_region"],
 } as const;
 
 describe("getScopeFilterForUser", () => {
   it("should retrieve a scopeFilter array if user permission scope is region", () => {
-    expect(getScopeFilterForUser("users/lecture", requestUser)).toEqual({
-      scope: "region",
+    expect(getScopeFilterForUser(PermissionEnum["users/lecture"], requestUser)).toEqual({
+      scope: PermissionScopeEnum["région"],
       scopeFilter: ["84"],
     });
   });
 
   it("should not retrieve a scope filter array if user permission scope is not region", () => {
     expect(
-      getScopeFilterForUser("users/lecture", {
+      getScopeFilterForUser(PermissionEnum["users/lecture"], {
         ...requestUser,
-        role: "admin",
+        role: RoleEnum["admin"],
       })
     ).toEqual({
-      scope: "national",
+      scope: PermissionScopeEnum["national"],
       scopeFilter: [],
     });
   });

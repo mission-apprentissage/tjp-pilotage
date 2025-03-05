@@ -1,10 +1,9 @@
 import { chakra, FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/validators/demandeValidators";
+import { isTypeDiminution,isTypeFermeture } from "shared/utils/typeDemandeUtils";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
-import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const AmiCmaValideAnneeField = chakra(({ disabled, className }: { disabled?: boolean; className?: string }) => {
   const {

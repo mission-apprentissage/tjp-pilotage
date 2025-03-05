@@ -1,5 +1,6 @@
-import { createRoute } from "@http-wizard/core";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
+import { createRoute } from "shared/utils/http-wizard/core";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
@@ -15,10 +16,9 @@ export const editCampagneRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("campagnes/ecriture"),
+      preHandler: hasPermissionHandler(PermissionEnum["campagnes/ecriture"]),
       handler: async (request, response) => {
         await editCampagneUsecase({
-          campagneId: request.params.campagneId,
           campagne: request.body,
         });
         response.code(200).send();

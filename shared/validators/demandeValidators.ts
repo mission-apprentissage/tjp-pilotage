@@ -1,41 +1,15 @@
 // @ts-nocheck -- TODO  Not all code paths return a value.
 
-import type { Args, ZodTypeProvider } from "@http-wizard/core";
-
-// import type { Router } from "server/src/server/routes/routes";
 import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
-import type { DemandeType } from "../enum/demandeTypeEnum";
+import type { Router } from "../routes";
+import type { Args, ZodTypeProvider } from "../utils/http-wizard/core";
+import { isTypeAjustement, isTypeAugmentation, isTypeColoration, isTypeCompensation, isTypeDiminution, isTypeFermeture, isTypeOuverture, isTypeTransfert } from "../utils/typeDemandeUtils";
+import { isPositiveNumber } from "./utils";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Demande = Args<any["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
+type Demande = Args<Router["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
 
-export const isTypeFermeture = (typeDemande: DemandeType) => ["fermeture"].includes(typeDemande);
 
-export const isTypeOuverture = (typeDemande: DemandeType) =>
-  ["ouverture_compensation", "ouverture_nette"].includes(typeDemande);
-
-export const isTypeAugmentation = (typeDemande: DemandeType) =>
-  ["augmentation_compensation", "augmentation_nette"].includes(typeDemande);
-
-export const isTypeDiminution = (typeDemande: DemandeType) => ["diminution"].includes(typeDemande);
-
-export const isTypeCompensation = (typeDemande: DemandeType) =>
-  ["augmentation_compensation", "ouverture_compensation"].includes(typeDemande);
-
-export const isTypeTransfert = (typeDemande: DemandeType) => ["transfert"].includes(typeDemande);
-
-export const isTypeColoration = (typeDemande: DemandeType) => ["coloration"].includes(typeDemande);
-
-export const isTypeAjustement = (typeDemande: DemandeType) => ["ajustement"].includes(typeDemande);
-
-const isPositiveNumber = (value: number | undefined): value is number => {
-  if (!Number.isInteger(value)) return false;
-  if (value === undefined) return false;
-  if (value < 0) return false;
-  return true;
-};
-
-export const demandeValidators: Record<keyof Demande | string, (demande: Demande) => string | undefined> = {
+export const demandeValidators = {
   motif: (demande) => {
     if (!isTypeAjustement(demande.typeDemande) && !demande.motif?.length) {
       return "Le champ 'motif' est obligatoire";
@@ -404,4 +378,4 @@ export const demandeValidators: Record<keyof Demande | string, (demande: Demande
     }
     return undefined;
   },
-};
+} satisfies Record<keyof Demande | string, (demande: Demande) => string | undefined>;

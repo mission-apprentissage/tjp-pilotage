@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
+import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 import type { searchDiplomeSchema } from "shared/routes/schemas/get.diplome.search.search.schema";
 import type { z } from "zod";
 
@@ -65,8 +66,8 @@ export const findManyInDataFormationQuery = async ({
         ]),
         eb.or([
           eb("dataFormation.typeFamille", "is", null),
-          eb("dataFormation.typeFamille", "=", "specialite"),
-          eb("dataFormation.typeFamille", "=", "option"),
+          eb("dataFormation.typeFamille", "=", TypeFamilleEnum["specialite"]),
+          eb("dataFormation.typeFamille", "=", TypeFamilleEnum["option"]),
         ]),
       ])
     )

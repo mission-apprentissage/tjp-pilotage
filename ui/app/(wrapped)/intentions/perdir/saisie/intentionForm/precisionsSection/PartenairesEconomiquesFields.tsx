@@ -2,10 +2,9 @@ import { AddIcon } from "@chakra-ui/icons";
 import { Button, chakra, Flex, FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/validators/demandeValidators";
+import { isTypeDiminution, isTypeFermeture } from "shared/utils/typeDemandeUtils";
 
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
-import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const PartenairesEconomiquesFields = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {

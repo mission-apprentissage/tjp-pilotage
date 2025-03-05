@@ -7,5 +7,6 @@ export const getCampagneEnCours = async () => {
     .selectFrom("campagne")
     .where("statut", "=", CampagneStatutEnum["en cours"])
     .selectAll()
+    .orderBy("annee", "asc")
     .executeTakeFirst();
 };

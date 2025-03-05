@@ -4,8 +4,8 @@ import type { Role } from "shared";
 
 import type { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/components/RoleTag";
-import type { MotifLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
-import { getMotifLabel, hasMotifAutre } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import type { AnneeCampagneMotifDemande,MotifDemandeLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
+import { getMotifDemandeLabel,hasMotifAutre } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
@@ -19,10 +19,23 @@ const formatDifferenceCapacite = (difference?: number) => {
   return difference;
 };
 
-const formatMotifArray = (values?: Array<string | undefined>): string => {
-  if (!values) return "Aucun";
+
+const formatMotifArray = ({
+  motifs,
+  anneeCampagne
+} :{
+  motifs?: Array<string | undefined>,
+  anneeCampagne: string
+}): string => {
+  if (!motifs) return "Aucun";
+  // Filtrer le motifs autre pour les ajouter différemment sur la synthèse
   return formatArray(
-    values.filter((motif) => !hasMotifAutre([motif])).map((motif) => getMotifLabel({ motif: motif as MotifLabel }))
+    motifs.filter((motif) => !hasMotifAutre([motif])).map((motif) =>
+      getMotifDemandeLabel({
+        motif: motif as MotifDemandeLabel,
+        anneeCampagne: anneeCampagne as AnneeCampagneMotifDemande
+      })
+    )
   );
 };
 
@@ -251,7 +264,13 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
             </Heading>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text fontSize={14}>{formatMotifArray(intention.motif)}</Text>
+            <Text fontSize={14}>{
+              formatMotifArray({
+                motifs: intention.motif,
+                anneeCampagne: intention.campagne.annee
+              })
+            }
+            </Text>
           </Flex>
           {hasMotifAutre(intention.motif) && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>

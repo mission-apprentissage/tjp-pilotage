@@ -62,8 +62,11 @@ const IntentionSchema = z.object({
   autreMotifRefus: z.string().optional(),
 });
 
+export const FiltersSchema = z.object({ numero: z.string() });
+
+
 export const importIntentionSchema = {
-  params: z.object({ numero: z.string() }),
+  params: FiltersSchema,
   response: {
     200: IntentionSchema.partial().merge(
       z.object({

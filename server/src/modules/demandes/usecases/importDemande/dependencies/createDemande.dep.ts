@@ -1,6 +1,7 @@
 import type { Insertable } from "kysely";
 import { omit } from "lodash-es";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {DemandeTypeEnum} from 'shared/enum/demandeTypeEnum';
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
@@ -17,11 +18,11 @@ export const createDemandeQuery = ({
   user: Pick<RequestUser, "id">;
 }) => {
   const getTypeDemande = (demande: Insertable<DB["demande"]>) => {
-    if (demande.typeDemande === "augmentation_compensation") {
-      return "augmentation_nette";
+    if (demande.typeDemande === DemandeTypeEnum["augmentation_compensation"]) {
+      return DemandeTypeEnum["augmentation_nette"];
     }
-    if (demande.typeDemande === "ouverture_compensation") {
-      return "ouverture_nette";
+    if (demande.typeDemande === DemandeTypeEnum["ouverture_compensation"]) {
+      return DemandeTypeEnum["ouverture_nette"];
     }
     return demande.typeDemande;
   };

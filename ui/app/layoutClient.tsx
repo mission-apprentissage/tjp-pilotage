@@ -8,24 +8,32 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Crisp } from "crisp-sdk-web";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
-import type { Dispatch, SetStateAction } from "react";
-import { createContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { publicConfig } from "@/config.public";
 import { theme } from "@/theme/theme";
 
-import type { Auth } from "./(wrapped)/auth/authContext";
-import { AuthContext } from "./(wrapped)/auth/authContext";
 import type { Changelog } from "./(wrapped)/changelog/changelogContext";
 import { ChangelogContext } from "./(wrapped)/changelog/changelogContext";
 import { GlossaireProvider } from "./(wrapped)/glossaire/glossaireContext";
 import type { GlossaireEntries } from "./(wrapped)/glossaire/types";
+import type { Auth} from "./authContext";
+import { AuthContext } from "./authContext";
+import { CodeRegionContext } from "./codeRegionContext";
+import { CurrentCampagneContext } from "./currentCampagneContext";
+import { PreviousCampagneContext } from "./previousCampagneContext";
+import { UaisContext } from "./uaiContext";
 
 interface RootLayoutClientProps {
   readonly children: React.ReactNode;
   readonly auth?: Auth;
   readonly changelog: Changelog;
   readonly glossaire: GlossaireEntries;
+  readonly previousCampagne?: CampagneType;
+  readonly currentCampagne?: CampagneType;
+  readonly codeRegion?: string;
+  readonly uais?: Array<string>;
 }
 
 const useCrisp = () => {
@@ -59,35 +67,15 @@ const useTracking = () => {
   return !noTracking.current;
 };
 
-export const CodeRegionFilterContext = createContext<{
-  codeRegionFilter?: string;
-  setCodeRegionFilter: Dispatch<SetStateAction<string | undefined>>;
-}>({
-  codeRegionFilter: "",
-  setCodeRegionFilter: () => {},
-});
-
-export const CodeDepartementFilterContext = createContext<{
-  codeDepartementFilter?: string;
-  setCodeDepartementFilter: Dispatch<SetStateAction<string | undefined>>;
-}>({
-  codeDepartementFilter: "",
-  setCodeDepartementFilter: () => {},
-});
-
-export const UaisFilterContext = createContext<{
-  uaisFilter?: Array<string>;
-  setUaisFilter: Dispatch<SetStateAction<Array<string> | undefined>>;
-}>({
-  uaisFilter: [],
-  setUaisFilter: () => {},
-});
-
 export default function RootLayoutClient({
   children,
   auth: initialAuth,
   changelog: initialChangelog,
   glossaire: initialGlossaire,
+  currentCampagne: initialCurrentCampagne,
+  previousCampagne: initialPreviousCampagne,
+  codeRegion: initialCodeRegion,
+  uais: initialUais,
 }: RootLayoutClientProps) {
   useCrisp();
   const tracking = useTracking();
@@ -104,13 +92,11 @@ export default function RootLayoutClient({
 
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
   const [changelog, setChangelog] = useState<Changelog>(initialChangelog);
+  const [currentCampagne, setCurrentCampagne] = useState<CampagneType | undefined>(initialCurrentCampagne);
+  const [previousCampagne, setPreviousCampagne] = useState<CampagneType | undefined>(initialPreviousCampagne);
 
-  const [codeRegionFilter, setCodeRegionFilter] = useState<string | undefined>(auth?.user.codeRegion);
-  const [uaisFilter, setUaisFilter] = useState<Array<string> | undefined>(auth?.user.uais);
-
-  const codeRegionFilterValue = useMemo(() => ({ codeRegionFilter, setCodeRegionFilter }), [codeRegionFilter]);
-
-  const uaisFilterValue = useMemo(() => ({ uaisFilter, setUaisFilter }), [uaisFilter]);
+  const [codeRegion, setCodeRegion] = useState<string | undefined>(initialCodeRegion);
+  const [uais, setUais] = useState<Array<string> | undefined>(initialUais);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef<number>(0);
@@ -142,24 +128,34 @@ export default function RootLayoutClient({
           <CacheProvider>
             <ChakraProvider theme={theme}>
               <AuthContext.Provider value={{ auth, setAuth }}>
-                <UaisFilterContext.Provider value={uaisFilterValue}>
-                  <CodeRegionFilterContext.Provider value={codeRegionFilterValue}>
-                    <GlossaireProvider initialEntries={initialGlossaire}>
-                      <ChangelogContext.Provider value={{ changelog, setChangelog }}>
-                        <Flex
-                          direction="column"
-                          height="100vh"
-                          overflow="auto"
-                          position="relative"
-                          ref={containerRef}
-                          onScroll={handleScrolling}
-                        >
-                          {children}
-                        </Flex>
-                      </ChangelogContext.Provider>
-                    </GlossaireProvider>
-                  </CodeRegionFilterContext.Provider>
-                </UaisFilterContext.Provider>
+                <UaisContext.Provider value={{uais, setUais}}>
+                  <CodeRegionContext.Provider value={{codeRegion, setCodeRegion}}>
+                    <CurrentCampagneContext.Provider value={{
+                      campagne: currentCampagne,
+                      setCampagne: setCurrentCampagne
+                    }}>
+                      <PreviousCampagneContext.Provider value={{
+                        campagne: previousCampagne,
+                        setCampagne: setPreviousCampagne
+                      }}>
+                        <GlossaireProvider initialEntries={initialGlossaire}>
+                          <ChangelogContext.Provider value={{ changelog, setChangelog }}>
+                            <Flex
+                              direction="column"
+                              height="100vh"
+                              overflow="auto"
+                              position="relative"
+                              ref={containerRef}
+                              onScroll={handleScrolling}
+                            >
+                              {children}
+                            </Flex>
+                          </ChangelogContext.Provider>
+                        </GlossaireProvider>
+                      </PreviousCampagneContext.Provider>
+                    </CurrentCampagneContext.Provider>
+                  </CodeRegionContext.Provider>
+                </UaisContext.Provider>
               </AuthContext.Provider>
             </ChakraProvider>
           </CacheProvider>

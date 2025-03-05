@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 import type { Voie } from "shared/enum/voieEnum";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 import { cleanNull } from "@/utils/noNull";
 
@@ -48,7 +48,7 @@ export const getFiltersCodeNiveauDiplome = async ({ uai, voie }: { uai: string; 
     .groupBy(["label", "value"])
     .orderBy(["label asc"])
     .$castTo<
-      OptionSchema & {
+      OptionType & {
         nbOffres: number;
       }
     >()

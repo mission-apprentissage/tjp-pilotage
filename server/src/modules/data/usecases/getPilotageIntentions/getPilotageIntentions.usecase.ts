@@ -4,7 +4,8 @@ import type {
 } from "shared/routes/schemas/get.pilotage-intentions.schema";
 import type { z } from "zod";
 
-import { getCurrentCampagneQuery } from "@/modules/data/queries/getCurrentCampagne/getCurrentCampagne.query";
+import type { RequestUser } from "@/modules/core/model/User";
+import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
 import type { getDenominateurQuery, getNumerateurQuery} from "./deps";
 import { getDomaines, getFiltersQuery, getFormationsQuery, getNiveauxDiplome, getPositionsQuadrant, getStatuts, getZonesGeographiques } from "./deps";
@@ -12,6 +13,7 @@ import {getStatsSortieQuery} from './deps/getStatsSortieQuery';
 import { formatResult, formatResultUngrouped } from "./utils";
 
 export interface Filters extends z.infer<typeof getPilotageIntentionsSchema.querystring> {
+  user: RequestUser;
   campagne: string;
 }
 export interface ActiveFilters extends Omit<Filters, "campagne"> {
@@ -52,7 +54,7 @@ export type Repartition = {
 const getPilotageIntentionsFactory =
   (
     deps = {
-      getCurrentCampagneQuery,
+      getCurrentCampagne,
       getDomaines,
       getNiveauxDiplome,
       getZonesGeographiques,
@@ -64,8 +66,8 @@ const getPilotageIntentionsFactory =
     }
   ) =>
     async (activeFilters: ActiveFilters) => {
-      const campagne = await deps.getCurrentCampagneQuery();
-      const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
+      const campagne = await deps.getCurrentCampagne(activeFilters.user);
+      const anneeCampagne = activeFilters.campagne ?? campagne.annee;
       const [
         domaines,
         niveauxDiplome,
@@ -134,7 +136,7 @@ const getPilotageIntentionsFactory =
         zonesGeographiques: formatResult(zonesGeographiques, activeFilters.order, activeFilters.orderBy),
         positionsQuadrant: formatResult(positionsQuadrant, activeFilters.order, activeFilters.orderBy),
         filters,
-        campagne,
+        campagne
       };
     };
 

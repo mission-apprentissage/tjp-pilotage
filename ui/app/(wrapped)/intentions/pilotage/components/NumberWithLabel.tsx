@@ -2,7 +2,6 @@ import { Box, Flex, Heading, HStack, Icon as ChakraIcon, Popover, PopoverCloseBu
 import { Icon } from '@iconify/react';
 import _ from 'lodash';
 import type { ReactNode } from "react";
-import React from "react";
 import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 
 import { getStatutBgColor } from '@/app/(wrapped)/intentions/components/StatutTag';

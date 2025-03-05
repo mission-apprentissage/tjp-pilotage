@@ -3,6 +3,7 @@ export const formatDate = ({
   date,
   options,
   dateTimeSeparator,
+  nullValue = ""
 }: {
   date?: string;
   options?: {
@@ -10,8 +11,9 @@ export const formatDate = ({
     timeStyle?: "short" | "medium" | "long" | "full";
   };
   dateTimeSeparator?: string;
+  nullValue?: string;
 }) => {
-  if (!date) return "";
+  if (!date) return nullValue;
   if (!dateTimeSeparator) return new Date(date).toLocaleString("fr-FR", options);
   const [datePart, timePart] = new Date(date).toLocaleString("fr-FR", options).split(" ");
   return `${datePart}${dateTimeSeparator}${timePart ?? ""}`;
@@ -63,6 +65,19 @@ export const formatPercentage = (
   return new Intl.NumberFormat("fr-FR", {
     style: "percent",
     maximumFractionDigits: numberOfDigits,
+  }).format(value);
+};
+
+export const formatPercentageFixedDigits = (
+  value?: number | null,
+  numberOfDigits: number = 0,
+  nullValue: string = "0 %"
+): string => {
+  if (value === undefined || value === null || Number.isNaN(value)) return nullValue;
+  return new Intl.NumberFormat("fr-FR", {
+    style: "percent",
+    maximumFractionDigits: numberOfDigits,
+    minimumFractionDigits: numberOfDigits,
   }).format(value);
 };
 

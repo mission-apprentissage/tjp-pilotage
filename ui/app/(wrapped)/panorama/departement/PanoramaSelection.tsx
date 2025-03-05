@@ -8,7 +8,7 @@ import { useContext, useEffect } from "react";
 
 import type { client } from "@/api.client";
 import { DEFAULT_SEARCH_PARAMS } from "@/app/(wrapped)/panorama/types";
-import { CodeDepartementFilterContext } from "@/app/layoutClient";
+import { CodeDepartementContext } from "@/app/codeDepartementContext";
 
 export function PanoramaSelection({
   departementsOptions,
@@ -16,15 +16,15 @@ export function PanoramaSelection({
   readonly departementsOptions: (typeof client.infer)["[GET]/departements"];
 }) {
   const router = useRouter();
-  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
+  const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
 
   useEffect(() => {
-    if (codeDepartementFilter) onCodeDepartementChanged(codeDepartementFilter);
+    if (codeDepartement) onCodeDepartementChanged(codeDepartement);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onCodeDepartementChanged = (codeDepartement: string) => {
-    setCodeDepartementFilter(codeDepartement);
+    setCodeDepartement(codeDepartement);
     router.push(`/panorama/departement/${codeDepartement}?${qs.stringify(DEFAULT_SEARCH_PARAMS)}`);
   };
 

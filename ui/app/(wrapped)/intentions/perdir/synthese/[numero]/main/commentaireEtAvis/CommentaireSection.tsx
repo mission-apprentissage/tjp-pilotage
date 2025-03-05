@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Role } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/components/RoleTag";
@@ -27,7 +28,7 @@ import { UpdateChangementStatutForm } from "./UpdateChangementStatutForm";
 
 export const CommentaireSection = chakra(
   ({ changementStatut, statut }: { changementStatut: ChangementStatut; statut: DemandeStatutType }) => {
-    const hasPermissionModificationStatut = usePermission("intentions-perdir-statut/ecriture");
+    const hasPermissionModificationStatut = usePermission(PermissionEnum["intentions-perdir-statut/ecriture"]);
     const [isModifying, setIsModifying] = useState(false);
     const queryClient = useQueryClient();
 

@@ -1,4 +1,5 @@
-import { Box, Button, Flex, Grid, GridItem, Select, Text, VStack } from "@chakra-ui/react";
+import {ChevronDownIcon} from '@chakra-ui/icons';
+import {Box, Button, Flex, Grid, GridItem, Menu, MenuButton, MenuItem, MenuList,Select, Text, VStack} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { ScopeEnum } from "shared";
@@ -10,8 +11,9 @@ import type {
   FilterTracker,
   PilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
-import { findDefaultRentreeScolaireForCampagne } from "@/app/(wrapped)/intentions/pilotage/utils";
+import { getDefaultRentreeScolaireForAnneeCampagne } from "@/app/(wrapped)/intentions/pilotage/utils";
 import { getStickyNavHeight } from "@/app/(wrapped)/utils/getStickyNavOffset";
+import {CampagneStatutTag} from '@/components/CampagneStatutTag';
 import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
@@ -22,12 +24,14 @@ export const FiltersSection = ({
   setDefaultFilters,
   filterTracker,
   data,
+  isLoading
 }: {
   filters: FiltersPilotageIntentions;
   setFilters: (filters: FiltersPilotageIntentions) => void;
   setDefaultFilters: () => void;
   filterTracker: FilterTracker;
   data?: PilotageIntentions;
+  isLoading?: boolean;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const onUpdateFilter = <T,>({
@@ -54,9 +58,8 @@ export const FiltersSection = ({
     };
 
     if (key === "campagne" && typeof value === "string") {
-      const defaultRentreeScolaire = findDefaultRentreeScolaireForCampagne(
+      const defaultRentreeScolaire = getDefaultRentreeScolaireForAnneeCampagne(
         value,
-        data?.filters?.rentreesScolaires ?? []
       );
       newFilters = {
         ...newFilters,
@@ -144,24 +147,42 @@ export const FiltersSection = ({
       >
         <GridItem>
           <Text as="label" htmlFor="select-campagne">Campagne</Text>
-          <Select
-            id="select-campagne"
-            width={"100%"}
-            size="md"
-            variant="newInput"
-            value={filters.campagne ?? ""}
-            data-has-value={!!filters.campagne}
-            onChange={(e) => {
-              onUpdateFilter({ key: "campagne", selected: e.target.value });
-            }}
-            placeholder="Choisir une campagne"
-          >
-            {data?.filters.campagnes.map((campagne) => (
-              <option key={campagne.value} value={campagne.value}>
-                {_.capitalize(campagne.label)}
-              </option>
-            ))}
-          </Select>
+          <Menu gutter={0} matchWidth={true} autoSelect={false}>
+            <MenuButton
+              as={Button}
+              variant={"selectButton"}
+              rightIcon={<ChevronDownIcon />}
+              width={"100%"}
+              size="md"
+              bg={"white"}
+              isLoading={isLoading}
+            >
+              <Flex direction="row" gap={2}>
+                <Text my={"auto"} bgColor="white">
+                  {data?.filters.campagnes?.find((campagne) => campagne.annee === filters.campagne)?.annee ?? "Sélectionner une campagne"}
+                </Text>
+                {filters.campagne && (
+                  <CampagneStatutTag
+                    statut={data?.filters.campagnes?.find((campagne) => campagne.annee === filters.campagne)?.statut}
+                  />
+                )}
+              </Flex>
+            </MenuButton>
+            <MenuList py={0}>
+              {data?.filters.campagnes?.map((campagne) => (
+                <MenuItem
+                  p={2}
+                  key={campagne.id}
+                  onClick={() => onUpdateFilter({ key: "campagne", selected: campagne.annee })}
+                >
+                  <Flex direction="row" gap={2}>
+                    <Text my={"auto"}>Campagne {campagne.annee}</Text>
+                    <CampagneStatutTag statut={campagne.statut} />
+                  </Flex>
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
         </GridItem>
         <GridItem>
           <Text>Rentrée scolaire</Text>
