@@ -15,6 +15,7 @@ import {
   Portal,
   Tag,
   Text,
+  Tooltip,
   VisuallyHidden,
 } from "@chakra-ui/react";
 import type { ChangeEventHandler, ReactNode } from "react";
@@ -41,7 +42,7 @@ const Checkbox = ({
 }) => {
   return (
     <label style={{ display: "flex", alignItems: "center" }}>
-      <input checked={checked} value={value} onChange={onChange} hidden type="checkbox" />
+      <input checked={checked} value={value} onChange={onChange} hidden type="checkbox"/>
       <CheckboxIcon checked={checked} />
       {children}
     </label>
@@ -133,7 +134,7 @@ export const GroupedMultiselect = chakra(
       string,
       {
         color?: string;
-        options: (OptionType & { isDisabled?: boolean })[];
+        options: (OptionType & { isDisabled?: boolean, tooltip?: ReactNode })[];
       }
     >;
     readonly defaultOptions?: OptionType[];
@@ -191,7 +192,7 @@ export const GroupedMultiselect = chakra(
             }
             return acc;
           },
-            {} as Record<string, { label: string; value: string; isDisabled?: boolean }[]>
+            {} as Record<string, { label: string; value: string; isDisabled?: boolean, tooltip?: ReactNode }[]>
         )
         : Object.keys(groupedOptions).reduce(
           (acc, key) => {
@@ -201,7 +202,7 @@ export const GroupedMultiselect = chakra(
             }
             return acc;
           },
-            {} as Record<string, { label: string; value: string; isDisabled?: boolean }[]>
+            {} as Record<string, { label: string; value: string; isDisabled?: boolean, tooltip?: ReactNode }[]>
         );
     };
 
@@ -323,24 +324,26 @@ export const GroupedMultiselect = chakra(
                     >
                       {groupLabel}
                     </Tag>
-                    {filteredOptions[groupLabel].map(({ value, label, isDisabled }) => (
+                    {filteredOptions[groupLabel].map(({ value, label, isDisabled, tooltip }) => (
                       <MenuItemOption key={value} isDisabled={isDisabled}>
-                        <InputWapper
-                          isReadOnly={isDisabled}
-                          checked={!!map.get(value)}
-                          onChange={({ checked, label, value }) => {
-                            const newMap = new Map(map);
-                            if (checked) {
-                              newMap.set(value, label);
-                            } else {
-                              newMap.delete(value);
-                            }
-                            onChange?.(Array.from(newMap.keys()));
-                          }}
-                          value={value}
-                        >
-                          {label}
-                        </InputWapper>
+                        <Tooltip label={tooltip} shouldWrapChildren>
+                          <InputWapper
+                            isReadOnly={isDisabled}
+                            checked={!!map.get(value)}
+                            onChange={({ checked, label, value }) => {
+                              const newMap = new Map(map);
+                              if (checked) {
+                                newMap.set(value, label);
+                              } else {
+                                newMap.delete(value);
+                              }
+                              onChange?.(Array.from(newMap.keys()));
+                            }}
+                            value={value}
+                          >
+                            {label}
+                          </InputWapper>
+                        </Tooltip>
                       </MenuItemOption>
                     ))}
                   </MenuGroup>
