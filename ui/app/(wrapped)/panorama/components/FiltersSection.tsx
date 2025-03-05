@@ -1,5 +1,5 @@
 import { Container, Flex, Select, VisuallyHidden } from "@chakra-ui/react";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 import type { FiltersPanoramaFormation } from "@/app/(wrapped)/panorama/types";
 import { getStickyNavHeight } from "@/app/(wrapped)/utils/getStickyNavOffset";
@@ -16,14 +16,14 @@ export const FiltersSection = ({
 }: {
   code?: string;
   onCodeChanged: (code: string) => void;
-  options?: OptionSchema[];
-  diplomeOptions?: OptionSchema[];
+  options?: OptionType[];
+  diplomeOptions?: OptionType[];
   handleFilters: (
     type: keyof FiltersPanoramaFormation,
     value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
   ) => void;
   activeFilters: Partial<FiltersPanoramaFormation>;
-  libelleNsfOptions?: OptionSchema[];
+  libelleNsfOptions?: OptionType[];
 }) => {
   return (
     <Container

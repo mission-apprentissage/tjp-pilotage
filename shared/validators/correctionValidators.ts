@@ -1,30 +1,17 @@
 // @ts-nocheck -- TODO  Not all code paths return a value.
 
-import type { Args, ZodTypeProvider } from "@http-wizard/core";
-
-// import type { Router } from "server/src/server/routes/routes";
-import { RaisonCorrectionEnum } from "../enum/raisonCorrectionEnum";
 import type { Router } from "../routes";
+import type { Args, ZodTypeProvider } from "../utils/http-wizard/core";
+import { isRaisonAnnulation, isRaisonModificationCapacite, isRaisonReport } from "../utils/raisonCorrectionUtils";
+import { isPositiveNumber } from "./utils";
 
-export type Correction = Args<Router["[POST]/correction/submit"]["schema"], ZodTypeProvider>["body"]["correction"];
+type Correction = Args<Router["[POST]/correction/submit"]["schema"], ZodTypeProvider>["body"]["correction"];
+type Demande = Args<Router["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
 
-export type Demande = Args<Router["[POST]/demande/submit"]["schema"], ZodTypeProvider>["body"]["demande"];
-
-const isRaisonAnnulation = (raison: string): boolean => raison === RaisonCorrectionEnum["annulation"];
-
-const isRaisonReport = (raison: string): boolean => raison === RaisonCorrectionEnum["report"];
-
-const isRaisonModificationCapacite = (raison: string): boolean =>
-  raison === RaisonCorrectionEnum["modification_capacite"];
-
-const isPositiveNumber = (value: number | undefined): value is number => {
-  if (!Number.isInteger(value)) return false;
-  if (value === undefined) return false;
-  if (value < 0) return false;
-  return true;
-};
-
-export const correctionValidators = {
+export const correctionValidators: Record<
+  keyof Correction | string,
+  (correction: Correction, demande?: Demande) => string | undefined
+> = {
   raison: (correction) => {
     if (!correction.raison?.length) {
       return "Le champ 'raison' est obligatoire";
@@ -159,4 +146,7 @@ export const correctionValidators = {
       return "La somme des futures capacités colorées doit être inférieure ou égale à la somme des futures capacités";
     return undefined;
   },
-} satisfies Record<keyof Correction | string,(correction: Correction, demande: Demande) => string | undefined | void>;
+} satisfies Record<
+  keyof Correction | string,
+  (correction: Correction, demande: Demande) => string | undefined
+>;

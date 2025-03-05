@@ -5,4 +5,4 @@ export const OptionSchema = z.object({
   value: z.coerce.string(),
 });
 
-export type OptionSchema = z.infer<typeof OptionSchema>;
+export type OptionType = z.infer<typeof OptionSchema>;

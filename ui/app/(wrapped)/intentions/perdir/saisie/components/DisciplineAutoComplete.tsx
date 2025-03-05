@@ -1,9 +1,13 @@
+import _ from "lodash";
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncCreatableSelect from "react-select/async-creatable";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType} from 'shared/schema/optionSchema';
 
 import { client } from "@/api.client";
+import type {Discipline} from '@/app/(wrapped)/intentions/types';
+
+type Options = (typeof client.infer)["[GET]/discipline/search/:search"];
 
 export const DisciplineAutocompleteInput = ({
   id = "discipline-autocomplete",
@@ -15,10 +19,10 @@ export const DisciplineAutocompleteInput = ({
 }: {
   id?: string;
   name: string;
-  defaultValue?: OptionSchema;
+  defaultValue?: OptionType;
   active?: boolean;
   inError: boolean;
-  onChange: (value?: (typeof client.infer)["[GET]/discipline/search/:search"][number]) => void;
+  onChange: (value?: Discipline) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -34,6 +38,15 @@ export const DisciplineAutocompleteInput = ({
       width: "14rem",
     }),
   };
+
+  const searchDiscipline = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+    if (inputValue.length >= 3) {
+      client
+        .ref("[GET]/discipline/search/:search")
+        .query({ params: { search: inputValue } })
+        .then((options) => callback(options));
+    }
+  }, 300);
 
   return (
     <AsyncCreatableSelect
@@ -54,10 +67,7 @@ export const DisciplineAutocompleteInput = ({
           ...defaultValue,
         } as (typeof client.infer)["[GET]/discipline/search/:search"][number])
       }
-      loadOptions={(inputValue: string) => {
-        if (inputValue.length >= 3)
-          return client.ref("[GET]/discipline/search/:search").query({ params: { search: inputValue } });
-      }}
+      loadOptions={searchDiscipline}
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"
       }

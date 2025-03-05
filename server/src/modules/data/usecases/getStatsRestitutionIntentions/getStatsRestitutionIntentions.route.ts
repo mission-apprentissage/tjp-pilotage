@@ -1,6 +1,7 @@
 import * as Boom from "@hapi/boom";
-import { createRoute } from "@http-wizard/core";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
+import { createRoute } from "shared/utils/http-wizard/core";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
@@ -16,7 +17,7 @@ export const getStatsRestitutionIntentionsRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("restitution-intentions/lecture"),
+      preHandler: hasPermissionHandler(PermissionEnum["restitution-intentions/lecture"]),
       handler: async (request, response) => {
         const { ...filters } = request.query;
         if (!request.user) throw Boom.forbidden();

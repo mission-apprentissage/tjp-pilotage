@@ -11,10 +11,12 @@ import { useContext, useEffect, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
+import {SecteurEnum} from 'shared/enum/secteurEnum';
 
 import { client } from "@/api.client";
-import { CodeDepartementFilterContext, CodeRegionFilterContext } from "@/app/layoutClient";
+import { CodeDepartementContext } from "@/app/codeDepartementContext";
+import { CodeRegionContext } from "@/app/codeRegionContext";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { SearchInput } from "@/components/SearchInput";
 import { TableHeader } from "@/components/TableHeader";
@@ -22,6 +24,7 @@ import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 import { GuardPermission } from "@/utils/security/GuardPermission";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDES_COLUMN";
@@ -84,6 +87,7 @@ const PAGE_SIZE = 30;
 
 // eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default () => {
+  const { campagne } = useCurrentCampagne();
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -138,16 +142,10 @@ export default () => {
     if (value != null)
       switch (type) {
       case "codeRegion":
-        setCodeRegionFilter((value as string[])[0] ?? "");
+        setCodeRegion((value as string[])[0] ?? "");
         break;
       case "codeDepartement":
-        setCodeDepartementFilter((value as string[])[0] ?? "");
-        break;
-      case "rentreeScolaire":
-        setRentreeScolaireFilter((value as string[])[0] ?? "");
-        break;
-      case "campagne":
-        setCampagneFilter((value as string[])[0] ?? "");
+        setCodeDepartement((value as string[])[0] ?? "");
         break;
       case "statut":
         setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
@@ -221,13 +219,8 @@ export default () => {
     }
   );
 
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(CodeRegionFilterContext);
-
-  const { codeDepartementFilter, setCodeDepartementFilter } = useContext(CodeDepartementFilterContext);
-
-  const [rentreeScolaireFilter, setRentreeScolaireFilter] = useState<string>();
-
-  const [campagneFilter, setCampagneFilter] = useState<string>(CURRENT_ANNEE_CAMPAGNE);
+  const { codeRegion, setCodeRegion } = useContext(CodeRegionContext);
+  const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
 
   const [colonneFilters, setColonneFilters] = useState<(keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]>(
     (columns.length
@@ -244,23 +237,20 @@ export default () => {
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeRegionFilter
+      codeRegion
     ) {
-      filters.codeRegion = [codeRegionFilter];
+      filters.codeRegion = [codeRegion];
     }
     if (
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
       filters?.codeDepartement === undefined &&
-      codeDepartementFilter
+      codeDepartement
     ) {
-      filters.codeDepartement = [codeDepartementFilter];
+      filters.codeDepartement = [codeDepartement];
     }
-    if (filters?.campagne === undefined && campagneFilter !== "") {
-      filters.campagne = campagneFilter;
-    }
-    if (filters?.rentreeScolaire === undefined && rentreeScolaireFilter !== "") {
-      filters.rentreeScolaire = rentreeScolaireFilter;
+    if (filters?.campagne === undefined) {
+      filters.campagne = campagne?.annee;
     }
 
     if (filters?.statut === undefined) {
@@ -334,7 +324,7 @@ export default () => {
         `${demande.discipline1ProfesseurAssocieRH} ${
           demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
         }`,
-      secteur: demande.secteur === "PU" ? "Public" : "Privé",
+      secteur: demande.secteur === SecteurEnum["PU"] ? "Public" : "Privé",
       actionPrioritaire: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
       transitionDemographique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
       transitionEcologique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition écologique"]],
@@ -380,14 +370,8 @@ export default () => {
     });
   };
 
-  useEffect(() => {
-    const campagneFilterNumber = parseInt(searchParams.filters?.campagne ?? "");
-    handleFilters("rentreeScolaire", campagneFilterNumber + 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams.filters?.campagne]);
-
   return (
-    <GuardPermission permission="restitution-intentions/lecture">
+    <GuardPermission permission={PermissionEnum["restitution-intentions/lecture"]}>
       <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20} flex={1}>
         <HeaderSection
           countData={countData}

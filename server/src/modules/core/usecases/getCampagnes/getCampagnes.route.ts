@@ -1,10 +1,11 @@
-import { createRoute } from "@http-wizard/core";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { ROUTES } from "shared/routes/routes";
+import { createRoute } from "shared/utils/http-wizard/core";
 
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getCampagnes } from "./getCampagnes.query";
+import {getCampagnesQuery} from './getCampagnes.query';
 
 const ROUTE = ROUTES["[GET]/campagnes"];
 
@@ -15,9 +16,9 @@ export const getCampagnesRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("campagnes/lecture"),
+      preHandler: hasPermissionHandler(PermissionEnum["campagnes/lecture"]),
       handler: async (_request, response) => {
-        const campagnes = await getCampagnes();
+        const campagnes = await getCampagnesQuery();
         response.status(200).send(campagnes);
       },
     });

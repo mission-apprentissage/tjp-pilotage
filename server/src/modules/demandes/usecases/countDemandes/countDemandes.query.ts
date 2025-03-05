@@ -16,7 +16,7 @@ export const countDemandesQuery = async ({ user, campagne, codeAcademie, codeNiv
   const search_array = getNormalizedSearchArray(search);
 
   const countDemandes = getKbdClient()
-    .selectFrom("latestDemandeView as demande")
+    .selectFrom("latestDemandeIntentionView as demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
@@ -112,9 +112,7 @@ export const countDemandesQuery = async ({ user, campagne, codeAcademie, codeNiv
       return eb;
     })
     .$call((eb) => {
-      if (campagne) {
-        return eb.where("campagne.annee", "=", campagne);
-      }
+      if (campagne) return eb.where("campagne.annee", "=", campagne);
       return eb;
     })
     .where(isDemandeNotDeleted)

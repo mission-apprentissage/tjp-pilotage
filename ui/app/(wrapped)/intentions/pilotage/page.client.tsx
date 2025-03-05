@@ -6,6 +6,7 @@ import { ScopeEnum } from "shared";
 
 import { client } from "@/api.client";
 import { DefinitionTauxTransfoModal } from "@/app/(wrapped)/components/DefinitionTauxTransfoModal";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 import { useStateParams } from "@/utils/useFilters";
 
 import { FiltersSection } from "./filter/FiltersSection";
@@ -16,12 +17,12 @@ import type {
   FiltersPilotageIntentions,
   FilterTracker,
   OrderFormationsPilotageIntentions,
-  OrderPilotageIntentions,
-  PilotageIntentions
+  OrderPilotageIntentions
 } from './types';
-import { findDefaultRentreeScolaireForCampagne } from "./utils";
+import { getDefaultRentreeScolaireForAnneeCampagne } from './utils';
 
 export const PilotageNationalClient = () => {
+  const { campagne } = useCurrentCampagne();
   const trackEvent = usePlausible();
   const [searchParams, setSearchParams] = useStateParams<{
     filters?: FiltersPilotageIntentions;
@@ -32,7 +33,9 @@ export const PilotageNationalClient = () => {
     defaultValues: {
       filters: {
         scope: ScopeEnum["région"],
-        campagne: undefined,
+        campagne: campagne?.annee,
+        rentreeScolaire: campagne ?
+          [getDefaultRentreeScolaireForAnneeCampagne(campagne?.annee)] : undefined,
         coloration: undefined
       },
       displayTypes: [DisplayTypeEnum.repartition, DisplayTypeEnum.zone_geographique],
@@ -98,18 +101,11 @@ export const PilotageNationalClient = () => {
       displayTypes: [searchParams.displayTypes?.[0] ?? DisplayTypeEnum.repartition, DisplayTypeEnum.domaine],
     });
 
-  const { data, isLoading } = client
-    .ref("[GET]/pilotage-intentions")
-    .useQuery({
-      query: { ...filters, ...order },
-    },
+  const { data, isLoading } = client.ref("[GET]/pilotage-intentions").useQuery(
     {
-      onSuccess: (data) => {
-        if (!filters.campagne) {
-          setDefaultFilters(data);
-        }
-      },
-    });
+      query: { ...filters, ...order },
+    }
+  );
 
   const { data: { formations, stats } = {} } = client.ref("[GET]/pilotage-intentions/formations").useQuery(
     {
@@ -117,15 +113,14 @@ export const PilotageNationalClient = () => {
     },
   );
 
-  const setDefaultFilters = (data: PilotageIntentions | undefined) => {
-    if (!data) return;
-    const rentreeScolaire = findDefaultRentreeScolaireForCampagne(
-      data.campagne.annee,
-      data.filters.rentreesScolaires
+  const setDefaultFilters = () => {
+    if (!campagne) return;
+    const rentreeScolaire = getDefaultRentreeScolaireForAnneeCampagne(
+      campagne.annee,
     );
 
     setFilters({
-      campagne: data.campagne.annee,
+      campagne: campagne.annee,
       rentreeScolaire: rentreeScolaire ? [rentreeScolaire] : undefined,
       codeRegion: undefined,
       codeAcademie: undefined,
@@ -162,7 +157,8 @@ export const PilotageNationalClient = () => {
             filters={filters}
             setFilters={setFilters}
             filterTracker={filterTracker}
-            setDefaultFilters={() => setDefaultFilters(data)}
+            setDefaultFilters={() => setDefaultFilters()}
+            isLoading={isLoading}
           />
           <HeaderSection
             data={data}

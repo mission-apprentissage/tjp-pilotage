@@ -1,17 +1,19 @@
 import { chakra, Tag, Td } from "@chakra-ui/react";
+import { SecteurEnum } from "shared/enum/secteurEnum";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import type { CORRECTIONS_COLUMNS } from "@/app/(wrapped)/intentions/corrections/CORRECTIONS_COLUMN";
 import type { Corrections } from "@/app/(wrapped)/intentions/corrections/types";
 import type {
-  MotifCorrectionCampagne,
+  AnneeCampagneMotifCorrection,
   MotifCorrectionLabel,
 } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
 import { getMotifCorrectionLabel } from "@/app/(wrapped)/intentions/utils/motifCorrectionUtils";
 import type {
-  RaisonCorrectionCampagne,
+  AnneeCampagneRaisonCorrection,
   RaisonCorrectionLabel,
 } from "@/app/(wrapped)/intentions/utils/raisonCorrectionUtils";
-import { getRaisonCorrectionLabel } from "@/app/(wrapped)/intentions/utils/raisonCorrectionUtils";
+import { getRaisonCorrectionLabelParAnneeCampagne } from "@/app/(wrapped)/intentions/utils/raisonCorrectionUtils";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
@@ -29,27 +31,27 @@ const formatEcart = (value: number) => {
   );
 };
 
-const handleRaisonLabel = ({ raison, campagne }: { raison?: string; campagne?: string }) => {
-  return getRaisonCorrectionLabel({
+const handleRaisonLabel = ({ raison, anneeCampagne }: { raison?: string; anneeCampagne: string }) => {
+  return getRaisonCorrectionLabelParAnneeCampagne({
     raison: raison as RaisonCorrectionLabel,
-    campagne: campagne as RaisonCorrectionCampagne,
+    anneeCampagne: anneeCampagne as AnneeCampagneRaisonCorrection,
   });
 };
 
 const handleMotifCorrectionLabel = ({
   motifCorrection,
   autreMotif,
-  campagne,
+  anneeCampagne,
 }: {
   motifCorrection?: string;
-  campagne?: string;
   autreMotif?: string;
+  anneeCampagne: string;
 }) => {
   return motifCorrection === "autre"
     ? `Autre : ${autreMotif}`
     : getMotifCorrectionLabel({
       motifCorrection: motifCorrection as MotifCorrectionLabel,
-      campagne: campagne as MotifCorrectionCampagne,
+      anneeCampagne: anneeCampagne as AnneeCampagneMotifCorrection,
     });
 };
 const ConditionalTd = chakra(
@@ -89,7 +91,7 @@ export const LineContent = ({
   getCellColor,
 }: {
   correction: Corrections["corrections"][0];
-  campagne?: string;
+  campagne: CampagneType;
   colonneFilters: (keyof typeof CORRECTIONS_COLUMNS)[];
   getCellColor: (column: keyof typeof CORRECTIONS_COLUMNS) => string;
 }) => {
@@ -132,7 +134,7 @@ export const LineContent = ({
         {correction.libelleAcademie}
       </ConditionalTd>
       <ConditionalTd colonneFilters={colonneFilters} colonne={"secteur"} bgColor={getCellColor("secteur")}>
-        {correction.secteur === "PU" ? "Public" : "Privé"}
+        {correction.secteur === SecteurEnum["PU"] ? "Public" : "Privé"}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -254,7 +256,7 @@ export const LineContent = ({
       >
         {handleRaisonLabel({
           raison: correction.raisonCorrection,
-          campagne: campagne,
+          anneeCampagne: campagne.annee,
         })}
       </ConditionalTd>
       <ConditionalTd
@@ -269,7 +271,7 @@ export const LineContent = ({
         {handleMotifCorrectionLabel({
           motifCorrection: correction.motifCorrection,
           autreMotif: correction.autreMotifCorrection,
-          campagne: campagne,
+          anneeCampagne: campagne.annee,
         })}
       </ConditionalTd>
       <ConditionalTd

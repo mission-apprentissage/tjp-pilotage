@@ -1,7 +1,6 @@
 import { ArrowForwardIcon, CheckIcon } from "@chakra-ui/icons";
 import {
   Button,
-  Checkbox,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -242,23 +241,7 @@ export const AvisForm = ({ intention }: { intention: (typeof client.infer)["[GET
           />
         </FormControl>
         {getTypeAvis(intention.statut) === AvisTypeEnum["consultatif"] ? (
-          <FormControl mt={3}>
-            <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
-              Cet avis est visible uniquement par les administrateurs et pilotes. Vous avez la possibilité de rendre
-              votre avis visible de tous en cochant la case ci-dessous.
-            </FormLabel>
-            <Checkbox
-              size="lg"
-              {...register("isVisibleParTous", {
-                required: false,
-              })}
-              whiteSpace={"nowrap"}
-            >
-              <Text fontSize={14} fontWeight={400}>
-                Rendre cet avis visible de tous
-              </Text>
-            </Checkbox>
-          </FormControl>
+          <Text mt={3}>{`Cet avis ${getTypeAvis(intention.statut)} est visible uniquement par les administrateurs et pilotes`}</Text>
         ) : (
           <Text mt={3}>{`Cet avis ${getTypeAvis(intention.statut)} sera visible de toutes les parties prenantes`}</Text>
         )}

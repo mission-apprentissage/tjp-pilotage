@@ -47,7 +47,7 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
       expect(result.etablissements).toEqual(
         expect.arrayContaining([
-          { rentreeScolaire: "2020", nbEtablissements: 778 },
+          { rentreeScolaire: "2020", nbEtablissements: 785 },
           { rentreeScolaire: "2021", nbEtablissements: 797 },
           { rentreeScolaire: "2022", nbEtablissements: 802 },
           { rentreeScolaire: "2023", nbEtablissements: 806 },

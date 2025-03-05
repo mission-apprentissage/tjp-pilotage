@@ -1,14 +1,18 @@
 import { Flex, Tag, Text } from "@chakra-ui/react";
+import _ from "lodash";
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
+import type {Formation} from '@/app/(wrapped)/intentions/types';
+
+type Options = (typeof client.infer)["[GET]/diplome/search/:search"];
 
 export const cfdRegex = /^\d{8}$/;
 
-const OptionLabel = ({ option }: { option: (typeof client.infer)["[GET]/diplome/search/:search"][number] }) => {
+const OptionLabel = ({ option }: { option: Formation }) => {
   return (
     <Flex gap={2}>
       <Text textOverflow={"ellipsis"} overflow={"hidden"} w="fit-content">
@@ -43,10 +47,10 @@ export const CfdAutocompleteInput = ({
 }: {
   id?: string;
   name: string;
-  defaultValue?: OptionSchema;
+  defaultValue?: OptionType;
   disabled?: boolean;
   inError: boolean;
-  onChange: (value?: (typeof client.infer)["[GET]/diplome/search/:search"][number]) => void;
+  onChange: (value?: Formation) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -58,6 +62,14 @@ export const CfdAutocompleteInput = ({
   const formatOptionLabel = (option: (typeof client.infer)["[GET]/diplome/search/:search"][number]) => (
     <OptionLabel option={option} />
   );
+
+  const searchDiplome = _.debounce((search: string, callback: (options: Options) => void) => {
+    if (search.length >= 3)
+      client
+        .ref("[GET]/diplome/search/:search")
+        .query({ params: { search }, query: {} })
+        .then((options) => callback(options));
+  }, 300);
 
   return (
     <AsyncSelect
@@ -87,10 +99,7 @@ export const CfdAutocompleteInput = ({
           cfd: "",
         } as (typeof client.infer)["[GET]/diplome/search/:search"][number])
       }
-      loadOptions={(search) => {
-        if (search.length >= 3)
-          return client.ref("[GET]/diplome/search/:search").query({ params: { search }, query: {} });
-      }}
+      loadOptions={searchDiplome}
       formatOptionLabel={formatOptionLabel}
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 3 ? "Recherche..." : "Veuillez rentrer au moins 3 lettres"

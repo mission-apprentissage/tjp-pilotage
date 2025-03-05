@@ -1,21 +1,16 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import type { getDemandesSchema } from "shared/routes/schemas/get.demandes.schema";
-import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
 import type { DB } from "@/db/schema";
-import type { RequestUser } from "@/modules/core/model/User";
 import { isInPerimetreIJAcademie } from "@/modules/data/utils/isInPerimetreIJ";
+import type {Filters} from '@/modules/demandes/usecases/getDemandes/getDemandes.usecase';
+import {getCampagnes} from '@/modules/utils/getCurrentCampagne';
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
 import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
 import { cleanNull } from "@/utils/noNull";
 
-export interface Filters extends z.infer<typeof getDemandesSchema.querystring> {
-  user: RequestUser;
-}
-
-export const getFilters = async ({ user, codeAcademie, codeNiveauDiplome }: Filters) => {
+export const getFiltersQuery = async ({ user, codeAcademie, codeNiveauDiplome }: Filters) => {
   const inCodeAcademie = (eb: ExpressionBuilder<DB, "academie">) => {
     if (!codeAcademie) return sql<true>`true`;
     return eb("academie.codeAcademie", "in", codeAcademie);
@@ -66,8 +61,11 @@ export const getFilters = async ({ user, codeAcademie, codeNiveauDiplome }: Filt
     })
     .execute();
 
+  const campagnesFilters = await getCampagnes(user);
+
   return {
     academies: academiesFilters.map(cleanNull),
     diplomes: diplomesFilters.map(cleanNull),
+    campagnes: campagnesFilters.map(cleanNull),
   };
 };

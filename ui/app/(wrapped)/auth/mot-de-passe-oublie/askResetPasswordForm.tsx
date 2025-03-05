@@ -13,13 +13,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect } from "react";
+import {  useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { emailRegex } from "shared";
 
 import { client } from "@/api.client";
-import { AuthContext } from "@/app/(wrapped)/auth/authContext";
 import { getErrorMessage } from "@/utils/apiError";
+import { useAuth } from "@/utils/security/useAuth";
 
 export const ForgottenPasswordForm = () => {
   const {
@@ -44,7 +44,7 @@ export const ForgottenPasswordForm = () => {
     },
   });
 
-  const { auth } = useContext(AuthContext);
+  const { auth } = useAuth();
 
   useEffect(() => {
     if (auth) router.replace("/");

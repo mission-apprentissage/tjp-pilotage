@@ -1,19 +1,10 @@
 import {ScopeEnum} from 'shared';
 
-import type {Filters,FiltersPilotageIntentions } from './types';
+import type {FiltersPilotageIntentions } from './types';
 
-export const findDefaultRentreeScolaireForCampagne = (
-  annee: string,
-  rentreesScolaires: Filters["rentreesScolaires"]
-) => {
-  if (rentreesScolaires) {
-    const rentreeScolaire = rentreesScolaires.find((r) => parseInt(r.value) === parseInt(annee) + 1);
-
-    if (rentreeScolaire) return rentreeScolaire.value;
-  }
-
-  return undefined;
-};
+export const getDefaultRentreeScolaireForAnneeCampagne = (
+  anneeCampagne: string,
+) => (parseInt(anneeCampagne) + 1).toString();
 
 
 /**

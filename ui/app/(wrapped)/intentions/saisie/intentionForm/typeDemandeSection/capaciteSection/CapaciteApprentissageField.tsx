@@ -1,10 +1,10 @@
 import { chakra } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { isTypeColoration, isTypeFermeture } from "shared/utils/typeDemandeUtils";
 
 import { CapaciteField } from "@/app/(wrapped)/intentions/saisie/components/CapaciteField";
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-import { isTypeColoration, isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const CapaciteApprentissageField = chakra(
   ({ id, disabled, className }: { id: string; disabled?: boolean; className?: string }) => {

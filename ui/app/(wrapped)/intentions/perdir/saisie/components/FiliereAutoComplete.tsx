@@ -1,9 +1,13 @@
+import _ from "lodash";
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncCreatableSelect from "react-select/async-creatable";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { OptionType} from 'shared/schema/optionSchema';
 
 import { client } from "@/api.client";
+import type {Filiere} from '@/app/(wrapped)/intentions/perdir/saisie/types';
+
+type Options = (typeof client.infer)["[GET]/filiere/search/:search"];
 
 export const FiliereAutoCompleteInput = ({
   id = "cfd-autocomplete",
@@ -15,10 +19,10 @@ export const FiliereAutoCompleteInput = ({
 }: {
   id?: string;
   name: string;
-  defaultValue?: OptionSchema;
+  defaultValue?: OptionType;
   active?: boolean;
   inError: boolean;
-  onChange: (value?: (typeof client.infer)["[GET]/filiere/search/:search"][number]) => void;
+  onChange: (value?: Filiere) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -34,6 +38,13 @@ export const FiliereAutoCompleteInput = ({
       width: "35rem",
     }),
   };
+
+  const searchFiliere = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+    client
+      .ref("[GET]/filiere/search/:search")
+      .query({ params: { search: inputValue } })
+      .then((options) => callback(options));
+  }, 300);
 
   return (
     <AsyncCreatableSelect
@@ -54,9 +65,7 @@ export const FiliereAutoCompleteInput = ({
           ...defaultValue,
         } as (typeof client.infer)["[GET]/filiere/search/:search"][number])
       }
-      loadOptions={(inputValue: string) =>
-        client.ref("[GET]/filiere/search/:search").query({ params: { search: inputValue } })
-      }
+      loadOptions={searchFiliere}
       defaultOptions
       isClearable={true}
       noOptionsMessage={({ inputValue }) => (inputValue ? "Pas de filière correspondante" : "Commencez à écrire...")}

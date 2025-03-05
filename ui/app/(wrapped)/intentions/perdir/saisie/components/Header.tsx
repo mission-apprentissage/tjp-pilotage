@@ -1,17 +1,18 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
-import type { OptionSchema } from "shared/schema/optionSchema";
+import type { CampagneType } from "shared/schema/campagneSchema";
+import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { INTENTIONS_COLUMNS } from "@/app/(wrapped)/intentions/perdir/saisie/INTENTIONS_COLUMNS";
-import type { Campagnes, Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/perdir/saisie/utils/canEditIntention";
+import type { Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
 import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { Multiselect } from "@/components/Multiselect";
 import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { feature } from "@/utils/feature";
 import { formatExportFilename } from "@/utils/formatExportFilename";
 
 export const Header = ({
@@ -21,11 +22,11 @@ export const Header = ({
   getIntentionsQueryParameters,
   searchIntention,
   setSearchIntention,
-  campagnes,
   campagne,
   handleFilters,
   diplomes,
   academies,
+  campagnes,
 }: {
   activeFilters: Filters;
   filterTracker: (filterName: keyof Filters) => () => void;
@@ -33,14 +34,14 @@ export const Header = ({
   getIntentionsQueryParameters: (qLimit?: number, qOffset?: number) => Partial<Filters>;
   searchIntention?: string;
   setSearchIntention: (search: string) => void;
-  campagnes?: Campagnes;
   campagne?: {
     annee: string;
     statut: string;
   };
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-  diplomes: OptionSchema[];
-  academies: OptionSchema[];
+  diplomes: OptionType[];
+  academies: OptionType[];
+  campagnes?: CampagneType[];
 }) => {
   const trackEvent = usePlausible();
   const anneeCampagne = activeFilters.campagne ?? campagne?.annee;
@@ -116,7 +117,7 @@ export const Header = ({
             borderStyle="solid"
             borderColor="grey.900"
           >
-            <Flex direction="row">
+            <Flex direction="row" gap={2}>
               <Text my={"auto"}>Campagne {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}</Text>
               <CampagneStatutTag statut={campagnes?.find((c) => c.annee === anneeCampagne)?.statut} />
             </Flex>
@@ -132,7 +133,7 @@ export const Header = ({
                   });
                 }}
               >
-                <Flex direction="row">
+                <Flex direction="row" gap={2}>
                   <Text my={"auto"}>Campagne {campagne.annee}</Text>
                   <CampagneStatutTag statut={campagne.statut} />
                 </Flex>
@@ -141,7 +142,7 @@ export const Header = ({
           </MenuList>
         </Menu>
       </Flex>
-      {isSaisieDisabled() && (
+      {feature.saisieDisabled && (
         <Flex
           borderLeftWidth={5}
           borderLeftColor={"bluefrance.113"}
@@ -151,9 +152,9 @@ export const Header = ({
           padding={5}
           mb={8}
         >
-          <Text fontWeight={700}>Campagne de saisie 2023 terminée</Text>
+          <Text fontWeight={700}>Campagne de saisie terminée</Text>
           <Text fontWeight={400}>
-            La campagne de saisie 2023 est terminée, vous pourrez saisir vos demandes pour la campagne de saisie 2024
+            La campagne de saisie est terminée, vous pourrez saisir vos demandes pour la prochaine campagne de saisie
             d'ici le 15 avril.
           </Text>
         </Flex>

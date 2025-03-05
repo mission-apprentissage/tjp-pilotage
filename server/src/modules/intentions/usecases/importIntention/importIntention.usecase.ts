@@ -1,9 +1,10 @@
 import * as Boom from "@hapi/boom";
 import { getPermissionScope, guardScope } from "shared";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { getCurrentCampagneQuery } from "@/modules/intentions/queries/getCurrentCampagne/getCurrentCampagne.query";
 import { findOneIntention } from "@/modules/intentions/repositories/findOneIntention.query";
+import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 import logger from "@/services/logger";
 
 import { createIntentionQuery } from "./dependencies/createIntention.dep";
@@ -15,15 +16,15 @@ const importIntentionFactory =
     deps = {
       createIntentionQuery,
       findOneIntention,
-      getCurrentCampagneQuery,
+      getCurrentCampagne,
       getIntentionWithMetadata,
       hasAlreadyBeenImported,
     }
   ) =>
-    async ({ numero, user }: { user: Pick<RequestUser, "id" | "codeRegion" | "role" | "uais">; numero: string }) => {
+    async ({ numero, user }: { user: RequestUser; numero: string }) => {
       const [intention, campagne, alreadyImportedIntention] = await Promise.all([
         deps.findOneIntention(numero),
-        deps.getCurrentCampagneQuery(),
+        deps.getCurrentCampagne(user),
         deps.hasAlreadyBeenImported({ numero }),
       ]);
 
@@ -65,10 +66,10 @@ const importIntentionFactory =
         });
       }
 
-      const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
-      const isAllowed = guardScope(scope?.default, {
+      const scope = getPermissionScope(user.role, PermissionEnum["intentions-perdir/ecriture"]);
+      const isAllowed = guardScope(scope, {
         uai: () => user.uais?.includes(intention.uai) ?? false,
-        region: () => user.codeRegion === intention.codeRegion,
+        région: () => user.codeRegion === intention.codeRegion,
         national: () => true,
       });
 

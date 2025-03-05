@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import {
   Button,
   chakra,
@@ -22,7 +20,7 @@ import { ScopeEnum } from "shared";
 
 import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage/main/displayTypeEnum";
 import type {
-  FiltersStatsPilotageIntentions,
+  FiltersPilotageIntentions,
   OrderPilotageIntentions,
   PilotageIntentionsDomaines,
   PilotageIntentionsZonesGeographiques,
@@ -97,7 +95,7 @@ export const AnalyseComparativeSection = ({
   domaines?: PilotageIntentionsDomaines;
   order: Partial<OrderPilotageIntentions>;
   setOrder: (order: OrderPilotageIntentions) => void;
-  filters?: Partial<FiltersStatsPilotageIntentions>;
+  filters?: Partial<FiltersPilotageIntentions>;
   displayType: DisplayTypeEnum;
   displayZonesGeographiques: () => void;
   displayDomaines: () => void;

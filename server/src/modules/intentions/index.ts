@@ -6,7 +6,6 @@ import { deleteChangementStatutRoute } from "./usecases/deleteChangementStatut/d
 import { deleteIntentionRoute } from "./usecases/deleteIntention/deleteIntention.route";
 import { deleteIntentionFilesRoute } from "./usecases/deleteIntentionFiles/deleteIntentionFiles.route";
 import { deleteSuiviRoute } from "./usecases/deleteSuivi/deleteSuivi.route";
-import { getCurrentCampagneRoute } from "./usecases/getDefaultCampagne/getDefaultCampagne.route";
 import { getEditoRoute } from "./usecases/getEdito/getEdito.route";
 import { getIntentionRoute } from "./usecases/getIntention/getIntention.route";
 import { getIntentionFileDownloadUrlRoute } from "./usecases/getIntentionFileDownloadUrl/getIntentionFileDownloadUrl.route";
@@ -21,7 +20,7 @@ import { submitIntentionAccessLogRoute } from "./usecases/submitIntentionAccessL
 import { submitSuiviRoute } from "./usecases/submitSuivi/submitSuivi.route";
 import { uploadIntentionFilesRoute } from "./usecases/uploadIntentionFiles/uploadIntentionFiles.route";
 
-export const registerIntentionsExpeModule = (server: Server) => {
+export const registerIntentionsModule = (server: Server) => {
   return {
     ...submitIntentionRoute(server),
     ...getIntentionRoute(server),
@@ -29,7 +28,6 @@ export const registerIntentionsExpeModule = (server: Server) => {
     ...countIntentionsRoute(server),
     ...deleteIntentionRoute(server),
     ...importIntentionRoute(server),
-    ...getCurrentCampagneRoute(server),
     ...searchEtablissementPerdirRoute(server),
     ...submitChangementStatutRoute(server),
     ...deleteChangementStatutRoute(server),

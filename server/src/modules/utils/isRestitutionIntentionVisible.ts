@@ -1,8 +1,9 @@
 import * as Boom from "@hapi/boom";
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import { getPermissionScope } from "shared";
+import { getPermissionScope, RoleEnum } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import type { DB } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
@@ -10,15 +11,17 @@ import type { RequestUser } from "@/modules/core/model/User";
 export const isRestitutionIntentionVisible =
   ({ user }: { user: RequestUser }) =>
     (eb: ExpressionBuilder<DB, "demande">) => {
-      const filter = getRestitutionIntentionsVisiblesFilters(user);
+      const filters = getRestitutionIntentionsVisiblesFilters(user);
+
+      if(filters.role === RoleEnum["invite"]) return eb
+        .and([
+          filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
+          eb("demande.statut", "in", [DemandeStatutEnum["demande validée"], DemandeStatutEnum["refusée"]]),
+        ]);
+
       return eb.and([
-        filter.role === "invite" ?
-          eb("demande.statut", "in", [
-            DemandeStatutEnum["demande validée"],
-            DemandeStatutEnum["refusée"]
-          ]) : sql<boolean>`true`,
-        filter.codeRegion ? eb("demande.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`,
-        filter.uais ? eb.or(filter.uais.map((uai) => eb("demande.uai", "=", uai))) : sql<boolean>`true`,
+        filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
+        filters.uais ? eb("demande.uai", "in", filters.uais) : sql<boolean>`true`,
         eb.or([
           eb.and([
             eb("demande.statut", "=", DemandeStatutEnum["brouillon"]), eb("demande.createdBy", "=", user.id)
@@ -31,22 +34,20 @@ export const isRestitutionIntentionVisible =
 export const isRestitutionIntentionRegionVisible =
   ({ user }: { user: RequestUser }) =>
     (eb: ExpressionBuilder<DB, "region">) => {
-      const filter = getRestitutionIntentionsVisiblesFilters(user);
-      return eb.and([filter.codeRegion ? eb("region.codeRegion", "=", filter.codeRegion) : sql<boolean>`true`]);
+      const filters = getRestitutionIntentionsVisiblesFilters(user);
+      return eb.and([filters.codeRegion ? eb("region.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`]);
     };
 
 const getRestitutionIntentionsVisiblesFilters = (user?: RequestUser) => {
   if (!user) throw new Error("missing variable user");
-  const scope = getPermissionScope(user?.role, "restitution-intentions/lecture");
-  if (!scope?.default) throw Boom.forbidden();
+  const scope = getPermissionScope(user?.role, PermissionEnum["restitution-intentions/lecture"]);
+  if (!scope) throw Boom.forbidden();
 
-  const filter = {
+  return {
     national: {},
-    region: { codeRegion: user.codeRegion },
-    user: {},
+    région: { codeRegion: user.codeRegion },
     uai: { uais: user.uais },
-    role: { codeRegion: user.codeRegion, role: user.role },
-  }[scope?.default];
-
-  return filter;
+    role: { role: user.role, codeRegion: user.codeRegion },
+    user: { userId: user.id },
+  }[scope];
 };

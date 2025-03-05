@@ -17,8 +17,11 @@ import {
 } from "@chakra-ui/react";
 import _ from "lodash";
 import { useState } from "react";
+import type { Role } from "shared";
 import { getPermissionScope, PERMISSIONS } from "shared";
-import type { Permission, Role, Scope } from "shared/security/permissions";
+import type {Permission} from 'shared/enum/permissionEnum';
+import { PermissionEnum} from 'shared/enum/permissionEnum';
+import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
 
 import { themeDefinition } from "@/theme/theme";
 import { GuardPermission } from "@/utils/security/GuardPermission";
@@ -50,11 +53,11 @@ const formatPermissions = (permissions: Array<Permission>) => {
   return permissions.map((p) => p.split("/")[1]);
 };
 
-const getScopeFromGroup = (role: Role, group: string): Scope => {
+const getScopeFromGroup = (role: Role, group: string): PermissionScope => {
   const rolePermissions = PERMISSIONS[role];
   const permission = Object.keys(rolePermissions).filter((key) => key.split("/")[0] === group)[0] as Permission;
 
-  return getPermissionScope(role, permission)?.default ?? "national";
+  return getPermissionScope(role, permission) ?? "national";
 };
 
 const formatRights = (role: Role, label: string, user?: User) => {
@@ -77,7 +80,7 @@ export default () => {
   const [selectedUser, setSelectedUser] = useState<User>();
 
   return (
-    <GuardPermission permission="users/lecture">
+    <GuardPermission permission={PermissionEnum["users/lecture"]}>
       <Box py="16px" px="64px" width="100%" display={"block"}>
         <VStack gap="16px" width="100%">
           <HStack gap="22px" width="100%" px="8px">

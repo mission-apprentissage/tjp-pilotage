@@ -1,4 +1,5 @@
 import { Badge, Box, Flex, GridItem, Heading, Image, Text, useToken } from "@chakra-ui/react";
+import {SecteurEnum} from 'shared/enum/secteurEnum';
 
 import type { Informations } from "@/app/(wrapped)/panorama/etablissement/components/header/types";
 
@@ -18,8 +19,8 @@ export const Coordonnees = ({ informations }: { informations: Informations }) =>
   return (
     <GridItem colSpan={7}>
       <Heading as="h3" fontSize={{ base: "14px" }} pb={"16px"} fontWeight={"bold"}>
-        {secteur === "PU" && "ÉTABLISSEMENT PUBLIC"}
-        {secteur === "PR" && "ÉTABLISSEMENT PRIVÉ"}
+        {secteur === SecteurEnum["PU"] && "ÉTABLISSEMENT PUBLIC"}
+        {secteur === SecteurEnum["PR"] && "ÉTABLISSEMENT PRIVÉ"}
       </Heading>
       <Flex>
         <Image src={`/logo_etablissement.png`} height={"80px"} width={"80px"} alt="logo etablissement" mr={"16px"} />

@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import type { Role } from "shared";
-import type { Scope } from "shared/security/permissions";
+import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
+import { PermissionScopeEnum} from 'shared/enum/permissionScopeEnum';
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -19,7 +20,7 @@ export const findUsers = async ({
   limit?: number;
   search?: string;
   orderBy?: { order: "asc" | "desc"; column: string };
-  scope: Scope;
+  scope: PermissionScope;
   scopeFilter: Array<string>;
 }) => {
   const search_array = getNormalizedSearchArray(search);
@@ -47,7 +48,7 @@ export const findUsers = async ({
       );
     })
     .$call((q) => {
-      if (scope === "region") {
+      if (scope === PermissionScopeEnum["région"]) {
         return q.where("user.codeRegion", "in", scopeFilter);
       }
       return q;

@@ -16,14 +16,14 @@ import { getFormationCarteEtablissementsRoute } from "./usecases/getFormationCar
 import { getFormationEtablissementsRoutes } from "./usecases/getFormationEtablissements/getFormationEtablissements.routes";
 import { getFormationIndicateursRoute } from "./usecases/getFormationIndicateurs/getFormationIndicateurs.route";
 import { getFormationsRoute } from "./usecases/getFormations/getFormations.route";
-import { getFormationsPilotageIntentionsRoute } from "./usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.route";
+import {getFormationsPilotageIntentionsRoute} from './usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.route';
 import { getHeaderEtablissementRoute } from "./usecases/getHeaderEtablissement/getHeaderEtablissement.route";
 import { getPilotageIntentionsRoute } from "./usecases/getPilotageIntentions/getPilotageIntentions.route";
-import { getPilotageReformeStatsRoute } from "./usecases/getPilotageReformeStats/getPilotageReformeStats.route";
-import { getPilotageReformeStatsRegionsRoute } from "./usecases/getPilotageReformeStatsRegions/getPilotageReformeStatsRegions.route";
 import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
 import { getRegionsRoute } from "./usecases/getRegions/getRegions.route";
 import { getStatsRestitutionIntentionsRoute } from "./usecases/getStatsRestitutionIntentions/getStatsRestitutionIntentions.route";
+import { getSuiviImpactStatsRoute } from "./usecases/getSuiviImpactStats/getSuiviImpactStats.route";
+import { getSuiviImpactStatsRegionsRoute } from "./usecases/getSuiviImpactStatsRegions/getSuiviImpactStatsRegions.route";
 import { searchCampusRoute } from "./usecases/searchCampus/searchCampus.route";
 import { searchDiplomeRoute } from "./usecases/searchDiplome/searchDiplome.route";
 import { searchDisciplineRoute } from "./usecases/searchDiscipline/searchDiscipline.route";
@@ -48,12 +48,12 @@ export const registerDataModule = (server: Server) => {
     ...getDataForPanoramaRegionRoute(server),
     ...getRegionRoute(server),
     ...getRegionsRoute(server),
-    ...getFormationsPilotageIntentionsRoute(server),
     ...getPilotageIntentionsRoute(server),
+    ...getFormationsPilotageIntentionsRoute(server),
     ...getDemandesRestitutionIntentionsRoute(server),
     ...getStatsRestitutionIntentionsRoute(server),
-    ...getPilotageReformeStatsRoute(server),
-    ...getPilotageReformeStatsRegionsRoute(server),
+    ...getSuiviImpactStatsRoute(server),
+    ...getSuiviImpactStatsRegionsRoute(server),
     ...getDataForEtablissementMapRoute(server),
     ...getDataForEtablissementMapListRoute(server),
     ...searchDiplomeRoute(server),

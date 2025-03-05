@@ -24,6 +24,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { hasRole } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
+import {RoleEnum} from 'shared/enum/roleEnum';
 
 import { client } from "@/api.client";
 import { AvisStatutTag } from "@/app/(wrapped)/intentions/components/AvisStatutTag";
@@ -37,15 +39,15 @@ import { usePermission } from "@/utils/security/usePermission";
 import { UpdateAvisForm } from "./UpdateAvisForm";
 
 export const AvisSection = chakra(({ avis, statut }: { avis: Avis; statut: DemandeStatutType }) => {
-  const { auth } = useAuth();
+  const { user } = useAuth();
   const toast = useToast();
 
   const hasPermissionModificationAvis = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    if (usePermission("intentions-perdir-avis/ecriture")) {
+    if (usePermission(PermissionEnum["intentions-perdir-avis/ecriture"])) {
       // TODO
-      if (hasRole({ user: auth?.user, role: "expert_region" }) || hasRole({ user: auth?.user, role: "region" })) {
-        if (avis.createdBy === auth?.user.id) return true;
+      if (hasRole({ user, role: RoleEnum["expert_region"] }) || hasRole({ user, role: RoleEnum["region"] })) {
+        if (avis.createdBy === user?.id) return true;
         return false;
       } else return true;
     }

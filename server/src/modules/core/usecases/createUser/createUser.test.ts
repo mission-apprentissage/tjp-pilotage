@@ -1,4 +1,5 @@
 import { PERMISSIONS } from "shared";
+import {RoleEnum} from 'shared/enum/roleEnum';
 import { describe, expect, it, vi } from "vitest";
 
 import { createUserFactory } from "./createUser.usecase";
@@ -8,7 +9,7 @@ const user = {
   firstname: "firstname",
   lastname: "lastname",
   password: "password",
-  role: "admin",
+  role: RoleEnum["admin"],
 } as const;
 
 const requestUser = {
@@ -17,7 +18,7 @@ const requestUser = {
   firstname: "firstname",
   lastname: "lastname",
   password: "password",
-  role: "admin",
+  role: RoleEnum["admin"],
 } as const;
 
 describe("createUser usecase", () => {
@@ -107,8 +108,8 @@ describe("createUser usecase", () => {
       await expect(deps.shootTemplate).toHaveBeenCalledWith(expect.objectContaining({ template: "activate_account" }));
 
       await createUser({
-        body: { ...user, codeRegion: "84", role: "pilote_region" },
-        requestUser: { ...requestUser, role: "admin_region", codeRegion: "84" },
+        body: { ...user, codeRegion: "84", role: RoleEnum["pilote_region"] },
+        requestUser: { ...requestUser, role: RoleEnum["admin_region"], codeRegion: "84" },
       });
 
       await expect(deps.insertUserQuery).toHaveBeenCalled();
@@ -125,8 +126,8 @@ describe("createUser usecase", () => {
       };
       const createUser = createUserFactory(deps);
       await createUser({
-        body: { ...user, codeRegion: "84", role: "pilote_region" },
-        requestUser: { ...requestUser, codeRegion: "84", role: "admin_region" },
+        body: { ...user, codeRegion: "84", role: RoleEnum["pilote_region"] },
+        requestUser: { ...requestUser, codeRegion: "84", role: RoleEnum["admin_region"] },
       });
 
       await expect(deps.insertUserQuery).toHaveBeenCalled();
@@ -144,11 +145,11 @@ describe("createUser usecase", () => {
       const createUser = createUserFactory(deps);
       await expect(async () =>
         await createUser({
-          body: { ...user, codeRegion: "76", role: "pilote_region" },
+          body: { ...user, codeRegion: "76", role: RoleEnum["pilote_region"] },
           requestUser: {
             ...requestUser,
             codeRegion: "84",
-            role: "admin_region",
+            role: RoleEnum["admin_region"],
           },
         })
       ).rejects.toThrow("Vous ne pouvez pas créer un utilisateur dans ce périmètre.");

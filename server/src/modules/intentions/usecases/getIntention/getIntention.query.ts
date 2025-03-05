@@ -3,14 +3,14 @@ import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import type { getIntentionSchema } from "shared/routes/schemas/get.intention.numero.schema";
-import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { RequestUser } from "@/modules/core/model/User";
+import { findOneCampagneRegionByCampagneId } from "@/modules/intentions/repositories/findOneCampagneRegionByCampagneId.query";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
+import {castRaisonCorrection} from '@/modules/utils/castRaisonCorrection';
 import { castAvisStatut } from "@/modules/utils/castStatutAvis";
 import { castAvisType } from "@/modules/utils/castTypeAvis";
+import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import {
   countDifferenceCapaciteApprentissageIntention,
   countDifferenceCapaciteScolaireIntention,
@@ -21,9 +21,7 @@ import { isIntentionNotDeleted, isIntentionSelectable } from "@/modules/utils/is
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { cleanNull } from "@/utils/noNull";
 
-export interface Filters extends z.infer<typeof getIntentionSchema.params> {
-  user: RequestUser;
-}
+import type { Filters } from "./getIntention.usecase";
 
 export const getIntentionQuery = async ({ numero, user }: Filters) => {
   const intention = await getKbdClient()
@@ -47,6 +45,13 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       "suivi.id as suiviId",
       jsonObjectFrom(
         eb
+          .selectFrom("correction")
+          .selectAll("correction")
+          .whereRef("correction.intentionNumero", "=", "intention.numero")
+          .limit(1)
+      ).as("correction"),
+      jsonObjectFrom(
+        eb
           .selectFrom("user")
           .whereRef("user.id", "=", "intention.createdBy")
           .select((eb) => [
@@ -65,9 +70,6 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
             "user.role",
           ])
       ).as("updatedBy"),
-      jsonObjectFrom(
-        eb.selectFrom("campagne").selectAll("campagne").whereRef("campagne.id", "=", "intention.campagneId").limit(1)
-      ).as("campagne"),
       jsonBuildObject({
         etablissement: jsonObjectFrom(
           eb
@@ -185,8 +187,14 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     .execute()
     .then(cleanNull);
 
+  const campagne =  await findOneCampagneRegionByCampagneId({
+    campagneId: intention.campagneId,
+    user,
+  });
+
   return {
     ...intention,
+    campagne,
     metadata: {
       ...intention.metadata,
       formation: intention.metadata.formation,
@@ -194,10 +202,8 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     },
     createdAt: intention.createdAt?.toISOString(),
     updatedAt: intention.updatedAt?.toISOString(),
-    campagne: {
-      ...intention.campagne,
-    },
     statut: castDemandeStatutWithoutSupprimee(intention.statut),
+    typeDemande: castTypeDemande(intention.typeDemande),
     changementsStatut: changementsStatut.map((changementStatut) => ({
       ...changementStatut,
       statut: castDemandeStatutWithoutSupprimee(changementStatut.statut),
@@ -212,6 +218,10 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       statutAvis: castAvisStatut(avis.statutAvis),
       typeAvis: castAvisType(avis.typeAvis),
     })),
+    correction: intention.correction ? {
+      ...intention.correction,
+      raison: castRaisonCorrection(intention.correction?.raison),
+    }: undefined,
     formationSpecifique: formatFormationSpecifique(intention),
   };
 };

@@ -1,34 +1,47 @@
 "use client";
 
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import { redirect, useSearchParams } from 'next/navigation';
 
-import { client } from "@/api.client";
-import { IntentionSpinner } from "@/app/(wrapped)/intentions/saisie/components/IntentionSpinner";
+import {client} from '@/api.client';
 import { IntentionForm } from "@/app/(wrapped)/intentions/saisie/intentionForm/IntentionForm";
+import { canCreateDemande } from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
+import { Loading } from '@/components/Loading';
+import { getRoutingSaisieRecueilDemande } from '@/utils/getRoutingRecueilDemande';
 import { GuardExpe } from '@/utils/security/GuardExpe';
 import { GuardPermission } from "@/utils/security/GuardPermission";
+import { useAuth } from '@/utils/security/useAuth';
+import { useCurrentCampagne } from '@/utils/security/useCurrentCampagne';
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default () => {
+const Page = () => {
+  const { user } = useAuth();
+  const { campagne: currentCampagne } = useCurrentCampagne();
+  const queryParams = useSearchParams();
 
-  const { data: defaultCampagne, isLoading } = client.ref("[GET]/demande/campagne/default").useQuery({});
+  if(!currentCampagne) return redirect(getRoutingSaisieRecueilDemande({campagne: currentCampagne, user}));
+  const campagneId = queryParams.get("campagneId") ?? currentCampagne.id;
+
+  const { data: campagne, isLoading } = client.ref("[GET]/campagne/:campagneId").useQuery({
+    params: { campagneId },
+  });
+
+  if(isLoading) return <Loading />;
+  if(!campagne) return redirect(getRoutingSaisieRecueilDemande({campagne, user}));
 
   return (
     <GuardPermission permission="intentions/ecriture">
       <GuardExpe isExpeRoute={false}>
-        {isLoading && (<IntentionSpinner />)}
-        {!isLoading && defaultCampagne &&  (
-          <IntentionForm
-            disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
-            defaultValues={{
-              campagneId: defaultCampagne?.id,
-              rentreeScolaire: defaultCampagne?.annee ? Number.parseInt(defaultCampagne?.annee) + 1 : undefined,
-            }}
-            formMetadata={{}}
-            campagne={defaultCampagne}
-          />
-        )}
+        <IntentionForm
+          disabled={!canCreateDemande({ user, campagne, currentCampagne })}
+          defaultValues={{
+            campagneId,
+            rentreeScolaire:  Number.parseInt(campagne.annee) + 1,
+          }}
+          formMetadata={{}}
+          campagne={campagne}
+        />
       </GuardExpe>
     </GuardPermission>
   );
 };
+
+export default Page;

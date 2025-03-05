@@ -1,8 +1,5 @@
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
-
-import type { TypeDemande } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
-
-export const defaultIntentionForms: PartialIntentionForms = {};
+import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
 
 export type PartialIntentionForms = Partial<IntentionForms>;
 
@@ -14,7 +11,7 @@ export type IntentionForms = {
   libelleFCIL?: string;
   // Type de demande
   rentreeScolaire: number;
-  typeDemande: TypeDemande;
+  typeDemande: DemandeTypeType;
   coloration: boolean;
   libelleColoration?: string;
   // Capacité

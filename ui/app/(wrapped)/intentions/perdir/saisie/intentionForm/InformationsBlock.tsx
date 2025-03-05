@@ -13,17 +13,18 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import {useRouter} from 'next/navigation';
 import type { ReactNode, RefObject } from "react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/validators/demandeValidators";
+import type { CampagneType } from "shared/schema/campagneSchema";
+import { isTypeDiminution, isTypeFermeture } from "shared/utils/typeDemandeUtils";
 
 import { client } from "@/api.client";
 import { SectionBlock } from "@/app/(wrapped)/intentions/perdir/saisie/components/SectionBlock";
-import type { Campagne } from "@/app/(wrapped)/intentions/perdir/saisie/types";
-import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import type {Intention} from '@/app/(wrapped)/intentions/perdir/types';
 
+import { CorrectionSection } from './correctionSection/CorrectionSection';
 import type { IntentionForms } from "./defaultFormValues";
 import { InternatEtRestaurationSection } from "./internatEtRestaurationSection/InternatEtRestaurationSection";
 import { ObservationsSection } from "./observationsSection/ObservationsSection";
@@ -38,12 +39,16 @@ export const InformationsBlock = ({
   disabled,
   footerActions,
   campagne,
+  intention,
+  showCorrection
 }: {
   refs: Record<string, RefObject<HTMLDivElement>>;
   formId?: string;
   disabled: boolean;
   footerActions: ReactNode;
-  campagne?: Campagne;
+  campagne: CampagneType;
+  intention?: Intention;
+  showCorrection?: boolean;
 }) => {
   const { push } = useRouter();
   const { setValue, watch } = useFormContext<IntentionForms>();
@@ -98,13 +103,24 @@ export const InformationsBlock = ({
   );
 
   const typeDemande = watch("typeDemande");
+
+  useEffect(() => {
+    refs["correction"].current?.scrollIntoView({ behavior: "smooth" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showCorrection]);
+
   const sectionsTravauxInternatEtRestaurationVisible = !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
 
   return (
     <Flex direction="column" gap={6} mt={6}>
       <SectionBlock>
-        <TypeDemandeSection typeDemandeRef={refs["typeDemande"]} disabled={disabled} campagne={campagne} />
+        <TypeDemandeSection typeDemandeRef={refs["typeDemande"]} disabled={disabled} intention={intention} campagne={campagne} />
       </SectionBlock>
+      {showCorrection && (
+        <SectionBlock borderColor={"red"} borderWidth={"1px"}>
+          <CorrectionSection correctionRef={refs["correction"]} intention={intention!} campagne={campagne} />
+        </SectionBlock>
+      )}
       <SectionBlock>
         <PrecisionsSection motifsEtPrecisionsRef={refs["motifsEtPrecisions"]} disabled={disabled} campagne={campagne} />
       </SectionBlock>

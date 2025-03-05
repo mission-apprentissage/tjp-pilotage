@@ -1,5 +1,6 @@
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import {DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
+import {DemandeTypeEnum} from 'shared/enum/demandeTypeEnum';
+import {RoleEnum} from 'shared/enum/roleEnum';
 import { describe, expect, it, vi } from "vitest";
 
 import { submitDemandeFactory } from "./submitDemande.usecase";
@@ -13,12 +14,12 @@ const valideDeps = {
   findOneDataEtablissement: async () =>
     Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<Deps["findOneDataEtablissement"]>),
   findOneDataFormation: async () => Promise.resolve({ cfd: "cfd" } as AwaitedResult<Deps["findOneDataFormation"]>),
-  findOneDemande: async () =>
+  findOneDemandeQuery: async () =>
     Promise.resolve({
       numero: "numero-id",
       codeRegion: "codeRegion",
       createdBy: "user-id",
-    } as AwaitedResult<Deps["findOneDemande"]>),
+    } as AwaitedResult<Deps["findOneDemandeQuery"]>),
   findOneSimilarDemande: async () => Promise.resolve(),
 } as Deps;
 
@@ -52,7 +53,8 @@ const demande = {
 const gestionnaire = {
   codeRegion: "75",
   id: "user-id",
-  role: "gestionnaire_region",
+  role: RoleEnum["gestionnaire_region"],
+  email: "gestionnaire@mail.fr"
 } as const;
 
 describe("submitDemande usecase", () => {
@@ -115,7 +117,8 @@ describe("submitDemande usecase", () => {
         user: {
           codeRegion: "other",
           id: "user-id",
-          role: "pilote_region",
+          role: RoleEnum["pilote_region"],
+          email: "pilote@mail.fr"
         },
         demande: {
           ...demande,

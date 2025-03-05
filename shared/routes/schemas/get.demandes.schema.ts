@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
+import { CampagneSchema } from "../../schema/campagneSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
 const UserSchema = z.object({
@@ -27,7 +28,7 @@ const DemandeItem = z.object({
   libelleFCIL: z.string().optional(),
   // Type de demande
   rentreeScolaire: z.coerce.number().optional(),
-  typeDemande: DemandeTypeZodType.optional(),
+  typeDemande: DemandeTypeZodType,
   coloration: z.boolean().optional(),
   libelleColoration: z.string().optional(),
   // Capacités
@@ -45,8 +46,6 @@ const DemandeItem = z.object({
   compensationCodeDispositif: z.string().optional(),
   compensationUai: z.string().optional(),
   compensationRentreeScolaire: z.coerce.number().optional(),
-  numeroCompensation: z.string().optional(),
-  typeCompensation: z.string().optional(),
   // Précisions
   motif: z.array(z.string()).optional(),
   autreMotif: z.string().optional(),
@@ -89,44 +88,33 @@ const DemandeItem = z.object({
   canEdit: z.boolean(),
   correction: z.string().optional(),
   alreadyAccessed: z.boolean(),
+  isIntention: z.boolean(),
+});
+
+export const FiltersSchema = z.object({
+  statut: z.union([DemandeStatutZodType.exclude(["supprimée"]), z.literal("suivies")]).optional(),
+  search: z.string().optional(),
+  suivies: z.coerce.boolean().optional(),
+  order: z.enum(["asc", "desc"]).optional(),
+  orderBy: DemandeItem.keyof().optional(),
+  offset: z.coerce.number().optional(),
+  limit: z.coerce.number().optional(),
+  campagne: z.string().optional(),
+  codeAcademie: z.array(z.string()).optional(),
+  codeNiveauDiplome: z.array(z.string()).optional(),
 });
 
 export const getDemandesSchema = {
-  querystring: z.object({
-    statut: z.union([DemandeStatutZodType.exclude(["supprimée"]), z.literal("suivies")]).optional(),
-    search: z.string().optional(),
-    suivies: z.coerce.boolean().optional(),
-    order: z.enum(["asc", "desc"]).optional(),
-    orderBy: DemandeItem.keyof().optional(),
-    offset: z.coerce.number().optional(),
-    limit: z.coerce.number().optional(),
-    campagne: z.string().optional(),
-    codeAcademie: z.array(z.string()).optional(),
-    codeNiveauDiplome: z.array(z.string()).optional(),
-  }),
+  querystring: FiltersSchema,
   response: {
     200: z.object({
       count: z.coerce.number(),
       demandes: z.array(DemandeItem),
-      campagnes: z.array(
-        z.object({
-          annee: z.string(),
-          statut: z.string(),
-        })
-      ),
-      currentCampagne: z.object({
-        annee: z.string(),
-        statut: z.string(),
-        id: z.string(),
-      }),
-      campagne: z.object({
-        annee: z.string(),
-        statut: z.string(),
-        id: z.string(),
-      }),
+      campagne: CampagneSchema,
       filters: z.object({
         academies: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
+        campagnes: z.array(CampagneSchema),
       }),
     }),
   },

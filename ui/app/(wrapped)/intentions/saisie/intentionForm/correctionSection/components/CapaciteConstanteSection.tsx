@@ -1,8 +1,7 @@
 import { Flex, Input, Table, Tbody, Td, Th, Thead, Tr, VisuallyHidden } from "@chakra-ui/react";
+import { isTypeColoration } from "shared/utils/typeDemandeUtils";
 
-import type { Intention } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/types";
-import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
-
+import type { Demande } from "@/app/(wrapped)/intentions/saisie/types";
 const ConstanteField = ({ id, value }: { id: string; value: string | number | undefined }) => (
   <Input
     id={id}
@@ -25,7 +24,7 @@ const differenceCapacité = (valueA: number | undefined, valueB: number | undefi
   return valueA - valueB > 0 ? `+${valueA - valueB}` : valueA - valueB;
 };
 
-export const CapaciteConstanteSection = ({ demande }: { demande: Intention }) => {
+export const CapaciteConstanteSection = ({ demande }: { demande: Demande }) => {
   const typeDemande = demande?.typeDemande;
   const coloration = typeDemande !== undefined && (isTypeColoration(typeDemande) || demande.coloration);
   return (

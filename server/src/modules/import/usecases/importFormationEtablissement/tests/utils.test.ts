@@ -37,12 +37,12 @@ describe('server > src > modules > import > usecases > importFormationEtablissem
     });
 
     describe("CFD commençant par 363", () => {
-      it("Doit retourner 378 peu importe la durée", () => {
-        expect(extractCfdFromMefAndDuree('363000', 1)).toBe(378);
-        expect(extractCfdFromMefAndDuree('363000', 2)).toBe(378);
-        expect(extractCfdFromMefAndDuree('363000', 3)).toBe(378);
-        expect(extractCfdFromMefAndDuree('363000', 4)).toBe(378);
-        expect(extractCfdFromMefAndDuree('363000', 0)).toBe(378);
+      it("Doit retourner 372 peu importe la durée", () => {
+        expect(extractCfdFromMefAndDuree('363000', 1)).toBe(372);
+        expect(extractCfdFromMefAndDuree('363000', 2)).toBe(372);
+        expect(extractCfdFromMefAndDuree('363000', 3)).toBe(372);
+        expect(extractCfdFromMefAndDuree('363000', 4)).toBe(372);
+        expect(extractCfdFromMefAndDuree('363000', 0)).toBe(372);
       });
     });
 

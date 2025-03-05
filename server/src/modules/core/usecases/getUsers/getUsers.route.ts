@@ -1,6 +1,7 @@
-import { createRoute } from "@http-wizard/core";
-import type { UserFonction } from "shared/enum/userFonction";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
+import type { UserFonction } from "shared/enum/userFonctionEnum";
 import { ROUTES } from "shared/routes/routes";
+import { createRoute } from "shared/utils/http-wizard/core";
 
 import { getScopeFilterForUser } from "@/modules/core/utils/getScopeFilterForUser";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
@@ -17,12 +18,12 @@ export const getUsersRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("users/lecture"),
+      preHandler: hasPermissionHandler(PermissionEnum["users/lecture"]),
       handler: async (request, response) => {
         const { user } = request;
 
         const { order, orderBy, ...rest } = request.query;
-        const { scope, scopeFilter } = getScopeFilterForUser("users/lecture", user!);
+        const { scope, scopeFilter } = getScopeFilterForUser(PermissionEnum["users/lecture"], user!);
 
         const users = await getUsers({
           ...rest,

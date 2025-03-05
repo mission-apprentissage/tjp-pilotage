@@ -1,3 +1,5 @@
+import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
+
 import { formatNumber } from "@/utils/formatUtils";
 
 export const formatTaux = (value?: number): number => formatNumber((value ?? 0) * 100);
@@ -16,18 +18,18 @@ export const formatAnneeCommuneLibelle = (libelleFormation: string): string => {
 
 export const formatTypeFamilleLong = (typeFamille: string): string => {
   return typeFamille
-    .replace("2nde_commune", "Seconde commune")
-    .replace("1ere_commune", "Première année commune")
-    .replace("specialite", "Spécialité")
-    .replace("option", "Option")
+    .replace(TypeFamilleEnum["2nde_commune"], "Seconde commune")
+    .replace(TypeFamilleEnum["1ere_commune"], "Première année commune")
+    .replace(TypeFamilleEnum["specialite"], "Spécialité")
+    .replace(TypeFamilleEnum["option"], "Option")
     .replace("fermeture", "Fermeture au ");
 };
 
 export const formatTypeFamilleCourt = (typeFamille: string): string => {
   return typeFamille
-    .replace("2nde_commune", "2de")
-    .replace("1ere_commune", "1ère")
-    .replace("specialite", "Spé")
-    .replace("option", "Opt")
+    .replace(TypeFamilleEnum["2nde_commune"], "2de")
+    .replace(TypeFamilleEnum["1ere_commune"], "1ère")
+    .replace(TypeFamilleEnum["specialite"], "Spé")
+    .replace(TypeFamilleEnum["option"], "Opt")
     .replace("fermeture", "Fermeture au ");
 };

@@ -2,6 +2,7 @@ import { Box, Center, Flex, Skeleton, Table, TableContainer, Tbody, Td, Text, Th
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 import { getPermissionScope, guardScope } from "shared";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/GROUPED_STATS_DEMANDES_COLUMN";
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
@@ -52,26 +53,23 @@ export const ConsoleSection = ({
   isLoading,
   order,
   handleOrder,
-  campagne,
   colonneFilters,
 }: {
   data?: DemandesRestitutionIntentions;
   isLoading: boolean;
   order: OrderDemandesRestitutionIntentions;
   handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
-  campagne?: string;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
 }) => {
   const router = useRouter();
-  const { auth } = useAuth();
+  const { user } = useAuth();
 
   const showFormulairePerdir = (intention: { isIntention: boolean; uai: string; codeRegion: string }) => {
-    const user = auth?.user;
-    const scope = getPermissionScope(user?.role, "intentions-perdir/lecture");
-    const isAllowed = guardScope(scope?.default, {
+    const scope = getPermissionScope(user?.role, PermissionEnum["intentions-perdir/lecture"]);
+    const isAllowed = guardScope(scope, {
       role: () => false,
       uai: () => user?.uais?.includes(intention.uai) ?? false,
-      region: () => user?.codeRegion === intention.codeRegion,
+      région: () => user?.codeRegion === intention.codeRegion,
       national: () => true,
     });
 
@@ -134,7 +132,6 @@ export const ConsoleSection = ({
                     >
                       <LineContent
                         demande={demande}
-                        campagne={campagne}
                         colonneFilters={colonneFilters}
                         getCellColor={getCellColor}
                       />

@@ -1,9 +1,9 @@
 import { expressionBuilder, sql } from "kysely";
 import { VoieEnum } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import type { DB } from "@/db/db";
@@ -33,8 +33,11 @@ import { isDemandeNotAjustementRentree } from "@/modules/utils/isDemandeSelectab
 
 import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
 
+
+const CURRENT_ANNEE_CAMPAGNE = "2025";
+
 export const genericOnDemandes = ({
-  statut,
+  statut = [DemandeStatutEnum["projet de demande"], DemandeStatutEnum["demande validée"], DemandeStatutEnum["prêt pour le vote"]],
   rentreeScolaire,
   codeNiveauDiplome,
   CPC,
@@ -48,7 +51,7 @@ export const genericOnDemandes = ({
   formationSpecifique,
   withAjustementRentree = true,
 }: {
-  statut?: Array<DemandeStatutType>;
+  statut?: DemandeStatutType[];
   rentreeScolaire?: string[];
   codeNiveauDiplome?: string[];
   CPC?: string[];

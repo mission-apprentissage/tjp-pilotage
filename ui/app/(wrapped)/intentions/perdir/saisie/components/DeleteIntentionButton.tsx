@@ -22,11 +22,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { client } from "@/api.client";
+import type { Intentions } from "@/app/(wrapped)/intentions/perdir/saisie/types";
 
 import { IntentionSpinner } from "./IntentionSpinner";
 
 export const DeleteIntentionButton = chakra(
-  ({ intention }: { intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0] }) => {
+  ({ intention }: { intention: Intentions[number] }) => {
     const toast = useToast();
     const queryClient = useQueryClient();
     const { isOpen, onOpen, onClose } = useDisclosure();
