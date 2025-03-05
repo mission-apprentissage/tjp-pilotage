@@ -1,18 +1,18 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, Button, Collapse, Flex, Menu, MenuButton, MenuItem, MenuList, Text, useToast } from "@chakra-ui/react";
+import {ArrowForwardIcon,ChevronDownIcon} from '@chakra-ui/icons';
+import {Box, Button, Collapse, Flex, Highlight, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure,useToast} from '@chakra-ui/react';
 import {useQueryClient} from '@tanstack/react-query';
 import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
 import { INTENTIONS_COLUMNS } from "@/app/(wrapped)/intentions/perdir/saisie/INTENTIONS_COLUMNS";
+import type {CheckedIntentionsType} from '@/app/(wrapped)/intentions/perdir/saisie/page.client';
 import type { Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
-import { getOrderStatut, getStepWorkflow} from '@/app/(wrapped)/intentions/utils/statutUtils';
+import {formatStatut, getPossibleNextStatuts} from '@/app/(wrapped)/intentions/utils/statutUtils';
 import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { Multiselect } from "@/components/Multiselect";
@@ -51,12 +51,13 @@ export const Header = ({
   diplomes: OptionType[];
   academies: OptionType[];
   campagnes?: CampagneType[];
-  checkedIntentions: Record<string, { statut: DemandeStatutType }>;
-  setCheckedIntentions: (checkedIntentions: Record<string, { statut: DemandeStatutType }>) => void;
+  checkedIntentions: CheckedIntentionsType | undefined;
+  setCheckedIntentions: (checkedIntentions: CheckedIntentionsType | undefined) => void;
   setIsModifyingGroup: (isModifyingGroup: boolean) => void;
 }) => {
   const toast = useToast();
   const trackEvent = usePlausible();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const anneeCampagne = activeFilters.campagne ?? campagne?.annee;
 
   const onClickSearchIntention = () => {
@@ -117,19 +118,6 @@ export const Header = ({
     );
   };
 
-  const statutsPossiblesActionsGroupees = Object.keys(DemandeStatutEnum).filter((statut) =>
-    Object.values(checkedIntentions).every((demande) => {
-      const seuilActuel = getStepWorkflow(demande.statut);
-      const seuilMax = seuilActuel + 1;
-      const seuilCible = getStepWorkflow(statut as DemandeStatutType);
-
-      return demande.statut !== statut &&
-        getOrderStatut(demande.statut) <= getOrderStatut(statut as DemandeStatutType) &&
-        seuilCible >= seuilActuel &&
-        seuilCible <= seuilMax;
-    })
-  );
-
   const queryClient = useQueryClient();
 
   const {
@@ -160,7 +148,7 @@ export const Header = ({
         queryClient.invalidateQueries({
           queryKey: ["[GET]/intentions/count"],
         });
-        setCheckedIntentions({});
+        setCheckedIntentions(undefined);
         setStatut(undefined);
         setIsModifyingGroup(false);
       }, 500);
@@ -267,15 +255,17 @@ export const Header = ({
           />
         </Flex>
       </Flex>
-      <Collapse in={Object.keys(checkedIntentions).length > 0}>
-        <Flex direction={"row"} gap={4} bgColor={"bluefrance.850"} p={4} justify={"space-between"} >
+      <Collapse in={checkedIntentions !== undefined && checkedIntentions.intentions.length > 0}>
+        <Flex direction={"row"} gap={4} bgColor={"bluefrance.975"} p={4} justify={"space-between"} >
           <Flex my={"auto"}>
-            <Text color={"bluefrance.113"} fontWeight={700} fontSize={16}>
-              { Object.keys(checkedIntentions).length > 1 ?
-                `${Object.keys(checkedIntentions).length} demandes sélectionnées` :
-                `${Object.keys(checkedIntentions).length} demande sélectionnée`
-              }
-            </Text>
+            {checkedIntentions && (
+              <Text color={"bluefrance.113"} fontWeight={700} fontSize={16}>
+                { checkedIntentions?.intentions && checkedIntentions.intentions.length > 1 ?
+                  `${checkedIntentions.intentions.length} demandes sélectionnées` :
+                  `${checkedIntentions?.intentions.length} demande sélectionnée`
+                }
+              </Text>
+            )}
           </Flex>
           <Flex direction={"row"} gap={6}>
             <Menu gutter={0} matchWidth={true} autoSelect={false}>
@@ -302,7 +292,7 @@ export const Header = ({
                 </Flex>
               </MenuButton>
               <MenuList py={0} borderTopRadius={0} zIndex={"banner"}>
-                {statutsPossiblesActionsGroupees?.map((statut) => (
+                {getPossibleNextStatuts(checkedIntentions?.statut)?.map((statut) => (
                   <MenuItem
                     p={2}
                     key={statut}
@@ -319,12 +309,7 @@ export const Header = ({
             </Menu>
             <Button
               onClick={() => {
-                if(statut) submitIntentionsStatut({
-                  body: {
-                    intentions: Object.keys(checkedIntentions).map((intention) => ({numero: intention})),
-                    statut,
-                  }
-                });
+                if(statut && checkedIntentions) onOpen();
               }}
               disabled={isLoading || !statut}
               variant={"secondary"}
@@ -336,6 +321,96 @@ export const Header = ({
           </Flex>
         </Flex>
       </Collapse>
+      {checkedIntentions && statut && (
+        <ModalModificationStatut
+          isOpen={isOpen}
+          onClose={onClose}
+          checkedIntentions={checkedIntentions!}
+          statut={statut!}
+          submitIntentionsStatut={submitIntentionsStatut}
+          isLoading={isLoading}
+        />
+      )}
     </Flex>
+  );
+};
+
+const ModalModificationStatut = ({
+  isOpen,
+  onClose,
+  checkedIntentions,
+  statut,
+  submitIntentionsStatut,
+  isLoading
+} : {
+  isOpen: boolean;
+  onClose: () => void;
+  checkedIntentions: CheckedIntentionsType;
+  statut: DemandeStatutType;
+  submitIntentionsStatut: (params: { body: { intentions: { numero: string }[], statut: DemandeStatutType } }) => void;
+  isLoading: boolean;
+}) => {
+
+  const text = checkedIntentions.intentions.length > 1 ?
+    `Souhaitez-vous changer le statut de ${checkedIntentions.intentions.length} demandes depuis
+    ${formatStatut(checkedIntentions.statut)} vers ${formatStatut(statut)} ?`
+    :
+    `Souhaitez-vous changer le statut d'une demande depuis ${formatStatut(checkedIntentions.statut)} vers ${formatStatut(statut)} ?`;
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+      <ModalOverlay />
+      <ModalContent p="4">
+        <ModalCloseButton title="Fermer" />
+        <ModalHeader>
+          <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
+          Confirmer le changement de statut
+        </ModalHeader>
+        <ModalBody>
+          <Highlight
+            query={[
+              formatStatut(checkedIntentions.statut),
+              formatStatut(statut),
+              `${checkedIntentions.intentions.length} demandes`,
+              "une demande"
+            ]}
+            styles={{ fontWeight: 700 }}
+          >
+            {text}
+          </Highlight>
+          <Text color="red" mt={2}>
+              Attention, ce changement est irréversible
+          </Text>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            isLoading={isLoading}
+            colorScheme="blue"
+            mr={3}
+            onClick={() => {
+              onClose();
+            }}
+            variant={"secondary"}
+          >
+            Annuler
+          </Button>
+          <Button
+            isLoading={isLoading}
+            variant="primary"
+            onClick={() => {
+              submitIntentionsStatut({
+                body: {
+                  intentions: checkedIntentions.intentions.map((intention) => ({numero: intention})),
+                  statut,
+                }
+              });
+              onClose();
+            }}
+          >
+            Confirmer le changement
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
