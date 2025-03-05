@@ -84,6 +84,7 @@ import { submitAvisSchema } from "./schemas/post.intention.avis.submit.schema";
 import { importIntentionSchema } from "./schemas/post.intention.import.numero.schema";
 import { submitChangementStatutSchema } from "./schemas/post.intention.statut.submit.schema";
 import { submitIntentionSchema } from "./schemas/post.intention.submit.schema";
+import { submitIntentionsStatutSchema } from "./schemas/post.intentions.statut.submit.schema";
 import { submitRequeteEnregistreeSchema } from "./schemas/post.requete.enregistrement.schema";
 import { createUserSchema } from "./schemas/post.users.userId.schema";
 import { editCampagneSchema } from "./schemas/put.campagnes.campagneId.schema";
@@ -507,6 +508,11 @@ export const ROUTES = {
     url: "/intention/import/:numero",
     method: "POST",
     schema: importIntentionSchema,
+  },
+  "[POST]/intentions/statut/submit": {
+    url: "/intentions/statut/submit",
+    method: "POST",
+    schema: submitIntentionsStatutSchema,
   },
   "[GET]/etablissement/perdir/search/:search": {
     url: "/etablissement/perdir/search/:search",
