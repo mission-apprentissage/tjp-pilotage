@@ -40,12 +40,7 @@ export const getEtablissementsProches = async ({ cfd, bbox, limit = 100 }: Filte
       sb.fn.max(selectTauxInsertion6mois("indicateurSortie")).as("tauxInsertion"),
       sb.fn.max(effectifAnnee({ alias: "indicateurEntree" })).as("effectif"),
     ])
-    .where((eb) =>
-      eb.or([
-        eb("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE),
-        eb("indicateurEntree.rentreeScolaire", "is", null),
-      ])
-    )
+    .where("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE)
     .where((eb) =>
       eb.or([
         eb("indicateurSortie.millesimeSortie", "=", CURRENT_IJ_MILLESIME),

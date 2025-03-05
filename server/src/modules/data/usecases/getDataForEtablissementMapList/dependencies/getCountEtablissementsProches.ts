@@ -13,12 +13,7 @@ export const getCountEtablissementsProches = async ({ cfd, bbox }: Filters) =>
     .leftJoin("indicateurEntree", "indicateurEntree.formationEtablissementId", "formationEtablissement.id")
     .leftJoin("indicateurSortie", "indicateurSortie.formationEtablissementId", "formationEtablissement.id")
     .select((sb) => sb.fn.count<number>("etablissement.uai").over().as("count"))
-    .where((eb) =>
-      eb.or([
-        eb("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE),
-        eb("indicateurEntree.rentreeScolaire", "is", null),
-      ])
-    )
+    .where("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE)
     .where((eb) =>
       eb.or([
         eb("indicateurSortie.millesimeSortie", "=", CURRENT_IJ_MILLESIME),
