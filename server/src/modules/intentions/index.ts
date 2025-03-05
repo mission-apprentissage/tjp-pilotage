@@ -17,12 +17,14 @@ import { submitAvisRoute } from "./usecases/submitAvis/submitAvis.route";
 import { submitChangementStatutRoute } from "./usecases/submitChangementStatut/submitChangementStatut.route";
 import { submitIntentionRoute } from "./usecases/submitIntention/submitIntention.route";
 import { submitIntentionAccessLogRoute } from "./usecases/submitIntentionAccessLog/submitIntentionAccessLog.route";
+import {submitIntentionsStatutRoute} from './usecases/submitIntentionsStatut/submitIntentionsStatut.route';
 import { submitSuiviRoute } from "./usecases/submitSuivi/submitSuivi.route";
 import { uploadIntentionFilesRoute } from "./usecases/uploadIntentionFiles/uploadIntentionFiles.route";
 
 export const registerIntentionsModule = (server: Server) => {
   return {
     ...submitIntentionRoute(server),
+    ...submitIntentionsStatutRoute(server),
     ...getIntentionRoute(server),
     ...getIntentionsRoute(server),
     ...countIntentionsRoute(server),
