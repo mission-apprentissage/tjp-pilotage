@@ -131,3 +131,15 @@ export const getTypeAvis = (statut?: DemandeStatutType): AvisTypeType => {
     return AvisTypeEnum["préalable"];
   }
 };
+
+export const getPossibleNextStatuts = (statut?: DemandeStatutType): Array<DemandeStatutType> =>
+  Object.keys(DemandeStatutEnum).filter((possibleStatut) => {
+    const seuilActuel = getStepWorkflow(statut);
+    const seuilMax = seuilActuel + 1;
+    const seuilCible = getStepWorkflow(possibleStatut as DemandeStatutType);
+
+    return statut !== possibleStatut &&
+      getOrderStatut(statut) <= getOrderStatut(possibleStatut as DemandeStatutType) &&
+      seuilCible >= seuilActuel &&
+      seuilCible <= seuilMax;
+  }) as Array<DemandeStatutType>;
