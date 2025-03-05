@@ -168,7 +168,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
 
 export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   string,
-  { color: string; options: Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL>}
+  { color: string; options: typeof STATS_DEMANDES_COLUMNS_OPTIONAL}
 > = {
   // établissement
   ["établissement"]: {

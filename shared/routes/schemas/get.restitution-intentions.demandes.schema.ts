@@ -27,7 +27,6 @@ const DemandeSchema = z.object({
   libelleDispositif: z.string().optional(),
   codeDispositif: z.string(),
   cfd: z.string(),
-  isBTS: z.boolean(),
   // Demande
   typeDemande: DemandeTypeZodType,
   motif: z.array(z.string()),
@@ -109,6 +108,7 @@ const DemandeSchema = z.object({
   pilotageCapacite: z.number().optional(),
   pilotageEffectif: z.number().optional(),
   pilotageTauxPression: z.number().optional(),
+  pilotageTauxDemande: z.number().optional(),
   pilotageTauxRemplissage: z.number().optional(),
   pilotagePremierVoeu: z.number().optional()
 });

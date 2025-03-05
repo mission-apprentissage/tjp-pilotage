@@ -94,7 +94,7 @@ export const STATS_DEMANDES_COLUMNS = {
   // Suivi du taux de remplissage des demandes
   pilotageCapacite: "Capacité RS {0}",
   pilotageEffectif: "Effectif RS {0}",
-  pilotageTauxRemplissage: "Remplissage RS {0}",
+  pilotageTauxRemplissage: "Tx Remplissage RS {0}",
   pilotageTauxPression: "Tx Pression RS {0}",
   pilotageTauxDemande: "Tx Demande RS {0}",
 } satisfies ExportColumns<
@@ -109,7 +109,6 @@ export const STATS_DEMANDES_COLUMNS = {
     transitionDemographique: boolean;
     transitionEcologique: boolean;
     transitionNumerique: boolean;
-    pilotageTauxDemande: number;
   }
 >;
 

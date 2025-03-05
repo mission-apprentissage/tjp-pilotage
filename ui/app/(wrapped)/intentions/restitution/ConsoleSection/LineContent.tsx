@@ -495,14 +495,14 @@ export const LineContent = ({
               colonne={"pilotageTauxPression"}
               bgColor={getCellColor("pilotageTauxPression")}
             >
-              {!demande.isBTS && formatNumberToString(demande.pilotageTauxPression, 2, "")}
+              {formatNumberToString(demande.pilotageTauxPression, 2, "")}
             </ConditionalTd>
             <ConditionalTd
               colonneFilters={colonneFilters}
               colonne={"pilotageTauxDemande"}
               bgColor={getCellColor("pilotageTauxDemande")}
             >
-              {demande.isBTS && formatNumberToString(demande.pilotageTauxPression, 2, "") }
+              {formatNumberToString(demande.pilotageTauxDemande, 2, "") }
             </ConditionalTd>
           </>
         )

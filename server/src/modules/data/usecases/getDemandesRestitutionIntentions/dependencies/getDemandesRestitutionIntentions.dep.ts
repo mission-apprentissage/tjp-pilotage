@@ -115,8 +115,9 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         capaciteAnnee({ alias: "indicateurEntree"}).as("capacite"),
         effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
         premiersVoeuxAnnee({alias: "indicateurEntree"}).as("premierVoeu"),
-        selectTauxPression("indicateurEntree", "formationScolaireView", true).as("pression"),
-        selectTauxRemplissage("indicateurEntree").as("remplissage")
+        selectTauxRemplissage("indicateurEntree").as("remplissage"),
+        sb.case().when(sql<string>`LEFT(${sb.ref("formationScolaireView.cfd")}, 3)`, '<>', '320').then(selectTauxPression("indicateurEntree", "formationScolaireView", true)).end().as("pression"),
+        sb.case().when(sql<string>`LEFT(${sb.ref("formationScolaireView.cfd")}, 3)`, '=', '320').then(selectTauxPression("indicateurEntree", "formationScolaireView", true)).end().as("demande"),
       ]).as("tauxEntree"),
     (join) => join.onRef("tauxEntree.cfd", "=", "demande.cfd").onRef("tauxEntree.rentreeScolaire", "=", "demande.rentreeScolaire").onRef("tauxEntree.codeDispositif", "=", "demande.codeDispositif").onRef("tauxEntree.uai", "=", "demande.uai")
     )
@@ -170,7 +171,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       eb.ref("tauxEntree.pression").as("pilotageTauxPression"),
       eb.ref("tauxEntree.remplissage").as("pilotageTauxRemplissage"),
       eb.ref("tauxEntree.premierVoeu").as("pilotagePremierVoeu"),
-      sql<boolean>`LEFT(${eb.ref("demande.cfd")}, 3) = '320'`.as("isBTS"),
+      eb.ref("tauxEntree.demande").as("pilotageTauxDemande"),
     ])
     .$call((eb) => {
       if (search)
