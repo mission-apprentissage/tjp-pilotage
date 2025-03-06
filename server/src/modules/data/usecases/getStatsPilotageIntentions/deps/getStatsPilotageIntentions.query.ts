@@ -204,9 +204,9 @@ const getDepartementData = async (filters: Filters) => {
 
 export const getStatsPilotageIntentionsQuery = async (filters: Filters) => {
   switch (filters.scope) {
-  case ScopeEnum["académie"]: return getAcademieData(filters);
-  case ScopeEnum["département"]: return getDepartementData(filters);
-  case ScopeEnum["région"]: return getRegionData(filters);
+  case ScopeEnum["académie"]: return getAcademieData({...filters, codeAcademie: undefined, codeRegion: undefined, codeDepartement: undefined});
+  case ScopeEnum["département"]: return getDepartementData({...filters, codeAcademie: undefined, codeRegion: undefined, codeDepartement: undefined});
+  case ScopeEnum["région"]: return getRegionData({...filters, codeAcademie: undefined, codeRegion: undefined, codeDepartement: undefined});
   case ScopeEnum.national:
   default:
     return getNationalData(filters);

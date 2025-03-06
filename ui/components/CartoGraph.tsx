@@ -22,15 +22,6 @@ function hasValue(data: { value?: number }): data is {
   return data.value !== undefined;
 }
 
-function hasNoValue(data: { value?: number }): data is {
-  name?: string;
-  parentName?: string;
-  value: undefined;
-  code?: string;
-} {
-  return typeof data.value === "undefined";
-}
-
 // Pour plus de 4 valeurs, créer 4 quartiles
 function getQuartileValue(arr: number[], quartile: number): number {
   const position = (arr.length - 1) * (quartile / 4);
@@ -96,6 +87,7 @@ export const CartoGraph = ({
   selectedScope,
   codeRegionSelectionne,
 }: CartoGraphProps) => {
+  console.log({ graphData });
   const colorPalette = useColorPalette(customColorPalette, objectif);
   const grey = useToken("colors", "grey.925");
   const bluefrance525 = useToken("colors", "bluefrance.525");
