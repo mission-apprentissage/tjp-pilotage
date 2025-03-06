@@ -82,7 +82,7 @@ export const DefinitionTauxTransfoModal = ({ isOpen, onClose }: { isOpen: boolea
               <UnorderedList spacing="16px">
                 <ListItem>
                   <Text>
-                    Le calcul tient compte des places transformées en <b>voie scolaire</b> et en
+                    Le calcul tient compte des places transformées en <b>voie scolaire</b> et en{" "}
                     <b>apprentissage</b> (diplômes retenus : CAP, Bac Pro, CS, BTS, FCIL, BT, BP, DNMADE, BMA).
                     Le dénominateur concerne les effectifs <b>en entrée</b>.
                   </Text>
@@ -96,14 +96,14 @@ export const DefinitionTauxTransfoModal = ({ isOpen, onClose }: { isOpen: boolea
                       ils sont calculés à partir des transformations <b>prévues</b> et non constatées
                     </ListItem>
                     <ListItem>
-                      ils sont rapportés à un total de places de la <b>Rentrée N-1</b> et non N, jusquà parution du
+                      ils sont rapportés à un total de places de la <b>Rentrée N-1</b> et non N, jusqu'à parution du
                       constat de rentrée N (en fin d'année).
                     </ListItem>
                   </UnorderedList>
                 </ListItem>
                 <ListItem>
                   <Text>
-                    On peut également suivre dans Orion le taux de transformation prévisionnel
+                    On peut également suivre dans Orion le taux de transformation prévisionnel{" "}
                     <b>hors colorations</b> (à partir de la Rentrée Scolaire 2025).
                   </Text>
                 </ListItem>
