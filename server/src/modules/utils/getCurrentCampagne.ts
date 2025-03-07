@@ -129,7 +129,6 @@ export const getCampagnes = async (user?: RequestUser): Promise<Array<CampagneTy
   .leftJoin("campagneRegion", (join) =>
     join
       .onRef("campagneRegion.campagneId", "=", "campagne.id")
-      .on("campagneRegion.statut", "=", CampagneStatutEnum["en cours"])
       .$call((eb) => {
         if(user?.codeRegion) return eb.on("campagneRegion.codeRegion", "=", user.codeRegion);
         return eb.on((eb) => eb.val(false));

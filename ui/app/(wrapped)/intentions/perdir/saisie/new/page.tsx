@@ -34,7 +34,7 @@ const Page = () => {
       <GuardSaisieExpe campagne={campagne}>
         <IntentionFilesProvider>
           <IntentionForm
-            disabled={!canCreateIntention({ user, campagne, currentCampagne })}
+            disabled={!canCreateIntention({ user, campagne })}
             defaultValues={{
               campagneId,
               rentreeScolaire: Number.parseInt(campagne.annee) + 1,

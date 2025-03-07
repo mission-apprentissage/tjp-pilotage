@@ -230,7 +230,7 @@ export const PageClient = () => {
   const [isModifyingGroup, setIsModifyingGroup] = useState(false);
 
   if (!data) return <IntentionSpinner />;
-  const isNouvelleDemandeDisabled = !canCreateIntention({ user, campagne: data.campagne, currentCampagne });
+  const isNouvelleDemandeDisabled = !canCreateIntention({ user, campagne: data.campagne });
 
   return (
     <Container maxWidth="100%" flex={1} flexDirection={["column", null, "row"]} display={"flex"} minHeight={0} py={4}>
