@@ -63,7 +63,6 @@ const createIntentionBuilder = ({
 
 const fixtureBuilder = () => {
   let user: UserType | undefined = undefined;
-  let currentCampagne: CampagneType = createCampagneBuilder({annee: "2025"});
   let campagne: CampagneType = createCampagneBuilder({annee: "2023"});
   let intention: DemandeIntention = createIntentionBuilder({
     campagne: createCampagneBuilder({annee: "2023"}),
@@ -111,12 +110,6 @@ const fixtureBuilder = () => {
       utilisateurRegionHorsExpe: () => {
         user = createUserBuilder({role: RoleEnum["expert_region"], codeRegion: "11"});
       },
-      currentCampagne2024: () => {
-        currentCampagne = createCampagneBuilder({annee: "2024"});
-      },
-      currentCampagne2025: () => {
-        currentCampagne = createCampagneBuilder({annee: "2025"});
-      },
       campagne2023: () => {
         campagne = createCampagneBuilder({annee: "2023"});
       },
@@ -129,11 +122,11 @@ const fixtureBuilder = () => {
       campagne2025: () => {
         campagne = createCampagneBuilder({annee: "2025"});
       },
-      campagneRegionaleEnCoursWithSaisiePerdir: () => {
-        campagne = createCampagneBuilder({annee: "2025", codeRegion: "76", withSaisiePerdir: true});
+      campagneRegionaleEnCoursWithSaisiePerdir: (annee?: string) => {
+        campagne = createCampagneBuilder({annee: annee ?? "2025", codeRegion: "76", withSaisiePerdir: true});
       },
-      campagneRegionaleEnCoursWithoutSaisiePerdir: () => {
-        campagne = createCampagneBuilder({annee: "2025", codeRegion: "76", withSaisiePerdir: false });
+      campagneRegionaleEnCoursWithoutSaisiePerdir: (annee?: string) => {
+        campagne = createCampagneBuilder({annee: annee ?? "2025", codeRegion: "76", withSaisiePerdir: false });
       },
       campagne2025EnAttente: () => {
         campagne = createCampagneBuilder({annee: "2025", statut: CampagneStatutEnum["en attente"]});
@@ -197,7 +190,7 @@ const fixtureBuilder = () => {
         canEdit = canEditDemandeIntention({demandeIntention : intention, user});
       },
       canCreateIntention: () => {
-        canCreate = canCreateIntention({campagne, currentCampagne, user});
+        canCreate = canCreateIntention({campagne, user});
       },
       canShowCorrectionButton: () => {
         canShowCorrectionButton = canCorrectIntention({intention, user});
@@ -288,7 +281,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur expert ne doit pas pouvoir créer ou modifier une demande dans la campagne 2024", () => {
     fixture.given.utilisateurExpert();
-    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
 
     fixture.when.canCreateIntention();
@@ -301,7 +293,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur expert ne doit pas pouvoir créer ou modifier une demande dans la campagne 2025", () => {
     fixture.given.utilisateurExpert();
-    fixture.given.currentCampagne2025();
     fixture.given.campagne2025();
     fixture.given.campagneRegionaleEnCoursWithSaisiePerdir();
 
@@ -315,7 +306,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur qui n'a pas les permissions ne doit pas pouvoir importer une demande ou modifier une demande", () => {
     fixture.given.utilisateurInvite();
-    fixture.given.currentCampagne2024();
     fixture.given.campagne2023Terminee();
     fixture.given.intentionValidee();
     fixture.given.isNotAlreadyImported();
@@ -338,7 +328,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur national doit pouvoir modifier une demande", () => {
     fixture.given.utilisateurNational();
-    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
@@ -351,7 +340,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur national ne doit pas pouvoir modifier une demande non éditable", () => {
     fixture.given.utilisateurNational();
-    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
     fixture.given.intentionNonEditable();
 
@@ -361,7 +349,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur national ne doit pas pouvoir créer ou modifier une demande pendant une campagne terminée", () => {
     fixture.given.utilisateurNational();
-    fixture.given.currentCampagne2024();
     fixture.given.campagne2023Terminee();
     fixture.given.intentionEditable();
 
@@ -374,7 +361,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur national ne doit pas pouvoir créer ou modifier une demande pendant une campagne en attente", () => {
     fixture.given.utilisateurNational();
-    fixture.given.currentCampagne2024();
     fixture.given.campagne2025EnAttente();
     fixture.given.intentionEditable();
 
@@ -387,7 +373,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région hors expérimentation ne doit pas pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
     fixture.given.utilisateurAdminRegionHorsExpe();
-    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
@@ -400,7 +385,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur perdir hors expérimentation ne doit pas pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
     fixture.given.utilisateurPerdirHorsExpe();
-    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
@@ -413,7 +397,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région de l'expérimentation doit pouvoir modifier une demande pendant une campagne nationale", () => {
     fixture.given.utilisateurAdminRegionExpe();
-    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
@@ -423,7 +406,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région de l'expérimentation doit pouvoir modifier une demande pendant une campagne nationale", () => {
     fixture.given.utilisateurAdminRegionExpe();
-    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
@@ -433,7 +415,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région de l'expérimentation ne doit pas pouvoir créer une demande pendant la campagne 2024", () => {
     fixture.given.utilisateurAdminRegionExpe();
-    fixture.given.currentCampagne2024();
     fixture.given.campagne2024();
 
     fixture.when.canCreateIntention();
@@ -442,7 +423,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région de l'expérimentation doit pouvoir créer une demande pendant la campagne en cours si celle ci a une campagne régionale ", () => {
     fixture.given.utilisateurAdminRegionExpe();
-    fixture.given.currentCampagne2025();
     fixture.given.campagneRegionaleEnCoursWithoutSaisiePerdir();
 
     fixture.when.canCreateIntention();
@@ -451,7 +431,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région de l'expérimentation doit pouvoir créer une demande pendant la campagne en cours si celle ci a une campagne régionale ", () => {
     fixture.given.utilisateurPerdirExpe();
-    fixture.given.currentCampagne2025();
     fixture.given.campagneRegionaleEnCoursWithSaisiePerdir();
 
     fixture.when.canCreateIntention();
@@ -460,7 +439,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur admin région de l'expérimentation doit pouvoir créer une demande pendant la campagne en cours si celle ci a une campagne régionale ", () => {
     fixture.given.utilisateurPerdirExpe();
-    fixture.given.currentCampagne2025();
     fixture.given.campagneRegionaleEnCoursWithoutSaisiePerdir();
 
     fixture.when.canCreateIntention();
@@ -511,7 +489,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur national ne doit pas pouvoir créer une demande lors d'une campagne qui n'est pas la dernière en cours", () => {
     fixture.given.utilisateurNational();
-    fixture.given.currentCampagne2025();
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
@@ -521,7 +498,6 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
 
   it("Un utilisateur national doit pouvoir modifier une demande lors d'une campagne qui n'est pas la dernière en cours", () => {
     fixture.given.utilisateurNational();
-    fixture.given.currentCampagne2025();
     fixture.given.campagne2024();
     fixture.given.intentionEditable();
 
@@ -607,6 +583,18 @@ describe("ui > app > (wrapped) > intentions > utils > permissionsIntentionUtils"
     fixture.when.canShowCorrectionButton();
 
     fixture.then.verifierCanNotShowCorrectionButton();
+  });
+
+  it("Un utilisateur admin région de l'expérimentation doit pouvoir éditer une demande d'une campagne", () => {
+    fixture.given.utilisateurAdminRegionExpe();
+    fixture.given.campagneRegionaleEnCoursWithSaisiePerdir("2024");
+    fixture.given.intentionEditable();
+
+    fixture.when.canCreateIntention();
+    fixture.when.canEditDemandeIntention();
+
+    fixture.then.verifierCanCreate();
+    fixture.then.verifierCanEdit();
   });
 
 });

@@ -117,7 +117,9 @@ export default () => {
                     <Td width={"5%"} isNumeric>
                       <Tooltip
                         label="Éditer la campagne régionale"
-                        placement="bottom-start">
+                        placement="bottom-start"
+                        shouldWrapChildren
+                      >
                         <IconButton
                           position="unset"
                           variant="ghost"
@@ -132,7 +134,9 @@ export default () => {
                       </Tooltip>
                       <Tooltip
                         label="Supprimer la campagne régionale"
-                        placement="bottom-start">
+                        placement="bottom-start"
+                        shouldWrapChildren
+                      >
                         <IconButton
                           position="unset"
                           variant="ghost"

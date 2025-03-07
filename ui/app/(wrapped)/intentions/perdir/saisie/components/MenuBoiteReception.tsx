@@ -334,7 +334,7 @@ export const MenuBoiteReception = ({
             Demandes suivies
           </Text>
         </Button>
-        {canCreateIntention({user, currentCampagne, campagne}) && (
+        {canCreateIntention({user, campagne}) && (
           <Button
             bgColor={"unset"}
             size="sm"
