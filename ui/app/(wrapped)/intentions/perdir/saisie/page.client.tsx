@@ -719,7 +719,7 @@ export const PageClient = () => {
                         variant="createButton"
                         size={"lg"}
                         as={isNouvelleDemandeDisabled ? undefined : NextLink}
-                        href={getRoutingSaisieRecueilDemande({ campagne: data?.campagne, user, suffix: "new" })}
+                        href={getRoutingSaisieRecueilDemande({ campagne: data?.campagne, user, suffix: `new?campagneId=${data?.campagne.id}` })}
                         px={3}
                         mt={12}
                         mx={"auto"}

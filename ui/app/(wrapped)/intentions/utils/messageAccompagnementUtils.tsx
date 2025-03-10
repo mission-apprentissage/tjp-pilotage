@@ -38,13 +38,13 @@ export const getMessageAccompagnementCampagne = ({
   if(isCampagneTerminee(campagne))
     return CAMPAGNE_TERMINEE
       .replace("$ANNEE_CAMPAGNE", campagne.annee);
-  if(campagne.id !== currentCampagne?.id && !campagne.codeRegion)
-    return PAS_DE_CAMPAGNE_REGIONALE_EN_COURS
-      .replace("$ANNEE_CAMPAGNE", campagne.annee);
   if(campagne.id !== currentCampagne?.id && currentCampagne?.codeRegion)
     return CAMPAGNE_UNIQUEMENT_MODIFICATION
       .replace("$ANNEE_CAMPAGNE", campagne.annee)
       .replace("$CURRENT_ANNEE_CAMPAGNE", currentCampagne?.annee ? `campagne ${currentCampagne.annee}`: "dernière campagne en cours");
+  if(campagne.id !== currentCampagne?.id && !campagne.codeRegion)
+    return PAS_DE_CAMPAGNE_REGIONALE_EN_COURS
+      .replace("$ANNEE_CAMPAGNE", campagne.annee);
   if(campagne.id === currentCampagne?.id && !campagne.codeRegion)
     return PAS_DE_CURRENT_CAMPAGNE_REGIONALE_EN_COURS
       .replace("$ANNEE_CAMPAGNE", campagne.annee);

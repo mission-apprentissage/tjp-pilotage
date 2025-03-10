@@ -1,4 +1,4 @@
-import {hasPermission, hasRole, RoleEnum} from 'shared';
+import {hasPermission, hasRole, isUserNational, RoleEnum} from 'shared';
 import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 import type {DemandeTypeType} from 'shared/enum/demandeTypeEnum';
 import { PermissionEnum } from 'shared/enum/permissionEnum';
@@ -28,6 +28,7 @@ export const canCreateIntention = ({
   user?: UserType,
   campagne: CampagneType
 }) => {
+  if(isUserNational({user}) && isCampagneEnCours(campagne)) return true;
   const isCampagneRegionale = !!campagne?.codeRegion;
   const withSaisiePerdir = hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne?.withSaisiePerdir : true;
   return !feature.saisieDisabled &&

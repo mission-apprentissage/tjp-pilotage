@@ -2,7 +2,7 @@
 
 import { redirect, usePathname, } from "next/navigation";
 import type { ReactNode } from "react";
-import { hasRole, RoleEnum } from "shared";
+import {hasRole, RoleEnum} from 'shared';
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import {isUserNational} from 'shared/security/securityUtils';
@@ -13,7 +13,6 @@ import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande
 import { isUserPartOfExpe } from "@/utils/isPartOfExpe";
 
 import { useAuth } from './useAuth';
-import { useCurrentCampagne } from './useCurrentCampagne';
 
 
 /**
@@ -31,26 +30,23 @@ export const GuardSaisieExpe = ({ campagne, children }: { campagne: CampagneType
   const pathname = usePathname();
   const segment = pathname ? pathname.split("/").pop() : undefined;
   const { user } = useAuth();
-  const { campagne: currentCampagne } = useCurrentCampagne();
 
   if(!isUserPartOfExpe({ user, campagne })) return redirect(getRoutingSaisieRecueilDemande({ campagne, user }));
   return segment?.startsWith("new") ?
-    handleNewSaisie({ campagne, currentCampagne, user, children }) :
+    handleNewSaisie({ campagne, user, children }) :
     handleEditSaisie({ campagne, user, children });
 };
 
 const handleNewSaisie = (
-  { campagne, currentCampagne, user, children }:
-  { campagne: CampagneType; currentCampagne?: CampagneType; user?: UserType; children: ReactNode }
+  { campagne, user, children }:
+  { campagne: CampagneType; user?: UserType; children: ReactNode }
 ): ReactNode => {
-  const isCurrentCampagne = currentCampagne?.id === campagne.id;
-  if(isUserNational({ user }) && isCurrentCampagne) return (<>{children}</>);
+  if(isUserNational({ user }) && isCampagneEnCours(campagne)) return (<>{children}</>);
   const isCampagneRegionale = !!campagne?.codeRegion;
   const withSaisiePerdir = hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne?.withSaisiePerdir : true;
 
   if (feature.saisieDisabled ||
     !isCampagneRegionale ||
-    !isCurrentCampagne ||
     !withSaisiePerdir
   ) return redirect(getRoutingSaisieRecueilDemande({ campagne, user }));
   return (<>{children}</>);

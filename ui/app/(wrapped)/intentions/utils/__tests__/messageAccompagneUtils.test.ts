@@ -61,35 +61,8 @@ const fixtureBuilder = () => {
 
   return {
     given: {
-      utilisateurAuthorise: () => {
-        user = undefined;
-      },
-      utilisateurInvite: () => {
-        user = createUserBuilder({role: RoleEnum["invite"]});
-      },
-      utilisateurExpert: () => {
-        user = createUserBuilder({role: RoleEnum["expert_region"]});
-      },
-      utilisateurNational: () => {
-        user = createUserBuilder({role: RoleEnum["admin"]});
-      },
-      utilisateurPerdirExpe: () => {
-        user = createUserBuilder({role: RoleEnum["perdir"], codeRegion: "76"});
-      },
-      utilisateurPerdirHorsExpe: () => {
-        user = createUserBuilder({role: RoleEnum["perdir"], codeRegion: "11"});
-      },
-      utilisateurAdminRegionExpe: () => {
+      utilisateurAdminRegion: () => {
         user = createUserBuilder({role: RoleEnum["admin_region"], codeRegion: "76"});
-      },
-      utilisateurAdminRegionHorsExpe: () => {
-        user = createUserBuilder({role: RoleEnum["admin_region"], codeRegion: "11"});
-      },
-      utilisateurRegionExpe: () => {
-        user = createUserBuilder({role: RoleEnum["expert_region"], codeRegion: "76"});
-      },
-      utilisateurRegionHorsExpe: () => {
-        user = createUserBuilder({role: RoleEnum["expert_region"], codeRegion: "11"});
       },
       campagneTerminee: (annee?: string) => {
         campagne = createCampagneBuilder({annee: annee ?? "2024", statut: CampagneStatutEnum["terminée"]});
@@ -174,7 +147,7 @@ describe("ui > app > (wrapped) > intentions > utils > messageAccompagnementUtils
   });
 
   it("Aucun message ne doit être affiché dans le cas où la campagne régionale est ouverte", () => {
-    fixture.given.utilisateurNational();
+    fixture.given.utilisateurAdminRegion();
     fixture.given.campagneEnCoursAvecCampagneRegion("2024");
     fixture.given.currentCampagne("2024");
 
@@ -184,7 +157,7 @@ describe("ui > app > (wrapped) > intentions > utils > messageAccompagnementUtils
   });
 
   it("Affichage du message d'accompagnement pour les campagnes en attente", () => {
-    fixture.given.utilisateurNational();
+    fixture.given.utilisateurAdminRegion();
     fixture.given.campagneEnAttente("2025");
     fixture.given.currentCampagne("2024");
 
@@ -194,7 +167,7 @@ describe("ui > app > (wrapped) > intentions > utils > messageAccompagnementUtils
   });
 
   it("Affichage du message d'accompagnement pour les campagnes terminées", () => {
-    fixture.given.utilisateurNational();
+    fixture.given.utilisateurAdminRegion();
     fixture.given.campagneTerminee("2025");
     fixture.given.currentCampagne("2024");
 
@@ -204,7 +177,7 @@ describe("ui > app > (wrapped) > intentions > utils > messageAccompagnementUtils
   });
 
   it("Affichage du message d'accompagnement si la campagne en cours n'a pas une campagne régionale associée", () => {
-    fixture.given.utilisateurNational();
+    fixture.given.utilisateurAdminRegion();
     fixture.given.campagneEnCoursSansCampagneRegion("2024");
     fixture.given.currentCampagne("2024");
 
@@ -214,7 +187,7 @@ describe("ui > app > (wrapped) > intentions > utils > messageAccompagnementUtils
   });
 
   it("Affichage du message d'accompagne pour une campagne sans campagne régionale associée", () => {
-    fixture.given.utilisateurNational();
+    fixture.given.utilisateurAdminRegion();
     fixture.given.campagneEnCoursSansCampagneRegion("2024");
     fixture.given.currentCampagne("2025");
 
