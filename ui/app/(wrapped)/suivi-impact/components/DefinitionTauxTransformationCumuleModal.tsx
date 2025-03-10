@@ -67,32 +67,33 @@ export const DefinitionTauxTransformationCumuleModal = (
 
             <HStack width="100%" mt={"32px"}>
               {/* DEMANDES VALIDEES */}
-              <VStack
+              <HStack
                 width="33%"
                 fontSize={12}
                 fontStyle="italic"
                 px="8px"
                 py="16px"
-                alignSelf="center"
+                alignSelf="stretch"
                 borderRadius="8px"
                 borderWidth="3px"
                 borderColor={blue}
+                alignItems="center"
               >
                 <HStack alignItems="center">
                   <Text lineHeight="20px">=</Text>
                   <VStack lineHeight="20px">
-                    <Text fontWeight="700" align="center" style={{ textWrap: "nowrap" }}>
+                    <Text fontWeight="700" align="center" style={{ textWrap: "wrap" }}>
                       <Highlight styles={{ color: "info.text" }} query={""}>
                         {`Pl. transformées RS ${rentreesScolaire.join(" + ")}`}
                       </Highlight>
                     </Text>
                     <Text>issues des demandes validées</Text>
                     <Divider borderColor="black" />
-                    <Text fontWeight="700" style={{ textWrap: "nowrap" }}>Effectif en entrée de formation</Text>
+                    <Text fontWeight="700" style={{ textWrap: "wrap" }}>Effectif en entrée de formation</Text>
                     <Text>Constat de rentrée {FIRST_ANNEE_CAMPAGNE}</Text>
                   </VStack>
                 </HStack>
-              </VStack>
+              </HStack>
 
               {/* PROJETS RS INCLUS */}
               <VStack
