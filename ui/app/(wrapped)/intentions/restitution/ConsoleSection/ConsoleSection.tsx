@@ -2,7 +2,7 @@ import { Box, Center, Flex, Skeleton, Table, TableContainer, Tbody, Td, Text, Th
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 import { getPermissionScope, guardScope } from "shared";
-import {PermissionEnum} from 'shared/enum/permissionEnum';
+import { PermissionEnum } from 'shared/enum/permissionEnum';
 
 import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/GROUPED_STATS_DEMANDES_COLUMN";
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
@@ -54,12 +54,16 @@ export const ConsoleSection = ({
   order,
   handleOrder,
   colonneFilters,
+  displayPilotageColumns,
+  currentRS,
 }: {
   data?: DemandesRestitutionIntentions;
   isLoading: boolean;
   order: OrderDemandesRestitutionIntentions;
   handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
+  displayPilotageColumns: boolean;
+  currentRS: string;
 }) => {
   const router = useRouter();
   const { user } = useAuth();
@@ -112,6 +116,8 @@ export const ConsoleSection = ({
                 handleOrder={handleOrder}
                 colonneFilters={colonneFilters}
                 getCellColor={getCellColor}
+                displayPilotageColumns={displayPilotageColumns}
+                currentRS={currentRS}
               />
             </Tr>
           </Thead>
@@ -134,6 +140,7 @@ export const ConsoleSection = ({
                         demande={demande}
                         colonneFilters={colonneFilters}
                         getCellColor={getCellColor}
+                        displayPilotageColumns={displayPilotageColumns}
                       />
                     </Tr>
                   </Fragment>
