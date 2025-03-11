@@ -1,4 +1,4 @@
-import { Box, chakra, Th, Tooltip } from "@chakra-ui/react";
+import { Box, chakra, Text, Th, Tooltip } from "@chakra-ui/react";
 import type { CSSProperties } from "react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -17,6 +17,7 @@ const ConditionalTh = chakra(
     colonne,
     onClick,
     isNumeric = false,
+    overrideTooltip,
   }: {
     className?: string;
     style?: CSSProperties;
@@ -25,6 +26,7 @@ const ConditionalTh = chakra(
     colonne: keyof typeof STATS_DEMANDES_COLUMNS;
     onClick?: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
     isNumeric?: boolean;
+    overrideTooltip?: (tooltip: string) => string;
   }) => {
     if (colonneFilters.includes(colonne))
       return (
@@ -37,7 +39,7 @@ const ConditionalTh = chakra(
           cursor={onClick ? "pointer" : "default"}
           onClick={() => onClick && onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])}
         >
-          <Tooltip label={STATS_DEMANDES_COLUMNS[colonne]} placement="top">
+          <Tooltip label={overrideTooltip ? overrideTooltip(STATS_DEMANDES_COLUMNS[colonne]) : STATS_DEMANDES_COLUMNS[colonne]} placement="top">
             <Box
               fontSize={12}
               fontWeight={700}
@@ -47,6 +49,8 @@ const ConditionalTh = chakra(
               alignSelf={"stretch"}
               isTruncated
               whiteSpace="nowrap"
+              display="flex"
+              alignItems="center"
             >
               {children}
             </Box>
@@ -62,11 +66,15 @@ export const HeadLineContent = ({
   handleOrder,
   colonneFilters,
   getCellColor,
+  displayPilotageColumns,
+  currentRS,
 }: {
   order: OrderDemandesRestitutionIntentions;
   handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
   getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
+  displayPilotageColumns: boolean;
+  currentRS: string;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   return (
@@ -151,7 +159,7 @@ export const HeadLineContent = ({
         bgColor={getCellColor("formationSpecifique")}
       >
         {STATS_DEMANDES_COLUMNS.formationSpecifique}
-        <TooltipIcon ml="1" label="Cliquez pour plus d'infos." onClick={() => openGlossaire("formation-specifique")} />
+        <TooltipIcon ml="1" mt="1px" label="Cliquez pour plus d'infos." onClick={() => openGlossaire("formation-specifique")} />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -344,8 +352,7 @@ export const HeadLineContent = ({
         bgColor={getCellColor("positionQuadrant")}
       >
         <TooltipIcon
-          mt={"auto"}
-          me="1"
+          mr="1"
           label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
         />
         {STATS_DEMANDES_COLUMNS.positionQuadrant}
@@ -363,6 +370,7 @@ export const HeadLineContent = ({
         {STATS_DEMANDES_COLUMNS.tauxInsertionRegional}
         <TooltipIcon
           ml="1"
+          mt="1px"
           label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude pour cette formation à l'échelle régionale (voie scolaire)."
         />
       </ConditionalTh>
@@ -377,6 +385,7 @@ export const HeadLineContent = ({
         {STATS_DEMANDES_COLUMNS.tauxPoursuiteRegional}
         <TooltipIcon
           ml="1"
+          mt="1px"
           label="Tout élève inscrit à N+1 (réorientation et redoublement compris) pour cette formation à l'échelle régionale (voie scolaire)."
         />
       </ConditionalTh>
@@ -405,6 +414,7 @@ export const HeadLineContent = ({
         {STATS_DEMANDES_COLUMNS.tauxPressionRegional}
         <TooltipIcon
           ml="1"
+          mt="1px"
           label={
             <>
               <Box>Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.</Box>
@@ -424,7 +434,7 @@ export const HeadLineContent = ({
       >
         <OrderIcon {...order} column="nbEtablissement" />
         {STATS_DEMANDES_COLUMNS.nbEtablissement}
-        <TooltipIcon ml="1" label="Le nombre d'établissement dispensant la formation dans la région." />
+        <TooltipIcon ml="1" mt="1px" label="Le nombre d'établissement dispensant la formation dans la région." />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -582,6 +592,103 @@ export const HeadLineContent = ({
       <ConditionalTh colonneFilters={colonneFilters} colonne={"motifRefus"} bgColor={getCellColor("motifRefus")}>
         {STATS_DEMANDES_COLUMNS.motifRefus}
       </ConditionalTh>
+      {displayPilotageColumns && (
+        <>
+          <ConditionalTh colonneFilters={colonneFilters} colonne={"pilotageCapacite"} bgColor={getCellColor("pilotageCapacite")} overrideTooltip={(tooltip) => tooltip.replace("{0}", currentRS)}>
+            {STATS_DEMANDES_COLUMNS.pilotageCapacite.replace("{0}", currentRS)}
+            <TooltipIcon
+              ml="1"
+              mt="1px"
+              label={
+                <>
+                  <p>Capacité théorique issue d'Affelnet pour la rentrée 2024, voie scolaire</p>
+                  <p>Cliquer pour plus d'infos.</p>
+                </>
+              }
+              onClick={() => openGlossaire("capacite")}
+            />
+          </ConditionalTh>
+          <ConditionalTh
+            colonneFilters={colonneFilters}
+            colonne={"pilotageEffectif"}
+            bgColor={getCellColor("pilotageEffectif")}
+            overrideTooltip={(tooltip) => tooltip.replace("{0}", currentRS)}
+          >
+            {STATS_DEMANDES_COLUMNS.pilotageEffectif.replace("{0}", currentRS)}
+            <TooltipIcon
+              ml="1"
+              mt="1px"
+              label={
+                <>
+                  <p>Effectif en entrée de formation issue du Constat de Rentrée 2024, comptant uniquement les élèves en voie scolaire</p>
+                  <p>Cliquer pour plus d'infos.</p>
+                </>
+              }
+              onClick={() => openGlossaire("effectif-en-entree")}
+            />
+          </ConditionalTh>
+          <ConditionalTh
+            colonneFilters={colonneFilters}
+            colonne={"pilotageTauxRemplissage"}
+            bgColor={getCellColor("pilotageTauxRemplissage")}
+            overrideTooltip={(tooltip) => tooltip.replace("{0}", currentRS)}
+            maxW={200}
+          >
+            {STATS_DEMANDES_COLUMNS.pilotageTauxRemplissage.replace("{0}", currentRS)}
+            <TooltipIcon
+              ml="1"
+              mt="1px"
+              label={
+                <>
+                  <p>Taux de remplissage par rapport à la capacité théorique d'Affelnet pour la rentrée 2024, voie scolaire</p>
+                  <p>Cliquer pour plus d'infos.</p>
+                </>
+              }
+              onClick={() => openGlossaire("taux-de-remplissage")}
+            />
+          </ConditionalTh>
+          <ConditionalTh
+            colonneFilters={colonneFilters}
+            colonne={"pilotageTauxPression"}
+            bgColor={getCellColor("pilotageTauxPression")}
+            overrideTooltip={(tooltip) => tooltip.replace("{0}", currentRS)}
+            maxW={200}
+          >
+            {STATS_DEMANDES_COLUMNS.pilotageTauxPression.replace("{0}", currentRS)}
+            <TooltipIcon
+              ml="1"
+              mt="1px"
+              label={
+                <>
+                  <p>Taux de pression (ou de demande dans le cas des BTS) issue d'Affelnet pour la rentrée 2024, voie scolaire</p>
+                  <p>Cliquer pour plus d'infos.</p>
+                </>
+              }
+              onClick={() => openGlossaire("taux-de-pression")}
+            />
+          </ConditionalTh>
+          <ConditionalTh
+            colonneFilters={colonneFilters}
+            colonne={"pilotageTauxDemande"}
+            bgColor={getCellColor("pilotageTauxDemande")}
+            overrideTooltip={(tooltip) => tooltip.replace("{0}", currentRS)}
+            maxW={200}
+          >
+            {STATS_DEMANDES_COLUMNS.pilotageTauxDemande.replace("{0}", currentRS)}
+            <TooltipIcon
+              ml="1"
+              mt="1px"
+              label={
+                <Box>
+                  <Text>Le ratio entre le nombre de voeux et la capacité de la formation dans l'établissement.</Text>
+                  <Text>Cliquez pour plus d'infos.</Text>
+                </Box>
+              }
+              onClick={() => openGlossaire("taux-de-demande")}
+            />
+          </ConditionalTh>
+        </>
+      )}
     </>
   );
 };
