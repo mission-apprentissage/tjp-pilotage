@@ -230,7 +230,11 @@ export const PageClient = () => {
   const [isModifyingGroup, setIsModifyingGroup] = useState(false);
 
   if (!data) return <IntentionSpinner />;
-  const isNouvelleDemandeDisabled = !canCreateIntention({ user, campagne: data.campagne });
+  const isNouvelleDemandeDisabled = !canCreateIntention({
+    user,
+    campagne: data.campagne,
+    currentCampagne: currentCampagne!
+  });
 
   return (
     <Container maxWidth="100%" flex={1} flexDirection={["column", null, "row"]} display={"flex"} minHeight={0} py={4}>
@@ -710,7 +714,11 @@ export const PageClient = () => {
                 <Flex direction={"column"}>
                   <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
                   <Tooltip
-                    label={getMessageAccompagnementCampagne({ campagne: data?.campagne, currentCampagne, user })}
+                    label={getMessageAccompagnementCampagne({
+                      campagne: data?.campagne,
+                      currentCampagne: currentCampagne!,
+                      user
+                    })}
                     shouldWrapChildren
                   >
                     <Flex>

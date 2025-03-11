@@ -7,7 +7,7 @@ import type { UserType } from "shared/schema/userSchema";
 
 import { client } from "@/api.client";
 import type { Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
-import {getMessageAccompagnementCampagne} from '@/app/(wrapped)/intentions/utils/messageAccompagnementUtils';
+import { getMessageAccompagnementCampagne } from '@/app/(wrapped)/intentions/utils/messageAccompagnementUtils';
 import { canCreateIntention } from "@/app/(wrapped)/intentions/utils/permissionsIntentionUtils";
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
@@ -41,7 +41,7 @@ export const MenuBoiteReception = ({
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
       <Tooltip
-        label={getMessageAccompagnementCampagne({ campagne, currentCampagne, user })}
+        label={getMessageAccompagnementCampagne({ campagne, currentCampagne: currentCampagne!, user })}
         shouldWrapChildren
         placement="bottom-start"
       >
@@ -334,7 +334,7 @@ export const MenuBoiteReception = ({
             Demandes suivies
           </Text>
         </Button>
-        {canCreateIntention({user, campagne}) && (
+        {canCreateIntention({user, currentCampagne: currentCampagne!, campagne}) && (
           <Button
             bgColor={"unset"}
             size="sm"

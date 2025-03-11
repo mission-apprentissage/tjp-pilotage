@@ -6,7 +6,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import {beforeEach,describe, expect, it} from 'vitest';
 
-import { CAMPAGNE_EN_ATTENTE, CAMPAGNE_TERMINEE, CAMPAGNE_UNIQUEMENT_MODIFICATION, getMessageAccompagnementCampagne, PAS_DE_CAMPAGNE_REGIONALE_EN_COURS, PAS_DE_CURRENT_CAMPAGNE_REGIONALE_EN_COURS } from '@/app/(wrapped)/intentions/utils/messageAccompagnementUtils';
+import { CAMPAGNE_EN_ATTENTE, CAMPAGNE_TERMINEE, CAMPAGNE_UNIQUEMENT_MODIFICATION, getMessageAccompagnementCampagne, PAS_DE_CAMPAGNE_REGIONALE_EN_COURS } from '@/app/(wrapped)/intentions/utils/messageAccompagnementUtils';
 
 
 const createUserBuilder = ({
@@ -64,20 +64,20 @@ const fixtureBuilder = () => {
       utilisateurAdminRegion: () => {
         user = createUserBuilder({role: RoleEnum["admin_region"], codeRegion: "76"});
       },
-      campagneTerminee: (annee?: string) => {
-        campagne = createCampagneBuilder({annee: annee ?? "2024", statut: CampagneStatutEnum["terminée"]});
+      campagne: (annee?: string, statut?: CampagneStatut) => {
+        campagne = createCampagneBuilder({annee: annee ?? "2024", statut, codeRegion: "76"});
       },
-      campagneEnAttente: (annee?: string) => {
-        campagne = createCampagneBuilder({annee: annee ?? "2024", statut: CampagneStatutEnum["en attente"]});
+      campagneNationale: (annee?: string, statut?: CampagneStatut) => {
+        campagne = createCampagneBuilder({annee: annee ?? "2024", statut});
       },
-      campagneEnCoursAvecCampagneRegion: (annee?: string) => {
-        campagne = createCampagneBuilder({annee: annee ?? "2024", statut: CampagneStatutEnum["en cours"], codeRegion: "76"});
-      },
-      campagneEnCoursSansCampagneRegion: (annee?: string) => {
-        campagne = createCampagneBuilder({annee: annee ?? "2024", statut: CampagneStatutEnum["en cours"]});
-      },
-      currentCampagne: (annee?: string) => {
+      currentCampagneNationale: (annee?: string) => {
         currentCampagne = createCampagneBuilder({annee: annee ?? "2024"});
+      },
+      currentCampagneRegionaleWithSaisiePerdir: (annee?: string) => {
+        currentCampagne = createCampagneBuilder({annee: annee ?? "2024", codeRegion: "76", withSaisiePerdir: true});
+      },
+      currentCampagneRegionaleWithoutSaisiePerdir: (annee?: string) => {
+        currentCampagne = createCampagneBuilder({annee: annee ?? "2024", codeRegion: "76", withSaisiePerdir: false});
       },
     },
     when: {
@@ -101,15 +101,6 @@ const fixtureBuilder = () => {
             campagne,
             currentCampagne,
             messageAccompagnementCampagne: PAS_DE_CAMPAGNE_REGIONALE_EN_COURS
-          })
-        );
-      },
-      verifierPasDeCurrentCampagneEnCours: () => {
-        expect(messageAccompagnement).toEqual(
-          createMessageAccompagnementBuilder({
-            campagne,
-            currentCampagne,
-            messageAccompagnementCampagne: PAS_DE_CURRENT_CAMPAGNE_REGIONALE_EN_COURS
           })
         );
       },
@@ -146,10 +137,20 @@ describe("ui > app > (wrapped) > intentions > utils > messageAccompagnementUtils
     fixture = fixtureBuilder();
   });
 
-  it("Aucun message ne doit être affiché dans le cas où la campagne régionale est ouverte", () => {
+  it("Aucun message ne doit être affiché dans le cas où la campagne en cours est une campagne régionale", () => {
     fixture.given.utilisateurAdminRegion();
-    fixture.given.campagneEnCoursAvecCampagneRegion("2024");
-    fixture.given.currentCampagne("2024");
+    fixture.given.campagne("2024");
+    fixture.given.currentCampagneRegionaleWithSaisiePerdir("2024");
+
+    fixture.when.getMessageAccompagnementCampagne();
+
+    fixture.then.verifierPasDeMessage();
+  });
+
+  it("Aucun message ne doit être affiché dans le cas où la campagne en cours est une campagne nationale", () => {
+    fixture.given.utilisateurAdminRegion();
+    fixture.given.campagne("2024");
+    fixture.given.currentCampagneNationale("2024");
 
     fixture.when.getMessageAccompagnementCampagne();
 
@@ -158,8 +159,8 @@ describe("ui > app > (wrapped) > intentions > utils > messageAccompagnementUtils
 
   it("Affichage du message d'accompagnement pour les campagnes en attente", () => {
     fixture.given.utilisateurAdminRegion();
-    fixture.given.campagneEnAttente("2025");
-    fixture.given.currentCampagne("2024");
+    fixture.given.campagne("2025", CampagneStatutEnum["en attente"]);
+    fixture.given.currentCampagneRegionaleWithSaisiePerdir("2024");
 
     fixture.when.getMessageAccompagnementCampagne();
 
@@ -168,28 +169,18 @@ describe("ui > app > (wrapped) > intentions > utils > messageAccompagnementUtils
 
   it("Affichage du message d'accompagnement pour les campagnes terminées", () => {
     fixture.given.utilisateurAdminRegion();
-    fixture.given.campagneTerminee("2025");
-    fixture.given.currentCampagne("2024");
+    fixture.given.campagne("2025", CampagneStatutEnum["terminée"]);
+    fixture.given.currentCampagneRegionaleWithSaisiePerdir("2024");
 
     fixture.when.getMessageAccompagnementCampagne();
 
     fixture.then.verifierCampagneTerminee();
   });
 
-  it("Affichage du message d'accompagnement si la campagne en cours n'a pas une campagne régionale associée", () => {
-    fixture.given.utilisateurAdminRegion();
-    fixture.given.campagneEnCoursSansCampagneRegion("2024");
-    fixture.given.currentCampagne("2024");
-
-    fixture.when.getMessageAccompagnementCampagne();
-
-    fixture.then.verifierPasDeCurrentCampagneEnCours();
-  });
-
   it("Affichage du message d'accompagne pour une campagne sans campagne régionale associée", () => {
     fixture.given.utilisateurAdminRegion();
-    fixture.given.campagneEnCoursSansCampagneRegion("2024");
-    fixture.given.currentCampagne("2025");
+    fixture.given.campagneNationale("2025");
+    fixture.given.currentCampagneNationale("2024");
 
     fixture.when.getMessageAccompagnementCampagne();
 

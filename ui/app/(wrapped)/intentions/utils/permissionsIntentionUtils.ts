@@ -21,21 +21,72 @@ export type DemandeIntention = {
   isIntention: boolean
 }
 
+
+// /**
+//  * Vérifie si l'utilisateur peut créer une intention
+//  *
+//  * - Si l'utilisateur est national et que la campagne est en cours, on autorise la création
+//  * - Sinon
+//  *  - Si la saisie n'est pas désactivée ET
+//  *    si l'utilisateur a la permission d'écrire les intentions PERDIR ET
+//  *    si l'utilisateur fait partie de l'expérimentation ET
+//  *    si la campagne est en cours ET
+//  *    si la campagne est régionale ET
+//  *    si l'utilisateur est un perdir ET que la campagne autorise la saisie PERDIR
+//  *    on autorise la création
+//  *  - Sinon on refuse la création
+//  *
+//  */
+// export const canCreateIntention = ({
+//   user,
+//   campagne
+// } : {
+//   user?: UserType,
+//   campagne: CampagneType
+// }) => {
+//   if(isUserNational({user}) && isCampagneEnCours(campagne)) return true;
+//   const isCampagneRegionale = !!campagne?.codeRegion;
+//   const withSaisiePerdir = hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne?.withSaisiePerdir : true;
+//   return !feature.saisieDisabled &&
+//     hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"]) &&
+//     isUserPartOfExpe({ user, campagne }) &&
+//     isCampagneEnCours(campagne) &&
+//     isCampagneRegionale &&
+//     withSaisiePerdir;
+// };
+
+
+
+/**
+ * Vérifie si l'utilisateur peut créer une intention
+ *
+ * - Si l'utilisateur est national et que la campagne est en cours, on autorise la création
+ * - Sinon
+ *  - Si la saisie n'est pas désactivée ET
+ *    si l'utilisateur a la permission d'écrire les intentions PERDIR ET
+ *    si l'utilisateur fait partie de l'expérimentation ET
+ *    si la campagne est en cours ET
+ *    si la campagne est régionale ET
+ *    si l'utilisateur est un perdir ET que la campagne autorise la saisie PERDIR
+ *    on autorise la création
+ *  - Sinon on refuse la création
+ *
+ */
 export const canCreateIntention = ({
   user,
-  campagne
+  campagne,
+  currentCampagne
 } : {
   user?: UserType,
-  campagne: CampagneType
+  campagne: CampagneType,
+  currentCampagne: CampagneType
 }) => {
   if(isUserNational({user}) && isCampagneEnCours(campagne)) return true;
-  const isCampagneRegionale = !!campagne?.codeRegion;
-  const withSaisiePerdir = hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne?.withSaisiePerdir : true;
+  if(campagne.id !== currentCampagne.id) return false;
+  const withSaisiePerdir = (hasRole({ user, role: RoleEnum["perdir"] }) && !!campagne.codeRegion)? !!campagne?.withSaisiePerdir : true;
   return !feature.saisieDisabled &&
     hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"]) &&
     isUserPartOfExpe({ user, campagne }) &&
-    isCampagneEnCours(campagne) &&
-    isCampagneRegionale &&
     withSaisiePerdir;
 };
 
@@ -50,6 +101,11 @@ export const canEditDemandeIntention = ({
   return canEditDemande({ demande: demandeIntention, user });
 };
 
+/**
+ * Vérifie si on peut modifier une intention :
+ *
+ * - Si l'utilisateur n'est pas autorisé à éditer les intentions
+ */
 export const canEditIntention = ({
   intention,
   user,
