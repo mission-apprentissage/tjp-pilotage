@@ -606,6 +606,7 @@ export const HeadLineContent = ({
                 </>
               }
               onClick={() => openGlossaire("capacite")}
+              placement={"bottom-end"}
             />
           </ConditionalTh>
           <ConditionalTh
@@ -625,6 +626,7 @@ export const HeadLineContent = ({
                 </>
               }
               onClick={() => openGlossaire("effectif-en-entree")}
+              placement={"bottom-end"}
             />
           </ConditionalTh>
           <ConditionalTh
@@ -645,6 +647,7 @@ export const HeadLineContent = ({
                 </>
               }
               onClick={() => openGlossaire("taux-de-remplissage")}
+              placement={"bottom-end"}
             />
           </ConditionalTh>
           <ConditionalTh
@@ -665,6 +668,7 @@ export const HeadLineContent = ({
                 </>
               }
               onClick={() => openGlossaire("taux-de-pression")}
+              placement={"bottom-end"}
             />
           </ConditionalTh>
           <ConditionalTh
@@ -685,6 +689,7 @@ export const HeadLineContent = ({
                 </Box>
               }
               onClick={() => openGlossaire("taux-de-demande")}
+              placement={"bottom-end"}
             />
           </ConditionalTh>
         </>

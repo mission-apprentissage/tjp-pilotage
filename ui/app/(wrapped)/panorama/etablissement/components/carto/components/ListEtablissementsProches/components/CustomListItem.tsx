@@ -66,7 +66,7 @@ export const CustomListItem = ({ etablissement, withDivider, children }: CustomL
   const tooltipLabelTauxEmploi = (() => {
     if (etablissement.tauxInsertion !== undefined) {
       if (isScolaire) {
-        return `Taux d'emploi à 6mois (Millesime ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
+        return `Taux d'emploi à 6 mois (Millesimes ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
       }
     }
 
@@ -80,7 +80,7 @@ export const CustomListItem = ({ etablissement, withDivider, children }: CustomL
   const tooltipLabelTauxPoursuite = (() => {
     if (etablissement.tauxPoursuite !== undefined) {
       if (isScolaire) {
-        return `Taux de poursuite d'étude (Millesime ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
+        return `Taux de poursuite d'études (Millesimes ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
       }
     }
 
