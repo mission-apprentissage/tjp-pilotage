@@ -512,7 +512,11 @@ export const PageClient = () => {
             <Flex direction={"column"}>
               <Text fontSize={"2xl"} textAlign={"center"}>Pas de demande à afficher</Text>
               <Tooltip
-                label={getMessageAccompagnementCampagne({ campagne: data?.campagne, currentCampagne, user })}
+                label={getMessageAccompagnementCampagne({
+                  campagne: data?.campagne,
+                  currentCampagne: currentCampagne!,
+                  user
+                })}
                 shouldWrapChildren
               >
                 <Flex>

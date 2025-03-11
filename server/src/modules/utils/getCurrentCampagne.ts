@@ -29,6 +29,7 @@ const getCampagneRegionEnCours = async ({
   codeRegion: string
 }) => getKbdClient()
   .selectFrom("campagneRegion")
+  .innerJoin("campagne", "campagne.id", "campagneRegion.campagneId")
   .where((eb) =>
     eb.and([
       eb("statut", "=", CampagneStatutEnum["en cours"]),
@@ -36,6 +37,7 @@ const getCampagneRegionEnCours = async ({
     ])
   )
   .selectAll()
+  .orderBy("campagne.annee", "desc")
   .executeTakeFirst()
   .then((campagneRegion) =>
     campagneRegion ?
