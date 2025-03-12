@@ -354,6 +354,7 @@ export const HeadLineContent = ({
         <TooltipIcon
           mr="1"
           label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
+          placement={"bottom-end"}
         />
         {STATS_DEMANDES_COLUMNS.positionQuadrant}
       </ConditionalTh>
@@ -372,6 +373,7 @@ export const HeadLineContent = ({
           ml="1"
           mt="1px"
           label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude pour cette formation à l'échelle régionale (voie scolaire)."
+          placement={"bottom-end"}
         />
       </ConditionalTh>
       <ConditionalTh
@@ -387,6 +389,7 @@ export const HeadLineContent = ({
           ml="1"
           mt="1px"
           label="Tout élève inscrit à N+1 (réorientation et redoublement compris) pour cette formation à l'échelle régionale (voie scolaire)."
+          placement={"bottom-end"}
         />
       </ConditionalTh>
       <ConditionalTh
@@ -401,6 +404,7 @@ export const HeadLineContent = ({
         <TooltipIcon
           ml="2"
           label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation pour cette formation à l'échelle régionale (voie scolaire)."
+          placement={"bottom-end"}
         />
       </ConditionalTh>
       <ConditionalTh
@@ -421,6 +425,7 @@ export const HeadLineContent = ({
               <TauxPressionScale />
             </>
           }
+          placement={"bottom-end"}
         />
       </ConditionalTh>
       <ConditionalTh
@@ -606,6 +611,7 @@ export const HeadLineContent = ({
                 </>
               }
               onClick={() => openGlossaire("capacite")}
+              placement={"bottom-end"}
             />
           </ConditionalTh>
           <ConditionalTh
@@ -625,6 +631,7 @@ export const HeadLineContent = ({
                 </>
               }
               onClick={() => openGlossaire("effectif-en-entree")}
+              placement={"bottom-end"}
             />
           </ConditionalTh>
           <ConditionalTh
@@ -645,6 +652,7 @@ export const HeadLineContent = ({
                 </>
               }
               onClick={() => openGlossaire("taux-de-remplissage")}
+              placement={"bottom-end"}
             />
           </ConditionalTh>
           <ConditionalTh
@@ -665,6 +673,7 @@ export const HeadLineContent = ({
                 </>
               }
               onClick={() => openGlossaire("taux-de-pression")}
+              placement={"bottom-end"}
             />
           </ConditionalTh>
           <ConditionalTh
@@ -685,6 +694,7 @@ export const HeadLineContent = ({
                 </Box>
               }
               onClick={() => openGlossaire("taux-de-demande")}
+              placement={"bottom-end"}
             />
           </ConditionalTh>
         </>
