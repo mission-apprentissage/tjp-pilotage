@@ -1,6 +1,7 @@
 import { chakra, Td } from "@chakra-ui/react";
 import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
 import {SecteurEnum} from 'shared/enum/secteurEnum';
+import {unEscapeString} from 'shared/utils/escapeString';
 
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 import type { DemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
@@ -31,7 +32,7 @@ const handleMotifDemandeLabel = ({
   if (!motifs || motifs.length === 0) return undefined;
   const formattedMotifs = motifs?.map((motif) =>
     motif === "autre"
-      ? `Autre : ${autreMotif}`
+      ? `Autre : ${unEscapeString(autreMotif)}`
       : getMotifDemandeLabel({
         motif: motif as MotifDemandeLabel,
         anneeCampagne: anneeCampagne as AnneeCampagneMotifDemande,
@@ -49,7 +50,7 @@ const handleMotifRefusLabel = ({
 }) => {
   if (!motifsRefus || motifsRefus.length === 0) return undefined;
   const formattedMotifs = motifsRefus?.map((motif) =>
-    motif === "autre" ? `Autre : ${autreMotifRefus}` : getMotifRefusLabel(motif as MotifRefusLabel)
+    motif === "autre" ? `Autre : ${unEscapeString(autreMotifRefus)}` : getMotifRefusLabel(motif as MotifRefusLabel)
   );
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
 };

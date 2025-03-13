@@ -5,12 +5,14 @@ import type { DB } from "@/db/db";
 
 // DIFFÉRENCES CAPACITÉS
 
-export const countDifferenceCapaciteScolaire = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) => sql<number>`
-      ${eb.ref("demande.capaciteScolaire")} -
-      ${eb.ref("demande.capaciteScolaireActuelle")}
-    `;
+export const countDifferenceCapaciteScolaire = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
+  sql<number>`
+    ${eb.ref("demande.capaciteScolaire")} -
+    ${eb.ref("demande.capaciteScolaireActuelle")}
+  `;
 
-export const countDifferenceCapaciteScolaireColoree = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) => sql<number>`
+export const countDifferenceCapaciteScolaireColoree = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
+  sql<number>`
     ${eb.ref("demande.capaciteScolaireColoree")} -
     ${eb.ref("demande.capaciteScolaireColoreeActuelle")}
   `;
@@ -21,16 +23,14 @@ export const countDifferenceCapaciteScolaireCorrection = ({ eb }: { eb: Expressi
     ${eb.ref("correction.capaciteScolaireActuelle")}
   `;
 
-export const countDifferenceCapaciteApprentissage = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) => sql<number>`
+export const countDifferenceCapaciteApprentissage = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
+  sql<number>`
       ${eb.ref("demande.capaciteApprentissage")} -
       ${eb.ref("demande.capaciteApprentissageActuelle")}
     `;
 
-export const countDifferenceCapaciteApprentissageColoree = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) => sql<number>`
+export const countDifferenceCapaciteApprentissageColoree = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
+  sql<number>`
     ${eb.ref("demande.capaciteApprentissageColoree")} -
     ${eb.ref("demande.capaciteApprentissageColoreeActuelle")}
   `;

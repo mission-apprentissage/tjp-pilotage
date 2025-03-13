@@ -4,7 +4,7 @@ export const feature = {
   saisieDisabled: false,
   etablissementQuadrant: publicConfig.env !== "production",
   correction: true,
-  showColorationFilter: false,
+  showColorationFilter: true,
   requetesSuggerees: true,
   formationsSpecifiqueConsole: false,
 };

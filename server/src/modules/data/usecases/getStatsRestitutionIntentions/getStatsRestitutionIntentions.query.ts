@@ -5,6 +5,7 @@ import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import { getKbdClient } from "@/db/db";
 import {
+  countPlacesColorees,
   countPlacesColoreesFermees,
   countPlacesColoreesFermeesApprentissage,
   countPlacesColoreesFermeesScolaire,
@@ -14,12 +15,12 @@ import {
   countPlacesFermees,
   countPlacesFermeesApprentissage,
   countPlacesFermeesScolaire,
-  countPlacesNonColoreesTransformees,
-  countPlacesNonColoreesTransformeesApprentissage,
-  countPlacesNonColoreesTransformeesScolaire,
   countPlacesOuvertes,
   countPlacesOuvertesApprentissage,
   countPlacesOuvertesScolaire,
+  countPlacesTransformees,
+  countPlacesTransformeesApprentissage,
+  countPlacesTransformeesScolaire,
 } from "@/modules/utils/countCapacite";
 import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
@@ -87,114 +88,33 @@ export const getStatsRestitutionIntentionsQuery = async ({
         .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
     )
     .select((eb) =>
-      jsonBuildObject({
-        total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesNonColoreesTransformees(eb)), eb.val(0)),
-        scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesNonColoreesTransformeesScolaire(eb)), eb.val(0)),
-        apprentissage: eb.fn.coalesce(
-          eb.fn.sum<number>(countPlacesNonColoreesTransformeesApprentissage(eb)),
-          eb.val(0)
-        ),
-      }).as("total")
-    )
-    .select((eb) =>
-      jsonBuildObject({
-        total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesOuvertes(eb)), eb.val(0)),
-        colorationTotal: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesOuvertes(eb)), eb.val(0)),
-        scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesOuvertesScolaire(eb)), eb.val(0)),
-        colorationScolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesOuvertesScolaire(eb)), eb.val(0)),
-        apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesOuvertesApprentissage(eb)), eb.val(0)),
-        colorationApprentissage: eb.fn.coalesce(
-          eb.fn.sum<number>(countPlacesColoreesOuvertesApprentissage(eb)),
-          eb.val(0)
-        ),
-      }).as("ouvertures")
-    )
-    .select((eb) =>
-      jsonBuildObject({
-        total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesFermees(eb)), eb.val(0)),
-        colorationTotal: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesFermees(eb)), eb.val(0)),
-        scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesFermeesScolaire(eb)), eb.val(0)),
-        colorationScolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesFermeesScolaire(eb)), eb.val(0)),
-        apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesFermeesApprentissage(eb)), eb.val(0)),
-        colorationApprentissage: eb.fn.coalesce(
-          eb.fn.sum<number>(countPlacesColoreesFermeesApprentissage(eb)),
-          eb.val(0)
-        ),
-      }).as("fermetures")
-    )
-    .select((eb) =>
-      jsonBuildObject({
-        total: eb.fn.coalesce(
-          eb.fn.sum<number>((s) =>
-            s
-              .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["561", "461"]))
-              .then(countPlacesOuvertes(eb))
-              .else(0)
-              .end()
-          ),
-          eb.val(0)
-        ),
-        scolaire: eb.fn.coalesce(
-          eb.fn.sum<number>((s) =>
-            s
-              .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["561", "461"]))
-              .then(countPlacesOuvertesScolaire(eb))
-              .else(0)
-              .end()
-          ),
-          eb.val(0)
-        ),
-        apprentissage: eb.fn.coalesce(
-          eb.fn.sum<number>((s) =>
-            s
-              .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["561", "461"]))
-              .then(countPlacesOuvertesApprentissage(eb))
-              .else(0)
-              .end()
-          ),
-          eb.val(0)
-        ),
-      }).as("certifSpecialisation")
-    )
-    .select((eb) =>
-      jsonBuildObject({
-        total: eb.fn.coalesce(
-          eb.fn.sum<number>((s) =>
-            s
-              .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"]))
-              .then(countPlacesOuvertes(eb))
-              .else(0)
-              .end()
-          ),
-          eb.val(0)
-        ),
-        scolaire: eb.fn.coalesce(
-          eb.fn.sum<number>((s) =>
-            s
-              .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"]))
-              .then(countPlacesOuvertesScolaire(eb))
-              .else(0)
-              .end()
-          ),
-          eb.val(0)
-        ),
-        apprentissage: eb.fn.coalesce(
-          eb.fn.sum<number>((s) =>
-            s
-              .case()
-              .when(eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"]))
-              .then(countPlacesOuvertesApprentissage(eb))
-              .else(0)
-              .end()
-          ),
-          eb.val(0)
-        ),
-      }).as("FCILs")
+      [
+        jsonBuildObject({
+          total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesTransformees(eb)), eb.val(0)),
+          scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesTransformeesScolaire(eb)), eb.val(0)),
+          apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesTransformeesApprentissage(eb)), eb.val(0)),
+        }).as("total"),
+        jsonBuildObject({
+          total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesOuvertes(eb)), eb.val(0)),
+          scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesOuvertesScolaire(eb)), eb.val(0)),
+          apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesOuvertesApprentissage(eb)), eb.val(0)),
+        }).as("ouvertures"),
+        jsonBuildObject({
+          total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesFermees(eb)), eb.val(0)),
+          scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesFermeesScolaire(eb)), eb.val(0)),
+          apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesFermeesApprentissage(eb)), eb.val(0)),
+        }).as("fermetures"),
+        jsonBuildObject({
+          total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesOuvertes(eb)), eb.val(0)),
+          scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesOuvertesScolaire(eb)), eb.val(0)),
+          apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesOuvertesApprentissage(eb)), eb.val(0)),
+        }).as("ouverturesColorations"),
+        jsonBuildObject({
+          total: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesFermees(eb)), eb.val(0)),
+          scolaire: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesFermeesScolaire(eb)), eb.val(0)),
+          apprentissage: eb.fn.coalesce(eb.fn.sum<number>(countPlacesColoreesFermeesApprentissage(eb)), eb.val(0)),
+        }).as("fermeturesColorations")
+      ]
     )
     .$call((eb) => {
       if (search)
@@ -274,8 +194,16 @@ export const getStatsRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (coloration)
-        return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
+      if(coloration === "true") return eb.where(
+        (eb) => eb.or([
+          sql<boolean>`${countPlacesColorees(eb)} > 0`,
+        ])
+      );
+      if(coloration === "false") return eb.where(
+        (eb) => eb.or([
+          sql<boolean>`${countPlacesColorees(eb)} < 0`,
+        ])
+      );
       return eb;
     })
     .$call((eb) => {
@@ -289,31 +217,30 @@ export const getStatsRestitutionIntentionsQuery = async ({
     .$call((eb) => {
       if (voie === "apprentissage") {
         return eb.where(
-          ({ eb: ebw }) =>
-            sql<boolean>`ABS(
-              ${ebw.ref("demande.capaciteApprentissage")} -
-              ${ebw.ref("demande.capaciteApprentissageActuelle")}
-            ) > 1`
+          (eb) => eb.or([
+            sql<boolean>`${countPlacesOuvertesApprentissage(eb)} > 0`,
+            sql<boolean>`${countPlacesFermeesApprentissage(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesOuvertesApprentissage(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesFermeesApprentissage(eb)} > 0`,
+          ])
         );
       }
-
       if (voie === "scolaire") {
         return eb.where(
-          ({ eb: ebw }) =>
-            sql<boolean>`ABS(
-              ${ebw.ref("demande.capaciteScolaire")} -
-              ${ebw.ref("demande.capaciteScolaireActuelle")}
-            ) > 1`
+          (eb) => eb.or([
+            sql<boolean>`${countPlacesOuvertesScolaire(eb)} > 0`,
+            sql<boolean>`${countPlacesFermeesScolaire(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesOuvertesScolaire(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesFermeesScolaire(eb)} > 0`,
+          ])
         );
       }
-
       return eb;
     })
     .$call((eb) => {
       if (codeNsf && codeNsf.length > 0) {
         return eb.where("dataFormation.codeNsf", "in", codeNsf);
       }
-
       return eb;
     })
     .$call((q) => {

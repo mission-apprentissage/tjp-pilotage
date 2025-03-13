@@ -1,14 +1,10 @@
-import { Box, Flex, Heading, HStack, Icon as ChakraIcon, Popover, PopoverCloseButton, PopoverContent, PopoverTrigger, Text,VisuallyHidden} from '@chakra-ui/react';
-import { Icon } from '@iconify/react';
-import _ from 'lodash';
-import type { ReactNode } from "react";
+import { Box,Flex, Heading, HStack, Icon as ChakraIcon,VisuallyHidden} from '@chakra-ui/react';
+import type {ReactNode} from 'react';
 import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 
-import { getStatutBgColor } from '@/app/(wrapped)/intentions/components/StatutTag';
-import {getOrderStatut} from '@/app/(wrapped)/intentions/utils/statutUtils';
 import { ProgressBar } from "@/components/ProgressBar";
 import { themeDefinition } from "@/theme/theme";
-import { formatPercentage, formatPercentageWithoutSign } from "@/utils/formatUtils";
+import {formatPercentage, formatPercentageWithoutSign} from '@/utils/formatUtils';
 
 const DrapeauFrancaisIcon = ({ ...props }) => (
   <ChakraIcon boxSize={4} {...props}>
@@ -57,6 +53,8 @@ export const NumberWithLabel = ({
   round?: number;
   tooltip?: ReactNode
 }) => {
+
+
   return (
     <Flex direction={"column"} alignItems="start" justifyContent="start" minWidth="200px" w={"100%"} gap={4}>
       <HStack>
@@ -71,17 +69,6 @@ export const NumberWithLabel = ({
             <VisuallyHidden>Valeur :</VisuallyHidden>
             {formatPercentage(percentage, round, "- %")}
           </Heading>
-          <Popover>
-            <PopoverTrigger>
-              <Flex cursor="pointer">
-                <Icon icon={"ri:zoom-in-line"} width={15} />
-              </Flex>
-            </PopoverTrigger>
-            <PopoverContent _focusVisible={{ outline: "none" }} p="3">
-              <PopoverCloseButton />
-              <DetailTooltip statuts={statuts} round={round} objective={objective}/>
-            </PopoverContent>
-          </Popover>
         </Flex>
         {objective && (
           <Box width="100%">
@@ -118,49 +105,4 @@ export const NumberWithLabel = ({
     </Flex>
   );
 };
-
-
-const DetailTooltip = ({
-  statuts,
-  round,
-  objective
-} : {
-  statuts: Record<string, number>;
-  round: number;
-  objective?: number;
-}) =>
-  (
-    <Flex direction={"column"} gap={2} p={3}>
-      <Text fontSize={14} fontWeight="700" lineHeight="20px">
-        Détail par statut
-      </Text>
-      {
-        Object.entries(statuts)
-          .sort(
-            ([statutA], [statutB]) =>
-              getOrderStatut(statutA as DemandeStatutType) -
-              getOrderStatut(statutB as DemandeStatutType)
-          )
-          .map(([key, value]) => {
-            return (
-              <Flex direction={"column"} gap={2} key={key}>
-                {objective ? (
-                  <ProgressBar
-                    leftLabel={formatPercentage(value, round)}
-                    rightLabel={_.capitalize(key)}
-                    percentage={formatPercentageWithoutSign(value ? value / objective : undefined, round)}
-                    colorScheme={getStatutBgColor(key as DemandeStatutType)}
-                  />
-                ) : (
-                  <Flex direction={"row"} gap={2}>
-                    <Text>{_.capitalize(key)} :</Text>
-                    <Text>{formatPercentage(value, round)}</Text>
-                  </Flex>
-                )}
-              </Flex>
-            );
-          })
-      }
-    </Flex>
-  );
 
