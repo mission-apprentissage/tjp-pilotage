@@ -35,7 +35,7 @@ export const EtablissementItemContent = ({ etablissement }: { etablissement: Eta
 
   const tooltilLabelTauxDevenir = (() => {
     if (etablissement.tauxDevenirFavorable !== undefined) {
-      return `Taux de devenir favorable à 6 mois (Millesime ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
+      return `Taux de devenir favorable à 6 mois (Millesimes ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
     }
 
     if (isApprentissage && !isScolaire) {

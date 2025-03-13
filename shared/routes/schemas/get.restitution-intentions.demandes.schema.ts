@@ -104,6 +104,13 @@ const DemandeSchema = z.object({
   campagneId: z.string(),
   isIntention: z.boolean(),
   campagne: CampagneSchema,
+  // Pilotage
+  pilotageCapacite: z.number().optional(),
+  pilotageEffectif: z.number().optional(),
+  pilotageTauxPression: z.number().optional(),
+  pilotageTauxDemande: z.number().optional(),
+  pilotageTauxRemplissage: z.number().optional(),
+  pilotagePremierVoeu: z.number().optional()
 });
 
 export const FiltersSchema = z.object({
@@ -155,6 +162,7 @@ export const getDemandesRestitutionIntentionsSchema = {
       demandes: z.array(DemandeSchema),
       campagne: CampagneSchema,
       count: z.coerce.number(),
+      rentreesPilotage: z.array(z.string()),
     }),
   },
 };
