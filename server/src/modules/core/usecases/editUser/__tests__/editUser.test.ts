@@ -1,7 +1,8 @@
-import {RoleEnum} from 'shared/enum/roleEnum';
+import { RoleEnum } from 'shared/enum/roleEnum';
 import { describe, expect, it, vi } from "vitest";
 
-import { editUserFactory } from "./editUser.usecase";
+import { editUserFactory } from "@/modules/core/usecases/editUser/editUser.usecase";
+
 const user = {
   email: "test@test.fr",
   firstname: "firstname",
@@ -9,6 +10,7 @@ const user = {
   role: RoleEnum["admin"],
   codeRegion: "84",
   enabled: true,
+  fonction: null,
 } as const;
 
 const requestUser = {
@@ -20,12 +22,14 @@ const requestUser = {
   role: RoleEnum["admin"],
 } as const;
 
-describe("createUser usecase", () => {
+describe("editUser usecase", () => {
   describe("permissions", () => {
     describe("admin", () => {
       it("should edit the user", async () => {
         const deps = {
           updateUser: vi.fn(async () => {}),
+          findUser: vi.fn(async () => ({id: "test", email: "test@test.fr"})),
+          findDifferentUserWithSameEmail: vi.fn(async () => undefined),
         };
         const editUser = editUserFactory(deps);
         await editUser({ userId: "test", data: user, requestUser });
@@ -37,6 +41,8 @@ describe("createUser usecase", () => {
       it("should edit the user with the right role within the same region", async () => {
         const deps = {
           updateUser: vi.fn(async () => {}),
+          findUser: vi.fn(async () => ({id: "test", email: "test@test.fr"})),
+          findDifferentUserWithSameEmail: vi.fn(async () => undefined)
         };
         const editUser = editUserFactory(deps);
         await editUser({ userId: "test", data: user, requestUser });
@@ -46,6 +52,8 @@ describe("createUser usecase", () => {
       it("should throw an error if the user has a role that requestUser cannot modify", async () => {
         const deps = {
           updateUser: vi.fn(async () => {}),
+          findUser: vi.fn(async () => ({id: "test", email: "test@test.fr"})),
+          findDifferentUserWithSameEmail: vi.fn(async () => undefined)
         };
         const editUser = editUserFactory(deps);
         await expect(async () =>
@@ -67,6 +75,8 @@ describe("createUser usecase", () => {
       it("should throw an error if the user already exist", async () => {
         const deps = {
           updateUser: vi.fn(async () => {}),
+          findUser: vi.fn(async () => ({id: "test", email: "test@test.fr"})),
+          findDifferentUserWithSameEmail: vi.fn(async () => undefined)
         };
         const editUser = editUserFactory(deps);
         await expect(async () =>
