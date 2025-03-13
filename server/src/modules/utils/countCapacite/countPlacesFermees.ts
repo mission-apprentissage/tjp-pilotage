@@ -13,34 +13,48 @@ import {
 } from "./countDifferenceCapacite";
 import { inQ3, inQ3Q4, inQ4 } from "./utils";
 
-export const countPlacesFermees = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) => sql<number>`
-    ${countPlacesFermeesScolaire(eb)} +
-    ${countPlacesFermeesApprentissage(eb)}
+export const countPlacesFermees = ({
+  eb,
+  avecColoration
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
+}) => sql<number>`
+    ${countPlacesFermeesScolaire({eb, avecColoration})} +
+    ${countPlacesFermeesApprentissage({eb, avecColoration})}
   `;
 
 export const countPlacesFermeesQ3 = ({
   eb,
+  avecColoration = true,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ3(eb)).then(countPlacesFermees(eb)).else(0).end();
+  avecColoration?: boolean;
+}) => eb.case().when(inQ3(eb)).then(countPlacesFermees({eb, avecColoration})).else(0).end();
 
 export const countPlacesFermeesQ4 = ({
   eb,
+  avecColoration = true,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ4(eb)).then(countPlacesFermees(eb)).else(0).end();
+  avecColoration?: boolean;
+}) => eb.case().when(inQ4(eb)).then(countPlacesFermees({eb, avecColoration})).else(0).end();
 
 export const countPlacesFermeesQ4ParCampagne = ({
   eb,
+  avecColoration = true,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "campagne" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ4(eb)).then(countPlacesFermeesParCampagne(eb)).else(0).end();
+  avecColoration?: boolean;
+}) => eb.case().when(inQ4(eb)).then(countPlacesFermeesParCampagne({eb, avecColoration})).else(0).end();
 
 export const countPlacesFermeesQ3Q4 = ({
   eb,
+  avecColoration = true,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ3Q4(eb)).then(countPlacesFermees(eb)).else(0).end();
+  avecColoration?: boolean;
+}) => eb.case().when(inQ3Q4(eb)).then(countPlacesFermees({eb, avecColoration})).else(0).end();
 
 export const countPlacesFermeesCorrection = ({ eb }: { eb: ExpressionBuilder<DB, "correction" | "demande"> }) =>
   sql<number>`
@@ -48,9 +62,23 @@ export const countPlacesFermeesCorrection = ({ eb }: { eb: ExpressionBuilder<DB,
     ${countPlacesFermeesApprentissageCorrection(eb)}
   `;
 
-export const countPlacesFermeesScolaire = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
+export const countPlacesFermeesScolaire = ({
+  eb,
+  avecColoration = true,
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean;
+}) =>
   eb
     .case()
+    .when(eb.val(!avecColoration))
+    .then(
+      eb.case()
+        .when(sql<boolean>`${countDifferenceCapaciteScolaire(eb)} < 0`)
+        .then(sql<number>`ABS(${countDifferenceCapaciteScolaire(eb)})`)
+        .else(eb.val(0))
+        .end()
+    )
     // si type demande = coloration => pas de fermeture de places
     .when("typeDemande", "=", DemandeTypeEnum["coloration"])
     .then(eb.val(0))
@@ -105,12 +133,18 @@ export const countPlacesFermeesScolaire = ({ eb }: { eb: ExpressionBuilder<DB, "
     .then(eb.val(0))
     .end();
 
-export const countPlacesFermeesParCampagne = ({ eb }: { eb: ExpressionBuilder<DB, "demande" | "campagne"> }) =>
+export const countPlacesFermeesParCampagne = ({
+  eb,
+  avecColoration = true,
+}: {
+  eb: ExpressionBuilder<DB, "demande" | "campagne">;
+  avecColoration?: boolean;
+}) =>
   eb
     .case()
     .when("campagne.annee", "=", FIRST_ANNEE_CAMPAGNE)
-    .then(countPlacesFermeesScolaire(eb))
-    .else(countPlacesFermees(eb))
+    .then(countPlacesFermeesScolaire({eb, avecColoration}))
+    .else(countPlacesFermees({eb, avecColoration}))
     .end();
 
 export const countPlacesFermeesScolaireCorrection = ({
@@ -126,25 +160,45 @@ export const countPlacesFermeesScolaireCorrection = ({
 
 export const countPlacesFermeesScolaireQ3 = ({
   eb,
+  avecColoration = true,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ3(eb)).then(countPlacesFermeesScolaire(eb)).else(0).end();
+  avecColoration?: boolean;
+}) => eb.case().when(inQ3(eb)).then(countPlacesFermeesScolaire({eb, avecColoration})).else(0).end();
 
 export const countPlacesFermeesScolaireQ4 = ({
   eb,
+  avecColoration = true,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ4(eb)).then(countPlacesFermeesScolaire(eb)).else(0).end();
+  avecColoration?: boolean;
+}) => eb.case().when(inQ4(eb)).then(countPlacesFermeesScolaire({eb, avecColoration})).else(0).end();
 
 export const countPlacesFermeesScolaireQ3Q4 = ({
   eb,
+  avecColoration = true,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ3Q4(eb)).then(countPlacesFermeesScolaire(eb)).else(0).end();
+  avecColoration?: boolean;
+}) => eb.case().when(inQ3Q4(eb)).then(countPlacesFermeesScolaire({eb, avecColoration})).else(0).end();
 
-export const countPlacesFermeesApprentissage = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
+export const countPlacesFermeesApprentissage = ({
+  eb,
+  avecColoration = true,
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean;
+}) =>
   eb
     .case()
+    .when(eb.val(!avecColoration))
+    .then(
+      eb.case()
+        .when(sql<boolean>`${countDifferenceCapaciteApprentissage(eb)} < 0`)
+        .then(sql<number>`ABS(${countDifferenceCapaciteApprentissage(eb)})`)
+        .else(eb.val(0))
+        .end()
+    )
     // si type demande = coloration => pas de fermeture de places
     .when("typeDemande", "=", DemandeTypeEnum["coloration"])
     .then(eb.val(0))
@@ -212,18 +266,24 @@ export const countPlacesFermeesApprentissageCorrection = ({
 
 export const countPlacesFermeesApprentissageQ3 = ({
   eb,
+  avecColoration = true,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ3(eb)).then(countPlacesFermeesApprentissage(eb)).else(0).end();
+  avecColoration?: boolean;
+}) => eb.case().when(inQ3(eb)).then(countPlacesFermeesApprentissage({eb, avecColoration})).else(0).end();
 
 export const countPlacesFermeesApprentissageQ4 = ({
   eb,
+  avecColoration = true,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ4(eb)).then(countPlacesFermeesApprentissage(eb)).else(0).end();
+  avecColoration?: boolean;
+}) => eb.case().when(inQ4(eb)).then(countPlacesFermeesApprentissage({eb, avecColoration})).else(0).end();
 
 export const countPlacesFermeesApprentissageQ3Q4 = ({
   eb,
+  avecColoration = true,
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ3Q4(eb)).then(countPlacesFermeesApprentissage(eb)).else(0).end();
+  avecColoration?: boolean;
+}) => eb.case().when(inQ3Q4(eb)).then(countPlacesFermeesApprentissage({eb, avecColoration})).else(0).end();

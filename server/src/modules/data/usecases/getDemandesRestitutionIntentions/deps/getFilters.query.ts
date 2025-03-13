@@ -372,16 +372,6 @@ export const getFilters = async ({
         value: "false",
       },
     ],
-    compensations: [
-      {
-        label: "Oui",
-        value: "true",
-      },
-      {
-        label: "Non",
-        value: "false",
-      },
-    ],
     voies: [
       {
         label: "Scolaire",

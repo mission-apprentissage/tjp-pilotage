@@ -10,7 +10,7 @@ import { cleanNull } from "@/utils/noNull";
 export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
   return getKbdClient()
     .selectFrom(
-      genericOnDemandes(filters)
+      genericOnDemandes({...filters, avecColoration: filters.coloration !== "false"})
         .select((eb) => [
           eb.ref("campagne.annee").as("annee"),
           eb.ref("demande.rentreeScolaire").as("rentreeScolaire"),
@@ -70,6 +70,22 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
       eb.fn.coalesce("countDemande", eb.val(0)).as("countDemande"),
     ])
     .where("statut", "not in", [DemandeStatutEnum["brouillon"]])
+    // .$call((eb) => {
+    //   if(filters.coloration === "false") return eb.select((eb) => [
+    //     sql<number>`0`.as("placesColoreesOuvertes"),
+    //     sql<number>`0`.as("placesColoreesFermees"),
+    //     sql<number>`0`.as("placesColorees"),
+    //     sql<number>`0`.as("placesColoreesQ4"),
+    //     eb.fn.coalesce("placesNonColoreesTransformees", eb.val(0)).as("placesTransformees"),
+    //   ]);
+    //   return eb.select((eb) => [
+    //     eb.fn.coalesce("placesColoreesOuvertes", eb.val(0)).as("placesColoreesOuvertes"),
+    //     eb.fn.coalesce("placesColoreesFermees", eb.val(0)).as("placesColoreesFermees"),
+    //     eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
+    //     eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
+    //     eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
+    //   ]);
+    // })
     .execute()
     .then(cleanNull);
 };

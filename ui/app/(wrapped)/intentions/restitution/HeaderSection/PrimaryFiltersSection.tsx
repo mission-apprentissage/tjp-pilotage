@@ -61,10 +61,11 @@ export const PrimaryFiltersSection = ({
                         borderStyle="solid"
                         borderColor="grey.900"
                         bg={"white"}
+                        isLoading={isLoading}
                       >
                         <Flex direction="row" gap={2}>
                           <Text my={"auto"}>
-                            {data?.filters.campagnes?.find((campagne) => campagne.annee === activeFilters.campagne)?.annee ?? ""}
+                            {data?.filters.campagnes?.find((campagne) => campagne.annee === activeFilters.campagne)?.annee ?? "Sélectionner une campagne"}
                           </Text>
                           {activeFilters.campagne && (
                             <CampagneStatutTag
@@ -108,6 +109,7 @@ export const PrimaryFiltersSection = ({
                         borderStyle="solid"
                         borderColor="grey.900"
                         bg={"white"}
+                        isLoading={isLoading}
                       >
                         <Flex direction="row">
                           <Text my={"auto"}>
@@ -118,7 +120,7 @@ export const PrimaryFiltersSection = ({
                             }
                           </Text>
                           {(
-                            activeFilters.rentreeScolaire ===
+                            activeFilters.rentreeScolaire && activeFilters.rentreeScolaire ===
                               data?.filters.campagnes?.find(
                                 (campagne) => campagne.annee === activeFilters.campagne
                               )?.annee

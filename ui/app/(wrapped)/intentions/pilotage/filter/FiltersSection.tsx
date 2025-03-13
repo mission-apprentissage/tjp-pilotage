@@ -353,13 +353,11 @@ export const FiltersSection = ({
             value={filters.coloration?.toString() ?? ""}
             onChange={(e) => onUpdateFilter({key: "coloration", selected: e.target.value})}
             borderBottomColor={filters.coloration != undefined ? "info.525" : ""}
-            placeholder="Avec / sans"
+            placeholder="Avec"
           >
-            {data?.filters.colorations?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            <option key={"false"} value={"false"}>
+              Sans
+            </option>
           </Select>
         </GridItem>
         <GridItem>

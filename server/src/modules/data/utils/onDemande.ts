@@ -1,7 +1,6 @@
 import { expressionBuilder, sql } from "kysely";
 import { VoieEnum } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
@@ -37,7 +36,7 @@ import { isInPerimetreIJDataEtablissement } from "./isInPerimetreIJ";
 const CURRENT_ANNEE_CAMPAGNE = "2025";
 
 export const genericOnDemandes = ({
-  statut = [DemandeStatutEnum["projet de demande"], DemandeStatutEnum["demande validée"], DemandeStatutEnum["prêt pour le vote"]],
+  statut,
   rentreeScolaire,
   codeNiveauDiplome,
   CPC,
@@ -47,7 +46,7 @@ export const genericOnDemandes = ({
   codeRegion,
   codeAcademie,
   codeDepartement,
-  coloration,
+  avecColoration,
   formationSpecifique,
   withAjustementRentree = true,
 }: {
@@ -61,7 +60,7 @@ export const genericOnDemandes = ({
   codeRegion?: string;
   codeAcademie?: string;
   codeDepartement?: string;
-  coloration?: string;
+  avecColoration?: boolean;
   formationSpecifique?: Array<TypeFormationSpecifiqueType>;
   withAjustementRentree?: boolean;
 }) =>
@@ -100,26 +99,26 @@ export const genericOnDemandes = ({
     )
     .select((eb) => [
       eb.fn.count<number>("numero").as("countDemande"),
-      eb.fn.sum<number>(countPlacesOuvertesScolaire(eb)).as("placesOuvertesScolaire"),
-      eb.fn.sum<number>(countPlacesFermeesScolaire(eb)).as("placesFermeesScolaire"),
-      eb.fn.sum<number>(countPlacesOuvertesScolaireQ1(eb)).as("placesOuvertesScolaireQ1"),
-      eb.fn.sum<number>(countPlacesFermeesScolaireQ4(eb)).as("placesFermeesScolaireQ4"),
-      eb.fn.sum<number>(countPlacesOuvertesApprentissage(eb)).as("placesOuvertesApprentissage"),
-      eb.fn.sum<number>(countPlacesFermeesApprentissage(eb)).as("placesFermeesApprentissage"),
-      eb.fn.sum<number>(countPlacesOuvertesApprentissageQ1(eb)).as("placesOuvertesApprentissageQ1"),
-      eb.fn.sum<number>(countPlacesFermeesApprentissageQ4(eb)).as("placesFermeesApprentissageQ4"),
-      eb.fn.sum<number>(countPlacesOuvertes(eb)).as("placesOuvertes"),
-      eb.fn.sum<number>(countPlacesFermeesParCampagne(eb)).as("placesFermees"),
-      eb.fn.sum<number>(countPlacesOuvertesQ1(eb)).as("placesOuvertesQ1"),
-      eb.fn.sum<number>(countPlacesFermeesQ4ParCampagne(eb)).as("placesFermeesQ4"),
-      eb.fn.sum<number>(countPlacesNonColoreesTransformees(eb)).as("placesNonColoreesTransformees"),
-      eb.fn.sum<number>(countPlacesOuvertesTransitionEcologique(eb)).as("placesOuvertesTransformationEcologique"),
-      eb.fn.sum<number>(countPlacesColorees(eb)).as("placesColorees"),
-      eb.fn.sum<number>(countPlacesColoreesQ4(eb)).as("placesColoreesQ4"),
-      eb.fn.sum<number>(countPlacesColoreesOuvertes(eb)).as("placesColoreesOuvertes"),
-      eb.fn.sum<number>(countPlacesColoreesFermees(eb)).as("placesColoreesFermees"),
-      eb.fn.sum<number>(countPlacesColoreesOuvertesQ4(eb)).as("placesColoreesOuvertesQ4"),
-      eb.fn.sum<number>(countPlacesTransformeesParCampagne(eb)).as("placesTransformees"),
+      eb.fn.sum<number>(countPlacesOuvertesScolaire({eb, avecColoration})).as("placesOuvertesScolaire"),
+      eb.fn.sum<number>(countPlacesFermeesScolaire({eb, avecColoration})).as("placesFermeesScolaire"),
+      eb.fn.sum<number>(countPlacesOuvertesScolaireQ1({eb, avecColoration})).as("placesOuvertesScolaireQ1"),
+      eb.fn.sum<number>(countPlacesFermeesScolaireQ4({eb, avecColoration})).as("placesFermeesScolaireQ4"),
+      eb.fn.sum<number>(countPlacesOuvertesApprentissage({eb, avecColoration})).as("placesOuvertesApprentissage"),
+      eb.fn.sum<number>(countPlacesFermeesApprentissage({eb, avecColoration})).as("placesFermeesApprentissage"),
+      eb.fn.sum<number>(countPlacesOuvertesApprentissageQ1({eb, avecColoration})).as("placesOuvertesApprentissageQ1"),
+      eb.fn.sum<number>(countPlacesFermeesApprentissageQ4({eb, avecColoration})).as("placesFermeesApprentissageQ4"),
+      eb.fn.sum<number>(countPlacesOuvertes({eb, avecColoration})).as("placesOuvertes"),
+      eb.fn.sum<number>(countPlacesFermeesParCampagne({eb, avecColoration})).as("placesFermees"),
+      eb.fn.sum<number>(countPlacesOuvertesQ1({eb, avecColoration})).as("placesOuvertesQ1"),
+      eb.fn.sum<number>(countPlacesFermeesQ4ParCampagne({eb, avecColoration})).as("placesFermeesQ4"),
+      eb.fn.sum<number>(countPlacesNonColoreesTransformees({eb, avecColoration})).as("placesNonColoreesTransformees"),
+      eb.fn.sum<number>(countPlacesOuvertesTransitionEcologique({eb, avecColoration})).as("placesOuvertesTransformationEcologique"),
+      eb.fn.sum<number>(countPlacesColorees({eb, avecColoration})).as("placesColorees"),
+      eb.fn.sum<number>(countPlacesColoreesQ4({eb, avecColoration})).as("placesColoreesQ4"),
+      eb.fn.sum<number>(countPlacesColoreesOuvertes({eb, avecColoration})).as("placesColoreesOuvertes"),
+      eb.fn.sum<number>(countPlacesColoreesFermees({eb, avecColoration})).as("placesColoreesFermees"),
+      eb.fn.sum<number>(countPlacesColoreesOuvertesQ4({eb, avecColoration})).as("placesColoreesOuvertesQ4"),
+      eb.fn.sum<number>(countPlacesTransformeesParCampagne({eb, avecColoration})).as("placesTransformees"),
     ])
     .where(isInPerimetreIJDataEtablissement)
     .$if(withAjustementRentree, (eb) => eb.where(isDemandeNotAjustementRentree))
@@ -166,11 +165,6 @@ export const genericOnDemandes = ({
     })
     .$call((eb) => {
       if (statut) return eb.where("demande.statut", "in", statut);
-      return eb;
-    })
-    .$call((eb) => {
-      if (coloration)
-        return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
       return eb;
     })
     .$call((eb) => {

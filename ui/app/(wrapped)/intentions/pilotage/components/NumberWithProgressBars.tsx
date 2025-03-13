@@ -84,16 +84,10 @@ export const NumberWithProgressBars = ({
       <Collapse in={showMore} >
         <Flex direction={"column"} gap="8px">
           <ProgressBar
-            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["refusée"]]) / statuts["Total"])}
-            rightLabel="Refusées"
-            leftLabel={formatNumber(statuts[DemandeStatutEnum["refusée"]])}
-            colorScheme={themeColors.pinkmacaron[850]}
-          />
-          <ProgressBar
-            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["prêt pour le vote"]]) / statuts["Total"])}
-            rightLabel="Prêt pour le vote"
-            leftLabel={formatNumber(statuts[DemandeStatutEnum["prêt pour le vote"]])}
-            colorScheme={getStatutBgColor(DemandeStatutEnum["prêt pour le vote"])}
+            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["dossier complet"]]) / statuts["Total"])}
+            rightLabel="Dossier complet"
+            leftLabel={formatNumber(statuts[DemandeStatutEnum["dossier complet"]])}
+            colorScheme={getStatutBgColor(DemandeStatutEnum["dossier complet"])}
           />
           <ProgressBar
             percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["dossier incomplet"]]) / statuts["Total"])}
@@ -102,16 +96,22 @@ export const NumberWithProgressBars = ({
             colorScheme={getStatutBgColor(DemandeStatutEnum["dossier incomplet"])}
           />
           <ProgressBar
-            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["dossier complet"]]) / statuts["Total"])}
-            rightLabel="Dossier complet"
-            leftLabel={formatNumber(statuts[DemandeStatutEnum["dossier complet"]])}
-            colorScheme={getStatutBgColor(DemandeStatutEnum["dossier complet"])}
-          />
-          <ProgressBar
             percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["proposition"]]) / statuts["Total"])}
             rightLabel="Proposition"
             leftLabel={formatNumber(statuts[DemandeStatutEnum["proposition"]])}
             colorScheme={getStatutBgColor(DemandeStatutEnum["proposition"])}
+          />
+          <ProgressBar
+            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["prêt pour le vote"]]) / statuts["Total"])}
+            rightLabel="Prêt pour le vote"
+            leftLabel={formatNumber(statuts[DemandeStatutEnum["prêt pour le vote"]])}
+            colorScheme={getStatutBgColor(DemandeStatutEnum["prêt pour le vote"])}
+          />
+          <ProgressBar
+            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["refusée"]]) / statuts["Total"])}
+            rightLabel="Refusées"
+            leftLabel={formatNumber(statuts[DemandeStatutEnum["refusée"]])}
+            colorScheme={getStatutBgColor(DemandeStatutEnum["refusée"])}
           />
         </Flex>
       </Collapse>

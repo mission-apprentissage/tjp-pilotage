@@ -2,6 +2,7 @@ import { Divider, Flex, Heading, Tag, Text, Tooltip } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import type { Role } from "shared";
+import { unEscapeString } from "shared/utils/escapeString";
 
 import type { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/components/RoleTag";
@@ -180,7 +181,7 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
               {demande.commentaire && demande.commentaire.length ? (
                 demande.commentaire.split("\n").map((p, i) => (
                   <Text key={`commentaire-${i}`} fontSize={14}>
-                    {p}
+                    {unEscapeString(p)}
                   </Text>
                 ))
               ) : (
@@ -281,7 +282,7 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
           </Flex>
           {hasMotifAutre(demande.motif) && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Heading as={"h3"} fontSize={14} fontWeight={400}>Autre motif : {demande.autreMotif!}</Heading>
+              <Heading as={"h3"} fontSize={14} fontWeight={400}>Autre motif : {unEscapeString(demande.autreMotif!)}</Heading>
             </Flex>
           )}
           <Divider my={3} borderColor={"grey.900"} />

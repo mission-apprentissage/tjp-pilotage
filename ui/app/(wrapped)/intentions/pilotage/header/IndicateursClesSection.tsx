@@ -1,10 +1,14 @@
-import { Box, Divider, Flex, Grid, GridItem, HStack, Skeleton, Text, VisuallyHidden, VStack } from "@chakra-ui/react";
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import {Box,Button,Collapse,Divider, Flex, Grid, GridItem, HStack, Skeleton, Text, VisuallyHidden, VStack} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
+import _ from 'lodash';
+import { useState } from 'react';
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { OBJECTIF_TAUX_TRANSFO_PERCENTAGE } from "shared/objectives/TAUX_TRANSFO";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import {getStatutBgColor} from '@/app/(wrapped)/intentions/components/StatutTag';
 import { IndicateurCard } from "@/app/(wrapped)/intentions/pilotage/components/IndicateurCard";
 import { NumberWithLabel } from "@/app/(wrapped)/intentions/pilotage/components/NumberWithLabel";
 import { NumberWithProgressBars } from "@/app/(wrapped)/intentions/pilotage/components/NumberWithProgressBars";
@@ -15,9 +19,10 @@ import type {
   PilotageIntentionsStatuts,
 } from '@/app/(wrapped)/intentions/pilotage/types';
 import {getScopeCode} from '@/app/(wrapped)/intentions/pilotage/utils';
+import {ProgressBar} from '@/components/ProgressBar';
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
-import { formatPercentage } from "@/utils/formatUtils";
+import { formatPercentage, formatPercentageWithoutSign} from '@/utils/formatUtils';
 
 const Loader = () => {
   return (
@@ -58,9 +63,16 @@ const getScopedData = ({
   indicateur
 } : {
   statuts?: PilotageIntentionsStatuts,
-  statut: DemandeStatutType | "Total",
+  statut: DemandeStatutType | "Total" | Array<DemandeStatutType | "Total">,
   indicateur: IndicateurRepartition
-}): number => statuts?.[statut]?.[indicateur] as number;
+}): number => {
+  if(Array.isArray(statut)) {
+    return statut.reduce(
+      (acc, current) => acc + (getScopedData({ statuts, statut: current, indicateur }) ?? 0),
+      0) as number;
+  }
+  return statuts?.[statut]?.[indicateur] as number;
+};
 
 const getDataIndicateur = ({
   data,
@@ -89,6 +101,7 @@ export const IndicateursClesSection = ({
   onOpenTauxTransfoDefinition: () => void;
 }) => {
   const { openGlossaire } = useGlossaireContext();
+  const [showMore, setShowMore] = useState(false);
 
   if (isLoading || !filters.campagne || !filters.rentreeScolaire) return <Loader />;
 
@@ -113,10 +126,10 @@ export const IndicateursClesSection = ({
           <Grid templateColumns="repeat(2, 1fr)" width="100%" minW={450} gap="24px">
             <GridItem colSpan={1}>
               <NumberWithLabel
-                label="Projets de demande"
+                label="Projets"
                 icon={<Icon icon="ri:file-text-line" />}
                 scopeCode={getScopeCode(filters)}
-                statuts={getDataIndicateur({ data: data, indicateur: "tauxTransformation" })}
+                statuts={getDataIndicateur({ data, indicateur: "tauxTransformation" })}
                 percentage={getScopedData({
                   statuts: data?.statuts,
                   statut: DemandeStatutEnum["projet de demande"],
@@ -128,13 +141,6 @@ export const IndicateursClesSection = ({
                   indicateur: "tauxTransformation"
                 })}
                 objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
-                tooltip={
-                  <TooltipIcon
-                    mb={"auto"}
-                    ms={1}
-                    label="Somme des demandes en statut proposition / projet de demande / dossier complet et incomplet / prêt pour le vote."
-                  />
-                }
               />
             </GridItem>
             <GridItem colSpan={1}>
@@ -142,7 +148,7 @@ export const IndicateursClesSection = ({
                 label="Demandes validées"
                 icon={<Icon icon="ri:checkbox-circle-line" />}
                 scopeCode={getScopeCode(filters)}
-                statuts={getDataIndicateur({ data: data, indicateur: "tauxTransformation" })}
+                statuts={getDataIndicateur({ data, indicateur: "tauxTransformation" })}
                 percentage={getScopedData({
                   statuts: data?.statuts,
                   statut: DemandeStatutEnum["demande validée"],
@@ -156,31 +162,67 @@ export const IndicateursClesSection = ({
                 objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
               />
             </GridItem>
+            <GridItem colSpan={2}>
+              <Flex ms={"auto"}>
+                <Button
+                  variant="link"
+                  size="sm"
+                  ms={"auto"}
+                  color={"bluefrance.113"}
+                  onClick={() => setShowMore((showMore) => !showMore)}
+                  rightIcon={showMore ? <ChevronUpIcon mt={"auto"}/> : <ChevronDownIcon mt={"auto"}/>}
+                  iconSpacing={1}
+                >
+                  {showMore ? "Voir moins" : "Voir plus"}
+                </Button>
+              </Flex>
+              <Collapse in={showMore} >
+                <DetailsTauxDeTransformation statuts={getDataIndicateur({ data, indicateur: "tauxTransformation" })} round={1} objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE} />
+              </Collapse>
+            </GridItem>
           </Grid>
         </IndicateurCard>
         <IndicateurCard title="Ratio de fermetures">
-          <NumberWithLabel
-            label={<VisuallyHidden>Ratio de fermetures</VisuallyHidden>}
-            scopeCode={getScopeCode(filters)}
-            statuts={getDataIndicateur({ data: data, indicateur: "ratioFermeture" })}
-            percentage={getScopedData({
-              statuts: data?.statuts,
-              statut: "Total",
-              indicateur: "ratioFermeture"
-            })}
-            nationalPercentage={getScopedData({
-              statuts: data?.statutsNational,
-              statut: "Total",
-              indicateur: "ratioFermeture"
-            })}
-          />
+          <Flex direction="column">
+            <NumberWithLabel
+              label={<VisuallyHidden>Ratio de fermetures</VisuallyHidden>}
+              scopeCode={getScopeCode(filters)}
+              statuts={getDataIndicateur({ data, indicateur: "ratioFermeture" })}
+              percentage={getScopedData({
+                statuts: data?.statuts,
+                statut: "Total",
+                indicateur: "ratioFermeture"
+              })}
+              nationalPercentage={getScopedData({
+                statuts: data?.statutsNational,
+                statut: "Total",
+                indicateur: "ratioFermeture"
+              })}
+            />
+            <Flex ms={"auto"} mt={"auto"}>
+              <Button
+                variant="link"
+                size="sm"
+                ms={"auto"}
+                color={"bluefrance.113"}
+                onClick={() => setShowMore((showMore) => !showMore)}
+                rightIcon={showMore ? <ChevronUpIcon mt={"auto"}/> : <ChevronDownIcon mt={"auto"}/>}
+                iconSpacing={1}
+              >
+                {showMore ? "Voir moins" : "Voir plus"}
+              </Button>
+            </Flex>
+            <Collapse in={showMore} >
+              <DetailsRatioFermeture statuts={getDataIndicateur({ data, indicateur: "ratioFermeture" })} round={1} />
+            </Collapse>
+          </Flex>
         </IndicateurCard>
       </Flex>
       <Flex direction={"row"} gap={6}>
         <NumberWithProgressBars
           icon={<Icon width="24px" icon="ri:user-add-fill" color={themeDefinition.colors.bluefrance[525]} />}
           title="Pl. Ouvertes"
-          statuts={getDataIndicateur({ data: data, indicateur: "placesOuvertes" })}
+          statuts={getDataIndicateur({ data, indicateur: "placesOuvertes" })}
         >
           <Divider />
           <VStack width="100%" color={themeDefinition.colors.grey[425]} fontSize={12}>
@@ -223,7 +265,7 @@ export const IndicateursClesSection = ({
         <NumberWithProgressBars
           icon={<Icon width="24px" icon="ri:user-unfollow-fill" color={themeDefinition.colors.success["425_active"]} />}
           title="Pl. Fermées"
-          statuts={getDataIndicateur({ data: data, indicateur: "placesFermees" })}
+          statuts={getDataIndicateur({ data, indicateur: "placesFermees" })}
         >
           <Divider />
           <VStack width="100%" color={themeDefinition.colors.grey[425]} fontSize={12}>
@@ -272,7 +314,7 @@ export const IndicateursClesSection = ({
             />
           }
           title="Colorations"
-          statuts={getDataIndicateur({ data: data, indicateur: "placesColorees" })}
+          statuts={getDataIndicateur({ data, indicateur: "placesColorees" })}
           tooltip={
             <TooltipIcon
               label={
@@ -331,3 +373,109 @@ export const IndicateursClesSection = ({
     </Flex>
   );
 };
+
+
+
+const DetailsTauxDeTransformation = ({
+  statuts,
+  round,
+  objective
+} : {
+  statuts: Record<string, number>;
+  round: number;
+  objective: number;
+}) =>
+  (
+    <Flex direction={"column"} gap={2} p={3}>
+      <Text fontSize={14} fontWeight="700" lineHeight="20px">
+        Détail par statut
+      </Text>
+      <ProgressBar
+        percentage={formatPercentageWithoutSign((statuts[DemandeStatutEnum["dossier complet"]] / objective), round)}
+        rightLabel={_.capitalize(DemandeStatutEnum["dossier complet"])}
+        leftLabel={formatPercentage(statuts[DemandeStatutEnum["dossier complet"]], round)}
+        colorScheme={getStatutBgColor(DemandeStatutEnum["dossier complet"])}
+      />
+      <ProgressBar
+        percentage={formatPercentageWithoutSign((statuts[DemandeStatutEnum["dossier incomplet"]] / objective), round)}
+        rightLabel={_.capitalize(DemandeStatutEnum["dossier incomplet"])}
+        leftLabel={formatPercentage(statuts[DemandeStatutEnum["dossier incomplet"]], round)}
+        colorScheme={getStatutBgColor(DemandeStatutEnum["dossier incomplet"])}
+      />
+      <ProgressBar
+        percentage={formatPercentageWithoutSign((statuts[DemandeStatutEnum["proposition"]] / objective), round)}
+        rightLabel={_.capitalize(DemandeStatutEnum["proposition"])}
+        leftLabel={formatPercentage(statuts[DemandeStatutEnum["proposition"]], round)}
+        colorScheme={getStatutBgColor(DemandeStatutEnum["proposition"])}
+      />
+      <ProgressBar
+        percentage={formatPercentageWithoutSign((statuts[DemandeStatutEnum["projet de demande"]] / objective), round)}
+        rightLabel={_.capitalize(DemandeStatutEnum["projet de demande"])}
+        leftLabel={formatPercentage(statuts[DemandeStatutEnum["projet de demande"]], round)}
+        colorScheme={getStatutBgColor(DemandeStatutEnum["projet de demande"])}
+      />
+      <ProgressBar
+        percentage={formatPercentageWithoutSign((statuts[DemandeStatutEnum["prêt pour le vote"]] / objective), round)}
+        rightLabel={_.capitalize(DemandeStatutEnum["prêt pour le vote"])}
+        leftLabel={formatPercentage(statuts[DemandeStatutEnum["prêt pour le vote"]], round)}
+        colorScheme={getStatutBgColor(DemandeStatutEnum["prêt pour le vote"])}
+      />
+      <ProgressBar
+        percentage={formatPercentageWithoutSign((statuts[DemandeStatutEnum["demande validée"]] / objective), round)}
+        rightLabel={_.capitalize(DemandeStatutEnum["demande validée"])}
+        leftLabel={formatPercentage(statuts[DemandeStatutEnum["demande validée"]], round)}
+        colorScheme={getStatutBgColor(DemandeStatutEnum["demande validée"])}
+      />
+      <ProgressBar
+        percentage={formatPercentageWithoutSign((statuts[DemandeStatutEnum["refusée"]] / objective), round)}
+        rightLabel={_.capitalize(DemandeStatutEnum["refusée"])}
+        leftLabel={formatPercentage(statuts[DemandeStatutEnum["refusée"]], round)}
+        colorScheme={getStatutBgColor(DemandeStatutEnum["refusée"])}
+      />
+
+    </Flex>
+  );
+
+
+const DetailsRatioFermeture = ({
+  statuts,
+  round
+} : {
+  statuts: Record<string, number>;
+  round: number;
+}) =>
+  <Flex direction={"column"} gap={2} p={3}>
+    <Text fontSize={14} fontWeight="700" lineHeight="20px">
+      Détail par statut
+    </Text>
+    <Flex direction={"column"} gap={2}>
+      <Flex direction={"row"} gap={2} fontSize={12} height={"16px"}>
+        <Text>{_.capitalize(DemandeStatutEnum["dossier complet"])} :</Text>
+        <Text>{formatPercentage((statuts[DemandeStatutEnum["dossier complet"]]), round)}</Text>
+      </Flex>
+      <Flex direction={"row"} gap={2} fontSize={12} height={"16px"}>
+        <Text>{_.capitalize(DemandeStatutEnum["dossier complet"])} :</Text>
+        <Text>{formatPercentage((statuts[DemandeStatutEnum["dossier incomplet"]]), round)}</Text>
+      </Flex>
+      <Flex direction={"row"} gap={2} fontSize={12} height={"16px"}>
+        <Text>{_.capitalize(DemandeStatutEnum["proposition"])} :</Text>
+        <Text>{formatPercentage((statuts[DemandeStatutEnum["proposition"]]), round)}</Text>
+      </Flex>
+      <Flex direction={"row"} gap={2} fontSize={12} height={"16px"}>
+        <Text>{_.capitalize(DemandeStatutEnum["projet de demande"])} :</Text>
+        <Text>{formatPercentage((statuts[DemandeStatutEnum["projet de demande"]]), round)}</Text>
+      </Flex>
+      <Flex direction={"row"} gap={2} fontSize={12} height={"16px"}>
+        <Text>{_.capitalize(DemandeStatutEnum["prêt pour le vote"])} :</Text>
+        <Text>{formatPercentage((statuts[DemandeStatutEnum["prêt pour le vote"]]), round)}</Text>
+      </Flex>
+      <Flex direction={"row"} gap={2} fontSize={12} height={"16px"}>
+        <Text>{_.capitalize(DemandeStatutEnum["demande validée"])} :</Text>
+        <Text>{formatPercentage((statuts[DemandeStatutEnum["demande validée"]]), round)}</Text>
+      </Flex>
+      <Flex direction={"row"} gap={2} fontSize={12} height={"16px"}>
+        <Text>{_.capitalize(DemandeStatutEnum["refusée"])} :</Text>
+        <Text>{formatPercentage((statuts[DemandeStatutEnum["refusée"]]), round)}</Text>
+      </Flex>
+    </Flex>
+  </Flex>;
