@@ -335,8 +335,7 @@ export const FiltersSection = ({
               label={
                 <Box>
                   <Text>
-                    Doit on considérer ou non les demandes ayant fait l'objet
-                    d'une augmentation ou diminution de places colorées ?
+                    Doit-on considérer ou non les colorations de places dans le taux de transformation ?
                   </Text>
                   <Text mt={4}>Cliquez pour plus d'infos.</Text>
                 </Box>

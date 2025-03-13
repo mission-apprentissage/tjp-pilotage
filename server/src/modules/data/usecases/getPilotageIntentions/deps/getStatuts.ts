@@ -10,7 +10,6 @@ export const getStatuts = async ({ filters }: { filters: Filters }): Promise<Rep
     getNumerateurQuery({
       filters: {
         ...filters,
-        statut: undefined
       },
     }),
     getDenominateurQuery({
