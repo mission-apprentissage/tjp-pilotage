@@ -10,9 +10,7 @@ import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import {PermissionEnum} from 'shared/enum/permissionEnum';
-import {SecteurEnum} from 'shared/enum/secteurEnum';
+import { PermissionEnum } from 'shared/enum/permissionEnum';
 
 import { client } from "@/api.client";
 import { CodeDepartementContext } from "@/app/codeDepartementContext";
@@ -30,20 +28,34 @@ import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDES_COLUMN";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import type { STATS_DEMANDES_COLUMNS_OPTIONAL } from "./STATS_DEMANDES_COLUMN";
-import { STATS_DEMANDES_COLUMNS, STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
+import { STATS_DEMANDES_COLUMNS_DEFAULT } from "./STATS_DEMANDES_COLUMN";
 import type {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,
   OrderDemandesRestitutionIntentions,
 } from "./types";
+import { findDefaultRentreeScolaireForCampagne, getDataForExport } from "./utils";
+
+type DisablableOptionType = {
+    color: string;
+    options: typeof STATS_DEMANDES_COLUMNS_OPTIONAL;
+    isDisabled?: boolean;
+    tooltip?: string;
+  };
 
 const ColonneFiltersSection = chakra(
   ({
     colonneFilters,
     handleColonneFilters,
+    displayPilotageColumns,
+    currentRS,
+    allowPilotageColumnsToBeSelected
   }: {
     colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[];
     handleColonneFilters: (value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]) => void;
+    displayPilotageColumns: boolean;
+    currentRS: string;
+    allowPilotageColumnsToBeSelected: boolean;
   }) => {
     return (
       <Flex justifyContent={"start"} direction="row">
@@ -52,19 +64,51 @@ const ColonneFiltersSection = chakra(
           size="md"
           variant={"newInput"}
           onChange={(selected) => handleColonneFilters(selected as (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[])}
-          groupedOptions={Object.entries(GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL).reduce(
-            (acc, [group, { color, options }]) => {
-              acc[group] = {
-                color,
-                options: Object.entries(options).map(([value, label]) => ({
-                  label,
-                  value,
-                })),
-              };
-              return acc;
-            },
-            {} as Record<string, { color: string; options: { label: string; value: string }[] }>
-          )}
+          groupedOptions={Object.entries(GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL)
+            .filter(([key]) => key !== "pilotage" || displayPilotageColumns)
+            .map((groupedOptions): [string, DisablableOptionType] =>
+            {
+              const [key, {color, options}] = groupedOptions;
+
+              if(key === "pilotage") {
+
+                const values = {color, options: {
+                  ...options,
+                  pilotageCapacite: options.pilotageCapacite?.replace("{0}", currentRS),
+                  pilotageEffectif: options.pilotageEffectif?.replace("{0}", currentRS),
+                  pilotageTauxRemplissage: options.pilotageTauxRemplissage?.replace("{0}", currentRS),
+                  pilotageTauxPression: options.pilotageTauxPression?.replace("{0}", currentRS),
+                  pilotageTauxDemande: options.pilotageTauxDemande?.replace("{0}", currentRS),
+                },
+                isDisabled: !allowPilotageColumnsToBeSelected,
+                tooltip: !allowPilotageColumnsToBeSelected ? "Cette valeur ne peut pas être sélectionnée, car le constat de rentrée associé n’est pas encore disponible." : undefined
+                };
+
+                return  [key,values ];
+              }
+
+              const values = {color, options, isDisabled: false, tooltip: undefined};
+
+              return [key, values];
+            })
+            .reduce(
+              (acc, [group, { color, options, isDisabled, tooltip }]) => {
+                acc[group] = {
+                  color,
+                  options: Object.entries(options).map(([value, label]) => ({
+                    label,
+                    value,
+                    isDisabled,
+                    tooltip
+                  })),
+                };
+                return acc;
+              },
+            {} as Record<string, {
+                color: string;
+                options: { label: string; value: string, isDisabled?:boolean, tooltip?:string }[]
+              }>
+            )}
           defaultOptions={Object.entries(STATS_DEMANDES_COLUMNS_DEFAULT)?.map(([value, label]) => {
             return {
               label,
@@ -113,6 +157,9 @@ export default () => {
   }) => {
     router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));
   };
+
+  const [displayPilotageColumns, setDisplayPilotageColumns] = useState(false);
+  const [allowPilotageColumnsToBeSelected, setAllowPilotageColumnsToBeSelected] = useState(false);
 
   const trackEvent = usePlausible();
   const filterTracker = (filterName: keyof FiltersDemandesRestitutionIntentions) => () => {
@@ -203,6 +250,9 @@ export default () => {
     {
       keepPreviousData: true,
       staleTime: 10000000,
+      onSuccess: (data) => {
+        setDefaultFilters(data);
+      }
     }
   );
 
@@ -232,7 +282,7 @@ export default () => {
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 
-  const setDefaultFilters = () => {
+  const setDefaultFilters = (data: DemandesRestitutionIntentions | undefined) => {
     if (
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
@@ -241,6 +291,7 @@ export default () => {
     ) {
       filters.codeRegion = [codeRegion];
     }
+
     if (
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
@@ -249,8 +300,13 @@ export default () => {
     ) {
       filters.codeDepartement = [codeDepartement];
     }
+
     if (filters?.campagne === undefined) {
       filters.campagne = campagne?.annee;
+
+      if(data){
+        filters.rentreeScolaire = findDefaultRentreeScolaireForCampagne(data.campagne.annee, data.filters.rentreesScolaires);
+      }
     }
 
     if (filters?.statut === undefined) {
@@ -262,79 +318,8 @@ export default () => {
           statut !== DemandeStatutEnum["refusée"]
       ) as Exclude<DemandeStatutType, "supprimée" | "brouillon" | "refusée">[];
     }
+
     setSearchParams({ filters: filters });
-  };
-
-  const getDataForExport = (data: DemandesRestitutionIntentions) => {
-    const region = data.filters.regions.find((r) => r.value === filters.codeRegion?.[0]);
-
-    const academies = data.filters.academies.filter((a) => filters.codeAcademie?.includes(a.value) ?? false);
-
-    const departements = data.filters.departements.filter((d) => filters.codeDepartement?.includes(d.value) ?? false);
-
-    const regionsColumns = {
-      selectedCodeRegion: "Code Région sélectionné",
-      selectedRegion: "Région sélectionnée",
-    };
-    const academiesColumns = {
-      selectedCodeAcademie: "Code Académie sélectionné",
-      selectedAcademie: "Académie sélectionnée",
-    };
-    const departementsColumns = {
-      selectedCodeDepartement: "Code Département sélectionné",
-      selectedDepartement: "Departement sélectionnée",
-    };
-
-    const columns = {
-      ...STATS_DEMANDES_COLUMNS,
-      ...(filters.codeRegion && region ? regionsColumns : {}),
-      ...(filters.codeAcademie && academies ? academiesColumns : {}),
-      ...(filters.codeDepartement && departements ? departementsColumns : {}),
-    };
-
-    let demandes = [];
-
-    demandes = data.demandes.map((demande) => ({
-      ...demande,
-      createdAt: new Date(demande.createdAt).toLocaleDateString("fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      updatedAt: new Date(demande.updatedAt).toLocaleDateString("fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      disciplinesRecrutementRH:
-        demande.discipline1RecrutementRH &&
-        `${demande.discipline1RecrutementRH} ${
-          demande.discipline2RecrutementRH ? `- ${demande.discipline2RecrutementRH}` : ""
-        }`,
-      disciplinesReconversionRH:
-        demande.discipline1ReconversionRH &&
-        `${demande.discipline1ReconversionRH} ${
-          demande.discipline2ReconversionRH ? `- ${demande.discipline2ReconversionRH}` : ""
-        }`,
-      disciplinesFormationRH:
-        demande.discipline1FormationRH &&
-        `${demande.discipline1FormationRH} ${
-          demande.discipline2FormationRH ? `- ${demande.discipline2FormationRH}` : ""
-        }`,
-      disciplinesProfesseurAssocieRH:
-        demande.discipline1ProfesseurAssocieRH &&
-        `${demande.discipline1ProfesseurAssocieRH} ${
-          demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
-        }`,
-      secteur: demande.secteur === SecteurEnum["PU"] ? "Public" : "Privé",
-      actionPrioritaire: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
-      transitionDemographique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
-      transitionEcologique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition écologique"]],
-      transitionNumerique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition numérique"]],
-    }));
-
-    return {
-      columns,
-      demandes,
-    };
   };
 
   const onExportCsv = async (isFiltered?: boolean) => {
@@ -343,7 +328,11 @@ export default () => {
       query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
 
-    const { columns, demandes } = getDataForExport(data);
+    const { columns, demandes } = getDataForExport({
+      data,
+      filters,
+      addPilotageColumns: allowPilotageColumnsToBeSelected
+    });
     downloadCsv(formatExportFilename("restitution_export"), demandes, columns);
   };
 
@@ -353,14 +342,13 @@ export default () => {
       query: isFiltered ? getIntentionsStatsQueryParameters() : {},
     });
 
-    const { columns, demandes } = getDataForExport(data);
+    const { columns, demandes } = getDataForExport({
+      data,
+      filters,
+      addPilotageColumns: allowPilotageColumnsToBeSelected
+    });
     downloadExcel(formatExportFilename("restitution_export"), demandes, columns);
   };
-
-  useEffect(() => {
-    setDefaultFilters();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const onClickSearch = () => {
     setSearchParams({
@@ -369,6 +357,20 @@ export default () => {
       search: searchIntention,
     });
   };
+
+  useEffect(() => {
+    setDisplayPilotageColumns(!!filters.rentreeScolaire);
+  }, [data?.rentreesPilotage, filters.rentreeScolaire]);
+
+  useEffect(() => {
+    setAllowPilotageColumnsToBeSelected(data?.rentreesPilotage?.includes(filters.rentreeScolaire ?? "") ?? false);
+  }, [data?.rentreesPilotage, filters.rentreeScolaire]);
+
+  useEffect(() => {
+    if(!allowPilotageColumnsToBeSelected) {
+      setColonneFilters((cln) => cln.filter((colonne) => colonne !== "pilotageCapacite" && colonne !== "pilotageEffectif" && colonne !== "pilotageTauxRemplissage" && colonne !== "pilotageTauxPression" && colonne !== "pilotageTauxDemande"));
+    }
+  }, [allowPilotageColumnsToBeSelected]);
 
   return (
     <GuardPermission permission={PermissionEnum["restitution-intentions/lecture"]}>
@@ -392,7 +394,13 @@ export default () => {
             />
           }
           ColonneFilter={
-            <ColonneFiltersSection colonneFilters={colonneFilters} handleColonneFilters={handleColonneFilters} />
+            <ColonneFiltersSection
+              colonneFilters={colonneFilters}
+              handleColonneFilters={handleColonneFilters}
+              currentRS={filters.rentreeScolaire ?? ""}
+              displayPilotageColumns={displayPilotageColumns}
+              allowPilotageColumnsToBeSelected={allowPilotageColumnsToBeSelected}
+            />
           }
           onExportCsv={onExportCsv}
           onExportExcel={onExportExcel}
@@ -407,6 +415,8 @@ export default () => {
           handleOrder={handleOrder}
           order={order}
           colonneFilters={colonneFilters}
+          displayPilotageColumns={displayPilotageColumns}
+          currentRS={filters.rentreeScolaire ?? ""}
         />
       </Container>
     </GuardPermission>
