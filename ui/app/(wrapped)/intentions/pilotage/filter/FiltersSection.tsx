@@ -1,11 +1,10 @@
-import {ChevronDownIcon} from '@chakra-ui/icons';
-import {Box, Button, Flex, Grid, GridItem, Menu, MenuButton, MenuItem, MenuList,Select, Text, VStack} from '@chakra-ui/react';
+import {ArrowForwardIcon, ChevronDownIcon} from '@chakra-ui/icons';
+import { Button, Flex, Grid, GridItem, Highlight, ListItem, Menu, MenuButton, MenuItem, MenuList,OrderedList,Select, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { ScopeEnum } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type {
   FiltersPilotageIntentions,
   FilterTracker,
@@ -15,7 +14,7 @@ import { getDefaultRentreeScolaireForAnneeCampagne } from "@/app/(wrapped)/inten
 import { getStickyNavHeight } from "@/app/(wrapped)/utils/getStickyNavOffset";
 import {CampagneStatutTag} from '@/components/CampagneStatutTag';
 import { Multiselect } from "@/components/Multiselect";
-import { TooltipIcon } from "@/components/TooltipIcon";
+import { PopoverIcon } from '@/components/PopoverIcon';
 import { themeDefinition } from "@/theme/theme";
 
 export const FiltersSection = ({
@@ -33,7 +32,6 @@ export const FiltersSection = ({
   data?: PilotageIntentions;
   isLoading?: boolean;
 }) => {
-  const { openGlossaire } = useGlossaireContext();
   const onUpdateFilter = <T,>({
     key,
     selected,
@@ -330,19 +328,7 @@ export const FiltersSection = ({
         <GridItem>
           <Text as="label" htmlFor="select-coloration" fontWeight={500} mb={1}>
             Coloration
-            <TooltipIcon
-              ms={2}
-              label={
-                <Box>
-                  <Text>
-                    Doit-on considérer ou non les colorations de places dans le taux de transformation ?
-                  </Text>
-                  <Text mt={4}>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              h={"24px"}
-              onClick={() => openGlossaire("coloration")}
-            />
+            <PopoverColoration />
           </Text>
           <Select
             id="select-coloration"
@@ -419,5 +405,115 @@ export const FiltersSection = ({
         </GridItem>
       </Grid>
     </Flex>
+  );
+};
+
+
+const PopoverColoration = () => {
+  return (
+    <PopoverIcon
+      ms={2}
+      h={"24px"}
+      header={<Text fontWeight={700} my={3}>Taux de transformation sans coloration</Text>}
+    >
+      <Flex direction="column" gap={2} my={3} mx={2}>
+        <Text>
+          <Highlight
+            query={["avec", "sans"]}
+            styles={{
+              fontWeight: "bold",
+            }}
+          >
+          Le taux de transformation peut être établi avec ou sans
+          considérer les colorations de formation.
+          </Highlight>
+        </Text>
+        <Text>
+          Dans le cas où les colorations ne sont pas incluses (filtre coloration à «Sans»)
+          dans le taux de transformation les impacts sont doubles :
+        </Text>
+        <OrderedList>
+          <ListItem>
+            <Highlight
+              query={["places colorées ouvertes", "plus considérées"]}
+              styles={{
+                fontWeight: "bold",
+              }}
+            >
+        Les places colorées ouvertes ne sont plus considérées dans les places transformées
+            </Highlight>
+          </ListItem>
+          <ListItem>
+            <Highlight
+              query={["places ouvertes non colorées", "réintégrées"]}
+              styles={{
+                fontWeight: "bold",
+              }}
+            >
+        Les places ouvertes non colorées (ignorées dans certains cas particuliers* dans
+        les demandes faisant l’objet d’une coloration) sont réintégrées dans les places transformées
+            </Highlight>
+          </ListItem>
+        </OrderedList>
+        <Text mt={6}>
+          <Highlight
+            query={["augmentation", "5", "10"]}
+            styles={{
+              fontWeight: "bold",
+            }}
+          >
+      * exemple : dans le cas d’une demande de type augmentation,
+      si on augmente les places ouvertes de 5 et les places colorées ouvertes de 10,
+      on augmentera les places transformées de 10.
+          </Highlight>
+        </Text>
+        <TableContainer>
+          <Table
+            variant={"unstyled"}
+            size={"sm"}
+            border={"1px solid"}
+
+          >
+            <Thead>
+              <Tr>
+                <Th border={"1px solid"} textAlign={"center"}>Augmentation de places</Th>
+                <Th border={"1px solid"} textAlign={"center"}>Augmentation de places colorées</Th>
+                <Th border={"1px solid"} textAlign={"center"}>Places transformées</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td border={"1px solid"} textAlign={"center"}>
+                  10
+                  <ArrowForwardIcon />
+                  15
+                  (+5)
+                </Td>
+                <Td border={"1px solid"} textAlign={"center"}>
+                  0
+                  <ArrowForwardIcon />
+                  10
+                  <Highlight query={"+10"} styles={{textDecoration: "underline"}}> (+10)</Highlight>
+                </Td>
+                <Td border={"1px solid"} textAlign={"center"}>
+                  <Highlight query={"+10"} styles={{textDecoration: "underline"}}>+10</Highlight>
+                </Td>
+              </Tr>
+            </Tbody>
+          </Table>
+        </TableContainer>
+        <Text>
+          <Highlight
+            query={["5", "10"]}
+            styles={{
+              fontWeight: "bold",
+            }}
+          >
+          Ainsi, si l’on n’inclut pas la coloration dans les calculs de taux de transformation,
+          on réintègrera 5 places dans les places ouvertes incluses dans les places transformées.
+          </Highlight>
+        </Text>
+      </Flex>
+    </PopoverIcon>
   );
 };
