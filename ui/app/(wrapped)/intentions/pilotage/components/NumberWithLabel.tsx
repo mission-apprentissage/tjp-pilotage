@@ -1,6 +1,5 @@
 import { Box,Flex, Heading, HStack, Icon as ChakraIcon,VisuallyHidden} from '@chakra-ui/react';
 import type {ReactNode} from 'react';
-import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 
 import { ProgressBar } from "@/components/ProgressBar";
 import { themeDefinition } from "@/theme/theme";
@@ -36,7 +35,6 @@ export const NumberWithLabel = ({
   icon,
   label,
   scopeCode,
-  statuts,
   percentage,
   nationalPercentage = 0,
   objective,
@@ -46,63 +44,58 @@ export const NumberWithLabel = ({
   icon?: React.ReactNode;
   label?: React.ReactNode;
   scopeCode?: string;
-  statuts: Record<DemandeStatutType | "Total", number>;
   percentage?: number;
   nationalPercentage?: number;
   objective?: number;
   round?: number;
   tooltip?: ReactNode
-}) => {
-
-
-  return (
-    <Flex direction={"column"} alignItems="start" justifyContent="start" minWidth="200px" w={"100%"} gap={4}>
-      <HStack>
-        {icon}
-        <Heading as="h3" fontSize={14} fontWeight="700" lineHeight="20px">
-          {label} {tooltip}
+}) => (
+  <Flex direction={"column"} alignItems="start" justifyContent="start" minWidth="200px" w={"100%"} gap={4}>
+    <HStack>
+      {icon}
+      <Heading as="h3" fontSize={14} fontWeight="700" lineHeight="20px">
+        {label} {tooltip}
+      </Heading>
+    </HStack>
+    <Flex flex={1} direction={"column"} gap="16px" width="100%">
+      <Flex direction={"row"} gap={2}>
+        <Heading as="h4" fontSize="32px" lineHeight="40px" fontWeight="700" color={"grey.50"}>
+          <VisuallyHidden>Valeur :</VisuallyHidden>
+          {formatPercentage(percentage, round, "- %")}
         </Heading>
-      </HStack>
-      <Flex flex={1} direction={"column"} gap="16px" width="100%">
-        <Flex direction={"row"} gap={2}>
-          <Heading as="h4" fontSize="32px" lineHeight="40px" fontWeight="700" color={"grey.50"}>
-            <VisuallyHidden>Valeur :</VisuallyHidden>
-            {formatPercentage(percentage, round, "- %")}
+      </Flex>
+      {objective && (
+        <Box width="100%">
+          <ProgressBar percentage={
+            formatPercentageWithoutSign(percentage ? percentage / objective : undefined, 1)}
+          />
+          <Heading as="h4" color={themeDefinition.colors.grey[425]} fontSize={"13px"} fontWeight={"400"} lineHeight={"20px"}>
+            <VisuallyHidden>Objectif :</VisuallyHidden>
+            {formatPercentage(percentage ? percentage / objective : undefined, 1, "- %")} de l'objectif
+          </Heading>
+        </Box>
+      )}
+      {scopeCode && (
+        <Flex direction={"row"} mt={"auto"} ms={"auto"} gap={2}>
+          <Flex mt={1.5}>
+            <DrapeauFrancaisIcon />
+          </Flex>
+          <Heading
+            as="h4"
+            fontSize={14}
+            lineHeight="20px"
+            color={(percentage ? percentage - nationalPercentage > 0 : false) ? "success.425" : "error.425"}
+            mb={"auto"}
+          >
+            <VisuallyHidden>Différence par rapport à valeur nationale :</VisuallyHidden>
+            {`${(percentage ? percentage - nationalPercentage > 0 : false) ? "+" : ""}${formatPercentageWithoutSign(
+              percentage ? percentage - nationalPercentage : undefined,
+              1
+            )} pts`}
           </Heading>
         </Flex>
-        {objective && (
-          <Box width="100%">
-            <ProgressBar percentage={
-              formatPercentageWithoutSign(percentage ? percentage / objective : undefined, 1)}
-            />
-            <Heading as="h4" color={themeDefinition.colors.grey[425]} fontSize={"13px"} fontWeight={"400"} lineHeight={"20px"}>
-              <VisuallyHidden>Objectif :</VisuallyHidden>
-              {formatPercentage(percentage ? percentage / objective : undefined, 1, "- %")} de l'objectif
-            </Heading>
-          </Box>
-        )}
-        {scopeCode && (
-          <Flex direction={"row"} mt={"auto"} ms={"auto"} gap={2}>
-            <Flex mt={1.5}>
-              <DrapeauFrancaisIcon />
-            </Flex>
-            <Heading
-              as="h4"
-              fontSize={14}
-              lineHeight="20px"
-              color={(percentage ? percentage - nationalPercentage > 0 : false) ? "success.425" : "error.425"}
-              mb={"auto"}
-            >
-              <VisuallyHidden>Différence par rapport à valeur nationale :</VisuallyHidden>
-              {`${(percentage ? percentage - nationalPercentage > 0 : false) ? "+" : ""}${formatPercentageWithoutSign(
-                percentage ? percentage - nationalPercentage : undefined,
-                1
-              )} pts`}
-            </Heading>
-          </Flex>
-        )}
-      </Flex>
+      )}
     </Flex>
-  );
-};
+  </Flex>
+);
 

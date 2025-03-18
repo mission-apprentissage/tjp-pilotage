@@ -1,5 +1,5 @@
 import { AspectRatio, Box, Flex, Heading, Img, useToken, VStack } from "@chakra-ui/react";
-import * as echarts from "echarts";
+import { init, registerLocale } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 import type {
@@ -384,8 +384,8 @@ export const PositiveNegativeBarChart = ({
     // TODO
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      echarts.registerLocale("fr", frenchLocale);
-      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
+      registerLocale("fr", frenchLocale);
+      chartRef.current = init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps

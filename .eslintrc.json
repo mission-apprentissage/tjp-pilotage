@@ -74,7 +74,8 @@
     ],
     "react/react-in-jsx-scope": "off",
     "react/no-unescaped-entities": "off",
-    "import/namespace": "warn"
+    "import/namespace": "warn",
+    "import/no-named-as-default-member": "off"
   },
   "settings": {
     "import/resolver": {

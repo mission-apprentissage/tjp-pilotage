@@ -1,6 +1,7 @@
 import { Kysely, PostgresDialect } from "kysely";
 /* eslint-disable-next-line import/default */
 import pg from "pg";
+/* eslint-disable-next-line import/no-named-as-default-member */
 const { Pool, types } = pg;
 
 import config from "@/config";
@@ -72,7 +73,8 @@ export const connectToPgDb = async (uri: string) => {
     ssl: config.psql.ca ? { rejectUnauthorized: false, ca: config.psql.ca } : undefined,
   });
 
-  pool.on("error", (error) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pool.on("error", (error: any) => {
     try {
       logger.error({ error }, "[PSQL] pg pool lost connexion with database");
       // eslint-disable-next-line unused-imports/no-unused-vars

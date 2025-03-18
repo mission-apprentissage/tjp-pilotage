@@ -1,5 +1,4 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
