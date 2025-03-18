@@ -87,7 +87,6 @@ export const CartoGraph = ({
   selectedScope,
   codeRegionSelectionne,
 }: CartoGraphProps) => {
-  console.log({ graphData });
   const colorPalette = useColorPalette(customColorPalette, objectif);
   const grey = useToken("colors", "grey.925");
   const bluefrance525 = useToken("colors", "bluefrance.525");

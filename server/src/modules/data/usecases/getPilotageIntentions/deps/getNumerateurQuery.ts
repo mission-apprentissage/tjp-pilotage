@@ -69,23 +69,7 @@ export const getNumerateurQuery = async ({ filters }: { filters: Filters }) => {
       eb.fn.coalesce("placesOuvertesTransformationEcologique", eb.val(0)).as("placesOuvertesTransformationEcologique"),
       eb.fn.coalesce("countDemande", eb.val(0)).as("countDemande"),
     ])
-    .where("statut", "not in", [DemandeStatutEnum["brouillon"]])
-    // .$call((eb) => {
-    //   if(filters.coloration === "false") return eb.select((eb) => [
-    //     sql<number>`0`.as("placesColoreesOuvertes"),
-    //     sql<number>`0`.as("placesColoreesFermees"),
-    //     sql<number>`0`.as("placesColorees"),
-    //     sql<number>`0`.as("placesColoreesQ4"),
-    //     eb.fn.coalesce("placesNonColoreesTransformees", eb.val(0)).as("placesTransformees"),
-    //   ]);
-    //   return eb.select((eb) => [
-    //     eb.fn.coalesce("placesColoreesOuvertes", eb.val(0)).as("placesColoreesOuvertes"),
-    //     eb.fn.coalesce("placesColoreesFermees", eb.val(0)).as("placesColoreesFermees"),
-    //     eb.fn.coalesce("placesColorees", eb.val(0)).as("placesColorees"),
-    //     eb.fn.coalesce("placesColoreesQ4", eb.val(0)).as("placesColoreesQ4"),
-    //     eb.fn.coalesce("placesTransformees", eb.val(0)).as("placesTransformees"),
-    //   ]);
-    // })
+    .where("statut", "not in", [DemandeStatutEnum["brouillon"], DemandeStatutEnum["refusée"]])
     .execute()
     .then(cleanNull);
 };

@@ -33,7 +33,7 @@ export const CartoSection = ({
     isDefault: boolean;
   }[];
   filters: FiltersPilotageIntentions;
-  handleFilters: (filters: Partial<FiltersPilotageIntentions>) => void;
+  handleFilters: (filters: FiltersPilotageIntentions) => void;
   data?: PilotageIntentions;
   isLoading?: boolean;
   filterTracker: FilterTracker;
@@ -99,6 +99,12 @@ export const CartoSection = ({
 
   const handleClickOnTerritoire = useCallback(
     (code: string | undefined) => {
+      const newFilters = {
+        scope: filters.scope,
+        codeRegion: filters.scope === ScopeEnum["région"] ? code : undefined,
+        codeAcademie: filters.scope === ScopeEnum["académie"] ? code : undefined,
+        codeDepartement: filters.scope === ScopeEnum["département"] ? code : undefined,
+      };
       switch (filters.scope) {
       case ScopeEnum["région"]:
         filterTracker("codeRegion", { value: code, context: "carto" });
@@ -112,10 +118,8 @@ export const CartoSection = ({
       }
 
       return handleFilters({
-        scope: filters.scope,
-        codeRegion: getScopeCode(filters),
-        codeAcademie: getScopeCode(filters),
-        codeDepartement: getScopeCode(filters),
+        ...filters,
+        ...newFilters,
       });
     },
     // TODO: REFACTO

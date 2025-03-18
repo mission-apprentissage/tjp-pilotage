@@ -55,20 +55,20 @@ export const NumberWithProgressBars = ({
         </Heading>
         {tooltip}
       </HStack>
-      <Heading as="h4" fontSize="32px" fontWeight="800" color="grey.50">
+      <Heading as="h4" fontSize="32px" fontWeight="800" color="grey.50" mb={6}>
         {statuts["Total"]}
       </Heading>
       <ProgressBar
         percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["demande validée"]]) / statuts["Total"])}
         rightLabel="Validées"
         leftLabel={formatNumber(statuts[DemandeStatutEnum["demande validée"]])}
-        colorScheme={themeColors.success[975]}
+        colorScheme={getStatutBgColor(DemandeStatutEnum["demande validée"])}
       />
       <ProgressBar
         percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["projet de demande"]]) / statuts["Total"])}
         rightLabel="Projet de demande"
         leftLabel={formatNumber(statuts[DemandeStatutEnum["projet de demande"]])}
-        colorScheme={themeColors.orange.draft}
+        colorScheme={getStatutBgColor(DemandeStatutEnum["projet de demande"])}
       />
       <Button
         variant="link"
@@ -106,12 +106,6 @@ export const NumberWithProgressBars = ({
             rightLabel="Prêt pour le vote"
             leftLabel={formatNumber(statuts[DemandeStatutEnum["prêt pour le vote"]])}
             colorScheme={getStatutBgColor(DemandeStatutEnum["prêt pour le vote"])}
-          />
-          <ProgressBar
-            percentage={formatPercentageWithoutSign(formatNumber(statuts[DemandeStatutEnum["refusée"]]) / statuts["Total"])}
-            rightLabel="Refusées"
-            leftLabel={formatNumber(statuts[DemandeStatutEnum["refusée"]])}
-            colorScheme={getStatutBgColor(DemandeStatutEnum["refusée"])}
           />
         </Flex>
       </Collapse>
