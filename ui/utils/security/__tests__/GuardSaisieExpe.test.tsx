@@ -9,7 +9,6 @@ import type { CampagneStatut } from 'shared/enum/campagneStatutEnum';
 import { CampagneStatutEnum } from 'shared/enum/campagneStatutEnum';
 import { ROUTES } from 'shared/routes/routes';
 import type { CampagneType } from "shared/schema/campagneSchema";
-import type { UserType } from 'shared/schema/userSchema';
 import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -17,20 +16,6 @@ import type { Auth } from "@/app/authContext";
 import { AuthContext } from "@/app/authContext";
 import { CurrentCampagneContext } from "@/app/currentCampagneContext";
 import { GuardSaisieExpe } from "@/utils/security/GuardSaisieExpe";
-
-const createUserBuilder = ({
-  role,
-  codeRegion
-}: {
-  role: Role,
-  codeRegion?: string
-}): UserType => ({
-  id: "test",
-  email: "email@test.fr",
-  role: role,
-  codeRegion: codeRegion,
-  uais: [],
-});
 
 const createAuthContextBuilder = ({ role, codeRegion }: { role: Role, codeRegion?: string }) => {
   const response = generateMock(ROUTES["[GET]/auth/whoAmI"].schema.response[200])!;
@@ -86,6 +71,7 @@ const fixtureBuilder = () => {
     campagne: CampagneType | undefined,
     setCampagne: (campagne: CampagneType | undefined) => void
   } = createCampagneContextBuilder({ annee: "2023" });
+  // eslint-disable-next-line unused-imports/no-unused-vars
   let pathname = "/intentions/perdir/saisie/new";
 
   const updatePathnameMock = (newPathname: string) => {

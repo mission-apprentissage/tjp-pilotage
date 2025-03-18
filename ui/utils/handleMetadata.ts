@@ -167,6 +167,7 @@ const getPathnameFromMetadataState = (
 
   const res = symbols
     .map((p) => state[p])
+    .filter((state) => state)
     .find((state) => Object.prototype.hasOwnProperty.call(state, "urlPathname"));
 
   return res?.urlPathname.replace(/\?.+/, "");

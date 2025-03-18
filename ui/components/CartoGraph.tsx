@@ -1,6 +1,6 @@
 import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import type { EChartsOption } from "echarts";
-import * as echarts from "echarts";
+import { init,registerLocale, registerMap } from "echarts";
 import { findKey, isEqual, partial } from "lodash";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import type { ScopeZone } from "shared";
@@ -136,7 +136,7 @@ export const CartoGraph = ({
     }
   };
 
-  echarts.registerMap(scope, getGeoMap());
+  registerMap(scope, getGeoMap());
 
 
   //TODO : améliorer la gestion de la graduation dynamique
@@ -409,8 +409,8 @@ export const CartoGraph = ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      echarts.registerLocale("fr", frenchLocale);
-      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
+      registerLocale("fr", frenchLocale);
+      chartRef.current = init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option);
     chartRef.current.on("click", "series", (params) => {

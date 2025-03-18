@@ -129,7 +129,6 @@ export const IndicateursClesSection = ({
                 label="Projets"
                 icon={<Icon icon="ri:file-text-line" />}
                 scopeCode={getScopeCode(filters)}
-                statuts={getDataIndicateur({ data, indicateur: "tauxTransformation" })}
                 percentage={getScopedData({
                   statuts: data?.statuts,
                   statut: DemandeStatutEnum["projet de demande"],
@@ -148,7 +147,6 @@ export const IndicateursClesSection = ({
                 label="Demandes validées"
                 icon={<Icon icon="ri:checkbox-circle-line" />}
                 scopeCode={getScopeCode(filters)}
-                statuts={getDataIndicateur({ data, indicateur: "tauxTransformation" })}
                 percentage={getScopedData({
                   statuts: data?.statuts,
                   statut: DemandeStatutEnum["demande validée"],
@@ -187,7 +185,6 @@ export const IndicateursClesSection = ({
             <NumberWithLabel
               label={<VisuallyHidden>Ratio de fermetures</VisuallyHidden>}
               scopeCode={getScopeCode(filters)}
-              statuts={getDataIndicateur({ data, indicateur: "ratioFermeture" })}
               percentage={getScopedData({
                 statuts: data?.statuts,
                 statut: "Total",

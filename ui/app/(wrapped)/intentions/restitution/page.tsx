@@ -5,8 +5,7 @@ import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
-/* eslint-disable-next-line import/default */
-import qs from "qs";
+import { parse } from "qs";
 import { useContext, useEffect, useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
@@ -140,7 +139,7 @@ export default () => {
     order?: Partial<OrderDemandesRestitutionIntentions>;
     page?: string;
     search?: string;
-  } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
+  } = parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const filters = searchParams.filters ?? {};
   const columns = searchParams.columns ?? [];
@@ -305,7 +304,10 @@ export default () => {
       filters.campagne = campagne?.annee;
 
       if(data){
-        filters.rentreeScolaire = findDefaultRentreeScolaireForCampagne(data.campagne.annee, data.filters.rentreesScolaires);
+        filters.rentreeScolaire = findDefaultRentreeScolaireForCampagne(
+          data.campagne.annee,
+          data.filters.rentreesScolaires
+        );
       }
     }
 
