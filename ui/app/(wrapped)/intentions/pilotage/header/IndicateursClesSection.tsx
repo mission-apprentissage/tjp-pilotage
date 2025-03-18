@@ -320,10 +320,9 @@ export const IndicateursClesSection = ({
               label={
                 <Box>
                   <Text>
-                    Dans Orion, à partir de la campagne 2024, on désigne comme “Colorations”
-                    la différence entre le nombre de places colorées actuelles et le nombre de
-                    futurs places colorées d'une offre de formation faisant l'objet d'une demande
-                    sur Orion.
+                    Dans Orion, à partir de la campagne 2024, on désigne comme «Colorations» les places ouvertes
+                    colorées soit la différence (si elle est positive) entre le nombre de places colorées actuelles
+                    et le nombre de futurs places colorées d'une demande de transformation sur Orion.
                   </Text>
                   <Text mt={4}>Cliquez pour plus d'infos.</Text>
                 </Box>
