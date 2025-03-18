@@ -64,7 +64,7 @@ export const HeaderSection = ({
             indicateurOptions={indicateurOptions}
             filters={filters}
             data={data}
-            handleFilters={(f) => setFilters({ ...filters, ...f })}
+            handleFilters={setFilters}
             filterTracker={filterTracker}
             isLoading={isLoading}
           />

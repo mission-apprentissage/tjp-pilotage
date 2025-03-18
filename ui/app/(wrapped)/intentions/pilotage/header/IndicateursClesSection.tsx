@@ -27,8 +27,8 @@ import { formatPercentage, formatPercentageWithoutSign} from '@/utils/formatUtil
 const Loader = () => {
   return (
     <Flex
-      minH={550}
-      minW={700}
+      minH={535}
+      minW={705}
       w={"100%"}
       gap={6}
       direction={"row"}
@@ -427,13 +427,6 @@ const DetailsTauxDeTransformation = ({
         leftLabel={formatPercentage(statuts[DemandeStatutEnum["demande validée"]], round)}
         colorScheme={getStatutBgColor(DemandeStatutEnum["demande validée"])}
       />
-      <ProgressBar
-        percentage={formatPercentageWithoutSign((statuts[DemandeStatutEnum["refusée"]] / objective), round)}
-        rightLabel={_.capitalize(DemandeStatutEnum["refusée"])}
-        leftLabel={formatPercentage(statuts[DemandeStatutEnum["refusée"]], round)}
-        colorScheme={getStatutBgColor(DemandeStatutEnum["refusée"])}
-      />
-
     </Flex>
   );
 
@@ -473,10 +466,6 @@ const DetailsRatioFermeture = ({
       <Flex direction={"row"} gap={2} fontSize={12} height={"16px"}>
         <Text>{_.capitalize(DemandeStatutEnum["demande validée"])} :</Text>
         <Text>{formatPercentage((statuts[DemandeStatutEnum["demande validée"]]), round)}</Text>
-      </Flex>
-      <Flex direction={"row"} gap={2} fontSize={12} height={"16px"}>
-        <Text>{_.capitalize(DemandeStatutEnum["refusée"])} :</Text>
-        <Text>{formatPercentage((statuts[DemandeStatutEnum["refusée"]]), round)}</Text>
       </Flex>
     </Flex>
   </Flex>;
