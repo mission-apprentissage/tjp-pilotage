@@ -8,8 +8,7 @@ import type { RequestUser } from "@/modules/core/model/User";
 import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
 import type { getDenominateurQuery, getNumerateurQuery} from "./deps";
-import { getDomaines, getFiltersQuery, getFormationsQuery, getNiveauxDiplome, getPositionsQuadrant, getStatuts, getZonesGeographiques } from "./deps";
-import {getStatsSortieQuery} from './deps/getStatsSortieQuery';
+import { getDomaines, getFiltersQuery, getFormationsQuery, getNiveauxDiplome, getPositionsQuadrant, getStatsSortieQuery, getStatuts, getZonesGeographiques } from "./deps";
 import { formatResult, formatResultUngrouped } from "./utils";
 
 export interface Filters extends z.infer<typeof getPilotageIntentionsSchema.querystring> {
