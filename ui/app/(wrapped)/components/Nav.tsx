@@ -91,7 +91,7 @@ const NavLink = chakra(
   }
 );
 
-const NavMenuLink = chakra(
+const NavMenuItem = chakra(
   ({
     children,
     segment,
@@ -108,9 +108,8 @@ const NavMenuLink = chakra(
     const segments = useSelectedLayoutSegments();
     const isActive = (!segment && !segments.length) || (segment && segments.join("/").includes(segment));
     return (
-      <Link
+      <MenuItem
         className={className}
-        variant={"unstyled"}
         as={prefetch ? NextLink : Link}
         href={href}
         fontSize={14}
@@ -121,9 +120,10 @@ const NavMenuLink = chakra(
         color="bluefrance.113"
         bg={isActive ? "grey.1000_hover" : "inherit"}
         _hover={{ textDecoration: "unset", bg: "blueecume.950" }}
+        _focus={{ bg: "blueecume.950", borderColor: "bluefrance.113", borderWidth: 0, borderBottomWidth: 2, boxShadow: "none" }}
       >
         {children}
-      </Link>
+      </MenuItem>
     );
   }
 );
@@ -134,15 +134,15 @@ const NavMenuButton = chakra(
     className,
     segment,
     isOpen,
-    onMouseEnter,
-    onMouseLeave,
+    onOpen,
+    onClose,
   }: {
     children: ReactNode;
     className?: string;
     segment: string | null;
     isOpen?: boolean;
-    onMouseEnter?: () => void;
-    onMouseLeave?: () => void;
+    onOpen: () => void;
+    onClose: () => void;
   }) => {
     const segments = useSelectedLayoutSegments();
     const isActive = (!segment && !segments.length) || (segment && segments.join("/").includes(segment));
@@ -162,8 +162,20 @@ const NavMenuButton = chakra(
         borderColor={isActive ? "bluefrance.113" : "transparent"}
         _hover={{ textDecoration: "unset", bg: "blueecume.950" }}
         as={Button}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
+        tabIndex={0}
+        onMouseEnter={onOpen}
+        onMouseLeave={onClose}
+        // onFocus={onOpen}
+        // onClick={onOpen}
+        // onBlur={onClose}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            onClose();
+          }
+          if (e.key === "Enter") {
+            onOpen();
+          }
+        }}
         rightIcon={<ChevronDownIcon />}
       >
         {children}
@@ -179,9 +191,6 @@ export const Nav = () => {
 
   const hasAdminMenu =
     hasPermission(role, PermissionEnum["users/lecture"]) || hasPermission(role, PermissionEnum["campagnes/lecture"]);
-
-  const shouldDisplayBothIntentionMenus =
-    hasRole({user, role: "admin"}) || hasRole({ user, role: RoleEnum["pilote"] });
 
   const { isOpen: isMenuPanoramaOpen, onOpen: onMenuPanoramaOpen, onClose: onMenuPanoramaClose } = useDisclosure();
 
@@ -200,8 +209,8 @@ export const Nav = () => {
         <NavMenuButton
           segment="panorama"
           isOpen={isMenuPanoramaOpen}
-          onMouseEnter={onMenuPanoramaOpen}
-          onMouseLeave={onMenuPanoramaClose}
+          onOpen={onMenuPanoramaOpen}
+          onClose={onMenuPanoramaClose}
         >
           Panorama
         </NavMenuButton>
@@ -212,32 +221,27 @@ export const Nav = () => {
             onMouseEnter={onMenuPanoramaOpen}
             onMouseLeave={onMenuPanoramaClose}
             zIndex={"dropdown"}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                onMenuPanoramaClose();
+              }
+            }}
           >
-            <MenuItem p="0">
-              <NavMenuLink href="/panorama/region" segment="panorama/region">
-                Région
-              </NavMenuLink>
-            </MenuItem>
-            <MenuItem p="0">
-              <NavMenuLink href="/panorama/departement" segment="panorama/departement">
-                Département
-              </NavMenuLink>
-            </MenuItem>
-            <MenuItem p="0">
-              <NavMenuLink href="/panorama/etablissement" segment="panorama/etablissement">
-                Établissement
-              </NavMenuLink>
-            </MenuItem>
-            <MenuItem p="0">
-              <NavMenuLink href="/panorama/lien-metier-formation" segment="panorama/lien-metier-formation">
-                Lien métier formation
-              </NavMenuLink>
-            </MenuItem>
-            <MenuItem p="0">
-              <NavMenuLink href="/panorama/domaine-de-formation" segment="panorama/domaine-de-formation">
-                Domaine de formation
-              </NavMenuLink>
-            </MenuItem>
+            <NavMenuItem href="/panorama/region" segment="panorama/region">
+              Région
+            </NavMenuItem>
+            <NavMenuItem href="/panorama/departement" segment="panorama/departement">
+              Département
+            </NavMenuItem>
+            <NavMenuItem href="/panorama/etablissement" segment="panorama/etablissement">
+              Établissement
+            </NavMenuItem>
+            <NavMenuItem href="/panorama/lien-metier-formation" segment="panorama/lien-metier-formation">
+              Lien métier formation
+            </NavMenuItem>
+            <NavMenuItem href="/panorama/domaine-de-formation" segment="panorama/domaine-de-formation">
+              Domaine de formation
+            </NavMenuItem>
           </MenuList>
         </Portal>
       </Menu>
@@ -245,8 +249,8 @@ export const Nav = () => {
         <NavMenuButton
           segment="console"
           isOpen={isMenuConsoleOpen}
-          onMouseEnter={onMenuConsoleOpen}
-          onMouseLeave={onMenuConsoleClose}
+          onOpen={onMenuConsoleOpen}
+          onClose={onMenuConsoleClose}
         >
           Console
         </NavMenuButton>
@@ -257,28 +261,29 @@ export const Nav = () => {
             onMouseEnter={onMenuConsoleOpen}
             onMouseLeave={onMenuConsoleClose}
             zIndex={"dropdown"}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                onMenuConsoleClose();
+              }
+            }}
           >
-            <MenuItem p="0">
-              <NavMenuLink href="/console/formations" segment="/console/formations">
-                Formation
-              </NavMenuLink>
-            </MenuItem>
-            <MenuItem p="0">
-              <NavMenuLink
-                href={
-                  uais
-                    ? createParameterizedUrl("/console/etablissements", {
-                      filters: {
-                        uai: uais,
-                      },
-                    })
-                    : "/console/etablissements"
-                }
-                segment="consoles/etablissements"
-              >
+            <NavMenuItem href="/console/formations" segment="/console/formations">
+              Formation
+            </NavMenuItem>
+            <NavMenuItem
+              href={
+                uais
+                  ? createParameterizedUrl("/console/etablissements", {
+                    filters: {
+                      uai: uais,
+                    },
+                  })
+                  : "/console/etablissements"
+              }
+              segment="consoles/etablissements"
+            >
                 Établissement
-              </NavMenuLink>
-            </MenuItem>
+            </NavMenuItem>
           </MenuList>
         </Portal>
       </Menu>
@@ -287,45 +292,42 @@ export const Nav = () => {
           <NavMenuButton
             segment="intentions"
             isOpen={isMenuIntentionOpen}
-            onMouseEnter={onMenuIntentionOpen}
-            onMouseLeave={onMenuIntentionClose}
+            onOpen={onMenuIntentionOpen}
+            onClose={onMenuIntentionClose}
           >
             Transformation
           </NavMenuButton>
           <Portal>
             <MenuList
               p="0"
-              borderTop="unset"
+              border="unset"
               w="100%"
               onMouseEnter={onMenuIntentionOpen}
               onMouseLeave={onMenuIntentionClose}
               zIndex={"dropdown"}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  onMenuIntentionClose();
+                }
+              }}
             >
-              <MenuItem p="0" w="100%">
-                <NavMenuLink href={getRoutingSaisieRecueilDemande({campagne, user})} segment="saisie-intentions">
-                    Gestion des demandes
-                </NavMenuLink>
-              </MenuItem>
+              <NavMenuItem href={getRoutingSaisieRecueilDemande({campagne, user})} segment="saisie" prefetch={false}>
+                Gestion des demandes
+              </NavMenuItem>
               {hasPermission(role, PermissionEnum["pilotage-intentions/lecture"]) && (
-                <MenuItem p="0">
-                  <NavMenuLink href="/intentions/pilotage" segment="pilotage-intentions" prefetch={false}>
-                    Pilotage
-                  </NavMenuLink>
-                </MenuItem>
+                <NavMenuItem href="/intentions/pilotage" segment="pilotage-intentions" prefetch={false}>
+                  Pilotage
+                </NavMenuItem>
               )}
               {(hasPermission(role, PermissionEnum["restitution-intentions/lecture"])) && (
-                <MenuItem p="0" w="100%">
-                  <NavMenuLink href="/intentions/restitution" segment="restitution-intentions" prefetch={false}>
-                    Restitution des demandes
-                  </NavMenuLink>
-                </MenuItem>
+                <NavMenuItem href="/intentions/restitution" segment="restitution-intentions" prefetch={false}>
+                  Restitution des demandes
+                </NavMenuItem>
               )}
               {feature.correction && hasPermission(role, PermissionEnum["intentions/lecture"]) && (
-                <MenuItem p="0" w="100%">
-                  <NavMenuLink href="/intentions/corrections" segment="corrections" prefetch={false}>
-                    Restitution des corrections
-                  </NavMenuLink>
-                </MenuItem>
+                <NavMenuItem href="/intentions/corrections" segment="corrections" prefetch={false}>
+                  Restitution des corrections
+                </NavMenuItem>
               )}
             </MenuList>
           </Portal>
@@ -342,8 +344,8 @@ export const Nav = () => {
           <NavMenuButton
             segment="admin"
             isOpen={isMenuAdminOpen}
-            onMouseEnter={onMenuAdminOpen}
-            onMouseLeave={onMenuAdminClose}
+            onOpen={onMenuAdminOpen}
+            onClose={onMenuAdminClose}
           >
             Admin
           </NavMenuButton>
@@ -355,28 +357,27 @@ export const Nav = () => {
               onMouseEnter={onMenuAdminOpen}
               onMouseLeave={onMenuAdminClose}
               zIndex={"dropdown"}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  onMenuAdminClose();
+                }
+              }}
             >
               {hasPermission(role, PermissionEnum["users/lecture"]) && (
-                <MenuItem p="0">
-                  <NavMenuLink href="/admin/users" segment="admin/users">
-                    Utilisateurs
-                  </NavMenuLink>
-                </MenuItem>
+                <NavMenuItem href="/admin/users" segment="admin/users">
+                  Utilisateurs
+                </NavMenuItem>
               )}
               {(hasPermission(role, PermissionEnum["campagnes/lecture"]) ||
                hasPermission(role, PermissionEnum["campagnes-région/lecture"])) && (
-                <MenuItem p="0">
-                  <NavMenuLink href="/admin/campagnes" segment="admin/campagnes">
-                    Campagnes
-                  </NavMenuLink>
-                </MenuItem>
+                <NavMenuItem href="/admin/campagnes" segment="admin/campagnes">
+                  Campagnes
+                </NavMenuItem>
               )}
               {hasPermission(role, PermissionEnum["users/lecture"]) && (
-                <MenuItem p="0">
-                  <NavMenuLink href="/admin/roles" segment="admin/roles">
-                    Rôles
-                  </NavMenuLink>
-                </MenuItem>
+                <NavMenuItem href="/admin/roles" segment="admin/roles">
+                  Rôles
+                </NavMenuItem>
               )}
             </MenuList>
           </Portal>
