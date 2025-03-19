@@ -6,6 +6,7 @@ import { ScopeEnum } from "shared";
 
 import { client } from "@/api.client";
 import { DefinitionTauxTransfoModal } from "@/app/(wrapped)/components/DefinitionTauxTransfoModal";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 import { useStateParams } from "@/utils/useFilters";
 
 import { FiltersSection } from "./filter/FiltersSection";
@@ -13,25 +14,29 @@ import { HeaderSection } from "./header/HeaderSection";
 import { DisplayTypeEnum } from "./main/displayTypeEnum";
 import { MainSection } from "./main/MainSection";
 import type {
-  FiltersStatsPilotageIntentions,
+  FiltersPilotageIntentions,
   FilterTracker,
-  OrderRepartitionPilotageIntentions,
-  StatsPilotageIntentions,
-} from "./types";
-import { findDefaultRentreeScolaireForCampagne } from "./utils";
+  OrderFormationsPilotageIntentions,
+  OrderPilotageIntentions
+} from './types';
+import { getDefaultRentreeScolaireForAnneeCampagne } from './utils';
 
 export const PilotageNationalClient = () => {
+  const { campagne } = useCurrentCampagne();
   const trackEvent = usePlausible();
   const [searchParams, setSearchParams] = useStateParams<{
-    filters?: FiltersStatsPilotageIntentions;
-    displayTypes?: Array<DisplayTypeEnum>;
-    order?: Partial<OrderRepartitionPilotageIntentions>;
+    filters?: FiltersPilotageIntentions;
+    displayTypes: Array<DisplayTypeEnum>;
+    order?: Partial<OrderPilotageIntentions>;
+    orderFormations?: Partial<OrderFormationsPilotageIntentions>;
   }>({
     defaultValues: {
       filters: {
         scope: ScopeEnum["région"],
-        campagne: undefined,
-        withColoration: "true",
+        campagne: campagne?.annee,
+        rentreeScolaire: campagne ?
+          [getDefaultRentreeScolaireForAnneeCampagne(campagne?.annee)] : undefined,
+        coloration: undefined
       },
       displayTypes: [DisplayTypeEnum.repartition, DisplayTypeEnum.zone_geographique],
     },
@@ -40,9 +45,10 @@ export const PilotageNationalClient = () => {
   const filters = searchParams.filters ?? {
     scope: ScopeEnum["région"],
     campagne: undefined,
-    withColoration: "true",
+    coloration: undefined
   };
   const order = searchParams.order ?? { order: "asc" };
+  const orderFormations = searchParams.orderFormations ?? { orderFormations: "asc" };
 
   const filterTracker: FilterTracker = (filterName, options = {}) => {
     trackEvent("pilotage-transformation:filtre", {
@@ -50,10 +56,24 @@ export const PilotageNationalClient = () => {
     });
   };
 
-  const setFilters = (filters: FiltersStatsPilotageIntentions) => {
+  const setFilters = (filters: FiltersPilotageIntentions) => {
     setSearchParams({
       ...searchParams,
-      filters,
+      filters
+    });
+  };
+
+  const setOrder = (order: OrderPilotageIntentions) => {
+    setSearchParams({
+      ...searchParams,
+      order
+    });
+  };
+
+  const setOrderFormations = (orderFormations: OrderFormationsPilotageIntentions) => {
+    setSearchParams({
+      ...searchParams,
+      orderFormations
     });
   };
 
@@ -81,31 +101,26 @@ export const PilotageNationalClient = () => {
       displayTypes: [searchParams.displayTypes?.[0] ?? DisplayTypeEnum.repartition, DisplayTypeEnum.domaine],
     });
 
-  const { data: repartitionData, isLoading: isLoadingRepartition } = client
-    .ref("[GET]/pilotage-intentions/repartition")
-    .useQuery({
+  const { data, isLoading } = client.ref("[GET]/pilotage-intentions").useQuery(
+    {
       query: { ...filters, ...order },
-    });
-
-  const { data, isLoading: isLoadingStats } = client.ref("[GET]/pilotage-intentions/stats").useQuery(
-    {
-      query: { ...filters },
-    },
-    {
-      onSuccess: (data) => {
-        if (!filters.campagne) {
-          setDefaultFilters(data);
-        }
-      },
     }
   );
 
-  const setDefaultFilters = (data: StatsPilotageIntentions | undefined) => {
-    if (!data) return;
-    const rentreeScolaire = findDefaultRentreeScolaireForCampagne(data.campagne.annee, data.filters.rentreesScolaires);
+  const { data: { formations, stats } = {} } = client.ref("[GET]/pilotage-intentions/formations").useQuery(
+    {
+      query: { ...filters, ...orderFormations },
+    },
+  );
+
+  const setDefaultFilters = () => {
+    if (!campagne) return;
+    const rentreeScolaire = getDefaultRentreeScolaireForAnneeCampagne(
+      campagne.annee,
+    );
 
     setFilters({
-      campagne: data.campagne.annee,
+      campagne: campagne.annee,
       rentreeScolaire: rentreeScolaire ? [rentreeScolaire] : undefined,
       codeRegion: undefined,
       codeAcademie: undefined,
@@ -138,11 +153,12 @@ export const PilotageNationalClient = () => {
       <Container maxWidth={"container.xl"}>
         <VStack gap={8}>
           <FiltersSection
+            data={data}
             filters={filters}
             setFilters={setFilters}
             filterTracker={filterTracker}
-            data={data}
-            setDefaultFilters={() => setDefaultFilters(data)}
+            setDefaultFilters={() => setDefaultFilters()}
+            isLoading={isLoading}
           />
           <HeaderSection
             data={data}
@@ -150,20 +166,24 @@ export const PilotageNationalClient = () => {
             setFilters={setFilters}
             filterTracker={filterTracker}
             onOpenTauxTransfoDefinition={onOpenTauxTransfoDefinition}
-            isLoading={isLoadingStats}
+            isLoading={isLoading}
           />
           <MainSection
-            displayTypes={searchParams.displayTypes ?? [DisplayTypeEnum.repartition, DisplayTypeEnum.zone_geographique]}
+            displayTypes={searchParams.displayTypes}
             filters={filters}
+            setFilters={setFilters}
             displayRepartition={displayRepartition}
             displayQuadrant={displayQuadrant}
             displayZonesGeographiques={displayZonesGeographiques}
             displayDomaines={displayDomaines}
-            quadrantData={data}
-            repartitionData={repartitionData}
-            isLoading={isLoadingRepartition}
+            data={data}
+            formations={formations}
+            statsSortie={stats}
+            isLoading={isLoading}
             order={order}
-            setSearchParams={setSearchParams}
+            orderFormations={orderFormations}
+            setOrder={setOrder}
+            setOrderFormations={setOrderFormations}
           />
         </VStack>
       </Container>

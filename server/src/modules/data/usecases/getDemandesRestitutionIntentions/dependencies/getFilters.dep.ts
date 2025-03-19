@@ -140,10 +140,9 @@ export const getFilters = async ({
 
   const campagnesFilters = await getKbdClient()
     .selectFrom("campagne")
-    .select(["campagne.annee as label", "campagne.annee as value", "statut"])
+    .selectAll()
     .distinct()
-    .$castTo<{ label: string; value: string; statut: string }>()
-    .orderBy("label", "desc")
+    .orderBy("annee", "desc")
     .where("campagne.annee", "is not", null)
     .execute();
 
@@ -332,7 +331,11 @@ export const getFilters = async ({
     departements: departementsFilters.map(cleanNull),
     academies: academiesFilters.map(cleanNull),
     etablissements: etablissementsFilters.map(cleanNull),
-    campagnes: campagnesFilters.map(cleanNull),
+    campagnes: campagnesFilters.map((campagne) => cleanNull({
+      ...campagne,
+      dateDebut: campagne.dateDebut?.toISOString(),
+      dateFin: campagne.dateFin?.toISOString(),
+    })),
     statuts: statutsFilters.map((value) =>
       cleanNull({
         value,
@@ -366,16 +369,6 @@ export const getFilters = async ({
       },
       {
         label: "Sans",
-        value: "false",
-      },
-    ],
-    compensations: [
-      {
-        label: "Oui",
-        value: "true",
-      },
-      {
-        label: "Non",
         value: "false",
       },
     ],

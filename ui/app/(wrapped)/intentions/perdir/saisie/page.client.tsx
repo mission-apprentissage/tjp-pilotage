@@ -38,7 +38,7 @@ import { PermissionEnum } from "shared/enum/permissionEnum";
 import { isCampagneTerminee } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
-import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import { StatutTag } from "@/app/(wrapped)/intentions/components/StatutTag";
 import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/intentions/utils/messageAccompagnementUtils";
 import {canCheckIntention, canCorrectIntention, canCreateIntention, canDeleteIntention,canEditDemandeIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";

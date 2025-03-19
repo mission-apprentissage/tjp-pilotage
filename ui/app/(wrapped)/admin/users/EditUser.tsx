@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import {
   Alert,
   AlertDescription,

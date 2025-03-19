@@ -53,19 +53,19 @@ const METADATA_MAP = {
   },
   "/intentions/perdir/saisie": {
     title: "Demandes - Orion",
-    description: "Demandes de transformation de formation (expérimentation)",
+    description: "Demandes de transformation de formation",
   },
   "/intentions/perdir/saisie/new": {
     title: "Nouvelle demande - Orion",
-    description: "Nouvelle demande de transformation de formation (expérimentation)",
+    description: "Nouvelle demande de transformation de formation",
   },
   "/intentions/perdir/saisie/": {
     title: "Modification de la demande - Orion",
-    description: "Modification de la demande de transformation de formation (expérimentation)",
+    description: "Modification de la demande de transformation de formation",
   },
   "/intentions/perdir/synthese": {
     title: "Synthèse de la demande  - Orion",
-    description: "Synthèse de la demande de transformation de formation (expérimentation)",
+    description: "Synthèse de la demande de transformation de formation",
   },
   "/intentions/pilotage": {
     title: "Pilotage de la transformation - Orion",
@@ -167,6 +167,7 @@ const getPathnameFromMetadataState = (
 
   const res = symbols
     .map((p) => state[p])
+    .filter((state) => state)
     .find((state) => Object.prototype.hasOwnProperty.call(state, "urlPathname"));
 
   return res?.urlPathname.replace(/\?.+/, "");

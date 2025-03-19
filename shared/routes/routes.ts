@@ -57,8 +57,7 @@ import { searchNsfFormationSchema } from "./schemas/get.nsf-diplome.search.searc
 import { getDataForPanoramaDepartementSchema } from "./schemas/get.panorama.stats.departement.schema";
 import { getDataForPanoramaRegionSchema } from "./schemas/get.panorama.stats.region.schema";
 import { getFormationsPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.formations.schema";
-import { getRepartitionPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.repartition.schema";
-import { getStatsPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.stats.schema";
+import { getPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.schema";
 import { getRegionSchema } from "./schemas/get.region.codeRegion.schema";
 import { getRegionsSchema } from "./schemas/get.regions.schema";
 import { getRequetesEnregistreesSchema } from "./schemas/get.requetes.schema";
@@ -295,11 +294,6 @@ export const ROUTES = {
     method: "GET",
     schema: getFormationsSchema,
   },
-  "[GET]/pilotage-intentions/formations": {
-    url: "/pilotage-intentions/formations",
-    method: "GET",
-    schema: getFormationsPilotageIntentionsSchema,
-  },
   "[GET]/etablissement/:uai/header": {
     url: "/etablissement/:uai/header",
     method: "GET",
@@ -325,15 +319,15 @@ export const ROUTES = {
     method: "GET",
     schema: getRegionsSchema,
   },
-  "[GET]/pilotage-intentions/repartition": {
-    url: "/pilotage-intentions/repartition",
+  "[GET]/pilotage-intentions": {
+    url: "/pilotage-intentions",
     method: "GET",
-    schema: getRepartitionPilotageIntentionsSchema,
+    schema: getPilotageIntentionsSchema,
   },
-  "[GET]/pilotage-intentions/stats": {
-    url: "/pilotage-intentions/stats",
+  "[GET]/pilotage-intentions/formations": {
+    url: "/pilotage-intentions/formations",
     method: "GET",
-    schema: getStatsPilotageIntentionsSchema,
+    schema: getFormationsPilotageIntentionsSchema,
   },
   "[GET]/restitution-intentions/stats": {
     url: "/restitution-intentions/stats",

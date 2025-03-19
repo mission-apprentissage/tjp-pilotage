@@ -3,8 +3,7 @@
 import { Container, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { isAxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
-/* eslint-disable-next-line import/default */
-import qs from "qs";
+import { parse } from "qs";
 import { useEffect } from "react";
 import {hasRole, RoleEnum} from 'shared';
 import { isCampagneEnCours } from "shared/utils/campagneUtils";
@@ -37,7 +36,7 @@ export default ({
   const queryParams = useSearchParams();
   const searchParams: {
     displayType?: DisplayTypeEnum;
-  } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
+  } = parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const setSearchParams = (params: { displayType?: DisplayTypeEnum }) => {
     router.replace(createParameterizedUrl(location.pathname, { ...searchParams, ...params }));

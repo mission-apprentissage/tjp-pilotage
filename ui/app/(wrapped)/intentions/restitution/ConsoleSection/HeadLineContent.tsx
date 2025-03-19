@@ -606,8 +606,8 @@ export const HeadLineContent = ({
               mt="1px"
               label={
                 <>
-                  <p>Capacité théorique issue d'Affelnet pour la rentrée 2024, voie scolaire</p>
-                  <p>Cliquer pour plus d'infos.</p>
+                  <Text>Capacité théorique issue d'Affelnet pour la rentrée 2024, voie scolaire</Text>
+                  <Text>Cliquer pour plus d'infos.</Text>
                 </>
               }
               onClick={() => openGlossaire("capacite")}
@@ -626,8 +626,11 @@ export const HeadLineContent = ({
               mt="1px"
               label={
                 <>
-                  <p>Effectif en entrée de formation issue du Constat de Rentrée 2024, comptant uniquement les élèves en voie scolaire</p>
-                  <p>Cliquer pour plus d'infos.</p>
+                  <Text>
+                    Effectif en entrée de formation issue du Constat de Rentrée 2024,
+                    comptant uniquement les élèves en voie scolaire
+                  </Text>
+                  <Text>Cliquer pour plus d'infos.</Text>
                 </>
               }
               onClick={() => openGlossaire("effectif-en-entree")}
@@ -647,8 +650,11 @@ export const HeadLineContent = ({
               mt="1px"
               label={
                 <>
-                  <p>Taux de remplissage par rapport à la capacité théorique d'Affelnet pour la rentrée 2024, voie scolaire</p>
-                  <p>Cliquer pour plus d'infos.</p>
+                  <Text>
+                    Taux de remplissage par rapport à la capacité théorique
+                    d'Affelnet pour la rentrée 2024, voie scolaire
+                  </Text>
+                  <Text>Cliquer pour plus d'infos.</Text>
                 </>
               }
               onClick={() => openGlossaire("taux-de-remplissage")}
@@ -668,8 +674,11 @@ export const HeadLineContent = ({
               mt="1px"
               label={
                 <>
-                  <p>Taux de pression (ou de demande dans le cas des BTS) issue d'Affelnet pour la rentrée 2024, voie scolaire</p>
-                  <p>Cliquer pour plus d'infos.</p>
+                  <Text>
+                    Taux de pression (ou de demande dans le cas des BTS)
+                    issue d'Affelnet pour la rentrée 2024, voie scolaire
+                  </Text>
+                  <Text>Cliquer pour plus d'infos.</Text>
                 </>
               }
               onClick={() => openGlossaire("taux-de-pression")}

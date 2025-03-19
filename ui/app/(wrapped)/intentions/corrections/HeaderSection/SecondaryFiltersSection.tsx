@@ -9,6 +9,7 @@ import type { Corrections, FiltersCorrections } from "@/app/(wrapped)/intentions
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import {feature} from '@/utils/feature';
 import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 
 export const SecondaryFiltersSection = ({
@@ -193,25 +194,27 @@ export const SecondaryFiltersSection = ({
               Tous ({data?.filters.typesDemande.length ?? 0})
             </Multiselect>
           </Box>
-          <Box justifyContent={"start"}>
-            <Text as="label" htmlFor="select-coloration" fontWeight={500} mb={1}>Coloration</Text>
-            <Select
-              id="select-coloration"
-              width={"48"}
-              size="md"
-              variant={"newInput"}
-              value={activeFilters.coloration?.toString() ?? ""}
-              onChange={(e) => handleFilters("coloration", e.target.value)}
-              borderBottomColor={activeFilters.coloration != undefined ? "info.525" : ""}
-              placeholder="Oui / non"
-            >
-              {data?.filters.colorations?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-          </Box>
+          {feature.showColorationFilter && (
+            <Box justifyContent={"start"}>
+              <Text as="label" htmlFor="select-coloration" fontWeight={500} mb={1}>Coloration</Text>
+              <Select
+                id="select-coloration"
+                width={"48"}
+                size="md"
+                variant={"newInput"}
+                value={activeFilters.coloration?.toString() ?? ""}
+                onChange={(e) => handleFilters("coloration", e.target.value)}
+                borderBottomColor={activeFilters.coloration != undefined ? "info.525" : ""}
+                placeholder="Avec / sans"
+              >
+                {data?.filters.colorations?.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </Box>
+          )}
           <Box justifyContent={"start"}>
             <Text as="label" htmlFor="select-ami-cma" fontWeight={500} mb={1}>AMI/CMA</Text>
             <Select

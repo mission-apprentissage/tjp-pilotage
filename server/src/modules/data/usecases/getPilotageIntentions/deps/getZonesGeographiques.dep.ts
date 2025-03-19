@@ -1,12 +1,9 @@
 import { ScopeEnum } from "shared";
 
-import type {
-  Filters,
-  Repartition,
-} from "@/modules/data/usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.usecase";
+import type { Filters, Repartition } from "@/modules/data/usecases/getPilotageIntentions/getPilotageIntentions.usecase";
 
-import { getDenominateurQuery } from "./getDenominateurQuery";
-import { getNumerateurQuery } from "./getNumerateurQuery";
+import { getDenominateurQuery } from "./getDenominateurQuery.dep";
+import { getNumerateurQuery } from "./getNumerateurQuery.dep";
 
 export const getZonesGeographiques = async ({ filters }: { filters: Filters }): Promise<Repartition> => {
   const [numerateur, denominateur] = await Promise.all([

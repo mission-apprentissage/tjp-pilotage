@@ -2,7 +2,7 @@ import { fastifyCookie } from "@fastify/cookie";
 import { fastifyCors } from "@fastify/cors";
 import { fastifyMultipart } from "@fastify/multipart";
 import { fastifyRateLimit } from "@fastify/rate-limit";
-import fastifyStatic from "@fastify/static";
+import { fastifyStatic } from "@fastify/static";
 import { fastifySwagger } from "@fastify/swagger";
 import type { FastifySwaggerUiOptions } from "@fastify/swagger-ui";
 import { fastifySwaggerUi } from "@fastify/swagger-ui";
@@ -17,8 +17,7 @@ import type {
 import { fastify } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
-/* eslint-disable-next-line import/default */
-import qs from "qs";
+import { parse } from "qs";
 import { MAX_FILE_SIZE } from "shared";
 
 import config from "@/config";
@@ -117,7 +116,7 @@ export async function bind(app: Server) {
 
 export default async (): Promise<Server> => {
   const app: Server = fastify({
-    querystringParser: (str) => qs.parse(str),
+    querystringParser: (str) => parse(str),
     logger: logMiddleware(),
     trustProxy: 1,
     caseSensitive: false,

@@ -180,9 +180,6 @@ export const Nav = () => {
   const hasAdminMenu =
     hasPermission(role, PermissionEnum["users/lecture"]) || hasPermission(role, PermissionEnum["campagnes/lecture"]);
 
-  const shouldDisplayBothIntentionMenus =
-    hasRole({user, role: "admin"}) || hasRole({ user, role: RoleEnum["pilote"] });
-
   const { isOpen: isMenuPanoramaOpen, onOpen: onMenuPanoramaOpen, onClose: onMenuPanoramaClose } = useDisclosure();
 
   const { isOpen: isMenuConsoleOpen, onOpen: onMenuConsoleOpen, onClose: onMenuConsoleClose } = useDisclosure();
