@@ -2,8 +2,7 @@
 
 import { AspectRatio, Container, Flex, FormControl, FormLabel, Img, Select } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-/* eslint-disable-next-line import/default */
-import qs from "qs";
+import { stringify } from "qs";
 import { useContext, useEffect } from "react";
 
 import type { client } from "@/api.client";
@@ -25,7 +24,7 @@ export function PanoramaSelection({
 
   const onCodeDepartementChanged = (codeDepartement: string) => {
     setCodeDepartement(codeDepartement);
-    router.push(`/panorama/departement/${codeDepartement}?${qs.stringify(DEFAULT_SEARCH_PARAMS)}`);
+    router.push(`/panorama/departement/${codeDepartement}?${stringify(DEFAULT_SEARCH_PARAMS)}`);
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 /* eslint-disable-next-line import/default */
-import qs from "qs";
+import { parse } from "qs";
 import type { SetStateAction } from "react";
 import { useEffect, useState } from "react";
 
@@ -15,7 +15,7 @@ export function useStateParams<F extends object>({
 }): [F, (f: SetStateAction<F>) => void] {
   const queryParams = useSearchParams();
   const router = useRouter();
-  const params = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
+  const params = parse(queryParams.toString(), { arrayLimit: Infinity });
   const prefixed = (prefix ? params[prefix] : params) as F;
   const [filters, setFilters] = useState<F>({ ...defaultValues, ...prefixed });
 

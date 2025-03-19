@@ -5,7 +5,7 @@ import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { BarChart } from "@/app/(wrapped)/intentions/pilotage/components/BarChart";
 import type {
   FormationsPilotageIntentions,
-  RepartitionPilotageIntentionsPositionQuadrant,
+  PilotageIntentionsPositionQuadrant,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { formatPercentage } from "@/utils/formatUtils";
@@ -22,7 +22,7 @@ type StatsPositionQuadrant = {
 };
 
 const getStatsPositionQuadrant = (
-  positionsQuadrant: RepartitionPilotageIntentionsPositionQuadrant,
+  positionsQuadrant: PilotageIntentionsPositionQuadrant,
   positionQuadrant: PositionQuadrantType
 ): StatsPositionQuadrant => {
   const statsPositionQuadrant: StatsPositionQuadrant = {
@@ -66,8 +66,8 @@ export const PlacesTransformeesParPositionQuadrantSection = ({
   formations,
   positionsQuadrant,
 }: {
-  formations?: FormationsPilotageIntentions["formations"];
-  positionsQuadrant?: RepartitionPilotageIntentionsPositionQuadrant;
+  formations?: FormationsPilotageIntentions;
+  positionsQuadrant?: PilotageIntentionsPositionQuadrant;
 }) => {
   if (!formations || !positionsQuadrant) return <Skeleton opacity={0.3} height="100%" />;
 

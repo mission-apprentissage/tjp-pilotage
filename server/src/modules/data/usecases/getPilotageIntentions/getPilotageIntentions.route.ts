@@ -5,11 +5,12 @@ import { createRoute } from "shared/utils/http-wizard/core";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { getRepartitionPilotageIntentionsUsecase } from "./getRepartitionPilotageIntentions.usecase";
+import { getPilotageIntentionsUsecase } from './getPilotageIntentions.usecase';
 
-const ROUTE = ROUTES["[GET]/pilotage-intentions/repartition"];
 
-export const getRepartitionPilotageIntentionsRoute = (server: Server) => {
+const ROUTE = ROUTES["[GET]/pilotage-intentions"];
+
+export const getPilotageIntentionsRoute = (server: Server) => {
   return createRoute(ROUTE.url, {
     method: ROUTE.method,
     schema: ROUTE.schema,
@@ -21,7 +22,7 @@ export const getRepartitionPilotageIntentionsRoute = (server: Server) => {
         const { ...filters } = request.query;
         const user = request.user!;
 
-        const result = await getRepartitionPilotageIntentionsUsecase({
+        const result = await getPilotageIntentionsUsecase({
           ...filters,
           user
         });

@@ -8,7 +8,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
-import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import { StatutTag } from "@/app/(wrapped)/intentions/components/StatutTag";
 import { INTENTIONS_COLUMNS } from "@/app/(wrapped)/intentions/perdir/saisie/INTENTIONS_COLUMNS";
 import type {CheckedIntentionsType} from '@/app/(wrapped)/intentions/perdir/saisie/page.client';
 import type { Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";

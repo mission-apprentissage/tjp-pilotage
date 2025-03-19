@@ -1,11 +1,12 @@
 import { Divider, Flex, Heading, Img, Tag, Text, Tooltip } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import type { Role } from "shared";
+import {unEscapeString} from 'shared/utils/escapeString';
 
 import type { client } from "@/api.client";
-import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
+import { RoleTag } from "@/app/(wrapped)/intentions/components/RoleTag";
 import type { AnneeCampagneMotifDemande,MotifDemandeLabel } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
-import {getMotifDemandeLabel, hasMotifAutre} from '@/app/(wrapped)/intentions/utils/motifDemandeUtils';
+import { getMotifDemandeLabel,hasMotifAutre } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
@@ -174,7 +175,7 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
               {intention.commentaire && intention.commentaire.length ? (
                 intention.commentaire.split("\n").map((p, i) => (
                   <Text key={`commentaire-${i}`} fontSize={14} sx={{ py: 1 }}>
-                    {p}
+                    {unEscapeString(p)}
                   </Text>
                 ))
               ) : (
@@ -274,7 +275,7 @@ export const SyntheseSection = ({ intention }: { intention: (typeof client.infer
           </Flex>
           {hasMotifAutre(intention.motif) && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text fontSize={14}>Autre motif : {intention.autreMotif!}</Text>
+              <Text fontSize={14}>Autre motif : {unEscapeString(intention.autreMotif!)}</Text>
             </Flex>
           )}
           <Divider my={3} borderColor={"grey.900"} />

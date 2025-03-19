@@ -19,12 +19,7 @@ import { selectTauxPression, selectTauxPressionParFormationEtParRegionDemande } 
 import { selectTauxRemplissage } from "@/modules/data/utils/tauxRemplissage";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
 import { castTypeDemande } from "@/modules/utils/castTypeDemande";
-import {
-  countDifferenceCapaciteApprentissage,
-  countDifferenceCapaciteApprentissageColoree,
-  countDifferenceCapaciteScolaire,
-  countDifferenceCapaciteScolaireColoree,
-} from "@/modules/utils/countCapacite";
+import {countDifferenceCapaciteApprentissage, countDifferenceCapaciteApprentissageColoree, countDifferenceCapaciteScolaire, countDifferenceCapaciteScolaireColoree, countPlacesColorees,countPlacesColoreesFermeesApprentissage, countPlacesColoreesFermeesScolaire, countPlacesColoreesOuvertesApprentissage, countPlacesColoreesOuvertesScolaire, countPlacesFermeesApprentissage, countPlacesFermeesScolaire, countPlacesOuvertesApprentissage, countPlacesOuvertesScolaire} from '@/modules/utils/countCapacite';
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
@@ -255,11 +250,6 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (coloration)
-        return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
-      return eb;
-    })
-    .$call((eb) => {
       if (amiCMA) return eb.where("demande.amiCma", "=", amiCMA === "true" ? sql<true>`true` : sql<false>`false`);
       return eb;
     })
@@ -268,24 +258,39 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
+      if(coloration === "true") return eb.where(
+        (eb) => eb.or([
+          sql<boolean>`${countPlacesColorees(eb)} > 0`,
+        ])
+      );
+      if(coloration === "false") return eb.where(
+        (eb) => eb.or([
+          sql<boolean>`${countPlacesColorees(eb)} < 0`,
+        ])
+      );
+      return eb;
+    })
+    .$call((eb) => {
       if (voie === "apprentissage") {
         return eb.where(
-          ({ eb: ebw }) =>
-            sql<boolean>`abs(${ebw.ref(
-              "demande.capaciteApprentissage"
-            )} - ${ebw.ref("demande.capaciteApprentissageActuelle")}) > 1`
+          (eb) => eb.or([
+            sql<boolean>`${countPlacesOuvertesApprentissage(eb)} > 0`,
+            sql<boolean>`${countPlacesFermeesApprentissage(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesOuvertesApprentissage(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesFermeesApprentissage(eb)} > 0`,
+          ])
         );
       }
-
       if (voie === "scolaire") {
         return eb.where(
-          ({ eb: ebw }) =>
-            sql<boolean>`abs(${ebw.ref("demande.capaciteScolaire")} - ${ebw.ref(
-              "demande.capaciteScolaireActuelle"
-            )}) > 1`
+          (eb) => eb.or([
+            sql<boolean>`${countPlacesOuvertesScolaire(eb)} > 0`,
+            sql<boolean>`${countPlacesFermeesScolaire(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesOuvertesScolaire(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesFermeesScolaire(eb)} > 0`,
+          ])
         );
       }
-
       return eb;
     })
     .$call((q) => {

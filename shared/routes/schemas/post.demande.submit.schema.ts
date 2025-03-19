@@ -28,7 +28,9 @@ export const submitDemandeSchema = {
       capaciteApprentissageColoree: z.coerce.number().optional(),
       // Précisions
       motif: z.array(z.string()).optional(),
-      autreMotif: z.string().optional(),
+      autreMotif: z.string()
+        .optional()
+        .transform((autreMotif) => unEscapeString(autreMotif)),
       amiCma: z.boolean().optional(),
       amiCmaValide: z.boolean().optional(),
       amiCmaValideAnnee: z.string().optional(),
@@ -66,7 +68,7 @@ export const submitDemandeSchema = {
       autreMotifRefus: z
         .string()
         .optional()
-        .transform((motif) => unEscapeString(motif)),
+        .transform((autreMotifRefus) => unEscapeString(autreMotifRefus)),
       // Autre
       numero: z.string().optional(),
       campagneId: z.string(),
