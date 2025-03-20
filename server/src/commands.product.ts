@@ -5,6 +5,8 @@ import { mapValues } from "lodash-es";
 import path from "path";
 import type { Role } from "shared";
 import { PERMISSIONS } from "shared";
+import type { UserFonction } from "shared/enum/userFonctionEnum";
+import { UserFonctionZodType } from "shared/enum/userFonctionEnum";
 import { z } from "zod";
 
 import { basepath } from "./basepath";
@@ -47,7 +49,7 @@ export function productCommands(cli: Command) {
     .command("importUsers")
     .description("usage: yarn cli importUsers")
     .description(`place file in ${basepath}/import/users.csv`)
-    .description("csv: role;codeRegion;lastname;firstname;email")
+    .description("csv: role;codeRegion;lastname;firstname;email;fonction")
     .option("--dryRun <boolean>", "parse the data only", false)
     .action(async ({ dryRun }) => {
       const fileContent = fs.readFileSync(`${basepath}/import/users.csv`).toString();
@@ -63,6 +65,7 @@ export function productCommands(cli: Command) {
           email: string;
           role: string;
           codeRegion?: string;
+          fonction?: UserFonction | null
         }[]
       ).map((user) => mapValues(user, (value) => value || undefined));
 
@@ -77,6 +80,7 @@ export function productCommands(cli: Command) {
               .string()
               .optional()
               .transform((val) => val || undefined),
+            fonction: UserFonctionZodType.nullish()
           })
         )
         .parse(data);
@@ -107,6 +111,7 @@ export function productCommands(cli: Command) {
     .requiredOption("--role <string>")
     .option("--codeRegion <string>")
     .option("--uai <string>")
+    .option("--fonction <string>")
     .action(
       async (options: {
         email: string;
@@ -115,6 +120,7 @@ export function productCommands(cli: Command) {
         role: Role;
         codeRegion?: string;
         uai?: string;
+        fonction?: UserFonction
     }) => {
         await createUser({ body: options });
         await createJob({ name: "createUser" });
