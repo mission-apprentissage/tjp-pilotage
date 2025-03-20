@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import {
   Button,
   chakra,
@@ -22,10 +20,10 @@ import { ScopeEnum } from "shared";
 
 import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/pilotage/main/displayTypeEnum";
 import type {
-  FiltersStatsPilotageIntentions,
-  OrderRepartitionPilotageIntentions,
-  RepartitionPilotageIntentionsDomaines,
-  RepartitionPilotageIntentionsZonesGeographiques,
+  FiltersPilotageIntentions,
+  OrderPilotageIntentions,
+  PilotageIntentionsDomaines,
+  PilotageIntentionsZonesGeographiques,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { Legend } from "@/components/Legend";
@@ -87,17 +85,17 @@ export const AnalyseComparativeSection = ({
   zonesGeographiques,
   domaines,
   order,
-  setSearchParams,
+  setOrder,
   filters,
   displayType,
   displayZonesGeographiques,
   displayDomaines,
 }: {
-  zonesGeographiques?: RepartitionPilotageIntentionsZonesGeographiques;
-  domaines?: RepartitionPilotageIntentionsDomaines;
-  order: Partial<OrderRepartitionPilotageIntentions>;
-  setSearchParams: (params: { order?: Partial<OrderRepartitionPilotageIntentions> }) => void;
-  filters?: Partial<FiltersStatsPilotageIntentions>;
+  zonesGeographiques?: PilotageIntentionsZonesGeographiques;
+  domaines?: PilotageIntentionsDomaines;
+  order: Partial<OrderPilotageIntentions>;
+  setOrder: (order: OrderPilotageIntentions) => void;
+  filters?: Partial<FiltersPilotageIntentions>;
   displayType: DisplayTypeEnum;
   displayZonesGeographiques: () => void;
   displayDomaines: () => void;
@@ -166,19 +164,17 @@ export const AnalyseComparativeSection = ({
     if (indicateur > 0.06) return customPalette[5];
   };
 
-  const handleOrder = (column: OrderRepartitionPilotageIntentions["orderBy"]) => {
+  const handleOrder = (column: OrderPilotageIntentions["orderBy"]) => {
     trackEvent("pilotage-transformation:formations-ordre", {
       props: { colonne: column },
     });
     if (order?.orderBy !== column) {
-      setSearchParams({ order: { order: "desc", orderBy: column } });
+      setOrder({ order: "desc", orderBy: column });
       return;
     }
-    setSearchParams({
-      order: {
-        order: order?.order === "asc" ? "desc" : "asc",
-        orderBy: column,
-      },
+    setOrder({
+      order: order?.order === "asc" ? "desc" : "asc",
+      orderBy: column,
     });
   };
 

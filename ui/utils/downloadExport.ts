@@ -1,7 +1,7 @@
 import { number as numberFormatter } from "@json2csv/formatters";
 import { Parser } from "@json2csv/plainjs";
 // eslint-disable-next-line import/no-extraneous-dependencies, import/default
-import Excel from "exceljs";
+import { Workbook } from "exceljs";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { saveAs } from "file-saver";
 import _ from "lodash";
@@ -86,7 +86,7 @@ export async function downloadExcel<D extends object>(
   } else if (Array.isArray(data)) {
     const filenameWithExtension = filename.indexOf(".xlsx") !== -1 ? filename : `${filename}.xlsx`;
 
-    const workbook = new Excel.Workbook();
+    const workbook = new Workbook();
 
     const worksheet = workbook.addWorksheet(filename);
 
@@ -154,7 +154,7 @@ function downloadExcelMultipleSheets<D extends object>(
 ) {
   const filenameWithExtension = filename.indexOf(".xlsx") !== -1 ? filename : `${filename}.xlsx`;
 
-  const workbook = new Excel.Workbook();
+  const workbook = new Workbook();
 
   Object.entries(data).map(([key, sheetData]) => {
     const worksheet = workbook.addWorksheet(`${key}`);

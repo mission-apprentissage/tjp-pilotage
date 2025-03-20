@@ -31,7 +31,7 @@ export const submitIntentionSchema = {
       autreMotif: z
         .string()
         .optional()
-        .transform((motif) => unEscapeString(motif)),
+        .transform((autreMotif) => unEscapeString(autreMotif)),
       amiCma: z.boolean().optional(),
       amiCmaValide: z.boolean().optional(),
       amiCmaValideAnnee: z.string().optional(),
@@ -86,7 +86,7 @@ export const submitIntentionSchema = {
       autreMotifRefus: z
         .string()
         .optional()
-        .transform((motif) => unEscapeString(motif)),
+        .transform((autreMotifRefus) => unEscapeString(autreMotifRefus)),
       // Autre
       numero: z.string().optional(),
       campagneId: z.string(),

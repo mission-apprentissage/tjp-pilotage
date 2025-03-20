@@ -1,5 +1,5 @@
 import { Box, useToken } from "@chakra-ui/react";
-import * as echarts from "echarts";
+import { init, registerLocale } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 import type { TauxIJValues } from "@/app/(wrapped)/domaine-de-formation/[codeNsf]/types";
@@ -33,6 +33,7 @@ export const DevenirBarGraph = function ({
   const blue = useToken("colors", "blueCumulus.526");
   const mustard = useToken("colors", "yellowMoutarde.679");
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const series: {
     name: string;
     data: (number | undefined)[];
@@ -160,8 +161,8 @@ export const DevenirBarGraph = function ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      echarts.registerLocale("fr", frenchLocale);
-      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
+      registerLocale("fr", frenchLocale);
+      chartRef.current = init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
   }, [chartRef, option]);
