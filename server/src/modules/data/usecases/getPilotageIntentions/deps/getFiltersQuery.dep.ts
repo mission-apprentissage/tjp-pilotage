@@ -175,7 +175,11 @@ export const getFiltersQuery = async ({filters}: {filters: Filters}) => {
     .execute();
 
   const statutsFilters = values(DemandeStatutEnum).filter(
-    (statut) => statut !== DemandeStatutEnum["brouillon"] && statut !== DemandeStatutEnum["supprimée"]
+    (statut) => (
+      statut !== DemandeStatutEnum["brouillon"] &&
+      statut !== DemandeStatutEnum["supprimée"] &&
+      statut !== DemandeStatutEnum["refusée"]
+    )
   );
 
   return {
