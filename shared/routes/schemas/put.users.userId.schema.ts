@@ -10,7 +10,7 @@ const BodySchema = z.object({
   role: RoleZodType,
   codeRegion: z.string().min(1).nullable(),
   enabled: z.boolean(),
-  fonction: UserFonctionZodType.optional(),
+  fonction: UserFonctionZodType.nullable(),
 });
 
 export type BodySchema = z.infer<typeof BodySchema>;

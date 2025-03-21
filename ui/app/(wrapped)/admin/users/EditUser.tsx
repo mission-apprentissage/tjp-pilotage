@@ -20,12 +20,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { Role } from "shared";
-import {getHierarchy, hasRole} from 'shared';
-import {RoleEnum} from 'shared/enum/roleEnum';
+import { getHierarchy, hasRole } from 'shared';
+import { RoleEnum } from 'shared/enum/roleEnum';
 import { UserFonctionEnum } from "shared/enum/userFonctionEnum";
 import { z } from "zod";
 
 import { client } from "@/api.client";
+import { getErrorMessage } from '@/utils/apiError';
 import { useAuth } from "@/utils/security/useAuth";
 
 export const EditUser = ({
@@ -68,6 +69,7 @@ export const EditUser = ({
     mutate: updateUser,
     isLoading,
     isError,
+    error
   } = client.ref("[PUT]/users/:userId").useMutation({
     onSuccess: () => {
       queryClient.invalidateQueries(["[GET]/users"]);
@@ -92,7 +94,7 @@ export const EditUser = ({
         as="form"
         onSubmit={handleSubmit((v) =>
           updateUser({
-            body: { ...v, codeRegion: v.codeRegion || null },
+            body: { ...v, codeRegion: v.codeRegion || null, fonction: v.fonction || null },
             params: { userId: user?.id },
           })
         )}
@@ -158,7 +160,7 @@ export const EditUser = ({
           <FormControl mb="4" isInvalid={!!errors.fonction}>
             <FormLabel>Fonction de l'utilisateur</FormLabel>
             <Select {...register("fonction")}>
-              {<option value="">Aucune</option>}
+              {<option value={""}>Aucune</option>}
               {Object.keys(UserFonctionEnum)?.map((userFonction) => (
                 <option key={userFonction} value={userFonction}>
                   {userFonction}
@@ -176,7 +178,7 @@ export const EditUser = ({
           </FormControl>
           {isError && (
             <Alert status="error">
-              <AlertDescription>Erreur lors de la création</AlertDescription>
+              <AlertDescription>{getErrorMessage(error)}</AlertDescription>
             </Alert>
           )}
         </ModalBody>
