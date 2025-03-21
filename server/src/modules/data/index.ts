@@ -16,12 +16,11 @@ import { getFormationCarteEtablissementsRoute } from "./usecases/getFormationCar
 import { getFormationEtablissementsRoutes } from "./usecases/getFormationEtablissements/getFormationEtablissements.routes";
 import { getFormationIndicateursRoute } from "./usecases/getFormationIndicateurs/getFormationIndicateurs.route";
 import { getFormationsRoute } from "./usecases/getFormations/getFormations.route";
-import { getFormationsPilotageIntentionsRoute } from "./usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.route";
+import {getFormationsPilotageIntentionsRoute} from './usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.route';
 import { getHeaderEtablissementRoute } from "./usecases/getHeaderEtablissement/getHeaderEtablissement.route";
+import { getPilotageIntentionsRoute } from "./usecases/getPilotageIntentions/getPilotageIntentions.route";
 import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
 import { getRegionsRoute } from "./usecases/getRegions/getRegions.route";
-import { getRepartitionPilotageIntentionsRoute } from "./usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.route";
-import { getStatsPilotageIntentionsRoute } from "./usecases/getStatsPilotageIntentions/getStatsPilotageIntentions.route";
 import { getStatsRestitutionIntentionsRoute } from "./usecases/getStatsRestitutionIntentions/getStatsRestitutionIntentions.route";
 import { getSuiviImpactStatsRoute } from "./usecases/getSuiviImpactStats/getSuiviImpactStats.route";
 import { getSuiviImpactStatsRegionsRoute } from "./usecases/getSuiviImpactStatsRegions/getSuiviImpactStatsRegions.route";
@@ -49,8 +48,8 @@ export const registerDataModule = (server: Server) => {
     ...getDataForPanoramaRegionRoute(server),
     ...getRegionRoute(server),
     ...getRegionsRoute(server),
+    ...getPilotageIntentionsRoute(server),
     ...getFormationsPilotageIntentionsRoute(server),
-    ...getStatsPilotageIntentionsRoute(server),
     ...getDemandesRestitutionIntentionsRoute(server),
     ...getStatsRestitutionIntentionsRoute(server),
     ...getSuiviImpactStatsRoute(server),
@@ -65,7 +64,6 @@ export const registerDataModule = (server: Server) => {
     ...searchDisciplineRoute(server),
     ...searchFiliereRoute(server),
     ...searchCampusRoute(server),
-    ...getRepartitionPilotageIntentionsRoute(server),
     ...getDomainesDeFormationRoute(server),
     ...getFormationRoute(server),
     ...getDomaineDeFormationRoute(server),

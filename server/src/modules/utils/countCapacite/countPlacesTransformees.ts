@@ -30,75 +30,109 @@ import { inQ4 } from "./utils";
 
 export const countPlacesNonColoreesTransformeesScolaire = ({
   eb,
+  avecColoration = true
 }: {
   eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
 }) => sql<number>`
-  ${countPlacesOuvertesScolaire(eb)} +
-  ${countPlacesFermeesScolaire(eb)}
+  ${countPlacesOuvertesScolaire({eb, avecColoration})} +
+  ${countPlacesFermeesScolaire({eb, avecColoration})}
 `;
 
 export const countPlacesNonColoreesTransformeesApprentissage = ({
   eb,
+  avecColoration = true
 }: {
   eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
 }) => sql<number>`
-  ${countPlacesOuvertesApprentissage(eb)} +
-  ${countPlacesFermeesApprentissage(eb)}
+  ${countPlacesOuvertesApprentissage({eb, avecColoration})} +
+  ${countPlacesFermeesApprentissage({eb, avecColoration})}
 `;
 
-export const countPlacesNonColoreesTransformees = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) => sql<number>`
-      ${countPlacesNonColoreesTransformeesScolaire(eb)} +
-      ${countPlacesNonColoreesTransformeesApprentissage(eb)}
-    `;
+export const countPlacesNonColoreesTransformees = ({
+  eb,
+  avecColoration = true
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
+}) => sql<number>`
+  ${countPlacesNonColoreesTransformeesScolaire({eb, avecColoration})} +
+  ${countPlacesNonColoreesTransformeesApprentissage({eb, avecColoration})}
+`;
 
 // PLACES COLORÉES TRANSFORMÉES
 
 export const countPlacesColoreesTransformeesScolaire = ({
   eb,
+  avecColoration = true
 }: {
   eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
 }) => sql<number>`
-    ${countPlacesColoreesOuvertesScolaire(eb)} +
-    ${countPlacesColoreesFermeesScolaire(eb)}
+    ${countPlacesColoreesOuvertesScolaire({eb, avecColoration})} +
+    ${countPlacesColoreesFermeesScolaire({eb, avecColoration})}
     `;
 
 export const countPlacesColoreesTransformeesScolaireQ4 = ({
   eb,
+  avecColoration = true
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ4(eb)).then(countPlacesColoreesTransformeesScolaire(eb)).else(0).end();
+  avecColoration?: boolean
+}) => eb.case().when(inQ4(eb)).then(countPlacesColoreesTransformeesScolaire({eb, avecColoration})).else(0).end();
 
 export const countPlacesColoreesTransformeesApprentissage = ({
   eb,
+  avecColoration = true
 }: {
   eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
 }) => sql<number>`
-      ${countPlacesColoreesOuvertesApprentissage(eb)} +
-      ${countPlacesColoreesFermeesApprentissage(eb)}
+      ${countPlacesColoreesOuvertesApprentissage({eb, avecColoration})} +
+      ${countPlacesColoreesFermeesApprentissage({eb, avecColoration})}
     `;
 
 export const countPlacesColoreesTransformeesApprentissageQ4 = ({
   eb,
+  avecColoration = true
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ4(eb)).then(countPlacesColoreesTransformeesApprentissage(eb)).else(0).end();
+  avecColoration?: boolean
+}) => eb.case().when(inQ4(eb)).then(countPlacesColoreesTransformeesApprentissage({eb, avecColoration})).else(0).end();
 
-export const countPlacesColoreesTransformees = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) => sql<number>`
-    ${countPlacesColoreesOuvertesScolaire(eb)} +
-    ${countPlacesColoreesOuvertesApprentissage(eb)}
+export const countPlacesColoreesTransformees = ({
+  eb,
+  avecColoration = true
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
+ }) => sql<number>`
+    ${countPlacesColoreesOuvertesScolaire({eb, avecColoration})} +
+    ${countPlacesColoreesOuvertesApprentissage({eb, avecColoration})}
   `;
 
 export const countPlacesColoreesTransformeesQ4 = ({
   eb,
+  avecColoration = true
 }: {
   eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
-}) => eb.case().when(inQ4(eb)).then(countPlacesColoreesTransformees(eb)).else(0).end();
+  avecColoration?: boolean
+}) => eb.case().when(inQ4(eb)).then(countPlacesColoreesTransformees({eb, avecColoration})).else(0).end();
 
 // PLACES TRANSFORMÉES COLORÉES ET NON COLORÉES
 
-export const countPlacesTransformeesScolaire = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
+export const countPlacesTransformeesScolaire = ({
+  eb,
+  avecColoration = true
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
+ }) =>
   eb
     .case()
+    .when(eb.val(!avecColoration))
+    .then(countPlacesNonColoreesTransformeesScolaire(eb))
     // si diminution des places globales + diminution des places colorées => max de diminution (aucun cas en prod)
     .when(
       eb.and([
@@ -153,9 +187,17 @@ export const countPlacesTransformeesScolaire = ({ eb }: { eb: ExpressionBuilder<
     )
     .end();
 
-export const countPlacesTransformeesApprentissage = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
+export const countPlacesTransformeesApprentissage = ({
+  eb,
+  avecColoration = true
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
+ }) =>
   eb
     .case()
+    .when(eb.val(!avecColoration))
+    .then(countPlacesNonColoreesTransformeesApprentissage(eb))
     // si diminution des places globales + diminution des places colorées => max de diminution (aucun cas en prod)
     .when(
       eb.and([
@@ -210,34 +252,66 @@ export const countPlacesTransformeesApprentissage = ({ eb }: { eb: ExpressionBui
     )
     .end();
 
-export const countPlacesTransformees = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) => sql<number>`
-    ${countPlacesNonColoreesTransformees(eb)} +
-    ${countPlacesColoreesTransformees(eb)}
-  `;
+export const countPlacesTransformees = ({
+  eb,
+  avecColoration = true
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
+}) =>
+  eb
+    .case()
+    .when(eb.val(!avecColoration))
+    .then(countPlacesNonColoreesTransformees(eb))
+    .else(
+      sql<number>`
+        ${countPlacesTransformeesScolaire({eb})} +
+        ${countPlacesTransformeesApprentissage({eb})}
+      `
+    )
+    .end();
 
 // En 2023, les places transformées sont les places ouvertes + les places fermées scolaires
 // les places colorées ne sont pas comptabilisées tout comme les places fermées en apprentissage
-const countPlacesTransformeesCampagne2023 = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) =>
+const countPlacesTransformeesCampagne2023 = ({
+  eb,
+  avecColoration = true
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
+ }) =>
   sql<number>`
-    ${countPlacesOuvertes(eb)} +
-    ${countPlacesFermeesScolaire(eb)}
+    ${countPlacesOuvertes({eb, avecColoration})} +
+    ${countPlacesFermeesScolaire({eb, avecColoration})}
   `;
 
 // En 2024, les places transformées sont les places ouvertes et fermées + les places colorées ouvertes
 // les places colorées fermées ne sont pas comptabilisées
-const countPlacesTransformeesCampagne2024 = ({ eb }: { eb: ExpressionBuilder<DB, "demande"> }) => sql<number>`
-    ${countPlacesNonColoreesTransformees(eb)} +
-    ${countPlacesColoreesOuvertes(eb)}
+const countPlacesTransformeesCampagne2024 = ({
+  eb,
+  avecColoration = true
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  avecColoration?: boolean
+ }) => sql<number>`
+    ${countPlacesNonColoreesTransformees({eb, avecColoration})} +
+    ${countPlacesColoreesOuvertes({eb, avecColoration})}
   `;
 
-export const countPlacesTransformeesParCampagne = ({ eb }: { eb: ExpressionBuilder<DB, "demande" | "campagne"> }) =>
+export const countPlacesTransformeesParCampagne = ({
+  eb,
+  avecColoration = true
+}: {
+  eb: ExpressionBuilder<DB, "demande" | "campagne">;
+  avecColoration?: boolean
+ }) =>
   eb
     .case()
     .when("campagne.annee", "=", "2023")
-    .then(countPlacesTransformeesCampagne2023(eb))
+    .then(countPlacesTransformeesCampagne2023({eb, avecColoration}))
     .when("campagne.annee", "=", "2024")
-    .then(countPlacesTransformeesCampagne2024(eb))
-    .else(countPlacesTransformees(eb))
+    .then(countPlacesTransformeesCampagne2024({eb, avecColoration}))
+    .else(countPlacesTransformees({eb, avecColoration}))
     .end();
 
 export const getTauxTransformation = ({

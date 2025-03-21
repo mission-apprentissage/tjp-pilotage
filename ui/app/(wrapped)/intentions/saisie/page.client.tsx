@@ -34,7 +34,7 @@ import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import {isCampagneTerminee} from 'shared/utils/campagneUtils';
 
 import { client } from "@/api.client";
-import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import { StatutTag } from "@/app/(wrapped)/intentions/components/StatutTag";
 import {getMessageAccompagnementCampagne} from '@/app/(wrapped)/intentions/utils/messageAccompagnementUtils';
 import {canCorrectDemande,canCreateDemande, canImportDemande} from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
 import {canEditDemandeIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';

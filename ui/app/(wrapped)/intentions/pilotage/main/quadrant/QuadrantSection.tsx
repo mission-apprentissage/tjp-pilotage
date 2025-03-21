@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
@@ -23,26 +21,19 @@ import {
   Stack,
   Text,
   useToken,
-  VisuallyHidden,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
-import { CURRENT_RENTREE, ScopeEnum } from "shared";
+import { CURRENT_RENTREE } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
-import { client } from "@/api.client";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import QuadrantPlaceholder from "@/app/(wrapped)/intentions/pilotage/components/QuadrantPlaceholder";
-import type {
-  FiltersStatsPilotageIntentions,
-  OrderFormationsPilotageIntentions,
-  RepartitionPilotageIntentions,
-  SelectedScope,
-  StatsPilotageIntentions,
-} from "@/app/(wrapped)/intentions/pilotage/types";
+import type {Filters, FiltersPilotageIntentions, FormationsPilotageIntentions, OrderFormationsPilotageIntentions,PilotageIntentions, StatsSortiePilotageIntentions} from '@/app/(wrapped)/intentions/pilotage/types';
+import {getScopeCode} from '@/app/(wrapped)/intentions/pilotage/utils';
 import { InfoTooltipContent } from "@/app/(wrapped)/panorama/components/QuadrantSection/InfoTooltipContent";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { GraphWrapper } from "@/components/GraphWrapper";
@@ -55,7 +46,6 @@ import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
-import { useStateParams } from "@/utils/useFilters";
 
 import { PlacesTransformeesParPositionQuadrantSection } from "./PlacesTransformeesParPositionQuadrantSection";
 
@@ -68,15 +58,23 @@ const EFFECTIF_SIZES = [
 ];
 
 export const QuadrantSection = ({
-  scope,
-  parentFilters,
-  scopeFilters,
-  repartitionData,
+  orderFormations,
+  filters,
+  filtersOptions,
+  setFilters,
+  setOrderFormations,
+  data,
+  formations,
+  statsSortie
 }: {
-  scope?: SelectedScope;
-  parentFilters: Partial<FiltersStatsPilotageIntentions>;
-  scopeFilters?: StatsPilotageIntentions["filters"];
-  repartitionData?: RepartitionPilotageIntentions;
+  orderFormations: Partial<OrderFormationsPilotageIntentions>;
+  filters: FiltersPilotageIntentions;
+  filtersOptions?: Filters;
+  setFilters: (filters: FiltersPilotageIntentions) => void;
+  setOrderFormations: (orderFormations: OrderFormationsPilotageIntentions) => void;
+  data?: PilotageIntentions;
+  formations?: FormationsPilotageIntentions;
+  statsSortie?: StatsSortiePilotageIntentions;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const bluefrance113 = useToken("colors", "bluefrance.113");
@@ -88,41 +86,7 @@ export const QuadrantSection = ({
     else setTypeVue("quadrant");
   };
 
-  const [filters, setFilters] = useStateParams({
-    prefix: "quadrant",
-    defaultValues: {
-      tauxPression: undefined,
-      type: undefined,
-      order: undefined,
-    } as {
-      tauxPression?: "eleve" | "faible";
-      type?: "ouverture" | "fermeture";
-      order?: Partial<OrderFormationsPilotageIntentions>;
-    },
-  });
-
-  const order = filters.order;
-
   const [currentFormationId, setCurrentFormationId] = useState<string | undefined>();
-  const { ...otherFilters } = parentFilters;
-  const mergedFilters = {
-    ...otherFilters,
-    tauxPression: filters.tauxPression,
-    type: filters.type,
-    codeRegion: scope?.type === ScopeEnum["région"] ? scope.value : undefined,
-    codeAcademie: scope?.type === ScopeEnum["académie"] ? scope.value : undefined,
-    codeDepartement: scope?.type === ScopeEnum["département"] ? scope.value : undefined,
-  };
-
-  const { data: { formations, stats } = {} } = client.ref("[GET]/pilotage-intentions/formations").useQuery(
-    {
-      query: { ...mergedFilters, ...order },
-    },
-    {
-      keepPreviousData: true,
-      staleTime: 100000000,
-    }
-  );
 
   const formationsQuadrant =
     formations?.filter(
@@ -135,27 +99,20 @@ export const QuadrantSection = ({
   );
 
   const getLibelleTerritoire = (territoires?: Array<{ label: string; value: string }>, code?: string) => {
-    if (scope?.value && scopeFilters) return _.find(territoires, (territoire) => territoire.value === code)?.label;
-    return undefined;
+    return _.find(territoires, (territoire) => territoire.value === code)?.label;
   };
 
-  const handleOrder = (column: OrderFormationsPilotageIntentions["orderBy"]) => {
-    trackEvent("tableau-quadrant-intentions:ordre", {
+  const handleOrder = (column: OrderFormationsPilotageIntentions["orderByFormations"]) => {
+    trackEvent("pilotage-transformation:formations-ordre", {
       props: { colonne: column },
     });
-    if (order?.orderBy !== column) {
-      setFilters({
-        ...filters,
-        order: { order: "desc", orderBy: column },
-      });
+    if (orderFormations?.orderByFormations !== column) {
+      setOrderFormations({ orderFormations: "desc", orderByFormations: column });
       return;
     }
-    setFilters({
-      ...filters,
-      order: {
-        order: order?.order === "asc" ? "desc" : "asc",
-        orderBy: column,
-      },
+    setOrderFormations({
+      orderFormations: orderFormations?.orderFormations === "asc" ? "desc" : "asc",
+      orderByFormations: column,
     });
   };
 
@@ -168,18 +125,21 @@ export const QuadrantSection = ({
   };
 
   const shouldShowQuadrant = !(
-    (!mergedFilters.codeDepartement && !mergedFilters.codeAcademie && !mergedFilters.codeRegion) ||
-    !mergedFilters.codeNiveauDiplome ||
-    mergedFilters.codeNiveauDiplome.length === 0 ||
-    mergedFilters.codeNiveauDiplome.length > 1
+    (!filters.codeDepartement && !filters.codeAcademie && !filters.codeRegion) ||
+    !filters.codeNiveauDiplome ||
+    filters.codeNiveauDiplome.length === 0 ||
+    filters.codeNiveauDiplome.length > 1
   );
 
   const generateRestitutionUrl = (cfd: string, dispositifId?: string) => {
     const urlFilters: Record<string, unknown> = {
-      campagne: mergedFilters.campagne ?? undefined,
-      rentreeScolaire: mergedFilters.rentreeScolaire ?? CURRENT_RENTREE,
+      campagne: filters.campagne ?? undefined,
+      rentreeScolaire: filters.rentreeScolaire ?? CURRENT_RENTREE,
       cfd: [cfd],
       codeDispositif: [dispositifId],
+      codeRegion: getScopeCode(filters),
+      codeAcademie: getScopeCode(filters),
+      codeDepartement: getScopeCode(filters),
     };
 
     if (filters?.type) {
@@ -193,20 +153,6 @@ export const QuadrantSection = ({
           DemandeTypeEnum["fermeture"],
           DemandeTypeEnum["diminution"]
         ];
-      }
-    }
-
-    if (scope?.value !== undefined) {
-      if (scope?.type === ScopeEnum["région"]) {
-        urlFilters.codeRegion = [scope.value];
-      }
-
-      if (scope?.type === ScopeEnum["académie"]) {
-        urlFilters.codeAcademie = [scope.value];
-      }
-
-      if (scope?.type === ScopeEnum["département"]) {
-        urlFilters.codeDepartement = [scope.value];
       }
     }
 
@@ -225,42 +171,34 @@ export const QuadrantSection = ({
           <ExportMenuButton
             color={"bluefrance.113"}
             onExportCsv={async () => {
-              downloadCsv(
-                `repartition_par_position_quadrant`,
-                Object.values(repartitionData?.positionsQuadrant ?? {}),
-                {
-                  libelle: "Position quadrant",
-                  code: "Code",
-                  effectif: "Effectif",
-                  placesTransformees: "Places transformées",
-                  tauxTransformation: "Taux de transformation",
-                  placesOuvertes: "Places ouvertes",
-                  placesFermees: "Places fermées",
-                  placesColoreesOuvertes: "Places colorées ouvertes",
-                  placesColoreesFermees: "Places colorées fermées",
-                  solde: "Solde",
-                  ratioFermeture: "Ratio de fermeture",
-                }
-              );
+              downloadCsv(`repartition_par_position_quadrant`, Object.values(data?.positionsQuadrant ?? {}), {
+                libelle: "Position quadrant",
+                code: "Code",
+                effectif: "Effectif",
+                placesTransformees: "Places transformées",
+                tauxTransformation: "Taux de transformation",
+                placesOuvertes: "Places ouvertes",
+                placesFermees: "Places fermées",
+                placesColoreesOuvertes: "Places colorées ouvertes",
+                placesColoreesFermees: "Places colorées fermées",
+                solde: "Solde",
+                ratioFermeture: "Ratio de fermeture",
+              });
             }}
             onExportExcel={async () => {
-              downloadExcel(
-                `repartition_par_position_quadrant`,
-                Object.values(repartitionData?.positionsQuadrant ?? {}),
-                {
-                  libelle: "Position quadrant",
-                  code: "Code",
-                  effectif: "Effectif",
-                  placesTransformees: "Places transformées",
-                  tauxTransformation: "Taux de transformation",
-                  placesOuvertes: "Places ouvertes",
-                  placesFermees: "Places fermées",
-                  placesColoreesOuvertes: "Places colorées ouvertes",
-                  placesColoreesFermees: "Places colorées fermées",
-                  solde: "Solde",
-                  ratioFermeture: "Ratio de fermeture",
-                }
-              );
+              downloadExcel(`repartition_par_position_quadrant`, Object.values(data?.positionsQuadrant ?? {}), {
+                libelle: "Position quadrant",
+                code: "Code",
+                effectif: "Effectif",
+                placesTransformees: "Places transformées",
+                tauxTransformation: "Taux de transformation",
+                placesOuvertes: "Places ouvertes",
+                placesFermees: "Places fermées",
+                placesColoreesOuvertes: "Places colorées ouvertes",
+                placesColoreesFermees: "Places colorées fermées",
+                solde: "Solde",
+                ratioFermeture: "Ratio de fermeture",
+              });
             }}
             variant="ghost"
           />
@@ -269,7 +207,7 @@ export const QuadrantSection = ({
         <Flex mt={12} width="80%" mx={"auto"}>
           <PlacesTransformeesParPositionQuadrantSection
             formations={formations}
-            positionsQuadrant={repartitionData?.positionsQuadrant}
+            positionsQuadrant={data?.positionsQuadrant}
           />
         </Flex>
       </Box>
@@ -280,16 +218,16 @@ export const QuadrantSection = ({
           rel="noreferrer"
           href={createParameterizedUrl("/intentions/restitution", {
             filters: {
-              codeNiveauDiplome: mergedFilters.codeNiveauDiplome,
-              codeRegion: [mergedFilters.codeRegion],
-              codeAcademie: [mergedFilters.codeAcademie],
-              codeDepartement: [mergedFilters.codeDepartement],
-              rentreeScolaire: mergedFilters.rentreeScolaire?.[0],
-              campagne: mergedFilters.campagne,
-              codeNsf: mergedFilters.codeNsf,
-              statut: mergedFilters.statut,
+              codeNiveauDiplome: filters.codeNiveauDiplome,
+              codeRegion: [filters.codeRegion],
+              codeAcademie: [filters.codeAcademie],
+              codeDepartement: [filters.codeDepartement],
+              rentreeScolaire: filters.rentreeScolaire?.[0],
+              campagne: filters.campagne,
+              codeNsf: filters.codeNsf,
+              statut: filters.statut,
               secteur:
-                mergedFilters.secteur && mergedFilters.secteur?.length === 1 ? mergedFilters.secteur[0] : undefined,
+                filters.secteur && filters.secteur?.length === 1 ? filters.secteur[0] : undefined,
             },
           })}
           color={"bluefrance.113"}
@@ -311,18 +249,9 @@ export const QuadrantSection = ({
                     "formations_transformees",
                     formations.map((formation) => ({
                       ...formation,
-                      libelleRegion:
-                        scope?.type === ScopeEnum["région"]
-                          ? getLibelleTerritoire(scopeFilters?.regions, scope.value)
-                          : undefined,
-                      libelleAcademie:
-                        scope?.type === ScopeEnum["académie"]
-                          ? getLibelleTerritoire(scopeFilters?.academies, scope.value)
-                          : undefined,
-                      libelleDepartement:
-                        scope?.type === ScopeEnum["département"]
-                          ? getLibelleTerritoire(scopeFilters?.departements, scope.value)
-                          : undefined,
+                      libelleRegion: getLibelleTerritoire(filtersOptions?.regions, getScopeCode(filters)),
+                      libelleAcademie: getLibelleTerritoire(filtersOptions?.academies, getScopeCode(filters)),
+                      libelleDepartement: getLibelleTerritoire(filtersOptions?.departements, getScopeCode(filters)),
                     })),
                     {
                       libelleFormation: "Formation",
@@ -346,18 +275,9 @@ export const QuadrantSection = ({
                     "formations_transformees",
                     formations.map((formation) => ({
                       ...formation,
-                      libelleRegion:
-                        scope?.type === ScopeEnum["région"]
-                          ? getLibelleTerritoire(scopeFilters?.regions, scope.value)
-                          : undefined,
-                      libelleAcademie:
-                        scope?.type === ScopeEnum["académie"]
-                          ? getLibelleTerritoire(scopeFilters?.academies, scope.value)
-                          : undefined,
-                      libelleDepartement:
-                        scope?.type === ScopeEnum["département"]
-                          ? getLibelleTerritoire(scopeFilters?.departements, scope.value)
-                          : undefined,
+                      libelleRegion: getLibelleTerritoire(filtersOptions?.regions, getScopeCode(filters)),
+                      libelleAcademie: getLibelleTerritoire(filtersOptions?.academies, getScopeCode(filters)),
+                      libelleDepartement: getLibelleTerritoire(filtersOptions?.departements, getScopeCode(filters)),
                     })),
                     {
                       libelleFormation: "Formation",
@@ -377,9 +297,7 @@ export const QuadrantSection = ({
                 }}
                 variant="ghost"
               />
-              <VisuallyHidden as="label" htmlFor="select-type-transformation">Sélectionner un type de transformation</VisuallyHidden>
               <Select
-                id="select-type-transformation"
                 variant="newInput"
                 maxW={250}
                 value={filters.type ?? ""}
@@ -511,7 +429,6 @@ export const QuadrantSection = ({
                       query={[
                         formationsQuadrant?.length.toString() ?? "-",
                         formationsQuadrant
-                          // @ts-expect-error TODO
                           ?.reduce((acc, { placesOuvertes, placesFermees }) => {
                             if (filters.type === "fermeture") return acc + (placesFermees ?? 0);
                             if (filters.type === "ouverture") return acc + (placesOuvertes ?? 0);
@@ -521,13 +438,11 @@ export const QuadrantSection = ({
                           .toString() ?? "-",
                       ]}
                     >
-                      {`${formationsQuadrant?.length ?? "-"} certifications -
-                                ${
-        formationsQuadrant?.reduce(
-          (acc, { placesTransformees }) => acc + (placesTransformees ?? 0),
-          0
-        ) ?? "-"
-        } places transformées`}
+                      {
+                        `${formationsQuadrant?.length ?? "-"} certifications -
+                        ${formationsQuadrant?.reduce((acc, { placesTransformees }) => acc + (placesTransformees ?? 0), 0)
+                        ?? "-"} places transformées`
+                      }
                     </Highlight>
                   </Text>
                 </Flex>
@@ -538,8 +453,8 @@ export const QuadrantSection = ({
                     (typeVue === "quadrant" ? (
                       <Quadrant
                         onClick={({ cfd, codeDispositif }) => setCurrentFormationId(`${cfd}_${codeDispositif}`)}
-                        meanInsertion={stats?.tauxInsertion}
-                        meanPoursuite={stats?.tauxPoursuite}
+                        meanInsertion={statsSortie?.tauxInsertion}
+                        meanPoursuite={statsSortie?.tauxPoursuite}
                         currentFormationId={currentFormationId}
                         data={formationsQuadrant?.map((formation) => ({
                           ...formation,
@@ -558,9 +473,9 @@ export const QuadrantSection = ({
                         }))}
                         handleClick={setCurrentFormationId}
                         currentFormationId={currentFormationId}
-                        order={order}
+                        order={{ order: orderFormations.orderFormations, orderBy: orderFormations.orderByFormations }}
                         handleOrder={(column?: string) =>
-                          handleOrder(column as OrderFormationsPilotageIntentions["orderBy"])
+                          handleOrder(column as OrderFormationsPilotageIntentions["orderByFormations"])
                         }
                       />
                     ))}

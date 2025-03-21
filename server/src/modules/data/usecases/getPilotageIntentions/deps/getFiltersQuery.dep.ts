@@ -1,12 +1,13 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
+import {capitalize,values} from 'lodash-es';
 import { CURRENT_RENTREE } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
-import type { Filters } from "@/modules/data/usecases/getStatsPilotageIntentions/getStatsPilotageIntentions.usecase";
+import type { Filters } from "@/modules/data/usecases/getPilotageIntentions/getPilotageIntentions.usecase";
 import {
   isInPerimetreIJAcademie,
   isInPerimetreIJDepartement,
@@ -15,49 +16,39 @@ import {
 import { isDemandeNotDeletedOrRefused } from "@/modules/utils/isDemandeSelectable";
 import { cleanNull } from "@/utils/noNull";
 
-export const getFiltersQuery = async ({
-  statut,
-  rentreeScolaire,
-  codeNiveauDiplome,
-  CPC,
-  codeNsf,
-  campagne,
-  codeAcademie,
-  codeRegion,
-  withColoration,
-}: Filters) => {
+export const getFiltersQuery = async ({filters}: {filters: Filters}) => {
   const inStatut = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!statut || statut === undefined) return sql<true>`true`;
-    return eb("demande.statut", "in", statut);
+    if (!filters.statut) return sql<true>`true`;
+    return eb("demande.statut", "in", filters.statut);
   };
 
   const inRentreeScolaire = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!rentreeScolaire) return sql<true>`true`;
+    if (!filters.rentreeScolaire) return sql<true>`true`;
     return eb(
       "demande.rentreeScolaire",
       "in",
-      rentreeScolaire.map((rentree) => parseInt(rentree))
+      filters.rentreeScolaire.map((rentree) => parseInt(rentree))
     );
   };
 
   const inCodeNiveauDiplome = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!codeNiveauDiplome) return sql<true>`true`;
-    return eb("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+    if (!filters.codeNiveauDiplome) return sql<true>`true`;
+    return eb("dataFormation.codeNiveauDiplome", "in", filters.codeNiveauDiplome);
   };
 
   const inCPC = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!CPC) return sql<true>`true`;
-    return eb("dataFormation.cpc", "in", CPC);
+    if (!filters.CPC) return sql<true>`true`;
+    return eb("dataFormation.cpc", "in", filters.CPC);
   };
 
   const inNsf = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!codeNsf) return sql<true>`true`;
-    return eb("dataFormation.codeNsf", "in", codeNsf);
+    if (!filters.codeNsf) return sql<true>`true`;
+    return eb("dataFormation.codeNsf", "in", filters.codeNsf);
   };
 
   const inCampagne = (eb: ExpressionBuilder<DB, "campagne">) => {
-    if (!campagne) return sql<true>`true`;
-    return eb("campagne.annee", "=", campagne);
+    if (!filters.campagne) return sql<true>`true`;
+    return eb("campagne.annee", "=", filters.campagne);
   };
 
   const base = getKbdClient()
@@ -71,7 +62,7 @@ export const getFiltersQuery = async ({
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .where(isDemandeNotDeletedOrRefused)
     .$call((q) => {
-      if (!withColoration || withColoration === "false")
+      if (!filters.coloration || filters.coloration === "false")
         return q.where((w) =>
           w.or([w("demande.coloration", "=", false), w("demande.typeDemande", "!=", DemandeTypeEnum["coloration"])])
         );
@@ -83,10 +74,9 @@ export const getFiltersQuery = async ({
 
   const campagnesFilters = await getKbdClient()
     .selectFrom("campagne")
-    .select(["campagne.annee as label", "campagne.annee as value"])
+    .selectAll()
     .distinct()
-    .$castTo<{ label: string; value: string }>()
-    .orderBy("label", "asc")
+    .orderBy("annee", "asc")
     .where("campagne.annee", "is not", null)
     .execute();
 
@@ -112,8 +102,8 @@ export const getFiltersQuery = async ({
     .where("academie.codeAcademie", "is not", null)
     .where(isInPerimetreIJAcademie)
     .$call((q) => {
-      if (codeRegion) {
-        return q.where("region.codeRegion", "=", codeRegion);
+      if (filters.codeRegion) {
+        return q.where("region.codeRegion", "=", filters.codeRegion);
       }
 
       return q;
@@ -126,12 +116,12 @@ export const getFiltersQuery = async ({
     .where("departement.codeDepartement", "is not", null)
     .where(isInPerimetreIJDepartement)
     .$call((q) => {
-      if (codeRegion) {
-        return q.where("region.codeRegion", "=", codeRegion);
+      if (filters.codeRegion) {
+        return q.where("region.codeRegion", "=", filters.codeRegion);
       }
 
-      if (codeAcademie) {
-        return q.where("academie.codeAcademie", "=", codeAcademie);
+      if (filters.codeAcademie) {
+        return q.where("academie.codeAcademie", "=", filters.codeAcademie);
       }
 
       return q;
@@ -184,8 +174,20 @@ export const getFiltersQuery = async ({
     ])
     .execute();
 
+  const statutsFilters = values(DemandeStatutEnum).filter(
+    (statut) => (
+      statut !== DemandeStatutEnum["brouillon"] &&
+      statut !== DemandeStatutEnum["supprimée"] &&
+      statut !== DemandeStatutEnum["refusée"]
+    )
+  );
+
   return {
-    campagnes: campagnesFilters.map(cleanNull),
+    campagnes: campagnesFilters.map((campagne) => cleanNull({
+      ...campagne,
+      dateDebut: campagne.dateDebut?.toISOString(),
+      dateFin: campagne.dateFin?.toISOString(),
+    })),
     rentreesScolaires: rentreesScolairesFilters.map(cleanNull),
     regions: regionsFilters.map(cleanNull),
     academies: academiesFilters.map(cleanNull),
@@ -194,12 +196,21 @@ export const getFiltersQuery = async ({
     nsfs: nsfFilters.map(cleanNull),
     niveauxDiplome: niveauxDiplomesFilters.map(cleanNull),
     secteurs: secteurFilters.map(cleanNull),
-    statuts: [
-      { value: DemandeStatutEnum["demande validée"], label: "Demande validée" },
+    statuts: statutsFilters.map((value) =>
+      cleanNull({
+        value,
+        label: capitalize(value),
+      })
+    ),
+    colorations: [
       {
-        value: DemandeStatutEnum["projet de demande"],
-        label: "Projet de demande",
+        label: "Avec",
+        value: "true",
       },
-    ],
+      {
+        label: "Sans",
+        value: "false",
+      },
+    ]
   };
 };

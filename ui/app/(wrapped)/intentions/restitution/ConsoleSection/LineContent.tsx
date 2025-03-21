@@ -1,6 +1,7 @@
 import { chakra, Td } from "@chakra-ui/react";
 import type { DemandeTypeType } from "shared/enum/demandeTypeEnum";
 import {SecteurEnum} from 'shared/enum/secteurEnum';
+import {unEscapeString} from 'shared/utils/escapeString';
 
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 import type { DemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
@@ -14,7 +15,7 @@ import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifiqu
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumber, formatNumberToString, formatPercentageFixedDigits } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 const formatBooleanValue = (value?: boolean) => (value ? "Oui" : "Non");
@@ -31,7 +32,7 @@ const handleMotifDemandeLabel = ({
   if (!motifs || motifs.length === 0) return undefined;
   const formattedMotifs = motifs?.map((motif) =>
     motif === "autre"
-      ? `Autre : ${autreMotif}`
+      ? `Autre : ${unEscapeString(autreMotif)}`
       : getMotifDemandeLabel({
         motif: motif as MotifDemandeLabel,
         anneeCampagne: anneeCampagne as AnneeCampagneMotifDemande,
@@ -49,7 +50,7 @@ const handleMotifRefusLabel = ({
 }) => {
   if (!motifsRefus || motifsRefus.length === 0) return undefined;
   const formattedMotifs = motifsRefus?.map((motif) =>
-    motif === "autre" ? `Autre : ${autreMotifRefus}` : getMotifRefusLabel(motif as MotifRefusLabel)
+    motif === "autre" ? `Autre : ${unEscapeString(autreMotifRefus)}` : getMotifRefusLabel(motif as MotifRefusLabel)
   );
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
 };
@@ -88,10 +89,12 @@ export const LineContent = ({
   demande,
   colonneFilters,
   getCellColor,
+  displayPilotageColumns,
 }: {
   demande: DemandesRestitutionIntentions["demandes"][0];
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
   getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
+  displayPilotageColumns: boolean;
 }) => {
   return (
     <>
@@ -472,6 +475,39 @@ export const LineContent = ({
           autreMotifRefus: demande.autreMotifRefus,
         })}
       </ConditionalTd>
+      {
+        displayPilotageColumns && (
+          <>
+            <ConditionalTd colonneFilters={colonneFilters} colonne={"pilotageCapacite"} bgColor={getCellColor("pilotageCapacite")}>
+              {demande.pilotageCapacite}
+            </ConditionalTd>
+            <ConditionalTd colonneFilters={colonneFilters} colonne={"pilotageEffectif"} bgColor={getCellColor("pilotageEffectif")}>
+              {demande.pilotageEffectif}
+            </ConditionalTd>
+            <ConditionalTd
+              colonneFilters={colonneFilters}
+              colonne={"pilotageTauxRemplissage"}
+              bgColor={getCellColor("pilotageTauxRemplissage")}
+            >
+              {formatPercentageFixedDigits(demande.pilotageTauxRemplissage, 1, "")}
+            </ConditionalTd>
+            <ConditionalTd
+              colonneFilters={colonneFilters}
+              colonne={"pilotageTauxPression"}
+              bgColor={getCellColor("pilotageTauxPression")}
+            >
+              {formatNumberToString(demande.pilotageTauxPression, 2, "")}
+            </ConditionalTd>
+            <ConditionalTd
+              colonneFilters={colonneFilters}
+              colonne={"pilotageTauxDemande"}
+              bgColor={getCellColor("pilotageTauxDemande")}
+            >
+              {formatNumberToString(demande.pilotageTauxDemande, 2, "") }
+            </ConditionalTd>
+          </>
+        )
+      }
     </>
   );
 };

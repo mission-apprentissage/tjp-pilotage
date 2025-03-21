@@ -104,6 +104,13 @@ const DemandeSchema = z.object({
   campagneId: z.string(),
   isIntention: z.boolean(),
   campagne: CampagneSchema,
+  // Pilotage
+  pilotageCapacite: z.number().optional(),
+  pilotageEffectif: z.number().optional(),
+  pilotageTauxPression: z.number().optional(),
+  pilotageTauxDemande: z.number().optional(),
+  pilotageTauxRemplissage: z.number().optional(),
+  pilotagePremierVoeu: z.number().optional()
 });
 
 export const FiltersSchema = z.object({
@@ -150,20 +157,12 @@ export const getDemandesRestitutionIntentionsSchema = {
         amiCMAs: z.array(OptionSchema),
         colorations: z.array(OptionSchema),
         voies: z.array(OptionSchema),
-        campagnes: z.array(
-          z.object({
-            label: z.coerce.string(),
-            value: z.coerce.string(),
-            statut: z.coerce.string(),
-          })
-        ),
+        campagnes: z.array(CampagneSchema),
       }),
       demandes: z.array(DemandeSchema),
-      campagne: z.object({
-        annee: z.string(),
-        statut: z.string(),
-      }),
+      campagne: CampagneSchema,
       count: z.coerce.number(),
+      rentreesPilotage: z.array(z.string()),
     }),
   },
 };

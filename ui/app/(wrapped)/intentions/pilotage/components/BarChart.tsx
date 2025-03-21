@@ -1,17 +1,17 @@
 import { AspectRatio, Box, useToken } from "@chakra-ui/react";
-import * as echarts from "echarts";
+import { init, registerLocale } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import type { PositionQuadrantType } from "shared/enum/positionQuadrantEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
-import type { RepartitionPilotageIntentionsPositionQuadrant } from "@/app/(wrapped)/intentions/pilotage/types";
+import type { PilotageIntentionsPositionQuadrant } from "@/app/(wrapped)/intentions/pilotage/types";
 import { frenchLocale } from "@/utils/echarts/frenchLocale";
 import { formatPercentage } from "@/utils/formatUtils";
 
 export const BarChart = ({
   positionsQuadrant,
 }: {
-  positionsQuadrant?: RepartitionPilotageIntentionsPositionQuadrant;
+  positionsQuadrant?: PilotageIntentionsPositionQuadrant;
 }) => {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -251,8 +251,8 @@ export const BarChart = ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      echarts.registerLocale("fr", frenchLocale);
-      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
+      registerLocale("fr", frenchLocale);
+      chartRef.current = init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps

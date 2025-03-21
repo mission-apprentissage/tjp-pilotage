@@ -1,11 +1,8 @@
-/* eslint-disable-next-line import/default */
-import ejs from "ejs";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
+import { renderFile } from "ejs";
 import { inject } from "injecti";
 import { omit } from "lodash-es";
 import mjml from "mjml";
-/* eslint-disable-next-line import/default */
-import nodemailer from "nodemailer";
+import { createTransport } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
 import path from "path";
@@ -56,7 +53,7 @@ export type TemplatePayloads = {
 
 function createTransporter(smtp: SMTPTransport & { secure: boolean }) {
   const needsAuthentication = !!smtp.auth?.user;
-  const transporter = nodemailer.createTransport(needsAuthentication ? smtp : omit(smtp, ["auth"]));
+  const transporter = createTransport(needsAuthentication ? smtp : omit(smtp, ["auth"]));
   transporter.use("compile", htmlToText());
   return transporter;
 }
@@ -113,7 +110,7 @@ async function generateHtml({
   templateFile: string;
   data: unknown;
 }) {
-  const buffer = await ejs.renderFile(templateFile, {
+  const buffer = await renderFile(templateFile, {
     to,
     subject,
     data,

@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
@@ -16,6 +15,7 @@ import { createUserInDB } from "./createUser.dep";
 import { findEtablissement } from "./findEtablissement.dep";
 import { findUserQuery } from "./findUserQuery.dep";
 
+// eslint-disable-next-line import/no-named-as-default-member
 dayjs.extend(customParseFormat);
 
 type ExtraUserInfo = {
