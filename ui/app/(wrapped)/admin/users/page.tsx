@@ -26,7 +26,7 @@ import { hasRightOverRole } from "shared";
 import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import { client } from "@/api.client";
-import { OrderIcon } from "@/components/OrderIcon";
+import {SortableTh} from '@/components/SortableTh';
 import { TableHeader } from "@/components/TableHeader";
 import type { ExportColumns } from "@/utils/downloadExport";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
@@ -65,15 +65,15 @@ export default () => {
   const order = { order: filters.order, orderBy: filters.orderBy };
   const [search, setSearch] = useState(filters.search);
 
-  const handleOrder = (column: Exclude<typeof filters.orderBy, undefined>) => {
-    if (order?.orderBy !== column) {
-      setFilters({ ...filters, order: "desc", orderBy: column });
+  const handleOrder = (colonne: Exclude<typeof filters.orderBy, undefined>) => {
+    if (order?.orderBy !== colonne) {
+      setFilters({ ...filters, order: "desc", orderBy: colonne });
       return;
     }
     setFilters({
       ...filters,
       order: order?.order === "asc" ? "desc" : "asc",
-      orderBy: column,
+      orderBy: colonne,
     });
   };
 
@@ -158,39 +158,63 @@ export default () => {
               <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white">
                 <Tr>
                   <Th w={0} fontSize={12}><VisuallyHidden>Icône utilisateur</VisuallyHidden></Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("email")} fontSize={12}>
-                    <OrderIcon {...order} column="email" />
+                  <SortableTh
+                    colonne={"email"}
+                    order={order}
+                    handleOrder={(order) => handleOrder(order as keyof typeof Columns)}
+                  >
                     {Columns.email}
-                  </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("firstname")} fontSize={12}>
-                    <OrderIcon {...order} column="firstname" />
+                  </SortableTh>
+                  <SortableTh
+                    colonne={"firstname"}
+                    order={order}
+                    handleOrder={(order) => handleOrder(order as keyof typeof Columns)}
+                  >
                     {Columns.firstname}
-                  </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("lastname")} fontSize={12}>
-                    <OrderIcon {...order} column="lastname" />
+                  </SortableTh>
+                  <SortableTh
+                    colonne={"lastname"}
+                    order={order}
+                    handleOrder={(order) => handleOrder(order as keyof typeof Columns)}
+                  >
                     {Columns.lastname}
-                  </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("role")} fontSize={12}>
-                    <OrderIcon {...order} column="role" />
+                  </SortableTh>
+                  <SortableTh
+                    colonne={"role"}
+                    order={order}
+                    handleOrder={(order) => handleOrder(order as keyof typeof Columns)}
+                  >
                     {Columns.role}
-                  </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("fonction")} fontSize={12}>
-                    <OrderIcon {...order} column="role" />
+                  </SortableTh>
+                  <SortableTh
+                    colonne={"fonction"}
+                    order={order}
+                    handleOrder={(order) => handleOrder(order as keyof typeof Columns)}
+                  >
                     {Columns.fonction}
-                  </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("enabled")} fontSize={12}>
-                    <OrderIcon {...order} column="enabled" />
+                  </SortableTh>
+                  <SortableTh
+                    colonne={"enabled"}
+                    order={order}
+                    handleOrder={(order) => handleOrder(order as keyof typeof Columns)}
+                  >
                     {Columns.enabled}
-                  </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("libelleRegion")} fontSize={12}>
-                    <OrderIcon {...order} column="libelleRegion" />
+                  </SortableTh>
+                  <SortableTh
+                    colonne={"libelleRegion"}
+                    order={order}
+                    handleOrder={(order) => handleOrder(order as keyof typeof Columns)}
+                  >
                     {Columns.libelleRegion}
-                  </Th>
+                  </SortableTh>
                   <Th fontSize={12}>{Columns.uais}</Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("createdAt")} fontSize={12}>
-                    <OrderIcon {...order} column="createdAt" />
+                  <SortableTh
+                    colonne={"createdAt"}
+                    order={order}
+                    handleOrder={(order) => handleOrder(order as keyof typeof Columns)}
+                  >
                     {Columns.createdAt}
-                  </Th>
+                  </SortableTh>
                   <Th isNumeric fontSize={12}>actions</Th>
                 </Tr>
               </Thead>

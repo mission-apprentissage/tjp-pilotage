@@ -59,7 +59,7 @@ export const ConsoleSection = ({
   colonneFilters: (keyof typeof CORRECTIONS_COLUMNS)[];
 }) => {
   const router = useRouter();
-  const getCellColor = (column: keyof typeof CORRECTIONS_COLUMNS) => {
+  const getCellBgColor = (column: keyof typeof CORRECTIONS_COLUMNS) => {
     const groupLabel = Object.keys(GROUPED_CORRECTIONS_COLUMNS).find((groupLabel) => {
       return Object.keys(GROUPED_CORRECTIONS_COLUMNS[groupLabel].options).includes(column);
     });
@@ -94,7 +94,7 @@ export const ConsoleSection = ({
                 order={order}
                 handleOrder={handleOrder}
                 colonneFilters={colonneFilters}
-                getCellColor={getCellColor}
+                getCellBgColor={getCellBgColor}
               />
             </Tr>
           </Thead>
@@ -113,7 +113,7 @@ export const ConsoleSection = ({
                         correction={correction}
                         campagne={campagne}
                         colonneFilters={colonneFilters}
-                        getCellColor={getCellColor}
+                        getCellBgColor={getCellBgColor}
                       />
                     </Tr>
                   </Fragment>

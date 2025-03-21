@@ -89,12 +89,12 @@ export const LineContent = ({
   correction,
   campagne,
   colonneFilters,
-  getCellColor,
+  getCellBgColor,
 }: {
   correction: Corrections["corrections"][0];
   campagne: CampagneType;
   colonneFilters: (keyof typeof CORRECTIONS_COLUMNS)[];
-  getCellColor: (column: keyof typeof CORRECTIONS_COLUMNS) => string;
+  getCellBgColor: (column: keyof typeof CORRECTIONS_COLUMNS) => string;
 }) => {
   return (
     <>
@@ -106,7 +106,7 @@ export const LineContent = ({
         left={0}
         position="sticky"
         zIndex={1}
-        bgColor={getCellColor("libelleEtablissement")}
+        bgColor={getCellBgColor("libelleEtablissement")}
       >
         {correction.libelleEtablissement}
       </ConditionalTd>
@@ -117,24 +117,24 @@ export const LineContent = ({
         position="sticky"
         zIndex={1}
         boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
-        bgColor={getCellColor("commune")}
+        bgColor={getCellBgColor("commune")}
       >
         {formatCommuneLibelleWithCodeDepartement({
           commune: correction.commune,
           codeDepartement: correction.codeDepartement,
         })}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"libelleRegion"} bgColor={getCellColor("libelleRegion")}>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"libelleRegion"} bgColor={getCellBgColor("libelleRegion")}>
         {correction.libelleRegion}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"libelleAcademie"}
-        bgColor={getCellColor("libelleAcademie")}
+        bgColor={getCellBgColor("libelleAcademie")}
       >
         {correction.libelleAcademie}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"secteur"} bgColor={getCellColor("secteur")}>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"secteur"} bgColor={getCellBgColor("secteur")}>
         {correction.secteur === SecteurEnum["PU"] ? "Public" : "Privé"}
       </ConditionalTd>
       <ConditionalTd
@@ -142,7 +142,7 @@ export const LineContent = ({
         colonne={"libelleNsf"}
         minW={300}
         maxW={300}
-        bgColor={getCellColor("libelleNsf")}
+        bgColor={getCellBgColor("libelleNsf")}
       >
         {correction.libelleNsf}
       </ConditionalTd>
@@ -151,7 +151,7 @@ export const LineContent = ({
         colonne={"libelleFormation"}
         minW={300}
         maxW={300}
-        bgColor={getCellColor("libelleFormation")}
+        bgColor={getCellBgColor("libelleFormation")}
       >
         {correction.libelleFormation}
       </ConditionalTd>
@@ -160,19 +160,19 @@ export const LineContent = ({
         colonne={"formationSpecifique"}
         minW={300}
         maxW={300}
-        bgColor={getCellColor("formationSpecifique")}
+        bgColor={getCellBgColor("formationSpecifique")}
       >
         <BadgesFormationSpecifique formationSpecifique={correction.formationSpecifique} />
       </ConditionalTd>
 
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"niveauDiplome"} bgColor={getCellColor("niveauDiplome")}>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"niveauDiplome"} bgColor={getCellBgColor("niveauDiplome")}>
         {correction.niveauDiplome}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"tauxInsertionRegional"}
         textAlign="center"
-        bgColor={getCellColor("tauxInsertionRegional")}
+        bgColor={getCellBgColor("tauxInsertionRegional")}
       >
         <GraphWrapper value={correction.tauxInsertionRegional} />
       </ConditionalTd>
@@ -180,7 +180,7 @@ export const LineContent = ({
         colonneFilters={colonneFilters}
         colonne={"tauxPoursuiteRegional"}
         textAlign="center"
-        bgColor={getCellColor("tauxPoursuiteRegional")}
+        bgColor={getCellBgColor("tauxPoursuiteRegional")}
       >
         <GraphWrapper value={correction.tauxPoursuiteRegional} />
       </ConditionalTd>
@@ -188,7 +188,7 @@ export const LineContent = ({
         colonneFilters={colonneFilters}
         colonne={"tauxDevenirFavorableRegional"}
         textAlign="center"
-        bgColor={getCellColor("tauxDevenirFavorableRegional")}
+        bgColor={getCellBgColor("tauxDevenirFavorableRegional")}
       >
         <GraphWrapper value={correction.tauxDevenirFavorableRegional} />
       </ConditionalTd>
@@ -196,7 +196,7 @@ export const LineContent = ({
         colonneFilters={colonneFilters}
         colonne={"tauxPressionRegional"}
         textAlign="center"
-        bgColor={getCellColor("tauxPressionRegional")}
+        bgColor={getCellBgColor("tauxPressionRegional")}
       >
         <TableBadge sx={getTauxPressionStyle(correction.tauxPressionRegional)}>
           {typeof correction.tauxPressionRegional !== "undefined" ? formatNumber(correction.tauxPressionRegional) : "-"}
@@ -206,7 +206,7 @@ export const LineContent = ({
         colonneFilters={colonneFilters}
         colonne={"nbEtablissement"}
         isNumeric
-        bgColor={getCellColor("nbEtablissement")}
+        bgColor={getCellBgColor("nbEtablissement")}
       >
         {correction.nbEtablissement}
       </ConditionalTd>
@@ -214,7 +214,7 @@ export const LineContent = ({
         colonneFilters={colonneFilters}
         colonne={"positionQuadrant"}
         isNumeric
-        bgColor={getCellColor("positionQuadrant")}
+        bgColor={getCellBgColor("positionQuadrant")}
       >
         {correction.positionQuadrant ?? "-"}
       </ConditionalTd>
@@ -222,7 +222,7 @@ export const LineContent = ({
         colonneFilters={colonneFilters}
         colonne={"capaciteScolaireCorrigee"}
         textAlign={"center"}
-        bgColor={getCellColor("capaciteScolaireCorrigee")}
+        bgColor={getCellBgColor("capaciteScolaireCorrigee")}
       >
         {correction.capaciteScolaireCorrigee ?? 0}
       </ConditionalTd>
@@ -230,7 +230,7 @@ export const LineContent = ({
         colonneFilters={colonneFilters}
         colonne={"ecartScolaire"}
         textAlign={"center"}
-        bgColor={getCellColor("ecartScolaire")}
+        bgColor={getCellBgColor("ecartScolaire")}
       >
         {formatEcart(correction.ecartScolaire ?? 0)}
       </ConditionalTd>
@@ -238,7 +238,7 @@ export const LineContent = ({
         colonneFilters={colonneFilters}
         colonne={"capaciteApprentissageCorrigee"}
         textAlign={"center"}
-        bgColor={getCellColor("capaciteApprentissageCorrigee")}
+        bgColor={getCellBgColor("capaciteApprentissageCorrigee")}
       >
         {correction.capaciteApprentissageCorrigee ?? 0}
       </ConditionalTd>
@@ -246,14 +246,14 @@ export const LineContent = ({
         colonneFilters={colonneFilters}
         colonne={"ecartApprentissage"}
         textAlign={"center"}
-        bgColor={getCellColor("ecartApprentissage")}
+        bgColor={getCellBgColor("ecartApprentissage")}
       >
         {formatEcart(correction.ecartApprentissage ?? 0)}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"raisonCorrection"}
-        bgColor={getCellColor("raisonCorrection")}
+        bgColor={getCellBgColor("raisonCorrection")}
       >
         {handleRaisonLabel({
           raison: correction.raisonCorrection,
@@ -267,7 +267,7 @@ export const LineContent = ({
         maxW={400}
         textOverflow={"ellipsis"}
         isTruncated={true}
-        bgColor={getCellColor("motifCorrection")}
+        bgColor={getCellBgColor("motifCorrection")}
       >
         {handleMotifCorrectionLabel({
           motifCorrection: correction.motifCorrection,
@@ -280,11 +280,11 @@ export const LineContent = ({
         colonne={"libelleColoration"}
         minW={300}
         maxW={300}
-        bgColor={getCellColor("libelleColoration")}
+        bgColor={getCellBgColor("libelleColoration")}
       >
         {correction.libelleColoration}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"commentaire"} bgColor={getCellColor("commentaire")}>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"commentaire"} bgColor={getCellBgColor("commentaire")}>
         {correction.commentaire}
       </ConditionalTd>
     </>

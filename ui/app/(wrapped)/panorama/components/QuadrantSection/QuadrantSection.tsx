@@ -115,21 +115,6 @@ const useQuadrantSection = (formations?: PanoramaFormations) => {
   };
 };
 
-interface QuadrantSectionProps {
-  quadrantFormations?: PanoramaFormations;
-  isLoading: boolean;
-  meanPoursuite?: number;
-  meanInsertion?: number;
-  order?: Partial<Order>;
-  handleOrder: (column: Order["orderBy"]) => void;
-  codeRegion?: string;
-  codeNiveauDiplome?: string;
-  codeNsf?: string;
-  codeDepartement?: string;
-  nbFormationsTotal?: number;
-  effectifEntreeTotal?: number;
-}
-
 export const QuadrantSection = ({
   quadrantFormations,
   isLoading,
@@ -143,7 +128,20 @@ export const QuadrantSection = ({
   codeDepartement,
   nbFormationsTotal,
   effectifEntreeTotal,
-}: QuadrantSectionProps) => {
+}: {
+  quadrantFormations?: PanoramaFormations;
+  isLoading: boolean;
+  meanPoursuite?: number;
+  meanInsertion?: number;
+  order: Partial<Order>;
+  handleOrder: (column: Order["orderBy"]) => void;
+  codeRegion?: string;
+  codeNiveauDiplome?: string;
+  codeNsf?: string;
+  codeDepartement?: string;
+  nbFormationsTotal?: number;
+  effectifEntreeTotal?: number;
+}) => {
   const { filteredFormations, filters, setFilters, effectifEntree } = useQuadrantSection(quadrantFormations);
 
   return (

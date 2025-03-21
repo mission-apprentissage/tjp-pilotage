@@ -1,10 +1,10 @@
-import { Th, Tooltip, Tr } from "@chakra-ui/react";
+import { Tooltip, Tr } from "@chakra-ui/react";
 
 import type {
   FiltersPilotageIntentions,
   OrderPilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
-import { OrderIcon } from "@/components/OrderIcon";
+import { SortableTh } from "@/components/SortableTh";
 
 export const HeadlineContent =
   ({
@@ -20,54 +20,33 @@ export const HeadlineContent =
   }) => {
     return (
       <Tr>
-        <Th cursor={"pointer"} onClick={() => handleOrder("libelle")} fontSize={12}>
-          <OrderIcon {...order} column="libelle" />
+        <SortableTh handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="libelle">
           {isZoneGeographiqueSelected ? filters?.scope : "Domaine"}
-        </Th>
-        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("placesTransformees")} fontSize={12}>
-          <OrderIcon {...order} column="placesTransformees" />
+        </SortableTh>
+        <SortableTh isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="placesTransformees">
           Places transformées
-        </Th>
-        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("effectif")} fontSize={12}>
-          <OrderIcon {...order} column="effectif" />
+        </SortableTh>
+        <SortableTh isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="effectif">
           Effectif en entrée
-        </Th>
-        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("tauxTransformation")} fontSize={12}>
-          <>
-            <OrderIcon {...order} column="tauxTransformation" />
-            <Tooltip label={"Places transformées / effectif"}>Taux de transformation</Tooltip>
-          </>
-        </Th>
-        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("placesOuvertes")} fontSize={12}>
-          <>
-            <OrderIcon {...order} column="placesOuvertes" />
-            <Tooltip label={"Places ouvertes"}>dont ouvertures</Tooltip>
-          </>
-        </Th>
-        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("placesFermees")} fontSize={12}>
-          <>
-            <OrderIcon {...order} column="placesFermees" />
-            <Tooltip label={"Places fermées"}>dont fermetures</Tooltip>
-          </>
-        </Th>
-        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("placesColorees")} fontSize={12}>
-          <>
-            <OrderIcon {...order} column="placesColorees" />
-            <Tooltip label={"Places colorées"}>dont colorations</Tooltip>
-          </>
-        </Th>
-        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("solde")} fontSize={12}>
-          <>
-            <OrderIcon {...order} column="solde" />
-            <Tooltip label={"Places ouvertes - places fermées"}>solde</Tooltip>
-          </>
-        </Th>
-        <Th isNumeric cursor={"pointer"} onClick={() => handleOrder("ratioFermeture")} fontSize={12}>
-          <>
-            <OrderIcon {...order} column="ratioFermeture" />
-            <Tooltip label={"Places fermées / places transformées"}>ratio fermetures</Tooltip>
-          </>
-        </Th>
+        </SortableTh>
+        <SortableTh isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="tauxTransformation">
+          <Tooltip label={"Places transformées / effectif"}>Taux de transformation</Tooltip>
+        </SortableTh>
+        <SortableTh isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="placesOuvertes">
+          <Tooltip label={"Places ouvertes"}>dont ouvertures</Tooltip>
+        </SortableTh>
+        <SortableTh isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="placesFermees">
+          <Tooltip label={"Places fermées"}>dont fermetures</Tooltip>
+        </SortableTh>
+        <SortableTh isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="placesColorees">
+          <Tooltip label={"Places colorées"}>dont colorations</Tooltip>
+        </SortableTh>
+        <SortableTh isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="solde">
+          <Tooltip label={"Places ouvertes - places fermées"}>solde</Tooltip>
+        </SortableTh>
+        <SortableTh isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="ratioFermeture">
+          <Tooltip label={"Places fermées / places transformées"}>ratio fermetures</Tooltip>
+        </SortableTh>
       </Tr>
     );
   };

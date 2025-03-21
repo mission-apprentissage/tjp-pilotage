@@ -1,10 +1,10 @@
-import { Box, Flex, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from '@chakra-ui/react';
+import { Box, Flex, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Thead, Tooltip, Tr } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { ANNEE_CHOMAGE } from 'shared';
 
 import type { Order, PilotageReformeStatsRegion, TauxTransformation } from "@/app/(wrapped)/suivi-impact/types";
 import { GlossaireShortcut } from '@/components/GlossaireShortcut';
-import { OrderIcon } from "@/components/OrderIcon";
+import {SortableTh} from '@/components/SortableTh';
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { formatPercentageFixedDigits } from "@/utils/formatUtils";
 
@@ -118,13 +118,11 @@ export const VueRegionAcademieSection = ({
             <Table variant="striped" size={"sm"}>
               <Thead position="sticky" top="0" bg="white" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" zIndex={1}>
                 <Tr>
-                  <Th cursor="pointer" pb="4" onClick={() => handleOrder("libelleRegion")}>
-                    <OrderIcon {...order} column="libelleRegion" />
+                  <SortableTh pb={4} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="libelleRegion">
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.libelleRegion}
-                  </Th>
-                  <Th isNumeric cursor="pointer" pb="4"  onClick={() => handleOrder("tauxTransformationCumule")}>
+                  </SortableTh>
+                  <SortableTh pb={4} isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="tauxTransformationCumule">
                     <Flex alignItems="center">
-                      <OrderIcon {...order} column="tauxTransformationCumule" />
                       <Text align="left">
                       Taux de transfo. cumulé
                         <br/>
@@ -141,10 +139,9 @@ export const VueRegionAcademieSection = ({
                         onClick={() => onModalOpen()}
                       />
                     </Flex>
-                  </Th>
-                  <Th isNumeric cursor="pointer" pb="4" onClick={() => handleOrder("tauxTransformationCumulePrevisionnel")}>
+                  </SortableTh>
+                  <SortableTh pb={4} isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="tauxTransformationCumulePrevisionnel">
                     <Flex alignItems="center">
-                      <OrderIcon {...order} column="tauxTransformationCumulePrevisionnel" />
                       <Text align="left">
                         Taux de transfo. cumulé
                         <br/>
@@ -161,10 +158,9 @@ export const VueRegionAcademieSection = ({
                         onClick={() => onModalOpen()}
                       />
                     </Flex>
-                  </Th>
-                  <Th isNumeric cursor="pointer" pb="4"  onClick={() => handleOrder("tauxPoursuite")}>
+                  </SortableTh>
+                  <SortableTh pb={4} isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="tauxPoursuite">
                     <Flex alignItems="center">
-                      <OrderIcon {...order} column="tauxPoursuite"/>
                       <Text align="left">
                           Taux de poursuite
                         <br/>
@@ -183,10 +179,9 @@ export const VueRegionAcademieSection = ({
                         }
                       />
                     </Flex>
-                  </Th>
-                  <Th isNumeric cursor="pointer" pb="4"  onClick={() => handleOrder("tauxInsertion")}>
+                  </SortableTh>
+                  <SortableTh pb={4} isNumeric handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="tauxInsertion">
                     <Flex alignItems="center">
-                      <OrderIcon {...order} column="tauxInsertion" />
                       <Text align="left">
                         Taux d'emploi
                         <br/>
@@ -205,12 +200,11 @@ export const VueRegionAcademieSection = ({
                         }
                       />
                     </Flex>
-                  </Th>
-                  <Th isNumeric cursor="pointer" pb="4" width="15%" onClick={() => handleOrder("tauxChomage")}>
-                    <OrderIcon {...order} column="tauxChomage" />
+                  </SortableTh>
+                  <SortableTh pb={4} isNumeric w={"15%"} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="tauxChomage">
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxChomage}
                     <TooltipIcon ml="1" label={`T4 ${ANNEE_CHOMAGE}`}/>
-                  </Th>
+                  </SortableTh>
                 </Tr>
               </Thead>
               <Tbody>

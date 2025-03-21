@@ -39,7 +39,7 @@ import {getMessageAccompagnementCampagne} from '@/app/(wrapped)/intentions/utils
 import {canCorrectDemande,canCreateDemande, canImportDemande} from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
 import {canEditDemandeIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
-import { OrderIcon } from "@/components/OrderIcon";
+import {SortableTh} from '@/components/SortableTh';
 import { TableFooter } from "@/components/TableFooter";
 import { formatCodeDepartement, formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { getRoutingSaisieRecueilDemande, getRoutingSyntheseRecueilDemande } from "@/utils/getRoutingRecueilDemande";
@@ -251,35 +251,25 @@ export const PageClient = () => {
               <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" variant="striped" fontSize={14} gap="0">
                 <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white" zIndex={"1"}>
                   <Tr>
-                    <Th cursor="pointer" onClick={() => handleOrder("updatedAt")} fontSize={12}>
-                      <OrderIcon {...order} column="updatedAt" />
+                    <SortableTh handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="updatedAt">
                       {DEMANDES_COLUMNS.updatedAt}
-                    </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("libelleFormation")} fontSize={12}>
-                      <OrderIcon {...order} column="libelleFormation" />
+                    </SortableTh>
+                    <SortableTh handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="libelleFormation">
                       {DEMANDES_COLUMNS.libelleFormation}
-                    </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("libelleEtablissement")} w={400} fontSize={12}>
-                      <OrderIcon {...order} column="libelleEtablissement" />
+                    </SortableTh>
+                    <SortableTh w={400} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="libelleEtablissement">
                       {DEMANDES_COLUMNS.libelleEtablissement}
-                    </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("libelleDepartement")} fontSize={12}>
-                      <OrderIcon {...order} column="libelleDepartement" />
-                      {DEMANDES_COLUMNS.libelleDepartement}
-                    </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("statut")} textAlign={"center"} fontSize={12}>
-                      <OrderIcon {...order} column="statut" />
+                    </SortableTh>
+                    <SortableTh handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="statut">
                       {DEMANDES_COLUMNS.statut}
-                    </Th>
+                    </SortableTh>
                     <Th textAlign={"center"} fontSize={12}>Actions</Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("typeDemande")} textAlign={"center"} fontSize={12}>
-                      <OrderIcon {...order} column="typeDemande" />
+                    <SortableTh textAlign={"center"} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="typeDemande">
                       {DEMANDES_COLUMNS.typeDemande}
-                    </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("userName")} w="15" fontSize={12}>
-                      <OrderIcon {...order} column="userName" />
+                    </SortableTh>
+                    <SortableTh w="15" handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="userName">
                       {DEMANDES_COLUMNS.userName}
-                    </Th>
+                    </SortableTh>
                   </Tr>
                 </Thead>
                 <Tbody>

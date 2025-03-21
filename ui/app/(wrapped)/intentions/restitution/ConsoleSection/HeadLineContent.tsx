@@ -1,10 +1,10 @@
-import { Box, chakra, Text, Th, Tooltip } from "@chakra-ui/react";
-import type { CSSProperties } from "react";
+import { Box, chakra, Text, Tooltip } from "@chakra-ui/react";
+import type { CSSProperties, ReactNode } from "react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 import type { OrderDemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
-import { OrderIcon } from "@/components/OrderIcon";
+import {SortableTh} from '@/components/SortableTh';
 import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
@@ -15,64 +15,58 @@ const ConditionalTh = chakra(
     style,
     colonneFilters,
     colonne,
-    onClick,
+    handleOrder,
+    getCellBgColor,
+    order,
     isNumeric = false,
     overrideTooltip,
   }: {
     className?: string;
     style?: CSSProperties;
-    children: React.ReactNode;
+    children: ReactNode;
     colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
     colonne: keyof typeof STATS_DEMANDES_COLUMNS;
-    onClick?: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
+    handleOrder?: (colonne: OrderDemandesRestitutionIntentions["orderBy"]) => void;
+    getCellBgColor: (colonne: keyof typeof STATS_DEMANDES_COLUMNS) => string;
+    order: Partial<OrderDemandesRestitutionIntentions>,
     isNumeric?: boolean;
     overrideTooltip?: (tooltip: string) => string;
   }) => {
     if (colonneFilters.includes(colonne))
       return (
-        <Th
+        <SortableTh
           maxW={170}
           p={2}
           className={className}
           style={style}
           isNumeric={isNumeric}
-          cursor={onClick ? "pointer" : "default"}
-          onClick={() => onClick && onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])}
+          colonne={colonne}
+          order={order}
+          handleOrder={handleOrder ? (colonne) => handleOrder(colonne as OrderDemandesRestitutionIntentions["orderBy"]) : undefined}
+          bgColor={getCellBgColor(colonne)}
         >
           <Tooltip label={overrideTooltip ? overrideTooltip(STATS_DEMANDES_COLUMNS[colonne]) : STATS_DEMANDES_COLUMNS[colonne]} placement="top">
-            <Box
-              fontSize={12}
-              fontWeight={700}
-              lineHeight={"20px"}
-              textTransform={"uppercase"}
-              textOverflow={"ellipsis"}
-              alignSelf={"stretch"}
-              isTruncated
-              whiteSpace="nowrap"
-              display="flex"
-              alignItems="center"
-            >
-              {children}
-            </Box>
+            {children}
           </Tooltip>
-        </Th>
+        </SortableTh>
       );
     return null;
-  }
+  },
+  { shouldForwardProp: (_prop) => true }
 );
 
 export const HeadLineContent = ({
   order,
   handleOrder,
   colonneFilters,
-  getCellColor,
+  getCellBgColor,
   displayPilotageColumns,
   currentRS,
 }: {
   order: OrderDemandesRestitutionIntentions;
   handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
-  getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
+  getCellBgColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
   displayPilotageColumns: boolean;
   currentRS: string;
 }) => {
@@ -82,81 +76,81 @@ export const HeadLineContent = ({
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"libelleEtablissement"}
-        onClick={handleOrder}
         minW={300}
         maxW={300}
         position="sticky"
         zIndex={"sticky"}
         left="0"
-        bgColor={getCellColor("libelleEtablissement")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="libelleEtablissement" />
         {STATS_DEMANDES_COLUMNS.libelleEtablissement}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"commune"}
-        onClick={handleOrder}
         left={colonneFilters.includes("libelleEtablissement") ? 300 : 0}
         position="sticky"
         zIndex={"sticky"}
         boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
-        bgColor={getCellColor("commune")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="commune" />
         {STATS_DEMANDES_COLUMNS.commune}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"libelleRegion"}
-        onClick={handleOrder}
-        bgColor={getCellColor("libelleRegion")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="libelleRegion" />
         {STATS_DEMANDES_COLUMNS.libelleRegion}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"libelleAcademie"}
-        onClick={handleOrder}
-        bgColor={getCellColor("libelleAcademie")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="libelleAcademie" />
         {STATS_DEMANDES_COLUMNS.libelleAcademie}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"secteur"}
-        onClick={handleOrder}
-        bgColor={getCellColor("secteur")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="secteur" />
         {STATS_DEMANDES_COLUMNS.secteur}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"libelleNsf"}
-        onClick={handleOrder}
         minW={200}
         maxW={200}
-        bgColor={getCellColor("libelleNsf")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="libelleNsf" />
         {STATS_DEMANDES_COLUMNS.libelleNsf}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"libelleFormation"}
-        onClick={handleOrder}
-        bgColor={getCellColor("libelleFormation")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="libelleFormation" />
         {STATS_DEMANDES_COLUMNS.libelleFormation}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"formationSpecifique"}
-        bgColor={getCellColor("formationSpecifique")}
+        getCellBgColor={getCellBgColor}
       >
         {STATS_DEMANDES_COLUMNS.formationSpecifique}
         <TooltipIcon ml="1" mt="1px" label="Cliquez pour plus d'infos." onClick={() => openGlossaire("formation-specifique")} />
@@ -164,192 +158,193 @@ export const HeadLineContent = ({
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"libelleNiveauDiplome"}
-        onClick={handleOrder}
-        bgColor={getCellColor("libelleNiveauDiplome")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="libelleNiveauDiplome" />
         {STATS_DEMANDES_COLUMNS.libelleNiveauDiplome}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"typeDemande"}
-        onClick={handleOrder}
-        bgColor={getCellColor("typeDemande")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="typeDemande" />
         {STATS_DEMANDES_COLUMNS.typeDemande}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"motif"}
-        onClick={handleOrder}
-        bgColor={getCellColor("motif")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="motif" />
         {STATS_DEMANDES_COLUMNS.motif}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"differenceCapaciteScolaire"}
-        onClick={handleOrder}
         isNumeric
-        bgColor={getCellColor("differenceCapaciteScolaire")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="differenceCapaciteScolaire" />
         {STATS_DEMANDES_COLUMNS.differenceCapaciteScolaire}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"differenceCapaciteApprentissage"}
-        onClick={handleOrder}
         isNumeric
-        bgColor={getCellColor("differenceCapaciteApprentissage")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="differenceCapaciteApprentissage" />
         {STATS_DEMANDES_COLUMNS.differenceCapaciteApprentissage}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"differenceCapaciteScolaireColoree"}
-        onClick={handleOrder}
         isNumeric
-        bgColor={getCellColor("differenceCapaciteScolaireColoree")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="differenceCapaciteScolaireColoree" />
         {STATS_DEMANDES_COLUMNS.differenceCapaciteScolaireColoree}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"differenceCapaciteApprentissageColoree"}
-        onClick={handleOrder}
         isNumeric
-        bgColor={getCellColor("differenceCapaciteApprentissageColoree")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="differenceCapaciteApprentissageColoree" />
         {STATS_DEMANDES_COLUMNS.differenceCapaciteApprentissageColoree}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"libelleColoration"}
-        onClick={handleOrder}
-        bgColor={getCellColor("libelleColoration")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="libelleColoration" />
         {STATS_DEMANDES_COLUMNS.libelleColoration}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"libelleFCIL"}
-        onClick={handleOrder}
-        bgColor={getCellColor("libelleFCIL")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="libelleFCIL" />
         {STATS_DEMANDES_COLUMNS.libelleFCIL}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"amiCma"}
-        onClick={handleOrder}
-        bgColor={getCellColor("amiCma")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="amiCma" />
         {STATS_DEMANDES_COLUMNS.amiCma}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"amiCmaValide"}
-        onClick={handleOrder}
-        bgColor={getCellColor("amiCmaValide")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="amiCmaValide" />
         {STATS_DEMANDES_COLUMNS.amiCmaValide}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"amiCmaEnCoursValidation"}
-        onClick={handleOrder}
-        bgColor={getCellColor("amiCmaEnCoursValidation")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="amiCmaEnCoursValidation" />
         {STATS_DEMANDES_COLUMNS.amiCmaEnCoursValidation}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"amiCmaValideAnnee"}
-        onClick={handleOrder}
-        bgColor={getCellColor("amiCmaValideAnnee")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="amiCmaValideAnnee" />
         {STATS_DEMANDES_COLUMNS.amiCmaValideAnnee}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"filiereCmq"}
-        onClick={handleOrder}
-        bgColor={getCellColor("filiereCmq")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="filiereCmq" />
         {STATS_DEMANDES_COLUMNS.filiereCmq}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"nomCmq"}
-        onClick={handleOrder}
-        bgColor={getCellColor("nomCmq")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="nomCmq" />
         {STATS_DEMANDES_COLUMNS.nomCmq}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"inspecteurReferent"}
-        onClick={handleOrder}
-        bgColor={getCellColor("inspecteurReferent")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="inspecteurReferent" />
         {STATS_DEMANDES_COLUMNS.inspecteurReferent}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"partenaireEconomique1"}
-        onClick={handleOrder}
-        bgColor={getCellColor("partenaireEconomique1")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="partenaireEconomique1" />
         {STATS_DEMANDES_COLUMNS.partenaireEconomique1}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"partenaireEconomique2"}
-        onClick={handleOrder}
-        bgColor={getCellColor("partenaireEconomique2")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="partenaireEconomique2" />
         {STATS_DEMANDES_COLUMNS.partenaireEconomique2}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"commentaire"}
-        onClick={handleOrder}
-        bgColor={getCellColor("commentaire")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="commentaire" />
         {STATS_DEMANDES_COLUMNS.commentaire}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"numero"}
-        onClick={handleOrder}
-        bgColor={getCellColor("numero")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="numero" />
         {STATS_DEMANDES_COLUMNS.numero}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"positionQuadrant"}
         isNumeric
-        bgColor={getCellColor("positionQuadrant")}
+        getCellBgColor={getCellBgColor}
+        order={order}
       >
         <TooltipIcon
           mr="1"
@@ -361,13 +356,13 @@ export const HeadLineContent = ({
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"tauxInsertionRegional"}
-        onClick={handleOrder}
         textAlign="center"
         minW={200}
         maxW={200}
-        bgColor={getCellColor("tauxInsertionRegional")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="tauxInsertionRegional" />
         {STATS_DEMANDES_COLUMNS.tauxInsertionRegional}
         <TooltipIcon
           ml="1"
@@ -379,11 +374,11 @@ export const HeadLineContent = ({
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"tauxPoursuiteRegional"}
-        onClick={handleOrder}
         textAlign="center"
-        bgColor={getCellColor("tauxPoursuiteRegional")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="tauxPoursuiteRegional" />
         {STATS_DEMANDES_COLUMNS.tauxPoursuiteRegional}
         <TooltipIcon
           ml="1"
@@ -395,11 +390,11 @@ export const HeadLineContent = ({
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"tauxDevenirFavorableRegional"}
-        onClick={handleOrder}
         textAlign="center"
-        bgColor={getCellColor("tauxDevenirFavorableRegional")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="tauxDevenirFavorableRegional" />
         {STATS_DEMANDES_COLUMNS.tauxDevenirFavorableRegional}
         <TooltipIcon
           ml="2"
@@ -410,11 +405,11 @@ export const HeadLineContent = ({
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"tauxPressionRegional"}
-        onClick={handleOrder}
         textAlign="center"
-        bgColor={getCellColor("tauxPressionRegional")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="tauxPressionRegional" />
         {STATS_DEMANDES_COLUMNS.tauxPressionRegional}
         <TooltipIcon
           ml="1"
@@ -431,175 +426,186 @@ export const HeadLineContent = ({
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"nbEtablissement"}
-        onClick={handleOrder}
         isNumeric
         minW={200}
         maxW={200}
-        bgColor={getCellColor("nbEtablissement")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="nbEtablissement" />
         {STATS_DEMANDES_COLUMNS.nbEtablissement}
         <TooltipIcon ml="1" mt="1px" label="Le nombre d'établissement dispensant la formation dans la région." />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"nbRecrutementRH"}
-        onClick={handleOrder}
-        bgColor={getCellColor("nbRecrutementRH")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="nbRecrutementRH" />
         {STATS_DEMANDES_COLUMNS.nbRecrutementRH}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"nbReconversionRH"}
-        onClick={handleOrder}
-        bgColor={getCellColor("nbReconversionRH")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="nbReconversionRH" />
         {STATS_DEMANDES_COLUMNS.nbReconversionRH}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"nbProfesseurAssocieRH"}
-        onClick={handleOrder}
-        bgColor={getCellColor("nbProfesseurAssocieRH")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="nbProfesseurAssocieRH" />
         {STATS_DEMANDES_COLUMNS.nbProfesseurAssocieRH}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"nbFormationRH"}
-        onClick={handleOrder}
-        bgColor={getCellColor("nbFormationRH")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="nbFormationRH" />
         {STATS_DEMANDES_COLUMNS.nbFormationRH}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"travauxAmenagement"}
-        onClick={handleOrder}
-        bgColor={getCellColor("travauxAmenagement")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="travauxAmenagement" />
         {STATS_DEMANDES_COLUMNS.travauxAmenagement}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"travauxAmenagementCout"}
-        onClick={handleOrder}
-        bgColor={getCellColor("travauxAmenagementCout")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="travauxAmenagementCout" />
         {STATS_DEMANDES_COLUMNS.travauxAmenagementCout}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"travauxAmenagementDescription"}
-        onClick={handleOrder}
-        bgColor={getCellColor("travauxAmenagementDescription")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="travauxAmenagementDescription" />
         {STATS_DEMANDES_COLUMNS.travauxAmenagementDescription}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"achatEquipement"}
-        onClick={handleOrder}
-        bgColor={getCellColor("achatEquipement")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="achatEquipement" />
         {STATS_DEMANDES_COLUMNS.achatEquipement}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"achatEquipementCout"}
-        onClick={handleOrder}
-        bgColor={getCellColor("achatEquipementCout")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="achatEquipementCout" />
         {STATS_DEMANDES_COLUMNS.achatEquipementCout}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"achatEquipementDescription"}
-        onClick={handleOrder}
-        bgColor={getCellColor("achatEquipementDescription")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="achatEquipementDescription" />
         {STATS_DEMANDES_COLUMNS.achatEquipementDescription}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilHebergement"}
-        onClick={handleOrder}
-        bgColor={getCellColor("augmentationCapaciteAccueilHebergement")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="augmentationCapaciteAccueilHebergement" />
         {STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilHebergement}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilHebergementPlaces"}
-        onClick={handleOrder}
-        bgColor={getCellColor("augmentationCapaciteAccueilHebergementPlaces")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="augmentationCapaciteAccueilHebergementPlaces" />
         {STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilHebergementPlaces}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilHebergementPrecisions"}
-        onClick={handleOrder}
-        bgColor={getCellColor("augmentationCapaciteAccueilHebergementPrecisions")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="augmentationCapaciteAccueilHebergementPrecisions" />
         {STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilHebergementPrecisions}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilRestauration"}
-        onClick={handleOrder}
-        bgColor={getCellColor("augmentationCapaciteAccueilRestauration")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="augmentationCapaciteAccueilRestauration" />
         {STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilRestauration}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilRestaurationPlaces"}
-        onClick={handleOrder}
-        bgColor={getCellColor("augmentationCapaciteAccueilRestaurationPlaces")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="augmentationCapaciteAccueilRestaurationPlaces" />
         {STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilRestaurationPlaces}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilRestaurationPrecisions"}
-        onClick={handleOrder}
-        bgColor={getCellColor("augmentationCapaciteAccueilRestaurationPrecisions")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="augmentationCapaciteAccueilRestaurationPrecisions" />
         {STATS_DEMANDES_COLUMNS.augmentationCapaciteAccueilRestaurationPrecisions}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"statut"}
-        onClick={handleOrder}
-        bgColor={getCellColor("statut")}
+        getCellBgColor={getCellBgColor}
+        handleOrder={handleOrder}
+        order={order}
       >
-        <OrderIcon {...order} column="statut" />
         {STATS_DEMANDES_COLUMNS.statut}
       </ConditionalTh>
-      <ConditionalTh colonneFilters={colonneFilters} colonne={"motifRefus"} bgColor={getCellColor("motifRefus")}>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"motifRefus"}
+        getCellBgColor={getCellBgColor}
+        order={order}
+      >
         {STATS_DEMANDES_COLUMNS.motifRefus}
       </ConditionalTh>
       {displayPilotageColumns && (
         <>
-          <ConditionalTh colonneFilters={colonneFilters} colonne={"pilotageCapacite"} bgColor={getCellColor("pilotageCapacite")} overrideTooltip={(tooltip) => tooltip.replace("{0}", currentRS)}>
+          <ConditionalTh
+            colonneFilters={colonneFilters}
+            colonne={"pilotageCapacite"}
+            getCellBgColor={getCellBgColor}
+            order={order}
+            overrideTooltip={(tooltip) => tooltip.replace("{0}", currentRS)}
+          >
             {STATS_DEMANDES_COLUMNS.pilotageCapacite.replace("{0}", currentRS)}
             <TooltipIcon
               ml="1"
@@ -617,7 +623,8 @@ export const HeadLineContent = ({
           <ConditionalTh
             colonneFilters={colonneFilters}
             colonne={"pilotageEffectif"}
-            bgColor={getCellColor("pilotageEffectif")}
+            getCellBgColor={getCellBgColor}
+            order={order}
             overrideTooltip={(tooltip) => tooltip.replace("{0}", currentRS)}
           >
             {STATS_DEMANDES_COLUMNS.pilotageEffectif.replace("{0}", currentRS)}
@@ -640,9 +647,10 @@ export const HeadLineContent = ({
           <ConditionalTh
             colonneFilters={colonneFilters}
             colonne={"pilotageTauxRemplissage"}
-            bgColor={getCellColor("pilotageTauxRemplissage")}
             overrideTooltip={(tooltip) => tooltip.replace("{0}", currentRS)}
             maxW={200}
+            getCellBgColor={getCellBgColor}
+            order={order}
           >
             {STATS_DEMANDES_COLUMNS.pilotageTauxRemplissage.replace("{0}", currentRS)}
             <TooltipIcon
@@ -664,9 +672,10 @@ export const HeadLineContent = ({
           <ConditionalTh
             colonneFilters={colonneFilters}
             colonne={"pilotageTauxPression"}
-            bgColor={getCellColor("pilotageTauxPression")}
             overrideTooltip={(tooltip) => tooltip.replace("{0}", currentRS)}
             maxW={200}
+            getCellBgColor={getCellBgColor}
+            order={order}
           >
             {STATS_DEMANDES_COLUMNS.pilotageTauxPression.replace("{0}", currentRS)}
             <TooltipIcon
@@ -688,9 +697,10 @@ export const HeadLineContent = ({
           <ConditionalTh
             colonneFilters={colonneFilters}
             colonne={"pilotageTauxDemande"}
-            bgColor={getCellColor("pilotageTauxDemande")}
             overrideTooltip={(tooltip) => tooltip.replace("{0}", currentRS)}
             maxW={200}
+            getCellBgColor={getCellBgColor}
+            order={order}
           >
             {STATS_DEMANDES_COLUMNS.pilotageTauxDemande.replace("{0}", currentRS)}
             <TooltipIcon

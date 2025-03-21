@@ -1,25 +1,8 @@
 "use client";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  chakra,
-  Flex,
-  Input,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuGroup,
-  MenuItemOption,
-  MenuList,
-  Portal,
-  Tag,
-  Text,
-  Tooltip,
-  VisuallyHidden,
-} from "@chakra-ui/react";
-import type { ChangeEventHandler, ReactNode } from "react";
-import { memo, useId, useMemo, useRef, useState } from "react";
+import {Box, Button, chakra, Checkbox, CheckboxGroup,Flex, Input, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Tag, Text, Tooltip, VisuallyHidden} from '@chakra-ui/react';
+import type { ReactNode } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import removeAccents from "remove-accents";
 import type { OptionType } from "shared/schema/optionSchema";
 
@@ -27,91 +10,6 @@ const ButtonContent = ({ selected, children }: { selected: string[]; children: R
   if (!selected.length) return <>{children}</>;
   if (selected.length === 1) return <>{selected[0]}</>;
   return <>{selected.length} sélectionnés</>;
-};
-
-const Checkbox = ({
-  value,
-  onChange,
-  children,
-  checked,
-}: {
-  value: string;
-  onChange: ChangeEventHandler;
-  children: string;
-  checked: boolean;
-}) => {
-  return (
-    <label style={{ display: "flex", alignItems: "center" }}>
-      <input checked={checked} value={value} onChange={onChange} hidden type="checkbox"/>
-      <CheckboxIcon checked={checked} />
-      {children}
-    </label>
-  );
-};
-
-// eslint-disable-next-line react/display-name
-const InputWapper = memo(
-  ({
-    onChange,
-    ...props
-  }: {
-    value: string;
-    onChange: (_: { checked: boolean; value: string; label: string }) => void;
-    children: string;
-    checked: boolean;
-    isReadOnly?: boolean;
-  }) => {
-    return (
-      <Checkbox
-        onChange={(e) =>
-          props.isReadOnly
-            ? undefined
-            : onChange({
-              checked: (e.target as HTMLInputElement).checked,
-              label: props.children,
-              value: props.value,
-            })
-        }
-        {...props}
-      ></Checkbox>
-    );
-  }
-);
-
-const CheckboxIcon = ({ checked }: { checked: boolean }) => {
-  return (
-    <Flex
-      align="center"
-      justify="center"
-      border="2px solid"
-      height="1rem"
-      width="1rem"
-      mr="2"
-      mt="2px"
-      borderRadius="2"
-      bg={checked ? "bluefrance.113" : ""}
-      transition="background 200ms, border-color 200ms"
-      flexShrink="0"
-      borderColor={checked ? "bluefrance.113" : "grey.900"}
-    >
-      {checked && (
-        <svg
-          fontSize="8px"
-          viewBox="0 0 12 10"
-          style={{
-            width: "1.2em",
-            height: "1.2em",
-            fill: "none",
-            strokeWidth: 2,
-            stroke: "white",
-            strokeDasharray: 16,
-          }}
-        >
-          <polyline points="1.5 6 4.5 9 10.5 1" />
-        </svg>
-      )}
-    </Flex>
-  );
 };
 
 export const GroupedMultiselect = chakra(
@@ -261,110 +159,132 @@ export const GroupedMultiselect = chakra(
             </ButtonContent>
           </MenuButton>
         )}
-        <Portal>
-          <MenuList zIndex={"sticky"} maxWidth={450} pt="0">
-            <Flex borderBottom="1px solid" borderBottomColor="grey.900">
-              <VisuallyHidden as="label" htmlFor={id}>
+        <MenuList zIndex={"sticky"} maxWidth={450} pt="0">
+          <Flex borderBottom="1px solid" borderBottomColor="grey.900">
+            <VisuallyHidden as="label" htmlFor={id}>
                 Rechercher dans la liste
-              </VisuallyHidden>
-              <Input
-                id={id}
-                ref={inputRef}
-                placeholder="Rechercher dans la liste"
-                value={search}
-                onInput={async (e) => handleSearch((e.target as HTMLInputElement).value)}
-                px="3"
-                py="2"
-                variant="unstyled"
-              />
-              {defaultOptions ? (
-                <Button
-                  onClick={() => {
-                    const mapDefaultOptions = getDefaultMapOptions();
-                    if (!mapDefaultOptions) return;
-                    onChange?.(Array.from(mapDefaultOptions.keys()));
-                  }}
-                  bgColor={"transparent"}
-                >
-                  {map.size > 0 && (
-                    <Text fontSize={12} fontWeight={"normal"} color="bluefrance.113" p={2}>
+            </VisuallyHidden>
+            <Input
+              id={id}
+              ref={inputRef}
+              placeholder="Rechercher dans la liste"
+              value={search}
+              onChange={async (e) => handleSearch((e.target as HTMLInputElement).value)}
+              px="3"
+              py="2"
+              variant="unstyled"
+              onKeyDown={(e) => {
+                if (e.key === "Tab") {
+                  e.preventDefault();
+                  e.currentTarget.blur();
+                }
+              }}
+            />
+            {defaultOptions ? (
+              <Button
+                onClick={() => {
+                  const mapDefaultOptions = getDefaultMapOptions();
+                  if (!mapDefaultOptions) return;
+                  onChange?.(Array.from(mapDefaultOptions.keys()));
+                }}
+                bgColor={"transparent"}
+                onKeyDown={(e) => {
+                  if (e.key === "Tab") {
+                    e.preventDefault();
+                    e.currentTarget.blur();
+                  }
+                }}
+              >
+                {map.size > 0 && (
+                  <Text fontSize={12} fontWeight={"normal"} color="bluefrance.113" p={2}>
                       Réinitialiser
-                    </Text>
-                  )}
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    onChange?.(Array.from(new Map().keys()));
-                  }}
-                  bgColor={"transparent"}
-                >
-                  {map.size > 0 && (
-                    <Text fontSize={12} fontWeight={"normal"} color="bluefrance.113" p={2}>
+                  </Text>
+                )}
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  onChange?.(Array.from(new Map().keys()));
+                }}
+                bgColor={"transparent"}
+                onKeyDown={(e) => {
+                  if (e.key === "Tab") {
+                    e.preventDefault();
+                    e.currentTarget.blur();
+                  }
+                }}
+              >
+                {map.size > 0 && (
+                  <Text fontSize={12} fontWeight={"normal"} color="bluefrance.113" p={2}>
                       Tout décocher
-                    </Text>
-                  )}
-                </Button>
-              )}
-            </Flex>
-            <Flex direction="column" ref={ref} maxHeight={300} overflow="auto" sx={{ "> *": { px: "3", py: "1.5" } }}>
-              {Object.keys(filteredOptions).map((groupLabel) => (
-                <Box key={groupLabel} p={0}>
-                  <MenuGroup>
-                    <Tag
-                      bgColor={groupedOptions[groupLabel].color}
-                      fontSize={12}
-                      textTransform={"uppercase"}
-                      fontWeight={700}
-                      lineHeight={"20px"}
-                      onClick={() => selectGroupOptions(groupLabel)}
-                      cursor={"pointer"}
-                      ms={5}
-                      my={2}
+                  </Text>
+                )}
+              </Button>
+            )}
+          </Flex>
+          <Flex direction="column" ref={ref} maxHeight={300} overflow="auto" sx={{ "> *": { px: "3", py: "1.5" } }}>
+            {Object.keys(filteredOptions).map((groupLabel) => (
+              <Box key={groupLabel} p={0}>
+                <MenuGroup as={CheckboxGroup}>
+                  <Tag
+                    as={MenuItem}
+                    bgColor={groupedOptions[groupLabel].color}
+                    fontSize={12}
+                    textTransform={"uppercase"}
+                    fontWeight={700}
+                    lineHeight={"20px"}
+                    onClick={() => selectGroupOptions(groupLabel)}
+                    cursor={"pointer"}
+                    w={"fit-content"}
+                    h={"fit-content"}
+                    m={2}
+                    p={2}
+                    py={0}
+                  >
+                    {groupLabel}
+                  </Tag>
+                  {filteredOptions[groupLabel].map(({ value, label, isDisabled, tooltip }) => (
+                    <Checkbox
+                      key={value}
+                      as={MenuItem}
+                      isChecked={!!map.get(value)}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        const newMap = new Map(map);
+                        if (checked) {
+                          newMap.set(value, label);
+                        } else {
+                          newMap.delete(value);
+                        }
+                        onChange?.(Array.from(newMap.keys()));
+                      }}
+                      value={value}
+                      colorScheme="bluefrance"
+                      iconColor={"white"}
                     >
-                      {groupLabel}
-                    </Tag>
-                    {filteredOptions[groupLabel].map(({ value, label, isDisabled, tooltip }) => (
-                      <MenuItemOption key={value} isDisabled={isDisabled}>
-                        <Tooltip label={tooltip} shouldWrapChildren>
-                          <InputWapper
-                            isReadOnly={isDisabled}
-                            checked={!!map.get(value)}
-                            onChange={({ checked, label, value }) => {
-                              const newMap = new Map(map);
-                              if (checked) {
-                                newMap.set(value, label);
-                              } else {
-                                newMap.delete(value);
-                              }
-                              onChange?.(Array.from(newMap.keys()));
-                            }}
-                            value={value}
-                          >
-                            {label}
-                          </InputWapper>
-                        </Tooltip>
-                      </MenuItemOption>
-                    ))}
-                  </MenuGroup>
-                  <MenuDivider mb={0} />
-                </Box>
-              ))}
-              {Object.keys(filteredOptions).length === 0 && (
-                <Text px="3" py="1.5" color="gray.500" textAlign="center">
+                      <Tooltip label={tooltip} shouldWrapChildren>
+                        {label}
+                      </Tooltip>
+                    </Checkbox>
+                  ))}
+                </MenuGroup>
+                <MenuDivider mb={0} />
+              </Box>
+            ))}
+            {Object.keys(filteredOptions).length === 0 && (
+              <Text px="3" py="1.5" color="gray.500" textAlign="center">
                   Aucun résultat trouvé.
-                </Text>
-              )}
-              {Object.keys(filteredOptions).length > limit && (
-                <Box px="3">
-                  <Button size="sm" w="100%" onClick={() => setLimit(limit + 100)}>
+              </Text>
+            )}
+            {Object.keys(filteredOptions).length > limit && (
+              <Box px="3">
+                <Button size="sm" w="100%" onClick={() => setLimit(limit + 100)}>
                     Afficher plus
-                  </Button>
-                </Box>
-              )}
-            </Flex>
-          </MenuList>
-        </Portal>
+                </Button>
+              </Box>
+            )}
+          </Flex>
+        </MenuList>
       </Menu>
     );
   }

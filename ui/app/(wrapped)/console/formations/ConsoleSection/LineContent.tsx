@@ -172,6 +172,7 @@ export const FormationLineContent = ({
             codeDispositif: line.codeDispositif ? [line.codeDispositif] : undefined,
           },
         })}
+        aria-label={`Voir les établissements pour le CFD ${line.cfd} et le code dispositif ${line.codeDispositif}`}
       >
         {line.nbEtablissement ?? "-"}
       </Link>

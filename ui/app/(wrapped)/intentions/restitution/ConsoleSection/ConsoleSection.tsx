@@ -80,7 +80,7 @@ export const ConsoleSection = ({
     return isAllowed && intention.isIntention;
   };
 
-  const getCellColor = (column: keyof typeof STATS_DEMANDES_COLUMNS) => {
+  const getCellBgColor = (column: keyof typeof STATS_DEMANDES_COLUMNS) => {
     const groupLabel = Object.keys(GROUPED_STATS_DEMANDES_COLUMNS).find((groupLabel) => {
       return Object.keys(GROUPED_STATS_DEMANDES_COLUMNS[groupLabel].options).includes(column);
     });
@@ -115,7 +115,7 @@ export const ConsoleSection = ({
                 order={order}
                 handleOrder={handleOrder}
                 colonneFilters={colonneFilters}
-                getCellColor={getCellColor}
+                getCellBgColor={getCellBgColor}
                 displayPilotageColumns={displayPilotageColumns}
                 currentRS={currentRS}
               />
@@ -139,7 +139,7 @@ export const ConsoleSection = ({
                       <LineContent
                         demande={demande}
                         colonneFilters={colonneFilters}
-                        getCellColor={getCellColor}
+                        getCellBgColor={getCellBgColor}
                         displayPilotageColumns={displayPilotageColumns}
                       />
                     </Tr>

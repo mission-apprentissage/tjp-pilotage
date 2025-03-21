@@ -131,7 +131,7 @@ export const QuadrantDisplay = ({
   formations: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
-  order?: Partial<Order>;
+  order: Partial<Order>;
   handleOrder: (column: Order["orderBy"]) => void;
   isLoading: boolean;
   codeRegion?: string;

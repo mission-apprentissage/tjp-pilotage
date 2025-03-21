@@ -1,10 +1,11 @@
 "use client";
 import { ChevronDownIcon, RepeatIcon } from "@chakra-ui/icons";
 import type { PlacementWithLogical, PositionProps } from "@chakra-ui/react";
-import { Button, chakra, Flex, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal, Text, VisuallyHidden } from "@chakra-ui/react";
-import type { ChangeEventHandler, ReactNode } from "react";
+import {Button, chakra, Checkbox,Flex, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal, Text, VisuallyHidden, } from '@chakra-ui/react';
+import type { ReactNode } from "react";
 import { memo, useId, useMemo, useRef, useState } from "react";
 import removeAccents from "remove-accents";
+
 
 const ButtonContent = ({ selected, children }: { selected: string[]; children: ReactNode }) => {
   if (!selected.length) return <>{children}</>;
@@ -12,30 +13,11 @@ const ButtonContent = ({ selected, children }: { selected: string[]; children: R
   return <>{selected.length} sélectionnés</>;
 };
 
-const Checkbox = ({
-  value,
-  onChange,
-  children,
-  checked,
-}: {
-  value: string;
-  onChange: ChangeEventHandler;
-  children: string;
-  checked: boolean;
-}) => {
-  return (
-    <label style={{ display: "flex", alignItems: "center" }} role="menuitemcheckbox" aria-checked={checked}>
-      <input checked={checked} value={value} onChange={onChange} hidden type="checkbox" />
-      <CheckboxIcon checked={checked} />
-      {children}
-    </label>
-  );
-};
-
 // eslint-disable-next-line react/display-name
 const InputWapper = memo(
   ({
     onChange,
+    checked,
     ...props
   }: {
     value: string;
@@ -45,6 +27,7 @@ const InputWapper = memo(
   }) => {
     return (
       <Checkbox
+        isChecked={checked}
         onChange={(e) =>
           onChange({
             checked: (e.target as HTMLInputElement).checked,
@@ -53,7 +36,7 @@ const InputWapper = memo(
           })
         }
         {...props}
-      ></Checkbox>
+      />
     );
   }
 );
@@ -108,7 +91,7 @@ export const Multiselect = chakra(
     hasDefaultValue = true,
     variant = "input",
     menuZIndex = "dropdown",
-    gutter,
+    gutter = 0,
     placement,
   }: {
     inputId?: string;
@@ -202,7 +185,7 @@ export const Multiselect = chakra(
           </ButtonContent>
         </MenuButton>
         <Portal>
-          <MenuList maxWidth={450} pt="0" zIndex={menuZIndex} role="menu">
+          <MenuList maxWidth={450} minW={300} pt="0" zIndex={menuZIndex} role="menu">
             <Flex role="menuitem">
               {!inputId && (
                 <VisuallyHidden as="label" htmlFor={id}>
@@ -218,6 +201,12 @@ export const Multiselect = chakra(
                 variant="unstyled"
                 px="3"
                 py="2"
+                onKeyDown={(e) => {
+                  if (e.key === "Tab") {
+                    e.preventDefault();
+                    inputRef.current?.blur();
+                  }
+                }}
               />
               {map.size > 0 && (
                 <Button
@@ -225,6 +214,12 @@ export const Multiselect = chakra(
                     onChange?.(Array.from(new Map().keys()));
                   }}
                   bgColor={"transparent"}
+                  onKeyDown={(e) => {
+                    if (e.key === "Tab") {
+                      e.preventDefault();
+                      e.currentTarget.blur();
+                    }
+                  }}
                 >
                   <Text fontSize={12} fontWeight={"normal"} color="bluefrance.113" p={2}>
                     <RepeatIcon ml={1} mr={1} verticalAlign={"bottom"} />
@@ -236,10 +231,12 @@ export const Multiselect = chakra(
             <MenuDivider m={0}/>
             <Flex direction="column" ref={ref} maxHeight={300} overflow="auto" sx={{ "> *": { px: "3", py: "1.5" } }}>
               {filteredOptions.slice(0, limit).map(({ value, label }) => (
-                <InputWapper
+                <Checkbox
                   key={value}
-                  checked={!!map.get(value)}
-                  onChange={({ checked, label, value }) => {
+                  as={MenuItem}
+                  isChecked={!!map.get(value)}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
                     const newMap = new Map(map);
                     if (checked) {
                       newMap.set(value, label);
@@ -249,9 +246,11 @@ export const Multiselect = chakra(
                     onChange?.(Array.from(newMap.keys()));
                   }}
                   value={value}
+                  colorScheme="bluefrance"
+                  iconColor={"white"}
                 >
                   {label}
-                </InputWapper>
+                </Checkbox>
               ))}
               {filteredOptions.length > limit && (
                 <MenuItem px="3">
@@ -266,3 +265,21 @@ export const Multiselect = chakra(
       </Menu>
     );
   });
+{/* <MenuOptionGroup
+                type="checkbox"
+                value={Array.from(map.keys())}
+                onChange={(value) => {
+                  onChange?.(Array.from(value));
+                }}
+              >
+                {filteredOptions.slice(0, limit).map(({ value, label, }) => (
+                  <MenuItemOption
+                    key={value}
+                    isChecked={!!map.get(value)}
+                    value={value}
+                    icon={<CheckboxIcon checked={!!map.get(value)} />}
+                  >
+                    {label}
+                  </MenuItemOption>
+                ))}
+              </MenuOptionGroup> */}

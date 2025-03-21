@@ -120,7 +120,10 @@ const NavMenuItem = chakra(
         color="bluefrance.113"
         bg={isActive ? "grey.1000_hover" : "inherit"}
         _hover={{ textDecoration: "unset", bg: "blueecume.950" }}
-        _focus={{ bg: "blueecume.950", borderColor: "bluefrance.113", borderWidth: 0, borderBottomWidth: 2, boxShadow: "none" }}
+        _focus={{ bg: "blueecume.950", borderColor: "bluefrance.113", boxShadow: "none" }}
+        borderWidth={0}
+        borderBottomWidth={2}
+        borderColor="transparent"
       >
         {children}
       </MenuItem>
@@ -165,9 +168,6 @@ const NavMenuButton = chakra(
         tabIndex={0}
         onMouseEnter={onOpen}
         onMouseLeave={onClose}
-        // onFocus={onOpen}
-        // onClick={onOpen}
-        // onBlur={onClose}
         onKeyDown={(e) => {
           if (e.key === "Escape") {
             onClose();

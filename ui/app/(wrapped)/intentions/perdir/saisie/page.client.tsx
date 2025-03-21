@@ -43,7 +43,7 @@ import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/intentions/uti
 import {canCheckIntention, canCorrectIntention, canCreateIntention, canDeleteIntention,canEditDemandeIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
-import { OrderIcon } from "@/components/OrderIcon";
+import { SortableTh } from "@/components/SortableTh";
 import { TableFooter } from "@/components/TableFooter";
 import { formatCodeDepartement, formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { getRoutingSaisieRecueilDemande, getRoutingSyntheseRecueilDemande } from "@/utils/getRoutingRecueilDemande";
@@ -293,47 +293,37 @@ export const PageClient = () => {
                             />
                           </Th>
                         )}
-                        <Th cursor="pointer" onClick={() => handleOrder("updatedAt")} fontSize={12}>
-                          <OrderIcon {...order} column="updatedAt" />
+                        <SortableTh fontSize={12} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="updatedAt">
                           {INTENTIONS_COLUMNS.updatedAt}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("libelleFormation")} minW={300} maxW={300} fontSize={12}>
-                          <OrderIcon {...order} column="libelleFormation" />
+                        </SortableTh>
+                        <SortableTh fontSize={12} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="libelleFormation">
                           {INTENTIONS_COLUMNS.libelleFormation}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("libelleEtablissement")} minW={350} maxW={350} fontSize={12}>
-                          <OrderIcon {...order} column="libelleEtablissement" />
+                        </SortableTh>
+                        <SortableTh minW={350} maxW={350} fontSize={12} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="libelleEtablissement">
                           {INTENTIONS_COLUMNS.libelleEtablissement}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("libelleDepartement")} fontSize={12}>
-                          <OrderIcon {...order} column="libelleDepartement" />
+                        </SortableTh>
+                        <SortableTh fontSize={12} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="libelleDepartement">
                           {INTENTIONS_COLUMNS.libelleDepartement}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("statut")} textAlign={"center"} fontSize={12}>
-                          <OrderIcon {...order} column="statut" />
+                        </SortableTh>
+                        <SortableTh textAlign={"center"} fontSize={12} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="statut">
                           {INTENTIONS_COLUMNS.statut}
-                        </Th>
+                        </SortableTh>
                         <Th textAlign={"center"} fontSize={12}>actions</Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("typeDemande")} textAlign={"center"} fontSize={12}>
-                          <OrderIcon {...order} column="typeDemande" />
+                        <SortableTh textAlign={"center"} fontSize={12} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="typeDemande">
                           {INTENTIONS_COLUMNS.typeDemande}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("createdAt")} fontSize={12}>
-                          <OrderIcon {...order} column="createdAt" />
+                        </SortableTh>
+                        <SortableTh fontSize={12} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="createdAt">
                           {INTENTIONS_COLUMNS.createdAt}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("numeroDemandeImportee")} fontSize={12}>
-                          <OrderIcon {...order} column="numeroDemandeImportee" />
+                        </SortableTh>
+                        <SortableTh fontSize={12} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="numero">
                           {INTENTIONS_COLUMNS.numero}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("userName")} w="15" fontSize={12}>
-                          <OrderIcon {...order} column="userName" />
+                        </SortableTh>
+                        <SortableTh w="15" fontSize={12} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="userName">
                           {INTENTIONS_COLUMNS.userName}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("inspecteurReferent")} minW={250} maxW={250} fontSize={12}>
-                          <OrderIcon {...order} column="inspecteurReferent" />
+                        </SortableTh>
+                        <SortableTh minW={250} maxW={250} fontSize={12} handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)} order={order} colonne="inspecteurReferent">
                           {INTENTIONS_COLUMNS.inspecteurReferent}
-                        </Th>
+                        </SortableTh>
                         <Th textAlign={"center"} fontSize={12}>Progression</Th>
                         <Th fontSize={12}>Avis (Phase en cours)</Th>
                         <Th fontSize={12}>Derniers avis - Phase en cours</Th>

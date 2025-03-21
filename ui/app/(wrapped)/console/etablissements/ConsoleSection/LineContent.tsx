@@ -1,6 +1,7 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, chakra, Flex, IconButton, Link, Skeleton, Tag, Td, Text, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
+import type { ReactNode } from "react";
 import { CURRENT_RENTREE } from "shared";
 
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
@@ -28,7 +29,7 @@ const ConditionalTd = chakra(
     colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     colonne: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS;
     getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
-    children: React.ReactNode;
+    children: ReactNode;
     isNumeric?: boolean;
   }) => {
     if (colonneFilters.includes(colonne))
@@ -111,6 +112,7 @@ export const EtablissementLineContent = ({
           textDecoration: "underline",
         }}
         color={"bluefrance.113"}
+        aria-label={`Voir la page de l'établissement ${line.libelleEtablissement}`}
       >
         <Flex justify={"start"}>{line.libelleEtablissement ?? "-"}</Flex>
       </Link>
@@ -170,6 +172,7 @@ export const EtablissementLineContent = ({
                 },
               })}
               color="bluefrance.113"
+              aria-label={`Voir la formation rénovée ${line.formationRenovee}`}
             >
               <Flex my="auto">
                 <Text fontSize={12}>Voir la formation rénovée</Text>

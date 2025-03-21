@@ -47,6 +47,8 @@ export const themeColors = {
     113: "#000091",
     "113_hover": "#1212ff",
     "113_active": "#2323ff",
+    500: "#000091",
+    " 500": "#000091",
     525: "#6a6af4",
     "525_hover": "#b1b1f9",
     "525_active": "#c6c6fb",

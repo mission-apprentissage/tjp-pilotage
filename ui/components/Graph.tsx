@@ -44,6 +44,8 @@ export const Graph = memo(
               </Text>
             </>
           }
+          placement="top"
+          shouldWrapChildren
         >
           <Box
             className={className}

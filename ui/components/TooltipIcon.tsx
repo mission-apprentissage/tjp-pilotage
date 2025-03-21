@@ -1,6 +1,6 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import type { Placement } from "@chakra-ui/react";
-import { chakra, Tooltip } from "@chakra-ui/react";
+import { chakra, IconButton, Tooltip } from "@chakra-ui/react";
 import type { MouseEventHandler, ReactNode } from "react";
 
 export const TooltipIcon = chakra(
@@ -12,12 +12,18 @@ export const TooltipIcon = chakra(
   }: {
     label?: ReactNode;
     className?: string;
-    onClick?: MouseEventHandler<SVGElement> | undefined;
+    onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
     placement?: Placement;
   }) => {
     return (
       <Tooltip label={label} placement={placement}>
-        <QuestionOutlineIcon
+        <IconButton
+          variant="outline"
+          minW="auto"
+          h="auto"
+          p={0}
+          m={1}
+          aria-label="Tooltip icon"
           cursor="pointer"
           className={className}
           onClick={(e) => {
@@ -26,7 +32,8 @@ export const TooltipIcon = chakra(
               onClick(e);
             }
           }}
-        />
+          icon={<QuestionOutlineIcon />}
+        ></IconButton>
       </Tooltip>
     );
   }

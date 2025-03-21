@@ -1,4 +1,4 @@
-import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Thead, Tr } from "@chakra-ui/react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -6,7 +6,7 @@ import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "./GraphWrapper";
-import { OrderIcon } from "./OrderIcon";
+import { SortableTh } from "./SortableTh";
 import { TableBadge } from "./TableBadge";
 import { TauxPressionScale } from "./TauxPressionScale";
 import { TooltipIcon } from "./TooltipIcon";
@@ -33,10 +33,10 @@ export const TableQuadrant = ({
   order,
 }: {
   formations: Formation[];
-  handleOrder?: (column?: string) => void;
+  handleOrder: (column?: string) => void;
   handleClick?: (value?: string) => void;
   currentFormationId?: string;
-  order?: {
+  order: {
     order?: "asc" | "desc";
     orderBy?: string;
   };
@@ -73,25 +73,25 @@ export const TableQuadrant = ({
             zIndex={1}
           >
             <Tr>
-              <Th
+              <SortableTh
                 px="2"
                 maxW="40%"
                 color="white"
-                cursor={handleOrder ? "pointer" : "default"}
-                onClick={() => handleOrder && handleOrder("libelleFormation")}
+                handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)}
+                order={order}
+                colonne="libelleFormation"
               >
-                {handleOrder && <OrderIcon {...order} column="libelleFormation" />}
                 FORMATION
-              </Th>
-              <Th
+              </SortableTh>
+              <SortableTh
                 px="2"
                 maxW="20%"
                 color="white"
-                cursor={handleOrder ? "pointer" : "default"}
-                onClick={() => handleOrder && handleOrder("tauxPression")}
                 textAlign={"center"}
+                handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)}
+                order={order}
+                colonne="tauxPression"
               >
-                {handleOrder && <OrderIcon {...order} column="tauxPression" />}
                 TX PRESSION
                 <TooltipIcon
                   ml="1"
@@ -106,16 +106,16 @@ export const TableQuadrant = ({
                   }
                   onClick={() => openGlossaire("taux-de-pression")}
                 />
-              </Th>
-              <Th
+              </SortableTh>
+              <SortableTh
                 px="2"
                 maxW="20%"
                 color="white"
-                cursor={handleOrder ? "pointer" : "default"}
-                onClick={() => handleOrder && handleOrder("tauxInsertion")}
                 textAlign={"center"}
+                handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)}
+                order={order}
+                colonne="tauxEmploi"
               >
-                {handleOrder && <OrderIcon {...order} column="tauxInsertion" />}
                 TX EMPLOI
                 <TooltipIcon
                   ml="1"
@@ -127,16 +127,16 @@ export const TableQuadrant = ({
                   }
                   onClick={() => openGlossaire("taux-emploi-6-mois")}
                 />
-              </Th>
-              <Th
+              </SortableTh>
+              <SortableTh
                 px="2"
                 maxW="20%"
                 color="white"
-                cursor={handleOrder ? "pointer" : "default"}
-                onClick={() => handleOrder && handleOrder("tauxPoursuite")}
                 textAlign={"center"}
+                handleOrder={(colonne) => handleOrder(colonne as typeof order.orderBy)}
+                order={order}
+                colonne="tauxPoursuite"
               >
-                {handleOrder && <OrderIcon {...order} column="tauxPoursuite" />}
                 TX POURSUITE
                 <TooltipIcon
                   ml="1"
@@ -148,7 +148,7 @@ export const TableQuadrant = ({
                   }
                   onClick={() => openGlossaire("taux-poursuite-etudes")}
                 />
-              </Th>
+              </SortableTh>
             </Tr>
           </Thead>
           <Tbody>

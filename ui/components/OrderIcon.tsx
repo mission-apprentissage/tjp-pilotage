@@ -1,10 +1,10 @@
 "use client";
 import { ArrowUpDownIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
-export const OrderIcon = ({ column, orderBy, order }: { column: string; orderBy?: string; order?: "desc" | "asc" }) => {
-  if (!order || orderBy !== column) return <ArrowUpDownIcon mr={2} />;
+export const OrderIcon = ({ colonne, orderBy, order }: { colonne: string; orderBy?: string; order?: "desc" | "asc" }) => {
+  if (!order || orderBy !== colonne) return <ArrowUpDownIcon mr={2} />;
   if (order === "desc") {
-    return <ChevronDownIcon ml={2} />;
+    return <ChevronDownIcon mr={1} boxSize={5} />;
   }
-  return <ChevronUpIcon ml={2} />;
+  return <ChevronUpIcon mr={1} boxSize={5}/>;
 };
