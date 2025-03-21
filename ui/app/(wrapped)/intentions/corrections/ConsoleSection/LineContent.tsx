@@ -1,6 +1,7 @@
 import { chakra, Tag, Td } from "@chakra-ui/react";
 import { SecteurEnum } from "shared/enum/secteurEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
+import { unEscapeString } from "shared/utils/escapeString";
 
 import type { CORRECTIONS_COLUMNS } from "@/app/(wrapped)/intentions/corrections/CORRECTIONS_COLUMN";
 import type { Corrections } from "@/app/(wrapped)/intentions/corrections/types";
@@ -48,7 +49,7 @@ const handleMotifCorrectionLabel = ({
   anneeCampagne: string;
 }) => {
   return motifCorrection === "autre"
-    ? `Autre : ${autreMotif}`
+    ? `Autre : ${unEscapeString(autreMotif)}`
     : getMotifCorrectionLabel({
       motifCorrection: motifCorrection as MotifCorrectionLabel,
       anneeCampagne: anneeCampagne as AnneeCampagneMotifCorrection,

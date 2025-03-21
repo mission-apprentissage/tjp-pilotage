@@ -32,9 +32,9 @@ import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { escapeString } from "shared/utils/escapeString";
 
 import { client } from "@/api.client";
-import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
-import { FonctionTag } from "@/app/(wrapped)/intentions/perdir/components/FonctionTag";
-import { RoleVisibleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleVisibleTag";
+import { AvisStatutTag } from "@/app/(wrapped)/intentions/components/AvisStatutTag";
+import { FonctionTag } from "@/app/(wrapped)/intentions/components/FonctionTag";
+import { RoleVisibleTag } from "@/app/(wrapped)/intentions/components/RoleVisibleTag";
 import { getTypeAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 
 import { FONCTIONS } from "./FONCTIONS";

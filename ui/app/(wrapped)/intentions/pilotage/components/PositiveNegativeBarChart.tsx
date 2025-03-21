@@ -1,11 +1,11 @@
 import { AspectRatio, Box, Flex, Heading, Img, useToken, VStack } from "@chakra-ui/react";
-import * as echarts from "echarts";
+import { init, registerLocale } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 import type {
-  RepartitionPilotageIntentionsDomaines,
-  RepartitionPilotageIntentionsNiveauxDiplome,
-  RepartitionPilotageIntentionsZonesGeographiques,
+  PilotageIntentionsDomaines,
+  PilotageIntentionsNiveauxDiplome,
+  PilotageIntentionsZonesGeographiques,
 } from "@/app/(wrapped)/intentions/pilotage/types";
 import { themeDefinition } from "@/theme/theme";
 import { themeColors } from "@/theme/themeColors";
@@ -20,9 +20,9 @@ export const PositiveNegativeBarChart = ({
   title: string;
   type: string;
   data?:
-    | RepartitionPilotageIntentionsDomaines
-    | RepartitionPilotageIntentionsZonesGeographiques
-    | RepartitionPilotageIntentionsNiveauxDiplome;
+    | PilotageIntentionsDomaines
+    | PilotageIntentionsZonesGeographiques
+    | PilotageIntentionsNiveauxDiplome;
 }) => {
   if (!data || !Object.keys(data).filter((key) => key !== "Total").length)
     return (
@@ -384,8 +384,8 @@ export const PositiveNegativeBarChart = ({
     // TODO
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      echarts.registerLocale("fr", frenchLocale);
-      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
+      registerLocale("fr", frenchLocale);
+      chartRef.current = init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps

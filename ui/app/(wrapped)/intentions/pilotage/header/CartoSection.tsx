@@ -2,12 +2,12 @@ import { Box, Center, Flex, Heading, Highlight, Select, Skeleton, Text, useToken
 import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
-import { useScopeCode } from "@/app/(wrapped)/intentions/pilotage/hooks";
 import type {
-  FiltersStatsPilotageIntentions,
+  FiltersPilotageIntentions,
   FilterTracker,
-  StatsPilotageIntentions,
+  PilotageIntentions,
 } from "@/app/(wrapped)/intentions/pilotage/types";
+import { getScopeCode } from "@/app/(wrapped)/intentions/pilotage/utils";
 import { CartoGraph } from "@/components/CartoGraph";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
@@ -32,14 +32,12 @@ export const CartoSection = ({
     value: string;
     isDefault: boolean;
   }[];
-  filters: FiltersStatsPilotageIntentions;
-  handleFilters: (filters: Partial<FiltersStatsPilotageIntentions>) => void;
-  data: StatsPilotageIntentions | undefined;
+  filters: FiltersPilotageIntentions;
+  handleFilters: (filters: FiltersPilotageIntentions) => void;
+  data?: PilotageIntentions;
   isLoading?: boolean;
   filterTracker: FilterTracker;
 }) => {
-  const { code: scopeCode } = useScopeCode(filters);
-
   const customPalette = [
     useToken("colors", "pilotage.red"),
     useToken("colors", "pilotage.orange"),
@@ -84,7 +82,7 @@ export const CartoSection = ({
       return [];
     }
 
-    return Object.values(data?.all).map((territoire) => ({
+    return Object.values(data?.zonesGeographiques).map((territoire) => ({
       name: territoire.libelle,
 
       parentName: territoire.libelleAcademie,
@@ -101,6 +99,12 @@ export const CartoSection = ({
 
   const handleClickOnTerritoire = useCallback(
     (code: string | undefined) => {
+      const newFilters = {
+        scope: filters.scope,
+        codeRegion: filters.scope === ScopeEnum["région"] ? code : undefined,
+        codeAcademie: filters.scope === ScopeEnum["académie"] ? code : undefined,
+        codeDepartement: filters.scope === ScopeEnum["département"] ? code : undefined,
+      };
       switch (filters.scope) {
       case ScopeEnum["région"]:
         filterTracker("codeRegion", { value: code, context: "carto" });
@@ -114,15 +118,13 @@ export const CartoSection = ({
       }
 
       return handleFilters({
-        scope: filters.scope,
-        codeRegion: filters.scope !== ScopeEnum["région"] ? undefined : code,
-        codeAcademie: filters.scope !== ScopeEnum["académie"] ? undefined : code,
-        codeDepartement: filters.scope !== ScopeEnum["département"] ? undefined : code,
+        ...filters,
+        ...newFilters,
       });
     },
     // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [handleFilters, filters, scopeCode]
+    [handleFilters, filters]
   );
 
   if (!Object.keys(ScopeEnum).includes(filters.scope))
@@ -198,7 +200,7 @@ export const CartoSection = ({
               handleClick={handleClickOnTerritoire}
               selectedScope={{
                 type: filters.scope,
-                value: scopeCode ?? "national",
+                value: getScopeCode(filters) ?? "national",
               }}
             />
           </Box>

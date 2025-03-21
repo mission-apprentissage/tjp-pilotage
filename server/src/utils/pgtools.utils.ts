@@ -2,7 +2,7 @@ import type * as Ipg from "pg";
 /* eslint-disable-next-line import/default */
 import pg from "pg";
 import type { EmptyObject } from "type-fest";
-
+/* eslint-disable-next-line import/no-named-as-default-member */
 const { Client } = pg;
 
 const knownErrors = {

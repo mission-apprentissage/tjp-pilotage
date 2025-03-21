@@ -14,7 +14,7 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import type { EChartsOption } from "echarts";
-import * as echarts from "echarts";
+import { init, registerLocale } from "echarts";
 import type { FC, ReactNode } from "react";
 import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
@@ -339,8 +339,8 @@ export const Quadrant = function <
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      echarts.registerLocale("fr", frenchLocale);
-      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
+      registerLocale("fr", frenchLocale);
+      chartRef.current = init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option);
 

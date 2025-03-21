@@ -5,23 +5,21 @@ import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
-import type { Filters } from
-  "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.usecase";
+import type { Filters } from "@/modules/data/usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.usecase";
+import { capaciteAnnee } from "@/modules/data/utils/capaciteAnnee";
+import { effectifAnnee } from "@/modules/data/utils/effectifAnnee";
 import { isScolaireIndicateurRegionSortie } from "@/modules/data/utils/isScolaire";
 import { nbEtablissementFormationRegion } from "@/modules/data/utils/nbEtablissementFormationRegion";
+import { premiersVoeuxAnnee } from "@/modules/data/utils/premiersVoeuxAnnee";
 import { selectPositionQuadrant } from "@/modules/data/utils/selectPositionQuadrant";
 import { selectTauxDevenirFavorable } from "@/modules/data/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
-import { selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
+import { selectTauxPression, selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
+import { selectTauxRemplissage } from "@/modules/data/utils/tauxRemplissage";
 import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
 import { castTypeDemande } from "@/modules/utils/castTypeDemande";
-import {
-  countDifferenceCapaciteApprentissage,
-  countDifferenceCapaciteApprentissageColoree,
-  countDifferenceCapaciteScolaire,
-  countDifferenceCapaciteScolaireColoree,
-} from "@/modules/utils/countCapacite";
+import {countDifferenceCapaciteApprentissage, countDifferenceCapaciteApprentissageColoree, countDifferenceCapaciteScolaire, countDifferenceCapaciteScolaireColoree, countPlacesColorees,countPlacesColoreesFermeesApprentissage, countPlacesColoreesFermeesScolaire, countPlacesColoreesOuvertesApprentissage, countPlacesColoreesOuvertesScolaire, countPlacesFermeesApprentissage, countPlacesFermeesScolaire, countPlacesOuvertesApprentissage, countPlacesOuvertesScolaire} from '@/modules/utils/countCapacite';
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
@@ -96,6 +94,28 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
         .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
     )
+    .leftJoin((eb) => eb.selectFrom("formationScolaireView")
+      .innerJoin("formationEtablissement", (join) =>
+        join
+          .onRef("formationEtablissement.cfd", "=", "formationScolaireView.cfd")
+          .onRef("formationEtablissement.voie", "=", "formationScolaireView.voie")
+      )
+      .innerJoin("indicateurEntree", "indicateurEntree.formationEtablissementId", "formationEtablissement.id")
+      .select(sb => [
+        sql<number>`CAST(${sb.ref("indicateurEntree.rentreeScolaire")} AS INT)`.as("rentreeScolaire"),
+        sb.ref("formationScolaireView.cfd").as("cfd"),
+        sb.ref("formationEtablissement.codeDispositif").as("codeDispositif"),
+        sb.ref("formationScolaireView.voie").as("voie"),
+        sb.ref("formationEtablissement.uai").as("uai"),
+        capaciteAnnee({ alias: "indicateurEntree"}).as("capacite"),
+        effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
+        premiersVoeuxAnnee({alias: "indicateurEntree"}).as("premierVoeu"),
+        selectTauxRemplissage("indicateurEntree").as("remplissage"),
+        sb.case().when(sql<string>`LEFT(${sb.ref("formationScolaireView.codeNiveauDiplome")}, 3)`, '<>', '320').then(selectTauxPression("indicateurEntree", "formationScolaireView", true)).end().as("pression"),
+        sb.case().when(sql<string>`LEFT(${sb.ref("formationScolaireView.codeNiveauDiplome")}, 3)`, '=', '320').then(selectTauxPression("indicateurEntree", "formationScolaireView", true)).end().as("demande"),
+      ]).as("tauxEntree"),
+    (join) => join.onRef("tauxEntree.cfd", "=", "demande.cfd").onRef("tauxEntree.rentreeScolaire", "=", "demande.rentreeScolaire").onRef("tauxEntree.codeDispositif", "=", "demande.codeDispositif").onRef("tauxEntree.uai", "=", "demande.uai")
+    )
     .selectAll("demande")
     .select((eb) => [
       sql<string>`count(*) over()`.as("count"),
@@ -141,6 +161,12 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
+      eb.ref("tauxEntree.capacite").as("pilotageCapacite"),
+      eb.ref("tauxEntree.effectifEntree").as("pilotageEffectif"),
+      eb.ref("tauxEntree.pression").as("pilotageTauxPression"),
+      eb.ref("tauxEntree.remplissage").as("pilotageTauxRemplissage"),
+      eb.ref("tauxEntree.premierVoeu").as("pilotagePremierVoeu"),
+      eb.ref("tauxEntree.demande").as("pilotageTauxDemande"),
     ])
     .$call((eb) => {
       if (search)
@@ -224,11 +250,6 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (coloration)
-        return eb.where("demande.coloration", "=", coloration === "true" ? sql<true>`true` : sql<false>`false`);
-      return eb;
-    })
-    .$call((eb) => {
       if (amiCMA) return eb.where("demande.amiCma", "=", amiCMA === "true" ? sql<true>`true` : sql<false>`false`);
       return eb;
     })
@@ -237,24 +258,39 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
+      if(coloration === "true") return eb.where(
+        (eb) => eb.or([
+          sql<boolean>`${countPlacesColorees(eb)} > 0`,
+        ])
+      );
+      if(coloration === "false") return eb.where(
+        (eb) => eb.or([
+          sql<boolean>`${countPlacesColorees(eb)} < 0`,
+        ])
+      );
+      return eb;
+    })
+    .$call((eb) => {
       if (voie === "apprentissage") {
         return eb.where(
-          ({ eb: ebw }) =>
-            sql<boolean>`abs(${ebw.ref(
-              "demande.capaciteApprentissage"
-            )} - ${ebw.ref("demande.capaciteApprentissageActuelle")}) > 1`
+          (eb) => eb.or([
+            sql<boolean>`${countPlacesOuvertesApprentissage(eb)} > 0`,
+            sql<boolean>`${countPlacesFermeesApprentissage(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesOuvertesApprentissage(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesFermeesApprentissage(eb)} > 0`,
+          ])
         );
       }
-
       if (voie === "scolaire") {
         return eb.where(
-          ({ eb: ebw }) =>
-            sql<boolean>`abs(${ebw.ref("demande.capaciteScolaire")} - ${ebw.ref(
-              "demande.capaciteScolaireActuelle"
-            )}) > 1`
+          (eb) => eb.or([
+            sql<boolean>`${countPlacesOuvertesScolaire(eb)} > 0`,
+            sql<boolean>`${countPlacesFermeesScolaire(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesOuvertesScolaire(eb)} > 0`,
+            sql<boolean>`${countPlacesColoreesFermeesScolaire(eb)} > 0`,
+          ])
         );
       }
-
       return eb;
     })
     .$call((q) => {

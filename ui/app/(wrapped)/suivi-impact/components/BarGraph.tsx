@@ -1,5 +1,5 @@
 import { Box, useToken } from "@chakra-ui/react";
-import * as echarts from "echarts";
+import { init,registerLocale } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 import { frenchLocale } from "@/utils/echarts/frenchLocale";
@@ -149,8 +149,8 @@ export const BarGraph = function <F extends BarGraphData>({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      echarts.registerLocale("fr", frenchLocale);
-      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
+      registerLocale("fr", frenchLocale);
+      chartRef.current = init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
