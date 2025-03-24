@@ -61,7 +61,7 @@ export const GlossaireListContent = ({
       </InputGroup>
       <VStack divider={<StackDivider borderColor="grey.950" />} spacing={0} cursor={"pointer"}>
         {(entries ?? []).map((entry) => (
-          <GlossaireListContentItem key={entry.id} entry={entry} selectEntry={selectEntry} searchValue={searchValue} />
+          <GlossaireListContentItem key={entry.slug} entry={entry} selectEntry={selectEntry} searchValue={searchValue} />
         ))}
       </VStack>
     </>
