@@ -11,6 +11,7 @@ import { findDiplomesProfessionnels } from "@/modules/import/usecases/importIJDa
 import { streamIt } from "@/modules/import/utils/streamIt";
 
 import { deleteFormationEtablissement } from "./deleteFormationEtablissement";
+import { findDataFormation } from "./findDataFormation.dep";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
 import { findFormationEtablissement } from "./findFormationEtablissement";
 import { findUAIsApprentissage } from "./findUAIsApprentissage";
@@ -28,7 +29,7 @@ import {
   importIndicateursRegionSortie,
   importIndicateursRegionSortieApprentissage,
 } from "./steps/importIndicateursSortieRegionaux/importIndicateursSortieRegionaux.step";
-import { extractCfdFromMefAndDuree } from "./utils";
+import { extractCfdFromMefAndDuree, extractYearFromTags, isYearBetweenOuvertureAndFermeture } from "./utils";
 
 const processedUais = new Set<string>();
 
@@ -105,6 +106,7 @@ export const [importFormationEtablissements] = inject(
     findUAIsApprentissage,
     findRawData: rawDataRepository.findRawData,
     findRawDatas: rawDataRepository.findRawDatas,
+    findDataFormation,
     findFormationEtablissement,
     deleteFormationEtablissement
   },
@@ -137,7 +139,10 @@ export const [importFormationEtablissements] = inject(
           const dureeCollectee = offreApprentissage?.["Formation: durée collectée"]
             ? parseInt(offreApprentissage?.["Formation: durée collectée"])
             : -1;
-          const rentreesScolaires = offreApprentissage["Offre: Tags"].split(',').map((tag) => tag.trim());
+
+          const dataFormation = await deps.findDataFormation({ cfd });
+          const rentreesScolaires: string[] = extractYearFromTags(offreApprentissage["Offre: Tags"])
+            .filter(year => isYearBetweenOuvertureAndFermeture(year, dataFormation));
 
           if (mefs.length > 0) {
             /**

@@ -1,3 +1,5 @@
+import { CURRENT_RENTREE } from "shared";
+import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
 
 export const extractCfdFromMefAndDuree = (mef: string, duree: number): number => {
   const threeFirstChars = parseInt(mef.substring(0, 3));
@@ -76,3 +78,36 @@ export const extractCfdFromMefAndDuree = (mef: string, duree: number): number =>
 
   return -1;
 };
+
+
+export const extractYearFromTags = (tags: string) => {
+  const years: string[] = [];
+  tags.split(',')
+    .forEach((tag) => {
+      const year = tag.length > 0 ? Number(tag.trim()) : NaN;
+      const lastYear = year - 1;
+      if (year <= parseInt(CURRENT_RENTREE) && years.indexOf('' + year) === -1) {
+        years.push('' + year);
+      }
+
+      if (lastYear <= parseInt(CURRENT_RENTREE) && years.indexOf('' + lastYear) === -1) {
+        years.push('' + lastYear);
+      }
+    });
+
+  return years.sort();
+};
+
+export const isYearBetweenOuvertureAndFermeture =
+  (year: string, dataFormation: { dateOuverture: Date | null, dateFermeture: Date | null } | undefined) => {
+    const yearDate = new Date(getDateRentreeScolaire(year));
+    if (!dataFormation?.dateOuverture) return false;
+    const ouverture = new Date(dataFormation.dateOuverture);
+
+    if (dataFormation?.dateFermeture) {
+      const fermeture = new Date(dataFormation.dateFermeture);
+      return yearDate <= fermeture && yearDate >= ouverture;
+    }
+
+    return yearDate >= ouverture;
+  };
