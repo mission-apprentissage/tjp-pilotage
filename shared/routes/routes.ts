@@ -429,8 +429,8 @@ export const ROUTES = {
     method: "GET",
     schema: getGlossaireSchema,
   },
-  "[GET]/glossaire/:id": {
-    url: "/glossaire/:id",
+  "[GET]/glossaire/:slug": {
+    url: "/glossaire/:slug",
     method: "GET",
     schema: getGlossaireEntrySchema,
   },
