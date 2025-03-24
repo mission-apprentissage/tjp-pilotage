@@ -2,7 +2,6 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
-  Badge,
   Box,
   Flex,
   Heading,
@@ -23,20 +22,25 @@ import { client } from "@/api.client";
 
 import { useGlossaireContext } from "./glossaireContext";
 import { GlossaireIcon } from "./GlossaireIcon";
+import { TypeBadge } from "./TypeBadge";
 
-const notionIdHrefRegex = /^\/?[0-9a-zA-Z]{32}$/;
-
-function isNotionId(href?: string): boolean {
-  return notionIdHrefRegex.test(href ?? "");
-}
-
-function convertToNotionPageId(id: string | undefined): string {
-  return (id ?? "").replace("/", "").replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
+function isGlossaireId(href?: string): boolean {
+  try {
+    new URL(href ?? "");
+    return false;
+  } catch (_) {
+    return true;
+  }
 }
 
 const chakraRendererTheme: Components = {
   ul: ({ children }) => <UnorderedList mb={"24px"}>{children}</UnorderedList>,
   li: ({ children }) => <ListItem>{children}</ListItem>,
+  img: ({ src, alt }) => {
+    // Assurez-vous que le chemin commence par un slash
+    const imagePath = src?.startsWith('/') ? src : `/${src}`;
+    return <img src={imagePath} alt={alt || ''} />;
+  },
   blockquote: ({ children }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const greyColor = useToken("colors", "grey.975"); // TODO
@@ -57,12 +61,13 @@ const chakraRendererTheme: Components = {
     );
   },
   a: ({ children, href }) => {
+    console.log(`Is glossaire id: ${isGlossaireId(href)}`);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { setSelectedEntry } = useGlossaireContext(); // TODO
-    if (isNotionId(href)) {
+    if (isGlossaireId(href)) {
       return (
         <Link
-          onClick={() => setSelectedEntry(convertToNotionPageId(href))}
+          onClick={() => setSelectedEntry(href)}
           color="bluefrance.113"
           textDecor={"underline"}
         >
@@ -72,11 +77,33 @@ const chakraRendererTheme: Components = {
     }
 
     return (
-      <Link href={href} color="bluefrance.113" textDecor={"underline"}>
+      <Link href={href} color="bluefrance.113" textDecor={"underline"} target="_blank">
         {children}
       </Link>
     );
   },
+  aside: ({ children }) => {
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const greyColor = useToken("colors", "grey.975"); // TODO
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const blueColor = useToken("colors", "bluefrance.525"); // TODO
+
+    return (
+      <blockquote
+        style={{
+          borderLeft: "4px solid",
+          borderColor: blueColor,
+          padding: "16px 32px",
+          marginBottom: "24px",
+          backgroundColor: greyColor,
+        }}
+      >
+        <Heading as="h6" size="md" color="black">A noter</Heading>
+        {children}
+      </blockquote>
+    );
+  }
 };
 
 const RenderGlossaireEntrySkeleton = () => {
@@ -91,13 +118,13 @@ const RenderGlossaireEntrySkeleton = () => {
   );
 };
 
-const useGlossaireEntryContentHook = (id: string) => {
+const useGlossaireEntryContentHook = (slug: string) => {
   const trackEvent = usePlausible();
 
-  const { data, isLoading, isError, error } = client.ref("[GET]/glossaire/:id").useQuery(
+  const { data, isLoading, isError, error } = client.ref("[GET]/glossaire/:slug").useQuery(
     {
       params: {
-        id,
+        slug,
       },
     },
     {
@@ -143,36 +170,16 @@ export const GlossaireEntryContent = ({ id }: { id: string }) => {
     <Box margin={"0px 12px"}>
       <Flex direction="row" justifyContent={"space-between"} alignItems={"center"} marginBottom={"24px"}>
         <Flex direction="row" justifyContent={"start"} alignItems={"center"}>
-          {entry?.icon && <GlossaireIcon icon={entry.icon} size="32px" marginRight="8px" />}
+          {entry?.icon && <GlossaireIcon icon={entry.icon} size="32px" marginRight="8px" color="bluefrance.113" />}
           {entry?.title && (
             <Heading as="h6" size="lg" color="bluefrance.113">
               {entry?.title}
             </Heading>
           )}
         </Flex>
-        {entry?.indicator && (
-          <Badge
-            variant={
-              {
-                green: "success",
-                blue: "info",
-                yellow: "new",
-                red: "error",
-                orange: "warning",
-                purple: "purpleGlycine",
-                pink: "pinkTuile",
-                brown: "brownCafeCreme",
-              }[entry.indicator?.color]
-            }
-            display="flex"
-            alignItems={"center"}
-            style={{ borderRadius: "0.25rem", padding: "0.25rem 0.5rem" }}
-          >
-            {entry.indicator?.name}
-          </Badge>
-        )}
+        {entry?.type && <TypeBadge type={entry.type} />}
       </Flex>
-      <ReactMarkdown components={ChakraUIRenderer(chakraRendererTheme)} className={"react-markdown"} skipHtml>
+      <ReactMarkdown components={ChakraUIRenderer(chakraRendererTheme)} className={"react-markdown"}>
         {entry?.content ?? ""}
       </ReactMarkdown>
     </Box>
