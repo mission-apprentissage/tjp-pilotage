@@ -130,12 +130,34 @@ export const findManyInDataFormationQuery = async ({
         else null
         end
       `.as("dateFermeture"),
+      eb
+        .selectFrom("formationHistorique")
+        .innerJoin("formationView as fva", "fva.cfd", "formationHistorique.ancienCFD")
+        .select("formationHistorique.ancienCFD")
+        .where(wb => wb.and([
+          wb(wb.ref("formationHistorique.cfd"), "=", wb.ref("dataFormation.cfd")),
+          wb("fva.dateFermeture", "is not", null),
+        ]))
+        .limit(1)
+        .as("isFormationRenovee"),
     ])
-    .distinctOn(["dataFormation.cfd", "dataFormation.libelleFormation", "niveauDiplome.libelleNiveauDiplome"])
-    .orderBy(["niveauDiplome.libelleNiveauDiplome", "dataFormation.libelleFormation asc"])
+    .distinctOn([
+      "dataFormation.cfd",
+      "dataFormation.libelleFormation",
+      "niveauDiplome.libelleNiveauDiplome",
+      "dataFormation.dateFermeture"
+    ])
+    .orderBy([
+      "niveauDiplome.libelleNiveauDiplome",
+      "dataFormation.libelleFormation asc",
+      sql`"dataFormation"."dateFermeture" nulls first`,
+    ])
     .limit(20)
     .execute()
-    .then(cleanNull);
+    .then((formations) => formations.map((formation) => cleanNull({
+      ...formation,
+      isFormationRenovee: !!formation.isFormationRenovee
+    })));
 
   return formations;
 };

@@ -2,7 +2,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import { isCampagneEnAttente, isCampagneTerminee } from "shared/utils/campagneUtils";
 
-import { canCreateIntention } from "./permissionsIntentionUtils";
+import { canCreateDemandeIntention } from "./permissionsIntentionUtils";
 
 
 export const CAMPAGNE_UNIQUEMENT_MODIFICATION = `La création de nouvelles demandes n'est plus possible
@@ -26,7 +26,7 @@ export const getMessageAccompagnementCampagne = ({
   campagne: CampagneType;
   currentCampagne: CampagneType;
 }) => {
-  if(canCreateIntention({user, currentCampagne, campagne})) return;
+  if(canCreateDemandeIntention({user, campagne})) return;
   if(isCampagneEnAttente(campagne))
     return CAMPAGNE_EN_ATTENTE
       .replace("$ANNEE_CAMPAGNE", campagne.annee);

@@ -13,7 +13,6 @@ export const [searchDiplome] = inject(
         search,
         filters,
       });
-
       return formations;
     }
 );

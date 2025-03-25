@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { hasRole } from "shared";
+import { hasPermission, hasRole } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import {PermissionEnum} from 'shared/enum/permissionEnum';
 import {RoleEnum} from 'shared/enum/roleEnum';
@@ -34,7 +34,6 @@ import type { Avis } from "@/app/(wrapped)/intentions/perdir/types";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { formatDate } from "@/utils/formatUtils";
 import { useAuth } from "@/utils/security/useAuth";
-import { usePermission } from "@/utils/security/usePermission";
 
 import { UpdateAvisForm } from "./UpdateAvisForm";
 
@@ -43,15 +42,12 @@ export const AvisSection = chakra(({ avis, statut }: { avis: Avis; statut: Deman
   const toast = useToast();
 
   const hasPermissionModificationAvis = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    if (usePermission(PermissionEnum["intentions-perdir-avis/ecriture"])) {
-      // TODO
+    if (hasPermission(user?.role, PermissionEnum["intentions-perdir-avis/ecriture"])) {
       if (hasRole({ user, role: RoleEnum["expert_region"] }) || hasRole({ user, role: RoleEnum["region"] })) {
         if (avis.createdBy === user?.id) return true;
         return false;
-      } else return true;
-    }
-    return false;
+      } return true;
+    } return false;
   };
 
   const [isModifying, setIsModifying] = useState(false);
@@ -148,7 +144,7 @@ export const AvisSection = chakra(({ avis, statut }: { avis: Avis; statut: Deman
               </Text>
             )}
             {hasPermissionModificationAvis() &&
-              !isChangementStatutAvisDisabled(statut) &&
+              isChangementStatutAvisDisabled({statut, user}) &&
               !isDeleting &&
               !isModifying && (
               <Flex direction={"row"} gap={6}>
