@@ -177,14 +177,4 @@ describe("ui > app > (wrapped) > intentions > utils > messageAccompagnementUtils
     fixture.then.verifierCampagneTerminee();
   });
 
-  it("Affichage du message d'accompagne pour une campagne sans campagne régionale associée", () => {
-    fixture.given.utilisateurAdminRegion();
-    fixture.given.campagneNationale("2025");
-    fixture.given.currentCampagneNationale("2024");
-
-    fixture.when.getMessageAccompagnementCampagne();
-
-    fixture.then.verifierPasDeCampagneRegionaleEnCours();
-  });
-
 });

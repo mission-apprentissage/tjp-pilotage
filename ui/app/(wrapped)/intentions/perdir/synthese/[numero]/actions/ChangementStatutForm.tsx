@@ -25,17 +25,11 @@ import { isAxiosError } from "axios";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { escapeString } from "shared/utils/escapeString";
-import {isStatutDossierComplet,isStatutProjetDeDemande, isStatutRefusee} from 'shared/utils/statutDemandeUtils';
 
 import { client } from "@/api.client";
-import {
-  formatStatut,
-  getOrderStatut,
-  getStepWorkflow,
-  isStatutStepWorkflowEnabled,
-} from "@/app/(wrapped)/intentions/utils/statutUtils";
+import {formatStatut, getOrderedStatutsOptions, getPossibleNextStatuts, getStepWorkflow} from '@/app/(wrapped)/intentions/utils/statutUtils';
+import { useAuth } from "@/utils/security/useAuth";
 
 type ChangementStatutForm = {
   id: string;
@@ -46,28 +40,12 @@ type ChangementStatutForm = {
   commentaire?: string;
 };
 
-const isStatutDisabled = ({
-  statutPrecedent,
-  statut,
-}: {
-  statutPrecedent?: DemandeStatutType;
-  statut: DemandeStatutType;
-}) => {
-  if (statut != statutPrecedent && getStepWorkflow(statutPrecedent) === 4) return true;
-  if (isStatutRefusee(statut)) return false;
-  if (isStatutProjetDeDemande(statut) && !isStatutDossierComplet(statutPrecedent))
-    return true;
-  return (
-    getOrderStatut(statutPrecedent) > getOrderStatut(statut) ||
-    getStepWorkflow(statut) - getStepWorkflow(statutPrecedent) > 1
-  );
-};
-
 export const ChangementStatutForm = ({
   intention,
 }: {
   intention: (typeof client.infer)["[GET]/intention/:numero"];
 }) => {
+  const { user } = useAuth();
   const toast = useToast();
   const queryClient = useQueryClient();
 
@@ -165,19 +143,12 @@ export const ChangementStatutForm = ({
             placeholder="Sélectionner une option"
             isInvalid={!!errors.statut}
           >
-            {Object.values(DemandeStatutEnum)
-              .filter((statut) => statut !== DemandeStatutEnum["supprimée"])
-              .filter((statut) => isStatutStepWorkflowEnabled(statut))
-              .sort((a, b) => b.localeCompare(a))
-              .sort((a, b) => getOrderStatut(a) - getOrderStatut(b))
+            {getOrderedStatutsOptions()
               .map((statut) => (
                 <option
                   key={statut}
                   value={statut}
-                  disabled={isStatutDisabled({
-                    statutPrecedent: intention.statut,
-                    statut,
-                  })}
+                  disabled={!getPossibleNextStatuts({statut: intention.statut, user}).includes(statut)}
                 >
                   {formatStatut(statut)}
                 </option>

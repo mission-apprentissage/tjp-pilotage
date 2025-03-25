@@ -40,7 +40,7 @@ import { isCampagneTerminee } from "shared/utils/campagneUtils";
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/components/StatutTag";
 import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/intentions/utils/messageAccompagnementUtils";
-import {canCheckIntention, canCorrectIntention, canCreateIntention, canDeleteIntention,canEditDemandeIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import {canCheckIntention, canCorrectIntention, canCreateDemandeIntention, canDeleteIntention,canEditDemandeIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -179,7 +179,7 @@ export const PageClient = () => {
     .ref("[POST]/intention/import/:numero")
     .useMutation({
       onSuccess: (intention) => {
-        router.push(`/intentions/perdir/saisie/${intention.numero}`);
+        router.push(getRoutingSaisieRecueilDemande({ user, suffix: intention.numero }));
       },
       onError: (error) => {
         toast({
@@ -230,10 +230,10 @@ export const PageClient = () => {
   const [isModifyingGroup, setIsModifyingGroup] = useState(false);
 
   if (!data) return <IntentionSpinner />;
-  const isNouvelleDemandeDisabled = !canCreateIntention({
+
+  const isNouvelleDemandeDisabled = !canCreateDemandeIntention({
     user,
     campagne: data.campagne,
-    currentCampagne: currentCampagne!
   });
 
   return (
@@ -687,7 +687,7 @@ export const PageClient = () => {
                                     intention.avis.filter(
                                       (avis) =>
                                         getStepWorkflowAvis(avis.type as AvisTypeType) ===
-                                      getStepWorkflow(intention.statut)
+                                        getStepWorkflow(intention.statut)
                                     ).length
                                   }
                                 </Tag>

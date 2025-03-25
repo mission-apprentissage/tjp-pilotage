@@ -32,8 +32,8 @@ const getCampagneRegionEnCours = async ({
   .innerJoin("campagne", "campagne.id", "campagneRegion.campagneId")
   .where((eb) =>
     eb.and([
-      eb("statut", "=", CampagneStatutEnum["en cours"]),
-      eb("codeRegion", "=", codeRegion)
+      eb("campagneRegion.statut", "=", CampagneStatutEnum["en cours"]),
+      eb("campagneRegion.codeRegion", "=", codeRegion)
     ])
   )
   .selectAll()

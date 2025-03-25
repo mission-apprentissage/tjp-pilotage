@@ -128,6 +128,7 @@ describe("[POST]/intentions/statut/submit", () => {
     let user: RequestUser | undefined = undefined;
     let intentionsAChanger: Array<{
       numero: string;
+      isIntention?: boolean;
     }> | undefined = undefined;
     let intentions: Array<Intention | undefined> | undefined = undefined;
     let statut: DemandeStatutType | undefined = undefined;
@@ -160,6 +161,12 @@ describe("[POST]/intentions/statut/submit", () => {
           intentionsAChanger = [
             { numero: numeroIntentionExistants[0] },
             { numero: "NOTFOUND" },
+          ];
+        },
+        intentionsEtDemandeAChangerExistantes: () => {
+          intentionsAChanger = [
+            { numero: numeroIntentionExistants[0] },
+            { numero: numeroIntentionExistants[1], isIntention: false },
           ];
         },
         intentionsExistantes: async (data: Partial<Intention> = {}) => {
