@@ -5,8 +5,7 @@ import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
-/* eslint-disable-next-line import/default */
-import qs from "qs";
+import { parse } from "qs";
 import { useContext, useEffect, useState } from "react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
@@ -113,7 +112,7 @@ export default function Etablissements() {
     columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     order?: Partial<Order>;
     page?: string;
-  } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
+  } = parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const setSearchParams = (params: {
     filters?: typeof filters;

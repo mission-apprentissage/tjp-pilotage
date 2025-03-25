@@ -1,26 +1,26 @@
-import { Box, Card, CardBody, CardHeader, Divider, Flex, Heading, Img, Text, VisuallyHidden } from "@chakra-ui/react";
+import { Box, Card, CardBody, CardHeader, Divider, Flex, Heading, Text, VisuallyHidden } from "@chakra-ui/react";
+import {Icon} from '@iconify/react';
+import type { ReactNode } from "react";
 
 import type { StatsRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
+import {themeDefinition} from '@/theme/theme';
 
 const CountCard = ({
   label,
-  iconSrc,
+  icon,
   subLabel,
   value,
 }: {
   label: string;
-  iconSrc?: string;
+  icon?: ReactNode;
   subLabel?: string;
   value?: {
     total?: number;
-    colorationTotal?: number;
     scolaire?: number;
-    colorationScolaire?: number;
     apprentissage?: number;
-    colorationApprentissage?: number;
   };
 }) => (
-  <Card minW={[null, null, "56"]} flex={1} bgColor="white" borderRadius={5}>
+  <Card minW={[null, null, "72"]} flex={1} bgColor="white" borderRadius={5}>
     <CardHeader px={3} pt={2} pb={1}>
       <Flex flexDirection="column" minH="42px">
         <Flex>
@@ -33,24 +33,14 @@ const CountCard = ({
               <VisuallyHidden>Sous libellé :</VisuallyHidden>
               {subLabel}
             </Heading>
-            {value?.colorationTotal !== undefined && (
-              <Text fontSize="12" lineHeight={"20px"} fontWeight={400} color="grey.425">
-                (dont coloration)
-              </Text>
-            )}
           </Flex>
-          {iconSrc && <Img src={`/icons/${iconSrc}.svg`} height="30px" ms={"auto"} alt=""/>}
+          <Box ms={"auto"}>{icon}</Box>
         </Flex>
       </Flex>
     </CardHeader>
     <CardBody pb={3} pt={0} px={3}>
       <Flex flexDirection="column">
         <Flex direction={"row"} justify={"space-between"} py={4}>
-          {value?.colorationTotal !== undefined && (
-            <Text mt={"auto"} fontSize={18} lineHeight={"20px"} fontWeight={400} color="grey.425">
-              ({value?.colorationTotal})
-            </Text>
-          )}
           <Heading as="h4" fontSize={36} fontWeight={700} mt={"auto"} lineHeight={"32px"} ms={"auto"}>
             {value?.total ? value?.total : "0"}
           </Heading>
@@ -61,11 +51,6 @@ const CountCard = ({
               scolaire
             </Heading>
             <Flex>
-              {value?.colorationScolaire !== undefined && (
-                <Text fontSize={12} fontWeight={400} color="grey.425" me={3}>
-                  ({value?.colorationScolaire})
-                </Text>
-              )}
               <Box minW={9}>
                 <Text textAlign="end" fontSize={12} fontWeight={"bold"}>
                   {value?.scolaire ? value?.scolaire : "0"}
@@ -79,11 +64,6 @@ const CountCard = ({
               apprentissage
             </Heading>
             <Flex>
-              {value?.colorationApprentissage !== undefined && (
-                <Text fontSize={12} fontWeight={400} color="grey.425" me={3}>
-                  ({value?.colorationApprentissage})
-                </Text>
-              )}
               <Box minW={9}>
                 <Text textAlign="end" fontSize={12} fontWeight={"bold"}>
                   {value?.apprentissage ? value?.apprentissage : "0"}
@@ -101,17 +81,21 @@ export const CountersSection = ({ countData }: { countData?: StatsRestitutionInt
   return (
     <Flex flexDirection={"row"} gap={4} overflowY={"auto"} pb={2} flexWrap={["wrap", null, "nowrap"]}>
       <Flex gap={4} width="100%">
-        <CountCard label="Places ouvertes" iconSrc={"places_ouvertes"} value={countData?.ouvertures} />
-        <CountCard label="Places fermées" iconSrc={"places_fermees"} value={countData?.fermetures} />
-      </Flex>
-      <Flex gap={4} width="100%">
         <CountCard
-          label="Cert. Spécialisat."
-          iconSrc={"places_ami-cma"}
-          subLabel="Places ouvertes"
-          value={countData?.certifSpecialisation}
+          label="Places ouvertes"
+          value={countData?.ouvertures}
+          icon={<Icon width="30px" icon="ri:user-add-fill" color={themeDefinition.colors.bluefrance[525]} />}
         />
-        <CountCard label="FCIL" iconSrc={"places_fcil"} subLabel="Places ouvertes" value={countData?.FCILs} />
+        <CountCard
+          label="Places fermées"
+          value={countData?.fermetures}
+          icon={<Icon width="30px" icon="ri:user-unfollow-fill" color={themeDefinition.colors.success["425_active"]} />}
+        />
+        <CountCard
+          label="Places colorées"
+          value={countData?.ouverturesColorations}
+          icon={<Icon width="30px" icon={"ri:account-pin-box-fill"} color={themeDefinition.colors.purpleGlycine["850_active"]} />}
+        />
       </Flex>
     </Flex>
   );

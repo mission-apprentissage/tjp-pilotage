@@ -1,44 +1,41 @@
 import type { ScopeZone } from "shared";
-import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import type { client } from "@/api.client";
 
-export type RepartitionPilotageIntentions = (typeof client.infer)["[GET]/pilotage-intentions/repartition"];
+export type PilotageIntentions = (typeof client.infer)["[GET]/pilotage-intentions"];
 
-export type RepartitionPilotageIntentionsQuery =
-  (typeof client.inferArgs)["[GET]/pilotage-intentions/repartition"]["query"];
+export type PilotageIntentionsQuery =
+  (typeof client.inferArgs)["[GET]/pilotage-intentions"]["query"];
 
-export type FiltersRepartitionPilotageIntentions = Omit<RepartitionPilotageIntentionsQuery, "order" | "orderBy">;
+export type FiltersPilotageIntentions = Omit<PilotageIntentionsQuery, "order" | "orderBy">;
 
-export type OrderRepartitionPilotageIntentions = Pick<RepartitionPilotageIntentionsQuery, "order" | "orderBy">;
+export type OrderPilotageIntentions = Pick<PilotageIntentionsQuery, "order" | "orderBy">;
 
-export type RepartitionPilotageIntentionsDomaines =
-  (typeof client.infer)["[GET]/pilotage-intentions/repartition"]["domaines"];
+export type PilotageIntentionsDomaines =
+  (typeof client.infer)["[GET]/pilotage-intentions"]["domaines"];
 
-export type RepartitionPilotageIntentionsZonesGeographiques =
-  (typeof client.infer)["[GET]/pilotage-intentions/repartition"]["zonesGeographiques"];
+export type PilotageIntentionsZonesGeographiques =
+  (typeof client.infer)["[GET]/pilotage-intentions"]["zonesGeographiques"];
 
-export type RepartitionPilotageIntentionsNiveauxDiplome =
-  (typeof client.infer)["[GET]/pilotage-intentions/repartition"]["niveauxDiplome"];
+export type PilotageIntentionsNiveauxDiplome =
+  (typeof client.infer)["[GET]/pilotage-intentions"]["niveauxDiplome"];
 
-export type RepartitionPilotageIntentionsPositionQuadrant =
-  (typeof client.infer)["[GET]/pilotage-intentions/repartition"]["positionsQuadrant"];
+export type PilotageIntentionsPositionQuadrant =
+  (typeof client.infer)["[GET]/pilotage-intentions"]["positionsQuadrant"];
 
-export type RepartitionPilotageIntentionsLine =
-  | RepartitionPilotageIntentionsDomaines[string]
-  | RepartitionPilotageIntentionsZonesGeographiques[string]
-  | RepartitionPilotageIntentionsNiveauxDiplome[string]
-  | RepartitionPilotageIntentionsPositionQuadrant[string];
+export type PilotageIntentionsStatuts =
+    (typeof client.infer)["[GET]/pilotage-intentions"]["statuts"];
 
-export type StatsPilotageIntentions = (typeof client.infer)["[GET]/pilotage-intentions/stats"];
+export type PilotageIntentionsLine =
+  | PilotageIntentionsDomaines[string]
+  | PilotageIntentionsZonesGeographiques[string]
+  | PilotageIntentionsNiveauxDiplome[string]
+  | PilotageIntentionsPositionQuadrant[string]
+  | PilotageIntentionsStatuts[string];
 
-export type StatsPilotageIntentionsQuery = (typeof client.inferArgs)["[GET]/pilotage-intentions/stats"]["query"];
+export type Filters = PilotageIntentions["filters"];
 
-export type FiltersStatsPilotageIntentions = Omit<StatsPilotageIntentionsQuery, "order" | "orderBy">;
-
-export type Statut = Extract<DemandeStatutType, "demande validée" | "projet de demande"> | "all";
-
-export type Indicateur = keyof StatsPilotageIntentions["all"][string];
+export type IndicateurRepartition = keyof PilotageIntentionsLine;
 
 export type SelectedScope = {
   type: ScopeZone;
@@ -48,13 +45,14 @@ export type SelectedScope = {
 export type FormationsPilotageIntentionsQuery =
   (typeof client.inferArgs)["[GET]/pilotage-intentions/formations"]["query"];
 
-export type FiltersFormationsPilotageIntentionsQuery = Omit<FormationsPilotageIntentionsQuery, "order" | "orderBy">;
+export type FiltersFormationsPilotageIntentions = Omit<FormationsPilotageIntentionsQuery, "order" | "orderBy">;
 
-export type FormationsPilotageIntentions = (typeof client.infer)["[GET]/pilotage-intentions/formations"];
+export type FormationsPilotageIntentions = (typeof client.infer)["[GET]/pilotage-intentions/formations"]["formations"];
+export type StatsSortiePilotageIntentions = (typeof client.infer)["[GET]/pilotage-intentions/formations"]["stats"];
 
-export type OrderFormationsPilotageIntentions = Pick<FormationsPilotageIntentionsQuery, "order" | "orderBy">;
+export type OrderFormationsPilotageIntentions = Pick<FormationsPilotageIntentionsQuery, "orderFormations" | "orderByFormations">;
 
 export type FilterTracker = (
-  filterName: keyof FiltersStatsPilotageIntentions,
+  filterName: keyof FiltersPilotageIntentions,
   options?: { value?: unknown; context?: string }
 ) => void;

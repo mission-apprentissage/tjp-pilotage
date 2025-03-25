@@ -28,8 +28,8 @@ import {PermissionEnum} from 'shared/enum/permissionEnum';
 import {RoleEnum} from 'shared/enum/roleEnum';
 
 import { client } from "@/api.client";
-import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
-import { FonctionTag } from "@/app/(wrapped)/intentions/perdir/components/FonctionTag";
+import { AvisStatutTag } from "@/app/(wrapped)/intentions/components/AvisStatutTag";
+import { FonctionTag } from "@/app/(wrapped)/intentions/components/FonctionTag";
 import type { Avis } from "@/app/(wrapped)/intentions/perdir/types";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { formatDate } from "@/utils/formatUtils";

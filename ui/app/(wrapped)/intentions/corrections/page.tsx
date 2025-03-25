@@ -4,8 +4,7 @@ import {Button, chakra, Container, Flex, MenuButton} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
-/* eslint-disable-next-line import/default */
-import qs from "qs";
+import { parse } from "qs";
 import { useContext, useEffect, useState } from "react";
 import {PermissionEnum} from 'shared/enum/permissionEnum';
 import {SecteurEnum} from 'shared/enum/secteurEnum';
@@ -88,7 +87,7 @@ const Page = () => {
     order?: Partial<OrderCorrections>;
     page?: string;
     search?: string;
-  } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
+  } = parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const filters = searchParams.filters ?? {};
   const columns = searchParams.columns ?? [];

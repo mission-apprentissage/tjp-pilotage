@@ -67,32 +67,33 @@ export const DefinitionTauxTransformationCumuleModal = (
 
             <HStack width="100%" mt={"32px"}>
               {/* DEMANDES VALIDEES */}
-              <VStack
+              <HStack
                 width="33%"
                 fontSize={12}
                 fontStyle="italic"
                 px="8px"
                 py="16px"
-                alignSelf="center"
+                alignSelf="stretch"
                 borderRadius="8px"
                 borderWidth="3px"
                 borderColor={blue}
+                alignItems="center"
               >
                 <HStack alignItems="center">
                   <Text lineHeight="20px">=</Text>
                   <VStack lineHeight="20px">
-                    <Text fontWeight="700" align="center" style={{ textWrap: "nowrap" }}>
+                    <Text fontWeight="700" align="center" style={{ textWrap: "wrap" }}>
                       <Highlight styles={{ color: "info.text" }} query={""}>
                         {`Pl. transformées RS ${rentreesScolaire.join(" + ")}`}
                       </Highlight>
                     </Text>
                     <Text>issues des demandes validées</Text>
                     <Divider borderColor="black" />
-                    <Text fontWeight="700" style={{ textWrap: "nowrap" }}>Effectif en entrée de formation</Text>
+                    <Text fontWeight="700" style={{ textWrap: "wrap" }}>Effectif en entrée de formation</Text>
                     <Text>Constat de rentrée {FIRST_ANNEE_CAMPAGNE}</Text>
                   </VStack>
                 </HStack>
-              </VStack>
+              </HStack>
 
               {/* PROJETS RS INCLUS */}
               <VStack
@@ -138,22 +139,30 @@ export const DefinitionTauxTransformationCumuleModal = (
               <UnorderedList spacing="16px">
                 <ListItem>
                   <Text>
-                    Pl. <b>transformées</b> = Pl. <b>ouvertes</b> + Pl. <b>fermées</b> + Pl. <b>existantes colorées</b> (à partir de la Rentrée Scolaire 2025).
+                    Pl. <b>transformées</b> = Pl. <b>ouvertes</b> + Pl. <b>fermées</b> + Pl. <b>existantes colorées</b>
+                    (à partir de la Rentrée Scolaire 2025).
                   </Text>
                 </ListItem>
                 <ListItem>
                   <Text>
-                    Le calcul tient compte des places transformées en <b>voie scolaire</b> et en <b>apprentissage</b> (diplômes retenus : CAP, Bac Pro, MC/CS, BTS, FCIL, DNMADE, BMA). Le dénominateur concerne les effectifs <b>en entrée de formation.</b>
+                    Le calcul tient compte des places transformées en <b>voie scolaire</b> et en <b>apprentissage</b>
+                    (diplômes retenus : CAP, Bac Pro, MC/CS, BTS, FCIL, DNMADE, BMA).
+                    Le dénominateur concerne les effectifs <b>en entrée de formation.</b>
                   </Text>
                 </ListItem>
                 <ListItem>
                   <Text>
-                  Pour le taux “<b>Demandes validées</b>”, le nombre de places transformées au numérateur correspond aux transformations <b>validées</b> (sur la base des demandes validées à l’issue des concertations entre régions et régions académiques).
+                  Pour le taux “<b>Demandes validées</b>”, le nombre de places transformées
+                  au numérateur correspond aux transformations <b>validées</b>
+                  (sur la base des demandes validées à l’issue des concertations entre régions et régions académiques).
                   </Text>
                 </ListItem>
                 <ListItem>
                   <Text>
-                    Pour le taux “<b>Projets inclus</b>“, le nombre de places transformées au numérateur correspond à la somme des transformations <b>validées</b> (comme le taux précédent) et des <b>projets de transformation</b> (demandes qui seront examinées en concertation).
+                    Pour le taux “<b>Projets inclus</b>“, le nombre de places transformées
+                    au numérateur correspond à la somme des transformations <b>validées</b>
+                    (comme le taux précédent) et des <b>projets de transformation</b>
+                    (demandes qui seront examinées en concertation).
                   </Text>
                 </ListItem>
               </UnorderedList>

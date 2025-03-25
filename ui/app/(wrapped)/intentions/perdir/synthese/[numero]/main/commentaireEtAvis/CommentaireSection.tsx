@@ -17,8 +17,8 @@ import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import { client } from "@/api.client";
-import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
-import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import { RoleTag } from "@/app/(wrapped)/intentions/components/RoleTag";
+import { StatutTag } from "@/app/(wrapped)/intentions/components/StatutTag";
 import type { ChangementStatut } from "@/app/(wrapped)/intentions/perdir/types";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { formatDate } from "@/utils/formatUtils";

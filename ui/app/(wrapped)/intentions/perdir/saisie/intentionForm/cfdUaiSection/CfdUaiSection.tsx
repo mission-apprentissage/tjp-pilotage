@@ -6,7 +6,7 @@ import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
-import { StatutTag } from "@/app/(wrapped)/intentions/perdir/components/StatutTag";
+import { StatutTag } from "@/app/(wrapped)/intentions/components/StatutTag";
 import type {
   IntentionForms,
   PartialIntentionForms,

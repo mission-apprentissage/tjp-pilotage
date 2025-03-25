@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { iframeResizer } from "iframe-resizer";
 import { useRef } from "react";
 
