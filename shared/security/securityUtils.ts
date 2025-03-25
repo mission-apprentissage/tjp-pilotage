@@ -24,6 +24,9 @@ export const isUserInRegionsExperimentation2024 = (
 export const isUserNational = ({ user }: { user?: { role?: Role };}): boolean =>
   hasRole({user, role: RoleEnum["admin"]}) || hasRole({user, role: RoleEnum["pilote"]});
 
+export const isAdmin = ({ user }: { user?: { role?: Role };}): boolean =>
+  hasRole({user, role: RoleEnum["admin"]}) || hasRole({user, role: RoleEnum["admin_region"]});
+
 export const hasRole = ({ user, role }: { user?: { role?: Role }; role: Role }): boolean =>
   user?.role === role;
 

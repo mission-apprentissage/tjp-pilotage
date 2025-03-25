@@ -81,7 +81,7 @@ const DemandeSchema = z.object({
   // Précisions
   motif: z.array(z.string()),
   autreMotif: z.string().optional(),
-  amiCma: z.boolean(),
+  amiCma: z.boolean().optional(),
   amiCmaValide: z.boolean().optional(),
   amiCmaValideAnnee: z.string().optional(),
   amiCmaEnCoursValidation: z.boolean().optional(),

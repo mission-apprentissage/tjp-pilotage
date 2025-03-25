@@ -33,6 +33,14 @@ const OptionLabel = ({ option }: { option: Formation }) => {
           Fermeture au {option.dateFermeture}
         </Tag>
       )}
+      {option.isFormationRenovee && (
+        <Tag
+          bgColor={"greenArchipel.950"}
+          color={"greenArchipel.391"}
+          size={"md"} maxHeight={4} minW={"fit-content"} my={"auto"} textAlign={"center"}>
+          Rénovée
+        </Tag>
+      )}
     </Flex>
   );
 };

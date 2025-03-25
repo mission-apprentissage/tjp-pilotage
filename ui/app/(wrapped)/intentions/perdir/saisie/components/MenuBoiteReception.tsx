@@ -8,7 +8,6 @@ import type { UserType } from "shared/schema/userSchema";
 import { client } from "@/api.client";
 import type { Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
 import { getMessageAccompagnementCampagne } from '@/app/(wrapped)/intentions/utils/messageAccompagnementUtils';
-import { canCreateIntention } from "@/app/(wrapped)/intentions/utils/permissionsIntentionUtils";
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
@@ -334,7 +333,7 @@ export const MenuBoiteReception = ({
             Demandes suivies
           </Text>
         </Button>
-        {canCreateIntention({user, currentCampagne: currentCampagne!, campagne}) && (
+        {!isNouvelleDemandeDisabled && (
           <Button
             bgColor={"unset"}
             size="sm"

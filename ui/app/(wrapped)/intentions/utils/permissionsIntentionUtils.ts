@@ -1,17 +1,18 @@
-import {hasPermission, hasRole, isUserNational, RoleEnum} from 'shared';
+import {hasPermission, hasRole, isUserInRegionsExperimentation2024, isUserNational, RoleEnum} from 'shared';
 import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
+import {DemandeStatutEnum } from 'shared/enum/demandeStatutEnum';
 import type {DemandeTypeType} from 'shared/enum/demandeTypeEnum';
 import { PermissionEnum } from 'shared/enum/permissionEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 import type { UserType } from 'shared/schema/userSchema';
 import { isCampagneEnCours, isCampagneTerminee } from 'shared/utils/campagneUtils';
-import { isStatutBrouillon, isStatutDemandeValidee, isStatutDossierIncomplet, isStatutProposition,isStatutRefusee } from 'shared/utils/statutDemandeUtils';
+import { isStatutDemandeValidee } from 'shared/utils/statutDemandeUtils';
 import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
 
 import {feature} from '@/utils/feature';
 import { isUserPartOfExpe} from '@/utils/isPartOfExpe';
 
-import { canEditDemande } from './permissionsDemandeUtils';
+import { canCreateDemande, canEditDemande } from './permissionsDemandeUtils';
 
 export type DemandeIntention = {
   campagne: CampagneType,
@@ -21,73 +22,87 @@ export type DemandeIntention = {
   isIntention: boolean
 }
 
-
-// /**
-//  * Vérifie si l'utilisateur peut créer une intention
-//  *
-//  * - Si l'utilisateur est national et que la campagne est en cours, on autorise la création
-//  * - Sinon
-//  *  - Si la saisie n'est pas désactivée ET
-//  *    si l'utilisateur a la permission d'écrire les intentions PERDIR ET
-//  *    si l'utilisateur fait partie de l'expérimentation ET
-//  *    si la campagne est en cours ET
-//  *    si la campagne est régionale ET
-//  *    si l'utilisateur est un perdir ET que la campagne autorise la saisie PERDIR
-//  *    on autorise la création
-//  *  - Sinon on refuse la création
-//  *
-//  */
-// export const canCreateIntention = ({
-//   user,
-//   campagne
-// } : {
-//   user?: UserType,
-//   campagne: CampagneType
-// }) => {
-//   if(isUserNational({user}) && isCampagneEnCours(campagne)) return true;
-//   const isCampagneRegionale = !!campagne?.codeRegion;
-//   const withSaisiePerdir = hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne?.withSaisiePerdir : true;
-//   return !feature.saisieDisabled &&
-//     hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"]) &&
-//     isUserPartOfExpe({ user, campagne }) &&
-//     isCampagneEnCours(campagne) &&
-//     isCampagneRegionale &&
-//     withSaisiePerdir;
-// };
-
-
+export const canCreateDemandeIntention = ({
+  user,
+  campagne,
+} : {
+  user?: UserType,
+  campagne: CampagneType,
+}): boolean => {
+  if(campagne?.annee === "2023" || (
+    campagne?.annee === "2024" &&
+    !isUserInRegionsExperimentation2024({ user })
+  )) return canCreateDemande({ user, campagne });
+  return canCreateIntention({ user, campagne });
+};
 
 /**
  * Vérifie si l'utilisateur peut créer une intention
  *
- * - Si l'utilisateur est national et que la campagne est en cours, on autorise la création
- * - Sinon
- *  - Si la saisie n'est pas désactivée ET
- *    si l'utilisateur a la permission d'écrire les intentions PERDIR ET
- *    si l'utilisateur fait partie de l'expérimentation ET
- *    si la campagne est en cours ET
- *    si la campagne est régionale ET
- *    si l'utilisateur est un perdir ET que la campagne autorise la saisie PERDIR
- *    on autorise la création
- *  - Sinon on refuse la création
- *
+ * - Si la saisie n'est pas désactivée
+ * - Si la campagne est en cours
+ * - Si l'utilisateur est national
+ * - On autorise la création
+ * OU
+ * - Si la saisie n'est pas désactivée
+ * - Si la campagne est en cours
+ * - Si l'utilisateur a les droits sur l'édition des intentions en général
+ * - Si l'utilisateur fait partie de l'expérimentation
+ * - Si la campa
+ * - Si l'utilisateur est un PERDIR
+ *  - Si la campagne est régionale
+ *  - Si l'utilisateur est bien dans la région de la campagne
+ *  - Si celle-ci autorise la saisie PERDIR
+ *  - On autorise la création
  */
 export const canCreateIntention = ({
   user,
-  campagne,
-  currentCampagne
+  campagne
 } : {
   user?: UserType,
-  campagne: CampagneType,
-  currentCampagne: CampagneType
+  campagne: CampagneType
 }) => {
-  if(isUserNational({user}) && isCampagneEnCours(campagne)) return true;
-  if(campagne.id !== currentCampagne.id) return false;
-  const withSaisiePerdir = (hasRole({ user, role: RoleEnum["perdir"] }) && !!campagne.codeRegion)? !!campagne?.withSaisiePerdir : true;
-  return !feature.saisieDisabled &&
-    hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"]) &&
-    isUserPartOfExpe({ user, campagne }) &&
-    withSaisiePerdir;
+  if(feature.saisieDisabled) return false;
+  if(!isCampagneEnCours(campagne)) return false;
+  if(isUserNational({user})) return true;
+  if(!hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"])) return false;
+  if(!isUserPartOfExpe({ user, campagne })) return false;
+  if(campagne.annee !== "2023" && campagne.annee !== "2024") {
+    const isCampagneRegionale = campagne.codeRegion;
+    const isCampagneRegionaleOfUser = isCampagneRegionale && (user?.codeRegion === campagne.codeRegion);
+    if(!isCampagneRegionaleOfUser) return false;
+    return hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne.withSaisiePerdir : true;
+  }
+  return true;
+};
+
+export const canEditIntentionStatut = ({
+  intention,
+  user
+} : {
+  intention: DemandeIntention,
+  user?: UserType
+}) => {
+  const editableStatutsPerdir: Array<DemandeStatutType> = [
+    DemandeStatutEnum["brouillon"],
+    DemandeStatutEnum["proposition"],
+    DemandeStatutEnum["dossier incomplet"]
+  ];
+  const editableStatuts: Array<DemandeStatutType> = [
+    ...editableStatutsPerdir,
+    DemandeStatutEnum["dossier complet"],
+    DemandeStatutEnum["projet de demande"],
+    DemandeStatutEnum["prêt pour le vote"],
+  ];
+  const editableStatutsAdmin: Array<DemandeStatutType> = [
+    ...editableStatuts,
+    DemandeStatutEnum["demande validée"],
+    DemandeStatutEnum["refusée"],
+  ];
+
+  if(hasRole({ user, role: RoleEnum["perdir"] })) return editableStatutsPerdir.includes(intention.statut);
+  if(hasRole({ user, role: RoleEnum["admin"] }) || hasRole({ user, role: RoleEnum["admin_region"] })) return editableStatutsAdmin.includes(intention.statut);
+  else return editableStatuts.includes(intention.statut);
 };
 
 export const canEditDemandeIntention = ({
@@ -104,7 +119,14 @@ export const canEditDemandeIntention = ({
 /**
  * Vérifie si on peut modifier une intention :
  *
- * - Si l'utilisateur n'est pas autorisé à éditer les intentions
+ * - Si l'utilisateur a les droits sur l'édition des intentions en général
+ *    - si l'utilisateur peut éditer cette intention
+ *    - si l'utilisateur peut éditer le statut de l'intention
+ *    - si l'utilisateur est un perdir
+ *      - si la campagne est régionale,
+ *      - si l'utilisateur est bien dans la région de la campagne
+ *      - si celle-ci autorise la saisie PERDIR
+ *      - si la saisie n'est pas désactivée
  */
 export const canEditIntention = ({
   intention,
@@ -113,53 +135,9 @@ export const canEditIntention = ({
   intention: DemandeIntention,
   user?: UserType
 }): boolean => {
-  // Si l'utilisateur n'est pas autorisé à éditer les intentions
-  if(!isUserPartOfExpe({ user, campagne: intention.campagne })) return false;
-  const canUserEditIntention = intention.canEdit;
-  const canEditStatut = (
-    !isStatutDemandeValidee(intention.statut) &&
-    !isStatutRefusee(intention.statut)
-  );
-  // Si l'utilisateur est PERDIR,
-  if(hasRole({ user, role: RoleEnum["perdir"] })) {
-    // On vérifie si la demande est dans un statut qui peut être modifié par le PERDIR
-    const canPerdirEditStatut = canEditStatut && (
-      isStatutBrouillon(intention.statut) ||
-      isStatutProposition(intention.statut) ||
-      isStatutDossierIncomplet(intention.statut)
-    );
-
-    // Si une campagne est régionale, on vérifie si l'utilisateur est bien dans la région de la campagne et quel celle-ci autorise la saisie PERDIR
-    const isCampagneRegionale = !!intention.campagne?.codeRegion;
-    const isCampagneRegionaleOfUser = user?.codeRegion === intention.campagne?.codeRegion;
-    const withSaisiePerdir = (
-      isCampagneRegionale && isCampagneRegionaleOfUser
-    ) ? !!intention.campagne?.withSaisiePerdir : true;
-
-    // Si la saisie n'est pas désactivée,
-    // si l'utilisateur peut modifier la demande,
-    // si le statut de la demande peut être modifié par le PERDIR,
-    // si la campagne autorise la saisie PERDIR
-    return (
-      !feature.saisieDisabled &&
-      hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"]) &&
-      canUserEditIntention &&
-      canPerdirEditStatut &&
-      withSaisiePerdir
-    );
-  }
-
-  // Si l'utilisateur n'est pas PERDIR,
-  // si la saisie n'est pas désactivée,
-  // si l'utilisateur peut modifier la demande,
-  // si le statut de la demande peut être modifié par l'utilisateur
-  return (
-    !feature.saisieDisabled &&
-    hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"]) &&
-    canUserEditIntention &&
-    canEditStatut &&
-    isCampagneEnCours(intention.campagne)
-  );
+  if (!canEditIntentionStatut({ intention, user })) return false;
+  if (!intention.canEdit) return false;
+  return canCreateIntention({ user, campagne: intention.campagne });
 };
 
 export const canDeleteIntention = ({ intention, user } : { intention: DemandeIntention; user?: UserType; }) =>
@@ -209,6 +187,7 @@ export const canCheckIntention = ({
   user?: UserType
 }) => {
   if(!hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"])) return false;
+  if(!canEditIntentionStatut({ intention, user })) return false;
   return !checkedIntentions?.intentions ||
     checkedIntentions?.intentions.length === 0 ||
     checkedIntentions?.statut === intention.statut;
