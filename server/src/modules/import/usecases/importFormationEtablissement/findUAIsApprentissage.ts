@@ -11,7 +11,6 @@ export const findUAIsApprentissage = async ({ cfd }: { cfd: string }) => {
     .then((rawDatas) => {
       if (!rawDatas || !rawDatas.length) return;
       return rawDatas
-        .filter((rawData) => rawData["Offre: Tags"].includes("2023") || rawData["Offre: Tags"].includes("2024"))
         .map((rawData) => {
           if (rawData["Lieu: UAI"]) return rawData["Lieu: UAI"];
           if (rawData["Formateur: UAI"]) return rawData["Formateur: UAI"];

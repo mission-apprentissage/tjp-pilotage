@@ -117,6 +117,7 @@ export const [importFormationEtablissements] = inject(
         const uais = await deps.findUAIsApprentissage({ cfd });
         if (!uais) return;
         for (const uai of uais) {
+          // Récupération des données établissements concernés par l'offre apprentissage
           if (!processedUais.has(uai)) {
             await deps.importEtablissement({ uai });
             for (const millesime of MILLESIMES_IJ) {
@@ -127,13 +128,20 @@ export const [importFormationEtablissements] = inject(
 
           // Récupération du codeDispositif pour les formations en apprentissage
           // à partir du contenu du fichier offres_apprentissage
-          const offreApprentissage = await deps.findRawData({
+          const offresApprentissages = await deps.findRawDatas({
             type: "offres_apprentissage",
             filter: { "Formation: code CFD": cfd },
           });
 
-          if (!offreApprentissage) continue;
+          if (offresApprentissages.length === 0) continue;
 
+          const tags: string[] = [];
+          for (let i = 0; i < offresApprentissages.length; i++) {
+            tags.push(offresApprentissages[i]["Offre: Tags"]);
+          }
+          const aggregatedTags = tags.join(",");
+
+          const offreApprentissage = offresApprentissages[0];
           const codesDispositifs: Array<string> = [];
           const mefs = offreApprentissage["Formation: codes MEF"]?.split(",").map((mef) => mef.trim()) ?? [];
           const dureeCollectee = offreApprentissage?.["Formation: durée collectée"]
@@ -141,7 +149,7 @@ export const [importFormationEtablissements] = inject(
             : -1;
 
           const dataFormation = await deps.findDataFormation({ cfd });
-          const rentreesScolaires: string[] = extractYearFromTags(offreApprentissage["Offre: Tags"])
+          const rentreesScolaires: string[] = extractYearFromTags(aggregatedTags)
             .filter(year => isYearBetweenOuvertureAndFermeture(year, dataFormation));
 
           if (mefs.length > 0) {
