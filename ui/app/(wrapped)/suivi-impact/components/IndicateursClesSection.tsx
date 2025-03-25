@@ -23,7 +23,6 @@ import { themeColors } from "@/theme/themeColors";
 import { formatNumber, formatPercentageFixedDigits } from "@/utils/formatUtils";
 
 import { MultiProgressBar } from "./MultiProgressBar";
-
 const Loader = () => {
   return (
     <Box mt={12}>
@@ -211,11 +210,13 @@ const StatCard = ({
 const TauxTransfoCard = (
   { tauxTransformationCumule,
     tauxTransformationCumulePrevisionnel,
-    onModalOpen
+    onModalOpen,
+    nextRentree
   } :
   { tauxTransformationCumule?: TauxTransformation,
     tauxTransformationCumulePrevisionnel?: TauxTransformation,
-    onModalOpen: () => void
+    onModalOpen: () => void,
+    nextRentree: number
   }) => {
   const [blue, cyan, grey] = useToken("colors", ["bluefrance.113", "blueecume.675_hover", "grey.925"]);
 
@@ -250,7 +251,7 @@ const TauxTransfoCard = (
                 <MultiProgressBar
                   bars={[
                     {value: OBJECTIF_TAUX_TRANSFO_REFORME, label: 'Objectif de la réforme', color: grey},
-                    {value: tauxTransformationCumulePrevisionnel?.taux, label: `Projets RS ${NEXT_RENTREE} inclus`, color: cyan, tooltip:`${tauxTransformationCumulePrevisionnel?.placesTransformees} / ${tauxTransformationCumulePrevisionnel?.effectifs}`},
+                    {value: tauxTransformationCumulePrevisionnel?.taux, label: `Projets RS ${nextRentree} inclus`, color: cyan, tooltip:`${tauxTransformationCumulePrevisionnel?.placesTransformees} / ${tauxTransformationCumulePrevisionnel?.effectifs}`},
                     {value: tauxTransformationCumule?.taux, label: 'Demandes validées', color: blue, tooltip:`${tauxTransformationCumule?.placesTransformees} / ${tauxTransformationCumule?.effectifs}`}
                   ].filter(bar => typeof bar?.value !== "undefined").sort((a, b) => b.value! - a.value!).map((taux, index) => ({...taux, order: index + 1} as {
                   value: number;
@@ -285,6 +286,7 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
           tauxTransformationCumule={data?.scoped.tauxTransformationCumule}
           tauxTransformationCumulePrevisionnel={data?.scoped.tauxTransformationCumulePrevisionnel}
           onModalOpen={onModalOpen}
+          nextRentree={Math.max(...(data?.rentreesScolaire ?? []).map(Number)) ?? Number(NEXT_RENTREE)}
         />
         <SimpleGrid spacing={3} columns={[2]} width="100%">
           <StatCard

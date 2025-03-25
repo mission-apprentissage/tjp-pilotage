@@ -150,3 +150,18 @@ export const canCorrectIntention = ({
   isStatutDemandeValidee(intention.statut) &&
   !hasRole({user, role: RoleEnum["perdir"]}) &&
   !isTypeAjustement(intention.typeDemande);
+
+export const canCheckIntention = ({
+  intention,
+  checkedIntentions,
+  user
+}:{
+  intention: DemandeIntention,
+  checkedIntentions: { statut: DemandeStatutType, intentions: Array<string> } | undefined,
+  user?: UserType
+}) => {
+  if(!hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"])) return false;
+  return !checkedIntentions?.intentions ||
+    checkedIntentions?.intentions.length === 0 ||
+    checkedIntentions?.statut === intention.statut;
+};

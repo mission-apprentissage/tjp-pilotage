@@ -19,7 +19,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { getHierarchy, hasRole } from "shared";
-import {RoleEnum} from 'shared/enum/roleEnum';
+import { RoleEnum } from 'shared/enum/roleEnum';
 import { UserFonctionEnum } from "shared/enum/userFonctionEnum";
 import { z } from "zod";
 
@@ -43,6 +43,7 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       firstname: "",
       lastname: "",
       role: RoleEnum["gestionnaire_region"],
+      fonction: null,
     },
   });
 
@@ -65,7 +66,7 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   });
 
   const onSubmit = (v: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]) =>
-    createUser({ body: { ...v, codeRegion: v.codeRegion || undefined } });
+    createUser({ body: { ...v, codeRegion: v.codeRegion || undefined, fonction: v.fonction || null } });
 
   const roles = getHierarchy(role);
   const isAdminRegion = hasRole({user, role: RoleEnum["admin_region"]});
@@ -152,16 +153,11 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             </Select>
             {!!errors.codeRegion && <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>}
           </FormControl>
-          {isError && (
-            <Alert status="error">
-              <AlertDescription>{getErrorMessage(error)}</AlertDescription>
-            </Alert>
-          )}
 
           <FormControl mb="4" isInvalid={!!errors.fonction}>
             <FormLabel>Fonction de l'utilisateur</FormLabel>
             <Select {...register("fonction")}>
-              {<option value="">Aucune</option>}
+              {<option value={""}>Aucune</option>}
               {Object.keys(UserFonctionEnum)?.map((userFonction) => (
                 <option key={userFonction} value={userFonction}>
                   {userFonction}
@@ -170,6 +166,12 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             </Select>
             {!!errors.fonction && <FormErrorMessage>{errors.fonction.message}</FormErrorMessage>}
           </FormControl>
+
+          {isError && (
+            <Alert status="error">
+              <AlertDescription>{getErrorMessage(error)}</AlertDescription>
+            </Alert>
+          )}
         </ModalBody>
 
         <ModalFooter>

@@ -1,13 +1,7 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Flex,
-  Highlight,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Select,
   Text,
 } from "@chakra-ui/react";
@@ -213,57 +207,7 @@ export const SecondaryFiltersSection = ({
               Tous ({data?.filters.typesDemande.length ?? 0})
             </Multiselect>
           </Box>
-          {feature.showColorationFilter && (
-            <Box justifyContent={"start"}>
-              <Text fontWeight={500} mb={1}>Coloration</Text>
-              <Menu gutter={6} matchWidth={false} autoSelect={true}>
-                <MenuButton
-                  as={Button}
-                  variant={"selectButton"}
-                  rightIcon={<ChevronDownIcon />}
-                  width={[null, null, "64"]}
-                  size="md"
-                  borderWidth="1px"
-                  borderStyle="solid"
-                  borderColor="grey.900"
-                  bg={"white"}
-                >
-                  <Flex direction="row">
-                    <Text my={"auto"} textOverflow={"ellipsis"} overflow={"hidden"}>
-                      <Highlight
-                        query={["Toutes demandes", "ouvertures/fermetures", "demandes avec places colorées"]}
-                        styles={{ fontWeight: "bold" }}
-                      >
-                        {data?.filters.colorations?.find((c) => c.value === activeFilters.coloration)?.label ??
-                          "Toutes demandes"}
-                      </Highlight>
-                    </Text>
-                  </Flex>
-                </MenuButton>
-                <MenuList py={0} borderRadius={4}>
-                  {data?.filters.colorations?.map((option) => (
-                    <MenuItem
-                      p={2}
-                      key={option.value}
-                      onClick={() => handleFilters("coloration", option.value)}
-                      borderRadius={4}
-                    >
-                      <Flex direction="row">
-                        <Text my={"auto"}>
-                          <Highlight
-                            query={["Toutes demandes", "ouvertures/fermetures", "demandes avec places colorées"]}
-                            styles={{ fontWeight: "bold" }}
-                          >
-                            {option.label}
-                          </Highlight>
-                        </Text>
-                      </Flex>
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </Menu>
-            </Box>
-          )}
+
           <Box justifyContent={"start"}>
             <Text as="label" htmlFor="select-ami-cma" fontWeight={500} mb={1}>AMI/CMA</Text>
             <Select
@@ -283,25 +227,27 @@ export const SecondaryFiltersSection = ({
               ))}
             </Select>
           </Box>
-          <Box justifyContent={"start"}>
-            <Text as="label" htmlFor="select-coloration" fontWeight={500} mb={1}>Coloration</Text>
-            <Select
-              id="select-coloration"
-              width={"48"}
-              size="md"
-              variant={"newInput"}
-              value={activeFilters.coloration?.toString() ?? ""}
-              onChange={(e) => handleFilters("coloration", e.target.value)}
-              borderBottomColor={activeFilters.coloration != undefined ? "info.525" : ""}
-              placeholder="Avec / sans"
-            >
-              {data?.filters.colorations?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-          </Box>
+          {feature.showColorationFilter && (
+            <Box justifyContent={"start"}>
+              <Text as="label" htmlFor="select-coloration" fontWeight={500} mb={1}>Coloration</Text>
+              <Select
+                id="select-coloration"
+                width={"48"}
+                size="md"
+                variant={"newInput"}
+                value={activeFilters.coloration?.toString() ?? ""}
+                onChange={(e) => handleFilters("coloration", e.target.value)}
+                borderBottomColor={activeFilters.coloration != undefined ? "info.525" : ""}
+                placeholder="Avec / sans"
+              >
+                {data?.filters.colorations?.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </Box>
+          )}
           <Box justifyContent={"start"}>
             <Text as="label" htmlFor="select-position-quadrant" fontWeight={500} mb={1}>Position quadrant</Text>
             <Select

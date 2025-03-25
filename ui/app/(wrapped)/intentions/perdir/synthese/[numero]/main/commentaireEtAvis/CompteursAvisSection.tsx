@@ -2,7 +2,7 @@ import { chakra, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import type { AvisStatutType } from "shared/enum/avisStatutEnum";
 
 import type { client } from "@/api.client";
-import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
+import { AvisStatutTag } from "@/app/(wrapped)/intentions/components/AvisStatutTag";
 
 export const CompteursAvisSection = chakra(
   ({ intention }: { intention: (typeof client.infer)["[GET]/intention/:numero"] }) => {

@@ -1,5 +1,3 @@
-// @ts-nocheck -- TODO
-
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -63,14 +61,19 @@ export const PrimaryFiltersSection = ({
                         borderStyle="solid"
                         borderColor="grey.900"
                         bg={"white"}
+                        isLoading={isLoading}
                       >
                         <Flex direction="row" gap={2}>
                           <Text my={"auto"}>
-                            {data?.filters.campagnes?.find((c) => c.value === activeFilters.campagne)?.value ?? ""}
+                            {data?.filters.campagnes?.find((campagne) => campagne.annee === activeFilters.campagne)?.annee ?? "Sélectionner une campagne"}
                           </Text>
                           {activeFilters.campagne && (
                             <CampagneStatutTag
-                              statut={data?.filters.campagnes?.find((c) => c.value === activeFilters.campagne)?.statut}
+                              statut={
+                                data?.filters.campagnes?.find(
+                                  (campagne) => campagne.annee === activeFilters.campagne
+                                )?.statut
+                              }
                             />
                           )}
                         </Flex>
@@ -79,11 +82,11 @@ export const PrimaryFiltersSection = ({
                         {data?.filters.campagnes?.map((campagne) => (
                           <MenuItem
                             p={2}
-                            key={campagne.value}
-                            onClick={() => handleFilters("campagne", campagne.value)}
+                            key={campagne.annee}
+                            onClick={() => handleFilters("campagne", campagne.annee)}
                           >
                             <Flex direction="row" gap={2}>
-                              <Text my={"auto"}>Campagne {campagne.value}</Text>
+                              <Text my={"auto"}>Campagne {campagne.annee}</Text>
                               <CampagneStatutTag statut={campagne.statut} />
                             </Flex>
                           </MenuItem>
@@ -106,19 +109,27 @@ export const PrimaryFiltersSection = ({
                         borderStyle="solid"
                         borderColor="grey.900"
                         bg={"white"}
+                        isLoading={isLoading}
                       >
                         <Flex direction="row">
                           <Text my={"auto"}>
-                            {data?.filters.rentreesScolaires?.find((c) => c.value === activeFilters.rentreeScolaire)
-                              ?.value ?? `Toutes (${data?.filters.rentreesScolaires?.length})`}
+                            {
+                              data?.filters.rentreesScolaires?.find(
+                                (rentreeScolaire) => rentreeScolaire.value === activeFilters.rentreeScolaire)?.value ??
+                              `Toutes (${data?.filters.rentreesScolaires?.length})`
+                            }
                           </Text>
-                          {(activeFilters.rentreeScolaire ===
-                            data?.filters.campagnes?.find((c) => c.value === activeFilters.campagne)?.value ??
-                            "") && (
-                            <Tag mx={3} colorScheme="red">
+                          {(
+                            activeFilters.rentreeScolaire && activeFilters.rentreeScolaire ===
+                              data?.filters.campagnes?.find(
+                                (campagne) => campagne.annee === activeFilters.campagne
+                              )?.annee
+                          )
+                            && (
+                              <Tag mx={3} colorScheme="red">
                               Ajustement RS {activeFilters.rentreeScolaire}
-                            </Tag>
-                          )}
+                              </Tag>
+                            )}
                         </Flex>
                       </MenuButton>
                       <MenuList py={0} borderTopRadius={0}>
@@ -128,7 +139,6 @@ export const PrimaryFiltersSection = ({
                           </Flex>
                         </MenuItem>
                         {data?.filters.rentreesScolaires?.map(
-                          // @ts-expect-error TODO
                           (rentreeScolaire) => (
                             <MenuItem
                               p={2}
@@ -138,13 +148,12 @@ export const PrimaryFiltersSection = ({
                               <Flex direction="row">
                                 <Text my={"auto"}>{rentreeScolaire.label}</Text>
                                 {
-                                  // @ts-expect-error TODO
-                                  (rentreeScolaire.value ===
+                                  (
+                                    rentreeScolaire.value ===
                                     data?.filters.campagnes?.find(
-                                      // @ts-expect-error TODO
-                                      (c) => c.value === activeFilters.campagne
-                                    )?.value ??
-                                    "") && (
+                                      (campagne) => campagne.annee === activeFilters.campagne
+                                    )?.annee
+                                  ) && (
                                     <Tag mx={3} colorScheme="red">
                                       Ajustement RS {rentreeScolaire.value}
                                     </Tag>

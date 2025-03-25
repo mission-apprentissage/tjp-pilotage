@@ -1,8 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-/* eslint-disable-next-line import/default */
-import qs from "qs";
+import { parse, stringify } from "qs";
 import { useContext } from "react";
 
 import { client } from "@/api.client";
@@ -24,7 +23,7 @@ export default function Panorama({
 }) {
   const router = useRouter();
   const queryParams = useSearchParams();
-  const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
+  const searchParams: Partial<FiltersPanoramaFormation> = parse(queryParams.toString(), { arrayLimit: Infinity });
   const { setCodeDepartement } = useContext(CodeDepartementContext);
 
   const setSearchParams = (params: FiltersPanoramaFormation) => {
@@ -57,7 +56,7 @@ export default function Panorama({
   const onCodeDepartementChanged = (codeDepartement: string) => {
     setCodeDepartement(codeDepartement);
 
-    router.push(`/panorama/departement/${codeDepartement}?${qs.stringify(searchParams)}`);
+    router.push(`/panorama/departement/${codeDepartement}?${stringify(searchParams)}`);
   };
 
   const { data: departementsOptions } = client.ref("[GET]/departements").useQuery(

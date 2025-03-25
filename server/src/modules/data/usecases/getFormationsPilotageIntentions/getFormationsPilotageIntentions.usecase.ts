@@ -1,18 +1,15 @@
 import type {MILLESIMES_IJ} from 'shared';
 import type {FiltersSchema} from 'shared/routes/schemas/get.pilotage-intentions.formations.schema';
-import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import type {z} from 'zod';
 
 import type {RequestUser} from '@/modules/core/model/User';
-import { getStatsSortieQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
 import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
 import {
   getCodeRegionFromAcademieQuery,
   getCodeRegionFromDepartementQuery,
-  getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery,
-  getFormationsPilotageIntentionsQuery,
-  getRegionStatsQuery,
+  getFormationsQuery,
+  getStatsSortieQuery
 } from "./deps";
 
 export interface Filters extends z.infer<typeof FiltersSchema> {
@@ -27,9 +24,7 @@ interface ActiveFilters extends Omit<Filters, "campagne"> {
 const getQuadrantPilotageIntentionsFactory =
   (
     deps = {
-      getEffectifsParCampagneCodeNiveauDiplomeCodeRegionQuery,
-      getRegionStatsQuery,
-      getFormationsPilotageIntentionsQuery,
+      getFormationsQuery,
       getCodeRegionFromDepartementQuery,
       getCodeRegionFromAcademieQuery,
       getStatsSortieQuery,
@@ -42,7 +37,9 @@ const getQuadrantPilotageIntentionsFactory =
       let codeRegion = activeFilters.codeRegion;
 
       if (!codeRegion && activeFilters.codeDepartement) {
-        const { codeRegion: departementCodeRegion } = await getCodeRegionFromDepartementQuery(
+        const {
+          codeRegion: departementCodeRegion
+        } = await deps.getCodeRegionFromDepartementQuery(
           activeFilters.codeDepartement
         );
         if (departementCodeRegion) {
@@ -51,30 +48,34 @@ const getQuadrantPilotageIntentionsFactory =
       }
 
       if (!codeRegion && activeFilters.codeAcademie) {
-        const { codeRegion: academieCodeRegion } = await getCodeRegionFromAcademieQuery(activeFilters.codeAcademie);
+        const {
+          codeRegion: academieCodeRegion
+        } = await deps.getCodeRegionFromAcademieQuery(activeFilters.codeAcademie);
         if (academieCodeRegion) {
           codeRegion = academieCodeRegion;
         }
       }
 
-      const [formations, statsSortie] = await Promise.all([
-        deps.getFormationsPilotageIntentionsQuery({
-          ...activeFilters,
-          campagne: anneeCampagne,
-          codeRegion,
+      const [formations, stats] = await Promise.all([
+        deps.getFormationsQuery({
+          filters : {
+            ...activeFilters,
+            campagne: anneeCampagne,
+            codeRegion,
+          }
         }),
-        getStatsSortieQuery({
-          ...activeFilters,
-          codeRegion,
-          millesimeSortie: getMillesimeFromCampagne(anneeCampagne),
+        deps.getStatsSortieQuery({
+          filters :{
+            ...activeFilters,
+            campagne: anneeCampagne,
+            codeRegion,
+          }
         }),
       ]);
 
       return {
-        stats: statsSortie,
-        formations: formations.map((formation) => ({
-          ...formation,
-        })),
+        stats,
+        formations,
       };
     };
 export const getFormationsPilotageIntentionsUsecase = getQuadrantPilotageIntentionsFactory();

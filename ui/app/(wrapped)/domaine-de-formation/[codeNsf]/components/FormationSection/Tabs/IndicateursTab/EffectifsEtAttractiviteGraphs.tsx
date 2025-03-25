@@ -1,5 +1,5 @@
 import { Box, Flex, Text, useToken } from "@chakra-ui/react";
-import * as echarts from "echarts";
+import { init, registerLocale } from "echarts";
 import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import type { ScopeZone } from "shared";
 
@@ -152,8 +152,8 @@ const VerticalBarChart = ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
-      echarts.registerLocale("fr", frenchLocale);
-      chartRef.current = echarts.init(containerRef.current, null, { locale: "fr" });
+      registerLocale("fr", frenchLocale);
+      chartRef.current = init(containerRef.current, null, { locale: "fr" });
     }
     chartRef.current.setOption(option, true);
   }, [data, option]);
