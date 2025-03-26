@@ -1,5 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { useRef } from "react";
 
 import { GlossaireIcon } from "./GlossaireIcon";
 import { TypeBadge } from "./TypeBadge";
@@ -25,8 +26,6 @@ const highlightText = (text?: string, highlight?: string) => {
   return [text.slice(0, start), <strong key={`${text}_match`}>{text.slice(start, end)}</strong>, text.slice(end)];
 };
 
-
-
 export const GlossaireListContentItem = ({
   entry,
   searchValue,
@@ -36,8 +35,18 @@ export const GlossaireListContentItem = ({
   searchValue: string;
   selectEntry: (id: string) => void;
 }) => {
+  const itemRef = useRef<HTMLDivElement>(null);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      selectEntry(entry.slug);
+    }
+  };
+
   return (
     <Flex
+      ref={itemRef}
       key={entry.slug}
       justifyContent={"space-between"}
       alignItems={"center"}
@@ -46,6 +55,10 @@ export const GlossaireListContentItem = ({
       _hover={{ backgroundColor: "grey.950" }}
       width={"100%"}
       onClick={() => selectEntry(entry.slug)}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="button"
+      aria-label={`Définition de ${entry.title}`}
     >
       <Flex>
         {entry.icon && <GlossaireIcon icon={entry.icon} size={"24px"} marginRight={"12px"} />}
