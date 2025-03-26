@@ -6,6 +6,7 @@ export const searchDiplomeSchema = {
   }),
   querystring: z.object({
     codeNsf: z.string().optional(),
+    campagne: z.string().optional(),
   }),
   response: {
     200: z.array(
