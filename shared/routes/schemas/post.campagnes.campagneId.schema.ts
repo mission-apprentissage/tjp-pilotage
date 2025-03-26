@@ -1,6 +1,12 @@
 import { z } from "zod";
 
-import {CampagneSchema} from '../../schema/campagneSchema';
+
+const CampagneSchema = z.object({
+  annee: z.string().regex(/^\d{4}$/),
+  statut: z.string(),
+  dateFin: z.string().datetime(),
+  dateDebut: z.string().datetime(),
+});
 
 export const createCampagneSchema = {
   body: CampagneSchema,
