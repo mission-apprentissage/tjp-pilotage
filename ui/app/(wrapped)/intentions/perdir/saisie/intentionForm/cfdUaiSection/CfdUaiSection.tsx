@@ -137,6 +137,7 @@ export const CfdUaiSection = ({
           setDispositifs={setDispositifs}
           setIsFCIL={setIsFCIL}
           disabled={disabled || !active}
+          campagne={campagne}
         />
         <DispositifBlock options={dispositifs} disabled={disabled || !active} />
         <LibelleFCILField shouldDisplay={isFCIL} disabled={disabled || !active} />

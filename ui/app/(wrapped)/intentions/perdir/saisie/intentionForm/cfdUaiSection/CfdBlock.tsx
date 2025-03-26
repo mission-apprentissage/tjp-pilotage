@@ -1,5 +1,6 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, LightMode } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { CfdAutocompleteInput } from "@/app/(wrapped)/intentions/perdir/saisie/components/CfdAutocomplete";
 import type { IntentionForms } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/defaultFormValues";
@@ -11,11 +12,13 @@ export const CfdBlock = ({
   setIsFCIL,
   formMetaData,
   disabled,
+  campagne
 }: {
   setDispositifs: (info?: Formation["dispositifs"]) => void;
   setIsFCIL: (isFcil: boolean) => void;
   formMetaData?: IntentionMetadata;
   disabled: boolean;
+  campagne?: CampagneType
 }) => {
   const {
     formState: { errors },
@@ -50,6 +53,7 @@ export const CfdBlock = ({
                   setDispositifs(selected?.dispositifs);
                   setIsFCIL(selected?.isFCIL ?? false);
                 }}
+                campagne={campagne}
               />
             )}
           />
