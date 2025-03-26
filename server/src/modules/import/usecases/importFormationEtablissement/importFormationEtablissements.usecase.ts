@@ -14,6 +14,7 @@ import { deleteFormationEtablissement } from "./deleteFormationEtablissement";
 import { findDataFormation } from "./findDataFormation.dep";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
 import { findFormationEtablissement } from "./findFormationEtablissement";
+import { findOffreApprentissageCfdUai } from "./findOffreApprentissageCfdUai";
 import { findUAIsApprentissage } from "./findUAIsApprentissage";
 import { importEtablissement } from "./steps/importEtablissement/importEtablissement.step";
 import { importFormation } from "./steps/importFormation/importFormation.step";
@@ -108,7 +109,8 @@ export const [importFormationEtablissements] = inject(
     findRawDatas: rawDataRepository.findRawDatas,
     findDataFormation,
     findFormationEtablissement,
-    deleteFormationEtablissement
+    deleteFormationEtablissement,
+    findOffreApprentissageCfdUai
   },
   (deps) => {
     return async ({ cfd, voie = VoieEnum.scolaire }: { cfd: string; voie?: string }) => {
@@ -128,10 +130,10 @@ export const [importFormationEtablissements] = inject(
 
           // Récupération du codeDispositif pour les formations en apprentissage
           // à partir du contenu du fichier offres_apprentissage
-          const offresApprentissages = await deps.findRawDatas({
-            type: "offres_apprentissage",
-            filter: { "Formation: code CFD": cfd },
-          });
+          const offresApprentissages = await deps.findOffreApprentissageCfdUai({
+            cfd,
+            uai
+          }) ?? [];
 
           if (offresApprentissages.length === 0) continue;
 
