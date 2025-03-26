@@ -5,7 +5,10 @@ import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 import { flatten, uniq } from "lodash-es";
 import type { UserinfoResponse } from "openid-client";
+import type {Role} from 'shared';
 import {RoleEnum} from 'shared';
+import type { SupportedLDAPGroups } from "shared/security/sso";
+import { LDAP_GROUP_ROLES_DNE_CORRESPONDANCE, ROLE_DNE_ROLE_ORION_CORRESPONDANCE,RoleDNEEnum } from "shared/security/sso";
 
 import config from "@/config";
 import { getDneClient } from "@/modules/core/services/dneClient/dneClient";
@@ -13,6 +16,7 @@ import logger from "@/services/logger";
 
 import { createUserInDB } from "./createUser.dep";
 import { findEtablissement } from "./findEtablissement.dep";
+import { findRegionFromAcademie } from "./findRegionFromAcademie.dep";
 import { findUserQuery } from "./findUserQuery.dep";
 
 // eslint-disable-next-line import/no-named-as-default-member
@@ -23,6 +27,14 @@ type ExtraUserInfo = {
   FrEduRne: Array<string>;
   FrEduResDel?: Array<string>;
   FrEduRneResp?: Array<string>;
+  // Liste des groupes LDAP auxquels l'utilisateur est rattaché
+  ctgrps?: Array<string>;
+  // Titre de fonction de l'utilisateur
+  title?: string;
+  // Nécessaire à l'identification du DASEN
+  FrEduGestResp?: string;
+  // Code région académique
+  codaca?:string;
 };
 
 const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
@@ -69,14 +81,59 @@ const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
   }
   return uais;
 };
-// @ts-expect-error TODO
+
+const extractRoleFromLDAPGroups = (groups: Array<string>): Role | undefined => {
+  const orionGroups = groups.filter((group) => group.startsWith("GRP_ORION"));
+
+  if (orionGroups.length === 0) {
+    return;
+  }
+
+  const roles = orionGroups.map((group) => {
+    const roleDne = LDAP_GROUP_ROLES_DNE_CORRESPONDANCE[group as SupportedLDAPGroups];
+    return ROLE_DNE_ROLE_ORION_CORRESPONDANCE[roleDne];
+  });
+
+  return roles.find((role) => role !== undefined);
+};
+
 const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
+  // Autres
+  if (userInfo.ctgrps) {
+    const role = extractRoleFromLDAPGroups(userInfo.ctgrps);
+
+    if (role) {
+      return {
+        role,
+        uais: []
+      };
+    }
+  }
+
+  // DASEN
+  // Voir fiche polhab page 8
+  if (userInfo.FrEduGestResp?.endsWith("805$ORIONINSERJEUNES")) {
+    return {
+      role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["DASEN"],
+      uais: []
+    };
+  }
+
+  // Inspecteurs
+  if (userInfo.title === RoleDNEEnum.INS) {
+    return {
+      role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["INS"],
+      uais: []
+    };
+  }
+
+  // Perdir
   if (userInfo.FrEduFonctAdm === "DIR" || userInfo.FrEduResDel) {
     const uais = extractUaisRep(userInfo);
 
     if (uais.length > 0) {
       return {
-        role: RoleEnum["perdir"],
+        role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["PERDIR"],
         uais,
       };
     }
@@ -106,6 +163,7 @@ export const [redirectDne, redirectDneFactory] = inject(
     findUserQuery,
     createUserInDB,
     findEtablissement,
+    findRegionFromAcademie
   },
   (deps) =>
     async ({ codeVerifierJwt, url }: { codeVerifierJwt: string; url: string }) => {
@@ -152,8 +210,9 @@ export const [redirectDne, redirectDneFactory] = inject(
       }
 
       const etablissement = attributes.uais && (await deps.findEtablissement({ uais: attributes.uais }));
+      let codeRegion: string | null | undefined;
 
-      if (!etablissement?.codeRegion) {
+      if (attributes.role === RoleEnum.perdir && !etablissement?.codeRegion) {
         logger.error({
           error: new Error("missing codeRegion"),
           userinfo,
@@ -162,6 +221,13 @@ export const [redirectDne, redirectDneFactory] = inject(
           etablissement,
         }, "[SSO] Il manque le code région pour l'établissement");
         throw new Error("missing codeRegion");
+      } else if (attributes.role === RoleEnum.perdir) {
+        codeRegion = etablissement?.codeRegion;
+      } else if (userinfo.codaca) {
+        const codeRegionFromAcademie = await deps.findRegionFromAcademie(userinfo.codaca);
+        if (codeRegionFromAcademie) {
+          codeRegion = codeRegionFromAcademie.codeRegion;
+        }
       }
 
       const userToInsert = {
@@ -170,7 +236,7 @@ export const [redirectDne, redirectDneFactory] = inject(
         firstname: userinfo.given_name,
         lastname: userinfo.family_name,
         sub: userinfo.sub,
-        codeRegion: etablissement?.codeRegion,
+        codeRegion: codeRegion,
         enabled: true,
         ...attributes,
       };
