@@ -1,5 +1,4 @@
 "use client";
-import "react-notion-x/src/styles.css";
 
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider, Flex } from "@chakra-ui/react";
@@ -18,7 +17,7 @@ import type { Changelog } from "./(wrapped)/changelog/changelogContext";
 import { ChangelogContext } from "./(wrapped)/changelog/changelogContext";
 import { GlossaireProvider } from "./(wrapped)/glossaire/glossaireContext";
 import type { GlossaireEntries } from "./(wrapped)/glossaire/types";
-import type { Auth} from "./authContext";
+import type { Auth } from "./authContext";
 import { AuthContext } from "./authContext";
 import { CodeRegionContext } from "./codeRegionContext";
 import { CurrentCampagneContext } from "./currentCampagneContext";
