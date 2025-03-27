@@ -50,7 +50,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   [DemandeTypeEnum["ouverture_nette"]]: {
     value: DemandeTypeEnum["ouverture_nette"],
     label: "Ouverture",
-    campagnes: ["2023", "2024", "2025"],
+    campagnes: ["2023", "2024", "2025", "2026"],
     desc: "Utiliser ce formulaire pour tout cas de création d'une formation en voie scolaire ou apprentissage.",
     exemple: (
       <>
@@ -67,7 +67,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   [DemandeTypeEnum["augmentation_nette"]]: {
     value: DemandeTypeEnum["augmentation_nette"],
     label: "Augmentation",
-    campagnes: ["2023", "2024", "2025"],
+    campagnes: ["2023", "2024", "2025", "2026"],
     desc: "Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur une formation existante. Ne pas utiliser pour des places déjà ouvertes sur l'établissement.",
     exemple: (
       <>
@@ -82,7 +82,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   [DemandeTypeEnum["fermeture"]]: {
     value: DemandeTypeEnum["fermeture"],
     label: "Fermeture",
-    campagnes: ["2023", "2024", "2025"],
+    campagnes: ["2023", "2024", "2025", "2026"],
     desc: "Utiliser ce formulaire pour renseigner les places fermées en compensation d'une ouverture ou pour les fermetures nettes.",
     exemple: (
       <>
@@ -141,7 +141,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   [DemandeTypeEnum["diminution"]]: {
     value: DemandeTypeEnum["diminution"],
     label: "Diminution",
-    campagnes: ["2023", "2024", "2025"],
+    campagnes: ["2023", "2024", "2025", "2026"],
     desc: "Utiliser ce formulaire pour renseigner les places fermées en compensation d'une ouverture, ou pour les diminutions nettes.",
     exemple: (
       <>
@@ -156,7 +156,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   [DemandeTypeEnum["transfert"]]: {
     value: DemandeTypeEnum["transfert"],
     label: "Transfert",
-    campagnes: ["2024", "2025"],
+    campagnes: ["2024", "2025", "2026"],
     desc: "Utiliser ce formulaire pour les transferts de place entre la voie scolaire et l'apprentissage.",
     exemple: (
       <>
@@ -174,7 +174,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     value: DemandeTypeEnum["coloration"],
     labelFiltre: "Coloration / formations existantes",
     label: "Coloration",
-    campagnes: ["2024", "2025"],
+    campagnes: ["2024", "2025", "2026"],
     desc: "Utiliser ce formulaire pour colorer une formation existante.",
     exemple: (
       <>
@@ -194,7 +194,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   [DemandeTypeEnum["ajustement"]]: {
     value: DemandeTypeEnum["ajustement"],
     label: "Ajustement de rentrée",
-    campagnes: ["2024", "2025"],
+    campagnes: ["2024", "2025", "2026"],
     desc: "Ce formulaire doit être utilisé uniquement pour des ouvertures ou augmentations de places afin de répondre à l’afflux d’élèves sans affectation.",
     exemple: (
       <>

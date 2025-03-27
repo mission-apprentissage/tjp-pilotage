@@ -25,6 +25,7 @@ const FormationMetadataSchema = z
   .object({
     libelleFormation: z.string().optional(),
     isFCIL: z.boolean().optional(),
+    dateFermeture: z.string().optional(),
     dispositifs: z
       .array(
         z.object({

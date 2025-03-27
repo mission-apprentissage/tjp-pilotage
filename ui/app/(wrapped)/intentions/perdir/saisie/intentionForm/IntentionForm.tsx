@@ -119,6 +119,8 @@ export const IntentionForm = ({
   });
 
   const [isFCIL, setIsFCIL] = useState<boolean>(formMetadata?.formation?.isFCIL ?? false);
+  const [dateFermetureFormation, setDateFermetureFormation] =
+    useState<string | undefined>(formMetadata?.formation?.dateFermeture);
 
   const isDisabledForPerdir =
     hasRole({
@@ -269,6 +271,7 @@ export const IntentionForm = ({
             disabled={disabled}
             isFCIL={isFCIL}
             setIsFCIL={setIsFCIL}
+            setDateFermetureFormation={setDateFermetureFormation}
             isCFDUaiSectionValid={isCFDUaiSectionValid}
             submitCFDUAISection={submitCFDUAISection}
             statutComponentRef={statutComponentRef}
@@ -285,7 +288,7 @@ export const IntentionForm = ({
                       showCorrection={showCorrection}
                     />
                     <Box position="relative">
-                      <Conseils />
+                      <Conseils dateFermetureFormation={dateFermetureFormation} />
                     </Box>
                     <Box position={"relative"}>
                       {errors && (

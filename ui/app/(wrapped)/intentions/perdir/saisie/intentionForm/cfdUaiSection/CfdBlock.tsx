@@ -10,12 +10,14 @@ import type { Formation } from "@/app/(wrapped)/intentions/types";
 export const CfdBlock = ({
   setDispositifs,
   setIsFCIL,
+  setDateFermetureFormation,
   formMetaData,
   disabled,
   campagne
 }: {
   setDispositifs: (info?: Formation["dispositifs"]) => void;
   setIsFCIL: (isFcil: boolean) => void;
+  setDateFermetureFormation: (dateFermetureFormation?: string) => void;
   formMetaData?: IntentionMetadata;
   disabled: boolean;
   campagne?: CampagneType
@@ -52,6 +54,7 @@ export const CfdBlock = ({
                   onChange(selected?.value);
                   setDispositifs(selected?.dispositifs);
                   setIsFCIL(selected?.isFCIL ?? false);
+                  setDateFermetureFormation(selected?.dateFermeture);
                 }}
                 campagne={campagne}
               />
