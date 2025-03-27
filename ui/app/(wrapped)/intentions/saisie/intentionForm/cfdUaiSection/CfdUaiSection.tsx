@@ -87,6 +87,7 @@ export const CfdUaiSection = ({
   onEditUaiCfdSection,
   isFCIL,
   setIsFCIL,
+  setDateFermetureFormation,
   submitCFDUAISection,
   isCFDUaiSectionValid,
   statusComponentRef,
@@ -100,6 +101,7 @@ export const CfdUaiSection = ({
   onEditUaiCfdSection: () => void;
   isFCIL: boolean;
   setIsFCIL: (isFcil: boolean) => void;
+  setDateFermetureFormation: (dateFermetureFormation?: string) => void;
   submitCFDUAISection: () => void;
   isCFDUaiSectionValid: (_: Partial<IntentionForms>) => boolean;
   statusComponentRef?: React.RefObject<HTMLDivElement>;
@@ -166,6 +168,7 @@ export const CfdUaiSection = ({
           formMetaData={formMetadata}
           setDispositifs={setDispositifs}
           setIsFCIL={setIsFCIL}
+          setDateFermetureFormation={setDateFermetureFormation}
           disabled={disabled || !active}
           campagne={campagne}
         />
