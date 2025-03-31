@@ -10,6 +10,7 @@ import { countFamillesMetiers } from "@/modules/import/usecases/importIJData/cou
 import { findDiplomesProfessionnels } from "@/modules/import/usecases/importIJData/findDiplomesProfessionnels.dep";
 import { streamIt } from "@/modules/import/utils/streamIt";
 
+import { cleanApprentissageData } from "./cleanApprentissageData.dep";
 import { deleteFormationEtablissement } from "./deleteFormationEtablissement";
 import { findDataFormation } from "./findDataFormation.dep";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
@@ -41,7 +42,8 @@ export const [importFormations] = inject(
     findDiplomesProfessionnels,
     findFamillesMetiers,
     countDiplomesProfessionnels,
-    countFamillesMetiers
+    countFamillesMetiers,
+    cleanApprentissageData
   },
   (deps) => {
     return async () => {
@@ -51,6 +53,8 @@ export const [importFormations] = inject(
       let nbDiplomesProfessionnelsDone = 0;
 
       console.log(`Début de l'import des données sur les ${total} formations`);
+
+      await deps.cleanApprentissageData();
 
       await streamIt(
         (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
@@ -76,7 +80,7 @@ export const [importFormations] = inject(
         (count) => deps.findFamillesMetiers({ offset: count, limit: 60 }),
         async (item, count) => {
           const cfd = item.cfd;
-          console.log("--", "cfd famille", cfd, `-- (${Math.round((count+nbDiplomesProfessionnelsDone)/total * 10000)/100}%)`);
+          console.log("--", "cfd famille", cfd, `-- (${Math.round((count+nbDiplomesProfessionnels)/total * 10000)/100}%)`);
           if (!cfd) return;
           const formation = await deps.importFormation({ cfd });
           const ancienCfds = await deps.importFormationHistorique({ cfd });
@@ -118,7 +122,8 @@ export const [importFormationEtablissements] = inject(
         await deps.importIndicateursRegionSortieApprentissage({ cfd });
         const uais = await deps.findUAIsApprentissage({ cfd });
         if (!uais) return;
-        for (const uai of uais) {
+        const normalizedUais = uais?.map(uai => uai.toUpperCase());
+        for (const uai of normalizedUais) {
           // Récupération des données établissements concernés par l'offre apprentissage
           if (!processedUais.has(uai)) {
             await deps.importEtablissement({ uai });
@@ -153,6 +158,10 @@ export const [importFormationEtablissements] = inject(
           const dataFormation = await deps.findDataFormation({ cfd });
           const rentreesScolaires: string[] = extractYearFromTags(aggregatedTags)
             .filter(year => isYearBetweenOuvertureAndFermeture(year, dataFormation));
+          console.log(aggregatedTags, { ouverture: dataFormation?.dateOuverture, fermeture: dataFormation?.dateFermeture}, rentreesScolaires);
+
+          // Ne pas importer les données concernant la formation si elle n'est pas associée à une rentrée scolaire
+          if (rentreesScolaires.length === 0) continue;
 
           if (mefs.length > 0) {
             /**
