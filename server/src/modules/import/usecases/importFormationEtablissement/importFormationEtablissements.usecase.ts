@@ -52,9 +52,11 @@ export const [importFormations] = inject(
       const total = nbDiplomesProfessionnels + nbFamillesMetiers;
       let nbDiplomesProfessionnelsDone = 0;
 
-      console.log(`Début de l'import des données sur les ${total} formations`);
-
+      console.log("Suppression des données IJ apprentissage (indicateurSortie, indicateurEntree et indicateurRegionSortie)");
       await deps.cleanApprentissageData();
+      console.log("Données IJ apprentissage supprimées");
+
+      console.log(`Début de l'import des données sur les ${total} formations`);
 
       await streamIt(
         (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
