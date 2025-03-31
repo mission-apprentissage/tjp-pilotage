@@ -64,5 +64,6 @@ export const findOneCampagneRegionByCampagneId = async ({
     statut: campagne.statut,
     withSaisiePerdir: campagneRegion?.withSaisiePerdir,
     dateVote: campagneRegion?.dateVote,
+    codeRegion: campagneRegion?.codeRegion,
   };
 };
