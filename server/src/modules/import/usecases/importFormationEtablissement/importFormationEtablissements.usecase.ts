@@ -160,7 +160,6 @@ export const [importFormationEtablissements] = inject(
           const dataFormation = await deps.findDataFormation({ cfd });
           const rentreesScolaires: string[] = extractYearFromTags(aggregatedTags)
             .filter(year => isYearBetweenOuvertureAndFermeture(year, dataFormation));
-          console.log(aggregatedTags, { ouverture: dataFormation?.dateOuverture, fermeture: dataFormation?.dateFermeture}, rentreesScolaires);
 
           // Ne pas importer les données concernant la formation si elle n'est pas associée à une rentrée scolaire
           if (rentreesScolaires.length === 0) continue;
