@@ -12,7 +12,7 @@ export const cleanApprentissageData = async () => {
         eb(eb.ref("formationEtablissement.id"), "=", eb.ref("indicateurSortie.formationEtablissementId")),
         eb(eb.ref("formationEtablissement.voie"), "=", eb.val(VoieEnum.apprentissage))
       ])
-    );
+    ).execute();
 
   await getKbdClient()
     .deleteFrom("indicateurEntree")
@@ -22,9 +22,10 @@ export const cleanApprentissageData = async () => {
         eb(eb.ref("formationEtablissement.id"), "=", eb.ref("indicateurEntree.formationEtablissementId")),
         eb(eb.ref("formationEtablissement.voie"), "=", eb.val(VoieEnum.apprentissage))
       ])
-    );
+    ).execute();
 
   await getKbdClient()
     .deleteFrom("indicateurRegionSortie")
-    .where(eb => eb("indicateurRegionSortie.voie", "=",eb.val(VoieEnum.apprentissage)));
+    .where(eb => eb("indicateurRegionSortie.voie", "=",eb.val(VoieEnum.apprentissage)))
+    .execute();
 };
