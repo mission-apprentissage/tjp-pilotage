@@ -5,15 +5,23 @@ import { getTypeDemandeExemple } from "@/app/(wrapped)/intentions/utils/typeDema
 
 import { InfoBox } from "./InfoBox";
 
-export const Conseils = () => {
+export const Conseils = ({ dateFermetureFormation }:{ dateFermetureFormation?: string }) => {
   const { watch } = useFormContext<IntentionForms>();
 
   const typeDemande = watch("typeDemande");
-  if (!typeDemande) return null;
 
   return (
-    <InfoBox flex="1" mt={6}>
-      {getTypeDemandeExemple(typeDemande)}
-    </InfoBox>
+    <>
+      { dateFermetureFormation && (
+        <InfoBox flex="1" mt={6} bgColor="redmarianne.925" color="red.500">
+          {`Attention, la formation sur laquelle vous souhaitez faire une demande sera fermée à partir du ${dateFermetureFormation}.`}
+        </InfoBox>
+      )}
+      { typeDemande && (
+        <InfoBox flex="1" mt={6}>
+          {getTypeDemandeExemple(typeDemande)}
+        </InfoBox>
+      )}
+    </>
   );
 };

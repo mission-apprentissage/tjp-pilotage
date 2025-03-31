@@ -52,8 +52,8 @@ export const TabsSection = ({
           color={"black"}
           h={"102px"}
           w={"300px"}
-          _hover={{ bg: "bluefrance.975_hover" }}
-          bg={"bluefrance.975"}
+          _hover={{ bg: "bluefrance.850_hover" }}
+          bg={"bluefrance.850"}
         >
           <Flex direction={"column"} justify={"center"} alignItems={"center"} mx={"80px"}>
             {isRepartitionSelected ? (
@@ -75,8 +75,8 @@ export const TabsSection = ({
           color={"black"}
           h={"102px"}
           w={"300px"}
-          _hover={{ bg: "bluefrance.975_hover" }}
-          bg={"bluefrance.975"}
+          _hover={{ bg: "bluefrance.850_hover" }}
+          bg={"bluefrance.850"}
         >
           <Flex direction={"column"} justify={"center"} alignItems={"center"} mx={"80px"}>
             {isQuadrantSelected ? (

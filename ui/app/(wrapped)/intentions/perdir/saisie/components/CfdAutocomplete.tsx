@@ -3,6 +3,7 @@ import _ from "lodash";
 import { useId } from "react";
 import type { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
+import type { CampagneType } from "shared/schema/campagneSchema";
 import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
@@ -33,6 +34,14 @@ const OptionLabel = ({ option }: { option: Formation }) => {
           Fermeture au {option.dateFermeture}
         </Tag>
       )}
+      {option.isFormationRenovee && (
+        <Tag
+          bgColor={"greenArchipel.950"}
+          color={"greenArchipel.391"}
+          size={"md"} maxHeight={4} minW={"fit-content"} my={"auto"} textAlign={"center"}>
+          Rénovée
+        </Tag>
+      )}
     </Flex>
   );
 };
@@ -44,6 +53,7 @@ export const CfdAutocompleteInput = ({
   disabled,
   inError,
   onChange,
+  campagne
 }: {
   id?: string;
   name: string;
@@ -51,6 +61,7 @@ export const CfdAutocompleteInput = ({
   disabled?: boolean;
   inError: boolean;
   onChange: (value?: Formation) => void;
+  campagne?: CampagneType;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -67,7 +78,9 @@ export const CfdAutocompleteInput = ({
     if (search.length >= 3)
       client
         .ref("[GET]/diplome/search/:search")
-        .query({ params: { search }, query: {} })
+        .query({ params: { search }, query: {
+          campagne: campagne?.annee
+        } })
         .then((options) => callback(options));
   }, 300);
 

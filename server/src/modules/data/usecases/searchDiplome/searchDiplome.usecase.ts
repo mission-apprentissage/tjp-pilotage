@@ -3,17 +3,27 @@ import { inject } from "injecti";
 import type { searchDiplomeSchema } from "shared/routes/schemas/get.diplome.search.search.schema";
 import type { z } from "zod";
 
-import { findManyInDataFormationQuery } from "./searchDiplome.query";
+import type {RequestUser} from '@/modules/core/model/User';
+
+import { searchDiplomeQuery } from "./searchDiplome.query";
+
+export interface Filters extends z.infer<typeof searchDiplomeSchema.querystring> {
+  search: string;
+  user: RequestUser;
+}
 
 export const [searchDiplome] = inject(
-  { findManyInDataFormationQuery },
+  {
+    searchDiplomeQuery,
+  },
   (deps) =>
-    async ({ search, filters }: { search: string; filters: z.infer<typeof searchDiplomeSchema.querystring> }) => {
-      const formations = await deps.findManyInDataFormationQuery({
-        search,
-        filters,
-      });
+    async (activeFilters: Filters) => {
+      const anneeCampagne = activeFilters.campagne;
 
+      const formations = await deps.searchDiplomeQuery({
+        ...activeFilters,
+        campagne: anneeCampagne,
+      });
       return formations;
     }
 );
