@@ -7,7 +7,6 @@ import { IntentionForm } from "@/app/(wrapped)/intentions/saisie/intentionForm/I
 import { canCreateDemande } from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
 import { Loading } from '@/components/Loading';
 import { getRoutingSaisieRecueilDemande } from '@/utils/getRoutingRecueilDemande';
-import { GuardExpe } from '@/utils/security/GuardExpe';
 import { GuardPermission } from "@/utils/security/GuardPermission";
 import { useAuth } from '@/utils/security/useAuth';
 import { useCurrentCampagne } from '@/utils/security/useCurrentCampagne';
@@ -29,17 +28,15 @@ const Page = () => {
 
   return (
     <GuardPermission permission="intentions/ecriture">
-      <GuardExpe isExpeRoute={false}>
-        <IntentionForm
-          disabled={!canCreateDemande({ user, campagne, currentCampagne })}
-          defaultValues={{
-            campagneId,
-            rentreeScolaire:  Number.parseInt(campagne.annee) + 1,
-          }}
-          formMetadata={{}}
-          campagne={campagne}
-        />
-      </GuardExpe>
+      <IntentionForm
+        disabled={!canCreateDemande({ user, campagne })}
+        defaultValues={{
+          campagneId,
+          rentreeScolaire:  Number.parseInt(campagne.annee) + 1,
+        }}
+        formMetadata={{}}
+        campagne={campagne}
+      />
     </GuardPermission>
   );
 };

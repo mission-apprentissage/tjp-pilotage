@@ -1,5 +1,6 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, LightMode } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
+import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { CfdAutocompleteInput } from "@/app/(wrapped)/intentions/saisie/components/CfdAutocomplete";
 import type { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
@@ -9,13 +10,17 @@ import type { Formation } from "@/app/(wrapped)/intentions/types";
 export const CfdBlock = ({
   setDispositifs,
   setIsFCIL,
+  setDateFermetureFormation,
   formMetaData,
   disabled,
+  campagne,
 }: {
   setDispositifs: (info?: Formation["dispositifs"]) => void;
   setIsFCIL: (isFcil: boolean) => void;
+  setDateFermetureFormation?: (dateFermetureFormation?: string) => void;
   formMetaData?: DemandeMetadata;
   disabled: boolean;
+  campagne?: CampagneType;
 }) => {
   const {
     formState: { errors },
@@ -49,7 +54,9 @@ export const CfdBlock = ({
                   onChange(selected?.value);
                   setDispositifs(selected?.dispositifs);
                   setIsFCIL(selected?.isFCIL ?? false);
+                  setDateFermetureFormation?.(selected?.dateFermeture);
                 }}
+                campagne={campagne}
               />
             )}
           />

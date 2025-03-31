@@ -113,6 +113,8 @@ export const IntentionForm = ({
   const isActionsDisabled = isSuccess || isSubmitting;
 
   const [isFCIL, setIsFCIL] = useState<boolean>(formMetadata?.formation?.isFCIL ?? false);
+  const [dateFermetureFormation, setDateFermetureFormation] =
+    useState<string | undefined>(formMetadata?.formation?.dateFermeture);
 
   const isCFDUaiSectionValid = ({ cfd, codeDispositif, libelleFCIL, uai }: Partial<IntentionForms>): boolean => {
     if (isFCIL) return !!(cfd && codeDispositif && libelleFCIL && uai);
@@ -233,6 +235,7 @@ export const IntentionForm = ({
             disabled={disabled}
             isFCIL={isFCIL}
             setIsFCIL={setIsFCIL}
+            setDateFermetureFormation={setDateFermetureFormation}
             isCFDUaiSectionValid={isCFDUaiSectionValid}
             submitCFDUAISection={submitCFDUAISection}
             statusComponentRef={statusComponentRef}
@@ -245,7 +248,7 @@ export const IntentionForm = ({
                   <Box position="sticky" z-index="sticky" top={STICKY_OFFSET} textAlign={"start"}>
                     <MenuFormulaire refs={anchorsRefs} showCorrection={showCorrection} />
                     <Box position="relative">
-                      <Conseils />
+                      <Conseils dateFermetureFormation={dateFermetureFormation} />
                     </Box>
                     <Box position="relative">
                       {errors && (
