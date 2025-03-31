@@ -16,8 +16,9 @@ export const searchDiplomeRoute = (server: Server) => {
       ...props,
       handler: async (request, response) => {
         const { search } = request.params;
-        const filters = request.query;
-        const result = await searchDiplome({ search, filters });
+        const { ...filters } = request.query;
+        const user = request.user!;
+        const result = await searchDiplome({ ...filters, user, search });
         response.status(200).send(result);
       },
     });

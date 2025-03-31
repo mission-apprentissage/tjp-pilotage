@@ -40,7 +40,7 @@ import { isCampagneTerminee } from "shared/utils/campagneUtils";
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/components/StatutTag";
 import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/intentions/utils/messageAccompagnementUtils";
-import {canCheckIntention, canCorrectIntention, canCreateIntention, canDeleteIntention,canEditDemandeIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import {canCheckIntention, canCorrectIntention, canCreateDemandeIntention, canDeleteIntention,canEditDemandeIntention, canImportIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -179,7 +179,7 @@ export const PageClient = () => {
     .ref("[POST]/intention/import/:numero")
     .useMutation({
       onSuccess: (intention) => {
-        router.push(`/intentions/perdir/saisie/${intention.numero}`);
+        router.push(getRoutingSaisieRecueilDemande({ user, suffix: intention.numero }));
       },
       onError: (error) => {
         toast({
@@ -230,7 +230,11 @@ export const PageClient = () => {
   const [isModifyingGroup, setIsModifyingGroup] = useState(false);
 
   if (!data) return <IntentionSpinner />;
-  const isNouvelleDemandeDisabled = !canCreateIntention({ user, campagne: data.campagne, currentCampagne });
+
+  const isNouvelleDemandeDisabled = !canCreateDemandeIntention({
+    user,
+    campagne: data.campagne,
+  });
 
   return (
     <Container maxWidth="100%" flex={1} flexDirection={["column", null, "row"]} display={"flex"} minHeight={0} py={4}>
@@ -683,7 +687,7 @@ export const PageClient = () => {
                                     intention.avis.filter(
                                       (avis) =>
                                         getStepWorkflowAvis(avis.type as AvisTypeType) ===
-                                      getStepWorkflow(intention.statut)
+                                        getStepWorkflow(intention.statut)
                                     ).length
                                   }
                                 </Tag>
@@ -710,7 +714,11 @@ export const PageClient = () => {
                 <Flex direction={"column"}>
                   <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
                   <Tooltip
-                    label={getMessageAccompagnementCampagne({ campagne: data?.campagne, currentCampagne, user })}
+                    label={getMessageAccompagnementCampagne({
+                      campagne: data?.campagne,
+                      currentCampagne: currentCampagne!,
+                      user
+                    })}
                     shouldWrapChildren
                   >
                     <Flex>
@@ -719,7 +727,7 @@ export const PageClient = () => {
                         variant="createButton"
                         size={"lg"}
                         as={isNouvelleDemandeDisabled ? undefined : NextLink}
-                        href={getRoutingSaisieRecueilDemande({ campagne: data?.campagne, user, suffix: "new" })}
+                        href={getRoutingSaisieRecueilDemande({ campagne: data?.campagne, user, suffix: `new?campagneId=${data?.campagne.id}` })}
                         px={3}
                         mt={12}
                         mx={"auto"}

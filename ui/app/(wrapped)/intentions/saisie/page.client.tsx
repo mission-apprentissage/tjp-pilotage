@@ -36,8 +36,8 @@ import {isCampagneTerminee} from 'shared/utils/campagneUtils';
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/components/StatutTag";
 import {getMessageAccompagnementCampagne} from '@/app/(wrapped)/intentions/utils/messageAccompagnementUtils';
-import {canCorrectDemande,canCreateDemande, canImportDemande} from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
-import {canEditDemandeIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
+import {canCorrectDemande, canImportDemande} from '@/app/(wrapped)/intentions/utils/permissionsDemandeUtils';
+import {canCreateDemandeIntention, canEditDemandeIntention} from '@/app/(wrapped)/intentions/utils/permissionsIntentionUtils';
 import { getTypeDemandeLabel } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
@@ -165,11 +165,11 @@ export const PageClient = () => {
   };
   const bluefrance113 = useToken("colors", "bluefrance.113");
 
-  const { mutateAsync: importDemande, isLoading: isSubmitting } = client
-    .ref("[POST]/demande/import/:numero")
+  const { mutateAsync: importIntention, isLoading: isSubmitting } = client
+    .ref("[POST]/intention/import/:numero")
     .useMutation({
-      onSuccess: (demande) => {
-        router.push(`/intentions/saisie/${demande.numero}`);
+      onSuccess: (intention) => {
+        router.push(getRoutingSaisieRecueilDemande({ user, suffix: intention.numero }));
       },
       onError: (error) =>
         toast({
@@ -216,7 +216,7 @@ export const PageClient = () => {
 
   if (!data) return <IntentionSpinner />;
 
-  const isNouvelleDemandeDisabled = !canCreateDemande({user, campagne: data.campagne, currentCampagne});
+  const isNouvelleDemandeDisabled = !canCreateDemandeIntention({user, campagne: data.campagne});
 
   return (
     <Container maxWidth="100%" flex={1} flexDirection={["column", null, "row"]} display={"flex"} minHeight={0} py={4}>
@@ -459,7 +459,7 @@ export const PageClient = () => {
                                         setIsImporting(true);
                                         e.preventDefault();
                                         e.stopPropagation();
-                                        importDemande({
+                                        importIntention({
                                           params: { numero: demande.numero },
                                         });
                                       }}
@@ -512,7 +512,11 @@ export const PageClient = () => {
             <Flex direction={"column"}>
               <Text fontSize={"2xl"} textAlign={"center"}>Pas de demande à afficher</Text>
               <Tooltip
-                label={getMessageAccompagnementCampagne({ campagne: data?.campagne, currentCampagne, user })}
+                label={getMessageAccompagnementCampagne({
+                  campagne: data?.campagne,
+                  currentCampagne: currentCampagne!,
+                  user
+                })}
                 shouldWrapChildren
               >
                 <Flex>

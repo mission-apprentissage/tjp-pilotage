@@ -5,7 +5,7 @@ import { isAxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { parse } from "qs";
 import { useEffect } from "react";
-import {hasRole, RoleEnum} from 'shared';
+import { hasRole, RoleEnum} from 'shared';
 import { isCampagneEnCours } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
@@ -100,7 +100,9 @@ export default ({
           <Flex direction={"column"} gap={8}>
             <StepperSection intention={intention} />
             <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
-              <GridItem colSpan={isChangementStatutAvisDisabled(intention.statut) && !isPerdir ? 4 : 3}>
+              <GridItem colSpan={
+                isChangementStatutAvisDisabled({user, statut: intention.statut}) && !isPerdir ? 4 : 3
+              }>
                 <MainSection
                   intention={intention}
                   displayType={searchParams.displayType ?? DisplayTypeEnum.synthese}
@@ -113,7 +115,7 @@ export default ({
                   <EditoSection />
                 </GridItem>
               )}
-              {!isChangementStatutAvisDisabled(intention.statut) && (
+              {!isChangementStatutAvisDisabled({user, statut: intention.statut}) && (
                 <GridItem colSpan={1}>
                   <ActionsSection intention={intention} />
                 </GridItem>
