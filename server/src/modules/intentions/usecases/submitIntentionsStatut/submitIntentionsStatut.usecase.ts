@@ -10,14 +10,14 @@ import type { RequestUser } from "@/modules/core/model/User";
 import { findOneIntention } from "@/modules/intentions/repositories/findOneIntention.query";
 import logger from '@/services/logger';
 
-import {updateChangementsStatutAndIntentionsWithHistory} from './deps/updateIntentionsWithHistory.query';
+import { updateChangementsStatutAndDemandesIntentionsWithHistory } from './deps/updateChangementsStatutAndDemandesIntentionsWithHistory.dep';
 
 type Intentions = z.infer<typeof submitIntentionsStatutSchema.body>["intentions"];
 
 export const [submitIntentionsStatutUsecase, submitIntentionsStatutFactory] = inject(
   {
     findOneIntention,
-    updateChangementsStatutAndIntentionsWithHistory
+    updateChangementsStatutAndDemandesIntentionsWithHistory
   },
   (deps) =>
     async ({
@@ -54,22 +54,32 @@ export const [submitIntentionsStatutUsecase, submitIntentionsStatutFactory] = in
         return intentionData;
       }));
 
-      const newChangementStatut = intentionsData.map((intentionData) => ({
-        intentionNumero: intentionData.numero,
-        statutPrecedent: intentionData.statut,
-        statut,
-        createdBy: user.id,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }));
+      const newChangementStatut = intentionsData
+        .filter((intention) => intention.isIntention)
+        .map((intentionData) => ({
+          intentionNumero: intentionData.numero,
+          statutPrecedent: intentionData.statut,
+          statut,
+          createdBy: user.id,
+          updatedAt: new Date(),
+        }));
 
-      const newIntentions = intentionsData.map((intentionData) => ({
-        ...intentionData,
-        statut,
-        updatedAt: new Date(),
-      }));
+      const newIntentions = intentionsData
+        .filter((intention) => intention.isIntention)
+        .map((intentionData) => ({
+          ...intentionData,
+          statut,
+        }));
 
-      const changementsStatut = await deps.updateChangementsStatutAndIntentionsWithHistory({
+      const newDemandes = intentionsData
+        .filter((intention) => !intention.isIntention)
+        .map((intentionData) => ({
+          ...intentionData,
+          statut,
+        }));
+
+      const changementsStatut = await deps.updateChangementsStatutAndDemandesIntentionsWithHistory({
+        demandes: newDemandes,
         intentions: newIntentions,
         changementsStatut: newChangementStatut
       });

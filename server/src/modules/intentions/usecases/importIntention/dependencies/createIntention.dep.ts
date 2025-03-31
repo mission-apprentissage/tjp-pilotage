@@ -8,13 +8,17 @@ import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
 import { generateId, generateShortId } from "@/modules/utils/generateId";
 
+const getNextRentreeScolaire = (campagne: { annee: string }) => {
+  return Number.parseInt(campagne.annee) + 1;
+};
+
 export const createIntentionQuery = ({
   intention,
   campagne,
   user,
 }: {
   intention: Insertable<DB["intention"]>;
-  campagne: { id: string };
+  campagne: { id: string, annee: string };
   user: Pick<RequestUser, "id">;
 }) => {
   const getTypeDemande = (intention: Insertable<DB["intention"]>) => {
@@ -37,6 +41,7 @@ export const createIntentionQuery = ({
         "createdAt",
         "updatedAt",
         "campagneId",
+        "rentreeScolaire",
         "createdBy",
         "statut",
         "motifRefus",
@@ -50,7 +55,7 @@ export const createIntentionQuery = ({
       createdAt: new Date(),
       updatedAt: new Date(),
       campagneId: campagne.id,
-      amiCma: null,
+      rentreeScolaire: getNextRentreeScolaire(campagne),
       createdBy: user.id,
       statut: DemandeStatutEnum["proposition"],
       typeDemande: getTypeDemande(intention),

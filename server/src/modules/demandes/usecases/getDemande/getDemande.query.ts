@@ -50,12 +50,15 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
           eb
             .selectFrom("dataFormation")
             .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
-            .select((ebDataFormation) => [
-              sql<string>`CONCAT(${ebDataFormation.ref("dataFormation.libelleFormation")},
-              ' (',${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},')',
-              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
-              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+            .select((eb) => [
+              sql<string>`CONCAT(${eb.ref("dataFormation.libelleFormation")},
+              ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')',
+              ' (',${eb.ref("dataFormation.cfd")},')')`.as("libelleFormation"),
+              sql<boolean>`${eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
                 "isFCIL"
+              ),
+              sql<boolean>`${eb("dataFormation.dateFermeture", "is not", null)}`.as(
+                "isEnRenovation"
               ),
             ])
             .select((eb) =>

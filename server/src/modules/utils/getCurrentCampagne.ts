@@ -29,13 +29,15 @@ const getCampagneRegionEnCours = async ({
   codeRegion: string
 }) => getKbdClient()
   .selectFrom("campagneRegion")
+  .innerJoin("campagne", "campagne.id", "campagneRegion.campagneId")
   .where((eb) =>
     eb.and([
-      eb("statut", "=", CampagneStatutEnum["en cours"]),
-      eb("codeRegion", "=", codeRegion)
+      eb("campagneRegion.statut", "=", CampagneStatutEnum["en cours"]),
+      eb("campagneRegion.codeRegion", "=", codeRegion)
     ])
   )
   .selectAll()
+  .orderBy("campagne.annee", "desc")
   .executeTakeFirst()
   .then((campagneRegion) =>
     campagneRegion ?
@@ -129,7 +131,6 @@ export const getCampagnes = async (user?: RequestUser): Promise<Array<CampagneTy
   .leftJoin("campagneRegion", (join) =>
     join
       .onRef("campagneRegion.campagneId", "=", "campagne.id")
-      .on("campagneRegion.statut", "=", CampagneStatutEnum["en cours"])
       .$call((eb) => {
         if(user?.codeRegion) return eb.on("campagneRegion.codeRegion", "=", user.codeRegion);
         return eb.on((eb) => eb.val(false));

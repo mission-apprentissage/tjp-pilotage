@@ -22,12 +22,14 @@ import { StatutTag } from "@/app/(wrapped)/intentions/components/StatutTag";
 import type { ChangementStatut } from "@/app/(wrapped)/intentions/perdir/types";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { formatDate } from "@/utils/formatUtils";
+import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { UpdateChangementStatutForm } from "./UpdateChangementStatutForm";
 
 export const CommentaireSection = chakra(
   ({ changementStatut, statut }: { changementStatut: ChangementStatut; statut: DemandeStatutType }) => {
+    const { user } = useAuth();
     const hasPermissionModificationStatut = usePermission(PermissionEnum["intentions-perdir-statut/ecriture"]);
     const [isModifying, setIsModifying] = useState(false);
     const queryClient = useQueryClient();
@@ -117,7 +119,7 @@ export const CommentaireSection = chakra(
               </Text>
             )}
             {hasPermissionModificationStatut &&
-              !isChangementStatutAvisDisabled(statut) &&
+              isChangementStatutAvisDisabled({statut, user}) &&
               !isDeleting &&
               !isModifying && (
               <Flex direction={"row"} gap={6}>

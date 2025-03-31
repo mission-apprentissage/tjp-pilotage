@@ -1,7 +1,8 @@
 import * as Boom from "@hapi/boom";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import type { CampagneType} from 'shared/schema/campagneSchema';
+import type { createCampagneSchema } from "shared/routes/schemas/post.campagnes.campagneId.schema";
+import type {z} from 'zod';
 
 import { getCampagneEnCours } from "@/modules/core/queries/getCampagneEnCours";
 
@@ -15,7 +16,7 @@ export const [createCampagne, createCampagneFactory] = inject(
     getCampagneByAnneeQuery,
     getCampagneEnCours,
   },
-  (deps) => async (campagne: CampagneType) => {
+  (deps) => async (campagne: z.infer<typeof createCampagneSchema.body>) => {
     const existingCampagne = await deps.getCampagneByAnneeQuery({ annee: campagne.annee });
     if (existingCampagne) {
       throw Boom.badRequest(`Une campagne existe déjà pour l'année ${campagne.annee}`, {
