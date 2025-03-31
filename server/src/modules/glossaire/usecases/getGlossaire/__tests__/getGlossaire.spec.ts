@@ -34,11 +34,11 @@ describe("[GET]/glossaire", () => {
     expect(entries).toBeDefined();
     expect(entries.length).toBeGreaterThan(0);
 
-    expect(entries[0].slug).toBe("action-prioritaire");
-    expect(entries[0].title).toBe("Action Prioritaire");
-    expect(entries[0].type).toBe("Formation");
+    expect(entries[0].slug).toBe("ami-cma");
+    expect(entries[0].title).toBe("AMI/CMA");
+    expect(entries[0].type).toBe("Acteurs");
     expect(entries[0].createdBy).toBe("Oriana");
     expect(entries[0].status).toBe("validé");
-    expect(entries[0].icon).toBe("ri:hand-heart-line");
+    expect(entries[0].icon).toBe("ri:seedling-line");
   });
 });

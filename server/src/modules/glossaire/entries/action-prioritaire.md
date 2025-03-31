@@ -1,7 +1,7 @@
 ---
 Type d'indicateur: Formation
 Created by: Oriana
-statut: validé
+statut: a valider
 title: Action Prioritaire
 icon: ri:hand-heart-line
 ---
