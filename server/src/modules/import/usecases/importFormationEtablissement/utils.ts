@@ -95,7 +95,11 @@ export const extractYearFromTags = (tags: string) => {
       }
     });
 
-  return years.sort();
+
+  const collator = new Intl.Collator('fr', { numeric: true, sensitivity: 'base' });
+  return years.sort((a, b) =>
+    collator.compare(a, b)
+  );
 };
 
 export const isYearBetweenOuvertureAndFermeture =
