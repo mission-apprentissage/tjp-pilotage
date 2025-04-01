@@ -50,11 +50,10 @@ export const [importFormations] = inject(
       const { nbDiplomesProfessionnels } = await deps.countDiplomesProfessionnels();
       const { nbFamillesMetiers } = await deps.countFamillesMetiers();
       const total = nbDiplomesProfessionnels + nbFamillesMetiers;
-      let nbDiplomesProfessionnelsDone = 0;
 
-      console.log("Suppression des données IJ apprentissage (indicateurSortie, indicateurEntree et indicateurRegionSortie)");
+      console.log("Suppression des données apprentissage : IJ (indicateurSortie, indicateurEntree, indicateurRegionSortie) puis formationEtablissement");
       await deps.cleanApprentissageData();
-      console.log("Données IJ apprentissage supprimées");
+      console.log("Données apprentissage supprimées");
 
       console.log(`Début de l'import des données sur les ${total} formations`);
 
@@ -73,7 +72,6 @@ export const [importFormations] = inject(
             await importFormationEtablissements({ cfd: ancienCfd, voie });
           }
           await importFormationEtablissements({ cfd, voie });
-          nbDiplomesProfessionnelsDone++;
         },
         { parallel: 20 }
       );
@@ -124,9 +122,9 @@ export const [importFormationEtablissements] = inject(
         await deps.importIndicateursRegionSortieApprentissage({ cfd });
         const uais = await deps.findUAIsApprentissage({ cfd });
         if (!uais) return;
-        const normalizedUais = uais?.map(uai => uai.toUpperCase());
-        for (const uai of normalizedUais) {
+        for (const offreUai of uais) {
           // Récupération des données établissements concernés par l'offre apprentissage
+          const uai = offreUai.toUpperCase();
           if (!processedUais.has(uai)) {
             await deps.importEtablissement({ uai });
             for (const millesime of MILLESIMES_IJ) {
@@ -139,10 +137,14 @@ export const [importFormationEtablissements] = inject(
           // à partir du contenu du fichier offres_apprentissage
           const offresApprentissages = await deps.findOffreApprentissageCfdUai({
             cfd,
-            uai
+            // Nous devons utiliser la valeure brute pour aller chercher la donnée dans le fichier CSV
+            uai: offreUai
           }) ?? [];
 
-          if (offresApprentissages.length === 0) continue;
+          if (offresApprentissages.length === 0) {
+            console.log("---- Pas d'offre en apprentissage pour le couple", cfd, uai);
+            continue;
+          }
 
           const tags: string[] = [];
           for (let i = 0; i < offresApprentissages.length; i++) {

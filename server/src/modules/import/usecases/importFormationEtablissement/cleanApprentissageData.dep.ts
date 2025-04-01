@@ -28,4 +28,12 @@ export const cleanApprentissageData = async () => {
     .deleteFrom("indicateurRegionSortie")
     .where(eb => eb("indicateurRegionSortie.voie", "=",eb.val(VoieEnum.apprentissage)))
     .execute();
+
+  await getKbdClient()
+    .deleteFrom("formationEtablissement")
+    .where(eb =>
+      eb.and([
+        eb(eb.ref("formationEtablissement.voie"), "=", eb.val(VoieEnum.apprentissage))
+      ])
+    ).execute();
 };
