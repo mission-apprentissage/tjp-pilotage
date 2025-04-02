@@ -13,9 +13,6 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import { publicConfig } from "@/config.public";
 import { theme } from "@/theme/theme";
 
-import type { Changelog } from "./(wrapped)/changelog/changelogContext";
-import { ChangelogContext } from "./(wrapped)/changelog/changelogContext";
-import { GlossaireProvider } from "./(wrapped)/glossaire/glossaireContext";
 import type { GlossaireEntries } from "./(wrapped)/glossaire/types";
 import type { Auth } from "./authContext";
 import { AuthContext } from "./authContext";
@@ -27,7 +24,6 @@ import { UaisContext } from "./uaiContext";
 interface RootLayoutClientProps {
   readonly children: React.ReactNode;
   readonly auth?: Auth;
-  readonly changelog: Changelog;
   readonly glossaire: GlossaireEntries;
   readonly previousCampagne?: CampagneType;
   readonly currentCampagne?: CampagneType;
@@ -69,7 +65,6 @@ const useTracking = () => {
 export default function RootLayoutClient({
   children,
   auth: initialAuth,
-  changelog: initialChangelog,
   glossaire: initialGlossaire,
   currentCampagne: initialCurrentCampagne,
   previousCampagne: initialPreviousCampagne,
@@ -90,7 +85,6 @@ export default function RootLayoutClient({
   );
 
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
-  const [changelog, setChangelog] = useState<Changelog>(initialChangelog);
   const [currentCampagne, setCurrentCampagne] = useState<CampagneType | undefined>(initialCurrentCampagne);
   const [previousCampagne, setPreviousCampagne] = useState<CampagneType | undefined>(initialPreviousCampagne);
 
@@ -137,20 +131,16 @@ export default function RootLayoutClient({
                         campagne: previousCampagne,
                         setCampagne: setPreviousCampagne
                       }}>
-                        <GlossaireProvider initialEntries={initialGlossaire}>
-                          <ChangelogContext.Provider value={{ changelog, setChangelog }}>
-                            <Flex
-                              direction="column"
-                              height="100vh"
-                              overflow="auto"
-                              position="relative"
-                              ref={containerRef}
-                              onScroll={handleScrolling}
-                            >
-                              {children}
-                            </Flex>
-                          </ChangelogContext.Provider>
-                        </GlossaireProvider>
+                        <Flex
+                          direction="column"
+                          height="100vh"
+                          overflow="auto"
+                          position="relative"
+                          ref={containerRef}
+                          onScroll={handleScrolling}
+                        >
+                          {children}
+                        </Flex>
                       </PreviousCampagneContext.Provider>
                     </CurrentCampagneContext.Provider>
                   </CodeRegionContext.Provider>
