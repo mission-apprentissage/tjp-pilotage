@@ -6,7 +6,6 @@ import { deleteChangementStatutRoute } from "./usecases/deleteChangementStatut/d
 import { deleteIntentionRoute } from "./usecases/deleteIntention/deleteIntention.route";
 import { deleteIntentionFilesRoute } from "./usecases/deleteIntentionFiles/deleteIntentionFiles.route";
 import { deleteSuiviRoute } from "./usecases/deleteSuivi/deleteSuivi.route";
-import { getEditoRoute } from "./usecases/getEdito/getEdito.route";
 import { getIntentionRoute } from "./usecases/getIntention/getIntention.route";
 import { getIntentionFileDownloadUrlRoute } from "./usecases/getIntentionFileDownloadUrl/getIntentionFileDownloadUrl.route";
 import { getIntentionFilesRoute } from "./usecases/getIntentionFiles/getIntentionFiles.route";
@@ -41,7 +40,6 @@ export const registerIntentionsModule = (server: Server) => {
     ...deleteAvisRoute(server),
     ...submitSuiviRoute(server),
     ...deleteSuiviRoute(server),
-    ...getEditoRoute(server),
     ...submitIntentionAccessLogRoute(server),
   };
 };

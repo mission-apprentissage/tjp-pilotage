@@ -61,10 +61,14 @@ fileignoreconfig:
   checksum: 7bdc65299956e6277afa0e0f74bdb55871e5ff7dbae60a127a6a5062745eda74
 - filename: ui/app/(wrapped)/cgu/page.tsx
   checksum: d42601745f99f191e3fb865ed61ef829e4c7e82a5d157a544deb8f4986717fef
+- filename: ui/app/(wrapped)/changelog/const.ts
+  checksum: 3538b29e39d9a641c5573121dbfed6f4db4f8b3c30df957cf2f8c290685816c2
 - filename: ui/app/(wrapped)/documentation/page.tsx
   checksum: 50bc89c2ce7e01f8b8ff7381b44abb68ed2979230dc7252009e2e77b85c11558
 - filename: ui/app/(wrapped)/glossaire/GlossaireEntries.ts
   checksum: 879121c075cb8d6f1bb728ed24706ea5c31b20bc7a0ba1d20747237ddbe42ec5
+- filename: ui/app/(wrapped)/intentions/perdir/synthese/[numero]/actions/const.ts
+  checksum: d2802537bd9b064191f47c0b697ae683b4077d82ed86d99e094c184c6efb92da
 - filename: ui/app/(wrapped)/intentions/utils/__tests__/messageAccompagneUtils.test.ts
   checksum: 5e613e7713acca04787d983d04eecaeda58676dd82ef17ce7139a5cd4de55a5d
 - filename: ui/app/(wrapped)/intentions/utils/__tests__/permissionsDemandeUtils.test.ts
@@ -111,5 +115,6 @@ allowed_patterns:
 - '@mail.com'
 - '@exemple.fr'
 - '@inserjeunes.beta.gouv.fr'
+- 'https://webinaire.numerique.gouv.fr//meeting/signin/31852/creator/16468/hash/6d52a428a84100623dbff7e34ff7843f4a0c9f0f'
 threshold: medium
 version: "1.0"

@@ -9,12 +9,11 @@ import { deleteRequeteEnregistreeSchema } from "./schemas/delete.requeteEnregist
 import { checkActivationTokenSchema } from "./schemas/get.auth.check-activation-token.schema";
 import { whoAmISchema } from "./schemas/get.auth.whoAmI.schema";
 import { getCurrentCampagneSchema } from "./schemas/get.campagne.current.schema";
-import {getLatestCampagneSchema} from './schemas/get.campagne.latest.schema';
-import {getCampagneSchema} from './schemas/get.campagne.schema';
+import { getLatestCampagneSchema } from './schemas/get.campagne.latest.schema';
+import { getCampagneSchema } from './schemas/get.campagne.schema';
 import { getCampagnesSchema } from "./schemas/get.campagnes.schema";
 import { getCampagnesRegionSchema } from "./schemas/get.campagnes-region.schema";
 import { searchCampusSchema } from "./schemas/get.campus.search.search.schema";
-import { getChangelogSchema } from "./schemas/get.changelog.schema";
 import { getCorrectionsSchema } from "./schemas/get.corrections.schema";
 import { getDemandeSchema } from "./schemas/get.demande.numero.schema";
 import { countDemandesSchema } from "./schemas/get.demandes.count.schema";
@@ -28,7 +27,6 @@ import { getDneUrlSchema } from "./schemas/get.dne_url.schema";
 import { getDomaineDeFormationCodeNsfSchema } from "./schemas/get.domaine-de-formation.codeNsf.schema";
 import { getDomaineDeFormationSchema } from "./schemas/get.domaine-de-formation.schema";
 import { searchDomaineProfessionnelSchema } from "./schemas/get.domaine-professionnel.search.search.schema";
-import { getEditoSchema } from "./schemas/get.edito.schema";
 import { searchEtablissementPerdirSchema } from "./schemas/get.etablissement.perdir.search.search.schema";
 import { searchEtablissementSchema } from "./schemas/get.etablissement.search.search.schema";
 import { getAnalyseDetailleeEtablissementSchema } from "./schemas/get.etablissement.uai.analyse-detaillee.schema";
@@ -133,11 +131,6 @@ export const ROUTES = {
     url: "/auth/whoAmI",
     method: "GET",
     schema: whoAmISchema,
-  },
-  "[GET]/changelog": {
-    url: "/changelog",
-    method: "GET",
-    schema: getChangelogSchema,
   },
   "[GET]/healthcheck": {
     url: "/healthcheck",
@@ -478,11 +471,6 @@ export const ROUTES = {
     url: "/intention/suivi/:id",
     method: "DELETE",
     schema: deleteSuiviSchema,
-  },
-  "[GET]/edito": {
-    url: "/edito",
-    method: "GET",
-    schema: getEditoSchema,
   },
   "[GET]/intention/:numero": {
     url: "/intention/:numero",
