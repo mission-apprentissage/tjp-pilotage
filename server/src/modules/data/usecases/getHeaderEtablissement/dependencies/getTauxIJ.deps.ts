@@ -26,10 +26,7 @@ const getBase = ({ uai, rentreeScolaire }: { uai: string; rentreeScolaire: strin
     )
     .where((w) =>
       w.and([
-        w.or([
-          w("indicateurEntree.rentreeScolaire", "=", rentreeScolaire),
-          w("indicateurEntree.rentreeScolaire", "is", null),
-        ]),
+        w("indicateurEntree.rentreeScolaire", "=", rentreeScolaire),
         w("formationEtablissement.uai", "=", uai),
       ])
     );
