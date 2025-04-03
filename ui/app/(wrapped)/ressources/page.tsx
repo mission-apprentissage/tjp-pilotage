@@ -1,9 +1,16 @@
 "use client";
 
-import { Box, Container, Flex, Heading, Link, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Link, Table, TableContainer, Tbody, Td as ChakraTd, Th, Thead, Tr, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
-import { Callout } from "@/components/Callout";
+const Td = (props: React.ComponentProps<typeof ChakraTd>) => (
+  <ChakraTd
+    maxWidth="100px"
+    sx={{
+      textWrap: "auto"
+    }}
+    {...props}>{props.children}</ChakraTd>
+);
 
 export default function Ressources() {
   return (
@@ -16,32 +23,6 @@ export default function Ressources() {
         <Heading as="h1" size="xl">
           Ressources Orion
         </Heading>
-
-        <Callout
-          body={
-            <Flex gap={2}>
-              <Icon icon="ri:information-2-line" width={24} height={24} />
-              <Text>
-            Vous ne trouvez pas ce que vous cherchez ? Rendez-vous sur{' '}
-                <Link href="https://aide.orion.inserjeunes.beta.gouv.fr/fr/" color="blue.500" isExternal>
-              https://aide.orion.inserjeunes.beta.gouv.fr/fr/
-                </Link>
-              </Text>
-            </Flex>
-          }
-        />
-
-        <Box>
-          <Heading as="h2" size="lg" mb={4}>
-            Documentation
-          </Heading>
-          <Text mb={4}>
-            📅{' '}
-            <Link href="https://orion.inserjeunes.beta.gouv.fr/changelog" color="blue.500" isExternal>
-              Journal des mises à jour
-            </Link>
-          </Text>
-        </Box>
 
         <Box>
           <Heading as="h2" size="lg" mb={4}>
@@ -177,25 +158,7 @@ export default function Ressources() {
                   <Td py={4}></Td>
                 </Tr>
                 <Tr>
-                  <Td py={4} fontWeight="bold">Affichage dans Orion</Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                </Tr>
-                <Tr>
-                  <Td py={4} fontWeight="bold">Onglet "Par établissements"</Td>
+                  <Td py={4} fontWeight="bold">Console Établissements</Td>
                   <Td py={4}>Spécialités (famille de métiers ou non) et 2ndes communes</Td>
                   <Td py={4}>Rentrées 2024, 2023 et 2022</Td>
                   <Td py={4}>Effectifs pour chaque année de formation</Td>
@@ -213,7 +176,7 @@ export default function Ressources() {
                   <Td py={4}></Td>
                 </Tr>
                 <Tr>
-                  <Td py={4} fontWeight="bold">Onglet "Par formations"</Td>
+                  <Td py={4} fontWeight="bold">Console Formations</Td>
                   <Td py={4}>Spécialités (Famille de Métiers ou non) et 2ndes communes</Td>
                   <Td py={4}>Agrégation des données Etablissement</Td>
                   <Td py={4}>Agrégation des données Etablissement</Td>
@@ -231,7 +194,7 @@ export default function Ressources() {
                   <Td py={4}></Td>
                 </Tr>
                 <Tr>
-                  <Td py={4} fontWeight="bold">Panorama Régional</Td>
+                  <Td py={4} fontWeight="bold">Panorama Régional/Départemental/Établissement</Td>
                   <Td py={4}></Td>
                   <Td py={4}></Td>
                   <Td py={4}>Effectif en entrée (rentrée 2024)</Td>
@@ -240,60 +203,6 @@ export default function Ressources() {
                   <Td py={4}>Taux régional par spécialité</Td>
                   <Td py={4}>Taux régional par spécialité</Td>
                   <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                </Tr>
-                <Tr>
-                  <Td py={4} fontWeight="bold">Panorama Départemental</Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}>Effectif en entrée (rentrée 2024)</Td>
-                  <Td py={4}></Td>
-                  <Td py={4}>Taux régional par spécialité</Td>
-                  <Td py={4}>Taux régional par spécialité</Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                </Tr>
-                <Tr>
-                  <Td py={4} fontWeight="bold">Panorama Etablissement</Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}>Effectif en entrée (rentrée 2024)</Td>
-                  <Td py={4}></Td>
-                  <Td py={4}>Taux régional par spécialité</Td>
-                  <Td py={4}>Taux régional par spécialité</Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                </Tr>
-                <Tr>
-                  <Td py={4} fontWeight="bold">Panorama lien métier - formation</Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}></Td>
-                  <Td py={4}>Taux moyen de devenir favorable national par formation (voie scolaire et voie en apprentissage)</Td>
                   <Td py={4}></Td>
                   <Td py={4}></Td>
                   <Td py={4}></Td>
