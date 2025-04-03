@@ -13,8 +13,7 @@ export const findOffresApprentissages = async ({ offset, limit }: { offset: numb
           eb(sql`"data"->>'Formation: code CFD'`, "like", "3%"),
           eb(sql`"data"->>'Formation: code CFD'`, "like", "4%"),
           eb(sql`"data"->>'Formation: code CFD'`, "like", "5%"),
-        ]),
-        eb.or([eb(sql`"data"->>'Offre: Tags'`, "like", "%2023%"), eb(sql`"data"->>'Offre: Tags'`, "like", "%2024%")]),
+        ])
       ])
     )
     .offset(offset)
