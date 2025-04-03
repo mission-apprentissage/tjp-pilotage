@@ -1,18 +1,17 @@
 import { Grid, GridItem, HStack, Tag, Text, VStack } from "@chakra-ui/react";
 
-import type { ChangelogEntry } from "@/app/(wrapped)/changelog/changelogContext";
+import type { IChangelog } from "@/app/(wrapped)/changelog/const";
 import { themeDefinition } from "@/theme/theme";
 
 interface EntryProps {
-  changelogEntry: ChangelogEntry;
+  changelogEntry: IChangelog;
 }
 
 // This is to ensure each react list element has a unique ID
 let entry = 0;
 
 const mois = ["Jan.", "Fev.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Aout", "Sept.", "Oct.", "Nov.", "Dec."];
-const generateDateString = (str: string) => {
-  const date = new Date(str);
+const generateDateString = (date: Date) => {
   const day = date.getDate();
   const month = mois[date.getMonth()];
   const year = date.getFullYear();
@@ -49,20 +48,19 @@ export const Entry = ({ changelogEntry }: EntryProps) => {
               <Tag
                 key={`${entry}-${type}-${i}`}
                 backgroundColor={
-                  type.label === "Données" ? themeDefinition.colors.orange.draft : themeDefinition.colors.info[950]
+                  type === "Données" ? themeDefinition.colors.orange.draft : themeDefinition.colors.info[950]
                 }
                 color={
-                  type.label === "Données"
+                  type === "Données"
                     ? themeDefinition.colors.yellowTournesol[407]
                     : themeDefinition.colors.info[525]
                 }
               >
-                {type.label.toUpperCase()}
+                {type.toUpperCase()}
               </Tag>
             ))}
             <Text color={themeDefinition.colors.grey["425_hover"]}>
-              {changelogEntry.date.type === "string" && changelogEntry.date.value}
-              {changelogEntry.date.type === "date" && generateDateString(changelogEntry.date.value)}
+              {generateDateString(changelogEntry.date)}
             </Text>
           </HStack>
           <Text fontSize={16} fontWeight={400}>
