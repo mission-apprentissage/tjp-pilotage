@@ -1,7 +1,7 @@
 import { Box, Input, InputGroup, InputLeftElement, StackDivider, Text, useToken, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { GlossaireListContentItem } from "./GlossaireListContentItem";
 import type { GlossaireEntries } from "./types";
@@ -11,6 +11,7 @@ const useGlossaireList = (initialEntries: GlossaireEntries) => {
   const [searchValue, setSearchValue] = useState("");
   const [entries, setEntries] = useState<GlossaireEntries>(initialEntries);
   const [greyColor] = useToken("colors", ["grey.625"]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setEntries(() =>
@@ -24,11 +25,19 @@ const useGlossaireList = (initialEntries: GlossaireEntries) => {
     trackEvent("glossaire", { props: { name: "Liste" } });
   }, [trackEvent]);
 
+  useEffect(() => {
+    // Focus initial sur l'input
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
   return {
     entries,
     searchValue,
     setSearchValue,
     greyColor,
+    inputRef,
   };
 };
 
@@ -39,7 +48,7 @@ export const GlossaireListContent = ({
   selectEntry: (e: string) => void;
   initialEntries: GlossaireEntries;
 }) => {
-  const { entries, searchValue, setSearchValue, greyColor } = useGlossaireList(initialEntries);
+  const { entries, searchValue, setSearchValue, greyColor, inputRef } = useGlossaireList(initialEntries);
 
   return (
     <>
@@ -54,6 +63,7 @@ export const GlossaireListContent = ({
           <Icon icon="ri:search-line" height={24} style={{ color: greyColor }} />
         </InputLeftElement>
         <Input
+          ref={inputRef}
           placeholder="Rechercher une définition"
           onChange={(e) => setSearchValue(e.currentTarget.value)}
           value={searchValue}
@@ -61,7 +71,12 @@ export const GlossaireListContent = ({
       </InputGroup>
       <VStack divider={<StackDivider borderColor="grey.950" />} spacing={0} cursor={"pointer"}>
         {(entries ?? []).map((entry) => (
-          <GlossaireListContentItem key={entry.id} entry={entry} selectEntry={selectEntry} searchValue={searchValue} />
+          <GlossaireListContentItem
+            key={entry.slug}
+            entry={entry}
+            selectEntry={selectEntry}
+            searchValue={searchValue}
+          />
         ))}
       </VStack>
     </>
