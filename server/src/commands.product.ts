@@ -67,14 +67,19 @@ export function productCommands(cli: Command) {
           codeRegion?: string;
           fonction?: UserFonction | null
         }[]
-      ).map((user) => mapValues(user, (value) => value || undefined));
+      ).map((user) => mapValues(user, (value, key) => {
+        if (key === "email") {
+          return value?.toLocaleLowerCase() || undefined;
+        }
+        return value || undefined;
+      }));
 
       const users = z
         .array(
           z.object({
             firstname: z.string(),
             lastname: z.string(),
-            email: z.string(),
+            email: z.string().email(),
             role: z.enum(Object.keys(PERMISSIONS) as [Role]),
             codeRegion: z
               .string()
@@ -86,7 +91,7 @@ export function productCommands(cli: Command) {
         .parse(data);
 
       if (dryRun) {
-        console.log(users);
+        console.log("--importUser results", JSON.stringify(users));
         return;
       }
 
