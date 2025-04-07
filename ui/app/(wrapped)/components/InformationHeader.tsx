@@ -3,19 +3,18 @@ import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 
-import { useChangelog } from "@/app/(wrapped)/changelog/useChangelog";
+import { CHANGELOG } from '@/app/(wrapped)/changelog/const';
 import { themeDefinition } from "@/theme/theme";
 
 const LOCAL_STORAGE_KEY = "closedChangelogEntries";
 
 export const InformationHeader = () => {
   const [closedEntries, setClosedEntries] = useState<Array<string>>([]);
-  const { changelog } = useChangelog();
 
   const filteredChangelog =
-    changelog?.filter(
+    CHANGELOG.filter(
       (changelogEntry) =>
-        changelogEntry.types.findIndex((t) => t.label === "BANDEAU") !== -1 &&
+        changelogEntry.types.findIndex((t) => t === "BANDEAU") !== -1 &&
         changelogEntry.show &&
         !closedEntries.includes(changelogEntry.id)
     ) ?? [];
