@@ -43,7 +43,11 @@ export const getDataForEtablissementMapListFactory =
       });
 
       const foundEtablissement = etablissement
-        ? etablissement
+        ? {
+          ...etablissement,
+          voies: etablissementData.voies.filter(v => v !== null),
+          libellesDispositifs: etablissementData.libellesDispositifs.filter(v => v !== null),
+        }
         : // Si l'établissement a été trouvé sans filtre par CFD, cela signifie que la
         // formation (cfd) n'est pas enseignée dans celui-ci. Il faut donc remettre à
         // 0 les voies et les libellés dispositifs où il est enseigné.
