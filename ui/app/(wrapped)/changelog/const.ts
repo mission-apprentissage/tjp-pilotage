@@ -207,7 +207,7 @@ export const CHANGELOG: IChangelog[] = [
     "show": true,
     "title": "Mise à jour technique de l’outil de visualisation des cartes dans Orion",
     "types": ["Bug"],
-    "date": new Date("2024-30-10"),
+    "date": new Date("2024-10-30"),
     "description": "Suite à une mise à jour technique, certains utilisateurs ne voient plus la carte dans la page établissement. Si c’est votre cas, un simple rafraichissement de la page en vidant le cache permet de corriger le problème. Si vous êtes sur Windows, vous pouvez effectuer Ctrl + F5. Si vous êtes sur MacOS vous pouvez effectuer Command + Maj + R.",
     "document": "",
   }
