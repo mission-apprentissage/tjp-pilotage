@@ -62,7 +62,7 @@ export const getIndicateurs = async ({
   ]);
 
   return {
-    millesime: millesime[1].replace("_", "+"),
+    millesime: millesime[millesime.length - 1].replace("_", "+"),
     valeurAjoutee: getIndicateur(
       valeurAjoutee[0]?.valeurAjoutee,
       valeurAjoutee[1]?.valeurAjoutee,

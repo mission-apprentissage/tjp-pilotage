@@ -89,7 +89,7 @@ export const QuadrantSection = ({
           Quadrant
         </Text>
         <Badge variant="info" maxH={5} mt="auto">
-          Millésimes 2021+2022
+          Millésimes {CURRENT_IJ_MILLESIME.replace("_", "+")}
         </Badge>
       </Flex>
       <Text fontSize={14} color={"grey.200"}>
