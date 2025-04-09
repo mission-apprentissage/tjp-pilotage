@@ -33,9 +33,9 @@ export const PanoramaDomaineDeFormationClient = ({
             isClearable={false}
             routeSelectedNsf={(selected) => {
               if (selected.type === "formation") {
-                router.push(`/domaine-de-formation/${selected.nsf}?cfd=${selected.value}`);
+                router.push(`/panorama/domaine-de-formation/${selected.nsf}?cfd=${selected.value}`);
               } else {
-                router.push(`/domaine-de-formation/${selected.value}`);
+                router.push(`/panorama/domaine-de-formation/${selected.value}`);
               }
             }}
           />
