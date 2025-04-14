@@ -138,6 +138,8 @@ const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
       };
     }
   }
+
+  return undefined;
 };
 
 const decodeCodeVerifierJwt = (token: string, secret: string) => {
@@ -242,6 +244,7 @@ export const [redirectDne, redirectDneFactory] = inject(
         // On garde par défaut le role de l'utilisateur s'il existe déjà en base de données
         role: user ? user.role : attributes.role as Role,
       };
+
 
       await deps.createUserInDB({ user: userToInsert });
 

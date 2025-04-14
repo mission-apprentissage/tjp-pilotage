@@ -92,7 +92,7 @@ describe("redirectDne usecase", () => {
       ).rejects.toThrow();
     });
 
-    it("Doit retourner un AuthorizationToken et mettre à jour l'utilisateur si l'utilisateur existe", async () => {
+    it("Doit retourner un AuthorizationToken et créer l'utilisateur (sans son rôle) si l'utilisateur existe", async () => {
       const ssoUserInfo = {
         email: "user@test.test",
         given_name: "firstname",
@@ -109,7 +109,7 @@ describe("redirectDne usecase", () => {
         createUserInDB: vi.fn(),
         authJwtSecret: "authJwtSecret",
         codeVerifierJwtSecret: "codeVerifierJwtSecret",
-        findUserQuery: vi.fn().mockResolvedValue({ email: "email@test.test", enabled: true }),
+        findUserQuery: vi.fn().mockResolvedValue({ email: "email@test.test", enabled: true, role: "gestionnaire_region" }),
         findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
         findRegionFromAcademie: vi.fn(),
       };
@@ -125,7 +125,7 @@ describe("redirectDne usecase", () => {
           email: ssoUserInfo.email,
           firstname: ssoUserInfo.given_name,
           lastname: ssoUserInfo.family_name,
-          role: RoleEnum["perdir"],
+          role: RoleEnum["gestionnaire_region"],
           uais: ["code-uai"],
           codeRegion: "75",
         }),
@@ -135,7 +135,7 @@ describe("redirectDne usecase", () => {
       });
     });
 
-    it("should create the user with the correct role if the user exist and return an Authorization token", async () => {
+    it("Doit retourner un AuthorizationToken et créer l'utilisateur si l'utilisateur n'existe pas", async () => {
       const ssoUserInfo = {
         email: "user@test.test",
         given_name: "firstname",
@@ -177,7 +177,7 @@ describe("redirectDne usecase", () => {
       });
     });
 
-    it("should create the user with the correct role if there is a authorization delegation", async () => {
+    it("Doit créer l'utilisateur avec le bon rôle s'il y a une délégation de rôle", async () => {
       const ssoUserInfo = {
         FrEduRne: ["0693045K$UAJ$PU$ADM$0693045K$T3$LP$320"],
         FrEduResDel: [
@@ -223,7 +223,7 @@ describe("redirectDne usecase", () => {
       });
     });
 
-    it("should not create the user with the correct role if there is a authorization delegation, but no perdir role", async () => {
+    it("Ne doit pas créer l'utilisateur s'il y a la délégation de droits mais pas FrEduRne sur un UAI", async () => {
       const ssoUserInfo = {
         FrEduResDel: [
           "orioninserjeunes|/mdp/redirectionhub/redirect.jsp?applicationname=orioninserjeunes|03/03/2024|31/12/9999|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||",
@@ -257,7 +257,7 @@ describe("redirectDne usecase", () => {
       ).rejects.toThrow();
     });
 
-    it("should create the user with the correct role if there is a authorization delegation, but no perdir role on uai", async () => {
+    it("Doit créer l'utilisateur avec le bon rôle s'il y a une délégation de droits et le FrEduRne sur l'UAI", async () => {
       const ssoUserInfo = {
         FrEduRne: ["XXXXXXXK$UAJ$PU$ADM$0693045K$T3$LP$320"],
         FrEduResDel: [
@@ -304,7 +304,7 @@ describe("redirectDne usecase", () => {
       });
     });
 
-    it("should not create the user if authorization delegation is past or future", async () => {
+    it("Ne doit pas créer l'utilisateur si la délégation de droits est dans le passé ou le futur", async () => {
       const currentYear = new Date().getFullYear();
       const ssoUserInfo = {
         FrEduRne: ["0693045K$UAJ$PU$ADM$0693045K$T3$LP$320"],
@@ -365,7 +365,7 @@ describe("redirectDne usecase", () => {
         createUserInDB: vi.fn(),
         authJwtSecret: "authJwtSecret",
         codeVerifierJwtSecret: "codeVerifierJwtSecret",
-        findUserQuery: vi.fn().mockResolvedValue({ email: "email@test.test", enabled: true }),
+        findUserQuery: vi.fn().mockResolvedValue(undefined),
         findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
         findRegionFromAcademie: vi.fn().mockResolvedValue({ codeRegion: "11" }),
       };
@@ -414,7 +414,7 @@ describe("redirectDne usecase", () => {
         createUserInDB: vi.fn(),
         authJwtSecret: "authJwtSecret",
         codeVerifierJwtSecret: "codeVerifierJwtSecret",
-        findUserQuery: vi.fn().mockResolvedValue({ email: "email@test.test", enabled: true }),
+        findUserQuery: vi.fn().mockResolvedValue(undefined),
         findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
         findRegionFromAcademie: vi.fn().mockResolvedValue({ codeRegion: "11" }),
       };
@@ -463,7 +463,7 @@ describe("redirectDne usecase", () => {
         createUserInDB: vi.fn(),
         authJwtSecret: "authJwtSecret",
         codeVerifierJwtSecret: "codeVerifierJwtSecret",
-        findUserQuery: vi.fn().mockResolvedValue({ email: "email@test.test", enabled: true }),
+        findUserQuery: vi.fn().mockResolvedValue(undefined),
         findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
         findRegionFromAcademie: vi.fn().mockResolvedValue({ codeRegion: "11" }),
       };
