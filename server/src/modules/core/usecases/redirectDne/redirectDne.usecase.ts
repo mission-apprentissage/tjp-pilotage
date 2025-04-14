@@ -239,6 +239,8 @@ export const [redirectDne, redirectDneFactory] = inject(
         codeRegion: codeRegion,
         enabled: true,
         ...attributes,
+        // On garde par défaut le role de l'utilisateur s'il existe déjà en base de données
+        role: user ? user.role : attributes.role as Role,
       };
 
       await deps.createUserInDB({ user: userToInsert });
