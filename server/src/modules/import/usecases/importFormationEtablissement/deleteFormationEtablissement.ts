@@ -3,6 +3,7 @@ import { getKbdClient } from "@/db/db";
 
 export const deleteFormationEtablissement = async ({ id }: {id: string }) => {
   await getKbdClient().deleteFrom("indicateurSortie").where("formationEtablissementId", "=", id).execute();
+  await getKbdClient().deleteFrom("indicateurEntree").where("formationEtablissementId", "=", id).execute();
 
   return await getKbdClient()
     .deleteFrom("formationEtablissement")

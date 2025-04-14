@@ -21,14 +21,10 @@ export const getBase = ({ uai, rentreeScolaire = CURRENT_RENTREE }: { uai: strin
     .leftJoin("indicateurEntree", (join) =>
       join
         .onRef("indicateurEntree.formationEtablissementId", "=", "formationEtablissement.id")
-        .on("formationEtablissement.voie", "=", VoieEnum.scolaire)
     )
     .where((w) =>
       w.and([
-        w.or([
-          w("indicateurEntree.rentreeScolaire", "=", rentreeScolaire),
-          w("indicateurEntree.rentreeScolaire", "is", null),
-        ]),
+        w("indicateurEntree.rentreeScolaire", "=", rentreeScolaire),
         w("formationEtablissement.uai", "=", uai),
       ])
     );
