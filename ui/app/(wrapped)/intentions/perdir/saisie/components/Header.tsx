@@ -20,6 +20,7 @@ import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { feature } from "@/utils/feature";
 import { formatExportFilename } from "@/utils/formatExportFilename";
+import { useAuth } from '@/utils/security/useAuth';
 
 export const Header = ({
   activeFilters,
@@ -55,6 +56,7 @@ export const Header = ({
   setCheckedIntentions: (checkedIntentions: CheckedIntentionsType | undefined) => void;
   setIsModifyingGroup: (isModifyingGroup: boolean) => void;
 }) => {
+  const { user } = useAuth();
   const toast = useToast();
   const trackEvent = usePlausible();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -292,7 +294,7 @@ export const Header = ({
                 </Flex>
               </MenuButton>
               <MenuList py={0} borderTopRadius={0} zIndex={"banner"}>
-                {getPossibleNextStatuts(checkedIntentions?.statut)?.map((statut) => (
+                {getPossibleNextStatuts({statut: checkedIntentions?.statut, user})?.map((statut) => (
                   <MenuItem
                     p={2}
                     key={statut}

@@ -14,5 +14,5 @@ const glossaireCache = new NodeCache({
 
 export const registerGlossaireModule = (server: Server) => ({
   ...getGlossaireRoute({ server, cache: glossaireCache }),
-  ...getGlossaireEntryRoute({ server, cache: glossaireCache }),
+  ...getGlossaireEntryRoute({ server }),
 });

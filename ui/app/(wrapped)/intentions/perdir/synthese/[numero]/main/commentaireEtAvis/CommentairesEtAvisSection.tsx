@@ -9,7 +9,6 @@ import {
   getOrderStatut,
   getStepWorkflow,
   getStepWorkflowAvis,
-  isStepWorkflowEnabled,
 } from "@/app/(wrapped)/intentions/utils/statutUtils";
 
 import { AvisSection } from "./AvisSection";
@@ -95,7 +94,6 @@ export const CommentairesEtAvisSection = ({
       {etapes.filter((etape) => etape?.commentairesEtAvis?.length).length ? (
         etapes
           .filter((etape) => etape?.commentairesEtAvis?.length)
-          .filter((etape) => isStepWorkflowEnabled(etape.numero))
           .map((etape) => (
             <Flex key={etape.label} direction={"column"} gap={10}>
               <Flex direction="row" gap={1}>

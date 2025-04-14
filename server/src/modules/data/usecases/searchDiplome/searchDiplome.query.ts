@@ -1,21 +1,16 @@
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
-import type { searchDiplomeSchema } from "shared/routes/schemas/get.diplome.search.search.schema";
-import type { z } from "zod";
+import {getDateRentreeScolaire} from 'shared/utils/getRentreeScolaire';
 
 import { getKbdClient } from "@/db/db";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
-export const findManyInDataFormationQuery = async ({
-  search,
-  filters,
-}: {
-  search: string;
-  filters: z.infer<typeof searchDiplomeSchema.querystring>;
-}) => {
-  const search_array = getNormalizedSearchArray(search);
+import type { Filters } from "./searchDiplome.usecase";
+
+export const searchDiplomeQuery = async (filters: Filters) => {
+  const search_array = getNormalizedSearchArray(filters.search);
 
   const formations = await getKbdClient()
     .selectFrom("dataFormation")
@@ -130,12 +125,35 @@ export const findManyInDataFormationQuery = async ({
         else null
         end
       `.as("dateFermeture"),
+      eb
+        .selectFrom("formationHistorique")
+        .innerJoin("formationView as fva", "fva.cfd", "formationHistorique.ancienCFD")
+        .select("formationHistorique.ancienCFD")
+        .where(wb => wb.and([
+          wb(wb.ref("formationHistorique.cfd"), "=", wb.ref("dataFormation.cfd")),
+          wb("fva.dateFermeture", "is not", null),
+          filters.campagne ? wb("fva.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(filters.campagne)}`) : wb.val(true)
+        ]))
+        .limit(1)
+        .as("isFormationRenovee"),
     ])
-    .distinctOn(["dataFormation.cfd", "dataFormation.libelleFormation", "niveauDiplome.libelleNiveauDiplome"])
-    .orderBy(["niveauDiplome.libelleNiveauDiplome", "dataFormation.libelleFormation asc"])
+    .distinctOn([
+      "dataFormation.cfd",
+      "dataFormation.libelleFormation",
+      "niveauDiplome.libelleNiveauDiplome",
+      "dataFormation.dateFermeture"
+    ])
+    .orderBy([
+      "niveauDiplome.libelleNiveauDiplome",
+      "dataFormation.libelleFormation asc",
+      sql`"dataFormation"."dateFermeture" nulls first`,
+    ])
     .limit(20)
     .execute()
-    .then(cleanNull);
+    .then((formations) => formations.map((formation) => cleanNull({
+      ...formation,
+      isFormationRenovee: !!formation.isFormationRenovee
+    })));
 
   return formations;
 };

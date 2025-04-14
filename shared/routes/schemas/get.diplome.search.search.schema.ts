@@ -6,6 +6,7 @@ export const searchDiplomeSchema = {
   }),
   querystring: z.object({
     codeNsf: z.string().optional(),
+    campagne: z.string().optional(),
   }),
   response: {
     200: z.array(
@@ -20,6 +21,7 @@ export const searchDiplomeSchema = {
         dateFermeture: z.string().optional(),
         libelleFormation: z.string(),
         libelleNiveauDiplome: z.string().optional(),
+        isFormationRenovee: z.coerce.boolean().optional(),
         cfd: z.string(),
         dispositifs: z
           .array(

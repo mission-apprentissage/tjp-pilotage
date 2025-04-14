@@ -22,7 +22,6 @@ import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionP
 import { cleanNull } from "@/utils/noNull";
 
 import type { Filters } from "./getIntention.usecase";
-
 export const getIntentionQuery = async ({ numero, user }: Filters) => {
   const intention = await getKbdClient()
     .selectFrom("latestDemandeIntentionView as intention")
@@ -82,18 +81,21 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
           eb
             .selectFrom("dataFormation")
             .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
-            .select((ebDataFormation) => [
+            .select((eb) => [
               sql<string>`CONCAT(
-                ${ebDataFormation.ref("formationView.libelleFormation")},
+                ${eb.ref("formationView.libelleFormation")},
                 ' (',
-                ${ebDataFormation.ref("niveauDiplome.libelleNiveauDiplome")},
+                ${eb.ref("niveauDiplome.libelleNiveauDiplome")},
                 ')',
                 ' (',
-                ${ebDataFormation.ref("dataFormation.cfd")},
+                ${eb.ref("dataFormation.cfd")},
                 ')')
               `.as("libelleFormation"),
-              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+              sql<boolean>`${eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
                 "isFCIL"
+              ),
+              sql<boolean>`${eb("dataFormation.dateFermeture", "is not", null)}`.as(
+                "isEnRenovation"
               ),
             ])
             .select((eb) =>

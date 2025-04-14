@@ -139,7 +139,7 @@ const METADATA_MAP = {
     title: "Panorama domaine de formation - Orion",
     description: "Panorama des formations enseignées dans un domaine de formation",
   },
-  "/domaine-de-formation/": {
+  "/panorama/domaine-de-formation/": {
     title: "Domaines de formation - Orion",
     description: "Domaines de formation",
   },
@@ -218,8 +218,8 @@ const extractBasePathname = (pathname: string) => {
   if (pathname.includes("/intentions/perdir/saisie")) {
     return "/intentions/perdir/saisie";
   }
-  if (pathname.includes("/domaine-de-formation/")) {
-    return "/domaine-de-formation";
+  if (pathname.includes("/panorama/domaine-de-formation/")) {
+    return "/panorama/domaine-de-formation";
   }
   return pathname;
 };

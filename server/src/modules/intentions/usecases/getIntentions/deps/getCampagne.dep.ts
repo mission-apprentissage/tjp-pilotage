@@ -1,5 +1,4 @@
 import * as Boom from "@hapi/boom";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { getKbdClient } from "@/db/db";
@@ -14,7 +13,6 @@ const getCampagneRegion = async ({
   user: RequestUser
 }) => getKbdClient()
   .selectFrom("campagneRegion")
-  .where("campagneRegion.statut", "=", CampagneStatutEnum["en cours"])
   .where("campagneRegion.campagneId", "=", campagneId)
   .$call((q) => {
     if(user?.codeRegion) return q.where("codeRegion", "=", user.codeRegion);
@@ -65,7 +63,7 @@ export const getCampagneQuery = async ({
     annee: campagne.annee,
     dateDebut: campagne.dateDebut,
     dateFin: campagne.dateFin,
-    statut: campagne.statut,
+    statut: campagneRegion?.statut ?? campagne.statut,
     withSaisiePerdir: campagneRegion?.withSaisiePerdir,
     dateVote: campagneRegion?.dateVote,
     codeRegion: campagneRegion?.codeRegion,
