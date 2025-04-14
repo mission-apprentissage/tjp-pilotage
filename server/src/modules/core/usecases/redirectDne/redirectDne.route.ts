@@ -61,6 +61,11 @@ export const redirectDneRoute = (server: Server) => {
             url: request.url,
           });
 
+          let url = '/';
+          if (user.uais.length > 0) {
+            url = `/panorama/etablissement/${user.uais[0]}`;
+          }
+
           response
             .setCookie("Authorization", token, {
               maxAge: 30 * 24 * 3600000,
@@ -69,7 +74,7 @@ export const redirectDneRoute = (server: Server) => {
               secure: true,
               path: "/",
             })
-            .redirect(`/panorama/etablissement/${user.uais[0]}`, 302)
+            .redirect(url, 302)
             .send();
         } catch (error) {
           logger.error({ error: error as Error }, "[SSO] echec dne redirect");
