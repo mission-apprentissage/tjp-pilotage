@@ -182,6 +182,13 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       const userinfo = await client.userinfo<ExtraUserInfo>(tokenSet.access_token);
 
+      logger.info(
+        {
+          userinfo,
+        },
+        "[SSO] Userinfo DNE"
+      );
+
       const email = userinfo.email?.toLowerCase();
       if (!email) {
         logger.error({
