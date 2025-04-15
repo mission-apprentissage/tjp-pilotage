@@ -66,6 +66,8 @@ export const redirectDneRoute = (server: Server) => {
             url = `/panorama/etablissement/${user.uais[0]}`;
           }
 
+          logger.info("[SSO] Redirection de l'utilisateur", { user, url });
+
           response
             .setCookie("Authorization", token, {
               maxAge: 30 * 24 * 3600000,
