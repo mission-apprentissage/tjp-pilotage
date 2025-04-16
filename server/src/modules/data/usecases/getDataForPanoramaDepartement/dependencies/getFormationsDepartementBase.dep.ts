@@ -1,5 +1,5 @@
 import { sql } from "kysely";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE, VoieEnum } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import type { Filters } from "shared/routes/schemas/get.panorama.stats.departement.schema";
 import { getMillesimePrecedent } from "shared/utils/getMillesime";
@@ -28,7 +28,11 @@ export const getFormationsDepartementBase = ({
 }: Filters) =>
   getKbdClient()
     .selectFrom("formationScolaireView as formationView")
-    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .on(eb => eb("formationEtablissement.voie", "=", eb.val(VoieEnum.scolaire)))
+    )
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .leftJoin("dispositif", "formationEtablissement.codeDispositif", "dispositif.codeDispositif")
     .leftJoin("indicateurEntree", (join) =>

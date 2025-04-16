@@ -1,5 +1,6 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
+import { VoieEnum } from "shared";
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
@@ -15,10 +16,10 @@ export const getInformations = ({ uai }: { uai: string }) =>
     .selectFrom("etablissement")
     .leftJoin("departement", "etablissement.codeDepartement", "departement.codeDepartement")
     .leftJoin("formationEtablissement as feScolaire", (join) =>
-      join.onRef("feScolaire.uai", "=", "etablissement.uai").on("feScolaire.voie", "=", "scolaire")
+      join.onRef("feScolaire.uai", "=", "etablissement.uai").on("feScolaire.voie", "=", VoieEnum.scolaire)
     )
     .leftJoin("formationEtablissement as feApprentissage", (join) =>
-      join.onRef("feApprentissage.uai", "=", "etablissement.uai").on("feApprentissage.voie", "=", "apprentissage")
+      join.onRef("feApprentissage.uai", "=", "etablissement.uai").on("feApprentissage.voie", "=", VoieEnum.apprentissage)
     )
     .where("etablissement.uai", "=", uai)
     .select((eb) => [

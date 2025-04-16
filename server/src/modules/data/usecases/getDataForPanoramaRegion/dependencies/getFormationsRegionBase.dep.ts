@@ -28,7 +28,11 @@ export const getFormationsRegionBase = ({
 }: Filters) =>
   getKbdClient()
     .selectFrom("formationScolaireView as formationView")
-    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .onRef("formationEtablissement.voie", "=", "formationView.voie")
+    )
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .leftJoin("dispositif", "formationEtablissement.codeDispositif", "dispositif.codeDispositif")
     .leftJoin("indicateurEntree", (join) =>

@@ -1,5 +1,5 @@
 import { sql } from "kysely";
-import { CURRENT_RENTREE } from "shared";
+import { CURRENT_RENTREE, VoieEnum } from "shared";
 import { MILLESIMES_IJ_ETAB } from "shared/time/millesimes";
 
 import { getKbdClient } from "@/db/db";
@@ -17,12 +17,12 @@ const getBase = ({ uai, rentreeScolaire }: { uai: string; rentreeScolaire: strin
     .leftJoin("dispositif", (join) =>
       join
         .onRef("dispositif.codeDispositif", "=", "formationEtablissement.codeDispositif")
-        .on("formationEtablissement.voie", "=", "scolaire")
+        .on("formationEtablissement.voie", "=", VoieEnum.scolaire)
     )
     .leftJoin("indicateurEntree", (join) =>
       join
         .onRef("indicateurEntree.formationEtablissementId", "=", "formationEtablissement.id")
-        .on("formationEtablissement.voie", "=", "scolaire")
+        .on("formationEtablissement.voie", "=", VoieEnum.scolaire)
     )
     .where((w) =>
       w.and([
