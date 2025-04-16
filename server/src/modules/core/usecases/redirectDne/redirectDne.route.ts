@@ -1,4 +1,5 @@
 import type { FastifyRequest } from "fastify";
+import { DneSSOErrorsEnum } from "shared/enum/dneSSOErrorsEnum";
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -6,7 +7,6 @@ import { getDneUrl } from "@/modules/core/usecases/getDneUrl/getDneUrl.usecase";
 import type { Server } from "@/server/server";
 import logger from "@/services/logger";
 
-import { ERROR_TYPE } from "./const";
 import { redirectDne } from "./redirectDne.usecase";
 
 const ROUTE = ROUTES["[GET]/dne_connect"];
@@ -66,7 +66,7 @@ export const redirectDneRoute = (server: Server) => {
             url = `/panorama/etablissement/${user.uais[0]}`;
           }
 
-          logger.info("[SSO] Redirection de l'utilisateur", { user, url });
+          logger.info("[SSO] REDIRECT_USER", { user, url });
 
           response
             .setCookie("Authorization", token, {
@@ -78,9 +78,13 @@ export const redirectDneRoute = (server: Server) => {
             })
             .redirect(url, 302)
             .send();
-        } catch (error) {
-          logger.error({ error: error as Error }, "[SSO] echec dne redirect");
-          response.redirect(302, `/auth/login?error=${ERROR_TYPE}`).send();
+        } catch (err) {
+          let error = err as Error;
+          if (!((Object).values(DneSSOErrorsEnum) as string[]).includes(error.message)) {
+            error = new Error(DneSSOErrorsEnum.FALIURE_ON_DNE_REDIRECT);
+          }
+          logger.error({ error }, `[SSO] ${error.message.toLocaleLowerCase().replace(/_/g, " ")}`);
+          response.redirect(302, `/auth/login?error=${error.message}`).send();
         }
       },
     });
