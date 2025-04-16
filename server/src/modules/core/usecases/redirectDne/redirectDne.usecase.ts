@@ -7,6 +7,7 @@ import { flatten, uniq } from "lodash-es";
 import type { UserinfoResponse } from "openid-client";
 import type {Role} from 'shared';
 import {RoleEnum} from 'shared';
+import { DneSSOErrorsEnum } from "shared/enum/dneSSOErrorsEnum";
 import type { SupportedLDAPGroups } from "shared/security/sso";
 import { LDAP_GROUP_ROLES_DNE_CORRESPONDANCE, ROLE_DNE_ROLE_ORION_CORRESPONDANCE,RoleDNEEnum } from "shared/security/sso";
 
@@ -171,16 +172,18 @@ export const [redirectDne, redirectDneFactory] = inject(
     async ({ codeVerifierJwt, url }: { codeVerifierJwt: string; url: string }) => {
       const code_verifier = decodeCodeVerifierJwt(codeVerifierJwt, deps.codeVerifierJwtSecret);
 
-      if (!code_verifier) throw new Error("missing code_verifier");
+      if (!code_verifier) throw new Error(DneSSOErrorsEnum.MISSING_CODE_VERIFIER);
 
       const client = await deps.getDneClient();
       const params = client.callbackParams(url);
       const tokenSet = await client.callback(config.dne.redirectUri, params, {
         code_verifier,
       });
-      if (!tokenSet.access_token) throw new Error("missing access_token");
+      if (!tokenSet.access_token) throw new Error(DneSSOErrorsEnum.MISSING_ACCESS_TOKEN);
 
       const userinfo = await client.userinfo<ExtraUserInfo>(tokenSet.access_token);
+
+      if (!userinfo) throw new Error(DneSSOErrorsEnum.MISSING_USERINFO);
 
       logger.info(
         {
@@ -192,30 +195,30 @@ export const [redirectDne, redirectDneFactory] = inject(
       const email = userinfo.email?.toLowerCase();
       if (!email) {
         logger.error({
-          error: new Error("missing user email"),
+          error: new Error(DneSSOErrorsEnum.MISSING_USER_EMAIL),
           userinfo,
         }, "[SSO] Il manque l'email de l'utilisateur");
-        throw new Error("missing user email");
+        throw new Error(DneSSOErrorsEnum.MISSING_USER_EMAIL);
       }
 
       const user = await deps.findUserQuery(email);
       if (user && !user.enabled) {
         logger.error({
-          error: new Error("user not enabled"),
+          error: new Error(DneSSOErrorsEnum.USER_NOT_ENABLED),
           userinfo,
           email,
         }, "[SSO] L'utilisateur existe et est désactivé");
-        throw new Error("user not enabled");
+        throw new Error(DneSSOErrorsEnum.USER_NOT_ENABLED);
       }
 
       const attributes = getUserRoleAttributes(userinfo);
       if (!attributes) {
         logger.error({
-          error: new Error("missing rights"),
+          error: new Error(DneSSOErrorsEnum.MISSING_RIGHTS),
           userinfo,
           email,
-        }, "[SSO] Il manque les droits perdir pour l'utilisateur");
-        throw new Error("missing right attributes");
+        }, "[SSO] Aucun droit n'a pu être extrait pour l'utilisateur");
+        throw new Error(DneSSOErrorsEnum.MISSING_RIGHTS);
       }
 
       const etablissement = attributes.uais && (await deps.findEtablissement({ uais: attributes.uais }));
@@ -223,19 +226,32 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       if (attributes.role === RoleEnum.perdir && !etablissement?.codeRegion) {
         logger.error({
-          error: new Error("missing codeRegion"),
+          error: new Error(DneSSOErrorsEnum.MISSING_CODE_REGION),
           userinfo,
           email,
           attributes,
           etablissement,
-        }, "[SSO] Il manque le code région pour l'établissement");
-        throw new Error("missing codeRegion");
-      } else if (attributes.role === RoleEnum.perdir) {
+        }, "[SSO] Il manque le code région pour l'utilisateur");
+        throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION);
+      }
+
+      const userNeedsCodeRegion = ["admin_region", "pilote_region", "gestionnaire_region", "expert_region"].includes(attributes.role);
+
+      if (attributes.role === RoleEnum.perdir) {
         codeRegion = etablissement?.codeRegion;
-      } else if (userinfo.codaca) {
+      } else if (userNeedsCodeRegion && userinfo.codaca) {
         const codeRegionFromAcademie = await deps.findRegionFromAcademie(userinfo.codaca);
         if (codeRegionFromAcademie) {
           codeRegion = codeRegionFromAcademie.codeRegion;
+        } else {
+          logger.error({
+            error: new Error(DneSSOErrorsEnum.MISSING_CODE_REGION),
+            userinfo,
+            email,
+            attributes,
+            codeRegionFromAcademie,
+          }, "[SSO] Il manque le code région pour l'utilisateur");
+          throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION);
         }
       }
 
