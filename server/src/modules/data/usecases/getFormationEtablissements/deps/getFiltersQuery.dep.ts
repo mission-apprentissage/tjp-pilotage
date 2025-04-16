@@ -30,7 +30,11 @@ export const getFiltersQuery = async ({
 }: Partial<Filters>) => {
   const base = getKbdClient()
     .selectFrom("formationScolaireView as formationView")
-    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .onRef("formationEtablissement.voie", "=", "formationView.voie")
+    )
     .leftJoin("dataFormation", "dataFormation.cfd", "formationView.cfd")
     .innerJoin("indicateurEntree", (join) =>
       join
