@@ -32,7 +32,7 @@ const fetchAuth = async () => {
   try {
     return await serverClient.ref("[GET]/auth/whoAmI").query({}, { headers: headersList });
   } catch (e) {
-    console.log("nooo", (e as AxiosError).code);
+    console.log((e as AxiosError).code);
     return undefined;
   }
 };
