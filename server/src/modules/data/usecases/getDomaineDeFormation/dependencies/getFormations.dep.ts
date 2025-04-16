@@ -34,6 +34,7 @@ export const getFormations = async ({
           sb.ref("niveauDiplome.libelleNiveauDiplome").as("libelleNiveauDiplome"),
           sb.ref("niveauDiplome.codeNiveauDiplome").as("codeNiveauDiplome"),
           sb.ref("formationView.typeFamille").as("typeFamille"),
+          sb.ref("formationView.voie").as("voie"),
         ])
         .orderBy("formationView.libelleFormation", "asc")
         .distinct()
@@ -55,7 +56,11 @@ export const getFormations = async ({
     .with("formation_etab", (wb) =>
       wb
         .selectFrom("formations")
-        .leftJoin("formationEtablissement", "formations.cfd", "formationEtablissement.cfd")
+        .leftJoin("formationEtablissement", (join) =>
+          join
+            .onRef("formationEtablissement.cfd", "=", "formations.cfd")
+            .onRef("formationEtablissement.voie", "=", "formations.voie")
+        )
         .innerJoin("dataEtablissement", "dataEtablissement.uai", "formationEtablissement.uai")
         .selectAll("formations")
         .select((sb) => [
