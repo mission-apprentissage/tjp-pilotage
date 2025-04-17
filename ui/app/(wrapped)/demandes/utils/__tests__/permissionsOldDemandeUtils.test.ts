@@ -211,7 +211,7 @@ const fixtureBuilder = () => {
 };
 
 
-describe("ui > app > (wrapped) > intentions > utils > permissionsDemandeUtils", () => {
+describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", () => {
   let fixture: ReturnType<typeof fixtureBuilder>;
 
   beforeEach(() => {

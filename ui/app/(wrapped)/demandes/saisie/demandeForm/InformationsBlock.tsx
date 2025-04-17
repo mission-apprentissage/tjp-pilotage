@@ -60,7 +60,7 @@ export const InformationsBlock = ({
       await client
         .ref("[DELETE]/demande/:numero")
         .query({ params: { numero: formId } })
-        .then(() => push("/intentions/saisie?action=supprimée"));
+        .then(() => push("/demandes/saisie?action=supprimée"));
     },
   });
 

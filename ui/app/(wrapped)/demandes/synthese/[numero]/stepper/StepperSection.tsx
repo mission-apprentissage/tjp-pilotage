@@ -79,7 +79,7 @@ const IllustrationStatut = chakra(
     case DemandeStatutEnum["brouillon"]:
       return (
         <Img
-          src={`/illustrations/step-1-workflow-intentions.svg`}
+          src={`/illustrations/step-1-workflow-demandes.svg`}
           alt="Illustration de l'étape en cours"
           m={"auto"}
         />
@@ -92,7 +92,7 @@ const IllustrationStatut = chakra(
     default:
       return (
         <Img
-          src={`/illustrations/step-${getStepWorkflow(statut)}-workflow-intentions.svg`}
+          src={`/illustrations/step-${getStepWorkflow(statut)}-workflow-demandes.svg`}
           alt="Illustration de l'étape en cours"
           m={"auto"}
         />

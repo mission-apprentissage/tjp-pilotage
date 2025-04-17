@@ -107,7 +107,7 @@ export const ConsoleSection = ({
                       h="12"
                       role="group"
                       cursor={"pointer"}
-                      onClick={() => router.push(`/intentions/saisie/${correction.demandeNumero}?correction=true`)}
+                      onClick={() => router.push(`/demandes/saisie/${correction.demandeNumero}?correction=true`)}
                     >
                       <LineContent
                         correction={correction}

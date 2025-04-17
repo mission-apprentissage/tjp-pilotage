@@ -27,7 +27,53 @@ fileignoreconfig:
   checksum: 97116750d964c12ae4a0ffe9f5477d66526bf2f2e8ac8719ee399dc88faf7ae5
 - filename: server/src/modules/demandes/usecases/submitDemande/submitDemande.test.ts
   checksum: 47ff94a3172a8c0640853e60ae3501ba59609ba9103e341d072d8012be9a8fd1
-- filename: server/src/modules/intentions/usecases/submitIntention/__tests__/submitIntention.test.ts
+- filename: server/src/modules/glossaire/entries/action-prioritaire.md
+  checksum: 5883151dd01d19b71d550e9819719c546435d1c5a1da66b9ebed7414ec94fb60
+- filename: server/src/modules/glossaire/entries/apprentissage.md
+  checksum: a0e7ca953d0b8fb3bdb847b86a469297aef0946bef88d8a564fdb90ee6a8457c
+- filename: server/src/modules/glossaire/entries/capacite.md
+  checksum: 9dcac856584cde38e2beb93741dbbf0d0d84b6f8ccedfbbdad650c2f8eeea860
+- filename: server/src/modules/glossaire/entries/domaine-professionnel-fap.md
+  checksum: e24b8ef5bc01e4309af30c98eb32f0fc2e7be33382ac46905f00b82b9b62f1ed
+- filename: server/src/modules/glossaire/entries/effectif-en-entree.md
+  checksum: 45b82e3c50878609a96289deaa995d61f2f907dbfa8c22365591e846fee92aed
+- filename: server/src/modules/glossaire/entries/effectifs.md
+  checksum: c8052f2f4d7fcd3674652f81f4c2cfdcfe0e6eb0bd100371053dde31aaaf669a
+- filename: server/src/modules/glossaire/entries/formation-historique-renovee.md
+  checksum: ae429425d74267dc3135f981c753ddf29c98a938d3921c1c4d62c2f429a5cf0c
+- filename: server/src/modules/glossaire/entries/formations-specifiques.md
+  checksum: 0aa06b10d752fcfe534003eee14e78524cfe2a4ac0b6ce68f06a214ca2f579f1
+- filename: server/src/modules/glossaire/entries/inser-jeunes.md
+  checksum: 14dbd3939f25fd5e58dcd9c6190da729ae52dfa17ba069ee091ca6d688c84b55
+- filename: server/src/modules/glossaire/entries/millesime.md
+  checksum: 6692cf9a7396478e25379250ca50836842362982374a95433bf0f268895e63a0
+- filename: server/src/modules/glossaire/entries/nombre-deleves.md
+  checksum: 53d88d94c2fed2557ef56fef88bfe5fbfc891f4d860da8ed3c36e28f9f966910
+- filename: server/src/modules/glossaire/entries/quadrant-q1-a-q4.md
+  checksum: fbc339718877e9572afe9c8cf19cdab3ebd8cce4a9fb95f893aa891538eb1c47
+- filename: server/src/modules/glossaire/entries/taux-de-demande.md
+  checksum: f530e4add6438eea9a6a3f5c6b3fd708811d1bb065a6ffbbef4890226fc9a8e1
+- filename: server/src/modules/glossaire/entries/taux-de-devenir-favorable.md
+  checksum: fb9c63cf14a10b30a477f9c673adc89475f88072f6f0f4bff2b1dc76fe8451e4
+- filename: server/src/modules/glossaire/entries/taux-de-poursuite-d-etudes.md
+  checksum: 91474adc55b0d07ac7e0ed9c76807f2a09b134768eb68f16a9f84b22ef4a9f90
+- filename: server/src/modules/glossaire/entries/taux-de-pression.md
+  checksum: 8fe7fa2b0802fa1dbe588346aee3fe3db321f65085519bf9de9e9b56d070ef55
+- filename: server/src/modules/glossaire/entries/taux-de-remplissage.md
+  checksum: 4379cf4bb15c25326d57232164315db4ee4de26dffc220ca6d485692f93b4bb3
+- filename: server/src/modules/glossaire/entries/taux-demploi-a-6mois.md
+  checksum: b82d27e34accb1c6db9c6e7c58afdb04e9b9d8fbb6ba0035cd410048d30e1dda
+- filename: server/src/modules/glossaire/entries/tension-difficulte-de-recrutement.md
+  checksum: 169363bd47a3b2f024a650f645e0df7c7e45ad4cb1f20d29ed31996c79320250
+- filename: server/src/modules/glossaire/entries/transition-ecologique.md
+  checksum: dc2516c520035f1e6762170591346b0050d3764beed27f33e400b8e27e25f6d2
+- filename: server/src/modules/glossaire/entries/transition-numerique.md
+  checksum: a62d0d8f8915380454a5c1a9cbb704a1f75485786a9189a99dfd611d7256744a
+- filename: server/src/modules/glossaire/entries/valeur-ajoutee.md
+  checksum: cfa65284d4510e4475e62743c18ac299c16324358e5cc657d6414b47c21c68bf
+- filename: server/src/modules/glossaire/entries/voeux.md
+  checksum: 9b14d4378c9f49e031f80be65d273d8bd6e07752027bfc037fe5b7722fd8a5d2
+- filename: server/src/modules/demandes/usecases/submitDemande/__tests__/submitDemande.test.ts
   checksum: 1f964b6895fa14252a42134523c5ee4f36fef5b1885ab1ea5e809c17dae796c8
 - filename: server/static/files/lyceesACCE.csv
   checksum: 10bcfb7324ef1968ff3c24f3047fc6ce8f148060e625b48ec1b6f7e7a4cde471
@@ -61,17 +107,19 @@ fileignoreconfig:
   checksum: 7bdc65299956e6277afa0e0f74bdb55871e5ff7dbae60a127a6a5062745eda74
 - filename: ui/app/(wrapped)/cgu/page.tsx
   checksum: d42601745f99f191e3fb865ed61ef829e4c7e82a5d157a544deb8f4986717fef
+- filename: ui/app/(wrapped)/changelog/const.ts
+  checksum: 1ebf1d5b005c756d9240f9cd3b3ed794169782eb105228ea32d73174aa25f1e6
 - filename: ui/app/(wrapped)/documentation/page.tsx
   checksum: 50bc89c2ce7e01f8b8ff7381b44abb68ed2979230dc7252009e2e77b85c11558
 - filename: ui/app/(wrapped)/glossaire/GlossaireEntries.ts
   checksum: 879121c075cb8d6f1bb728ed24706ea5c31b20bc7a0ba1d20747237ddbe42ec5
-- filename: ui/app/(wrapped)/intentions/utils/__tests__/messageAccompagneUtils.test.ts
+- filename: ui/app/(wrapped)/demandes/perdir/synthese/[numero]/actions/const.ts
+  checksum: d2802537bd9b064191f47c0b697ae683b4077d82ed86d99e094c184c6efb92da
+- filename: ui/app/(wrapped)/demandes/utils/__tests__/messageAccompagneUtils.test.ts
   checksum: 5e613e7713acca04787d983d04eecaeda58676dd82ef17ce7139a5cd4de55a5d
-- filename: ui/app/(wrapped)/intentions/utils/__tests__/permissionsDemandeUtils.test.ts
-  checksum: 2e979fff0e8c1dc927f22a2b30bdd3266a8dedffa86c9130520e4c9809170ff9
-- filename: ui/app/(wrapped)/intentions/utils/__tests__/permissionsDemandeUtils.test.ts
+- filename: ui/app/(wrapped)/demandes/utils/__tests__/permissionsDemandeUtils.test.ts
   checksum: b3b68b225af36b8a4aa34ec83ac8bfe45db6f610e92a501de62f998222c941d4
-- filename: ui/app/(wrapped)/intentions/utils/__tests__/statutUtils.test.ts
+- filename: ui/app/(wrapped)/demandes/utils/__tests__/statutUtils.test.ts
   checksum: dc2a297780c6ed1ec68c05d2535e0747380eb77045b2b397c42e88a09bf8acd6
 - filename: ui/app/(wrapped)/mentions-legales/page.tsx
   checksum: 9d41bf20ab3cb269091a285eefeae595ecfd38dad78dbda7859eef31e69e7bc7
@@ -111,5 +159,10 @@ allowed_patterns:
 - '@mail.com'
 - '@exemple.fr'
 - '@inserjeunes.beta.gouv.fr'
+- https://webinaire.numerique.gouv.fr//meeting/signin/31852/creator/16468/hash/6d52a428a84100623dbff7e34ff7843f4a0c9f0f
+threshold: medium
+version: "1.0"
+ta.gouv.fr'
+- 'https://webinaire.numerique.gouv.fr//meeting/signin/31852/creator/16468/hash/6d52a428a84100623dbff7e34ff7843f4a0c9f0f'
 threshold: medium
 version: "1.0"

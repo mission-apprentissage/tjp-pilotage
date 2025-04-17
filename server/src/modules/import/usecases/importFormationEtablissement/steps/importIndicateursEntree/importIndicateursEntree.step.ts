@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
+import type { Voie } from "shared";
 
 import type {
   AnneeDispositif,
@@ -31,6 +32,7 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
       cfd,
       rentreeScolaire,
       uai,
+      voie
     }: {
       formationEtablissementId: string;
       anneesEnseignement: AnneeEnseignement[];
@@ -38,6 +40,7 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
       cfd: string;
       rentreeScolaire: string;
       uai: string;
+      voie: Voie
     }) => {
       const isSpecialite = await deps.findSpecialite({
         cfd,
@@ -48,30 +51,42 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
 
       const anneeDebut = isSpecialite && !isAnneeCommune ? 1 : 0;
 
-      const { capacites, premiersVoeux } = isBTS(cfd)
-        ? await deps.getIndicateursParcoursSup({
-          anneesDispositif,
-          uai,
+      if (voie === "apprentissage") {
+        await deps.createIndicateurEntree({
           anneeDebut,
-          rentreeScolaire,
-        })
-        : await deps.getIndicateursAffelnet({
-          anneesDispositif,
-          uai,
+          effectifs: [],
+          capacites: [],
+          premiersVoeux: [],
+          formationEtablissementId,
+          rentreeScolaire
+        });
+      } else {
+        const { capacites, premiersVoeux } = isBTS(cfd)
+          ? await deps.getIndicateursParcoursSup({
+            anneesDispositif,
+            uai,
+            anneeDebut,
+            rentreeScolaire,
+          })
+          : await deps.getIndicateursAffelnet({
+            anneesDispositif,
+            uai,
+            anneeDebut,
+            rentreeScolaire,
+          });
+
+        const indicateurEntree = toIndicateurEntree({
+          anneesEnseignement,
+          formationEtablissementId,
+          capacites,
           anneeDebut,
+          premiersVoeux,
           rentreeScolaire,
         });
 
-      const indicateurEntree = toIndicateurEntree({
-        anneesEnseignement,
-        formationEtablissementId,
-        capacites,
-        anneeDebut,
-        premiersVoeux,
-        rentreeScolaire,
-      });
-      if (!indicateurEntree) return;
-      await deps.createIndicateurEntree(indicateurEntree);
+        if (!indicateurEntree) return;
+        await deps.createIndicateurEntree(indicateurEntree);
+      }
     };
   }
 );

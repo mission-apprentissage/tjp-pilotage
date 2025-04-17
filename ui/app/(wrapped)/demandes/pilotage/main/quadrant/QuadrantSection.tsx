@@ -156,7 +156,7 @@ export const QuadrantSection = ({
       }
     }
 
-    return createParameterizedUrl("/intentions/restitution", {
+    return createParameterizedUrl("/demandes/restitution", {
       filters: urlFilters,
     });
   };
@@ -216,7 +216,7 @@ export const QuadrantSection = ({
           as={NextLink}
           target="_blank"
           rel="noreferrer"
-          href={createParameterizedUrl("/intentions/restitution", {
+          href={createParameterizedUrl("/demandes/restitution", {
             filters: {
               codeNiveauDiplome: filters.codeNiveauDiplome,
               codeRegion: [filters.codeRegion],

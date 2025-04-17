@@ -1,4 +1,3 @@
-import { registerChangelogModule } from "@/modules/changelog";
 import { registerCoreModule } from "@/modules/core";
 import { registerCorrectionModule } from "@/modules/corrections";
 import { registerDataModule } from "@/modules/data";
@@ -12,7 +11,6 @@ export const registerRoutes = (server: Server) => {
     ...registerCoreModule(server),
     ...registerDataModule(server),
     ...registerDemandesModule(server),
-    ...registerChangelogModule(server),
     ...registerGlossaireModule(server),
     ...registerCorrectionModule(server),
     ...registerRequetesEnregistreesModule(server),

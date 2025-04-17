@@ -181,6 +181,7 @@ export const [redirectDne, redirectDneFactory] = inject(
         logger.info(
           {
             user: userToInsert,
+            userinfo,
           },
           `[SSO] Nouveau login`
         );
@@ -188,6 +189,7 @@ export const [redirectDne, redirectDneFactory] = inject(
         logger.info(
           {
             user: userToInsert,
+            userinfo,
           },
           `[SSO] Nouvel utilisateur DNE`
         );
