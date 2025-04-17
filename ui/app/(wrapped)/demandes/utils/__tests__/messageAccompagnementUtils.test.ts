@@ -129,7 +129,7 @@ const fixtureBuilder = () => {
 };
 
 
-describe("ui > app > (wrapped) > intentions > utils > messageAccompagnementUtils", () => {
+describe("ui > app > (wrapped) > demandes > utils > messageAccompagnementUtils", () => {
   let fixture: ReturnType<typeof fixtureBuilder>;
 
   beforeEach(() => {

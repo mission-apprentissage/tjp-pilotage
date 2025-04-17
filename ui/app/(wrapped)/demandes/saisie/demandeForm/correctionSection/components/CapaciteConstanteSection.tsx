@@ -56,28 +56,28 @@ export const CapaciteConstanteSection = ({ demande }: { demande: Demande }) => {
               Capacité en voie scolaire
             </Td>
             <Td p={0} border={"none"}>
-              <VisuallyHidden as="label" htmlFor="intentionCapaciteScolaireActuelle">Capacité scolaire actuelle de la demande d'origine</VisuallyHidden>
-              <ConstanteField id={"intentionCapaciteScolaireActuelle"} value={demande.capaciteScolaireActuelle} />
+              <VisuallyHidden as="label" htmlFor="demandeCapaciteScolaireActuelle">Capacité scolaire actuelle de la demande d'origine</VisuallyHidden>
+              <ConstanteField id={"demandeCapaciteScolaireActuelle"} value={demande.capaciteScolaireActuelle} />
             </Td>
             <Td p={0} border={"none"}>
-              <VisuallyHidden as="label" htmlFor="intentionCapaciteScolaire">Capacité scolaire de la demande d'origine</VisuallyHidden>
-              <ConstanteField id={"intentionCapaciteScolaire"} value={demande.capaciteScolaire} />
+              <VisuallyHidden as="label" htmlFor="demandeCapaciteScolaire">Capacité scolaire de la demande d'origine</VisuallyHidden>
+              <ConstanteField id={"demandeCapaciteScolaire"} value={demande.capaciteScolaire} />
             </Td>
             {coloration && (
               <>
                 <Td p={0} border={"none"}>
-                  <VisuallyHidden as="label" htmlFor="intentionCapaciteScolaireColoreeActuelle">Capacité scolaire colorée actuelle de la demande d'origine</VisuallyHidden>
-                  <ConstanteField id={"intentionCapaciteScolaireColoreeActuelle"} value={demande.capaciteScolaireColoreeActuelle} />
+                  <VisuallyHidden as="label" htmlFor="demandeCapaciteScolaireColoreeActuelle">Capacité scolaire colorée actuelle de la demande d'origine</VisuallyHidden>
+                  <ConstanteField id={"demandeCapaciteScolaireColoreeActuelle"} value={demande.capaciteScolaireColoreeActuelle} />
                 </Td>
                 <Td p={0} border={"none"}>
-                  <VisuallyHidden as="label" htmlFor="intentionCapaciteScolaireColoree">Capacité scolaire colorée de la demande d'origine</VisuallyHidden>
-                  <ConstanteField id={"intentionCapaciteScolaire"} value={demande.capaciteScolaireColoree} />
+                  <VisuallyHidden as="label" htmlFor="demandeCapaciteScolaireColoree">Capacité scolaire colorée de la demande d'origine</VisuallyHidden>
+                  <ConstanteField id={"demandeCapaciteScolaire"} value={demande.capaciteScolaireColoree} />
                 </Td>
               </>
             )}
             <Td p={0} border={"none"}>
-              <VisuallyHidden as="label" htmlFor="intentionNouvellesPlacesScolaire">Nouvelles places scolaire de la demande d'origine</VisuallyHidden>
-              <ConstanteField id={"intentionNouvellesPlacesScolaire"} value={differenceCapacité(demande.capaciteScolaire, demande.capaciteScolaireActuelle)} />
+              <VisuallyHidden as="label" htmlFor="demandeNouvellesPlacesScolaire">Nouvelles places scolaire de la demande d'origine</VisuallyHidden>
+              <ConstanteField id={"demandeNouvellesPlacesScolaire"} value={differenceCapacité(demande.capaciteScolaire, demande.capaciteScolaireActuelle)} />
             </Td>
           </Tr>
           <Tr border={"none"}>
@@ -85,29 +85,29 @@ export const CapaciteConstanteSection = ({ demande }: { demande: Demande }) => {
               Capacité en apprentissage
             </Td>
             <Td p={0} border={"none"}>
-              <VisuallyHidden as="label" htmlFor="intentionCapaciteApprentissage">Capacité en apprentissage de la demande d'origine</VisuallyHidden>
-              <ConstanteField id={"intentionCapaciteApprentissage"} value={demande.capaciteApprentissageActuelle} />
+              <VisuallyHidden as="label" htmlFor="demandeCapaciteApprentissage">Capacité en apprentissage de la demande d'origine</VisuallyHidden>
+              <ConstanteField id={"demandeCapaciteApprentissage"} value={demande.capaciteApprentissageActuelle} />
             </Td>
             <Td p={0} border={"none"}>
-              <VisuallyHidden as="label" htmlFor="intentionCapaciteApprentissageActuelle">Capacité en apprentissage actuelle de la demande d'origine</VisuallyHidden>
-              <ConstanteField id={"intentionCapaciteApprentissageActuelle"} value={demande.capaciteApprentissage} />
+              <VisuallyHidden as="label" htmlFor="demandeCapaciteApprentissageActuelle">Capacité en apprentissage actuelle de la demande d'origine</VisuallyHidden>
+              <ConstanteField id={"demandeCapaciteApprentissageActuelle"} value={demande.capaciteApprentissage} />
             </Td>
             {coloration && (
               <>
                 <Td p={0} border={"none"}>
-                  <VisuallyHidden as="label" htmlFor="intentionCapaciteApprentissageColoreeActuelle">Capacité en apprentissage colorée actuelle de la demande d'origine</VisuallyHidden>
-                  <ConstanteField id={"intentionCapaciteApprentissageColoreeActuelle"} value={demande.capaciteApprentissageColoreeActuelle} />
+                  <VisuallyHidden as="label" htmlFor="demandeCapaciteApprentissageColoreeActuelle">Capacité en apprentissage colorée actuelle de la demande d'origine</VisuallyHidden>
+                  <ConstanteField id={"demandeCapaciteApprentissageColoreeActuelle"} value={demande.capaciteApprentissageColoreeActuelle} />
                 </Td>
                 <Td p={0} border={"none"}>
-                  <VisuallyHidden as="label" htmlFor="intentionCapaciteApprentissageColoree">Capacité en apprentissage colorée de la demande d'origine</VisuallyHidden>
-                  <ConstanteField id={"intentionCapaciteApprentissageColoree"} value={demande.capaciteApprentissageColoree} />
+                  <VisuallyHidden as="label" htmlFor="demandeCapaciteApprentissageColoree">Capacité en apprentissage colorée de la demande d'origine</VisuallyHidden>
+                  <ConstanteField id={"demandeCapaciteApprentissageColoree"} value={demande.capaciteApprentissageColoree} />
                 </Td>
               </>
             )}
             <Td p={0} border={"none"}>
-              <VisuallyHidden as="label" htmlFor="intentionNouvellesPlacesApprentissage">Nouvelles places en apprentissage de la demande d'origine</VisuallyHidden>
+              <VisuallyHidden as="label" htmlFor="demandeNouvellesPlacesApprentissage">Nouvelles places en apprentissage de la demande d'origine</VisuallyHidden>
               <ConstanteField
-                id={"intentionNouvellesPlacesApprentissage"}
+                id={"demandeNouvellesPlacesApprentissage"}
                 value={differenceCapacité(demande.capaciteApprentissage, demande.capaciteApprentissageActuelle)}
               />
             </Td>

@@ -37,11 +37,11 @@ export const findAddress = async ({
     params.append("lon", lon);
   }
 
-  console.log(`Recherche de l'adresse: ${search}`);
+  console.log(`--- Recherche de l'adresse: ${search}`);
 
   try {
     const response = await instance.get<BANResponse>(`?${params.toString()}`);
-
+    console.log(`---- Adresse trouvée: ${search}`);
     return response.data;
   } catch (err) {
     console.error(`Une erreur est survenue lors de la recherche de l'adresse: ${search}`);

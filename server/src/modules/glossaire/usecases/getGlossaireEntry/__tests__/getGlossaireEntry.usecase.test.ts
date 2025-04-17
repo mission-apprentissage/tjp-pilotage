@@ -1,102 +1,47 @@
 import "@/config";
 
-import * as Boom from "@hapi/boom";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { getPageAsMarkdown, getPageProperties } from "@/modules/core/services/notion/notion";
-import type { dependencies } from "@/modules/glossaire/usecases/getGlossaireEntry/dependencies";
-import { getGlossaireEntryFactory } from "@/modules/glossaire/usecases/getGlossaireEntry/getGlossaireEntry.usecase";
+vi.mock("fs/promises", () => ({
+  default: {
+    readFile: vi.fn().mockResolvedValue(`---
+Type d'indicateur: Exemple
+Created by: Test
+statut: validé
+title: A Exemple
+icon: ri:hand-heart-line
+---
+# A Exemple`),
+  },
+}));
 
-const GetGlossaireFixture = () => {
-  let errorMessage: string;
-  let usecase: ReturnType<typeof getGlossaireEntryFactory>;
-  let response: Awaited<ReturnType<typeof usecase>>;
+import { getGlossaireEntry } from "@/modules/glossaire/usecases/getGlossaireEntry/getGlossaireEntry.usecase";
 
-  return {
-    givenGetPageImplementation: (
-      getPageFcn: typeof getPageAsMarkdown,
-      getPagePpts: typeof getPageProperties,
-      mapNotionPageToGlEnt: typeof dependencies.mapNotionPageToGlossaireEntry
-    ) => {
-      usecase = getGlossaireEntryFactory({
-        getPageAsMarkdown: getPageFcn,
-        getPageProperties: getPagePpts,
-        mapNotionPageToGlossaireEntry: mapNotionPageToGlEnt,
-      });
-    },
-    whenGetGlossaireEntry: async (id: string) => {
-      try {
-        response = await usecase(id);
-      } catch (error) {
-        errorMessage = (error as Error)?.message;
-      }
-    },
-    thenExpectedErrorMessageIs: (expectedErrorMessage: string) => {
-      expect(errorMessage).toEqual(expectedErrorMessage);
-    },
-    thenExpectedResponseIs: (expectedResponse: Awaited<ReturnType<typeof usecase>>) => {
-      expect(response).toEqual(expectedResponse);
-    },
-  };
-};
-
-describe("Feature: Getting a Glossaire Entry", () => {
-  it("Scenario: The entry is not existitng", async () => {
-    const currentPageId = "id-page-1";
-    const currentFixture = GetGlossaireFixture();
-
-    currentFixture.givenGetPageImplementation(
-      () => {
-        throw Boom.badImplementation(
-          "Erreur lors de la récupération des informations de la page Notion avec l'id : " + currentPageId
-        );
-      },
-      vi.fn(),
-      vi.fn()
-    );
-
-    await currentFixture.whenGetGlossaireEntry(currentPageId);
-
-    currentFixture.thenExpectedErrorMessageIs(
-      `Erreur lors de la récupération des informations de la page Notion avec l'id : ${currentPageId}`
-    );
+describe("getGlossaireEntry - Retrouver une entrée de glossaire depuis un slug", () => {
+  afterEach(() => {
+    vi.resetAllMocks();
   });
 
-  it("Scenario: The entry is existing", async () => {
-    const currentPageId = "id-page-1";
-    const currentFixure = GetGlossaireFixture();
+  it("Pour une entrée de glossaire existante", async () => {
+    // When
+    const result = await getGlossaireEntry("exemple");
 
-    currentFixure.givenGetPageImplementation(
-      async () => {
-        return "## Test";
-      },
-      vi.fn(),
-      () => {
-        return {
-          id: currentPageId,
-          icon: "icon",
-          title: "title",
-          indicator: {
-            color: "yellow",
-            name: "InserJeunes",
-          },
-          status: "validé",
-        };
-      }
-    );
-
-    await currentFixure.whenGetGlossaireEntry(currentPageId);
-
-    currentFixure.thenExpectedResponseIs({
-      id: currentPageId,
-      icon: "icon",
-      title: "title",
-      content: "## Test",
-      indicator: {
-        color: "yellow",
-        name: "InserJeunes",
-      },
+    // Then
+    expect(result).toEqual({
+      title: "A Exemple",
+      type: "Exemple",
+      createdBy: "Test",
       status: "validé",
+      icon: "ri:hand-heart-line",
+      slug: "exemple",
+      content: "# A Exemple",
     });
+  });
+
+  it("Pour une entrée de glossaire non existante", async () => {
+    // When/Then
+    await expect(getGlossaireEntry("non-existant")).rejects.toThrow(
+      "Entrée de glossaire non trouvée: non-existant"
+    );
   });
 });

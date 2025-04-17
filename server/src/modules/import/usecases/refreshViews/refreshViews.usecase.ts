@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import { refreshDemandeMaterializedView } from "./refreshDemandeIntentionViews.dep";
+import { refreshDemandeMaterializedView } from "./refreshDemandeViews.dep";
 import { refreshFormationMaterializedViews } from "./refreshFormationView.dep";
 
 export const [refreshViews] = inject(

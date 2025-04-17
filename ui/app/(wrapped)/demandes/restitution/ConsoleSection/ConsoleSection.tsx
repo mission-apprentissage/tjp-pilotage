@@ -1,8 +1,6 @@
 import { Box, Center, Flex, Skeleton, Table, TableContainer, Tbody, Td, Text, Thead, Tr } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
-import { getPermissionScope, guardScope } from "shared";
-import { PermissionEnum } from 'shared/enum/permissionEnum';
 
 import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/GROUPED_STATS_DEMANDES_COLUMN";
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/STATS_DEMANDES_COLUMN";
@@ -10,7 +8,6 @@ import type {
   DemandesRestitution,
   OrderDemandesRestitution,
 } from "@/app/(wrapped)/demandes/restitution/types";
-import { useAuth } from "@/utils/security/useAuth";
 
 import { HeadLineContent } from "./HeadLineContent";
 import { LineContent } from "./LineContent";
@@ -66,19 +63,6 @@ export const ConsoleSection = ({
   currentRS: string;
 }) => {
   const router = useRouter();
-  const { user } = useAuth();
-
-  const showFormulairePerdir = (demande: { isOldDemande: boolean; uai: string; codeRegion: string }) => {
-    const scope = getPermissionScope(user?.role, PermissionEnum["demande/lecture"]);
-    const isAllowed = guardScope(scope, {
-      role: () => false,
-      uai: () => user?.uais?.includes(demande.uai) ?? false,
-      région: () => user?.codeRegion === demande.codeRegion,
-      national: () => true,
-    });
-
-    return isAllowed && demande.isOldDemande;
-  };
 
   const getCellColor = (column: keyof typeof STATS_DEMANDES_COLUMNS) => {
     const groupLabel = Object.keys(GROUPED_STATS_DEMANDES_COLUMNS).find((groupLabel) => {
@@ -131,7 +115,7 @@ export const ConsoleSection = ({
                       cursor={"pointer"}
                       onClick={() =>
                         router.push(
-                          `/intentions/${showFormulairePerdir(demande) ? "perdir/" : ""}synthese/${demande.numero}`
+                          `/demandes/synthese/${demande.numero}`
                         )
                       }
                       role="group"

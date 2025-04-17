@@ -48,7 +48,7 @@ export default ({
       onError: (error: unknown) => {
         if (isAxiosError(error) && error.response?.data?.message) {
           console.error(error);
-          if (error.response?.status === 404) router.push(`/intentions/perdir/saisie?notfound=${numero}`);
+          if (error.response?.status === 404) router.push(`/demandes/perdir/saisie?notfound=${numero}`);
         }
       },
     }
@@ -88,10 +88,10 @@ export default ({
           me="auto"
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: "/intentions/perdir/saisie" },
+            { title: "Recueil des demandes", to: "/demandes/perdir/saisie" },
             {
               title: `Demande n°${demande?.numero}`,
-              to: `/intentions/perdir/synthese/${demande?.numero}`,
+              to: `/demandes/perdir/synthese/${demande?.numero}`,
               active: true,
             },
           ]}

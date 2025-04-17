@@ -32,17 +32,7 @@ const fetchAuth = async () => {
   try {
     return await serverClient.ref("[GET]/auth/whoAmI").query({}, { headers: headersList });
   } catch (e) {
-    console.log("nooo", (e as AxiosError).code);
-    return undefined;
-  }
-};
-
-const fetchChangelog = async () => {
-  const headersList = Object.fromEntries(headers().entries());
-  try {
-    return await serverClient.ref("[GET]/changelog").query({}, { headers: headersList });
-  } catch (e) {
-    console.log(e);
+    console.log((e as AxiosError).code);
     return undefined;
   }
 };
@@ -73,13 +63,11 @@ interface LayoutProps {
 
 async function Layout({ children }: LayoutProps) {
   const auth = await fetchAuth();
-  const changelog = await fetchChangelog();
   const glossaire = await fetchGlossaire();
   const campagnes = await fetchCampagne();
   return (
     <RootLayoutClient
       auth={auth || undefined}
-      changelog={changelog || []}
       glossaire={glossaire || []}
       currentCampagne={campagnes?.current}
       previousCampagne={campagnes?.previous}

@@ -1,6 +1,7 @@
+import { CURRENT_RENTREE } from 'shared';
 import { describe, expect,it } from 'vitest';
 
-import { extractCfdFromMefAndDuree } from '@/modules/import/usecases/importFormationEtablissement/utils';
+import { extractCfdFromMefAndDuree, extractYearFromTags , isYearBetweenOuvertureAndFermeture } from '@/modules/import/usecases/importFormationEtablissement/utils';
 
 describe('server > src > modules > import > usecases > importFormationEtablissement > utils.ts', () => {
   describe("extractCfdFromMefAndDuree doit parse un CFD et retourner un codeNiveauDiplome pour les offres en apprentissage", () => {
@@ -242,6 +243,62 @@ describe('server > src > modules > import > usecases > importFormationEtablissem
 
     it('Doit retourner -1 pour un CFD inconnu', () => {
       expect(extractCfdFromMefAndDuree('999000', 1)).toBe(-1);
+    });
+  });
+
+  describe("extractYearFromTags doit extraire les années contenues dans les tags des offres en apprentissage", () => {
+    it("Doit retourner un tableau vide si la chaine de caractères est vide", () => {
+      expect(extractYearFromTags('')).toEqual([]);
+    });
+
+    describe("Gestion des années", () => {
+      it("Doit retourner l'année contenue dans le tag et celle précédente si celle-ci est parsable", () => {
+        expect(extractYearFromTags('2021')).toEqual(["2020","2021"]);
+      });
+
+      it("Doit retourner les années contenues dans le tag si celles-ci sont séparées par une virgule", () => {
+        expect(extractYearFromTags('2021,2022')).toEqual(["2020", "2021", "2022"]);
+      });
+
+      it("Doit trim les années", () => {
+        expect(extractYearFromTags('  2021 , 2022   ')).toEqual(["2020", "2021", "2022"]);
+      });
+
+      it("Doit limiter les années sélectionnées à l'année de référence", () => {
+        expect(extractYearFromTags(`2021,2022,2023,${parseInt(CURRENT_RENTREE) + 1}`)).toEqual(["2020", "2021", "2022", "2023", "2024"]);
+      });
+    });
+
+    it("Ne doit pas fonctionner avec un autre séparateur", () => {
+      expect(extractYearFromTags('2021;2022')).toEqual([]);
+    });
+  });
+
+  describe("isYearBetweenOuvertureAndFermeture doit révéler si une année est comprise entre la date d'ouverture et de fermeture d'une formation", () => {
+    it("Doit retourner false si la date d'ouverture est nulle", () => {
+      expect(isYearBetweenOuvertureAndFermeture('2021', { dateOuverture: null, dateFermeture: null })).toBe(false);
+      expect(isYearBetweenOuvertureAndFermeture('2021', { dateOuverture: null, dateFermeture: new Date('2022-01-01') })).toBe(false);
+      expect(isYearBetweenOuvertureAndFermeture('2021', { dateOuverture: null, dateFermeture: new Date('2020-01-01') })).toBe(false);
+    });
+
+    it("Doit retourner true si la date de fermeture est nulle et la date d'ouverture est avant l'année", () => {
+      expect(isYearBetweenOuvertureAndFermeture('2021', { dateOuverture: new Date('2020-01-01'), dateFermeture: null })).toBe(true);
+    });
+
+    it("Doit retourner false si la date de fermeture est nulle et la date d'ouverture est après l'année", () => {
+      expect(isYearBetweenOuvertureAndFermeture('2021', { dateOuverture: new Date('2022-01-01'), dateFermeture: null })).toBe(false);
+    });
+
+    it("Doit retourner true si l'année est entre la date d'ouverture et de fermeture", () => {
+      expect(isYearBetweenOuvertureAndFermeture('2021', { dateOuverture: new Date('2020-01-01'), dateFermeture: new Date('2022-01-01') })).toBe(true);
+    });
+
+    it("Doit retourner false si l'année est avant la date d'ouverture", () => {
+      expect(isYearBetweenOuvertureAndFermeture('2021', { dateOuverture: new Date('2022-01-01'), dateFermeture: new Date('2023-01-01') })).toBe(false);
+    });
+
+    it("Doit retourner false si l'année est après la date de fermeture", () => {
+      expect(isYearBetweenOuvertureAndFermeture('2021', { dateOuverture: new Date('2019-01-01'), dateFermeture: new Date('2020-01-01') })).toBe(false);
     });
   });
 });

@@ -49,7 +49,7 @@ export const CorrectionDemandeButton = chakra(
 
     const { mutateAsync: submitCorrection } = client.ref("[POST]/correction/submit").useMutation({
       onSuccess: (_body) => {
-        queryClient.invalidateQueries(["[GET]/intentions/"]);
+        queryClient.invalidateQueries(["[GET]/demandes/"]);
         let message: string | null = null;
         message = "Correction enregistrée avec succès";
 

@@ -109,7 +109,7 @@ export const DemandeForm = ({
 
       await handleFiles(body.numero);
 
-      push(`/intentions/perdir/saisie`);
+      push(`/demandes/saisie`);
     },
     onError: (e: unknown) => {
       if(isAxiosError<DetailedApiError>(e)) {

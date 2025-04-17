@@ -24,6 +24,7 @@ export const TabsContent = (params: ReturnType<typeof useAnalyseDetaillee>) => {
     handleFilters,
     filterTracker,
   } = params;
+
   return (
     <Flex direction={"column"} gap={8}>
       <FiltersSection

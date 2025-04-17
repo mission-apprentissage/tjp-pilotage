@@ -47,9 +47,9 @@ export const DeleteDemandeButton = chakra(
         });
         // Wait until view is updated before invalidating queries
         setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: ["[GET]/intentions"] });
+          queryClient.invalidateQueries({ queryKey: ["[GET]/demandes"] });
           queryClient.invalidateQueries({
-            queryKey: ["[GET]/intentions/count"],
+            queryKey: ["[GET]/demandes/count"],
           });
           setIsDeleting(false);
           onClose();

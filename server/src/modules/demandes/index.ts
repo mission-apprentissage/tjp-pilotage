@@ -10,7 +10,6 @@ import { getDemandeRoute } from "./usecases/getDemande/getDemande.route";
 import { getDemandeFileDownloadUrlRoute } from "./usecases/getDemandeFileDownloadUrl/getDemandeFileDownloadUrl.route";
 import { getDemandeFilesRoute } from "./usecases/getDemandeFiles/getDemandeFiles.route";
 import { getDemandesRoute } from "./usecases/getDemandes/getDemandes.route";
-import { getEditoRoute } from "./usecases/getEdito/getEdito.route";
 import { importDemandeRoute } from "./usecases/importDemande/importDemande.route";
 import { searchEtablissementPerdirRoute } from "./usecases/searchEtablissementPerdir/searchEtablissementPerdir.route";
 import { submitAvisRoute } from "./usecases/submitAvis/submitAvis.route";
@@ -41,7 +40,6 @@ export const registerDemandesModule = (server: Server) => {
     ...deleteAvisRoute(server),
     ...submitSuiviRoute(server),
     ...deleteSuiviRoute(server),
-    ...getEditoRoute(server),
     ...submitDemandeAccessLogRoute(server),
   };
 };

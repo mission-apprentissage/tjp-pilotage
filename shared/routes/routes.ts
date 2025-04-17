@@ -29,7 +29,6 @@ import { getDneUrlSchema } from "./schemas/get.dne_url.schema";
 import { getDomaineDeFormationCodeNsfSchema } from "./schemas/get.domaine-de-formation.codeNsf.schema";
 import { getDomaineDeFormationSchema } from "./schemas/get.domaine-de-formation.schema";
 import { searchDomaineProfessionnelSchema } from "./schemas/get.domaine-professionnel.search.search.schema";
-import { getEditoSchema } from "./schemas/get.edito.schema";
 import { searchEtablissementPerdirSchema } from "./schemas/get.etablissement.perdir.search.search.schema";
 import { searchEtablissementSchema } from "./schemas/get.etablissement.search.search.schema";
 import { getAnalyseDetailleeEtablissementSchema } from "./schemas/get.etablissement.uai.analyse-detaillee.schema";
@@ -378,8 +377,8 @@ export const ROUTES = {
     method: "GET",
     schema: getGlossaireSchema,
   },
-  "[GET]/glossaire/:id": {
-    url: "/glossaire/:id",
+  "[GET]/glossaire/:slug": {
+    url: "/glossaire/:slug",
     method: "GET",
     schema: getGlossaireEntrySchema,
   },
@@ -427,11 +426,6 @@ export const ROUTES = {
     url: "/demande/suivi/:id",
     method: "DELETE",
     schema: deleteSuiviSchema,
-  },
-  "[GET]/edito": {
-    url: "/edito",
-    method: "GET",
-    schema: getEditoSchema,
   },
   "[GET]/demande/:numero": {
     url: "/demande/:numero",

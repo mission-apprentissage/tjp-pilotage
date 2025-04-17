@@ -71,7 +71,7 @@ describe("ui > components > security > GuardExpe", () => {
 
     const textToBeNull = screen.queryByText("has_permission");
     expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/intentions/saisie");
+    expect(redirectMock).toHaveBeenCalledWith("/demandes/saisie");
   });
 
   it("Doit laisser passer les utilisateurs nationaux pour les routes expé", async () => {
@@ -118,7 +118,7 @@ describe("ui > components > security > GuardExpe", () => {
 
     const textToBeNull = screen.queryByText("has_permission");
     expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/intentions/saisie");
+    expect(redirectMock).toHaveBeenCalledWith("/demandes/saisie");
   });
 
   it("Doit rediriger les utilisateurs vers la saisie expé", async () => {
@@ -134,7 +134,7 @@ describe("ui > components > security > GuardExpe", () => {
 
     const textToBeNull = screen.queryByText("has_permission");
     expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/intentions/perdir/saisie");
+    expect(redirectMock).toHaveBeenCalledWith("/demandes/perdir/saisie");
   });
 
   it("Doit rediriger les utilisateurs vers la saisie expé même si l'utilisateur ne fait pas partie d'une région test lors de la campagne 2025", async () => {
@@ -150,7 +150,7 @@ describe("ui > components > security > GuardExpe", () => {
 
     const textToBeNull = screen.queryByText("has_permission");
     expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/intentions/perdir/saisie");
+    expect(redirectMock).toHaveBeenCalledWith("/demandes/perdir/saisie");
   });
 
   it("Doit laisser passer le perdir dans le cas où sa région accepte la saisie perdir pour cette campagne", async () => {
@@ -208,7 +208,7 @@ describe("ui > components > security > GuardExpe", () => {
 
     const textToBeNull = screen.queryByText("has_permission");
     expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/intentions/perdir/saisie");
+    expect(redirectMock).toHaveBeenCalledWith("/demandes/perdir/saisie");
   });
 
   it("Doit rediriger le perdir vers la saisie expe dans le cas où sa région accepte la saisie perdir pour cette campagne et l'utilisateur tente d'accéder à une route hors expérimentation", async () => {
@@ -228,6 +228,6 @@ describe("ui > components > security > GuardExpe", () => {
 
     const textToBeNull = screen.queryByText("has_permission");
     expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/intentions/perdir/saisie");
+    expect(redirectMock).toHaveBeenCalledWith("/demandes/perdir/saisie");
   });
 });

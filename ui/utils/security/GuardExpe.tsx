@@ -60,10 +60,7 @@ const handlePerdir = ({
 }) => {
   const isPartOfExpe = isPerdirPartOfExpe({ user, campagne });
 
-  if(isExpeRoute) {
-    return isPartOfExpe ? (<>{children}</>) : redirect("/");
-  }
-  return isPartOfExpe ? redirect("/intentions/perdir/saisie") : redirect("/");
+  if(isExpeRoute) return isPartOfExpe ? (<>{children}</>) : redirect("/");
 };
 
 /**
@@ -92,8 +89,5 @@ const handleNotPerdir = ({
   if (!user?.codeRegion) return (<>{children}</>);
   const isPartOfExpe = isUserPartOfExpe({ user, campagne });
 
-  if(isExpeRoute) {
-    return isPartOfExpe ? (<>{children}</>) : redirect("/intentions/saisie");
-  }
-  return isPartOfExpe ? redirect("/intentions/perdir/saisie") : (<>{children}</>);
+  if(isExpeRoute) return isPartOfExpe ? (<>{children}</>) : redirect("/demandes/saisie");
 };

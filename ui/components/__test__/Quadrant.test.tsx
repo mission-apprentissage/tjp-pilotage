@@ -8,7 +8,7 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import { Quadrant } from "@/components/Quadrant";
 
-// from ui/app/(wrapped)/intentions/pilotage/main/quadrant/QuadrantSection.tsx
+// from ui/app/(wrapped)/demandes/pilotage/main/quadrant/QuadrantSection.tsx
 const EFFECTIF_SIZES = [
   { max: 15, size: 6 },
   { min: 15, max: 40, size: 10 },
