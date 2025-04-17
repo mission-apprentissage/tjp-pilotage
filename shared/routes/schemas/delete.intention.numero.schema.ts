@@ -1,5 +1,5 @@
 import { z } from "zod";
-export const deleteIntentionSchema = {
+export const deleteDemandeSchema = {
   params: z.object({ numero: z.string() }),
   response: {
     200: z.void(),

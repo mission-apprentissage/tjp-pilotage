@@ -7,7 +7,7 @@ import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifique
 import { OptionSchema } from "../../schema/optionSchema";
 
 const CorrectionItem = z.object({
-  intentionNumero: z.string().optional(),
+  demandeNumero: z.string().optional(),
   // Établissement
   libelleEtablissement: z.string().optional(),
   uai: z.string(),

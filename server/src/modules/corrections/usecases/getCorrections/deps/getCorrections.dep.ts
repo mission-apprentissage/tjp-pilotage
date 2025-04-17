@@ -49,7 +49,7 @@ export const getCorrectionsQuery = async ({
 
   const corrections = await getKbdClient()
     .selectFrom("correction")
-    .innerJoin("latestDemandeView as demande", "demande.numero", "correction.intentionNumero")
+    .innerJoin("latestDemandeView as demande", "demande.numero", "correction.demandeNumero")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
@@ -148,7 +148,7 @@ export const getCorrectionsQuery = async ({
         .as("ecartApprentissage"),
       "correction.capaciteScolaire as capaciteScolaireCorrigee",
       "correction.capaciteApprentissage as capaciteApprentissageCorrigee",
-      "correction.intentionNumero",
+      "correction.demandeNumero",
       "correction.raison as raisonCorrection",
       "correction.motif as motifCorrection",
       "correction.autreMotif as autreMotifCorrection",

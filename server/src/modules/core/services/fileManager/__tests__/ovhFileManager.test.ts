@@ -23,7 +23,7 @@ describe("Ovh file manager", () => {
 
   it("should list that no files are linked to the demande", async () => {
     // given
-    const id = fileFixture.givenAnIntentionId();
+    const id = fileFixture.givenAnDemandeId();
     fileFixture.givenNoFileAreLinkedToTheDemande();
 
     // when
@@ -35,10 +35,10 @@ describe("Ovh file manager", () => {
 
   it("should list that one file is linked to the demande", async () => {
     // given
-    const id = fileFixture.givenAnIntentionId();
+    const id = fileFixture.givenAnDemandeId();
     fileFixture.givenNFilesIsLinkedToTheDemande([
       {
-        filepath: `intentions/${id}/test.txt`,
+        filepath: `demandes/${id}/test.txt`,
         lastModified: new Date("2021-09-01T00:00:00Z"),
         size: 1024,
       },
@@ -49,7 +49,7 @@ describe("Ovh file manager", () => {
 
     // then
 
-    fileFixture.thenFileShouldBeListed(`intentions/${id}/test.txt`);
+    fileFixture.thenFileShouldBeListed(`demandes/${id}/test.txt`);
   });
 });
 
@@ -60,7 +60,7 @@ const fileManagerFixture = (client: S3Client) => {
   const filepathManager = ovhFilePathManagerFactory();
   let files: FileType[] = [];
   return {
-    givenAnIntentionId: () => {
+    givenAnDemandeId: () => {
       return `INTENTION_01`;
     },
     givenASimpleFileAsBuffer: () => {
@@ -68,7 +68,7 @@ const fileManagerFixture = (client: S3Client) => {
     },
     givenAFileIsExistingInDirectory: (id: string, filename: string) => {
       fileManager.uploadFile(
-        filepathManager.getIntentionFilePath(id, filename),
+        filepathManager.getDemandeFilePath(id, filename),
         Buffer.from("i'm the content of a file", "utf-8")
       );
     },
@@ -125,20 +125,20 @@ const fileManagerFixture = (client: S3Client) => {
       } as ListObjectsV2CommandOutput);
     },
     whenUploadingAFileAsBuffer: async (demandeId: string, filename: string, file: Buffer) => {
-      await fileManager.uploadFile(filepathManager.getIntentionFilePath(demandeId, filename), file);
+      await fileManager.uploadFile(filepathManager.getDemandeFilePath(demandeId, filename), file);
     },
     whenListingFiles: async (id: string) => {
-      files = await fileManager.listFiles(filepathManager.getIntentionFilePath(id));
+      files = await fileManager.listFiles(filepathManager.getDemandeFilePath(id));
     },
     whenGeneratingAnUrlForAFile: async (id: string, filename: string) => {
-      return fileManager.getDownloadUrl(filepathManager.getIntentionFilePath(id, filename));
+      return fileManager.getDownloadUrl(filepathManager.getDemandeFilePath(id, filename));
     },
     thenFileShouldBeUploaded: async (id: string, filename: string) => {
-      files = await fileManager.listFiles(filepathManager.getIntentionFilePath(id, filename));
+      files = await fileManager.listFiles(filepathManager.getDemandeFilePath(id, filename));
       expect(files).toContain(filename);
     },
     thenDeleteFile: (id: string, filename: string) => {
-      fileManager.deleteFile(filepathManager.getIntentionFilePath(id, filename));
+      fileManager.deleteFile(filepathManager.getDemandeFilePath(id, filename));
     },
     thenZeroFilesShouldBeListed() {
       expect(files.length).toBe(0);

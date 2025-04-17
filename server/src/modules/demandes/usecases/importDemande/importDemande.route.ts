@@ -5,7 +5,7 @@ import { createRoute } from "shared/utils/http-wizard/core";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { importDemande } from "./importDemande.usecase";
+import { importDemandeUsecase } from './importDemande.usecase';
 
 const ROUTE = ROUTES["[POST]/demande/import/:numero"];
 
@@ -16,11 +16,11 @@ export const importDemandeRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler(PermissionEnum["intentions/ecriture"]),
+      preHandler: hasPermissionHandler(PermissionEnum["demande/ecriture"]),
       handler: async (request, response) => {
         const user = request.user!;
 
-        const demande = await importDemande({
+        const demande = await importDemandeUsecase({
           numero: request.params.numero,
           user,
         });
