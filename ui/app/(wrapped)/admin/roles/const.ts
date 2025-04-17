@@ -76,14 +76,14 @@ Partial<
   >
 > = {
   perdir: {
-    [PermissionEnum["intentions-perdir/ecriture"]]: (codeRegion) => {
+    [PermissionEnum["demande/ecriture"]]: (codeRegion) => {
       if (codeRegion && CODES_REGIONS_EXPE_2024.includes(codeRegion)) {
         return true;
       }
 
       return false;
     },
-    [PermissionEnum["intentions-perdir/lecture"]]: (codeRegion) => {
+    [PermissionEnum["demande/lecture"]]: (codeRegion) => {
       if (codeRegion && CODES_REGIONS_EXPE_2024.includes(codeRegion)) {
         return true;
       }

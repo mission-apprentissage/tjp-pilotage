@@ -14,5 +14,4 @@ export { isValidUrl } from "./utils/isValidUrl";
 export { MAX_FILE_SIZE, MAX_FILE_SIZE_IN_MB } from "./utils/maxFileSize";
 export { passwordRegex } from "./utils/passwordRegex";
 export { demandeValidators } from "./validators/demandeValidators";
-export { intentionValidators } from "./validators/intentionValidators";
 

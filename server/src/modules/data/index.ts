@@ -5,7 +5,7 @@ import { getDataForEtablissementMapRoute } from "./usecases/getDataForEtablissem
 import { getDataForEtablissementMapListRoute } from "./usecases/getDataForEtablissementMapList/getDataForEtablissementMapList.route";
 import { getDataForPanoramaDepartementRoute } from "./usecases/getDataForPanoramaDepartement/getDataForPanoramaDepartement.route";
 import { getDataForPanoramaRegionRoute } from "./usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.route";
-import { getDemandesRestitutionIntentionsRoute } from "./usecases/getDemandesRestitutionIntentions/getDemandesRestitutionIntentions.route";
+import { getDemandesRestitutionRoute } from "./usecases/getDemandesRestitution/getDemandesRestitution.route";
 import { getDepartementRoute } from "./usecases/getDepartement/getDepartement.route";
 import { getDepartementsRoute } from "./usecases/getDepartements/getDepartements.route";
 import { getDomaineDeFormationRoute } from "./usecases/getDomaineDeFormation/getDomaineDeFormation.route";
@@ -16,12 +16,12 @@ import { getFormationCarteEtablissementsRoute } from "./usecases/getFormationCar
 import { getFormationEtablissementsRoutes } from "./usecases/getFormationEtablissements/getFormationEtablissements.routes";
 import { getFormationIndicateursRoute } from "./usecases/getFormationIndicateurs/getFormationIndicateurs.route";
 import { getFormationsRoute } from "./usecases/getFormations/getFormations.route";
-import {getFormationsPilotageIntentionsRoute} from './usecases/getFormationsPilotageIntentions/getFormationsPilotageIntentions.route';
+import {getFormationsPilotageRoute} from './usecases/getFormationsPilotage/getFormationsPilotage.route';
 import { getHeaderEtablissementRoute } from "./usecases/getHeaderEtablissement/getHeaderEtablissement.route";
-import { getPilotageIntentionsRoute } from "./usecases/getPilotageIntentions/getPilotageIntentions.route";
+import { getPilotageRoute } from "./usecases/getPilotage/getPilotage.route";
 import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
 import { getRegionsRoute } from "./usecases/getRegions/getRegions.route";
-import { getStatsRestitutionIntentionsRoute } from "./usecases/getStatsRestitutionIntentions/getStatsRestitutionIntentions.route";
+import { getStatsRestitutionRoute } from "./usecases/getStatsRestitution/getStatsRestitution.route";
 import { getSuiviImpactStatsRoute } from "./usecases/getSuiviImpactStats/getSuiviImpactStats.route";
 import { getSuiviImpactStatsRegionsRoute } from "./usecases/getSuiviImpactStatsRegions/getSuiviImpactStatsRegions.route";
 import { searchCampusRoute } from "./usecases/searchCampus/searchCampus.route";
@@ -48,10 +48,10 @@ export const registerDataModule = (server: Server) => {
     ...getDataForPanoramaRegionRoute(server),
     ...getRegionRoute(server),
     ...getRegionsRoute(server),
-    ...getPilotageIntentionsRoute(server),
-    ...getFormationsPilotageIntentionsRoute(server),
-    ...getDemandesRestitutionIntentionsRoute(server),
-    ...getStatsRestitutionIntentionsRoute(server),
+    ...getPilotageRoute(server),
+    ...getFormationsPilotageRoute(server),
+    ...getDemandesRestitutionRoute(server),
+    ...getStatsRestitutionRoute(server),
     ...getSuiviImpactStatsRoute(server),
     ...getSuiviImpactStatsRegionsRoute(server),
     ...getDataForEtablissementMapRoute(server),

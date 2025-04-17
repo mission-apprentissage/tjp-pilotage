@@ -69,7 +69,7 @@ fileignoreconfig:
   checksum: 5e613e7713acca04787d983d04eecaeda58676dd82ef17ce7139a5cd4de55a5d
 - filename: ui/app/(wrapped)/intentions/utils/__tests__/permissionsDemandeUtils.test.ts
   checksum: 2e979fff0e8c1dc927f22a2b30bdd3266a8dedffa86c9130520e4c9809170ff9
-- filename: ui/app/(wrapped)/intentions/utils/__tests__/permissionsIntentionUtils.test.ts
+- filename: ui/app/(wrapped)/intentions/utils/__tests__/permissionsDemandeUtils.test.ts
   checksum: b3b68b225af36b8a4aa34ec83ac8bfe45db6f610e92a501de62f998222c941d4
 - filename: ui/app/(wrapped)/intentions/utils/__tests__/statutUtils.test.ts
   checksum: dc2a297780c6ed1ec68c05d2535e0747380eb77045b2b397c42e88a09bf8acd6

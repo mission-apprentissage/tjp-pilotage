@@ -2,12 +2,12 @@ import { z } from "zod";
 
 export const submitSuiviSchema = {
   body: z.object({
-    intentionNumero: z.string(),
+    demandeNumero: z.string(),
   }),
   response: {
     200: z.object({
       id: z.string(),
-      intentionNumero: z.string(),
+      demandeNumero: z.string(),
       userId: z.string(),
     }),
   },

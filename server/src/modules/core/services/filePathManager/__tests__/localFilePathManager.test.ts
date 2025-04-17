@@ -14,12 +14,12 @@ describe("Core Service: Local file path manager", () => {
     vi.restoreAllMocks();
   });
 
-  it("should generate a path for a given intention id", () => {
+  it("should generate a path for a given demande id", () => {
     // given
-    const id = "INTENTION_01";
+    const id = "DEMANDE_01";
 
     // when
-    const path = filePathManager.getIntentionFilePath(id);
+    const path = filePathManager.getDemandeFilePath(id);
 
     // then
     expect(path).toBe(`./public/upload/${id}/`);
@@ -27,11 +27,11 @@ describe("Core Service: Local file path manager", () => {
 
   it("should generate a path with a filename", () => {
     // given
-    const id = "INTENTION_02";
+    const id = "DEMANDE_02";
     const filename = "test.txt";
 
     // when
-    const path = filePathManager.getIntentionFilePath(id, filename);
+    const path = filePathManager.getDemandeFilePath(id, filename);
 
     // then
     expect(path).toBe(`./public/upload/${id}/test.txt`);

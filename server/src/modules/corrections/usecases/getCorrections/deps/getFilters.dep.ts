@@ -9,7 +9,7 @@ import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/corrections/usecases/getCorrections/getCorrections.usecase";
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
-import { isRestitutionIntentionRegionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
+import { isRestitutionDemandeRegionVisible } from "@/modules/utils/isRestitutionDemandeVisible";
 import { cleanNull } from "@/utils/noNull";
 
 export const getFiltersQuery = async ({
@@ -30,10 +30,10 @@ export const getFiltersQuery = async ({
   campagne,
 }: Filters) => {
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
-    if (!codeRegion) return sql<boolean>`${isRestitutionIntentionRegionVisible({ user })}`;
+    if (!codeRegion) return sql<boolean>`${isRestitutionDemandeRegionVisible({ user })}`;
     return eb.and([
       eb("region.codeRegion", "in", codeRegion),
-      sql<boolean>`${isRestitutionIntentionRegionVisible({ user })}`,
+      sql<boolean>`${isRestitutionDemandeRegionVisible({ user })}`,
     ]);
   };
 
@@ -114,7 +114,7 @@ export const getFiltersQuery = async ({
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
     .where("region.codeRegion", "not in", ["99", "00"])
-    .where(isRestitutionIntentionRegionVisible({ user }))
+    .where(isRestitutionDemandeRegionVisible({ user }))
     .execute();
 
   const departementsFilters = await geoFiltersBase
@@ -154,7 +154,7 @@ export const getFiltersQuery = async ({
   const filtersBase = getKbdClient()
     .selectFrom("correction")
     .innerJoin("latestDemandeView as demande", (join) =>
-      join.onRef("correction.intentionNumero", "=", "demande.numero")
+      join.onRef("correction.demandeNumero", "=", "demande.numero")
     )
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
     .leftJoin("formationView", "formationView.cfd", "demande.cfd")

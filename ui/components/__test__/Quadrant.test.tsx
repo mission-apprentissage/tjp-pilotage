@@ -17,7 +17,7 @@ const EFFECTIF_SIZES = [
   { min: 150, size: 22 },
 ];
 
-const { stats, formations } = generateMock(ROUTES["[GET]/pilotage-intentions/formations"].schema.response[200]);
+const { stats, formations } = generateMock(ROUTES["[GET]/pilotage/formations"].schema.response[200]);
 
 const setCurrentFormationId = vi.fn(({ _cfd, _dispositif }) => {});
 

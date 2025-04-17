@@ -12,7 +12,7 @@ export type Avis = Insertable<DB["avis"]>;
 export function buildAvis(user?: RequestUser, defaultAvis: Partial<Avis> = {}) {
   const avis: Avis = {
     id: defaultAvis.id ?? generateId(),
-    intentionNumero: defaultAvis.intentionNumero ?? generateShortId(),
+    demandeNumero: defaultAvis.demandeNumero ?? generateShortId(),
     statutAvis: defaultAvis.statutAvis ?? "favorable",
     typeAvis: defaultAvis.typeAvis ?? "préalable",
     isVisibleParTous: defaultAvis.isVisibleParTous ?? true,
@@ -23,7 +23,7 @@ export function buildAvis(user?: RequestUser, defaultAvis: Partial<Avis> = {}) {
 
   return {
     withNumero: (numero: string) =>
-      buildAvis(user, { ...avis, intentionNumero: numero }),
+      buildAvis(user, { ...avis, demandeNumero: numero }),
     withType: (type: AvisTypeType) =>
       buildAvis(user, { ...avis, typeAvis: type }),
     withStatus: (status: AvisStatutType) =>

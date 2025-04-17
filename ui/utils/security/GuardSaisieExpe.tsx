@@ -23,11 +23,11 @@ import { useAuth } from './useAuth';
 
 export const GuardSaisieExpe = ({ campagne, children }: { campagne: CampagneType; children: ReactNode }): ReactNode => {
   const { user } = useAuth();
-  if(feature.saisieDisabled) return redirect(getRoutingSaisieRecueilDemande({ campagne, user }));
-  if(!isUserPartOfExpe({ user, campagne })) return redirect(getRoutingSaisieRecueilDemande({ campagne, user }));
+  if(feature.saisieDisabled) return redirect(getRoutingSaisieRecueilDemande({ user }));
+  if(!isUserPartOfExpe({ user, campagne })) return redirect(getRoutingSaisieRecueilDemande({ user }));
   if(isUserNational({ user }) && isCampagneEnCours(campagne)) return (<>{children}</>);
   const isCampagneRegionale = !!campagne?.codeRegion;
   const withSaisiePerdir = (hasRole({ user, role: RoleEnum["perdir"] }) && isCampagneRegionale) ? !!campagne?.withSaisiePerdir : true;
-  if(!withSaisiePerdir) return redirect(getRoutingSaisieRecueilDemande({ campagne, user }));
+  if(!withSaisiePerdir) return redirect(getRoutingSaisieRecueilDemande({ user }));
   return (<>{children}</>);
 };

@@ -51,9 +51,9 @@ export const isUserPartOfExpe = ({
   campagne?: CampagneType
 }): boolean => {
   if(
-    !hasPermission(user?.role, PermissionEnum["intentions-perdir/ecriture"]) &&
-    !hasPermission(user?.role, PermissionEnum["intentions-perdir-avis/ecriture"]) &&
-    !hasPermission(user?.role, PermissionEnum["intentions-perdir-statut/ecriture"])
+    !hasPermission(user?.role, PermissionEnum["demande/ecriture"]) &&
+    !hasPermission(user?.role, PermissionEnum["demande-avis/ecriture"]) &&
+    !hasPermission(user?.role, PermissionEnum["demande-statut/ecriture"])
   ) return false;
   if(hasRole({ user, role: RoleEnum["perdir"] })) return isPerdirPartOfExpe({ user, campagne });
   return isNotPerdirPartOfExpe({ user, campagne });
