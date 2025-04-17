@@ -67,7 +67,7 @@ export const Header = ({
   };
 
   const onExportCsv = async (isFiltered?: boolean) => {
-    trackEvent("saisie_demandes_perdir:export");
+    trackEvent("saisie_demandes:export");
     const data = await client.ref("[GET]/demandes").query({
       query: isFiltered ? getDemandesQueryParameters() : {},
     });
@@ -94,7 +94,7 @@ export const Header = ({
   };
 
   const onExportExcel = async (isFiltered?: boolean) => {
-    trackEvent("saisie_demandes_perdir:export-excel");
+    trackEvent("saisie_demandes:export-excel");
     const data = await client.ref("[GET]/demandes").query({
       query: isFiltered ? getDemandesQueryParameters() : {},
     });

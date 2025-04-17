@@ -162,7 +162,3 @@ allowed_patterns:
 - https://webinaire.numerique.gouv.fr//meeting/signin/31852/creator/16468/hash/6d52a428a84100623dbff7e34ff7843f4a0c9f0f
 threshold: medium
 version: "1.0"
-ta.gouv.fr'
-- 'https://webinaire.numerique.gouv.fr//meeting/signin/31852/creator/16468/hash/6d52a428a84100623dbff7e34ff7843f4a0c9f0f'
-threshold: medium
-version: "1.0"

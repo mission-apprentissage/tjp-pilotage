@@ -23,7 +23,7 @@ export type Demande = {
   isOldDemande: boolean
 }
 
-const isOldDemande = ({
+export const isOldDemande = ({
   demande,
   campagne,
   user

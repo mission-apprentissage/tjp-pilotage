@@ -12,6 +12,7 @@ import { client } from "@/api.client";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/demandes/utils/statutUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
+import { getRoutingSaisieRecueilDemande, getRoutingSyntheseRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { ActionsSection } from "./actions/ActionsSection";
@@ -31,7 +32,6 @@ export default ({
   };
 }) => {
   const { user } = useAuth();
-  const isPerdir = hasRole({ user, role: RoleEnum["perdir"] });
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -88,10 +88,10 @@ export default ({
           me="auto"
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: "/demandes/perdir/saisie" },
+            { title: "Recueil des demandes", to: getRoutingSaisieRecueilDemande({user}) },
             {
               title: `Demande n°${demande?.numero}`,
-              to: `/demandes/perdir/synthese/${demande?.numero}`,
+              to: getRoutingSyntheseRecueilDemande({user, suffix: demande?.numero}),
               active: true,
             },
           ]}
@@ -100,9 +100,7 @@ export default ({
           <Flex direction={"column"} gap={8}>
             <StepperSection demande={demande} />
             <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
-              <GridItem colSpan={
-                isChangementStatutAvisDisabled({user, statut: demande.statut}) && !isPerdir ? 4 : 3
-              }>
+              <GridItem colSpan={isChangementStatutAvisDisabled({user, demande}) ? 4 : 3}>
                 <MainSection
                   demande={demande}
                   displayType={searchParams.displayType ?? DisplayTypeEnum.synthese}
@@ -110,12 +108,12 @@ export default ({
                   displayCommentairesEtAvis={displayCommentairesEtAvis}
                 />
               </GridItem>
-              {isPerdir && (
+              {hasRole({user, role: RoleEnum["perdir"]}) && (
                 <GridItem colSpan={1}>
                   <EditoSection />
                 </GridItem>
               )}
-              {!isChangementStatutAvisDisabled({user, statut: demande.statut}) && (
+              {!isChangementStatutAvisDisabled({user, demande}) && (
                 <GridItem colSpan={1}>
                   <ActionsSection demande={demande} />
                 </GridItem>
