@@ -6,6 +6,8 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { CORRECTIONS_COLUMNS } from "@/app/(wrapped)/demandes/corrections/CORRECTIONS_COLUMN";
 import { GROUPED_CORRECTIONS_COLUMNS } from "@/app/(wrapped)/demandes/corrections/GROUPED_CORRECTIONS_COLUMN";
 import type { Corrections, OrderCorrections } from "@/app/(wrapped)/demandes/corrections/types";
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { useAuth } from "@/utils/security/useAuth";
 
 import { HeadLineContent } from "./HeadLineContent";
 import { LineContent } from "./LineContent";
@@ -59,6 +61,7 @@ export const ConsoleSection = ({
   colonneFilters: (keyof typeof CORRECTIONS_COLUMNS)[];
 }) => {
   const router = useRouter();
+  const { user } = useAuth();
   const getCellColor = (column: keyof typeof CORRECTIONS_COLUMNS) => {
     const groupLabel = Object.keys(GROUPED_CORRECTIONS_COLUMNS).find((groupLabel) => {
       return Object.keys(GROUPED_CORRECTIONS_COLUMNS[groupLabel].options).includes(column);
@@ -107,7 +110,9 @@ export const ConsoleSection = ({
                       h="12"
                       role="group"
                       cursor={"pointer"}
-                      onClick={() => router.push(`/demandes/saisie/${correction.demandeNumero}?correction=true`)}
+                      onClick={() => router.push(
+                        getRoutingSaisieRecueilDemande({ user, suffix: `${correction.demandeNumero}?correction=true`})
+                      )}
                     >
                       <LineContent
                         correction={correction}

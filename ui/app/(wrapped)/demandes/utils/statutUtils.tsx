@@ -1,10 +1,15 @@
 import _ from "lodash";
+import { RoleEnum } from "shared";
 import type { AvisTypeType } from "shared/enum/avisTypeEnum";
 import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { UserType } from 'shared/schema/userSchema';
-import { isAdmin } from 'shared/security/securityUtils';
+import { hasRole, isAdmin } from 'shared/security/securityUtils';
+
+import type { Demande } from "@/app/(wrapped)/demandes/types";
+
+import { isOldDemande } from "./permissionsDemandeUtils";
 
 const possibleStatuts: Array<DemandeStatutType> =
   Object.values(DemandeStatutEnum).filter((statut) => (
@@ -64,17 +69,18 @@ const canChangeAllStatuts = ({
 }) => isAdmin({ user });
 
 export const isChangementStatutAvisDisabled = ({
-  statut,
+  demande,
   user
 }: {
-  statut?: DemandeStatutType,
+  demande?: Demande,
   user?: UserType
 }): boolean => {
+  if(isOldDemande({demande, user})) return true;
+  if(hasRole({ user, role: RoleEnum["perdir"] })) return true;
   if(canChangeAllStatuts({user})) return false;
-  switch (statut) {
+  switch (demande?.statut) {
   case DemandeStatutEnum["demande validée"]:
   case DemandeStatutEnum["refusée"]:
-  case DemandeStatutEnum["supprimée"]:
     return true;
   case DemandeStatutEnum["brouillon"]:
   case DemandeStatutEnum["proposition"]:

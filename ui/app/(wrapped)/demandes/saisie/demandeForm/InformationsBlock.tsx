@@ -23,6 +23,8 @@ import {isTypeAjustement,isTypeDiminution, isTypeFermeture} from 'shared/utils/t
 import { client } from "@/api.client";
 import { SectionBlock } from "@/app/(wrapped)/demandes/saisie/components/SectionBlock";
 import type {Demande} from '@/app/(wrapped)/demandes/types';
+import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { useAuth } from "@/utils/security/useAuth";
 
 import { CorrectionSection } from './correctionSection/CorrectionSection';
 import { InternatEtRestaurationSection } from "./internatEtRestaurationSection/InternatEtRestaurationSection";
@@ -52,6 +54,7 @@ export const InformationsBlock = ({
   showCorrection?: boolean;
 }) => {
   const { push } = useRouter();
+  const { user } = useAuth();
   const { setValue, watch } = useFormContext<DemandeFormType>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isLoading: isDeleting, mutateAsync: deleteDemande } = useMutation({
@@ -60,7 +63,9 @@ export const InformationsBlock = ({
       await client
         .ref("[DELETE]/demande/:numero")
         .query({ params: { numero: formId } })
-        .then(() => push("/demandes/saisie?action=supprimée"));
+        .then(() => push(
+          getRoutingSaisieRecueilDemande({user, suffix: "?action=supprimée"})
+        ));
     },
   });
 
