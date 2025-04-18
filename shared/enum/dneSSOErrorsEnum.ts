@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const DneSSOErrorsZodType = z.enum([
-  "FALIURE_ON_DNE_REDIRECT",
+  "FAILURE_ON_DNE_REDIRECT",
   "MISSING_USER_EMAIL",
   "USER_NOT_ENABLED",
   "MISSING_RIGHTS",
