@@ -81,7 +81,7 @@ export const redirectDneRoute = (server: Server) => {
         } catch (err) {
           let error = err as Error;
           if (!((Object).values(DneSSOErrorsEnum) as string[]).includes(error.message)) {
-            error = new Error(DneSSOErrorsEnum.FALIURE_ON_DNE_REDIRECT);
+            error = new Error(DneSSOErrorsEnum.FAILURE_ON_DNE_REDIRECT);
           }
           logger.error({ error }, `[SSO] ${error.message.toLocaleLowerCase().replace(/_/g, " ")}`);
           response.redirect(302, `/auth/login?error=${error.message}`).send();
