@@ -60,8 +60,12 @@ export const getFormationsRegionBase = ({
         ])
       )
     )
-    .leftJoin("indicateurEntree as iep", "formationEtablissement.id", "iep.formationEtablissementId")
-    .where("iep.rentreeScolaire", "=", getRentreeScolairePrecedente(rentreeScolaire))
+    .leftJoin("indicateurEntree as iep", (join) =>
+      join
+        .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
+        .on(eb => eb(eb.ref("iep.rentreeScolaire"), "=", eb.val(getRentreeScolairePrecedente(rentreeScolaire))))
+    )
+    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire))
     .where(notAnneeCommune)
     .where("etablissement.codeRegion", "=", codeRegion)
