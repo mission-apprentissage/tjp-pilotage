@@ -119,7 +119,7 @@ export const CommentaireSection = chakra(
               </Text>
             )}
             {hasPermissionModificationStatut &&
-              isChangementStatutAvisDisabled({statut, user}) &&
+              !isChangementStatutAvisDisabled({statut, user}) &&
               !isDeleting &&
               !isModifying && (
               <Flex direction={"row"} gap={6}>
