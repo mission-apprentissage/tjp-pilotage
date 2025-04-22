@@ -481,7 +481,7 @@ describe("redirectDne usecase", () => {
           lastname: ssoUserInfo.family_name,
           role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE[RoleDNEEnum.DASEN],
           uais: [],
-          codeRegion: "11",
+          codeRegion: undefined,
           sub: undefined,
           enabled: true,
         }),
