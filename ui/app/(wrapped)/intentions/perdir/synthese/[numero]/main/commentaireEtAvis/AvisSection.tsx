@@ -144,7 +144,7 @@ export const AvisSection = chakra(({ avis, statut }: { avis: Avis; statut: Deman
               </Text>
             )}
             {hasPermissionModificationAvis() &&
-              isChangementStatutAvisDisabled({statut, user}) &&
+              !isChangementStatutAvisDisabled({statut, user}) &&
               !isDeleting &&
               !isModifying && (
               <Flex direction={"row"} gap={6}>
