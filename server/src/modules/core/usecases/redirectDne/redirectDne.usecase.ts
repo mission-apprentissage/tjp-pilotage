@@ -174,14 +174,25 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       if (!code_verifier) throw new Error(DneSSOErrorsEnum.MISSING_CODE_VERIFIER);
 
-      const client = await deps.getDneClient();
+      const client = await deps.getDneClient().catch((err) => {
+        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du client DNE");
+        throw new Error(DneSSOErrorsEnum.FAILURE_ON_DNE_REDIRECT);
+      });
+
       const params = client.callbackParams(url);
       const tokenSet = await client.callback(config.dne.redirectUri, params, {
         code_verifier,
+      }).catch((err) => {
+        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du token DNE");
+        throw new Error(DneSSOErrorsEnum.MISSING_ACCESS_TOKEN);
       });
+
       if (!tokenSet.access_token) throw new Error(DneSSOErrorsEnum.MISSING_ACCESS_TOKEN);
 
-      const userinfo = await client.userinfo<ExtraUserInfo>(tokenSet.access_token);
+      const userinfo = await client.userinfo<ExtraUserInfo>(tokenSet.access_token).catch((err) => {
+        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du userinfo DNE");
+        throw new Error(DneSSOErrorsEnum.MISSING_USERINFO);
+      });
 
       if (!userinfo) throw new Error(DneSSOErrorsEnum.MISSING_USERINFO);
 
