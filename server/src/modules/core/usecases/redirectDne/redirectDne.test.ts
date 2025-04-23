@@ -474,7 +474,7 @@ describe("redirectDne usecase", () => {
           url: "localhost?code=mycode",
         });
       } catch (e) {
-        expect(e).toEqual(new Error(DneSSOErrorsEnum.MISSING_CODE_REGION));
+        expect(e).toEqual(new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_CODACA));
       }
     });
   });

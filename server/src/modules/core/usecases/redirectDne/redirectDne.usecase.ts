@@ -246,33 +246,47 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       if (attributes.role === RoleEnum.perdir && !etablissement?.codeRegion) {
         logger.error({
-          error: new Error(DneSSOErrorsEnum.MISSING_CODE_REGION),
+          error: new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_PERDIR),
           userinfo,
           email,
           attributes,
           etablissement,
-        }, "[SSO] Il manque le code région pour l'utilisateur");
-        throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION);
+        }, "[SSO] Établissement non trouvé pour un utilisateur perdir");
+        throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_PERDIR);
       }
 
       const userNeedsCodeRegion = ["admin_region", "pilote_region", "gestionnaire_region", "expert_region"].includes(attributes.role);
 
-      if (attributes.role === RoleEnum.perdir) {
-        codeRegion = etablissement?.codeRegion;
-      } else if (userNeedsCodeRegion && userinfo.codaca) {
-        const codeRegionFromAcademie = await deps.findRegionFromAcademie(userinfo.codaca);
-        if (codeRegionFromAcademie) {
-          codeRegion = codeRegionFromAcademie.codeRegion;
-        } else {
+      try {
+        if (attributes.role === RoleEnum.perdir) {
+          if (etablissement) {
+            codeRegion = etablissement?.codeRegion;
+          }
+        } else if (userNeedsCodeRegion && userinfo.codaca) {
+          const codeRegionFromAcademie = await deps.findRegionFromAcademie(userinfo.codaca.substring(1));
+          if (codeRegionFromAcademie) {
+            codeRegion = codeRegionFromAcademie.codeRegion;
+          } else {
+            logger.error({
+              userinfo,
+              email,
+              attributes,
+            }, "[SSO] Le code région n'a pas pu être déduit du codaca");
+            throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_CODACA);
+          }
+        }
+      } catch (err) {
+        // Cela signifie que c'est une erreur logicielle et non utilisateur
+        if ((err as Error).message !== DneSSOErrorsEnum.MISSING_CODE_REGION_CODACA) {
           logger.error({
-            error: new Error(DneSSOErrorsEnum.MISSING_CODE_REGION),
+            error: err,
             userinfo,
             email,
             attributes,
-            codeRegionFromAcademie,
-          }, "[SSO] Il manque le code région pour l'utilisateur");
-          throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION);
+          }, "[SSO] Une erreur est survenue lors de la récupération du code région");
         }
+        // Si l'utilisateur n'a pas de code région, on ne l'insère pas en base de données
+        throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_CODACA);
       }
 
       const userToInsert = {
