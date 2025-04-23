@@ -61,14 +61,12 @@ export const redirectDneRoute = (server: Server) => {
             url: request.url,
           });
 
-          logger.info("[SSO] Utilisateur & token OK", { user });
-
           let url = '/';
           if (user.uais.length > 0) {
             url = `/panorama/etablissement/${user.uais[0]}`;
           }
 
-          logger.info("[SSO] Redirection Utilisateur", { user, url });
+          logger.info({ user, url }, "[SSO] Redirection Utilisateur");
 
           response
             .setCookie("Authorization", token, {
