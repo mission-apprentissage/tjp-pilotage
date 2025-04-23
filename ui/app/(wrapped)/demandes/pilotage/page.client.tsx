@@ -21,7 +21,7 @@ import type {
 } from './types';
 import { getDefaultRentreeScolaireForAnneeCampagne } from './utils';
 
-export const PilotageNationalClient = () => {
+export const PageClient = () => {
   const { campagne } = useCurrentCampagne();
   const trackEvent = usePlausible();
   const [searchParams, setSearchParams] = useStateParams<{

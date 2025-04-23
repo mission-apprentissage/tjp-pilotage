@@ -37,14 +37,40 @@ import { CommentaireField } from "./components/CommentaireField";
 import { MotifField } from "./components/MotifField";
 import { RaisonField } from "./components/RaisonField";
 
+const getCorrectionDescription = (raison: RaisonCorrectionType) => {
+  switch (raison) {
+  case RaisonCorrectionEnum["modification_capacite"]:
+    return (
+      <Text color="info.text">
+      Vous vous apprêtez à enregistrer de nouvelles capacités sur cette demande.
+      </Text>
+    );
+  case RaisonCorrectionEnum["annulation"]:
+    return (
+      <Text color="info.text">Annuler la demande indique que le projet ne sera pas mis en oeuvre.</Text>
+    );
+  case RaisonCorrectionEnum["report"]:
+    return (
+      <Text color="info.text">
+        Reporter la demande indique que le projet sera mis en oeuvre ultérieurement. Une nouvelle saisie ou
+        une duplication devront avoir lieu lors d’une prochaine campagne.
+      </Text>
+    );
+  default:
+    return null;
+  }
+};
+
 export const CorrectionSection = ({
   correctionRef,
   demande,
   campagne,
+  disabled,
 }: {
   correctionRef: React.RefObject<HTMLDivElement>;
   demande: Demande;
   campagne: CampagneType;
+  disabled?: boolean;
 }) => {
   const { user } = useAuth();
   const toast = useToast();
@@ -103,21 +129,9 @@ export const CorrectionSection = ({
     },
   });
 
-  const isCorrectionDisabled = isSuccess || isSubmitting || !!demande.correction;
+  const isCorrectionDisabled = isSuccess || isSubmitting || !!demande.correction || disabled;
 
   const [raison, setRaison] = useState<RaisonCorrectionType>(RaisonCorrectionEnum["modification_capacite"]);
-
-  const isRaisonModificationCapacite = () => {
-    return raison === RaisonCorrectionEnum["modification_capacite"];
-  };
-
-  const isRaisonAnnulation = () => {
-    return raison === RaisonCorrectionEnum["annulation"];
-  };
-
-  const isRaisonReport = () => {
-    return raison === RaisonCorrectionEnum["report"];
-  };
 
   useEffect(
     () =>
@@ -149,23 +163,12 @@ export const CorrectionSection = ({
             <CapaciteConstanteSection demande={demande} />
             <RaisonField campagne={campagne} disabled={isCorrectionDisabled} />
             <Flex direction={"column"}>
-              {isRaisonModificationCapacite() ? (
-                <Text color="info.text">
-                  Vous vous apprêtez à enregistrer de nouvelles capacités sur cette demande.
-                </Text>
-              ) : isRaisonAnnulation() ? (
-                <Text color="info.text">Annuler la demande indique que le projet ne sera pas mis en oeuvre.</Text>
-              ) : isRaisonReport() ? (
-                <Text color="info.text">
-                  Reporter la demande indique que le projet sera mis en oeuvre ultérieurement. Une nouvelle saisie ou
-                  une duplication devront avoir lieu lors d’une prochaine campagne.
-                </Text>
-              ) : null}
+              {getCorrectionDescription(raison)}
               <Text fontSize={14} color={"info.text"} mb={4}>
                 Pour rappel : ces modifications ne seront pas prises en compte dans le taux de transformation affiché
                 dans la page de pilotage.
               </Text>
-              <Collapse in={isRaisonModificationCapacite()} unmountOnExit>
+              <Collapse in={raison === RaisonCorrectionEnum["modification_capacite"]} unmountOnExit>
                 <CapaciteSection demande={demande} disabled={isCorrectionDisabled} />
               </Collapse>
             </Flex>
@@ -184,7 +187,7 @@ export const CorrectionSection = ({
                     variant="secondary"
                     color="bluefrance.113"
                     onClick={handleSubmit((correction) => {
-                      if (isRaisonModificationCapacite()) {
+                      if (raison === RaisonCorrectionEnum["modification_capacite"]) {
                         return submitCorrection({
                           body: {
                             correction

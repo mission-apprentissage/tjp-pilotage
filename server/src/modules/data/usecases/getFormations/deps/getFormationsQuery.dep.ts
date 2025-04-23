@@ -55,7 +55,7 @@ export const getFormationsQuery = async ({
     .leftJoin("formationEtablissement", (join) =>
       join
         .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
-        .on("formationEtablissement.codeDispositif", "is not", null)
+        .onRef("formationEtablissement.voie", "=", "formationView.voie")
     )
     .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")

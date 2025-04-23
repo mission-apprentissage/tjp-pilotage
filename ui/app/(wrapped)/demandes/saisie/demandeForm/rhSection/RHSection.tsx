@@ -25,7 +25,7 @@ export const RHSection = ({
   disabled,
   ressourcesHumainesRef,
 }: {
-  disabled: boolean;
+  disabled?: boolean;
   ressourcesHumainesRef: RefObject<HTMLDivElement>;
 }) => {
   const { watch } = useFormContext<DemandeFormType>();

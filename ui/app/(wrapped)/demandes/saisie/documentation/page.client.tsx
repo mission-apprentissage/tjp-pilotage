@@ -7,7 +7,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
-export function DocumentationClient() {
+export const PageClient = () => {
   const { user } = useAuth();
 
   return (
@@ -181,4 +181,4 @@ export function DocumentationClient() {
       </Container>
     </>
   );
-}
+};

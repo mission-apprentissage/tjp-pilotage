@@ -143,7 +143,7 @@ const getPathnameFromMetadataState = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   state: any
 ): string | undefined => {
-  const symbols = Object.getOwnPropertySymbols(state || {});
+  const symbols = Object.getOwnPropertySymbols(state ?? {});
 
   if (symbols.length === 0) {
     return undefined;
@@ -178,29 +178,17 @@ const extractBasePathname = (pathname: string) => {
   if (pathname.includes("/panorama/lien-metier-formation/metier")) {
     return "/panorama/lien-metier-formation/metier";
   }
-  if (pathname.includes("/demandes/perdir/synthese")) {
-    return "/demandes/perdir/synthese";
-  }
   if (pathname.includes("/demandes/synthese")) {
     return "/demandes/synthese";
   }
   if (pathname.includes("/demandes/saisie/new")) {
     return "/demandes/saisie/new";
   }
-  if (pathname.includes("/demandes/perdir/saisie/new")) {
-    return "/demandes/perdir/saisie/new";
-  }
   if (pathname.includes("/demandes/saisie/")) {
     return "/demandes/saisie/";
   }
-  if (pathname.includes("/demandes/perdir/saisie/")) {
-    return "/demandes/perdir/saisie/";
-  }
   if (pathname.includes("/demandes/saisie")) {
     return "/demandes/saisie";
-  }
-  if (pathname.includes("/demandes/perdir/saisie")) {
-    return "/demandes/perdir/saisie";
   }
   if (pathname.includes("/panorama/domaine-de-formation/")) {
     return "/panorama/domaine-de-formation";

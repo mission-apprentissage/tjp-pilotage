@@ -2,7 +2,7 @@ import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "./GraphWrapper";
@@ -173,12 +173,8 @@ export const TableQuadrant = ({
                     {formation.libelle}
                   </Td>
                   <Td textAlign={"center"}>
-                    <TableBadge
-                      sx={getTauxPressionStyle(
-                        formation.tauxPression !== undefined ? formation?.tauxPression : undefined
-                      )}
-                    >
-                      {formation.tauxPression !== undefined ? formatNumber(formation?.tauxPression, 2) : "-"}
+                    <TableBadge sx={getTauxPressionStyle(formatNumber(formation.tauxPression, 2))}>
+                      {formatNumberToString(formation?.tauxPression, 2, "-")}
                     </TableBadge>
                   </Td>
                   <Td color={getTdColor(formation)} maxW="20%">

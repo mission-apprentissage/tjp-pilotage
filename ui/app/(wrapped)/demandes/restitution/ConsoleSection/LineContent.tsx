@@ -15,7 +15,7 @@ import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifiqu
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
-import { formatNumber, formatNumberToString, formatPercentageFixedDigits } from "@/utils/formatUtils";
+import {formatNumber,formatNumberToMonetaryString, formatNumberToString, formatPercentageFixedDigits} from '@/utils/formatUtils';
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 const formatBooleanValue = (value?: boolean) => (value ? "Oui" : "Non");
@@ -344,8 +344,8 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxPressionRegional")}
       >
-        <TableBadge sx={getTauxPressionStyle(demande.tauxPressionRegional)}>
-          {formatNumber(demande.tauxPressionRegional, 2) || "-"}
+        <TableBadge sx={getTauxPressionStyle(formatNumber(demande.tauxPressionRegional, 2))}>
+          {formatNumberToString(demande.tauxPressionRegional, 2, "-")}
         </TableBadge>
       </ConditionalTd>
       <ConditionalTd
@@ -393,7 +393,7 @@ export const LineContent = ({
         bgColor={getCellColor("travauxAmenagementCout")}
         isNumeric
       >
-        {demande.travauxAmenagementCout !== undefined ? `${demande.travauxAmenagementCout}€` : "-"}
+        {formatNumberToMonetaryString(demande.travauxAmenagementCout, 0, "-")}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -415,7 +415,7 @@ export const LineContent = ({
         bgColor={getCellColor("achatEquipementCout")}
         isNumeric
       >
-        {demande.achatEquipementCout !== undefined ? `${demande.achatEquipementCout}€` : "-"}
+        {formatNumberToMonetaryString(demande.achatEquipementCout, 0, "-")}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -496,14 +496,14 @@ export const LineContent = ({
               colonne={"pilotageTauxPression"}
               bgColor={getCellColor("pilotageTauxPression")}
             >
-              {formatNumberToString(demande.pilotageTauxPression, 2, "")}
+              {formatNumberToString(demande.pilotageTauxPression, 2, "-")}
             </ConditionalTd>
             <ConditionalTd
               colonneFilters={colonneFilters}
               colonne={"pilotageTauxDemande"}
               bgColor={getCellColor("pilotageTauxDemande")}
             >
-              {formatNumberToString(demande.pilotageTauxDemande, 2, "") }
+              {formatNumberToString(demande.pilotageTauxDemande, 2, "-") }
             </ConditionalTd>
           </>
         )

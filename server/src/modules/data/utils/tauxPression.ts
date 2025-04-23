@@ -97,7 +97,11 @@ export const tauxPressionFormationRegional = ({
 }) => {
   return eb
     .selectFrom("formationView")
-    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .onRef("formationEtablissement.voie", "=", "formationView.voie")
+    )
     .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .innerJoin("indicateurEntree", "indicateurEntree.formationEtablissementId", "formationEtablissement.id")

@@ -7,7 +7,7 @@ import { EditorialTitle } from "@/app/(wrapped)/components/EditorialTitle";
 import { Entry } from "./components/Entry";
 import { CHANGELOG, ChangelogTypeEnum } from "./const";
 
-export default function Changelog() {
+const Page = () => {
   const updates =
     CHANGELOG?.filter(
       (changelogEntry) =>
@@ -48,4 +48,6 @@ export default function Changelog() {
       </Container>
     </>
   );
-}
+};
+
+export default Page;

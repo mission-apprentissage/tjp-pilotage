@@ -143,7 +143,7 @@ export const formatResult = (repartition: Repartition, order: "asc" | "desc" = "
     .orderBy((item) => {
       const value = orderBy ? item[orderBy as keyof typeof item] : item.libelle;
 
-      return !value ? 0 : value; // Treat null/undefined as 0
+      return value ?? 0; // Treat null/undefined as 0
     }, order)
     .keyBy("libelle")
     .value();
@@ -283,7 +283,7 @@ export const formatResultUngrouped = (repartition: Repartition, order: "asc" | "
     .orderBy((item) => {
       const value = orderBy ? item[orderBy as keyof typeof item] : item.libelle;
 
-      return !value ? 0 : value; // Treat null/undefined as 0
+      return value ?? 0; // Treat null/undefined as 0
     }, order)
     .keyBy("libelle")
     .value();

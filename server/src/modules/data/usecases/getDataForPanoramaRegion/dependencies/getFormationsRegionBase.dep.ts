@@ -28,7 +28,11 @@ export const getFormationsRegionBase = ({
 }: Filters) =>
   getKbdClient()
     .selectFrom("formationScolaireView as formationView")
-    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .onRef("formationEtablissement.voie", "=", "formationView.voie")
+    )
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
     .leftJoin("dispositif", "formationEtablissement.codeDispositif", "dispositif.codeDispositif")
     .leftJoin("indicateurEntree", (join) =>
@@ -56,8 +60,12 @@ export const getFormationsRegionBase = ({
         ])
       )
     )
-    .leftJoin("indicateurEntree as iep", "formationEtablissement.id", "iep.formationEtablissementId")
-    .where("iep.rentreeScolaire", "=", getRentreeScolairePrecedente(rentreeScolaire))
+    .leftJoin("indicateurEntree as iep", (join) =>
+      join
+        .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
+        .on(eb => eb(eb.ref("iep.rentreeScolaire"), "=", eb.val(getRentreeScolairePrecedente(rentreeScolaire))))
+    )
+    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire))
     .where(notAnneeCommune)
     .where("etablissement.codeRegion", "=", codeRegion)

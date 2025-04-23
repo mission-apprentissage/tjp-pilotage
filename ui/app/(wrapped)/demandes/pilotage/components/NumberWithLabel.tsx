@@ -31,6 +31,27 @@ const DrapeauFrancaisIcon = ({ ...props }) => (
   </ChakraIcon>
 );
 
+const getDeltaPercentage = (
+  {percentage, nationalPercentage = 0}:
+  {percentage?: number, nationalPercentage?: number}
+): number | undefined => percentage ? percentage - nationalPercentage : undefined;
+
+const getHeadingColor = (
+  {percentage, nationalPercentage = 0}:
+  {percentage?: number, nationalPercentage?: number}
+): string => {
+  const delta = getDeltaPercentage({percentage, nationalPercentage});
+  return delta && delta > 0 ? "success.425" : "error.425";
+};
+
+const getDifferenceAvecValeurNationale = (
+  {percentage, nationalPercentage = 0}:
+  {percentage?: number, nationalPercentage?: number}
+): string => {
+  const delta = getDeltaPercentage({percentage, nationalPercentage});
+  return `${(delta && delta > 0) ? "+" : ""}${formatPercentageWithoutSign(delta, 1)} pts`;
+};
+
 export const NumberWithLabel = ({
   icon,
   label,
@@ -64,7 +85,7 @@ export const NumberWithLabel = ({
           {formatPercentage(percentage, round, "- %")}
         </Heading>
       </Flex>
-      {objective && (
+      {!!objective && (
         <Box width="100%">
           <ProgressBar percentage={
             formatPercentageWithoutSign(percentage ? percentage / objective : undefined, 1)}
@@ -75,7 +96,7 @@ export const NumberWithLabel = ({
           </Heading>
         </Box>
       )}
-      {scopeCode && (
+      {!!scopeCode && (
         <Flex direction={"row"} mt={"auto"} ms={"auto"} gap={2}>
           <Flex mt={1.5}>
             <DrapeauFrancaisIcon />
@@ -84,14 +105,11 @@ export const NumberWithLabel = ({
             as="h4"
             fontSize={14}
             lineHeight="20px"
-            color={(percentage ? percentage - nationalPercentage > 0 : false) ? "success.425" : "error.425"}
+            color={getHeadingColor({percentage, nationalPercentage})}
             mb={"auto"}
           >
             <VisuallyHidden>Différence par rapport à valeur nationale :</VisuallyHidden>
-            {`${(percentage ? percentage - nationalPercentage > 0 : false) ? "+" : ""}${formatPercentageWithoutSign(
-              percentage ? percentage - nationalPercentage : undefined,
-              1
-            )} pts`}
+            {getDifferenceAvecValeurNationale({percentage, nationalPercentage})}
           </Heading>
         </Flex>
       )}

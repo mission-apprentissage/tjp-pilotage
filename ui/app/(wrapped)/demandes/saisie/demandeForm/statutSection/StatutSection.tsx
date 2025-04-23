@@ -1,4 +1,5 @@
 import { Divider, Flex, Select, Text } from "@chakra-ui/react";
+import type {RefObject} from 'react';
 import { Controller, useFormContext } from "react-hook-form";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
@@ -7,11 +8,17 @@ import type { DemandeFormType } from "@/app/(wrapped)/demandes/saisie/demandeFor
 import { AutreMotifRefusField } from "./AutreMotifRefusField";
 import { MotifRefusBlock } from "./MotifRefusBlock";
 
-export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
+export const StatutSection = ({
+  disabled,
+  statutRef
+}: {
+  disabled?: boolean,
+  statutRef: RefObject<HTMLDivElement>;
+}) => {
   const { control } = useFormContext<DemandeFormType>();
 
   return (
-    <Flex direction="column">
+    <Flex ref={statutRef} direction="column">
       <Text as="label" htmlFor="select-statut" fontSize={20} mb={4} fontWeight={700}>
         Statut de la demande
       </Text>

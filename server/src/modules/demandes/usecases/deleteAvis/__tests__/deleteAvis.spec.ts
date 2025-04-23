@@ -55,7 +55,7 @@ describe("[DELETE]/demande/avis/:id", () => {
 
     it("doit retourner une erreur 404 si l'avis n'existe pas", async () => {
       await fixture.given.utilisateurPiloteRegion();
-      await fixture.given.avisInexistant();
+      fixture.given.avisInexistant();
 
       await fixture.when.supprimerAvis();
 
@@ -179,10 +179,10 @@ describe("[DELETE]/demande/avis/:id", () => {
           expect(responseCode).toBe(200);
         },
         expectAvisToBeDeleted: async () => {
-          if (!avis) {
+          if (!avis?.id) {
             throw Error("Un avis doit être créé avant de pouvoir le supprimer");
           }
-          const deletedAvis = await findOneAvisQuery(avis.id!);
+          const deletedAvis = await findOneAvisQuery(avis.id);
           expect(deletedAvis).toBeUndefined();
         },
       },

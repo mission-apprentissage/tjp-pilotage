@@ -4,7 +4,7 @@ import _ from "lodash";
 import { CURRENT_RENTREE } from "shared";
 
 import type { FormationListItem } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
-import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
+import { formatFamilleMetierLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
@@ -102,7 +102,7 @@ export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
                       }}
                       paddingLeft={"2px"}
                     >
-                      <Tooltip label={formatAnneeCommuneLibelle(formation.libelleFormation)}>
+                      <Tooltip label={formatFamilleMetierLibelle(formation.libelleFormation)}>
                         <Text
                           my={2}
                           color={getFontColor(formation, selectedCfd)}
@@ -112,7 +112,7 @@ export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
                           isTruncated={true}
                           _firstLetter={{ textTransform: "uppercase" }}
                         >
-                          {formatAnneeCommuneLibelle(formation.libelleFormation)}
+                          {formatFamilleMetierLibelle(formation.libelleFormation)}
                         </Text>
                       </Tooltip>
                       <Flex direction="row" gap={1}>

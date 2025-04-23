@@ -5,9 +5,7 @@ import AsyncCreatableSelect from "react-select/async-creatable";
 import type { OptionType} from 'shared/schema/optionSchema';
 
 import { client } from "@/api.client";
-import type {Filiere} from '@/app/(wrapped)/demandes/saisie/types';
-
-type Options = (typeof client.infer)["[GET]/filiere/search/:search"];
+import type { Filiere, Filieres } from "@/app/(wrapped)/demandes/types";
 
 export const FiliereAutoCompleteInput = ({
   id = "cfd-autocomplete",
@@ -39,7 +37,7 @@ export const FiliereAutoCompleteInput = ({
     }),
   };
 
-  const searchFiliere = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+  const searchFiliere = _.debounce((inputValue: string, callback: (options: Filieres) => void) => {
     client
       .ref("[GET]/filiere/search/:search")
       .query({ params: { search: inputValue } })

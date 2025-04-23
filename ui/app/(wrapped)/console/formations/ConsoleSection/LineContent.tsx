@@ -9,8 +9,8 @@ import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifiqu
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
-import { formatAnneeCommuneLibelle } from "@/utils/formatLibelle";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatFamilleMetierLibelle } from "@/utils/formatLibelle";
+import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 const ConditionalTd = chakra(
@@ -106,7 +106,7 @@ export const FormationLineContent = ({
     >
       <Flex>
         <Flex w={"fit-content"} my={"auto"}>
-          {formatAnneeCommuneLibelle(line, "long", "sm", "12px")}
+          {formatFamilleMetierLibelle(line, "long", "sm", "12px")}
         </Flex>
         <BadgeFormationRenovee isFormationRenovee={!!line.isFormationRenovee} ms={2}/>
         {line.formationRenovee && (
@@ -194,10 +194,8 @@ export const FormationLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <TableBadge
-        sx={getTauxPressionStyle(line.tauxPression !== undefined ? formatNumber(line.tauxPression, 2) : undefined)}
-      >
-        {line.tauxPression !== undefined ? formatNumber(line.tauxPression, 2) : "-"}
+      <TableBadge sx={getTauxPressionStyle(formatNumber(line.tauxPression, 2))}>
+        {formatNumberToString(line.tauxPression, 2, "-")}
       </TableBadge>
     </ConditionalTd>
     <ConditionalTd
@@ -242,11 +240,14 @@ export const FormationLineContent = ({
 
 export const FormationLineLoader = () => (
   <Tr bg={"grey.975"}>
-    {new Array(17).fill(0).map((_, i) => (
-      <Td key={i}>
-        <Skeleton opacity={0.3} height="16px" />
-      </Td>
-    ))}
+    {new Array(17).fill(0).map((_, i) => {
+      const key = `loader_FormationLine_${i}`;
+      return (
+        <Td key={key}>
+          <Skeleton opacity={0.3} height="16px" />
+        </Td>
+      );}
+    )}
   </Tr>
 );
 

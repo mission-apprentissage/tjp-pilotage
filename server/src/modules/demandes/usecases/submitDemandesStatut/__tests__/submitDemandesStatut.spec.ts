@@ -174,7 +174,7 @@ describe("[POST]/demandes/statut/submit", () => {
           demandes = [
             (
               await (
-                await createDemandeBuilder(demandeOwner!, data)
+                await createDemandeBuilder(demandeOwner, data)
                   .withStatut(DemandeStatutEnum["proposition"])
                   .withNumero(numeroDemandeExistants[0])
                   .withCurrentCampagneId()
@@ -182,7 +182,7 @@ describe("[POST]/demandes/statut/submit", () => {
             ).build(),
             (
               await (
-                await createDemandeBuilder(demandeOwner!, data)
+                await createDemandeBuilder(demandeOwner, data)
                   .withStatut(DemandeStatutEnum["proposition"])
                   .withNumero(numeroDemandeExistants[1])
                   .withCurrentCampagneId()
@@ -234,17 +234,21 @@ describe("[POST]/demandes/statut/submit", () => {
           expect(responseCode).toBe(200);
         },
         verifierChangementsStatutCrees: async () => {
+          if (!demandesAChanger) {
+            throw Error("Des demandes doivent être créées");
+          }
+
           const changementDeStatuts = await getKbdClient()
             .selectFrom("changementStatut")
             .selectAll()
-            .where("changementStatut.demandeNumero", "in", demandesAChanger!.map((demande) => demande.numero))
+            .where("changementStatut.demandeNumero", "in", demandesAChanger.map((demande) => demande.numero))
             .execute();
 
           if (!changementDeStatuts) {
             throw Error("Des changements de statuts doivent être créés");
           }
 
-          expect(changementDeStatuts).toHaveLength(demandesAChanger!.length);
+          expect(changementDeStatuts).toHaveLength(demandesAChanger.length);
 
           changementDeStatuts.map((changementDeStatut) => {
             const demande = demandes?.find((demande) => demande?.numero === changementDeStatut.demandeNumero);

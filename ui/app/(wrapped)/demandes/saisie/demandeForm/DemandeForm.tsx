@@ -35,7 +35,6 @@ import { MenuFormulaire } from "@/app/(wrapped)/demandes/saisie/components/MenuF
 import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/demandes/SCROLL_OFFSETS";
 import type { Demande, DemandeMetadata } from "@/app/(wrapped)/demandes/types";
 import {canCorrectDemande} from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
-import { getStepWorkflow } from "@/app/(wrapped)/demandes/utils/statutUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
 import type { DetailedApiError } from "@/utils/apiError";
@@ -122,18 +121,7 @@ export const DemandeForm = ({
   const [dateFermetureFormation, setDateFermetureFormation] =
     useState<string | undefined>(formMetadata?.formation?.dateFermeture);
 
-  const isDisabledForPerdir =
-    hasRole({
-      user,
-      role: RoleEnum["perdir"],
-    }) &&
-    !!defaultValues.statut &&
-    getStepWorkflow(defaultValues.statut) > 1;
-
-  const isActionsDisabled = isSuccess || isSubmitting || isDisabledForPerdir;
-
-  const isFormDisabled =
-    disabled || campagne.statut !== CampagneStatutEnum["en cours"] || isDisabledForPerdir;
+  const isActionsDisabled = (isSuccess || isSubmitting);
 
   const isCFDUaiSectionValid = ({ cfd, codeDispositif, libelleFCIL, uai }: PartialDemandeFormType): boolean => {
     if (isFCIL) return !!(cfd && codeDispositif && libelleFCIL && uai);
@@ -313,7 +301,7 @@ export const DemandeForm = ({
                   <InformationsBlock
                     refs={anchorsRefs}
                     formId={formId}
-                    disabled={isFormDisabled}
+                    disabled={disabled}
                     campagne={campagne}
                     demande={demande}
                     showCorrection={showCorrection}

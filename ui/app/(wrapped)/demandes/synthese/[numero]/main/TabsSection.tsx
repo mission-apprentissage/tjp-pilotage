@@ -5,15 +5,15 @@ import { DisplayTypeEnum } from "./displayTypeEnum";
 export const TabsSection = ({
   displayType,
   displaySynthese,
-  displayCommentairesEtAvis,
+  displayChangementStatutEtAvis,
 }: {
   displayType: DisplayTypeEnum;
   displaySynthese: () => void;
-  displayCommentairesEtAvis: () => void;
+  displayChangementStatutEtAvis: () => void;
 }) => {
   const getTabIndex = () => {
     if (displayType === DisplayTypeEnum.synthese) return 0;
-    if (displayType === DisplayTypeEnum.commentairesEtAvis) return 1;
+    if (displayType === DisplayTypeEnum.changementStatutEtAvis) return 1;
   };
   return (
     <Tabs
@@ -33,7 +33,7 @@ export const TabsSection = ({
             <Text>Synthèse</Text>
           </Flex>
         </Tab>
-        <Tab as={Button} onClick={() => displayCommentairesEtAvis()}>
+        <Tab as={Button} onClick={() => displayChangementStatutEtAvis()}>
           <Flex direction={"row"} justify={"center"} alignItems={"center"} p={3} gap={2}>
             <Icon icon="ri:team-line" />
             <Text>Commentaires et avis</Text>

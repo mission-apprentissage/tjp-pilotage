@@ -5,13 +5,12 @@ import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { PageClient } from "./page.client";
 
-const SaisiePage = () => {
-  return (
-    <GuardPermission permission={PermissionEnum["demande/lecture"]}>
-      <GuardExpe isExpeRoute={true}>
-        <PageClient />
-      </GuardExpe>
-    </GuardPermission>
-  );
-};
+const SaisiePage = () => (
+  <GuardPermission permission={PermissionEnum["demande/lecture"]}>
+    <GuardExpe>
+      <PageClient />
+    </GuardExpe>
+  </GuardPermission>
+);
+
 export default SaisiePage;

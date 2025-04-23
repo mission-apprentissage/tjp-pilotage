@@ -5,9 +5,7 @@ import AsyncSelect from "react-select/async";
 import type { OptionType} from 'shared/schema/optionSchema';
 
 import { client } from "@/api.client";
-import type { Campus } from "@/app/(wrapped)/demandes/saisie/types";
-
-type Options = (typeof client.infer)["[GET]/campus/search/:search"];
+import type { Campus, Campuss } from "@/app/(wrapped)/demandes/types";
 
 export const CampusAutocompleteInput = ({
   name,
@@ -38,7 +36,7 @@ export const CampusAutocompleteInput = ({
   };
 
   const searchCampus = _.debounce(
-    (inputValue: string, callback: (options: Options) => void) => {
+    (inputValue: string, callback: (options: Campuss) => void) => {
       client.ref("[GET]/campus/search/:search")
         .query({ params: { search: inputValue } })
         .then(options => callback(options));

@@ -12,7 +12,7 @@ export const ObservationsSection = ({
   disabled,
   commentaireEtPiecesJointesRef,
 }: {
-  disabled: boolean;
+  disabled?: boolean;
   commentaireEtPiecesJointesRef: RefObject<HTMLDivElement>;
 }) => (
   <Flex ref={commentaireEtPiecesJointesRef} scrollMarginTop={SCROLL_OFFSET} direction="column">

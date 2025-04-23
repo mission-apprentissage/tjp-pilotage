@@ -9,7 +9,6 @@ import { useAuth } from "@/utils/security/useAuth";
 const Page = () => {
   const { user } = useAuth();
 
-  redirect(getRoutingSaisieRecueilDemande({user})
-  );
+  redirect(getRoutingSaisieRecueilDemande({user}));
 };
 export default Page;

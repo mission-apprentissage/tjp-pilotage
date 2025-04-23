@@ -4,7 +4,7 @@ import { useDemandeFilesContext } from "./filesContext";
 import { FilesField } from "./FilesField";
 import { UploadField } from "./UploadField";
 
-export const FilesSection = ({ disabled }: { disabled: boolean }) => {
+export const FilesSection = ({ disabled }: { disabled?: boolean }) => {
   const { newFiles, addNewFiles, files, deleteFile, downloadFile } = useDemandeFilesContext();
 
   return (

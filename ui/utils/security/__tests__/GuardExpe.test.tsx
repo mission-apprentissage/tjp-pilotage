@@ -19,7 +19,7 @@ const getUserContext = (role: Role, codeRegion?: string) => {
   const response = generateMock(ROUTES["[GET]/auth/whoAmI"].schema.response[200])!;
   response.user.codeRegion = codeRegion;
   response.user.role = role;
-  return { auth: { user: response!.user }, setAuth: (_auth: Auth | undefined) => {} };
+  return { auth: { user: response.user }, setAuth: (_auth: Auth | undefined) => {} };
 };
 
 const getCampagneContext = ({
@@ -58,11 +58,26 @@ describe("ui > components > security > GuardExpe", () => {
     vi.resetAllMocks();
   });
 
-  it("Doit rediriger les utilisateurs vers la saisie hors expé même si l'utilisateur fait partie d'une région test lors de la campagne 2023", async () => {
+  it("Doit laisser passer les utilisateurs nationaux", async () => {
+    render(
+      <AuthContext.Provider value={getUserContext(RoleEnum["admin"])}>
+        <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
+          <GuardExpe>
+            <p>has_permission</p>
+          </GuardExpe>
+        </CurrentCampagneContext.Provider>
+      </AuthContext.Provider>
+    );
+
+    const textToFind = screen.queryByText("has_permission");
+    expect(textToFind).not.toBe(null);
+  });
+
+  it("Doit rediriger les utilisateurs admin région d'AURA quand la saisie n'était pas autorisée en AURA en 2023", async () => {
     render(
       <AuthContext.Provider value={getUserContext(RoleEnum["admin_region"], "76")}>
         <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2023"})}>
-          <GuardExpe isExpeRoute={true}>
+          <GuardExpe>
             <p>has_permission</p>
           </GuardExpe>
         </CurrentCampagneContext.Provider>
@@ -71,86 +86,69 @@ describe("ui > components > security > GuardExpe", () => {
 
     const textToBeNull = screen.queryByText("has_permission");
     expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/demandes/saisie");
+    expect(redirectMock).toHaveBeenCalledWith("/");
   });
 
-  it("Doit laisser passer les utilisateurs nationaux pour les routes expé", async () => {
-    render(
-      <AuthContext.Provider value={getUserContext(RoleEnum["admin"], undefined)}>
-        <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
-          <GuardExpe isExpeRoute={true}>
-            <p>has_permission</p>
-          </GuardExpe>
-        </CurrentCampagneContext.Provider>
-      </AuthContext.Provider>
-    );
-
-    const textToFind = screen.queryByText("has_permission");
-    expect(textToFind).not.toBe(null);
-  });
-
-
-  it("Doit laisser passer les utilisateurs nationaux pour les routes hors expé", async () => {
-    render(
-      <AuthContext.Provider value={getUserContext(RoleEnum["admin"], undefined)}>
-        <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
-          <GuardExpe isExpeRoute={false}>
-            <p>has_permission</p>
-          </GuardExpe>
-        </CurrentCampagneContext.Provider>
-      </AuthContext.Provider>
-    );
-
-    const textToFind = screen.queryByText("has_permission");
-    expect(textToFind).not.toBe(null);
-  });
-
-  it("Doit rediriger les utilisateurs vers la saisie hors expé", async () => {
+  it("Doit rediriger les utilisateurs admin région d'IDF quand la saisie n'était pas autorisée en IDF en 2024", async () => {
     render(
       <AuthContext.Provider value={getUserContext(RoleEnum["admin_region"], "11")}>
         <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
-          <GuardExpe isExpeRoute={true}>
+          <GuardExpe>
             <p>has_permission</p>
           </GuardExpe>
         </CurrentCampagneContext.Provider>
       </AuthContext.Provider>
     );
 
-    const textToBeNull = screen.queryByText("has_permission");
-    expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/demandes/saisie");
+    const textToFind = screen.queryByText("has_permission");
+    expect(textToFind).toBe(null);
+    expect(redirectMock).toHaveBeenCalledWith("/");
   });
 
-  it("Doit rediriger les utilisateurs vers la saisie expé", async () => {
+  it("Doit rediriger les utilisateurs perdir d'IDF quand la saisie n'était pas autorisée en IDF en 2024", async () => {
+    render(
+      <AuthContext.Provider value={getUserContext(RoleEnum["perdir"], "11")}>
+        <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
+          <GuardExpe>
+            <p>has_permission</p>
+          </GuardExpe>
+        </CurrentCampagneContext.Provider>
+      </AuthContext.Provider>
+    );
+
+    const textToFind = screen.queryByText("has_permission");
+    expect(textToFind).toBe(null);
+    expect(redirectMock).toHaveBeenCalledWith("/");
+  });
+
+  it("Doit laisser passer les utilisateurs admin région d'AURA quand la saisie était autorisée en 2024", async () => {
     render(
       <AuthContext.Provider value={getUserContext(RoleEnum["admin_region"], "76")}>
         <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
-          <GuardExpe isExpeRoute={false}>
+          <GuardExpe>
             <p>has_permission</p>
           </GuardExpe>
         </CurrentCampagneContext.Provider>
       </AuthContext.Provider>
     );
 
-    const textToBeNull = screen.queryByText("has_permission");
-    expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/demandes/perdir/saisie");
+    const textToFind = screen.queryByText("has_permission");
+    expect(textToFind).not.toBe(null);
   });
 
-  it("Doit rediriger les utilisateurs vers la saisie expé même si l'utilisateur ne fait pas partie d'une région test lors de la campagne 2025", async () => {
+  it("Doit laisser passer les utilisateurs perdir d'AURA quand la saisie était autorisée en 2024", async () => {
     render(
-      <AuthContext.Provider value={getUserContext(RoleEnum["admin_region"], "76")}>
-        <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2025"})}>
-          <GuardExpe isExpeRoute={false}>
+      <AuthContext.Provider value={getUserContext(RoleEnum["perdir"], "76")}>
+        <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
+          <GuardExpe>
             <p>has_permission</p>
           </GuardExpe>
         </CurrentCampagneContext.Provider>
       </AuthContext.Provider>
     );
 
-    const textToBeNull = screen.queryByText("has_permission");
-    expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/demandes/perdir/saisie");
+    const textToFind = screen.queryByText("has_permission");
+    expect(textToFind).not.toBe(null);
   });
 
   it("Doit laisser passer le perdir dans le cas où sa région accepte la saisie perdir pour cette campagne", async () => {
@@ -161,7 +159,7 @@ describe("ui > components > security > GuardExpe", () => {
           codeRegion: "76",
           withSaisiePerdir: true,
         })}>
-          <GuardExpe isExpeRoute={true}>
+          <GuardExpe>
             <p>has_permission</p>
           </GuardExpe>
         </CurrentCampagneContext.Provider>
@@ -180,7 +178,7 @@ describe("ui > components > security > GuardExpe", () => {
           codeRegion: "76",
           withSaisiePerdir: false,
         })}>
-          <GuardExpe isExpeRoute={true}>
+          <GuardExpe>
             <p>has_permission</p>
           </GuardExpe>
         </CurrentCampagneContext.Provider>
@@ -189,45 +187,5 @@ describe("ui > components > security > GuardExpe", () => {
 
     const textToBeNull = screen.queryByText("has_permission");
     expect(textToBeNull).not.toBe(null);
-  });
-
-  it("Doit rediriger le perdir vers la saisie expé même si sa région n'accepte pas la saisie perdir pour cette campagne et l'utilisateur tente d'accéder à une route hors expérimentation", async () => {
-    render(
-      <AuthContext.Provider value={getUserContext(RoleEnum["perdir"], "76")}>
-        <CurrentCampagneContext.Provider value={getCampagneContext({
-          annee: "2025",
-          codeRegion: "76",
-          withSaisiePerdir: false,
-        })}>
-          <GuardExpe isExpeRoute={false}>
-            <p>has_permission</p>
-          </GuardExpe>
-        </CurrentCampagneContext.Provider>
-      </AuthContext.Provider>
-    );
-
-    const textToBeNull = screen.queryByText("has_permission");
-    expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/demandes/perdir/saisie");
-  });
-
-  it("Doit rediriger le perdir vers la saisie expe dans le cas où sa région accepte la saisie perdir pour cette campagne et l'utilisateur tente d'accéder à une route hors expérimentation", async () => {
-    render(
-      <AuthContext.Provider value={getUserContext(RoleEnum["perdir"], "76")}>
-        <CurrentCampagneContext.Provider value={getCampagneContext({
-          annee: "2025",
-          codeRegion: "76",
-          withSaisiePerdir: true,
-        })}>
-          <GuardExpe isExpeRoute={false}>
-            <p>has_permission</p>
-          </GuardExpe>
-        </CurrentCampagneContext.Provider>
-      </AuthContext.Provider>
-    );
-
-    const textToBeNull = screen.queryByText("has_permission");
-    expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/demandes/perdir/saisie");
   });
 });

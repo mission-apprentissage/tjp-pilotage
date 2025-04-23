@@ -13,7 +13,7 @@ const SynthesePage = ({
   };
 }) => (
   <GuardPermission permission={PermissionEnum["demande/lecture"]}>
-    <GuardExpe isExpeRoute={true}>
+    <GuardExpe>
       <PageClient params={params}/>
     </GuardExpe>
   </GuardPermission>

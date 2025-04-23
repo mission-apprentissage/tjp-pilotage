@@ -44,6 +44,19 @@ type Option = {
   readonly value: string;
 };
 
+const getAvisOptionLabel = (option: { value: string }) => (
+  <AvisStatutTag
+    statutAvis={option.value as AvisStatutType}
+    size="md"
+    hasIcon
+    textTransform={"uppercase"}
+    gap={2}
+  />
+);
+
+const getFonctionOptionLabel = (option: { label: string }) =>
+  option.label.startsWith("Créer la fonction") ? option.label : <FonctionTag fonction={option.label} />;
+
 export const AvisForm = ({ demande }: { demande: (typeof client.infer)["[GET]/demande/:numero"] }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -163,9 +176,7 @@ export const AvisForm = ({ demande }: { demande: (typeof client.infer)["[GET]/de
                   label: fonction.toUpperCase(),
                   value: fonction,
                 }))}
-                formatOptionLabel={(option: { label: string }) =>
-                  option.label.startsWith("Créer la fonction") ? option.label : <FonctionTag fonction={option.label} />
-                }
+                formatOptionLabel={getFonctionOptionLabel}
                 isClearable
                 formatCreateLabel={(inputValue) => `Créer la fonction ${inputValue}`}
               />
@@ -201,15 +212,7 @@ export const AvisForm = ({ demande }: { demande: (typeof client.infer)["[GET]/de
                   label: avis.toUpperCase(),
                   value: avis,
                 }))}
-                formatOptionLabel={(option: { value: string }) => (
-                  <AvisStatutTag
-                    statutAvis={option.value as AvisStatutType}
-                    size="md"
-                    hasIcon
-                    textTransform={"uppercase"}
-                    gap={2}
-                  />
-                )}
+                formatOptionLabel={getAvisOptionLabel}
                 isClearable
               />
             )}

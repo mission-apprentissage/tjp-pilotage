@@ -15,7 +15,7 @@ export const InternatEtRestaurationSection = ({
   disabled,
   internatEtRestaurationRef,
 }: {
-  disabled: boolean;
+  disabled?: boolean;
   internatEtRestaurationRef: RefObject<HTMLDivElement>;
 }) => {
   return (

@@ -7,9 +7,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { OptionType } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
-import type {Formation} from '@/app/(wrapped)/demandes/types';
-
-type Options = (typeof client.infer)["[GET]/diplome/search/:search"];
+import type {Formation, Formations} from '@/app/(wrapped)/demandes/types';
 
 export const cfdRegex = /^\d{8}$/;
 
@@ -74,7 +72,7 @@ export const CfdAutocompleteInput = ({
     <OptionLabel option={option} />
   );
 
-  const searchDiplome = _.debounce((search: string, callback: (options: Options) => void) => {
+  const searchDiplome = _.debounce((search: string, callback: (options: Formations) => void) => {
     if (search.length >= 3)
       client
         .ref("[GET]/diplome/search/:search")

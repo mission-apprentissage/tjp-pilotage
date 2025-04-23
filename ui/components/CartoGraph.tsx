@@ -65,7 +65,7 @@ interface CartoGraphProps {
   graphData?: {
     name?: string;
     parentName?: string;
-    value?: number | undefined;
+    value?: number;
     code?: string;
   }[];
   scope?: ScopeZone;

@@ -31,7 +31,7 @@ export const UploadField = ({
 }: {
   setNewFiles: (files: FileList | null) => void;
   newFiles: File[];
-  disabled: boolean;
+  disabled?: boolean;
 }) => {
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);

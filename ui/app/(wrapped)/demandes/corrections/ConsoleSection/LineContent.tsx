@@ -19,7 +19,7 @@ import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifiqu
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 const formatEcart = (value: number) => {
@@ -198,8 +198,8 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxPressionRegional")}
       >
-        <TableBadge sx={getTauxPressionStyle(correction.tauxPressionRegional)}>
-          {typeof correction.tauxPressionRegional !== "undefined" ? formatNumber(correction.tauxPressionRegional) : "-"}
+        <TableBadge sx={getTauxPressionStyle(formatNumber(correction.tauxPressionRegional, 2))}>
+          {formatNumberToString(correction.tauxPressionRegional, 2, "-")}
         </TableBadge>
       </ConditionalTd>
       <ConditionalTd

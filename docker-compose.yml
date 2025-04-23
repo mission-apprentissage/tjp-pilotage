@@ -7,7 +7,7 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - "127.0.0.1:5432:5432"
-    shm_size: 1gb
+    shm_size: 2gb
     volumes:
       - pilotage_postgres_data:/var/lib/postgresql/data:z
       - ./server/seed/seed_schema.dump:/seed_schema.dump:ro
