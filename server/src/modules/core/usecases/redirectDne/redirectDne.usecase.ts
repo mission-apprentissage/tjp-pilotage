@@ -24,8 +24,8 @@ import { findUserQuery } from "./findUserQuery.dep";
 dayjs.extend(customParseFormat);
 
 type ExtraUserInfo = {
-  FrEduFonctAdm: string;
-  FrEduRne: Array<string>;
+  FrEduFonctAdm?: string;
+  FrEduRne?: Array<string>;
   FrEduResDel?: Array<string>;
   FrEduRneResp?: Array<string>;
   // Liste des groupes LDAP auxquels l'utilisateur est rattaché
@@ -38,9 +38,14 @@ type ExtraUserInfo = {
   codaca?:string;
 };
 
+type TUserEtablissement = {
+  codeRegion: string | null;
+  uai: string;
+} | undefined
+
 const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
   const uais: Array<string> = [];
-  const perdirOnUais = userInfo.FrEduRne?.map((item) => item.split("$")[0]);
+  const perdirOnUais = userInfo.FrEduRne?.map((item) => item.split("$")[0]) ?? [];
 
   if (userInfo.FrEduFonctAdm === "DIR") {
     if (perdirOnUais.length > 0) {
@@ -241,8 +246,10 @@ export const [redirectDne, redirectDneFactory] = inject(
         "[SSO] Attributs utilisateur"
       );
 
-      const etablissement = attributes.uais && (await deps.findEtablissement({ uais: attributes.uais }));
-      let codeRegion: string | null | undefined;
+      let etablissement: TUserEtablissement = undefined;
+      if (attributes.role === RoleEnum.perdir && attributes.uais.length > 0) {
+        etablissement = attributes.uais && (await deps.findEtablissement({ uais: attributes.uais }));
+      }
 
       if (attributes.role === RoleEnum.perdir && !etablissement?.codeRegion) {
         logger.error({
@@ -255,13 +262,17 @@ export const [redirectDne, redirectDneFactory] = inject(
         throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_PERDIR);
       }
 
+      let codeRegion: string | null | undefined;
       const userNeedsCodeRegion = ["admin_region", "pilote_region", "gestionnaire_region", "expert_region"].includes(attributes.role);
 
       try {
+        // Si l'utilisateur est un perdir, extraire le codeRegions des UAI contenu dans les attributes
         if (attributes.role === RoleEnum.perdir) {
           if (etablissement) {
             codeRegion = etablissement?.codeRegion;
           }
+          // Si l'utilisateur a besoin d'un codeRegion et qu'il n'est pas un perdir,
+          // Aller chercher le codeRegion depuis le codeAca
         } else if (userNeedsCodeRegion && userinfo.codaca) {
           const codeRegionFromAcademie = await deps.findRegionFromAcademie(userinfo.codaca.substring(1));
           if (codeRegionFromAcademie) {
