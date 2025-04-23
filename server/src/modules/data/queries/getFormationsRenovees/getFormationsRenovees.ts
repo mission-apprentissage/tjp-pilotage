@@ -12,8 +12,12 @@ export const getFormationsRenoveesEnseigneesQuery = async ({
 }) => {
   return await getKbdClient()
     .selectFrom("formationHistorique")
-    .innerJoin("formationEtablissement", "formationEtablissement.cfd", "formationHistorique.cfd")
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "formationHistorique.cfd")
+    .innerJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .onRef("formationEtablissement.voie", "=", "formationView.voie")
+    )
     .where("formationView.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(rentreeScolaire[0])}`)
     .select("formationHistorique.cfd")
     .where(isScolaireFormationHistorique)

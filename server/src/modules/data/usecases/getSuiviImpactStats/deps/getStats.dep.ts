@@ -1,5 +1,5 @@
 import { sql } from "kysely";
-import { CURRENT_RENTREE } from "shared";
+import { CURRENT_RENTREE, VoieEnum } from "shared";
 import { getFinDanneeScolaireMillesime } from "shared/time/millesimes";
 import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import { getRentreeScolaire } from "shared/utils/getRentreeScolaire";
@@ -55,6 +55,7 @@ const selectStatsEffectif = async (
   })
   .where(notHistorique)
   .where(notAnneeCommune)
+  .where("formationEtablissement.voie", "=", VoieEnum.scolaire)
   .select([
     sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."codeDispositif"))`.as(
       "nbFormations"
