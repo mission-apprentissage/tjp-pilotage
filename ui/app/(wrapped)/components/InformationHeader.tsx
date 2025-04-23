@@ -68,7 +68,7 @@ export const InformationHeader = () => {
                 md: "block",
               }}
             >
-              {changelogEntry.description}
+              {changelogEntry.description}{" "}
               <Link as={NextLink} href="/changelog" textDecoration="underline">
                 Voir les détails
               </Link>
