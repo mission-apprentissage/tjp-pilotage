@@ -54,7 +54,11 @@ export const getFormationEtablissementsQuery = async ({
 
   const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")
-    .innerJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .innerJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .onRef("formationEtablissement.voie", "=", "formationView.voie")
+    )
     .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")

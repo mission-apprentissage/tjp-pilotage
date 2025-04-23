@@ -1,3 +1,4 @@
+
 import { getKbdClient } from "@/db/db";
 import { cleanNull } from "@/utils/noNull";
 
@@ -9,7 +10,11 @@ export const getFilters = async ({ codeDepartement }: { codeDepartement?: string
       "formationView.codeNiveauDiplome",
       "niveauDiplome.codeNiveauDiplome"
     )
-    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .onRef("formationEtablissement.voie", "=", "formationView.voie")
+    )
     .leftJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .$call((eb) => {
       if (!codeDepartement) return eb;

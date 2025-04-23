@@ -55,7 +55,11 @@ export const getRegionStats = async ({
   const baseStatsEntree = getKbdClient()
     .selectFrom("formationScolaireView as formationView")
     .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
-    .innerJoin("formationEtablissement", "formationEtablissement.cfd", "formationView.cfd")
+    .innerJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .onRef("formationEtablissement.voie", "=", "formationView.voie")
+    )
     .innerJoin("indicateurEntree", (join) =>
       join
         .onRef("indicateurEntree.formationEtablissementId", "=", "formationEtablissement.id")

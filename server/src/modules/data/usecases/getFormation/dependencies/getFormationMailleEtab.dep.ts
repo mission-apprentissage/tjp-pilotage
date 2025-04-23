@@ -26,6 +26,7 @@ export const getFormationMailleEtab = ({
       "formationView.codeNsf",
       "dateFermeture",
       "typeFamille",
+      "voie"
     ])
     .where((eb) =>
       eb.or([
@@ -39,7 +40,11 @@ export const getFormationMailleEtab = ({
   return getKbdClient()
     .with("formations", () => formations)
     .selectFrom("formations")
-    .leftJoin("formationEtablissement", "formations.cfd", "formationEtablissement.cfd")
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formations.cfd")
+        .onRef("formationEtablissement.voie", "=", "formations.voie")
+    )
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "formationEtablissement.uai")
     .select((sb) => [
       sb.ref("formations.libelleNiveauDiplome").as("libelleNiveauDiplome"),
