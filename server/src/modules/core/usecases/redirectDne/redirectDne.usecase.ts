@@ -175,7 +175,7 @@ export const [redirectDne, redirectDneFactory] = inject(
       if (!code_verifier) throw new Error(DneSSOErrorsEnum.MISSING_CODE_VERIFIER);
 
       const client = await deps.getDneClient().catch((err) => {
-        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du client DNE");
+        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du client");
         throw new Error(DneSSOErrorsEnum.FAILURE_ON_DNE_REDIRECT);
       });
 
@@ -183,14 +183,14 @@ export const [redirectDne, redirectDneFactory] = inject(
       const tokenSet = await client.callback(config.dne.redirectUri, params, {
         code_verifier,
       }).catch((err) => {
-        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du token DNE");
+        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du token");
         throw new Error(DneSSOErrorsEnum.MISSING_ACCESS_TOKEN);
       });
 
       if (!tokenSet.access_token) throw new Error(DneSSOErrorsEnum.MISSING_ACCESS_TOKEN);
 
       const userinfo = await client.userinfo<ExtraUserInfo>(tokenSet.access_token).catch((err) => {
-        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du userinfo DNE");
+        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du userinfo");
         throw new Error(DneSSOErrorsEnum.MISSING_USERINFO);
       });
 
@@ -200,7 +200,7 @@ export const [redirectDne, redirectDneFactory] = inject(
         {
           userinfo,
         },
-        "[SSO] Userinfo DNE"
+        "[SSO] Userinfo"
       );
 
       const email = userinfo.email?.toLowerCase();
@@ -231,6 +231,15 @@ export const [redirectDne, redirectDneFactory] = inject(
         }, "[SSO] Aucun droit n'a pu être extrait pour l'utilisateur");
         throw new Error(DneSSOErrorsEnum.MISSING_RIGHTS);
       }
+
+      logger.info(
+        {
+          email,
+          user,
+          attributes,
+        },
+        "[SSO] Attributs utilisateur"
+      );
 
       const etablissement = attributes.uais && (await deps.findEtablissement({ uais: attributes.uais }));
       let codeRegion: string | null | undefined;
@@ -278,7 +287,6 @@ export const [redirectDne, redirectDneFactory] = inject(
         // On garde par défaut le role de l'utilisateur s'il existe déjà en base de données
         role: user ? user.role : attributes.role as Role,
       };
-
 
       await deps.createUserInDB({ user: userToInsert });
 
