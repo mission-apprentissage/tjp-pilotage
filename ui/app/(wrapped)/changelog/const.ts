@@ -21,7 +21,7 @@ export const CHANGELOG: IChangelog[] = [
   {
     "id": "18cd0d8ec0158002aa65e8acae3243f1",
     "deployed": true,
-    "show": true,
+    "show": false,
     "title": "Constat de rentrée 2024 et Taux IJ 2022-2023",
     "types": [ChangelogTypeEnum.BANDEAU],
     "date": new Date("2025-01-31"),
@@ -41,7 +41,7 @@ export const CHANGELOG: IChangelog[] = [
   {
     "id": "18cd0d8ec01580a286e8e9e722a0439c",
     "deployed": true,
-    "show": false,
+    "show": true,
     "title": "Panorama Domaine de formation",
     "types": [ChangelogTypeEnum.BANDEAU],
     "date": new Date("2025-01-09"),
