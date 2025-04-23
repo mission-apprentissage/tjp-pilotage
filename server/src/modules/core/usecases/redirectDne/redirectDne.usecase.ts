@@ -142,6 +142,8 @@ const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
         role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["PERDIR"],
         uais,
       };
+    } else {
+      throw new Error(DneSSOErrorsEnum.MISSING_RIGHTS_PERDIR);
     }
   }
 
@@ -315,23 +317,14 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       await deps.createUserInDB({ user: userToInsert });
 
-      if (user) {
-        logger.info(
-          {
-            user: userToInsert,
-            userinfo,
-          },
-          `[SSO] Nouveau login`
-        );
-      } else {
-        logger.info(
-          {
-            user: userToInsert,
-            userinfo,
-          },
+      logger.info(
+        {
+          user: userToInsert,
+          userinfo,
+        },
+        user ? `[SSO] Nouveau login` :
           `[SSO] Nouvel utilisateur DNE`
-        );
-      }
+      );
 
       const authorizationToken = jwt.sign({ email }, deps.authJwtSecret, {
         issuer: "orion",
