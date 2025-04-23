@@ -23,7 +23,6 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { hasPermission, hasRole } from "shared";
-import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import {PermissionEnum} from 'shared/enum/permissionEnum';
 import {RoleEnum} from 'shared/enum/roleEnum';
 import type { UserType } from "shared/schema/userSchema";
@@ -31,7 +30,7 @@ import type { UserType } from "shared/schema/userSchema";
 import { client } from "@/api.client";
 import { AvisStatutTag } from "@/app/(wrapped)/demandes/components/AvisStatutTag";
 import { FonctionTag } from "@/app/(wrapped)/demandes/components/FonctionTag";
-import type { Avis } from "@/app/(wrapped)/demandes/types";
+import type { Avis, Demande } from "@/app/(wrapped)/demandes/types";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/demandes/utils/statutUtils";
 import { formatDate } from "@/utils/formatUtils";
 import { useAuth } from "@/utils/security/useAuth";
@@ -47,7 +46,7 @@ const hasPermissionModificationAvis = ({ user, avis }:{ user?: UserType, avis: A
   } return false;
 };
 
-export const AvisSection = chakra(({ avis, statut }: { avis: Avis; statut: DemandeStatutType }) => {
+export const AvisSection = chakra(({ avis, demande }: { avis: Avis; demande: Demande }) => {
   const { user } = useAuth();
   const toast = useToast();
 
@@ -84,6 +83,10 @@ export const AvisSection = chakra(({ avis, statut }: { avis: Avis; statut: Deman
       }, 500);
     },
   });
+
+  const commentaireAvis = avis.commentaire ?
+    `« ${avis.commentaire} »` :
+    "Pas d'observation renseignée";
 
   return (
     <Collapse in={isOpenDeleteAvis}>
@@ -135,17 +138,13 @@ export const AvisSection = chakra(({ avis, statut }: { avis: Avis; statut: Deman
             </Flex>
             {isModifying ? (
               <UpdateAvisForm avis={avis} setIsModifying={setIsModifying} onToggleUpdateAvis={onToggleUpdateAvis} />
-            ) : avis.commentaire ? (
-              <Text fontSize={16} fontWeight={500} lineHeight={"24px"} color={"grey.50"}>
-                « {avis.commentaire} »
-              </Text>
             ) : (
-              <Text fontSize={16} fontWeight={500} lineHeight={"24px"} color={"grey.900"}>
-                Pas d'observation renseignée
+              <Text fontSize={16} fontWeight={500} lineHeight={"24px"} color={avis.commentaire ? "grey.50" : "grey.900"}>
+                {commentaireAvis}
               </Text>
             )}
             {hasPermissionModificationAvis({user, avis}) &&
-              isChangementStatutAvisDisabled({user, statut}) &&
+              !isChangementStatutAvisDisabled({user, demande}) &&
               !isDeleting &&
               !isModifying && (
               <Flex direction={"row"} gap={6}>

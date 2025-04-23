@@ -37,7 +37,7 @@ const differenceCapacité = (valueA: number | undefined, valueB: number | undefi
   return valueA - valueB > 0 ? `+${valueA - valueB}` : valueA - valueB;
 };
 
-export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
+export const CapaciteSection = ({ disabled }: { disabled?: boolean }) => {
   const {
     watch,
     formState: { errors },

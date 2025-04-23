@@ -10,5 +10,3 @@ export type Demandes = (typeof client.infer)["[GET]/demandes"]["demandes"];
 
 export type Avis = (typeof client.infer)["[GET]/demandes"]["demandes"][number]["avis"][number];
 
-export type Filiere = (typeof client.infer)["[GET]/filiere/search/:search"][number];
-export type Campus = (typeof client.infer)["[GET]/campus/search/:search"][number];

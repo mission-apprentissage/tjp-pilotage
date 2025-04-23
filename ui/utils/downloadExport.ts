@@ -1,10 +1,34 @@
 import { number as numberFormatter } from "@json2csv/formatters";
 import { Parser } from "@json2csv/plainjs";
 // eslint-disable-next-line import/no-extraneous-dependencies, import/default
+import type { Worksheet } from "exceljs";
+// eslint-disable-next-line import/no-extraneous-dependencies, import/default
 import { Workbook } from "exceljs";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { saveAs } from "file-saver";
 import _ from "lodash";
+
+const setColumnWrapText = ({
+  worksheet,
+  columnName
+}: {
+  worksheet: Worksheet;
+  columnName: string
+}) => {
+  worksheet.getColumn(columnName).eachCell({ includeEmpty: true }, (cell) => {
+    cell.alignment = { wrapText: true };
+  });
+};
+
+const setColumnWrapNumber = ({
+  worksheet,
+  columnName
+}: {
+  worksheet: Worksheet;
+  columnName: string
+}) => {
+  worksheet.getColumn(columnName).numFmt = "#,##0.00";
+};
 
 export type ExportColumns<T extends object> = {
   [K in keyof T as T[K] extends string | string[] | number | boolean | undefined
@@ -59,7 +83,7 @@ export function downloadCsv<D extends object>(filename: string, data: Array<D>, 
   downloadCsvFromString(filenameWithExtension, csv);
 }
 
-function downloadCsvFromString(filename: string, text: string) {
+const downloadCsvFromString = (filename: string, text: string) => {
   const element = document.createElement("a");
   const universalBOM = "\uFEFF";
   element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(universalBOM + text));
@@ -68,7 +92,7 @@ function downloadCsvFromString(filename: string, text: string) {
   document.body.appendChild(element);
   element.click();
   document.body.removeChild(element);
-}
+};
 
 export async function downloadExcel<D extends object>(
   filename: string,
@@ -82,7 +106,6 @@ export async function downloadExcel<D extends object>(
       data as Record<string, Array<D>>,
       columns as Record<string, ExportColumns<D>>
     );
-    return;
   } else if (Array.isArray(data)) {
     const filenameWithExtension = filename.indexOf(".xlsx") !== -1 ? filename : `${filename}.xlsx`;
 
@@ -95,23 +118,13 @@ export async function downloadExcel<D extends object>(
       key,
     }));
 
-    const setColumnWrapText = (columnName: string) => {
-      worksheet.getColumn(columnName).eachCell({ includeEmpty: true }, (cell) => {
-        cell.alignment = { wrapText: true };
-      });
-    };
-
-    const setColumnWrapNumber = (columnName: string) => {
-      worksheet.getColumn(columnName).numFmt = "#,##0.00";
-    };
-
     Object.entries(columns).forEach(([key, _value]) => {
       switch (typeof _.get(data[0], key)) {
       case "string":
-        setColumnWrapText(key);
+        setColumnWrapText({worksheet, columnName: key});
         break;
       case "number":
-        setColumnWrapNumber(key);
+        setColumnWrapNumber({worksheet, columnName: key});
         break;
       case "bigint":
       case "boolean":
@@ -120,7 +133,7 @@ export async function downloadExcel<D extends object>(
       case "object":
       case "function":
       default:
-        setColumnWrapText(key);
+        setColumnWrapText({worksheet, columnName: key});
         break;
       }
     });
@@ -156,7 +169,7 @@ function downloadExcelMultipleSheets<D extends object>(
 
   const workbook = new Workbook();
 
-  Object.entries(data).map(([key, sheetData]) => {
+  Object.entries(data).forEach(([key, sheetData]) => {
     const worksheet = workbook.addWorksheet(`${key}`);
 
     worksheet.columns = Object.entries(columns[key]).map(([key, value]) => ({
@@ -164,23 +177,13 @@ function downloadExcelMultipleSheets<D extends object>(
       key,
     }));
 
-    const setColumnWrapText = (columnName: string) => {
-      worksheet.getColumn(columnName).eachCell({ includeEmpty: true }, (cell) => {
-        cell.alignment = { wrapText: true };
-      });
-    };
-
-    const setColumnWrapNumber = (columnName: string) => {
-      worksheet.getColumn(columnName).numFmt = "#,##0.00";
-    };
-
     Object.entries(columns[key]).forEach(([key, _value]) => {
       switch (typeof _.get(sheetData[0], key)) {
       case "string":
-        setColumnWrapText(key);
+        setColumnWrapText({worksheet, columnName: key});
         break;
       case "number":
-        setColumnWrapNumber(key);
+        setColumnWrapNumber({worksheet, columnName: key});
         break;
       case "bigint":
       case "boolean":
@@ -189,7 +192,7 @@ function downloadExcelMultipleSheets<D extends object>(
       case "object":
       case "function":
       default:
-        setColumnWrapText(key);
+        setColumnWrapText({worksheet, columnName: key});
         break;
       }
     });

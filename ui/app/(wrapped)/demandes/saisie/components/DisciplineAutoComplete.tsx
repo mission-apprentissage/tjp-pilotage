@@ -5,9 +5,7 @@ import AsyncCreatableSelect from "react-select/async-creatable";
 import type { OptionType} from 'shared/schema/optionSchema';
 
 import { client } from "@/api.client";
-import type {Discipline} from '@/app/(wrapped)/demandes/types';
-
-type Options = (typeof client.infer)["[GET]/discipline/search/:search"];
+import type {Discipline, Disciplines} from '@/app/(wrapped)/demandes/types';
 
 export const DisciplineAutocompleteInput = ({
   id = "discipline-autocomplete",
@@ -39,7 +37,7 @@ export const DisciplineAutocompleteInput = ({
     }),
   };
 
-  const searchDiscipline = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+  const searchDiscipline = _.debounce((inputValue: string, callback: (options: Disciplines) => void) => {
     if (inputValue.length >= 3) {
       client
         .ref("[GET]/discipline/search/:search")

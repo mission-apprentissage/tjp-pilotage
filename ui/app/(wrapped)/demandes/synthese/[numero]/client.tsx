@@ -23,8 +23,7 @@ import { DisplayTypeEnum } from "./main/displayTypeEnum";
 import { MainSection } from "./main/MainSection";
 import { StepperSection } from "./stepper/StepperSection";
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default ({
+const Page = ({
   params: { numero },
 }: {
   params: {
@@ -67,10 +66,10 @@ export default ({
       displayType: DisplayTypeEnum.synthese,
     });
 
-  const displayCommentairesEtAvis = () =>
+  const displayChangementStatutEtAvis = () =>
     setSearchParams({
       ...searchParams,
-      displayType: DisplayTypeEnum.commentairesEtAvis,
+      displayType: DisplayTypeEnum.changementStatutEtAvis,
     });
 
   if (isLoading) return <SyntheseSpinner />;
@@ -105,7 +104,7 @@ export default ({
                   demande={demande}
                   displayType={searchParams.displayType ?? DisplayTypeEnum.synthese}
                   displaySynthese={displaySynthese}
-                  displayCommentairesEtAvis={displayCommentairesEtAvis}
+                  displayChangementStatutEtAvis={displayChangementStatutEtAvis}
                 />
               </GridItem>
               {hasRole({user, role: RoleEnum["perdir"]}) && (
@@ -125,10 +124,12 @@ export default ({
             demande={demande}
             displayType={searchParams.displayType ?? DisplayTypeEnum.synthese}
             displaySynthese={displaySynthese}
-            displayCommentairesEtAvis={displayCommentairesEtAvis}
+            displayChangementStatutEtAvis={displayChangementStatutEtAvis}
           />
         )}
       </Flex>
     </Flex>
   );
 };
+
+export default Page;

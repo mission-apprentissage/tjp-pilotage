@@ -15,8 +15,7 @@ import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import {formatBoolean, formatDate} from '@/utils/formatUtils';
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-// eslint-disable-next-line react/display-name, import/no-anonymous-default-export
-export default () => {
+const Page = () => {
   const { data: campagnes } = client.ref("[GET]/campagnes").useQuery({});
   const { data: campagnesRegion } = client.ref("[GET]/campagnes-region").useQuery({});
   const { data: regions } = client.ref("[GET]/regions").useQuery({});
@@ -239,3 +238,5 @@ export default () => {
     </GuardPermission>
   );
 };
+
+export default Page;

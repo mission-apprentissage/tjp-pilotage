@@ -102,15 +102,7 @@ export const UpdateAvisForm = chakra(
                   onChange={(selected) => {
                     onChange(selected?.value);
                   }}
-                  defaultValue={
-                    value
-                      ? {
-                        value: `${value}`,
-                        // @ts-expect-error TODO
-                        label: value?.toUpperCase() ?? "",
-                      }
-                      : undefined
-                  }
+                  defaultValue={{value}}
                   placeholder="Sélectionner une option"
                   options={Object.values(AvisStatutEnum).map((avis) => ({
                     label: avis.toUpperCase(),
@@ -138,16 +130,11 @@ export const UpdateAvisForm = chakra(
                   inputId={updateFonctionAvisId}
                   name={name}
                   onChange={(selected) => {
-                    // @ts-expect-error TODO
-                    onChange(selected?.value);
+                    onChange(selected?.label);
                   }}
                   defaultValue={
                     value
-                      ? {
-                        // @ts-expect-error TODO
-                        value: value,
-                        label: value?.toUpperCase() ?? "",
-                      }
+                      ? { label: value?.toUpperCase() ?? "" }
                       : undefined
                   }
                   placeholder="Sélectionner une option"

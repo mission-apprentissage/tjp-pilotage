@@ -9,7 +9,7 @@ import { canEditDemande } from "@/app/(wrapped)/demandes/utils/permissionsDemand
 import {getRoutingSaisieRecueilDemande} from '@/utils/getRoutingRecueilDemande';
 import { useAuth } from "@/utils/security/useAuth";
 
-import { CommentairesEtAvisSection } from "./commentaireEtAvis/CommentairesEtAvisSection";
+import { ChangementStatutEtAvisSection } from "./changementStatutEtAvis/ChangementStatutEtAvisSection";
 import { DisplayTypeEnum } from "./displayTypeEnum";
 import { SyntheseSection } from "./synthese/SyntheseSection";
 import { TabsSection } from "./TabsSection";
@@ -18,12 +18,12 @@ export const MainSection = ({
   demande,
   displayType,
   displaySynthese,
-  displayCommentairesEtAvis,
+  displayChangementStatutEtAvis,
 }: {
   demande: (typeof client.infer)["[GET]/demande/:numero"];
   displayType: DisplayTypeEnum;
   displaySynthese: () => void;
-  displayCommentairesEtAvis: () => void;
+  displayChangementStatutEtAvis: () => void;
 }) => {
   const { user } = useAuth();
   const toast = useToast();
@@ -64,7 +64,7 @@ export const MainSection = ({
           <TabsSection
             displayType={displayType}
             displaySynthese={displaySynthese}
-            displayCommentairesEtAvis={displayCommentairesEtAvis}
+            displayChangementStatutEtAvis={displayChangementStatutEtAvis}
           />
           <Flex direction={"row"} gap={2}>
             {canEditDemande({demande, user}) && (
@@ -110,11 +110,11 @@ export const MainSection = ({
         </Flex>
       )}
       <Flex mt={8}>
-        {displayType === DisplayTypeEnum.synthese ? (
+        {displayType === DisplayTypeEnum.changementStatutEtAvis ? (
+          <ChangementStatutEtAvisSection demande={demande} />
+        ) : (
           <SyntheseSection demande={demande} />
-        ) : displayType === DisplayTypeEnum.commentairesEtAvis ? (
-          <CommentairesEtAvisSection demande={demande} />
-        ) : null}
+        )}
       </Flex>
     </Flex>
   );

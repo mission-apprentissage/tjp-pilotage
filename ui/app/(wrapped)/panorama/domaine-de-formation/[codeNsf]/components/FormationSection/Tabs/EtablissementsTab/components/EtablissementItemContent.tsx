@@ -7,7 +7,7 @@ import type { Etablissement } from "@/app/(wrapped)/panorama/domaine-de-formatio
 import { TableBadge } from "@/components/TableBadge";
 import { themeDefinition } from "@/theme/theme";
 import { formatCommuneLibelleWithCodeDepartement, formatDispositifs, formatSecteur } from "@/utils/formatLibelle";
-import { formatNumberToString, formatPercentage } from "@/utils/formatUtils";
+import { formatNumber, formatNumberToString, formatPercentage } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 export const EtablissementItemContent = ({ etablissement }: { etablissement: Etablissement }) => {
@@ -147,7 +147,7 @@ export const EtablissementItemContent = ({ etablissement }: { etablissement: Eta
           <Tooltip label={tooltipLabelTauxPression}>
             <HStack gap="4px" width="65px" justifyContent="flex-start" alignItems="center">
               <InlineIcon icon="ri:temp-cold-line" height="14px" width="14px" />
-              <TableBadge sx={getTauxPressionStyle(etablissement.tauxPression)}>
+              <TableBadge sx={getTauxPressionStyle(formatNumber(etablissement.tauxPression, 2))}>
                 {formatNumberToString(etablissement.tauxPression, 2, "-")}
               </TableBadge>
             </HStack>

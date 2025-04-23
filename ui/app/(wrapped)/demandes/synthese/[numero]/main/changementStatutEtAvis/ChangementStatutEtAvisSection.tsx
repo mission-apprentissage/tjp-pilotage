@@ -12,7 +12,7 @@ import {
 } from "@/app/(wrapped)/demandes/utils/statutUtils";
 
 import { AvisSection } from "./AvisSection";
-import { CommentaireSection } from "./CommentaireSection";
+import { CommentaireSection } from "./ChangementStatutSection";
 import { CompteursAvisSection } from "./CompteursAvisSection";
 
 const StepIcon = chakra(({ className, numero }: { className?: string; numero: number }) => (
@@ -23,12 +23,14 @@ const StepIcon = chakra(({ className, numero }: { className?: string; numero: nu
   </Box>
 ));
 
-export const CommentairesEtAvisSection = ({
+type Etape = 1 | 2 | 3;
+
+export const ChangementStatutEtAvisSection = ({
   demande,
 }: {
   demande: (typeof client.infer)["[GET]/demande/:numero"];
 }) => {
-  const getCommentairesEtAvisByEtape = (etape: 1 | 2 | 3) => {
+  const getChangementStatutEtAvisByEtape = (etape: Etape) => {
     const changementsStatut = getChangementStatutByEtape(etape);
     const avis = getAvisByEtape(etape);
     if (changementsStatut === undefined && avis === undefined) return [];
@@ -37,7 +39,7 @@ export const CommentairesEtAvisSection = ({
     return _.orderBy([...changementsStatut, ...avis], (item) => item.updatedAt, "desc");
   };
 
-  const getChangementStatutByEtape = (etape: 1 | 2 | 3) => {
+  const getChangementStatutByEtape = (etape: Etape) => {
     return demande?.changementsStatut
 
       ?.filter((changementStatut) => {
@@ -53,47 +55,47 @@ export const CommentairesEtAvisSection = ({
       .sort((a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut));
   };
 
-  const getAvisByEtape = (etape: 1 | 2 | 3) => {
+  const getAvisByEtape = (etape: Etape) => {
     return demande?.avis?.filter((avis) => {
       if (etape === 3 && getStepWorkflowAvis(avis.typeAvis) === 4) return true;
       return getStepWorkflowAvis(avis.typeAvis) === etape;
     });
   };
 
-  const getNombreDifferentsContributeurs = (commentairesEtAvis?: Array<{ createdBy: string }>) => {
-    if (!commentairesEtAvis) return 0;
-    return _.uniq(commentairesEtAvis.map((commentaireEtAvis) => commentaireEtAvis.createdBy)).length;
+  const getNombreDifferentsContributeurs = (changementStatutEtAvis?: Array<{ createdBy: string }>) => {
+    if (!changementStatutEtAvis) return 0;
+    return _.uniq(changementStatutEtAvis.map((commentaireEtAvis) => commentaireEtAvis.createdBy)).length;
   };
 
   const etapes = [
     {
       numero: 3,
       label: "Les arbitrages et décisions de vote",
-      commentairesEtAvis: getCommentairesEtAvisByEtape(3),
+      changementStatutEtAvis: getChangementStatutEtAvisByEtape(3),
     },
     {
       numero: 2,
       label: "Les avis de la phase d'instruction de projet",
-      commentairesEtAvis: getCommentairesEtAvisByEtape(2),
+      changementStatutEtAvis: getChangementStatutEtAvisByEtape(2),
     },
     {
       numero: 1,
       label: "Les avis de la phase de revue des propositions",
-      commentairesEtAvis: getCommentairesEtAvisByEtape(1),
+      changementStatutEtAvis: getChangementStatutEtAvisByEtape(1),
     },
   ];
 
   return (
     <Flex direction={"column"} gap={10} width={"100%"}>
       <Heading as="h2" fontSize={18} fontWeight={700}>
-        Consulter les avis et commentaires sur la demande
+        Consulter les avis et changementStatut sur la demande
       </Heading>
       <CompteursAvisSection demande={demande} />
       <Divider />
 
-      {etapes.filter((etape) => etape?.commentairesEtAvis?.length).length ? (
+      {etapes.filter((etape) => etape?.changementStatutEtAvis?.length).length ? (
         etapes
-          .filter((etape) => etape?.commentairesEtAvis?.length)
+          .filter((etape) => etape?.changementStatutEtAvis?.length)
           .map((etape) => (
             <Flex key={etape.label} direction={"column"} gap={10}>
               <Flex direction="row" gap={1}>
@@ -105,32 +107,32 @@ export const CommentairesEtAvisSection = ({
                   <Text fontSize={14} fontWeight={400} lineHeight={"24px"} color={"grey.200"}>
                     <Highlight
                       query={[
-                        etape.commentairesEtAvis?.length.toString() ?? "",
-                        getNombreDifferentsContributeurs(etape.commentairesEtAvis).toString(),
+                        etape.changementStatutEtAvis?.length.toString() ?? "",
+                        getNombreDifferentsContributeurs(etape.changementStatutEtAvis).toString(),
                       ]}
                       styles={{
                         fontWeight: 700,
                       }}
                     >
                       {`${
-                        etape.commentairesEtAvis?.length
+                        etape.changementStatutEtAvis?.length
                       } changement(s) de statut ou avis par ${getNombreDifferentsContributeurs(
-                        etape.commentairesEtAvis
+                        etape.changementStatutEtAvis
                       )} contributeur(s)`}
                     </Highlight>
                   </Text>
                 </Flex>
               </Flex>
               <Flex direction={"column"}>
-                {etape.commentairesEtAvis?.map((commentaireEtAvis) => (
+                {etape.changementStatutEtAvis?.map((commentaireEtAvis) => (
                   <Fragment key={commentaireEtAvis.updatedAt}>
                     {Object.hasOwn(commentaireEtAvis, "statut") ? (
                       <CommentaireSection
                         changementStatut={commentaireEtAvis as ChangementStatut}
-                        statut={demande.statut}
+                        demande={demande}
                       />
                     ) : (
-                      <AvisSection avis={commentaireEtAvis as Avis} statut={demande.statut} />
+                      <AvisSection avis={commentaireEtAvis as Avis} demande={demande} />
                     )}
                   </Fragment>
                 ))}

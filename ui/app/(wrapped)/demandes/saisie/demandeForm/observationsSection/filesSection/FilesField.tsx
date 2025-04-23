@@ -15,7 +15,7 @@ export const FilesField = ({
   files: FileType[];
   deleteFile: (file: FileType) => void;
   downloadFile: (file: FileType) => Promise<void>;
-  disabled: boolean;
+  disabled?: boolean;
 }) => {
   const greyColor = useToken("colors", "grey.425");
 

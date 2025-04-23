@@ -44,7 +44,7 @@ import { TableQuadrant } from "@/components/TableQuadrant";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { PlacesTransformeesParPositionQuadrantSection } from "./PlacesTransformeesParPositionQuadrantSection";
@@ -56,6 +56,42 @@ const EFFECTIF_SIZES = [
   { min: 80, max: 150, size: 18 },
   { min: 150, size: 22 },
 ];
+const getLibelleTerritoire = (territoires?: Array<{ label: string; value: string }>, code?: string) => {
+  return _.find(territoires, (territoire) => territoire.value === code)?.label;
+};
+
+const generateRestitutionUrl = (
+  {filters, cfd, dispositifId}:
+  {filters: FiltersPilotage, cfd: string, dispositifId?: string}
+) => {
+  const urlFilters: Record<string, unknown> = {
+    campagne: filters.campagne ?? undefined,
+    rentreeScolaire: filters.rentreeScolaire ?? CURRENT_RENTREE,
+    cfd: [cfd],
+    codeDispositif: [dispositifId],
+    codeRegion: getScopeCode(filters),
+    codeAcademie: getScopeCode(filters),
+    codeDepartement: getScopeCode(filters),
+  };
+
+  if (filters?.type) {
+    if (filters.type === "ouverture") {
+      urlFilters.typeDemande = [
+        DemandeTypeEnum["ouverture_nette"],
+        DemandeTypeEnum["ouverture_compensation"]
+      ];
+    } else {
+      urlFilters.typeDemande = [
+        DemandeTypeEnum["fermeture"],
+        DemandeTypeEnum["diminution"]
+      ];
+    }
+  }
+
+  return createParameterizedUrl("/demandes/restitution", {
+    filters: urlFilters,
+  });
+};
 
 export const QuadrantSection = ({
   orderFormations,
@@ -98,10 +134,6 @@ export const QuadrantSection = ({
     [currentFormationId, formations]
   );
 
-  const getLibelleTerritoire = (territoires?: Array<{ label: string; value: string }>, code?: string) => {
-    return _.find(territoires, (territoire) => territoire.value === code)?.label;
-  };
-
   const handleOrder = (column: OrderFormationsPilotage["orderByFormations"]) => {
     trackEvent("pilotage-transformation:formations-ordre", {
       props: { colonne: column },
@@ -116,50 +148,12 @@ export const QuadrantSection = ({
     });
   };
 
-  const trackRestitutionsLink = () => {
-    trackEvent("pilotage-transformation:quadrant-link-restitution");
-  };
-
-  const trackRestitutionsLinkFromQuadrantSelection = () => {
-    trackEvent("pilotage-transformation:quadrant-link-restitution-from-selection");
-  };
-
   const shouldShowQuadrant = !(
     (!filters.codeDepartement && !filters.codeAcademie && !filters.codeRegion) ||
     !filters.codeNiveauDiplome ||
     filters.codeNiveauDiplome.length === 0 ||
     filters.codeNiveauDiplome.length > 1
   );
-
-  const generateRestitutionUrl = (cfd: string, dispositifId?: string) => {
-    const urlFilters: Record<string, unknown> = {
-      campagne: filters.campagne ?? undefined,
-      rentreeScolaire: filters.rentreeScolaire ?? CURRENT_RENTREE,
-      cfd: [cfd],
-      codeDispositif: [dispositifId],
-      codeRegion: getScopeCode(filters),
-      codeAcademie: getScopeCode(filters),
-      codeDepartement: getScopeCode(filters),
-    };
-
-    if (filters?.type) {
-      if (filters.type === "ouverture") {
-        urlFilters.typeDemande = [
-          DemandeTypeEnum["ouverture_nette"],
-          DemandeTypeEnum["ouverture_compensation"]
-        ];
-      } else {
-        urlFilters.typeDemande = [
-          DemandeTypeEnum["fermeture"],
-          DemandeTypeEnum["diminution"]
-        ];
-      }
-    }
-
-    return createParameterizedUrl("/demandes/restitution", {
-      filters: urlFilters,
-    });
-  };
 
   return (
     <Box width={"100%"}>
@@ -231,7 +225,7 @@ export const QuadrantSection = ({
             },
           })}
           color={"bluefrance.113"}
-          onClick={() => trackRestitutionsLink()}
+          onClick={() => trackEvent("pilotage-transformation:quadrant-link-restitution")}
         >
           Voir la liste des demandes de transformation correspondantes
           <ArrowForwardIcon ms={2} />
@@ -311,7 +305,7 @@ export const QuadrantSection = ({
 
                   setFilters({
                     ...filters,
-                    type: (item.target.value || undefined) as typeof filters.type,
+                    type: (item.target.value ?? undefined) as typeof filters.type,
                   });
                 }}
               >
@@ -340,17 +334,17 @@ export const QuadrantSection = ({
                 <FormLabel>Taux de pression</FormLabel>
                 <RadioGroup
                   as={Stack}
-                  onChange={(v) => {
+                  onChange={(value) => {
                     trackEvent("pilotage-transformation:quadrant-filter", {
                       props: {
                         type: "tauxPression",
-                        value: v,
+                        value,
                       },
                     });
 
                     setFilters({
                       ...filters,
-                      tauxPression: (v || undefined) as "eleve" | "faible",
+                      tauxPression: (value ?? undefined) as "eleve" | "faible",
                     });
                   }}
                   value={filters.tauxPression ?? ""}
@@ -412,14 +406,30 @@ export const QuadrantSection = ({
                   </Flex>
                   <Flex>
                     <Button onClick={() => toggleTypeVue()} variant="link" gap={2}>
-                      <Icon
-                        icon={`${typeVue === "quadrant" ? "ri:table-2" : "ri:layout-grid-line"}`}
-                        color={bluefrance113}
-                        height={"14px"}
-                      />
-                      <Text color={bluefrance113} fontWeight={400} lineHeight={"14px"}>
-                        {`Vue ${typeVue === "quadrant" ? "tableau" : "quadrant"}`}
-                      </Text>
+                      {
+                        typeVue === "quadrant" ? (
+                          <>
+                            <Icon
+                              icon={"ri:table-2"}
+                              color={bluefrance113}
+                              height={"14px"}
+                            />
+                            <Text color={bluefrance113} fontWeight={400} lineHeight={"14px"}>
+                              Vue tableau
+                            </Text>
+                          </>
+                        ) : (
+                          <>
+                            <Icon
+                              icon={"ri:layout-grid-line"}
+                              color={bluefrance113}
+                              height={"14px"}
+                            />
+                            <Text color={bluefrance113} fontWeight={400} lineHeight={"14px"}>
+                              Vue quadrant
+                            </Text>
+                          </>)
+                      }
                     </Button>
                   </Flex>
                 </Flex>
@@ -529,9 +539,9 @@ export const QuadrantSection = ({
                     as={NextLink}
                     target="_blank"
                     rel="noreferrer"
-                    href={generateRestitutionUrl(formation.cfd, formation?.codeDispositif)}
+                    href={generateRestitutionUrl({ filters, ...formation })}
                     mb={4}
-                    onClick={() => trackRestitutionsLinkFromQuadrantSelection()}
+                    onClick={() => trackEvent("pilotage-transformation:quadrant-link-restitution-from-selection")}
                   >
                     Voir le détail des demandes
                   </Button>
@@ -540,8 +550,8 @@ export const QuadrantSection = ({
                     label="Taux de pression"
                     textBg="white"
                     value={
-                      <TableBadge sx={getTauxPressionStyle(formation?.tauxPression)}>
-                        {formation.tauxPression !== undefined ? formatNumber(formation?.tauxPression, 2) : "-"}
+                      <TableBadge sx={getTauxPressionStyle(formatNumber(formation?.tauxPression, 2))}>
+                        {formatNumberToString(formation?.tauxPression, 2, "-")}
                       </TableBadge>
                     }
                   />

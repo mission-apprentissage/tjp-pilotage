@@ -3,7 +3,7 @@ import { ChevronDownIcon, RepeatIcon } from "@chakra-ui/icons";
 import type { PlacementWithLogical, PositionProps } from "@chakra-ui/react";
 import { Button, chakra, Flex, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal, Text, VisuallyHidden } from "@chakra-ui/react";
 import type { ChangeEventHandler, ReactNode } from "react";
-import { memo, useId, useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import removeAccents from "remove-accents";
 
 const ButtonContent = ({ selected, children }: { selected: string[]; children: ReactNode }) => {
@@ -32,30 +32,29 @@ const Checkbox = ({
   );
 };
 
-// eslint-disable-next-line react/display-name
-const InputWapper = memo(
-  ({
-    onChange,
-    ...props
-  }: {
+
+const InputWapper = ({
+  onChange,
+  ...props
+}: {
     value: string;
     onChange: (_: { checked: boolean; value: string; label: string }) => void;
     children: string;
     checked: boolean;
-  }) => {
-    return (
-      <Checkbox
-        onChange={(e) =>
-          onChange({
-            checked: (e.target as HTMLInputElement).checked,
-            label: props.children,
-            value: props.value,
-          })
-        }
-        {...props}
-      ></Checkbox>
-    );
-  }
+    isReadOnly?: boolean;
+  }) => (
+  <Checkbox
+    onChange={(e) =>
+      props.isReadOnly
+        ? undefined
+        : onChange({
+          checked: (e.target as HTMLInputElement).checked,
+          label: props.children,
+          value: props.value,
+        })
+    }
+    {...props}
+  />
 );
 
 const CheckboxIcon = ({ checked }: { checked: boolean }) => {
@@ -110,6 +109,7 @@ export const Multiselect = chakra(
     menuZIndex = "dropdown",
     gutter,
     placement,
+    isLoading = false
   }: {
     inputId?: string;
     children: ReactNode;
@@ -125,6 +125,7 @@ export const Multiselect = chakra(
     menuZIndex?: PositionProps["zIndex"];
     gutter?: number;
     placement?: PlacementWithLogical;
+    isLoading?: boolean;
   }) => {
     const map = useMemo(() => {
       return new Map(
@@ -196,6 +197,7 @@ export const Multiselect = chakra(
           borderColor={value.length ? "info.525" : "grey.950"}
           borderWidth={value.length ? "1.5px" : "1px"}
           rightIcon={<ChevronDownIcon />}
+          isLoading={isLoading}
         >
           <ButtonContent selected={Array.from(map.values())}>
             {showDefaultValue() ? options[0].label : children}

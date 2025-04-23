@@ -5,10 +5,8 @@ import AsyncSelect from "react-select/async";
 import {hasRole, RoleEnum} from 'shared';
 
 import { client } from "@/api.client";
-import type {Etablissement} from '@/app/(wrapped)/demandes/types';
+import type {Etablissement, Etablissements} from '@/app/(wrapped)/demandes/types';
 import { useAuth } from "@/utils/security/useAuth";
-
-type Options = (typeof client.infer)["[GET]/etablissement/perdir/search/:search"];
 
 export const UaiAutocomplete = ({
   id = "uai-autocomplete",
@@ -34,7 +32,7 @@ export const UaiAutocomplete = ({
   };
   const isPerdir = hasRole({ user, role: RoleEnum["perdir"] });
 
-  const searchEtablissement = _.debounce((inputValue: string, callback: (options: Options) => void) => {
+  const searchEtablissement = _.debounce((inputValue: string, callback: (options: Etablissements) => void) => {
     if (inputValue.length >= 3 || isPerdir) {
       client
         .ref("[GET]/etablissement/perdir/search/:search")

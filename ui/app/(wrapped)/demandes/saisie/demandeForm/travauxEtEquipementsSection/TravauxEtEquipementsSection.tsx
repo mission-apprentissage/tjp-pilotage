@@ -14,7 +14,7 @@ export const TravauxEtEquipementsSection = ({
   disabled,
   travauxEtEquipementsRef,
 }: {
-  disabled: boolean;
+  disabled?: boolean;
   travauxEtEquipementsRef: RefObject<HTMLDivElement>;
 }) => {
   return (

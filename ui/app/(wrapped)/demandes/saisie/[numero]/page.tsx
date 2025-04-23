@@ -2,7 +2,7 @@ import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { PageClient } from "./client";
+import { PageClient } from "./page.client";
 
 const Page = ({
   params,

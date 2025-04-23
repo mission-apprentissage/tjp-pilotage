@@ -27,7 +27,7 @@ export const PrecisionsSection = ({
   motifsEtPrecisionsRef,
   campagne
 }: {
-  disabled: boolean;
+  disabled?: boolean;
   motifsEtPrecisionsRef: RefObject<HTMLDivElement>;
   campagne: CampagneType;
 }) => {

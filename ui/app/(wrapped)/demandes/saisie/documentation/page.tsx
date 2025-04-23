@@ -2,12 +2,13 @@ import { PermissionEnum } from 'shared/enum/permissionEnum';
 
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { DocumentationClient } from "./page.client";
+import { PageClient } from "./page.client";
 
-export default function Documentation() {
-  return (
-    <GuardPermission permission={PermissionEnum["demande/lecture"]}>
-      <DocumentationClient />
-    </GuardPermission>
-  );
-}
+
+const Page = () => (
+  <GuardPermission permission={PermissionEnum["demande/lecture"]}>
+    <PageClient />
+  </GuardPermission>
+);
+
+export default Page;

@@ -226,6 +226,37 @@ export const PageClient = () => {
   const [ checkedDemandes, setCheckedDemandes ] = useState<CheckedDemandesType | undefined>();
   const canCheckDemandes = hasPermission(user?.role, PermissionEnum["demande-statut/ecriture"]);
 
+  const onChangeCheckedDemandes = (demande: { statut: DemandeStatutType, numero: string }) => {
+    setCheckedDemandes((prevState: CheckedDemandesType | undefined) => {
+      if (!prevState || !prevState.demandes.length) {
+      // Si checkedDemandes est undefined on initialise avec le statut donné
+        return {
+          statut: demande.statut,
+          demandes: [demande.numero],
+        };
+      }
+
+      const { demandes } = prevState;
+      if (demandes.includes(demande.numero)) {
+      // Si la demande est la seule sélectionnée, on retire le statut
+        if(demandes.length === 1) {
+          return undefined;
+        }
+        // Si la demande est déjà présente, on la retire
+        return {
+          ...prevState,
+          demandes: demandes.filter((i) => i !== demande.statut),
+        };
+      } else {
+      // Sinon, on l'ajoute
+        return {
+          ...prevState,
+          demandes: [...demandes, demande.numero],
+        };
+      }
+    });
+  };
+
   const [isImporting, setIsImporting] = useState(false);
   const [isModifyingGroup, setIsModifyingGroup] = useState(false);
 
@@ -270,190 +301,22 @@ export const PageClient = () => {
             />
             {isModifyingGroup ? (
               <DemandeSpinner mt={6}/>
-            ) : data?.demandes.length ? (
-              <>
-                <TableContainer overflowY="auto" flex={1}>
-                  <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize={14} gap="0">
-                    <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white" zIndex={"1"}>
-                      <Tr>
-                        {canCheckDemandes && (
-                          <Th textAlign={"center"}>
-                            <Checkbox
-                              onChange={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setCheckedDemandes(undefined);
-                              }}
-                              borderRadius={4}
-                              borderColor={"bluefrance.113"}
-                              bgColor={"white"}
-                              _checked={{
-                                bgColor: "bluefrance.113",
-                              }}
-                              colorScheme="bluefrance"
-                              iconColor={"white"}
-                              isChecked={!!checkedDemandes?.demandes.length}
-                              display={checkedDemandes?.demandes.length && canCheckDemandes ? "block" : "none"}
-                            />
-                          </Th>
-                        )}
-                        <Th cursor="pointer" onClick={() => handleOrder("updatedAt")} fontSize={12}>
-                          <OrderIcon {...order} column="updatedAt" />
-                          {DEMANDES_COLUMNS.updatedAt}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("libelleFormation")} minW={300} maxW={300} fontSize={12}>
-                          <OrderIcon {...order} column="libelleFormation" />
-                          {DEMANDES_COLUMNS.libelleFormation}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("libelleEtablissement")} minW={350} maxW={350} fontSize={12}>
-                          <OrderIcon {...order} column="libelleEtablissement" />
-                          {DEMANDES_COLUMNS.libelleEtablissement}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("libelleDepartement")} fontSize={12}>
-                          <OrderIcon {...order} column="libelleDepartement" />
-                          {DEMANDES_COLUMNS.libelleDepartement}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("statut")} textAlign={"center"} fontSize={12}>
-                          <OrderIcon {...order} column="statut" />
-                          {DEMANDES_COLUMNS.statut}
-                        </Th>
-                        <Th textAlign={"center"} fontSize={12}>actions</Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("typeDemande")} textAlign={"center"} fontSize={12}>
-                          <OrderIcon {...order} column="typeDemande" />
-                          {DEMANDES_COLUMNS.typeDemande}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("createdAt")} fontSize={12}>
-                          <OrderIcon {...order} column="createdAt" />
-                          {DEMANDES_COLUMNS.createdAt}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("numeroDemandeImportee")} fontSize={12}>
-                          <OrderIcon {...order} column="numeroDemandeImportee" />
-                          {DEMANDES_COLUMNS.numero}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("userName")} w="15" fontSize={12}>
-                          <OrderIcon {...order} column="userName" />
-                          {DEMANDES_COLUMNS.userName}
-                        </Th>
-                        <Th cursor="pointer" onClick={() => handleOrder("inspecteurReferent")} minW={250} maxW={250} fontSize={12}>
-                          <OrderIcon {...order} column="inspecteurReferent" />
-                          {DEMANDES_COLUMNS.inspecteurReferent}
-                        </Th>
-                        <Th textAlign={"center"} fontSize={12}>Progression</Th>
-                        <Th fontSize={12}>Avis (Phase en cours)</Th>
-                        <Th fontSize={12}>Derniers avis - Phase en cours</Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {data?.demandes.map((demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]) => {
-
-                        const linkSaisie = getRoutingSaisieRecueilDemande({
-                          user,
-                          suffix: demande.numero
-                        });
-
-                        const linkSaisieImported = getRoutingSaisieRecueilDemande({
-                          user,
-                          suffix: demande.numeroDemandeImportee
-                        });
-
-                        const linkSynthese = getRoutingSyntheseRecueilDemande({
-                          user,
-                          suffix: demande.numero
-                        });
-
-                        const isModificationDisabled = !canEditDemande({
-                          demande : {
-                            ...demande,
-                            campagne: data?.campagne,
-                          },
-                          user,
-                        });
-
-                        const isDeleteDisabled = !canDeleteDemande({
-                          demande : {
-                            ...demande,
-                            campagne: data?.campagne,
-                          },
-                          user
-                        });
-
-                        const isImportDisabled = !canImportDemande({
-                          isAlreadyImported: !!demande.numeroDemandeImportee,
-                          isLoading: (isLoading || isSubmitting || isImporting),
-                          user,
-                          campagne: data?.campagne,
-                        });
-
-                        const isCorrectionDisabled = !canCorrectDemande({
-                          demande : {
-                            ...demande,
-                            campagne: data?.campagne
-                          },
-                          user
-                        });
-
-                        const isChecked = checkedDemandes !== undefined &&
-                          checkedDemandes.demandes.length > 0 &&
-                          checkedDemandes.demandes.includes(demande.numero);
-                        const canBeChecked = !isModificationDisabled && canCheckDemande({
-                          demande: {
-                            ...demande,
-                            campagne: data?.campagne
-                          },
-                          checkedDemandes,
-                          user
-                        });
-
-                        return (
-                          <Tr
-                            height={"60px"}
-                            key={demande.numero}
-                            whiteSpace={"pre"}
-                            fontWeight={demande.alreadyAccessed ? "400" : "700"}
-                            bg={demande.alreadyAccessed ? "grey.975" : "white"}
-                          >
-                            {canCheckDemandes && (
-                              <Td textAlign={"center"}>
-                                <Tooltip isDisabled={canBeChecked}
-                                  closeOnScroll={true}
-                                  label={
-                                    isModificationDisabled ?
-                                      "Cette demande a un statut qui ne permet pas sa sélection pour modification." :
-                                      "Vous avez sélectionné une demande dont le statut est différent, ce qui ne permet pas de modifier le statut de manière groupée."}
-                                  shouldWrapChildren
-                                >
+            ) : <> {
+              data?.demandes.length ? (
+                <>
+                  <TableContainer overflowY="auto" flex={1}>
+                    <Table sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }} size="md" fontSize={14} gap="0">
+                      <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" bg="white" zIndex={"1"}>
+                        <Tr>
+                          {canCheckDemandes && (
+                            <Th textAlign={"center"}>
+                              { checkedDemandes?.demandes.length &&
+                                (
                                   <Checkbox
                                     onChange={(e) => {
                                       e.preventDefault();
                                       e.stopPropagation();
-                                      setCheckedDemandes((prevState: CheckedDemandesType | undefined) => {
-                                        if (!prevState || !prevState.demandes.length) {
-                                          // Si checkedDemandes est undefined on initialise avec le statut donné
-                                          return {
-                                            statut: demande.statut,
-                                            demandes: [demande.numero],
-                                          };
-                                        }
-
-                                        const { demandes } = prevState;
-                                        if (demandes.includes(demande.numero)) {
-                                          // Si la demande est la seule sélectionnée, on retire le statut
-                                          if(demandes.length === 1) {
-                                            return undefined;
-                                          }
-                                          // Si la demande est déjà présente, on la retire
-                                          return {
-                                            ...prevState,
-                                            demandes: demandes.filter((i) => i !== demande.statut),
-                                          };
-                                        } else {
-                                          // Sinon, on l'ajoute
-                                          return {
-                                            ...prevState,
-                                            demandes: [...demandes, demande.numero],
-                                          };
-                                        }
-                                      });
+                                      setCheckedDemandes(undefined);
                                     }}
                                     borderRadius={4}
                                     borderColor={"bluefrance.113"}
@@ -463,128 +326,273 @@ export const PageClient = () => {
                                     }}
                                     colorScheme="bluefrance"
                                     iconColor={"white"}
-                                    isChecked={isChecked}
-                                    isDisabled={!canBeChecked}
+                                    isChecked={true}
                                   />
+                                )
+                              }
+                            </Th>
+                          )}
+                          <Th cursor="pointer" onClick={() => handleOrder("updatedAt")} fontSize={12}>
+                            <OrderIcon {...order} column="updatedAt" />
+                            {DEMANDES_COLUMNS.updatedAt}
+                          </Th>
+                          <Th cursor="pointer" onClick={() => handleOrder("libelleFormation")} minW={300} maxW={300} fontSize={12}>
+                            <OrderIcon {...order} column="libelleFormation" />
+                            {DEMANDES_COLUMNS.libelleFormation}
+                          </Th>
+                          <Th cursor="pointer" onClick={() => handleOrder("libelleEtablissement")} minW={350} maxW={350} fontSize={12}>
+                            <OrderIcon {...order} column="libelleEtablissement" />
+                            {DEMANDES_COLUMNS.libelleEtablissement}
+                          </Th>
+                          <Th cursor="pointer" onClick={() => handleOrder("libelleDepartement")} fontSize={12}>
+                            <OrderIcon {...order} column="libelleDepartement" />
+                            {DEMANDES_COLUMNS.libelleDepartement}
+                          </Th>
+                          <Th cursor="pointer" onClick={() => handleOrder("statut")} textAlign={"center"} fontSize={12}>
+                            <OrderIcon {...order} column="statut" />
+                            {DEMANDES_COLUMNS.statut}
+                          </Th>
+                          <Th textAlign={"center"} fontSize={12}>actions</Th>
+                          <Th cursor="pointer" onClick={() => handleOrder("typeDemande")} textAlign={"center"} fontSize={12}>
+                            <OrderIcon {...order} column="typeDemande" />
+                            {DEMANDES_COLUMNS.typeDemande}
+                          </Th>
+                          <Th cursor="pointer" onClick={() => handleOrder("createdAt")} fontSize={12}>
+                            <OrderIcon {...order} column="createdAt" />
+                            {DEMANDES_COLUMNS.createdAt}
+                          </Th>
+                          <Th cursor="pointer" onClick={() => handleOrder("numeroDemandeImportee")} fontSize={12}>
+                            <OrderIcon {...order} column="numeroDemandeImportee" />
+                            {DEMANDES_COLUMNS.numero}
+                          </Th>
+                          <Th cursor="pointer" onClick={() => handleOrder("userName")} w="15" fontSize={12}>
+                            <OrderIcon {...order} column="userName" />
+                            {DEMANDES_COLUMNS.userName}
+                          </Th>
+                          <Th cursor="pointer" onClick={() => handleOrder("inspecteurReferent")} minW={250} maxW={250} fontSize={12}>
+                            <OrderIcon {...order} column="inspecteurReferent" />
+                            {DEMANDES_COLUMNS.inspecteurReferent}
+                          </Th>
+                          <Th textAlign={"center"} fontSize={12}>Progression</Th>
+                          <Th fontSize={12}>Avis (Phase en cours)</Th>
+                          <Th fontSize={12}>Derniers avis - Phase en cours</Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {data?.demandes.map((demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]) => {
+
+                          const linkSaisie = getRoutingSaisieRecueilDemande({
+                            user,
+                            suffix: demande.numero
+                          });
+
+                          const linkSaisieImported = getRoutingSaisieRecueilDemande({
+                            user,
+                            suffix: demande.numeroDemandeImportee
+                          });
+
+                          const linkSynthese = getRoutingSyntheseRecueilDemande({
+                            user,
+                            suffix: demande.numero
+                          });
+
+                          const isModificationDisabled = !canEditDemande({
+                            demande : {
+                              ...demande,
+                              campagne: data?.campagne,
+                            },
+                            user,
+                          });
+
+                          const isDeleteDisabled = !canDeleteDemande({
+                            demande : {
+                              ...demande,
+                              campagne: data?.campagne,
+                            },
+                            user
+                          });
+
+                          const isImportDisabled = !canImportDemande({
+                            isAlreadyImported: !!demande.numeroDemandeImportee,
+                            isLoading: (isLoading || isSubmitting || isImporting),
+                            user,
+                            campagne: data?.campagne,
+                          });
+
+                          const isCorrectionDisabled = !canCorrectDemande({
+                            demande : {
+                              ...demande,
+                              campagne: data?.campagne
+                            },
+                            user
+                          });
+
+                          const isChecked = checkedDemandes !== undefined &&
+                          checkedDemandes.demandes.length > 0 &&
+                          checkedDemandes.demandes.includes(demande.numero);
+                          const canBeChecked = !isModificationDisabled && canCheckDemande({
+                            demande: {
+                              ...demande,
+                              campagne: data?.campagne
+                            },
+                            checkedDemandes,
+                            user
+                          });
+
+                          return (
+                            <Tr
+                              height={"60px"}
+                              key={demande.numero}
+                              whiteSpace={"pre"}
+                              fontWeight={demande.alreadyAccessed ? "400" : "700"}
+                              bg={demande.alreadyAccessed ? "grey.975" : "white"}
+                            >
+                              {canCheckDemandes && (
+                                <Td textAlign={"center"}>
+                                  <Tooltip isDisabled={canBeChecked}
+                                    closeOnScroll={true}
+                                    label={
+                                      isModificationDisabled ?
+                                        "Cette demande a un statut qui ne permet pas sa sélection pour modification." :
+                                        "Vous avez sélectionné une demande dont le statut est différent, ce qui ne permet pas de modifier le statut de manière groupée."}
+                                    shouldWrapChildren
+                                  >
+                                    <Checkbox
+                                      onChange={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        onChangeCheckedDemandes(demande);
+                                      }}
+                                      borderRadius={4}
+                                      borderColor={"bluefrance.113"}
+                                      bgColor={"white"}
+                                      _checked={{
+                                        bgColor: "bluefrance.113",
+                                      }}
+                                      colorScheme="bluefrance"
+                                      iconColor={"white"}
+                                      isChecked={isChecked}
+                                      isDisabled={!canBeChecked}
+                                    />
+                                  </Tooltip>
+                                </Td>
+                              )}
+                              <Td textAlign={"center"}>
+                                <Tooltip label={`Le ${format(demande.updatedAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
+                                  {format(demande.updatedAt, "d MMM HH:mm", {
+                                    locale: fr,
+                                  })}
                                 </Tooltip>
                               </Td>
-                            )}
-                            <Td textAlign={"center"}>
-                              <Tooltip label={`Le ${format(demande.updatedAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
-                                {format(demande.updatedAt, "d MMM HH:mm", {
-                                  locale: fr,
-                                })}
-                              </Tooltip>
-                            </Td>
-                            <Td>
-                              <Tooltip label={demande.libelleFormation}>
+                              <Td>
+                                <Tooltip label={demande.libelleFormation}>
+                                  <Text
+                                    textOverflow={"ellipsis"}
+                                    overflow={"hidden"}
+                                    whiteSpace={"break-spaces"}
+                                    noOfLines={2}
+                                  >
+                                    {demande.libelleFormation}
+                                  </Text>
+                                </Tooltip>
+                              </Td>
+                              <Td>
+                                <Tooltip label={demande.libelleEtablissement}>
+                                  <Text
+                                    textOverflow={"ellipsis"}
+                                    overflow={"hidden"}
+                                    whiteSpace={"break-spaces"}
+                                    noOfLines={2}
+                                  >
+                                    {demande.libelleEtablissement}
+                                  </Text>
+                                </Tooltip>
+                              </Td>
+                              <Td>
                                 <Text
+                                  textAlign={"center"}
                                   textOverflow={"ellipsis"}
                                   overflow={"hidden"}
                                   whiteSpace={"break-spaces"}
                                   noOfLines={2}
                                 >
-                                  {demande.libelleFormation}
+                                  <Tooltip
+                                    label={formatDepartementLibelleWithCodeDepartement({
+                                      libelleDepartement: demande.libelleDepartement,
+                                      codeDepartement: demande.codeDepartement,
+                                    })}
+                                  >
+                                    {formatCodeDepartement(demande.codeDepartement)}
+                                  </Tooltip>
                                 </Text>
-                              </Tooltip>
-                            </Td>
-                            <Td>
-                              <Tooltip label={demande.libelleEtablissement}>
-                                <Text
-                                  textOverflow={"ellipsis"}
-                                  overflow={"hidden"}
-                                  whiteSpace={"break-spaces"}
-                                  noOfLines={2}
-                                >
-                                  {demande.libelleEtablissement}
-                                </Text>
-                              </Tooltip>
-                            </Td>
-                            <Td>
-                              <Text
-                                textAlign={"center"}
-                                textOverflow={"ellipsis"}
-                                overflow={"hidden"}
-                                whiteSpace={"break-spaces"}
-                                noOfLines={2}
-                              >
-                                <Tooltip
-                                  label={formatDepartementLibelleWithCodeDepartement({
-                                    libelleDepartement: demande.libelleDepartement,
-                                    codeDepartement: demande.codeDepartement,
-                                  })}
-                                >
-                                  {formatCodeDepartement(demande.codeDepartement)}
-                                </Tooltip>
-                              </Text>
-                            </Td>
-                            <Td textAlign={"center"} w={0}>
-                              <StatutTag statut={demande.statut} size="md" />
-                            </Td>
-                            <Td textAlign={"center"}>
-                              <Flex direction={"row"} gap={0} justifyContent={"left"}>
-                                <Tooltip label="Voir la demande" shouldWrapChildren>
-                                  <IconButton
-                                    as={NextLink}
-                                    href={linkSynthese}
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      router.push(linkSynthese);
-                                    }}
-                                    aria-label="Voir la demande"
-                                    color={"bluefrance.113"}
-                                    bgColor={"transparent"}
-                                    icon={<Icon icon="ri:eye-line" width={"24px"} color={bluefrance113} />}
-                                  />
-                                </Tooltip>
-                                {
-                                  !isModificationDisabled && (
-                                    <Tooltip label="Modifier la demande" shouldWrapChildren>
-                                      <IconButton
-                                        disabled={isModificationDisabled}
-                                        as={NextLink}
-                                        href={linkSaisie}
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          e.stopPropagation();
-                                          router.push(linkSaisie);
-                                        }}
-                                        aria-label="Modifier la demande"
-                                        color={"bluefrance.113"}
-                                        bgColor={"transparent"}
-                                        icon={<Icon icon="ri:pencil-line" width={"24px"} color={bluefrance113} />}
-                                      />
-                                    </Tooltip>
-                                  )}
-                                { !isDeleteDisabled && (<DeleteDemandeButton demande={demande} />) }
-                                <Tooltip label="Suivre la demande" shouldWrapChildren>
-                                  <IconButton
-                                    onClick={() => {
-                                      if (!demande.suiviId)
-                                        submitSuivi({
-                                          body: {
-                                            demandeNumero: demande.numero,
-                                          },
-                                        });
-                                      else
-                                        deleteSuivi({
-                                          params: { id: demande.suiviId },
-                                        });
-                                    }}
-                                    aria-label="Suivre la demande"
-                                    color={"bluefrance.113"}
-                                    bgColor={"transparent"}
-                                    icon={
-                                      demande.suiviId ? (
-                                        <Icon width="24px" icon="ri:bookmark-fill" />
-                                      ) : (
-                                        <Icon width="24px" icon="ri:bookmark-line" />
-                                      )
-                                    }
-                                  />
-                                </Tooltip>
-                                {isCampagneTerminee(data?.campagne) &&
+                              </Td>
+                              <Td textAlign={"center"} w={0}>
+                                <StatutTag statut={demande.statut} size="md" />
+                              </Td>
+                              <Td textAlign={"center"}>
+                                <Flex direction={"row"} gap={0} justifyContent={"left"}>
+                                  <Tooltip label="Voir la demande" shouldWrapChildren>
+                                    <IconButton
+                                      as={NextLink}
+                                      href={linkSynthese}
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        router.push(linkSynthese);
+                                      }}
+                                      aria-label="Voir la demande"
+                                      color={"bluefrance.113"}
+                                      bgColor={"transparent"}
+                                      icon={<Icon icon="ri:eye-line" width={"24px"} color={bluefrance113} />}
+                                    />
+                                  </Tooltip>
+                                  {
+                                    !isModificationDisabled && (
+                                      <Tooltip label="Modifier la demande" shouldWrapChildren>
+                                        <IconButton
+                                          disabled={isModificationDisabled}
+                                          as={NextLink}
+                                          href={linkSaisie}
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            router.push(linkSaisie);
+                                          }}
+                                          aria-label="Modifier la demande"
+                                          color={"bluefrance.113"}
+                                          bgColor={"transparent"}
+                                          icon={<Icon icon="ri:pencil-line" width={"24px"} color={bluefrance113} />}
+                                        />
+                                      </Tooltip>
+                                    )}
+                                  { !isDeleteDisabled && (<DeleteDemandeButton demande={demande} />) }
+                                  <Tooltip label="Suivre la demande" shouldWrapChildren>
+                                    <IconButton
+                                      onClick={() => {
+                                        if (!demande.suiviId)
+                                          submitSuivi({
+                                            body: {
+                                              demandeNumero: demande.numero,
+                                            },
+                                          });
+                                        else
+                                          deleteSuivi({
+                                            params: { id: demande.suiviId },
+                                          });
+                                      }}
+                                      aria-label="Suivre la demande"
+                                      color={"bluefrance.113"}
+                                      bgColor={"transparent"}
+                                      icon={
+                                        demande.suiviId ? (
+                                          <Icon width="24px" icon="ri:bookmark-fill" />
+                                        ) : (
+                                          <Icon width="24px" icon="ri:bookmark-line" />
+                                        )
+                                      }
+                                    />
+                                  </Tooltip>
+                                  {isCampagneTerminee(data?.campagne) &&
                                 (demande.numeroDemandeImportee ? (
                                   <Tooltip label={`Voir la demande dupliquée ${demande.numeroDemandeImportee}`} shouldWrapChildren>
                                     <IconButton
@@ -623,116 +631,118 @@ export const PageClient = () => {
                                     />
                                   </Tooltip>
                                 ))}
-                                {!isCorrectionDisabled &&
+                                  {!isCorrectionDisabled &&
                                  (<CorrectionDemandeButton
                                    user={user}
                                    demande={demande}
                                    campagne={data?.campagne}
                                  />)
-                                }
-                              </Flex>
-                            </Td>
-                            <Td textAlign={"center"}>
-                              <Tag colorScheme="blue" size={"md"} h="fit-content">
-                                {getTypeDemandeLabel(demande.typeDemande)}
-                              </Tag>
-                            </Td>
-
-                            <Td textAlign={"center"}>
-                              <Tooltip label={`Le ${format(demande.createdAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
-                                {format(demande.createdAt, "d MMM HH:mm", {
-                                  locale: fr,
-                                })}
-                              </Tooltip>
-                            </Td>
-                            <Td>
-                              <Text
-                                textOverflow={"ellipsis"}
-                                overflow={"hidden"}
-                                whiteSpace={"break-spaces"}
-                                textAlign={"center"}
-                              >
-                                {demande.numero}
-                              </Text>
-                            </Td>
-                            <Td w="15" textAlign={"center"}>
-                              <Tooltip label={demande.userName}>
-                                <Avatar
-                                  name={demande.userName}
-                                  colorScheme={getAvatarBgColor(demande.userName ?? "")}
-                                  bg={getAvatarBgColor(demande.userName ?? "")}
-                                  color={"white"}
-                                  position={"unset"}
-                                />
-                              </Tooltip>
-                            </Td>
-                            <Td>
-                              <Text textOverflow={"ellipsis"} overflow={"hidden"} whiteSpace={"break-spaces"}>
-                                {demande.inspecteurReferent}
-                              </Text>
-                            </Td>
-                            <Td>
-                              <ProgressSteps statut={demande.statut} />
-                            </Td>
-                            <Td>
-                              <HStack w={"100%"} justify={"center"}>
-                                <Tag size="md" color={"white"} bgColor={"bluefrance.525"} fontWeight={"bold"}>
-                                  {
-                                    demande.avis.filter(
-                                      (avis) =>
-                                        getStepWorkflowAvis(avis.type as AvisTypeType) ===
-                                        getStepWorkflow(demande.statut)
-                                    ).length
                                   }
+                                </Flex>
+                              </Td>
+                              <Td textAlign={"center"}>
+                                <Tag colorScheme="blue" size={"md"} h="fit-content">
+                                  {getTypeDemandeLabel(demande.typeDemande)}
                                 </Tag>
-                                <Text>({demande.avis.length} au total)</Text>
-                              </HStack>
-                            </Td>
-                            <Td>
-                              <AvisTags listeAvis={demande.avis} statut={demande.statut} />
-                            </Td>
-                          </Tr>
-                        );})}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-                <TableFooter
-                  page={page}
-                  pageSize={PAGE_SIZE}
-                  count={data?.count}
-                  onPageChange={(newPage) => setSearchParams({ ...searchParams, page: `${newPage}` })}
-                />
-              </>
-            ) : (
-              <Center mt={12}>
-                <Flex direction={"column"}>
-                  <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-                  <Tooltip
-                    label={getMessageAccompagnementCampagne({
-                      campagne: data?.campagne,
-                      currentCampagne: currentCampagne!,
-                      user
-                    })}
-                    shouldWrapChildren
-                  >
-                    <Flex>
-                      <Button
-                        isDisabled={isNouvelleDemandeDisabled}
-                        variant="createButton"
-                        size={"lg"}
-                        as={isNouvelleDemandeDisabled ? undefined : NextLink}
-                        href={getRoutingSaisieRecueilDemande({ user, suffix: `new?campagneId=${data?.campagne.id}` })}
-                        px={3}
-                        mt={12}
-                        mx={"auto"}
-                      >
+                              </Td>
+
+                              <Td textAlign={"center"}>
+                                <Tooltip label={`Le ${format(demande.createdAt, "d MMMM yyyy à HH:mm", { locale: fr })}`}>
+                                  {format(demande.createdAt, "d MMM HH:mm", {
+                                    locale: fr,
+                                  })}
+                                </Tooltip>
+                              </Td>
+                              <Td>
+                                <Text
+                                  textOverflow={"ellipsis"}
+                                  overflow={"hidden"}
+                                  whiteSpace={"break-spaces"}
+                                  textAlign={"center"}
+                                >
+                                  {demande.numero}
+                                </Text>
+                              </Td>
+                              <Td w="15" textAlign={"center"}>
+                                <Tooltip label={demande.userName}>
+                                  <Avatar
+                                    name={demande.userName}
+                                    colorScheme={getAvatarBgColor(demande.userName ?? "")}
+                                    bg={getAvatarBgColor(demande.userName ?? "")}
+                                    color={"white"}
+                                    position={"unset"}
+                                  />
+                                </Tooltip>
+                              </Td>
+                              <Td>
+                                <Text textOverflow={"ellipsis"} overflow={"hidden"} whiteSpace={"break-spaces"}>
+                                  {demande.inspecteurReferent}
+                                </Text>
+                              </Td>
+                              <Td>
+                                <ProgressSteps statut={demande.statut} />
+                              </Td>
+                              <Td>
+                                <HStack w={"100%"} justify={"center"}>
+                                  <Tag size="md" color={"white"} bgColor={"bluefrance.525"} fontWeight={"bold"}>
+                                    {
+                                      demande.avis.filter(
+                                        (avis) =>
+                                          getStepWorkflowAvis(avis.type as AvisTypeType) ===
+                                        getStepWorkflow(demande.statut)
+                                      ).length
+                                    }
+                                  </Tag>
+                                  <Text>({demande.avis.length} au total)</Text>
+                                </HStack>
+                              </Td>
+                              <Td>
+                                <AvisTags listeAvis={demande.avis} statut={demande.statut} />
+                              </Td>
+                            </Tr>
+                          );})}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
+                  <TableFooter
+                    page={page}
+                    pageSize={PAGE_SIZE}
+                    count={data?.count}
+                    onPageChange={(newPage) => setSearchParams({ ...searchParams, page: `${newPage}` })}
+                  />
+                </>
+              ) : (
+                <Center mt={12}>
+                  <Flex direction={"column"}>
+                    <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
+                    <Tooltip
+                      label={getMessageAccompagnementCampagne({
+                        campagne: data?.campagne,
+                        currentCampagne: currentCampagne!,
+                        user
+                      })}
+                      shouldWrapChildren
+                    >
+                      <Flex>
+                        <Button
+                          isDisabled={isNouvelleDemandeDisabled}
+                          variant="createButton"
+                          size={"lg"}
+                          as={!isNouvelleDemandeDisabled ? undefined : NextLink}
+                          href={getRoutingSaisieRecueilDemande({ user, suffix: `new?campagneId=${data?.campagne.id}` })}
+                          px={3}
+                          mt={12}
+                          mx={"auto"}
+                        >
                           Nouvelle demande
-                      </Button>
-                    </Flex>
-                  </Tooltip>
-                </Flex>
-              </Center>
-            )}
+                        </Button>
+                      </Flex>
+                    </Tooltip>
+                  </Flex>
+                </Center>
+              )}
+            </>
+            }
           </>
         )}
       </Flex>

@@ -3,8 +3,7 @@ import { Icon } from "@iconify/react";
 import { humanFileSize } from "shared/utils/humanFileSize";
 
 import { client } from "@/api.client";
-
-import type { FileType } from "./types";
+import type {FileType} from '@/app/(wrapped)/demandes/types';
 
 const useFilesSection = (numero: string) => {
   const toast = useToast();

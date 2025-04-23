@@ -75,8 +75,7 @@ const formatRights = (role: Role, label: string, user?: User) => {
   return formatPermissions(overridePermissions);
 };
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default () => {
+const Page = () => {
   const [selectedUser, setSelectedUser] = useState<User>();
 
   return (
@@ -184,3 +183,5 @@ export default () => {
     </GuardPermission>
   );
 };
+
+export default Page;

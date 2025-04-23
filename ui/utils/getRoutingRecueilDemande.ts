@@ -5,6 +5,7 @@ import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 
 const ROUTE_DEMANDES = "/demandes";
+const formatSuffix = (suffix: string) => suffix ? `/${suffix}` : "";
 
 export const getRoutingSaisieRecueilDemande = ({
   user,
@@ -17,7 +18,7 @@ export const getRoutingSaisieRecueilDemande = ({
   suffix?: string;
 }) => {
   if(!hasPermission(user?.role, PermissionEnum["demande/ecriture"]) && !hasPermission(user?.role, PermissionEnum["demande/lecture"])) return "/";
-  return `${ROUTE_DEMANDES}/saisie${suffix ? `/${suffix}` : ""}`;
+  return `${ROUTE_DEMANDES}/saisie${formatSuffix(suffix)}`;
 };
 
 export const getRoutingSyntheseRecueilDemande = ({
@@ -31,6 +32,6 @@ export const getRoutingSyntheseRecueilDemande = ({
   suffix?: string;
 }) => {
   if(!hasPermission(user?.role, PermissionEnum["demande/ecriture"]) && !hasPermission(user?.role, PermissionEnum["demande/lecture"])) return "/";
-  return `${ROUTE_DEMANDES}/synthese${suffix ? `/${suffix}` : ""}`;
+  return `${ROUTE_DEMANDES}/synthese${formatSuffix(suffix)}`;
 };
 

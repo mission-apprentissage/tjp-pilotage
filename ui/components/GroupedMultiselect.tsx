@@ -19,7 +19,7 @@ import {
   VisuallyHidden,
 } from "@chakra-ui/react";
 import type { ChangeEventHandler, ReactNode } from "react";
-import { memo, useId, useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import removeAccents from "remove-accents";
 import type { OptionType } from "shared/schema/optionSchema";
 
@@ -49,33 +49,28 @@ const Checkbox = ({
   );
 };
 
-// eslint-disable-next-line react/display-name
-const InputWapper = memo(
-  ({
-    onChange,
-    ...props
-  }: {
-    value: string;
-    onChange: (_: { checked: boolean; value: string; label: string }) => void;
-    children: string;
-    checked: boolean;
-    isReadOnly?: boolean;
-  }) => {
-    return (
-      <Checkbox
-        onChange={(e) =>
-          props.isReadOnly
-            ? undefined
-            : onChange({
-              checked: (e.target as HTMLInputElement).checked,
-              label: props.children,
-              value: props.value,
-            })
-        }
-        {...props}
-      ></Checkbox>
-    );
-  }
+const InputWapper = ({
+  onChange,
+  ...props
+}: {
+  value: string;
+  onChange: (_: { checked: boolean; value: string; label: string }) => void;
+  children: string;
+  checked: boolean;
+  isReadOnly?: boolean;
+}) => (
+  <Checkbox
+    onChange={(e) =>
+      props.isReadOnly
+        ? undefined
+        : onChange({
+          checked: (e.target as HTMLInputElement).checked,
+          label: props.children,
+          value: props.value,
+        })
+    }
+    {...props}
+  />
 );
 
 const CheckboxIcon = ({ checked }: { checked: boolean }) => {
@@ -156,8 +151,8 @@ export const GroupedMultiselect = chakra(
 
     const map = useMemo(() => {
       return new Map(
-        value.map((val) => {
-          return [
+        value.map((val) =>
+          [
             val,
             (
               groupedOptions[
@@ -166,8 +161,8 @@ export const GroupedMultiselect = chakra(
                 ) as string
               ]?.options.find(({ value }) => val === value)?.label) ??
               val,
-          ];
-        })
+          ]
+        )
       );
     }, [value, groupedOptions]);
 
@@ -223,8 +218,7 @@ export const GroupedMultiselect = chakra(
         if (allOptionsSelected) {
           onChange?.(value.filter((val) => !values.includes(val)));
         } else {
-          // @ts-expect-error TODO
-          onChange?.([...new Set([...value, ...values])]);
+          onChange?.([...value, ...values]);
         }
       }
     };
@@ -242,9 +236,7 @@ export const GroupedMultiselect = chakra(
         closeOnSelect={false}
         preventOverflow={false}
       >
-        {customButton ? (
-          customButton
-        ) : (
+        {customButton || (
           <MenuButton
             as={Button}
             size={size ?? "sm"}

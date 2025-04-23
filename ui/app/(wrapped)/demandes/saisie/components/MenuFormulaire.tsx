@@ -6,10 +6,12 @@ export const MenuFormulaire = ({
   refs,
   isTypeDemandeNotFermetureOuDiminution,
   showCorrection,
+  showStatutSection,
 }: {
   refs: Record<string, RefObject<HTMLDivElement>>;
   isTypeDemandeNotFermetureOuDiminution?: boolean;
   showCorrection?: boolean;
+  showStatutSection?: boolean;
 }) => {
   const jumpToAnchor = (anchor: string) => {
     refs[anchor]?.current?.scrollIntoView({ behavior: "smooth" });
@@ -134,6 +136,22 @@ export const MenuFormulaire = ({
         >
           Commentaire et pièce(s) jointe(s)
         </Button>
+        {showStatutSection && (
+          <Button
+            onClick={() => jumpToAnchor("statut")}
+            width={"100%"}
+            justifyContent={"start"}
+            fontSize={16}
+            fontWeight={700}
+            px={4}
+            py={3}
+            bg={"bluefrance.975"}
+            _hover={{ bg: "blueecume.925_hover" }}
+            leftIcon={<Icon icon="ri:chat-3-line" color="black" />}
+          >
+          Statut
+          </Button>
+        )}
       </Flex>
     </Box>
   );

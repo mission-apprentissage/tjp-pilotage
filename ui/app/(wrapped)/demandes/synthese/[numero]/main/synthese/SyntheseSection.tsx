@@ -172,11 +172,13 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
             </Flex>
             <Flex gap={2} direction="column">
               {demande.commentaire && demande.commentaire.length ? (
-                demande.commentaire.split("\n").map((p, i) => (
-                  <Text key={`commentaire-${i}`} fontSize={14} sx={{ py: 1 }}>
-                    {unEscapeString(p)}
-                  </Text>
-                ))
+                demande.commentaire.split("\n").map((p, i) => {
+                  const key = `commentaire-${i}`;
+                  return (
+                    <Text key={key} fontSize={14} sx={{ py: 1 }}>
+                      {unEscapeString(p)}
+                    </Text>
+                  );})
               ) : (
                 <Text fontSize={14}>Aucune</Text>
               )}

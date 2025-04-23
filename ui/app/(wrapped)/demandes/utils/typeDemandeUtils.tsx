@@ -197,13 +197,11 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     campagnes: ["2024", "2025", "2026"],
     desc: "Ce formulaire doit être utilisé uniquement pour des ouvertures ou augmentations de places afin de répondre à l’afflux d’élèves sans affectation.",
     exemple: (
-      <>
-        <Text>
-          Toute augmentation de capacité concernant des élèves non affectés doit être saisie dans ce formulaire, y
-          compris si la formation concernée avait déjà fait l’objet d’une saisie d’ouverture ou d'augmentation durant la
-          campagne 2023.
-        </Text>
-      </>
+      <Text>
+        Toute augmentation de capacité concernant des élèves non affectés doit être saisie dans ce formulaire, y
+        compris si la formation concernée avait déjà fait l’objet d’une saisie d’ouverture ou d'augmentation durant la
+        campagne 2023.
+      </Text>
     ),
   },
 };

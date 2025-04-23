@@ -57,18 +57,19 @@ export const FiltersSection = ({
       [key]: value,
     };
 
-    if (key === "campagne" && typeof value === "string") {
-      const defaultRentreeScolaire = getDefaultRentreeScolaireForAnneeCampagne(
-        value,
-      );
-      newFilters = {
-        ...newFilters,
-        rentreeScolaire: defaultRentreeScolaire ? [defaultRentreeScolaire] : undefined,
-      };
-    }
-
     // Valeurs par défaut pour les codes
     switch (key) {
+    case "campagne":
+      if(typeof value === "string") {
+        const defaultRentreeScolaire = getDefaultRentreeScolaireForAnneeCampagne(
+          value,
+        );
+        newFilters = {
+          ...newFilters,
+          rentreeScolaire: defaultRentreeScolaire ? [defaultRentreeScolaire] : undefined,
+        };
+      }
+      break;
     case "scope":
       if (value === ScopeEnum["région"]) {
         newFilters = {

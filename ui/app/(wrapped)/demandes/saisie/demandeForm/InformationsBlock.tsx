@@ -31,7 +31,7 @@ import { InternatEtRestaurationSection } from "./internatEtRestaurationSection/I
 import { ObservationsSection } from "./observationsSection/ObservationsSection";
 import { PrecisionsSection } from "./precisionsSection/PrecisionsSection";
 import { RHSection } from "./rhSection/RHSection";
-import {StatusBlock} from './statutSection/StatusBlock';
+import { StatutSection} from './statutSection/StatutSection';
 import { TravauxEtEquipementsSection } from "./travauxEtEquipementsSection/TravauxEtEquipementsSection";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 import type { DemandeFormType } from "./types";
@@ -47,7 +47,7 @@ export const InformationsBlock = ({
 }: {
   refs: Record<string, RefObject<HTMLDivElement>>;
   formId?: string;
-  disabled: boolean;
+  disabled?: boolean;
   footerActions: ReactNode;
   campagne: CampagneType;
   demande?: Demande;
@@ -116,7 +116,6 @@ export const InformationsBlock = ({
   }, [showCorrection]);
 
   const isOldDemande = (demande && !!demande.isOldDemande);
-  const isDemande = (demande && !demande.isOldDemande);
 
   const sectionsTravauxInternatEtRestaurationVisible = (
     !isTypeFermeture(typeDemande) &&
@@ -124,7 +123,7 @@ export const InformationsBlock = ({
     isOldDemande
   );
 
-  const sectionStatutVisible = !isTypeAjustement(typeDemande) && isDemande;
+  const sectionStatutVisible = !isTypeAjustement(typeDemande) && isOldDemande;
 
   return (
     <Flex direction="column" gap={6} mt={6}>
@@ -158,6 +157,11 @@ export const InformationsBlock = ({
       <SectionBlock>
         <ObservationsSection commentaireEtPiecesJointesRef={refs["commentaireEtPiecesJointes"]} disabled={disabled} />
       </SectionBlock>
+      {sectionStatutVisible && (
+        <SectionBlock>
+          <StatutSection statutRef={refs["statut"]} disabled={disabled} />
+        </SectionBlock>
+      )}
       <SectionBlock>
         <Flex justifyContent={"space-between"} flexDir={"row"}>
           {formId && (
@@ -174,11 +178,6 @@ export const InformationsBlock = ({
           {footerActions && <Flex ms={"auto"}>{footerActions}</Flex>}
         </Flex>
       </SectionBlock>
-      {sectionStatutVisible && (
-        <SectionBlock>
-          <StatusBlock disabled={disabled} />
-        </SectionBlock>
-      )}
       <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
         <ModalOverlay />
         <ModalContent p="4">

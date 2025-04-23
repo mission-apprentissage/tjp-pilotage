@@ -24,6 +24,17 @@ export const PositiveNegativeBarChart = ({
     | PilotageZonesGeographiques
     | PilotageNiveauxDiplome;
 }) => {
+
+  const limit = 10;
+  const chartRef = useRef<echarts.ECharts>();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const bf113 = useToken("colors", "bluefrance.113");
+  const bf850 = useToken("colors", "bluefrance.850");
+  const bf850_active = useToken("colors", "bluefrance.850_active");
+  const grey425 = useToken("colors", "grey.425");
+  const pilotageGreen2 = useToken("colors", "pilotage.green.2");
+  const pilotageRed = useToken("colors", "pilotage.red");
+
   if (!data || !Object.keys(data).filter((key) => key !== "Total").length)
     return (
       <VStack mt={16} mb={5} width="100%" backgroundColor={themeColors.grey[975]} color={themeColors.grey[625]} p={8}>
@@ -36,24 +47,6 @@ export const PositiveNegativeBarChart = ({
         </Flex>
       </VStack>
     );
-
-  const limit = 10;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const chartRef = useRef<echarts.ECharts>(); // TODO
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const containerRef = useRef<HTMLDivElement>(null); // TODO
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const bf113 = useToken("colors", "bluefrance.113"); // TODO
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const bf850 = useToken("colors", "bluefrance.850"); // TODO
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const bf850_active = useToken("colors", "bluefrance.850_active"); // TODO
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const grey425 = useToken("colors", "grey.425"); // TODO
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const pilotageGreen2 = useToken("colors", "pilotage.green.2"); // TODO
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const pilotageRed = useToken("colors", "pilotage.red"); // TODO
 
   const getYAxisTitle = () => {
     return Object.keys(data)
@@ -78,8 +71,7 @@ export const PositiveNegativeBarChart = ({
 
   const placesFermees = Object.keys(data)
     .filter((key) => key !== "Total")
-    // @ts-expect-error TODO
-    .map((key) => -data[key].placesFermees ?? null)
+    .map((key) => -data[key].placesFermees)
     .slice(0, limit)
     .reverse();
 
@@ -100,7 +92,6 @@ export const PositiveNegativeBarChart = ({
   };
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const option = useMemo<echarts.EChartsOption>(
-    // TODO
     () => ({
       aria: {
         label: {
@@ -381,7 +372,6 @@ export const PositiveNegativeBarChart = ({
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useLayoutEffect(() => {
-    // TODO
     if (!containerRef.current) return;
     if (!chartRef.current) {
       registerLocale("fr", frenchLocale);
@@ -394,7 +384,7 @@ export const PositiveNegativeBarChart = ({
   return (
     <AspectRatio ratio={2}>
       <Box position="relative" overflow={"visible !important"}>
-        <Box ref={containerRef} h={"100%"} w={"100%"} role="figure"></Box>
+        <Box ref={containerRef} h={"100%"} w={"100%"} role="figure" />
       </Box>
     </AspectRatio>
   );

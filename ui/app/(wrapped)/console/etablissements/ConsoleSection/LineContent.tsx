@@ -11,8 +11,8 @@ import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifiqu
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
-import { formatAnneeCommuneLibelle, formatCodeDepartement } from "@/utils/formatLibelle";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatCodeDepartement,formatFamilleMetierLibelle } from "@/utils/formatLibelle";
+import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 const ConditionalTd = chakra(
@@ -152,7 +152,7 @@ export const EtablissementLineContent = ({
       }}
     >
       <Flex>
-        {formatAnneeCommuneLibelle(line, "long", "sm", "12px")}
+        {formatFamilleMetierLibelle(line, "long", "sm", "12px")}
         <BadgeFormationRenovee isFormationRenovee={!!line.isFormationRenovee} />
         {line.formationRenovee && (
           <Flex ms={2} my={"auto"} width={"fit-content"} h={"1.8rem"} whiteSpace={"nowrap"} direction={"column"}>
@@ -222,10 +222,8 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <TableBadge
-        sx={getTauxPressionStyle(line.tauxPression !== undefined ? formatNumber(line.tauxPression, 2) : undefined)}
-      >
-        {line.tauxPression !== undefined ? formatNumber(line.tauxPression, 2) : "-"}
+      <TableBadge sx={getTauxPressionStyle(formatNumber(line.tauxPression, 2))}>
+        {formatNumberToString(line.tauxPression, 2, "-")}
       </TableBadge>
     </ConditionalTd>
     <ConditionalTd
@@ -285,11 +283,14 @@ export const EtablissementLineContent = ({
 
 export const EtablissementLineLoader = () => (
   <Tr bg={"grey.975"}>
-    {new Array(17).fill(0).map((_, i) => (
-      <Td key={i}>
-        <Skeleton opacity={0.3} height="16px" />
-      </Td>
-    ))}
+    {new Array(17).fill(0).map((_, i) => {
+      const key = `line_${i}`;
+      return (
+        <Td key={key}>
+          <Skeleton opacity={0.3} height="16px" />
+        </Td>
+      );
+    })}
   </Tr>
 );
 

@@ -55,7 +55,7 @@ describe("[DELETE]/demande/changement-statut/:id", () => {
 
     it("doit retourner une erreur 404 si le changement de statut n'existe pas", async () => {
       await fixture.given.utilisateurAutorise({codeRegion: "76"});
-      await fixture.given.changementStatutInexistant();
+      fixture.given.changementStatutInexistant();
 
       await fixture.when.supprimerChangementStatut();
 
@@ -178,10 +178,10 @@ describe("[DELETE]/demande/changement-statut/:id", () => {
           expect(responseCode).toBe(200);
         },
         verifierChangementStatutSupprime: async () => {
-          if (!changementStatut) {
+          if (!changementStatut?.id) {
             throw Error("Un changement de statut doit être créé avant de pouvoir le supprimer");
           }
-          const deletedChangementStatut = await findOneChangementStatut(changementStatut.id!);
+          const deletedChangementStatut = await findOneChangementStatut(changementStatut.id);
           expect(deletedChangementStatut).toBeUndefined();
         },
       },

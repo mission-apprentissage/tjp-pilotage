@@ -29,7 +29,7 @@ export const ActionsSection = ({ demande }: { demande: (typeof client.infer)["[G
         getTypeAvis(demande.statut) != AvisTypeEnum["consultatif"]) ||
       (hasRole({ user, role: RoleEnum["region"] }) &&
         getTypeAvis(demande.statut) === AvisTypeEnum["consultatif"]) ||
-      isChangementStatutAvisDisabled({statut: demande.statut, user})
+      isChangementStatutAvisDisabled({demande, user})
     )
       return false;
     return true;

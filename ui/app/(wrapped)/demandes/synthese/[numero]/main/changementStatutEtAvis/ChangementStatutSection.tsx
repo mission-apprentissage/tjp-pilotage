@@ -13,13 +13,12 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Role } from "shared";
-import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/demandes/components/RoleTag";
 import { StatutTag } from "@/app/(wrapped)/demandes/components/StatutTag";
-import type { ChangementStatut } from "@/app/(wrapped)/demandes/types";
+import type { ChangementStatut, Demande } from "@/app/(wrapped)/demandes/types";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/demandes/utils/statutUtils";
 import { formatDate } from "@/utils/formatUtils";
 import { useAuth } from "@/utils/security/useAuth";
@@ -28,7 +27,7 @@ import { usePermission } from "@/utils/security/usePermission";
 import { UpdateChangementStatutForm } from "./UpdateChangementStatutForm";
 
 export const CommentaireSection = chakra(
-  ({ changementStatut, statut }: { changementStatut: ChangementStatut; statut: DemandeStatutType }) => {
+  ({ changementStatut, demande }: { changementStatut: ChangementStatut; demande: Demande }) => {
     const { user } = useAuth();
     const hasPermissionModificationStatut = usePermission(PermissionEnum["demande-statut/ecriture"]);
     const [isModifying, setIsModifying] = useState(false);
@@ -55,6 +54,10 @@ export const CommentaireSection = chakra(
         }, 100);
       },
     });
+
+    const commentaireChangementStatut = changementStatut.commentaire ?
+      `« ${changementStatut.commentaire} »`
+      : "Pas d'observation renseignée";
 
     return (
       <SlideFade in={isOpenUpdateChangementStatut} offsetX="50px" reverse>
@@ -109,17 +112,13 @@ export const CommentaireSection = chakra(
                 setIsModifying={setIsModifying}
                 onToggleUpdateChangementStatut={onToggleUpdateChangementStatut}
               />
-            ) : changementStatut.commentaire ? (
-              <Text fontSize={16} fontWeight={500} lineHeight={"24px"} color={"grey.50"}>
-                « {changementStatut.commentaire} »
-              </Text>
             ) : (
-              <Text fontSize={16} fontWeight={500} lineHeight={"24px"} color={"grey.900"}>
-                Pas d'observation renseignée
+              <Text fontSize={16} fontWeight={500} lineHeight={"24px"} color={changementStatut.commentaire ? "grey.50" : "grey.900"}>
+                {commentaireChangementStatut}
               </Text>
             )}
             {hasPermissionModificationStatut &&
-              isChangementStatutAvisDisabled({statut, user}) &&
+              isChangementStatutAvisDisabled({demande, user}) &&
               !isDeleting &&
               !isModifying && (
               <Flex direction={"row"} gap={6}>

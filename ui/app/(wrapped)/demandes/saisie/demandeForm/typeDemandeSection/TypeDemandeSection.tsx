@@ -83,7 +83,7 @@ export const TypeDemandeSection = ({
   campagne,
   typeDemandeRef,
 }: {
-  disabled: boolean;
+  disabled?: boolean;
   demande?: Demande;
   campagne: CampagneType;
   typeDemandeRef: RefObject<HTMLDivElement>;

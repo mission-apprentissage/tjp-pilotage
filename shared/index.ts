@@ -8,7 +8,6 @@ export { CURRENT_IJ_MILLESIME } from "./time/CURRENT_IJ_MILLESIME";
 export { CURRENT_RENTREE } from "./time/CURRENT_RENTREE";
 export { FIRST_ANNEE_CAMPAGNE } from "./time/FIRST_ANNEE_CAMPAGNE";
 export { MILLESIMES_IJ, MILLESIMES_IJ_REG, RENTREES_SCOLAIRES } from "./time/millesimes";
-export { RENTREE_INTENTIONS } from "./time/RENTREE_INTENTIONS";
 export { emailRegex } from "./utils/emailRegex";
 export { isValidUrl } from "./utils/isValidUrl";
 export { MAX_FILE_SIZE, MAX_FILE_SIZE_IN_MB } from "./utils/maxFileSize";
