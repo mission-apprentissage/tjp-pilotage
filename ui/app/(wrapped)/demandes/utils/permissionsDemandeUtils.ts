@@ -33,7 +33,7 @@ export const isOldDemande = ({
   user?: UserType
 }) => {
   if(
-    (demande && demande.isOldDemande) ||
+    (demande?.isOldDemande) ||
     (campagne?.annee === "2023" || (
       campagne?.annee === "2024" &&
       !isUserInRegionsExperimentation2024({ user })

@@ -12,8 +12,8 @@ import { castAvisStatut } from "@/modules/utils/castStatutAvis";
 import { castAvisType } from "@/modules/utils/castTypeAvis";
 import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import {
-  countDifferenceCapaciteApprentissageDemande,
-  countDifferenceCapaciteScolaireDemande,
+  countDifferenceCapaciteApprentissage,
+  countDifferenceCapaciteScolaire,
 } from "@/modules/utils/countCapacite";
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isAvisVisible } from "@/modules/utils/isAvisVisible";
@@ -124,8 +124,8 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
             .limit(1)
         ),
       }).as("metadata"),
-      countDifferenceCapaciteScolaireDemande(eb).as("differenceCapaciteScolaire"),
-      countDifferenceCapaciteApprentissageDemande(eb).as("differenceCapaciteApprentissage"),
+      countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
+      countDifferenceCapaciteApprentissage(eb).as("differenceCapaciteApprentissage"),
       isFormationActionPrioritaire({
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",

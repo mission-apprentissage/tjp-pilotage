@@ -171,7 +171,7 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
               </Heading>
             </Flex>
             <Flex gap={2} direction="column">
-              {demande.commentaire && demande.commentaire.length ? (
+              {demande?.commentaire?.length ? (
                 demande.commentaire.split("\n").map((p, i) => {
                   const key = `commentaire-${i}`;
                   return (
@@ -276,7 +276,7 @@ export const SyntheseSection = ({ demande }: { demande: (typeof client.infer)["[
           </Flex>
           {hasMotifAutre(demande.motif) && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text fontSize={14}>Autre motif : {unEscapeString(demande.autreMotif!)}</Text>
+              <Text fontSize={14}>Autre motif : {unEscapeString(demande.autreMotif)}</Text>
             </Flex>
           )}
           <Divider my={3} borderColor={"grey.900"} />

@@ -327,8 +327,8 @@ export const Header = ({
         <ModalModificationStatut
           isOpen={isOpen}
           onClose={onClose}
-          checkedDemandes={checkedDemandes!}
-          statut={statut!}
+          checkedDemandes={checkedDemandes}
+          statut={statut}
           submitDemandesStatut={submitDemandesStatut}
           isLoading={isLoading}
         />

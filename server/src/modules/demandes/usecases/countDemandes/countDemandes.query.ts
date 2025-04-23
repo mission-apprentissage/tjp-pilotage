@@ -152,27 +152,23 @@ export const countDemandesQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeAcademie) {
-        return eb.where("academie.codeAcademie", "in", codeAcademie);
-      }
+      if (codeAcademie) return eb.where("academie.codeAcademie", "in", codeAcademie);
       return eb;
     })
     .$call((eb) => {
-      if (codeNiveauDiplome) {
-        return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
-      }
+      if (codeNiveauDiplome) return eb.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
       return eb;
     })
     .$call((eb) => {
-      if (campagne) {
-        return eb.where("campagne.annee", "=", campagne);
-      }
+      if (campagne) return eb.where("campagne.annee", "=", campagne);
       return eb;
     })
     .where(isDemandeSelectable({ user }))
     .where(isDemandeBrouillonVisible({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);
+
+  console.log(codeNiveauDiplome);
 
   return countDemandes;
 };

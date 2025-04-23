@@ -21,10 +21,10 @@ import { useRouter, useSearchParams} from 'next/navigation';
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {hasRole, RoleEnum} from 'shared';
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
+import { isCampagneEnCours } from "shared/utils/campagneUtils";
 import { escapeString } from "shared/utils/escapeString";
 import { isStatutBrouillon, isStatutDemandeValidee, isStatutProjetDeDemande, isStatutProposition } from "shared/utils/statutDemandeUtils";
 import { isTypeAjustement, isTypeDiminution, isTypeFermeture } from "shared/utils/typeDemandeUtils";
@@ -310,7 +310,9 @@ export const DemandeForm = ({
                         {canSubmitBrouillon() && (
                           <Button
                             isDisabled={
-                              disabled || isActionsDisabled || campagne?.statut !== CampagneStatutEnum["en cours"]
+                              disabled ||
+                              isActionsDisabled ||
+                              !isCampagneEnCours(campagne)
                             }
                             isLoading={isSubmitting}
                             variant="draft"
@@ -336,7 +338,9 @@ export const DemandeForm = ({
                         )}
                         <Button
                           isDisabled={
-                            disabled || isActionsDisabled || campagne?.statut !== CampagneStatutEnum["en cours"]
+                            disabled ||
+                            isActionsDisabled ||
+                            !isCampagneEnCours(campagne)
                           }
                           isLoading={isSubmitting}
                           variant="primary"

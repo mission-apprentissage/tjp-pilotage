@@ -93,7 +93,6 @@ export const CartoSection = ({
 
       code: territoire.code,
     }));
-    // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, filters, indicateur]);
 
@@ -122,7 +121,6 @@ export const CartoSection = ({
         ...newFilters,
       });
     },
-    // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [handleFilters, filters]
   );

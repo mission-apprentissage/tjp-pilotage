@@ -17,28 +17,31 @@ const Loader = () => {
     <TableContainer overflowY={"auto"} flex={1} position="relative" bg={"white"}>
       <Table variant="simple" size={"sm"}>
         <Tbody>
-          {new Array(7).fill(0).map((_, i) => (
-            <Tr key={`loader_RestitutionConsoleSection_option_${i}`} h="12">
-              <Td>
-                <Skeleton opacity={0.3} height="16px" width={"100%"} />
-              </Td>
-              <Td isNumeric>
-                <Skeleton opacity={0.3} height="16px" width={"100%"} />
-              </Td>
-              <Td isNumeric>
-                <Skeleton opacity={0.3} height="16px" width={"100%"} />
-              </Td>
-              <Td isNumeric>
-                <Skeleton opacity={0.3} height="16px" width={"100%"} />
-              </Td>
-              <Td isNumeric>
-                <Skeleton opacity={0.3} height="16px" width={"100%"} />
-              </Td>
-              <Td isNumeric>
-                <Skeleton opacity={0.3} height="16px" width={"100%"} />
-              </Td>
-            </Tr>
-          ))}
+          {new Array(7).fill(0).map((_, i) => {
+            const key = `loader_RestitutionConsoleSection_${i}`;
+            return (
+              <Tr key={key} h="12">
+                <Td>
+                  <Skeleton opacity={0.3} height="16px" width={"100%"} />
+                </Td>
+                <Td isNumeric>
+                  <Skeleton opacity={0.3} height="16px" width={"100%"} />
+                </Td>
+                <Td isNumeric>
+                  <Skeleton opacity={0.3} height="16px" width={"100%"} />
+                </Td>
+                <Td isNumeric>
+                  <Skeleton opacity={0.3} height="16px" width={"100%"} />
+                </Td>
+                <Td isNumeric>
+                  <Skeleton opacity={0.3} height="16px" width={"100%"} />
+                </Td>
+                <Td isNumeric>
+                  <Skeleton opacity={0.3} height="16px" width={"100%"} />
+                </Td>
+              </Tr>
+            );}
+          )}
         </Tbody>
       </Table>
     </TableContainer>

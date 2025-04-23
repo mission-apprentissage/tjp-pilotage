@@ -54,7 +54,7 @@ describe("[GET]/demandes/count", () => {
   describe("success", () => {
     it("doit compter les demandes pour l'année de campagne en cours", async () => {
       await fixture.given.utilisateurAutorise();
-      await fixture.given.demandesInexistantes({ nombre: 3 });
+      await fixture.given.demandesExistantes({ nombre: 3 });
 
       await fixture.when.getNombreDemandes();
 
@@ -64,15 +64,15 @@ describe("[GET]/demandes/count", () => {
 
     it("doit compter les demandes par statut", async () => {
       await fixture.given.utilisateurAutorise();
-      await fixture.given.demandesInexistantes({
+      await fixture.given.demandesExistantes({
         nombre: 2,
         statut: DemandeStatutEnum["brouillon"]
       });
-      await fixture.given.demandesInexistantes({
+      await fixture.given.demandesExistantes({
         nombre: 3,
         statut: DemandeStatutEnum["projet de demande"]
       });
-      await fixture.given.demandesInexistantes({
+      await fixture.given.demandesExistantes({
         nombre: 1,
         statut: DemandeStatutEnum["supprimée"]
       });
@@ -85,24 +85,24 @@ describe("[GET]/demandes/count", () => {
 
     it("doit compter les demandes suivies par l'utilisateur", async () => {
       await fixture.given.utilisateurAutorise();
-      await fixture.given.demandesInexistantes({
+      await fixture.given.demandesExistantes({
         nombre: 2,
         suiviParUtilisateur: true
       });
-      await fixture.given.demandesInexistantes({ nombre: 1 });
+      await fixture.given.demandesExistantes({ nombre: 1 });
 
       await fixture.when.getNombreDemandes();
 
       fixture.then.verifierNombreDemandesSuivies(2);
     });
 
-    it("doit compter les demandes qui sont filtré par recherche textuelle", async () => {
+    it("doit compter les demandes qui sont filtrées par recherche textuelle", async () => {
       await fixture.given.utilisateurAutorise();
-      await fixture.given.demandesInexistantes({
+      await fixture.given.demandesExistantes({
         nombre: 3,
         cfd: "32031309"
       });
-      await fixture.given.demandesInexistantes({
+      await fixture.given.demandesExistantes({
         nombre: 2,
         cfd: "40022106"
       });
@@ -113,31 +113,33 @@ describe("[GET]/demandes/count", () => {
       fixture.then.verifierNombreTotal(2);
     });
 
-    // TODO: fixer le test
+    it("doit compter les demandes qui sont filtrées par codeNiveauDiplome", async () => {
+      await fixture.given.utilisateurAutorise();
+      await fixture.given.demandesExistantes({
+        nombre: 3,
+        cfd: "32031309"
+      });
+      await fixture.given.demandesExistantes({
+        nombre: 2,
+        cfd: "40022106",
+      });
+      await fixture.given.demandesExistantes({
+        nombre: 1,
+        cfd: "50025136",
+      });
+      await fixture.given.demandesExistantes({
+        nombre: 1,
+        cfd: "40022106",
+        statut: DemandeStatutEnum["supprimée"]
 
-    // it("doit compter les demandes qui sont filtré par cfd", async () => {
-    //   await fixture.given.utilisateurAutorise();
-    //   await fixture.given.demandesInexistantes({
-    //     nombre: 3,
-    //     cfd: "32031309"
-    //   });
-    //   await fixture.given.demandesInexistantes({
-    //     nombre: 2,
-    //     cfd: "40022106",
-    //   });
-    //   await fixture.given.demandesInexistantes({
-    //     nombre: 1,
-    //     cfd: "40022106",
-    //     statut: DemandeStatutEnum["supprimée"]
+      });
 
-    //   });
+      fixture.given.filtres({ codeNiveauDiplome: ["400", "500"] });
 
-    //   fixture.given.filtres({ codeNiveauDiplome: ["40022106", "40022105"] });
+      await fixture.when.getNombreDemandes();
 
-    //   await fixture.when.getNombreDemandes();
-
-    //   fixture.then.verifierNombreTotal(2);
-    // });
+      fixture.then.verifierNombreTotal(3);
+    });
   });
 
   const fixtureBuilder = (app: Server) => {
@@ -159,7 +161,7 @@ describe("[GET]/demandes/count", () => {
             .withRole(RoleEnum["pilote_region"])
             .create();
         },
-        demandesInexistantes: async (data: {
+        demandesExistantes: async (data: {
           nombre: number;
           statut?: DemandeStatutType;
           anneeCampagne?: string;
@@ -197,6 +199,8 @@ describe("[GET]/demandes/count", () => {
             query: filtres,
             cookies: user ? generateAuthCookie(user) : undefined,
           });
+          console.log(filtres);
+          console.log(response);
           responseCode = response.statusCode;
           responseBody = response.json();
         },

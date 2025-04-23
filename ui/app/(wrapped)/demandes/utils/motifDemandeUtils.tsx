@@ -31,9 +31,9 @@ export const getMotifsTriggerAutre = () => motifsTriggerAutre;
 export const hasMotifAutre = (values?: Array<string | undefined>) => {
   return values?.filter(
     (motif) =>
-      MOTIFS_DEMANDE_LABEL[2023][motif! as MotifDemandeLabel] !== undefined ||
-      MOTIFS_DEMANDE_LABEL[2024][motif! as MotifDemandeLabel] !== undefined ||
-      MOTIFS_DEMANDE_LABEL[2025][motif! as MotifDemandeLabel] !== undefined
+      MOTIFS_DEMANDE_LABEL[2023][motif as MotifDemandeLabel] !== undefined ||
+      MOTIFS_DEMANDE_LABEL[2024][motif as MotifDemandeLabel] !== undefined ||
+      MOTIFS_DEMANDE_LABEL[2025][motif as MotifDemandeLabel] !== undefined
   );
 };
 
