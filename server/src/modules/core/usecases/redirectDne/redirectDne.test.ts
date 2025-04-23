@@ -1,6 +1,7 @@
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 import { RoleEnum } from "shared";
+import { DneSSOErrorsEnum } from "shared/enum/dneSSOErrorsEnum";
 import { ROLE_DNE_ROLE_ORION_CORRESPONDANCE, RoleDNEEnum, supportedLDAPGroupsEnum } from "shared/security/sso";
 import { describe, expect, it, vi } from "vitest";
 
@@ -440,6 +441,41 @@ describe("redirectDne usecase", () => {
       expect(result).toMatchObject({
         token: expect.stringMatching(""),
       });
+    });
+
+    it("Doit remonter une erreur sir le codaca n'est pas reconnu", async () => {
+      const ssoUserInfo = {
+        email: "user@test.test",
+        given_name: "firstname",
+        family_name: "lastname",
+        FrEduFonctAdm: "DIR",
+        FrEduRne: ["code-uai$rest"],
+        title: "INS",
+        codaca: "1"
+      };
+      const deps = {
+        getDneClient: vi.fn().mockResolvedValue({
+          callbackParams: vi.fn(),
+          callback: vi.fn().mockResolvedValue({ access_token: "access_token" }),
+          userinfo: vi.fn().mockResolvedValue(ssoUserInfo),
+        }),
+        createUserInDB: vi.fn(),
+        authJwtSecret: "authJwtSecret",
+        codeVerifierJwtSecret: "codeVerifierJwtSecret",
+        findUserQuery: vi.fn().mockResolvedValue(undefined),
+        findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+        findRegionFromAcademie: vi.fn().mockResolvedValue(undefined),
+      };
+      const redirectDne = redirectDneFactory(deps);
+
+      try {
+        await redirectDne({
+          codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "codeVerifierJwtSecret"),
+          url: "localhost?code=mycode",
+        });
+      } catch (e) {
+        expect(e).toEqual(new Error(DneSSOErrorsEnum.MISSING_CODE_REGION));
+      }
     });
   });
 
