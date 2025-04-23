@@ -24,6 +24,7 @@ import { client } from "@/api.client";
 import { CodeRegionContext } from "@/app/codeRegionContext";
 import { PreviousCampagneContext } from "@/app/previousCampagneContext";
 import { UaisContext } from "@/app/uaiContext";
+import { publicConfig } from "@/config.public";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
@@ -44,6 +45,8 @@ export const LoginForm = () => {
   const { setCodeRegion } = useContext(CodeRegionContext);
   const { setUais } = useContext(UaisContext);
   const { data: { url } = {} } = client.ref("[GET]/dne_url").useQuery({});
+
+  const showConnectToDNEPortal = publicConfig.env !== "production" && url !== undefined;
 
   const {
     mutateAsync: login,
@@ -114,7 +117,7 @@ export const LoginForm = () => {
               Se connecter
             </Button>
           </Flex>
-          {false && (
+          {showConnectToDNEPortal && (
             <>
               <Divider mt="6" mb="6" />
               <Button width="100%" as={NextLink} href={url ?? "#"}>
