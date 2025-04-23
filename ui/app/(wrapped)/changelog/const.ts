@@ -25,7 +25,7 @@ export const CHANGELOG: IChangelog[] = [
     "title": "Constat de rentrée 2024 et Taux IJ 2022-2023",
     "types": [ChangelogTypeEnum.BANDEAU],
     "date": new Date("2025-01-31"),
-    "description": "Le constat de rentrée 2024 est chargé ainsi que le dernier millésime InserJeunes. Ces données modifient la position des formations dans les quadrants et ont un impact sur le calcul du taux de transformation",
+    "description": "Le constat de rentrée 2024 est chargé ainsi que le dernier millésime InserJeunes. Ces données modifient la position des formations dans les quadrants et ont un impact sur le calcul du taux de transformation.",
     "document": "",
   },
   {
@@ -41,11 +41,11 @@ export const CHANGELOG: IChangelog[] = [
   {
     "id": "18cd0d8ec01580a286e8e9e722a0439c",
     "deployed": true,
-    "show": true,
+    "show": false,
     "title": "Panorama Domaine de formation",
     "types": [ChangelogTypeEnum.BANDEAU],
     "date": new Date("2025-01-09"),
-    "description": "Découvrez le Panorama Domaine de Formation, qui vous permet de visualiser quelles sont les formations dispensées ou absentes sur votre territoire",
+    "description": "Découvrez le Panorama Domaine de Formation, qui vous permet de visualiser quelles sont les formations dispensées ou absentes sur votre territoire.",
     "document": "",
   },
   {
@@ -55,7 +55,7 @@ export const CHANGELOG: IChangelog[] = [
     "title": "Nouveau Panorama Domaine de formation",
     "types": [ChangelogTypeEnum["Données"]],
     "date": new Date("2025-01-09"),
-    "description": "Observez l’évolution des taux d’emploi et de poursuite d’’études, visualisez l’offre de formations sur une carte, identifiez les formations qui sont dispensées ou non sur le territoire observé",
+    "description": "Observez l’évolution des taux d’emploi et de poursuite d’’études, visualisez l’offre de formations sur une carte, identifiez les formations qui sont dispensées ou non sur le territoire observé.",
     "document": "",
   },
   {
@@ -175,7 +175,7 @@ export const CHANGELOG: IChangelog[] = [
     "title": "Ouverture de la campagne 2024",
     "types": [ChangelogTypeEnum["Fonctionnalité"]],
     "date": new Date("2024-06-04"),
-    "description": "Le formulaire qui permet la saisie  des demandes d’ouverture et fermeture pour la rentrée 2025 est ouvert pour toutes les régions sauf Occitanie et AURA pour lesquelles le formulaire sera livré le 5 juin après-midi",
+    "description": "Le formulaire qui permet la saisie  des demandes d’ouverture et fermeture pour la rentrée 2025 est ouvert pour toutes les régions sauf Occitanie et AURA pour lesquelles le formulaire sera livré le 5 juin après-midi.",
     "document": "",
   },
   {
@@ -198,7 +198,7 @@ export const CHANGELOG: IChangelog[] = [
     "title": "Transformation : la position dans le quadrant est liée à la campagne",
     "types": [ChangelogTypeEnum["Données"]],
     "date": new Date("2024-10-30"),
-    "description": "Afin de pouvoir évaluer l’impact de la transformation, la position dans le quadrant est liée à la campagne dans les pages de l’onglet Transformation. Pour illustrer, si vous saisissez une ouverture sur une formation en Q3 au moment de la saisie, cette donnée n’évoluera pas lorsque vous reviendrez sur la fiche synthèse de cette demande à postériori",
+    "description": "Afin de pouvoir évaluer l’impact de la transformation, la position dans le quadrant est liée à la campagne dans les pages de l’onglet Transformation. Pour illustrer, si vous saisissez une ouverture sur une formation en Q3 au moment de la saisie, cette donnée n’évoluera pas lorsque vous reviendrez sur la fiche synthèse de cette demande à postériori.",
     "document": "",
   },
   {
@@ -229,6 +229,26 @@ export const CHANGELOG: IChangelog[] = [
     "types": [ChangelogTypeEnum["Fonctionnalité"]],
     "date": new Date("2025-03-03"),
     "description": "Les campagnes sont désormais gérées au niveau régional. C’est l’admin Orion en R.A. qui ouvre et ferme les campagnes en précisant si les chefs d’établissement saisissent les propositions ou non.",
+    "document": "",
+  },
+  {
+    "id": "ad424ff3-be91-44f7-910f-864f36c6c8a6",
+    "deployed": true,
+    "show": true,
+    "title": "Erreur dans les données d’apprentissage",
+    "types": [ChangelogTypeEnum["BANDEAU"]],
+    "date": new Date("2025-04-23"),
+    "description": "Erreurs sur la page Domaine de Formation : suite à une mise à jour des données “apprentissage”, la page Domaine de formation affiche des données erronées : nombre d’établissements et nombre d’élèves en entrée. Les taux InserJeunes sont exacts. Le problème est en cours de résolution.",
+    "document": "",
+  },
+  {
+    "id": "84981ee7-5930-4cb2-8a8e-026892c67a79",
+    "deployed": true,
+    "show": true,
+    "title": "Erreur données apprentissage (Domaine de formation)",
+    "types": [ChangelogTypeEnum["Bug"]],
+    "date": new Date("2025-04-23"),
+    "description": "Erreurs sur la page Domaine de Formation : suite à une mise à jour des données “apprentissage”, la page Domaine de formation affiche des données erronées : nombre d’établissements et nombre d’élèves en entrée. Les taux InserJeunes sont exacts. Le problème est en cours de résolution.",
     "document": "",
   },
 ];
