@@ -77,35 +77,35 @@ describe("ui > app > (wrapped) > demandes > utils > statutUtils", () => {
     fixture.then.verifierNextStatuts(allPossibleStatuts);
   });
 
-  // it("Différents statuts possibles pour un utilisateur non admin ", () => {
-  //   fixture.given.utilisateurNonAdmin();
-  //   fixture.given.statutPrecedent(DemandeStatutEnum["proposition"]);
-  //   fixture.when.getPossibleNextStatuts();
-  //   fixture.then.verifierNextStatuts([
-  //     DemandeStatutEnum["projet de demande"],
-  //     DemandeStatutEnum["dossier complet"],
-  //     DemandeStatutEnum["dossier incomplet"],
-  //   ]);
+  it("Différents statuts possibles pour un utilisateur non admin ", () => {
+    fixture.given.utilisateurNonAdmin();
+    fixture.given.statutPrecedent(DemandeStatutEnum["proposition"]);
+    fixture.when.getPossibleNextStatuts();
+    fixture.then.verifierNextStatuts([
+      DemandeStatutEnum["projet de demande"],
+      DemandeStatutEnum["dossier complet"],
+      DemandeStatutEnum["dossier incomplet"],
+    ]);
 
-  //   fixture.given.statutPrecedent(DemandeStatutEnum["projet de demande"]);
-  //   fixture.when.getPossibleNextStatuts();
-  //   fixture.then.verifierNextStatuts([
-  //     DemandeStatutEnum["prêt pour le vote"],
-  //   ]);
+    fixture.given.statutPrecedent(DemandeStatutEnum["projet de demande"]);
+    fixture.when.getPossibleNextStatuts();
+    fixture.then.verifierNextStatuts([
+      DemandeStatutEnum["prêt pour le vote"],
+    ]);
 
-  //   fixture.given.statutPrecedent(DemandeStatutEnum["prêt pour le vote"]);
-  //   fixture.when.getPossibleNextStatuts();
-  //   fixture.then.verifierNextStatuts([
-  //     DemandeStatutEnum["demande validée"],
-  //     DemandeStatutEnum["refusée"],
-  //   ]);
+    fixture.given.statutPrecedent(DemandeStatutEnum["prêt pour le vote"]);
+    fixture.when.getPossibleNextStatuts();
+    fixture.then.verifierNextStatuts([
+      DemandeStatutEnum["demande validée"],
+      DemandeStatutEnum["refusée"],
+    ]);
 
-  //   fixture.given.statutPrecedent(DemandeStatutEnum["demande validée"]);
-  //   fixture.when.getPossibleNextStatuts();
-  //   fixture.then.verifierNextStatuts([]);
+    fixture.given.statutPrecedent(DemandeStatutEnum["demande validée"]);
+    fixture.when.getPossibleNextStatuts();
+    fixture.then.verifierNextStatuts([]);
 
-  //   fixture.given.statutPrecedent(DemandeStatutEnum["refusée"]);
-  //   fixture.when.getPossibleNextStatuts();
-  //   fixture.then.verifierNextStatuts([]);
-  // });
+    fixture.given.statutPrecedent(DemandeStatutEnum["refusée"]);
+    fixture.when.getPossibleNextStatuts();
+    fixture.then.verifierNextStatuts([]);
+  });
 });

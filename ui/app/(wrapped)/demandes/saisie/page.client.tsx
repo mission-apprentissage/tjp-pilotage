@@ -228,7 +228,7 @@ export const PageClient = () => {
 
   const onChangeCheckedDemandes = (demande: { statut: DemandeStatutType, numero: string }) => {
     setCheckedDemandes((prevState: CheckedDemandesType | undefined) => {
-      if (!prevState || !prevState.demandes.length) {
+      if (!prevState?.demandes.length) {
       // Si checkedDemandes est undefined on initialise avec le statut donné
         return {
           statut: demande.statut,

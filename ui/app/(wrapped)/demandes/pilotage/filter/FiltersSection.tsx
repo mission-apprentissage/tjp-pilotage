@@ -34,21 +34,19 @@ export const FiltersSection = ({
 }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const onUpdateFilter = <T,>({
+  const onUpdateFilter = ({
     key,
     selected,
   }: {
     key: keyof FiltersPilotage;
-    selected: T | T[] | null;
+    selected?: string | number | Array<string | number> ;
   }) => {
     let value = undefined;
 
     filterTracker(key, { value });
 
-    if (selected instanceof Array) {
-      value = selected as Array<T>;
-    } else if (selected !== null && selected !== undefined) {
-      value = selected as T;
+    if (selected !== null && selected !== undefined) {
+      value = selected ;
     } else {
       value = undefined;
     }
@@ -71,27 +69,7 @@ export const FiltersSection = ({
       }
       break;
     case "scope":
-      if (value === ScopeEnum["région"]) {
-        newFilters = {
-          ...newFilters,
-          codeAcademie: undefined,
-          codeDepartement: undefined,
-        };
-      }
-      if (value === ScopeEnum["académie"]) {
-        newFilters = {
-          ...newFilters,
-          codeRegion: undefined,
-          codeDepartement: undefined,
-        };
-      }
-      if (value === ScopeEnum["département"]) {
-        newFilters = {
-          ...newFilters,
-          codeRegion: undefined,
-          codeAcademie: undefined,
-        };
-      }
+      onUpdateScopeFilter({value, newFilters});
       break;
     case "codeAcademie":
       if (value !== undefined) {
@@ -126,6 +104,39 @@ export const FiltersSection = ({
     }
 
     setFilters({ ...filters, ...newFilters });
+  };
+
+  const onUpdateScopeFilter = ({
+    value,
+    newFilters
+  } : {
+    value?: string | number | Array<string | number>,
+    newFilters: Partial<FiltersPilotage>
+  }) => {
+    switch (value) {
+    case ScopeEnum["région"]:
+      return {
+        ...newFilters,
+        codeAcademie: undefined,
+        codeDepartement: undefined,
+      };
+    case ScopeEnum["académie"]:
+      return {
+        ...newFilters,
+        codeRegion: undefined,
+        codeDepartement: undefined,
+      };
+    case ScopeEnum["département"]:
+      return {
+        ...newFilters,
+        codeRegion: undefined,
+        codeAcademie: undefined,
+      };
+    default:
+      return {
+        ...newFilters,
+      };
+    }
   };
 
   return (

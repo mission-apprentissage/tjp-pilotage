@@ -11,8 +11,7 @@ const deleteDemandeFilesFactory =
     }
   ) =>
     async ({ numero, files }: { numero: string; files: FileType[] }) => {
-      // TODO
-      for await (const file of files) {
+      for (const file of files) {
         const filePath = deps.filePathManager.getDemandeFilePath(numero, file.name);
 
         console.log(`Suppression du fichier ${file.name} pour la demande ${numero} depuis ${filePath}`);

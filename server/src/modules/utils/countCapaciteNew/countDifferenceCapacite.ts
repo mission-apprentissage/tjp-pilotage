@@ -43,21 +43,3 @@ export const countDifferenceCapaciteApprentissageCorrection = ({
     ${eb.ref("correction.capaciteApprentissage")} -
     ${eb.ref("correction.capaciteApprentissageActuelle")}
   `;
-
-export const countDifferenceCapaciteScolaireDemande = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) => sql<number>`
-      ${eb.ref("demande.capaciteScolaire")} -
-      ${eb.ref("demande.capaciteScolaireActuelle")}
-    `;
-
-export const countDifferenceCapaciteApprentissageDemande = ({
-  eb,
-}: {
-  eb: ExpressionBuilder<DB, "demande">;
-}) => sql<number>`
-      ${eb.ref("demande.capaciteApprentissage")} -
-      ${eb.ref("demande.capaciteApprentissageActuelle")}
-    `;

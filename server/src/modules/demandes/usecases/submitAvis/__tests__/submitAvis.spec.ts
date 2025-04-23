@@ -147,7 +147,7 @@ describe("[POST]/demande/avis/submit", () => {
             cookies: user ? generateAuthCookie(user) : undefined,
           });
           responseCode = response.statusCode;
-          responseBody = response.json() as Response | IResError;
+          responseBody = response.json() as IResError;
 
           console.dir(responseBody, { depth: Infinity });
         },

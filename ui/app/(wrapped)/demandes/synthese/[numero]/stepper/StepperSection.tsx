@@ -11,6 +11,10 @@ import { Step } from "./Step";
 
 const IllustrationStatut = chakra(
   ({ statut, latestTypeAvis }: { statut?: DemandeStatutType; latestTypeAvis?: AvisTypeType }) => {
+    let phaseRefus = "de vote";
+    if (latestTypeAvis === AvisTypeEnum["préalable"]) phaseRefus = "de revue de la proposition";
+    else if (latestTypeAvis === AvisTypeEnum["consultatif"]) phaseRefus = "d'instruction";
+
     switch (statut) {
     case DemandeStatutEnum["demande validée"]:
       return (
@@ -32,6 +36,7 @@ const IllustrationStatut = chakra(
         </Flex>
       );
     case DemandeStatutEnum["refusée"]:
+
       return (
         <Flex
           w={"100%"}
@@ -48,12 +53,7 @@ const IllustrationStatut = chakra(
               Demande refusée
           </Text>
           <Text>
-              La demande a été refusée à l'issue de la phase{" "}
-            {latestTypeAvis === AvisTypeEnum["préalable"]
-              ? "de revue de la proposition"
-              : latestTypeAvis === AvisTypeEnum["consultatif"]
-                ? "d'instruction"
-                : "de vote"}
+              La demande a été refusée à l'issue de la phase {phaseRefus}
           </Text>
         </Flex>
       );
@@ -103,12 +103,12 @@ const IllustrationStatut = chakra(
 
 export const StepperSection = ({ demande }: { demande: (typeof client.infer)["[GET]/demande/:numero"] }) => {
   const previousStep = getStepWorkflow(
-    (demande.changementsStatut || []).sort((a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut))[0]
+    (demande.changementsStatut ?? []).sort((a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut))[0]
       ?.statutPrecedent
   );
 
   const latestTypeAvis = getTypeAvis(
-    (demande.changementsStatut || []).sort((a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut))[0]
+    (demande.changementsStatut ?? []).sort((a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut))[0]
       ?.statutPrecedent
   );
 

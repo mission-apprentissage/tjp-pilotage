@@ -74,7 +74,7 @@ export const MainSection = ({
         <Loader />
       ) : (
         <Flex p={8} bgColor={"white"} borderBottomRadius={4} borderTopRightRadius={4} borderLeftWidth={1}>
-          {tabsDisplayType === DisplayTypeEnum.repartition ? (
+          {tabsDisplayType === DisplayTypeEnum.repartition && (
             <RepartitionSection
               data={data}
               order={order}
@@ -84,7 +84,8 @@ export const MainSection = ({
               displayZonesGeographiques={displayZonesGeographiques}
               displayDomaines={displayDomaines}
             />
-          ) : tabsDisplayType === DisplayTypeEnum.quadrant ? (
+          )}
+          {tabsDisplayType === DisplayTypeEnum.quadrant && (
             <QuadrantSection
               filters={filters}
               filtersOptions={data?.filters}
@@ -95,7 +96,7 @@ export const MainSection = ({
               formations={formations}
               statsSortie={statsSortie}
             />
-          ) : null}
+          )}
         </Flex>
       )}
     </Flex>

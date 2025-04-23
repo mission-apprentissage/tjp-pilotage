@@ -291,7 +291,7 @@ export const down = async (db: Kysely<unknown>) => {
     .then((intentions) => intentions.map(({
       // @ts-ignore
       // eslint-disable-next-line unused-imports/no-unused-vars, max-len
-      isOldDemande, poursuitePedagogique, poursuitepedagogique, compensationCfd, compensationcfd, compensationCodeDispositif, compensationcodedispositif, compensationUai, compensationuai, compensationrentreescolaire, compensationRentreeScolaire, autreBesoinRH,
+      isOldDemande, poursuitePedagogique, poursuitepedagogique, compensationCfd, compensationcfd, compensationCodeDispositif, compensationcodedispositif, compensationUai, compensationuai, compensationrentreescolaire, compensationRentreeScolaire, autreBesoinRH, autrebesoinrh,
       ...rest
     }) => rest));
 
