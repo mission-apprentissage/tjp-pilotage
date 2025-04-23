@@ -34,6 +34,7 @@ export const getFormations = async ({
           sb.ref("niveauDiplome.libelleNiveauDiplome").as("libelleNiveauDiplome"),
           sb.ref("niveauDiplome.codeNiveauDiplome").as("codeNiveauDiplome"),
           sb.ref("formationView.typeFamille").as("typeFamille"),
+          sb.ref("formationView.voie").as("voie"),
         ])
         .orderBy("formationView.libelleFormation", "asc")
         .distinct()
@@ -55,12 +56,16 @@ export const getFormations = async ({
     .with("formation_etab", (wb) =>
       wb
         .selectFrom("formations")
-        .leftJoin("formationEtablissement", "formations.cfd", "formationEtablissement.cfd")
+        .leftJoin("formationEtablissement", (join) =>
+          join
+            .onRef("formationEtablissement.cfd", "=", "formations.cfd")
+            .onRef("formationEtablissement.voie", "=", "formations.voie")
+        )
         .innerJoin("dataEtablissement", "dataEtablissement.uai", "formationEtablissement.uai")
         .selectAll("formations")
         .select((sb) => [
           sb.ref("formationEtablissement.uai").as("uai"),
-          sb.ref("formationEtablissement.voie").as("voie"),
+          sb.ref("formations.voie").as("formations.voie"),
           sb.ref("dataEtablissement.codeRegion").as("codeRegion"),
           sb.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
           sb.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
@@ -89,8 +94,8 @@ export const getFormations = async ({
     .selectAll("formations")
     .select((sb) => [
       sb.fn.count<number>("formation_etab.uai").as("nbEtab"),
-      sql<boolean>`bool_or(voie = 'apprentissage' OR voie IS NULL)`.as("apprentissage"),
-      sql<boolean>`bool_or(voie = 'scolaire' OR voie IS NULL)`.as("scolaire"),
+      sql<boolean>`bool_or(formations.voie = 'apprentissage' OR formations.voie IS NULL)`.as("apprentissage"),
+      sql<boolean>`bool_or(formations.voie = 'scolaire' OR formations.voie IS NULL)`.as("scolaire"),
       sb.fn
         .coalesce(sql<boolean>`formations.cfd IN (SELECT cfd FROM formation_renovee)`, sql<boolean>`false`)
         .as("isFormationRenovee"),
@@ -104,6 +109,7 @@ export const getFormations = async ({
       "formations.typeFamille",
       "formations.codeNsf",
       "formations.dateOuverture",
+      "formations.voie"
     ])
     .$castTo<z.infer<typeof formationSchema>>()
     .execute()

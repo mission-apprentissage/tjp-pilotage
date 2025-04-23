@@ -43,6 +43,7 @@ services:
     restart: unless-stopped
     ports:
       - "5432:5432"
+    shm_size: 2gb
     networks:
       - ij_network
     volumes:
