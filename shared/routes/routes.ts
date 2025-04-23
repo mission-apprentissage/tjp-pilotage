@@ -14,7 +14,6 @@ import { getCampagneSchema } from './schemas/get.campagne.schema';
 import { getCampagnesSchema } from "./schemas/get.campagnes.schema";
 import { getCampagnesRegionSchema } from "./schemas/get.campagnes-region.schema";
 import { searchCampusSchema } from "./schemas/get.campus.search.search.schema";
-import { getChangelogSchema } from "./schemas/get.changelog.schema";
 import { getCorrectionsSchema } from "./schemas/get.corrections.schema";
 import { getDemandeSchema } from "./schemas/get.demande.numero.schema";
 import { countDemandesSchema } from "./schemas/get.demandes.count.schema";
@@ -132,11 +131,6 @@ export const ROUTES = {
     url: "/auth/whoAmI",
     method: "GET",
     schema: whoAmISchema,
-  },
-  "[GET]/changelog": {
-    url: "/changelog",
-    method: "GET",
-    schema: getChangelogSchema,
   },
   "[GET]/healthcheck": {
     url: "/healthcheck",
