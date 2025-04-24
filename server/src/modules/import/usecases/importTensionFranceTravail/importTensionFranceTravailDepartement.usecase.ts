@@ -78,11 +78,11 @@ export const [importTensionFranceTravailDepartement] = inject(
                   retry = false;
                   if (e.response?.data?.message?.includes("FiltreErreurSldng")) {
                     console.error(
-                      `ERROR [DEP=${codeDepartement},ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`
+                      `ERROR [DEP=${codeDepartement},ROME=${codeRome}] Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`
                     );
                   } else {
                     console.error(
-                      `ERROR [DEP=${codeDepartement},ROME=${codeRome}] ${`Status code : ${e.response?.status}`}`
+                      `ERROR [DEP=${codeDepartement},ROME=${codeRome}] Status code : ${e.response?.status}`
                     );
                   }
                 } else {

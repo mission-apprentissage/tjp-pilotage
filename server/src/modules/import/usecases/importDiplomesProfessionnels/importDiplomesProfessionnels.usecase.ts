@@ -51,7 +51,7 @@ export const [importDiplomesProfessionnels] = inject(
       },
       { parallel: 20 }
     ).then(() => {
-      process.stdout.write(`${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`);
+      process.stdout.write(errorCount > 0 ? `(avec ${errorCount} erreurs)\n\n` : "\n\n");
     });
     console.log("Import des diplomeProfessionnel (apprentissage)");
     errorCount = 0;
@@ -72,7 +72,7 @@ export const [importDiplomesProfessionnels] = inject(
       },
       { parallel: 20 }
     ).then(() => {
-      process.stdout.write(`${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`);
+      process.stdout.write(errorCount > 0 ? `(avec ${errorCount} erreurs)\n\n` : "\n\n");
     });
   }
 );
