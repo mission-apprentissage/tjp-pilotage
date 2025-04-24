@@ -138,116 +138,108 @@ export const CreateRequeteEnregistreeModal = ({
     <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
       <ModalOverlay />
       {auth ? (
-        <>
-          <ModalContent
-            as="form"
-            onSubmit={handleSubmit((form) => {
-              if (!form.nom) {
-                form.nom = `Recherche du ${format(new Date(), "dd/MM/yyyy")}`;
-              }
-              return createRequeteEnregistree({
-                body: {
-                  ...form,
-                  page,
-                  filtres: {
-                    ...searchParams?.filters,
-                    search: searchParams?.search,
-                  },
+        <ModalContent
+          as="form"
+          onSubmit={handleSubmit((form) => {
+            form.nom ??=  `Recherche du ${format(new Date(), "dd/MM/yyyy")}`;
+            return createRequeteEnregistree({
+              body: {
+                ...form,
+                page,
+                filtres: {
+                  ...searchParams?.filters,
+                  search: searchParams?.search,
                 },
-              });
-            })}
-          >
-            <ModalHeader>{altText ? altText : "Enregistrer la requête"}</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <FormControl mb="4" isInvalid={!!errors.nom}>
-                <FormLabel>Nom de la requête</FormLabel>
-                <Input {...register("nom")} width={350} placeholder="Saisir un nom court et facilement identifiable" />
-                {!!errors.nom && <FormErrorMessage>{errors.nom.message as string}</FormErrorMessage>}
-              </FormControl>
-              <FormControl mb="4" isInvalid={!!errors.couleur} isRequired>
-                <FormLabel>Badge</FormLabel>
-                <Menu gutter={0} matchWidth={true} autoSelect={false}>
-                  <MenuButton
-                    as={Button}
-                    variant={"selectButton"}
-                    rightIcon={<ChevronDownIcon />}
-                    width={350}
-                    size="md"
-                    borderWidth="1px"
-                    borderStyle="solid"
-                    borderColor="grey.900"
-                    bg={"white"}
-                  >
-                    <Flex direction="row" gap={2}>
-                      <Tag size={"sm"} colorScheme={couleur} bgColor={couleur} borderRadius={"100%"} />
-                      <Text my={"auto"}>{COULEURS_DISPONIBLES.find((c) => c.value === couleur)?.label}</Text>
-                    </Flex>
-                  </MenuButton>
-                  <MenuList py={0} borderTopRadius={0}>
-                    {COULEURS_DISPONIBLES.map((couleur) => (
-                      <MenuItem p={2} key={couleur.value} onClick={() => setValue("couleur", couleur.value)} gap={2}>
-                        <Tag size={"sm"} colorScheme={couleur.value} bgColor={couleur.value} borderRadius={"100%"} />
-                        <Flex direction="row">{couleur.label}</Flex>
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </Menu>
-                {!!errors.couleur && <FormErrorMessage>{errors.couleur.message as string}</FormErrorMessage>}
-              </FormControl>
-              <Flex direction={"column"} gap={3}>
-                <Text fontWeight={700}>Filtres actifs :</Text>
-                <FilterTags filters={searchParams?.filters} filtersList={filtersList} />
-              </Flex>
-              {isError && (
-                <Alert status="error">
-                  <AlertDescription>{getErrorMessage(error)}</AlertDescription>
-                </Alert>
-              )}
-            </ModalBody>
-
-            <ModalFooter>
-              <Button variant="primary" ml={3} isLoading={isLoading} type="submit">
-                Envoyer
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </>
+              },
+            });
+          })}
+        >
+          <ModalHeader>{altText ?? "Enregistrer la requête"}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl mb="4" isInvalid={!!errors.nom}>
+              <FormLabel>Nom de la requête</FormLabel>
+              <Input {...register("nom")} width={350} placeholder="Saisir un nom court et facilement identifiable" />
+              {!!errors.nom && <FormErrorMessage>{errors.nom.message as string}</FormErrorMessage>}
+            </FormControl>
+            <FormControl mb="4" isInvalid={!!errors.couleur} isRequired>
+              <FormLabel>Badge</FormLabel>
+              <Menu gutter={0} matchWidth={true} autoSelect={false}>
+                <MenuButton
+                  as={Button}
+                  variant={"selectButton"}
+                  rightIcon={<ChevronDownIcon />}
+                  width={350}
+                  size="md"
+                  borderWidth="1px"
+                  borderStyle="solid"
+                  borderColor="grey.900"
+                  bg={"white"}
+                >
+                  <Flex direction="row" gap={2}>
+                    <Tag size={"sm"} colorScheme={couleur} bgColor={couleur} borderRadius={"100%"} />
+                    <Text my={"auto"}>{COULEURS_DISPONIBLES.find((c) => c.value === couleur)?.label}</Text>
+                  </Flex>
+                </MenuButton>
+                <MenuList py={0} borderTopRadius={0}>
+                  {COULEURS_DISPONIBLES.map((couleur) => (
+                    <MenuItem p={2} key={couleur.value} onClick={() => setValue("couleur", couleur.value)} gap={2}>
+                      <Tag size={"sm"} colorScheme={couleur.value} bgColor={couleur.value} borderRadius={"100%"} />
+                      <Flex direction="row">{couleur.label}</Flex>
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Menu>
+              {!!errors.couleur && <FormErrorMessage>{errors.couleur.message as string}</FormErrorMessage>}
+            </FormControl>
+            <Flex direction={"column"} gap={3}>
+              <Text fontWeight={700}>Filtres actifs :</Text>
+              <FilterTags filters={searchParams?.filters} filtersList={filtersList} />
+            </Flex>
+            {isError && (
+              <Alert status="error">
+                <AlertDescription>{getErrorMessage(error)}</AlertDescription>
+              </Alert>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="primary" ml={3} isLoading={isLoading} type="submit">
+              Envoyer
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       ) : (
-        <>
-          <ModalContent>
-            <ModalHeader>Enregistrer les filtres actuels en favori</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody gap={3}>
-              <Text mb={2}>Cette fonctionnalité est réservée aux utilisateurs connectés afin de :</Text>
-              <UnorderedList spacing={3} mb={2}>
-                <ListItem ms={2}>
-                  <strong>Sauvegarder une requête</strong> (filtres saisies et résultats) pour la retrouver facilement
-                </ListItem>
-                <ListItem ms={2}>
-                  <strong>Exporter les données</strong> spécifiques à une requête et non toutes les données
-                </ListItem>
-              </UnorderedList>
-              <Text>
-                Connectez-vous pour accéder à la fonctionnalité, sinon vous pouvez copier-coller l'URL d'accès direct à
-                votre recherche.
-              </Text>
-            </ModalBody>
-
-            <ModalFooter mt={1}>
-              <Flex w={"100%"} justifyContent={"space-between"}>
-                <Button fontWeight="light" as={NextLink} color="bluefrance.113" href="/auth/login" variant="ghost">
-                  <LoginIcon mr="2" />
-                  Se connecter
-                </Button>
-                <Button variant="primary" onClick={copyUrlToClipboard}>
-                  <LinkIcon mr="2" />
-                  Copier l'URL
-                </Button>
-              </Flex>
-            </ModalFooter>
-          </ModalContent>
-        </>
+        <ModalContent>
+          <ModalHeader>Enregistrer les filtres actuels en favori</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody gap={3}>
+            <Text mb={2}>Cette fonctionnalité est réservée aux utilisateurs connectés afin de :</Text>
+            <UnorderedList spacing={3} mb={2}>
+              <ListItem ms={2}>
+                <strong>Sauvegarder une requête</strong> (filtres saisies et résultats) pour la retrouver facilement
+              </ListItem>
+              <ListItem ms={2}>
+                <strong>Exporter les données</strong> spécifiques à une requête et non toutes les données
+              </ListItem>
+            </UnorderedList>
+            <Text>
+              Connectez-vous pour accéder à la fonctionnalité, sinon vous pouvez copier-coller l'URL d'accès direct à
+              votre recherche.
+            </Text>
+          </ModalBody>
+          <ModalFooter mt={1}>
+            <Flex w={"100%"} justifyContent={"space-between"}>
+              <Button fontWeight="light" as={NextLink} color="bluefrance.113" href="/auth/login" variant="ghost">
+                <LoginIcon mr="2" />
+                Se connecter
+              </Button>
+              <Button variant="primary" onClick={copyUrlToClipboard}>
+                <LinkIcon mr="2" />
+                Copier l'URL
+              </Button>
+            </Flex>
+          </ModalFooter>
+        </ModalContent>
       )}
     </Modal>
   );

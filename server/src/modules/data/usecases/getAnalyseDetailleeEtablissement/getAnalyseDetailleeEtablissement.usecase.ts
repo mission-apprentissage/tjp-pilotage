@@ -74,7 +74,7 @@ export const getAnalyseDetailleeEtablissementFactory =
               tauxInsertion: chiffres.tauxInsertion ?? 0,
               tauxPoursuite: chiffres.tauxPoursuite ?? 0,
             },
-            statsSortie[etablissement.codeRegion ?? ""] || {}
+            statsSortie[etablissement.codeRegion ?? ""] ?? {}
           ),
         };
       });
@@ -93,7 +93,7 @@ export const getAnalyseDetailleeEtablissementFactory =
         formations: formationsObject,
         chiffresIJ: chiffresIJObject,
         chiffresEntree: chiffresEntreeObject,
-        statsSortie: statsSortie[etablissement.codeRegion ?? ""] || {},
+        statsSortie: statsSortie[etablissement.codeRegion ?? ""] ?? {},
         filters,
       };
     };
