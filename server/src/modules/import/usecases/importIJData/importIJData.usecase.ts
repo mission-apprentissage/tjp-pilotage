@@ -18,9 +18,7 @@ const UAI_TO_PROCESS: {
 } = {};
 
 function addUaiToProcess(uai: string) {
-  if (!UAI_TO_PROCESS[uai]) {
-    UAI_TO_PROCESS[uai] = true;
-  }
+  UAI_TO_PROCESS[uai] ??= true;
 }
 
 const BATCH_SIZE = 50;

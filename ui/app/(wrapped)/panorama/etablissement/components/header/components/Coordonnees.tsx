@@ -14,7 +14,7 @@ export const Coordonnees = ({ informations }: { informations: Informations }) =>
     isApprentissage,
     isScolaire,
     uai,
-  } = informations || {};
+  } = informations ?? {};
   const [textDisabled] = useToken("colors", ["grey.625"]);
   return (
     <GridItem colSpan={7}>

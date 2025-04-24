@@ -22,10 +22,10 @@ export async function getGlossaireEntries(): Promise<GlossaireEntry[]> {
           const slug = path.basename(file, ".md");
 
           return {
-            title: data.title || "",
-            type: data["Type d'indicateur"] || "",
-            createdBy: data["Created by"] || "",
-            status: data.statut || "",
+            title: data.title ?? "",
+            type: data["Type d'indicateur"] ?? "",
+            createdBy: data["Created by"] ?? "",
+            status: data.statut ?? "",
             icon: data.icon?.trim(),
             slug,
           } as GlossaireEntry;

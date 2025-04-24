@@ -39,13 +39,13 @@ const chakraRendererTheme: Components = {
   img: ({ src, alt }) => {
     // Assurez-vous que le chemin commence par un slash
     const imagePath = src?.startsWith('/') ? src : `/${src}`;
-    return <img src={imagePath} alt={alt || ''} />;
+    return <img src={imagePath} alt={alt ?? ''} />;
   },
   blockquote: ({ children }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const greyColor = useToken("colors", "grey.975"); // TODO
+    const greyColor = useToken("colors", "grey.975");
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const blueColor = useToken("colors", "bluefrance.525"); // TODO
+    const blueColor = useToken("colors", "bluefrance.525");
     return (
       <blockquote
         style={{

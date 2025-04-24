@@ -16,12 +16,12 @@ export async function getGlossaireEntryFromMarkdown(slug: string): Promise<Gloss
     const { data, content } = matter(fileContent);
 
     return {
-      title: data.title || "",
-      type: data["Type d'indicateur"] || "",
-      createdBy: data["Created by"] || "",
-      status: data.statut || "",
+      title: data.title ?? "",
+      type: data["Type d'indicateur"] ?? "",
+      createdBy: data["Created by"] ?? "",
+      status: data.statut ?? "",
       content,
-      icon: data.icon || "",
+      icon: data.icon ?? "",
       slug,
     };
   } catch (error) {

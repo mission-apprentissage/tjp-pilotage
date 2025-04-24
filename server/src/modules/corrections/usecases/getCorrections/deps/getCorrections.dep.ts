@@ -327,6 +327,6 @@ export const getCorrectionsQuery = async ({
       formationSpecifique: formatFormationSpecifique(correction),
     })),
     campagnes,
-    count: corrections[0]?.count || 0,
+    count: corrections[0]?.count ?? 0,
   };
 };

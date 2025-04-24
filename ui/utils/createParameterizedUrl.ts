@@ -6,7 +6,7 @@ export const createParameterizedUrl = (pathname: string, searchParams: object) =
     stringify(searchParams, {
       encode: false,
       addQueryPrefix: true,
-      filter: (_, value) => value || undefined,
+      filter: (_, value) => value ?? undefined,
     })
   );
 };

@@ -94,7 +94,7 @@ export const EditUser = ({
         as="form"
         onSubmit={handleSubmit((v) =>
           updateUser({
-            body: { ...v, codeRegion: v.codeRegion || null, fonction: v.fonction || null },
+            body: { ...v, codeRegion: v.codeRegion ?? null, fonction: v.fonction ?? null },
             params: { userId: user?.id },
           })
         )}
@@ -107,7 +107,7 @@ export const EditUser = ({
             <Input
               type="email"
               {...register("email", {
-                validate: (v) => z.string().email().safeParse(v).success || "Veuillez saisir un email valide",
+                validate: (v) => z.string().email().safeParse(v).success ?? "Veuillez saisir un email valide",
               })}
             />
             {!!errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
