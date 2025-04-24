@@ -42,30 +42,33 @@ export const up = async (db: Kysely<unknown>) => {
     `.compile(getKbdClient())
   );
 
-  await db.schema
-    .alterTable("demande")
-    .addColumn("partenairesEconomiquesImpliques", "boolean")
-    .addColumn("partenaireEconomique1", "varchar")
-    .addColumn("partenaireEconomique2", "varchar")
-    .addColumn("cmqImplique", "boolean")
-    .addColumn("filiereCmq", "varchar")
-    .addColumn("nomCmq", "varchar")
-    .addColumn("besoinRHPrecisions", "varchar")
-    .addColumn("travauxAmenagement", "boolean")
-    .addColumn("travauxAmenagementDescription", "varchar")
-    .addColumn("achatEquipement", "boolean")
-    .addColumn("achatEquipementDescription", "varchar")
-    .addColumn("augmentationCapaciteAccueilHebergement", "boolean")
-    .addColumn("augmentationCapaciteAccueilHebergementPlaces", "integer")
-    .addColumn("augmentationCapaciteAccueilHebergementPrecisions", "varchar")
-    .addColumn("augmentationCapaciteAccueilRestauration", "boolean")
-    .addColumn("augmentationCapaciteAccueilRestaurationPlaces", "integer")
-    .addColumn("augmentationCapaciteAccueilRestaurationPrecisions", "varchar")
-    .addColumn("inspecteurReferent", "varchar")
-    .addColumn("achatEquipementCout", "integer")
-    .addColumn("travauxAmenagementCout", "integer")
-    .addColumn("isOldDemande", "boolean", (c) => c.notNull().defaultTo(true))
-    .execute();
+  await getKbdClient()
+    .transaction()
+    .execute((transaction) =>  transaction.schema
+      .alterTable("demande")
+      .addColumn("partenairesEconomiquesImpliques", "boolean")
+      .addColumn("partenaireEconomique1", "varchar")
+      .addColumn("partenaireEconomique2", "varchar")
+      .addColumn("cmqImplique", "boolean")
+      .addColumn("filiereCmq", "varchar")
+      .addColumn("nomCmq", "varchar")
+      .addColumn("besoinRHPrecisions", "varchar")
+      .addColumn("travauxAmenagement", "boolean")
+      .addColumn("travauxAmenagementDescription", "varchar")
+      .addColumn("achatEquipement", "boolean")
+      .addColumn("achatEquipementDescription", "varchar")
+      .addColumn("augmentationCapaciteAccueilHebergement", "boolean")
+      .addColumn("augmentationCapaciteAccueilHebergementPlaces", "integer")
+      .addColumn("augmentationCapaciteAccueilHebergementPrecisions", "varchar")
+      .addColumn("augmentationCapaciteAccueilRestauration", "boolean")
+      .addColumn("augmentationCapaciteAccueilRestaurationPlaces", "integer")
+      .addColumn("augmentationCapaciteAccueilRestaurationPrecisions", "varchar")
+      .addColumn("inspecteurReferent", "varchar")
+      .addColumn("achatEquipementCout", "integer")
+      .addColumn("travauxAmenagementCout", "integer")
+      .addColumn("isOldDemande", "boolean", (c) => c.notNull().defaultTo(true))
+      .execute()
+    );
 
   const intentions = await getKbdClient()
     // @ts-ignore
@@ -77,22 +80,28 @@ export const up = async (db: Kysely<unknown>) => {
       isOldDemande: false
     })));
 
-  let countIntentions = 0;
-  chunk(intentions, 500).forEach(async (intentionsChunk) =>
-    getKbdClient()
-      .transaction()
-      .execute((transaction) =>
-        transaction
-          .insertInto("demande")
-          // @ts-ignore
-          .values(intentionsChunk)
-          .execute()
-          .then(() => {
-            countIntentions += intentionsChunk.length;
-            console.log(`\rIntentions -> demandes migrées : ${countIntentions}`);
-          })
-      )
-  );
+  const countIntentions = await getKbdClient()
+    // @ts-ignore
+    .selectFrom("intention")
+    .select((eb) => eb.fn.countAll().as("count"))
+    .executeTakeFirstOrThrow()
+    .then((count => count.count));
+
+  let countMigrationsIntentions = 0;
+  const chunksIntentions = chunk(intentions, 100);
+  for(let i = 0; i < chunksIntentions.length; i++) {
+    const intentionsChunk = chunksIntentions[i];
+    await getKbdClient()
+      .insertInto("demande")
+      // @ts-ignore
+      .values(intentionsChunk)
+      .onConflict((oc) => oc.doNothing())
+      .execute()
+      .then(() => {
+        countMigrationsIntentions += intentionsChunk.length;
+        console.log(`\rIntentions -> demandes migrées : ${countMigrationsIntentions}/${countIntentions}`);
+      });
+  }
 
   await db.schema
     .createView("latestDemandeView")
@@ -296,23 +305,21 @@ export const down = async (db: Kysely<unknown>) => {
     }) => rest));
 
   let countIntentions = 0;
-  chunk(intentions, 500).forEach(async (intentionsChunk) =>
-    getKbdClient()
-      .transaction()
-      .execute((transaction) =>
-        transaction
-        // @ts-ignore
-          .insertInto("intention")
-        // @ts-ignore
-          .values(intentionsChunk)
-          .onConflict((oc) => oc.doNothing())
-          .execute()
-          .then(() => {
-            countIntentions += intentionsChunk.length;
-            console.log(`\rDemandes -> intentions migrées : ${countIntentions}`);
-          })
-      )
-  );
+  const chunksIntentions = chunk(intentions, 100);
+  for(let i = 0; i < chunksIntentions.length; i++) {
+    const intentionsChunk = chunksIntentions[i];
+    await getKbdClient()
+      // @ts-ignore
+      .insertInto("intention")
+      // @ts-ignore
+      .values(intentionsChunk)
+      .onConflict((oc) => oc.doNothing())
+      .execute()
+      .then(() => {
+        countIntentions += intentionsChunk.length;
+        console.log(`\rDemandes -> intentions migrées : ${countIntentions}/${intentions.length}`);
+      });
+  }
 
   await getKbdClient()
     .deleteFrom("demande")
