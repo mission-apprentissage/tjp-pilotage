@@ -63,7 +63,7 @@ const chakraRendererTheme: Components = {
   a: ({ children, href }) => {
     console.log(`Is glossaire id: ${isGlossaireId(href)}`);
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { setSelectedEntry } = useGlossaireContext(); // TODO
+    const { setSelectedEntry } = useGlossaireContext();
     if (isGlossaireId(href)) {
       return (
         <Link
@@ -85,9 +85,9 @@ const chakraRendererTheme: Components = {
   aside: ({ children }) => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const greyColor = useToken("colors", "grey.975"); // TODO
+    const greyColor = useToken("colors", "grey.975");
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const blueColor = useToken("colors", "bluefrance.525"); // TODO
+    const blueColor = useToken("colors", "bluefrance.525");
 
     return (
       <blockquote
