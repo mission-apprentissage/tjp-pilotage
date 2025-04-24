@@ -80,18 +80,14 @@ export const up = async (db: Kysely<unknown>) => {
   let countIntentions = 0;
   chunk(intentions, 500).forEach(async (intentionsChunk) =>
     getKbdClient()
-      .transaction()
-      .execute((transaction) =>
-        transaction
-          .insertInto("demande")
-          // @ts-ignore
-          .values(intentionsChunk)
-          .execute()
-          .then(() => {
-            countIntentions += intentionsChunk.length;
-            console.log(`\rIntentions -> demandes migrées : ${countIntentions}`);
-          })
-      )
+      .insertInto("demande")
+      // @ts-ignore
+      .values(intentionsChunk)
+      .execute()
+      .then(() => {
+        countIntentions += intentionsChunk.length;
+        console.log(`\rIntentions -> demandes migrées : ${countIntentions}`);
+      })
   );
 
   await db.schema
@@ -298,20 +294,16 @@ export const down = async (db: Kysely<unknown>) => {
   let countIntentions = 0;
   chunk(intentions, 500).forEach(async (intentionsChunk) =>
     getKbdClient()
-      .transaction()
-      .execute((transaction) =>
-        transaction
-        // @ts-ignore
-          .insertInto("intention")
-        // @ts-ignore
-          .values(intentionsChunk)
-          .onConflict((oc) => oc.doNothing())
-          .execute()
-          .then(() => {
-            countIntentions += intentionsChunk.length;
-            console.log(`\rDemandes -> intentions migrées : ${countIntentions}`);
-          })
-      )
+      // @ts-ignore
+      .insertInto("intention")
+      // @ts-ignore
+      .values(intentionsChunk)
+      .onConflict((oc) => oc.doNothing())
+      .execute()
+      .then(() => {
+        countIntentions += intentionsChunk.length;
+        console.log(`\rDemandes -> intentions migrées : ${countIntentions}`);
+      })
   );
 
   await getKbdClient()
