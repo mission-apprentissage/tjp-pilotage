@@ -487,7 +487,7 @@ describe("redirectDne usecase", () => {
         family_name: "lastname",
         FrEduFonctAdm: "DIR",
         FrEduRne: ["code-uai$rest"],
-        FrEduGestResp: "code-uai$rest$805$ORIONINSERJEUNES",
+        FrEduGestResp: ["code-uai$rest$805$ORIONINSERJEUNES"],
         codaca: "1"
       };
       const deps = {
