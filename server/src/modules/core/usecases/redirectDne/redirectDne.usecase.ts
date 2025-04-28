@@ -33,7 +33,7 @@ type ExtraUserInfo = {
   // Titre de fonction de l'utilisateur
   title?: string;
   // Nécessaire à l'identification du DASEN
-  FrEduGestResp?: string;
+  FrEduGestResp?: Array<string>;
   // Code région académique
   codaca?:string;
 };
@@ -118,7 +118,7 @@ const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
 
   // DASEN
   // Voir fiche polhab page 8
-  if (userInfo.FrEduGestResp?.endsWith("805$ORIONINSERJEUNES")) {
+  if (userInfo.FrEduGestResp?.some(s => s.endsWith("805$ORIONINSERJEUNES"))) {
     return {
       role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["DASEN"],
       uais: []
@@ -276,6 +276,16 @@ export const [redirectDne, redirectDneFactory] = inject(
           // Si l'utilisateur a besoin d'un codeRegion et qu'il n'est pas un perdir,
           // Aller chercher le codeRegion depuis le codeAca
         } else if (userNeedsCodeRegion && userinfo.codaca) {
+          // Cela signifie que le codaca n'est pas défini pour l'utilisateur
+          if (userinfo.codaca === "000") {
+            logger.error({
+              userinfo,
+              email,
+              attributes,
+            }, "[SSO] Le code région n'a pas pu être déduit du codaca");
+            throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_CODACA);
+          }
+
           const codeRegionFromAcademie = await deps.findRegionFromAcademie(userinfo.codaca.substring(1));
           if (codeRegionFromAcademie) {
             codeRegion = codeRegionFromAcademie.codeRegion;
