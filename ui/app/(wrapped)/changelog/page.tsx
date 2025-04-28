@@ -14,7 +14,7 @@ const Page = () => {
         changelogEntry.types.findIndex((t) => t === ChangelogTypeEnum.BANDEAU) === -1 &&
         changelogEntry.deployed &&
         changelogEntry.show
-    ) ?? [];
+    ).sort((a, b) => b.date.getTime() - a.date.getTime()) ?? [];
 
   const incoming =
     CHANGELOG?.filter(
@@ -22,7 +22,7 @@ const Page = () => {
         changelogEntry.types.findIndex((t) => t === ChangelogTypeEnum.BANDEAU) === -1 &&
         !changelogEntry.deployed &&
         changelogEntry.show
-    ) ?? [];
+    ).sort((a, b) => a.date.getTime() - b.date.getTime()) ?? [];
 
   return (
     <>
