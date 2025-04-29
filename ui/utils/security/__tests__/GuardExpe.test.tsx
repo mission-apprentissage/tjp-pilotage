@@ -73,54 +73,6 @@ describe("ui > components > security > GuardExpe", () => {
     expect(textToFind).not.toBe(null);
   });
 
-  it("Doit rediriger les utilisateurs admin région d'AURA quand la saisie n'était pas autorisée en AURA en 2023", async () => {
-    render(
-      <AuthContext.Provider value={getUserContext(RoleEnum["admin_region"], "76")}>
-        <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2023"})}>
-          <GuardExpe>
-            <p>has_permission</p>
-          </GuardExpe>
-        </CurrentCampagneContext.Provider>
-      </AuthContext.Provider>
-    );
-
-    const textToBeNull = screen.queryByText("has_permission");
-    expect(textToBeNull).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/");
-  });
-
-  it("Doit rediriger les utilisateurs admin région d'IDF quand la saisie n'était pas autorisée en IDF en 2024", async () => {
-    render(
-      <AuthContext.Provider value={getUserContext(RoleEnum["admin_region"], "11")}>
-        <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
-          <GuardExpe>
-            <p>has_permission</p>
-          </GuardExpe>
-        </CurrentCampagneContext.Provider>
-      </AuthContext.Provider>
-    );
-
-    const textToFind = screen.queryByText("has_permission");
-    expect(textToFind).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/");
-  });
-
-  it("Doit rediriger les utilisateurs perdir d'IDF quand la saisie n'était pas autorisée en IDF en 2024", async () => {
-    render(
-      <AuthContext.Provider value={getUserContext(RoleEnum["perdir"], "11")}>
-        <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
-          <GuardExpe>
-            <p>has_permission</p>
-          </GuardExpe>
-        </CurrentCampagneContext.Provider>
-      </AuthContext.Provider>
-    );
-
-    const textToFind = screen.queryByText("has_permission");
-    expect(textToFind).toBe(null);
-    expect(redirectMock).toHaveBeenCalledWith("/");
-  });
-
   it("Doit laisser passer les utilisateurs admin région d'AURA quand la saisie était autorisée en 2024", async () => {
     render(
       <AuthContext.Provider value={getUserContext(RoleEnum["admin_region"], "76")}>

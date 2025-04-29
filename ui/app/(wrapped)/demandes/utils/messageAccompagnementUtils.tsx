@@ -31,6 +31,7 @@ export const getMessageAccompagnementCampagne = ({
   campagne: CampagneType;
   currentCampagne: CampagneType;
 }) => {
+  console.log(campagne, currentCampagne);
   if(canCreateDemande({user, campagne})) return undefined;
   if(isCampagneEnAttente(campagne))
     return CAMPAGNE_EN_ATTENTE
