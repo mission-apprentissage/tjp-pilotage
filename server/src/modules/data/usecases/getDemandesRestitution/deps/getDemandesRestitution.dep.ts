@@ -1,5 +1,7 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import type { TypeDemandeType } from "shared/enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
@@ -17,8 +19,6 @@ import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6moi
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPression, selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissage } from "@/modules/data/utils/tauxRemplissage";
-import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
-import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import {countDifferenceCapaciteApprentissage, countDifferenceCapaciteApprentissageColoree, countDifferenceCapaciteScolaire, countDifferenceCapaciteScolaireColoree, countPlacesColorees,countPlacesColoreesFermeesApprentissage, countPlacesColoreesFermeesScolaire, countPlacesColoreesOuvertesApprentissage, countPlacesColoreesOuvertesScolaire, countPlacesFermeesApprentissage, countPlacesFermeesScolaire, countPlacesOuvertesApprentissage, countPlacesOuvertesScolaire} from '@/modules/utils/countCapacite';
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
@@ -168,6 +168,10 @@ export const getDemandesRestitutionQuery = async ({
       eb.ref("tauxEntree.premierVoeu").as("pilotagePremierVoeu"),
       eb.ref("tauxEntree.demande").as("pilotageTauxDemande"),
     ])
+    .$narrowType<{
+      statut: DemandeStatutType,
+      typeDemande: TypeDemandeType
+     }>()
     .$call((eb) => {
       if (search)
         return eb.where((eb) =>
@@ -335,8 +339,6 @@ export const getDemandesRestitutionQuery = async ({
         dateDebut: demande.dateDebutCampagne?.toISOString(),
         dateFin: demande.dateFinCampagne?.toISOString(),
       },
-      statut: castDemandeStatutWithoutSupprimee(demande.statut),
-      typeDemande: castTypeDemande(demande.typeDemande),
       createdAt: demande.createdAt?.toISOString(),
       updatedAt: demande.updatedAt?.toISOString(),
       formationSpecifique: formatFormationSpecifique(demande),

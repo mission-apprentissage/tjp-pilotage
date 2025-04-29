@@ -9,11 +9,11 @@ import type { client } from "@/api.client";
 import { DEFAULT_SEARCH_PARAMS } from "@/app/(wrapped)/panorama/types";
 import { CodeRegionContext } from "@/app/codeRegionContext";
 
-export function PanoramaSelection({
+export const PageClient = ({
   regionOptions,
 }: {
   readonly regionOptions: (typeof client.infer)["[GET]/regions"];
-}) {
+}) => {
   const router = useRouter();
   const { codeRegion, setCodeRegion } = useContext(CodeRegionContext);
 
@@ -49,4 +49,4 @@ export function PanoramaSelection({
       </Flex>
     </Container>
   );
-}
+};

@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import type { Role } from "shared";
+import type {OrderType} from 'shared/enum/orderEnum';
 import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
 import { PermissionScopeEnum} from 'shared/enum/permissionScopeEnum';
 import { MAX_LIMIT } from "shared/utils/maxLimit";
@@ -19,7 +20,7 @@ export const findUsers = async ({
   offset?: number;
   limit?: number;
   search?: string;
-  orderBy?: { order: "asc" | "desc"; column: string };
+  orderBy?: { order: OrderType; column: string };
   scope: PermissionScope;
   scopeFilter: Array<string>;
 }) => {

@@ -1,11 +1,10 @@
 import type {Insertable} from 'kysely';
 import {omit} from 'lodash-es';
+import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 
 import type {DB} from '@/db/db';
 import { getKbdClient} from '@/db/db';
-import { castDemandeStatut } from '@/modules/utils/castDemandeStatut';
 import { generateId } from '@/modules/utils/generateId';
-import { cleanNull } from '@/utils/noNull';
 
 export const updateChangementsStatutAndDemandesWithHistory = async ({
   demandes,
@@ -38,15 +37,11 @@ export const updateChangementsStatutAndDemandesWithHistory = async ({
           oc.columns(["createdBy", "demandeNumero", "statutPrecedent", "statut"]).doUpdateSet({ updatedAt: new Date() })
         )
         .returningAll()
-        .execute()
-        .then((changementsStatut) => changementsStatut.map(
-          (changementStatut) =>
-            cleanNull({
-              ...changementStatut,
-              statut: castDemandeStatut(changementStatut.statut),
-              statutPrecedent: castDemandeStatut(changementStatut.statutPrecedent),
-            })
-        ));
+        .$narrowType<{
+          statut: DemandeStatutType;
+          statutPrecedent: DemandeStatutType;
+        }>()
+        .execute();
 
       return [];
     });

@@ -26,7 +26,7 @@ import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
 import { UaisContext } from "@/app/uaiContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
-import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
 import { isPerdirPartOfExpe } from "@/utils/isPartOfExpe";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
@@ -298,7 +298,7 @@ export const Nav = () => {
               zIndex={"dropdown"}
             >
               <MenuItem p="0" w="100%">
-                <NavMenuLink href={getRoutingSaisieRecueilDemande({user})} segment="saisie">
+                <NavMenuLink href={getRoutingSaisieDemande({user})} segment="saisie">
                     Gestion des demandes
                 </NavMenuLink>
               </MenuItem>

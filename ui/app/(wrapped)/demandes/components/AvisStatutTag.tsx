@@ -2,8 +2,8 @@ import { chakra, Tag } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import type { AvisStatutType } from "shared/enum/avisStatutEnum";
 import { AvisStatutEnum } from "shared/enum/avisStatutEnum";
-import type { AvisTypeType } from "shared/enum/avisTypeEnum";
-import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
+import type { TypeAvisType } from "shared/enum/typeAvisEnum";
+import { TypeAvisEnum } from "shared/enum/typeAvisEnum";
 
 export const TagIcon = chakra(({ statutAvis }: { statutAvis: AvisStatutType }) => {
   switch (statutAvis) {
@@ -53,7 +53,7 @@ export const AvisStatutTag = chakra(
     hasIcon = false,
   }: {
     statutAvis: AvisStatutType;
-    typeAvis?: AvisTypeType;
+    typeAvis?: TypeAvisType;
     className?: string;
     size?: "sm" | "md" | "lg";
     hasIcon?: boolean;
@@ -66,7 +66,7 @@ export const AvisStatutTag = chakra(
       gap={1}
     >
       {hasIcon && <TagIcon statutAvis={statutAvis} />}
-      {typeAvis && (typeAvis != AvisTypeEnum["final"] ? `Avis ${typeAvis} ` : `Vote ${typeAvis} `)}
+      {typeAvis && (typeAvis != TypeAvisEnum["final"] ? `Avis ${typeAvis} ` : `Vote ${typeAvis} `)}
       {statutAvis}
     </Tag>
   )

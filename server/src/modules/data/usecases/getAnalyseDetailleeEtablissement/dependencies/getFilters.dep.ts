@@ -1,5 +1,5 @@
 import { sql } from "kysely";
-import type { Voie } from "shared/enum/voieEnum";
+import type { VoieType } from "shared/enum/voieEnum";
 import type { OptionType } from "shared/schema/optionSchema";
 
 import { cleanNull } from "@/utils/noNull";
@@ -17,7 +17,7 @@ export const getFiltersVoie = async ({ uai, codeNiveauDiplome }: { uai: string; 
 
       return q;
     })
-    .$castTo<{ voie: Voie }>()
+    .$castTo<{ voie: VoieType }>()
     .execute();
 
 export const getFiltersCodeNiveauDiplome = async ({ uai, voie }: { uai: string; voie?: string[] }) =>
@@ -74,7 +74,7 @@ export const getFilters = async ({
   ]);
 
   return {
-    voies: voies.map((v) => v.voie),
+    voies: voies.map((v) => v.voie) as VoieType[],
     ...codeNiveauDiplomeFilters,
   };
 };

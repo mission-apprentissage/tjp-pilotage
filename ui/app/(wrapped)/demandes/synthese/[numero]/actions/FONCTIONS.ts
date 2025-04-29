@@ -1,4 +1,4 @@
-import type { AvisTypeType } from "shared/enum/avisTypeEnum";
+import type { TypeAvisType } from "shared/enum/typeAvisEnum";
 import type { UserFonction} from "shared/enum/userFonctionEnum";
 import { UserFonctionEnum } from "shared/enum/userFonctionEnum";
 
@@ -25,4 +25,4 @@ export const FONCTIONS = {
     UserFonctionEnum["CSA"],
     UserFonctionEnum["Recteur"]
   ],
-} as Record<AvisTypeType, UserFonction[]>;
+} as Record<TypeAvisType, UserFonction[]>;

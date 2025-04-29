@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
+import {OrderZodType} from '../../enum/orderEnum';
 import { CampagneSchema } from '../../schema/campagneSchema';
 import { OptionSchema } from "../../schema/optionSchema";
 
@@ -123,7 +124,7 @@ export const FiltersSchema = z.object({
   statut: z.union([DemandeStatutZodType.exclude(["supprimée"]), z.literal("suivies")]).optional(),
   suivies: z.coerce.boolean().optional(),
   search: z.string().optional(),
-  order: z.enum(["asc", "desc"]).optional(),
+  order: OrderZodType.optional(),
   orderBy: DemandeItem.keyof().optional(),
   offset: z.coerce.number().optional(),
   limit: z.coerce.number().optional(),

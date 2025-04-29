@@ -94,7 +94,8 @@ export const InformationHeader = () => {
               justifyItems="end"
               alignItems="start"
               width="auto"
-              height="auto"
+              h={"fit-content"}
+              mb={"auto"}
             >
               <VisuallyHidden fontSize={12}>Fermer</VisuallyHidden>
               <Icon icon="ri:close-fill" fontSize={16} />

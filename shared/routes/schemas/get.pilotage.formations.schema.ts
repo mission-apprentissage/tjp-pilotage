@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import {DemandeStatutZodType} from '../../enum/demandeStatutEnum';
+import {OrderZodType} from '../../enum/orderEnum';
 import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
 import {SecteurZodType} from '../../enum/secteurEnum';
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
@@ -45,7 +46,7 @@ export const FiltersSchema = z.object({
   coloration: z.string().optional(),
   type: z.enum(["ouverture", "fermeture", "coloration"]).optional(),
   tauxPression: z.enum(["faible", "eleve"]).optional(),
-  orderFormations: z.enum(["asc", "desc"]).optional(),
+  orderFormations: OrderZodType.optional(),
   orderByFormations: FormationTransformationStatsSchema.keyof().optional(),
 });
 

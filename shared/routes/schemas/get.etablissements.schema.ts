@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import {OrderZodType} from '../../enum/orderEnum';
 import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
@@ -84,7 +85,7 @@ const FiltersSchema = z.object({
   formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
   withAnneeCommune: z.string().optional(),
   search: z.string().optional(),
-  order: z.enum(["asc", "desc"]).optional(),
+  order: OrderZodType.optional(),
   orderBy: FormationEtablissementLineSchema.keyof().optional(),
   offset: z.coerce.number().optional(),
   limit: z.coerce.number().optional(),

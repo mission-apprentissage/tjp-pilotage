@@ -156,18 +156,15 @@ export const canImportDemande = ({
   user,
   campagne
 } : {
-    isAlreadyImported: boolean,
-    isLoading: boolean,
-    user?: UserType,
-    campagne?: CampagneType
-  }) => {
-  return (
-    !isAlreadyImported &&
-    !isLoading &&
-    isCampagneTerminee(campagne) &&
-    hasPermission(user?.role, PermissionEnum["demande/ecriture"])
-  );
-};
+  isAlreadyImported: boolean,
+  isLoading: boolean,
+  user?: UserType,
+  campagne?: CampagneType
+}) =>
+  !isAlreadyImported &&
+  !isLoading &&
+  isCampagneTerminee(campagne) &&
+  hasPermission(user?.role, PermissionEnum["demande/ecriture"]);
 
 export const canCorrectDemande = ({
   demande,

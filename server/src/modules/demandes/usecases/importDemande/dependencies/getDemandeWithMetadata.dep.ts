@@ -1,9 +1,9 @@
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
+import type {DemandeStatutTypeWithoutSupprimee} from 'shared/enum/demandeStatutEnum';
+import type {TypeDemandeType} from 'shared/enum/demandeTypeEnum';
 
 import { getKbdClient } from "@/db/db";
-import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
-import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import { cleanNull } from "@/utils/noNull";
 
 export const getDemandeWithMetadata = async (id: string) => {
@@ -52,6 +52,10 @@ export const getDemandeWithMetadata = async (id: string) => {
         ),
       }).as("metadata"),
     ])
+    .$narrowType<{
+      statut: DemandeStatutTypeWithoutSupprimee,
+      typeDemande: TypeDemandeType
+    }>()
     .where("demande.id", "=", id)
     .executeTakeFirstOrThrow()
     .then(cleanNull);
@@ -70,8 +74,6 @@ export const getDemandeWithMetadata = async (id: string) => {
         formation: cleanNull(demande.metadata.formation),
         etablissement: cleanNull(demande.metadata.etablissement),
       }),
-      statut: castDemandeStatutWithoutSupprimee(demande.statut),
-      typeDemande: castTypeDemande(demande.typeDemande),
       createdAt: demande.createdAt?.toISOString(),
       codeDispositif,
     })

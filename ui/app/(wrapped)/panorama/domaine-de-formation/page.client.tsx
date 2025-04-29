@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { SelectNsf } from "./components/selectNsf";
 import type { NsfOptions } from "./types";
 
-export const PanoramaDomaineDeFormationClient = ({
+export const PageClient = ({
   defaultNsf,
   wrongNsf,
 }: {
@@ -22,6 +22,7 @@ export const PanoramaDomaineDeFormationClient = ({
   wrongNsf?: string;
 }) => {
   const router = useRouter();
+
   return (
     <Container px="48px" as="section" py="40px" bg="bluefrance.975" maxWidth={"container.xl"} h={"100%"}>
       <Flex align="center" direction="row" justify="space-between">

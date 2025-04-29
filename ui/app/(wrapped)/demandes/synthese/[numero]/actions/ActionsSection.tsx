@@ -1,8 +1,8 @@
 import { Flex } from "@chakra-ui/react";
 import { hasPermission, hasRole } from "shared";
-import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 import {PermissionEnum} from 'shared/enum/permissionEnum';
 import {RoleEnum} from 'shared/enum/roleEnum';
+import { TypeAvisEnum } from "shared/enum/typeAvisEnum";
 
 import type { client } from "@/api.client";
 import { STICKY_OFFSET } from "@/app/(wrapped)/demandes/SCROLL_OFFSETS";
@@ -26,9 +26,9 @@ export const ActionsSection = ({ demande }: { demande: (typeof client.infer)["[G
   const canSubmitAvis = () => {
     if (
       (hasRole({ user, role: RoleEnum["expert_region"] }) &&
-        getTypeAvis(demande.statut) != AvisTypeEnum["consultatif"]) ||
+        getTypeAvis(demande.statut) != TypeAvisEnum["consultatif"]) ||
       (hasRole({ user, role: RoleEnum["region"] }) &&
-        getTypeAvis(demande.statut) === AvisTypeEnum["consultatif"]) ||
+        getTypeAvis(demande.statut) === TypeAvisEnum["consultatif"]) ||
       isChangementStatutAvisDisabled({demande, user})
     )
       return false;

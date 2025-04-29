@@ -1,8 +1,8 @@
 import type { Insertable } from "kysely";
+import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
 
 import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
-import { castDemandeStatut } from "@/modules/utils/castDemandeStatut";
 import { cleanNull } from "@/utils/noNull";
 
 export const createChangementStatutQuery = async (changementStatut: Insertable<DB["changementStatut"]>) =>
@@ -17,11 +17,9 @@ export const createChangementStatutQuery = async (changementStatut: Insertable<D
       oc.columns(["createdBy", "demandeNumero", "statutPrecedent", "statut"]).doUpdateSet(changementStatut)
     )
     .returningAll()
+    .$narrowType<{
+      statut: DemandeStatutType;
+      statutPrecedent: DemandeStatutType;
+    }>()
     .executeTakeFirstOrThrow()
-    .then((changementStatut) =>
-      cleanNull({
-        ...changementStatut,
-        statut: castDemandeStatut(changementStatut.statut),
-        statutPrecedent: castDemandeStatut(changementStatut.statutPrecedent),
-      })
-    );
+    .then(cleanNull);

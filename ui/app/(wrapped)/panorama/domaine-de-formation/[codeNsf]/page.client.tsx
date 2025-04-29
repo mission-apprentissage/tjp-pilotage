@@ -23,7 +23,7 @@ type Props = {
   formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>;
 };
 
-export const PageDomaineDeFormationClient = ({
+export const PageClient = ({
   codeNsf,
   libelleNsf,
   formations,
@@ -35,23 +35,21 @@ export const PageDomaineDeFormationClient = ({
   scope,
   defaultNsfs,
   formationsByLibelleNiveauDiplome,
-}: Props) => {
-  return (
-    <FormationContextProvider value={{ codeNsf, scope, regions, academies, departements, libelleNsf }} defaultCfd={cfd}>
-      <HeaderSection codeNsf={codeNsf} libelleNsf={libelleNsf} />
-      <FiltersSection
-        regionOptions={regions}
-        academieOptions={academies}
-        departementOptions={departements}
-        defaultNsfs={defaultNsfs}
-        currentNsf={codeNsf}
-      />
-      <FormationSection
-        formations={formations}
-        counter={counter}
-        formationsByLibelleNiveauDiplome={formationsByLibelleNiveauDiplome}
-      />
-      <LiensUtilesSection />
-    </FormationContextProvider>
-  );
-};
+}: Props) => (
+  <FormationContextProvider value={{ codeNsf, scope, regions, academies, departements, libelleNsf }} defaultCfd={cfd}>
+    <HeaderSection codeNsf={codeNsf} libelleNsf={libelleNsf} />
+    <FiltersSection
+      regionOptions={regions}
+      academieOptions={academies}
+      departementOptions={departements}
+      defaultNsfs={defaultNsfs}
+      currentNsf={codeNsf}
+    />
+    <FormationSection
+      formations={formations}
+      counter={counter}
+      formationsByLibelleNiveauDiplome={formationsByLibelleNiveauDiplome}
+    />
+    <LiensUtilesSection />
+  </FormationContextProvider>
+);

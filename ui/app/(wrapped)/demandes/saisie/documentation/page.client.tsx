@@ -4,7 +4,7 @@ import { Alert, AlertIcon, Box, Container, Flex, Heading, Image, ListItem, Text,
 import { Icon } from "@iconify/react";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
 export const PageClient = () => {
@@ -17,10 +17,10 @@ export const PageClient = () => {
           ml={4}
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: getRoutingSaisieRecueilDemande({user}) },
+            { title: "Recueil des demandes", to: getRoutingSaisieDemande({user}) },
             {
               title: "Documentation",
-              to: `${getRoutingSaisieRecueilDemande({user, suffix: "documentation"})}`,
+              to: `${getRoutingSaisieDemande({user, suffix: "documentation"})}`,
               active: true,
             },
           ]}

@@ -8,6 +8,7 @@ import { formatFamilleMetierLibelle } from "@/app/(wrapped)/panorama/etablisseme
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
+import { BadgeVoieApprentissage } from "@/components/BadgeVoieApprentissage";
 import { themeColors } from "@/theme/themeColors";
 
 const LabelNumberOfFormations = ({ formations }: { formations: number }) => (
@@ -73,7 +74,7 @@ export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
               <List>
                 {formations.map((formation) => (
                   <ListItem
-                    key={`${formation.cfd}`}
+                    key={`${formation.cfd}_${formation.voie}`}
                     ms={3}
                     p={"8px 16px 8px 8px"}
                     cursor={"pointer"}
@@ -118,6 +119,7 @@ export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
                       <Flex direction="row" gap={1}>
                         <BadgeTypeFamille typeFamille={formation.typeFamille as TypeFamilleKeys} />
                         <BadgeFormationRenovee isFormationRenovee={formation.isFormationRenovee} />
+                        <BadgeVoieApprentissage voie={formation.voie} />
                       </Flex>
                     </Flex>
                   </ListItem>

@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import { OrderZodType } from "../../enum/orderEnum";
+import {VoieZodType} from '../../enum/voieEnum';
 import {CampagneSchema} from '../../schema/campagneSchema';
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
@@ -75,10 +77,10 @@ export const FiltersSchema = z.object({
   amiCMA: z.string().optional(),
   secteur: z.string().optional(),
   positionQuadrant: z.string().optional(),
-  voie: z.enum(["scolaire", "apprentissage"]).optional(),
+  voie: VoieZodType.optional(),
   campagne: z.string().optional(),
   formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
-  order: z.enum(["asc", "desc"]).optional(),
+  order: OrderZodType.optional(),
   orderBy: CorrectionItem.keyof().optional(),
   offset: z.coerce.number().optional(),
   limit: z.coerce.number().optional(),

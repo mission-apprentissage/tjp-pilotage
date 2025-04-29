@@ -32,9 +32,9 @@ import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
 import { hasPermission } from "shared";
-import type { AvisTypeType } from "shared/enum/avisTypeEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { PermissionEnum } from "shared/enum/permissionEnum";
+import type { TypeAvisType } from "shared/enum/typeAvisEnum";
 import { isCampagneTerminee } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
@@ -46,7 +46,7 @@ import { getTypeDemandeLabel } from "@/app/(wrapped)/demandes/utils/typeDemandeU
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { formatCodeDepartement, formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
-import { getRoutingSaisieRecueilDemande, getRoutingSyntheseRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { getRoutingSaisieDemande, getRoutingSyntheseDemande } from "@/utils/getRoutingDemande";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 import { useStateParams } from "@/utils/useFilters";
@@ -150,7 +150,6 @@ export const PageClient = () => {
     { cacheTime: 0, keepPreviousData: true }
   );
 
-
   const [searchDemande, setSearchDemande] = useState<string>(search);
 
   const getAvatarBgColor = (userName: string) => {
@@ -179,7 +178,7 @@ export const PageClient = () => {
     .ref("[POST]/demande/import/:numero")
     .useMutation({
       onSuccess: (demande) => {
-        router.push(getRoutingSaisieRecueilDemande({ user, suffix: demande.numero }));
+        router.push(getRoutingSaisieDemande({ user, suffix: demande.numero }));
       },
       onError: (error) => {
         toast({
@@ -381,17 +380,17 @@ export const PageClient = () => {
                       <Tbody>
                         {data?.demandes.map((demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]) => {
 
-                          const linkSaisie = getRoutingSaisieRecueilDemande({
+                          const linkSaisie = getRoutingSaisieDemande({
                             user,
                             suffix: demande.numero
                           });
 
-                          const linkSaisieImported = getRoutingSaisieRecueilDemande({
+                          const linkSaisieImported = getRoutingSaisieDemande({
                             user,
                             suffix: demande.numeroDemandeImportee
                           });
 
-                          const linkSynthese = getRoutingSyntheseRecueilDemande({
+                          const linkSynthese = getRoutingSyntheseDemande({
                             user,
                             suffix: demande.numero
                           });
@@ -688,7 +687,7 @@ export const PageClient = () => {
                                     {
                                       demande.avis.filter(
                                         (avis) =>
-                                          getStepWorkflowAvis(avis.type as AvisTypeType) ===
+                                          getStepWorkflowAvis(avis.type as TypeAvisType) ===
                                         getStepWorkflow(demande.statut)
                                       ).length
                                     }
@@ -729,7 +728,7 @@ export const PageClient = () => {
                           variant="createButton"
                           size={"lg"}
                           as={!isNouvelleDemandeDisabled ? undefined : NextLink}
-                          href={getRoutingSaisieRecueilDemande({ user, suffix: `new?campagneId=${data?.campagne.id}` })}
+                          href={getRoutingSaisieDemande({ user, suffix: `new?campagneId=${data?.campagne.id}`})}
                           px={3}
                           mt={12}
                           mx={"auto"}

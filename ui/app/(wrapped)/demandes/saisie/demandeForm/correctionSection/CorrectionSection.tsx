@@ -27,7 +27,7 @@ import { client } from "@/api.client";
 import type { CorrectionFormType } from "@/app/(wrapped)/demandes/saisie/demandeForm/types";
 import { SCROLL_OFFSET } from "@/app/(wrapped)/demandes/SCROLL_OFFSETS";
 import type { Demande } from "@/app/(wrapped)/demandes/types";
-import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { AutreMotifField } from "./components/AutreMotifField";
@@ -110,7 +110,7 @@ export const CorrectionSection = ({
     isSuccess,
   } = client.ref("[POST]/correction/submit").useMutation({
     onSuccess: (_body) => {
-      push(getRoutingSaisieRecueilDemande({user, suffix: `?campagne=${campagne?.annee}`}));
+      push(getRoutingSaisieDemande({user, suffix: `?campagne=${campagne?.annee}`}));
 
       let message: string | null = null;
       message = "Correction enregistrée avec succès";

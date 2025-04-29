@@ -18,7 +18,7 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import type { AvisStatutType } from "shared/enum/avisStatutEnum";
 import { AvisStatutEnum } from "shared/enum/avisStatutEnum";
-import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
+import { TypeAvisEnum } from "shared/enum/typeAvisEnum";
 
 import { client } from "@/api.client";
 import { AvisStatutTag } from "@/app/(wrapped)/demandes/components/AvisStatutTag";
@@ -182,19 +182,19 @@ export const UpdateAvisForm = chakra(
               <Flex direction={"row"} gap={3}>
                 <RoleVisibleTag
                   role={"Experts"}
-                  isChecked={!!isVisibleParTous || avis.typeAvis != AvisTypeEnum["consultatif"]}
+                  isChecked={!!isVisibleParTous || avis.typeAvis != TypeAvisEnum["consultatif"]}
                 />
                 <RoleVisibleTag
                   role={"PERDIR"}
-                  isChecked={!!isVisibleParTous || avis.typeAvis != AvisTypeEnum["consultatif"]}
+                  isChecked={!!isVisibleParTous || avis.typeAvis != TypeAvisEnum["consultatif"]}
                 />
                 <RoleVisibleTag
                   role={"Région"}
-                  isChecked={!!isVisibleParTous || avis.typeAvis != AvisTypeEnum["consultatif"]}
+                  isChecked={!!isVisibleParTous || avis.typeAvis != TypeAvisEnum["consultatif"]}
                 />
               </Flex>
             </Flex>
-            {avis.typeAvis === AvisTypeEnum["consultatif"] && (
+            {avis.typeAvis === TypeAvisEnum["consultatif"] && (
               <Checkbox
                 size="lg"
                 {...register("isVisibleParTous", {

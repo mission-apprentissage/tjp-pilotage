@@ -8,7 +8,7 @@ import { UaisContext } from "@/app/uaiContext";
 
 import { UaiForm } from "./UaiForm";
 
-export function PanoramaSelection({ wrongUai }: { readonly wrongUai?: string }) {
+export const PageClient = ({ wrongUai }: { readonly wrongUai?: string }) => {
   const router = useRouter();
   const { uais } = useContext(UaisContext);
 
@@ -37,4 +37,4 @@ export function PanoramaSelection({ wrongUai }: { readonly wrongUai?: string }) 
       </Flex>
     </Container>
   );
-}
+};

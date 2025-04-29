@@ -1,5 +1,5 @@
 export { ScopeEnum, type ScopeZone } from "./enum/scopeEnum";
-export { VoieEnum, type Voie } from "./enum/voieEnum";
+export { VoieEnum, type VoieType } from "./enum/voieEnum";
 export { RoleEnum, type Role } from "./enum/roleEnum";
 export { PERMISSIONS } from "./security/permissions";
 export * from "./security/securityUtils";

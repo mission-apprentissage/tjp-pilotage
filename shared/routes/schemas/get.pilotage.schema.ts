@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
+import {OrderZodType} from '../../enum/orderEnum';
 import {PositionQuadrantZodType} from '../../enum/positionQuadrantEnum';
 import { scope, ScopeEnum } from "../../enum/scopeEnum";
 import { SecteurZodType } from "../../enum/secteurEnum";
@@ -69,7 +70,7 @@ export const FiltersSchema = z.object({
   codeNiveauDiplome: z.array(z.string()).optional(),
   CPC: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
-  order: z.enum(["asc", "desc"]).optional(),
+  order: OrderZodType.optional(),
   orderBy: StatsSchema.pick({
     libelle: true,
     effectif: true,
@@ -101,7 +102,7 @@ export const FiltersSchema = z.object({
   tauxPression: z.enum(["faible", "eleve"]).optional(),
   coloration: z.string().optional(),
   formationSpecifique: z.array(TypeFormationSpecifiqueZodType).optional(),
-  orderFormations: z.enum(["asc", "desc"]).optional(),
+  orderFormations: OrderZodType.optional(),
   orderByFormations: FormationTransformationStatsSchema.keyof().optional(),
 });
 

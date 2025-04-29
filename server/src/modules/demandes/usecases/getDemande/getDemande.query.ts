@@ -1,16 +1,16 @@
 import * as Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonBuildObject, jsonObjectFrom } from "kysely/helpers/postgres";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { AvisStatutType } from "shared/enum/avisStatutEnum";
+import type { DemandeStatutTypeWithoutSupprimee} from 'shared/enum/demandeStatutEnum';
+import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
+import type {TypeDemandeType} from 'shared/enum/demandeTypeEnum';
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import type { RaisonCorrectionType } from "shared/enum/raisonCorrectionEnum";
+import type { TypeAvisType } from "shared/enum/typeAvisEnum";
 
 import { getKbdClient } from "@/db/db";
 import { findOneCampagneRegionByCampagneId } from "@/modules/demandes/repositories/findOneCampagneRegionByCampagneId.query";
-import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
-import {castRaisonCorrection} from '@/modules/utils/castRaisonCorrection';
-import { castAvisStatut } from "@/modules/utils/castStatutAvis";
-import { castAvisType } from "@/modules/utils/castTypeAvis";
-import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteScolaire,
@@ -55,6 +55,9 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
           .selectFrom("correction")
           .selectAll("correction")
           .whereRef("correction.demandeNumero", "=", "demande.numero")
+          .$narrowType<{
+            raison: RaisonCorrectionType,
+          }>()
           .limit(1)
       ).as("correction"),
       jsonObjectFrom(
@@ -135,6 +138,10 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
+    .$narrowType<{
+      statut: DemandeStatutTypeWithoutSupprimee,
+      typeDemande: TypeDemandeType
+    }>()
     .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
     .where("demande.numero", "=", numero)
@@ -167,6 +174,10 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       "user.role as userRole",
       sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref("user.lastname")})`.as("userFullName"),
     ])
+    .$narrowType<{
+      statut: DemandeStatutTypeWithoutSupprimee,
+      statutPrecedent: DemandeStatutTypeWithoutSupprimee
+    }>()
     .execute()
     .then(cleanNull);
 
@@ -186,6 +197,10 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
         "updatedByFullName"
       ),
     ])
+    .$narrowType<{
+      statutAvis: AvisStatutType,
+      typeAvis: TypeAvisType
+    }>()
     .where(isAvisVisible({ user }))
     .execute()
     .then(cleanNull);
@@ -205,12 +220,8 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
     },
     createdAt: demande.createdAt?.toISOString(),
     updatedAt: demande.updatedAt?.toISOString(),
-    statut: castDemandeStatutWithoutSupprimee(demande.statut),
-    typeDemande: castTypeDemande(demande.typeDemande),
     changementsStatut: changementsStatut.map((changementStatut) => ({
       ...changementStatut,
-      statut: castDemandeStatutWithoutSupprimee(changementStatut.statut),
-      statutPrecedent: castDemandeStatutWithoutSupprimee(changementStatut.statutPrecedent),
       updatedAt: changementStatut.updatedAt?.toISOString(),
     })),
     avis: avis.map((avis) => ({
@@ -218,13 +229,8 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       createdAt: avis.createdAt?.toISOString(),
       updatedAt: avis.updatedAt?.toISOString(),
       updatedByFullName: avis.updatedByFullName.trim() ?? null,
-      statutAvis: castAvisStatut(avis.statutAvis),
-      typeAvis: castAvisType(avis.typeAvis),
     })),
-    correction: demande.correction ? {
-      ...demande.correction,
-      raison: castRaisonCorrection(demande.correction?.raison),
-    }: undefined,
+    correction: cleanNull(demande?.correction),
     formationSpecifique: formatFormationSpecifique(demande),
     isOldDemande: demande.isOldDemande ?? false,
   };

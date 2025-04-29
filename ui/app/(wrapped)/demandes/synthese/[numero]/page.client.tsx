@@ -12,7 +12,7 @@ import { client } from "@/api.client";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/demandes/utils/statutUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
-import { getRoutingSaisieRecueilDemande, getRoutingSyntheseRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { getRoutingSaisieDemande, getRoutingSyntheseDemande } from "@/utils/getRoutingDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { ActionsSection } from "./actions/ActionsSection";
@@ -23,7 +23,7 @@ import { DisplayTypeEnum } from "./main/displayTypeEnum";
 import { MainSection } from "./main/MainSection";
 import { StepperSection } from "./stepper/StepperSection";
 
-const Page = ({
+export const PageClient = ({
   params: { numero },
 }: {
   params: {
@@ -87,10 +87,15 @@ const Page = ({
           me="auto"
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: getRoutingSaisieRecueilDemande({user}) },
+            { title: "Recueil des demandes", to: getRoutingSaisieDemande({
+              user,
+            }) },
             {
               title: `Demande n°${demande?.numero}`,
-              to: getRoutingSyntheseRecueilDemande({user, suffix: demande?.numero}),
+              to: getRoutingSyntheseDemande({
+                user,
+                suffix: demande?.numero
+              }),
               active: true,
             },
           ]}
@@ -99,7 +104,10 @@ const Page = ({
           <Flex direction={"column"} gap={8}>
             <StepperSection demande={demande} />
             <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
-              <GridItem colSpan={isChangementStatutAvisDisabled({user, demande}) ? 4 : 3}>
+              <GridItem colSpan={(
+                !isChangementStatutAvisDisabled({user, demande}) ||
+                !hasRole({user, role: RoleEnum["perdir"]})
+              ) ? 4 : 3}>
                 <MainSection
                   demande={demande}
                   displayType={searchParams.displayType ?? DisplayTypeEnum.synthese}
@@ -131,5 +139,3 @@ const Page = ({
     </Flex>
   );
 };
-
-export default Page;
