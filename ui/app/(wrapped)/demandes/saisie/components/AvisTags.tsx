@@ -1,7 +1,7 @@
 import { HStack, Tag, Text, Tooltip, VStack } from "@chakra-ui/react";
 import type { AvisStatutType } from "shared/enum/avisStatutEnum";
-import type { AvisTypeType } from "shared/enum/avisTypeEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import type { TypeAvisType } from "shared/enum/typeAvisEnum";
 
 import {
   getAvisStatusTagBgColor,
@@ -15,7 +15,7 @@ export const AvisTags = ({ listeAvis, statut }: { listeAvis: Avis[]; statut: Dem
   return (
     <HStack gap={3}>
       {listeAvis
-        .filter((avis) => getStepWorkflowAvis(avis.type as AvisTypeType) === getStepWorkflow(statut))
+        .filter((avis) => getStepWorkflowAvis(avis.type as TypeAvisType) === getStepWorkflow(statut))
         .sort((a, b) => a.fonction!.localeCompare(b.fonction!))
         .map((avis) => (
           <Tooltip

@@ -1,6 +1,6 @@
 import type {AvisStatutType} from 'shared/enum/avisStatutEnum';
-import type {AvisTypeType} from 'shared/enum/avisTypeEnum';
 import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
+import type {TypeAvisType} from 'shared/enum/typeAvisEnum';
 
 
 export type ChangementStatutFormType = {
@@ -18,7 +18,7 @@ export type AvisFormType = {
   updatedBy?: string;
   demandeNumero: string;
   statutAvis: AvisStatutType;
-  typeAvis: AvisTypeType;
+  typeAvis: TypeAvisType;
   commentaire?: string;
   isVisibleParTous: boolean;
   userFonction?: string;

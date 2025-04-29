@@ -1,7 +1,7 @@
 import { usePg } from "@tests/utils/pg.test.utils";
 import { clearDemandes, createDemandeBuilder } from "@tests/utils/schema/demande.spec.utils";
 import { createUserBuilder, generateAuthCookie } from "@tests/utils/schema/users.spec.utils";
-import type { DemandeStatutType, DemandeStatutWithoutSupprimee } from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutType, DemandeStatutTypeWithoutSupprimee } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import {RoleEnum} from 'shared/enum/roleEnum';
 import type { IResError } from "shared/models/errors";
@@ -215,7 +215,7 @@ describe("[GET]/demandes/count", () => {
         verifierResultat: (result: Response) => {
           expect(responseBody).toEqual(result);
         },
-        verifierNombreParStatut: (statut: DemandeStatutWithoutSupprimee, nombre: number) => {
+        verifierNombreParStatut: (statut: DemandeStatutTypeWithoutSupprimee, nombre: number) => {
           expect((responseBody as Response)[statut]).toBe(nombre);
         },
         verifierNombreTotal: (nombre: number) => {

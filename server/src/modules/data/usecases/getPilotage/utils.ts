@@ -1,5 +1,6 @@
 import { chain, filter, get, keys, sumBy, union } from "lodash-es";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type {OrderType} from 'shared/enum/orderEnum';
 import type { StatsSchema } from "shared/routes/schemas/get.pilotage.schema";
 import type { z } from "zod";
 
@@ -125,7 +126,7 @@ const groupByResult = ({ numerateur, denominateur, groupBy }: Repartition) => {
     .value();
 };
 
-export const formatResult = (repartition: Repartition, order: "asc" | "desc" = "desc", orderBy?: string) => {
+export const formatResult = (repartition: Repartition, order: OrderType = "desc", orderBy?: string) => {
   return chain(calculateTotal(groupByResult(repartition)))
     .map((item) => ({
       ...item,
@@ -265,7 +266,7 @@ const groupByResultUngrouped = ({ numerateur, denominateur, groupBy }: Repartiti
     .value();
 };
 
-export const formatResultUngrouped = (repartition: Repartition, order: "asc" | "desc" = "desc", orderBy?: string) => {
+export const formatResultUngrouped = (repartition: Repartition, order: OrderType = "desc", orderBy?: string) => {
   return chain(calculateTotalUngrouped(groupByResultUngrouped(repartition)))
     .map((item) => ({
       ...item,

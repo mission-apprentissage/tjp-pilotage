@@ -8,7 +8,7 @@ import type { UserType } from "shared/schema/userSchema";
 import { client } from "@/api.client";
 import type { Filters } from "@/app/(wrapped)/demandes/saisie/types";
 import { getMessageAccompagnementCampagne } from '@/app/(wrapped)/demandes/utils/messageAccompagnementUtils';
-import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
 export const MenuBoiteReception = ({
@@ -51,7 +51,7 @@ export const MenuBoiteReception = ({
             isDisabled={isNouvelleDemandeDisabled}
             leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
             as={isNouvelleDemandeDisabled ? undefined : NextLink}
-            href={isNouvelleDemandeDisabled ? undefined : getRoutingSaisieRecueilDemande({user, suffix: `new?campagneId=${campagne?.id}`})}
+            href={isNouvelleDemandeDisabled ? undefined : getRoutingSaisieDemande({user, suffix: `new?campagneId=${campagne?.id}`})}
             minHeight={"35px"}
             w={"100%"}
           >

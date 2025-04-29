@@ -1,8 +1,8 @@
 import { chakra, Flex, Grid, GridItem, Img, Text } from "@chakra-ui/react";
-import type { AvisTypeType } from "shared/enum/avisTypeEnum";
-import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { TypeAvisType } from "shared/enum/typeAvisEnum";
+import { TypeAvisEnum } from "shared/enum/typeAvisEnum";
 
 import type { client } from "@/api.client";
 import { getOrderStatut, getStepWorkflow, getTypeAvis } from "@/app/(wrapped)/demandes/utils/statutUtils";
@@ -10,10 +10,10 @@ import { getOrderStatut, getStepWorkflow, getTypeAvis } from "@/app/(wrapped)/de
 import { Step } from "./Step";
 
 const IllustrationStatut = chakra(
-  ({ statut, latestTypeAvis }: { statut?: DemandeStatutType; latestTypeAvis?: AvisTypeType }) => {
+  ({ statut, latestTypeAvis }: { statut?: DemandeStatutType; latestTypeAvis?: TypeAvisType }) => {
     let phaseRefus = "de vote";
-    if (latestTypeAvis === AvisTypeEnum["préalable"]) phaseRefus = "de revue de la proposition";
-    else if (latestTypeAvis === AvisTypeEnum["consultatif"]) phaseRefus = "d'instruction";
+    if (latestTypeAvis === TypeAvisEnum["préalable"]) phaseRefus = "de revue de la proposition";
+    else if (latestTypeAvis === TypeAvisEnum["consultatif"]) phaseRefus = "d'instruction";
 
     switch (statut) {
     case DemandeStatutEnum["demande validée"]:

@@ -27,12 +27,12 @@ const getStatsRestitutionFactory =
     async (activeFilters: ActiveFilters) => {
       const currentCampagne = await getCurrentCampagne(activeFilters.user);
       const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
-      const countRestitution = deps.getStatsRestitutionQuery({
+      const countRestitution = await deps.getStatsRestitutionQuery({
         ...activeFilters,
         campagne: anneeCampagne,
       });
 
-      return await countRestitution;
+      return countRestitution;
     };
 
 export const getStatsRestitutionUsecase = getStatsRestitutionFactory();

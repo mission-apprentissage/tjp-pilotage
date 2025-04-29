@@ -1,9 +1,14 @@
+import { hasRole } from "shared";
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import { isCampagneEnAttente, isCampagneTerminee } from "shared/utils/campagneUtils";
 
 import { canCreateDemande } from "./permissionsDemandeUtils";
 
+
+export const CAMPAGNE_SANS_SAISIE_PERDIR = `
+  La saisie de demande n'est pas autorisée pour les chefs d'établissement pour la campagne $ANNEE_CAMPAGNE.
+`;
 
 export const CAMPAGNE_UNIQUEMENT_MODIFICATION = `La création de nouvelles demandes n'est plus possible
   pour la campagne $ANNEE_CAMPAGNE, vous pouvez uniquement modifier une demande existante.
@@ -39,6 +44,9 @@ export const getMessageAccompagnementCampagne = ({
       .replace("$CURRENT_ANNEE_CAMPAGNE", currentCampagne?.annee ? `campagne ${currentCampagne.annee}`: "dernière campagne en cours");
   if(campagne.id !== currentCampagne?.id && !campagne.codeRegion)
     return PAS_DE_CAMPAGNE_REGIONALE_EN_COURS
+      .replace("$ANNEE_CAMPAGNE", campagne.annee);
+  if(hasRole({user, role: "perdir"}) && !campagne.withSaisiePerdir)
+    return CAMPAGNE_SANS_SAISIE_PERDIR
       .replace("$ANNEE_CAMPAGNE", campagne.annee);
   return undefined;
 };

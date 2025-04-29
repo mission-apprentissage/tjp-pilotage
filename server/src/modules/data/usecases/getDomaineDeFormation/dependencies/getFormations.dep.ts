@@ -1,8 +1,7 @@
 import { sql } from "kysely";
+import type { VoieType } from "shared";
 import { CURRENT_RENTREE } from "shared";
-import type { formationSchema } from "shared/routes/schemas/get.domaine-de-formation.codeNsf.schema";
 import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
-import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
 import { notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
@@ -90,7 +89,7 @@ export const getFormations = async ({
         })
     )
     .selectFrom("formations")
-    .leftJoin("formation_etab", "formations.cfd", "formation_etab.cfd")
+    .innerJoin("formation_etab", "formations.cfd", "formation_etab.cfd")
     .selectAll("formations")
     .select((sb) => [
       sb.fn.count<number>("formation_etab.uai").as("nbEtab"),
@@ -111,6 +110,6 @@ export const getFormations = async ({
       "formations.dateOuverture",
       "formations.voie"
     ])
-    .$castTo<z.infer<typeof formationSchema>>()
+    .$narrowType<{ voie: VoieType }>()
     .execute()
     .then(cleanNull);

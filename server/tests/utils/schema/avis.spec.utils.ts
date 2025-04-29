@@ -1,6 +1,6 @@
 import type { Insertable } from "kysely";
 import type { AvisStatutType } from "shared/enum/avisStatutEnum";
-import type { AvisTypeType } from "shared/enum/avisTypeEnum";
+import type { TypeAvisType } from "shared/enum/typeAvisEnum";
 
 import type {DB} from "@/db/db";
 import { getKbdClient } from "@/db/db";
@@ -24,7 +24,7 @@ export function buildAvis(user?: RequestUser, defaultAvis: Partial<Avis> = {}) {
   return {
     withNumero: (numero: string) =>
       buildAvis(user, { ...avis, demandeNumero: numero }),
-    withType: (type: AvisTypeType) =>
+    withType: (type: TypeAvisType) =>
       buildAvis(user, { ...avis, typeAvis: type }),
     withStatus: (status: AvisStatutType) =>
       buildAvis(user, { ...avis, statutAvis: status }),

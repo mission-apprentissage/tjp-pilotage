@@ -36,9 +36,9 @@ const getInformationHeaderMessage = (statut: DemandeStatutType) => {
   case DemandeStatutEnum["brouillon"]:
   case DemandeStatutEnum["proposition"]:
   case DemandeStatutEnum["dossier complet"]:
-  case DemandeStatutEnum["demande validée"]:
   case DemandeStatutEnum["refusée"]:
   case DemandeStatutEnum["supprimée"]:
+  case DemandeStatutEnum["demande validée"]:
   default:
     return null;
   }
@@ -62,7 +62,7 @@ export const InformationHeader = ({ statut }: { statut: DemandeStatutType }) => 
 
   const [shouldDisplay, setShouldDisplay] = useState(true);
 
-  if (!isPerdir) {
+  if (!isPerdir || !getInformationHeaderMessage(statut)) {
     return <></>;
   }
 
@@ -77,6 +77,7 @@ export const InformationHeader = ({ statut }: { statut: DemandeStatutType }) => 
           px={24}
         >
           <Stack
+            maxW={"container.xl"}
             margin="auto"
             display="flex"
             flexDirection="row"

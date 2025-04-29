@@ -5,6 +5,7 @@ import {
   Box,
   Flex,
   Heading,
+  Img,
   Link,
   ListItem,
   SkeletonCircle,
@@ -28,7 +29,8 @@ function isGlossaireId(href?: string): boolean {
   try {
     new URL(href ?? "");
     return false;
-  } catch (_) {
+  } catch (_error) {
+    console.error("Invalid URL", _error);
     return true;
   }
 }
@@ -39,7 +41,7 @@ const chakraRendererTheme: Components = {
   img: ({ src, alt }) => {
     // Assurez-vous que le chemin commence par un slash
     const imagePath = src?.startsWith('/') ? src : `/${src}`;
-    return <img src={imagePath} alt={alt ?? ''} />;
+    return <Img src={imagePath} alt={alt ?? ''} />;
   },
   blockquote: ({ children }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks

@@ -204,15 +204,15 @@ describe("[POST]/demande/statut/submit", () => {
             throw Error("Un changement de statut doit être créé");
           }
 
-          const changementDeStatuts = await getKbdClient()
+          const changementsStatut = await getKbdClient()
             .selectFrom("changementStatut")
             .selectAll()
             .where("changementStatut.demandeNumero", "=", demande!.numero)
             .execute();
 
-          expect(changementDeStatuts).toHaveLength(1);
+          expect(changementsStatut).toHaveLength(1);
 
-          const changementDeStatut = changementDeStatuts[0];
+          const changementDeStatut = changementsStatut[0];
 
           expect(changementDeStatut).toBeDefined();
           expect(changementDeStatut?.createdBy).toBe(user?.id);

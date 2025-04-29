@@ -1,12 +1,12 @@
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { DemandeStatutTypeWithoutSupprimee} from 'shared/enum/demandeStatutEnum';
+import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
+import type {TypeDemandeType} from 'shared/enum/demandeTypeEnum';
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
 import type { Filters } from "@/modules/demandes/usecases/getDemandes/getDemandes.usecase";
-import { castDemandeStatutWithoutSupprimee } from "@/modules/utils/castDemandeStatut";
-import { castTypeDemande } from "@/modules/utils/castTypeDemande";
 import { isAvisVisible } from "@/modules/utils/isAvisVisible";
 import { isDemandeCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
 import { isDemandeBrouillonVisible, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
@@ -141,6 +141,10 @@ export const getDemandesQuery = async (
         .limit(1)
         .as("correction")
     ])
+    .$narrowType<{
+      statut: DemandeStatutTypeWithoutSupprimee,
+      typeDemande: TypeDemandeType
+    }>()
     .$call((eb) => {
       if (statut) {
         if (statut === "suivies")
@@ -202,8 +206,6 @@ export const getDemandesQuery = async (
       cleanNull({
         ...demande,
         avis: demande.avis.filter((c) => c).map((avis) => avis),
-        statut: castDemandeStatutWithoutSupprimee(demande.statut),
-        typeDemande: castTypeDemande(demande.typeDemande),
         createdAt: demande.createdAt?.toISOString(),
         updatedAt: demande.updatedAt?.toISOString(),
         alreadyAccessed: !!(demande.alreadyAccessed ?? true),

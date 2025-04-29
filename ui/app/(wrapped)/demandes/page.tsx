@@ -2,13 +2,12 @@
 
 import { redirect } from "next/navigation";
 
-import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
 import { useAuth } from "@/utils/security/useAuth";
-
 
 const Page = () => {
   const { user } = useAuth();
 
-  redirect(getRoutingSaisieRecueilDemande({user}));
+  redirect(getRoutingSaisieDemande({user}));
 };
 export default Page;

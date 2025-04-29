@@ -10,7 +10,7 @@ const getTabIndex = (segment: string | null) => {
   if (segment === "metier") return 1;
 };
 
-const LienEmploiFormation = ({ children }: { children: React.ReactNode }) => {
+export const PageClient = ({ children }: { children: React.ReactNode }) => {
   const segment = useSelectedLayoutSegment();
   const tabIndex = getTabIndex(segment);
 
@@ -45,5 +45,3 @@ const LienEmploiFormation = ({ children }: { children: React.ReactNode }) => {
     </VStack>
   );
 };
-
-export default LienEmploiFormation;

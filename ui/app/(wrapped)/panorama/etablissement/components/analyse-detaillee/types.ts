@@ -1,4 +1,4 @@
-import { voie } from "shared/enum/voieEnum";
+import { VoieZodType } from "shared/enum/voieEnum";
 import { z } from "zod";
 
 import type { client } from "@/api.client";
@@ -8,7 +8,7 @@ export type Query = (typeof client.inferArgs)["[GET]/etablissement/:uai/analyse-
 // eslint-disable-next-line unused-imports/no-unused-vars
 const filtersSchema = z.object({
   codeNiveauDiplome: z.array(z.string()),
-  voie: z.array(z.enum([...voie.options, "all"] as const)),
+  voie: z.array(z.enum([...VoieZodType.options, "all"] as const)),
 });
 
 export type Filters = z.infer<typeof filtersSchema>;

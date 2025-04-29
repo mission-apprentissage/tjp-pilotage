@@ -62,40 +62,40 @@ export const ChangementStatutEtAvisSection = ({
     });
   };
 
-  const getNombreDifferentsContributeurs = (changementStatutEtAvis?: Array<{ createdBy: string }>) => {
-    if (!changementStatutEtAvis) return 0;
-    return _.uniq(changementStatutEtAvis.map((commentaireEtAvis) => commentaireEtAvis.createdBy)).length;
+  const getNombreDifferentsContributeurs = (changementsStatutEtAvis?: Array<{ createdBy: string }>) => {
+    if (!changementsStatutEtAvis) return 0;
+    return _.uniq(changementsStatutEtAvis.map((changementsStatutEtAvis) => changementsStatutEtAvis.createdBy)).length;
   };
 
   const etapes = [
     {
       numero: 3,
       label: "Les arbitrages et décisions de vote",
-      changementStatutEtAvis: getChangementStatutEtAvisByEtape(3),
+      changementsStatutEtAvis: getChangementStatutEtAvisByEtape(3),
     },
     {
       numero: 2,
       label: "Les avis de la phase d'instruction de projet",
-      changementStatutEtAvis: getChangementStatutEtAvisByEtape(2),
+      changementsStatutEtAvis: getChangementStatutEtAvisByEtape(2),
     },
     {
       numero: 1,
       label: "Les avis de la phase de revue des propositions",
-      changementStatutEtAvis: getChangementStatutEtAvisByEtape(1),
+      changementsStatutEtAvis: getChangementStatutEtAvisByEtape(1),
     },
   ];
 
   return (
     <Flex direction={"column"} gap={10} width={"100%"}>
       <Heading as="h2" fontSize={18} fontWeight={700}>
-        Consulter les avis et changementStatut sur la demande
+        Consulter les changement(s) de statut et avis sur la demande
       </Heading>
       <CompteursAvisSection demande={demande} />
       <Divider />
 
-      {etapes.filter((etape) => etape?.changementStatutEtAvis?.length).length ? (
+      {etapes.filter((etape) => etape?.changementsStatutEtAvis?.length).length ? (
         etapes
-          .filter((etape) => etape?.changementStatutEtAvis?.length)
+          .filter((etape) => etape?.changementsStatutEtAvis?.length)
           .map((etape) => (
             <Flex key={etape.label} direction={"column"} gap={10}>
               <Flex direction="row" gap={1}>
@@ -107,32 +107,32 @@ export const ChangementStatutEtAvisSection = ({
                   <Text fontSize={14} fontWeight={400} lineHeight={"24px"} color={"grey.200"}>
                     <Highlight
                       query={[
-                        etape.changementStatutEtAvis?.length.toString() ?? "",
-                        getNombreDifferentsContributeurs(etape.changementStatutEtAvis).toString(),
+                        etape.changementsStatutEtAvis?.length.toString() ?? "",
+                        getNombreDifferentsContributeurs(etape.changementsStatutEtAvis).toString(),
                       ]}
                       styles={{
                         fontWeight: 700,
                       }}
                     >
                       {`${
-                        etape.changementStatutEtAvis?.length
+                        etape.changementsStatutEtAvis?.length
                       } changement(s) de statut ou avis par ${getNombreDifferentsContributeurs(
-                        etape.changementStatutEtAvis
+                        etape.changementsStatutEtAvis
                       )} contributeur(s)`}
                     </Highlight>
                   </Text>
                 </Flex>
               </Flex>
               <Flex direction={"column"}>
-                {etape.changementStatutEtAvis?.map((commentaireEtAvis) => (
-                  <Fragment key={commentaireEtAvis.updatedAt}>
-                    {Object.hasOwn(commentaireEtAvis, "statut") ? (
+                {etape.changementsStatutEtAvis?.map((changementStatutEtAvis) => (
+                  <Fragment key={changementStatutEtAvis.updatedAt}>
+                    {Object.hasOwn(changementStatutEtAvis, "statut") ? (
                       <CommentaireSection
-                        changementStatut={commentaireEtAvis as ChangementStatut}
+                        changementStatut={changementStatutEtAvis as ChangementStatut}
                         demande={demande}
                       />
                     ) : (
-                      <AvisSection avis={commentaireEtAvis as Avis} demande={demande} />
+                      <AvisSection avis={changementStatutEtAvis as Avis} demande={demande} />
                     )}
                   </Fragment>
                 ))}

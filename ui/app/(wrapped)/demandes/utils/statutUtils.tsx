@@ -1,9 +1,9 @@
 import _ from "lodash";
 import { RoleEnum } from "shared";
-import type { AvisTypeType } from "shared/enum/avisTypeEnum";
-import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import type { TypeAvisType } from "shared/enum/typeAvisEnum";
+import { TypeAvisEnum } from "shared/enum/typeAvisEnum";
 import type { UserType } from 'shared/schema/userSchema';
 import { hasRole, isAdmin } from 'shared/security/securityUtils';
 
@@ -93,30 +93,30 @@ export const isChangementStatutAvisDisabled = ({
   }
 };
 
-export const getStepWorkflowAvis = (typeAvis: AvisTypeType): number => {
+export const getStepWorkflowAvis = (typeAvis: TypeAvisType): number => {
   switch (typeAvis) {
-  case AvisTypeEnum["préalable"]:
+  case TypeAvisEnum["préalable"]:
     return 1;
-  case AvisTypeEnum["consultatif"]:
+  case TypeAvisEnum["consultatif"]:
     return 2;
-  case AvisTypeEnum["final"]:
+  case TypeAvisEnum["final"]:
     return 3;
   default:
     return 0;
   }
 };
 
-export const getTypeAvis = (statut?: DemandeStatutType): AvisTypeType => {
+export const getTypeAvis = (statut?: DemandeStatutType): TypeAvisType => {
   switch (getStepWorkflow(statut)) {
   case 2:
-    return AvisTypeEnum["consultatif"];
+    return TypeAvisEnum["consultatif"];
   case 3:
   case 4:
-    return AvisTypeEnum["final"];
+    return TypeAvisEnum["final"];
   case 0:
   case 1:
   default:
-    return AvisTypeEnum["préalable"];
+    return TypeAvisEnum["préalable"];
   }
 };
 

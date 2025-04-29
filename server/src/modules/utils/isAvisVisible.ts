@@ -1,7 +1,7 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 import {RoleEnum} from 'shared/enum/roleEnum';
+import { TypeAvisEnum } from "shared/enum/typeAvisEnum";
 
 import type { DB } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
@@ -17,7 +17,7 @@ export const isAvisVisible =
     (eb: ExpressionBuilder<DB, "avis" | "user">) => {
       return eb.or([
         eb.and([
-          eb("avis.typeAvis", "=", AvisTypeEnum["consultatif"]),
+          eb("avis.typeAvis", "=", TypeAvisEnum["consultatif"]),
           eb("avis.isVisibleParTous", "=", sql<boolean>`false`),
           eb
             .selectFrom("user")

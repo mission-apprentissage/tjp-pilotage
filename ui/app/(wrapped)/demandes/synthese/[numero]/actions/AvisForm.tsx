@@ -26,8 +26,8 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import type { AvisStatutType } from "shared/enum/avisStatutEnum";
 import { AvisStatutEnum } from "shared/enum/avisStatutEnum";
-import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { TypeAvisEnum } from "shared/enum/typeAvisEnum";
 import { escapeString } from "shared/utils/escapeString";
 
 import { client } from "@/api.client";
@@ -67,7 +67,7 @@ export const AvisForm = ({ demande }: { demande: (typeof client.infer)["[GET]/de
       statutAvis: undefined,
       typeAvis: getTypeAvis(demande.statut),
       commentaire: undefined,
-      isVisibleParTous: getTypeAvis(demande.statut) !== AvisTypeEnum["consultatif"],
+      isVisibleParTous: getTypeAvis(demande.statut) !== TypeAvisEnum["consultatif"],
       userFonction: undefined,
     },
     mode: "onTouched",
@@ -113,11 +113,11 @@ export const AvisForm = ({ demande }: { demande: (typeof client.infer)["[GET]/de
   const getLabelAvis = (statut?: DemandeStatutType): string => {
     const typeAvis = getTypeAvis(statut);
     switch (typeAvis) {
-    case AvisTypeEnum["préalable"]:
+    case TypeAvisEnum["préalable"]:
       return `avis préalable`;
-    case AvisTypeEnum["consultatif"]:
+    case TypeAvisEnum["consultatif"]:
       return `avis consultatif`;
-    case AvisTypeEnum["final"]:
+    case TypeAvisEnum["final"]:
       return `vote`;
     default:
       return `avis`;
@@ -232,7 +232,7 @@ export const AvisForm = ({ demande }: { demande: (typeof client.infer)["[GET]/de
             rows={8}
           />
         </FormControl>
-        {getTypeAvis(demande.statut) === AvisTypeEnum["consultatif"] ? (
+        {getTypeAvis(demande.statut) === TypeAvisEnum["consultatif"] ? (
           <Text mt={3}>{`Cet avis ${getTypeAvis(demande.statut)} est visible uniquement par les administrateurs et pilotes`}</Text>
         ) : (
           <Text mt={3}>{`Cet avis ${getTypeAvis(demande.statut)} sera visible de toutes les parties prenantes`}</Text>
@@ -245,15 +245,15 @@ export const AvisForm = ({ demande }: { demande: (typeof client.infer)["[GET]/de
           <Flex direction={"row"} gap={3}>
             <RoleVisibleTag
               role={"Experts"}
-              isChecked={!!isVisibleParTous || getTypeAvis(demande.statut) != AvisTypeEnum["consultatif"]}
+              isChecked={!!isVisibleParTous || getTypeAvis(demande.statut) != TypeAvisEnum["consultatif"]}
             />
             <RoleVisibleTag
               role={"PERDIR"}
-              isChecked={!!isVisibleParTous || getTypeAvis(demande.statut) != AvisTypeEnum["consultatif"]}
+              isChecked={!!isVisibleParTous || getTypeAvis(demande.statut) != TypeAvisEnum["consultatif"]}
             />
             <RoleVisibleTag
               role={"Région"}
-              isChecked={!!isVisibleParTous || getTypeAvis(demande.statut) != AvisTypeEnum["consultatif"]}
+              isChecked={!!isVisibleParTous || getTypeAvis(demande.statut) != TypeAvisEnum["consultatif"]}
             />
           </Flex>
         </Flex>

@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 import { AvisStatutZodType } from "../../enum/avisStatutEnum";
-import { AvisTypeZodType } from "../../enum/avisTypeEnum";
 import { DemandeStatutEnum, DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
 import { RaisonCorrectionZodType } from '../../enum/raisonCorrectionEnum';
+import { TypeAvisZodType } from "../../enum/typeAvisEnum";
 import { CampagneSchema } from "../../schema/campagneSchema";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 
@@ -175,7 +175,7 @@ const DemandeSchema = z.object({
       updatedAt: z.string(),
       updatedByFullName: z.string().optional(),
       userRole: z.string().optional(),
-      typeAvis: AvisTypeZodType,
+      typeAvis: TypeAvisZodType,
       isVisibleParTous: z.boolean(),
       statutAvis: AvisStatutZodType,
       commentaire: z.string().optional(),

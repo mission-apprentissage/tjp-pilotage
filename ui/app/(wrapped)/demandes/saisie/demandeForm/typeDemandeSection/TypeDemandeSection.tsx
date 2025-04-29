@@ -12,7 +12,7 @@ import { canCorrectDemande } from '@/app/(wrapped)/demandes/utils/permissionsDem
 import {shouldDisplayAjustement} from '@/app/(wrapped)/demandes/utils/typeDemandeUtils';
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
-import {getRoutingSaisieRecueilDemande} from '@/utils/getRoutingRecueilDemande';
+import {getRoutingSaisieDemande} from '@/utils/getRoutingDemande';
 import {useAuth} from '@/utils/security/useAuth';
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
@@ -129,7 +129,7 @@ export const TypeDemandeSection = ({
             border="1px solid black"
             onClick={() => {
               router.replace(
-                getRoutingSaisieRecueilDemande({
+                getRoutingSaisieDemande({
                   user,
                   suffix: `${demande!.numero}?correction=true`,
                 })

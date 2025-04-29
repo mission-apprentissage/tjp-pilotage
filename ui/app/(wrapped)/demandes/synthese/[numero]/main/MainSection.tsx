@@ -6,7 +6,7 @@ import { isCampagneEnCours } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
 import { canEditDemande } from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
-import {getRoutingSaisieRecueilDemande} from '@/utils/getRoutingRecueilDemande';
+import {getRoutingSaisieDemande} from '@/utils/getRoutingDemande';
 import { useAuth } from "@/utils/security/useAuth";
 
 import { ChangementStatutEtAvisSection } from "./changementStatutEtAvis/ChangementStatutEtAvisSection";
@@ -71,7 +71,7 @@ export const MainSection = ({
               <Tooltip label="Modifier la demande">
                 <IconButton
                   as={NextLink}
-                  href={getRoutingSaisieRecueilDemande({
+                  href={getRoutingSaisieDemande({
                     user,
                     suffix: demande?.numero
                   })}

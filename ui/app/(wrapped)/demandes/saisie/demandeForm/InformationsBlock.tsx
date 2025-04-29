@@ -23,7 +23,7 @@ import {isTypeAjustement,isTypeDiminution, isTypeFermeture} from 'shared/utils/t
 import { client } from "@/api.client";
 import { SectionBlock } from "@/app/(wrapped)/demandes/saisie/components/SectionBlock";
 import type {Demande} from '@/app/(wrapped)/demandes/types';
-import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { CorrectionSection } from './correctionSection/CorrectionSection';
@@ -64,7 +64,7 @@ export const InformationsBlock = ({
         .ref("[DELETE]/demande/:numero")
         .query({ params: { numero: formId } })
         .then(() => push(
-          getRoutingSaisieRecueilDemande({user, suffix: "?action=supprimée"})
+          getRoutingSaisieDemande({user, suffix: "?action=supprimée"})
         ));
     },
   });

@@ -9,11 +9,11 @@ import type { client } from "@/api.client";
 import { DEFAULT_SEARCH_PARAMS } from "@/app/(wrapped)/panorama/types";
 import { CodeDepartementContext } from "@/app/codeDepartementContext";
 
-export function PanoramaSelection({
+export const PageClient = ({
   departementsOptions,
 }: {
   readonly departementsOptions: (typeof client.infer)["[GET]/departements"];
-}) {
+}) => {
   const router = useRouter();
   const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
 
@@ -49,4 +49,4 @@ export function PanoramaSelection({
       </Flex>
     </Container>
   );
-}
+};

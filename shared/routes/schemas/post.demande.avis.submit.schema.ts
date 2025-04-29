@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { AvisStatutZodType } from "../../enum/avisStatutEnum";
-import { AvisTypeZodType } from "../../enum/avisTypeEnum";
+import { TypeAvisZodType } from "../../enum/typeAvisEnum";
 import { unEscapeString } from "../../utils/escapeString";
 
 export const submitAvisSchema = {
@@ -9,7 +9,7 @@ export const submitAvisSchema = {
     avis: z.object({
       demandeNumero: z.string(),
       statutAvis: AvisStatutZodType,
-      typeAvis: AvisTypeZodType,
+      typeAvis: TypeAvisZodType,
       commentaire: z
         .string()
         .optional()
@@ -26,7 +26,7 @@ export const submitAvisSchema = {
       id: z.string(),
       demandeNumero: z.string(),
       statutAvis: AvisStatutZodType,
-      typeAvis: AvisTypeZodType,
+      typeAvis: TypeAvisZodType,
       commentaire: z.string().optional(),
       userFonction: z.string().optional(),
       isVisibleParTous: z.boolean(),

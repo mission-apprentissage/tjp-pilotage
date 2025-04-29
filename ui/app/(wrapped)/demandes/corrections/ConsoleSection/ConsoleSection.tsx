@@ -6,7 +6,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { CORRECTIONS_COLUMNS } from "@/app/(wrapped)/demandes/corrections/CORRECTIONS_COLUMN";
 import { GROUPED_CORRECTIONS_COLUMNS } from "@/app/(wrapped)/demandes/corrections/GROUPED_CORRECTIONS_COLUMN";
 import type { Corrections, OrderCorrections } from "@/app/(wrapped)/demandes/corrections/types";
-import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { HeadLineContent } from "./HeadLineContent";
@@ -107,24 +107,24 @@ export const ConsoleSection = ({
           <Tbody>
             <Fragment>
               {data?.corrections.map((correction: Corrections["corrections"][0]) => {
+
+                const linkCorrection = getRoutingSaisieDemande({ user, suffix: `${correction.demandeNumero}?correction=true`});
+
                 return (
-                  <Fragment key={`${correction.demandeNumero}`}>
-                    <Tr
-                      h="12"
-                      role="group"
-                      cursor={"pointer"}
-                      onClick={() => router.push(
-                        getRoutingSaisieRecueilDemande({ user, suffix: `${correction.demandeNumero}?correction=true`})
-                      )}
-                    >
-                      <LineContent
-                        correction={correction}
-                        campagne={campagne}
-                        colonneFilters={colonneFilters}
-                        getCellColor={getCellColor}
-                      />
-                    </Tr>
-                  </Fragment>
+                  <Tr
+                    key={`${correction.demandeNumero}`}
+                    h="12"
+                    role="group"
+                    cursor={"pointer"}
+                    onClick={() => router.push(linkCorrection)}
+                  >
+                    <LineContent
+                      correction={correction}
+                      campagne={campagne}
+                      colonneFilters={colonneFilters}
+                      getCellColor={getCellColor}
+                    />
+                  </Tr>
                 );
               })}
             </Fragment>
