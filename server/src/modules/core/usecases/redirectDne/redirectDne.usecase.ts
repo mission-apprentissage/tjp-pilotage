@@ -3,6 +3,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat.js";
 import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
+import type { Insertable } from "kysely";
 import { flatten, uniq } from "lodash-es";
 import type { UserinfoResponse } from "openid-client";
 import type {Role} from 'shared';
@@ -12,6 +13,7 @@ import type { SupportedLDAPGroups } from "shared/security/sso";
 import { LDAP_GROUP_ROLES_DNE_CORRESPONDANCE, ROLE_DNE_ROLE_ORION_CORRESPONDANCE,RoleDNEEnum } from "shared/security/sso";
 
 import config from "@/config";
+import type { DB } from "@/db/schema";
 import { getDneClient } from "@/modules/core/services/dneClient/dneClient";
 import logger from "@/services/logger";
 
@@ -312,14 +314,17 @@ export const [redirectDne, redirectDneFactory] = inject(
         throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_CODACA);
       }
 
-      const userToInsert = {
+      const userToInsert: Insertable<DB["user"]> = {
         ...user,
-        email,
+        email: email,
         firstname: userinfo.given_name,
         lastname: userinfo.family_name,
         sub: userinfo.sub,
         codeRegion: codeRegion,
         enabled: true,
+        // Si l'utilisateur a un mot de passe, nous le supprimons pour éviter la possible double connexion
+        // DNE + Local
+        password: null,
         ...attributes,
         // On garde par défaut le role de l'utilisateur s'il existe déjà en base de données
         role: user ? user.role : attributes.role as Role,

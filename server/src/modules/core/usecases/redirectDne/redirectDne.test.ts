@@ -129,6 +129,7 @@ describe("redirectDne usecase", () => {
           role: RoleEnum["gestionnaire_region"],
           uais: ["code-uai"],
           codeRegion: "75",
+          password: null,
         }),
       });
       expect(result).toMatchObject({
@@ -171,6 +172,7 @@ describe("redirectDne usecase", () => {
           role: RoleEnum["perdir"],
           uais: ["code-uai"],
           codeRegion: "75",
+          password: null,
         }),
       });
       expect(result).toMatchObject({
@@ -217,6 +219,7 @@ describe("redirectDne usecase", () => {
           role: RoleEnum["perdir"],
           uais: ["0693045K"],
           codeRegion: "75",
+          password: null,
         }),
       });
       expect(result).toMatchObject({
@@ -298,6 +301,7 @@ describe("redirectDne usecase", () => {
           role: RoleEnum["perdir"],
           uais: ["0693045K"],
           codeRegion: "75",
+          password: null,
         }),
       });
       expect(result).toMatchObject({
@@ -347,7 +351,7 @@ describe("redirectDne usecase", () => {
   });
 
   describe("Assignation depuis les groupes LDAP", () => {
-    it("Doit privilégier les groupes LDAP pour l'assignation des rôles", async () => {
+    it("Doit privilégier les groupes LDAP par rapport aux title, FrEduGestResp et droits perdir pour l'assignation des rôles", async () => {
       const ssoUserInfo = {
         email: "user@test.test",
         given_name: "firstname",
@@ -384,6 +388,7 @@ describe("redirectDne usecase", () => {
           lastname: ssoUserInfo.family_name,
           role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE[RoleDNEEnum.DGESCO],
           uais: [],
+          password: null,
           codeRegion: undefined,
           sub: undefined,
           enabled: true,
@@ -433,6 +438,7 @@ describe("redirectDne usecase", () => {
           lastname: ssoUserInfo.family_name,
           role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE[RoleDNEEnum.INS],
           uais: [],
+          password: null,
           codeRegion: "11",
           sub: undefined,
           enabled: true,
@@ -517,6 +523,7 @@ describe("redirectDne usecase", () => {
           lastname: ssoUserInfo.family_name,
           role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE[RoleDNEEnum.DASEN],
           uais: [],
+          password: null,
           codeRegion: undefined,
           sub: undefined,
           enabled: true,
