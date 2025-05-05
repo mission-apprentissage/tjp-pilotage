@@ -68,6 +68,14 @@ export type CheckedIntentionsType = {
   intentions: Array<string>;
 };
 
+export interface ISearchParams {
+  filters?: Partial<Filters>;
+  order?: Partial<Order>;
+  page?: string;
+  action?: Exclude<DemandeStatutType, "supprimée">;
+  notfound?: string;
+}
+
 export const PageClient = () => {
   const { user } = useAuth();
   const { campagne: currentCampagne } = useCurrentCampagne();
@@ -75,13 +83,7 @@ export const PageClient = () => {
   const toast = useToast();
   const router = useRouter();
 
-  const [searchParams, setSearchParams] = useStateParams<{
-    filters?: Partial<Filters>;
-    order?: Partial<Order>;
-    page?: string;
-    action?: Exclude<DemandeStatutType, "supprimée">;
-    notfound?: string;
-  }>({
+  const [searchParams, setSearchParams] = useStateParams<ISearchParams>({
     defaultValues: {
       filters: {},
       order: { order: "asc" },
@@ -253,6 +255,7 @@ export const PageClient = () => {
         ) : (
           <>
             <Header
+              searchParams={searchParams}
               activeFilters={filters}
               setSearchParams={setSearchParams}
               getIntentionsQueryParameters={getIntentionsQueryParameters}

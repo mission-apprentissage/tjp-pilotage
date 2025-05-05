@@ -26,6 +26,11 @@ export const countIntentionsQuery = async ({
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("user", "user.id", "intention.createdBy")
+    .leftJoin("niveauDiplome", (join) =>
+      join.on(jb =>
+        jb(jb.ref("niveauDiplome.codeNiveauDiplome"), "=", sql<string>`LEFT(${jb.ref("intention.cfd")}, 3)`)
+      )
+    )
     .innerJoin("campagne", "campagne.id", "intention.campagneId")
     .leftJoin("suivi", (join) =>
       join.onRef("suivi.intentionNumero", "=", "intention.numero").on("suivi.userId", "=", user.id)
@@ -141,7 +146,9 @@ export const countIntentionsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")})
                 )`,
                 "ilike",
                 `%${search_word}%`

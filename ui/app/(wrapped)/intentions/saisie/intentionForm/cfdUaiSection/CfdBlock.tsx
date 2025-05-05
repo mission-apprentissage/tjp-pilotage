@@ -30,7 +30,7 @@ export const CfdBlock = ({
   return (
     <LightMode>
       <FormControl mb="4" isInvalid={!!errors.cfd?.message} isRequired w="100%" maxW="752px">
-        <FormLabel htmlFor="cfd-autocomplete">Recherche d'un diplôme</FormLabel>
+        <FormLabel htmlFor="cfd-autocomplete">Recherche par diplôme et/ou par formation</FormLabel>
         <Box color="chakra-body-text">
           <Controller
             name="cfd"
