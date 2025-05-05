@@ -105,7 +105,7 @@ export const PageClient = ({
             <StepperSection demande={demande} />
             <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
               <GridItem colSpan={(
-                !isChangementStatutAvisDisabled({user, demande}) ||
+                isChangementStatutAvisDisabled({user, demande}) &&
                 !hasRole({user, role: RoleEnum["perdir"]})
               ) ? 4 : 3}>
                 <MainSection

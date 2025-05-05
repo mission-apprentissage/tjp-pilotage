@@ -103,11 +103,17 @@ const fixtureBuilder = () => {
       utilisateurAdminRegionHorsExpe: () => {
         user = createUserBuilder({role: RoleEnum["admin_region"], codeRegion: "11"});
       },
-      utilisateurRegionExpe: () => {
+      utilisateurExpertRegionExpe: () => {
         user = createUserBuilder({role: RoleEnum["expert_region"], codeRegion: "76"});
       },
-      utilisateurRegionHorsExpe: () => {
+      utilisateurExpertRegionHorsExpe: () => {
         user = createUserBuilder({role: RoleEnum["expert_region"], codeRegion: "11"});
+      },
+      utilisateurGestionnaireRegionExpe: () => {
+        user = createUserBuilder({role: RoleEnum["gestionnaire_region"], codeRegion: "76"});
+      },
+      utilisateurGestionnaireRegionHorsExpe: () => {
+        user = createUserBuilder({role: RoleEnum["gestionnaire_region"], codeRegion: "11"});
       },
       campagne: (annee: string, statut?: CampagneStatut) => {
         campagne = createCampagneBuilder({annee, statut: statut ?? CampagneStatutEnum["en cours"]});
@@ -351,8 +357,32 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.then.verifierCanNotCreate();
   });
 
-  it("Un utilisateur admin région hors expérimentation ne doit pas pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
+  it("Un utilisateur admin région hors expérimentation doit pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
     fixture.given.utilisateurAdminRegionHorsExpe();
+    fixture.given.campagne("2024");
+    fixture.given.demandeEditable();
+
+    fixture.when.canEditDemande();
+    fixture.then.verifierCanEdit();
+
+    fixture.when.canCreateDemande();
+    fixture.then.verifierCanCreate();
+  });
+
+  it("Un utilisateur gestionnaire hors expérimentation doit pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
+    fixture.given.utilisateurGestionnaireRegionHorsExpe();
+    fixture.given.campagne("2024");
+    fixture.given.demandeEditable();
+
+    fixture.when.canEditDemande();
+    fixture.then.verifierCanEdit();
+
+    fixture.when.canCreateDemande();
+    fixture.then.verifierCanCreate();
+  });
+
+  it("Un utilisateur expert hors expérimentation ne doit pas pouvoir créer ou modifier une demande pendant la campagne 2024", () => {
+    fixture.given.utilisateurExpertRegionHorsExpe();
     fixture.given.campagne("2024");
     fixture.given.demandeEditable();
 
@@ -472,7 +502,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
   });
 
   it("Un utilisateur expert région de l'expérimentation ne doit pas pouvoir delete une demande", () => {
-    fixture.given.utilisateurRegionExpe();
+    fixture.given.utilisateurExpertRegionExpe();
     fixture.given.campagne("2024");
     fixture.given.demandeEditable();
 
