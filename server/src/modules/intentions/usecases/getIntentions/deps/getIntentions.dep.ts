@@ -38,11 +38,7 @@ export const getIntentionsQuery = async (
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("dispositif", "dispositif.codeDispositif", "intention.codeDispositif")
-    .leftJoin("niveauDiplome", (join) =>
-      join.on(jb =>
-        jb(jb.ref("niveauDiplome.codeNiveauDiplome"), "=", sql<string>`LEFT(${jb.ref("intention.cfd")}, 3)`)
-      )
-    )
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .leftJoin(
       (join) =>
         join
