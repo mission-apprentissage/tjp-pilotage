@@ -10,7 +10,7 @@ import type { OptionType } from "shared/schema/optionSchema";
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/intentions/components/StatutTag";
 import { INTENTIONS_COLUMNS } from "@/app/(wrapped)/intentions/perdir/saisie/INTENTIONS_COLUMNS";
-import type {CheckedIntentionsType} from '@/app/(wrapped)/intentions/perdir/saisie/page.client';
+import type {CheckedIntentionsType, ISearchParams} from '@/app/(wrapped)/intentions/perdir/saisie/page.client';
 import type { Filters } from "@/app/(wrapped)/intentions/perdir/saisie/types";
 import {formatStatut, getPossibleNextStatuts} from '@/app/(wrapped)/intentions/utils/statutUtils';
 import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
@@ -25,6 +25,7 @@ import { useAuth } from '@/utils/security/useAuth';
 export const Header = ({
   activeFilters,
   filterTracker,
+  searchParams,
   setSearchParams,
   getIntentionsQueryParameters,
   searchIntention,
@@ -40,7 +41,8 @@ export const Header = ({
 }: {
   activeFilters: Filters;
   filterTracker: (filterName: keyof Filters) => () => void;
-  setSearchParams: (params: { filters: Partial<Filters> }) => void;
+  searchParams: ISearchParams;
+  setSearchParams: (params: ISearchParams) => void;
   getIntentionsQueryParameters: (qLimit?: number, qOffset?: number) => Partial<Filters>;
   searchIntention?: string;
   setSearchIntention: (search: string) => void;
@@ -63,7 +65,13 @@ export const Header = ({
   const anneeCampagne = activeFilters.campagne ?? campagne?.annee;
 
   const onClickSearchIntention = () => {
-    setSearchParams({ filters: { search: searchIntention } });
+    setSearchParams({
+      ...searchParams,
+      filters: {
+        ...searchParams.filters,
+        search: searchIntention,
+      },
+    });
   };
 
   const onExportCsv = async (isFiltered?: boolean) => {
