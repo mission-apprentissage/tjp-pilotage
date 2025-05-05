@@ -3,7 +3,6 @@ import customParseFormat from "dayjs/plugin/customParseFormat.js";
 import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
-import type { Insertable } from "kysely";
 import { flatten, uniq } from "lodash-es";
 import type { UserinfoResponse } from "openid-client";
 import type {Role} from 'shared';
@@ -13,7 +12,6 @@ import type { SupportedLDAPGroups } from "shared/security/sso";
 import { LDAP_GROUP_ROLES_DNE_CORRESPONDANCE, ROLE_DNE_ROLE_ORION_CORRESPONDANCE,RoleDNEEnum } from "shared/security/sso";
 
 import config from "@/config";
-import type { DB } from "@/db/schema";
 import { getDneClient } from "@/modules/core/services/dneClient/dneClient";
 import logger from "@/services/logger";
 
@@ -314,7 +312,7 @@ export const [redirectDne, redirectDneFactory] = inject(
         throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_CODACA);
       }
 
-      const userToInsert: Insertable<DB["user"]> = {
+      const userToInsert = {
         ...user,
         email: email,
         firstname: userinfo.given_name,
