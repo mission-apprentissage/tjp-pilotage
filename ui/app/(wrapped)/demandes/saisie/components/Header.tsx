@@ -10,7 +10,7 @@ import type { OptionType } from "shared/schema/optionSchema";
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/demandes/components/StatutTag";
 import { DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/saisie/DEMANDES_COLUMNS";
-import type { CheckedDemandesType} from '@/app/(wrapped)/demandes/saisie/page.client';
+import type { CheckedDemandesType, ISearchParams} from '@/app/(wrapped)/demandes/saisie/page.client';
 import type { Filters } from "@/app/(wrapped)/demandes/saisie/types";
 import {formatStatut, getPossibleNextStatuts} from '@/app/(wrapped)/demandes/utils/statutUtils';
 import { AdvancedExportMenuButton } from "@/components/AdvancedExportMenuButton";
@@ -23,13 +23,14 @@ import { formatExportFilename } from "@/utils/formatExportFilename";
 import { useAuth } from '@/utils/security/useAuth';
 
 export const Header = ({
-  activeFilters,
-  filterTracker,
+  searchParams,
   setSearchParams,
   getDemandesQueryParameters,
   searchDemande,
   setSearchDemande,
   campagne,
+  activeFilters,
+  filterTracker,
   handleFilters,
   diplomes,
   academies,
@@ -38,9 +39,8 @@ export const Header = ({
   setCheckedDemandes,
   setIsModifyingGroup,
 }: {
-  activeFilters: Filters;
-  filterTracker: (filterName: keyof Filters) => () => void;
-  setSearchParams: (params: { filters: Partial<Filters> }) => void;
+  searchParams: ISearchParams;
+  setSearchParams: (params: ISearchParams) => void;
   getDemandesQueryParameters: (qLimit?: number, qOffset?: number) => Partial<Filters>;
   searchDemande?: string;
   setSearchDemande: (search: string) => void;
@@ -48,6 +48,8 @@ export const Header = ({
     annee: string;
     statut: string;
   };
+  activeFilters: Filters;
+  filterTracker: (filterName: keyof Filters) => () => void;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   diplomes: OptionType[];
   academies: OptionType[];
@@ -63,7 +65,13 @@ export const Header = ({
   const anneeCampagne = activeFilters.campagne ?? campagne?.annee;
 
   const onClickSearchDemande = () => {
-    setSearchParams({ filters: { search: searchDemande } });
+    setSearchParams({
+      ...searchParams,
+      filters: {
+        ...searchParams.filters,
+        search: searchDemande,
+      },
+    });
   };
 
   const onExportCsv = async (isFiltered?: boolean) => {

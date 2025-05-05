@@ -38,6 +38,7 @@ export const getDemandesQuery = async (
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .leftJoin(
       (join) =>
         join
@@ -168,7 +169,9 @@ export const getDemandesQuery = async (
                   ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")})
                 )`,
                 "ilike",
                 `%${search_word}%`

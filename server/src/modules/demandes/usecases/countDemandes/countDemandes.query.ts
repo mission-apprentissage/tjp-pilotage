@@ -26,6 +26,7 @@ export const countDemandesQuery = async ({
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("user", "user.id", "demande.createdBy")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .innerJoin("campagne", "campagne.id", "demande.campagneId")
     .leftJoin("suivi", (join) =>
       join.onRef("suivi.demandeNumero", "=", "demande.numero").on("suivi.userId", "=", user.id)
@@ -141,7 +142,9 @@ export const countDemandesQuery = async ({
                   ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")})
                 )`,
                 "ilike",
                 `%${search_word}%`
