@@ -64,8 +64,8 @@ export default function Home() {
                 indicateurs InserJeunes (taux d’emploi à 6 mois, taux de poursuite d’études...) afin d’améliorer le
                 devenir des élèves, vers l’emploi ou la poursuite d’une formation.
               </Text>
-              {!auth && (
-                <Box margin="auto" marginTop="12px" padding="20px">
+              <Box margin="auto" marginTop="12px" padding="20px">
+                {!auth && (
                   <Link
                     href="/auth/login"
                     textDecoration="none"
@@ -79,8 +79,22 @@ export default function Home() {
                   >
                     Se connecter
                   </Link>
-                </Box>
-              )}
+                )}
+                <Link
+                  href="/console/formations"
+                  textDecoration="none"
+                  padding="6px 12px"
+                  backgroundColor={themeDefinition.colors.bluefrance[113]}
+                  borderColor={themeDefinition.colors.bluefrance[113]}
+                  color="white"
+                  borderWidth="1px"
+                  _hover={{
+                    bg: themeDefinition.colors.bluefrance[525],
+                  }}
+                >
+                    Explorer les données
+                </Link>
+              </Box>
             </VStack>
             <HStack justifyContent="center">
               <Box
