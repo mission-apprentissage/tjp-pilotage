@@ -28,7 +28,7 @@ export const [sendResetPassword, sendResetPasswordFactory] = inject(
       }
 
       const resetPasswordToken = jwt.sign({ email }, deps.jwtSecret, {
-        expiresIn: "1h",
+        expiresIn: "24h",
       });
 
       await deps.shootTemplate({
