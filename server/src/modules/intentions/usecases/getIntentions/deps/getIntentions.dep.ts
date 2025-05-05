@@ -38,6 +38,11 @@ export const getIntentionsQuery = async (
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("dispositif", "dispositif.codeDispositif", "intention.codeDispositif")
+    .leftJoin("niveauDiplome", (join) =>
+      join.on(jb =>
+        jb(jb.ref("niveauDiplome.codeNiveauDiplome"), "=", sql<string>`LEFT(${jb.ref("intention.cfd")}, 3)`)
+      )
+    )
     .leftJoin(
       (join) =>
         join
@@ -167,7 +172,9 @@ export const getIntentionsQuery = async (
                   ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")})
                 )`,
                 "ilike",
                 `%${search_word}%`
