@@ -67,6 +67,13 @@ export type CheckedDemandesType = {
   statut: DemandeStatutType;
   demandes: Array<string>;
 };
+export interface ISearchParams {
+  filters?: Partial<Filters>;
+  order?: Partial<Order>;
+  page?: string;
+  action?: Exclude<DemandeStatutType, "supprimée">;
+  notfound?: string;
+}
 
 export const PageClient = () => {
   const { user } = useAuth();
@@ -75,13 +82,7 @@ export const PageClient = () => {
   const toast = useToast();
   const router = useRouter();
 
-  const [searchParams, setSearchParams] = useStateParams<{
-    filters?: Partial<Filters>;
-    order?: Partial<Order>;
-    page?: string;
-    action?: Exclude<DemandeStatutType, "supprimée">;
-    notfound?: string;
-  }>({
+  const [searchParams, setSearchParams] = useStateParams<ISearchParams>({
     defaultValues: {
       filters: {},
       order: { order: "asc" },
@@ -284,6 +285,7 @@ export const PageClient = () => {
           <>
             <Header
               activeFilters={filters}
+              searchParams={searchParams}
               setSearchParams={setSearchParams}
               getDemandesQueryParameters={getDemandesQueryParameters}
               searchDemande={searchDemande}
