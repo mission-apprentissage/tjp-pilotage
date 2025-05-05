@@ -2,12 +2,10 @@ import { CheckIcon } from "@chakra-ui/icons";
 import {
   Button,
   chakra,
-  Checkbox,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Text,
   Textarea,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -194,19 +192,6 @@ export const UpdateAvisForm = chakra(
                 />
               </Flex>
             </Flex>
-            {avis.typeAvis === TypeAvisEnum["consultatif"] && (
-              <Checkbox
-                size="lg"
-                {...register("isVisibleParTous", {
-                  required: false,
-                })}
-                whiteSpace={"nowrap"}
-              >
-                <Text fontSize={14} fontWeight={400}>
-                  Rendre cet avis visible de tous
-                </Text>
-              </Checkbox>
-            )}
           </FormControl>
           <Button
             isLoading={isSubmitting}

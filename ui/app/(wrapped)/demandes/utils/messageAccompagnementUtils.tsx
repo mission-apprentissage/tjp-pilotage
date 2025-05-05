@@ -1,10 +1,15 @@
-import { hasRole } from "shared";
+import { hasPermission, hasRole } from "shared";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import { isCampagneEnAttente, isCampagneTerminee } from "shared/utils/campagneUtils";
 
 import { canCreateDemande } from "./permissionsDemandeUtils";
 
+
+export const UTILISATEUR_NON_AUTHORISE = `
+  Vous n'avez pas les droits nécessaires pour créer une demande
+`;
 
 export const CAMPAGNE_SANS_SAISIE_PERDIR = `
   La saisie de demande n'est pas autorisée pour les chefs d'établissement pour la campagne $ANNEE_CAMPAGNE.
@@ -31,8 +36,8 @@ export const getMessageAccompagnementCampagne = ({
   campagne: CampagneType;
   currentCampagne: CampagneType;
 }) => {
-  console.log(campagne, currentCampagne);
   if(canCreateDemande({user, campagne})) return undefined;
+  if(!hasPermission(user?.role, PermissionEnum["demande/ecriture"])) return UTILISATEUR_NON_AUTHORISE;
   if(isCampagneEnAttente(campagne))
     return CAMPAGNE_EN_ATTENTE
       .replace("$ANNEE_CAMPAGNE", campagne.annee);
@@ -43,7 +48,7 @@ export const getMessageAccompagnementCampagne = ({
     return CAMPAGNE_UNIQUEMENT_MODIFICATION
       .replace("$ANNEE_CAMPAGNE", campagne.annee)
       .replace("$CURRENT_ANNEE_CAMPAGNE", currentCampagne?.annee ? `campagne ${currentCampagne.annee}`: "dernière campagne en cours");
-  if(campagne.id !== currentCampagne?.id && !campagne.codeRegion)
+  if(campagne.id === currentCampagne?.id && !campagne.codeRegion)
     return PAS_DE_CAMPAGNE_REGIONALE_EN_COURS
       .replace("$ANNEE_CAMPAGNE", campagne.annee);
   if(hasRole({user, role: "perdir"}) && !campagne.withSaisiePerdir)

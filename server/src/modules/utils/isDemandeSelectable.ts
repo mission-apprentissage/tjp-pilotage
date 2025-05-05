@@ -1,7 +1,7 @@
 import * as Boom from "@hapi/boom";
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import {getPermissionScope, RoleEnum} from 'shared';
+import {getPermissionScope, hasRole, RoleEnum} from 'shared';
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import {PermissionEnum} from 'shared/enum/permissionEnum';
 
@@ -31,10 +31,24 @@ export const isDemandeSelectable =
     (eb: ExpressionBuilder<DB, "demande">) => {
       const filters = getDemandeSelectableFilters(user);
 
-      if(filters.role === RoleEnum["invite"]) return eb
+      if(hasRole({user, role: RoleEnum["invite"]})) return eb
         .and([
           filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
-          eb("demande.statut", "in", [DemandeStatutEnum["demande validée"], DemandeStatutEnum["refusée"]]),
+          eb("demande.statut", "in", [
+            DemandeStatutEnum["demande validée"],
+            DemandeStatutEnum["refusée"]]),
+        ]);
+
+      if(hasRole({user, role: RoleEnum["region"]})) return eb
+        .and([
+          filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
+          eb("demande.statut", "in", [
+            DemandeStatutEnum["dossier complet"],
+            DemandeStatutEnum["projet de demande"],
+            DemandeStatutEnum["prêt pour le vote"],
+            DemandeStatutEnum["demande validée"],
+            DemandeStatutEnum["refusée"],
+          ]),
         ]);
 
       return eb.and([

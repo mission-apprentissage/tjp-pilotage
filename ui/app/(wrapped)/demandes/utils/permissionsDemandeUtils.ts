@@ -52,10 +52,7 @@ const canCreateOldDemande  = ({
   if(feature.saisieDisabled) return false;
   if(!isCampagneEnCours(campagne)) return false;
   if(isUserNational({user})) return true;
-  if(campagne?.annee === "2023" || (
-    campagne?.annee === "2024" &&
-    !isUserInRegionsExperimentation2024({ user })
-  )) return false;
+  if(hasRole({ user, role: RoleEnum["perdir"] }) && !isUserInRegionsExperimentation2024({user})) return false;
   if(!hasPermission(user?.role, PermissionEnum["demande/ecriture"])) return false;
   return true;
 };
@@ -68,20 +65,18 @@ export const canCreateDemande = ({
   campagne: CampagneType,
 }): boolean => {
   if(isOldDemande({ user, campagne })) return canCreateOldDemande({ user, campagne });
-  else {
-    if(feature.saisieDisabled) return false;
-    if(!isCampagneEnCours(campagne)) return false;
-    if(isUserNational({user})) return true;
-    if(!hasPermission(user?.role, PermissionEnum["demande/ecriture"])) return false;
-    if(!isUserPartOfExpe({ user, campagne })) return false;
-    if(campagne.annee !== "2023" && campagne.annee !== "2024") {
-      const isCampagneRegionale = campagne.codeRegion;
-      const isCampagneRegionaleOfUser = isCampagneRegionale && (user?.codeRegion === campagne.codeRegion);
-      if(!isCampagneRegionaleOfUser) return false;
-      return hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne.withSaisiePerdir : true;
-    }
-    return true;
+  if(feature.saisieDisabled) return false;
+  if(!isCampagneEnCours(campagne)) return false;
+  if(isUserNational({user})) return true;
+  if(!hasPermission(user?.role, PermissionEnum["demande/ecriture"])) return false;
+  if(!isUserPartOfExpe({ user, campagne })) return false;
+  if(campagne.annee !== "2023" && campagne.annee !== "2024") {
+    const isCampagneRegionale = campagne.codeRegion;
+    const isCampagneRegionaleOfUser = isCampagneRegionale && (user?.codeRegion === campagne.codeRegion);
+    if(!isCampagneRegionaleOfUser) return false;
+    return hasRole({ user, role: RoleEnum["perdir"] }) ? !!campagne.withSaisiePerdir : true;
   }
+  return true;
 };
 
 export const canEditDemandeStatut = ({

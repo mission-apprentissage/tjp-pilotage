@@ -16,7 +16,7 @@ export const isUserInRegionsExperimentation2024 = (
   { user }:
   { user?: { codeRegion?: string, role?: Role } }
 ): boolean => {
-  if(hasRole({ user, role: RoleEnum["admin"] }) || hasRole({ user, role : RoleEnum["pilote"]})) return true;
+  if(isUserNational({user})) return true;
   if (!user?.codeRegion) return false;
   return CODES_REGIONS_EXPE_2024.includes(user.codeRegion);
 };
