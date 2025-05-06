@@ -222,7 +222,9 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <TableBadge sx={getTauxPressionStyle(formatNumber(line.tauxPression, 2))}>
+      <TableBadge sx={
+        getTauxPressionStyle(line.tauxPression !== undefined ? formatNumber(line.tauxPression, 2) : undefined)
+      }>
         {formatNumberToString(line.tauxPression, 2, "-")}
       </TableBadge>
     </ConditionalTd>

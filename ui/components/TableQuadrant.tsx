@@ -173,8 +173,14 @@ export const TableQuadrant = ({
                     {formation.libelle}
                   </Td>
                   <Td textAlign={"center"}>
-                    <TableBadge sx={getTauxPressionStyle(formatNumber(formation.tauxPression, 2))}>
-                      {formatNumberToString(formation?.tauxPression, 2, "-")}
+                    <TableBadge sx={
+                      getTauxPressionStyle(
+                        formation.tauxPression !== undefined ?
+                          formatNumber(formation.tauxPression, 2) :
+                          undefined
+                      )
+                    }>
+                      {formatNumberToString(formation.tauxPression, 2, "-")}
                     </TableBadge>
                   </Td>
                   <Td color={getTdColor(formation)} maxW="20%">

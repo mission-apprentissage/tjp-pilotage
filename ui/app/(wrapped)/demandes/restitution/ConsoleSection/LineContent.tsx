@@ -344,7 +344,13 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxPressionRegional")}
       >
-        <TableBadge sx={getTauxPressionStyle(formatNumber(demande.tauxPressionRegional, 2))}>
+        <TableBadge sx={
+          getTauxPressionStyle(
+            demande.tauxPressionRegional !== undefined ?
+              formatNumber(demande.tauxPressionRegional, 2) :
+              undefined
+          )
+        }>
           {formatNumberToString(demande.tauxPressionRegional, 2, "-")}
         </TableBadge>
       </ConditionalTd>
