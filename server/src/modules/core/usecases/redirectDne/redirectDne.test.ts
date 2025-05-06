@@ -2,6 +2,7 @@
 import jwt from "jsonwebtoken";
 import { RoleEnum } from "shared";
 import { DneSSOErrorsEnum } from "shared/enum/dneSSOErrorsEnum";
+import { DneSSOInfoEnum } from "shared/enum/dneSSOInfoEnum";
 import { ROLE_DNE_ROLE_ORION_CORRESPONDANCE, RoleDNEEnum, supportedLDAPGroupsEnum } from "shared/security/sso";
 import { describe, expect, it, vi } from "vitest";
 
@@ -110,7 +111,7 @@ describe("redirectDne usecase", () => {
         createUserInDB: vi.fn(),
         authJwtSecret: "authJwtSecret",
         codeVerifierJwtSecret: "codeVerifierJwtSecret",
-        findUserQuery: vi.fn().mockResolvedValue({ email: "email@test.test", enabled: true, role: "gestionnaire_region" }),
+        findUserQuery: vi.fn().mockResolvedValue({ email: "email@test.test", enabled: true, role: "gestionnaire_region", password: "toto" }),
         findEtablissement: vi.fn().mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
         findRegionFromAcademie: vi.fn(),
       };
@@ -132,8 +133,12 @@ describe("redirectDne usecase", () => {
           password: null,
         }),
       });
+
       expect(result).toMatchObject({
         token: expect.stringMatching(""),
+        userCommunication: [
+          DneSSOInfoEnum.USER_SWITCHED,
+        ]
       });
     });
 

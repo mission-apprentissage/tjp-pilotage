@@ -1,4 +1,6 @@
 import type { DneSSOErrorsType } from "shared/enum/dneSSOErrorsEnum";
+import type { DneSSOInfoType } from "shared/enum/dneSSOInfoEnum";
+
 
 export const ERROR_MESSAGES: Record<DneSSOErrorsType, { title: string, message: React.ReactNode }> = {
   "FAILURE_ON_DNE_REDIRECT": {
@@ -45,4 +47,16 @@ export const ERROR_MESSAGES: Record<DneSSOErrorsType, { title: string, message: 
     title: "Erreur lors de la connexion à Orion",
     message: "Nous n'avons pas réussi à établir une connexion. Merci de ré-essayer ultérieurement ou de vous rapprocher de votre support technique si le problème persiste."
   },
+};
+
+export const INFO_MESSAGES: Record<DneSSOInfoType, { title?: string, message?: string }> = {
+  "USER_CREATED": {
+    title: "Bienvenue sur Orion",
+  },
+  "USER_LOGGED_IN": {
+    title: "Vous êtes connecté",
+  },
+  "USER_SWITCHED": {
+    message: "Vous avez utilisé la connexion par SSO depuis votre portail. Nous avons mis à jour votre compte Orion et désactivé la possibilité de vous connecter directement par email et mot de passe. Merci d'utiliser uniquement la connexion depuis votre portail.",
+  }
 };
