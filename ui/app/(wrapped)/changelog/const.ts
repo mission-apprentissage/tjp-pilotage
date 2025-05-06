@@ -234,7 +234,7 @@ export const CHANGELOG: IChangelog[] = [
   {
     "id": "ad424ff3-be91-44f7-910f-864f36c6c8a6",
     "deployed": true,
-    "show": false,
+    "show": true,
     "title": "Erreur dans les données d’apprentissage",
     "types": [ChangelogTypeEnum["BANDEAU"]],
     "date": new Date("2025-04-23"),
@@ -254,7 +254,7 @@ export const CHANGELOG: IChangelog[] = [
   {
     "id": "450c1530-2093-4943-9340-f9d4564b0fcf",
     "deployed": true,
-    "show": true,
+    "show": false,
     "title": "Interruption de service",
     "types": [ChangelogTypeEnum["BANDEAU"]],
     "date": new Date("2025-05-06"),
@@ -264,7 +264,7 @@ export const CHANGELOG: IChangelog[] = [
   {
     "id": "450c1530-2093-4943-9340-f9d4564b0fcf",
     "deployed": true,
-    "show": true,
+    "show": false,
     "title": "Interruption de service",
     "types": [ChangelogTypeEnum["Maintenance"]],
     "date": new Date("2025-05-06"),
