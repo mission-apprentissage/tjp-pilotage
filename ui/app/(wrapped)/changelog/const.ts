@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ChangelogTypeZodType = z.enum(["BANDEAU", "Fonctionnalité", "Données", "Bug"]);
+export const ChangelogTypeZodType = z.enum(["BANDEAU", "Fonctionnalité", "Données", "Bug", "Maintenance"]);
 
 export const ChangelogTypeEnum = ChangelogTypeZodType.Enum;
 
@@ -234,7 +234,7 @@ export const CHANGELOG: IChangelog[] = [
   {
     "id": "ad424ff3-be91-44f7-910f-864f36c6c8a6",
     "deployed": true,
-    "show": true,
+    "show": false,
     "title": "Erreur dans les données d’apprentissage",
     "types": [ChangelogTypeEnum["BANDEAU"]],
     "date": new Date("2025-04-23"),
@@ -249,6 +249,26 @@ export const CHANGELOG: IChangelog[] = [
     "types": [ChangelogTypeEnum["Bug"]],
     "date": new Date("2025-04-23"),
     "description": "Erreurs sur la page Domaine de Formation : suite à une mise à jour des données “apprentissage”, la page Domaine de formation affiche des données erronées : nombre d’établissements et nombre d’élèves en entrée. Les taux InserJeunes sont exacts. Le problème est en cours de résolution.",
+    "document": "",
+  },
+  {
+    "id": "450c1530-2093-4943-9340-f9d4564b0fcf",
+    "deployed": true,
+    "show": true,
+    "title": "Interruption de service",
+    "types": [ChangelogTypeEnum["BANDEAU"]],
+    "date": new Date("2025-05-06"),
+    "description": "Le service Orion sera en maintenance le 06/05/2025 de 17h jusqu'au lendemain 07/05/2025 maximum.",
+    "document": "",
+  },
+  {
+    "id": "450c1530-2093-4943-9340-f9d4564b0fcf",
+    "deployed": true,
+    "show": true,
+    "title": "Interruption de service",
+    "types": [ChangelogTypeEnum["Maintenance"]],
+    "date": new Date("2025-05-06"),
+    "description": "Le service Orion sera en maintenance le 06/05/2025 de 17h jusqu'au lendemain 07/05/2025 maximum.",
     "document": "",
   },
 ];
