@@ -171,7 +171,5 @@ export const countDemandesQuery = async ({
     .executeTakeFirstOrThrow()
     .then(cleanNull);
 
-  console.log(codeNiveauDiplome);
-
   return countDemandes;
 };
