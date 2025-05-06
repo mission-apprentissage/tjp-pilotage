@@ -1,5 +1,6 @@
 import type { FastifyRequest } from "fastify";
 import { DneSSOErrorsEnum } from "shared/enum/dneSSOErrorsEnum";
+import { DneSSOInfoEnum } from "shared/enum/dneSSOInfoEnum";
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -56,7 +57,7 @@ export const redirectDneRoute = (server: Server) => {
               .send();
           }
 
-          const { token, user } = await redirectDne({
+          const { token, user, userCommunication } = await redirectDne({
             codeVerifierJwt: codeVerifierJwt as string,
             url: request.url,
           });
@@ -66,7 +67,9 @@ export const redirectDneRoute = (server: Server) => {
             url = `/panorama/etablissement/${user.uais[0]}`;
           }
 
-          logger.info({ user, url }, "[SSO] Redirection Utilisateur");
+          userCommunication.push(DneSSOInfoEnum.USER_LOGGED_IN);
+
+          logger.info({ user, url, userCommunication }, "[SSO] Redirection Utilisateur");
 
           response
             .setCookie("Authorization", token, {
@@ -76,7 +79,7 @@ export const redirectDneRoute = (server: Server) => {
               secure: true,
               path: "/",
             })
-            .redirect(url, 302)
+            .redirect(`${url}${userCommunication ? `?sso=${userCommunication.join(',')}` : ''}`, 302)
             .send();
         } catch (err) {
           let error = err as Error;

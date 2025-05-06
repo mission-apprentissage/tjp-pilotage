@@ -5,9 +5,10 @@ import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 import { flatten, uniq } from "lodash-es";
 import type { UserinfoResponse } from "openid-client";
-import type {Role} from 'shared';
-import {RoleEnum} from 'shared';
+import type { Role } from 'shared';
+import { RoleEnum } from 'shared';
 import { DneSSOErrorsEnum } from "shared/enum/dneSSOErrorsEnum";
+import type { DneSSOInfoType } from "shared/enum/dneSSOInfoEnum";
 import type { SupportedLDAPGroups } from "shared/security/sso";
 import { LDAP_GROUP_ROLES_DNE_CORRESPONDANCE, ROLE_DNE_ROLE_ORION_CORRESPONDANCE,RoleDNEEnum } from "shared/security/sso";
 
@@ -42,6 +43,26 @@ type TUserEtablissement = {
   codeRegion: string | null;
   uai: string;
 } | undefined
+
+interface UserCommunicationArguments {
+  passwordDeleted: boolean;
+  userCreated: boolean;
+}
+
+const generateUserCommunication =
+  ({ userCreated, passwordDeleted }: UserCommunicationArguments): Array<DneSSOInfoType> => {
+    const userCommunication: Array<DneSSOInfoType> = [];
+
+    if (userCreated) {
+      userCommunication.push("USER_CREATED");
+    }
+
+    if (passwordDeleted) {
+      userCommunication.push("USER_SWITCHED");
+    }
+
+    return userCommunication;
+  };
 
 const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
   const uais: Array<string> = [];
@@ -344,6 +365,11 @@ export const [redirectDne, redirectDneFactory] = inject(
         expiresIn: "7d",
       });
 
-      return { token: authorizationToken, user: userToInsert };
+      return {
+        token: authorizationToken, user: userToInsert, userCommunication: generateUserCommunication({
+          passwordDeleted: user?.password !== null,
+          userCreated: !user,
+        })
+      };
     }
 );
