@@ -550,8 +550,14 @@ export const QuadrantSection = ({
                     label="Taux de pression"
                     textBg="white"
                     value={
-                      <TableBadge sx={getTauxPressionStyle(formatNumber(formation?.tauxPression, 2))}>
-                        {formatNumberToString(formation?.tauxPression, 2, "-")}
+                      <TableBadge sx={
+                        getTauxPressionStyle(
+                          formation.tauxPression !== undefined ?
+                            formatNumber(formation.tauxPression, 2) :
+                            undefined
+                        )
+                      }>
+                        {formatNumberToString(formation.tauxPression, 2, "-")}
                       </TableBadge>
                     }
                   />
