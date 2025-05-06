@@ -1,8 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
-
 import type { NDispositifFormation } from "@/modules/import/fileTypes/NDispositifFormation";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { dependencies } from "./importDispositifs.dependencies";
 

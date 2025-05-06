@@ -1,5 +1,4 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES, VoieEnum } from "shared";
 
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
@@ -9,6 +8,7 @@ import { countDiplomesProfessionnels } from "@/modules/import/usecases/importIJD
 import { countFamillesMetiers } from "@/modules/import/usecases/importIJData/countFamillesMetiers.dep";
 import { findDiplomesProfessionnels } from "@/modules/import/usecases/importIJData/findDiplomesProfessionnels.dep";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { cleanApprentissageData } from "./cleanApprentissageData.dep";
 import { deleteFormationEtablissement } from "./deleteFormationEtablissement";

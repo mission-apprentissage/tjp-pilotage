@@ -1,10 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type { Insertable } from "kysely";
 
 import type { DB } from "@/db/schema";
 import { dataDI } from "@/modules/import/data.di";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { createTension, createTensionRomeDepartement, deleteTensionRomeDepartement } from "./utils";
 

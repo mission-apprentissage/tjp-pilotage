@@ -1,5 +1,4 @@
 import * as Boom from "@hapi/boom";
-import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 import { emailRegex } from "shared";
@@ -8,6 +7,7 @@ import type { BodySchema } from "shared/routes/schemas/post.users.userId.schema"
 import config from "@/config";
 import type { RequestUser } from "@/modules/core/model/User";
 import { shootTemplate } from "@/modules/core/services/mailer/mailer";
+import { inject } from "@/utils/inject";
 
 import { findUserQuery } from "./findUserQuery.dep";
 import { insertUserQuery } from "./insertUserQuery.dep";

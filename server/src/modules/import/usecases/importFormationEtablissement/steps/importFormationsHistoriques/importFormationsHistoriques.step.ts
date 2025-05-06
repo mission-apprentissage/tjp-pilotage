@@ -1,8 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
-
 import type { NFormationDiplomeLine } from "@/modules/import/fileTypes/NFormationDiplome";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
+import { inject } from "@/utils/inject";
 
 import { createFormationHistorique } from "./createFormationHistorique.dep";
 import { findDataFormation } from "./findDataFormation.dep";

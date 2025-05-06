@@ -1,8 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
-
 import { fileManager } from "@/modules/core/services/fileManager/fileManager";
 import { filePathManager } from "@/modules/core/services/filePathManager/filePathManager";
+import { inject } from "@/utils/inject";
 
 export const [uploadDemandeFilesUsecase] = inject(
   { fileManager, filePathManager },

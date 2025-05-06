@@ -1,11 +1,11 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { MILLESIMES_IJ_REG } from "shared";
 
 import { regionAcademiqueMapping } from "@/modules/import/domain/regionAcademiqueMapping";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { inserJeunesApi } from "@/modules/import/services/inserJeunesApi/inserJeunes.api";
 import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";
+import { inject } from "@/utils/inject";
 
 import { createIndicateurRegionSortie } from "./createIndicateurRegionSortie.dep";
 import { findAnciennesFormation } from "./findAnciennesFormation.dep";

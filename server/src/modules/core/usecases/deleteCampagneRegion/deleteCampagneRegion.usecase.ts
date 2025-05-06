@@ -1,7 +1,7 @@
 import * as Boom from "@hapi/boom";
-import { inject } from "injecti";
 
 import type { RequestUser } from "@/modules/core/model/User";
+import { inject } from "@/utils/inject";
 
 import { deleteCampagneRegionQuery } from "./deps/deleteCampagneRegion.dep";
 import { getCampagneRegionQuery } from "./deps/getCampagneRegion.dep";

@@ -1,10 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type { Insertable } from "kysely";
 
 import type { DB } from "@/db/db";
 import type { Departements_academies_regions } from "@/modules/import/fileTypes/Departements_academies_regions";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { importRegionsDeps } from "./importLieuxGeographiques.deps";
 

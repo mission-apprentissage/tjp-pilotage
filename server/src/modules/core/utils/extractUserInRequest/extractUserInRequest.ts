@@ -1,11 +1,11 @@
 import * as Sentry from "@sentry/node";
 import type { FastifyRequest } from "fastify";
-import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 
 import config from "@/config";
 import type { RequestUser } from "@/modules/core/model/User";
+import { inject } from "@/utils/inject";
 import { cleanNull } from "@/utils/noNull";
 
 import { findUserQuery } from "./findUserQuery.dep";
