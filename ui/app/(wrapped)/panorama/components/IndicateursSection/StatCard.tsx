@@ -36,13 +36,8 @@ export const StatCard = chakra(
           <Tooltip label={tooltip} placement="left">
             <Flex direction={"row"} alignItems={"baseline"}>
               <Heading as="h3" fontWeight="bold" fontSize="40px">
-                {value ?? "-"}
+                {value}
               </Heading>
-              {type === "percentage" && typeof value !== "undefined" && (
-                <Heading as="h3" fontSize={"22px"} fontWeight={"bold"}>
-                  &nbsp;%
-                </Heading>
-              )}
             </Flex>
           </Tooltip>
           {sub}

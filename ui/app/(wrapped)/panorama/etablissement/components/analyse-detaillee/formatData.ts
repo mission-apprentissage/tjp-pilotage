@@ -12,7 +12,7 @@ export const formatAbsoluteOrUndefined = (value?: number): number | undefined =>
 export const formatMillesime = (millesime: string): string =>
   `${millesime.split("_")[0]}+${millesime.split("_")[1].substring(2)}`;
 
-export const formatAnneeCommuneLibelle = (libelleFormation: string): string => {
+export const formatFamilleMetierLibelle = (libelleFormation: string): string => {
   return libelleFormation.replace("2nde commune", "").replace("1ere commune", "");
 };
 

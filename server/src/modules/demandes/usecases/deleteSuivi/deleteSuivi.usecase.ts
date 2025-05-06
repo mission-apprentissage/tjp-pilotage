@@ -1,7 +1,7 @@
 import * as Boom from "@hapi/boom";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { findOneDemandeQuery} from '@/modules/demandes/repositories/findOneDemande.query';
+import { findOneDemandeQuery } from '@/modules/demandes/repositories/findOneDemande.query';
 
 import { deleteSuiviQuery } from "./deps/deleteSuivi.query";
 import { findOneSuiviQuery } from "./deps/findOneSuivi.query";
@@ -12,8 +12,8 @@ export const deleteSuiviFactory =
       const suivi = await deps.findOneSuiviQuery(id);
       if (!suivi) throw Boom.notFound("Suivi non trouvé en base");
 
-      const intention = await deps.findOneDemandeQuery(suivi.intentionNumero);
-      if (!intention) throw Boom.notFound("Demande non trouvée en base");
+      const demande = await deps.findOneDemandeQuery(suivi.demandeNumero);
+      if (!demande) throw Boom.notFound("Demande non trouvée en base");
       const isAllowed = suivi.userId === user.id;
       if (!isAllowed) throw Boom.forbidden();
       await deps.deleteSuiviQuery(id);

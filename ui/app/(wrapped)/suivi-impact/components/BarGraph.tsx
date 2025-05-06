@@ -3,7 +3,7 @@ import { init,registerLocale } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 import { frenchLocale } from "@/utils/echarts/frenchLocale";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumberToString } from "@/utils/formatUtils";
 
 export type BarGraphData = {
   [key: string]: {
@@ -37,17 +37,15 @@ export const BarGraph = function <F extends BarGraphData>({
 
   const getNationalSerieData = () => {
     if (graphData !== undefined) {
-      return Object.keys(graphData).map((annee) => typeof graphData[annee].nationale !== "undefined" ? formatNumber(graphData[annee].nationale, 1) : "-");
+      return Object.keys(graphData).map((annee) => formatNumberToString(graphData[annee].nationale, 1, "-"));
     }
-
     return [];
   };
 
   const getFilteredSerieData = () => {
     if (isFiltered && graphData !== undefined) {
-      return Object.keys(graphData).map((annee) =>  typeof graphData[annee].filtered !== "undefined" ? formatNumber(graphData[annee].filtered, 1) : "-");
+      return Object.keys(graphData).map((annee) => formatNumberToString(graphData[annee].filtered, 1, "-"));
     }
-
     return [];
   };
 

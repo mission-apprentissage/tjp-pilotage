@@ -83,7 +83,6 @@ const BadgeFormationSpecifique = chakra(
       ) : (
         <></>
       );
-      break;
     default:
       return null;
     }

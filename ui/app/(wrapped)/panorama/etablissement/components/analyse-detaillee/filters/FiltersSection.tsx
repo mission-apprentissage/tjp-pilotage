@@ -1,12 +1,12 @@
 import { Flex, Select, Text } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
-import type { Voie } from "shared";
+import type { VoieType } from "shared";
 import { VoieEnum } from "shared";
 
 import type { Filters, FiltersData } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { Multiselect } from "@/components/Multiselect";
 
-const extractVoieOptions = (voies?: Voie[]) => {
+const extractVoieOptions = (voies?: VoieType[]) => {
   const options = [];
 
   if (!voies?.length || voies.includes(VoieEnum.scolaire)) {

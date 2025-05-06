@@ -8,10 +8,7 @@ export const hashPassword = (password: crypto.BinaryLike, salt?: crypto.BinaryLi
   const iterations = 2;
   const keylen = 64;
   const digest = "sha512";
-
-  if (!salt) {
-    salt = generateSalt();
-  }
+  salt = salt ?? generateSalt();
 
   const hashedPassword = crypto.pbkdf2Sync(password, salt, iterations, keylen, digest);
 

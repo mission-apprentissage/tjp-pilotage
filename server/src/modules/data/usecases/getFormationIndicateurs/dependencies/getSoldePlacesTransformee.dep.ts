@@ -20,7 +20,7 @@ export const getSoldePlacesTransformee = async ({
   codeDepartement?: string;
 }) =>
   getKbdClient()
-    .selectFrom("latestDemandeIntentionView as demande")
+    .selectFrom("latestDemandeView as demande")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .where("statut", "=", DemandeStatutEnum["demande validée"])
     .where("cfd", "=", cfd)

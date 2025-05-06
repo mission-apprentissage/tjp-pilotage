@@ -16,12 +16,13 @@ export const countDemandesRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler(PermissionEnum["intentions/lecture"]),
+      preHandler: hasPermissionHandler(PermissionEnum["demande/lecture"]),
       handler: async (request, response) => {
-        const { user, query: filters } = request;
+        const user = request.user!;
+        const { ...filters } = request.query;
         const result = await countDemandesUsecase({
-          user: user!,
           ...filters,
+          user,
         });
         response.status(200).send(result);
       },

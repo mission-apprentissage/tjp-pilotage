@@ -26,19 +26,18 @@ import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
 import { UaisContext } from "@/app/uaiContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
-import { getRoutingSaisieRecueilDemande } from "@/utils/getRoutingRecueilDemande";
+import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
 import { isPerdirPartOfExpe } from "@/utils/isPartOfExpe";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
-const shouldDisplayIntentionsMenu = ({ user, campagne }: {user?: UserType, campagne?: CampagneType}) => {
+const shouldDisplayDemandesMenu = ({ user, campagne }: {user?: UserType, campagne?: CampagneType}) => {
   if(!campagne || !user) return false;
 
   if(
-    !hasPermission(user.role, PermissionEnum["intentions/lecture"]) &&
-    !hasPermission(user.role, PermissionEnum["intentions-perdir/lecture"]) &&
-    !hasPermission(user.role, PermissionEnum["pilotage-intentions/lecture"]) &&
-    !hasPermission(user.role, PermissionEnum["restitution-intentions/lecture"])
+    !hasPermission(user.role, PermissionEnum["demande/lecture"]) &&
+    !hasPermission(user.role, PermissionEnum["pilotage/lecture"]) &&
+    !hasPermission(user.role, PermissionEnum["restitution/lecture"])
   ) return false;
 
   if(hasRole({user, role: RoleEnum["perdir"]})) return isPerdirPartOfExpe({user, campagne});
@@ -184,7 +183,7 @@ export const Nav = () => {
 
   const { isOpen: isMenuConsoleOpen, onOpen: onMenuConsoleOpen, onClose: onMenuConsoleClose } = useDisclosure();
 
-  const { isOpen: isMenuIntentionOpen, onOpen: onMenuIntentionOpen, onClose: onMenuIntentionClose } = useDisclosure();
+  const { isOpen: isMenuDemandeOpen, onOpen: onMenuDemandeOpen, onClose: onMenuDemandeClose } = useDisclosure();
 
   const { isOpen: isMenuAdminOpen, onOpen: onMenuAdminOpen, onClose: onMenuAdminClose } = useDisclosure();
 
@@ -279,13 +278,13 @@ export const Nav = () => {
           </MenuList>
         </Portal>
       </Menu>
-      {shouldDisplayIntentionsMenu({ user, campagne }) && (
-        <Menu gutter={0} isOpen={isMenuIntentionOpen}>
+      {shouldDisplayDemandesMenu({ user, campagne }) && (
+        <Menu gutter={0} isOpen={isMenuDemandeOpen}>
           <NavMenuButton
-            segment="intentions"
-            isOpen={isMenuIntentionOpen}
-            onMouseEnter={onMenuIntentionOpen}
-            onMouseLeave={onMenuIntentionClose}
+            segment="demandes"
+            isOpen={isMenuDemandeOpen}
+            onMouseEnter={onMenuDemandeOpen}
+            onMouseLeave={onMenuDemandeClose}
           >
             Transformation
           </NavMenuButton>
@@ -294,32 +293,32 @@ export const Nav = () => {
               p="0"
               borderTop="unset"
               w="100%"
-              onMouseEnter={onMenuIntentionOpen}
-              onMouseLeave={onMenuIntentionClose}
+              onMouseEnter={onMenuDemandeOpen}
+              onMouseLeave={onMenuDemandeClose}
               zIndex={"dropdown"}
             >
               <MenuItem p="0" w="100%">
-                <NavMenuLink href={getRoutingSaisieRecueilDemande({campagne, user})} segment="saisie-intentions">
+                <NavMenuLink href={getRoutingSaisieDemande({user})} segment="saisie">
                     Gestion des demandes
                 </NavMenuLink>
               </MenuItem>
-              {hasPermission(role, PermissionEnum["pilotage-intentions/lecture"]) && (
+              {hasPermission(role, PermissionEnum["pilotage/lecture"]) && (
                 <MenuItem p="0">
-                  <NavMenuLink href="/intentions/pilotage" segment="pilotage-intentions" prefetch={false}>
+                  <NavMenuLink href="/demandes/pilotage" segment="pilotage" prefetch={false}>
                     Pilotage
                   </NavMenuLink>
                 </MenuItem>
               )}
-              {(hasPermission(role, PermissionEnum["restitution-intentions/lecture"])) && (
+              {(hasPermission(role, PermissionEnum["restitution/lecture"])) && (
                 <MenuItem p="0" w="100%">
-                  <NavMenuLink href="/intentions/restitution" segment="restitution-intentions" prefetch={false}>
+                  <NavMenuLink href="/demandes/restitution" segment="restitution" prefetch={false}>
                     Restitution des demandes
                   </NavMenuLink>
                 </MenuItem>
               )}
-              {feature.correction && hasPermission(role, PermissionEnum["intentions/lecture"]) && (
+              {feature.correction && hasPermission(role, PermissionEnum["demande/lecture"]) && (
                 <MenuItem p="0" w="100%">
-                  <NavMenuLink href="/intentions/corrections" segment="corrections" prefetch={false}>
+                  <NavMenuLink href="/demandes/corrections" segment="corrections" prefetch={false}>
                     Restitution des corrections
                   </NavMenuLink>
                 </MenuItem>

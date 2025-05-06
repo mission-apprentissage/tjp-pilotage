@@ -2,7 +2,7 @@ import type { FilePathManager } from "./filePathManager";
 
 export const localFilePathManagerFactory = (): FilePathManager => {
   return {
-    getIntentionFilePath: (id: string, filename: string = "") => {
+    getDemandeFilePath: (id: string, filename: string = "") => {
       return `./public/upload/${id}/${filename}`;
     },
     getFranceTravailIndicateurTensionDepartementStatsFilePath: () => {

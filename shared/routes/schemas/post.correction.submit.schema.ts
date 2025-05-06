@@ -3,7 +3,7 @@ import { z } from "zod";
 import { RaisonCorrectionZodType } from "../../enum/raisonCorrectionEnum";
 
 const CorrectionSchema = z.object({
-  intentionNumero: z.string(),
+  demandeNumero: z.string(),
   capaciteScolaireActuelle: z.coerce.number(),
   capaciteScolaire: z.coerce.number(),
   capaciteScolaireColoreeActuelle: z.coerce.number(),

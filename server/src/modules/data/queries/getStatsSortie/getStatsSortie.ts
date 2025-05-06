@@ -88,7 +88,7 @@ export const getStatsSortieParRegionsEtNiveauDiplomeQuery = async ({
 
   return statsSortie.reduce(
     (acc, cur) => {
-      acc[cur.codeRegion] = acc[cur.codeRegion] || {};
+      acc[cur.codeRegion] = acc[cur.codeRegion] ?? {};
       acc[cur.codeRegion][cur.codeNiveauDiplome] = {
         tauxInsertion: cur.tauxInsertion,
         tauxPoursuite: cur.tauxPoursuite,
