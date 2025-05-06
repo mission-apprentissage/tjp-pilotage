@@ -1,10 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { MILLESIMES_IJ_REG } from "shared";
 
 import { regionAcademiqueMapping } from "@/modules/import/domain/regionAcademiqueMapping";
 import type { IjRegionData } from "@/modules/import/services/inserJeunesApi/formatRegionData";
 import { getRegionData } from "@/modules/import/services/inserJeunesApi/inserJeunes.api";
+import { inject } from "@/utils/inject";
 
 import { cacheIjReg, clearIjRegCache } from "./cacheIjReg.dep";
 

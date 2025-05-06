@@ -1,10 +1,10 @@
 import { AxiosError } from "axios";
-import { inject } from "injecti";
 import { setTimeout } from "timers/promises";
 
 import { localFilePathManager } from "@/modules/core/services/filePathManager/localFilePathManager";
 import { getStatsPerspectivesRecrutementRegion } from "@/modules/import/services/franceTravail/franceTravail.api";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import {
   appendFranceTravailTensionFile,

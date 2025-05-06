@@ -1,8 +1,8 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 
 import { findOneDataEtablissement } from "@/modules/data/repositories/findOneDataEtablissement.query";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
+import { inject } from "@/utils/inject";
 
 export const [getEtablissement] = inject({ findOneDataEtablissement }, (deps) => async ({ uai }: { uai: string }) => {
   const etablissement = await deps.findOneDataEtablissement({

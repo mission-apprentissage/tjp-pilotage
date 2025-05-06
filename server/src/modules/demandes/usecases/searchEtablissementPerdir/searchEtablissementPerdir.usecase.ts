@@ -1,8 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import {hasRole, RoleEnum} from 'shared';
 
 import type { RequestUser } from "@/modules/core/model/User";
+import { inject } from "@/utils/inject";
 
 import { searchEtablissementPerdirQuery } from "./searchEtablissementPerdir.query";
 

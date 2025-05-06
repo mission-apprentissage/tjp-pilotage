@@ -1,8 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { uniqWith } from "lodash-es";
 import type { searchNsfFormationSchema } from "shared/routes/schemas/get.nsf-diplome.search.search.schema";
 import type { z } from "zod";
+
+import { inject } from "@/utils/inject";
 
 import { findManyInDataFormationQuery } from "./dependencies/findDataFormations.query";
 

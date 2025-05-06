@@ -1,6 +1,4 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
 import { PermissionEnum } from "shared/enum/permissionEnum";
 import type { submitCorrectionSchema } from "shared/routes/schemas/post.correction.submit.schema";
@@ -12,6 +10,8 @@ import type { RequestUser } from "@/modules/core/model/User";
 import { findOneDemandeQuery } from '@/modules/demandes/repositories/findOneDemande.query';
 import { getCurrentCampagne } from "@/modules/utils/getCurrentCampagne";
 import logger from "@/services/logger";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
+import { inject } from "@/utils/inject";
 import { cleanNull } from "@/utils/noNull";
 
 import { createCorrectionQuery } from "./deps/createCorrection.query";

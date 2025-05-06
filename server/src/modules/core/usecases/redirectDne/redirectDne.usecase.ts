@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
-import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 import { flatten, uniq } from "lodash-es";
@@ -10,6 +9,7 @@ import {RoleEnum} from 'shared';
 import config from "@/config";
 import { getDneClient } from "@/modules/core/services/dneClient/dneClient";
 import logger from "@/services/logger";
+import { inject } from "@/utils/inject";
 
 import { createUserInDB } from "./createUser.dep";
 import { findEtablissement } from "./findEtablissement.dep";
