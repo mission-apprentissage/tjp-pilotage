@@ -13,7 +13,6 @@ const SSOInfo = () => {
 
 
   useEffect(() => {
-    console.log(ssoInfos);
     ssoInfos.forEach((message) => {
       const { title, message: description } = INFO_MESSAGES[message] ?? {};
 
