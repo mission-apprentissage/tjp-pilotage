@@ -1,13 +1,13 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
 
-import { refreshDemandeIntentionMaterializedViews } from "./refreshDemandeIntentionViews.dep";
+import { refreshDemandeMaterializedView } from "./refreshDemandeViews.dep";
 import { refreshFormationMaterializedViews } from "./refreshFormationView.dep";
 
 export const [refreshViews] = inject(
   {
     refreshFormationMaterializedViews,
-    refreshDemandeIntentionMaterializedViews,
+    refreshDemandeMaterializedView,
   },
   (deps) => {
     return async () => {
@@ -17,11 +17,8 @@ export const [refreshViews] = inject(
         console.log("formationApprentissageView refreshed");
       });
 
-      await deps.refreshDemandeIntentionMaterializedViews().then(() => {
+      await deps.refreshDemandeMaterializedView().then(() => {
         console.log("latestDemandeView refreshed");
-        console.log("latestIntentionView refreshed");
-        console.log("demandeIntentionView refreshed");
-        console.log("latestDemandeIntentionView refreshed");
       });
     };
   }

@@ -10,6 +10,7 @@ export const up = async (db: Kysely<unknown>) => {
     .createView("demandeIntentionNonMaterializedView")
     .as(
       getKbdClient()
+        // @ts-ignore
         .selectFrom("intention")
         // @ts-ignore
         .select([

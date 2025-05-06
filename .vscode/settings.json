@@ -54,5 +54,8 @@
   "compareFolders.ignoreWhiteSpaces": true,
   "compareFolders.respectGitIgnore": true,
   "eslint.useFlatConfig": false,
-  "eslint.options": { "overrideConfigFile": ".eslintrc.json" },
+  "eslint.options": {
+    "overrideConfigFile": ".eslintrc.json"
+  },
+  "sonarlint.analysisExcludesStandalone": "node_modules/.next",
 }

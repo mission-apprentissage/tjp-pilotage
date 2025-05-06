@@ -16,7 +16,7 @@ export const submitCorrectionRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler(PermissionEnum["intentions/ecriture"]),
+      preHandler: hasPermissionHandler(PermissionEnum["demande/ecriture"]),
       handler: async (request, response) => {
         const user = request.user!;
         const { correction } = request.body;

@@ -1,0 +1,15 @@
+import { z } from "zod";
+
+export const getDemandeFileDownloadUrlSchema = {
+  params: z.object({
+    numero: z.string(),
+  }),
+  querystring: z.object({
+    filename: z.string(),
+  }),
+  response: {
+    200: z.object({
+      url: z.string(),
+    }),
+  },
+};

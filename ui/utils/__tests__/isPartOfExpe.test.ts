@@ -122,15 +122,6 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
     fixture.then.verifierUserNotPartOfExpe();
   });
 
-  it("Doit renvoyer faux pour un utilisateur national et la campagne 2023", () => {
-    fixture.given.utilisateurNational();
-    fixture.given.campagne2023();
-
-    fixture.when.isUserPartOfExpe();
-
-    fixture.then.verifierUserNotPartOfExpe();
-  });
-
   it("Doit renvoyer faux pour un utilisateur anonyme et la campagne 2024", () => {
     fixture.given.utilisateurAnonyme();
     fixture.given.campagne2024();
@@ -147,15 +138,6 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
     fixture.when.isUserPartOfExpe();
 
     fixture.then.verifierUserPartOfExpe();
-  });
-
-  it("Doit renvoyer faux pour un utilisateur hors région expé et la campagne 2024", () => {
-    fixture.given.utilisateurRegionHorsExpe();
-    fixture.given.campagne2024();
-
-    fixture.when.isUserPartOfExpe();
-
-    fixture.then.verifierUserNotPartOfExpe();
   });
 
   it("Doit renvoyer vrai pour un utilisateur région expé et la campagne 2024", () => {

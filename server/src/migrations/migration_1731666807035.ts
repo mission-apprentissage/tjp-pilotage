@@ -39,6 +39,7 @@ export const up = async (db: Kysely<unknown>) => {
     .createView("demandeIntentionNonMaterializedView")
     .as(
       getKbdClient()
+        // @ts-ignore
         .selectFrom("intention")
         // @ts-ignore
         .select([
@@ -204,6 +205,7 @@ export const up = async (db: Kysely<unknown>) => {
     .createView("demandeIntentionView")
     .as(
       getKbdClient()
+        // @ts-ignore
         .selectFrom("intention")
         // @ts-ignore
         .select([
@@ -547,6 +549,7 @@ export const down = async (db: Kysely<unknown>) => {
     .createView("demandeIntentionNonMaterializedView")
     .as(
       getKbdClient()
+        // @ts-ignore
         .selectFrom("intention")
         // @ts-ignore
         .select([
@@ -708,6 +711,7 @@ export const down = async (db: Kysely<unknown>) => {
     .createView("demandeIntentionView")
     .as(
       getKbdClient()
+        // @ts-ignore
         .selectFrom("intention")
         // @ts-ignore
         .select([

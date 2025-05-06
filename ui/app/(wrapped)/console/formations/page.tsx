@@ -45,64 +45,61 @@ const ColonneFilterSection = chakra(
     handleColonneFilters: (value: (keyof typeof FORMATION_COLUMNS)[]) => void;
     trackEvent: (name: string, params?: Record<string, unknown>) => void;
     canShowQuadrantPosition?: boolean;
-  }) => {
-    return (
-      <Flex justifyContent={"start"} direction="row">
-        <GroupedMultiselect
-          width={"48"}
-          size="md"
-          variant={"newInput"}
-          onChange={(selected) => handleColonneFilters(selected as (keyof typeof FORMATION_COLUMNS)[])}
-          groupedOptions={Object.entries(GROUPED_FORMATION_COLUMNS_OPTIONAL).reduce(
-            (acc, [group, { color, options }]) => {
-              acc[group] = {
-                color,
-                options: Object.entries(options)
-                  .map(([value, label]) => ({
-                    label,
-                    value,
-                    isDisabled: forcedColonnes?.includes(value as keyof typeof FORMATION_COLUMNS),
-                  }))
-                  .filter(({ label }) => {
-                    if (!canShowQuadrantPosition) return label !== FORMATION_COLUMNS.positionQuadrant;
-                    return true;
-                  }),
-              };
-              return acc;
-            },
-            {} as Record<
-              string,
-              {
-                color: string;
-                options: (OptionType & { disabled?: boolean })[];
-              }
-            >
-          )}
-          defaultOptions={Object.entries(FORMATION_COLUMNS_DEFAULT)?.map(([value, label]) => {
-            return {
-              label,
-              value,
+  }) =>
+    <Flex justifyContent={"start"} direction="row">
+      <GroupedMultiselect
+        width={"48"}
+        size="md"
+        variant={"newInput"}
+        onChange={(selected) => handleColonneFilters(selected as (keyof typeof FORMATION_COLUMNS)[])}
+        groupedOptions={Object.entries(GROUPED_FORMATION_COLUMNS_OPTIONAL).reduce(
+          (acc, [group, { color, options }]) => {
+            acc[group] = {
+              color,
+              options: Object.entries(options)
+                .map(([value, label]) => ({
+                  label,
+                  value,
+                  isDisabled: forcedColonnes?.includes(value as keyof typeof FORMATION_COLUMNS),
+                }))
+                .filter(({ label }) => {
+                  if (!canShowQuadrantPosition) return label !== FORMATION_COLUMNS.positionQuadrant;
+                  return true;
+                }),
             };
-          })}
-          value={colonneFilters ?? []}
-          customButton={
-            <MenuButton
-              as={Button}
-              variant={"externalLink"}
-              leftIcon={<Icon icon={"ri:table-line"} />}
-              color="bluefrance.113"
-              onClick={() => trackEvent("formations:affichage-colonnes")}
-            >
-              Modifier les colonnes
-            </MenuButton>
-          }
-        />
-      </Flex>
-    );
-  }
+            return acc;
+          },
+          {} as Record<
+            string,
+            {
+              color: string;
+              options: (OptionType & { disabled?: boolean })[];
+            }
+          >
+        )}
+        defaultOptions={Object.entries(FORMATION_COLUMNS_DEFAULT)?.map(([value, label]) => {
+          return {
+            label,
+            value,
+          };
+        })}
+        value={colonneFilters ?? []}
+        customButton={
+          <MenuButton
+            as={Button}
+            variant={"externalLink"}
+            leftIcon={<Icon icon={"ri:table-line"} />}
+            color="bluefrance.113"
+            onClick={() => trackEvent("formations:affichage-colonnes")}
+          >
+            Modifier les colonnes
+          </MenuButton>
+        }
+      />
+    </Flex>
 );
 
-export default function Formations() {
+const Page = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const router = useRouter();
   const queryParams = useSearchParams();
@@ -422,4 +419,6 @@ export default function Formations() {
       )}
     </>
   );
-}
+};
+
+export default Page;

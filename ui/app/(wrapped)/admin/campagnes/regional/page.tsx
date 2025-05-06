@@ -27,8 +27,7 @@ import {formatBoolean, formatDate} from '@/utils/formatUtils';
 import { GuardPermission } from "@/utils/security/GuardPermission";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
-// eslint-disable-next-line react/display-name, import/no-anonymous-default-export
-export default () => {
+const Page = () => {
 
   const { campagne: currentCampagne } = useCurrentCampagne();
   const { data: campagnesRegion } = client.ref("[GET]/campagnes-region").useQuery({});
@@ -190,3 +189,4 @@ export default () => {
     </GuardPermission>
   );
 };
+export default Page;

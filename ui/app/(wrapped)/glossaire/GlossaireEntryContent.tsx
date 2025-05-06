@@ -5,6 +5,7 @@ import {
   Box,
   Flex,
   Heading,
+  Img,
   Link,
   ListItem,
   SkeletonCircle,
@@ -28,7 +29,8 @@ function isGlossaireId(href?: string): boolean {
   try {
     new URL(href ?? "");
     return false;
-  } catch (_) {
+  } catch (_error) {
+    console.error("Invalid URL", _error);
     return true;
   }
 }
@@ -39,13 +41,13 @@ const chakraRendererTheme: Components = {
   img: ({ src, alt }) => {
     // Assurez-vous que le chemin commence par un slash
     const imagePath = src?.startsWith('/') ? src : `/${src}`;
-    return <img src={imagePath} alt={alt || ''} />;
+    return <Img src={imagePath} alt={alt ?? ''} />;
   },
   blockquote: ({ children }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const greyColor = useToken("colors", "grey.975"); // TODO
+    const greyColor = useToken("colors", "grey.975");
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const blueColor = useToken("colors", "bluefrance.525"); // TODO
+    const blueColor = useToken("colors", "bluefrance.525");
     return (
       <blockquote
         style={{
@@ -63,7 +65,7 @@ const chakraRendererTheme: Components = {
   a: ({ children, href }) => {
     console.log(`Is glossaire id: ${isGlossaireId(href)}`);
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { setSelectedEntry } = useGlossaireContext(); // TODO
+    const { setSelectedEntry } = useGlossaireContext();
     if (isGlossaireId(href)) {
       return (
         <Link
@@ -85,9 +87,9 @@ const chakraRendererTheme: Components = {
   aside: ({ children }) => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const greyColor = useToken("colors", "grey.975"); // TODO
+    const greyColor = useToken("colors", "grey.975");
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const blueColor = useToken("colors", "bluefrance.525"); // TODO
+    const blueColor = useToken("colors", "bluefrance.525");
 
     return (
       <blockquote

@@ -44,7 +44,7 @@
     - name: Lancement des migrations
       shell:
         chdir: /opt/app
-        cmd: "sudo /opt/app/scripts/migrations-up.sh"
+        cmd: "sudo /opt/app/scripts/migrations-latest.sh"
       when:
         - stack_status.stdout != ""
         - '"migrations-status=synced" not in migration_status_output.stdout_lines'

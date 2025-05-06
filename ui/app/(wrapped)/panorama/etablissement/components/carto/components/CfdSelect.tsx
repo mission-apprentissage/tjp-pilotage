@@ -28,7 +28,7 @@ interface Option {
 }
 
 const formatOffreToCfdSearchResult = (offre: AnalyseDetaillee["formations"][number] | undefined): TCfdSearchResult => ({
-  value: offre?.cfd ? offre?.cfd : "",
+  value: offre?.cfd ?? "",
   label: offre?.libelleFormation
     ? `${offre?.libelleFormation} (${offre?.libelleDispositif ?? ""}) (${offre?.cfd})`
     : "",
@@ -39,9 +39,9 @@ const formatOffreToCfdSearchResult = (offre: AnalyseDetaillee["formations"][numb
   is1ereCommune: false,
   is2ndeCommune: false,
   //
-  libelleFormation: offre?.libelleFormation || "",
-  libelleNiveauDiplome: offre?.libelleNiveauDiplome || "",
-  cfd: offre?.cfd || "",
+  libelleFormation: offre?.libelleFormation ?? "",
+  libelleNiveauDiplome: offre?.libelleNiveauDiplome ?? "",
+  cfd: offre?.cfd ?? "",
 });
 
 const formatSearchResultToOption = (cfdSearchResult: TCfdSearchResult): Option => ({
@@ -78,7 +78,6 @@ export const CfdSelect = () => {
 
   const defaultValue: Option = useMemo(
     () => formatSearchResultToOption(formatOffreToCfdSearchResult(analyseDetailleeOffre)),
-    // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [offre, analyseDetailleeOffre]
   );
@@ -87,7 +86,6 @@ export const CfdSelect = () => {
     if (selected) {
       setCfdFilter(selected.value);
     }
-    // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
@@ -96,7 +94,6 @@ export const CfdSelect = () => {
       setCfdFilter(analyseDetailleeOffre.cfd);
       setSelected(formatSearchResultToOption(formatOffreToCfdSearchResult(analyseDetailleeOffre)));
     }
-    // TODO: REFACTO
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [analyseDetailleeOffre]);
 

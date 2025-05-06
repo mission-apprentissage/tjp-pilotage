@@ -7,6 +7,6 @@ export const isMaintenanceQuery = async () =>
     .executeTakeFirst()
     .then((maintenance) => {
       return {
-        isMaintenance: maintenance?.isMaintenance || false,
+        isMaintenance: maintenance?.isMaintenance ?? false,
       };
     });

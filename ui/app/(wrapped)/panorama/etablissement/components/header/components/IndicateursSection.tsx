@@ -14,13 +14,12 @@ import { formatNumberToString } from "@/utils/formatUtils";
 import { DonneesIncompletes } from "./DonneesIncompletes";
 
 const getCompareData = (compareTo?: CompareTo) => {
-  const { value, direction } = compareTo || {};
+  const { value, direction } = compareTo ?? {};
 
   if (!value || !direction) return null;
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [green, red, grey] = useToken("colors", [
-    // TODO useToken
     "success.425",
     "error.425",
     "grey.425",

@@ -1,8 +1,16 @@
 
+import type {FiltersSchema} from 'shared/routes/schemas/get.demandes.count.schema';
+import type {z} from 'zod';
+
+import type {RequestUser} from '@/modules/core/model/User';
 import { getCurrentCampagne } from "@/modules/utils/getCurrentCampagne";
 
-import type { Filters } from "./countDemandes.query";
 import { countDemandesQuery } from "./countDemandes.query";
+
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+}
+
 const countDemandesFactory =
   (
     deps = {
@@ -15,8 +23,8 @@ const countDemandesFactory =
       const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
 
       return await deps.countDemandesQuery({
-        campagne: anneeCampagne,
         ...activeFilters,
+        campagne: anneeCampagne,
       });
     };
 

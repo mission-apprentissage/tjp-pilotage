@@ -35,47 +35,31 @@ const METADATA_MAP = {
     title: "Console des formations par établissement - Orion",
     description: "Console des offres de formation dispensées par les établissements",
   },
-  "/intentions/saisie": {
+  "/demandes/saisie": {
     title: "Demandes - Orion",
     description: "Demandes de transformation de formation",
   },
-  "/intentions/saisie/new": {
+  "/demandes/saisie/new": {
     title: "Nouvelle demande - Orion",
     description: "Nouvelle demande de transformation de formation",
   },
-  "/intentions/saisie/": {
+  "/demandes/saisie/": {
     title: "Modification de la demande - Orion",
     description: "Modification de la demande de transformation de formation",
   },
-  "/intentions/synthese": {
+  "/demandes/synthese": {
     title: "Synthèse de la demande  - Orion",
     description: "Synthèse de la demande de transformation de formation",
   },
-  "/intentions/perdir/saisie": {
-    title: "Demandes - Orion",
-    description: "Demandes de transformation de formation",
-  },
-  "/intentions/perdir/saisie/new": {
-    title: "Nouvelle demande - Orion",
-    description: "Nouvelle demande de transformation de formation",
-  },
-  "/intentions/perdir/saisie/": {
-    title: "Modification de la demande - Orion",
-    description: "Modification de la demande de transformation de formation",
-  },
-  "/intentions/perdir/synthese": {
-    title: "Synthèse de la demande  - Orion",
-    description: "Synthèse de la demande de transformation de formation",
-  },
-  "/intentions/pilotage": {
+  "/demandes/pilotage": {
     title: "Pilotage de la transformation - Orion",
     description: "Pilotage de la transformation de la carte de formations",
   },
-  "/intentions/restitution": {
+  "/demandes/restitution": {
     title: "Restitution des demandes de transformation - Orion",
     description: "Restitution des demandes de transformation de formation",
   },
-  "/intentions/corrections": {
+  "/demandes/corrections": {
     title: "Restitution des corrections de demandes de transformation - Orion",
     description: "Restitution des corrections de demandes de transformation de formation",
   },
@@ -159,7 +143,7 @@ const getPathnameFromMetadataState = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   state: any
 ): string | undefined => {
-  const symbols = Object.getOwnPropertySymbols(state || {});
+  const symbols = Object.getOwnPropertySymbols(state ?? {});
 
   if (symbols.length === 0) {
     return undefined;
@@ -194,29 +178,17 @@ const extractBasePathname = (pathname: string) => {
   if (pathname.includes("/panorama/lien-metier-formation/metier")) {
     return "/panorama/lien-metier-formation/metier";
   }
-  if (pathname.includes("/intentions/perdir/synthese")) {
-    return "/intentions/perdir/synthese";
+  if (pathname.includes("/demandes/synthese")) {
+    return "/demandes/synthese";
   }
-  if (pathname.includes("/intentions/synthese")) {
-    return "/intentions/synthese";
+  if (pathname.includes("/demandes/saisie/new")) {
+    return "/demandes/saisie/new";
   }
-  if (pathname.includes("/intentions/saisie/new")) {
-    return "/intentions/saisie/new";
+  if (pathname.includes("/demandes/saisie/")) {
+    return "/demandes/saisie/";
   }
-  if (pathname.includes("/intentions/perdir/saisie/new")) {
-    return "/intentions/perdir/saisie/new";
-  }
-  if (pathname.includes("/intentions/saisie/")) {
-    return "/intentions/saisie/";
-  }
-  if (pathname.includes("/intentions/perdir/saisie/")) {
-    return "/intentions/perdir/saisie/";
-  }
-  if (pathname.includes("/intentions/saisie")) {
-    return "/intentions/saisie";
-  }
-  if (pathname.includes("/intentions/perdir/saisie")) {
-    return "/intentions/perdir/saisie";
+  if (pathname.includes("/demandes/saisie")) {
+    return "/demandes/saisie";
   }
   if (pathname.includes("/panorama/domaine-de-formation/")) {
     return "/panorama/domaine-de-formation";

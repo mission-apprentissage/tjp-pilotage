@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import {OrderZodType} from '../../enum/orderEnum';
 import { RoleZodType } from "../../enum/roleEnum";
 import {  UserFonctionZodType } from "../../enum/userFonctionEnum";
 
@@ -22,7 +23,7 @@ export const getUsersSchema = {
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
     search: z.string().optional(),
-    order: z.enum(["asc", "desc"]).optional(),
+    order: OrderZodType.optional(),
     orderBy: UserSchema.keyof().optional(),
   }),
   response: {

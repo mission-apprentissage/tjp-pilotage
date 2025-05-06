@@ -57,7 +57,7 @@ describe("ui > components > security > GuardPermission", () => {
   it("Doit bloquer les utilisateurs n'ayant pas les droits et les rediriger", async () => {
     render(
       <AuthContext.Provider value={contextValue}>
-        <GuardPermission permission={PermissionEnum["pilotage-intentions/lecture"]}>
+        <GuardPermission permission={PermissionEnum["pilotage/lecture"]}>
           <p>has_permission</p>
         </GuardPermission>
       </AuthContext.Provider>

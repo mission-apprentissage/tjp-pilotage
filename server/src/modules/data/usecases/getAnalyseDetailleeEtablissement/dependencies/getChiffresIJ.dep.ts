@@ -1,5 +1,6 @@
 import { expressionBuilder, sql } from "kysely";
 import { CURRENT_IJ_MILLESIME } from "shared";
+import type {VoieType} from 'shared/enum/voieEnum';
 
 import type { DB } from "@/db/db";
 import { hasContinuum } from "@/modules/data/utils/hasContinuum";
@@ -78,6 +79,7 @@ export const getChiffresIj = async ({
       "effectifSortie",
       "nbSortants",
     ])
+    .$narrowType<{ voie: VoieType }>()
     .execute()
     .then(cleanNull);
 };

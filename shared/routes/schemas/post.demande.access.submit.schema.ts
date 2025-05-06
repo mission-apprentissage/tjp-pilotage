@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-export const submitIntentionAccessLogSchema = {
+export const submitDemandeAccessLogSchema = {
   body: z.object({
-    intention: z.object({
+    demande: z.object({
       numero: z.string(),
     }),
   }),

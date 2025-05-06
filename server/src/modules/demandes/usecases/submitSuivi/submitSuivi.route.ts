@@ -16,13 +16,13 @@ export const submitSuiviRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler(PermissionEnum["intentions/lecture"]),
+      preHandler: hasPermissionHandler(PermissionEnum["demande/lecture"]),
       handler: async (request, response) => {
-        const { intentionNumero } = request.body;
+        const { demandeNumero } = request.body;
 
         const result = await submitSuiviUsecase({
           user: request.user!,
-          intentionNumero,
+          demandeNumero,
         });
         response.status(200).send(result);
       },

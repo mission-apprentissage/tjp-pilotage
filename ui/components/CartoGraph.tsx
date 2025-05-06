@@ -6,7 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react"
 import type { ScopeZone } from "shared";
 import { ScopeEnum } from "shared";
 
-import type { SelectedScope } from "@/app/(wrapped)/intentions/pilotage/types";
+import type { SelectedScope } from "@/app/(wrapped)/demandes/pilotage/types";
 import CarteFranceAcademies from "@/public/fond_carte_academies.json";
 import CarteFranceDepartements from "@/public/fond_carte_departements.json";
 import CarteFranceRegions from "@/public/fond_carte_regions.json";
@@ -65,7 +65,7 @@ interface CartoGraphProps {
   graphData?: {
     name?: string;
     parentName?: string;
-    value?: number | undefined;
+    value?: number;
     code?: string;
   }[];
   scope?: ScopeZone;
