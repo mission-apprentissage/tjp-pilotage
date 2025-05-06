@@ -199,8 +199,6 @@ describe("[GET]/demandes/count", () => {
             query: filtres,
             cookies: user ? generateAuthCookie(user) : undefined,
           });
-          console.log(filtres);
-          console.log(response);
           responseCode = response.statusCode;
           responseBody = response.json();
         },
