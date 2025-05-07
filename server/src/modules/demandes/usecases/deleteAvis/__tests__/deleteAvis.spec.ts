@@ -1,0 +1,191 @@
+import { usePg } from "@tests/utils/pg.test.utils";
+import type { Avis } from "@tests/utils/schema/avis.spec.utils";
+import { buildAvis, clearAvis } from "@tests/utils/schema/avis.spec.utils";
+import type { Demande } from "@tests/utils/schema/demande.spec.utils";
+import { createDemandeBuilder } from "@tests/utils/schema/demande.spec.utils";
+import { createUserBuilder, generateAuthCookie } from "@tests/utils/schema/users.spec.utils";
+import {RoleEnum} from 'shared/enum/roleEnum';
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+
+import type { RequestUser } from "@/modules/core/model/User";
+import { findOneAvisQuery } from "@/modules/demandes/usecases/deleteAvis/deps/findOneAvis.query";
+import { generateId } from "@/modules/utils/generateId";
+import type { Server } from "@/server/server";
+import createServer from "@/server/server.js";
+
+usePg();
+
+describe("[DELETE]/demande/avis/:id", () => {
+  let app: Server;
+  let fixture: ReturnType<typeof fixtureBuilder>;
+
+  beforeAll(async () => {
+    app = await createServer();
+    await app.ready();
+
+    return async () => app.close();
+  }, 15_000);
+
+  beforeEach(() => {
+    fixture = fixtureBuilder(app);
+  });
+
+  afterEach(async () => {
+    await clearAvis();
+  });
+
+  describe("errors", () => {
+    it("doit retourner une erreur 401 si l'utilisateur n'est pas authentifié", async () => {
+      fixture.given.utilisateurAnonyme();
+      await fixture.given.avisExistant();
+
+      await fixture.when.supprimerAvis();
+
+      fixture.then.expectResponseToBeUnauthorized();
+    });
+
+    it("doit retourner une erreur 403 si l'utilisateur n'a pas les permissions nécessaires", async () => {
+      await fixture.given.utilisateurNonAuthorise();
+      await fixture.given.avisExistant();
+
+      await fixture.when.supprimerAvis();
+
+      fixture.then.expectResponseToBeForbidden();
+    });
+
+    it("doit retourner une erreur 404 si l'avis n'existe pas", async () => {
+      await fixture.given.utilisateurPiloteRegion();
+      fixture.given.avisInexistant();
+
+      await fixture.when.supprimerAvis();
+
+      fixture.then.expectResponseToBeNotFound();
+    });
+
+    it("doit retourner une erreur 404 si la demande liée à l'avis n'existe pas", async () => {
+      await fixture.given.utilisateurPiloteRegion();
+      await fixture.given.demandeInexistante();
+      await fixture.given.avisExistant();
+
+      await fixture.when.supprimerAvis();
+
+      fixture.then.expectResponseToBeNotFound();
+    });
+
+    it("doit retourner une erreur 403 si l'utilisateur n'est pas de la même région que la demande", async () => {
+      await fixture.given.utilisateurPiloteRegion({ codeRegion: "11" });
+      await fixture.given.demandeExistante({ codeRegion: "76" });
+      await fixture.given.avisExistant();
+
+      await fixture.when.supprimerAvis();
+
+      fixture.then.expectResponseToBeForbidden();
+    });
+  });
+
+  describe("success", () => {
+    it("doit pouvoir supprimer un avis de sa région", async () => {
+      await fixture.given.utilisateurPiloteRegion({codeRegion: "76"});
+      await fixture.given.demandeExistante();
+      await fixture.given.avisExistant();
+
+      await fixture.when.supprimerAvis();
+
+      fixture.then.expectResponseToBeOK();
+      await fixture.then.expectAvisToBeDeleted();
+    });
+
+    it("doit pouvoir supprimer n'importe quel avis", async () => {
+      await fixture.given.utilisateurNational();
+      await fixture.given.demandeExistante();
+      await fixture.given.avisExistant();
+
+      await fixture.when.supprimerAvis();
+
+      fixture.then.expectResponseToBeOK();
+      await fixture.then.expectAvisToBeDeleted();
+    });
+  });
+
+  const fixtureBuilder = (app: Server) => {
+    let user: RequestUser | undefined = undefined;
+    let avis: Avis | undefined = undefined;
+    let demande: Demande | undefined = undefined;
+    let responseCode: number;
+
+    return {
+      given: {
+        utilisateurAnonyme: () => {
+          user = undefined;
+        },
+        utilisateurNonAuthorise: async () => {
+          user = await createUserBuilder().withRole(RoleEnum["invite"]).create();
+        },
+        utilisateurPiloteRegion: async (data: Partial<RequestUser> = {}) => {
+          user = await createUserBuilder(data)
+            .withRole(RoleEnum["pilote_region"])
+            .create();
+        },
+        utilisateurNational: async () => {
+          user = await createUserBuilder().withRole(RoleEnum["admin"]).create();
+        },
+        demandeExistante: async (data: Partial<Demande> = {}) => {
+          if (user) {
+            demande = (
+              await (
+                await createDemandeBuilder(user, data).withCurrentCampagneId()
+              ).injectInDB()
+            ).build();
+          }
+        },
+        demandeInexistante: async () => {
+          demande = undefined;
+        },
+        avisExistant: async (input: Partial<Avis> = {}) => {
+          if (user && demande) {
+            avis = (
+              await buildAvis(user, {
+                ...input,
+                demandeNumero: demande.numero,
+              }).injectInDB()
+            ).build();
+          }
+        },
+        avisInexistant: () => {
+          avis = undefined;
+        },
+      },
+      when: {
+        supprimerAvis: async () => {
+          const response = await app.inject({
+            method: "DELETE",
+            url: `/api/demande/avis/${avis?.id ?? generateId()}`,
+            cookies: user ? generateAuthCookie(user) : undefined,
+          });
+          responseCode = response.statusCode;
+        },
+      },
+      then: {
+        expectResponseToBeUnauthorized: () => {
+          expect(responseCode).toBe(401);
+        },
+        expectResponseToBeForbidden: () => {
+          expect(responseCode).toBe(403);
+        },
+        expectResponseToBeNotFound: () => {
+          expect(responseCode).toBe(404);
+        },
+        expectResponseToBeOK: () => {
+          expect(responseCode).toBe(200);
+        },
+        expectAvisToBeDeleted: async () => {
+          if (!avis?.id) {
+            throw Error("Un avis doit être créé avant de pouvoir le supprimer");
+          }
+          const deletedAvis = await findOneAvisQuery(avis.id);
+          expect(deletedAvis).toBeUndefined();
+        },
+      },
+    };
+  };
+});

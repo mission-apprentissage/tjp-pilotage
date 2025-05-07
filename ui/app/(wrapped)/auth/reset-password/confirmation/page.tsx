@@ -2,8 +2,7 @@
 import { Button, Flex, Heading, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default () => {
+const Page = () => {
   return (
     <Flex mt="12" mx="auto" direction="column" align="center">
       <Heading fontSize="lg">Votre mot de passe a bien été modifié !</Heading>
@@ -14,3 +13,5 @@ export default () => {
     </Flex>
   );
 };
+
+export default Page;

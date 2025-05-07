@@ -18,13 +18,13 @@ describe("Core Service: Local file manager", () => {
   afterEach(async () => {
     vi.restoreAllMocks();
 
-    await fileFixture.thenDeleteFile(fileFixture.givenAnIntentionId(), "test.txt");
-    await fileFixture.thenDeleteFile(fileFixture.givenAnIntentionId(), "test-1.txt");
+    await fileFixture.thenDeleteFile(fileFixture.givenADemandeId(), "test.txt");
+    await fileFixture.thenDeleteFile(fileFixture.givenADemandeId(), "test-1.txt");
   });
 
   it("should list that no files are linked to the demande", async () => {
     // given
-    const id = fileFixture.givenAnIntentionId();
+    const id = fileFixture.givenADemandeId();
 
     // when
     await fileFixture.whenListingFiles(id);
@@ -35,7 +35,7 @@ describe("Core Service: Local file manager", () => {
 
   it("should list that one file is linked to the demande", async () => {
     // given
-    const id = fileFixture.givenAnIntentionId();
+    const id = fileFixture.givenADemandeId();
     fileFixture.givenAFileIsExistingInDirectory(id, "test.txt");
 
     // when
@@ -51,14 +51,14 @@ const fileManagerFixture = (fileManager: FileManager, filePathManager: FilePathM
   let files: FileType[] = [];
 
   return {
-    givenAnIntentionId: () => {
+    givenADemandeId: () => {
       return `INTENTION_TEST`;
     },
     givenASimpleFileAsBuffer: () => {
       return Buffer.from("i'm the content of a file", "utf-8");
     },
     givenAFileIsExistingInDirectory: (id: string, filename: string) => {
-      const filepath = filePathManager.getIntentionFilePath(id, filename);
+      const filepath = filePathManager.getDemandeFilePath(id, filename);
       const folderPath = path.dirname(filepath);
 
       if (!fs.existsSync(folderPath)) {
@@ -71,17 +71,21 @@ const fileManagerFixture = (fileManager: FileManager, filePathManager: FilePathM
       });
     },
     whenUploadingAFileAsBuffer: async (demandeId: string, filename: string, file: Buffer) => {
-      const flname = filePathManager.getIntentionFilePath(demandeId, filename);
+      const flname = filePathManager.getDemandeFilePath(demandeId, filename);
 
       await fileManager.uploadFile(flname, file);
     },
     whenListingFiles: async (id: string) => {
-      const listedFiles = await fileManager.listFiles(filePathManager.getIntentionFilePath(id));
+      const listedFiles = await fileManager.listFiles({
+        filepath: filePathManager.getDemandeFilePath(id)
+      });
 
       files = listedFiles;
     },
     thenDeleteFile: async (id: string, filename: string) => {
-      await fileManager.deleteFile(filePathManager.getIntentionFilePath(id, filename));
+      await fileManager.deleteFile({
+        filepath: filePathManager.getDemandeFilePath(id, filename)
+      });
     },
     thenExpectFilesToBeEmpty() {
       expect(files).toEqual([]);

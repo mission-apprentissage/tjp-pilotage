@@ -27,6 +27,7 @@ export function createUserBuilder(options: Partial<InsertableUser> = {}) {
     withEmail: (email: string) => createUserBuilder({ ...defaultUser, email }),
     withRole: (role: Role) => createUserBuilder({ ...defaultUser, role }),
     withUais: (uais: string[]) => createUserBuilder({ ...defaultUser, uais }),
+    withCodeRegion: (codeRegion: string) => createUserBuilder({ ...defaultUser, codeRegion }),
     create: async () => {
       const user = await getKbdClient().insertInto("user").values(defaultUser).returningAll().executeTakeFirst();
 

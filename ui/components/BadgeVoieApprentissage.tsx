@@ -1,12 +1,12 @@
 import { Badge } from "@chakra-ui/react";
-import type { Voie } from "shared";
+import type { VoieType } from "shared";
 
 export const BadgeVoieApprentissage = ({
   voie,
   labelSize = "short",
   size = "xs",
 }: {
-  voie?: Voie;
+  voie?: VoieType;
   labelSize?: "short" | "long";
   size?: "xs" | "sm" | "md";
 }) => {

@@ -13,13 +13,3 @@ export const isDemandeCampagneEnCours = (eb: ExpressionBuilder<DB, "demande">, a
     eb.selectFrom("campagne").select("id").where("campagne.statut", "=", CampagneStatutEnum["en cours"])
   );
 };
-
-export const isIntentionCampagneEnCours = (eb: ExpressionBuilder<DB, "intention">, alias?: string) => {
-  const tableName = alias ?? "intention";
-
-  return eb(
-    sql<string>`${sql.table(tableName)}."campagneId"`,
-    "in",
-    eb.selectFrom("campagne").select("id").where("campagne.statut", "=", CampagneStatutEnum["en cours"])
-  );
-};

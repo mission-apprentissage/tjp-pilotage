@@ -116,7 +116,7 @@ export const EditCampagne = ({
                   z
                     .string()
                     .regex(/^\d{4}$/)
-                    .safeParse(annee).success || "Veuillez saisir une année valide",
+                    .safeParse(annee).success ?? "Veuillez saisir une année valide",
               })}
             />
             {!!errors.annee && <FormErrorMessage>{errors.annee.message}</FormErrorMessage>}

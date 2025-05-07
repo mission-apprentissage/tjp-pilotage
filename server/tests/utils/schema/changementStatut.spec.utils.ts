@@ -14,7 +14,7 @@ export type ChangementStatut = Insertable<DB["changementStatut"]>;
 export function buildChangementStatut(user?: RequestUser, defaultChangementStatut: Partial<ChangementStatut> = {}) {
   const changementStatut: ChangementStatut = {
     id: defaultChangementStatut.id ?? generateId(),
-    intentionNumero: defaultChangementStatut.intentionNumero ?? "",
+    demandeNumero: defaultChangementStatut.demandeNumero ?? "",
     statut: defaultChangementStatut.statut ?? DemandeStatutEnum.brouillon,
     statutPrecedent: defaultChangementStatut.statutPrecedent ?? DemandeStatutEnum.brouillon,
     updatedAt: defaultChangementStatut.updatedAt ?? new Date(),
@@ -23,7 +23,7 @@ export function buildChangementStatut(user?: RequestUser, defaultChangementStatu
 
   return {
     withNumero: (numero: string) =>
-      buildChangementStatut(user, { ...changementStatut, intentionNumero: numero }),
+      buildChangementStatut(user, { ...changementStatut, demandeNumero: numero }),
     withStatut: (statut: DemandeStatutType) =>
       buildChangementStatut(user, { ...changementStatut, statut }),
     injectInDB: async () => {

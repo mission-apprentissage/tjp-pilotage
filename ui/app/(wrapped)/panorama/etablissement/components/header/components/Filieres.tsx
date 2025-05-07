@@ -31,8 +31,8 @@ export const Filieres = ({ nsfs = [] }: { nsfs?: Nsfs }) => {
       <Text fontSize={{ base: "14px" }} fontWeight={"bold"}>
         DOMAINES DE FORMATION PROPOSÉS
       </Text>
-      {(nsfs || []).length === 0 && <Text my={"16px"}>Information indisponible</Text>}
-      {(nsfs || []).length > 0 && (
+      {(nsfs ?? []).length === 0 && <Text my={"16px"}>Information indisponible</Text>}
+      {(nsfs ?? []).length > 0 && (
         <SimpleGrid columns={2} spacing={"16px"} color={"grey.50"} my={"16px"}>
           {splited?.map((filiere) => (
             <Flex key={filiere.codeNsf} direction={"row"}>

@@ -70,7 +70,7 @@ export const [importConstatRentree] = inject(
         { parallel: 20 }
       );
 
-      process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
+      process.stdout.write(errorCount > 0 ? `(avec ${errorCount} erreurs)\n\n` : "\n\n");
     }
   }
 );

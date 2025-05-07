@@ -16,7 +16,7 @@ export const getCorrectionsRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler(PermissionEnum["intentions/lecture"]),
+      preHandler: hasPermissionHandler(PermissionEnum["demande/lecture"]),
       handler: async (request, response) => {
         const user = request.user!;
         const { search, ...filters } = request.query;

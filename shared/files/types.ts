@@ -15,8 +15,8 @@ export const fileTypeSchema = z.object({
 export interface FileType extends z.infer<typeof fileTypeSchema> {}
 
 export interface FileManager {
-  deleteFile: (filepath: string) => Promise<void>;
-  getDownloadUrl: (filepath: string) => Promise<string>;
-  listFiles: (filepath: string) => Promise<FileType[]>;
+  deleteFile: ({filepath, legacyFilepath}:{filepath: string, legacyFilepath?: string}) => Promise<void>;
+  getDownloadUrl: ({filepath, legacyFilepath}:{filepath: string, legacyFilepath?: string}) => Promise<string>;
+  listFiles: ({filepath, legacyFilepath}:{filepath: string, legacyFilepath?: string}) => Promise<FileType[]>;
   uploadFile: (filepath: string, file: Buffer) => Promise<void>;
 }

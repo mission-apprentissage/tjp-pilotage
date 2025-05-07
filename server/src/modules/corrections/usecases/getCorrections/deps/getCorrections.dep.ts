@@ -49,7 +49,7 @@ export const getCorrectionsQuery = async ({
 
   const corrections = await getKbdClient()
     .selectFrom("correction")
-    .innerJoin("latestDemandeView as demande", "demande.numero", "correction.intentionNumero")
+    .innerJoin("latestDemandeView as demande", "demande.numero", "correction.demandeNumero")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
@@ -102,19 +102,19 @@ export const getCorrectionsQuery = async ({
           ' ',
           ${eb.ref("user.lastname")}
         )`.as("userName"),
-      "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
+      "niveauDiplome.codeNiveauDiplome",
       "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
       "formationView.libelleFormation",
       "nsf.libelleNsf as libelleNsf",
       "dataEtablissement.libelleEtablissement",
-      "dataEtablissement.commune as commune",
+      "dataEtablissement.commune",
       "dataEtablissement.secteur",
       "dispositif.libelleDispositif",
-      "region.libelleRegion as libelleRegion",
+      "region.libelleRegion",
       "departement.libelleDepartement",
-      "departement.codeDepartement as codeDepartement",
+      "departement.codeDepartement",
       "academie.libelleAcademie",
-      "academie.codeAcademie as codeAcademie",
+      "academie.codeAcademie",
       "formationView.typeFamille",
       selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertionRegional"),
       selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteRegional"),
@@ -148,7 +148,7 @@ export const getCorrectionsQuery = async ({
         .as("ecartApprentissage"),
       "correction.capaciteScolaire as capaciteScolaireCorrigee",
       "correction.capaciteApprentissage as capaciteApprentissageCorrigee",
-      "correction.intentionNumero",
+      "correction.demandeNumero",
       "correction.raison as raisonCorrection",
       "correction.motif as motifCorrection",
       "correction.autreMotif as autreMotifCorrection",
@@ -327,6 +327,6 @@ export const getCorrectionsQuery = async ({
       formationSpecifique: formatFormationSpecifique(correction),
     })),
     campagnes,
-    count: corrections[0]?.count || 0,
+    count: corrections[0]?.count ?? 0,
   };
 };

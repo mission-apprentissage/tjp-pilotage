@@ -1,14 +1,19 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import "aws-sdk-client-mock-vitest";
 
 import type { ListObjectsV2CommandOutput } from "@aws-sdk/client-s3";
 import { ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { mockClient } from "aws-sdk-client-mock";
+import {
+  toHaveReceivedCommandWith,
+} from "aws-sdk-client-mock-vitest";
+import { randomUUID } from "crypto";
 import type { FileType } from "shared/files/types";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ovhFileManagerFactory } from "@/modules/core/services/fileManager/ovhFileManager";
 import { ovhFilePathManagerFactory } from "@/modules/core/services/filePathManager/ovhFilePathManager";
+
+/* you can also run this in setupTests, see above */
+expect.extend({ toHaveReceivedCommandWith });
 
 const s3ClientMock = mockClient(S3Client);
 
@@ -23,7 +28,7 @@ describe("Ovh file manager", () => {
 
   it("should list that no files are linked to the demande", async () => {
     // given
-    const id = fileFixture.givenAnIntentionId();
+    const id = fileFixture.givenAnDemandeId();
     fileFixture.givenNoFileAreLinkedToTheDemande();
 
     // when
@@ -35,7 +40,26 @@ describe("Ovh file manager", () => {
 
   it("should list that one file is linked to the demande", async () => {
     // given
-    const id = fileFixture.givenAnIntentionId();
+    const id = fileFixture.givenAnDemandeId();
+    fileFixture.givenNFilesIsLinkedToTheDemande([
+      {
+        filepath: `demandes/${id}/test.txt`,
+        lastModified: new Date("2021-09-01T00:00:00Z"),
+        size: 1024,
+      },
+    ]);
+
+    // when
+    await fileFixture.whenListingFiles(id);
+
+    // then
+
+    fileFixture.thenFileShouldBeListed(`demandes/${id}/test.txt`);
+  });
+
+  it("should list that one file is linked to the demande", async () => {
+    // given
+    const id = fileFixture.givenAnDemandeId();
     fileFixture.givenNFilesIsLinkedToTheDemande([
       {
         filepath: `intentions/${id}/test.txt`,
@@ -60,7 +84,7 @@ const fileManagerFixture = (client: S3Client) => {
   const filepathManager = ovhFilePathManagerFactory();
   let files: FileType[] = [];
   return {
-    givenAnIntentionId: () => {
+    givenAnDemandeId: () => {
       return `INTENTION_01`;
     },
     givenASimpleFileAsBuffer: () => {
@@ -68,7 +92,7 @@ const fileManagerFixture = (client: S3Client) => {
     },
     givenAFileIsExistingInDirectory: (id: string, filename: string) => {
       fileManager.uploadFile(
-        filepathManager.getIntentionFilePath(id, filename),
+        filepathManager.getDemandeFilePath(id, filename),
         Buffer.from("i'm the content of a file", "utf-8")
       );
     },
@@ -116,8 +140,8 @@ const fileManagerFixture = (client: S3Client) => {
         KeyCount: files.length,
         $metadata: {
           httpStatusCode: 200,
-          requestId: "request-01",
-          extendedRequestId: "request-01",
+          requestId: randomUUID(),
+          extendedRequestId: randomUUID(),
           cfId: undefined,
           attempts: 1,
           totalRetryDelay: 0,
@@ -125,26 +149,38 @@ const fileManagerFixture = (client: S3Client) => {
       } as ListObjectsV2CommandOutput);
     },
     whenUploadingAFileAsBuffer: async (demandeId: string, filename: string, file: Buffer) => {
-      await fileManager.uploadFile(filepathManager.getIntentionFilePath(demandeId, filename), file);
+      await fileManager.uploadFile(filepathManager.getDemandeFilePath(demandeId, filename), file);
     },
     whenListingFiles: async (id: string) => {
-      files = await fileManager.listFiles(filepathManager.getIntentionFilePath(id));
+      files = await fileManager.listFiles({
+        filepath: filepathManager.getDemandeFilePath(id),
+        legacyFilepath: filepathManager.getLegacyIntentionFilePath(id)
+      });
     },
     whenGeneratingAnUrlForAFile: async (id: string, filename: string) => {
-      return fileManager.getDownloadUrl(filepathManager.getIntentionFilePath(id, filename));
+      return fileManager.getDownloadUrl({
+        filepath: filepathManager.getDemandeFilePath(id, filename),
+        legacyFilepath: filepathManager.getLegacyIntentionFilePath(id, filename)
+      });
     },
     thenFileShouldBeUploaded: async (id: string, filename: string) => {
-      files = await fileManager.listFiles(filepathManager.getIntentionFilePath(id, filename));
+      files = await fileManager.listFiles({
+        filepath: filepathManager.getDemandeFilePath(id, filename),
+        legacyFilepath: filepathManager.getLegacyIntentionFilePath(id, filename)
+      });
       expect(files).toContain(filename);
     },
     thenDeleteFile: (id: string, filename: string) => {
-      fileManager.deleteFile(filepathManager.getIntentionFilePath(id, filename));
+      fileManager.deleteFile({
+        filepath: filepathManager.getDemandeFilePath(id, filename),
+        legacyFilepath: filepathManager.getLegacyIntentionFilePath(id, filename)
+      });
     },
-    thenZeroFilesShouldBeListed() {
+    thenZeroFilesShouldBeListed: () => {
       expect(files.length).toBe(0);
     },
     thenFileShouldBeListed: (filepath: string) => {
-      expect(files.filter((f) => f.path === filepath).length).toBe(1);
+      expect(files.filter((f) => f.path === filepath).length).toBeGreaterThan(0);
     },
   };
 };

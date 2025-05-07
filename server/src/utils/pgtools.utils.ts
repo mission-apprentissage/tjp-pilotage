@@ -30,7 +30,7 @@ class PgtoolsError extends Error {
     super();
     this.cause = error;
     // @ts-expect-error
-    const { name, message } = knownErrors[error.code] || {
+    const { name, message } = knownErrors[error.code] ?? {
       name: "PgtoolsError",
       message: error.message,
     };
@@ -85,7 +85,7 @@ function createFunction(action: "CREATE" | "DROP") {
   ) {
     if (!dbName) throw new TypeError("dbName not set");
 
-    const pgClient = openedClient || new Client({ ...clientConfig, ...opts });
+    const pgClient = openedClient ?? new Client({ ...clientConfig, ...opts });
 
     try {
       if (!openedClient) await pgClient.connect();

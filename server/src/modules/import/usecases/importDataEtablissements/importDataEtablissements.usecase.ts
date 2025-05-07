@@ -51,10 +51,10 @@ export const [importDataEtablissements] = inject(
       },
       { parallel: 20 }
     );
-    process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
+    process.stdout.write(errorCount > 0 ? `(avec ${errorCount} erreurs)\n\n` : "\n\n");
   }
 );
-// @ts-expect-error TODO
+// @ts-expect-error
 const formatCodeDepartement = (codeInsee: string | undefined) => {
   if (!codeInsee) return;
   if (codeInsee.length === 3) return codeInsee as `${number}${number}${string}`;

@@ -1,5 +1,6 @@
 import { notFound } from "@hapi/boom";
 import fs from "fs/promises";
+// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import matter from "gray-matter";
 import path from "path";
 import type { GlossaireEntry } from "shared/routes/schemas/get.glossaire.id.schema";
@@ -15,12 +16,12 @@ export async function getGlossaireEntryFromMarkdown(slug: string): Promise<Gloss
     const { data, content } = matter(fileContent);
 
     return {
-      title: data.title || "",
-      type: data["Type d'indicateur"] || "",
-      createdBy: data["Created by"] || "",
-      status: data.statut || "",
+      title: data.title ?? "",
+      type: data["Type d'indicateur"] ?? "",
+      createdBy: data["Created by"] ?? "",
+      status: data.statut ?? "",
       content,
-      icon: data.icon || "",
+      icon: data.icon ?? "",
       slug,
     };
   } catch (error) {

@@ -1,0 +1,30 @@
+import type { Filters, Repartition } from "@/modules/data/usecases/getPilotage/getPilotage.usecase";
+
+import { getDenominateurQuery } from "./getDenominateurQuery.dep";
+import { getNumerateurQuery } from "./getNumerateurQuery.dep";
+
+export const getDomaines = async ({ filters }: { filters: Filters }): Promise<Repartition> => {
+  const [numerateur, denominateur] = await Promise.all([
+    getNumerateurQuery({
+      filters: {
+        ...filters,
+        codeNsf: undefined,
+      },
+    }),
+    getDenominateurQuery({
+      filters: {
+        ...filters,
+        codeNsf: undefined,
+      },
+    }),
+  ]);
+
+  return {
+    numerateur,
+    denominateur,
+    groupBy: {
+      code: "codeNsf",
+      libelle: "libelleNsf",
+    },
+  };
+};
