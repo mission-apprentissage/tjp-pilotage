@@ -2,12 +2,13 @@ import type { BoxProps } from "@chakra-ui/react";
 import { Box, Container, Divider, Flex, forwardRef, Heading } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
 import type {
   FormationListItem,
-  FormationsCounter,
   FormationTab,
 } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
+import { Loading } from "@/components/Loading";
 
 import { ListeFormations } from "./ListeFormations";
 import { TabFilters } from "./TabFilters";
@@ -91,19 +92,16 @@ const useFormationSection = (
   };
 };
 
-export const FormationSection = ({
-  formations,
-  counter,
-  formationsByLibelleNiveauDiplome,
-}: {
-  formations: FormationListItem[];
-  counter: FormationsCounter;
-  formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>;
-}) => {
-  const { currentFilters, handleCfdChange, tabContentRef, tabContentHeight } = useFormationSection(
+export const FormationSection = () => {
+  const { formations, formationsByLibelleNiveauDiplome, isLoading } = useDomaineDeFormation();
+  const { currentFilters, tabContentRef, tabContentHeight } = useFormationSection(
     formations,
     formationsByLibelleNiveauDiplome
   );
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Container maxW={"container.xl"} as="section" id="formations" my={"32px"}>
@@ -112,13 +110,10 @@ export const FormationSection = ({
           Offre de formation dans ce domaine
         </Heading>
         <Divider width="48px" />
-        <TabFilters counter={counter} />
+        <TabFilters />
         <Flex direction="row" gap={8}>
           <ListeFormations
-            selectCfd={handleCfdChange}
-            selectedCfd={currentFilters.cfd}
             h={tabContentHeight}
-            formationsByLibelleNiveauDiplome={formationsByLibelleNiveauDiplome}
           />
           <TabContent tab={currentFilters.formationTab} ref={tabContentRef} />
         </Flex>

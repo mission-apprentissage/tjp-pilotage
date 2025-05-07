@@ -1,11 +1,13 @@
 import { Flex, Select } from "@chakra-ui/react";
 
+import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
-import type { FormationsCounter, Presence, Voie } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
+import type { Presence, Voie } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 
 import { FormationTabs } from "./FormationTabs";
 
-export const TabFilters = ({ counter }: { counter: FormationsCounter }) => {
+export const TabFilters = () => {
+  const { counter } = useDomaineDeFormation();
   const { handlePresenceChange, handleVoieChange, currentFilters, handleTabFormationChange } = useFormationContext();
 
   return (
