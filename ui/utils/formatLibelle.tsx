@@ -119,10 +119,13 @@ export const formatDepartementLibelleWithCodeDepartement = ({
   return `${libelleDepartement} (${formatCodeDepartement(codeDepartement)})`;
 };
 
-export const formatLibelleFormation = (etablissement: { libellesDispositifs: string[]; libelleFormation: string }) => {
+export const formatLibelleFormation = (
+  { libellesDispositifs, libelleFormation }:
+  { libellesDispositifs: string[]; libelleFormation: string }
+) => {
   const dispositifs =
-    formatArray(etablissement.libellesDispositifs) !== "" ? `(${formatArray(etablissement.libellesDispositifs)})` : "";
-  return `${etablissement.libelleFormation} ${dispositifs}`;
+    formatArray(libellesDispositifs) !== "" ? `(${formatArray(libellesDispositifs)})` : "";
+  return `${libelleFormation} ${dispositifs}`;
 };
 
 /**
