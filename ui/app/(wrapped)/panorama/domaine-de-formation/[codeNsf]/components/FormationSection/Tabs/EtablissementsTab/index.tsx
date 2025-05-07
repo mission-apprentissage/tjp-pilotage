@@ -6,6 +6,7 @@ import type { Etablissement } from "shared/routes/schemas/get.formation.cfd.map.
 import { client } from "@/api.client";
 import { FormationHeader } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/components/FormationSection/FormationHeader";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
+import { useNsfContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/nsfContext";
 
 import { FormationAbsente } from "./components/FormationAbsente";
 import { ExportListEtablissements } from "./ExportListEtablissements";
@@ -148,7 +149,8 @@ const useEtablissementsTab = () => {
 };
 
 export const EtablissementsTab = () => {
-  const { currentFilters, codeNsf, libelleNsf } = useFormationContext();
+  const { codeNsf, libelleNsf } = useNsfContext();
+  const { currentFilters } = useFormationContext();
   const {
     cfd,
     etab: { view },

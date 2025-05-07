@@ -3,6 +3,8 @@ import { Badge, Box, Divider, Flex, forwardRef, List, ListItem, Text, Tooltip } 
 import _ from "lodash";
 import { CURRENT_RENTREE } from "shared";
 
+import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
+import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
 import type { FormationListItem } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
@@ -41,14 +43,13 @@ const getFontColor = (formation: FormationListItem, selectedCfd: string) => {
   return undefined;
 };
 
-type ListeFormationsProps = BoxProps & {
-  formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>;
-  selectCfd: (cfd: string) => void;
-  selectedCfd: string;
-};
+type ListeFormationsProps = BoxProps & {};
 
 export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
-  ({ formationsByLibelleNiveauDiplome, selectCfd, selectedCfd, ...rest }, ref) => {
+  ({ ...rest }, ref) => {
+    const { handleCfdChange: selectCfd, currentFilters: { cfd: selectedCfd } } = useFormationContext();
+    const { formationsByLibelleNiveauDiplome } = useDomaineDeFormation();
+
     return (
       <Box
         borderRightWidth={1}

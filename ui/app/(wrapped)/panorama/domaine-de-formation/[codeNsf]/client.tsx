@@ -1,57 +1,134 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import type { ScopeZone } from "shared";
+import { ScopeEnum } from "shared";
+
+import { client } from "@/api.client";
 
 import { FiltersSection } from "./components/FiltersSection/FiltersSection";
 import { FormationSection } from "./components/FormationSection";
 import { HeaderSection } from "./components/HeaderSection/HeaderSection";
 import { LiensUtilesSection } from "./components/LiensUtilesSection/LiensUtilesSection";
+import { DomaineDeFormationProvider } from "./context/domaineDeFormationContext";
 import { FormationContextProvider } from "./context/formationContext";
-import type { Academie, Departement, FormationListItem, FormationsCounter, NsfOptions, Region } from "./types";
+import { NsfContextProvider } from "./context/nsfContext";
+import type { DomaineDeFormationResult, NsfOption, NsfOptions } from "./types";
 
-type Props = {
-  codeNsf: string;
-  libelleNsf: string;
-  formations: FormationListItem[];
-  cfd: string;
-  regions: Region[];
-  academies: Academie[];
-  departements: Departement[];
-  scope: ScopeZone;
-  counter: FormationsCounter;
-  defaultNsfs: NsfOptions;
-  formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>;
+const defineScope = (
+  codeRegion: string | undefined,
+  codeAcademie: string | undefined,
+  codeDepartement: string | undefined
+): ScopeZone => {
+  if (codeDepartement) {
+    return ScopeEnum.département;
+  }
+
+  if (codeAcademie) {
+    return ScopeEnum.académie;
+  }
+
+  if (codeRegion) {
+    return ScopeEnum.région;
+  }
+
+  return ScopeEnum.national;
 };
 
-export const PageDomaineDeFormationClient = ({
-  codeNsf,
-  libelleNsf,
-  formations,
-  cfd,
-  regions,
-  academies,
-  departements,
-  counter,
-  scope,
-  defaultNsfs,
-  formationsByLibelleNiveauDiplome,
-}: Props) => {
+
+export const useDomaineDeFormationSearchParams = () => {
+  const searchParams = useSearchParams();
+  const codeRegion = searchParams.get("codeRegion") ?? undefined;
+  const codeAcademie = searchParams.get("codeAcademie") ?? undefined;
+  const codeDepartement = searchParams.get("codeDepartement") ?? undefined;
+  const cfd = searchParams.get("cfd") ?? undefined;
+  const presence = searchParams.get("presence") ?? undefined;
+  const voie = searchParams.get("voie") ?? undefined;
+
+  return {
+    codeRegion: codeRegion,
+    codeAcademie: codeAcademie,
+    codeDepartement: codeDepartement,
+    cfd: cfd,
+    presence: presence,
+    voie: voie
+  };
+};
+
+export function DomaineDeFormationClient(
+  { defaultNsfs, nsf }:
+  { defaultNsfs: NsfOptions, nsf: NsfOption }) {
+  const { value: codeNsf } = nsf;
+  const [domaineDeFormation, setDomaineDeFormation] = useState<DomaineDeFormationResult>({
+    filters: {
+      regions: [],
+      academies: [],
+      departements: [],
+    },
+    formations: [],
+    libelleNsf: "",
+    codeNsf: "",
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { codeRegion, codeAcademie, codeDepartement } = useDomaineDeFormationSearchParams();
+
+  const libelleNsf = defaultNsfs.find((nsf) => nsf.value === codeNsf)?.label ?? "";
+
+  const { isLoading: isDomaineDeFormationLoading, data: results } = client
+    .ref("[GET]/domaine-de-formation/:codeNsf")
+    .useQuery({ params: { codeNsf }, query: {
+      codeRegion,
+      codeAcademie,
+      codeDepartement,
+    }});
+
+  useEffect(() => {
+    if (results) {
+      setDomaineDeFormation(results);
+    }
+  }, [results]);
+
+  useEffect(() => {
+    setIsLoading(isDomaineDeFormationLoading);
+  }, [isDomaineDeFormationLoading]);
+
+  // if (!isDomaineDeFormationLoading && !results) {
+  //   return redirect(`/panorama/domaine-de-formation?wrongNsf=${codeNsf}`);
+  // }
+
+  const regions = domaineDeFormation.filters.regions;
+  let academies = domaineDeFormation.filters.academies;
+  let departements = domaineDeFormation.filters.departements;
+
+  if (codeRegion) {
+    academies = academies.filter((academie) => academie.codeRegion === codeRegion);
+    departements = departements.filter((departement) => departement.codeRegion === codeRegion);
+
+    if (codeAcademie) {
+      departements = departements.filter((departement) => departement.codeAcademie === codeAcademie);
+    }
+  }
+
+  const scope = defineScope(codeRegion, codeAcademie, codeDepartement);
+
   return (
-    <FormationContextProvider value={{ codeNsf, scope, regions, academies, departements, libelleNsf }} defaultCfd={cfd}>
-      <HeaderSection codeNsf={codeNsf} libelleNsf={libelleNsf} />
-      <FiltersSection
-        regionOptions={regions}
-        academieOptions={academies}
-        departementOptions={departements}
-        defaultNsfs={defaultNsfs}
-        currentNsf={codeNsf}
-      />
-      <FormationSection
-        formations={formations}
-        counter={counter}
-        formationsByLibelleNiveauDiplome={formationsByLibelleNiveauDiplome}
-      />
-      <LiensUtilesSection />
-    </FormationContextProvider>
+    <NsfContextProvider value={{ codeNsf, libelleNsf, defaultNsfs }}>
+      <DomaineDeFormationProvider
+        value={{
+          domaineDeFormation,
+          setDomaineDeFormation,
+          isLoading,
+          setIsLoading
+        }}
+      >
+        <FormationContextProvider value={{ scope, departements, academies, regions }}>
+          <HeaderSection />
+          <FiltersSection />
+          <FormationSection />
+          <LiensUtilesSection />
+        </FormationContextProvider>
+      </DomaineDeFormationProvider>
+    </NsfContextProvider>
   );
-};
+}

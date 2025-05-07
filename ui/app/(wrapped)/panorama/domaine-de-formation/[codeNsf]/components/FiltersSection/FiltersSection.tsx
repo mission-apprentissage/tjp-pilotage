@@ -1,31 +1,19 @@
 import { Button, Container, Flex, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { OptionType } from "shared/schema/optionSchema";
 
+import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
-import type { NsfOptions } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
+import { useNsfContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/nsfContext";
 import { SelectNsf } from "@/app/(wrapped)/panorama/domaine-de-formation/components/selectNsf";
+import { Loading } from "@/components/Loading";
 
-export const FiltersSection = ({
-  regionOptions,
-  academieOptions,
-  departementOptions,
-  defaultNsfs,
-  currentNsf,
-}: {
-  regionOptions: OptionType[];
-  academieOptions: OptionType[];
-  departementOptions: OptionType[];
-  defaultNsfs: NsfOptions;
-  currentNsf: string;
-}) => {
+export const FiltersSection = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const {
     currentFilters,
-    codeNsf,
     handleRegionChange,
     handleAcademieChange,
     handleDepartementChange,
@@ -33,13 +21,21 @@ export const FiltersSection = ({
     handleCfdChange,
   } = useFormationContext();
 
+  const { defaultNsfs, codeNsf } = useNsfContext();
+  const { isLoading } = useDomaineDeFormation();
+  const { regions, academies, departements } = useFormationContext();
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <Flex bgColor={"bluefrance.975"} position="sticky" top={"52px"} left={0} zIndex="docked">
       <Container maxW={"container.xl"}>
         <Flex justify="space-between" gap={"1rem"} my={"24px"} align="center">
           <SelectNsf
             defaultNsfs={defaultNsfs}
-            defaultSelected={defaultNsfs.find((nsf) => nsf.value === currentNsf) ?? null}
+            defaultSelected={defaultNsfs.find((nsf) => nsf.value === codeNsf) ?? null}
             w={"100%"}
             flex={2}
             isClearable={true}
@@ -71,7 +67,7 @@ export const FiltersSection = ({
               aria-label="Sélectionner une région"
               flex={1}
             >
-              {regionOptions?.map((option) => (
+              {regions?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -89,7 +85,7 @@ export const FiltersSection = ({
               aria-label="Sélectionner une académie"
               flex={1}
             >
-              {academieOptions?.map((option) => (
+              {academies?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -107,7 +103,7 @@ export const FiltersSection = ({
               aria-label="Sélectionner un département"
               flex={1}
             >
-              {departementOptions?.map((option) => (
+              {departements?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
