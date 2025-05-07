@@ -45,6 +45,7 @@ const mapperToFileType = (content: _Object): FileType | undefined => {
   };
 };
 
+
 export const ovhFileManagerFactory = (
   deps = {
     client: generateNewS3Client(),
@@ -74,59 +75,102 @@ export const ovhFileManagerFactory = (
         throw new Error((error as Error).message);
       }
     },
-    listFiles: async (filepath: string): Promise<FileType[]> => {
-      try {
-        const listObjectsCommand = await deps.client.send(
-          new ListObjectsV2Command({
-            Bucket: config.s3.bucket,
-            Prefix: filepath,
-          })
-        );
+    listFiles: async (
+      { filepath, legacyFilepath }: { filepath: string; legacyFilepath?: string }
+    ): Promise<FileType[]> => {
+      const fetchFilesFromPath = async (path: string): Promise<FileType[]> => {
+        try {
+          const listObjectsCommand = await deps.client.send(
+            new ListObjectsV2Command({
+              Bucket: config.s3.bucket,
+              Prefix: path,
+            })
+          );
 
-        if (!listObjectsCommand.Contents) {
-          return [];
+          if (!listObjectsCommand.Contents) {
+            return [];
+          }
+
+          return listObjectsCommand.Contents.map(mapperToFileType).filter(Boolean) as FileType[];
+        } catch (error) {
+          console.error(
+            `Une erreur est survenue lors de la récupération des fichiers du dossier suivant: ${path}`,
+            error
+          );
+          throw new Error((error as Error).message);
         }
+      };
 
-        return listObjectsCommand.Contents.map(mapperToFileType).filter(Boolean) as FileType[];
+      try {
+        const filesFromFilepath = await fetchFilesFromPath(filepath);
+        const filesFromLegacyFilepath = legacyFilepath ? await fetchFilesFromPath(legacyFilepath) : [];
+
+        return [...filesFromFilepath, ...filesFromLegacyFilepath];
       } catch (error) {
-        console.error(
-          `Une erreur est survenue lors de la récupération des fichiers du dossier suivant: ${filepath}`,
-          error
-        );
-
         throw new Error((error as Error).message);
       }
     },
-    deleteFile: async (filepath: string) => {
+    deleteFile: async (
+      { filepath, legacyFilepath} :
+      { filepath: string, legacyFilepath?: string}
+    ) => {
       try {
         if (!filepath) {
           throw new Error("No filepath provided to delete file.");
         }
+        try {
+          await deps.client.send(
+            new DeleteObjectCommand({
+              Bucket: config.s3.bucket,
+              Key: filepath,
+            })
+          );
+        }
+        catch (filepathError) {
+          console.warn(`File not found at filepath: ${filepath}. Trying ${legacyFilepath}`, filepathError);
 
-        await deps.client.send(
-          new DeleteObjectCommand({
-            Bucket: config.s3.bucket,
-            Key: filepath,
-          })
-        );
+          await deps.client.send(
+            new DeleteObjectCommand({
+              Bucket: config.s3.bucket,
+              Key: legacyFilepath,
+            })
+          );
+        }
       } catch (error) {
         console.error(`Une erreur est survenue lors de la suppression du fichier suivant: ${filepath}`, error);
 
         throw new Error((error as Error).message);
       }
     },
-    getDownloadUrl: async (filepath: string): Promise<string> => {
+    getDownloadUrl: async (
+      { filepath, legacyFilepath} :
+      { filepath: string, legacyFilepath?: string}
+    ): Promise<string> => {
       try {
         if (!filepath) {
           throw new Error("No filepath provided to get download url.");
         }
 
-        const command = new GetObjectCommand({
-          Bucket: config.s3.bucket,
-          Key: filepath,
-        });
+        try {
+          // Attempt to generate URL for filepath
+          const command = new GetObjectCommand({
+            Bucket: config.s3.bucket,
+            Key: filepath,
+          });
+          return await getSignedUrl(deps.client, command, { expiresIn: 600 });
+        } catch (filepathError) {
+          console.warn(`File not found at filepath: ${filepath}. Trying legacyFilepath.`, filepathError);
 
-        return getSignedUrl(deps.client, command, { expiresIn: 600 });
+          if (!legacyFilepath) {
+            throw new Error("No legacyFilepath provided and filepath not found.");
+          }
+          // Attempt to generate URL for legacyFilepath
+          const legacyCommand = new GetObjectCommand({
+            Bucket: config.s3.bucket,
+            Key: legacyFilepath,
+          });
+          return await getSignedUrl(deps.client, legacyCommand, { expiresIn: 600 });
+        }
       } catch (error) {
         console.error(
           `Une erreur est survenue en générant l'url de téléchargement du fichier suivant: ${filepath}`,

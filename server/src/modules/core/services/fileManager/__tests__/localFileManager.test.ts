@@ -76,12 +76,16 @@ const fileManagerFixture = (fileManager: FileManager, filePathManager: FilePathM
       await fileManager.uploadFile(flname, file);
     },
     whenListingFiles: async (id: string) => {
-      const listedFiles = await fileManager.listFiles(filePathManager.getDemandeFilePath(id));
+      const listedFiles = await fileManager.listFiles({
+        filepath: filePathManager.getDemandeFilePath(id)
+      });
 
       files = listedFiles;
     },
     thenDeleteFile: async (id: string, filename: string) => {
-      await fileManager.deleteFile(filePathManager.getDemandeFilePath(id, filename));
+      await fileManager.deleteFile({
+        filepath: filePathManager.getDemandeFilePath(id, filename)
+      });
     },
     thenExpectFilesToBeEmpty() {
       expect(files).toEqual([]);
