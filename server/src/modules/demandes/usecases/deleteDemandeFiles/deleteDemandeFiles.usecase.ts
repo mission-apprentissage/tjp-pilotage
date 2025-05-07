@@ -12,11 +12,12 @@ const deleteDemandeFilesFactory =
   ) =>
     async ({ numero, files }: { numero: string; files: FileType[] }) => {
       for (const file of files) {
-        const filePath = deps.filePathManager.getDemandeFilePath(numero, file.name);
+        const filepath = deps.filePathManager.getDemandeFilePath(numero, file.name);
+        const legacyFilepath = deps.filePathManager.getLegacyIntentionFilePath(numero, file.name);
 
-        console.log(`Suppression du fichier ${file.name} pour la demande ${numero} depuis ${filePath}`);
+        console.log(`Suppression du fichier ${file.name} pour la demande ${numero} depuis ${filepath} et ${legacyFilepath}`);
 
-        await deps.fileManager.deleteFile(filePath);
+        await deps.fileManager.deleteFile({filepath, legacyFilepath});
       }
     };
 

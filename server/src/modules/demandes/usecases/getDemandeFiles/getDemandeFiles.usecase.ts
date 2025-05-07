@@ -9,6 +9,9 @@ const getDemandeFilesFactory =
     }
   ) =>
     async (numero: string) =>
-      deps.fileManager.listFiles(deps.filePathManager.getDemandeFilePath(numero));
+      deps.fileManager.listFiles({
+        filepath: deps.filePathManager.getDemandeFilePath(numero),
+        legacyFilepath: deps.filePathManager.getLegacyIntentionFilePath(numero)
+      });
 
 export const getDemandeFilesUsecase = getDemandeFilesFactory();
