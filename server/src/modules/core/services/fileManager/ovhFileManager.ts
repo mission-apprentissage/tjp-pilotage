@@ -146,39 +146,38 @@ export const ovhFileManagerFactory = (
       { filepath, legacyFilepath} :
       { filepath: string, legacyFilepath?: string}
     ): Promise<string> => {
-      try {
-        if (!filepath) {
-          throw new Error("No filepath provided to get download url.");
-        }
-
+      const generateDownloadUrl = async (path: string): Promise<string> => {
         try {
-          // Attempt to generate URL for filepath
+          if (!path) {
+            throw new Error("No filepath provided to get download url.");
+          }
+
           const command = new GetObjectCommand({
             Bucket: config.s3.bucket,
-            Key: filepath,
+            Key: path,
           });
-          return await getSignedUrl(deps.client, command, { expiresIn: 600 });
-        } catch (filepathError) {
-          console.warn(`File not found at filepath: ${filepath}. Trying legacyFilepath.`, filepathError);
 
-          if (!legacyFilepath) {
-            throw new Error("No legacyFilepath provided and filepath not found.");
-          }
-          // Attempt to generate URL for legacyFilepath
-          const legacyCommand = new GetObjectCommand({
-            Bucket: config.s3.bucket,
-            Key: legacyFilepath,
-          });
-          return await getSignedUrl(deps.client, legacyCommand, { expiresIn: 600 });
+          return getSignedUrl(deps.client, command, { expiresIn: 600 });
+        } catch (error) {
+          console.error(
+            `Une erreur est survenue en générant l'url de téléchargement du fichier suivant: ${path}`,
+            error
+          );
+          throw new Error((error as Error).message);
         }
+      };
+
+      try {
+        // Essayez d'abord avec le chemin principal
+        return await generateDownloadUrl(filepath);
       } catch (error) {
-        console.error(
-          `Une erreur est survenue en générant l'url de téléchargement du fichier suivant: ${filepath}`,
-          error
-        );
-        throw new Error((error as Error).message);
+        // Si le chemin principal échoue et que legacyFilepath est fourni, essayez avec legacyFilepath
+        if (legacyFilepath) {
+          return generateDownloadUrl(legacyFilepath);
+        }
+        throw error;
       }
-    },
+    }
   };
 };
 
