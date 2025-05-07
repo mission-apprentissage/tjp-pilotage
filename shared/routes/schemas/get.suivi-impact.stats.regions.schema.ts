@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import {OrderZodType} from '../../enum/orderEnum';
+
 
 const TauxTransformationSchema = z.object({
   placesTransformees: z.number().optional(),
@@ -19,7 +21,7 @@ const StatsRegionLineSchema = z.object({
 
 export const FiltersRegionsSchema = z.object({
   codeNiveauDiplome: z.string().optional(),
-  order: z.enum(["asc", "desc"]).optional(),
+  order: OrderZodType.optional(),
   orderBy: StatsRegionLineSchema.keyof().optional(),
 });
 

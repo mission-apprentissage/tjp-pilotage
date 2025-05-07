@@ -1,7 +1,7 @@
-import { PanoramaSelection } from "./PanoramaSelection";
+import { PageClient } from "./page.client";
 
-export const revalidate = 0;
+const Page = ({ searchParams }: { searchParams: { wrongUai?: string } }) => {
+  return <PageClient wrongUai={searchParams.wrongUai} />;
+};
 
-export default async function Panorama({ searchParams }: { searchParams: { wrongUai?: string } }) {
-  return <PanoramaSelection wrongUai={searchParams.wrongUai} />;
-}
+export default Page;

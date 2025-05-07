@@ -1,10 +1,10 @@
 import { serverClient } from "@/api.client";
 
-import { PanoramaSelection } from "./PanoramaSelection";
+import { PageClient } from './page.client';
 
-export const revalidate = 0;
-
-export default async function Panorama() {
+const Page = async () => {
   const departementsOptions = await serverClient.ref("[GET]/departements").query({});
-  return <PanoramaSelection departementsOptions={departementsOptions} />;
-}
+  return <PageClient departementsOptions={departementsOptions} />;
+};
+
+export default Page;

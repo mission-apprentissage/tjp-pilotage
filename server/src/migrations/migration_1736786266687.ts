@@ -35,15 +35,17 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 
   await getKbdClient()
+    // @ts-ignore
     .updateTable("intention")
     .set(
       {
         statut: DemandeStatutEnum["demande validée"]
       }
     )
-    .where("intention.typeDemande", "=", DemandeTypeEnum["ajustement"])
-    .where("intention.statut", "=", DemandeStatutEnum["projet de demande"])
-    .where("intention.id", "in", (eb) => eb.selectFrom("latestIntentionView").select("id"))
+    .where("typeDemande", "=", DemandeTypeEnum["ajustement"])
+    .where("statut", "=", DemandeStatutEnum["projet de demande"])
+    // @ts-ignore
+    .where("id", "in", (eb) => eb.selectFrom("latestIntentionView").select("id"))
     .execute();
 
 

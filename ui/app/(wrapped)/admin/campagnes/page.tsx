@@ -6,7 +6,6 @@ import {PermissionEnum} from 'shared/enum/permissionEnum';
 import { useAuth } from "@/utils/security/useAuth";
 
 const Page = () => {
-
   const { role }  = useAuth();
   const hasPermissionAdmin = hasPermission(role, PermissionEnum["campagnes/ecriture"]);
   const hasPermissionCampagneRegion = hasPermission(role, PermissionEnum["campagnes-région/lecture"]);

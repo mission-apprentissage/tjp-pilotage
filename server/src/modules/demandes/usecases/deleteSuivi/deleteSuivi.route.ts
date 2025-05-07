@@ -17,7 +17,7 @@ export const deleteSuiviRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler(PermissionEnum["intentions/lecture"]),
+      preHandler: hasPermissionHandler(PermissionEnum["demande/lecture"]),
       handler: async (request, response) => {
         const user = request.user as RequestUser;
         await deleteSuiviUsecase({ id: request.params.id, user });

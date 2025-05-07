@@ -26,7 +26,7 @@ const EMPTY_VALUE = "(VIDE)";
  */
 const normalizeWithReplace = ({ value, regexp }: { value?: string; regexp: RegExp }) => {
   if (!value) return EMPTY_VALUE;
-  return capitalize(value.trim().replace(regexp, "").trim()) || EMPTY_VALUE;
+  return capitalize(value.trim().replace(regexp, "").trim()) ?? EMPTY_VALUE;
 };
 
 const getLineOverride = (line: DiplomeProfessionnelLine) => {
@@ -231,6 +231,6 @@ export const [importDataFormations] = inject(
       },
       { parallel: 20 }
     );
-    process.stdout.write(`${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`);
+    process.stdout.write(errorCount > 0 ? `(avec ${errorCount} erreurs)\n\n` : "\n\n");
   }
 );

@@ -67,8 +67,8 @@ async function Layout({ children }: LayoutProps) {
   const campagnes = await fetchCampagne();
   return (
     <RootLayoutClient
-      auth={auth || undefined}
-      glossaire={glossaire || []}
+      auth={auth}
+      glossaire={glossaire ?? []}
       currentCampagne={campagnes?.current}
       previousCampagne={campagnes?.previous}
     >

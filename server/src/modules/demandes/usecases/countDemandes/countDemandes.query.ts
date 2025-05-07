@@ -1,32 +1,48 @@
 import { sql } from "kysely";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import type { countDemandesSchema } from "shared/routes/schemas/get.demandes.count.schema";
-import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
-import type { RequestUser } from "@/modules/core/model/User";
-import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
+import {
+  isDemandeBrouillonVisible,
+  isDemandeSelectable,
+} from "@/modules/utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
-export interface Filters extends z.infer<typeof countDemandesSchema.querystring> {
-  user: RequestUser;
-}
-export const countDemandesQuery = async ({ user, campagne, codeAcademie, codeNiveauDiplome, search }: Filters) => {
-  const search_array = getNormalizedSearchArray(search);
+import type { Filters } from "./countDemandes.usecase";
 
+export const countDemandesQuery = async ({
+  user,
+  campagne,
+  search,
+  codeAcademie,
+  codeNiveauDiplome,
+}: Filters) => {
+  const search_array = getNormalizedSearchArray(search);
   const countDemandes = getKbdClient()
-    .selectFrom("latestDemandeIntentionView as demande")
+    .selectFrom("latestDemandeView as demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
     .leftJoin("user", "user.id", "demande.createdBy")
+    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .innerJoin("campagne", "campagne.id", "demande.campagneId")
     .leftJoin("suivi", (join) =>
-      join.onRef("suivi.intentionNumero", "=", "demande.numero").on("suivi.userId", "=", user.id)
+      join.onRef("suivi.demandeNumero", "=", "demande.numero").on("suivi.userId", "=", user.id)
     )
     .select((eb) => sql<number>`count(${eb.ref("demande.numero")})`.as("total"))
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum["proposition"]}
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as(DemandeStatutEnum["proposition"])
+    )
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
@@ -74,6 +90,39 @@ export const countDemandesQuery = async ({ user, campagne, codeAcademie, codeNiv
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
+          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum["dossier complet"]}
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as(DemandeStatutEnum["dossier complet"])
+    )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum["dossier incomplet"]}
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as(DemandeStatutEnum["dossier incomplet"])
+    )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum["prêt pour le vote"]}
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as(DemandeStatutEnum["prêt pour le vote"])
+    )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
           CASE WHEN ${eb.ref("suivi.userId")} = ${user.id}
           THEN 1
           ELSE 0
@@ -93,7 +142,9 @@ export const countDemandesQuery = async ({ user, campagne, codeAcademie, codeNiv
                   ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")})
                 )`,
                 "ilike",
                 `%${search_word}%`
@@ -115,8 +166,8 @@ export const countDemandesQuery = async ({ user, campagne, codeAcademie, codeNiv
       if (campagne) return eb.where("campagne.annee", "=", campagne);
       return eb;
     })
-    .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
+    .where(isDemandeBrouillonVisible({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);
 

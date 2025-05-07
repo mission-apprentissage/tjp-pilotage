@@ -1,22 +1,22 @@
 import { deleteCampagneRegionSchema } from "./schemas/delete.campagneRegion.id.schema";
+import { deleteAvisSchema } from "./schemas/delete.demande.avis.id.schema";
+import { deleteDemandeFilesSchema } from "./schemas/delete.demande.numero.files.schema";
 import { deleteDemandeSchema } from "./schemas/delete.demande.numero.schema";
+import { deleteChangementStatutSchema } from "./schemas/delete.demande.statut.id.schema";
 import { deleteSuiviSchema } from "./schemas/delete.demande.suivi.id.schema";
-import { deleteAvisSchema } from "./schemas/delete.intention.avis.id.schema";
-import { deleteIntentionFilesSchema } from "./schemas/delete.intention.numero.files.schema";
-import { deleteIntentionSchema } from "./schemas/delete.intention.numero.schema";
-import { deleteChangementStatutSchema } from "./schemas/delete.intention.statut.id.schema";
 import { deleteRequeteEnregistreeSchema } from "./schemas/delete.requeteEnregistree.id.schema";
 import { checkActivationTokenSchema } from "./schemas/get.auth.check-activation-token.schema";
 import { whoAmISchema } from "./schemas/get.auth.whoAmI.schema";
 import { getCurrentCampagneSchema } from "./schemas/get.campagne.current.schema";
-import { getLatestCampagneSchema } from './schemas/get.campagne.latest.schema';
-import { getCampagneSchema } from './schemas/get.campagne.schema';
+import { getLatestCampagneSchema} from './schemas/get.campagne.latest.schema';
+import { getCampagneSchema} from './schemas/get.campagne.schema';
 import { getCampagnesSchema } from "./schemas/get.campagnes.schema";
 import { getCampagnesRegionSchema } from "./schemas/get.campagnes-region.schema";
 import { searchCampusSchema } from "./schemas/get.campus.search.search.schema";
-import { getChangelogSchema } from "./schemas/get.changelog.schema";
 import { getCorrectionsSchema } from "./schemas/get.corrections.schema";
-import { getDemandeSchema } from "./schemas/get.demande.numero.schema";
+import { getDemandeFilesSchema } from "./schemas/get.demande.numero.files.schema";
+import { getDemandeFileDownloadUrlSchema } from "./schemas/get.demande.numero.files.url.schema";
+import { getDemandeSchema} from './schemas/get.demande.numero.schema';
 import { countDemandesSchema } from "./schemas/get.demandes.count.schema";
 import { getDemandesSchema } from "./schemas/get.demandes.schema";
 import { getDepartementSchema } from "./schemas/get.departement.codeDepartement.schema";
@@ -44,24 +44,19 @@ import { getFormationsSchema } from "./schemas/get.formations.schema";
 import { getGlossaireEntrySchema } from "./schemas/get.glossaire.id.schema";
 import { getGlossaireSchema } from "./schemas/get.glossaire.schema";
 import { getHomeSchema } from "./schemas/get.home.schema";
-import { getIntentionFilesSchema } from "./schemas/get.intention.numero.files.schema";
-import { getIntentionFileDownloadUrlSchema } from "./schemas/get.intention.numero.files.url.schema";
-import { getIntentionSchema } from "./schemas/get.intention.numero.schema";
-import { countIntentionsSchema } from "./schemas/get.intentions.count.schema";
-import { getIntentionsSchema } from "./schemas/get.intentions.schema";
 import { getMaintenanceSchema } from "./schemas/get.maintenance.schema";
 import { searchMetierSchema } from "./schemas/get.metier.search.search.schema";
 import { searchNsfSchema } from "./schemas/get.nsf.search.search.schema";
 import { searchNsfFormationSchema } from "./schemas/get.nsf-diplome.search.search.schema";
 import { getDataForPanoramaDepartementSchema } from "./schemas/get.panorama.stats.departement.schema";
 import { getDataForPanoramaRegionSchema } from "./schemas/get.panorama.stats.region.schema";
-import { getFormationsPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.formations.schema";
-import { getPilotageIntentionsSchema } from "./schemas/get.pilotage-intentions.schema";
+import { getFormationsPilotageSchema} from './schemas/get.pilotage.formations.schema';
+import { getPilotageSchema } from "./schemas/get.pilotage.schema";
 import { getRegionSchema } from "./schemas/get.region.codeRegion.schema";
 import { getRegionsSchema } from "./schemas/get.regions.schema";
 import { getRequetesEnregistreesSchema } from "./schemas/get.requetes.schema";
-import { getDemandesRestitutionIntentionsSchema } from "./schemas/get.restitution-intentions.demandes.schema";
-import { getStatsRestitutionIntentionsSchema } from "./schemas/get.restitution-intentions.stats.schema";
+import { getDemandesRestitutionSchema } from "./schemas/get.restitution.demandes.schema";
+import { getStatsRestitutionSchema } from "./schemas/get.restitution.stats.schema";
 import { getSuiviImpactStatsRegionsSchema } from "./schemas/get.suivi-impact.stats.regions.schema";
 import { getSuiviImpactStatsSchema } from "./schemas/get.suivi-impact.stats.schema";
 import { searchUserSchema } from "./schemas/get.user.search.search.schema";
@@ -74,21 +69,19 @@ import { sendResetPasswordSchema } from "./schemas/post.auth.send-reset-password
 import { createCampagneSchema } from "./schemas/post.campagnes.campagneId.schema";
 import { createCampagneRegionSchema } from "./schemas/post.campagnes-region.campagneRegionId.schema";
 import { submitCorrectionSchema } from "./schemas/post.correction.submit.schema";
-import { submitIntentionAccessLogSchema } from "./schemas/post.demande.access.submit.schema";
+import { submitDemandeAccessLogSchema } from "./schemas/post.demande.access.submit.schema";
+import { submitAvisSchema } from "./schemas/post.demande.avis.submit.schema";
 import { importDemandeSchema } from "./schemas/post.demande.import.numero.schema";
+import { submitChangementStatutSchema } from "./schemas/post.demande.statut.submit.schema";
 import { submitDemandeSchema } from "./schemas/post.demande.submit.schema";
 import { submitSuiviSchema } from "./schemas/post.demande.suivi.schema";
+import { submitDemandesStatutSchema } from "./schemas/post.demandes.statut.submit.schema";
 import { getMetabaseDashboardUrlSchema } from "./schemas/post.generate-metabase-dashboard-url.schema";
-import { submitAvisSchema } from "./schemas/post.intention.avis.submit.schema";
-import { importIntentionSchema } from "./schemas/post.intention.import.numero.schema";
-import { submitChangementStatutSchema } from "./schemas/post.intention.statut.submit.schema";
-import { submitIntentionSchema } from "./schemas/post.intention.submit.schema";
-import { submitIntentionsStatutSchema } from "./schemas/post.intentions.statut.submit.schema";
 import { submitRequeteEnregistreeSchema } from "./schemas/post.requete.enregistrement.schema";
 import { createUserSchema } from "./schemas/post.users.userId.schema";
 import { editCampagneSchema } from "./schemas/put.campagnes.campagneId.schema";
 import { editCampagneRegionSchema } from "./schemas/put.campagnes-region.campagneRegionId.schema";
-import { uploadIntentionFilesSchema } from "./schemas/put.intention.numero.files.schema";
+import { uploadDemandeFilesSchema } from "./schemas/put.demande.numero.files.schema";
 import { editUserSchema } from "./schemas/put.users.userId.schema";
 import type { IRoutesDefinition } from "./types";
 
@@ -132,11 +125,6 @@ export const ROUTES = {
     url: "/auth/whoAmI",
     method: "GET",
     schema: whoAmISchema,
-  },
-  "[GET]/changelog": {
-    url: "/changelog",
-    method: "GET",
-    schema: getChangelogSchema,
   },
   "[GET]/healthcheck": {
     url: "/healthcheck",
@@ -263,10 +251,10 @@ export const ROUTES = {
     method: "GET",
     schema: getDataForPanoramaRegionSchema,
   },
-  "[GET]/restitution-intentions/demandes": {
-    url: "/restitution-intentions/demandes",
+  "[GET]/restitution/demandes": {
+    url: "/restitution/demandes",
     method: "GET",
-    schema: getDemandesRestitutionIntentionsSchema,
+    schema: getDemandesRestitutionSchema,
   },
   "[GET]/departement/:codeDepartement": {
     url: "/departement/:codeDepartement",
@@ -318,20 +306,20 @@ export const ROUTES = {
     method: "GET",
     schema: getRegionsSchema,
   },
-  "[GET]/pilotage-intentions": {
-    url: "/pilotage-intentions",
+  "[GET]/pilotage": {
+    url: "/pilotage",
     method: "GET",
-    schema: getPilotageIntentionsSchema,
+    schema: getPilotageSchema,
   },
-  "[GET]/pilotage-intentions/formations": {
-    url: "/pilotage-intentions/formations",
+  "[GET]/pilotage/formations": {
+    url: "/pilotage/formations",
     method: "GET",
-    schema: getFormationsPilotageIntentionsSchema,
+    schema: getFormationsPilotageSchema,
   },
-  "[GET]/restitution-intentions/stats": {
-    url: "/restitution-intentions/stats",
+  "[GET]/restitution/stats": {
+    url: "/restitution/stats",
     method: "GET",
-    schema: getStatsRestitutionIntentionsSchema,
+    schema: getStatsRestitutionSchema,
   },
   "[GET]/campus/search/:search": {
     url: "/campus/search/:search",
@@ -378,51 +366,6 @@ export const ROUTES = {
     method: "GET",
     schema: searchNsfFormationSchema,
   },
-  "[GET]/demandes/count": {
-    url: "/demandes/count",
-    method: "GET",
-    schema: countDemandesSchema,
-  },
-  "[DELETE]/demande/:numero": {
-    url: "/demande/:numero",
-    method: "DELETE",
-    schema: deleteDemandeSchema,
-  },
-  "[DELETE]/demande/suivi/:id": {
-    url: "/demande/suivi/:id",
-    method: "DELETE",
-    schema: deleteSuiviSchema,
-  },
-  "[GET]/demande/:numero": {
-    url: "/demande/:numero",
-    method: "GET",
-    schema: getDemandeSchema,
-  },
-  "[GET]/demandes": {
-    url: "/demandes",
-    method: "GET",
-    schema: getDemandesSchema,
-  },
-  "[POST]/demande/import/:numero": {
-    url: "/demande/import/:numero",
-    method: "POST",
-    schema: importDemandeSchema,
-  },
-  "[POST]/demande/submit": {
-    url: "/demande/submit",
-    method: "POST",
-    schema: submitDemandeSchema,
-  },
-  "[POST]/demande/access/submit": {
-    url: "/demande/access/submit",
-    method: "POST",
-    schema: submitIntentionAccessLogSchema,
-  },
-  "[POST]/demande/suivi": {
-    url: "/demande/suivi",
-    method: "POST",
-    schema: submitSuiviSchema,
-  },
   "[GET]/glossaire": {
     url: "/glossaire",
     method: "GET",
@@ -448,100 +391,100 @@ export const ROUTES = {
     method: "POST",
     schema: submitRequeteEnregistreeSchema,
   },
-  "[GET]/intentions/count": {
-    url: "/intentions/count",
+  "[GET]/demandes/count": {
+    url: "/demandes/count",
     method: "GET",
-    schema: countIntentionsSchema,
+    schema: countDemandesSchema,
   },
-  "[DELETE]/intention/avis/:id": {
-    url: "/intention/avis/:id",
+  "[DELETE]/demande/avis/:id": {
+    url: "/demande/avis/:id",
     method: "DELETE",
     schema: deleteAvisSchema,
   },
-  "[DELETE]/intention/statut/:id": {
-    url: "/intention/statut/:id",
+  "[DELETE]/demande/statut/:id": {
+    url: "/demande/statut/:id",
     method: "DELETE",
     schema: deleteChangementStatutSchema,
   },
-  "[DELETE]/intention/:numero": {
-    url: "/intention/:numero",
+  "[DELETE]/demande/:numero": {
+    url: "/demande/:numero",
     method: "DELETE",
-    schema: deleteIntentionSchema,
+    schema: deleteDemandeSchema,
   },
-  "[DELETE]/intention/:numero/files": {
-    url: "/intention/:numero/files",
+  "[DELETE]/demande/:numero/files": {
+    url: "/demande/:numero/files",
     method: "DELETE",
-    schema: deleteIntentionFilesSchema,
+    schema: deleteDemandeFilesSchema,
   },
-  "[DELETE]/intention/suivi/:id": {
-    url: "/intention/suivi/:id",
+  "[DELETE]/demande/suivi/:id": {
+    url: "/demande/suivi/:id",
     method: "DELETE",
     schema: deleteSuiviSchema,
   },
-  "[GET]/intention/:numero": {
-    url: "/intention/:numero",
+  "[GET]/demande/:numero": {
+    url: "/demande/:numero",
     method: "GET",
-    schema: getIntentionSchema,
+    schema: getDemandeSchema,
   },
-  "[GET]/intention/:numero/files/url": {
-    url: "/intention/:numero/files/url",
+  "[GET]/demande/:numero/files/url": {
+    url: "/demande/:numero/files/url",
     method: "GET",
-    schema: getIntentionFileDownloadUrlSchema,
+    schema: getDemandeFileDownloadUrlSchema,
   },
-  "[GET]/intention/:numero/files": {
-    url: "/intention/:numero/files",
+  "[GET]/demande/:numero/files": {
+    url: "/demande/:numero/files",
     method: "GET",
-    schema: getIntentionFilesSchema,
+    schema: getDemandeFilesSchema,
   },
-  "[GET]/intentions": {
-    url: "/intentions",
+  "[GET]/demandes": {
+    url: "/demandes",
     method: "GET",
-    schema: getIntentionsSchema,
+    schema: getDemandesSchema,
   },
-  "[POST]/intention/import/:numero": {
-    url: "/intention/import/:numero",
+  "[POST]/demande/import/:numero": {
+    url: "/demande/import/:numero",
     method: "POST",
-    schema: importIntentionSchema,
+    schema: importDemandeSchema,
   },
-  "[POST]/intentions/statut/submit": {
-    url: "/intentions/statut/submit",
+  "[POST]/demandes/statut/submit": {
+    url: "/demandes/statut/submit",
     method: "POST",
-    schema: submitIntentionsStatutSchema,
+    schema: submitDemandesStatutSchema,
   },
   "[GET]/etablissement/perdir/search/:search": {
     url: "/etablissement/perdir/search/:search",
     method: "GET",
     schema: searchEtablissementPerdirSchema,
   },
-  "[POST]/intention/avis/submit": {
-    url: "/intention/avis/submit",
+  "[POST]/demande/avis/submit": {
+    url: "/demande/avis/submit",
     method: "POST",
     schema: submitAvisSchema,
   },
-  "[POST]/intention/statut/submit": {
-    url: "/intention/statut/submit",
+  "[POST]/demande/statut/submit": {
+    url: "/demande/statut/submit",
     method: "POST",
     schema: submitChangementStatutSchema,
   },
-  "[POST]/intention/submit": {
-    url: "/intention/submit",
+  "[POST]/demande/submit": {
+    url: "/demande/submit",
     method: "POST",
-    schema: submitIntentionSchema,
+    schema: submitDemandeSchema,
   },
-  "[POST]/intention/access/submit": {
-    url: "/intention/access/submit",
+  "[POST]/demande/access/submit": {
+    url: "/demande/access/submit",
     method: "POST",
-    schema: submitIntentionAccessLogSchema,
+    schema: submitDemandeAccessLogSchema,
   },
-  "[POST]/intention/suivi": {
-    url: "/intention/suivi",
+  "[POST]/demande/suivi": {
+    url: "/demande/suivi",
     method: "POST",
     schema: submitSuiviSchema,
   },
-  "[PUT]/intention/:numero/files": {
-    url: "/intention/:numero/files",
+  "[PUT]/demande/:numero/files": {
+    url: "/demande/:numero/files",
     method: "PUT",
-    schema: uploadIntentionFilesSchema,
+    schema: uploadDemandeFilesSchema,
   },
   "[GET]/formation/:cfd": {
     url: "/formation/:cfd",

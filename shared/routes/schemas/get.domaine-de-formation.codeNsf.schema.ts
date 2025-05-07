@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { VoieZodType} from '../../enum/voieEnum';
 import { OptionSchema } from "../../schema/optionSchema";
 
 const filtersSchema = z.object({
@@ -22,13 +23,14 @@ export const formationSchema = z.object({
   cfd: z.string(),
   codeNiveauDiplome: z.string(),
   libelleFormation: z.string(),
-  libelleNiveauDiplome: z.string(),
+  libelleNiveauDiplome: z.string().optional(),
   typeFamille: z.string().optional(),
   nbEtab: z.number(),
   apprentissage: z.boolean(),
   scolaire: z.boolean(),
   isFormationRenovee: z.boolean(),
   dateOuverture: z.date(),
+  voie: VoieZodType
 });
 
 const queryFiltersSchema = z.object({

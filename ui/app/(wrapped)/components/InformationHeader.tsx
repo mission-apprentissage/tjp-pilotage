@@ -68,7 +68,7 @@ export const InformationHeader = () => {
                 md: "block",
               }}
             >
-              {changelogEntry.description}
+              {changelogEntry.description}{" "}
               <Link as={NextLink} href="/changelog" textDecoration="underline">
                 Voir les détails
               </Link>
@@ -94,7 +94,8 @@ export const InformationHeader = () => {
               justifyItems="end"
               alignItems="start"
               width="auto"
-              height="auto"
+              h={"fit-content"}
+              mb={"auto"}
             >
               <VisuallyHidden fontSize={12}>Fermer</VisuallyHidden>
               <Icon icon="ri:close-fill" fontSize={16} />

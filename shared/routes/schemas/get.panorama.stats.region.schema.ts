@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { OrderZodType } from "../../enum/orderEnum";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
@@ -48,7 +49,7 @@ export const getDataForPanoramaRegionSchema = {
     codeRegion: z.string(),
     codeNiveauDiplome: z.array(z.string()).optional(),
     codeNsf: z.array(z.string()).optional(),
-    order: z.enum(["asc", "desc"]).optional(),
+    order: OrderZodType.optional(),
     orderBy: FormationSchema.keyof().optional(),
   }),
   response: {

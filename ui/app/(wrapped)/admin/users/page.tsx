@@ -51,8 +51,7 @@ const Columns = {
   fonction: "Fonction",
 } satisfies ExportColumns<(typeof client.infer)["[GET]/users"]["users"][number]>;
 
-// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
-export default () => {
+const Page = () => {
   const trackEvent = usePlausible();
   const { auth } = useAuth();
   const [filters, setFilters] = useStateParams<{
@@ -243,3 +242,5 @@ export default () => {
     </GuardPermission>
   );
 };
+
+export default Page;

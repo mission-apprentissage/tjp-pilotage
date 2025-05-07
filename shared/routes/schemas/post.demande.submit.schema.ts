@@ -28,29 +28,27 @@ export const submitDemandeSchema = {
       capaciteApprentissageColoree: z.coerce.number().optional(),
       // Précisions
       motif: z.array(z.string()).optional(),
-      autreMotif: z.string()
+      autreMotif: z
+        .string()
         .optional()
         .transform((autreMotif) => unEscapeString(autreMotif)),
       amiCma: z.boolean().optional(),
       amiCmaValide: z.boolean().optional(),
       amiCmaValideAnnee: z.string().optional(),
       amiCmaEnCoursValidation: z.boolean().optional(),
-      poursuitePedagogique: z.boolean().optional(),
-      commentaire: z
-        .string()
-        .optional()
-        .transform((commentaire) => unEscapeString(commentaire)),
-      // Compensation
-      compensationUai: z.string().optional(),
-      compensationCfd: z.string().optional(),
-      compensationCodeDispositif: z.string().optional(),
-      compensationRentreeScolaire: z.coerce.number().optional(),
-      // RH
+      partenairesEconomiquesImpliques: z.boolean().optional(),
+      partenaireEconomique1: z.string().optional(),
+      partenaireEconomique2: z.string().optional(),
+      cmqImplique: z.boolean().optional(),
+      filiereCmq: z.string().optional(),
+      nomCmq: z.string().optional(),
+      inspecteurReferent: z.string().optional(),
+      //RH
       recrutementRH: z.boolean().optional(),
       nbRecrutementRH: z.coerce.number().optional(),
       discipline1RecrutementRH: z.string().optional(),
       discipline2RecrutementRH: z.string().optional(),
-      reconversionRH: z.boolean().optional(),
+      reconversionRH: z.boolean(),
       nbReconversionRH: z.coerce.number().optional(),
       discipline1ReconversionRH: z.string().optional(),
       discipline2ReconversionRH: z.string().optional(),
@@ -62,6 +60,26 @@ export const submitDemandeSchema = {
       nbFormationRH: z.coerce.number().optional(),
       discipline1FormationRH: z.string().optional(),
       discipline2FormationRH: z.string().optional(),
+      besoinRHPrecisions: z.string().optional(),
+      // Travaux et équipements
+      travauxAmenagement: z.boolean().optional(),
+      travauxAmenagementCout: z.coerce.number().optional(),
+      travauxAmenagementDescription: z.string().optional(),
+      achatEquipement: z.boolean().optional(),
+      achatEquipementCout: z.coerce.number().optional(),
+      achatEquipementDescription: z.string().optional(),
+      // Internat et restauration
+      augmentationCapaciteAccueilHebergement: z.boolean().optional(),
+      augmentationCapaciteAccueilHebergementPlaces: z.coerce.number().optional(),
+      augmentationCapaciteAccueilHebergementPrecisions: z.string().optional(),
+      augmentationCapaciteAccueilRestauration: z.boolean().optional(),
+      augmentationCapaciteAccueilRestaurationPlaces: z.coerce.number().optional(),
+      augmentationCapaciteAccueilRestaurationPrecisions: z.string().optional(),
+      // Observations / commentaires
+      commentaire: z
+        .string()
+        .optional()
+        .transform((commentaire) => unEscapeString(commentaire)),
       // Statut
       statut: DemandeStatutZodType.exclude(["supprimée"]),
       motifRefus: z.array(z.string()).optional(),
@@ -78,6 +96,7 @@ export const submitDemandeSchema = {
     200: z.object({
       id: z.string(),
       statut: DemandeStatutZodType,
+      numero: z.string(),
     }),
   },
 };

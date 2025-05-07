@@ -139,30 +139,39 @@ export const DefinitionTauxTransformationCumuleModal = (
               <UnorderedList spacing="16px">
                 <ListItem>
                   <Text>
-                    Pl. <b>transformées</b> = Pl. <b>ouvertes</b> + Pl. <b>fermées</b> + Pl. <b>existantes colorées</b>
-                    (à partir de la Rentrée Scolaire 2025).
+                    <Highlight query={["transformées", "ouvertes", "fermées", "existantes colorées"]} styles={{ fontWeight: "bold" }}>
+                      Pl. transformées = Pl. ouvertes + Pl. fermées + Pl. existantes colorées
+                      (à partir de la Rentrée Scolaire 2025).
+                    </Highlight>
                   </Text>
                 </ListItem>
                 <ListItem>
                   <Text>
-                    Le calcul tient compte des places transformées en <b>voie scolaire</b> et en <b>apprentissage</b>
-                    (diplômes retenus : CAP, Bac Pro, MC/CS, BTS, FCIL, DNMADE, BMA).
-                    Le dénominateur concerne les effectifs <b>en entrée de formation.</b>
+                    <Highlight query={["voie scolaire", "apprentissage", "en entrée de formation."]} styles={{ fontWeight: "bold" }}>
+                      Le calcul tient compte des places transformées en voie scolaire et en apprentissage
+                      (diplômes retenus : CAP, Bac Pro, MC/CS, BTS, FCIL, DNMADE, BMA).
+                      Le dénominateur concerne les effectifs en entrée de formation.
+                    </Highlight>
                   </Text>
                 </ListItem>
                 <ListItem>
                   <Text>
-                  Pour le taux “<b>Demandes validées</b>”, le nombre de places transformées
-                  au numérateur correspond aux transformations <b>validées</b>
-                  (sur la base des demandes validées à l’issue des concertations entre régions et régions académiques).
+                    <Highlight query={["Demandes validées", "validées", "en entrée de formation."]} styles={{ fontWeight: "bold" }}>
+                      Pour le taux “Demandes validées”, le nombre de places transformées
+                      au numérateur correspond aux transformations validées
+                      (sur la base des demandes validées à l’issue des concertations entre régions
+                       et régions académiques).
+                    </Highlight>
                   </Text>
                 </ListItem>
                 <ListItem>
                   <Text>
-                    Pour le taux “<b>Projets inclus</b>“, le nombre de places transformées
-                    au numérateur correspond à la somme des transformations <b>validées</b>
-                    (comme le taux précédent) et des <b>projets de transformation</b>
-                    (demandes qui seront examinées en concertation).
+                    <Highlight query={["Projets inclus", "validées", "projets de transformation"]} styles={{ fontWeight: "bold" }}>
+                      Pour le taux “Projets inclus“, le nombre de places transformées
+                      au numérateur correspond à la somme des transformations validées
+                      (comme le taux précédent) et des projets de transformation
+                      (demandes qui seront examinées en concertation).
+                    </Highlight>
                   </Text>
                 </ListItem>
               </UnorderedList>

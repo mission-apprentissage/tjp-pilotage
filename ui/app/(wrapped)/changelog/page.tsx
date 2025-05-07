@@ -7,14 +7,14 @@ import { EditorialTitle } from "@/app/(wrapped)/components/EditorialTitle";
 import { Entry } from "./components/Entry";
 import { CHANGELOG, ChangelogTypeEnum } from "./const";
 
-export default function Changelog() {
+const Page = () => {
   const updates =
     CHANGELOG?.filter(
       (changelogEntry) =>
         changelogEntry.types.findIndex((t) => t === ChangelogTypeEnum.BANDEAU) === -1 &&
         changelogEntry.deployed &&
         changelogEntry.show
-    ) ?? [];
+    ).sort((a, b) => b.date.getTime() - a.date.getTime()) ?? [];
 
   const incoming =
     CHANGELOG?.filter(
@@ -22,7 +22,7 @@ export default function Changelog() {
         changelogEntry.types.findIndex((t) => t === ChangelogTypeEnum.BANDEAU) === -1 &&
         !changelogEntry.deployed &&
         changelogEntry.show
-    ) ?? [];
+    ).sort((a, b) => a.date.getTime() - b.date.getTime()) ?? [];
 
   return (
     <>
@@ -48,4 +48,6 @@ export default function Changelog() {
       </Container>
     </>
   );
-}
+};
+
+export default Page;

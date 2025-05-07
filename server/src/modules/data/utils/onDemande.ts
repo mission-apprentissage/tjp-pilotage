@@ -65,7 +65,7 @@ export const genericOnDemandes = ({
   withAjustementRentree?: boolean;
 }) =>
   expressionBuilder<DB, keyof DB>()
-    .selectFrom("latestDemandeIntentionView as demande")
+    .selectFrom("latestDemandeView as demande")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
