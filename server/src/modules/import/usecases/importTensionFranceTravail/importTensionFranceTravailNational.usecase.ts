@@ -57,10 +57,10 @@ export const [importTensionFranceTravailNational] = inject(
               retry = false;
               if (e.response?.data?.message?.includes("FiltreErreurSldng")) {
                 console.error(
-                  `ERROR [ROME=${codeRome}] ${`Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`}`
+                  `ERROR [ROME=${codeRome}] Aucun résultat n'a pu être trouvé avec le code : ${codeRome}`
                 );
               } else {
-                console.error(`ERROR [ROME=${codeRome}] ${`Status code : ${e.response?.status}`}`);
+                console.error(`ERROR [ROME=${codeRome}] Status code : ${e.response?.status}`);
               }
             } else {
               console.error(e);

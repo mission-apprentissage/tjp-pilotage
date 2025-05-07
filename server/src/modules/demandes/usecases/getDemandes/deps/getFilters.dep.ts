@@ -1,13 +1,13 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 
+import type { DB } from "@/db/db";
 import { getKbdClient } from "@/db/db";
-import type { DB } from "@/db/schema";
 import { isInPerimetreIJAcademie } from "@/modules/data/utils/isInPerimetreIJ";
-import type {Filters} from '@/modules/demandes/usecases/getDemandes/getDemandes.usecase';
-import {getCampagnes} from '@/modules/utils/getCurrentCampagne';
+import type { Filters } from "@/modules/demandes/usecases/getDemandes/getDemandes.usecase";
+import { getCampagnes } from '@/modules/utils/getCurrentCampagne';
 import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
-import { isRestitutionIntentionVisible } from "@/modules/utils/isRestitutionIntentionVisible";
+import { isRestitutionDemandeVisible } from "@/modules/utils/isRestitutionDemandeVisible";
 import { cleanNull } from "@/utils/noNull";
 
 export const getFiltersQuery = async ({ user, codeAcademie, codeNiveauDiplome }: Filters) => {
@@ -34,7 +34,7 @@ export const getFiltersQuery = async ({ user, codeAcademie, codeNiveauDiplome }:
     .execute();
 
   const filtersBase = getKbdClient()
-    .selectFrom("latestDemandeIntentionView as demande")
+    .selectFrom("latestDemandeView as demande")
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
@@ -45,7 +45,7 @@ export const getFiltersQuery = async ({ user, codeAcademie, codeNiveauDiplome }:
     .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
     .leftJoin("campagne", "campagne.id", "demande.campagneId")
     .where(isDemandeNotDeleted)
-    .where(isRestitutionIntentionVisible({ user }))
+    .where(isRestitutionDemandeVisible({ user }))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -60,6 +60,7 @@ export const getFiltersQuery = async ({ user, codeAcademie, codeNiveauDiplome }:
       ]);
     })
     .execute();
+
 
   const campagnesFilters = await getCampagnes(user);
 

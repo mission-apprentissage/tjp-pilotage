@@ -1,11 +1,11 @@
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import {CampagneStatutEnum} from 'shared/enum/campagneStatutEnum';
 import type { CampagneType } from "shared/schema/campagneSchema";
 
 import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
 import {cleanNull} from '@/utils/noNull';
 
-const getCampagneRegionByCampagneId = async ({
+const getCampagneRegionByCampagneId = ({
   campagneId,
   user
 } : {

@@ -1,10 +1,11 @@
-import type { FiltersSchema} from 'shared/routes/schemas/get.demandes.schema';
+import type { FiltersSchema } from 'shared/routes/schemas/get.demandes.schema';
 import type {z} from 'zod';
 
 import type {RequestUser} from '@/modules/core/model/User';
 import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
-import { getCampagneQuery, getDemandesQuery, getFiltersQuery } from "./deps";
+import {getCampagneQuery, getDemandesQuery, getFiltersQuery } from './deps';
+
 
 export interface Filters extends z.infer<typeof FiltersSchema> {
   user: RequestUser;
@@ -14,13 +15,12 @@ export interface Filters extends z.infer<typeof FiltersSchema> {
 export interface ActiveFilters extends Omit<Filters, "campagne"> {
   campagne?: string;
 }
-
 const getDemandesFactory =
   (
     deps = {
-      getDemandesQuery,
-      getCampagneQuery,
       getCurrentCampagne,
+      getCampagneQuery,
+      getDemandesQuery,
       getFiltersQuery,
     }
   ) =>

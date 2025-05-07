@@ -24,6 +24,7 @@ const BG_COLOR: Record<ChangelogTypeType, string> = {
   "Données": themeDefinition.colors.orange.draft,
   "BANDEAU": themeDefinition.colors.info[950],
   "Bug": themeDefinition.colors.redmarianne[925],
+  "Maintenance": themeDefinition.colors.orange.draft,
 };
 
 const TEXT_COLOR: Record<ChangelogTypeType, string> = {
@@ -31,6 +32,7 @@ const TEXT_COLOR: Record<ChangelogTypeType, string> = {
   "Données": themeDefinition.colors.yellowTournesol[407],
   "BANDEAU": themeDefinition.colors.info[525],
   "Bug": themeDefinition.colors.redmarianne[625],
+  "Maintenance": themeDefinition.colors.yellowTournesol[407],
 };
 
 export const Entry = ({ changelogEntry }: EntryProps) => {

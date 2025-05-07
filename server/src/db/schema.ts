@@ -34,7 +34,7 @@ export interface ActionPrioritaire {
 export interface Avis {
   id: Generated<string>;
   createdBy: string | null;
-  intentionNumero: string;
+  demandeNumero: string;
   statutAvis: string;
   typeAvis: string;
   userFonction: string | null;
@@ -77,7 +77,7 @@ export interface ChangeLog {
 export interface ChangementStatut {
   id: Generated<string>;
   createdBy: string | null;
-  intentionNumero: string;
+  demandeNumero: string;
   statutPrecedent: string | null;
   statut: string;
   createdAt: Generated<Timestamp>;
@@ -97,7 +97,7 @@ export interface ConstatRentree {
 
 export interface Correction {
   id: Generated<string>;
-  intentionNumero: string;
+  demandeNumero: string;
   createdBy: string;
   updatedBy: string;
   createdAt: Generated<Timestamp>;
@@ -158,7 +158,6 @@ export interface Demande {
   coloration: boolean | null;
   libelleColoration: string | null;
   amiCma: boolean | null;
-  poursuitePedagogique: boolean | null;
   commentaire: string | null;
   statut: string;
   codeRegion: string;
@@ -172,10 +171,6 @@ export interface Demande {
   capaciteApprentissageActuelle: number | null;
   capaciteApprentissageColoree: number | null;
   mixte: boolean | null;
-  compensationUai: string | null;
-  compensationCfd: string | null;
-  compensationCodeDispositif: string | null;
-  compensationRentreeScolaire: number | null;
   updatedAt: Timestamp;
   libelleFCIL: string | null;
   motifRefus: string[] | null;
@@ -201,88 +196,38 @@ export interface Demande {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  autreBesoinRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
   capaciteScolaireColoreeActuelle: Generated<number | null>;
   capaciteApprentissageColoreeActuelle: Generated<number | null>;
-}
-
-export interface DemandeIntentionNonMaterializedView {
-  isIntention: boolean | null;
-  numero: string | null;
-  cfd: string | null;
-  codeDispositif: string | null;
-  uai: string | null;
-  rentreeScolaire: number | null;
-  typeDemande: string | null;
-  motif: string[] | null;
-  autreMotif: string | null;
-  coloration: boolean | null;
-  libelleColoration: string | null;
-  amiCma: boolean | null;
-  amiCmaValide: boolean | null;
-  amiCmaEnCoursValidation: boolean | null;
-  amiCmaValideAnnee: string | null;
-  statut: string | null;
-  commentaire: string | null;
-  codeRegion: string | null;
-  codeAcademie: string | null;
-  createdBy: string | null;
-  updatedBy: string | null;
-  createdAt: Timestamp | null;
-  capaciteScolaire: number | null;
-  capaciteScolaireActuelle: number | null;
-  capaciteScolaireColoree: number | null;
-  capaciteScolaireColoreeActuelle: number | null;
-  capaciteApprentissage: number | null;
-  capaciteApprentissageActuelle: number | null;
-  capaciteApprentissageColoree: number | null;
-  capaciteApprentissageColoreeActuelle: number | null;
-  mixte: boolean | null;
-  updatedAt: Timestamp | null;
-  libelleFCIL: string | null;
-  motifRefus: string[] | null;
-  autreMotifRefus: string | null;
-  campagneId: string | null;
-  id: string | null;
-  numeroHistorique: string | null;
-  recrutementRH: boolean | null;
-  nbRecrutementRH: number | null;
-  discipline1RecrutementRH: string | null;
-  discipline2RecrutementRH: string | null;
-  reconversionRH: boolean | null;
-  nbReconversionRH: number | null;
-  discipline1ReconversionRH: string | null;
-  discipline2ReconversionRH: string | null;
-  professeurAssocieRH: boolean | null;
-  nbProfesseurAssocieRH: number | null;
-  discipline1ProfesseurAssocieRH: string | null;
-  discipline2ProfesseurAssocieRH: string | null;
-  formationRH: boolean | null;
-  nbFormationRH: number | null;
-  discipline1FormationRH: string | null;
-  discipline2FormationRH: string | null;
+  isOldDemande: boolean | null;
   partenairesEconomiquesImpliques: boolean | null;
   partenaireEconomique1: string | null;
   partenaireEconomique2: string | null;
   cmqImplique: boolean | null;
   filiereCmq: string | null;
   nomCmq: string | null;
-  inspecteurReferent: string | null;
   besoinRHPrecisions: string | null;
   travauxAmenagement: boolean | null;
   travauxAmenagementDescription: string | null;
-  travauxAmenagementCout: number | null;
   achatEquipement: boolean | null;
   achatEquipementDescription: string | null;
-  achatEquipementCout: number | null;
   augmentationCapaciteAccueilHebergement: boolean | null;
   augmentationCapaciteAccueilHebergementPlaces: number | null;
   augmentationCapaciteAccueilHebergementPrecisions: string | null;
   augmentationCapaciteAccueilRestauration: boolean | null;
   augmentationCapaciteAccueilRestaurationPlaces: number | null;
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
+  inspecteurReferent: string | null;
+  achatEquipementCout: number | null;
+  travauxAmenagementCout: number | null;
+}
+
+export interface DemandeAccessLog {
+  id: Generated<string>;
+  demandeNumero: string | null;
+  userId: string | null;
+  updatedAt: Timestamp | null;
 }
 
 export interface Departement {
@@ -449,170 +394,10 @@ export interface IndicateurSortie {
   cfdContinuum: string | null;
 }
 
-export interface Intention {
-  numero: string;
-  cfd: string | null;
-  codeDispositif: string | null;
-  uai: string | null;
-  rentreeScolaire: number | null;
-  typeDemande: string | null;
-  motif: string[] | null;
-  autreMotif: string | null;
-  coloration: boolean | null;
-  libelleColoration: string | null;
-  amiCma: boolean | null;
-  commentaire: string | null;
-  statut: string;
-  codeRegion: string | null;
-  codeAcademie: string | null;
-  createdBy: string;
-  createdAt: Generated<Timestamp>;
-  capaciteScolaire: number | null;
-  capaciteScolaireActuelle: number | null;
-  capaciteScolaireColoree: number | null;
-  capaciteApprentissage: number | null;
-  capaciteApprentissageActuelle: number | null;
-  capaciteApprentissageColoree: number | null;
-  mixte: boolean | null;
-  updatedAt: Timestamp;
-  libelleFCIL: string | null;
-  motifRefus: string[] | null;
-  autreMotifRefus: string | null;
-  campagneId: string | null;
-  id: Generated<string>;
-  numeroHistorique: string | null;
-  amiCmaValide: boolean | null;
-  amiCmaValideAnnee: string | null;
-  amiCmaEnCoursValidation: boolean | null;
-  recrutementRH: boolean | null;
-  nbRecrutementRH: number | null;
-  discipline1RecrutementRH: string | null;
-  discipline2RecrutementRH: string | null;
-  reconversionRH: boolean | null;
-  nbReconversionRH: number | null;
-  discipline1ReconversionRH: string | null;
-  discipline2ReconversionRH: string | null;
-  professeurAssocieRH: boolean | null;
-  nbProfesseurAssocieRH: number | null;
-  discipline1ProfesseurAssocieRH: string | null;
-  discipline2ProfesseurAssocieRH: string | null;
-  formationRH: boolean | null;
-  nbFormationRH: number | null;
-  discipline1FormationRH: string | null;
-  discipline2FormationRH: string | null;
-  partenairesEconomiquesImpliques: boolean | null;
-  partenaireEconomique1: string | null;
-  partenaireEconomique2: string | null;
-  cmqImplique: boolean | null;
-  filiereCmq: string | null;
-  nomCmq: string | null;
-  besoinRHPrecisions: string | null;
-  travauxAmenagement: boolean | null;
-  travauxAmenagementDescription: string | null;
-  achatEquipement: boolean | null;
-  achatEquipementDescription: string | null;
-  augmentationCapaciteAccueilHebergement: boolean | null;
-  augmentationCapaciteAccueilHebergementPlaces: number | null;
-  augmentationCapaciteAccueilHebergementPrecisions: string | null;
-  augmentationCapaciteAccueilRestauration: boolean | null;
-  augmentationCapaciteAccueilRestaurationPlaces: number | null;
-  augmentationCapaciteAccueilRestaurationPrecisions: string | null;
-  updatedBy: string | null;
-  inspecteurReferent: string | null;
-  achatEquipementCout: number | null;
-  travauxAmenagementCout: number | null;
-  capaciteScolaireColoreeActuelle: Generated<number | null>;
-  capaciteApprentissageColoreeActuelle: Generated<number | null>;
-}
-
-export interface IntentionAccessLog {
-  id: Generated<string>;
-  intentionNumero: string | null;
-  userId: string | null;
-  updatedAt: Timestamp | null;
-}
-
 export interface Job {
   name: string | null;
   sub: string | null;
   createdAt: Generated<Timestamp | null>;
-}
-
-export interface LatestDemandeIntentionNonMaterializedView {
-  isIntention: boolean | null;
-  numero: string | null;
-  cfd: string | null;
-  codeDispositif: string | null;
-  uai: string | null;
-  rentreeScolaire: number | null;
-  typeDemande: string | null;
-  motif: string[] | null;
-  autreMotif: string | null;
-  coloration: boolean | null;
-  libelleColoration: string | null;
-  amiCma: boolean | null;
-  amiCmaValide: boolean | null;
-  amiCmaEnCoursValidation: boolean | null;
-  amiCmaValideAnnee: string | null;
-  statut: string | null;
-  commentaire: string | null;
-  codeRegion: string | null;
-  codeAcademie: string | null;
-  createdBy: string | null;
-  updatedBy: string | null;
-  createdAt: Timestamp | null;
-  capaciteScolaire: number | null;
-  capaciteScolaireActuelle: number | null;
-  capaciteScolaireColoree: number | null;
-  capaciteScolaireColoreeActuelle: number | null;
-  capaciteApprentissage: number | null;
-  capaciteApprentissageActuelle: number | null;
-  capaciteApprentissageColoree: number | null;
-  capaciteApprentissageColoreeActuelle: number | null;
-  mixte: boolean | null;
-  updatedAt: Timestamp | null;
-  libelleFCIL: string | null;
-  motifRefus: string[] | null;
-  autreMotifRefus: string | null;
-  campagneId: string | null;
-  id: string | null;
-  numeroHistorique: string | null;
-  recrutementRH: boolean | null;
-  nbRecrutementRH: number | null;
-  discipline1RecrutementRH: string | null;
-  discipline2RecrutementRH: string | null;
-  reconversionRH: boolean | null;
-  nbReconversionRH: number | null;
-  discipline1ReconversionRH: string | null;
-  discipline2ReconversionRH: string | null;
-  professeurAssocieRH: boolean | null;
-  nbProfesseurAssocieRH: number | null;
-  discipline1ProfesseurAssocieRH: string | null;
-  discipline2ProfesseurAssocieRH: string | null;
-  formationRH: boolean | null;
-  nbFormationRH: number | null;
-  discipline1FormationRH: string | null;
-  discipline2FormationRH: string | null;
-  partenairesEconomiquesImpliques: boolean | null;
-  partenaireEconomique1: string | null;
-  partenaireEconomique2: string | null;
-  cmqImplique: boolean | null;
-  filiereCmq: string | null;
-  nomCmq: string | null;
-  inspecteurReferent: string | null;
-  besoinRHPrecisions: string | null;
-  travauxAmenagement: boolean | null;
-  travauxAmenagementDescription: string | null;
-  travauxAmenagementCout: number | null;
-  achatEquipement: boolean | null;
-  achatEquipementDescription: string | null;
-  achatEquipementCout: number | null;
-  augmentationCapaciteAccueilHebergement: boolean | null;
-  augmentationCapaciteAccueilHebergementPlaces: number | null;
-  augmentationCapaciteAccueilHebergementPrecisions: string | null;
-  augmentationCapaciteAccueilRestauration: boolean | null;
-  augmentationCapaciteAccueilRestaurationPlaces: number | null;
-  augmentationCapaciteAccueilRestaurationPrecisions: string | null;
 }
 
 export interface LatestDemandeNonMaterializedView {
@@ -627,7 +412,6 @@ export interface LatestDemandeNonMaterializedView {
   coloration: boolean | null;
   libelleColoration: string | null;
   amiCma: boolean | null;
-  poursuitePedagogique: boolean | null;
   commentaire: string | null;
   statut: string | null;
   codeRegion: string | null;
@@ -641,10 +425,6 @@ export interface LatestDemandeNonMaterializedView {
   capaciteApprentissageActuelle: number | null;
   capaciteApprentissageColoree: number | null;
   mixte: boolean | null;
-  compensationUai: string | null;
-  compensationCfd: string | null;
-  compensationCodeDispositif: string | null;
-  compensationRentreeScolaire: number | null;
   updatedAt: Timestamp | null;
   libelleFCIL: string | null;
   motifRefus: string[] | null;
@@ -670,64 +450,11 @@ export interface LatestDemandeNonMaterializedView {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  autreBesoinRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
   capaciteScolaireColoreeActuelle: number | null;
   capaciteApprentissageColoreeActuelle: number | null;
-}
-
-export interface LatestIntentionNonMaterializedView {
-  numero: string | null;
-  cfd: string | null;
-  codeDispositif: string | null;
-  uai: string | null;
-  rentreeScolaire: number | null;
-  typeDemande: string | null;
-  motif: string[] | null;
-  autreMotif: string | null;
-  coloration: boolean | null;
-  libelleColoration: string | null;
-  amiCma: boolean | null;
-  commentaire: string | null;
-  statut: string | null;
-  codeRegion: string | null;
-  codeAcademie: string | null;
-  createdBy: string | null;
-  createdAt: Timestamp | null;
-  capaciteScolaire: number | null;
-  capaciteScolaireActuelle: number | null;
-  capaciteScolaireColoree: number | null;
-  capaciteApprentissage: number | null;
-  capaciteApprentissageActuelle: number | null;
-  capaciteApprentissageColoree: number | null;
-  mixte: boolean | null;
-  updatedAt: Timestamp | null;
-  libelleFCIL: string | null;
-  motifRefus: string[] | null;
-  autreMotifRefus: string | null;
-  campagneId: string | null;
-  id: string | null;
-  numeroHistorique: string | null;
-  amiCmaValide: boolean | null;
-  amiCmaValideAnnee: string | null;
-  amiCmaEnCoursValidation: boolean | null;
-  recrutementRH: boolean | null;
-  nbRecrutementRH: number | null;
-  discipline1RecrutementRH: string | null;
-  discipline2RecrutementRH: string | null;
-  reconversionRH: boolean | null;
-  nbReconversionRH: number | null;
-  discipline1ReconversionRH: string | null;
-  discipline2ReconversionRH: string | null;
-  professeurAssocieRH: boolean | null;
-  nbProfesseurAssocieRH: number | null;
-  discipline1ProfesseurAssocieRH: string | null;
-  discipline2ProfesseurAssocieRH: string | null;
-  formationRH: boolean | null;
-  nbFormationRH: number | null;
-  discipline1FormationRH: string | null;
-  discipline2FormationRH: string | null;
+  isOldDemande: boolean | null;
   partenairesEconomiquesImpliques: boolean | null;
   partenaireEconomique1: string | null;
   partenaireEconomique2: string | null;
@@ -745,7 +472,6 @@ export interface LatestIntentionNonMaterializedView {
   augmentationCapaciteAccueilRestauration: boolean | null;
   augmentationCapaciteAccueilRestaurationPlaces: number | null;
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
-  updatedBy: string | null;
   inspecteurReferent: string | null;
   achatEquipementCout: number | null;
   travauxAmenagementCout: number | null;
@@ -814,7 +540,7 @@ export interface Rome {
 
 export interface Suivi {
   id: Generated<string>;
-  intentionNumero: string;
+  demandeNumero: string;
   userId: string;
   createdAt: Generated<Timestamp>;
 }
@@ -885,7 +611,7 @@ export interface DB {
   dataEtablissement: DataEtablissement;
   dataFormation: DataFormation;
   demande: Demande;
-  demandeIntentionNonMaterializedView: DemandeIntentionNonMaterializedView;
+  demandeAccessLog: DemandeAccessLog;
   departement: Departement;
   diplomeProfessionnel: DiplomeProfessionnel;
   discipline: Discipline;
@@ -904,12 +630,8 @@ export interface DB {
   indicateurRegion: IndicateurRegion;
   indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
-  intention: Intention;
-  intentionAccessLog: IntentionAccessLog;
   job: Job;
-  latestDemandeIntentionNonMaterializedView: LatestDemandeIntentionNonMaterializedView;
   latestDemandeNonMaterializedView: LatestDemandeNonMaterializedView;
-  latestIntentionNonMaterializedView: LatestIntentionNonMaterializedView;
   maintenance: Maintenance;
   metier: Metier;
   niveauDiplome: NiveauDiplome;

@@ -1,5 +1,6 @@
 import { expressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
+import type {VoieType} from 'shared/enum/voieEnum';
 
 import type { DB } from "@/db/db";
 import { getRentreeScolaire } from "@/modules/data/services/getRentreeScolaire";
@@ -100,6 +101,7 @@ export const getChiffresEntree = async ({
       "ie.premiersVoeux",
       "ie.effectifs",
     ])
+    .$narrowType<{ voie: VoieType }>()
     .execute()
     .then(cleanNull);
 };

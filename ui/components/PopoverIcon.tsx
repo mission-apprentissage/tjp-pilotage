@@ -10,7 +10,7 @@ export const PopoverIcon = chakra(
     children
   }: {
     className?: string;
-    onClick?: MouseEventHandler<SVGElement> | undefined;
+    onClick?: MouseEventHandler<SVGElement>;
     header?: ReactNode;
     children?: ReactNode;
   }) => {

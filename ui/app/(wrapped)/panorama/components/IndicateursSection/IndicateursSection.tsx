@@ -5,7 +5,7 @@ import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext"
 import type { StatsFormations } from "@/app/(wrapped)/panorama/types";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { TooltipIcon } from "@/components/TooltipIcon";
-import { formatNumber, formatPercentage } from "@/utils/formatUtils";
+import { formatNumberToString, formatPercentage } from "@/utils/formatUtils";
 
 import { StatCard } from "./StatCard";
 
@@ -54,7 +54,7 @@ export const IndicateursSection = ({
         />
         <StatCard
           label={`Nombre total d’élèves dans votre ${typeTerritoire === "region" ? "région" : "département"}`}
-          value={stats?.effectifTotal ? stats.effectifTotal : "-"}
+          value={formatNumberToString(stats?.effectifTotal, 0, "-")}
           sub={
             stats?.effectifEntree ? (
               <HStack>
@@ -90,8 +90,8 @@ export const IndicateursSection = ({
         />
         <StatCard
           label={`Taux de remplissage dans votre ${typeTerritoire === "region" ? "région" : "département"}`}
-          value={stats?.tauxRemplissage ? formatNumber(stats.tauxRemplissage * 100, 0) : undefined}
-          tooltip={stats?.tauxRemplissage ? formatPercentage(stats?.tauxRemplissage, 2) : "-"}
+          value={formatPercentage(stats?.tauxRemplissage, 0, "-")}
+          tooltip={formatPercentage(stats?.tauxRemplissage, 2, "-")}
           type={"percentage"}
           glossaire={
             <TooltipIcon
@@ -108,8 +108,8 @@ export const IndicateursSection = ({
         />
         <StatCard
           label={`Taux de devenir favorable dans votre région`}
-          value={stats?.tauxDevenirFavorable ? formatNumber(stats.tauxDevenirFavorable * 100, 0) : undefined}
-          tooltip={stats?.tauxDevenirFavorable ? formatPercentage(stats?.tauxDevenirFavorable, 2) : "-"}
+          value={formatPercentage(stats?.tauxDevenirFavorable, 0, "-")}
+          tooltip={formatPercentage(stats?.tauxDevenirFavorable, 2, "-")}
           type={"percentage"}
           glossaire={
             <TooltipIcon
@@ -129,8 +129,8 @@ export const IndicateursSection = ({
         />
         <StatCard
           label="Taux de poursuite d'études dans votre région"
-          value={stats?.tauxPoursuite ? formatNumber(stats.tauxPoursuite * 100, 0) : undefined}
-          tooltip={stats?.tauxPoursuite ? formatPercentage(stats?.tauxPoursuite, 2) : "-"}
+          value={formatPercentage(stats?.tauxPoursuite, 0, "-")}
+          tooltip={formatPercentage(stats?.tauxPoursuite, 2, "-")}
           type={"percentage"}
           glossaire={
             <TooltipIcon
@@ -147,8 +147,8 @@ export const IndicateursSection = ({
         />
         <StatCard
           label="Taux d'emploi à 6 mois dans votre région"
-          value={stats?.tauxInsertion ? formatNumber(stats.tauxInsertion * 100, 0) : undefined}
-          tooltip={stats?.tauxInsertion ? formatPercentage(stats?.tauxInsertion, 2) : "-"}
+          value={formatPercentage(stats?.tauxInsertion, 0, "-")}
+          tooltip={formatPercentage(stats?.tauxInsertion, 2, "-")}
           type={"percentage"}
           glossaire={
             <TooltipIcon

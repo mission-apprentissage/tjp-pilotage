@@ -33,7 +33,7 @@ const MetadataSchema = z.object({
 const DemandeSchema = z.object({
   numero: z.string(),
   createdAt: z.string(),
-  statut: DemandeStatutZodType.optional(),
+  statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
   uai: z.string(),
   cfd: z.string(),
   codeDispositif: z.string(),
@@ -62,8 +62,11 @@ const DemandeSchema = z.object({
   autreMotifRefus: z.string().optional(),
 });
 
+export const FiltersSchema = z.object({ numero: z.string() });
+
+
 export const importDemandeSchema = {
-  params: z.object({ numero: z.string() }),
+  params: FiltersSchema,
   response: {
     200: DemandeSchema.partial().merge(
       z.object({

@@ -9,7 +9,7 @@ import { InfoBlock } from "@/components/InfoBlock";
 import { TableBadge } from "@/components/TableBadge";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { feature } from "@/utils/feature";
-import { formatNumber } from "@/utils/formatUtils";
+import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 type Formation = PanoramaFormation | PanoramaTopFlop;
@@ -56,8 +56,14 @@ export const FormationTooltipContent = ({ formation }: { formation: Formation })
         label="Taux de pression"
         textBg="white"
         value={
-          <TableBadge sx={getTauxPressionStyle(formation?.tauxPression)}>
-            {formation.tauxPression !== undefined ? formatNumber(formation?.tauxPression, 2) : "-"}
+          <TableBadge sx={
+            getTauxPressionStyle(
+              formation.tauxPression !== undefined ?
+                formatNumber(formation.tauxPression, 2) :
+                undefined
+            )
+          }>
+            {formatNumberToString(formation.tauxPression, 2, "-")}
           </TableBadge>
         }
       />

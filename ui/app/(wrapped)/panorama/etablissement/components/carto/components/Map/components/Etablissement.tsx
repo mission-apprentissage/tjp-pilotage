@@ -27,7 +27,7 @@ export const Etablissement = () => {
       uai: etablissement?.uai,
       // Attention, ici on utilise une string puisque les expressions de filtre de maplibre
       // ne permettent pas de vérifier les occurences dans un tableau
-      voies: etablissement?.voies.join(",") || "",
+      voies: etablissement?.voies.join(",") ?? "",
     },
   };
 

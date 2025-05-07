@@ -66,7 +66,7 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   });
 
   const onSubmit = (v: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]) =>
-    createUser({ body: { ...v, codeRegion: v.codeRegion || undefined, fonction: v.fonction || null } });
+    createUser({ body: { ...v, codeRegion: v.codeRegion ?? undefined, fonction: v.fonction ?? null } });
 
   const roles = getHierarchy(role);
   const isAdminRegion = hasRole({user, role: RoleEnum["admin_region"]});
@@ -96,7 +96,7 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             <FormLabel>Email</FormLabel>
             <Input
               {...register("email", {
-                validate: (v) => z.string().email().safeParse(v).success || "Veuillez saisir un email valide",
+                validate: (v) => z.string().email().safeParse(v).success ?? "Veuillez saisir un email valide",
               })}
             />
             {!!errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}

@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "injecti";
-import type { Voie } from "shared";
+import type { VoieType } from "shared";
 
 import type {
   AnneeDispositif,
@@ -40,7 +40,7 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
       cfd: string;
       rentreeScolaire: string;
       uai: string;
-      voie: Voie
+      voie: VoieType
     }) => {
       const isSpecialite = await deps.findSpecialite({
         cfd,

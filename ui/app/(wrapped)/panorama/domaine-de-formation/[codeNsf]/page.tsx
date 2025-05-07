@@ -4,9 +4,8 @@ import { redirect } from "next/navigation";
 
 import { serverClient } from "@/api.client";
 
-import { DomaineDeFormationClient } from "./client";
+import { DomaineDeFormationClient } from "./page.client";
 import type { Filters } from "./types";
-
 
 const fetchDefaultNsfs = async () => {
   const headersList = Object.fromEntries(headers().entries());

@@ -57,15 +57,14 @@ export const PERMISSION_GROUP_LABELS: {
 } = {
   "enregistrement-requete": "Enregistrement de requêtes",
   "suivi-impact": "Suivi de l'impact",
-  "intentions": "Demandes",
-  "restitution-intentions": "Restitution des demandes",
-  "pilotage-intentions": "Pilotage des demandes",
+  "demande": "Saisie des demandes",
+  "restitution": "Restitution des demandes",
+  "pilotage": "Pilotage des demandes",
   "users": "Utilisateurs",
   "campagnes": "Campagnes",
   "campagnes-région": "Campagnes régionales",
-  "intentions-perdir": "Saisie par les perdirs",
-  "intentions-perdir-avis": "Avis sur les intentions",
-  "intentions-perdir-statut": "Changement de statut sur les intentions",
+  "demande-avis": "Avis sur les demandes",
+  "demande-statut": "Changement de statut sur les demandes",
 };
 
 export const OVERRIDES:
@@ -76,14 +75,14 @@ Partial<
   >
 > = {
   perdir: {
-    [PermissionEnum["intentions-perdir/ecriture"]]: (codeRegion) => {
+    [PermissionEnum["demande/ecriture"]]: (codeRegion) => {
       if (codeRegion && CODES_REGIONS_EXPE_2024.includes(codeRegion)) {
         return true;
       }
 
       return false;
     },
-    [PermissionEnum["intentions-perdir/lecture"]]: (codeRegion) => {
+    [PermissionEnum["demande/lecture"]]: (codeRegion) => {
       if (codeRegion && CODES_REGIONS_EXPE_2024.includes(codeRegion)) {
         return true;
       }
