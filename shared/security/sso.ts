@@ -69,7 +69,6 @@ export const ROLE_DNE_ROLE_ORION_CORRESPONDANCE: Record<RoleDNE, Role> = {
   IGESR:"pilote",
   INS: "expert_region",
   PERDIR: "perdir",
-  // ???
   RECTEUR: "invite",
   DASEN: "invite",
 };

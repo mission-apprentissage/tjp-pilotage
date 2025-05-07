@@ -71,5 +71,11 @@ export const LOGIN_ERRORS: Record<LoginErrorsType, { message: React.ReactNode }>
   },
   "UNKNOWN": {
     message: "Erreur inconnue, merci de contacter le support."
+  },
+  "NO_PASSWORD": {
+    message: "Aucun mot de passe n'a été défini pour ce compte, merci de cliquer sur le lien d'activation que nous vous avons envoyé par email."
+  },
+  "DISABLED": {
+    message: "Votre compte est désactivé, merci de contacter le support."
   }
 };
