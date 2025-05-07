@@ -9,6 +9,9 @@ const getDemandeFileDownloadUrlFactory =
     }
   ) =>
     async (numero: string, filename: string) =>
-      deps.fileManager.getDownloadUrl(deps.filePathManager.getDemandeFilePath(numero, filename));
+      deps.fileManager.getDownloadUrl({
+        filepath: deps.filePathManager.getDemandeFilePath(numero, filename),
+        legacyFilepath: deps.filePathManager.getLegacyIntentionFilePath(numero, filename),
+      });
 
 export const getDemandeFileDownloadUrlUsecase = getDemandeFileDownloadUrlFactory();
