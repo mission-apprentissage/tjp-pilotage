@@ -17,7 +17,7 @@ export const getDemandeRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler(PermissionEnum["intentions/lecture"]),
+      preHandler: hasPermissionHandler(PermissionEnum["demande/lecture"]),
       handler: async (request, response) => {
         const user = request.user!;
         const demande = await getDemandeUsecase({
@@ -25,8 +25,9 @@ export const getDemandeRoute = (server: Server) => {
           user,
         });
 
-        const scope = getPermissionScope(user.role, PermissionEnum["intentions/ecriture"]);
+        const scope = getPermissionScope(user.role, PermissionEnum["demande/ecriture"]);
         const canEdit = guardScope(scope, {
+          uai: () => user.uais?.includes(demande.uai) ?? false,
           région: () => user.codeRegion === demande.codeRegion,
           national: () => true,
         });

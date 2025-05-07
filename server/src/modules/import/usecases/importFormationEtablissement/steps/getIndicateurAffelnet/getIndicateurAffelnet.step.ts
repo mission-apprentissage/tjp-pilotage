@@ -82,7 +82,7 @@ export const [getIndicateursAffelnet] = inject(
        * source.
        */
       const capacite = rawCapacite && rawCapacite >= 5 && rawCapacite <= 500 ? rawCapacite : undefined;
-      const premiersVoeux = rawPremierVoeux ? rawPremierVoeux : undefined;
+      const premiersVoeux = rawPremierVoeux ?? undefined;
 
       return {
         capacites: anneeDebut === 0 ? [capacite ?? null] : [null, capacite ?? null],

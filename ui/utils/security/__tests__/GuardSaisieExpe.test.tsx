@@ -139,17 +139,14 @@ const fixtureBuilder = () => {
         expect(redirectMock).toHaveBeenCalledWith("/");
       },
       verifierRedirectionSaisieExpe: () => {
-        expect(redirectMock).toHaveBeenCalledWith("/intentions/perdir/saisie");
+        expect(redirectMock).toHaveBeenCalledWith("/demandes/saisie");
       },
-      verifierRedirectionSaisieHorsExpe: () => {
-        expect(redirectMock).toHaveBeenCalledWith("/intentions/saisie");
-      }
     },
   };
 };
 
 const redirectMock = vi.hoisted(() => vi.fn());
-const usePathnameMock = vi.hoisted(() => vi.fn(() => "/intentions/perdir/saisie/new"));
+const usePathnameMock = vi.hoisted(() => vi.fn(() => "/demandes/saisie/new"));
 
 vi.mock("next/navigation", () => ({
   redirect: redirectMock,
@@ -200,7 +197,7 @@ describe("ui > components > security > GuardSaisieExpe", () => {
     fixture.when.accesSaisieExpe();
 
     fixture.then.verifierNotAccesSaisieExpe();
-    fixture.then.verifierRedirectionSaisieHorsExpe();
+    fixture.then.verifierRedirectionSaisieExpe();
   });
 
   it("Doit rediriger vers la boîte de réception les user perdir hors expe sur une nouvelle demande d'une campagne régionale avec saisie perdir d'une autre région", () => {
@@ -210,7 +207,7 @@ describe("ui > components > security > GuardSaisieExpe", () => {
     fixture.when.accesSaisieExpe();
 
     fixture.then.verifierNotAccesSaisieExpe();
-    fixture.then.verifierRedirectionSaisieHorsExpe();
+    fixture.then.verifierRedirectionSaisieExpe();
   });
 
   it("Doit rediriger les user perdir expe sur une demande d'une campagne régionale sans saisie perdir", () => {

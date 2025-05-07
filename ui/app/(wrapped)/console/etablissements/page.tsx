@@ -48,59 +48,56 @@ const ColonneFilterSection = chakra(
     forcedColonnes?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
     handleColonneFilters: (value: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]) => void;
     trackEvent: (name: string, params?: Record<string, unknown>) => void;
-  }) => {
-    return (
-      <Flex justifyContent={"start"} direction="row">
-        <GroupedMultiselect
-          width={"48"}
-          size="md"
-          variant={"newInput"}
-          onChange={(selected) => handleColonneFilters(selected as (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[])}
-          groupedOptions={Object.entries(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL).reduce(
-            (acc, [group, { color, options }]) => {
-              acc[group] = {
-                color,
-                options: Object.entries(options).map(([value, label]) => ({
-                  label,
-                  value,
-                  isDisabled: forcedColonnes?.includes(value as keyof typeof FORMATION_ETABLISSEMENT_COLUMNS),
-                })),
-              };
-              return acc;
-            },
-            {} as Record<
-              string,
-              {
-                color: string;
-                options: { label: string; value: string; disabled?: boolean }[];
-              }
-            >
-          )}
-          defaultOptions={Object.entries(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT)?.map(([value, label]) => {
-            return {
-              label,
-              value,
+  }) =>
+    <Flex justifyContent={"start"} direction="row">
+      <GroupedMultiselect
+        width={"48"}
+        size="md"
+        variant={"newInput"}
+        onChange={(selected) => handleColonneFilters(selected as (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[])}
+        groupedOptions={Object.entries(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL).reduce(
+          (acc, [group, { color, options }]) => {
+            acc[group] = {
+              color,
+              options: Object.entries(options).map(([value, label]) => ({
+                label,
+                value,
+                isDisabled: forcedColonnes?.includes(value as keyof typeof FORMATION_ETABLISSEMENT_COLUMNS),
+              })),
             };
-          })}
-          value={colonneFilters ?? []}
-          customButton={
-            <MenuButton
-              as={Button}
-              variant={"externalLink"}
-              leftIcon={<Icon icon={"ri:table-line"} />}
-              color="bluefrance.113"
-              onClick={() => trackEvent("etablissements:affichage-colonnes")}
-            >
-              Modifier les colonnes
-            </MenuButton>
-          }
-        />
-      </Flex>
-    );
-  }
+            return acc;
+          },
+          {} as Record<
+            string,
+            {
+              color: string;
+              options: { label: string; value: string; disabled?: boolean }[];
+            }
+          >
+        )}
+        defaultOptions={Object.entries(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT)?.map(([value, label]) => {
+          return {
+            label,
+            value,
+          };
+        })}
+        value={colonneFilters ?? []}
+        customButton={
+          <MenuButton
+            as={Button}
+            variant={"externalLink"}
+            leftIcon={<Icon icon={"ri:table-line"} />}
+            color="bluefrance.113"
+            onClick={() => trackEvent("etablissements:affichage-colonnes")}
+          >
+            Modifier les colonnes
+          </MenuButton>
+        }
+      />
+    </Flex>
 );
 
-export default function Etablissements() {
+const Page = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const trackEvent = usePlausible();
   const router = useRouter();
@@ -444,4 +441,6 @@ export default function Etablissements() {
       )}
     </>
   );
-}
+};
+
+export default Page;

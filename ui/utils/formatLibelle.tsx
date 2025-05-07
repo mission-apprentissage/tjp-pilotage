@@ -8,26 +8,22 @@ import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 
 import { formatArray } from "./formatUtils";
 
-export const formatAnneeCommuneLibelle = (
+type LabelSizeType = "short" | "long";
+type SizeType = "xs" | "sm" | "md";
+
+export const formatFamilleMetierLibelle = (
   formation: {
     libelleFormation?: string;
     typeFamille?: string;
   },
-  labelSize?: "short" | "long",
-  size?: "xs" | "sm" | "md",
+  labelSize?: LabelSizeType,
+  size?: SizeType,
   fontSize?: string,
 ): React.ReactNode => {
   switch (formation.typeFamille) {
   case TypeFamilleEnum["2nde_commune"]:
-    return format2ndeCommuneLibelle({
-      libelleFormation: formation.libelleFormation,
-      typeFamille: formation.typeFamille,
-      labelSize,
-      size,
-      fontSize
-    });
   case TypeFamilleEnum["1ere_commune"]:
-    return format1ereCommuneLibelle({
+    return formatAnneeCommuneLibelle({
       libelleFormation : formation.libelleFormation,
       typeFamille: formation.typeFamille,
       labelSize,
@@ -35,15 +31,8 @@ export const formatAnneeCommuneLibelle = (
       fontSize
     });
   case TypeFamilleEnum["specialite"]:
-    return formatSpecialiteLibelle({
-      libelleFormation : formation.libelleFormation,
-      typeFamille: formation.typeFamille,
-      labelSize,
-      size,
-      fontSize
-    });
   case TypeFamilleEnum["option"]:
-    return formatOptionLibelle({
+    return formatSpecialiteOuOptionLibelle({
       libelleFormation : formation.libelleFormation,
       typeFamille: formation.typeFamille,
       labelSize,
@@ -55,7 +44,7 @@ export const formatAnneeCommuneLibelle = (
   }
 };
 
-export const format2ndeCommuneLibelle = (
+export const formatAnneeCommuneLibelle = (
   {
     libelleFormation,
     typeFamille,
@@ -66,12 +55,12 @@ export const format2ndeCommuneLibelle = (
   : {
     libelleFormation?: string,
     typeFamille?: string,
-    labelSize?: "short" | "long",
-    size?: "xs" | "sm" | "md",
+    labelSize?: LabelSizeType,
+    size?: SizeType,
     fontSize?: string
   }): ReactNode => (
   <Flex alignItems={"center"} gap={2}>
-    {libelleFormation?.replace(" 2nde commune", "")}
+    {libelleFormation?.replace(" 2nde commune", "").replace(" 1ere annee commune", "")}
     <BadgeTypeFamille
       typeFamille={typeFamille as TypeFamilleKeys}
       labelSize={labelSize}
@@ -81,7 +70,7 @@ export const format2ndeCommuneLibelle = (
   </Flex>
 );
 
-export const format1ereCommuneLibelle = (
+export const formatSpecialiteOuOptionLibelle = (
   {
     libelleFormation,
     typeFamille,
@@ -92,60 +81,8 @@ export const format1ereCommuneLibelle = (
   : {
     libelleFormation?: string,
     typeFamille?: string,
-    labelSize?: "short" | "long",
-    size?: "xs" | "sm" | "md",
-    fontSize?: string
-}): ReactNode => (
-  <Flex alignItems={"center"} gap={2}>
-    {libelleFormation?.replace(" 1ere annee commune", "")}
-    <BadgeTypeFamille
-      typeFamille={typeFamille as TypeFamilleKeys}
-      labelSize={labelSize}
-      size={size}
-      fontSize={fontSize}
-    />
-  </Flex>
-);
-
-export const formatSpecialiteLibelle = (
-  {
-    libelleFormation,
-    typeFamille,
-    labelSize = "short",
-    size = "xs",
-    fontSize,
-  }
-  : {
-    libelleFormation?: string,
-    typeFamille?: string,
-    labelSize?: "short" | "long",
-    size?: "xs" | "sm" | "md",
-    fontSize?: string
-}): ReactNode => (
-  <Flex alignItems={"center"} gap={2}>
-    {libelleFormation}
-    <BadgeTypeFamille
-      typeFamille={typeFamille as TypeFamilleKeys}
-      labelSize={labelSize}
-      size={size}
-      fontSize={fontSize}
-    />
-  </Flex>
-);
-
-export const formatOptionLibelle = (
-  {
-    libelleFormation,
-    typeFamille,
-    labelSize = "short",
-    size = "xs",
-    fontSize,
-  }
-  : {
-    libelleFormation?: string,
-    typeFamille?: string,
-    labelSize?: "short" | "long",
-    size?: "xs" | "sm" | "md",
+    labelSize?: LabelSizeType,
+    size?: SizeType,
     fontSize?: string
 }): ReactNode => (
   <Flex alignItems={"center"} gap={2}>

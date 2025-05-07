@@ -43,10 +43,10 @@ export const EtablissementMapContext = createContext<EtablissementMapContextType
 
 export function EtablissementMapContextProvider({ children, value }: EtablissementMapContextProps) {
   const [bbox, setBbox] = useState({
-    minLat: value?.bbox?.minLat || 0,
-    minLng: value?.bbox?.minLng || 0,
-    maxLat: value?.bbox?.maxLat || 0,
-    maxLng: value?.bbox?.maxLng || 0,
+    minLat: value?.bbox?.minLat ?? 0,
+    minLng: value?.bbox?.minLng ?? 0,
+    maxLat: value?.bbox?.maxLat ?? 0,
+    maxLng: value?.bbox?.maxLng ?? 0,
   });
   const [etablissementMap, setEtablissementMap] = useState<EtablissementMapType>();
   const [etablissementList, setEtablissementList] = useState<EtablissementListType>();

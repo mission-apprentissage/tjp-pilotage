@@ -56,6 +56,12 @@ export const formatNumberToString = (
   }).format(value);
 };
 
+export const formatNumberToMonetaryString = (
+  value?: number | null,
+  numberOfDigits: number = 0,
+  nullValue: string = "0"
+): string => `${formatNumberToString(value, numberOfDigits, nullValue)} €`;
+
 export const formatPercentage = (
   value?: number | null,
   numberOfDigits: number = 0,

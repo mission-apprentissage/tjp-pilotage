@@ -7,7 +7,7 @@ import { ScopeEnum } from "shared";
 
 import { serverClient } from "@/api.client";
 
-import { PageDomaineDeFormationClient } from "./client";
+import { PageClient } from "./page.client";
 import type { Filters, FormationListItem, FormationsCounter, QueryFilters } from "./types";
 
 const fetchNsf = async (codeNsf: string, filters: QueryFilters) => {
@@ -99,7 +99,7 @@ type Params = {
   searchParams: Promise<Partial<Filters>>;
 };
 
-export default async function PageDomaineDeFormation({ params, searchParams }: Readonly<Params>) {
+const Page = async ({ params, searchParams }: Readonly<Params>) => {
   const { codeNsf } = await params;
   const { codeRegion, codeAcademie, codeDepartement, cfd, presence, voie } = await searchParams;
 
@@ -159,7 +159,7 @@ export default async function PageDomaineDeFormation({ params, searchParams }: R
   const selectedCfd = findDefaultCfd(cfd, formations, formationsByLibelleNiveauDiplome);
 
   return (
-    <PageDomaineDeFormationClient
+    <PageClient
       libelleNsf={results.libelleNsf}
       codeNsf={codeNsf}
       formations={formations}
@@ -173,4 +173,6 @@ export default async function PageDomaineDeFormation({ params, searchParams }: R
       formationsByLibelleNiveauDiplome={formationsByLibelleNiveauDiplome}
     />
   );
-}
+};
+
+export default Page;

@@ -19,7 +19,9 @@ export const up = async (db: Kysely<unknown>) => {
 };
 
 export const down = async (db: Kysely<unknown>) => {
-  await tables.map((table) => {
-    sql`DROP TRIGGER t ON ${sql.table(table)};`.execute(db);
-  });
+  await Promise.all(
+    tables.map((table) => {
+      sql`DROP TRIGGER t ON ${sql.table(table)};`.execute(db);
+    })
+  );
 };

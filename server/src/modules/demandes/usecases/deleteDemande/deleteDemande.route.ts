@@ -6,7 +6,7 @@ import type { RequestUser } from "@/modules/core/model/User";
 import { hasPermissionHandler } from "@/modules/core/utils/hasPermission";
 import type { Server } from "@/server/server";
 
-import { deleteDemande } from "./deleteDemande.usecase";
+import { deleteDemandeUsecase } from "./deleteDemande.usecase";
 
 const ROUTE = ROUTES["[DELETE]/demande/:numero"];
 
@@ -17,10 +17,10 @@ export const deleteDemandeRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler(PermissionEnum["intentions/ecriture"]),
+      preHandler: hasPermissionHandler(PermissionEnum["demande/ecriture"]),
       handler: async (request, response) => {
         const user = request.user as RequestUser;
-        await deleteDemande({ numero: request.params.numero, user });
+        await deleteDemandeUsecase({ numero: request.params.numero, user });
         response.status(200).send();
       },
     });

@@ -1,4 +1,5 @@
 import { inject } from "injecti";
+import type {OrderType} from 'shared/enum/orderEnum';
 import type { PermissionScope } from "shared/enum/permissionScopeEnum";
 
 import { findUsers } from "./findUsers.dep";
@@ -17,7 +18,7 @@ export const [getUsers] = inject(
       offset?: number;
       limit?: number;
       search?: string;
-      orderBy?: { order: "asc" | "desc"; column: string };
+      orderBy?: { order: OrderType; column: string };
       scope: PermissionScope;
       scopeFilter: Array<string>;
     }) => {

@@ -3,7 +3,7 @@ import _ from "lodash";
 import { usePlausible } from "next-plausible";
 import { CURRENT_RENTREE } from "shared";
 
-import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
+import { formatFamilleMetierLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import type { Formation } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
@@ -88,7 +88,7 @@ export const ListeFormations = ({
                     }}
                     paddingLeft={"2px"}
                   >
-                    <Tooltip label={formatAnneeCommuneLibelle(formation.libelleFormation)}>
+                    <Tooltip label={formatFamilleMetierLibelle(formation.libelleFormation)}>
                       <Text
                         my={2}
                         color={offre === formation.offre ? "bluefrance.113" : ""}
@@ -98,7 +98,7 @@ export const ListeFormations = ({
                         isTruncated={true}
                         _firstLetter={{ textTransform: "uppercase" }}
                       >
-                        {formatAnneeCommuneLibelle(formation.libelleFormation)}
+                        {formatFamilleMetierLibelle(formation.libelleFormation)}
                       </Text>
                     </Tooltip>
                     <Flex direction="row" gap={1}>

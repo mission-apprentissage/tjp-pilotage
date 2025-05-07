@@ -46,7 +46,7 @@ export type TemplatePayloads = {
     };
     activationToken: string;
   };
-  intention_dossier_incomplet: {
+  demande_dossier_incomplet: {
     libelleFormation: string;
   };
 };

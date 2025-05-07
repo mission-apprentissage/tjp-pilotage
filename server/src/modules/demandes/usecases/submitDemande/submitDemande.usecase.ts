@@ -3,20 +3,21 @@ import * as Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { demandeValidators, getPermissionScope, guardScope } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
+import {PermissionEnum} from 'shared/enum/permissionEnum';
 import type { submitDemandeSchema } from "shared/routes/schemas/post.demande.submit.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneDataEtablissement } from "@/modules/data/repositories/findOneDataEtablissement.query";
-import { findOneDataFormation } from "@/modules/demandes/repositories/findOneDataFormation.query";
+import { findOneDataFormationQuery } from "@/modules/demandes/repositories/findOneDataFormation.query";
 import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
 import { findOneSimilarDemande } from "@/modules/demandes/repositories/findOneSimilarDemande.query";
 import { generateId, generateShortId } from "@/modules/utils/generateId";
 import logger from "@/services/logger";
 import { cleanNull } from "@/utils/noNull";
 
-import { createDemandeQuery } from "./createDemandeQuery.dep";
+import { createChangementStatutQuery } from "./deps/createChangementStatut.dep";
+import { createDemandeQuery } from "./deps/createDemande.dep";
 
 type Demande = z.infer<typeof submitDemandeSchema.body>["demande"];
 
@@ -33,47 +34,51 @@ const validateDemande = (demande: Demande) => {
 const logDemande = (demande?: { statut: string }) => {
   if (!demande) return;
   switch (demande.statut) {
-  case DemandeStatutEnum["projet de demande"]:
-    logger.info({ demande: demande }, "[SUBMIT_DEMANDE] Projet de demande enregistré");
+  case DemandeStatutEnum["proposition"]:
+    logger.info(
+      {
+        demande: demande,
+      },
+      "[SUBMIT_INTENTION] Proposition enregistrée"
+    );
     break;
   case DemandeStatutEnum["demande validée"]:
-    logger.info({ demande: demande }, "[SUBMIT_DEMANDE] Demande validée");
+    logger.info({ demande: demande }, "[SUBMIT_INTENTION] Demande validée");
     break;
   case DemandeStatutEnum["refusée"]:
-    logger.info({ demande: demande }, "[SUBMIT_DEMANDE] Demande refusée");
+    logger.info({ demande: demande }, "[SUBMIT_INTENTION] Demande refusée");
     break;
   }
 };
 
-export const [submitDemande, submitDemandeFactory] = inject(
+export const [submitDemandeUsecase, submitDemandeFactory] = inject(
   {
     createDemandeQuery,
+    createChangementStatutQuery,
     findOneDataEtablissement,
-    findOneDataFormation,
+    findOneDataFormationQuery,
     findOneDemandeQuery,
     findOneSimilarDemande,
   },
   (deps) =>
-    async ({ demande, user }: { user: RequestUser; demande: Demande }) => {
+    async ({
+      demande,
+      user,
+    }: {
+      user: RequestUser;
+      demande: Demande;
+    }) => {
       const currentDemande = demande.numero ? await deps.findOneDemandeQuery(demande.numero) : undefined;
 
       const { cfd, uai } = demande;
 
       const dataEtablissement = await deps.findOneDataEtablissement({ uai });
-      if (!dataEtablissement) {
-        logger.error(
-          {
-            demande,
-            user
-          },
-          "[SUBMIT_DEMANDE] Code uai non valide"
-        );
-        throw Boom.badRequest("Code uai non valide");
-      }
+      if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
       if (!dataEtablissement.codeRegion) throw Boom.badData();
 
-      const scope = getPermissionScope(user.role, "intentions/ecriture");
+      const scope = getPermissionScope(user.role, PermissionEnum["demande/ecriture"]);
       const isAllowed = guardScope(scope, {
+        uai: () => user.uais?.includes(demande.uai) ?? false,
         région: () => user.codeRegion === dataEtablissement.codeRegion,
         national: () => true,
       });
@@ -84,7 +89,14 @@ export const [submitDemande, submitDemandeFactory] = inject(
         notNumero: demande.numero,
       });
       if (sameDemande) {
-        logger.error({ sameDemande, demande, user }, "[SUBMIT_DEMANDE] Demande similaire existante");
+        logger.error(
+          {
+            sameDemande,
+            demande,
+            user
+          },
+          "[SUBMIT_INTENTION] Demande similaire existante"
+        );
         throw Boom.badRequest("Demande similaire existante", {
           id: sameDemande.id,
           errors: {
@@ -94,15 +106,13 @@ export const [submitDemande, submitDemandeFactory] = inject(
         });
       }
 
-      const compensationRentreeScolaire =
-        demande.typeDemande === DemandeTypeEnum["augmentation_compensation"] ||
-        demande.typeDemande === DemandeTypeEnum["ouverture_compensation"]
-          ? demande.rentreeScolaire
-          : undefined;
-
-      const dataFormation = await deps.findOneDataFormation({ cfd });
+      const dataFormation = await deps.findOneDataFormationQuery(cfd);
       if (!dataFormation) {
-        logger.error({ demande, user }, "[SUBMIT_DEMANDE] CFD non valide");
+        logger.error({
+          demande,
+          cfd,
+          user
+        }, "[SUBMIT_INTENTION] CFD non valide");
         throw Boom.badRequest("CFD non valide");
       }
 
@@ -112,9 +122,6 @@ export const [submitDemande, submitDemandeFactory] = inject(
         libelleFCIL: null,
         autreMotif: null,
         commentaire: null,
-        compensationCfd: null,
-        compensationCodeDispositif: null,
-        compensationUai: null,
         capaciteScolaireActuelle: 0,
         capaciteScolaire: 0,
         capaciteScolaireColoreeActuelle: 0,
@@ -124,14 +131,19 @@ export const [submitDemande, submitDemandeFactory] = inject(
         capaciteApprentissageColoreeActuelle: 0,
         capaciteApprentissageColoree: 0,
         mixte: false,
-        poursuitePedagogique: false,
-        compensationRentreeScolaire,
         ...demande,
       };
 
       const errors = validateDemande(cleanNull(demandeData));
       if (errors) {
-        logger.error({ errors, demande: demandeData, user }, "[SUBMIT_DEMANDE] Donnée incorrectes");
+        logger.error(
+          {
+            errors,
+            demande: demandeData,
+            user
+          },
+          "[SUBMIT_INTENTION] Demande incorrecte"
+        );
         throw Boom.badData("Donnée incorrectes", { errors });
       }
 
@@ -145,6 +157,17 @@ export const [submitDemande, submitDemandeFactory] = inject(
         codeRegion: dataEtablissement.codeRegion,
         updatedAt: new Date(),
       });
+
+      if (created.statut !== currentDemande?.statut) {
+        await deps.createChangementStatutQuery({
+          id: generateId(),
+          demandeNumero: created.numero,
+          statutPrecedent: currentDemande?.statut,
+          statut: created.statut,
+          createdBy: user.id,
+          updatedAt: new Date(),
+        });
+      }
 
       logDemande(created);
       return created;

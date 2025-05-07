@@ -8,7 +8,7 @@ const correctPassword = "Azerty123!";
 const jwtSecret = "jwtSecret";
 const resetPasswordToken = jwt.sign({ email: "test@test.fr" }, jwtSecret, {
   issuer: "issuer",
-  expiresIn: "1h",
+  expiresIn: "24h",
 });
 
 describe("resetPassword usecase", () => {

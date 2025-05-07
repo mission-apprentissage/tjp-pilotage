@@ -365,7 +365,7 @@ export const Quadrant = function <
 
   return (
     <Box position="relative" className={className} overflow="visible !important">
-      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0" role="figure"></Box>
+      <Box ref={containerRef} position="absolute" right="0" top="0" left="0" bottom="0" role="figure" />
 
       {InfoTootipContent && (
         <InfoTooltip>

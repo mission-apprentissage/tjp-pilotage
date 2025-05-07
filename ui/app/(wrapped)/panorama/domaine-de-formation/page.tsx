@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 
 import { serverClient } from "@/api.client";
 
-import { PanoramaDomaineDeFormationClient } from "./client";
+import { PageClient } from "./page.client";
 
 const fetchDefaultNsf = async () => {
   const headersList = Object.fromEntries(headers().entries());
@@ -28,5 +28,5 @@ export default async function Panorama({ searchParams }: Readonly<Params>) {
   const { wrongNsf } = await searchParams;
   const defaultNsf = await fetchDefaultNsf();
 
-  return <PanoramaDomaineDeFormationClient defaultNsf={defaultNsf} wrongNsf={wrongNsf} />;
+  return <PageClient defaultNsf={defaultNsf} wrongNsf={wrongNsf} />;
 }

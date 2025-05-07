@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
-import type { Voie } from "shared/enum/voieEnum";
+import type { VoieType } from "shared/enum/voieEnum";
 
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
@@ -36,7 +36,7 @@ export const getFormations = async ({ uai }: { uai: string }) =>
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
-    .$narrowType<{ voie: Voie }>()
+    .$narrowType<{ voie: VoieType }>()
     .orderBy(["libelleNiveauDiplome asc", "libelleFormation asc", "libelleDispositif"])
     .execute()
     .then(cleanNull)

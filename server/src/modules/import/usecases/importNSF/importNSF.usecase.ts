@@ -30,7 +30,7 @@ export const importNSFFactory =
         async (item) => {
           const data: Insertable<DB["nsf"]> = {
             codeNsf: item.GROUPE_SPECIALITE,
-            libelleNsf: item.LIBELLE_EDITION || normalizeLibelleLong(item.LIBELLE_LONG) || "",
+            libelleNsf: item.LIBELLE_EDITION ?? normalizeLibelleLong(item.LIBELLE_LONG) ?? "",
           };
 
           await createNSFGroupeSpecialite(data);

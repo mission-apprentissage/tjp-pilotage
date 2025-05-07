@@ -2,11 +2,9 @@ export {
   countDifferenceCapaciteScolaire,
   countDifferenceCapaciteScolaireColoree,
   countDifferenceCapaciteScolaireCorrection,
-  countDifferenceCapaciteScolaireIntention,
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteApprentissageColoree,
   countDifferenceCapaciteApprentissageCorrection,
-  countDifferenceCapaciteApprentissageIntention,
 } from "./countDifferenceCapacite";
 
 export {
