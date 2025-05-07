@@ -3,6 +3,7 @@ import {
   DeleteObjectCommand,
   GetObjectCommand,
   ListObjectsV2Command,
+  NoSuchKey,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
@@ -146,36 +147,35 @@ export const ovhFileManagerFactory = (
       { filepath, legacyFilepath} :
       { filepath: string, legacyFilepath?: string}
     ): Promise<string> => {
-      const generateDownloadUrl = async (path: string): Promise<string> => {
-        try {
-          if (!path) {
-            throw new Error("No filepath provided to get download url.");
-          }
-
-          const command = new GetObjectCommand({
-            Bucket: config.s3.bucket,
-            Key: path,
-          });
-
-          return getSignedUrl(deps.client, command, { expiresIn: 600 });
-        } catch (error) {
-          console.error(
-            `Une erreur est survenue en générant l'url de téléchargement du fichier suivant: ${path}`,
-            error
-          );
-          throw new Error((error as Error).message);
+      const generateDownloadCommand = async (path: string): Promise<GetObjectCommand> => {
+        if (!path) {
+          throw new Error("No filepath provided to get download url.");
         }
+
+        const command = new GetObjectCommand({
+          Bucket: config.s3.bucket,
+          Key: path,
+        });
+        return command;
       };
 
       try {
+        const command = await generateDownloadCommand(filepath);
         // Essayez d'abord avec le chemin principal
-        return await generateDownloadUrl(filepath);
-      } catch (error) {
-        // Si le chemin principal échoue et que legacyFilepath est fourni, essayez avec legacyFilepath
-        if (legacyFilepath) {
-          return generateDownloadUrl(legacyFilepath);
+        await deps.client.send(command);
+        return getSignedUrl(deps.client, command, { expiresIn: 600 });
+      }
+      catch (error) {
+        if (error instanceof NoSuchKey) {
+          // Si le chemin principal échoue et que legacyFilepath est fourni, essayez avec legacyFilepath
+          if (legacyFilepath) {
+            const command = await generateDownloadCommand(legacyFilepath);
+            // Essayez d'abord avec le chemin principal
+            await deps.client.send(command);
+            return getSignedUrl(deps.client, command, { expiresIn: 600 });
+          }
         }
-        throw error;
+        throw new Error((error as Error).message);
       }
     }
   };
