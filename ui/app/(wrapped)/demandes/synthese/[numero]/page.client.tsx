@@ -47,7 +47,7 @@ export const PageClient = ({
       onError: (error: unknown) => {
         if (isAxiosError(error) && error.response?.data?.message) {
           console.error(error);
-          if (error.response?.status === 404) router.push(`/demandes/perdir/saisie?notfound=${numero}`);
+          if (error.response?.status === 404) router.push(getRoutingSaisieDemande({user, suffix: `?notfound=${numero}` }));
         }
       },
     }
