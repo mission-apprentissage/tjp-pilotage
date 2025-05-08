@@ -32,7 +32,7 @@ export const localFileManagerFactory = (): FileManager => {
 
       fs.writeFileSync(filepath, file, { encoding: "utf-8", flag: "w" });
     },
-    listFiles: async (filepath: string): Promise<FileType[]> => {
+    listFiles: async ({filepath}:{filepath: string}): Promise<FileType[]> => {
       try {
         if (!fs.existsSync(filepath)) {
           return [];
@@ -58,12 +58,12 @@ export const localFileManagerFactory = (): FileManager => {
         return [];
       }
     },
-    deleteFile: async (filepath: string) => {
+    deleteFile: async ({filepath}:{filepath: string}) => {
       if (fs.existsSync(filepath)) {
         fs.unlinkSync(filepath);
       }
     },
-    getDownloadUrl: async (filepath: string): Promise<string> => {
+    getDownloadUrl: async ({filepath}:{filepath: string}): Promise<string> => {
       return encodeURI(`${config.publicUrl}/public/upload/${filepath.replace("./public/upload/", "")}`);
     },
   };

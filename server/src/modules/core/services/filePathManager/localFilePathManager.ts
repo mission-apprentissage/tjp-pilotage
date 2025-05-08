@@ -2,6 +2,9 @@ import type { FilePathManager } from "./filePathManager";
 
 export const localFilePathManagerFactory = (): FilePathManager => {
   return {
+    getLegacyIntentionFilePath: (_id: string, _filename: string = "") => {
+      return "";
+    },
     getDemandeFilePath: (id: string, filename: string = "") => {
       return `./public/upload/${id}/${filename}`;
     },

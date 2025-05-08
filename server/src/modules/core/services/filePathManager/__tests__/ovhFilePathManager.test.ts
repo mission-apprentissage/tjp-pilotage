@@ -35,4 +35,15 @@ describe("Core Service: Ovh file path manager", () => {
     // then
     expect(path).toBe(`demandes/${id}/exemple.pdf`);
   });
+
+  it("should generate a path for a given legacy demande id", () => {
+    // given
+    const id = "INTENTION_01";
+
+    // when
+    const path = filePathManager.getLegacyIntentionFilePath(id, "exemple.pdf");
+
+    // then
+    expect(path).toBe(`intentions/${id}/exemple.pdf`);
+  });
 });
