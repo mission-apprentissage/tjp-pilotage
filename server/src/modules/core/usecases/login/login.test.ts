@@ -30,7 +30,8 @@ describe("server > src > modules > usecases > login", () => {
       findUserQuery: async () => ({
         email: "test@test.fr",
         password: undefined,
-        sub: undefined
+        sub: undefined,
+        enabled: true
       }),
     });
 
@@ -48,7 +49,8 @@ describe("server > src > modules > usecases > login", () => {
       findUserQuery: async () => ({
         email: "test@test.fr",
         password: hashedPassword,
-        sub: undefined
+        sub: undefined,
+        enabled: true
       }),
     });
 
@@ -60,13 +62,33 @@ describe("server > src > modules > usecases > login", () => {
     ).rejects.toThrow();
   });
 
+  it("Doit remonté une erreur si le compte est desactivé", async () => {
+    const login = loginFactory({
+      jwtSecret,
+      findUserQuery: async () => ({
+        email: "test@test.fr",
+        password: hashedPassword,
+        sub: "1234",
+        enabled: false
+      }),
+    });
+
+    await expect(async () =>
+      login({
+        password: hashedPassword,
+        email: "test@test.fr",
+      })
+    ).rejects.toThrow(LoginErrorsEnum.DISABLED);
+  });
+
   it("Doit remonté une erreur si le compte est un compte utilisant le SSO", async () => {
     const login = loginFactory({
       jwtSecret,
       findUserQuery: async () => ({
         email: "test@test.fr",
         password: hashedPassword,
-        sub: "1234"
+        sub: "1234",
+        enabled: true
       }),
     });
 
@@ -84,7 +106,8 @@ describe("server > src > modules > usecases > login", () => {
       findUserQuery: async () => ({
         email: "test@test.fr",
         password: hashedPassword,
-        sub: undefined
+        sub: undefined,
+        enabled: true
       }),
     });
 
