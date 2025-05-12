@@ -5,7 +5,12 @@ import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 import { flatten, uniq } from "lodash-es";
 import type { UserinfoResponse } from "openid-client";
-import {RoleEnum} from 'shared';
+import type { Role } from 'shared';
+import { RoleEnum } from 'shared';
+import { DneSSOErrorsEnum } from "shared/enum/dneSSOErrorsEnum";
+import type { DneSSOInfoType } from "shared/enum/dneSSOInfoEnum";
+import type { SupportedLDAPGroups } from "shared/security/sso";
+import { LDAP_GROUP_ROLES_DNE_CORRESPONDANCE, ROLE_DNE_ROLE_ORION_CORRESPONDANCE,RoleDNEEnum } from "shared/security/sso";
 
 import config from "@/config";
 import { getDneClient } from "@/modules/core/services/dneClient/dneClient";
@@ -13,21 +18,55 @@ import logger from "@/services/logger";
 
 import { createUserInDB } from "./createUser.dep";
 import { findEtablissement } from "./findEtablissement.dep";
+import { findRegionFromAcademie } from "./findRegionFromAcademie.dep";
 import { findUserQuery } from "./findUserQuery.dep";
 
 // eslint-disable-next-line import/no-named-as-default-member
 dayjs.extend(customParseFormat);
 
 type ExtraUserInfo = {
-  FrEduFonctAdm: string;
-  FrEduRne: Array<string>;
+  FrEduFonctAdm?: string;
+  FrEduRne?: Array<string>;
   FrEduResDel?: Array<string>;
   FrEduRneResp?: Array<string>;
+  // Liste des groupes LDAP auxquels l'utilisateur est rattaché
+  ctgrps?: Array<string>;
+  // Titre de fonction de l'utilisateur
+  title?: string;
+  // Nécessaire à l'identification du DASEN
+  FrEduGestResp?: Array<string>;
+  // Code région académique
+  codaca?:string;
 };
+
+type TUserEtablissement = {
+  codeRegion: string | null;
+  uai: string;
+} | undefined
+
+interface UserCommunicationArguments {
+  passwordDeleted: boolean;
+  userCreated: boolean;
+}
+
+const generateUserCommunication =
+  ({ userCreated, passwordDeleted }: UserCommunicationArguments): Array<DneSSOInfoType> => {
+    const userCommunication: Array<DneSSOInfoType> = [];
+
+    if (userCreated) {
+      userCommunication.push("USER_CREATED");
+    }
+
+    if (passwordDeleted) {
+      userCommunication.push("USER_SWITCHED");
+    }
+
+    return userCommunication;
+  };
 
 const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
   const uais: Array<string> = [];
-  const perdirOnUais = userInfo.FrEduRne?.map((item) => item.split("$")[0]);
+  const perdirOnUais = userInfo.FrEduRne?.map((item) => item.split("$")[0]) ?? [];
 
   if (userInfo.FrEduFonctAdm === "DIR") {
     if (perdirOnUais.length > 0) {
@@ -69,18 +108,67 @@ const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
   }
   return uais;
 };
-// @ts-expect-error TODO
+
+const extractRoleFromLDAPGroups = (groups: Array<string>): Role | undefined => {
+  const orionGroups = groups.filter((group) => group.startsWith("GRP_ORION"));
+
+  if (orionGroups.length === 0) {
+    return;
+  }
+
+  const roles = orionGroups.map((group) => {
+    const roleDne = LDAP_GROUP_ROLES_DNE_CORRESPONDANCE[group as SupportedLDAPGroups];
+    return ROLE_DNE_ROLE_ORION_CORRESPONDANCE[roleDne];
+  });
+
+  return roles.find((role) => role !== undefined);
+};
+
 const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
+  // Autres
+  if (userInfo.ctgrps) {
+    const role = extractRoleFromLDAPGroups(userInfo.ctgrps);
+
+    if (role) {
+      return {
+        role,
+        uais: []
+      };
+    }
+  }
+
+  // DASEN
+  // Voir fiche polhab page 8
+  if (userInfo.FrEduGestResp?.some(s => s.endsWith("805$ORIONINSERJEUNES"))) {
+    return {
+      role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["DASEN"],
+      uais: []
+    };
+  }
+
+  // Inspecteurs
+  if (userInfo.title === RoleDNEEnum.INS) {
+    return {
+      role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["INS"],
+      uais: []
+    };
+  }
+
+  // Perdir
   if (userInfo.FrEduFonctAdm === "DIR" || userInfo.FrEduResDel) {
     const uais = extractUaisRep(userInfo);
 
     if (uais.length > 0) {
       return {
-        role: RoleEnum["perdir"],
+        role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["PERDIR"],
         uais,
       };
+    } else {
+      throw new Error(DneSSOErrorsEnum.MISSING_RIGHTS_PERDIR);
     }
   }
+
+  return undefined;
 };
 
 const decodeCodeVerifierJwt = (token: string, secret: string) => {
@@ -106,100 +194,182 @@ export const [redirectDne, redirectDneFactory] = inject(
     findUserQuery,
     createUserInDB,
     findEtablissement,
+    findRegionFromAcademie
   },
   (deps) =>
     async ({ codeVerifierJwt, url }: { codeVerifierJwt: string; url: string }) => {
       const code_verifier = decodeCodeVerifierJwt(codeVerifierJwt, deps.codeVerifierJwtSecret);
 
-      if (!code_verifier) throw new Error("missing code_verifier");
+      if (!code_verifier) throw new Error(DneSSOErrorsEnum.MISSING_CODE_VERIFIER);
 
-      const client = await deps.getDneClient();
+      const client = await deps.getDneClient().catch((err) => {
+        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du client");
+        throw new Error(DneSSOErrorsEnum.FAILURE_ON_DNE_REDIRECT);
+      });
+
       const params = client.callbackParams(url);
       const tokenSet = await client.callback(config.dne.redirectUri, params, {
         code_verifier,
+      }).catch((err) => {
+        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du token");
+        throw new Error(DneSSOErrorsEnum.MISSING_ACCESS_TOKEN);
       });
-      if (!tokenSet.access_token) throw new Error("missing access_token");
 
-      const userinfo = await client.userinfo<ExtraUserInfo>(tokenSet.access_token);
+      if (!tokenSet.access_token) throw new Error(DneSSOErrorsEnum.MISSING_ACCESS_TOKEN);
+
+      const userinfo = await client.userinfo<ExtraUserInfo>(tokenSet.access_token).catch((err) => {
+        logger.error({ error: err }, "[SSO] Erreur lors de la récupération du userinfo");
+        throw new Error(DneSSOErrorsEnum.MISSING_USERINFO);
+      });
+
+      if (!userinfo) throw new Error(DneSSOErrorsEnum.MISSING_USERINFO);
+
+      logger.info(
+        {
+          userinfo,
+        },
+        "[SSO] Userinfo"
+      );
 
       const email = userinfo.email?.toLowerCase();
       if (!email) {
         logger.error({
-          error: new Error("missing user email"),
+          error: new Error(DneSSOErrorsEnum.MISSING_USER_EMAIL),
           userinfo,
         }, "[SSO] Il manque l'email de l'utilisateur");
-        throw new Error("missing user email");
+        throw new Error(DneSSOErrorsEnum.MISSING_USER_EMAIL);
       }
 
       const user = await deps.findUserQuery(email);
       if (user && !user.enabled) {
         logger.error({
-          error: new Error("user not enabled"),
+          error: new Error(DneSSOErrorsEnum.USER_NOT_ENABLED),
           userinfo,
           email,
         }, "[SSO] L'utilisateur existe et est désactivé");
-        throw new Error("user not enabled");
+        throw new Error(DneSSOErrorsEnum.USER_NOT_ENABLED);
       }
 
       const attributes = getUserRoleAttributes(userinfo);
       if (!attributes) {
         logger.error({
-          error: new Error("missing rights"),
+          error: new Error(DneSSOErrorsEnum.MISSING_RIGHTS),
           userinfo,
           email,
-        }, "[SSO] Il manque les droits perdir pour l'utilisateur");
-        throw new Error("missing right attributes");
+        }, "[SSO] Aucun droit n'a pu être extrait pour l'utilisateur");
+        throw new Error(DneSSOErrorsEnum.MISSING_RIGHTS);
       }
 
-      const etablissement = attributes.uais && (await deps.findEtablissement({ uais: attributes.uais }));
+      logger.info(
+        {
+          email,
+          user,
+          attributes,
+        },
+        "[SSO] Attributs utilisateur"
+      );
 
-      if (!etablissement?.codeRegion) {
+      let etablissement: TUserEtablissement = undefined;
+      if (attributes.role === RoleEnum.perdir && attributes.uais.length > 0) {
+        etablissement = attributes.uais && (await deps.findEtablissement({ uais: attributes.uais }));
+      }
+
+      if (attributes.role === RoleEnum.perdir && !etablissement?.codeRegion) {
         logger.error({
-          error: new Error("missing codeRegion"),
+          error: new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_PERDIR),
           userinfo,
           email,
           attributes,
           etablissement,
-        }, "[SSO] Il manque le code région pour l'établissement");
-        throw new Error("missing codeRegion");
+        }, "[SSO] Établissement non trouvé pour un utilisateur perdir");
+        throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_PERDIR);
+      }
+
+      let codeRegion: string | null | undefined;
+      const userNeedsCodeRegion = ["admin_region", "pilote_region", "gestionnaire_region", "expert_region"].includes(attributes.role);
+
+      try {
+        // Si l'utilisateur est un perdir, extraire le codeRegions des UAI contenu dans les attributes
+        if (attributes.role === RoleEnum.perdir) {
+          if (etablissement) {
+            codeRegion = etablissement?.codeRegion;
+          }
+          // Si l'utilisateur a besoin d'un codeRegion et qu'il n'est pas un perdir,
+          // Aller chercher le codeRegion depuis le codeAca
+        } else if (userNeedsCodeRegion && userinfo.codaca) {
+          // Cela signifie que le codaca n'est pas défini pour l'utilisateur
+          if (userinfo.codaca === "000") {
+            logger.error({
+              userinfo,
+              email,
+              attributes,
+            }, "[SSO] Le code région n'a pas pu être déduit du codaca");
+            throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_CODACA);
+          }
+
+          const codeRegionFromAcademie = await deps.findRegionFromAcademie(userinfo.codaca.substring(1));
+          if (codeRegionFromAcademie) {
+            codeRegion = codeRegionFromAcademie.codeRegion;
+          } else {
+            logger.error({
+              userinfo,
+              email,
+              attributes,
+            }, "[SSO] Le code région n'a pas pu être déduit du codaca");
+            throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_CODACA);
+          }
+        }
+      } catch (err) {
+        // Cela signifie que c'est une erreur logicielle et non utilisateur
+        if ((err as Error).message !== DneSSOErrorsEnum.MISSING_CODE_REGION_CODACA) {
+          logger.error({
+            error: err,
+            userinfo,
+            email,
+            attributes,
+          }, "[SSO] Une erreur est survenue lors de la récupération du code région");
+        }
+        // Si l'utilisateur n'a pas de code région, on ne l'insère pas en base de données
+        throw new Error(DneSSOErrorsEnum.MISSING_CODE_REGION_CODACA);
       }
 
       const userToInsert = {
         ...user,
-        email,
+        email: email,
         firstname: userinfo.given_name,
         lastname: userinfo.family_name,
         sub: userinfo.sub,
-        codeRegion: etablissement?.codeRegion,
+        codeRegion: codeRegion,
         enabled: true,
+        // Si l'utilisateur a un mot de passe, nous le supprimons pour éviter la possible double connexion
+        // DNE + Local
+        password: null,
         ...attributes,
+        // On garde par défaut le role de l'utilisateur s'il existe déjà en base de données
+        role: user ? user.role : attributes.role as Role,
       };
 
       await deps.createUserInDB({ user: userToInsert });
 
-      if (user) {
-        logger.info(
-          {
-            user: userToInsert,
-            userinfo,
-          },
-          `[SSO] Nouveau login`
-        );
-      } else {
-        logger.info(
-          {
-            user: userToInsert,
-            userinfo,
-          },
+      logger.info(
+        {
+          user: userToInsert,
+          userinfo,
+        },
+        user ? `[SSO] Nouveau login` :
           `[SSO] Nouvel utilisateur DNE`
-        );
-      }
+      );
 
       const authorizationToken = jwt.sign({ email }, deps.authJwtSecret, {
         issuer: "orion",
         expiresIn: "7d",
       });
 
-      return { token: authorizationToken, user: userToInsert };
+      return {
+        token: authorizationToken, user: userToInsert, userCommunication: generateUserCommunication({
+          passwordDeleted: user?.password !== null,
+          userCreated: !user,
+        })
+      };
     }
 );
