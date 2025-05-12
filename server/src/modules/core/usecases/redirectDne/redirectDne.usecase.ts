@@ -367,7 +367,7 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       return {
         token: authorizationToken, user: userToInsert, userCommunication: generateUserCommunication({
-          passwordDeleted: user?.password !== null,
+          passwordDeleted: user?.password !== undefined && user?.password !== null && user?.password !== "",
           userCreated: !user,
         })
       };
