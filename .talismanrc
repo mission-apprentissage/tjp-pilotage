@@ -24,7 +24,7 @@ fileignoreconfig:
 - filename: server/src/modules/core/usecases/login/__tests__/login.test.ts
   checksum: 28cdc80f0d836857ee9a802bff5a72a3ff3addad70a31b1ad4b7e98bc8db447c
 - filename: server/src/modules/core/usecases/login/login.test.ts
-  checksum: 8b05d16b0492370b18ca23913451347f1806ea152a0dfe798fa778ee20c4ef29
+  checksum: 7ccfc4ed066123e3655f8318830fd72171c689ef172e0f4acfec3ac01a554ccf
 - filename: server/src/modules/core/usecases/redirectDne/redirectDne.test.ts
   checksum: 419b61d1e765126aeacddea75f35ad6842207db8f97ce50ba2f5edfd524f5e50
 - filename: server/src/modules/demandes/usecases/submitDemande/__tests__/submitDemande.test.ts
