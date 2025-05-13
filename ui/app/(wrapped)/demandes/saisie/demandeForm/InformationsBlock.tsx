@@ -23,7 +23,7 @@ import {isTypeAjustement,isTypeDiminution, isTypeFermeture} from 'shared/utils/t
 import { client } from "@/api.client";
 import { SectionBlock } from "@/app/(wrapped)/demandes/saisie/components/SectionBlock";
 import type {Demande} from '@/app/(wrapped)/demandes/types';
-import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
+import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { CorrectionSection } from './correctionSection/CorrectionSection';
@@ -64,7 +64,7 @@ export const InformationsBlock = ({
         .ref("[DELETE]/demande/:numero")
         .query({ params: { numero: formId } })
         .then(() => push(
-          getRoutingSaisieDemande({user, suffix: "?action=supprimée"})
+          getRoutingAccessSaisieDemande({user, campagne, suffix: "?action=supprimée"})
         ));
     },
   });
@@ -120,7 +120,7 @@ export const InformationsBlock = ({
   const sectionsTravauxInternatEtRestaurationVisible = (
     !isTypeFermeture(typeDemande) &&
     !isTypeDiminution(typeDemande) &&
-    isOldDemande
+    !isOldDemande
   );
 
   const sectionStatutVisible = !isTypeAjustement(typeDemande) && isOldDemande;

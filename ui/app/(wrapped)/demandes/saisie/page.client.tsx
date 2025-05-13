@@ -46,7 +46,7 @@ import { getTypeDemandeLabel } from "@/app/(wrapped)/demandes/utils/typeDemandeU
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { formatCodeDepartement, formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
-import { getRoutingSaisieDemande, getRoutingSyntheseDemande } from "@/utils/getRoutingDemande";
+import { getRoutingAccessSaisieDemande, getRoutingAccesSyntheseDemande } from "@/utils/getRoutingAccesDemande";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 import { useStateParams } from "@/utils/useFilters";
@@ -179,7 +179,7 @@ export const PageClient = () => {
     .ref("[POST]/demande/import/:numero")
     .useMutation({
       onSuccess: (demande) => {
-        router.push(getRoutingSaisieDemande({ user, suffix: demande.numero }));
+        router.push(getRoutingAccessSaisieDemande({ user, campagne: currentCampagne, suffix: demande.numero }));
       },
       onError: (error) => {
         toast({
@@ -382,18 +382,21 @@ export const PageClient = () => {
                       <Tbody>
                         {data?.demandes.map((demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]) => {
 
-                          const linkSaisie = getRoutingSaisieDemande({
+                          const linkSaisie = getRoutingAccessSaisieDemande({
                             user,
+                            campagne: data?.campagne,
                             suffix: demande.numero
                           });
 
-                          const linkSaisieImported = getRoutingSaisieDemande({
+                          const linkSaisieImported = getRoutingAccessSaisieDemande({
                             user,
+                            campagne: data?.campagne,
                             suffix: demande.numeroDemandeImportee
                           });
 
-                          const linkSynthese = getRoutingSyntheseDemande({
+                          const linkSynthese = getRoutingAccesSyntheseDemande({
                             user,
+                            campagne: data?.campagne,
                             suffix: demande.numero
                           });
 
@@ -730,7 +733,7 @@ export const PageClient = () => {
                           variant="createButton"
                           size={"lg"}
                           as={!isNouvelleDemandeDisabled ? undefined : NextLink}
-                          href={getRoutingSaisieDemande({ user, suffix: `new?campagneId=${data?.campagne.id}`})}
+                          href={getRoutingAccessSaisieDemande({ user, suffix: `new?campagneId=${data?.campagne.id}`})}
                           px={3}
                           mt={12}
                           mx={"auto"}

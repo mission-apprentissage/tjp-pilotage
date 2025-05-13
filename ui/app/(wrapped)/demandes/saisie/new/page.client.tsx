@@ -7,8 +7,8 @@ import { DemandeForm } from "@/app/(wrapped)/demandes/saisie/demandeForm/Demande
 import { DemandeFilesProvider } from "@/app/(wrapped)/demandes/saisie/demandeForm/observationsSection/filesSection/filesContext";
 import { canCreateDemande } from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
 import {Loading} from '@/components/Loading';
-import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
-import { GuardSaisieExpe } from '@/utils/security/GuardSaisieExpe';
+import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
+import { GuardSaisieDemande } from '@/utils/security/GuardSaisieDemande';
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
@@ -17,7 +17,7 @@ export const PageClient = () => {
   const { campagne: currentCampagne } = useCurrentCampagne();
   const queryParams = useSearchParams();
 
-  if(!currentCampagne) return redirect(getRoutingSaisieDemande({user}));
+  if(!currentCampagne) return redirect(getRoutingAccessSaisieDemande({user}));
   const campagneId = queryParams.get("campagneId") ?? currentCampagne.id;
 
   const { data: campagne, isLoading } = client.ref("[GET]/campagne/:campagneId").useQuery({
@@ -25,10 +25,10 @@ export const PageClient = () => {
   });
 
   if(isLoading) return <Loading />;
-  if(!campagne) return redirect(getRoutingSaisieDemande({user}));
+  if(!campagne) return redirect(getRoutingAccessSaisieDemande({user}));
 
   return (
-    <GuardSaisieExpe campagne={campagne}>
+    <GuardSaisieDemande campagne={campagne}>
       <DemandeFilesProvider>
         <DemandeForm
           disabled={!canCreateDemande({ user, campagne })}
@@ -40,7 +40,7 @@ export const PageClient = () => {
           campagne={campagne}
         />
       </DemandeFilesProvider>
-    </GuardSaisieExpe>
+    </GuardSaisieDemande>
   );
 };
 
