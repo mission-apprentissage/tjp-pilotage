@@ -6,7 +6,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { CORRECTIONS_COLUMNS } from "@/app/(wrapped)/demandes/corrections/CORRECTIONS_COLUMN";
 import { GROUPED_CORRECTIONS_COLUMNS } from "@/app/(wrapped)/demandes/corrections/GROUPED_CORRECTIONS_COLUMN";
 import type { Corrections, OrderCorrections } from "@/app/(wrapped)/demandes/corrections/types";
-import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
+import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { HeadLineContent } from "./HeadLineContent";
@@ -108,7 +108,11 @@ export const ConsoleSection = ({
             <Fragment>
               {data?.corrections.map((correction: Corrections["corrections"][0]) => {
 
-                const linkCorrection = getRoutingSaisieDemande({ user, suffix: `${correction.demandeNumero}?correction=true`});
+                const linkCorrection = getRoutingAccessSaisieDemande({
+                  user,
+                  campagne,
+                  suffix: `${correction.demandeNumero}?correction=true`
+                });
 
                 return (
                   <Tr

@@ -6,7 +6,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 import {beforeEach,describe, expect, it} from 'vitest';
 
-import { isUserPartOfExpe } from '@/utils/isPartOfExpe';
+import { isUserPartOfAccesDemande } from '@/utils/isPartOfAccesDemande';
 
 const createUserBuilder = ({
   role,
@@ -45,7 +45,7 @@ const createCampagneBuilder = ({
 const fixtureBuilder = () => {
   let user: UserType | undefined = undefined;
   let campagne: CampagneType | undefined = undefined;
-  let isUserPartOfExpeTest: boolean | undefined = undefined;
+  let isUserPartOfAccesDemandeTest: boolean | undefined = undefined;
 
   return {
     given: {
@@ -90,23 +90,23 @@ const fixtureBuilder = () => {
       },
     },
     when: {
-      isUserPartOfExpe: () => {
-        isUserPartOfExpeTest = isUserPartOfExpe({campagne, user});
+      isUserPartOfAccesDemande: () => {
+        isUserPartOfAccesDemandeTest = isUserPartOfAccesDemande({campagne, user});
       },
     },
     then: {
-      verifierUserPartOfExpe: () => {
-        expect(isUserPartOfExpeTest).toBe(true);
+      verifierUserPartOfAccesDemande: () => {
+        expect(isUserPartOfAccesDemandeTest).toBe(true);
       },
-      verifierUserNotPartOfExpe: () => {
-        expect(isUserPartOfExpeTest).toBe(false);
+      verifierUserNotPartOfAccesDemande: () => {
+        expect(isUserPartOfAccesDemandeTest).toBe(false);
       },
     },
   };
 };
 
 
-describe("ui > utils > getRoutingRecueilDemande", () => {
+describe("ui > utils > isPartOfAccesDemabde", () => {
   let fixture: ReturnType<typeof fixtureBuilder>;
 
   beforeEach(() => {
@@ -117,116 +117,116 @@ describe("ui > utils > getRoutingRecueilDemande", () => {
     fixture.given.utilisateurAnonyme();
     fixture.given.campagne2023();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserNotPartOfExpe();
+    fixture.then.verifierUserNotPartOfAccesDemande();
   });
 
   it("Doit renvoyer faux pour un utilisateur anonyme et la campagne 2024", () => {
     fixture.given.utilisateurAnonyme();
     fixture.given.campagne2024();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserNotPartOfExpe();
+    fixture.then.verifierUserNotPartOfAccesDemande();
   });
 
   it("Doit renvoyer vrai pour un utilisateur national et la campagne 2024", () => {
     fixture.given.utilisateurNational();
     fixture.given.campagne2024();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserPartOfExpe();
+    fixture.then.verifierUserPartOfAccesDemande();
   });
 
   it("Doit renvoyer vrai pour un utilisateur région expé et la campagne 2024", () => {
     fixture.given.utilisateurRegionExpe();
     fixture.given.campagne2024();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserPartOfExpe();
+    fixture.then.verifierUserPartOfAccesDemande();
   });
 
   it("Doit renvoyer faux pour un utilisateur PERDIR hors expé et la campagne 2024", () => {
     fixture.given.utilisateurPerdirHorsExpe();
     fixture.given.campagne2024();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserNotPartOfExpe();
+    fixture.then.verifierUserNotPartOfAccesDemande();
   });
 
   it("Doit renvoyer faux pour un utilisateur anonyme et la campagne 2024", () => {
     fixture.given.utilisateurAnonyme();
     fixture.given.campagne2025();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserNotPartOfExpe();
+    fixture.then.verifierUserNotPartOfAccesDemande();
   });
 
   it("Doit renvoyer vrai pour un utilisateur région hors expé et la campagne 2025", () => {
     fixture.given.utilisateurRegionHorsExpe();
     fixture.given.campagne2025();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserPartOfExpe();
+    fixture.then.verifierUserPartOfAccesDemande();
   });
 
   it("Doit renvoyer vrai pour un utilisateur région expé et la campagne 2025", () => {
     fixture.given.utilisateurRegionExpe();
     fixture.given.campagne2025();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserPartOfExpe();
+    fixture.then.verifierUserPartOfAccesDemande();
   });
 
   it("Doit renvoyer vrai pour un utilisateur perdir et la campagne 2025", () => {
     fixture.given.utilisateurPerdirExpe();
     fixture.given.campagne2025();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserPartOfExpe();
+    fixture.then.verifierUserPartOfAccesDemande();
   });
 
   it("Doit renvoyer vrai pour un utilisateur perdir et la campagne 2025 même si sa région n'autorise pas la saisie", () => {
     fixture.given.utilisateurPerdirExpe();
     fixture.given.campagneRegionaleExpeEnCoursWithoutSaisiePerdir();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserPartOfExpe();
+    fixture.then.verifierUserPartOfAccesDemande();
   });
 
   it("Doit renvoyer vrai pour un utilisateur perdir et la campagne 2025 dont la campagne régionale autorise la saisie", () => {
     fixture.given.utilisateurPerdirExpe();
     fixture.given.campagneRegionaleExpeEnCoursWithSaisiePerdir();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserPartOfExpe();
+    fixture.then.verifierUserPartOfAccesDemande();
   });
 
   it("Doit renvoyer vrai pour un utilisateur perdir hors de l'expé et la campagne 2025", () => {
     fixture.given.utilisateurPerdirHorsExpe();
     fixture.given.campagneRegionaleHorsExpeEnCoursWithSaisiePerdir();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserPartOfExpe();
+    fixture.then.verifierUserPartOfAccesDemande();
   });
 
   it("Doit renvoyer vrai pour un utilisateur perdir hors de l'expé et la campagne 2025 même si sa région n'autorise pas la saisie", () => {
     fixture.given.utilisateurPerdirHorsExpe();
     fixture.given.campagneRegionaleHorsExpeEnCoursWithSaisiePerdir();
 
-    fixture.when.isUserPartOfExpe();
+    fixture.when.isUserPartOfAccesDemande();
 
-    fixture.then.verifierUserPartOfExpe();
+    fixture.then.verifierUserPartOfAccesDemande();
   });
 });
