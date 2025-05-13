@@ -1,10 +1,10 @@
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
-import {getDateRentreeScolaire} from 'shared/utils/getRentreeScolaire';
+import { TypeFamilleEnum } from 'shared/enum/typeFamilleEnum';
+import { getDateRentreeScolaire } from 'shared/utils/getRentreeScolaire';
 
 import { getKbdClient } from "@/db/db";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 import type { Filters } from "./searchDiplome.usecase";

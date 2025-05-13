@@ -1,6 +1,7 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import type { DB } from "@/db/db";
@@ -220,7 +221,11 @@ export const getFormationsQuery = ({ filters }: { filters: Filters }) => {
       return q.orderBy(sql.ref(filters.orderByFormations), sql`${sql.raw(filters.orderFormations)} NULLS LAST`);
     })
     .where(isDemandeNotDeletedOrRefused)
-    .$narrowType<{ tauxPoursuite: number; tauxInsertion: number }>()
+    .$narrowType<{
+      tauxPoursuite: number;
+      tauxInsertion: number;
+      typeFamille: TypeFamille;
+    }>()
     .groupBy([
       "positionFormationRegionaleQuadrant.positionQuadrant",
       "demande.cfd",

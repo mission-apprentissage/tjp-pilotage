@@ -20,6 +20,7 @@ import { TableHeader } from "@/components/TableHeader";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
+import {formatLibelleFormationAvecTags} from '@/utils/formatLibelle';
 import { formatArray } from "@/utils/formatUtils";
 import { useAuth } from '@/utils/security/useAuth';
 
@@ -208,6 +209,7 @@ const Page = () => {
           selectedDepartement: formatArray(departements.map((departement) => departement.label)),
         }
         : {}),
+      libelleFormation: formatLibelleFormationAvecTags(etablissement),
       actionPrioritaire: etablissement.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
     }));
 

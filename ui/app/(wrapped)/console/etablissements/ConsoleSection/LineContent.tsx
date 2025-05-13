@@ -152,7 +152,7 @@ export const EtablissementLineContent = ({
       }}
     >
       <Flex>
-        {formatFamilleMetierLibelle(line, "long", "sm", "12px")}
+        {formatFamilleMetierLibelle({ formation: line, labelSize: "long", size: "sm", fontSize: "12px"})}
         <BadgeFormationRenovee isFormationRenovee={!!line.isFormationRenovee} />
         {line.formationRenovee && (
           <Flex ms={2} my={"auto"} width={"fit-content"} h={"1.8rem"} whiteSpace={"nowrap"} direction={"column"}>

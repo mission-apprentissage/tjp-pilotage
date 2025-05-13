@@ -3,7 +3,7 @@ import { CURRENT_RENTREE } from "shared";
 
 import { getKbdClient } from "@/db/db";
 import { getDateRentreeScolaire } from "@/modules/data/services/getRentreeScolaire";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const searchEtablissementQuery = async ({
