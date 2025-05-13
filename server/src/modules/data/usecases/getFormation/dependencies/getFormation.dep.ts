@@ -1,5 +1,6 @@
 import { sql } from "kysely";
-import { CURRENT_RENTREE } from "shared";
+import {CURRENT_RENTREE} from 'shared';
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
 
 import { getKbdClient } from "@/db/db";
@@ -69,6 +70,9 @@ export const getFormation = async ({
         "dateFermeture",
         "typeFamille",
       ])
+      .$narrowType<{
+        typeFamille: TypeFamille;
+      }>()
       .where((eb) => notHistoriqueUnlessCoExistant(eb, CURRENT_RENTREE))
       .orderBy(["libelleNsf", "libelleNiveauDiplome", "libelleFormation"])
       .distinct();
@@ -166,6 +170,9 @@ export const getFormation = async ({
       "formation.typeFamille",
       "formation.codeNsf",
     ])
+    .$narrowType<{
+      typeFamille: TypeFamille;
+    }>()
     .executeTakeFirst()
     .then(cleanNull);
 };

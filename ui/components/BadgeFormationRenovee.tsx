@@ -13,6 +13,7 @@ export const BadgeFormationRenovee = forwardRef<BadgeFormationRenoveeProps, "spa
 
     return (
       <Badge
+        ms={2}
         my={"auto"}
         bgColor={"greenArchipel.950"}
         color={"greenArchipel.391"}

@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import type { VoieType } from "shared";
 import { CURRENT_RENTREE } from "shared";
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
 
 import { getKbdClient } from "@/db/db";
@@ -110,6 +111,9 @@ export const getFormations = async ({
       "formations.dateOuverture",
       "formations.voie"
     ])
-    .$narrowType<{ voie: VoieType }>()
+    .$narrowType<{
+      voie: VoieType;
+      typeFamille: TypeFamille;
+    }>()
     .execute()
     .then(cleanNull);

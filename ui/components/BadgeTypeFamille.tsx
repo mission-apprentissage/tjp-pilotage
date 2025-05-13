@@ -1,11 +1,6 @@
 import { Badge } from "@chakra-ui/react";
 import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
-import {
-  formatTypeFamilleCourt,
-  formatTypeFamilleLong,
-} from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
-
 export const TYPE_FAMILLE_KEYS = {
   [TypeFamilleEnum["2nde_commune"]]: "info",
   [TypeFamilleEnum["1ere_commune"]]: "info",
@@ -15,6 +10,25 @@ export const TYPE_FAMILLE_KEYS = {
 };
 
 export type TypeFamilleKeys = keyof typeof TYPE_FAMILLE_KEYS;
+
+export const formatTypeFamilleLong = (typeFamille: TypeFamilleKeys): string => {
+  return typeFamille
+    .replace(TypeFamilleEnum["2nde_commune"], "Seconde commune")
+    .replace(TypeFamilleEnum["1ere_commune"], "Première année commune")
+    .replace(TypeFamilleEnum["specialite"], "Spécialité")
+    .replace(TypeFamilleEnum["option"], "Option")
+    .replace("fermeture", "Fermeture au ");
+};
+
+export const formatTypeFamilleCourt = (typeFamille: TypeFamilleKeys): string => {
+  return typeFamille
+    .replace(TypeFamilleEnum["2nde_commune"], "2de")
+    .replace(TypeFamilleEnum["1ere_commune"], "1ère")
+    .replace(TypeFamilleEnum["specialite"], "Spé")
+    .replace(TypeFamilleEnum["option"], "Opt")
+    .replace("fermeture", "Fermeture au ");
+};
+
 
 export const BadgeTypeFamille = ({
   typeFamille,

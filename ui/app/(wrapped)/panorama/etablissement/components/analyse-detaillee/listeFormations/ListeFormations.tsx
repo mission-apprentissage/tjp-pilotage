@@ -3,13 +3,12 @@ import _ from "lodash";
 import { usePlausible } from "next-plausible";
 import { CURRENT_RENTREE } from "shared";
 
-import { formatFamilleMetierLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import type { Formation } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
-import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "@/components/BadgeVoieApprentissage";
 import { themeColors } from "@/theme/themeColors";
+import { formatFamilleMetierLibelle } from "@/utils/formatLibelle";
 
 const LabelNumberOfFormations = ({ formations }: { formations?: Array<Formation> }) => (
   <Text>
@@ -88,7 +87,7 @@ export const ListeFormations = ({
                     }}
                     paddingLeft={"2px"}
                   >
-                    <Tooltip label={formatFamilleMetierLibelle(formation.libelleFormation)}>
+                    <Tooltip label={formatFamilleMetierLibelle({formation, withBadge: false})}>
                       <Text
                         my={2}
                         color={offre === formation.offre ? "bluefrance.113" : ""}
@@ -98,12 +97,12 @@ export const ListeFormations = ({
                         isTruncated={true}
                         _firstLetter={{ textTransform: "uppercase" }}
                       >
-                        {formatFamilleMetierLibelle(formation.libelleFormation)}
+                        {formatFamilleMetierLibelle({formation, withBadge: false})}
                       </Text>
                     </Tooltip>
                     <Flex direction="row" gap={1}>
                       <BadgeVoieApprentissage voie={formation.voie} />
-                      <BadgeTypeFamille typeFamille={formation.typeFamille as TypeFamilleKeys} />
+                      <BadgeTypeFamille typeFamille={formation.typeFamille} />
                       <BadgesFormationSpecifique
                         formationSpecifique={formation.formationSpecifique}
                         labelSize={"short"}

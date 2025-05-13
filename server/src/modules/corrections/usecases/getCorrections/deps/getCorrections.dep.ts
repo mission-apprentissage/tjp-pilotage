@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import type { TypeFamille } from "shared/enum/typeFamilleEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
@@ -16,7 +17,8 @@ import { selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { isFormationRenovee } from "@/modules/utils/isFormationRenovee";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const getCorrectionsQuery = async ({
@@ -156,6 +158,7 @@ export const getCorrectionsQuery = async ({
       "correction.updatedAt",
       "correction.commentaire",
       selectPositionQuadrant(eb).as("positionQuadrant"),
+      isFormationRenovee({ eb, rentreeScolaire }).as("isFormationRenovee"),
       isFormationActionPrioritaire({
         cfdRef: "demande.cfd",
         codeDispositifRef: "demande.codeDispositif",
@@ -165,6 +168,9 @@ export const getCorrectionsQuery = async ({
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
     ])
+    .$narrowType<{
+      typeFamille: TypeFamille;
+    }>()
     .$call((eb) => {
       if (search)
         return eb.where((eb) =>
@@ -325,6 +331,7 @@ export const getCorrectionsQuery = async ({
       createdAt: correction.createdAt?.toISOString(),
       updatedAt: correction.updatedAt?.toISOString(),
       formationSpecifique: formatFormationSpecifique(correction),
+      isFormationRenovee: !!correction.isFormationRenovee
     })),
     campagnes,
     count: corrections[0]?.count ?? 0,

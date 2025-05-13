@@ -3,7 +3,7 @@ import { CURRENT_RENTREE } from "shared";
 
 import { getKbdClient } from "@/db/db";
 import { openForRentreeScolaire } from "@/modules/data/utils/openForRentreeScolaire";
-import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearch } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const findNsfQuery = async ({ search, limit = 100 }: { search: string; limit?: number }) => {
