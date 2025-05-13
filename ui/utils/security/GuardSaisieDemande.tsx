@@ -8,26 +8,28 @@ import {isUserNational} from 'shared/security/securityUtils';
 import { isCampagneEnCours } from "shared/utils/campagneUtils";
 
 import {feature} from '@/utils/feature';
-import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
-import { isUserPartOfExpe } from "@/utils/isPartOfExpe";
+import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
+import { isUserPartOfSaisieDemande} from '@/utils/isPartOfSaisieDemande';
 
 import { useAuth } from './useAuth';
 
 /**
  *
- * Guard permettant de filtrer les users en fonction de s'ils doivent pouvoir accéder à la saisie de l'expérimentation perdir ou non
+ * Guard permettant de filtrer les users en fonction de s'ils doivent pouvoir accéder à la saisie ou non
  *
- * @param isExpeRoute est-ce que la route est concernée par l'expérimentation perdir
  * @returns
  */
 
-export const GuardSaisieExpe = ({ campagne, children }: { campagne: CampagneType; children: ReactNode }): ReactNode => {
+export const GuardSaisieDemande = (
+  { campagne, children }:
+  { campagne: CampagneType; children: ReactNode }
+): ReactNode => {
   const { user } = useAuth();
-  if(feature.saisieDisabled) return redirect(getRoutingSaisieDemande({ user }));
-  if(!isUserPartOfExpe({ user, campagne })) return redirect(getRoutingSaisieDemande({ user }));
+  if(feature.saisieDisabled) return redirect(getRoutingAccessSaisieDemande({ user, campagne }));
+  if(!isUserPartOfSaisieDemande({ user, campagne })) return redirect(getRoutingAccessSaisieDemande({ user, campagne }));
   if(isUserNational({ user }) && isCampagneEnCours(campagne)) return (<>{children}</>);
   const isCampagneRegionale = !!campagne?.codeRegion;
   const withSaisiePerdir = (hasRole({ user, role: RoleEnum["perdir"] }) && isCampagneRegionale) ? !!campagne?.withSaisiePerdir : true;
-  if(!withSaisiePerdir) return redirect(getRoutingSaisieDemande({ user }));
+  if(!withSaisiePerdir) return redirect(getRoutingAccessSaisieDemande({ user, campagne }));
   return (<>{children}</>);
 };

@@ -4,11 +4,13 @@ import { Alert, AlertIcon, Box, Container, Flex, Heading, Image, ListItem, Text,
 import { Icon } from "@iconify/react";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
+import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
 import { useAuth } from "@/utils/security/useAuth";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
 export const PageClient = () => {
   const { user } = useAuth();
+  const { campagne } = useCurrentCampagne();
 
   return (
     <>
@@ -17,10 +19,10 @@ export const PageClient = () => {
           ml={4}
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: getRoutingSaisieDemande({user}) },
+            { title: "Recueil des demandes", to: getRoutingAccessSaisieDemande({user, campagne}) },
             {
               title: "Documentation",
-              to: `${getRoutingSaisieDemande({user, suffix: "documentation"})}`,
+              to: `${getRoutingAccessSaisieDemande({user, campagne, suffix: "documentation"})}`,
               active: true,
             },
           ]}

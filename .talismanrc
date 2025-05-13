@@ -141,7 +141,9 @@ fileignoreconfig:
   checksum: e78f766f2960e574b27ce2c9051324945b10c78e73aae310d11a2e243934afe2
 - filename: ui/utils/__tests__/isPartOfExpe.test.ts
   checksum: 2c57a4ce66aae5885864beab7369094022c779c45800ef2861bdb1a2830ca38f
-- filename: ui/utils/security/__tests__/GuardSaisieExpe.test.tsx
+- filename: ui/utils/__tests__/isPartOfSaisieDemande.test.ts
+  checksum: a9edcc318486f4d65e1d748e650eb7243f387075f093d9568d6f26d4cc03a5b6
+- filename: ui/utils/security/__tests__/GuardSaisieDemande.test.tsx
   checksum: 26e715515a91e89432de7a0f83edce0b9765e92e4a15f3e731de1abb56090d9e
 scopeconfig:
 - scope: node
