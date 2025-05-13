@@ -12,7 +12,7 @@ import {isStatutDemandeValidee, isStatutRefusee} from 'shared/utils/statutDemand
 import { isTypeAjustement } from 'shared/utils/typeDemandeUtils';
 
 import {feature} from '@/utils/feature';
-import {isUserPartOfExpe} from '@/utils/isPartOfExpe';
+import { isUserPartOfSaisieDemande } from '@/utils/isPartOfSaisieDemande';
 
 
 export type Demande = {
@@ -69,7 +69,7 @@ export const canCreateDemande = ({
   if(!isCampagneEnCours(campagne)) return false;
   if(isUserNational({user})) return true;
   if(!hasPermission(user?.role, PermissionEnum["demande/ecriture"])) return false;
-  if(!isUserPartOfExpe({ user, campagne })) return false;
+  if(!isUserPartOfSaisieDemande({ user, campagne })) return false;
   if(campagne.annee !== "2023" && campagne.annee !== "2024") {
     const isCampagneRegionale = campagne.codeRegion;
     const isCampagneRegionaleOfUser = isCampagneRegionale && (user?.codeRegion === campagne.codeRegion);
