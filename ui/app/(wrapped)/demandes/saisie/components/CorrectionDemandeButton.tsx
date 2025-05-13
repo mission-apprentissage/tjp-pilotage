@@ -37,7 +37,7 @@ import { client } from "@/api.client";
 import type { Demandes } from "@/app/(wrapped)/demandes/saisie/types";
 import type { AnneeCampagneMotifCorrection} from "@/app/(wrapped)/demandes/utils/motifCorrectionUtils";
 import { getMotifCorrectionOptionsParAnneeCampagne } from "@/app/(wrapped)/demandes/utils/motifCorrectionUtils";
-import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
+import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
 
 export const CorrectionDemandeButton = chakra(
   ({ user, demande, campagne }: { user?: UserType; demande: Demandes[number], campagne: CampagneType }) => {
@@ -140,7 +140,7 @@ export const CorrectionDemandeButton = chakra(
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    router.push(getRoutingSaisieDemande({user, suffix: `${demande.numero}?correction=true`}));
+                    router.push(getRoutingAccessSaisieDemande({user, campagne, suffix: `${demande.numero}?correction=true`}));
                   }}
                 >
                   <Flex direction={"row"} h={"100%"} gap={2}>
