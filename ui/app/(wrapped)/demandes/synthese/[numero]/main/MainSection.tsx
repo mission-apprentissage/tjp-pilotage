@@ -6,7 +6,7 @@ import { isCampagneEnCours } from "shared/utils/campagneUtils";
 
 import { client } from "@/api.client";
 import { canEditDemande } from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
-import {getRoutingSaisieDemande} from '@/utils/getRoutingDemande';
+import {getRoutingAccessSaisieDemande} from '@/utils/getRoutingAccesDemande';
 import { useAuth } from "@/utils/security/useAuth";
 
 import { ChangementStatutEtAvisSection } from "./changementStatutEtAvis/ChangementStatutEtAvisSection";
@@ -71,9 +71,10 @@ export const MainSection = ({
               <Tooltip label="Modifier la demande">
                 <IconButton
                   as={NextLink}
-                  href={getRoutingSaisieDemande({
+                  href={getRoutingAccessSaisieDemande({
                     user,
-                    suffix: demande?.numero
+                    campagne: demande.campagne,
+                    suffix: demande.numero
                   })}
                   aria-label="Modifier la demande"
                   color={"bluefrance.113"}
