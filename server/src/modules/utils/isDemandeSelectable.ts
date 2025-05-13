@@ -21,7 +21,10 @@ export const isDemandeBrouillonVisible =
   ({ user }: { user: RequestUser }) =>
     (eb: ExpressionBuilder<DB, "demande">) => {
       return eb.or([
-        eb.and([eb("demande.statut", "=", DemandeStatutEnum["brouillon"]), eb("demande.createdBy", "=", user.id)]),
+        eb.and([
+          eb("demande.statut", "=", DemandeStatutEnum["brouillon"]),
+          user.uais ? eb("demande.uai", "in", user.uais) : eb("demande.createdBy", "=", user.id),
+        ]),
         eb("demande.statut", "!=", DemandeStatutEnum["brouillon"]),
       ]);
     };
