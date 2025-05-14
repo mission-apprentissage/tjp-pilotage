@@ -1,4 +1,8 @@
+import type { Role } from "shared";
+import type { UserFonction } from "shared/enum/userFonctionEnum";
 import { z } from "zod";
+
+import type { Auth } from "@/app/authContext";
 
 export const ChangelogTypeZodType = z.enum(["BANDEAU", "Fonctionnalité", "Données", "Bug", "Maintenance"]);
 
@@ -15,6 +19,8 @@ export interface IChangelog {
     description: string,
     document?: string,
     show: boolean,
+    roles?: Role[]
+    fonction?: UserFonction[]
 }
 
 export const CHANGELOG: IChangelog[] = [
@@ -272,3 +278,21 @@ export const CHANGELOG: IChangelog[] = [
     "document": "",
   },
 ];
+
+const isRoleAllowed = (entry: IChangelog, role?: Role) => {
+  if (!entry.roles) return true;
+  if (!role) return false;
+  return entry.roles.includes(role);
+};
+
+const isFunctionAllowed = (entry: IChangelog, fonction?: UserFonction) => {
+  if (!entry.fonction) return true;
+  if (!fonction) return false;
+  return entry.fonction.includes(fonction);
+};
+
+export const getChangelog = (auth: Auth) => {
+  return CHANGELOG.filter((entry) =>
+    isRoleAllowed(entry, auth.user.role) &&
+    isFunctionAllowed(entry, auth.user.fonction));
+};

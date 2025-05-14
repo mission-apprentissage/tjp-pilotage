@@ -1,4 +1,5 @@
 import type { Role } from "shared";
+import type { UserFonction } from "shared/enum/userFonctionEnum";
 
 export type RequestUser = {
   email: string;
@@ -6,4 +7,5 @@ export type RequestUser = {
   role?: Role;
   codeRegion?: string;
   uais?: string[];
+  fonction?: UserFonction;
 };
