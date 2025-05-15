@@ -1,6 +1,6 @@
 import type { BoxProps } from "@chakra-ui/react";
 import { Box, Container, Divider, Flex, forwardRef, Heading } from "@chakra-ui/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo } from "react";
 
 import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
@@ -53,24 +53,6 @@ const useFormationSection = (
   formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>
 ) => {
   const { currentFilters, handleCfdChange } = useFormationContext();
-  const tabContentRef = useRef<HTMLDivElement>(null);
-  const [tabContentHeight, setTabContentHeight] = useState<number | undefined>(undefined);
-
-  useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        setTabContentHeight(entry.contentRect.height);
-      }
-    });
-
-    if (tabContentRef.current) {
-      observer.observe(tabContentRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [tabContentRef]);
 
   useEffect(() => {
     if (currentFilters.cfd !== "") {
@@ -87,14 +69,12 @@ const useFormationSection = (
   return {
     currentFilters,
     handleCfdChange,
-    tabContentRef,
-    tabContentHeight,
   };
 };
 
 export const FormationSection = () => {
   const { formations, formationsByLibelleNiveauDiplome, isLoading } = useDomaineDeFormation();
-  const { currentFilters, tabContentRef, tabContentHeight } = useFormationSection(
+  const { currentFilters } = useFormationSection(
     formations,
     formationsByLibelleNiveauDiplome
   );
@@ -113,9 +93,8 @@ export const FormationSection = () => {
         <TabFilters />
         <Flex direction="row" gap={8}>
           <ListeFormations
-            h={tabContentHeight}
           />
-          <TabContent tab={currentFilters.formationTab} ref={tabContentRef} />
+          <TabContent tab={currentFilters.formationTab} />
         </Flex>
       </Flex>
     </Container>

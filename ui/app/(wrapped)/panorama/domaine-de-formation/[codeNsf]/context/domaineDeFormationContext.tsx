@@ -3,7 +3,7 @@
 import _ from "lodash";
 import { createContext, useContext } from "react";
 
-import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/client";
+import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/page.client";
 import type {
   DomaineDeFormationResult,
   FormationListItem,
