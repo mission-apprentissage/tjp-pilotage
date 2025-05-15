@@ -21,7 +21,10 @@ export type Bbox = {
   lngMax: number;
 };
 export type Filters = {
-  cfd: string;
+  selection: {
+    cfd: string;
+    voie?: string;
+  },
   codeRegion?: string;
   codeDepartement?: string;
   codeAcademie?: string;

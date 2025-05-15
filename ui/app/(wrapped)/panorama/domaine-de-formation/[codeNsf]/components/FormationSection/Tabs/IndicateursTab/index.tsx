@@ -5,6 +5,7 @@ import { useState } from "react";
 import { client } from "@/api.client";
 import { FormationHeader } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/components/FormationSection/FormationHeader";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
+import { useNsfContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/nsfContext";
 import type { TauxAttractiviteType, TauxIJType } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 
 import { DonneesManquantes } from "./DonneesManquantes";
@@ -75,8 +76,9 @@ const useIndicateursTab = ({
 };
 
 export const IndicateursTab = () => {
-  const { currentFilters, scope, codeNsf } = useFormationContext();
-  const { codeRegion, codeAcademie, codeDepartement, cfd } = currentFilters;
+  const { codeNsf } = useNsfContext();
+  const { currentFilters, scope } = useFormationContext();
+  const { codeRegion, codeAcademie, codeDepartement, selection: { cfd } } = currentFilters;
 
   const {
     tauxIJSelected,

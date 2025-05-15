@@ -23,7 +23,7 @@ const COORDOONNEES_FRANCE = {
 
 const useEtablissementsTab = () => {
   const { currentFilters, handleClearBbox, handleSetBbox } = useFormationContext();
-  const { cfd, codeRegion, codeAcademie, codeDepartement } = currentFilters;
+  const { selection: { cfd }, codeRegion, codeAcademie, codeDepartement } = currentFilters;
   const mapContainer = createRef<HTMLDivElement>();
   const [activeUai, setActiveUai] = useState<string | null>(null);
   const [hoverUai, setHoverUai] = useState<string | null>(null);
@@ -152,7 +152,7 @@ export const EtablissementsTab = () => {
   const { codeNsf, libelleNsf } = useNsfContext();
   const { currentFilters } = useFormationContext();
   const {
-    cfd,
+    selection: { cfd },
     etab: { view },
   } = currentFilters;
 
