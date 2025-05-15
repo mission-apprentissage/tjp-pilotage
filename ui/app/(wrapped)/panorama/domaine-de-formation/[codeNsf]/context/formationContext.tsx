@@ -4,7 +4,7 @@ import { usePlausible } from "next-plausible";
 import { createContext, useContext, useState } from "react";
 import type { ScopeZone } from "shared";
 
-import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/client";
+import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/page.client";
 import type {
   Academie,
   Bbox,

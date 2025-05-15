@@ -1,5 +1,4 @@
-import type { BoxProps } from "@chakra-ui/react";
-import { Badge, Box, Divider, Flex, forwardRef, List, ListItem, Text, Tooltip } from "@chakra-ui/react";
+import { Badge, Box, Divider, Flex, List, ListItem, Text, Tooltip } from "@chakra-ui/react";
 import _ from "lodash";
 import { CURRENT_RENTREE } from "shared";
 
@@ -44,23 +43,20 @@ const getFontColor = (formation: FormationListItem, selectedCfd: string) => {
   return undefined;
 };
 
-type ListeFormationsProps = BoxProps & {};
+export const ListeFormations = () => {
+  const { handleCfdChange: selectCfd, currentFilters: { cfd: selectedCfd } } = useFormationContext();
+  const { formationsByLibelleNiveauDiplome } = useDomaineDeFormation();
 
-export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
-  ({ ...rest }, ref) => {
-    const { handleCfdChange: selectCfd, currentFilters: { cfd: selectedCfd } } = useFormationContext();
-    const { formationsByLibelleNiveauDiplome } = useDomaineDeFormation();
-
-    return (
-      <Box
-        borderRightWidth={1}
-        borderRightColor={"grey.925"}
-        overflowY={"auto"}
-        h={"80rem"}
-        w={"40%"}
-        ref={ref}
-        {...rest}
-      >
+  return (
+    <Box
+      borderRightWidth={1}
+      borderRightColor={"grey.925"}
+      overflowY={"auto"}
+      height="inherit"
+      position="relative"
+      w={"40%"}
+    >
+      <Box position="absolute" height="100%" width="100%" overflow="auto">
         <Flex flex={1} flexDirection={"row"} justifyContent={"space-between"} mx={"8px"} my={"16px"}>
           <LabelNumberOfFormations
             formations={_.sumBy(Object.values(formationsByLibelleNiveauDiplome), (arr) => arr.length)}
@@ -130,6 +126,6 @@ export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
           ))}
         </List>
       </Box>
-    );
-  }
-);
+    </Box>
+  );
+};
