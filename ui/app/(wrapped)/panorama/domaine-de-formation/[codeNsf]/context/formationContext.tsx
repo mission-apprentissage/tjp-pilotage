@@ -1,7 +1,7 @@
 "use client";
 
 import { usePlausible } from "next-plausible";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 import type { ScopeZone } from "shared";
 
 import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/page.client";
@@ -42,10 +42,14 @@ const findDefaultCfd = (
 };
 
 type InputFormationContextType = {
-  scope: ScopeZone;
-  regions: Region[];
-  academies: Academie[];
-  departements: Departement[];
+  scope?: ScopeZone;
+  regions?: Region[];
+  academies?: Academie[];
+  departements?: Departement[];
+  setScope: (scope: ScopeZone) => void,
+  setRegions: (regions: Region[]) => void,
+  setAcademies: (academies: Academie[]) => void,
+  setDepartements: (departements: Departement[]) => void
 };
 
 type FormationContextType = InputFormationContextType & {
@@ -63,13 +67,6 @@ type FormationContextType = InputFormationContextType & {
   handleCfdChange: (cfd: string) => void;
   handleClearBbox: () => void;
   handleSetBbox: (bbox?: Bbox) => void;
-  scope: ScopeZone,
-  setScope: (scope: ScopeZone) => void,
-  regions: Region[],
-  setRegions: (regions: Region[]) => void,
-  academies: Academie[],
-  setAcademies: (Academies: Academie[]) => void,
-  departements: Departement[],
   setDepartements: (departements: Departement[]) => void
 };
 
@@ -86,10 +83,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   const { formations, formationsByLibelleNiveauDiplome } = useDomaineDeFormation();
   const defaultCfd = findDefaultCfd(cfd, formations, formationsByLibelleNiveauDiplome);
 
-  const [scope, setScope] = useState(value.scope ?? "");
-  const [regions, setRegions] = useState(value.regions ?? []);
-  const [academies, setAcademies] = useState(value.academies ?? []);
-  const [departements, setDepartements] = useState(value.departements ?? []);
   const [currentFilters, setCurrentFilters] = useStateParams<Filters>({
     defaultValues: {
       presence: "",
@@ -138,7 +131,7 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
       props: { filter_name: "codeAcademie" },
     });
 
-    const academie = value.academies.find((a) => a.value === codeAcademie);
+    const academie = value.academies?.find((a) => a.value === codeAcademie);
 
     if (academie) {
       setCurrentFilters((prev) => ({
@@ -169,7 +162,7 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
       props: { filter_name: "codeDepartement" },
     });
 
-    const departement = value.departements.find((d) => d.value === codeDepartement);
+    const departement = value.departements?.find((d) => d.value === codeDepartement);
 
     if (departement) {
       setCurrentFilters((prev) => ({
@@ -292,15 +285,8 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
     handleCfdChange,
     handleClearBbox,
     handleSetBbox,
-    scope,
-    setScope,
-    regions,
-    setRegions,
-    academies,
-    setAcademies,
-    departements,
-    setDepartements,
-    setCurrentFilters
+    setCurrentFilters,
+    ...value
   };
 
   return <FormationContext.Provider value={context}>{children}</FormationContext.Provider>;
