@@ -31,6 +31,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   "continuum.cfd": "Code diplôme historique",
   codeDispositif: "Code dispositif",
   // Effectifs
+  evolutionEffectif: "Évolution des effectifs",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
@@ -39,18 +40,35 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   premiersVoeux: "Nb de voeux",
   // Indicateurs
   tauxPression: "Tx de pression",
+  evolutionTauxPression: "Évolution du taux de pression",
   tauxRemplissage: "Tx de remplissage",
+  evolutionTauxRemplissage: "Évolution du taux de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
+  evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
+  evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
   positionQuadrant: "Position dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
+  evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
   tauxInsertionEtablissement: "Tx d'emploi 6 mois de la formation dans l'établissement",
+  evolutionTauxInsertionEtablissement: "Évolution du taux d'emploi à 6 mois de la formation dans l'établissement",
   tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
+  evolutionTauxPoursuiteEtablissement: "Évolution du taux de poursuite d'études de la formation dans l'établissement",
   tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
+  evolutionTauxDevenirFavorableEtablissement: "Évolution du taux de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
 } satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]> & {
   formationSpecifique: string;
   actionPrioritaire: string;
+  evolutionEffectif: string;
+  evolutionTauxPression: string;
+  evolutionTauxRemplissage: string;
+  evolutionTauxInsertion: string;
+  evolutionTauxPoursuite: string;
+  evolutionTauxDevenirFavorable: string;
+  evolutionTauxInsertionEtablissement: string;
+  evolutionTauxPoursuiteEtablissement: string;
+  evolutionTauxDevenirFavorableEtablissement: string;
 };
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
@@ -76,6 +94,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   libelleNsf: "Domaine de formation (NSF)",
   "continuum.libelleFormation": "Diplôme historique",
   // Effectifs
+  evolutionEffectif: "Évolution des effectifs",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
@@ -84,14 +103,22 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {
   premiersVoeux: "Nb de voeux",
   // Indicateurs
   tauxPression: "Tx de pression",
+  evolutionTauxPression: "Évolution du taux de pression",
   tauxRemplissage: "Tx de remplissage",
+  evolutionTauxRemplissage: "Évolution du taux de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
+  evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
+  evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
   positionQuadrant: "Position dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
+  evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
   tauxInsertionEtablissement: "Tx d'emploi 6 mois de la formation dans l'établissement",
+  evolutionTauxInsertionEtablissement: "Évolution du taux d'emploi à 6 mois de la formation dans l'établissement",
   tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
+  evolutionTauxPoursuiteEtablissement: "Évolution du taux de poursuite d'études de la formation dans l'établissement",
   tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
+  evolutionTauxDevenirFavorableEtablissement: "Évolution du taux de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
 } satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS>;
 
@@ -105,6 +132,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   // Établissement
   commune: "Commune",
   // Effectifs
+  evolutionEffectif: "Évolution des effectifs",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
@@ -112,13 +140,21 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   premiersVoeux: "Nb de voeux",
   // Indicateurs
   tauxPression: "Tx de pression",
+  evolutionTauxPression: "Évolution du taux de pression",
   tauxRemplissage: "Tx de remplissage",
+  evolutionTauxRemplissage: "Évolution du taux de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
+  evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
+  evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
   positionQuadrant: "Position dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
+  evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
   tauxInsertionEtablissement: "Tx d'emploi 6 mois de la formation dans l'établissement",
+  evolutionTauxInsertionEtablissement: "Évolution du taux d'emploi à 6 mois de la formation dans l'établissement",
   tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
+  evolutionTauxPoursuiteEtablissement: "Évolution du taux de poursuite d'études de la formation dans l'établissement",
   tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
+  evolutionTauxDevenirFavorableEtablissement: "Évolution du taux de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
 } satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL>;

@@ -220,6 +220,13 @@ export const HeadLineContent = ({
           {FORMATION_COLUMNS.nbEtablissement}
         </ConditionalTh>
         <ConditionalTh
+          colonne={"evolutionEffectif"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+        >
+          {FORMATION_COLUMNS.evolutionEffectif}
+        </ConditionalTh>
+        <ConditionalTh
           colonne={"effectif1"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -327,6 +334,14 @@ export const HeadLineContent = ({
           />
         </ConditionalTh>
         <ConditionalTh
+          colonne={"evolutionTauxPression"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          maxWidth={48}
+        >
+          {FORMATION_COLUMNS.evolutionTauxPression}
+        </ConditionalTh>
+        <ConditionalTh
           colonne={"tauxRemplissage"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -346,6 +361,14 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("taux-de-remplissage")}
           />
+        </ConditionalTh>
+        <ConditionalTh
+          colonne={"evolutionTauxRemplissage"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          maxWidth={48}
+        >
+          {FORMATION_COLUMNS.evolutionTauxRemplissage}
         </ConditionalTh>
         {canShowQuadrantPosition && (
           <ConditionalTh
@@ -394,6 +417,14 @@ export const HeadLineContent = ({
           />
         </ConditionalTh>
         <ConditionalTh
+          colonne={"evolutionTauxInsertion"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          maxWidth={48}
+        >
+          {FORMATION_COLUMNS.evolutionTauxInsertion}
+        </ConditionalTh>
+        <ConditionalTh
           colonne={"tauxPoursuite"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
@@ -413,6 +444,14 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("taux-poursuite-etudes")}
           />
+        </ConditionalTh>
+        <ConditionalTh
+          colonne={"evolutionTauxPoursuite"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          maxWidth={48}
+        >
+          {FORMATION_COLUMNS.evolutionTauxPoursuite}
         </ConditionalTh>
         <ConditionalTh
           colonne={"tauxDevenirFavorable"}
@@ -437,6 +476,14 @@ export const HeadLineContent = ({
             }
             onClick={() => openGlossaire("taux-de-devenir-favorable")}
           />
+        </ConditionalTh>
+        <ConditionalTh
+          colonne={"evolutionTauxDevenirFavorable"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          maxWidth={48}
+        >
+          {FORMATION_COLUMNS.evolutionTauxDevenirFavorable}
         </ConditionalTh>
       </Tr>
     </Thead>

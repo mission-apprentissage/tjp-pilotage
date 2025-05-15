@@ -4,10 +4,12 @@ import NextLink from "next/link";
 import { CURRENT_RENTREE } from "shared";
 
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
-import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
+import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import type { Line } from "@/app/(wrapped)/console/etablissements/types";
+import {getEvolutionTauxEntreeData, getEvolutionTauxSortieData} from '@/app/(wrapped)/console/utils/extractEvolutionData';
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
+import {GraphEvolution} from '@/components/GraphEvolution';
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
@@ -46,6 +48,22 @@ const ConditionalTd = chakra(
     return null;
   }
 );
+
+const getEvolutionEffectifData = ({
+  effectif1,
+  effectif2,
+  effectif3,
+}: {
+  effectif1?: number;
+  effectif2?: number;
+  effectif3?: number;
+}) => {
+  return {
+    "Effectif 1": effectif1,
+    "Effectif 2": effectif2,
+    "Effectif 3": effectif3,
+  };
+};
 
 export const EtablissementLineContent = ({
   line,
@@ -201,6 +219,12 @@ export const EtablissementLineContent = ({
     <ConditionalTd colonne="libelleNsf" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleNsf ?? "-"}
     </ConditionalTd>
+    <ConditionalTd colonne={"evolutionEffectif"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      <GraphEvolution
+        title="Évolution des effectifs"
+        data={getEvolutionEffectifData(line)}
+      />
+    </ConditionalTd>
     <ConditionalTd colonne="effectif1" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
       {line.effectif1 ?? "-"}
     </ConditionalTd>
@@ -228,6 +252,13 @@ export const EtablissementLineContent = ({
         {formatNumberToString(line.tauxPression, 2, "-")}
       </TableBadge>
     </ConditionalTd>
+    <ConditionalTd colonne={"evolutionTauxPression"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
+      <GraphEvolution
+        title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxPression}
+        data={getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, taux: "tauxPression"})}
+        isPercentage={true}
+      />
+    </ConditionalTd>
     <ConditionalTd
       colonne="tauxRemplissage"
       colonneFilters={colonneFilters}
@@ -235,6 +266,13 @@ export const EtablissementLineContent = ({
       textAlign={"center"}
     >
       <GraphWrapper value={line.tauxRemplissage} />
+    </ConditionalTd>
+    <ConditionalTd colonne={"evolutionTauxRemplissage"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
+      <GraphEvolution
+        title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxRemplissage}
+        data={getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, taux: "tauxRemplissage"})}
+        isPercentage={true}
+      />
     </ConditionalTd>
     <ConditionalTd colonne="positionQuadrant" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.positionQuadrant ?? "-"}
@@ -247,6 +285,13 @@ export const EtablissementLineContent = ({
     >
       <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} />
     </ConditionalTd>
+    <ConditionalTd colonne={"evolutionTauxInsertion"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
+      <GraphEvolution
+        title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxInsertion}
+        data={getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, taux: "tauxInsertion"})}
+        isPercentage={true}
+      />
+    </ConditionalTd>
     <ConditionalTd
       colonne="tauxPoursuite"
       colonneFilters={colonneFilters}
@@ -254,6 +299,13 @@ export const EtablissementLineContent = ({
       textAlign={"center"}
     >
       <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
+    </ConditionalTd>
+    <ConditionalTd colonne={"evolutionTauxPoursuite"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
+      <GraphEvolution
+        title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxPoursuite}
+        data={getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, taux: "tauxPoursuite"})}
+        isPercentage={true}
+      />
     </ConditionalTd>
     <ConditionalTd
       colonne="tauxDevenirFavorable"
@@ -263,11 +315,32 @@ export const EtablissementLineContent = ({
     >
       <GraphWrapper continuum={line.continuum} value={line.tauxDevenirFavorable} />
     </ConditionalTd>
+    <ConditionalTd colonne={"evolutionTauxDevenirFavorable"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
+      <GraphEvolution
+        title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxDevenirFavorable}
+        data={getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortie, taux: "tauxDevenirFavorable"})}
+        isPercentage={true}
+      />
+    </ConditionalTd>
     <ConditionalTd colonne="tauxInsertionEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxInsertionEtablissement} />
     </ConditionalTd>
+    <ConditionalTd colonne={"evolutionTauxInsertionEtablissement"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
+      <GraphEvolution
+        title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxInsertionEtablissement}
+        data={getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, taux: "tauxInsertion"})}
+        isPercentage={true}
+      />
+    </ConditionalTd>
     <ConditionalTd colonne="tauxPoursuiteEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxPoursuiteEtablissement} />
+    </ConditionalTd>
+    <ConditionalTd colonne={"evolutionTauxPoursuiteEtablissement"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
+      <GraphEvolution
+        title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxPoursuiteEtablissement}
+        data={getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, taux: "tauxPoursuite"})}
+        isPercentage={true}
+      />
     </ConditionalTd>
     <ConditionalTd
       colonne="tauxDevenirFavorableEtablissement"
@@ -276,6 +349,13 @@ export const EtablissementLineContent = ({
       textAlign="center"
     >
       <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxDevenirFavorableEtablissement} />
+    </ConditionalTd>
+    <ConditionalTd colonne={"evolutionTauxDevenirFavorableEtablissement"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
+      <GraphEvolution
+        title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxDevenirFavorableEtablissement}
+        data={getEvolutionTauxSortieData({ evolutions: line.evolutionTauxSortieEtablissement, taux: "tauxDevenirFavorable"})}
+        isPercentage={true}
+      />
     </ConditionalTd>
     <ConditionalTd colonne="valeurAjoutee" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
       {line.valeurAjoutee ?? "-"}
