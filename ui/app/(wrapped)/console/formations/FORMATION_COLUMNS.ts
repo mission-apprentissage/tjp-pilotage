@@ -7,8 +7,6 @@ export const FORMATION_COLUMNS = {
   // Formation
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
-  formationSpecifique: "Formation spécifique",
-  actionPrioritaire: "Action prioritaire ?",
   libelleNiveauDiplome: "Diplôme",
   libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",
@@ -18,6 +16,13 @@ export const FORMATION_COLUMNS = {
   "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   codeDispositif: "Code dispositif",
+  // Tags formation
+  formationSpecifique: "Formation spécifique",
+  actionPrioritaire: "Action prioritaire ?",
+  typeFamille: "Type de famille de métiers",
+  isFormationRenovee: "Formation rénovée ?",
+  isHistorique: "Historique ?",
+  isHistoriqueCoExistant: "Historique co-existant ?",
   // Effectifs
   nbEtablissement: "Nb Étab",
   effectif1: "Année 1",
@@ -34,6 +39,7 @@ export const FORMATION_COLUMNS = {
 } satisfies ExportColumns<(typeof client.infer)["[GET]/formations"]["formations"][number]> & {
   formationSpecifique: string;
   actionPrioritaire: string;
+  isHistorique: string;
 };
 
 export const FORMATION_COLUMNS_OPTIONAL = {
