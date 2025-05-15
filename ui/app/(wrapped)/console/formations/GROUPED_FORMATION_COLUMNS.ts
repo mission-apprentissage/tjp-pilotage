@@ -43,6 +43,7 @@ export const GROUPED_FORMATION_COLUMNS: Record<
     cellColor: "inherit",
     options: {
       nbEtablissement: "Nombre d'établissements",
+      evolutionEffectif: "Évolution des effectifs",
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
       effectif3: "Effectif en année 3",
@@ -55,11 +56,16 @@ export const GROUPED_FORMATION_COLUMNS: Record<
     cellColor: "inherit",
     options: {
       tauxPression: "Taux de pression",
+      evolutionTauxPression: "Évolution du taux de pression",
       tauxRemplissage: "Taux de remplissage",
+      evolutionTauxRemplissage: "Évolution du taux de remplissage",
       positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
+      evolutionTauxInsertion: "Évolution du taux d'insertion",
       tauxPoursuite: "Taux de poursuite d'études régional",
+      evolutionTauxPoursuite: "Évolution du taux de poursuite d'études",
       tauxDevenirFavorable: "Taux de devenir favorable régional",
+      evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable",
     },
   },
 } as Record<
@@ -108,6 +114,7 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
     cellColor: "inherit",
     options: {
       nbEtablissement: "Nombre d'établissements",
+      evolutionEffectif: "Évolution des effectifs",
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
       effectif3: "Effectif en année 3",
@@ -120,11 +127,16 @@ export const GROUPED_FORMATION_COLUMNS_OPTIONAL: Record<
     cellColor: "inherit",
     options: {
       tauxPression: "Taux de pression",
+      evolutionTauxPression: "Évolution du taux de pression",
       tauxRemplissage: "Taux de remplissage",
+      evolutionTauxRemplissage: "Évolution du taux de remplissage",
       positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
+      evolutionTauxInsertion: "Évolution du taux d'insertion",
       tauxPoursuite: "Taux de poursuite d'études régional",
+      evolutionTauxPoursuite: "Évolution du taux de poursuite d'études",
       tauxDevenirFavorable: "Taux de devenir favorable régional",
+      evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable",
     },
   },
 } as Record<
@@ -166,6 +178,7 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
     cellColor: "inherit",
     options: {
       nbEtablissement: "Nombre d'établissements",
+      evolutionEffectif: "Évolution des effectifs",
       effectif1: "Effectif en année 1",
       effectif2: "Effectif en année 2",
       effectif3: "Effectif en année 3",
@@ -178,11 +191,16 @@ export const GROUPED_FORMATION_COLUMNS_DEFAULT: Record<
     cellColor: "inherit",
     options: {
       tauxPression: "Taux de pression",
+      evolutionTauxPression: "Évolution du taux de pression",
       tauxRemplissage: "Taux de remplissage",
+      evolutionTauxRemplissage: "Évolution du taux de remplissage",
       positionQuadrant: "Position dans le quadrant",
       tauxInsertion: "Taux d'emploi 6 mois régional",
+      evolutionTauxInsertion: "Évolution du taux d'insertion",
       tauxPoursuite: "Taux de poursuite d'études régional",
+      evolutionTauxPoursuite: "Évolution du taux de poursuite d'études",
       tauxDevenirFavorable: "Taux de devenir favorable régional",
+      evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable",
     },
   },
 } as Record<

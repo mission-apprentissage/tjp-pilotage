@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
@@ -16,9 +17,9 @@ import { isScolaireFormationHistorique } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
 import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistantIndicateurEntree } from "@/modules/data/utils/notHistorique";
 import { openForRentreeScolaireIndicateurEntree } from "@/modules/data/utils/openForRentreeScolaire";
-import { withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
-import { withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
+import {selectTauxDevenirFavorableAgg,withTauxDevenirFavorableReg} from '@/modules/data/utils/tauxDevenirFavorable';
+import { selectTauxInsertion6moisAgg, withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
+import { selectTauxPoursuiteAgg, withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "@/modules/data/utils/tauxRemplissage";
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
@@ -221,6 +222,47 @@ export const getFormationsQuery = async ({
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
+      jsonArrayFrom(
+        eb
+          .selectFrom("indicateurRegionSortie")
+          .whereRef("indicateurRegionSortie.cfd", "=", "formationView.cfd")
+          .whereRef("indicateurRegionSortie.voie", "=", "formationView.voie")
+          .whereRef("indicateurRegionSortie.codeDispositif", "=", "formationEtablissement.codeDispositif")
+          .select([
+            "indicateurRegionSortie.millesimeSortie",
+            selectTauxDevenirFavorableAgg("indicateurRegionSortie").as("tauxDevenirFavorable"),
+            selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
+            selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
+          ])
+          .$narrowType<{
+            millesimeSortie: string;
+          }>()
+          .groupBy([
+            "indicateurRegionSortie.millesimeSortie",
+          ])
+          .orderBy("indicateurRegionSortie.millesimeSortie", "asc")
+      ).as("evolutionTauxSortie"),
+      jsonArrayFrom(
+        eb
+          .selectFrom("indicateurEntree")
+          .leftJoin("formationEtablissement as fe", "fe.id", "indicateurEntree.formationEtablissementId")
+          .whereRef("fe.cfd", "=", "formationView.cfd")
+          .whereRef("fe.voie", "=", "formationView.voie")
+          .whereRef("fe.codeDispositif", "=", "fe.codeDispositif")
+          .whereRef("indicateurEntree.formationEtablissementId", "=", "fe.id")
+          .select([
+            "indicateurEntree.rentreeScolaire",
+            selectTauxPressionAgg("indicateurEntree", "formationView").as("tauxPression"),
+            selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
+          ])
+          .$narrowType<{
+            rentreeScolaire: string;
+          }>()
+          .groupBy([
+            "indicateurEntree.rentreeScolaire",
+          ])
+          .orderBy("indicateurEntree.rentreeScolaire", "asc")
+      ).as("evolutionTauxEntree"),
     ])
     .where(isInPerimetreIJEtablissement)
     .where(notHistoriqueUnlessCoExistantIndicateurEntree)
@@ -248,6 +290,7 @@ export const getFormationsQuery = async ({
       "formationEtablissement.cfd",
       "formationView.id",
       "formationView.cfd",
+      "formationView.voie",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
       "formationView.typeFamille",
