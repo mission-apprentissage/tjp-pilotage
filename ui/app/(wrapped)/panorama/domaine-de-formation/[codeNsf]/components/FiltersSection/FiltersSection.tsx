@@ -43,7 +43,7 @@ export const FiltersSection = () => {
               const params = new URLSearchParams(searchParams);
               if (selected.type === "formation") {
                 if (selected.nsf === codeNsf) {
-                  handleCfdChange(selected.value);
+                  handleCfdChange({ cfd: selected.value, voies: [] });
                 } else {
                   params.set("cfd", selected.value);
                   router.push(`/panorama/domaine-de-formation/${selected.nsf}?${params.toString()}`);
