@@ -70,7 +70,7 @@ export function DomaineDeFormationClient(
     libelleNsf: "",
     codeNsf: "",
   });
-  const [scope, setScope] = useState<ScopeZone>();
+  const [scope, setScope] = useState<ScopeZone>(ScopeEnum.national);
   const [regions, setRegions] = useState<Region[]>();
   const [academies, setAcademies] = useState<Academie[]>();
   const [departements, setDepartements] = useState<Departement[]>();

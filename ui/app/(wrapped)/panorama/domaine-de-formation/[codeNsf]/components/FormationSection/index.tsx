@@ -1,6 +1,8 @@
 import type { BoxProps } from "@chakra-ui/react";
 import { Box, Container, Divider, Flex, forwardRef, Heading } from "@chakra-ui/react";
 import { useEffect, useMemo } from "react";
+import type {VoieType} from "shared";
+import { VoieEnum  } from "shared";
 
 import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
@@ -37,16 +39,23 @@ const TabContent = forwardRef<TabContentProps, "div">(({ tab, ...rest }, ref) =>
   );
 });
 
-const getFirstFormation = (formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>) => {
-  const libellesNiveauDiplome = Object.keys(formationsByLibelleNiveauDiplome);
+const getFirstFormation =
+  (formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>): { cfd: string, voie: VoieType } => {
+    const libellesNiveauDiplome = Object.keys(formationsByLibelleNiveauDiplome);
 
-  if (libellesNiveauDiplome.length === 0) {
-    return "";
-  }
+    if (libellesNiveauDiplome.length === 0) {
+      return {
+        cfd: "",
+        voie: VoieEnum.scolaire
+      };
+    }
 
-  const firstFormation = formationsByLibelleNiveauDiplome[libellesNiveauDiplome[0]][0];
-  return firstFormation.cfd;
-};
+    const firstFormation = formationsByLibelleNiveauDiplome[libellesNiveauDiplome[0]][0];
+    return {
+      cfd: firstFormation.cfd,
+      voie: firstFormation.voie
+    };
+  };
 
 const useFormationSection = (
   formations: FormationListItem[],
@@ -55,13 +64,13 @@ const useFormationSection = (
   const { currentFilters, handleCfdChange } = useFormationContext();
 
   useEffect(() => {
-    if (currentFilters.cfd !== "") {
-      const cfdInListOfFormations = formations.find((f) => f.cfd === currentFilters.cfd);
+    if (currentFilters.selection.cfd !== "") {
+      const cfdInListOfFormations = formations.find((f) => f.cfd === currentFilters.selection.cfd);
 
       if (!cfdInListOfFormations) {
         handleCfdChange(getFirstFormation(formationsByLibelleNiveauDiplome));
       }
-    } else if (currentFilters.cfd === "" && Object.keys(formationsByLibelleNiveauDiplome).length > 0) {
+    } else if (currentFilters.selection.cfd === "" && Object.keys(formationsByLibelleNiveauDiplome).length > 0) {
       handleCfdChange(getFirstFormation(formationsByLibelleNiveauDiplome));
     }
   }, [currentFilters, formations, handleCfdChange, formationsByLibelleNiveauDiplome]);

@@ -2,7 +2,8 @@
 
 import { usePlausible } from "next-plausible";
 import { createContext, useContext } from "react";
-import type { ScopeZone } from "shared";
+import type {ScopeZone, VoieType} from "shared";
+import {  VoieEnum  } from "shared";
 
 import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/page.client";
 import type {
@@ -26,23 +27,32 @@ const findDefaultCfd = (
   defaultCfd: string | undefined,
   formations: FormationListItem[],
   formationByCodeNiveauDiplome: Record<string, FormationListItem[]>
-): string => {
+): { cfd: string, voie: VoieType } => {
   if (defaultCfd) {
     const isInList = formations.find((f) => f.cfd === defaultCfd);
 
     if (isInList) {
-      return defaultCfd;
+      return { cfd: defaultCfd, voie: isInList.voie };
     }
   }
   const firstFormations = formationByCodeNiveauDiplome[Object.keys(formationByCodeNiveauDiplome)[0]];
 
   const formationWithAtLeastOneEtab = firstFormations?.filter((f) => f.nbEtab > 0);
+  const firstFormation = formationWithAtLeastOneEtab?.[0];
 
-  return formationWithAtLeastOneEtab?.[0]?.cfd ?? "";
+  console.log(firstFormation);
+
+  return firstFormation ? {
+    cfd: firstFormation.cfd,
+    voie: firstFormation.voie
+  } : {
+    cfd: '',
+    voie: VoieEnum.scolaire
+  };
 };
 
 type InputFormationContextType = {
-  scope?: ScopeZone;
+  scope: ScopeZone;
   regions?: Region[];
   academies?: Academie[];
   departements?: Departement[];
@@ -64,7 +74,7 @@ type FormationContextType = InputFormationContextType & {
   handleIncludeAllChange: (includeAll: boolean) => void;
   handleViewChange: (view: EtablissementsView) => void;
   handleOrderByChange: (orderBy: EtablissementsOrderBy) => void;
-  handleCfdChange: (cfd: string) => void;
+  handleCfdChange: (params: { cfd: string, voie: VoieType }) => void;
   handleClearBbox: () => void;
   handleSetBbox: (bbox?: Bbox) => void;
   setDepartements: (departements: Departement[]) => void
@@ -81,14 +91,13 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   const trackEvent = usePlausible();
   const { cfd } = useDomaineDeFormationSearchParams();
   const { formations, formationsByLibelleNiveauDiplome } = useDomaineDeFormation();
-  const defaultCfd = findDefaultCfd(cfd, formations, formationsByLibelleNiveauDiplome);
 
   const [currentFilters, setCurrentFilters] = useStateParams<Filters>({
     defaultValues: {
       presence: "",
       voie: "",
       formationTab: "etablissements",
-      cfd: defaultCfd,
+      selection: findDefaultCfd(cfd, formations, formationsByLibelleNiveauDiplome),
       etab: {
         includeAll: true,
         view: "map",
@@ -245,14 +254,17 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
     }));
   };
 
-  const handleCfdChange = (cfd: string) => {
+  const handleCfdChange = ({ cfd, voie }: { cfd: string, voie: VoieType }) => {
     trackEvent("domaine-de-formation:cfd", {
       props: { cfd },
     });
 
     setCurrentFilters((prev) => ({
       ...prev,
-      cfd,
+      selection: {
+        cfd,
+        voie
+      }
     }));
   };
 

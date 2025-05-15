@@ -10,6 +10,7 @@ import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "@/components/BadgeVoieApprentissage";
+import { BadgeVoieScolaire } from "@/components/BadgeVoieScolaire";
 import { themeColors } from "@/theme/themeColors";
 
 const LabelNumberOfFormations = ({ formations }: { formations: number }) => (
@@ -19,33 +20,47 @@ const LabelNumberOfFormations = ({ formations }: { formations: number }) => (
   </Text>
 );
 
-const getBackgroundColor = (formation: FormationListItem, selectedCfd: string) => {
-  if (formation.cfd === selectedCfd) {
-    return "bluefrance.925";
-  }
-
-  if (formation.nbEtab === 0) {
-    return "grey.925";
-  }
-
-  return undefined;
-};
-
-const getFontColor = (formation: FormationListItem, selectedCfd: string) => {
-  if (formation.cfd === selectedCfd) {
-    return "bluefrance.113";
-  }
-
-  if (formation.nbEtab === 0) {
-    return "grey.625";
-  }
-
-  return undefined;
-};
-
 export const ListeFormations = () => {
-  const { handleCfdChange: selectCfd, currentFilters: { cfd: selectedCfd } } = useFormationContext();
+  const {
+    handleCfdChange: selectCfd,
+    currentFilters: {
+      selection: { cfd: selectedCfd, voie: selectedVoie }
+    }
+  } = useFormationContext();
+
   const { formationsByLibelleNiveauDiplome } = useDomaineDeFormation();
+
+  const isFormationSelected = (formation: FormationListItem) => {
+    if (selectedVoie === "") {
+      return formation.cfd === selectedCfd;
+    }
+
+    return formation.cfd === selectedCfd && formation.voie === selectedVoie;
+  };
+
+  const getBackgroundColor = (formation: FormationListItem) => {
+    if (isFormationSelected(formation)) {
+      return "bluefrance.925";
+    }
+
+    if (formation.nbEtab === 0) {
+      return "grey.925";
+    }
+
+    return undefined;
+  };
+
+  const getFontColor = (formation: FormationListItem) => {
+    if (isFormationSelected(formation)) {
+      return "bluefrance.113";
+    }
+
+    if (formation.nbEtab === 0) {
+      return "grey.625";
+    }
+
+    return undefined;
+  };
 
   return (
     <Box
@@ -76,13 +91,13 @@ export const ListeFormations = () => {
                     p={"8px 16px 8px 8px"}
                     cursor={"pointer"}
                     onClick={() => {
-                      selectCfd(formation.cfd);
+                      selectCfd({ cfd: formation.cfd, voie: formation.voie });
                     }}
-                    bgColor={getBackgroundColor(formation, selectedCfd)}
+                    bgColor={getBackgroundColor(formation)}
                     _hover={{
-                      backgroundColor: selectedCfd === formation.cfd ? "bluefrance.925_hover" : "grey.1000_active",
+                      backgroundColor: isFormationSelected(formation) ? "bluefrance.925_hover" : "grey.1000_active",
                     }}
-                    fontWeight={selectedCfd === formation.cfd ? "bold" : ""}
+                    fontWeight={isFormationSelected(formation) ? "bold" : ""}
                     position={"relative"}
                   >
                     <Flex
@@ -93,7 +108,7 @@ export const ListeFormations = () => {
                         width: "0",
                         height: "60%",
                         left: "0",
-                        borderLeft: selectedCfd === formation.cfd ? `3px solid ${themeColors.bluefrance[113]}` : "",
+                        borderLeft: isFormationSelected(formation) ? `3px solid ${themeColors.bluefrance[113]}` : "",
                         top: "50%",
                         transform: "translateY(-50%)",
                         position: "absolute",
@@ -103,7 +118,7 @@ export const ListeFormations = () => {
                       <Tooltip label={formatFamilleMetierLibelle(formation.libelleFormation)}>
                         <Text
                           my={2}
-                          color={getFontColor(formation, selectedCfd)}
+                          color={getFontColor(formation)}
                           whiteSpace="normal"
                           textOverflow={"ellipsis"}
                           overflow={"hidden"}
@@ -116,6 +131,7 @@ export const ListeFormations = () => {
                       <Flex direction="row" gap={1}>
                         <BadgeTypeFamille typeFamille={formation.typeFamille as TypeFamilleKeys} />
                         <BadgeFormationRenovee isFormationRenovee={formation.isFormationRenovee} />
+                        <BadgeVoieScolaire voie={formation.voie} />
                         <BadgeVoieApprentissage voie={formation.voie} />
                       </Flex>
                     </Flex>
