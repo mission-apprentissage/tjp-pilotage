@@ -62,6 +62,7 @@ const useEtablissementsTab = () => {
           codeDepartement,
           orderBy: currentFilters.etab.orderBy,
           includeAll: currentFilters.etab.includeAll,
+          voie: currentFilters.voie ? currentFilters.voie : undefined
         },
       },
       {

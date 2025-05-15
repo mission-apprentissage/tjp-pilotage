@@ -29,6 +29,7 @@ const useIndicateursTab = ({
 }) => {
   const [tauxIJSelected, setTauxIJSelected] = useState<TauxIJType>("tauxDevenirFavorable");
   const [tauxAttractiviteSelected, setTauxAttractiviteSelected] = useState<TauxAttractiviteType>("tauxPression");
+  const { currentFilters } = useFormationContext();
   const { data: dataFormation, isLoading: isLoadingFormation } = client.ref("[GET]/formation/:cfd").useQuery(
     {
       params: { cfd },
@@ -46,7 +47,12 @@ const useIndicateursTab = ({
     .useQuery(
       {
         params: { cfd },
-        query: { codeRegion, codeAcademie, codeDepartement },
+        query: {
+          codeRegion,
+          codeAcademie,
+          codeDepartement,
+          voie: currentFilters.voie ? currentFilters.voie : undefined
+        },
       },
       {
         keepPreviousData: true,

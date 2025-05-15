@@ -1,9 +1,12 @@
 import { z } from "zod";
 
+import { VoieZodType } from "../../enum/voieEnum";
+
 const queryFiltersSchema = z.object({
   codeRegion: z.string().optional(),
   codeAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),
+  voie: VoieZodType.optional()
 });
 
 const tauxIJValueSchema = z.object({
