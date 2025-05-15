@@ -6,6 +6,7 @@ import { createContext, useContext } from "react";
 import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/page.client";
 import type {
   DomaineDeFormationResult,
+  DomaineDeFormationResultFormation,
   FormationListItem,
   FormationsCounter,
 } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
@@ -44,25 +45,58 @@ type DomaineDeFormationProps = {
   value: InputDomaineDeFormationType;
 };
 
+const normalizeFormations = (formations: DomaineDeFormationResultFormation[]): FormationListItem[] => {
+  const output: FormationListItem[] = [];
+
+  formations.forEach((formation) => {
+    const index = output.findIndex(f => f.cfd === formation.cfd);
+    const { voie, ...formationWithoutVoie } = formation;
+
+    if (index > -1) {
+      output[index] = {
+        ...output[index],
+        apprentissage: output[index].apprentissage || formationWithoutVoie.apprentissage,
+        scolaire: output[index].scolaire || formationWithoutVoie.scolaire,
+        voies: [...output[index].voies, voie]
+      };
+    } else {
+      output.push({
+        ...formationWithoutVoie,
+        voies: [voie]
+      });
+    }
+  });
+
+  return output;
+};
+
 export const DomaineDeFormation = createContext<DomaineDeFormationType>({} as DomaineDeFormationType);
 
 export function DomaineDeFormationProvider({ children, value }: Readonly<DomaineDeFormationProps>) {
   const { domaineDeFormation, setDomaineDeFormation, isLoading, setIsLoading } = value;
   const { presence, voie } = useDomaineDeFormationSearchParams();
 
-  const formations = domaineDeFormation.formations
-    .filter((formation) => (presence === "dispensees" ? formation.nbEtab > 0 : true))
-    .filter((formation) => (presence === "absentes" ? formation.nbEtab === 0 : true))
-    .filter((formation) => (voie === "apprentissage" ? formation.apprentissage : true))
-    .filter((formation) => (voie === "scolaire" ? formation.scolaire : true));
+  const compactFormations = normalizeFormations(domaineDeFormation.formations);
 
-  const formationsByPresence = domaineDeFormation.formations
-    .filter((formation) => (presence === "dispensees" ? formation.nbEtab > 0 : true))
-    .filter((formation) => (presence === "absentes" ? formation.nbEtab === 0 : true));
+  const formations = normalizeFormations(
+    domaineDeFormation.formations
+      .filter((formation) => (presence === "dispensees" ? formation.nbEtab > 0 : true))
+      .filter((formation) => (presence === "absentes" ? formation.nbEtab === 0 : true))
+      .filter((formation) => (voie === "apprentissage" ? formation.apprentissage : true))
+      .filter((formation) => (voie === "scolaire" ? formation.scolaire : true))
+  );
 
-  const formationsByVoie = domaineDeFormation.formations
-    .filter((formation) => (voie === "apprentissage" ? formation.apprentissage : true))
-    .filter((formation) => (voie === "scolaire" ? formation.scolaire : true));
+  const formationsByPresence = normalizeFormations(
+    domaineDeFormation.formations
+      .filter((formation) => (presence === "dispensees" ? formation.nbEtab > 0 : true))
+      .filter((formation) => (presence === "absentes" ? formation.nbEtab === 0 : true))
+  );
+
+  const formationsByVoie = normalizeFormations(
+    domaineDeFormation.formations
+      .filter((formation) => (voie === "apprentissage" ? formation.apprentissage : true))
+      .filter((formation) => (voie === "scolaire" ? formation.scolaire : true))
+  );
 
   const counter: FormationsCounter = {
     inScope: formationsByVoie.filter((f) => f.nbEtab > 0).length,
@@ -73,7 +107,7 @@ export function DomaineDeFormationProvider({ children, value }: Readonly<Domaine
     allScopes: domaineDeFormation.formations.length,
   };
 
-  const formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]> =
+  const formationsByLibelleNiveauDiplome =
     groupFromationsByLibelleNiveauDiplome(formations);
 
   const context = {

@@ -2,7 +2,6 @@ import type { BoxProps } from "@chakra-ui/react";
 import { Box, Container, Divider, Flex, forwardRef, Heading } from "@chakra-ui/react";
 import { useEffect, useMemo } from "react";
 import type {VoieType} from "shared";
-import { VoieEnum  } from "shared";
 
 import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
@@ -40,20 +39,20 @@ const TabContent = forwardRef<TabContentProps, "div">(({ tab, ...rest }, ref) =>
 });
 
 const getFirstFormation =
-  (formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>): { cfd: string, voie: VoieType } => {
+  (formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>): { cfd: string, voies: VoieType[] } => {
     const libellesNiveauDiplome = Object.keys(formationsByLibelleNiveauDiplome);
 
     if (libellesNiveauDiplome.length === 0) {
       return {
         cfd: "",
-        voie: VoieEnum.scolaire
+        voies: []
       };
     }
 
     const firstFormation = formationsByLibelleNiveauDiplome[libellesNiveauDiplome[0]][0];
     return {
       cfd: firstFormation.cfd,
-      voie: firstFormation.voie
+      voies: firstFormation.voies
     };
   };
 

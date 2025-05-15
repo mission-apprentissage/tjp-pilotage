@@ -1,6 +1,6 @@
 import { Badge, Box, Divider, Flex, List, ListItem, Text, Tooltip } from "@chakra-ui/react";
 import _ from "lodash";
-import { CURRENT_RENTREE } from "shared";
+import { CURRENT_RENTREE, VoieEnum } from "shared";
 
 import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
@@ -24,18 +24,18 @@ export const ListeFormations = () => {
   const {
     handleCfdChange: selectCfd,
     currentFilters: {
-      selection: { cfd: selectedCfd, voie: selectedVoie }
+      selection: { cfd: selectedCfd, voies: selectedVoies }
     }
   } = useFormationContext();
 
   const { formationsByLibelleNiveauDiplome } = useDomaineDeFormation();
 
   const isFormationSelected = (formation: FormationListItem) => {
-    if (selectedVoie === "") {
+    if (selectedVoies.length === 0) {
       return formation.cfd === selectedCfd;
     }
 
-    return formation.cfd === selectedCfd && formation.voie === selectedVoie;
+    return formation.cfd === selectedCfd && formation.voies.some(voie => selectedVoies.includes(voie));
   };
 
   const getBackgroundColor = (formation: FormationListItem) => {
@@ -86,12 +86,12 @@ export const ListeFormations = () => {
               <List>
                 {formations.map((formation) => (
                   <ListItem
-                    key={`${formation.cfd}_${formation.voie}`}
+                    key={`${formation.cfd}_${formation.voies.join(',')}`}
                     ms={3}
                     p={"8px 16px 8px 8px"}
                     cursor={"pointer"}
                     onClick={() => {
-                      selectCfd({ cfd: formation.cfd, voie: formation.voie });
+                      selectCfd({ cfd: formation.cfd, voies: formation.voies });
                     }}
                     bgColor={getBackgroundColor(formation)}
                     _hover={{
@@ -131,8 +131,8 @@ export const ListeFormations = () => {
                       <Flex direction="row" gap={1}>
                         <BadgeTypeFamille typeFamille={formation.typeFamille as TypeFamilleKeys} />
                         <BadgeFormationRenovee isFormationRenovee={formation.isFormationRenovee} />
-                        <BadgeVoieScolaire voie={formation.voie} />
-                        <BadgeVoieApprentissage voie={formation.voie} />
+                        <BadgeVoieScolaire voie={formation.voies.find(v => v === VoieEnum.scolaire)} />
+                        <BadgeVoieApprentissage voie={formation.voies.find(v => v === VoieEnum.apprentissage)} />
                       </Flex>
                     </Flex>
                   </ListItem>

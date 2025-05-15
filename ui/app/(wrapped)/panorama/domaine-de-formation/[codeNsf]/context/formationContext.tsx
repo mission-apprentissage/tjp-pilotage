@@ -27,12 +27,12 @@ const findDefaultCfd = (
   defaultCfd: string | undefined,
   formations: FormationListItem[],
   formationByCodeNiveauDiplome: Record<string, FormationListItem[]>
-): { cfd: string, voie: VoieType } => {
+): { cfd: string, voies: VoieType[] } => {
   if (defaultCfd) {
     const isInList = formations.find((f) => f.cfd === defaultCfd);
 
     if (isInList) {
-      return { cfd: defaultCfd, voie: isInList.voie };
+      return { cfd: defaultCfd, voies: isInList.voies };
     }
   }
   const firstFormations = formationByCodeNiveauDiplome[Object.keys(formationByCodeNiveauDiplome)[0]];
@@ -40,14 +40,12 @@ const findDefaultCfd = (
   const formationWithAtLeastOneEtab = firstFormations?.filter((f) => f.nbEtab > 0);
   const firstFormation = formationWithAtLeastOneEtab?.[0];
 
-  console.log(firstFormation);
-
   return firstFormation ? {
     cfd: firstFormation.cfd,
-    voie: firstFormation.voie
+    voies: firstFormation.voies
   } : {
     cfd: '',
-    voie: VoieEnum.scolaire
+    voies: [VoieEnum.scolaire]
   };
 };
 
@@ -74,7 +72,7 @@ type FormationContextType = InputFormationContextType & {
   handleIncludeAllChange: (includeAll: boolean) => void;
   handleViewChange: (view: EtablissementsView) => void;
   handleOrderByChange: (orderBy: EtablissementsOrderBy) => void;
-  handleCfdChange: (params: { cfd: string, voie: VoieType }) => void;
+  handleCfdChange: (params: { cfd: string, voies: VoieType[] }) => void;
   handleClearBbox: () => void;
   handleSetBbox: (bbox?: Bbox) => void;
   setDepartements: (departements: Departement[]) => void
@@ -254,7 +252,7 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
     }));
   };
 
-  const handleCfdChange = ({ cfd, voie }: { cfd: string, voie: VoieType }) => {
+  const handleCfdChange = ({ cfd, voies }: { cfd: string, voies: VoieType[] }) => {
     trackEvent("domaine-de-formation:cfd", {
       props: { cfd },
     });
@@ -263,7 +261,7 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
       ...prev,
       selection: {
         cfd,
-        voie
+        voies
       }
     }));
   };
