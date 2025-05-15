@@ -139,10 +139,13 @@ export const formatDepartementLibelleWithCodeDepartement = ({
   return `${libelleDepartement} (${formatCodeDepartement(codeDepartement)})`;
 };
 
-export const formatLibelleFormation = (etablissement: { libellesDispositifs: string[]; libelleFormation: string }) => {
+export const formatLibelleFormationWithDispositifs = (
+  {libellesDispositifs, libelleFormation}:
+  { libellesDispositifs: string[]; libelleFormation: string }
+) => {
   const dispositifs =
-    formatArray(etablissement.libellesDispositifs) !== "" ? `(${formatArray(etablissement.libellesDispositifs)})` : "";
-  return `${etablissement.libelleFormation} ${dispositifs}`;
+    formatArray(libellesDispositifs) !== "" ? `(${formatArray(libellesDispositifs)})` : "";
+  return `${libelleFormation} ${dispositifs}`;
 };
 
 /**
@@ -164,29 +167,15 @@ export const formatDispositifs = (dispositifs: string[]) => {
     });
 };
 
-export const formatLibelleFormationAvecTags = (formation: Formation): string => {
-  let libelleFormation = formation.libelleFormation;
-  if(formation.isFormationRenovee) libelleFormation += " (formation rénovée)";
-  if(formation.formationRenovee) libelleFormation += " (formation historique)";
-  switch (formation.typeFamille) {
-  case TypeFamilleEnum["2nde_commune"]:
-    libelleFormation += " (2nde commune)";
-    break;
-  case TypeFamilleEnum["1ere_commune"]:
-    libelleFormation += " (1ère commune)";
-    break;
-  case TypeFamilleEnum["specialite"]:
-    libelleFormation += " (spécialité)";
-    break;
-  case TypeFamilleEnum["option"]:
-    libelleFormation += " (option)";
-    break;
-  default:
-    break;
-  }
-
-  return libelleFormation ?? "-";
-};
+export const formatLibelleFormationWithoutTags = (formation: Formation): string =>
+  formation.libelleFormation ?
+    formation.libelleFormation
+      .replace("2nde commune", "")
+      .replace("2nde année commune", "")
+      .replace("1ere annee commune", "")
+      .replace("1e annee commune", "")
+      .trim()
+    : "";
 
 export const formatMillesime = (millesime: string): string =>
   `${millesime.split("_")[0]}+${millesime.split("_")[1].substring(2)}`;

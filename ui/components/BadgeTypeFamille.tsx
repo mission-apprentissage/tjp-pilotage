@@ -11,7 +11,10 @@ export const TYPE_FAMILLE_KEYS = {
 
 export type TypeFamilleKeys = keyof typeof TYPE_FAMILLE_KEYS;
 
-export const formatTypeFamilleLong = (typeFamille: TypeFamilleKeys): string => {
+export const formatTypeFamilleLong = (typeFamille?: TypeFamilleKeys): string => {
+  if (!typeFamille) {
+    return "";
+  }
   return typeFamille
     .replace(TypeFamilleEnum["2nde_commune"], "Seconde commune")
     .replace(TypeFamilleEnum["1ere_commune"], "Première année commune")
@@ -20,7 +23,10 @@ export const formatTypeFamilleLong = (typeFamille: TypeFamilleKeys): string => {
     .replace("fermeture", "Fermeture au ");
 };
 
-export const formatTypeFamilleCourt = (typeFamille: TypeFamilleKeys): string => {
+export const formatTypeFamilleCourt = (typeFamille?: TypeFamilleKeys): string => {
+  if (!typeFamille) {
+    return "";
+  }
   return typeFamille
     .replace(TypeFamilleEnum["2nde_commune"], "2de")
     .replace(TypeFamilleEnum["1ere_commune"], "1ère")

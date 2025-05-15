@@ -6,7 +6,7 @@ import { useEtablissementContext } from "@/app/(wrapped)/panorama/etablissement/
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
-import { formatCommuneLibelleWithCodeDepartement, formatLibelleFormation } from "@/utils/formatLibelle";
+import { formatCommuneLibelleWithCodeDepartement, formatLibelleFormationWithDispositifs } from "@/utils/formatLibelle";
 import { formatArray } from "@/utils/formatUtils";
 
 export const ExportList = () => {
@@ -44,7 +44,7 @@ export const ExportList = () => {
           commune: etablissement.commune,
           codeDepartement: etablissement.codeDepartement,
         }),
-        libelleFormation: formatLibelleFormation(etablissement),
+        libelleFormation: formatLibelleFormationWithDispositifs(etablissement),
         voie: formatArray(etablissement.voies),
       })),
       {
@@ -74,7 +74,7 @@ export const ExportList = () => {
           commune: etablissement.commune,
           codeDepartement: etablissement.codeDepartement,
         }),
-        libelleFormation: formatLibelleFormation(etablissement),
+        libelleFormation: formatLibelleFormationWithDispositifs(etablissement),
         voie: formatArray(etablissement.voies),
       })),
       {

@@ -14,13 +14,14 @@ import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
 import { CodeDepartementContext } from '@/app/codeDepartementContext';
 import { CodeRegionContext } from '@/app/codeRegionContext';
+import {formatTypeFamilleLong} from '@/components/BadgeTypeFamille';
 import { ConsoleSearchInput } from "@/components/ConsoleSearchInput";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
-import {formatLibelleFormationAvecTags} from '@/utils/formatLibelle';
+import { formatLibelleFormationWithoutTags} from '@/utils/formatLibelle';
 import { formatArray } from "@/utils/formatUtils";
 import { useAuth } from '@/utils/security/useAuth';
 
@@ -207,11 +208,15 @@ const Page = () => {
           selectedDepartement: formatArray(departements.map((departement) => departement.label)),
         }
         : {}),
-      libelleFormation: formatLibelleFormationAvecTags(formation),
+      libelleFormation: formatLibelleFormationWithoutTags(formation),
       actionPrioritaire: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
       transitionDemographique: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],
       transitionEcologique: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Transition écologique"]],
       transitionNumerique: formation.formationSpecifique[TypeFormationSpecifiqueEnum["Transition numérique"]],
+      typeFamille: formatTypeFamilleLong(formation.typeFamille),
+      isFormationRenovee: formation.isFormationRenovee,
+      isHistorique: !!formation.formationRenovee,
+      isHistoriqueCoExistant: formation.isHistoriqueCoExistant,
     }));
 
     return {
