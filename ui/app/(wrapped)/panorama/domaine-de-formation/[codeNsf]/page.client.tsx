@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { ScopeZone } from "shared";
 import { ScopeEnum } from "shared";
@@ -14,7 +14,7 @@ import { LiensUtilesSection } from "./components/LiensUtilesSection/LiensUtilesS
 import { DomaineDeFormationProvider } from "./context/domaineDeFormationContext";
 import { FormationContextProvider } from "./context/formationContext";
 import { NsfContextProvider } from "./context/nsfContext";
-import type { DomaineDeFormationResult, NsfOption, NsfOptions } from "./types";
+import type { Academie, Departement, DomaineDeFormationResult, NsfOption, NsfOptions, Region } from "./types";
 
 const defineScope = (
   codeRegion: string | undefined,
@@ -70,6 +70,10 @@ export function DomaineDeFormationClient(
     libelleNsf: "",
     codeNsf: "",
   });
+  const [scope, setScope] = useState<ScopeZone>();
+  const [regions, setRegions] = useState<Region[]>();
+  const [academies, setAcademies] = useState<Academie[]>();
+  const [departements, setDepartements] = useState<Departement[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { codeRegion, codeAcademie, codeDepartement } = useDomaineDeFormationSearchParams();
 
@@ -93,24 +97,33 @@ export function DomaineDeFormationClient(
     setIsLoading(isDomaineDeFormationLoading);
   }, [isDomaineDeFormationLoading]);
 
-  // if (!isDomaineDeFormationLoading && !results) {
-  //   return redirect(`/panorama/domaine-de-formation?wrongNsf=${codeNsf}`);
-  // }
+  // Initialize filters
+  useEffect(() => {
+    if (domaineDeFormation) {
+      if (codeRegion) {
+        setAcademies(domaineDeFormation.filters.academies.filter((academie) => academie.codeRegion === codeRegion));
+        if (codeAcademie) {
+          setDepartements(
+            domaineDeFormation.filters.departements.filter((departement) => departement.codeAcademie === codeAcademie)
+          );
+        } else {
+          setDepartements(
+            domaineDeFormation.filters.departements.filter((departement) => departement.codeRegion === codeRegion)
+          );
+        }
+      } else {
+        setRegions(domaineDeFormation.filters.regions);
+        setAcademies(domaineDeFormation.filters.academies);
+        setDepartements(domaineDeFormation.filters.departements);
+      }
 
-  const regions = domaineDeFormation.filters.regions;
-  let academies = domaineDeFormation.filters.academies;
-  let departements = domaineDeFormation.filters.departements;
-
-  if (codeRegion) {
-    academies = academies.filter((academie) => academie.codeRegion === codeRegion);
-    departements = departements.filter((departement) => departement.codeRegion === codeRegion);
-
-    if (codeAcademie) {
-      departements = departements.filter((departement) => departement.codeAcademie === codeAcademie);
+      setScope(defineScope(codeRegion, codeAcademie, codeDepartement));
     }
-  }
+  }, [codeRegion, codeAcademie, domaineDeFormation, codeDepartement]);
 
-  const scope = defineScope(codeRegion, codeAcademie, codeDepartement);
+  if (!isDomaineDeFormationLoading && !results) {
+    return redirect(`/panorama/domaine-de-formation?wrongNsf=${codeNsf}`);
+  }
 
   return (
     <NsfContextProvider value={{ codeNsf, libelleNsf, defaultNsfs }}>
@@ -122,7 +135,16 @@ export function DomaineDeFormationClient(
           setIsLoading
         }}
       >
-        <FormationContextProvider value={{ scope, departements, academies, regions }}>
+        <FormationContextProvider value={{
+          scope,
+          setScope,
+          departements,
+          setDepartements,
+          academies,
+          setAcademies,
+          regions,
+          setRegions
+        }}>
           <HeaderSection />
           <FiltersSection />
           <FormationSection />
