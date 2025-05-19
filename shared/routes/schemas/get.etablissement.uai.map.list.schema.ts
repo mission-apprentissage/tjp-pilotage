@@ -14,8 +14,8 @@ export const EtablissementSchema = z.object({
   libellesDispositifs: z.array(z.string()),
   voies: z.array(z.string()),
   effectif: z.number().optional(),
-  tauxInsertion: z.number().optional(),
-  tauxPoursuite: z.number().optional(),
+  tauxDevenirFavorable: z.number().optional(),
+  tauxPression: z.number().optional(),
   secteur: z.string().optional(),
 });
 

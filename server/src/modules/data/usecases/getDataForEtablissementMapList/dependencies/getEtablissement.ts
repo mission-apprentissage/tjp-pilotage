@@ -4,8 +4,11 @@ import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
 import { effectifAnnee } from "@/modules/data/utils/effectifAnnee";
+import { selectTauxDevenirFavorable } from "@/modules/data/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
+import { selectTauxPression } from "@/modules/data/utils/tauxPression";
+import { cleanNull } from "@/utils/noNull";
 
 export interface Filters extends z.infer<typeof getDataForEtablissementMapListSchema.params> {
   cfd?: string[];
@@ -39,6 +42,8 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
       "academie.libelleAcademie",
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuite"),
       selectTauxInsertion6mois("indicateurSortie").as("tauxInsertion"),
+      selectTauxDevenirFavorable("indicateurSortie").as("tauxDevenirFavorable"),
+      selectTauxPression("indicateurEntree", "dataFormation", true).as("tauxPression"),
       effectifAnnee({ alias: "indicateurEntree" }).as("effectif"),
     ])
     .where("etablissement.uai", "=", uai)
@@ -50,6 +55,7 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
     })
     .groupBy([
       "dataFormation.libelleFormation",
+      "dataFormation.codeNiveauDiplome",
       "etablissement.uai",
       "etablissement.codeDepartement",
       "etablissement.commune",
@@ -65,5 +71,8 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
       "indicateurSortie.nbInsertion6mois",
       "indicateurEntree.effectifs",
       "indicateurEntree.anneeDebut",
+      "indicateurEntree.capacites",
+      "indicateurEntree.premiersVoeux"
     ])
-    .executeTakeFirst();
+    .executeTakeFirst()
+    .then(cleanNull);
