@@ -100,9 +100,7 @@ export const getEtablissements = async ({
           sql<number>`(effectifs->>${sb.ref("anneeDebut")})::integer`.as("effectifs"),
           selectTauxPression("indicateurEntree", "niveauDiplome", true).as("tauxPression"),
         ])
-        .where((eb) =>
-          eb.or([eb("rentreeScolaire", "=", CURRENT_RENTREE), eb("formationEtablissement.voie", "=", "apprentissage")])
-        )
+        .where("rentreeScolaire", "=", CURRENT_RENTREE)
     )
     .selectFrom("carto")
     .select((sb) => [
