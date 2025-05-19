@@ -12,7 +12,7 @@ const queryFiltersSchema = z.object({
 const tauxIJValueSchema = z.object({
   libelle: z.string(),
   apprentissage: z.number().optional(),
-  scolaire: z.number().optional(),
+  scolaire: z.number().optional()
 });
 
 const tauxIJSchema = z.object({
@@ -28,8 +28,8 @@ const effectifsSchema = z.object({
 
 const soldePlacesTransformeeSchema = z.object({
   rentreeScolaire: z.number(),
-  scolaire: z.number(),
-  apprentissage: z.number(),
+  scolaire: z.number().optional(),
+  apprentissage: z.number().optional(),
 });
 
 const etablissementsSchema = z.object({
