@@ -6,9 +6,12 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import type { client } from "@/api.client";
 import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
+import {TableBadge} from '@/components/TableBadge';
 import { themeDefinition } from "@/theme/theme";
 import { formatCodeDepartement, formatDispositifs, formatSecteur } from "@/utils/formatLibelle";
-import { formatDistance, formatPercentage } from "@/utils/formatUtils";
+import {formatDistance, formatNumber, formatNumberToString,formatPercentage} from '@/utils/formatUtils';
+import {getTauxPressionStyle} from '@/utils/getBgScale';
+
 
 interface CustomListItemProps {
   etablissement: (typeof client.infer)["[GET]/etablissement/:uai/map/list"]["etablissementsProches"][number];
@@ -63,10 +66,10 @@ export const CustomListItem = ({ etablissement, withDivider, children }: CustomL
     return `Données indisponibles`;
   })();
 
-  const tooltipLabelTauxEmploi = (() => {
-    if (etablissement.tauxInsertion !== undefined) {
+  const tooltipLabelTauxDevenirFavorable = (() => {
+    if (etablissement.tauxDevenirFavorable !== undefined) {
       if (isScolaire) {
-        return `Taux d'emploi à 6 mois (Millesimes ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
+        return `Taux de devenir favorable (Millesimes ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
       }
     }
 
@@ -74,13 +77,13 @@ export const CustomListItem = ({ etablissement, withDivider, children }: CustomL
       return `Données indisponibles pour l'apprentissage`;
     }
 
-    return `Données indisponibles`;
+    return "Données indisponibles";
   })();
 
-  const tooltipLabelTauxPoursuite = (() => {
-    if (etablissement.tauxPoursuite !== undefined) {
+  const tooltipLabelTauxPression = (() => {
+    if (etablissement.tauxDevenirFavorable !== undefined) {
       if (isScolaire) {
-        return `Taux de poursuite d'études (Millesimes ${CURRENT_IJ_MILLESIME.split("_").join("+")})`;
+        return `Taux de pression (ou taux de demande pour les BTS) (Rentrée scolaire ${CURRENT_RENTREE})`;
       }
     }
 
@@ -184,25 +187,25 @@ export const CustomListItem = ({ etablissement, withDivider, children }: CustomL
                 color={themeDefinition.colors.grey[425]}
               >
                 <Tooltip label={tooltipLabelEffectif}>
-                  <HStack gap="4px" width="30px">
+                  <HStack gap="4px" width="40px">
                     <InlineIcon icon="ri:group-line" />
                     <Text>{etablissement.effectif !== undefined ? etablissement.effectif : "--"}</Text>
                   </HStack>
                 </Tooltip>
-                <Tooltip label={tooltipLabelTauxEmploi}>
-                  <HStack gap="4px" width="40px">
-                    <InlineIcon icon="ri:briefcase-line" />
+                <Tooltip label={tooltipLabelTauxDevenirFavorable}>
+                  <HStack gap="4px" width="55px">
+                    <InlineIcon icon="ri:thumb-up-line" height="14px" width="14px" />
                     <Text>
-                      {etablissement.tauxInsertion !== undefined ? formatPercentage(etablissement.tauxInsertion) : "--"}
+                      {formatPercentage(etablissement.tauxDevenirFavorable, 0, "--")}
                     </Text>
                   </HStack>
                 </Tooltip>
-                <Tooltip label={tooltipLabelTauxPoursuite}>
-                  <HStack gap="4px" width="40px">
-                    <InlineIcon icon="ri:book-open-line" />
-                    <Text>
-                      {etablissement.tauxPoursuite !== undefined ? formatPercentage(etablissement.tauxPoursuite) : "--"}
-                    </Text>
+                <Tooltip label={tooltipLabelTauxPression}>
+                  <HStack gap="4px" width="65px">
+                    <InlineIcon icon="ri:temp-cold-line" height="14px" width="14px" />
+                    <TableBadge sx={getTauxPressionStyle(formatNumber(etablissement.tauxPression, 2))}>
+                      {formatNumberToString(etablissement.tauxPression, 2, "-")}
+                    </TableBadge>
                   </HStack>
                 </Tooltip>
               </HStack>
