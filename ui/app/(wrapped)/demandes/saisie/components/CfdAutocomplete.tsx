@@ -117,7 +117,7 @@ export const CfdAutocompleteInput = ({
       }
       isClearable={true}
       noOptionsMessage={({ inputValue }) => (inputValue ? "Pas de diplôme correspondant" : "Commencez à écrire...")}
-      placeholder="Entrer un niveau de diplôme, un nom de formation, un code diplôme,..."
+      placeholder="Entrer une spécialité, un intitulé de formation, un code diplôme,..."
       isDisabled={disabled}
     />
   );
