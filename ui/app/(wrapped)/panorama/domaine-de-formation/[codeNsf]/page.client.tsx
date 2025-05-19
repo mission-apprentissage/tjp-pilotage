@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { ScopeZone } from "shared";
 import { ScopeEnum } from "shared";
@@ -15,6 +15,7 @@ import { DomaineDeFormationProvider } from "./context/domaineDeFormationContext"
 import { FormationContextProvider } from "./context/formationContext";
 import { NsfContextProvider } from "./context/nsfContext";
 import type { Academie, Departement, DomaineDeFormationResult, NsfOption, NsfOptions, Region } from "./types";
+import { useDomaineDeFormationSearchParams } from "./useDomaineDeFormationSearchParams";
 
 const defineScope = (
   codeRegion: string | undefined,
@@ -34,26 +35,6 @@ const defineScope = (
   }
 
   return ScopeEnum.national;
-};
-
-
-export const useDomaineDeFormationSearchParams = () => {
-  const searchParams = useSearchParams();
-  const codeRegion = searchParams.get("codeRegion") ?? undefined;
-  const codeAcademie = searchParams.get("codeAcademie") ?? undefined;
-  const codeDepartement = searchParams.get("codeDepartement") ?? undefined;
-  const cfd = searchParams.get("cfd") ?? undefined;
-  const presence = searchParams.get("presence") ?? undefined;
-  const voie = searchParams.get("voie") ?? undefined;
-
-  return {
-    codeRegion: codeRegion,
-    codeAcademie: codeAcademie,
-    codeDepartement: codeDepartement,
-    cfd: cfd,
-    presence: presence,
-    voie: voie
-  };
 };
 
 export function DomaineDeFormationClient(

@@ -5,7 +5,6 @@ import { createContext, useContext } from "react";
 import type {ScopeZone, VoieType} from "shared";
 import {  VoieEnum  } from "shared";
 
-import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/page.client";
 import type {
   Academie,
   Bbox,
@@ -19,6 +18,7 @@ import type {
   Region,
   Voie,
 } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
+import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/useDomaineDeFormationSearchParams";
 import { useStateParams } from "@/utils/useFilters";
 
 import { useDomaineDeFormation } from "./domaineDeFormationContext";

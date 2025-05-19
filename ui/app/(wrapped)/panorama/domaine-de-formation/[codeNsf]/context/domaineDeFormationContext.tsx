@@ -3,13 +3,13 @@
 import _ from "lodash";
 import { createContext, useContext } from "react";
 
-import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/page.client";
 import type {
   DomaineDeFormationResult,
   DomaineDeFormationResultFormation,
   FormationListItem,
   FormationsCounter,
 } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
+import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/useDomaineDeFormationSearchParams";
 
 const groupFromationsByLibelleNiveauDiplome = (
   formations: FormationListItem[]
@@ -75,8 +75,6 @@ export const DomaineDeFormation = createContext<DomaineDeFormationType>({} as Do
 export function DomaineDeFormationProvider({ children, value }: Readonly<DomaineDeFormationProps>) {
   const { domaineDeFormation, setDomaineDeFormation, isLoading, setIsLoading } = value;
   const { presence, voie } = useDomaineDeFormationSearchParams();
-
-  const compactFormations = normalizeFormations(domaineDeFormation.formations);
 
   const formations = normalizeFormations(
     domaineDeFormation.formations
