@@ -1,7 +1,9 @@
 import { Box, useToken } from "@chakra-ui/react";
 import { init, registerLocale } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
+import { VoieEnum } from "shared";
 
+import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
 import type { TauxIJValues } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 import { frenchLocale } from "@/utils/echarts/frenchLocale";
 import { formatPercentage } from "@/utils/formatUtils";
@@ -32,6 +34,7 @@ export const DevenirBarGraph = function ({
   const containerRef = useRef<HTMLDivElement>(null);
   const blue = useToken("colors", "blueCumulus.526");
   const mustard = useToken("colors", "yellowMoutarde.679");
+  const { currentFilters: { voie } } = useFormationContext();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const series: {
@@ -40,7 +43,7 @@ export const DevenirBarGraph = function ({
     color: string;
   }[] = [];
 
-  if (hasVoieScolaire) {
+  if (hasVoieScolaire && (!voie || voie === VoieEnum.scolaire)) {
     series.push({
       name: `Voie scolaire${datas.some((d) => d.scolaire !== undefined) ? "" : " (indisponible)"}`,
       data: datas.map((data) => data.scolaire),
@@ -48,7 +51,7 @@ export const DevenirBarGraph = function ({
     });
   }
 
-  if (hasVoieApprentissage) {
+  if (hasVoieApprentissage && (!voie || voie === VoieEnum.apprentissage)) {
     series.push({
       name: `Apprentissage${datas.some((d) => d.apprentissage !== undefined) ? "" : " (indisponible)"}`,
       data: datas.map((data) => data.apprentissage),

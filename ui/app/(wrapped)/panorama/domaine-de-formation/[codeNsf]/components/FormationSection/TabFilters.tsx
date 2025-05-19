@@ -37,7 +37,7 @@ export const TabFilters = () => {
           borderStyle={"solid"}
           aria-label="Sélectionner une voie"
         >
-          <option value="">Voie: Tout ({counter.allVoies})</option>
+          <option value="">Voie: Scolaire + Apprentissage ({counter.allVoies})</option>
           <option value="scolaire">Scolaire ({counter.scolaire})</option>
           <option value="apprentissage">Apprentissage ({counter.apprentissage})</option>
         </Select>
