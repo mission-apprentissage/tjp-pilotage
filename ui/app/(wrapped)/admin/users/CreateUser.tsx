@@ -19,12 +19,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { getHierarchy, hasRole } from "shared";
+import type { Role} from 'shared/enum/roleEnum';
 import { RoleEnum } from 'shared/enum/roleEnum';
 import { UserFonctionEnum } from "shared/enum/userFonctionEnum";
 import { z } from "zod";
 
 import { client } from "@/api.client";
 import { getErrorMessage } from "@/utils/apiError";
+import {formatRole} from '@/utils/formatLibelle';
 import { useAuth } from "@/utils/security/useAuth";
 
 export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
@@ -35,6 +37,7 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     handleSubmit,
     reset,
     setValue,
+    watch
   } = useForm<(typeof client.inferArgs)["[POST]/users/:userId"]["body"]>({
     shouldUseNativeValidation: false,
     defaultValues: {
@@ -42,7 +45,7 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       codeRegion: "",
       firstname: "",
       lastname: "",
-      role: RoleEnum["gestionnaire_region"],
+      role: undefined,
       fonction: null,
     },
   });
@@ -77,6 +80,16 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     }
     return regions;
   })();
+
+  const newUserRole = watch("role") as Role;
+  const shouldShowCodeRegionSelect =
+    newUserRole === RoleEnum["gestionnaire_region"] ||
+    newUserRole === RoleEnum["admin_region"] ||
+    newUserRole === RoleEnum["expert_region"] ||
+    newUserRole === RoleEnum["pilote_region"] ||
+    newUserRole === RoleEnum["region"] ||
+    newUserRole === RoleEnum["invite"] ||
+    newUserRole === RoleEnum["perdir"];
 
   useEffect(() => {
     if (isAdminRegion && filteredRegions && filteredRegions.length > 0) {
@@ -128,32 +141,35 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             >
               {roles.map((role) => (
                 <option key={role} value={role}>
-                  {role}
+                  {formatRole(role)}
                 </option>
               ))}
             </Select>
             {!!errors.role && <FormErrorMessage>{errors.role.message}</FormErrorMessage>}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.codeRegion} isRequired={isAdminRegion}>
-            <FormLabel>Code région</FormLabel>
-            <Select
-              {...register("codeRegion", {
-                required: {
-                  value: isAdminRegion,
-                  message: "Veuillez choisir une région",
-                },
-              })}
-            >
-              {!isAdminRegion && <option value="">Aucune</option>}
-              {filteredRegions?.map((region) => (
-                <option key={region.value} value={region.value}>
-                  {region.label}
-                </option>
-              ))}
-            </Select>
-            {!!errors.codeRegion && <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>}
-          </FormControl>
-
+          {
+            shouldShowCodeRegionSelect && (
+              <FormControl mb="4" isInvalid={!!errors.codeRegion} isRequired={isAdminRegion}>
+                <FormLabel>Code région</FormLabel>
+                <Select
+                  {...register("codeRegion", {
+                    required: {
+                      value: isAdminRegion,
+                      message: "Veuillez choisir une région",
+                    },
+                  })}
+                >
+                  {!isAdminRegion && <option value="">Aucune</option>}
+                  {filteredRegions?.map((region) => (
+                    <option key={region.value} value={region.value}>
+                      {region.label}
+                    </option>
+                  ))}
+                </Select>
+                {!!errors.codeRegion && <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>}
+              </FormControl>
+            )
+          }
           <FormControl mb="4" isInvalid={!!errors.fonction}>
             <FormLabel>Fonction de l'utilisateur</FormLabel>
             <Select {...register("fonction")}>
@@ -166,7 +182,6 @@ export const CreateUser = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             </Select>
             {!!errors.fonction && <FormErrorMessage>{errors.fonction.message}</FormErrorMessage>}
           </FormControl>
-
           {isError && (
             <Alert status="error">
               <AlertDescription>{getErrorMessage(error)}</AlertDescription>
