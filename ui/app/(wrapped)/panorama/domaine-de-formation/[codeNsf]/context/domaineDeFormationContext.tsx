@@ -1,6 +1,6 @@
 "use client";
 
-import _ from "lodash";
+import _, { uniqBy } from "lodash";
 import { createContext, useContext } from "react";
 
 import type {
@@ -102,7 +102,8 @@ export function DomaineDeFormationProvider({ children, value }: Readonly<Domaine
     scolaire: formationsByPresence.filter((f) => f.scolaire).length,
     apprentissage: formationsByPresence.filter((f) => f.apprentissage).length,
     allVoies: formationsByPresence.length,
-    allScopes: domaineDeFormation.formations.length,
+    // dedupe cfd
+    allScopes: uniqBy(domaineDeFormation.formations, "cfd").length,
   };
 
   const formationsByLibelleNiveauDiplome =
