@@ -1,6 +1,7 @@
 import { Badge, Flex, Heading } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 import { useState } from "react";
+import { VoieEnum } from "shared";
 
 import { client } from "@/api.client";
 import { FormationHeader } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/components/FormationSection/FormationHeader";
@@ -84,7 +85,7 @@ const useIndicateursTab = ({
 export const IndicateursTab = () => {
   const { codeNsf } = useNsfContext();
   const { currentFilters, scope } = useFormationContext();
-  const { codeRegion, codeAcademie, codeDepartement, selection: { cfd } } = currentFilters;
+  const { codeRegion, codeAcademie, codeDepartement, selection: { cfd }, voie } = currentFilters;
 
   const {
     tauxIJSelected,
@@ -133,7 +134,7 @@ export const IndicateursTab = () => {
                 <Heading as="h3" fontSize={14} fontWeight={"bold"}>
                   EFFECTIFS ET ATTRACTIVITÉ
                 </Heading>
-                <Badge>VOIE SCOLAIRE</Badge>
+                { voie === VoieEnum.scolaire && ( <Badge>VOIE SCOLAIRE</Badge> ) }
               </Flex>
               <EffectifsEtAttractiviteGraphs
                 formation={dataFormation}

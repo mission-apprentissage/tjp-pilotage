@@ -34,7 +34,11 @@ const soldePlacesTransformeeSchema = z.object({
 
 const etablissementsSchema = z.object({
   rentreeScolaire: z.string(),
-  nbEtablissements: z.number(),
+  nbEtablissements: z.object({
+    all: z.number(),
+    apprentissage: z.number(),
+    scolaire: z.number()
+  }),
 });
 
 export const tauxSchema = z.object({
