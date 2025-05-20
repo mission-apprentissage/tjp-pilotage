@@ -277,6 +277,28 @@ export const CHANGELOG: IChangelog[] = [
     "description": "Le service Orion sera en maintenance le 06/05/2025 de 17h jusqu'au lendemain 07/05/2025 maximum.",
     "document": "",
   },
+  {
+    "id": "450c1530-2093-4943-9340-f9d4564b0fcf",
+    "deployed": true,
+    "show": true,
+    "title": "",
+    "types": [ChangelogTypeEnum["BANDEAU"]],
+    "date": new Date("2025-05-20"),
+    "description": "Nous avons ouvert la connexion depuis votre portail professionnel (Arena).",
+    "document": "",
+    "fonction": ["Inspecteur", "DASEN"]
+  },
+  {
+    "id": "450c1530-2093-4943-9340-f9d4564b0fcf",
+    "deployed": true,
+    "show": true,
+    "title": "Interruption de service",
+    "types": [ChangelogTypeEnum["Fonctionnalité"]],
+    "date": new Date("2025-05-20"),
+    "description": "Nous avons ouvert la connexion depuis votre portail professionnel (Arena). Vous retrouverez le lien pour Orion dans la rubrique : .",
+    "document": "",
+    "fonction": ["Inspecteur", "DASEN"]
+  },
 ];
 
 const isRoleAllowed = (entry: IChangelog, role?: Role) => {
