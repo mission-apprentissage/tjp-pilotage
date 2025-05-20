@@ -1,4 +1,4 @@
-import { Button, Container, Flex, Select } from "@chakra-ui/react";
+import { Button, Container, Flex, FormLabel, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -30,10 +30,14 @@ export const FiltersSection = () => {
   }
 
   return (
-    <Flex bgColor={"bluefrance.975"} position="sticky" top={"52px"} left={0} zIndex="docked">
+    <Flex bgColor={"bluefrance.975"} position="sticky" top={"52px"} left={0} zIndex={20}>
       <Container maxW={"container.xl"}>
-        <Flex justify="space-between" gap={"1rem"} my={"24px"} align="center">
+        <FormLabel htmlFor="nsf-select" py={"12px"}>
+          Rechercher un domaine de formation (NSF) ou par formation
+        </FormLabel>
+        <Flex justify="space-between" gap={"1rem"} mb={"24px"} mt={"12px"} align="center">
           <SelectNsf
+            hideLabel
             defaultNsfs={defaultNsfs}
             defaultSelected={defaultNsfs.find((nsf) => nsf.value === codeNsf) ?? null}
             w={"100%"}

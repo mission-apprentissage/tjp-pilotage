@@ -11,7 +11,13 @@ export const TabFilters = () => {
   const { handlePresenceChange, handleVoieChange, currentFilters, handleTabFormationChange } = useFormationContext();
 
   return (
-    <Flex w={"100%"} p={"16px"} bgColor={"bluefrance.975"} alignItems={"center"} justifyContent={"space-between"}>
+    <Flex w={"100%"} p={"16px"} bgColor={"bluefrance.975"} alignItems={"center"} justifyContent={"space-between"} position="sticky"
+      // 52px = navbar height
+      // 119px = page filters height
+      top="calc(119px + 52px)"
+      left="0"
+      z-index="10"
+    >
       <Flex gap={"16px"}>
         <Select
           onChange={(e) => handlePresenceChange(e.target.value as Presence)}
