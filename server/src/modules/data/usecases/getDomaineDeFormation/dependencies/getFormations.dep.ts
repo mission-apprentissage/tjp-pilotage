@@ -89,7 +89,7 @@ export const getFormations = async ({
         })
     )
     .selectFrom("formations")
-    .innerJoin("formation_etab", "formations.cfd", "formation_etab.cfd")
+    .leftJoin("formation_etab", "formations.cfd", "formation_etab.cfd")
     .selectAll("formations")
     .select((sb) => [
       sb.fn.count<number>("formation_etab.uai").as("nbEtab"),
