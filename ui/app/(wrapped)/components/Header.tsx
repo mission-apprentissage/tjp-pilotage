@@ -114,7 +114,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
         </Flex>
       </VStack>
       {!isMaintenance && (
-        <Box boxShadow="0 2px 3px rgba(0,0,18,0.16)" position="sticky" top={0} zIndex="docked" backgroundColor="white">
+        <Box boxShadow="0 2px 3px rgba(0,0,18,0.16)" position="sticky" top={0} zIndex={100} backgroundColor="white">
           <Container maxWidth={"container.xl"} px={0}>
             <Nav />
           </Container>

@@ -188,7 +188,7 @@ export const Nav = () => {
   const { isOpen: isMenuAdminOpen, onOpen: onMenuAdminOpen, onClose: onMenuAdminClose } = useDisclosure();
 
   return (
-    <Flex direction={"row"} align="center" flexWrap="wrap" width={"100%"} zIndex={100}>
+    <Flex direction={"row"} align="center" flexWrap="wrap" width={"100%"} zIndex="100">
       <NavLink mr="4" href="/" segment={null}>
         Accueil
       </NavLink>

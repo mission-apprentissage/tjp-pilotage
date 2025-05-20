@@ -16,7 +16,7 @@ export const TabFilters = () => {
       // 119px = page filters height
       top="calc(119px + 52px)"
       left="0"
-      z-index="10"
+      zIndex="10"
     >
       <Flex gap={"16px"}>
         <Select
