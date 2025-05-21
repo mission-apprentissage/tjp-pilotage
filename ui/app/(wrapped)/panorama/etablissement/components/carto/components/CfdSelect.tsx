@@ -176,9 +176,9 @@ export const CfdSelect = () => {
               return (
                 <Flex gap="4px">
                   <Text>{option.label} </Text>
-                  <BadgeTypeFamille typeFamille={getFormationTypeFamille(option)} labelSize="short" />
+                  <BadgeTypeFamille typeFamille={getFormationTypeFamille(option)} labelSize="long"/>
                   <BadgeFermeture dateFermeture={option.dateFermeture} />
-                  <BadgeFormationRenovee isFormationRenovee={option.isFormationRenovee} />
+                  <BadgeFormationRenovee isFormationRenovee={option.isFormationRenovee} labelSize="long"/>
                 </Flex>
               );
             }}
