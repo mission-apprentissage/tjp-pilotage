@@ -1,5 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import type { ReactNode } from "react";
+import type {Role} from "shared";
+import { RoleEnum } from "shared";
 import {SecteurEnum} from 'shared/enum/secteurEnum';
 import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 import { TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
@@ -179,3 +181,28 @@ export const formatLibelleFormationWithoutTags = (formation: Formation): string 
 
 export const formatMillesime = (millesime: string): string =>
   `${millesime.split("_")[0]}+${millesime.split("_")[1].substring(2)}`;
+
+export const formatRole = (role: Role) => {
+  switch (role) {
+  case RoleEnum["admin"]:
+    return "Administrateur";
+  case RoleEnum["admin_region"]:
+    return "Administrateur région";
+  case RoleEnum["expert_region"]:
+    return "Expert région";
+  case RoleEnum["gestionnaire_region"]:
+    return "Gestionnaire région";
+  case RoleEnum["pilote"]:
+    return "Pilote national";
+  case RoleEnum["pilote_region"]:
+    return "Pilote région";
+  case RoleEnum["perdir"]:
+    return "PERDIR / Chef d'établissement";
+  case RoleEnum["region"]:
+    return "Région";
+  case RoleEnum["invite"]:
+    return "Invité";
+  default:
+    return "Inconnu";
+  }
+};

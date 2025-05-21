@@ -3,6 +3,7 @@ import type { Role } from "shared";
 import type { OrderType } from 'shared/enum/orderEnum';
 import type { PermissionScope } from 'shared/enum/permissionScopeEnum';
 import { PermissionScopeEnum } from 'shared/enum/permissionScopeEnum';
+import type { UserFonction } from "shared/enum/userFonctionEnum";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -54,7 +55,10 @@ export const findUsers = async ({
       }
       return q;
     })
-    .$narrowType<{ role: Role }>()
+    .$narrowType<{
+      role: Role;
+      fonction: UserFonction;
+     }>()
     .offset(offset)
     .limit(limit)
     .$call((q) => {
