@@ -17,15 +17,14 @@ import { isScolaireFormationHistorique } from "@/modules/data/utils/isScolaire";
 import { notAnneeCommune } from "@/modules/data/utils/notAnneeCommune";
 import { isHistoriqueCoExistant, notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
 import { premiersVoeuxAnnee } from "@/modules/data/utils/premiersVoeuxAnnee";
-import { selectTauxDevenirFavorableAgg, withTauxDevenirFavorableReg } from "@/modules/data/utils/tauxDevenirFavorable";
-import { selectTauxInsertion6mois, withInsertionReg } from "@/modules/data/utils/tauxInsertion6mois";
-import { selectTauxPoursuite, withPoursuiteReg } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPression } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissage } from "@/modules/data/utils/tauxRemplissage";
+import { getSommeEffectifSortie, getSommeInsertion6mois, getSommeNbSortants, getSommePoursuite } from "@/modules/utils/calculTaux/getIndicateursSortie";
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
+
 
 export const getFormationEtablissementsQuery = async ({
   offset = 0,
@@ -59,6 +58,7 @@ export const getFormationEtablissementsQuery = async ({
         .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
         .onRef("formationEtablissement.voie", "=", "formationView.voie")
     )
+    .innerJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
     .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
@@ -72,7 +72,13 @@ export const getFormationEtablissementsQuery = async ({
         .onRef("indicateurSortie.formationEtablissementId", "=", "formationEtablissement.id")
         .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
     )
-    .innerJoin("etablissement", "etablissement.uai", "formationEtablissement.uai")
+    .leftJoin("indicateurRegionSortie", (join) =>
+      join
+        .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+        .onRef("indicateurRegionSortie.codeRegion", "=", "etablissement.codeRegion")
+        .onRef("indicateurRegionSortie.cfd", "=", "formationEtablissement.cfd")
+        .onRef("indicateurRegionSortie.codeDispositif", "=", "formationEtablissement.codeDispositif")
+    )
     .leftJoin("indicateurEtablissement", (join) =>
       join
         .onRef("etablissement.uai", "=", "indicateurEtablissement.uai")
@@ -149,9 +155,14 @@ export const getFormationEtablissementsQuery = async ({
       capaciteAnnee({ alias: "indicateurEntree", annee: sql`'2'` }).as("capacite3"),
       premiersVoeuxAnnee({ alias: "indicateurEntree" }).as("premiersVoeux"),
       selectTauxPression("indicateurEntree", "formationView", false).as("tauxPression"),
-      selectTauxPoursuite("indicateurSortie").as("tauxPoursuiteEtablissement"),
-      selectTauxInsertion6mois("indicateurSortie").as("tauxInsertionEtablissement"),
-      selectTauxDevenirFavorableAgg("indicateurSortie").as("tauxDevenirFavorableEtablissement"),
+      getSommeInsertion6mois("indicateurSortie").as("nbInsertion6moisEtablissement"),
+      getSommeNbSortants("indicateurSortie").as("nbSortantsEtablissement"),
+      getSommePoursuite("indicateurSortie").as("nbPoursuiteEtablissement"),
+      getSommeEffectifSortie("indicateurSortie").as("effectifSortieEtablissement"),
+      getSommeInsertion6mois("indicateurRegionSortie").as("nbInsertion6moisRegion"),
+      getSommeNbSortants("indicateurRegionSortie").as("nbSortantsRegion"),
+      getSommePoursuite("indicateurRegionSortie").as("nbPoursuiteRegion"),
+      getSommeEffectifSortie("indicateurRegionSortie").as("effectifSortieRegion"),
       isHistoriqueCoExistant(eb, rentreeScolaire[0]).as("isHistoriqueCoExistant"),
       eb
         .case()
@@ -221,30 +232,6 @@ export const getFormationEtablissementsQuery = async ({
           codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }).as("continuum"),
-      (eb) =>
-        withPoursuiteReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.codeDispositif",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxPoursuite"),
-      (eb) =>
-        withInsertionReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.codeDispositif",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxInsertion"),
-      (eb) =>
-        withTauxDevenirFavorableReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.codeDispositif",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxDevenirFavorable"),
     ])
     .$call((eb) => {
       if (search)
