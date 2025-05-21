@@ -8,8 +8,8 @@ import { DemandeSpinner } from "@/app/(wrapped)/demandes/saisie/components/Deman
 import { DemandeForm } from "@/app/(wrapped)/demandes/saisie/demandeForm/DemandeForm";
 import { DemandeFilesProvider } from "@/app/(wrapped)/demandes/saisie/demandeForm/observationsSection/filesSection/filesContext";
 import { canEditDemande } from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
-import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
-import { GuardSaisieExpe } from "@/utils/security/GuardSaisieExpe";
+import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
+import { GuardSaisieDemande } from "@/utils/security/GuardSaisieDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
 export const PageClient = ({
@@ -29,7 +29,7 @@ export const PageClient = ({
       onError: (error: unknown) => {
         if (isAxiosError(error) && error.response?.data?.message) {
           console.error(error);
-          if (error.response?.status === 404) push(`${getRoutingSaisieDemande({ user })}?notfound=${numero}`);
+          if (error.response?.status === 404) push(`${getRoutingAccessSaisieDemande({ user, campagne: demande?.campagne })}?notfound=${numero}`);
         }
       },
     }
@@ -38,7 +38,7 @@ export const PageClient = ({
   if (isLoading || !demande) return <DemandeSpinner />;
 
   return (
-    <GuardSaisieExpe campagne={demande.campagne}>
+    <GuardSaisieDemande campagne={demande.campagne}>
       <DemandeFilesProvider numero={numero}>
         <DemandeForm
           disabled={!canEditDemande({demande, user})}
@@ -49,6 +49,6 @@ export const PageClient = ({
           campagne={demande.campagne}
         />
       </DemandeFilesProvider>
-    </GuardSaisieExpe>
+    </GuardSaisieDemande>
   );
 };

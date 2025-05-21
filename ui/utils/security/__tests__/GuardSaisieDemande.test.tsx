@@ -14,7 +14,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Auth } from "@/app/authContext";
 import { AuthContext } from "@/app/authContext";
 import { CurrentCampagneContext } from "@/app/currentCampagneContext";
-import { GuardSaisieExpe } from "@/utils/security/GuardSaisieExpe";
+import { GuardSaisieDemande } from "@/utils/security/GuardSaisieDemande";
 
 const createAuthContextBuilder = ({ role, codeRegion }: { role: Role, codeRegion?: string }) => {
   const response = generateMock(ROUTES["[GET]/auth/whoAmI"].schema.response[200])!;
@@ -114,31 +114,31 @@ const fixtureBuilder = () => {
       },
     },
     when: {
-      accesSaisieExpe: () => {
+      accesSaisieDemande: () => {
         render(
           <AuthContext.Provider value={authContextValue}>
             <CurrentCampagneContext.Provider value={currentCampagneContextValue}>
-              <GuardSaisieExpe campagne={campagne}>
+              <GuardSaisieDemande campagne={campagne}>
                 <p>has_permission</p>
-              </GuardSaisieExpe>
+              </GuardSaisieDemande>
             </CurrentCampagneContext.Provider>
           </AuthContext.Provider>
         );
       },
     },
     then: {
-      verifierAccesSaisieExpe: () => {
+      verifierAccesSaisieDemande: () => {
         const textToFind = screen.queryByText("has_permission");
         expect(textToFind).not.toBe(null);
       },
-      verifierNotAccesSaisieExpe: () => {
+      verifierNotAccesSaisieDemande: () => {
         const textToFind = screen.queryByText("has_permission");
         expect(textToFind).toBe(null);
       },
       verifierRedirectionAccueil: () => {
         expect(redirectMock).toHaveBeenCalledWith("/");
       },
-      verifierRedirectionSaisieExpe: () => {
+      verifierRedirectionSaisieDemande: () => {
         expect(redirectMock).toHaveBeenCalledWith("/demandes/saisie");
       },
     },
@@ -153,7 +153,7 @@ vi.mock("next/navigation", () => ({
   usePathname: usePathnameMock,
 }));
 
-describe("ui > components > security > GuardSaisieExpe", () => {
+describe("ui > components > security > GuardSaisieDemande", () => {
   let fixture: ReturnType<typeof fixtureBuilder>;
 
   afterEach(() => {
@@ -173,9 +173,9 @@ describe("ui > components > security > GuardSaisieExpe", () => {
   it("Doit rediriger les users anonymes sur une nouvelle demande", () => {
     fixture.given.utilisateurAnonyme();
 
-    fixture.when.accesSaisieExpe();
+    fixture.when.accesSaisieDemande();
 
-    fixture.then.verifierNotAccesSaisieExpe();
+    fixture.then.verifierNotAccesSaisieDemande();
     fixture.then.verifierRedirectionAccueil();
   });
 
@@ -185,58 +185,48 @@ describe("ui > components > security > GuardSaisieExpe", () => {
     fixture.given.utilisateurPerdirExpe();
     fixture.given.campagne2024();
 
-    fixture.when.accesSaisieExpe();
+    fixture.when.accesSaisieDemande();
 
-    fixture.then.verifierAccesSaisieExpe();
+    fixture.then.verifierAccesSaisieDemande();
   });
 
   it("Doit rediriger vers la boîte de réception hors expé les user perdir hors expe sur une demande d'une campagne nationale", () => {
     fixture.given.utilisateurPerdirHorsExpe();
     fixture.given.campagne2024();
 
-    fixture.when.accesSaisieExpe();
+    fixture.when.accesSaisieDemande();
 
-    fixture.then.verifierNotAccesSaisieExpe();
-    fixture.then.verifierRedirectionSaisieExpe();
-  });
-
-  it("Doit rediriger vers la boîte de réception les user perdir hors expe sur une nouvelle demande d'une campagne régionale avec saisie perdir d'une autre région", () => {
-    fixture.given.utilisateurPerdirHorsExpe();
-    fixture.given.campagneRegionaleExpeEnCoursWithSaisiePerdir();
-
-    fixture.when.accesSaisieExpe();
-
-    fixture.then.verifierNotAccesSaisieExpe();
-    fixture.then.verifierRedirectionSaisieExpe();
+    fixture.then.verifierNotAccesSaisieDemande();
+    fixture.then.verifierRedirectionAccueil();
   });
 
   it("Doit rediriger les user perdir expe sur une demande d'une campagne régionale sans saisie perdir", () => {
     fixture.given.utilisateurPerdirExpe();
     fixture.given.campagneRegionaleExpeEnCoursWithoutSaisiePerdir();
 
-    fixture.when.accesSaisieExpe();
+    fixture.when.accesSaisieDemande();
 
-    fixture.then.verifierNotAccesSaisieExpe();
-    fixture.then.verifierRedirectionSaisieExpe();
+    fixture.then.verifierNotAccesSaisieDemande();
+    fixture.then.verifierRedirectionSaisieDemande();
   });
 
   it("Doit rediriger les user perdir hors expe sur une demande d'une campagne régionale sans saisie perdir", () => {
     fixture.given.utilisateurPerdirHorsExpe();
     fixture.given.campagneRegionaleHorsExpeEnCoursWithoutSaisiePerdir();
 
-    fixture.when.accesSaisieExpe();
+    fixture.when.accesSaisieDemande();
 
-    fixture.then.verifierNotAccesSaisieExpe();
-    fixture.then.verifierRedirectionSaisieExpe();
+    fixture.then.verifierNotAccesSaisieDemande();
+    fixture.then.verifierRedirectionSaisieDemande();
   });
 
   it("Doit laisser passer les user perdir hors expe sur une demande d'une campagne régionale avec saisie perdir", () => {
     fixture.given.utilisateurPerdirHorsExpe();
     fixture.given.campagneRegionaleHorsExpeEnCoursWithSaisiePerdir();
 
-    fixture.when.accesSaisieExpe();
+    fixture.when.accesSaisieDemande();
 
-    fixture.then.verifierAccesSaisieExpe();
+    fixture.then.verifierAccesSaisieDemande();
   });
 
   // Laissé passer
@@ -245,26 +235,26 @@ describe("ui > components > security > GuardSaisieExpe", () => {
     fixture.given.utilisateurPerdirExpe();
     fixture.given.campagne2024();
 
-    fixture.when.accesSaisieExpe();
+    fixture.when.accesSaisieDemande();
 
-    fixture.then.verifierAccesSaisieExpe();
+    fixture.then.verifierAccesSaisieDemande();
   });
 
   it("Doit laisser passer les user perdir expé sur une demande d'une campagne régionale avec saisie perdir", () => {
     fixture.given.utilisateurPerdirExpe();
     fixture.given.campagneRegionaleExpeEnCoursWithSaisiePerdir();
 
-    fixture.when.accesSaisieExpe();
+    fixture.when.accesSaisieDemande();
 
-    fixture.then.verifierAccesSaisieExpe();
+    fixture.then.verifierAccesSaisieDemande();
   });
 
   it("Doit laisser passer les user perdir hors expé sur une demande d'une campagne régionale avec saisie perdir", () => {
     fixture.given.utilisateurPerdirHorsExpe();
     fixture.given.campagneRegionaleHorsExpeEnCoursWithSaisiePerdir();
 
-    fixture.when.accesSaisieExpe();
+    fixture.when.accesSaisieDemande();
 
-    fixture.then.verifierAccesSaisieExpe();
+    fixture.then.verifierAccesSaisieDemande();
   });
 });

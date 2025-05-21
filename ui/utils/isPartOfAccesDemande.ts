@@ -3,7 +3,7 @@ import {hasPermission, hasRole, isUserInRegionsExperimentation2024, RoleEnum} fr
 import { PermissionEnum } from 'shared/enum/permissionEnum';
 import type {CampagneType} from 'shared/schema/campagneSchema';
 
-export const isPerdirPartOfExpe = ({
+export const isPerdirPartOfAccesDemande = ({
   user,
   campagne
 }:
@@ -24,7 +24,8 @@ export const isPerdirPartOfExpe = ({
   return true;
 };
 
-export const isUserPartOfExpe = ({
+
+export const isUserPartOfAccesDemande = ({
   user,
   campagne
 }:
@@ -36,10 +37,10 @@ export const isUserPartOfExpe = ({
   campagne?: CampagneType
 }): boolean => {
   if(
-    !hasPermission(user?.role, PermissionEnum["demande/ecriture"]) &&
-    !hasPermission(user?.role, PermissionEnum["demande-avis/ecriture"]) &&
-    !hasPermission(user?.role, PermissionEnum["demande-statut/ecriture"])
+    !hasPermission(user?.role, PermissionEnum["demande/lecture"]) &&
+    !hasPermission(user?.role, PermissionEnum["demande-avis/lecture"]) &&
+    !hasPermission(user?.role, PermissionEnum["demande-statut/lecture"])
   ) return false;
-  if(hasRole({ user, role: RoleEnum["perdir"] })) return isPerdirPartOfExpe({ user, campagne });
+  if(hasRole({ user, role: RoleEnum["perdir"] })) return isPerdirPartOfAccesDemande({ user, campagne });
   return true;
 };

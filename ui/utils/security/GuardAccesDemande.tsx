@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import type { CampagneType } from "shared/schema/campagneSchema";
 
-import { isUserPartOfExpe } from '@/utils/isPartOfExpe';
+import {isUserPartOfAccesDemande} from '@/utils/isPartOfAccesDemande';
 
 import { useAuth } from './useAuth';
 import { useCurrentCampagne } from './useCurrentCampagne';
@@ -17,7 +17,7 @@ import { useCurrentCampagne } from './useCurrentCampagne';
  * @returns
  */
 
-export const GuardExpe = ({
+export const GuardAccesDemande = ({
   campagne,
   children
 }: {
@@ -26,5 +26,5 @@ export const GuardExpe = ({
 }) => {
   const { user } = useAuth();
   const { campagne: currentCampagne } = useCurrentCampagne();
-  return isUserPartOfExpe({ user, campagne: campagne ?? currentCampagne }) ? (<>{children}</>) : redirect("/");
+  return isUserPartOfAccesDemande({ user, campagne: campagne ?? currentCampagne }) ? (<>{children}</>) : redirect("/");
 };
