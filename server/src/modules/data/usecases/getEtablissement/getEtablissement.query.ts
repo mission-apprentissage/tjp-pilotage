@@ -7,6 +7,6 @@ export const getEtablissementQuery = async ({ uai }: { uai: string }) =>
     .selectAll()
     .where("uai", "=", uai)
     .limit(1)
-    .executeTakeFirst().
-    then(cleanNull);
+    .executeTakeFirst()
+    .then(cleanNull);
 
