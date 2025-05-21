@@ -6,7 +6,7 @@ import type { RequestUser } from "@/modules/core/model/User";
 import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
 
 import type { getDenominateurQuery, getNumerateurQuery} from "./deps";
-import { getDomaines, getFiltersQuery, getFormationsQuery, getNiveauxDiplome, getPositionsQuadrant, getStatsSortieQuery, getStatuts, getZonesGeographiques } from "./deps";
+import { getDomaines, getFiltersQuery, getFormationsQuery, getNiveauxDiplome, getPositionsQuadrant, getStatuts, getZonesGeographiques } from "./deps";
 import { formatResult, formatResultUngrouped } from "./utils";
 
 export interface Filters extends z.infer<typeof FiltersSchema> {
@@ -59,7 +59,6 @@ const getPilotageFactory =
       getStatuts,
       getFiltersQuery,
       getFormationsQuery,
-      getStatsSortieQuery
     }
   ) =>
     async (activeFilters: ActiveFilters) => {

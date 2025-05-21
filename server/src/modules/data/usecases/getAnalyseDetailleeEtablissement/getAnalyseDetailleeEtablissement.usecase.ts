@@ -1,10 +1,9 @@
 import type { FormationSchema } from "shared/routes/schemas/get.etablissement.uai.analyse-detaillee.schema";
 import type { z } from "zod";
 
-import { getStatsSortieParRegionsQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant";
 
-import { getChiffresEntree, getChiffresIj, getEtablissement, getFilters, getFormations } from "./dependencies";
+import { getChiffresEntree, getChiffresIj, getEtablissement, getFilters, getFormations, getStatsSortieParRegionsQuery } from "./dependencies";
 
 type Formation = z.infer<typeof FormationSchema>;
 

@@ -57,6 +57,8 @@ export const ExportList = () => {
         effectif: "Effectif",
         tauxInsertion: "Taux d'insertion à 6 mois",
         tauxPoursuite: "Taux de poursuite d'études",
+        tauxDevenirFavorable: "Taux de devenir favorable",
+        tauxPression: "Taux de pression",
         libelleAcademie: "Académie",
         libelleRegion: "Région",
       }
@@ -87,6 +89,8 @@ export const ExportList = () => {
         effectif: "Effectif",
         tauxInsertion: "Taux d'insertion à 6 mois",
         tauxPoursuite: "Taux de poursuite d'études",
+        tauxDevenirFavorable: "Taux de devenir favorable",
+        tauxPression: "Taux de pression",
         libelleAcademie: "Académie",
         libelleRegion: "Région",
       }

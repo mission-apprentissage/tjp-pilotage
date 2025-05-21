@@ -3,7 +3,7 @@ import { createRoute } from "shared/utils/http-wizard/core";
 
 import type { Server } from "@/server/server";
 
-import { getEtablissement } from "./getEtablissement.usecase";
+import { getEtablissementUsecase } from "./getEtablissement.usecase";
 
 const ROUTE = ROUTES["[GET]/etablissement/:uai"];
 
@@ -16,7 +16,7 @@ export const getEtablissementRoute = (server: Server) => {
       ...props,
       handler: async (request, response) => {
         const { uai } = request.params;
-        const result = await getEtablissement({ uai });
+        const result = await getEtablissementUsecase({ uai });
         response.status(200).send(result);
       },
     });
