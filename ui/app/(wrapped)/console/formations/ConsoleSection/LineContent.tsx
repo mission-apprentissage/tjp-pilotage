@@ -1,9 +1,10 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, chakra, Flex, IconButton, Link, Skeleton, Tag, Td, Text, Tr } from "@chakra-ui/react";
+import { Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Line } from "@/app/(wrapped)/console/formations/types";
+import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
@@ -108,14 +109,14 @@ export const FormationLineContent = ({
         <Flex w={"fit-content"} my={"auto"}>
           {formatFamilleMetierLibelle(line, "long", "sm", "12px")}
         </Flex>
-        <BadgeFormationRenovee isFormationRenovee={!!line.isFormationRenovee} ms={2}/>
+        <BadgeFormationRenovee
+          isFormationRenovee={line.isFormationRenovee}
+          marginStart={2}
+          labelSize="long"
+        />
         {line.formationRenovee && (
           <Flex ms={2} my={"auto"} width={"fit-content"} h={"1.8rem"} whiteSpace={"nowrap"} direction={"column"}>
-            {line.dateFermeture && (
-              <Tag size="sm" bgColor="grey.1000_active" color={"grey.425"} width={"fit-content"} fontSize={12}>
-                Fermeture au {line.dateFermeture}
-              </Tag>
-            )}
+            <BadgeFermeture dateFermeture={line.dateFermeture} labelSize="long" size="sm" />
             <Link
               variant="text"
               as={NextLink}
@@ -136,7 +137,7 @@ export const FormationLineContent = ({
       </Flex>
     </ConditionalTd>
     <ConditionalTd colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <BadgesFormationSpecifique formationSpecifique={line.formationSpecifique} />
+      <BadgesFormationSpecifique formationSpecifique={line.formationSpecifique} labelSize="long" />
     </ConditionalTd>
     <ConditionalTd colonne={"libelleNiveauDiplome"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleNiveauDiplome ?? "-"}

@@ -7,4 +7,3 @@ export { getFiltersQuery } from './getFiltersQuery.dep';
 export { getFormationsQuery } from './getFormationsQuery.dep';
 export { getNumerateurQuery } from './getNumerateurQuery.dep';
 export { getDenominateurQuery } from './getDenominateurQuery.dep';
-export { getStatsSortieQuery } from './getStatsSortieQuery.dep';

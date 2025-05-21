@@ -1,12 +1,15 @@
 import type { BadgeProps } from "@chakra-ui/react";
-import { Badge, forwardRef } from "@chakra-ui/react";
+import {Badge, chakra} from '@chakra-ui/react';
 import type { ScopeZone } from "shared";
 
 type BadgeScopeProps = BadgeProps & {
   scope: ScopeZone;
 };
 
-export const BadgeScope = forwardRef<BadgeScopeProps, "span">(({ scope, ...rest }: { scope: ScopeZone }, ref) => {
+export const BadgeScope = chakra((
+  { scope, ...props }:
+  BadgeScopeProps,
+  ref) => {
   return (
     <Badge
       bgColor={
@@ -28,7 +31,7 @@ export const BadgeScope = forwardRef<BadgeScopeProps, "span">(({ scope, ...rest 
       fontWeight={"normal"}
       textTransform={"capitalize"}
       ref={ref}
-      {...rest}
+      {...props}
     >
       {scope}
     </Badge>
