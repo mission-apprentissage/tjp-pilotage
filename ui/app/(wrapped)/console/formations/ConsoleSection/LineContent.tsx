@@ -112,6 +112,7 @@ export const FormationLineContent = ({
         <BadgeFormationRenovee
           isFormationRenovee={line.isFormationRenovee}
           marginStart={2}
+          labelSize="long"
         />
         {line.formationRenovee && (
           <Flex ms={2} my={"auto"} width={"fit-content"} h={"1.8rem"} whiteSpace={"nowrap"} direction={"column"}>
@@ -136,7 +137,7 @@ export const FormationLineContent = ({
       </Flex>
     </ConditionalTd>
     <ConditionalTd colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <BadgesFormationSpecifique formationSpecifique={line.formationSpecifique} />
+      <BadgesFormationSpecifique formationSpecifique={line.formationSpecifique} labelSize="long" />
     </ConditionalTd>
     <ConditionalTd colonne={"libelleNiveauDiplome"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleNiveauDiplome ?? "-"}

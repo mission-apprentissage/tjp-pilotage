@@ -29,7 +29,7 @@ export const BadgeFormationRenovee = chakra(({
       fontSize={fontSize}
       {...props}
     >
-      {labelSize === "short" ? "RÉNO" : "RÉNOVÉE"}
+      {labelSize === "short" ? "Réno" : "Rénovée"}
     </Badge>
   );
 });
