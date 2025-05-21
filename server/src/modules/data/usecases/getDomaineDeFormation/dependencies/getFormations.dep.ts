@@ -12,11 +12,13 @@ export const getFormations = async ({
   codeRegion,
   codeDepartement,
   codeAcademie,
+  voie
 }: {
   codeNsf: string;
   codeRegion?: string;
   codeDepartement?: string;
   codeAcademie?: string;
+  voie?: VoieType
 }) =>
   getKbdClient()
     .with("formations", (wb) =>
@@ -84,6 +86,12 @@ export const getFormations = async ({
         .$call((q) => {
           if (codeDepartement) {
             return q.where("codeDepartement", "=", codeDepartement);
+          }
+          return q;
+        })
+        .$call((q) => {
+          if (voie) {
+            return q.where("formationEtablissement.voie", "=", voie);
           }
           return q;
         })
