@@ -49,7 +49,6 @@ export const getFormations = async ({
           wb("formations.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
           wb("fva.dateFermeture", "is not", null),
           wb("fva.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
-          wb("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
         ]))
         .select("formationHistorique.cfd")
         .distinct()
