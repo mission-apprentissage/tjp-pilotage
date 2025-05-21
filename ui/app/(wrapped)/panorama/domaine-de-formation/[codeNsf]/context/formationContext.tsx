@@ -29,17 +29,18 @@ const findDefaultCfd = (
   formations: FormationListItem[],
   formationByCodeNiveauDiplome: Record<string, FormationListItem[]>
 ): { cfd: string } => {
-  if (defaultCfd && (selectedCfd === null || selectedCfd === defaultCfd)) {
-    const isInList = formations.find((f) => f.cfd === defaultCfd);
-
-    if (isInList) {
-      return { cfd: defaultCfd };
-    }
-  } else if (selectedCfd !== null) {
+  if (selectedCfd) {
     const isInList = formations.find((f) => f.cfd === selectedCfd);
 
     if (isInList) {
       return { cfd: selectedCfd };
+    }
+  }
+  if (defaultCfd) {
+    const isInList = formations.find((f) => f.cfd === defaultCfd);
+
+    if (isInList) {
+      return { cfd: defaultCfd };
     }
   }
 
@@ -115,13 +116,14 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   });
 
   useEffect(() => {
-    if (!currentFilters.selection.cfd) {
+    const selection = findDefaultCfd(cfd, selectedCfd, formations, formationsByLibelleNiveauDiplome);
+    if (cfd !== currentFilters.selection.cfd) {
       setCurrentFilters({
         ...currentFilters,
-        selection: findDefaultCfd(cfd, selectedCfd, formations, formationsByLibelleNiveauDiplome)
+        selection
       });
     }
-  }, [currentFilters, cfd, selectedCfd, formations, formationsByLibelleNiveauDiplome, setCurrentFilters]);
+  }, [cfd, setCurrentFilters, selectedCfd, formations, formationsByLibelleNiveauDiplome]);
 
   const handleResetFilters = () => {
     trackEvent("domaine-de-formation:filtre", {
@@ -272,6 +274,7 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   };
 
   const handleCfdChange = ({ cfd }: { cfd: string }) => {
+    console.log(cfd);
     trackEvent("domaine-de-formation:cfd", {
       props: { cfd },
     });

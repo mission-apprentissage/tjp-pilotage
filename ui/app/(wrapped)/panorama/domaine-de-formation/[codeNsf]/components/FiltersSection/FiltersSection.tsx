@@ -50,6 +50,7 @@ export const FiltersSection = () => {
                   handleCfdChange({ cfd: selected.value });
                 } else {
                   params.set("cfd", selected.value);
+                  params.delete("selection[cfd]");
                   router.push(`/panorama/domaine-de-formation/${selected.nsf}?${params.toString()}`);
                 }
               } else {
