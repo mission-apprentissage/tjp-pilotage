@@ -1,6 +1,6 @@
 import type { BoxProps } from "@chakra-ui/react";
 import { Box, Container, Divider, Flex, forwardRef, Heading } from "@chakra-ui/react";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import type {VoieType} from "shared";
 
 import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
@@ -56,36 +56,9 @@ const getFirstFormation =
     };
   };
 
-const useFormationSection = (
-  formations: FormationListItem[],
-  formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>
-) => {
-  const { currentFilters, handleCfdChange } = useFormationContext();
-
-  useEffect(() => {
-    if (currentFilters.selection.cfd !== "") {
-      const cfdInListOfFormations = formations.find((f) => f.cfd === currentFilters.selection.cfd);
-
-      if (!cfdInListOfFormations) {
-        handleCfdChange(getFirstFormation(formationsByLibelleNiveauDiplome));
-      }
-    } else if (currentFilters.selection.cfd === "" && Object.keys(formationsByLibelleNiveauDiplome).length > 0) {
-      handleCfdChange(getFirstFormation(formationsByLibelleNiveauDiplome));
-    }
-  }, [currentFilters, formations, handleCfdChange, formationsByLibelleNiveauDiplome]);
-
-  return {
-    currentFilters,
-    handleCfdChange,
-  };
-};
-
 export const FormationSection = () => {
-  const { formations, formationsByLibelleNiveauDiplome, isLoading } = useDomaineDeFormation();
-  const { currentFilters } = useFormationSection(
-    formations,
-    formationsByLibelleNiveauDiplome
-  );
+  const { isLoading } = useDomaineDeFormation();
+  const { currentFilters } = useFormationContext();
 
   if (isLoading) {
     return <Loading />;
@@ -100,8 +73,7 @@ export const FormationSection = () => {
         <Divider width="48px" />
         <TabFilters />
         <Flex direction="row" gap={8}>
-          <ListeFormations
-          />
+          <ListeFormations />
           <TabContent tab={currentFilters.formationTab} />
         </Flex>
       </Flex>
