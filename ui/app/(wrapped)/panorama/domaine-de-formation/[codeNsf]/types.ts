@@ -26,7 +26,6 @@ export type Bbox = {
 export type Filters = {
   selection: {
     cfd: string;
-    voies: VoieType[];
   },
   codeRegion?: string;
   codeDepartement?: string;

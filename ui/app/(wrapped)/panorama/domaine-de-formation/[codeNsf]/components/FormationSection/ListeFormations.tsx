@@ -24,18 +24,14 @@ export const ListeFormations = () => {
   const {
     handleCfdChange: selectCfd,
     currentFilters: {
-      selection: { cfd: selectedCfd, voies: selectedVoies }
+      selection: { cfd: selectedCfd }
     }
   } = useFormationContext();
 
   const { formationsByLibelleNiveauDiplome } = useDomaineDeFormation();
 
   const isFormationSelected = (formation: FormationListItem) => {
-    if (selectedVoies.length === 0) {
-      return formation.cfd === selectedCfd;
-    }
-
-    return formation.cfd === selectedCfd && formation.voies.some(voie => selectedVoies.includes(voie));
+    return formation.cfd === selectedCfd;
   };
 
   const getBackgroundColor = (formation: FormationListItem) => {
@@ -91,7 +87,7 @@ export const ListeFormations = () => {
                     p={"8px 16px 8px 8px"}
                     cursor={"pointer"}
                     onClick={() => {
-                      selectCfd({ cfd: formation.cfd, voies: formation.voies });
+                      selectCfd({ cfd: formation.cfd });
                     }}
                     bgColor={getBackgroundColor(formation)}
                     _hover={{

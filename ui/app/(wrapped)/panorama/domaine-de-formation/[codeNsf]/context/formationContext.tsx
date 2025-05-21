@@ -1,9 +1,9 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
-import { createContext, useContext } from "react";
-import type {ScopeZone, VoieType} from "shared";
-import {  VoieEnum  } from "shared";
+import { createContext, useContext, useEffect } from "react";
+import type {ScopeZone} from "shared";
 
 import type {
   Academie,
@@ -25,16 +25,24 @@ import { useDomaineDeFormation } from "./domaineDeFormationContext";
 
 const findDefaultCfd = (
   defaultCfd: string | undefined,
+  selectedCfd: string | null,
   formations: FormationListItem[],
   formationByCodeNiveauDiplome: Record<string, FormationListItem[]>
-): { cfd: string, voies: VoieType[] } => {
-  if (defaultCfd) {
+): { cfd: string } => {
+  if (defaultCfd && (selectedCfd === null || selectedCfd === defaultCfd)) {
     const isInList = formations.find((f) => f.cfd === defaultCfd);
 
     if (isInList) {
-      return { cfd: defaultCfd, voies: isInList.voies };
+      return { cfd: defaultCfd };
+    }
+  } else if (selectedCfd !== null) {
+    const isInList = formations.find((f) => f.cfd === selectedCfd);
+
+    if (isInList) {
+      return { cfd: selectedCfd };
     }
   }
+
   const firstFormations = formationByCodeNiveauDiplome[Object.keys(formationByCodeNiveauDiplome)[0]];
 
   const formationWithAtLeastOneEtab = firstFormations?.filter((f) => f.nbEtab > 0);
@@ -42,10 +50,8 @@ const findDefaultCfd = (
 
   return firstFormation ? {
     cfd: firstFormation.cfd,
-    voies: firstFormation.voies
   } : {
     cfd: '',
-    voies: [VoieEnum.scolaire]
   };
 };
 
@@ -72,7 +78,7 @@ type FormationContextType = InputFormationContextType & {
   handleIncludeAllChange: (includeAll: boolean) => void;
   handleViewChange: (view: EtablissementsView) => void;
   handleOrderByChange: (orderBy: EtablissementsOrderBy) => void;
-  handleCfdChange: (params: { cfd: string, voies: VoieType[] }) => void;
+  handleCfdChange: (params: { cfd: string }) => void;
   handleClearBbox: () => void;
   handleSetBbox: (bbox?: Bbox) => void;
   setDepartements: (departements: Departement[]) => void
@@ -88,6 +94,8 @@ export const FormationContext = createContext<FormationContextType>({} as Format
 export function FormationContextProvider({ children, value }: Readonly<FormationContextProps>) {
   const trackEvent = usePlausible();
   const { cfd } = useDomaineDeFormationSearchParams();
+  const searchParams = useSearchParams();
+  const selectedCfd = searchParams.get("selection[cfd]");
   const { formations, formationsByLibelleNiveauDiplome } = useDomaineDeFormation();
 
   const [currentFilters, setCurrentFilters] = useStateParams<Filters>({
@@ -95,7 +103,9 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
       presence: "",
       voie: "",
       formationTab: "etablissements",
-      selection: findDefaultCfd(cfd, formations, formationsByLibelleNiveauDiplome),
+      selection: {
+        cfd: ""
+      },
       etab: {
         includeAll: true,
         view: "map",
@@ -103,6 +113,15 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
       },
     },
   });
+
+  useEffect(() => {
+    if (!currentFilters.selection.cfd) {
+      setCurrentFilters({
+        ...currentFilters,
+        selection: findDefaultCfd(cfd, selectedCfd, formations, formationsByLibelleNiveauDiplome)
+      });
+    }
+  }, [currentFilters, cfd, selectedCfd, formations, formationsByLibelleNiveauDiplome, setCurrentFilters]);
 
   const handleResetFilters = () => {
     trackEvent("domaine-de-formation:filtre", {
@@ -252,7 +271,7 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
     }));
   };
 
-  const handleCfdChange = ({ cfd, voies }: { cfd: string, voies: VoieType[] }) => {
+  const handleCfdChange = ({ cfd }: { cfd: string }) => {
     trackEvent("domaine-de-formation:cfd", {
       props: { cfd },
     });
@@ -261,7 +280,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
       ...prev,
       selection: {
         cfd,
-        voies
       }
     }));
   };
