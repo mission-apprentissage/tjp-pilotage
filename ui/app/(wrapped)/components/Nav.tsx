@@ -26,8 +26,8 @@ import { Glossaire } from "@/app/(wrapped)/glossaire/Glossaire";
 import { UaisContext } from "@/app/uaiContext";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
-import { getRoutingSaisieDemande } from "@/utils/getRoutingDemande";
-import { isPerdirPartOfExpe } from "@/utils/isPartOfExpe";
+import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
+import { isPerdirPartOfSaisieDemande } from "@/utils/isPartOfSaisieDemande";
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
@@ -40,7 +40,7 @@ const shouldDisplayDemandesMenu = ({ user, campagne }: {user?: UserType, campagn
     !hasPermission(user.role, PermissionEnum["restitution/lecture"])
   ) return false;
 
-  if(hasRole({user, role: RoleEnum["perdir"]})) return isPerdirPartOfExpe({user, campagne});
+  if(hasRole({user, role: RoleEnum["perdir"]})) return isPerdirPartOfSaisieDemande({user, campagne});
 
   return true;
 };
@@ -298,7 +298,7 @@ export const Nav = () => {
               zIndex={"dropdown"}
             >
               <MenuItem p="0" w="100%">
-                <NavMenuLink href={getRoutingSaisieDemande({user})} segment="saisie">
+                <NavMenuLink href={getRoutingAccessSaisieDemande({user, campagne})} segment="saisie">
                     Gestion des demandes
                 </NavMenuLink>
               </MenuItem>

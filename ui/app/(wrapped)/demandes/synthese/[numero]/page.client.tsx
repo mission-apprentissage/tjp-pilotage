@@ -12,8 +12,9 @@ import { client } from "@/api.client";
 import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/demandes/utils/statutUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
-import { getRoutingSaisieDemande, getRoutingSyntheseDemande } from "@/utils/getRoutingDemande";
+import { getRoutingAccessSaisieDemande, getRoutingAccesSyntheseDemande } from "@/utils/getRoutingAccesDemande";
 import { useAuth } from "@/utils/security/useAuth";
+import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
 
 import { ActionsSection } from "./actions/ActionsSection";
 import { EditoSection } from "./actions/EditoSection";
@@ -31,6 +32,7 @@ export const PageClient = ({
   };
 }) => {
   const { user } = useAuth();
+  const { campagne } = useCurrentCampagne();
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -47,7 +49,7 @@ export const PageClient = ({
       onError: (error: unknown) => {
         if (isAxiosError(error) && error.response?.data?.message) {
           console.error(error);
-          if (error.response?.status === 404) router.push(getRoutingSaisieDemande({user, suffix: `?notfound=${numero}` }));
+          if (error.response?.status === 404) router.push(getRoutingAccessSaisieDemande({user, campagne, suffix: `?notfound=${numero}` }));
         }
       },
     }
@@ -87,13 +89,15 @@ export const PageClient = ({
           me="auto"
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: getRoutingSaisieDemande({
+            { title: "Recueil des demandes", to: getRoutingAccessSaisieDemande({
+              campagne: demande?.campagne,
               user,
             }) },
             {
               title: `Demande n°${demande?.numero}`,
-              to: getRoutingSyntheseDemande({
+              to: getRoutingAccesSyntheseDemande({
                 user,
+                campagne: demande?.campagne,
                 suffix: demande?.numero
               }),
               active: true,

@@ -13,6 +13,7 @@ import type { CampagneType } from "shared/schema/campagneSchema";
 import { publicConfig } from "@/config.public";
 import { theme } from "@/theme/theme";
 
+import SSOInfo from "./(wrapped)/components/SSOInfo";
 import { GlossaireProvider } from "./(wrapped)/glossaire/glossaireContext";
 import type { GlossaireEntries } from "./(wrapped)/glossaire/types";
 import type { Auth } from "./authContext";
@@ -118,6 +119,7 @@ export default function RootLayoutClient({
         <PlausibleProvider trackLocalhost={false} enabled={tracking} domain={publicConfig.host} />
       </head>
       <body suppressHydrationWarning={true}>
+        <SSOInfo />
         <QueryClientProvider client={queryClient}>
           <CacheProvider>
             <ChakraProvider theme={theme}>

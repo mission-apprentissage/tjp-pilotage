@@ -1,0 +1,19 @@
+import { z } from "zod";
+
+export const DneSSOErrorsZodType = z.enum([
+  "FAILURE_ON_DNE_REDIRECT",
+  "MISSING_USER_EMAIL",
+  "USER_NOT_ENABLED",
+  "MISSING_RIGHTS_PERDIR",
+  "MISSING_RIGHTS",
+  "MISSING_CODE_REGION_CODACA",
+  "MISSING_CODE_VERIFIER",
+  "MISSING_CODEVERIFIERJWT",
+  "MISSING_ACCESS_TOKEN",
+  "MISSING_USERINFO",
+  "MISSING_CODE_REGION_PERDIR"
+]);
+
+export const DneSSOErrorsEnum = DneSSOErrorsZodType.Enum;
+
+export type DneSSOErrorsType = z.infer<typeof DneSSOErrorsZodType>;
