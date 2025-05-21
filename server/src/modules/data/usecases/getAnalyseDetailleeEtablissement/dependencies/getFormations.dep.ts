@@ -4,6 +4,7 @@ import type { VoieType } from "shared/enum/voieEnum";
 
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
+import { isFormationRenovee } from "@/modules/utils/isFormationRenovee";
 import { cleanNull } from "@/utils/noNull";
 
 import { getBase } from "./base.dep";
@@ -35,6 +36,7 @@ export const getFormations = async ({ uai }: { uai: string }) =>
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
+      isFormationRenovee({eb}).as("isFormationRenovee"),
     ])
     .$narrowType<{ voie: VoieType }>()
     .orderBy(["libelleNiveauDiplome asc", "libelleFormation asc", "libelleDispositif"])
@@ -44,5 +46,6 @@ export const getFormations = async ({ uai }: { uai: string }) =>
       formations.map((formation) => ({
         ...formation,
         formationSpecifique: formatFormationSpecifique(formation),
+        isFormationRenovee: !!formation.isFormationRenovee,
       }))
     );
