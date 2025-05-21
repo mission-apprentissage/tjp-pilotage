@@ -1,5 +1,7 @@
 import { useSearchParams } from "next/navigation";
 
+import type { Voie } from "./types";
+
 export const useDomaineDeFormationSearchParams = () => {
   const searchParams = useSearchParams();
   const codeRegion = searchParams.get("codeRegion") ?? undefined;
@@ -7,7 +9,7 @@ export const useDomaineDeFormationSearchParams = () => {
   const codeDepartement = searchParams.get("codeDepartement") ?? undefined;
   const cfd = searchParams.get("cfd") ?? undefined;
   const presence = searchParams.get("presence") ?? undefined;
-  const voie = searchParams.get("voie") ?? undefined;
+  const voie = searchParams.get("voie") ?? "";
 
   return {
     codeRegion: codeRegion,
@@ -15,6 +17,6 @@ export const useDomaineDeFormationSearchParams = () => {
     codeDepartement: codeDepartement,
     cfd: cfd,
     presence: presence,
-    voie: voie
+    voie: voie as Voie
   };
 };

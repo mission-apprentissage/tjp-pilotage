@@ -56,7 +56,7 @@ export function DomaineDeFormationClient(
   const [academies, setAcademies] = useState<Academie[]>();
   const [departements, setDepartements] = useState<Departement[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { codeRegion, codeAcademie, codeDepartement } = useDomaineDeFormationSearchParams();
+  const { codeRegion, codeAcademie, codeDepartement, voie } = useDomaineDeFormationSearchParams();
 
   const libelleNsf = defaultNsfs.find((nsf) => nsf.value === codeNsf)?.label ?? "";
 
@@ -66,6 +66,7 @@ export function DomaineDeFormationClient(
       codeRegion,
       codeAcademie,
       codeDepartement,
+      voie: voie !== "" ? voie : undefined
     }});
 
   useEffect(() => {
