@@ -29,7 +29,6 @@ export const up = async (db: Kysely<unknown>) => {
     .dropColumn("compensationCfd")
     .dropColumn("compensationCodeDispositif")
     .dropColumn("compensationRentreeScolaire")
-    .dropColumn("autreBesoinRH")
     .execute();
 
   await db.schema
@@ -133,7 +132,6 @@ export const down = async (db: Kysely<unknown>) => {
     .addColumn("compensationCfd", "varchar")
     .addColumn("compensationCodeDispositif", "varchar")
     .addColumn("compensationRentreeScolaire", "integer")
-    .addColumn("autreBesoinRH", "varchar")
     .execute();
 
   await db.schema
