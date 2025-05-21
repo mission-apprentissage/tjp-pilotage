@@ -81,6 +81,7 @@ export function DomaineDeFormationClient(
   // Initialize filters
   useEffect(() => {
     if (domaineDeFormation) {
+      setRegions(domaineDeFormation.filters.regions);
       if (codeRegion) {
         setAcademies(domaineDeFormation.filters.academies.filter((academie) => academie.codeRegion === codeRegion));
         if (codeAcademie) {
@@ -93,12 +94,11 @@ export function DomaineDeFormationClient(
           );
         }
       } else {
-        setRegions(domaineDeFormation.filters.regions);
         setAcademies(domaineDeFormation.filters.academies);
         setDepartements(domaineDeFormation.filters.departements);
-      }
 
-      setScope(defineScope(codeRegion, codeAcademie, codeDepartement));
+        setScope(defineScope(codeRegion, codeAcademie, codeDepartement));
+      }
     }
   }, [codeRegion, codeAcademie, domaineDeFormation, codeDepartement]);
 
