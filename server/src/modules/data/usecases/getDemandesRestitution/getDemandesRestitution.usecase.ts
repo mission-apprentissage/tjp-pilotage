@@ -3,7 +3,6 @@ import type { FiltersSchema } from "shared/routes/schemas/get.restitution.demand
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "@/modules/data/queries/getStatsSortie/getStatsSortie";
 import { getCurrentCampagne } from '@/modules/utils/getCurrentCampagne';
 
 import { getDemandesRestitutionQuery } from "./deps/getDemandesRestitution.dep";
@@ -25,7 +24,6 @@ const getDemandesRestitutionFactory =
       getDemandesRestitutionQuery,
       getFilters,
       getCurrentCampagne,
-      getStatsSortieParRegionsEtNiveauDiplomeQuery,
       getRentreesPilotage
     }
   ) =>

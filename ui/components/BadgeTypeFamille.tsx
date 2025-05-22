@@ -1,4 +1,5 @@
-import { Badge } from "@chakra-ui/react";
+import type { BadgeProps } from "@chakra-ui/react";
+import {Badge, chakra} from '@chakra-ui/react';
 import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
 export const TYPE_FAMILLE_KEYS = {
@@ -6,7 +7,6 @@ export const TYPE_FAMILLE_KEYS = {
   [TypeFamilleEnum["1ere_commune"]]: "info",
   [TypeFamilleEnum["specialite"]]: "purpleGlycine",
   [TypeFamilleEnum["option"]]: "purpleGlycine",
-  ["fermeture"]: "grey",
 };
 
 export type TypeFamilleKeys = keyof typeof TYPE_FAMILLE_KEYS;
@@ -36,18 +36,16 @@ export const formatTypeFamilleCourt = (typeFamille?: TypeFamilleKeys): string =>
 };
 
 
-export const BadgeTypeFamille = ({
+export const BadgeTypeFamille = chakra(({
   typeFamille,
   labelSize = "short",
   size = "xs",
-  fontSize,
-  children,
+  ...props
 }: {
   typeFamille?: TypeFamilleKeys;
   labelSize?: "short" | "long";
-  size?: "xs" | "sm" | "md";
-  fontSize?: string;
-  children?: React.ReactNode;
+  size: "xs" | "sm" | "md" | "lg";
+  props?: BadgeProps;
 }) => {
   if (!typeFamille) {
     return null;
@@ -58,13 +56,17 @@ export const BadgeTypeFamille = ({
     [TypeFamilleEnum["1ere_commune"]]: "info",
     [TypeFamilleEnum["specialite"]]: "purpleGlycine",
     [TypeFamilleEnum["option"]]: "purpleGlycine",
-    ["fermeture"]: "grey",
   }[typeFamille];
 
   return (
-    <Badge variant={typeFamilleVariant} size={size} fontSize={fontSize}>
+    <Badge
+      variant={typeFamilleVariant}
+      h={"fit-content"}
+      flex={"shrink"}
+      size={size}
+      {...props}
+    >
       {labelSize === "short" ? formatTypeFamilleCourt(typeFamille) : formatTypeFamilleLong(typeFamille)}
-      {children && <> {children}</>}
     </Badge>
   );
-};
+});

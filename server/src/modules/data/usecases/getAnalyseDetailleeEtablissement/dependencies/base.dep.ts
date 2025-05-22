@@ -6,6 +6,7 @@ import { getKbdClient } from "@/db/db";
 export const getBase = ({ uai, rentreeScolaire = CURRENT_RENTREE }: { uai: string; rentreeScolaire?: string }) =>
   getKbdClient()
     .selectFrom("formationEtablissement")
+    .innerJoin("dataFormation", "dataFormation.cfd", "formationEtablissement.cfd")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "formationEtablissement.uai")
     .innerJoin("formationView", (join) =>
       join

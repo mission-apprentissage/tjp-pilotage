@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, HStack, Stack, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, Grid, HStack, Stack, Text } from "@chakra-ui/react";
 import { createRef, useEffect, useState } from "react";
 
 import { useEtablissementContext } from "@/app/(wrapped)/panorama/etablissement/context/etablissementContext";
@@ -38,10 +38,16 @@ export const EtablissementMap = () => {
           L'offre de formation autour de l'établissement
         </Text>
         <Divider width="48px" />
-        <Text>
-          Visualisez l'offre de formation sur la carte régionale, et comparez les établissements selon les taux d'emploi
-          et de devenir favorable.
-        </Text>
+        <Flex gap={2} direction={"column"}>
+          <Text>
+            Visualisez l'offre de formation sur la carte régionale, et comparez les établissements selon
+            les taux d'emploi et de devenir favorable.
+          </Text>
+          <Text>
+            Vous pouvez rechercher parmi les formations de l'établissement mais aussi toutes les autres formations
+            qui existent sur le territoire.
+          </Text>
+        </Flex>
         <HStack gap="16px" alignItems="end" justifyContent="space-between" width="100%">
           <Box flexGrow={1}>
             <CfdSelect />
