@@ -37,6 +37,7 @@ const queryFiltersSchema = z.object({
   codeRegion: z.string().optional(),
   codeAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),
+  voie: VoieZodType.optional()
 });
 
 export type QueryFilters = z.infer<typeof queryFiltersSchema>;

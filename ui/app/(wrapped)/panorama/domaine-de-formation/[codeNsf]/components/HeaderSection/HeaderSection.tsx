@@ -3,11 +3,14 @@
 import { Container, Flex, Heading, Icon, Img } from "@chakra-ui/react";
 import { Icon as Iconify } from "@iconify/react";
 
+import { useNsfContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/nsfContext";
 import { getNsfIcon } from "@/utils/getNsfIcon";
 
 import { AccesRapide } from "./AccesRapide";
 
-export const HeaderSection = ({ codeNsf, libelleNsf }: { codeNsf: string; libelleNsf: string }) => {
+export const HeaderSection = () => {
+  const { codeNsf, libelleNsf } = useNsfContext();
+
   return (
     <Flex bgColor={"bluefrance.975"}>
       <Container mt={"44px"} maxW={"container.xl"}>

@@ -12,7 +12,7 @@ const getDomaineDeFormationFactory =
     }
   ) =>
     async (codeNsf: string, queryFilters: QueryFilters) => {
-      const { codeRegion, codeDepartement, codeAcademie } = queryFilters;
+      const { codeRegion, codeDepartement, codeAcademie, voie } = queryFilters;
       const [nsf, filters, formations] = await Promise.all([
         deps.getNsf(codeNsf),
         deps.getFilters(),
@@ -21,6 +21,7 @@ const getDomaineDeFormationFactory =
           codeRegion,
           codeDepartement,
           codeAcademie,
+          voie
         }),
       ]);
 

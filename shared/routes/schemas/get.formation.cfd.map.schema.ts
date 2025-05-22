@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { VoieZodType } from "../../enum/voieEnum";
+
 export const EtablissementSchema = z.object({
   uai: z.string(),
   latitude: z.number(),
@@ -27,6 +29,7 @@ export const QueryFiltersSchema = z.object({
   codeDepartement: z.string().optional(),
   codeAcademie: z.string().optional(),
   orderBy: z.enum(["libelle", "departement_commune"]).default("libelle"),
+  voie: VoieZodType.optional(),
   includeAll: z
     .enum(["true", "false"])
     .transform((val) => val === "true")

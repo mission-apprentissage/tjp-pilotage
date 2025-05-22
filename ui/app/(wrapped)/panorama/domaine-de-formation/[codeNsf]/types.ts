@@ -1,8 +1,11 @@
+import type { VoieType } from "shared";
+
 import type { client } from "@/api.client";
 
 export type DomaineDeFormationFilters = (typeof client.infer)["[GET]/domaine-de-formation/:codeNsf"]["filters"];
 export type DomaineDeFormationResult = (typeof client.infer)["[GET]/domaine-de-formation/:codeNsf"];
-export type FormationListItem = (typeof client.infer)["[GET]/domaine-de-formation/:codeNsf"]["formations"][number];
+export type DomaineDeFormationResultFormation = (typeof client.infer)["[GET]/domaine-de-formation/:codeNsf"]["formations"][number];
+export type FormationListItem = Omit<(typeof client.infer)["[GET]/domaine-de-formation/:codeNsf"]["formations"][number], "voie"> & { voies: VoieType[] };
 
 export type NsfOptions = (typeof client.infer)["[GET]/domaine-de-formation"];
 export type NsfOption = NsfOptions[number];
@@ -21,7 +24,9 @@ export type Bbox = {
   lngMax: number;
 };
 export type Filters = {
-  cfd: string;
+  selection: {
+    cfd: string;
+  },
   codeRegion?: string;
   codeDepartement?: string;
   codeAcademie?: string;
