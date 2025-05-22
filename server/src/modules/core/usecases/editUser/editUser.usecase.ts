@@ -1,9 +1,8 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type { BodySchema } from "shared/routes/schemas/put.users.userId.schema";
 
 import type { RequestUser } from "@/modules/core/model/User";
+import { inject } from "@/utils/inject";
 
 import { findDifferentUserWithSameEmail, findUser, updateUser } from "./dependencies";
 import { canEditRole } from "./utils/canEditRole";

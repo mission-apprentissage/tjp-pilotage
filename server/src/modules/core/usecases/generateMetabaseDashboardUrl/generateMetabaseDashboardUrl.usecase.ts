@@ -1,9 +1,9 @@
-import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 
 import config from "@/config";
 import { getDneClient } from "@/modules/core/services/dneClient/dneClient";
+import { inject } from "@/utils/inject";
 
 export const [getMetabaseDashboardUrl, getMetabaseDashboardUrlFactory] = inject(
   {

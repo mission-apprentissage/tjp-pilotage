@@ -1,5 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { capitalize, isString, pickBy } from "lodash-es";
 import { DateTime } from "luxon";
 import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
@@ -8,6 +6,7 @@ import type { DiplomeProfessionnelLine } from "@/modules/import/fileTypes/Diplom
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { getCfdDispositifs } from "@/modules/import/usecases/getCfdRentrees/getCfdDispositifs.dep";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { createDataFormation } from "./createDataFormation.dep";
 import { findDiplomeProfessionnel } from "./findDiplomeProfessionnel.dep";

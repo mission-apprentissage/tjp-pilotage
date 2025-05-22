@@ -1,6 +1,7 @@
-import { inject } from "injecti";
 import type {OrderType} from 'shared/enum/orderEnum';
 import type { PermissionScope } from "shared/enum/permissionScopeEnum";
+
+import { inject } from "@/utils/inject";
 
 import { findUsers } from "./findUsers.dep";
 

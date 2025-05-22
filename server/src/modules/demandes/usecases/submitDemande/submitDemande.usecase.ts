@@ -1,6 +1,4 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { demandeValidators, getPermissionScope, guardScope } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import {PermissionEnum} from 'shared/enum/permissionEnum';
@@ -14,6 +12,7 @@ import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDema
 import { findOneSimilarDemandeQuery } from "@/modules/demandes/repositories/findOneSimilarDemande.query";
 import { generateId, generateShortId } from "@/modules/utils/generateId";
 import logger from "@/services/logger";
+import { inject } from "@/utils/inject";
 import { cleanNull } from "@/utils/noNull";
 
 import { createChangementStatutQuery } from "./deps/createChangementStatut.dep";

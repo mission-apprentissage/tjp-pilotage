@@ -1,11 +1,11 @@
 import * as Boom from "@hapi/boom";
-import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 import { LoginErrorsEnum } from "shared/enum/loginErrorsEnum";
 
 import config from "@/config";
 import { verifyPassword } from "@/modules/core/utils/passwordUtils";
+import { inject } from "@/utils/inject";
 
 import { findUserQuery } from "./findUserQuery.dep";
 
