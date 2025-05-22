@@ -20,7 +20,7 @@ export interface IChangelog {
     document?: string,
     show: boolean,
     roles?: Role[]
-    fonction?: UserFonction[]
+    fonctions?: UserFonction[]
 }
 
 export const CHANGELOG: IChangelog[] = [
@@ -278,7 +278,7 @@ export const CHANGELOG: IChangelog[] = [
     "document": "",
   },
   {
-    "id": "450c1530-2093-4943-9340-f9d4564b0fcf",
+    "id": "f88dd011-c177-46a7-b80f-2f3a60822ac9",
     "deployed": true,
     "show": true,
     "title": "",
@@ -286,35 +286,39 @@ export const CHANGELOG: IChangelog[] = [
     "date": new Date("2025-05-20"),
     "description": "Nous avons ouvert la connexion depuis votre portail professionnel (Arena).",
     "document": "",
-    "fonction": ["Inspecteur", "DASEN"]
+    "fonctions": ["Inspecteur", "DASEN"],
   },
   {
-    "id": "450c1530-2093-4943-9340-f9d4564b0fcf",
+    "id": "dc817ae2-116d-47c4-8e85-ccb98dc470a0",
     "deployed": true,
     "show": true,
-    "title": "Interruption de service",
+    "title": "Ouverture de connexion depuis le portail professionnel",
     "types": [ChangelogTypeEnum["Fonctionnalité"]],
     "date": new Date("2025-05-20"),
-    "description": "Nous avons ouvert la connexion depuis votre portail professionnel (Arena). Vous retrouverez le lien pour Orion dans la rubrique : .",
+    "description": "Nous avons ouvert la connexion depuis votre portail professionnel (Arena). Vous retrouverez le lien pour Orion dans l'onglet : Enquêtes et Pilotage, rubrique Formations professionnelles sous le nom \"Orion inserjeunes\". En cliquant dessus, vous vous connecterez automatiquement à Orion avec votre compte professionnel.",
     "document": "",
-    "fonction": ["Inspecteur", "DASEN"]
+    "fonctions": ["Inspecteur", "DASEN"],
   },
 ];
 
-const isRoleAllowed = (entry: IChangelog, role?: Role) => {
-  if (!entry.roles) return true;
-  if (!role) return false;
-  return entry.roles.includes(role);
+const isRoleAllowed = (entry: IChangelog, role: Role) => {
+  return entry.roles?.includes(role) ?? true;
 };
 
-const isFunctionAllowed = (entry: IChangelog, fonction?: UserFonction) => {
-  if (!entry.fonction) return true;
-  if (!fonction) return false;
-  return entry.fonction.includes(fonction);
+const isFunctionAllowed = (entry: IChangelog, fonction: UserFonction) => {
+  return entry.fonctions?.includes(fonction) ?? true;
 };
 
-export const getChangelog = (auth: Auth) => {
-  return CHANGELOG.filter((entry) =>
-    isRoleAllowed(entry, auth.user.role) &&
-    isFunctionAllowed(entry, auth.user.fonction));
+export const getChangelog = (auth?: Auth) => {
+  return CHANGELOG.filter((entry) => {
+    if (auth?.user?.role && entry.roles) {
+      return isRoleAllowed(entry, auth?.user.role);
+    }
+
+    if (auth?.user?.fonction && entry.fonctions) {
+      return isFunctionAllowed(entry, auth?.user.fonction);
+    }
+
+    return !entry.fonctions && !entry.roles;
+  });
 };
