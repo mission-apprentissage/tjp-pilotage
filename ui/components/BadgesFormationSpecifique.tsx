@@ -1,3 +1,4 @@
+import type { BadgeProps} from "@chakra-ui/react";
 import { Badge, chakra, Flex, Tooltip } from "@chakra-ui/react";
 import type { TypeFormationSpecifiqueType } from "shared/enum/formationSpecifiqueEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
@@ -27,6 +28,7 @@ const BadgeFormationSpecifique = chakra(
     size?: "xs" | "sm" | "md";
     textTransform?: "uppercase" | "capitalize" | "lowercase";
     openGlossaire: (key: GlossaireEntryKey) => void;
+    props?: BadgeProps;
   }) => {
     switch (typeFormationSpecifique) {
     case TypeFormationSpecifiqueEnum["Action prioritaire"]:

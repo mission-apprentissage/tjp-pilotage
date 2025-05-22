@@ -4,8 +4,11 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { getKbdClient } from "@/db/db";
 import type { RouteQueryString } from "@/modules/data/usecases/getDataForEtablissementMapList/getDataForEtablissementMapList.usecase";
 import { effectifAnnee } from "@/modules/data/utils/effectifAnnee";
+import { selectTauxDevenirFavorable } from "@/modules/data/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
+import { selectTauxPression } from "@/modules/data/utils/tauxPression";
+import { cleanNull } from "@/utils/noNull";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Filters extends RouteQueryString {}
@@ -38,6 +41,8 @@ export const getEtablissementsProches = async ({ cfd, bbox, limit = 100 }: Filte
       "academie.libelleAcademie",
       sb.fn.max(selectTauxPoursuite("indicateurSortie")).as("tauxPoursuite"),
       sb.fn.max(selectTauxInsertion6mois("indicateurSortie")).as("tauxInsertion"),
+      sb.fn.max(selectTauxDevenirFavorable("indicateurSortie")).as("tauxDevenirFavorable"),
+      sb.fn.max(selectTauxPression("indicateurEntree", "dataFormation", true)).as("tauxPression"),
       sb.fn.max(effectifAnnee({ alias: "indicateurEntree" })).as("effectif"),
     ])
     .where("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE)
@@ -79,4 +84,5 @@ export const getEtablissementsProches = async ({ cfd, bbox, limit = 100 }: Filte
       "region.libelleRegion",
       "academie.libelleAcademie",
     ])
-    .execute();
+    .execute()
+    .then(cleanNull);

@@ -1,3 +1,4 @@
+import type { BadgeProps} from "@chakra-ui/react";
 import { Badge, Flex, Text, Tooltip } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
@@ -11,6 +12,7 @@ export const BadgeActionPrioritaire = ({
   size = "xs",
   textTransform = "uppercase",
   openGlossaire,
+  ...props
 }: {
   isFormationActionPrioritaire?: boolean;
   withIcon?: boolean;
@@ -18,11 +20,12 @@ export const BadgeActionPrioritaire = ({
   size?: "xs" | "sm" | "md";
   textTransform?: "uppercase" | "capitalize" | "lowercase";
   openGlossaire?: (key: GlossaireEntryKey) => void;
+  props?: BadgeProps;
 }) => {
   if (!isFormationActionPrioritaire) return <></>;
   if (!openGlossaire)
     return (
-      <Badge gap={1} size={size} my={"auto"} bgColor={"yellowTournesol.950"} color={"yellowTournesol.407"}>
+      <Badge gap={1} size={size} my={"auto"} bgColor={"yellowTournesol.950"} color={"yellowTournesol.407"} {...props}>
         {withIcon && (
           <Flex my={"auto"}>
             <Icon icon="ri:file-info-fill" />
@@ -46,6 +49,7 @@ export const BadgeActionPrioritaire = ({
           e.stopPropagation();
           openGlossaire("action-prioritaire");
         }}
+        {...props}
       >
         {withIcon && (
           <Flex my={"auto"}>

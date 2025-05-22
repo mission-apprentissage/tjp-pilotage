@@ -4,6 +4,7 @@ import { localFilePathManager } from "./localFilePathManager";
 import { ovhFilePathManager } from "./ovhFilePathManager";
 
 export interface FilePathManager {
+  getLegacyIntentionFilePath: (id: string, filename?: string) => string;
   getDemandeFilePath: (id: string, filename?: string) => string;
   getFranceTravailIndicateurTensionDepartementStatsFilePath: () => string;
   getFranceTravailIndicateurTensionRegionStatsFilePath: () => string;

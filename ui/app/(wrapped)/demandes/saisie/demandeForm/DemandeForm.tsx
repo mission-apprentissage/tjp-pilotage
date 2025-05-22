@@ -39,7 +39,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
 import type { DetailedApiError } from "@/utils/apiError";
 import { getDetailedErrorMessage } from "@/utils/apiError";
-import {getRoutingSaisieDemande} from '@/utils/getRoutingDemande';
+import {getRoutingAccessSaisieDemande} from '@/utils/getRoutingAccesDemande';
 import { useAuth } from "@/utils/security/useAuth";
 
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
@@ -236,16 +236,16 @@ export const DemandeForm = ({
             mb={4}
             pages={[
               { title: "Accueil", to: "/" },
-              { title: "Recueil des demandes", to: getRoutingSaisieDemande({user}) },
+              { title: "Recueil des demandes", to: getRoutingAccessSaisieDemande({user, campagne}) },
               formId
                 ?  {
                   title: `Demande n°${formId}`,
-                  to: getRoutingSaisieDemande({user, suffix: formId}),
+                  to: getRoutingAccessSaisieDemande({user, campagne, suffix: formId}),
                   active: true,
                 }
                 : {
                   title: "Nouvelle demande",
-                  to: getRoutingSaisieDemande({user, suffix: "new"}),
+                  to: getRoutingAccessSaisieDemande({user, campagne, suffix: "new"}),
                   active: true,
                 },
             ]}

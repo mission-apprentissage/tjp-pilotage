@@ -13,7 +13,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Auth } from "@/app/authContext";
 import { AuthContext } from "@/app/authContext";
 import { CurrentCampagneContext } from "@/app/currentCampagneContext";
-import { GuardExpe } from "@/utils/security/GuardExpe";
+import { GuardAccesDemande } from "@/utils/security/GuardAccesDemande";
 
 const getUserContext = (role: Role, codeRegion?: string) => {
   const response = generateMock(ROUTES["[GET]/auth/whoAmI"].schema.response[200])!;
@@ -52,7 +52,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 
-describe("ui > components > security > GuardExpe", () => {
+describe("ui > components > security > GuardAccesDemande", () => {
   afterEach(() => {
     cleanup();
     vi.resetAllMocks();
@@ -62,9 +62,9 @@ describe("ui > components > security > GuardExpe", () => {
     render(
       <AuthContext.Provider value={getUserContext(RoleEnum["admin"])}>
         <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
-          <GuardExpe>
+          <GuardAccesDemande>
             <p>has_permission</p>
-          </GuardExpe>
+          </GuardAccesDemande>
         </CurrentCampagneContext.Provider>
       </AuthContext.Provider>
     );
@@ -77,9 +77,9 @@ describe("ui > components > security > GuardExpe", () => {
     render(
       <AuthContext.Provider value={getUserContext(RoleEnum["admin_region"], "76")}>
         <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
-          <GuardExpe>
+          <GuardAccesDemande>
             <p>has_permission</p>
-          </GuardExpe>
+          </GuardAccesDemande>
         </CurrentCampagneContext.Provider>
       </AuthContext.Provider>
     );
@@ -92,9 +92,9 @@ describe("ui > components > security > GuardExpe", () => {
     render(
       <AuthContext.Provider value={getUserContext(RoleEnum["perdir"], "76")}>
         <CurrentCampagneContext.Provider value={getCampagneContext({annee: "2024"})}>
-          <GuardExpe>
+          <GuardAccesDemande>
             <p>has_permission</p>
-          </GuardExpe>
+          </GuardAccesDemande>
         </CurrentCampagneContext.Provider>
       </AuthContext.Provider>
     );
@@ -111,9 +111,9 @@ describe("ui > components > security > GuardExpe", () => {
           codeRegion: "76",
           withSaisiePerdir: true,
         })}>
-          <GuardExpe>
+          <GuardAccesDemande>
             <p>has_permission</p>
-          </GuardExpe>
+          </GuardAccesDemande>
         </CurrentCampagneContext.Provider>
       </AuthContext.Provider>
     );
@@ -130,9 +130,9 @@ describe("ui > components > security > GuardExpe", () => {
           codeRegion: "76",
           withSaisiePerdir: false,
         })}>
-          <GuardExpe>
+          <GuardAccesDemande>
             <p>has_permission</p>
-          </GuardExpe>
+          </GuardAccesDemande>
         </CurrentCampagneContext.Provider>
       </AuthContext.Provider>
     );
