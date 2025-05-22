@@ -1,5 +1,4 @@
 import {PermissionEnum} from 'shared/enum/permissionEnum';
-import type { UserFonction } from "shared/enum/userFonctionEnum";
 import { ROUTES } from "shared/routes/routes";
 import { createRoute } from "shared/utils/http-wizard/core";
 
@@ -34,10 +33,7 @@ export const getUsersRoute = (server: Server) => {
 
         response.code(200).send({
           count: users.count,
-          users: users.users.map((user) => ({
-            ...user,
-            fonction: user.fonction as UserFonction,
-          })),
+          users: users.users
         });
       },
     });

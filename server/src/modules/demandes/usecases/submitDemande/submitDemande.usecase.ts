@@ -6,10 +6,10 @@ import type { submitDemandeSchema } from "shared/routes/schemas/post.demande.sub
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
-import { findOneDataEtablissement } from "@/modules/data/repositories/findOneDataEtablissement.query";
+import { findOneDataEtablissementQuery } from "@/modules/demandes/repositories/findOneDataEtablissement.query";
 import { findOneDataFormationQuery } from "@/modules/demandes/repositories/findOneDataFormation.query";
 import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
-import { findOneSimilarDemande } from "@/modules/demandes/repositories/findOneSimilarDemande.query";
+import { findOneSimilarDemandeQuery } from "@/modules/demandes/repositories/findOneSimilarDemande.query";
 import { generateId, generateShortId } from "@/modules/utils/generateId";
 import logger from "@/services/logger";
 // eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
@@ -55,10 +55,10 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
   {
     createDemandeQuery,
     createChangementStatutQuery,
-    findOneDataEtablissement,
+    findOneDataEtablissementQuery,
     findOneDataFormationQuery,
     findOneDemandeQuery,
-    findOneSimilarDemande,
+    findOneSimilarDemandeQuery,
   },
   (deps) =>
     async ({
@@ -72,7 +72,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
 
       const { cfd, uai } = demande;
 
-      const dataEtablissement = await deps.findOneDataEtablissement({ uai });
+      const dataEtablissement = await deps.findOneDataEtablissementQuery({ uai });
       if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
       if (!dataEtablissement.codeRegion) throw Boom.badData();
 
@@ -84,7 +84,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
       });
       if (!isAllowed) throw Boom.forbidden();
 
-      const sameDemande = await deps.findOneSimilarDemande({
+      const sameDemande = await deps.findOneSimilarDemandeQuery({
         ...demande,
         notNumero: demande.numero,
       });

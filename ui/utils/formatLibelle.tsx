@@ -1,5 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import type { ReactNode } from "react";
+import type {Role} from "shared";
+import { RoleEnum } from "shared";
 import {SecteurEnum} from 'shared/enum/secteurEnum';
 import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
@@ -119,10 +121,13 @@ export const formatDepartementLibelleWithCodeDepartement = ({
   return `${libelleDepartement} (${formatCodeDepartement(codeDepartement)})`;
 };
 
-export const formatLibelleFormation = (etablissement: { libellesDispositifs: string[]; libelleFormation: string }) => {
+export const formatLibelleFormation = (
+  { libellesDispositifs, libelleFormation }:
+  { libellesDispositifs: string[]; libelleFormation: string }
+) => {
   const dispositifs =
-    formatArray(etablissement.libellesDispositifs) !== "" ? `(${formatArray(etablissement.libellesDispositifs)})` : "";
-  return `${etablissement.libelleFormation} ${dispositifs}`;
+    formatArray(libellesDispositifs) !== "" ? `(${formatArray(libellesDispositifs)})` : "";
+  return `${libelleFormation} ${dispositifs}`;
 };
 
 /**
@@ -142,4 +147,29 @@ export const formatDispositifs = (dispositifs: string[]) => {
     .map((d) => {
       return d.replace(/\sen\s/i, " ").replace(/professionnel/i, "PRO");
     });
+};
+
+export const formatRole = (role: Role) => {
+  switch (role) {
+  case RoleEnum["admin"]:
+    return "Administrateur";
+  case RoleEnum["admin_region"]:
+    return "Administrateur région";
+  case RoleEnum["expert_region"]:
+    return "Expert région";
+  case RoleEnum["gestionnaire_region"]:
+    return "Gestionnaire région";
+  case RoleEnum["pilote"]:
+    return "Pilote national";
+  case RoleEnum["pilote_region"]:
+    return "Pilote région";
+  case RoleEnum["perdir"]:
+    return "PERDIR / Chef d'établissement";
+  case RoleEnum["region"]:
+    return "Région";
+  case RoleEnum["invite"]:
+    return "Invité";
+  default:
+    return "Inconnu";
+  }
 };

@@ -24,10 +24,12 @@ esac
 readonly VERSION=$("${ROOT_DIR}/.bin/scripts/get-version.sh")
 
 generate_next_rc_version() {
-  local last_current_branch_tag=$(git describe --tags --abbrev=0 --match="v[0-9]*.[0-9]*.[0-9]*")
   local remote_tags=$(git ls-remote --tags origin | awk '{print $2}' | sed 's|refs/tags/||')
+  local tags=$(echo $remote_tags | grep "v[0-9]*.[0-9]*.[0-9]$")
   local current_commit_id=$(git rev-parse HEAD)
   local current_version_commit_id=$(git rev-list -n 1 $VERSION 2> /dev/null)
+
+  local last_current_branch_tag=$(echo "$remote_tags" | grep "v[0-9]*.[0-9]*.[0-9]$" | sort -V | tail -n 1)
 
   if [ "$current_commit_id" == "$current_version_commit_id" ]; then
     echo $VERSION;
@@ -45,26 +47,34 @@ generate_next_rc_version() {
     exit 1
   fi
 
-  rc_number=1
+  local rc_number=0
+  
+  if [[ $version =~ .*-rc\.([0-9]+)$ ]]; then
+    rc_number="${BASH_REMATCH[1]}"
+  fi
 
-  case $RC_TYPE in
-    major)
-      ((major++))
-      minor=0
-      patch=0
-      ;;
-    minor)
-      ((minor++))
-      patch=0
-      ;;
-    patch)
-      ((patch++))
-      ;;
-    *)
-      echo "Error: Invalid bump type. Use 'patch', 'minor', or 'major'."
-      exit 1
-      ;;
-  esac
+  if [[ $rc_number < 1 ]]; then
+    case $RC_TYPE in
+      major)
+        ((major++))
+        minor=0
+        patch=0
+        ;;
+      minor)
+        ((minor++))
+        patch=0
+        ;;
+      patch)
+        ((patch++))
+        ;;
+      *)
+        echo "Error: Invalid bump type. Use 'patch', 'minor', or 'major'."
+        exit 1
+        ;;
+    esac
+  fi
+
+  ((rc_number++))
 
   rc_version="$major.$minor.$patch-rc.$rc_number"
   while echo "$remote_tags" | grep -q "$rc_version"; do

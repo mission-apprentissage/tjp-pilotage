@@ -52,6 +52,9 @@ function release:app() {
   "${SCRIPT_DIR}/release-app.sh" "$@"
 }
 
+function generate-label:rc() {
+  "${SCRIPT_DIR}/generate-rc-label.sh" "$@"
+}
 
 function release:candidate() {
   "${SCRIPT_DIR}/release-candidate.sh" "$@"
