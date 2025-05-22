@@ -8,7 +8,6 @@ import type { z } from "zod";
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
 import logger from '@/services/logger';
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "@/utils/inject";
 
 import { updateChangementsStatutAndDemandesWithHistory } from './deps/updateChangementsStatutAndDemandesWithHistory.dep';

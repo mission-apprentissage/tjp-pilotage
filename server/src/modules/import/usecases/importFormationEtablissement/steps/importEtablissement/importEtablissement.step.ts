@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import type { Insertable, Selectable } from "kysely";
 import { DateTime } from "luxon";
 

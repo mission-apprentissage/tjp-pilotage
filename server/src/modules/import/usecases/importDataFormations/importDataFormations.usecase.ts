@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { capitalize, isString, pickBy } from "lodash-es";
 import { DateTime } from "luxon";
 import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";

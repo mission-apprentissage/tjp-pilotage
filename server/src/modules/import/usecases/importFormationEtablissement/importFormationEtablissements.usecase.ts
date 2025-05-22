@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES, VoieEnum } from "shared";
 
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";

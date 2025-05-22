@@ -2,7 +2,6 @@ import * as Boom from "@hapi/boom";
 import type { CampagneType} from 'shared/schema/campagneSchema';
 
 import { getCampagneEnCours } from "@/modules/core/queries/getCampagneEnCours";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "@/utils/inject";
 
 import { getAnotherCampagneByAnneeQuery,updateCampagneQuery } from "./editCampagne.query";

@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { getPositionQuadrant } from "@/modules/data/services/getPositionQuadrant";
 import { streamIt } from "@/modules/import/utils/streamIt";
 import { inject } from "@/utils/inject";

@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
 
 import { inject } from "@/utils/inject";

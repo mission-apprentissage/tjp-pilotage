@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import type { NFormationDiplomeLine } from "@/modules/import/fileTypes/NFormationDiplome";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { inject } from "@/utils/inject";

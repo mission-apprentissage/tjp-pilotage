@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import type { DB } from "@/db/db";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { streamIt } from "@/modules/import/utils/streamIt";

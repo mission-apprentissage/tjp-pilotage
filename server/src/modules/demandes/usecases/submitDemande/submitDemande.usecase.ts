@@ -12,7 +12,6 @@ import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDema
 import { findOneSimilarDemandeQuery } from "@/modules/demandes/repositories/findOneSimilarDemande.query";
 import { generateId, generateShortId } from "@/modules/utils/generateId";
 import logger from "@/services/logger";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "@/utils/inject";
 import { cleanNull } from "@/utils/noNull";
 
