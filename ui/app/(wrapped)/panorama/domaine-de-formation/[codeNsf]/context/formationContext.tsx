@@ -1,8 +1,9 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
-import { createContext, useContext, useMemo } from "react";
-import type { ScopeZone } from "shared";
+import { createContext, useContext, useEffect } from "react";
+import type {ScopeZone} from "shared";
 
 import type {
   Academie,
@@ -11,20 +12,59 @@ import type {
   EtablissementsOrderBy,
   EtablissementsView,
   Filters,
+  FormationListItem,
   FormationTab,
   Presence,
   Region,
   Voie,
 } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
+import { useDomaineDeFormationSearchParams } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/useDomaineDeFormationSearchParams";
 import { useStateParams } from "@/utils/useFilters";
 
+import { useDomaineDeFormation } from "./domaineDeFormationContext";
+
+const findDefaultCfd = (
+  defaultCfd: string | undefined,
+  selectedCfd: string | null,
+  formations: FormationListItem[],
+  formationByCodeNiveauDiplome: Record<string, FormationListItem[]>
+): { cfd: string } => {
+  if (selectedCfd) {
+    const isInList = formations.find((f) => f.cfd === selectedCfd);
+
+    if (isInList) {
+      return { cfd: selectedCfd };
+    }
+  }
+  if (defaultCfd) {
+    const isInList = formations.find((f) => f.cfd === defaultCfd);
+
+    if (isInList) {
+      return { cfd: defaultCfd };
+    }
+  }
+
+  const firstFormations = formationByCodeNiveauDiplome[Object.keys(formationByCodeNiveauDiplome)[0]];
+
+  const formationWithAtLeastOneEtab = firstFormations?.filter((f) => f.nbEtab > 0);
+  const firstFormation = formationWithAtLeastOneEtab?.[0];
+
+  return firstFormation ? {
+    cfd: firstFormation.cfd,
+  } : {
+    cfd: '',
+  };
+};
+
 type InputFormationContextType = {
-  codeNsf: string;
-  libelleNsf: string;
   scope: ScopeZone;
-  regions: Region[];
-  academies: Academie[];
-  departements: Departement[];
+  regions?: Region[];
+  academies?: Academie[];
+  departements?: Departement[];
+  setScope: (scope: ScopeZone) => void,
+  setRegions: (regions: Region[]) => void,
+  setAcademies: (academies: Academie[]) => void,
+  setDepartements: (departements: Departement[]) => void
 };
 
 type FormationContextType = InputFormationContextType & {
@@ -39,27 +79,34 @@ type FormationContextType = InputFormationContextType & {
   handleIncludeAllChange: (includeAll: boolean) => void;
   handleViewChange: (view: EtablissementsView) => void;
   handleOrderByChange: (orderBy: EtablissementsOrderBy) => void;
-  handleCfdChange: (cfd: string) => void;
+  handleCfdChange: (params: { cfd: string }) => void;
   handleClearBbox: () => void;
   handleSetBbox: (bbox?: Bbox) => void;
+  setDepartements: (departements: Departement[]) => void
 };
 
 type FormationContextProps = {
   children: React.ReactNode;
   value: InputFormationContextType;
-  defaultCfd: string;
 };
 
 export const FormationContext = createContext<FormationContextType>({} as FormationContextType);
 
-export function FormationContextProvider({ children, value, defaultCfd }: Readonly<FormationContextProps>) {
+export function FormationContextProvider({ children, value }: Readonly<FormationContextProps>) {
   const trackEvent = usePlausible();
+  const { cfd } = useDomaineDeFormationSearchParams();
+  const searchParams = useSearchParams();
+  const selectedCfd = searchParams.get("selection[cfd]");
+  const { formations, formationsByLibelleNiveauDiplome } = useDomaineDeFormation();
+
   const [currentFilters, setCurrentFilters] = useStateParams<Filters>({
     defaultValues: {
       presence: "",
       voie: "",
       formationTab: "etablissements",
-      cfd: defaultCfd,
+      selection: {
+        cfd: ""
+      },
       etab: {
         includeAll: true,
         view: "map",
@@ -67,6 +114,16 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
       },
     },
   });
+
+  useEffect(() => {
+    const selection = findDefaultCfd(cfd, selectedCfd, formations, formationsByLibelleNiveauDiplome);
+    if (cfd !== currentFilters.selection.cfd) {
+      setCurrentFilters({
+        ...currentFilters,
+        selection
+      });
+    }
+  }, [cfd, setCurrentFilters, selectedCfd, formations, formationsByLibelleNiveauDiplome]);
 
   const handleResetFilters = () => {
     trackEvent("domaine-de-formation:filtre", {
@@ -102,7 +159,7 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
       props: { filter_name: "codeAcademie" },
     });
 
-    const academie = value.academies.find((a) => a.value === codeAcademie);
+    const academie = value.academies?.find((a) => a.value === codeAcademie);
 
     if (academie) {
       setCurrentFilters((prev) => ({
@@ -133,7 +190,7 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
       props: { filter_name: "codeDepartement" },
     });
 
-    const departement = value.departements.find((d) => d.value === codeDepartement);
+    const departement = value.departements?.find((d) => d.value === codeDepartement);
 
     if (departement) {
       setCurrentFilters((prev) => ({
@@ -216,14 +273,16 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
     }));
   };
 
-  const handleCfdChange = (cfd: string) => {
+  const handleCfdChange = ({ cfd }: { cfd: string }) => {
     trackEvent("domaine-de-formation:cfd", {
       props: { cfd },
     });
 
     setCurrentFilters((prev) => ({
       ...prev,
-      cfd,
+      selection: {
+        cfd,
+      }
     }));
   };
 
@@ -241,47 +300,24 @@ export function FormationContextProvider({ children, value, defaultCfd }: Readon
     }));
   };
 
-  const context = useMemo(
-    () => ({
-      currentFilters,
-      handleResetFilters,
-      handleRegionChange,
-      handleAcademieChange,
-      handleDepartementChange,
-      handlePresenceChange,
-      handleVoieChange,
-      handleTabFormationChange,
-      handleIncludeAllChange,
-      handleViewChange,
-      handleOrderByChange,
-      handleCfdChange,
-      handleClearBbox,
-      scope: value.scope,
-      codeNsf: value.codeNsf,
-      libelleNsf: value.libelleNsf,
-      regions: value.regions,
-      academies: value.academies,
-      departements: value.departements,
-      handleSetBbox,
-    }),
-    [
-      currentFilters,
-      handleResetFilters,
-      handleRegionChange,
-      handleAcademieChange,
-      handleDepartementChange,
-      handlePresenceChange,
-      handleVoieChange,
-      handleTabFormationChange,
-      handleIncludeAllChange,
-      handleViewChange,
-      handleOrderByChange,
-      handleCfdChange,
-      handleClearBbox,
-      handleSetBbox,
-      value,
-    ]
-  );
+  const context = {
+    currentFilters,
+    handleResetFilters,
+    handleRegionChange,
+    handleAcademieChange,
+    handleDepartementChange,
+    handlePresenceChange,
+    handleVoieChange,
+    handleTabFormationChange,
+    handleIncludeAllChange,
+    handleViewChange,
+    handleOrderByChange,
+    handleCfdChange,
+    handleClearBbox,
+    handleSetBbox,
+    setCurrentFilters,
+    ...value
+  };
 
   return <FormationContext.Provider value={context}>{children}</FormationContext.Provider>;
 }

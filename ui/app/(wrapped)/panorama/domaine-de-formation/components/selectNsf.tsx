@@ -37,12 +37,14 @@ export const SelectNsf = chakra(
     className,
     isClearable = true,
     routeSelectedNsf,
+    hideLabel = false
   }: {
     defaultNsfs: NsfOptions;
     defaultSelected: NsfOption | null;
     className?: string;
     isClearable?: boolean;
     routeSelectedNsf: (selected: NsfOption) => void;
+    hideLabel?: boolean;
   }) => {
     const [search, setSearch] = useState<string>("");
 
@@ -60,9 +62,11 @@ export const SelectNsf = chakra(
       <Flex flexDirection="column" gap="2" className={className}>
         <Flex width="100%">
           <FormControl>
-            <FormLabel htmlFor="nsf-select">
+            { !hideLabel && (
+              <FormLabel htmlFor="nsf-select">
               Rechercher un domaine de formation (NSF) ou par formation
-            </FormLabel>
+              </FormLabel>
+            )}
             <Select
               inputId="nsf-select"
               noOptionsMessage={({ inputValue }) =>

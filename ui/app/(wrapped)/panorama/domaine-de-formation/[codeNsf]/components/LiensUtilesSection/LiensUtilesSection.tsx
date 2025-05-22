@@ -54,7 +54,7 @@ export const LiensUtilesSection = () => {
                   [ScopeEnum.département]: `Consultez les métiers les plus recherchés par les recruteurs dans votre département`,
                   [ScopeEnum.région]: `Consultez les métiers les plus recherchés par les recruteurs dans votre région`,
                   [ScopeEnum.académie]: `Consultez les métiers les plus recherchés par les recruteurs dans votre région`,
-                }[scope]
+                }[scope ?? ScopeEnum.national]
               }
               links={{
                 href: {
@@ -64,7 +64,7 @@ export const LiensUtilesSection = () => {
                   )}`,
                   [ScopeEnum.région]: `https://dataemploi.francetravail.fr/emploi/metier/REG/${codeRegion}`,
                   [ScopeEnum.académie]: `https://dataemploi.francetravail.fr/metier/REG/${codeRegion}`,
-                }[scope],
+                }[scope ?? ScopeEnum.national],
               }}
               img="/looking_man.png"
               sourceText="* Source: France Travail"
@@ -78,7 +78,7 @@ export const LiensUtilesSection = () => {
                   [ScopeEnum.département]: `Visualisez les secteurs les plus représentés dans votre département`,
                   [ScopeEnum.région]: `Visualisez les secteurs les plus représentés dans votre région`,
                   [ScopeEnum.académie]: `Visualisez les secteurs les plus représentés dans votre région`,
-                }[scope]
+                }[scope ?? ScopeEnum.national]
               }
               links={{
                 href: {
@@ -88,7 +88,7 @@ export const LiensUtilesSection = () => {
                   )}`,
                   [ScopeEnum.région]: `https://dataemploi.pole-emploi.fr/secteur/REG/${codeRegion}`,
                   [ScopeEnum.académie]: `https://dataemploi.pole-emploi.fr/secteur/REG/${codeRegion}`,
-                }[scope],
+                }[scope ?? ScopeEnum.national],
               }}
               img="/dashboard_girl.png"
               sourceText="* Source: France Travail"

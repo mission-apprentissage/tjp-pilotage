@@ -1,6 +1,10 @@
 import { Text, useToken } from "@chakra-ui/react";
-import type { ScopeZone } from "shared";
+import type { BarSeriesOption } from "echarts";
+import { useMemo } from "react";
+import type {ScopeZone} from "shared";
+import { VoieEnum } from "shared";
 
+import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
 import type { FormationIndicateurs } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
 import { BadgeScope } from "@/components/BadgeScope";
@@ -32,6 +36,39 @@ const dataStyle = (data: number) => ({
 
 export const SoldeDePlacesTransformeesCard = ({ scope, data }: { scope: ScopeZone; data: FormationIndicateurs }) => {
   const [blue, mustard] = useToken("colors", ["blueCumulus.526", "yellowMoutarde.679"]);
+  const { currentFilters: { voie } } = useFormationContext();
+  const series: BarSeriesOption[] = useMemo(() => {
+    const s: BarSeriesOption[] = [];
+    if (voie === VoieEnum.scolaire || !voie) {
+      s.push(
+        {
+          name: "Voie scolaire",
+          color: blue,
+          type: "bar",
+          data: data.soldePlacesTransformee.map((s) => ({
+            value: s.scolaire,
+            ...dataStyle(s.scolaire!),
+          }))
+        }
+      );
+    }
+
+    if (voie === VoieEnum.apprentissage || !voie) {
+      s.push(
+        {
+          name: "Apprentissage",
+          color: mustard,
+          type: "bar",
+          data: data.soldePlacesTransformee.map((s) => ({
+            value: s.apprentissage,
+            ...dataStyle(s.apprentissage!),
+          })),
+        },
+      );
+    }
+
+    return s;
+  }, [data]);
   return (
     <DashboardCard
       label="Solde de places transformées"
@@ -41,26 +78,7 @@ export const SoldeDePlacesTransformeesCard = ({ scope, data }: { scope: ScopeZon
     >
       {displaySoldeDePlacesTransformees(data) ? (
         <SoldeDePlacesTransformeesGraph
-          series={[
-            {
-              name: "Voie scolaire",
-              color: blue,
-              type: "bar",
-              data: data.soldePlacesTransformee.map((s) => ({
-                value: s.scolaire,
-                ...dataStyle(s.scolaire),
-              })),
-            },
-            {
-              name: "Apprentissage",
-              color: mustard,
-              type: "bar",
-              data: data.soldePlacesTransformee.map((s) => ({
-                value: s.apprentissage,
-                ...dataStyle(s.apprentissage),
-              })),
-            },
-          ]}
+          series={series}
           xAxisData={data.soldePlacesTransformee.map((s) => `RS ${s.rentreeScolaire.toString()}`)}
         />
       ) : (

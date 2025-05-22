@@ -1,15 +1,18 @@
 import { z } from "zod";
 
+import { VoieZodType } from "../../enum/voieEnum";
+
 const queryFiltersSchema = z.object({
   codeRegion: z.string().optional(),
   codeAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),
+  voie: VoieZodType.optional()
 });
 
 const tauxIJValueSchema = z.object({
   libelle: z.string(),
   apprentissage: z.number().optional(),
-  scolaire: z.number().optional(),
+  scolaire: z.number().optional()
 });
 
 const tauxIJSchema = z.object({
@@ -25,13 +28,17 @@ const effectifsSchema = z.object({
 
 const soldePlacesTransformeeSchema = z.object({
   rentreeScolaire: z.number(),
-  scolaire: z.number(),
-  apprentissage: z.number(),
+  scolaire: z.number().optional(),
+  apprentissage: z.number().optional(),
 });
 
 const etablissementsSchema = z.object({
   rentreeScolaire: z.string(),
-  nbEtablissements: z.number(),
+  nbEtablissements: z.object({
+    all: z.number(),
+    apprentissage: z.number(),
+    scolaire: z.number()
+  }),
 });
 
 export const tauxSchema = z.object({
