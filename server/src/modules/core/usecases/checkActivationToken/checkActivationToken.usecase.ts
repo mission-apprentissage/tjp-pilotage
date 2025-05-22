@@ -1,9 +1,9 @@
 import * as Boom from "@hapi/boom";
-import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
 
 import config from "@/config";
+import { inject } from "@/utils/inject";
 
 import { findUserQuery } from "./findUserQuery.dep";
 

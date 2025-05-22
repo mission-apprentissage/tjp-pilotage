@@ -1,10 +1,9 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type { CampagneRegionSchema } from "shared/routes/schemas/post.campagnes-region.campagneRegionId.schema";
 
 import { getCampagneEnCours } from "@/modules/core/queries/getCampagneEnCours";
 import { getSimilarCampagneRegion } from "@/modules/core/queries/getSimilarCampagneRegion";
+import { inject } from "@/utils/inject";
 
 import { insertCampagneRegion } from "./createCampagneRegion.query";
 

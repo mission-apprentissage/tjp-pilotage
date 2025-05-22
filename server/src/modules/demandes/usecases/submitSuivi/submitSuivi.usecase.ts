@@ -1,9 +1,8 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
+import { inject } from "@/utils/inject";
 
 import { createSuiviQuery } from "./submitSuivi.query";
 

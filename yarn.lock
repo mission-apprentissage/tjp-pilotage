@@ -12115,13 +12115,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"injecti@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "injecti@npm:1.0.5"
-  checksum: 3f8eb215c329a6ab7cb76d75b55ff3a166175f0bab55894b01b36baedaacf12569b0c796b10c6696bedc03c9158432b91f17edbe04325a608e64633df11de69c
-  languageName: node
-  linkType: hard
-
 "inline-style-parser@npm:0.2.4":
   version: 0.2.4
   resolution: "inline-style-parser@npm:0.2.4"
@@ -18967,7 +18960,6 @@ __metadata:
     geolib: ^3.3.4
     glob: ^11.0.0
     gray-matter: ^4.0.3
-    injecti: ^1.0.5
     jschardet: ^3.1.3
     jsonwebtoken: ^9.0.2
     kysely: 0.27.2

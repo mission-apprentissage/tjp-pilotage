@@ -1,11 +1,10 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type { Insertable } from "kysely";
 import { RENTREES_SCOLAIRES } from "shared";
 
 import type { DB } from "@/db/schema";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { createConstatRentree } from "./createConstatRentree.dep";
 import { findNMef } from "./findNMef.dep";

@@ -1,13 +1,12 @@
 import { pipeline, Writable } from "node:stream";
 
 import fs from "fs";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { ZodError, ZodIssueCode } from "zod";
 
 import batchCreate from "@/modules/import/utils/batchCreate";
 import { getStreamParser } from "@/modules/import/utils/parse";
 import { verifyFileEncoding } from "@/modules/import/utils/verifyFileEncoding";
+import { inject } from "@/utils/inject";
 
 import type { RawDataLine } from "./createRawDatas.dep";
 import { createRawDatas } from "./createRawDatas.dep";

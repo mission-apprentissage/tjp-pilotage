@@ -1,10 +1,10 @@
 import * as Boom from "@hapi/boom";
-import { inject } from "injecti";
 import type { submitRequeteEnregistreeSchema } from "shared/routes/schemas/post.requete.enregistrement.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneSimilarRequeteEnregistreeQuery } from "@/modules/requetesEnregistrees/repositories/findOneSimilarRequeteEnregistree.query";
+import { inject } from "@/utils/inject";
 
 import { createRequeteEnregistree } from "./dependencies/createRequeteEnregistree.dep";
 
