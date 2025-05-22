@@ -233,8 +233,8 @@ export const CHANGELOG: IChangelog[] = [
   },
   {
     "id": "ad424ff3-be91-44f7-910f-864f36c6c8a6",
-    "deployed": true,
-    "show": true,
+    "deployed": false,
+    "show": false,
     "title": "Erreur dans les données d’apprentissage",
     "types": [ChangelogTypeEnum["BANDEAU"]],
     "date": new Date("2025-04-23"),
@@ -243,8 +243,8 @@ export const CHANGELOG: IChangelog[] = [
   },
   {
     "id": "84981ee7-5930-4cb2-8a8e-026892c67a79",
-    "deployed": true,
-    "show": true,
+    "deployed": false,
+    "show": false,
     "title": "Erreur données apprentissage (Domaine de formation)",
     "types": [ChangelogTypeEnum["Bug"]],
     "date": new Date("2025-04-23"),
