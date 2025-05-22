@@ -8,7 +8,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { redirectDneFactory } from "./redirectDne.usecase";
 
-describe("redirectDne usecase", () => {
+describe("server > src > modules > core > usecases > redirectDne > usecase", () => {
   it("Doit throw s'il n'y a pas de code_verifier", async () => {
     const redirectDne = redirectDneFactory({
       getDneClient: vi.fn().mockResolvedValue({
