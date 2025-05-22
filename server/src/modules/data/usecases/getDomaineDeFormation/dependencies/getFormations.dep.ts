@@ -62,6 +62,7 @@ export const getFormations = async ({
             .onRef("formationEtablissement.voie", "=", "formations.voie")
         )
         .innerJoin("dataEtablissement", "dataEtablissement.uai", "formationEtablissement.uai")
+        .leftJoin("indicateurEntree", "indicateurEntree.formationEtablissementId", "formationEtablissement.id")
         .selectAll("formations")
         .select((sb) => [
           sb.ref("formationEtablissement.uai").as("uai"),
@@ -94,6 +95,7 @@ export const getFormations = async ({
           }
           return q;
         })
+        .where(wb => wb("indicateurEntree.rentreeScolaire", "=", wb.val(CURRENT_RENTREE)))
     )
     .selectFrom("formations")
     .leftJoin("formation_etab", "formations.cfd", "formation_etab.cfd")
