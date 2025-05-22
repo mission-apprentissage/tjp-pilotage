@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import type { searchMetierSchema } from "shared/routes/schemas/get.metier.search.search.schema";
 import type { z } from "zod";
 

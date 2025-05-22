@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { MILLESIMES_IJ_REG } from "shared";
 
 import { regionAcademiqueMapping } from "@/modules/import/domain/regionAcademiqueMapping";

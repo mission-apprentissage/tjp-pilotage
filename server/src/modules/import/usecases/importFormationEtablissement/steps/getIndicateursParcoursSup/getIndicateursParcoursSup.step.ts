@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import type { AnneeDispositif } from "@/modules/import/usecases/getCfdRentrees/getCfdRentrees.usecase";
 import { inject } from "@/utils/inject";

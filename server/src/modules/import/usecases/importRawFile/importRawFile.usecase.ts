@@ -6,7 +6,6 @@ import { ZodError, ZodIssueCode } from "zod";
 import batchCreate from "@/modules/import/utils/batchCreate";
 import { getStreamParser } from "@/modules/import/utils/parse";
 import { verifyFileEncoding } from "@/modules/import/utils/verifyFileEncoding";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "@/utils/inject";
 
 import type { RawDataLine } from "./createRawDatas.dep";

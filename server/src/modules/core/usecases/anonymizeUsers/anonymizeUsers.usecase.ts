@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import logger from "@/services/logger";
 import { inject } from "@/utils/inject";
 

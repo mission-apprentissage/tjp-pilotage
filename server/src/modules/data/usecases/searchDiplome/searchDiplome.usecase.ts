@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import type { searchDiplomeSchema } from "shared/routes/schemas/get.diplome.search.search.schema";
 import type { z } from "zod";
 

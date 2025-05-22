@@ -2,7 +2,6 @@ import * as Boom from "@hapi/boom";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import {getCurrentCampagne, getPreviousCampagne} from '@/modules/utils/getCurrentCampagne';
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "@/utils/inject";
 
 

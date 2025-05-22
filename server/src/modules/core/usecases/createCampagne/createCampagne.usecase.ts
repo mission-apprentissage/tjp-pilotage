@@ -3,7 +3,6 @@ import type { createCampagneSchema } from "shared/routes/schemas/post.campagnes.
 import type {z} from 'zod';
 
 import { getCampagneEnCours } from "@/modules/core/queries/getCampagneEnCours";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "@/utils/inject";
 
 import { getCampagneByAnneeQuery, insertCampagneQuery } from './createCampagne.query';

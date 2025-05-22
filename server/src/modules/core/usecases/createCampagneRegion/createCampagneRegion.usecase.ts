@@ -3,7 +3,6 @@ import type { CampagneRegionSchema } from "shared/routes/schemas/post.campagnes-
 
 import { getCampagneEnCours } from "@/modules/core/queries/getCampagneEnCours";
 import { getSimilarCampagneRegion } from "@/modules/core/queries/getSimilarCampagneRegion";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { inject } from "@/utils/inject";
 
 import { insertCampagneRegion } from "./createCampagneRegion.query";

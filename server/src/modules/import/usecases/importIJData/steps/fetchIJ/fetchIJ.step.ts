@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { MILLESIMES_IJ } from "shared";
 
 import type { IJUaiData } from "@/modules/import/services/inserJeunesApi/formatUaiData";

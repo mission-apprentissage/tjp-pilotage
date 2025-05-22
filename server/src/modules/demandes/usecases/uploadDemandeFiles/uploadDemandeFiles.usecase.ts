@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { fileManager } from "@/modules/core/services/fileManager/fileManager";
 import { filePathManager } from "@/modules/core/services/filePathManager/filePathManager";
 import { inject } from "@/utils/inject";

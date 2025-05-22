@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import {hasRole, RoleEnum} from 'shared';
+import { hasRole, RoleEnum } from 'shared';
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { inject } from "@/utils/inject";

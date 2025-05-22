@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import type { DiplomeProfessionnelLine } from "@/modules/import/fileTypes/DiplomesProfessionnels";
 import { streamIt } from "@/modules/import/utils/streamIt";
 import { inject } from "@/utils/inject";

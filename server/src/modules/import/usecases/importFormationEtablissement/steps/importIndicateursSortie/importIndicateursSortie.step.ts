@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import { omit } from "lodash-es";
 
 import { inject } from "@/utils/inject";
