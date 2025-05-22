@@ -69,9 +69,9 @@ export function productCommands(cli: Command) {
         }[]
       ).map((user) => mapValues(user, (value, key) => {
         if (key === "email") {
-          return value?.toLocaleLowerCase() || undefined;
+          return value?.toLocaleLowerCase() ?? undefined;
         }
-        return value || undefined;
+        return value ?? undefined;
       }));
 
       const users = z
