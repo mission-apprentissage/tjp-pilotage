@@ -3,13 +3,15 @@
 import { Container, Text, VStack } from "@chakra-ui/react";
 
 import { EditorialTitle } from "@/app/(wrapped)/components/EditorialTitle";
+import { useAuth } from "@/utils/security/useAuth";
 
 import { Entry } from "./components/Entry";
-import { CHANGELOG, ChangelogTypeEnum } from "./const";
+import { ChangelogTypeEnum, getChangelog } from "./const";
 
 const Page = () => {
+  const { auth } = useAuth();
   const updates =
-    CHANGELOG?.filter(
+    getChangelog(auth)?.filter(
       (changelogEntry) =>
         changelogEntry.types.findIndex((t) => t === ChangelogTypeEnum.BANDEAU) === -1 &&
         changelogEntry.deployed &&
@@ -17,7 +19,7 @@ const Page = () => {
     ).sort((a, b) => b.date.getTime() - a.date.getTime()) ?? [];
 
   const incoming =
-    CHANGELOG?.filter(
+    getChangelog(auth)?.filter(
       (changelogEntry) =>
         changelogEntry.types.findIndex((t) => t === ChangelogTypeEnum.BANDEAU) === -1 &&
         !changelogEntry.deployed &&
