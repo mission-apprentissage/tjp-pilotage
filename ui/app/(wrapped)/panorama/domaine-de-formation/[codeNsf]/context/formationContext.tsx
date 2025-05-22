@@ -274,7 +274,6 @@ export function FormationContextProvider({ children, value }: Readonly<Formation
   };
 
   const handleCfdChange = ({ cfd }: { cfd: string }) => {
-    console.log(cfd);
     trackEvent("domaine-de-formation:cfd", {
       props: { cfd },
     });
