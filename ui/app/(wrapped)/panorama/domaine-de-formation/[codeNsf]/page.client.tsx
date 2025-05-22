@@ -22,6 +22,7 @@ const defineScope = (
   codeAcademie: string | undefined,
   codeDepartement: string | undefined
 ): ScopeZone => {
+  console.log(codeRegion, codeAcademie, codeDepartement);
   if (codeDepartement) {
     return ScopeEnum.département;
   }
@@ -98,8 +99,8 @@ export function DomaineDeFormationClient(
         setAcademies(domaineDeFormation.filters.academies);
         setDepartements(domaineDeFormation.filters.departements);
 
-        setScope(defineScope(codeRegion, codeAcademie, codeDepartement));
       }
+      setScope(defineScope(codeRegion, codeAcademie, codeDepartement));
     }
   }, [codeRegion, codeAcademie, domaineDeFormation, codeDepartement]);
 
