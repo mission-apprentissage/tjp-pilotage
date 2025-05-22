@@ -142,7 +142,7 @@ export const formatDepartementLibelleWithCodeDepartement = ({
 };
 
 export const formatLibelleFormationWithDispositifs = (
-  {libellesDispositifs, libelleFormation}:
+  { libellesDispositifs, libelleFormation }:
   { libellesDispositifs: string[]; libelleFormation: string }
 ) => {
   const dispositifs =

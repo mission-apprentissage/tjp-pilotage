@@ -80,6 +80,7 @@ export const FormationSchema = z.object({
   typeFamille: TypeFamilleZodType.optional(),
   dateOuverture: z.date().optional(),
   formationSpecifique: FormationSpecifiqueFlagsSchema,
+  isFormationRenovee: z.boolean().optional(),
 });
 
 const OffreSchema = z.string();

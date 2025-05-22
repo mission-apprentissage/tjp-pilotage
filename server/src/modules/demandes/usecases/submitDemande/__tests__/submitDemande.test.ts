@@ -12,8 +12,8 @@ type AwaitedResult<V extends (...args: any[]) => Promise<any>> = Awaited<ReturnT
 const valideDeps = {
   createDemandeQuery: vi.fn(async (data) => Promise.resolve(data)),
   createChangementStatutQuery: vi.fn(async (data) => Promise.resolve(data)),
-  findOneDataEtablissement: async () =>
-    Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<Deps["findOneDataEtablissement"]>),
+  findOneDataEtablissementQuery: async () =>
+    Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<Deps["findOneDataEtablissementQuery"]>),
   findOneDataFormationQuery: async () => Promise.resolve({ cfd: "cfd" } as AwaitedResult<Deps["findOneDataFormationQuery"]>),
   findOneDemandeQuery: async () =>
     Promise.resolve({
@@ -21,7 +21,7 @@ const valideDeps = {
       codeRegion: "codeRegion",
       createdBy: "user-id",
     } as AwaitedResult<Deps["findOneDemandeQuery"]>),
-  findOneSimilarDemande: async () => Promise.resolve(),
+  findOneSimilarDemandeQuery: async () => Promise.resolve(),
 } as Deps;
 
 const demande = {
@@ -76,7 +76,7 @@ describe("submitDemande usecase", () => {
   it("should throw an exception if the uai is not found", async () => {
     const deps = {
       ...valideDeps,
-      findOneDataEtablissement: async () => Promise.resolve(undefined),
+      findOneDataEtablissementQuery: async () => Promise.resolve(undefined),
     };
 
     const submitDemande = submitDemandeFactory(deps);

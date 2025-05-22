@@ -1,17 +1,20 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, chakra, Flex, IconButton, Link, Skeleton, Tag, Td, Text, Tr } from "@chakra-ui/react";
+import { Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
-import type { Filters, Formation } from "@/app/(wrapped)/console/formations/types";
+import type { Filters, Formation  } from "@/app/(wrapped)/console/formations/types";
+import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
+import {BadgeTypeFamille} from '@/components/BadgeTypeFamille';
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { formatFamilleMetierLibelle } from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
+
 
 const ConditionalTd = chakra(
   ({
@@ -105,17 +108,27 @@ export const FormationLineContent = ({
       }}
     >
       <Flex>
-        <Flex w={"fit-content"} my={"auto"}>
-          {formatFamilleMetierLibelle({ formation, labelSize: "long", size: "sm", fontSize: "12px"})}
-        </Flex>
-        <BadgeFormationRenovee isFormationRenovee={!!formation.isFormationRenovee} ms={2}/>
+        {formatFamilleMetierLibelle({ formation, labelSize: "long", size: "sm", fontSize: "12px", withBadge: false })}
+        <BadgeTypeFamille
+          typeFamille={formation.typeFamille}
+          labelSize="long"
+          size="sm"
+          ms={2}
+        />
+        <BadgeFormationRenovee
+          isFormationRenovee={formation.isFormationRenovee}
+          labelSize="long"
+          size="sm"
+          ms={2}
+        />
         {formation.formationRenovee && (
-          <Flex ms={2} my={"auto"} width={"fit-content"} h={"1.8rem"} whiteSpace={"nowrap"} direction={"column"}>
-            {formation.dateFermeture && (
-              <Tag size="sm" bgColor="grey.1000_active" color={"grey.425"} width={"fit-content"} fontSize={12}>
-                Fermeture au {formation.dateFermeture}
-              </Tag>
-            )}
+          <Flex my={"auto"} width={"fit-content"} h={"1.8rem"} whiteSpace={"nowrap"} direction={"column"}>
+            <BadgeFermeture
+              dateFermeture={formation.dateFermeture}
+              labelSize="long"
+              size="sm"
+              ms={2}
+            />
             <Link
               variant="text"
               as={NextLink}
@@ -136,7 +149,11 @@ export const FormationLineContent = ({
       </Flex>
     </ConditionalTd>
     <ConditionalTd colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <BadgesFormationSpecifique formationSpecifique={formation.formationSpecifique} />
+      <BadgesFormationSpecifique
+        formationSpecifique={formation.formationSpecifique}
+        labelSize="long"
+        size="sm"
+      />
     </ConditionalTd>
     <ConditionalTd colonne={"libelleNiveauDiplome"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {formation.libelleNiveauDiplome ?? "-"}
