@@ -1,5 +1,4 @@
 import * as Boom from '@hapi/boom';
-import {CampagneStatutEnum} from 'shared/enum/campagneStatutEnum';
 
 import { getKbdClient } from "@/db/db";
 import type { RequestUser } from '@/modules/core/model/User';
@@ -17,7 +16,6 @@ export const getCampagneById = async ({
     .leftJoin("campagneRegion", (join) =>
       join
         .onRef("campagneRegion.campagneId", "=", "campagne.id")
-        .on("campagneRegion.statut", "=", CampagneStatutEnum["en cours"])
         .$call((eb) => {
           if(user?.codeRegion) return eb.on("campagneRegion.codeRegion", "=", user.codeRegion);
           return eb.on((eb) => eb.val(false));

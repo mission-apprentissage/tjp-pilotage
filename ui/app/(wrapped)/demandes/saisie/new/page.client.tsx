@@ -1,6 +1,8 @@
 "use client";
 
 import {redirect, useSearchParams} from 'next/navigation';
+import { CampagneStatutEnum } from 'shared/enum/campagneStatutEnum';
+import type { CampagneType } from 'shared/schema/campagneSchema';
 
 import {client} from '@/api.client';
 import { DemandeForm } from "@/app/(wrapped)/demandes/saisie/demandeForm/DemandeForm";
@@ -11,6 +13,11 @@ import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
 import { GuardSaisieDemande } from '@/utils/security/GuardSaisieDemande';
 import { useAuth } from "@/utils/security/useAuth";
 import { useCurrentCampagne } from "@/utils/security/useCurrentCampagne";
+
+
+const guardCampagne = (campagne?: CampagneType) => {
+  return !!campagne && new Date(campagne.dateDebut) <= new Date() && new Date(campagne.dateFin) >= new Date() && campagne.statut === CampagneStatutEnum['en cours'];
+};
 
 export const PageClient = () => {
   const { user } = useAuth();
@@ -24,7 +31,11 @@ export const PageClient = () => {
     params: { campagneId },
   });
 
+
   if(isLoading) return <Loading />;
+  if (!guardCampagne(campagne)) {
+    return redirect(getRoutingAccessSaisieDemande({ user }));
+  }
   if(!campagne) return redirect(getRoutingAccessSaisieDemande({user}));
 
   return (
