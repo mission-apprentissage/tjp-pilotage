@@ -21,6 +21,14 @@ const valideDeps = {
       codeRegion: "codeRegion",
       createdBy: "user-id",
     } as AwaitedResult<Deps["findOneDemandeQuery"]>),
+  findOneCampagneQuery: async () =>
+    Promise.resolve({
+      id: "campagne-id",
+      dateDebut: new Date("2023-01-01"),
+      dateFin: new Date(new Date().getFullYear() + 1, 0, 1),
+      statut: "en cours",
+      annee: "2024"
+    } as AwaitedResult<Deps["findOneCampagneQuery"]>),
   findOneSimilarDemandeQuery: async () => Promise.resolve(),
 } as Deps;
 
