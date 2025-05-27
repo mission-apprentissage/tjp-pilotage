@@ -6930,18 +6930,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:>=0.18.0":
-  version: 1.7.8
-  resolution: "axios@npm:1.7.8"
-  dependencies:
-    follow-redirects: ^1.15.6
-    form-data: ^4.0.0
-    proxy-from-env: ^1.1.0
-  checksum: 3d21652faf8e29fb36c47517d2872bb5e2285127a24f5c53ce23082c4eac7f5a88de84dd49d4a1a83068e5301dcfd9067b41e5fbd00b0d20ab7b0a843559273d
-  languageName: node
-  linkType: hard
-
-"axios@npm:^1.9.0":
+"axios@npm:>=0.18.0, axios@npm:^1.9.0":
   version: 1.9.0
   resolution: "axios@npm:1.9.0"
   dependencies:
