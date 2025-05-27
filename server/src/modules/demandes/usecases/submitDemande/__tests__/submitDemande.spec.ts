@@ -20,6 +20,7 @@ import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
+import { getCurrentCampagne } from "@/modules/utils/getCurrentCampagne";
 import type { Server } from "@/server/server";
 import createServer from "@/server/server.js";
 
@@ -36,6 +37,12 @@ describe("[POST]/demande/submit", () => {
   beforeAll(async () => {
     app = await createServer();
     await app.ready();
+    // TODO : fix seeds
+    // update campagne to reflect current year
+    const currentCampagne = await getCurrentCampagne();
+    await getKbdClient().updateTable("campagne").where("id", "=", currentCampagne.id).set({
+      dateFin: new Date(new Date().getFullYear() + 1, 0, 1),
+    }).execute();
 
     return async () => app.close();
   }, 15_000);
