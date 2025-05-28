@@ -117,7 +117,7 @@ export const [redirectDne, redirectDneFactory] = inject(
       );
 
       let etablissement: TUserEtablissement = undefined;
-      if (attributes.role === RoleEnum.perdir && attributes.uais.length > 0) {
+      if (attributes.role === RoleEnum.perdir && attributes.uais && attributes.uais.length > 0) {
         etablissement = attributes.uais && (await deps.findEtablissement({ uais: attributes.uais }));
       }
 
