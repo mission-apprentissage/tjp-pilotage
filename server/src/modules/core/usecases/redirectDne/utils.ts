@@ -111,7 +111,7 @@ export const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>)
     if (role) {
       return {
         role,
-        uais: [],
+        uais: undefined,
         fonction
       };
     }
@@ -122,7 +122,7 @@ export const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>)
   if (userInfo.FrEduGestResp?.some(s => s.endsWith("805$ORIONINSERJEUNES"))) {
     return {
       role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["DASEN"],
-      uais: [],
+      uais: undefined,
       fonction: ROLE_DNE_FONCTION_ORION_CORRESPONDANCE["DASEN"]
     };
   }
@@ -131,7 +131,7 @@ export const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>)
   if (userInfo.title === RoleDNEEnum.INS) {
     return {
       role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["INS"],
-      uais: [],
+      uais: undefined,
       fonction: ROLE_DNE_FONCTION_ORION_CORRESPONDANCE["INS"]
     };
   }
