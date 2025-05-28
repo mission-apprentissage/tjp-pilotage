@@ -19,8 +19,8 @@ export const [login, loginFactory] = inject(
       const user = await deps.findUserQuery({ email });
       if (!user) throw Boom.unauthorized(LoginErrorsEnum.WRONG_CREDENTIALS);
       if (!user.enabled) throw Boom.unauthorized(LoginErrorsEnum.DISABLED);
-      if (!user.password) throw Boom.unauthorized(LoginErrorsEnum.NO_PASSWORD);
       if (user.sub) throw Boom.unauthorized(LoginErrorsEnum.EXTERNAL_USER);
+      if (!user.password) throw Boom.unauthorized(LoginErrorsEnum.NO_PASSWORD);
 
       const correctPassword = verifyPassword(password, user.password);
       if (!correctPassword) throw Boom.unauthorized(LoginErrorsEnum.WRONG_CREDENTIALS);
