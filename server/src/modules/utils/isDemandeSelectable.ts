@@ -23,7 +23,7 @@ export const isDemandeBrouillonVisible =
       return eb.or([
         eb.and([
           eb("demande.statut", "=", DemandeStatutEnum["brouillon"]),
-          user.uais ? eb("demande.uai", "in", user.uais) : eb("demande.createdBy", "=", user.id),
+          (user.uais && user.uais.length > 0) ? eb("demande.uai", "in", user.uais) : eb("demande.createdBy", "=", user.id),
         ]),
         eb("demande.statut", "!=", DemandeStatutEnum["brouillon"]),
       ]);
@@ -68,7 +68,7 @@ const getDemandeSelectableFilters = (user?: Pick<RequestUser, "id" | "role" | "c
   return {
     national: {},
     région: { codeRegion: user.codeRegion },
-    uai: { uais: user.uais },
+    uai: { uais: (user.uais && user.uais.length > 0) ? user.uais : undefined },
     role: { role: user.role, codeRegion: user.codeRegion },
     user: { userId: user.id },
   }[scope];
