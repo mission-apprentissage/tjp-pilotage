@@ -1,12 +1,11 @@
-import { Badge, Box, Flex, Img, Text, Tooltip } from "@chakra-ui/react";
+import { Badge, Flex, Img, Text, Tooltip } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipDefinitionTauxRemplissage } from "@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
 import { formatTaux } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
-import { TooltipIcon } from "@/components/TooltipIcon";
 
 const getCompareData = ({
   tauxRemplissage,
@@ -53,23 +52,10 @@ export const TauxRemplissage = ({
   tauxRemplissage?: number;
   tauxRemplissageAnneePrecedente?: number;
 }) => {
-  const { openGlossaire } = useGlossaireContext();
-
   return (
     <DashboardCard
       label="Taux de remplissage"
-      tooltip={
-        <TooltipIcon
-          ml="1"
-          label={
-            <Box>
-              <Text>Le ratio entre l’effectif d’entrée en formation et sa capacité.</Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
-          }
-          onClick={() => openGlossaire("taux-de-remplissage")}
-        />
-      }
+      tooltip={<TooltipDefinitionTauxRemplissage label="Pour une formation, le ratio entre l’effectif en entrée et la capacité théorique." />}
       badge={
         <Badge variant="lavander" size={"xs"}>
           Étab.

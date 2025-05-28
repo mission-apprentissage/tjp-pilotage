@@ -1,6 +1,6 @@
-import { Badge, Box, Text } from "@chakra-ui/react";
+import { Badge } from "@chakra-ui/react";
 
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
 import { VerticalBarChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/VerticalBarChart";
 import {
@@ -9,7 +9,6 @@ import {
 } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import type { ChiffresIJOffre } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
-import { TooltipIcon } from "@/components/TooltipIcon";
 
 const checkDataAvailability = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOffre }): boolean => {
   if (chiffresIJOffre) {
@@ -35,26 +34,10 @@ const getVerticalBarChartData = ({
 };
 
 export const TauxDevenirFavorable = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOffre }) => {
-  const { openGlossaire } = useGlossaireContext();
-
   return (
     <DashboardCard
       label="Devenir favorable"
-      tooltip={
-        <TooltipIcon
-          ml="1"
-          label={
-            <Box>
-              <Text>
-                (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-                dernière année de formation.
-              </Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
-          }
-          onClick={() => openGlossaire("taux-de-devenir-favorable")}
-        />
-      }
+      tooltip={<TooltipDefinitionTauxDevenirFavorable />}
       badge={
         <Badge variant="lavander" size={"xs"}>
           Étab.

@@ -1,8 +1,5 @@
 import { chakra, Flex, FormControl, FormLabel, Radio, RadioGroup, VStack } from "@chakra-ui/react";
 
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import type { GlossaireEntryKey } from "@/app/(wrapped)/glossaire/GlossaireEntries";
-import { TooltipIcon } from "@/components/TooltipIcon";
 
 export enum TendanceEnum {
   tout = "all",
@@ -13,22 +10,21 @@ export enum TendanceEnum {
 export const TendanceRadio = chakra(
   ({
     label,
-    glossaire,
+    icon,
     tendance,
     setTendance,
   }: {
     label: string;
-    glossaire?: GlossaireEntryKey;
+    icon?: React.ReactNode;
     tendance: TendanceEnum;
     setTendance: (value: TendanceEnum) => void;
   }) => {
-    const { openGlossaire } = useGlossaireContext();
     return (
       <Flex w={"100%"}>
         <FormControl>
           <FormLabel as="legend" display={"flex"} alignItems={"center"}>
             {label}
-            {glossaire && <TooltipIcon onClick={() => openGlossaire(glossaire)} ml={1} />}
+            {icon}
           </FormLabel>
           <RadioGroup defaultValue={TendanceEnum.tout} onChange={setTendance} value={tendance}>
             <VStack spacing="12px" alignItems={"flex-start"}>
