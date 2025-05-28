@@ -63,7 +63,7 @@ export const redirectDneRoute = (server: Server) => {
           });
 
           let url = '/';
-          if (user.uais.length > 0) {
+          if (user.uais && user.uais.length > 0) {
             url = `/panorama/etablissement/${user.uais[0]}`;
           }
 
