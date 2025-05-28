@@ -2,8 +2,9 @@ import { Box, Flex, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, T
 import { useMemo } from 'react';
 import { ANNEE_CHOMAGE } from 'shared';
 
+import { TooltipDefinitionTauxEmploi6Mois } from '@/app/(wrapped)/components/definitions/DefinitionTauxEmploio6Mois';
+import { TooltipDefinitionTauxPoursuiteEtudes } from '@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes';
 import type { Order, PilotageReformeStatsRegion, TauxTransformation } from "@/app/(wrapped)/suivi-impact/types";
-import { GlossaireShortcut } from '@/components/GlossaireShortcut';
 import { OrderIcon } from "@/components/OrderIcon";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { formatPercentageFixedDigits } from "@/utils/formatUtils";
@@ -135,7 +136,8 @@ export const VueRegionAcademieSection = ({
                         marginInline={1}
                         label={
                           <Box>
-                            <Text>Taux de transformation cumulé par région.</Text>
+                            <Text>Taux de transformation cumulé par région (demandes validées).{" "}
+                              Cliquer pour plus d’infos.</Text>
                           </Box>
                         }
                         onClick={() => onModalOpen()}
@@ -155,7 +157,8 @@ export const VueRegionAcademieSection = ({
                         marginInline={1}
                         label={
                           <Box>
-                            <Text>Taux de transformation cumulé par région.</Text>
+                            <Text>Taux de transformation cumulé par région (projets inclus).{" "}
+                              Cliquer pour plus d’infos.</Text>
                           </Box>
                         }
                         onClick={() => onModalOpen()}
@@ -170,18 +173,7 @@ export const VueRegionAcademieSection = ({
                         <br/>
                           d'études
                       </Text>
-                      <GlossaireShortcut
-                        display={"inline"}
-                        marginInline={1}
-                        iconSize={"12px"}
-                        glossaireEntryKey={"taux-poursuite-etudes"}
-                        tooltip={
-                          <Box>
-                            <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                            <Text>Cliquez pour plus d'infos.</Text>
-                          </Box>
-                        }
-                      />
+                      <TooltipDefinitionTauxPoursuiteEtudes />
                     </Flex>
                   </Th>
                   <Th isNumeric cursor="pointer" pb="4"  onClick={() => handleOrder("tauxInsertion")}>
@@ -192,18 +184,7 @@ export const VueRegionAcademieSection = ({
                         <br/>
                         à 6 mois
                       </Text>
-                      <GlossaireShortcut
-                        display={"inline"}
-                        marginInline={1}
-                        iconSize={"12px"}
-                        glossaireEntryKey={"taux-emploi-6-mois"}
-                        tooltip={
-                          <Box>
-                            <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-                            <Text>Cliquez pour plus d'infos.</Text>
-                          </Box>
-                        }
-                      />
+                      <TooltipDefinitionTauxEmploi6Mois />
                     </Flex>
                   </Th>
                   <Th isNumeric cursor="pointer" pb="4" width="15%" onClick={() => handleOrder("tauxChomage")}>

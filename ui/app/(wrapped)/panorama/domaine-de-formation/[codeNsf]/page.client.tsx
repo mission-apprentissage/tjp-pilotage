@@ -22,7 +22,6 @@ const defineScope = (
   codeAcademie: string | undefined,
   codeDepartement: string | undefined
 ): ScopeZone => {
-  console.log(codeRegion, codeAcademie, codeDepartement);
   if (codeDepartement) {
     return ScopeEnum.département;
   }

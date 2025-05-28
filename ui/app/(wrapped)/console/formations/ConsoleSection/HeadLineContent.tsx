@@ -2,6 +2,10 @@ import { Box, chakra, Text, Th, Thead, Tooltip, Tr, VisuallyHidden } from "@chak
 import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
 
+import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploio6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Order } from "@/app/(wrapped)/console/formations/types";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -19,6 +23,7 @@ const ConditionalTh = chakra(
     getCellBgColor,
     onClick,
     isNumeric = false,
+    icon
   }: {
     className?: string;
     style?: CSSProperties;
@@ -28,11 +33,11 @@ const ConditionalTh = chakra(
     getCellBgColor: (column: keyof typeof FORMATION_COLUMNS) => string;
     onClick?: (column: Order["orderBy"]) => void;
     isNumeric?: boolean;
+    icon?: React.ReactNode;
   }) => {
     if (colonneFilters.includes(colonne))
       return (
         <Th
-          maxW={300}
           p={2}
           className={className}
           style={style}
@@ -41,20 +46,26 @@ const ConditionalTh = chakra(
           onClick={() => onClick && onClick(colonne as Order["orderBy"])}
           bgColor={getCellBgColor(colonne)}
         >
-          <Tooltip label={FORMATION_COLUMNS[colonne]} placement="top">
-            <Box
-              fontSize={12}
-              fontWeight={700}
-              lineHeight={"20px"}
-              textTransform={"uppercase"}
-              textOverflow={"ellipsis"}
-              alignSelf={"stretch"}
-              isTruncated
-              whiteSpace="nowrap"
-            >
-              {children}
-            </Box>
-          </Tooltip>
+          <Box maxW={280} sx={{
+            display: "flex",
+            alignItems: "center",
+          }}>
+            <Tooltip label={FORMATION_COLUMNS[colonne]} placement="top">
+              <Box
+                fontSize={12}
+                fontWeight={700}
+                lineHeight={"20px"}
+                textTransform={"uppercase"}
+                textOverflow={"ellipsis"}
+                alignSelf={"stretch"}
+                isTruncated
+                whiteSpace="nowrap"
+              >
+                {children}
+              </Box>
+            </Tooltip>
+            {icon}
+          </Box>
         </Th>
       );
     return null;
@@ -199,14 +210,10 @@ export const HeadLineContent = ({
           getCellBgColor={getCellBgColor}
           cursor="pointer"
           onClick={handleOrder}
+          icon={<TooltipDefinitionDomaineDeFormation />}
         >
           <OrderIcon {...order} column="libelleNsf" />
           {FORMATION_COLUMNS.libelleNsf}
-          <TooltipIcon
-            ml="1"
-            label="Cliquez pour plus d'infos."
-            onClick={() => openGlossaire("domaine-de-formation-nsf")}
-          />
         </ConditionalTh>
         <ConditionalTh
           colonne={"nbEtablissement"}
@@ -379,19 +386,10 @@ export const HeadLineContent = ({
           cursor="pointer"
           onClick={handleOrder}
           textAlign={"center"}
+          icon={<TooltipDefinitionTauxEmploi6Mois />}
         >
           <OrderIcon {...order} column="tauxInsertion" />
           {FORMATION_COLUMNS.tauxInsertion}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-emploi-6-mois")}
-          />
         </ConditionalTh>
         <ConditionalTh
           colonne={"tauxPoursuite"}
@@ -400,19 +398,10 @@ export const HeadLineContent = ({
           cursor="pointer"
           onClick={handleOrder}
           textAlign={"center"}
+          icon={<TooltipDefinitionTauxPoursuiteEtudes />}
         >
           <OrderIcon {...order} column="tauxPoursuite" />
           {FORMATION_COLUMNS.tauxPoursuite}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-poursuite-etudes")}
-          />
         </ConditionalTh>
         <ConditionalTh
           colonne={"tauxDevenirFavorable"}
@@ -421,22 +410,10 @@ export const HeadLineContent = ({
           cursor="pointer"
           onClick={handleOrder}
           textAlign={"center"}
+          icon={<TooltipDefinitionTauxDevenirFavorable />}
         >
           <OrderIcon {...order} column="tauxDevenirFavorable" />
           {FORMATION_COLUMNS.tauxDevenirFavorable}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>
-                  (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-                  dernière année de formation.
-                </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-de-devenir-favorable")}
-          />
         </ConditionalTh>
       </Tr>
     </Thead>
