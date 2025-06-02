@@ -84,7 +84,7 @@ export function productCommands(cli: Command) {
             codeRegion: z
               .string()
               .optional()
-              .transform((val) => val ?? undefined),
+              .transform((val) => val || undefined),
             fonction: UserFonctionZodType.nullish()
           })
         )

@@ -47,11 +47,46 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
       expect(result.etablissements).toEqual(
         expect.arrayContaining([
-          { rentreeScolaire: "2020", nbEtablissements: 785 },
-          { rentreeScolaire: "2021", nbEtablissements: 797 },
-          { rentreeScolaire: "2022", nbEtablissements: 802 },
-          { rentreeScolaire: "2023", nbEtablissements: 806 },
-          { rentreeScolaire: "2024", nbEtablissements: 814 },
+          {
+            rentreeScolaire: "2020",
+            nbEtablissements: {
+              all: 785,
+              apprentissage: 0,
+              scolaire:785
+            }
+          },
+          {
+            rentreeScolaire: "2021",
+            nbEtablissements: {
+              all: 797,
+              apprentissage: 0,
+              scolaire: 797
+            }
+          },
+          {
+            rentreeScolaire: "2022",
+            nbEtablissements: {
+              all: 802,
+              apprentissage: 0,
+              scolaire: 802
+            }
+          },
+          {
+            rentreeScolaire: "2023",
+            nbEtablissements: {
+              all: 806,
+              apprentissage: 0,
+              scolaire: 806
+            }
+          },
+          {
+            rentreeScolaire: "2024",
+            nbEtablissements: {
+              all: 814,
+              apprentissage: 0,
+              scolaire: 814
+            },
+          }
         ])
       );
     });
@@ -68,10 +103,38 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
       expect(result.etablissements).toEqual(
         expect.arrayContaining([
-          { rentreeScolaire: "2020", nbEtablissements: 89 },
-          { rentreeScolaire: "2021", nbEtablissements: 92 },
-          { rentreeScolaire: "2022", nbEtablissements: 94 },
-          { rentreeScolaire: "2023", nbEtablissements: 95 },
+          {
+            rentreeScolaire: "2020",
+            nbEtablissements: {
+              all: 89,
+              apprentissage: 0,
+              scolaire: 89,
+            }
+          },
+          {
+            rentreeScolaire: "2021",
+            nbEtablissements: {
+              all: 92,
+              apprentissage: 0,
+              scolaire: 92,
+            }
+          },
+          {
+            rentreeScolaire: "2022",
+            nbEtablissements: {
+              all: 94,
+              apprentissage: 0,
+              scolaire: 94,
+            }
+          },
+          {
+            rentreeScolaire: "2023",
+            nbEtablissements: {
+              all: 95,
+              apprentissage: 0,
+              scolaire: 95,
+            }
+          },
         ])
       );
     });
@@ -89,10 +152,38 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
       expect(result.etablissements).toEqual(
         expect.arrayContaining([
-          { rentreeScolaire: "2020", nbEtablissements: 36 },
-          { rentreeScolaire: "2021", nbEtablissements: 37 },
-          { rentreeScolaire: "2022", nbEtablissements: 38 },
-          { rentreeScolaire: "2023", nbEtablissements: 39 },
+          {
+            rentreeScolaire: "2020",
+            nbEtablissements: {
+              all: 36,
+              apprentissage: 0,
+              scolaire: 36
+            }
+          },
+          {
+            rentreeScolaire: "2021",
+            nbEtablissements: {
+              all: 37,
+              apprentissage: 0,
+              scolaire: 37
+            }
+          },
+          {
+            rentreeScolaire: "2022",
+            nbEtablissements: {
+              all: 38,
+              apprentissage: 0,
+              scolaire: 38
+            }
+          },
+          {
+            rentreeScolaire: "2023",
+            nbEtablissements: {
+              all: 39,
+              apprentissage: 0,
+              scolaire: 39
+            }
+          },
         ])
       );
     });
@@ -111,11 +202,39 @@ describe("GET /api/formation/:cfd/indicators", () => {
 
       expect(result.etablissements).toEqual(
         expect.arrayContaining([
-          { rentreeScolaire: "2020", nbEtablissements: 18 },
-          { rentreeScolaire: "2021", nbEtablissements: 18 },
-          { rentreeScolaire: "2022", nbEtablissements: 19 },
-          { rentreeScolaire: "2023", nbEtablissements: 20 },
-        ])
+          {
+            rentreeScolaire: "2020",
+            nbEtablissements: {
+              all: 18,
+              apprentissage: 0,
+              scolaire: 18
+            }
+          },
+          {
+            rentreeScolaire: "2021",
+            nbEtablissements: {
+              all: 18,
+              apprentissage: 0,
+              scolaire: 18
+            }
+          },
+          {
+            rentreeScolaire: "2022",
+            nbEtablissements: {
+              all: 19,
+              apprentissage: 0,
+              scolaire: 19
+            }
+          },
+          {
+            rentreeScolaire: "2023",
+            nbEtablissements: {
+              all: 20,
+              apprentissage: 0,
+              scolaire: 20
+            }
+          }]
+        )
       );
     });
   });

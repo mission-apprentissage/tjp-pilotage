@@ -1,12 +1,14 @@
-import type { BoxProps } from "@chakra-ui/react";
-import { Badge, Box, Divider, Flex, forwardRef, List, ListItem, Text, Tooltip } from "@chakra-ui/react";
+import { Badge, Box, Divider, Flex, List, ListItem, Text, Tooltip } from "@chakra-ui/react";
 import _ from "lodash";
-import { CURRENT_RENTREE } from "shared";
+import { CURRENT_RENTREE, VoieEnum } from "shared";
 
+import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
+import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
 import type { FormationListItem } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "@/components/BadgeVoieApprentissage";
+import { BadgeVoieScolaire } from "@/components/BadgeVoieScolaire";
 import { themeColors } from "@/theme/themeColors";
 import { formatFamilleMetierLibelle } from "@/utils/formatLibelle";
 
@@ -17,48 +19,54 @@ const LabelNumberOfFormations = ({ formations }: { formations: number }) => (
   </Text>
 );
 
-const getBackgroundColor = (formation: FormationListItem, selectedCfd: string) => {
-  if (formation.cfd === selectedCfd) {
-    return "bluefrance.925";
-  }
+export const ListeFormations = () => {
+  const {
+    handleCfdChange: selectCfd,
+    currentFilters: {
+      selection: { cfd: selectedCfd }
+    }
+  } = useFormationContext();
 
-  if (formation.nbEtab === 0) {
-    return "grey.925";
-  }
+  const { formationsByLibelleNiveauDiplome } = useDomaineDeFormation();
 
-  return undefined;
-};
+  const isFormationSelected = (formation: FormationListItem) => {
+    return formation.cfd === selectedCfd;
+  };
 
-const getFontColor = (formation: FormationListItem, selectedCfd: string) => {
-  if (formation.cfd === selectedCfd) {
-    return "bluefrance.113";
-  }
+  const getBackgroundColor = (formation: FormationListItem) => {
+    if (isFormationSelected(formation)) {
+      return "bluefrance.925";
+    }
 
-  if (formation.nbEtab === 0) {
-    return "grey.625";
-  }
+    if (formation.nbEtab === 0) {
+      return "grey.925";
+    }
 
-  return undefined;
-};
+    return undefined;
+  };
 
-type ListeFormationsProps = BoxProps & {
-  formationsByLibelleNiveauDiplome: Record<string, FormationListItem[]>;
-  selectCfd: (cfd: string) => void;
-  selectedCfd: string;
-};
+  const getFontColor = (formation: FormationListItem) => {
+    if (isFormationSelected(formation)) {
+      return "bluefrance.113";
+    }
 
-export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
-  ({ formationsByLibelleNiveauDiplome, selectCfd, selectedCfd, ...rest }, ref) => {
-    return (
-      <Box
-        borderRightWidth={1}
-        borderRightColor={"grey.925"}
-        overflowY={"auto"}
-        h={"80rem"}
-        w={"40%"}
-        ref={ref}
-        {...rest}
-      >
+    if (formation.nbEtab === 0) {
+      return "grey.625";
+    }
+
+    return undefined;
+  };
+
+  return (
+    <Box
+      borderRightWidth={1}
+      borderRightColor={"grey.925"}
+      overflowY={"auto"}
+      height="inherit"
+      position="relative"
+      w={"40%"}
+    >
+      <Box position="absolute" height="100%" width="100%" overflow="auto">
         <Flex flex={1} flexDirection={"row"} justifyContent={"space-between"} mx={"8px"} my={"16px"}>
           <LabelNumberOfFormations
             formations={_.sumBy(Object.values(formationsByLibelleNiveauDiplome), (arr) => arr.length)}
@@ -73,18 +81,18 @@ export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
               <List>
                 {formations.map((formation) => (
                   <ListItem
-                    key={`${formation.cfd}_${formation.voie}`}
+                    key={`${formation.cfd}_${formation.voies.join(',')}`}
                     ms={3}
                     p={"8px 16px 8px 8px"}
                     cursor={"pointer"}
                     onClick={() => {
-                      selectCfd(formation.cfd);
+                      selectCfd({ cfd: formation.cfd });
                     }}
-                    bgColor={getBackgroundColor(formation, selectedCfd)}
+                    bgColor={getBackgroundColor(formation)}
                     _hover={{
-                      backgroundColor: selectedCfd === formation.cfd ? "bluefrance.925_hover" : "grey.1000_active",
+                      backgroundColor: isFormationSelected(formation) ? "bluefrance.925_hover" : "grey.1000_active",
                     }}
-                    fontWeight={selectedCfd === formation.cfd ? "bold" : ""}
+                    fontWeight={isFormationSelected(formation) ? "bold" : ""}
                     position={"relative"}
                   >
                     <Flex
@@ -95,7 +103,7 @@ export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
                         width: "0",
                         height: "60%",
                         left: "0",
-                        borderLeft: selectedCfd === formation.cfd ? `3px solid ${themeColors.bluefrance[113]}` : "",
+                        borderLeft: isFormationSelected(formation) ? `3px solid ${themeColors.bluefrance[113]}` : "",
                         top: "50%",
                         transform: "translateY(-50%)",
                         position: "absolute",
@@ -106,7 +114,7 @@ export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
                       >
                         <Text
                           my={2}
-                          color={getFontColor(formation, selectedCfd)}
+                          color={getFontColor(formation)}
                           whiteSpace="normal"
                           textOverflow={"ellipsis"}
                           overflow={"hidden"}
@@ -119,7 +127,8 @@ export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
                       <Flex direction="row" gap={1}>
                         <BadgeTypeFamille typeFamille={formation.typeFamille} />
                         <BadgeFormationRenovee isFormationRenovee={formation.isFormationRenovee} />
-                        <BadgeVoieApprentissage voie={formation.voie} />
+                        <BadgeVoieScolaire voie={formation.voies.find(v => v === VoieEnum.scolaire)} />
+                        <BadgeVoieApprentissage voie={formation.voies.find(v => v === VoieEnum.apprentissage)} />
                       </Flex>
                     </Flex>
                   </ListItem>
@@ -129,6 +138,6 @@ export const ListeFormations = forwardRef<ListeFormationsProps, "div">(
           ))}
         </List>
       </Box>
-    );
-  }
-);
+    </Box>
+  );
+};

@@ -1,12 +1,16 @@
 import { Box, Flex, Text, useToken } from "@chakra-ui/react";
 import { init, registerLocale } from "echarts";
 import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
-import type { ScopeZone } from "shared";
+import type {ScopeZone} from "shared";
+import {VoieEnum} from "shared";
+import type { Etablissements } from "shared/routes/schemas/get.formation.cfd.indicators.schema";
 
+import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
 import type {
   Formation,
   FormationIndicateurs,
   TauxAttractiviteType,
+  Voie,
 } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 import { BadgeScope } from "@/components/BadgeScope";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
@@ -14,6 +18,12 @@ import { frenchLocale } from "@/utils/echarts/frenchLocale";
 
 import { displayEffectifsDatas, displayEtablissementsDatas } from "./displayIndicators";
 import { TauxPressionRemplissageCard } from "./TauxPressionRemplissageCard";
+
+const getNbEtablissementFromVoie = (nbEtabllissement: Etablissements["nbEtablissements"], voie: Voie) => {
+  if (voie === VoieEnum.apprentissage) return nbEtabllissement.apprentissage;
+  if (voie === VoieEnum.scolaire) return nbEtabllissement.scolaire;
+  return nbEtabllissement.all;
+};
 
 const getXAxisData = (
   data: {
@@ -178,6 +188,9 @@ export const EffectifsEtAttractiviteGraphs = ({
   tauxAttractiviteSelected: TauxAttractiviteType;
   handleChangeTauxAttractivite: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }) => {
+
+  const { currentFilters: { voie } } = useFormationContext();
+
   return (
     <Flex direction={"column"} gap={4}>
       <Flex direction={"row"} gap={4} wrap={"nowrap"}>
@@ -204,7 +217,7 @@ export const EffectifsEtAttractiviteGraphs = ({
             <VerticalBarChart
               data={indicateurs.etablissements.map(({ rentreeScolaire, nbEtablissements }) => ({
                 label: `RS ${rentreeScolaire}`,
-                value: nbEtablissements,
+                value: getNbEtablissementFromVoie(nbEtablissements, voie)
               }))}
             />
           ) : (
@@ -244,7 +257,7 @@ export const EffectifsEtAttractiviteGraphs = ({
               }
             />
           </Flex>
-          {displayEffectifsDatas(indicateurs) ? (
+          {displayEffectifsDatas(indicateurs) && voie !== VoieEnum.apprentissage ? (
             <VerticalBarChart
               data={indicateurs.effectifs.map(({ rentreeScolaire, effectif }) => ({
                 label: `RS ${rentreeScolaire}`,

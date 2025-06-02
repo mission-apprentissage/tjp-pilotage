@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
+import { inject } from "@/utils/inject";
 
 import { searchEtablissementQuery } from "./searchEtablissement.query";
 

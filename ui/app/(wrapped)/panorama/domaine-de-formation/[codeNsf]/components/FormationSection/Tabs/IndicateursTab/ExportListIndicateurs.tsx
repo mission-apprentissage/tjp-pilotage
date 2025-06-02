@@ -1,4 +1,5 @@
 import { usePlausible } from "next-plausible";
+import type { Etablissements } from "shared/routes/schemas/get.formation.cfd.indicators.schema";
 
 import type {
   Formation,
@@ -23,11 +24,11 @@ const transformEffectifs = (effectifs: { rentreeScolaire: string; effectif: numb
   );
 };
 
-const transformEtablissements = (etablissements: { rentreeScolaire: string; nbEtablissements: number }[]) => {
+const transformEtablissements = (etablissements: Etablissements[]) => {
   return etablissements.reduce(
     (acc, { rentreeScolaire, nbEtablissements }) => ({
       ...acc,
-      [`etablissements ${rentreeScolaire}`]: nbEtablissements,
+      [`etablissements ${rentreeScolaire}`]: nbEtablissements.all,
     }),
     {} as Record<string, number>
   );

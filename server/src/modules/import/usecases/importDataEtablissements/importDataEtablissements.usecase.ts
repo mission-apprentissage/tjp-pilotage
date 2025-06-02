@@ -1,9 +1,7 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
-
 import type { DB } from "@/db/db";
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
 import { streamIt } from "@/modules/import/utils/streamIt";
+import { inject } from "@/utils/inject";
 
 import { createDataEtablissement } from "./createDataEtablissement.dep";
 import { findDepartement } from "./findDepartement.dep";
