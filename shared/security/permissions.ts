@@ -39,7 +39,7 @@ export const PERMISSIONS = {
   },
   admin_region: {
     [PermissionEnum["pilotage/lecture"]]: PermissionScopeEnum["national"],
-    [PermissionEnum["restitution/lecture"]]: PermissionScopeEnum["région"],
+    [PermissionEnum["restitution/lecture"]]: PermissionScopeEnum["national"],
     [PermissionEnum["demande/lecture"]]: PermissionScopeEnum["région"],
     [PermissionEnum["demande/ecriture"]]: PermissionScopeEnum["région"],
     [PermissionEnum["users/lecture"]]: PermissionScopeEnum["région"],
