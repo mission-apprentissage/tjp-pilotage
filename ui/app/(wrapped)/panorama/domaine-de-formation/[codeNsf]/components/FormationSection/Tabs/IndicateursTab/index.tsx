@@ -1,10 +1,12 @@
 import { Badge, Flex, Heading } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 import { useState } from "react";
+import { VoieEnum } from "shared";
 
 import { client } from "@/api.client";
 import { FormationHeader } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/components/FormationSection/FormationHeader";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
+import { useNsfContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/nsfContext";
 import type { TauxAttractiviteType, TauxIJType } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 
 import { DonneesManquantes } from "./DonneesManquantes";
@@ -28,6 +30,7 @@ const useIndicateursTab = ({
 }) => {
   const [tauxIJSelected, setTauxIJSelected] = useState<TauxIJType>("tauxDevenirFavorable");
   const [tauxAttractiviteSelected, setTauxAttractiviteSelected] = useState<TauxAttractiviteType>("tauxPression");
+  const { currentFilters } = useFormationContext();
   const { data: dataFormation, isLoading: isLoadingFormation } = client.ref("[GET]/formation/:cfd").useQuery(
     {
       params: { cfd },
@@ -45,7 +48,12 @@ const useIndicateursTab = ({
     .useQuery(
       {
         params: { cfd },
-        query: { codeRegion, codeAcademie, codeDepartement },
+        query: {
+          codeRegion,
+          codeAcademie,
+          codeDepartement,
+          voie: currentFilters.voie ? currentFilters.voie : undefined
+        },
       },
       {
         keepPreviousData: true,
@@ -75,8 +83,9 @@ const useIndicateursTab = ({
 };
 
 export const IndicateursTab = () => {
-  const { currentFilters, scope, codeNsf } = useFormationContext();
-  const { codeRegion, codeAcademie, codeDepartement, cfd } = currentFilters;
+  const { codeNsf } = useNsfContext();
+  const { currentFilters, scope } = useFormationContext();
+  const { codeRegion, codeAcademie, codeDepartement, selection: { cfd }, voie } = currentFilters;
 
   const {
     tauxIJSelected,
@@ -125,7 +134,7 @@ export const IndicateursTab = () => {
                 <Heading as="h3" fontSize={14} fontWeight={"bold"}>
                   EFFECTIFS ET ATTRACTIVITÉ
                 </Heading>
-                <Badge>VOIE SCOLAIRE</Badge>
+                { voie === VoieEnum.scolaire && ( <Badge>VOIE SCOLAIRE</Badge> ) }
               </Flex>
               <EffectifsEtAttractiviteGraphs
                 formation={dataFormation}

@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+import type { VoieType } from "shared";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import type { Etablissement, EtablissementsOrderBy } from "shared/routes/schemas/get.formation.cfd.map.schema";
 
@@ -16,6 +17,7 @@ export const getEtablissements = async ({
   codeAcademie,
   orderBy,
   includeAll,
+  voie
 }: {
   cfd: string;
   codeRegion?: string;
@@ -23,6 +25,7 @@ export const getEtablissements = async ({
   codeAcademie?: string;
   orderBy?: EtablissementsOrderBy;
   includeAll: boolean;
+  voie?: VoieType;
 }) =>
   getKbdClient()
     .with("taux_ij_formation_etab", (db) =>
@@ -100,9 +103,13 @@ export const getEtablissements = async ({
           sql<number>`(effectifs->>${sb.ref("anneeDebut")})::integer`.as("effectifs"),
           selectTauxPression("indicateurEntree", "niveauDiplome", true).as("tauxPression"),
         ])
-        .where((eb) =>
-          eb.or([eb("rentreeScolaire", "=", CURRENT_RENTREE), eb("formationEtablissement.voie", "=", "apprentissage")])
-        )
+        .where("rentreeScolaire", "=", CURRENT_RENTREE)
+        .$call((qb) => {
+          if (voie) {
+            return qb.where(wb => wb("formationEtablissement.voie", "=", wb.val(voie)));
+          }
+          return qb;
+        })
     )
     .selectFrom("carto")
     .select((sb) => [

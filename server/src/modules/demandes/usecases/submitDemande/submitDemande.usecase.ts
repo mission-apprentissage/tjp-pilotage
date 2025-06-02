@@ -1,19 +1,20 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { demandeValidators, getPermissionScope, guardScope } from "shared";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import {PermissionEnum} from 'shared/enum/permissionEnum';
 import type { submitDemandeSchema } from "shared/routes/schemas/post.demande.submit.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
+import { findOneCampagneQuery } from "@/modules/demandes/repositories/findOneCampagne.query";
 import { findOneDataEtablissementQuery } from "@/modules/demandes/repositories/findOneDataEtablissement.query";
 import { findOneDataFormationQuery } from "@/modules/demandes/repositories/findOneDataFormation.query";
 import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
 import { findOneSimilarDemandeQuery } from "@/modules/demandes/repositories/findOneSimilarDemande.query";
 import { generateId, generateShortId } from "@/modules/utils/generateId";
 import logger from "@/services/logger";
+import { inject } from "@/utils/inject";
 import { cleanNull } from "@/utils/noNull";
 
 import { createChangementStatutQuery } from "./deps/createChangementStatut.dep";
@@ -51,6 +52,10 @@ const logDemande = (demande?: { statut: string }) => {
   }
 };
 
+const guardCampagne = (campagne: Awaited<ReturnType<typeof findOneCampagneQuery>>) => {
+  return campagne && campagne.dateDebut <= new Date() && campagne.dateFin >= new Date() && campagne.statut === CampagneStatutEnum["en cours"];
+};
+
 export const [submitDemandeUsecase, submitDemandeFactory] = inject(
   {
     createDemandeQuery,
@@ -58,6 +63,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
     findOneDataEtablissementQuery,
     findOneDataFormationQuery,
     findOneDemandeQuery,
+    findOneCampagneQuery,
     findOneSimilarDemandeQuery,
   },
   (deps) =>
@@ -70,9 +76,10 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
     }) => {
       const currentDemande = demande.numero ? await deps.findOneDemandeQuery(demande.numero) : undefined;
 
-      const { cfd, uai } = demande;
+      const { cfd, uai, campagneId } = demande;
 
       const dataEtablissement = await deps.findOneDataEtablissementQuery({ uai });
+      const campagne = await deps.findOneCampagneQuery({ id: campagneId });
       if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
       if (!dataEtablissement.codeRegion) throw Boom.badData();
 
@@ -82,7 +89,30 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
         région: () => user.codeRegion === dataEtablissement.codeRegion,
         national: () => true,
       });
-      if (!isAllowed) throw Boom.forbidden();
+      const isCampagneOpen = guardCampagne(campagne);
+
+      if (!isCampagneOpen) {
+        logger.error(
+          {
+            demande,
+            campagne,
+            user
+          },
+          "[SUBMIT_INTENTION] Demande soumise en dehors d'une campagne ouverte"
+        );
+        throw Boom.forbidden("Demande soumise en dehors d'une campagne ouverte");
+      }
+      if (!isAllowed) {
+        logger.error(
+          {
+            demande,
+            campagne,
+            user
+          },
+          "[SUBMIT_INTENTION] Demande soumise sur un établissement non autorisée"
+        );
+        throw Boom.forbidden("Demande soumise sur un établissement non autorisée");
+      }
 
       const sameDemande = await deps.findOneSimilarDemandeQuery({
         ...demande,

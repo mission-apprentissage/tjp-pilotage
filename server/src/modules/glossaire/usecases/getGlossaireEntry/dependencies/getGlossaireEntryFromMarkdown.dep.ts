@@ -1,6 +1,5 @@
 import { notFound } from "@hapi/boom";
 import fs from "fs/promises";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
 import matter from "gray-matter";
 import path from "path";
 import type { GlossaireEntry } from "shared/routes/schemas/get.glossaire.id.schema";

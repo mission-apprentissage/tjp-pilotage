@@ -1,12 +1,11 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type { submitDemandeAccessLogSchema } from "shared/routes/schemas/post.demande.access.submit.schema";
 import type { z } from "zod";
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
 import { updateDemandeWithHistory } from "@/modules/demandes/repositories/updateDemandeWithHistory.query";
+import { inject } from "@/utils/inject";
 
 import { createDemandeAccessLog } from "./deps/createDemandeAccessLog.dep";
 

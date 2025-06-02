@@ -1,5 +1,4 @@
 import { renderFile } from "ejs";
-import { inject } from "injecti";
 import { omit } from "lodash-es";
 import mjml from "mjml";
 import { createTransport } from "nodemailer";
@@ -9,6 +8,7 @@ import path from "path";
 
 import config from "@/config";
 import { getStaticDirPath } from "@/utils/getStaticFilePath";
+import { inject } from "@/utils/inject";
 
 export type TemplatePayloads = {
   reset_password: {

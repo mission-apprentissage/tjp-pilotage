@@ -1,10 +1,9 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type { Insertable, Selectable } from "kysely";
 import { DateTime } from "luxon";
 
 import type { DB } from "@/db/db";
 import type { LyceesACCELine } from "@/modules/import/fileTypes/LyceesACCELine";
+import { inject } from "@/utils/inject";
 
 import { createEtablissement } from "./createEtablissement.dep";
 import { findDepartement } from "./findDepartement.dep";

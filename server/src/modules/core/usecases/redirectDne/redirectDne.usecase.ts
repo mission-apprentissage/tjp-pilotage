@@ -1,175 +1,22 @@
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat.js";
-import { inject } from "injecti";
 /* eslint-disable-next-line import/default */
 import jwt from "jsonwebtoken";
-import { flatten, uniq } from "lodash-es";
-import type { UserinfoResponse } from "openid-client";
 import type { Role } from 'shared';
 import { RoleEnum } from 'shared';
 import { DneSSOErrorsEnum } from "shared/enum/dneSSOErrorsEnum";
-import type { DneSSOInfoType } from "shared/enum/dneSSOInfoEnum";
-import type { SupportedLDAPGroups } from "shared/security/sso";
-import { LDAP_GROUP_ROLES_DNE_CORRESPONDANCE, ROLE_DNE_ROLE_ORION_CORRESPONDANCE,RoleDNEEnum } from "shared/security/sso";
 
 import config from "@/config";
 import { getDneClient } from "@/modules/core/services/dneClient/dneClient";
 import logger from "@/services/logger";
+import { inject } from "@/utils/inject";
 
 import { createUserInDB } from "./createUser.dep";
 import { findEtablissement } from "./findEtablissement.dep";
 import { findRegionFromAcademie } from "./findRegionFromAcademie.dep";
 import { findUserQuery } from "./findUserQuery.dep";
+import type { ExtraUserInfo, TUserEtablissement } from "./types";
+import { generateUserCommunication, getUserRoleAttributes } from "./utils";
 
-// eslint-disable-next-line import/no-named-as-default-member
-dayjs.extend(customParseFormat);
 
-type ExtraUserInfo = {
-  FrEduFonctAdm?: string;
-  FrEduRne?: Array<string>;
-  FrEduResDel?: Array<string>;
-  FrEduRneResp?: Array<string>;
-  // Liste des groupes LDAP auxquels l'utilisateur est rattaché
-  ctgrps?: Array<string>;
-  // Titre de fonction de l'utilisateur
-  title?: string;
-  // Nécessaire à l'identification du DASEN
-  FrEduGestResp?: Array<string>;
-  // Code région académique
-  codaca?:string;
-};
-
-type TUserEtablissement = {
-  codeRegion: string | null;
-  uai: string;
-} | undefined
-
-interface UserCommunicationArguments {
-  passwordDeleted: boolean;
-  userCreated: boolean;
-}
-
-const generateUserCommunication =
-  ({ userCreated, passwordDeleted }: UserCommunicationArguments): Array<DneSSOInfoType> => {
-    const userCommunication: Array<DneSSOInfoType> = [];
-
-    if (userCreated) {
-      userCommunication.push("USER_CREATED");
-    }
-
-    if (passwordDeleted) {
-      userCommunication.push("USER_SWITCHED");
-    }
-
-    return userCommunication;
-  };
-
-const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
-  const uais: Array<string> = [];
-  const perdirOnUais = userInfo.FrEduRne?.map((item) => item.split("$")[0]) ?? [];
-
-  if (userInfo.FrEduFonctAdm === "DIR") {
-    if (perdirOnUais.length > 0) {
-      uais.push(...perdirOnUais);
-    }
-  }
-
-  if (perdirOnUais?.length > 0) {
-    /**
-     * Format des délégations : <nom appli>|<nom ressource>|<date debut>|<date fin>|<delegant>|<fredurneresp>|<id serveur>|<fonction deleguee>|
-     * Les délégations ici présentes sont forcément des perdir puisque c'est spécifié dans le scope de demande
-     * openId.
-     * Il est aussi nécessaire de dé-dupliquer les entrées puisqu'elles peuvent correspondre à d'anciennes
-     * délégations.
-     * frEduRneResp est au format suivant : FrEduRneResp=UAI$UAJ$PU$N$T3$LP$320
-     **/
-    const delegations = uniq(
-      flatten(
-        // @ts-expect-error TODO
-        userInfo?.FrEduResDel?.map((del) => {
-          const frEduRneResp = del.split("|")[5];
-          const startDate = dayjs(del.split("|")[2], "DD/MM/YYYY");
-          const endDate = dayjs(del.split("|")[3], "DD/MM/YYYY");
-          const now = dayjs();
-
-          if (startDate.isBefore(now) && endDate.isAfter(now)) {
-            const frEduRnes = frEduRneResp.replace("FrEduRneResp=", "");
-            return frEduRnes.split(";").map((frEduRne) => frEduRne.split("$")[0]);
-          }
-        })
-      ).filter((del) => {
-        return del !== undefined;
-      }) as unknown as Array<string>
-    );
-
-    if (delegations.length > 0) {
-      uais.push(...delegations);
-    }
-  }
-  return uais;
-};
-
-const extractRoleFromLDAPGroups = (groups: Array<string>): Role | undefined => {
-  const orionGroups = groups.filter((group) => group.startsWith("GRP_ORION"));
-
-  if (orionGroups.length === 0) {
-    return;
-  }
-
-  const roles = orionGroups.map((group) => {
-    const roleDne = LDAP_GROUP_ROLES_DNE_CORRESPONDANCE[group as SupportedLDAPGroups];
-    return ROLE_DNE_ROLE_ORION_CORRESPONDANCE[roleDne];
-  });
-
-  return roles.find((role) => role !== undefined);
-};
-
-const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
-  // Autres
-  if (userInfo.ctgrps) {
-    const role = extractRoleFromLDAPGroups(userInfo.ctgrps);
-
-    if (role) {
-      return {
-        role,
-        uais: []
-      };
-    }
-  }
-
-  // DASEN
-  // Voir fiche polhab page 8
-  if (userInfo.FrEduGestResp?.some(s => s.endsWith("805$ORIONINSERJEUNES"))) {
-    return {
-      role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["DASEN"],
-      uais: []
-    };
-  }
-
-  // Inspecteurs
-  if (userInfo.title === RoleDNEEnum.INS) {
-    return {
-      role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["INS"],
-      uais: []
-    };
-  }
-
-  // Perdir
-  if (userInfo.FrEduFonctAdm === "DIR" || userInfo.FrEduResDel) {
-    const uais = extractUaisRep(userInfo);
-
-    if (uais.length > 0) {
-      return {
-        role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE["PERDIR"],
-        uais,
-      };
-    } else {
-      throw new Error(DneSSOErrorsEnum.MISSING_RIGHTS_PERDIR);
-    }
-  }
-
-  return undefined;
-};
 
 const decodeCodeVerifierJwt = (token: string, secret: string) => {
   try {
@@ -270,7 +117,7 @@ export const [redirectDne, redirectDneFactory] = inject(
       );
 
       let etablissement: TUserEtablissement = undefined;
-      if (attributes.role === RoleEnum.perdir && attributes.uais.length > 0) {
+      if (attributes.role === RoleEnum.perdir && attributes.uais && attributes.uais.length > 0) {
         etablissement = attributes.uais && (await deps.findEtablissement({ uais: attributes.uais }));
       }
 
@@ -346,7 +193,9 @@ export const [redirectDne, redirectDneFactory] = inject(
         password: null,
         ...attributes,
         // On garde par défaut le role de l'utilisateur s'il existe déjà en base de données
-        role: user ? user.role : attributes.role as Role,
+        role: (user && user.role) ? user.role : attributes.role as Role,
+        // On garde par défaut la fonction de l'utilisateur s'il existe déjà en base de données
+        fonction: (user && user.fonction) ? user.fonction : (attributes.fonction ?? null)
       };
 
       await deps.createUserInDB({ user: userToInsert });

@@ -1,7 +1,7 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import type { GetHeaderEtablissementType } from "shared/routes/schemas/get.etablissement.uai.header.schema";
+
+import { inject } from "@/utils/inject";
 
 import { getEtablissement, getIndicateurs, getInformations, getNsfs } from "./dependencies";
 

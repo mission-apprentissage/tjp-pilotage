@@ -1,6 +1,7 @@
 import type { BoxProps } from "@chakra-ui/react";
 import {Badge, chakra} from '@chakra-ui/react';
 import type { VoieType } from "shared";
+import { VoieEnum  } from "shared";
 
 export const BadgeVoieApprentissage = chakra(({
   voie,
@@ -13,7 +14,7 @@ export const BadgeVoieApprentissage = chakra(({
   size: "xs" | "sm" | "md" | "lg";
   props?: BoxProps
 }) => {
-  if (!voie || voie !== "apprentissage") {
+  if (!voie || voie !== VoieEnum.apprentissage) {
     return null;
   }
 

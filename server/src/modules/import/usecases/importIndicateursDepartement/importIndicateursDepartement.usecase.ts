@@ -1,7 +1,5 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
-
 import { rawDataRepository } from "@/modules/import/repositories/rawData.repository";
+import { inject } from "@/utils/inject";
 
 import { findDepartementsQuery } from "./findDepartementsQuery.dep";
 import { upsertDepartementQuery } from "./upsertIndicateurDepartementQuery.dep";
