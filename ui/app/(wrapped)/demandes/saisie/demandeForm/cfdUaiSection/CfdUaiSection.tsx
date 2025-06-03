@@ -144,15 +144,16 @@ export const CfdUaiSection = ({
         <DispositifBlock options={dispositifs} disabled={disabled || !active} />
         <LibelleFCILField shouldDisplay={isFCIL} disabled={disabled || !active} />
         <Flex direction={"row"} justify={"space-between"}>
-          <Flex direction="column" w="100%" maxW="752px">
-            <Box mb="auto" w="100%" maxW="752px">
+          <Flex direction="column" w="100%" maxW="752px" gap={4}>
+            <Box w="100%" maxW="752px">
               <UaiBlock formMetadata={formMetadata} disabled={disabled || !active} setUaiInfo={setUaiInfo} />
             </Box>
-            <Flex minH={16} mt={"auto"} align="flex-end" justify={"space-between"}>
+            <Flex minH={16} align="flex-end" justify={"space-between"}>
               {!disabled && (
                 <Button
                   visibility={active ? "collapse" : "visible"}
-                  mr="auto"
+                  ms="auto"
+                  mb="auto"
                   aria-label="Editer"
                   onClick={onEditUaiCfdSection}
                   leftIcon={<EditIcon />}

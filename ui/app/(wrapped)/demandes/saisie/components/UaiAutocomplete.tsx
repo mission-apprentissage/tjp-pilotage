@@ -35,8 +35,8 @@ export const UaiAutocomplete = ({
   const searchEtablissement = _.debounce((inputValue: string, callback: (options: Etablissements) => void) => {
     if (inputValue.length >= 3 || isPerdir) {
       client
-        .ref("[GET]/etablissement/perdir/search/:search")
-        .query({ params: { search: inputValue }, query: {} })
+        .ref("[GET]/etablissement/search/:search")
+        .query({ params: { search: inputValue, isForm: true }, query: {} })
         .then(options => callback(options));
     }
   }, 300);
@@ -58,7 +58,7 @@ export const UaiAutocomplete = ({
         defaultValue &&
         ({
           ...defaultValue,
-        } as (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][0])
+        } as (typeof client.infer)["[GET]/etablissement/search/:search"][0])
       }
       defaultOptions={isPerdir}
       loadOptions={searchEtablissement}
