@@ -50,7 +50,7 @@ export const GROUPED_CORRECTIONS_COLUMNS: Record<
     color: "#C3FAD5",
     cellColor: "#E3FDEB",
     options: {
-      libelleColoration: "Libellé coloration",
+      libelleColoration: "Libellé(s) coloration(s)",
       commentaire: "Commentaire",
       demandeNumero: "N° demande",
       createdAt: "Date de création",
@@ -126,7 +126,7 @@ export const GROUPED_CORRECTIONS_COLUMNS_OPTIONAL: Record<
   ["demande"]: {
     color: "#C3FAD5",
     options: {
-      libelleColoration: "Libellé coloration",
+      libelleColoration: "Libellé(s) coloration(s)",
       commentaire: "Commentaire",
       demandeNumero: "N° demande",
       createdAt: "Date de création",

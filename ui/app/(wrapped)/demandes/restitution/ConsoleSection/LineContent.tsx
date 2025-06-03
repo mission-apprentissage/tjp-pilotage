@@ -14,7 +14,7 @@ import { getTypeDemandeLabel } from "@/app/(wrapped)/demandes/utils/typeDemandeU
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
-import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
+import {formatCommuneLibelleWithCodeDepartement, formatLibellesColoration} from '@/utils/formatLibelle';
 import {formatNumber,formatNumberToMonetaryString, formatNumberToString, formatPercentageFixedDigits} from '@/utils/formatUtils';
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -234,7 +234,7 @@ export const LineContent = ({
         maxW={300}
         bgColor={getCellColor("libelleColoration")}
       >
-        {demande.libelleColoration}
+        {formatLibellesColoration(demande)}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

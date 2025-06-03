@@ -15,7 +15,8 @@ export const submitDemandeSchema = {
       rentreeScolaire: z.coerce.number(),
       typeDemande: DemandeTypeZodType,
       coloration: z.boolean(),
-      libelleColoration: z.string().optional(),
+      libelleColoration1: z.string().optional(),
+      libelleColoration2: z.string().optional(),
       // Capacité
       mixte: z.boolean().optional(),
       capaciteScolaireActuelle: z.coerce.number().optional(),

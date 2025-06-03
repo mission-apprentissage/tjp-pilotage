@@ -14,7 +14,7 @@ export type Avis = Exclude<Aviss, typeof undefined>[number];
 
 export type Disciplines = (typeof client.infer)["[GET]/discipline/search/:search"];
 export type Discipline = Disciplines[number];
-export type Etablissements = (typeof client.infer)["[GET]/etablissement/perdir/search/:search"];
+export type Etablissements = (typeof client.infer)["[GET]/etablissement/search/:search"];
 export type Etablissement = Etablissements[number];
 export type Formations = (typeof client.infer)["[GET]/diplome/search/:search"];
 export type Formation = Formations[number];

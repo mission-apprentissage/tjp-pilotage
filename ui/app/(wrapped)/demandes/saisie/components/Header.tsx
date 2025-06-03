@@ -20,6 +20,7 @@ import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { feature } from "@/utils/feature";
 import { formatExportFilename } from "@/utils/formatExportFilename";
+import {formatLibellesColoration} from '@/utils/formatLibelle';
 import { useAuth } from '@/utils/security/useAuth';
 
 export const Header = ({
@@ -84,6 +85,7 @@ export const Header = ({
       [
         ...data.demandes.map((demande) => ({
           ...demande,
+          libelleColoration: formatLibellesColoration(demande),
           ...demande.avis.reduce(
             (acc, current, index) => {
               acc[`avis${index}`] = [
@@ -111,6 +113,7 @@ export const Header = ({
       [
         ...data.demandes.map((demande) => ({
           ...demande,
+          libelleColoration: formatLibellesColoration(demande),
           ...demande.avis.reduce(
             (acc, current, index) => {
               acc[`avis${index}`] = [

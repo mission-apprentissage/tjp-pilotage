@@ -18,7 +18,7 @@ import { getRaisonCorrectionLabelParAnneeCampagne } from "@/app/(wrapped)/demand
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
-import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
+import {formatCommuneLibelleWithCodeDepartement, formatLibellesColoration} from '@/utils/formatLibelle';
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -288,7 +288,7 @@ export const LineContent = ({
         maxW={300}
         bgColor={getCellColor("libelleColoration")}
       >
-        {correction.libelleColoration}
+        {formatLibellesColoration(correction)}
       </ConditionalTd>
       <ConditionalTd colonneFilters={colonneFilters} colonne={"commentaire"} bgColor={getCellColor("commentaire")}>
         {correction.commentaire}
