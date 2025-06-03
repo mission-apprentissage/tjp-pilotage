@@ -90,6 +90,7 @@ export const up = async (db: Kysely<unknown>) => {
       getKbdClient()
         // @ts-ignore
         .selectFrom("intention")
+        // @ts-ignore
         .select([
           "numero",
           "cfd",
@@ -162,8 +163,11 @@ export const up = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
         .union(
+          // @ts-ignore
           getKbdClient()
+            // @ts-ignore
             .selectFrom("demande")
+            // @ts-ignore
             .select([
               "numero",
               "cfd",
@@ -403,6 +407,7 @@ export const down = async (db: Kysely<unknown>) => {
       getKbdClient()
         // @ts-ignore
         .selectFrom("intention")
+      // @ts-ignore
         .select([
           "numero",
           "cfd",
@@ -474,8 +479,11 @@ export const down = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
         .union(
+          // @ts-ignore
           getKbdClient()
+            // @ts-ignore
             .selectFrom("demande")
+            // @ts-ignore
             .select([
               "numero",
               "cfd",

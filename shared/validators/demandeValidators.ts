@@ -21,10 +21,10 @@ export const demandeValidators = {
     return undefined;
   },
   libelleColoration: (demande) => {
-    if (demande.coloration && !demande.libelleColoration) {
+    if (demande.coloration && !demande.libelleColoration1) {
       return "Le champ 'libellé coloration' est obligatoire";
     }
-    if (!demande.coloration && demande.libelleColoration) {
+    if (!demande.coloration && demande.libelleColoration1) {
       return "Le champ 'libellé coloration' doit être vide";
     }
     return undefined;

@@ -29,7 +29,7 @@ import { getDneUrlSchema } from "./schemas/get.dne_url.schema";
 import { getDomaineDeFormationCodeNsfSchema } from "./schemas/get.domaine-de-formation.codeNsf.schema";
 import { getDomaineDeFormationSchema } from "./schemas/get.domaine-de-formation.schema";
 import { searchDomaineProfessionnelSchema } from "./schemas/get.domaine-professionnel.search.search.schema";
-import { searchEtablissementSchema } from "./schemas/get.etablissement.search.search.schema";
+import { searchEtablissementSchema } from "./schemas/get.etablissement.search.schema";
 import { getAnalyseDetailleeEtablissementSchema } from "./schemas/get.etablissement.uai.analyse-detaillee.schema";
 import { getHeaderEtablissementSchema } from "./schemas/get.etablissement.uai.header.schema";
 import { getDataForEtablissementMapListSchema } from "./schemas/get.etablissement.uai.map.list.schema";

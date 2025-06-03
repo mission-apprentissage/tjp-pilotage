@@ -22,7 +22,7 @@ export const CORRECTIONS_COLUMNS = {
   libelleDispositif: "Dispositif",
   niveauDiplome: "Diplôme",
   // Demande
-  libelleColoration: "Libellé coloration",
+  libelleColoration: "Libellé(s) coloration(s)",
   commentaire: "Commentaire",
   demandeNumero: "N° demande",
   createdAt: "Date de création",
@@ -44,6 +44,7 @@ export const CORRECTIONS_COLUMNS = {
   nbEtablissement: "Nombre d'établissements",
 } satisfies ExportColumns<(typeof client.infer)["[GET]/corrections"]["corrections"][number]> & {
   formationSpecifique: string;
+  libelleColoration: string;
 };
 
 export const CORRECTIONS_COLUMNS_OPTIONAL: Partial<typeof CORRECTIONS_COLUMNS> = {
@@ -63,7 +64,7 @@ export const CORRECTIONS_COLUMNS_OPTIONAL: Partial<typeof CORRECTIONS_COLUMNS> =
   libelleDispositif: "Dispositif",
   niveauDiplome: "Diplôme",
   // Demande
-  libelleColoration: "Libellé coloration",
+  libelleColoration: "Libellé(s) coloration(s)",
   commentaire: "Commentaire",
   demandeNumero: "N° demande",
   createdAt: "Date de création",

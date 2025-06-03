@@ -65,12 +65,12 @@ describe("shared > validators > demandeValidators", () => {
   describe("Validation du 'libelleColoration'", () => {
     describe("Si la 'coloration' a true", () => {
       it("Doit remonter une erreur si le 'libelleColoration' n'est pas renseigné", () => {
-        const demande = createDemande({ coloration: true, libelleColoration: undefined });
+        const demande = createDemande({ coloration: true, libelleColoration1: undefined });
         expect(demandeValidators.libelleColoration(demande)).toBe("Le champ 'libellé coloration' est obligatoire");
       });
 
       it("Ne doit pas remonter d'erreur si le 'libelleColoration' est renseigné", () => {
-        const demandeWithLibelleColoration = createDemande({ coloration: true, libelleColoration: "test" });
+        const demandeWithLibelleColoration = createDemande({ coloration: true, libelleColoration1: "test" });
         expect(
           demandeValidators.libelleColoration(demandeWithLibelleColoration)
         ).toBeUndefined();
@@ -79,12 +79,12 @@ describe("shared > validators > demandeValidators", () => {
 
     describe("Si la 'coloration' à false", () => {
       it("Doit remonter une erreur si le 'libelleColoration' est renseigné", () => {
-        const demande = createDemande({ coloration: false, libelleColoration: "test" });
+        const demande = createDemande({ coloration: false, libelleColoration1: "test" });
         expect(demandeValidators.libelleColoration(demande)).toBe("Le champ 'libellé coloration' doit être vide");
       });
 
       it("Ne doit pas remonter d'erreur si le 'libelleColoration' n'est pas renseigné", () => {
-        const demande = createDemande({ coloration: false, libelleColoration: undefined });
+        const demande = createDemande({ coloration: false, libelleColoration1: undefined });
         expect(demandeValidators.libelleColoration(demande)).toBeUndefined();
       });
     });

@@ -148,7 +148,8 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
 
       const demandeData = {
         ...currentDemande,
-        libelleColoration: null,
+        libelleColoration1: null,
+        libelleColoration2: null,
         libelleFCIL: null,
         autreMotif: null,
         commentaire: null,
