@@ -8,10 +8,12 @@ import { cleanNull } from "@/utils/noNull";
 
 export const searchEtablissementQuery = async ({
   search,
+  isForm = false,
   filtered,
   codeRegion,
 }: {
   search: string;
+  isForm?: boolean;
   filtered?: boolean;
   codeRegion?: string;
 }) => {
@@ -23,7 +25,6 @@ export const searchEtablissementQuery = async ({
     .distinct()
     .where((eb) =>
       eb.and([
-        eb("dataEtablissement.typeUai", "in", ["CLG", "EREA", "EXP", "LP", "LYC", "SEP", "TSGE"]),
         eb.or([
           eb("dataEtablissement.uai", "ilike", `${search}%`),
           eb.and(
@@ -39,6 +40,10 @@ export const searchEtablissementQuery = async ({
         ]),
       ])
     )
+    .$call((q) => {
+      if(isForm) return q.where("dataEtablissement.typeUai", "in", ["CLG", "EREA", "LP", "LYC"]);
+      return q.where("dataEtablissement.typeUai", "in", ["CLG", "EREA", "EXP", "LP", "LYC", "SEP", "TSGE"]);
+    })
     .$call((q) => {
       if (!codeRegion) return q;
       return q.where("dataEtablissement.codeRegion", "=", codeRegion);

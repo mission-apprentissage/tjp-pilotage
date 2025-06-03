@@ -1,8 +1,9 @@
 import { z } from "zod";
 
-export const searchEtablissementPerdirSchema = {
+export const searchEtablissementSchema = {
   params: z.object({
-    search: z.string().optional(),
+    search: z.string(),
+    isForm: z.boolean().optional(),
   }),
   querystring: z.object({
     filtered: z.coerce.boolean().optional(),
