@@ -9,7 +9,7 @@ export const BadgeFermeture = chakra(({
 }: {
   dateFermeture?: string;
   labelSize?: "short" | "long";
-  size: "xs" | "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   props?: BoxProps
 }) => {
   if (!dateFermeture) {

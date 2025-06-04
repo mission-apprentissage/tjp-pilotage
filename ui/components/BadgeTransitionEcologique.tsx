@@ -16,7 +16,7 @@ export const BadgeTransitionEcologique = chakra(({
   isFormationTransitionEcologique?: boolean;
   withIcon?: boolean;
   labelSize?: "short" | "long";
-  size: "xs" | "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   openGlossaire?: (key: GlossaireEntryKey) => void;
   props?: BadgeProps;
 }) => {

@@ -44,7 +44,7 @@ export const BadgeTypeFamille = chakra(({
 }: {
   typeFamille?: TypeFamilleKeys;
   labelSize?: "short" | "long";
-  size: "xs" | "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   props?: BadgeProps;
 }) => {
   if (!typeFamille) {
