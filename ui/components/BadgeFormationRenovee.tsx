@@ -9,7 +9,7 @@ export const BadgeFormationRenovee = chakra(({
 }: {
   isFormationRenovee?: boolean;
   labelSize?: "short" | "long";
-  size: "xs" | "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   props?: BadgeProps
 }) => {
   if (!isFormationRenovee) {

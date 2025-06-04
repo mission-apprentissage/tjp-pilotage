@@ -24,7 +24,7 @@ const BadgeFormationSpecifique = chakra(
     typeFormationSpecifique: TypeFormationSpecifiqueType;
     withIcon?: boolean;
     labelSize?: "short" | "long";
-    size: "xs" | "sm" | "md" | "lg";
+    size?: "xs" | "sm" | "md" | "lg";
     openGlossaire: (key: GlossaireEntryKey) => void;
     props?: BadgeProps;
   }) => {
