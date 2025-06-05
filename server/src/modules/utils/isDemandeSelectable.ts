@@ -60,6 +60,13 @@ export const isDemandeSelectable =
       ]);
     };
 
+export const isDemandeRegionVisible =
+  ({ user }: { user: RequestUser }) =>
+    (eb: ExpressionBuilder<DB, "region">) => {
+      const filters = getDemandeSelectableFilters(user);
+      return eb.and([filters.codeRegion ? eb("region.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`]);
+    };
+
 const getDemandeSelectableFilters = (user?: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">) => {
   if (!user) throw new Error("missing variable user");
   const scope = getPermissionScope(user?.role, PermissionEnum["demande/lecture"]);
