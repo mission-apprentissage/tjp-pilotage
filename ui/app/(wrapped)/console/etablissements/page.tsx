@@ -14,12 +14,14 @@ import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/component
 import { CodeDepartementContext } from '@/app/codeDepartementContext';
 import { CodeRegionContext } from '@/app/codeRegionContext';
 import { UaisContext } from '@/app/uaiContext';
+import { formatTypeFamilleLong } from '@/components/BadgeTypeFamille';
 import { ConsoleSearchInput } from "@/components/ConsoleSearchInput";
 import { GroupedMultiselect } from "@/components/GroupedMultiselect";
 import { TableHeader } from "@/components/TableHeader";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
+import {formatLibelleFormationWithoutTags} from '@/utils/formatLibelle';
 import { formatArray } from "@/utils/formatUtils";
 import { useAuth } from '@/utils/security/useAuth';
 
@@ -209,6 +211,11 @@ const Page = () => {
         }
         : {}),
       actionPrioritaire: etablissement.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
+      libelleFormation: formatLibelleFormationWithoutTags(etablissement),
+      typeFamille: formatTypeFamilleLong(etablissement.typeFamille),
+      isFormationRenovee: etablissement.isFormationRenovee,
+      isHistorique: !!etablissement.formationRenovee,
+      isHistoriqueCoExistant: etablissement.isHistoriqueCoExistant,
     }));
 
     return {

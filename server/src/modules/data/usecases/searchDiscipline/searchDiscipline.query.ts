@@ -1,7 +1,7 @@
 import { sql } from "kysely";
 
 import { getKbdClient } from "@/db/db";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const searchDisciplineQuery = async ({ search }: { search: string }) => {

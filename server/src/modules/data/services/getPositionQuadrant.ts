@@ -1,6 +1,7 @@
 import type {OrderType} from 'shared/enum/orderEnum';
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
-import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
+import { TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
 
 export const UNDEFINED_QUADRANT = "-";
@@ -9,7 +10,7 @@ export const getPositionQuadrant = (
   formation: {
     tauxInsertion?: number;
     tauxPoursuite?: number;
-    typeFamille?: string;
+    typeFamille?: TypeFamille;
   },
   moyenne?: {
     tauxInsertion?: number;

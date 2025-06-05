@@ -2,7 +2,7 @@ import { sql } from "kysely";
 import type { OptionType } from "shared/schema/optionSchema";
 
 import { getKbdClient } from "@/db/db";
-import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearch } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const findDomaineProfessionnelQuery = async ({ search, limit = 100 }: { search: string; limit?: number }) => {
