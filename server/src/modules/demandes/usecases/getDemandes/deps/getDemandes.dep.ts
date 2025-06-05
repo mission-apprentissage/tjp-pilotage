@@ -1,8 +1,8 @@
 import { sql } from "kysely";
 import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
-import type { DemandeStatutTypeWithoutSupprimee} from 'shared/enum/demandeStatutEnum';
-import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
-import type {TypeDemandeType} from 'shared/enum/demandeTypeEnum';
+import type { DemandeStatutTypeWithoutSupprimee } from 'shared/enum/demandeStatutEnum';
+import { DemandeStatutEnum } from 'shared/enum/demandeStatutEnum';
+import type { TypeDemandeType } from 'shared/enum/demandeTypeEnum';
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -10,7 +10,7 @@ import type { Filters } from "@/modules/demandes/usecases/getDemandes/getDemande
 import { isAvisVisible } from "@/modules/utils/isAvisVisible";
 import { isDemandeCampagneEnCours } from "@/modules/utils/isDemandeCampagneEnCours";
 import { isDemandeBrouillonVisible, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 

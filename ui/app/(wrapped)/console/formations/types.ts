@@ -9,7 +9,7 @@ export type Order = Pick<Query, "order" | "orderBy">;
 export type Formations = (typeof client.infer)["[GET]/formations"];
 export type FiltersList = Formations["filters"];
 
-export type Line = (typeof client.infer)["[GET]/formations"]["formations"][number];
+export type Formation = (typeof client.infer)["[GET]/formations"]["formations"][number];
 
 export type LineId = {
   codeDispositif?: string;

@@ -4,9 +4,9 @@ import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
-import { formatTaux } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import { formatPercentageWithoutSign} from '@/utils/formatUtils';
 
 const getCompareData = ({
   tauxRemplissage,
@@ -22,7 +22,7 @@ const getCompareData = ({
         <Flex>
           <Img src={"/icons/arrow_up.svg"} alt="Icône tendance à la hausse" />
           <Text fontWeight={"bold"} color="success.425">
-            {`+${formatTaux(tauxRemplissage - tauxRemplissageAnneePrecedente)}`}
+            {`+${formatPercentageWithoutSign(tauxRemplissage - tauxRemplissageAnneePrecedente)}`}
           </Text>
         </Flex>
       </Tooltip>
@@ -33,7 +33,7 @@ const getCompareData = ({
         <Flex>
           <Img src={"/icons/arrow_down.svg"} alt="Icône tendance à la baisse" />
           <Text fontWeight={"bold"} color="warning.525">
-            {`${formatTaux(tauxRemplissage - tauxRemplissageAnneePrecedente)}`}
+            {`${formatPercentageWithoutSign(tauxRemplissage - tauxRemplissageAnneePrecedente)}`}
           </Text>
         </Flex>
       </Tooltip>
@@ -77,7 +77,7 @@ export const TauxRemplissage = ({
       }
     >
       <CounterChart
-        data={typeof tauxRemplissage === "undefined" ? undefined : formatTaux(tauxRemplissage)}
+        data={typeof tauxRemplissage === "undefined" ? undefined : formatPercentageWithoutSign(tauxRemplissage)}
         compareData={getCompareData({
           tauxRemplissage,
           tauxRemplissageAnneePrecedente,
