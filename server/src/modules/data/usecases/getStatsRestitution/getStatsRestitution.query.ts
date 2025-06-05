@@ -22,7 +22,7 @@ import {
   countPlacesTransformeesApprentissage,
   countPlacesTransformeesScolaire,
 } from "@/modules/utils/countCapacite";
-import { isRestitutionDemandeVisible } from "@/modules/utils/isRestitutionDemandeVisible";
+import { isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
 import { cleanNull } from "@/utils/noNull";
 
@@ -264,7 +264,7 @@ export const getStatsRestitutionQuery = async ({
       }
       return q;
     })
-    .where(isRestitutionDemandeVisible({ user }))
+    .where(isDemandeSelectable({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);
 
