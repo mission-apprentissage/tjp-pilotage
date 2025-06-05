@@ -22,10 +22,9 @@ import { selectTauxPression, selectTauxPressionParFormationEtParRegionDemande } 
 import { selectTauxRemplissage } from "@/modules/data/utils/tauxRemplissage";
 import { countDifferenceCapaciteApprentissage, countDifferenceCapaciteApprentissageColoree, countDifferenceCapaciteScolaire, countDifferenceCapaciteScolaireColoree, countPlacesColorees, countPlacesColoreesFermeesApprentissage, countPlacesColoreesFermeesScolaire, countPlacesColoreesOuvertesApprentissage, countPlacesColoreesOuvertesScolaire, countPlacesFermeesApprentissage, countPlacesFermeesScolaire, countPlacesOuvertesApprentissage, countPlacesOuvertesScolaire } from '@/modules/utils/countCapacite';
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
-import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
+import {isDemandeBrouillonVisible,isDemandeNotDeleted, isDemandeSelectable} from '@/modules/utils/isDemandeSelectable';
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
 import { isFormationRenovee } from '@/modules/utils/isFormationRenovee';
-import { isRestitutionDemandeVisible } from "@/modules/utils/isRestitutionDemandeVisible";
 import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
@@ -333,7 +332,8 @@ export const getDemandesRestitutionQuery = async ({
       return q.orderBy(sql`${sql.ref(orderBy)}`, sql`${sql.raw(order)} NULLS LAST`);
     })
     .where(isDemandeNotDeleted)
-    .where(isRestitutionDemandeVisible({ user }))
+    .where(isDemandeSelectable({ user }))
+    .where(isDemandeBrouillonVisible({ user }))
     .offset(offset)
     .limit(limit)
     .execute()
