@@ -8,12 +8,12 @@ import { cleanNull } from "@/utils/noNull";
 
 export const searchEtablissementQuery = async ({
   search,
-  isForm = false,
+  isFormulaire = false,
   filtered,
   codeRegion,
 }: {
   search: string;
-  isForm?: boolean;
+  isFormulaire?: boolean;
   filtered?: boolean;
   codeRegion?: string;
 }) => {
@@ -41,7 +41,7 @@ export const searchEtablissementQuery = async ({
       ])
     )
     .$call((q) => {
-      if(isForm) return q.where("dataEtablissement.typeUai", "in", ["CLG", "EREA", "LP", "LYC"]);
+      if(isFormulaire) return q.where("dataEtablissement.typeUai", "in", ["CLG", "EREA", "LP", "LYC"]);
       return q.where("dataEtablissement.typeUai", "in", ["CLG", "EREA", "EXP", "LP", "LYC", "SEP", "TSGE"]);
     })
     .$call((q) => {

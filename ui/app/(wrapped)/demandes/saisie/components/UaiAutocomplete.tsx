@@ -36,7 +36,7 @@ export const UaiAutocomplete = ({
     if (inputValue.length >= 3 || isPerdir) {
       client
         .ref("[GET]/etablissement/search/:search")
-        .query({ params: { search: inputValue, isForm: true }, query: {} })
+        .query({ params: { search: inputValue }, query: { isFormulaire: true} })
         .then(options => callback(options));
     }
   }, 300);
