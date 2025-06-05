@@ -32,8 +32,8 @@ export const DispositifBlock = ({
   return (
     <LightMode>
       {(cfd && (!options || options?.length === 0)) && (
-        <Alert status="warning" mb="4">
-          Aucun dispositif n'est disponible pour le CFD sélectionné.
+        <Alert bgColor="orangeTerreBattue.850" color="warning.425" mb="4" maxW="752px">
+          Aucun dispositif n'est disponible pour la formation sélectionnée.
           Veuillez contacter un administrateur si vous pensez qu'il s'agit d'une erreur.
         </Alert>
       )}
