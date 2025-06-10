@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 
-import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploio6Mois";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
 import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import type { PanoramaStatsTauxInsertion, PanoramaStatsTauxPoursuite } from "@/app/(wrapped)/panorama/types";
 import { BarGraph } from "@/app/(wrapped)/suivi-impact/components/BarGraph";

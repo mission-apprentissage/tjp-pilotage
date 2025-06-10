@@ -1,7 +1,7 @@
 import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
-import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploio6Mois";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
 import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";

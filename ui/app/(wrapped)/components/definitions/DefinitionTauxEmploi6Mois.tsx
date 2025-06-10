@@ -1,13 +1,18 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Flex,Text} from '@chakra-ui/react';
+import {CURRENT_IJ_MILLESIME} from 'shared';
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import {formatMillesime} from '@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData';
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 const DefinitionTauxEmploi6Mois = ({ label }: { label?: string }) => (
-  <Box>
-    <Text>{ label ?? "Nombre d’élèves en emploi 6 mois après leur sortie d’études / Nombre de sortants (hors ré-inscrits en formation)." }</Text>
-    <Text mt={4}>Cliquez pour plus d'infos.</Text>
-  </Box>
+  <Flex direction="column" gap={4}>
+    <Text>{ label ??
+      `Nombre d’élèves en emploi 6 mois après leur sortie d’études / Nombre de sortants (hors ré-inscrits en formation)
+      (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)}).`
+    }</Text>
+    <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+  </Flex>
 );
 
 

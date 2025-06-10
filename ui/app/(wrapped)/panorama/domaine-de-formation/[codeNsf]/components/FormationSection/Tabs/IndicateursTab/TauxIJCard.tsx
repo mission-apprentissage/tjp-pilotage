@@ -4,7 +4,7 @@ import type { ScopeZone } from "shared";
 import { ScopeEnum } from "shared";
 
 import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
-import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploio6Mois";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
 import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import type { Formation, FormationIndicateurs, TauxIJType } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 import { BadgeScope } from "@/components/BadgeScope";
