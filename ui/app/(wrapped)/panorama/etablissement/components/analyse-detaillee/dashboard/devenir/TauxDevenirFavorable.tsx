@@ -1,4 +1,5 @@
-import { Badge, Box, Text } from "@chakra-ui/react";
+import {Badge, Flex,Text} from '@chakra-ui/react';
+import {CURRENT_IJ_MILLESIME} from 'shared';
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
@@ -42,13 +43,13 @@ export const TauxDevenirFavorable = ({ chiffresIJOffre }: { chiffresIJOffre?: Ch
         <TooltipIcon
           ml="1"
           label={
-            <Box>
+            <Flex direction="column" gap={2}>
               <Text>
                 (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-                dernière année de formation.
+                dernière année de formation (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
               </Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
           onClick={() => openGlossaire("taux-de-devenir-favorable")}
         />

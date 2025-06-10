@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, Img, Text, Tooltip } from "@chakra-ui/react";
+import { Badge, Flex, Img, Text, Tooltip } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
@@ -59,10 +59,10 @@ export const PremiersVoeux = ({
           marginInline={1}
           glossaireEntryKey="voeux"
           tooltip={
-            <Box>
+            <Flex direction="column" gap={2}>
               <Text>{codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? "Nombre de voeux" : "Nombre de 1ers voeux"}</Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
         />
       }

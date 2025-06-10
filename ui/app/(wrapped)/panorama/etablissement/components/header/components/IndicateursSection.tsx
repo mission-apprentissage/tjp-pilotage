@@ -1,4 +1,5 @@
-import { Badge, Box, Flex, GridItem, Heading, Img, Text, Tooltip, useToken } from "@chakra-ui/react";
+import { Badge, Flex, GridItem, Heading, Img, Text, Tooltip, useToken } from "@chakra-ui/react";
+import { CURRENT_IJ_MILLESIME } from "shared";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
@@ -9,6 +10,7 @@ import type {
   Indicateurs,
 } from "@/app/(wrapped)/panorama/etablissement/components/header/types";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+import { formatMillesime } from "@/utils/formatLibelle";
 import { formatNumberToString } from "@/utils/formatUtils";
 
 import { DonneesIncompletes } from "./DonneesIncompletes";
@@ -51,13 +53,13 @@ const IndicateurValeurAjoutee = ({ indicateur }: { indicateur?: Indicateur }) =>
         iconSize={"16px"}
         glossaireEntryKey={"valeur-ajoutee"}
         tooltip={
-          <Box>
+          <Flex direction="column" gap={2}>
             <Text>
               Capacité de l'établissement à insérer, en prenant en compte le profil social des élèves et le taux de
               chômage de la zone d'emploi, comparativement au taux de référence d’établissements similaires.
             </Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
+            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+          </Flex>
         }
       />
     }
@@ -88,10 +90,13 @@ const IndicateurTauxEmploi6mois = ({ indicateur }: { indicateur?: Indicateur }) 
         iconSize={"16px"}
         glossaireEntryKey={"taux-emploi-6-mois"}
         tooltip={
-          <Box>
-            <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
+          <Flex direction="column" gap={2}>
+            <Text>
+              La part de ceux qui sont en emploi 6 mois après leur sortie d’étude
+              (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+            </Text>
+            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+          </Flex>
         }
       />
     }
@@ -121,10 +126,13 @@ const IndicateurPoursuiteDetudes = ({ indicateur }: { indicateur?: Indicateur })
         iconSize={"16px"}
         glossaireEntryKey={"taux-poursuite-etudes"}
         tooltip={
-          <Box>
-            <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
+          <Flex direction="column" gap={2}>
+            <Text>
+              Tout élève inscrit à N+1 (réorientation et redoublement compris)
+              (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+            </Text>
+            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+          </Flex>
         }
       />
     }
@@ -155,13 +163,13 @@ const IndicateurTauxDevenirFavorable = ({ indicateur }: { indicateur?: Indicateu
           iconSize={"16px"}
           glossaireEntryKey={"taux-de-devenir-favorable"}
           tooltip={
-            <Box>
+            <Flex direction="column" gap={2}>
               <Text>
                 (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-                dernière année de formation.
+                dernière année de formation (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
               </Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
         />
       }
@@ -208,10 +216,10 @@ export const IndicateursSection = ({ indicateurs }: { indicateurs?: Indicateurs 
             iconSize={"14px"}
             glossaireEntryKey={"inserjeunes"}
             tooltip={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>Ces chiffres incluent l'apprentissage pour les établissements qui en proposent.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
           />
         </Flex>
@@ -221,13 +229,13 @@ export const IndicateursSection = ({ indicateurs }: { indicateurs?: Indicateurs 
             marginLeft={1}
             glossaireEntryKey={"millesime"}
             tooltip={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>
                   Cohorte d’élèves pour laquelle les indicateurs InserJeunes ont été mesurés systématiquement sur 2
                   années scolaires cumulées.
                 </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
           />
         </Badge>

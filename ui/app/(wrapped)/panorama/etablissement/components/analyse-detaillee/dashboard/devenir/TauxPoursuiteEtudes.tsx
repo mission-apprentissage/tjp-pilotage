@@ -1,4 +1,5 @@
-import { Badge, Box, Text } from "@chakra-ui/react";
+import { Badge, Flex, Text } from "@chakra-ui/react";
+import {CURRENT_IJ_MILLESIME} from 'shared';
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
@@ -41,10 +42,13 @@ export const TauxPoursuiteEtudes = ({ chiffresIJOffre }: { chiffresIJOffre?: Chi
         <TooltipIcon
           ml="1"
           label={
-            <Box>
-              <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
+            <Flex direction="column" gap={2}>
+              <Text>
+                Tout élève inscrit à N+1 (réorientation et redoublement compris)
+                (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+              </Text>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
           onClick={() => openGlossaire("taux-poursuite-etudes")}
         />

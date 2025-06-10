@@ -1,7 +1,9 @@
-import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { formatMillesime } from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -96,13 +98,14 @@ export const TableQuadrant = ({
                 <TooltipIcon
                   ml="1"
                   label={
-                    <Box>
+                    <Flex direction="column" gap={2}>
                       <Text>
-                        Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.
+                        Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional
+                        (RS {CURRENT_RENTREE}).
                       </Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
+                      <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
                       <TauxPressionScale />
-                    </Box>
+                    </Flex>
                   }
                   onClick={() => openGlossaire("taux-de-pression")}
                 />
@@ -120,10 +123,13 @@ export const TableQuadrant = ({
                 <TooltipIcon
                   ml="1"
                   label={
-                    <Box>
-                      <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
-                    </Box>
+                    <Flex direction="column" gap={2}>
+                      <Text>
+                        La part de ceux qui sont en emploi 6 mois après leur sortie d’étude
+                        (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+                      </Text>
+                      <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                    </Flex>
                   }
                   onClick={() => openGlossaire("taux-emploi-6-mois")}
                 />
@@ -141,10 +147,13 @@ export const TableQuadrant = ({
                 <TooltipIcon
                   ml="1"
                   label={
-                    <Box>
-                      <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
-                    </Box>
+                    <Flex direction="column" gap={2}>
+                      <Text>
+                        Tout élève inscrit à N+1 (réorientation et redoublement compris)
+                        (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+                      </Text>
+                      <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                    </Flex>
                   }
                   onClick={() => openGlossaire("taux-poursuite-etudes")}
                 />
@@ -184,10 +193,10 @@ export const TableQuadrant = ({
                     </TableBadge>
                   </Td>
                   <Td color={getTdColor(formation)} maxW="20%">
-                    <GraphWrapper maxW="120px" value={formation.tauxInsertion} continuum={formation.continuum} />
+                    <GraphWrapper maxW="120px" value={formation.tauxInsertion} continuum={formation.continuum} millesime={CURRENT_IJ_MILLESIME} />
                   </Td>
                   <Td color={getTdColor(formation)} maxW="20%">
-                    <GraphWrapper maxW="120px" value={formation.tauxPoursuite} continuum={formation.continuum} />
+                    <GraphWrapper maxW="120px" value={formation.tauxPoursuite} continuum={formation.continuum} millesime={CURRENT_IJ_MILLESIME} />
                   </Td>
                 </Tr>
               ))}

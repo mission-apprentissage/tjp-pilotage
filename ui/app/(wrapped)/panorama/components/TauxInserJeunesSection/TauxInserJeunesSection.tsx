@@ -1,8 +1,10 @@
 import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
+import { CURRENT_IJ_MILLESIME } from "shared";
 
 import type { PanoramaStatsTauxInsertion, PanoramaStatsTauxPoursuite } from "@/app/(wrapped)/panorama/types";
 import { BarGraph } from "@/app/(wrapped)/suivi-impact/components/BarGraph";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+import { formatMillesime } from "@/utils/formatLibelle";
 
 export const TauxInserJeunesSection = ({
   region,
@@ -37,10 +39,13 @@ export const TauxInserJeunesSection = ({
             <GlossaireShortcut
               ml={2}
               tooltip={
-                <Box>
-                  <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                <Flex direction="column" gap={2}>
+                  <Text>
+                    La part de ceux qui sont en emploi 6 mois après leur sortie d’étude
+                    (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+                  </Text>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               glossaireEntryKey="taux-emploi-6-mois"
             />
@@ -57,10 +62,13 @@ export const TauxInserJeunesSection = ({
             <GlossaireShortcut
               ml={2}
               tooltip={
-                <Box>
-                  <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                <Flex direction="column" gap={2}>
+                  <Text>
+                    Tout élève inscrit à N+1 (réorientation et redoublement compris)
+                    (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+                  </Text>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               glossaireEntryKey="taux-poursuite-etudes"
             />

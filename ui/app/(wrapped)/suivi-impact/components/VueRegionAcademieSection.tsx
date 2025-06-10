@@ -1,11 +1,12 @@
 import { Box, Flex, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import { ANNEE_CHOMAGE } from 'shared';
+import {ANNEE_CHOMAGE, CURRENT_IJ_MILLESIME} from 'shared';
 
 import type { Order, PilotageReformeStatsRegion, TauxTransformation } from "@/app/(wrapped)/suivi-impact/types";
 import { GlossaireShortcut } from '@/components/GlossaireShortcut';
 import { OrderIcon } from "@/components/OrderIcon";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import {formatMillesime} from '@/utils/formatLibelle';
 import { formatPercentageFixedDigits } from "@/utils/formatUtils";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
@@ -176,10 +177,13 @@ export const VueRegionAcademieSection = ({
                         iconSize={"12px"}
                         glossaireEntryKey={"taux-poursuite-etudes"}
                         tooltip={
-                          <Box>
-                            <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                            <Text>Cliquez pour plus d'infos.</Text>
-                          </Box>
+                          <Flex gap={2} direction="column">
+                            <Text>
+                              Tout élève inscrit à N+1 (réorientation et redoublement compris).
+                              (Millésimes {formatMillesime(CURRENT_IJ_MILLESIME)})
+                            </Text>
+                            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                          </Flex>
                         }
                       />
                     </Flex>
@@ -198,10 +202,13 @@ export const VueRegionAcademieSection = ({
                         iconSize={"12px"}
                         glossaireEntryKey={"taux-emploi-6-mois"}
                         tooltip={
-                          <Box>
-                            <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-                            <Text>Cliquez pour plus d'infos.</Text>
-                          </Box>
+                          <Flex gap={2} direction="column">
+                            <Text>
+                              La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.
+                              (Millésimes {formatMillesime(CURRENT_IJ_MILLESIME)})
+                            </Text>
+                            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                          </Flex>
                         }
                       />
                     </Flex>
