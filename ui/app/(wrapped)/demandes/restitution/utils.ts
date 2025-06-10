@@ -1,6 +1,8 @@
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { SecteurEnum } from "shared/enum/secteurEnum";
 
+import { formatLibelleFormationWithoutTags} from '@/utils/formatLibelle';
+
 import { STATS_DEMANDES_COLUMNS } from "./STATS_DEMANDES_COLUMN";
 import type { DemandesRestitution, FiltersDemandesRestitution } from "./types";
 
@@ -103,6 +105,7 @@ export const getDataForExport = ({
       `${demande.discipline1ProfesseurAssocieRH} ${
         demande.discipline2ProfesseurAssocieRH ? `- ${demande.discipline2ProfesseurAssocieRH}` : ""
       }`,
+    libelleFormation: formatLibelleFormationWithoutTags(demande),
     secteur: demande.secteur === SecteurEnum["PU"] ? "Public" : "Privé",
     actionPrioritaire: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Action prioritaire"]],
     transitionDemographique: demande.formationSpecifique[TypeFormationSpecifiqueEnum["Transition démographique"]],

@@ -11,7 +11,7 @@ export const GLOSSAIRE_ENTRIES_KEYS = {
   ["fcil"]: "fcil",
   ["formation-historique-renovee"] : 'formation-historique-renovee',
   ["formation-mixte"] : 'formation-mixte',
-  ["formation-specifique"]: "formation-specifiques",
+  ["formation-specifique"]: "formation-specifique",
   ["inserjeunes"]: "inserjeunes",
   ["millesime"]: "millesime",
   ["nombre-deleves"]: "nombre-deleves",

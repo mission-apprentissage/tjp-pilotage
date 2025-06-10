@@ -3,12 +3,10 @@ import { Badge } from "@chakra-ui/react";
 import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
 import { VerticalBarChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/VerticalBarChart";
-import {
-  formatMillesime,
-  formatTaux,
-} from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import type { ChiffresIJOffre } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
+import { formatMillesime } from '@/utils/formatLibelle';
+import { formatPercentageWithoutSign } from '@/utils/formatUtils';
 
 const checkDataAvailability = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOffre }): boolean => {
   if (chiffresIJOffre) {
@@ -27,7 +25,7 @@ const getVerticalBarChartData = ({
       .filter((millesime) => chiffresIJOffre[millesime].tauxPoursuite)
       .map((millesime) => ({
         label: formatMillesime(millesime),
-        value: formatTaux(chiffresIJOffre[millesime].tauxPoursuite),
+        value: formatPercentageWithoutSign(chiffresIJOffre[millesime].tauxPoursuite),
       }));
   }
   return [];

@@ -1,6 +1,7 @@
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import type { DB } from "@/db/db";
@@ -237,6 +238,9 @@ export const getFormationsQuery = ({ filters }: { filters: Filters }) => {
       "formationView.isTransitionNumerique",
       ...partition,
     ])
+    .$narrowType<{
+      typeFamille: TypeFamille;
+    }>()
     .orderBy("tauxDevenirFavorable", "desc")
     .execute()
     .then(cleanNull)

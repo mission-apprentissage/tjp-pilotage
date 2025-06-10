@@ -78,8 +78,6 @@ export const LoginForm = () => {
     return ((error as AxiosError)?.response?.data as z.infer<typeof loginSchema.response["401"]>).message ?? LoginErrorsEnum.UNKNOWN;
   }, [error]);
 
-  console.log(loginError);
-
   const router = useRouter();
 
   useEffect(() => {

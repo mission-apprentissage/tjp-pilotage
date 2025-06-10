@@ -4,7 +4,7 @@ import type { NsfOption } from "shared/routes/schemas/get.domaine-de-formation.s
 
 import { getKbdClient } from "@/db/db";
 import { openForRentreeScolaire } from "@/modules/data/utils/openForRentreeScolaire";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const getNsfsAndFormations = async (search?: string) => {

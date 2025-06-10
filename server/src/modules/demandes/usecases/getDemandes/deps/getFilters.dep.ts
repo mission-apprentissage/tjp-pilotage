@@ -6,8 +6,7 @@ import { getKbdClient } from "@/db/db";
 import { isInPerimetreIJAcademie } from "@/modules/data/utils/isInPerimetreIJ";
 import type { Filters } from "@/modules/demandes/usecases/getDemandes/getDemandes.usecase";
 import { getCampagnes } from '@/modules/utils/getCurrentCampagne';
-import { isDemandeNotDeleted } from "@/modules/utils/isDemandeSelectable";
-import { isRestitutionDemandeVisible } from "@/modules/utils/isRestitutionDemandeVisible";
+import { isDemandeNotDeleted, isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
 import { cleanNull } from "@/utils/noNull";
 
 export const getFiltersQuery = async ({ user, codeAcademie, codeNiveauDiplome }: Filters) => {
@@ -45,7 +44,7 @@ export const getFiltersQuery = async ({ user, codeAcademie, codeNiveauDiplome }:
     .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
     .leftJoin("campagne", "campagne.id", "demande.campagneId")
     .where(isDemandeNotDeleted)
-    .where(isRestitutionDemandeVisible({ user }))
+    .where(isDemandeSelectable({ user }))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");

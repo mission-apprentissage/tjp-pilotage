@@ -2,8 +2,8 @@ import { Flex,Text} from '@chakra-ui/react';
 import {CURRENT_IJ_MILLESIME} from 'shared';
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import {formatMillesime} from '@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData';
 import { TooltipIcon } from "@/components/TooltipIcon";
+import {formatMillesime} from '@/utils/formatLibelle';
 
 const DefinitionTauxPoursuiteEtudes = ({ label }: { label?: string }) => (
   <Flex direction="column" gap={4}>
