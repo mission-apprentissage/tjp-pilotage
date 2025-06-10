@@ -1,13 +1,13 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Flex, Text} from '@chakra-ui/react';
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 const DefinitionColoration = ({ label }: { label?: string }) => (
-  <Box>
+  <Flex direction="column" gap={4}>
     <Text>{ label ?? "Dans Orion, à partir de la campagne 2024, on désigne comme «Colorations» les places ouvertes colorées soit la différence (si elle est positive) entre le nombre de places colorées actuelles et le nombre de futurs places colorées d'une demande de transformation sur Orion." }</Text>
-    <Text mt={4}>Cliquez pour plus d'infos.</Text>
-  </Box>
+    <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+  </Flex>
 );
 
 

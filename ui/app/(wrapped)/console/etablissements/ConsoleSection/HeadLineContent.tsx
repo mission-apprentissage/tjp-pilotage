@@ -1,19 +1,22 @@
-import {Box, chakra, Text, Th, Thead, Tooltip, Tr, VisuallyHidden} from '@chakra-ui/react';
+import {Box, chakra, Th, Thead, Tooltip, Tr, VisuallyHidden} from '@chakra-ui/react';
 import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
 
 import { TooltipDefinitionDomaineDeFormation } from '@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation';
+import { TooltipDefinitionEffectifEnEntree } from '@/app/(wrapped)/components/definitions/DefinitionEffectifEnEntree';
+import { TooltipDefinitionFormationSpecifique } from '@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique';
+import { TooltipDefinitionNombreEleves } from '@/app/(wrapped)/components/definitions/DefinitionNombreEleves';
+import { TooltipDefinitionPositionQuadrant } from '@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant';
+import { TooltipDefinitionTauxDePression } from '@/app/(wrapped)/components/definitions/DefinitionTauxDePression';
 import { TooltipDefinitionTauxDevenirFavorable } from '@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable';
-import { TooltipDefinitionTauxEmploi6Mois } from '@/app/(wrapped)/components/definitions/DefinitionTauxEmploio6Mois';
+import { TooltipDefinitionTauxEmploi6Mois } from '@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois';
 import { TooltipDefinitionTauxPoursuiteEtudes } from '@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes';
 import { TooltipDefinitionTauxRemplissage } from '@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage';
+import { TooltipDefinitionValeurAjoutee } from '@/app/(wrapped)/components/definitions/DefinitionValeurAjoutee';
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
 import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import type { Filters, Order } from "@/app/(wrapped)/console/etablissements/types";
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { OrderIcon } from "@/components/OrderIcon";
-import { TauxPressionScale } from "@/components/TauxPressionScale";
-import { TooltipIcon } from "@/components/TooltipIcon";
 
 const ConditionalTh = chakra(
   ({
@@ -94,7 +97,6 @@ export const HeadLineContent = ({
   colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
   getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
 }) => {
-  const { openGlossaire } = useGlossaireContext();
   const trackEvent = usePlausible();
 
   const handleOrder = (column: Order["orderBy"]) => {
@@ -205,13 +207,13 @@ export const HeadLineContent = ({
           <OrderIcon {...order} column="libelleFormation" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleFormation}
         </ConditionalTh>
-        <ConditionalTh colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+        <ConditionalTh
+          colonne={"formationSpecifique"}
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          icon={<TooltipDefinitionFormationSpecifique /> }
+        >
           {FORMATION_ETABLISSEMENT_COLUMNS.formationSpecifique}
-          <TooltipIcon
-            ml="1"
-            label="Cliquez pour plus d'infos."
-            onClick={() => openGlossaire("formation-specifique")}
-          />
         </ConditionalTh>
         <ConditionalTh
           colonneFilters={colonneFilters}
@@ -281,19 +283,10 @@ export const HeadLineContent = ({
           isNumeric
           cursor="pointer"
           onClick={handleOrder}
+          icon={<TooltipDefinitionNombreEleves /> }
         >
           <OrderIcon {...order} column="effectif1" />
           {FORMATION_ETABLISSEMENT_COLUMNS.effectif1}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>Nb d'élèves.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("nombre-deleves")}
-          />
         </ConditionalTh>
         <ConditionalTh
           colonneFilters={colonneFilters}
@@ -302,18 +295,7 @@ export const HeadLineContent = ({
           isNumeric
           cursor="pointer"
           onClick={handleOrder}
-          icon={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Box>
-                  <Text>Nb d'élèves.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              onClick={() => openGlossaire("nombre-deleves")}
-            />
-          }
+          icon={<TooltipDefinitionNombreEleves /> }
         >
           <OrderIcon {...order} column="effectif2" />
           {FORMATION_ETABLISSEMENT_COLUMNS.effectif2}
@@ -325,18 +307,7 @@ export const HeadLineContent = ({
           isNumeric
           cursor="pointer"
           onClick={handleOrder}
-          icon={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Box>
-                  <Text>Nb d'élèves.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              onClick={() => openGlossaire("nombre-deleves")}
-            />
-          }
+          icon={<TooltipDefinitionNombreEleves /> }
         >
           <OrderIcon {...order} column="effectif3" />
           {FORMATION_ETABLISSEMENT_COLUMNS.effectif3}
@@ -348,18 +319,7 @@ export const HeadLineContent = ({
           cursor="pointer"
           onClick={handleOrder}
           width={"fit-content"}
-          icon={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Box>
-                  <Text>Effectifs en entrée en première année de formation.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              onClick={() => openGlossaire("effectif-en-entree")}
-            />
-          }
+          icon={<TooltipDefinitionEffectifEnEntree /> }
         >
           <OrderIcon {...order} column="effectifEntree" />
           {FORMATION_ETABLISSEMENT_COLUMNS.effectifEntree}
@@ -381,22 +341,10 @@ export const HeadLineContent = ({
           colonne="tauxPression"
           cursor="pointer"
           onClick={handleOrder}
+          icon={<TooltipDefinitionTauxDePression />}
         >
           <OrderIcon {...order} column="tauxPression" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPression}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>
-                  Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.
-                </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-                <TauxPressionScale />
-              </Box>
-            }
-            onClick={() => openGlossaire("taux-de-pression")}
-          />
         </ConditionalTh>
         <ConditionalTh
           colonneFilters={colonneFilters}
@@ -404,9 +352,7 @@ export const HeadLineContent = ({
           colonne="tauxRemplissage"
           cursor="pointer"
           onClick={handleOrder}
-          icon={
-            <TooltipDefinitionTauxRemplissage />
-          }
+          icon={<TooltipDefinitionTauxRemplissage /> }
         >
           <OrderIcon {...order} column="tauxRemplissage" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxRemplissage}
@@ -417,21 +363,7 @@ export const HeadLineContent = ({
           colonne="positionQuadrant"
           cursor="pointer"
           onClick={handleOrder}
-          icon={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Box>
-                  <Text>
-                  Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux
-                  d'emploi et de poursuite d'études appliquées au niveau de diplôme.
-                  </Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              onClick={() => openGlossaire("quadrant")}
-            />
-          }
+          icon={<TooltipDefinitionPositionQuadrant /> }
         >
           <OrderIcon {...order} column="positionQuadrant" />
           {FORMATION_ETABLISSEMENT_COLUMNS.positionQuadrant}
@@ -509,22 +441,10 @@ export const HeadLineContent = ({
           isNumeric
           cursor="pointer"
           onClick={handleOrder}
+          icon={<TooltipDefinitionValeurAjoutee />}
         >
           <OrderIcon {...order} column="valeurAjoutee" />
           {FORMATION_ETABLISSEMENT_COLUMNS.valeurAjoutee}
-          <TooltipIcon
-            ml="1"
-            label={
-              <Box>
-                <Text>
-                  Capacité de l'établissement à insérer, en prenant en compte le profil social des élèves et le taux de
-                  chômage de la zone d'emploi, comparativement au taux de référence d’établissements similaires.
-                </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
-            }
-            onClick={() => openGlossaire("valeur-ajoutee")}
-          />
         </ConditionalTh>
       </Tr>
     </Thead>

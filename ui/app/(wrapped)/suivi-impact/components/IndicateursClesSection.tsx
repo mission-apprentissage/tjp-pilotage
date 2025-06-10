@@ -16,7 +16,7 @@ import {
 import { OBJECTIF_TAUX_TRANSFO_REFORME } from "shared/objectives/TAUX_TRANSFO";
 import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
-import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploio6Mois";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { IndicateurType, PilotageReformeStats, TauxTransformation } from "@/app/(wrapped)/suivi-impact/types";
 import { TooltipIcon } from "@/components/TooltipIcon";

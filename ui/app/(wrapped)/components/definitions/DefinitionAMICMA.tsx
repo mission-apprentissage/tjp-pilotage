@@ -1,13 +1,13 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 const DefinitionAMICMA = ({ label }: { label?: string }) => (
-  <Box>
+  <Flex direction="column" gap={4}>
     <Text>{ label ?? "Appel à Manifestation d'Intérêt « Compétences et métiers d’avenir »" }</Text>
-    <Text mt={4}>Cliquez pour plus d'infos.</Text>
-  </Box>
+    <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+  </Flex>
 );
 
 

@@ -1,13 +1,13 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Flex,Text} from '@chakra-ui/react';
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 const DefinitionEffectifEnEntree = ({ label }: { label?: string }) => (
-  <Box>
+  <Flex direction="column" gap={4}>
     <Text>{ label ?? "Effectifs en entrée en première année de formation." }</Text>
-    <Text>Cliquez pour plus d'infos.</Text>
-  </Box>
+    <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+  </Flex>
 );
 
 

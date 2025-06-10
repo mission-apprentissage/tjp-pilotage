@@ -1,13 +1,18 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Flex,Text} from '@chakra-ui/react';
+import {CURRENT_IJ_MILLESIME} from 'shared';
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import {formatMillesime} from '@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData';
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 const DefinitionPositionQuadrant = ({ label }: { label?: string }) => (
-  <Box>
-    <Text>{ label ?? "Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme." }</Text>
-    <Text mt={4}>Cliquez pour plus d'infos.</Text>
-  </Box>
+  <Flex direction="column" gap={4}>
+    <Text>{ label ??
+      `Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme
+      (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)}).`
+    }</Text>
+    <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+  </Flex>
 );
 
 
