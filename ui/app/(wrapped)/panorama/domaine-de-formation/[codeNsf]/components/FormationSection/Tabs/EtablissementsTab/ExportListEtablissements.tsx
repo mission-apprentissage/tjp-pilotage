@@ -5,7 +5,7 @@ import { ExportMenuButton } from "@/components/ExportMenuButton";
 import type { ExportColumns } from "@/utils/downloadExport";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
-import { formatCommuneLibelleWithCodeDepartement, formatLibelleFormation, formatSecteur } from "@/utils/formatLibelle";
+import { formatCommuneLibelleWithCodeDepartement, formatLibelleFormationWithDispositifs, formatSecteur } from "@/utils/formatLibelle";
 import { formatArray } from "@/utils/formatUtils";
 
 const extractDatas = (
@@ -29,9 +29,9 @@ const extractDatas = (
   return {
     codeNsf: codeNsf,
     libelleNsf: libelleNsf,
-    libelleFormation: formatLibelleFormation({
-      libellesDispositifs: libellesDispositifs,
-      libelleFormation: libelleFormation,
+    libelleFormation: formatLibelleFormationWithDispositifs({
+      libellesDispositifs,
+      libelleFormation,
     }),
     ...restFormation,
     libelleEtablissement,

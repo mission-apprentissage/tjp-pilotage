@@ -5,13 +5,12 @@ import { CURRENT_RENTREE, VoieEnum } from "shared";
 import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
 import type { FormationListItem } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
-import { formatFamilleMetierLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
-import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "@/components/BadgeVoieApprentissage";
 import { BadgeVoieScolaire } from "@/components/BadgeVoieScolaire";
 import { themeColors } from "@/theme/themeColors";
+import { formatFamilleMetierLibelle } from "@/utils/formatLibelle";
 
 const LabelNumberOfFormations = ({ formations }: { formations: number }) => (
   <Text>
@@ -111,7 +110,8 @@ export const ListeFormations = () => {
                       }}
                       paddingLeft={"2px"}
                     >
-                      <Tooltip label={formatFamilleMetierLibelle(formation.libelleFormation)}>
+                      <Tooltip label={formatFamilleMetierLibelle({ formation, withBadge: false })}
+                      >
                         <Text
                           my={2}
                           color={getFontColor(formation)}
@@ -121,11 +121,11 @@ export const ListeFormations = () => {
                           isTruncated={true}
                           _firstLetter={{ textTransform: "uppercase" }}
                         >
-                          {formatFamilleMetierLibelle(formation.libelleFormation)}
+                          {formatFamilleMetierLibelle({ formation, withBadge: false })}
                         </Text>
                       </Tooltip>
                       <Flex direction="row" gap={1}>
-                        <BadgeTypeFamille typeFamille={formation.typeFamille as TypeFamilleKeys} />
+                        <BadgeTypeFamille typeFamille={formation.typeFamille} />
                         <BadgeFormationRenovee isFormationRenovee={formation.isFormationRenovee} />
                         <BadgeVoieScolaire voie={formation.voies.find(v => v === VoieEnum.scolaire)} />
                         <BadgeVoieApprentissage voie={formation.voies.find(v => v === VoieEnum.apprentissage)} />

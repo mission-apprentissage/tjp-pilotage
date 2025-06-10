@@ -5,13 +5,11 @@ export const BadgeFormationRenovee = chakra(({
   isFormationRenovee,
   labelSize = "short",
   size = "xs",
-  fontSize,
   ...props
 }: {
   isFormationRenovee?: boolean;
   labelSize?: "short" | "long";
-  size?: "xs" | "sm" | "md";
-  fontSize?: string;
+  size?: "xs" | "sm" | "md" | "lg";
   props?: BadgeProps
 }) => {
   if (!isFormationRenovee) {
@@ -26,7 +24,6 @@ export const BadgeFormationRenovee = chakra(({
       h={"fit-content"}
       flex={"shrink"}
       size={size}
-      fontSize={fontSize}
       {...props}
     >
       {labelSize === "short" ? "Réno" : "Rénovée"}

@@ -1,9 +1,9 @@
 import type { Role } from "shared";
-import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
-import { PermissionScopeEnum} from 'shared/enum/permissionScopeEnum';
+import type { PermissionScope } from 'shared/enum/permissionScopeEnum';
+import { PermissionScopeEnum } from 'shared/enum/permissionScopeEnum';
 
 import { getKbdClient } from "@/db/db";
-import { getNormalizedSearch } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearch } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const searchUserQuery = async ({
