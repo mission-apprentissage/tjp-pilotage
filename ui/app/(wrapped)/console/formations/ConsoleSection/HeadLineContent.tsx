@@ -1,6 +1,7 @@
-import { Box, chakra, Text, Th, Thead, Tooltip, Tr, VisuallyHidden } from "@chakra-ui/react";
+import { Box, chakra, Flex, Text, Th, Thead, Tooltip, Tr, VisuallyHidden } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
+import {CURRENT_IJ_MILLESIME} from 'shared';
 
 import { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
 import type { Filters, Order } from "@/app/(wrapped)/console/formations/types";
@@ -8,6 +9,7 @@ import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext"
 import { OrderIcon } from "@/components/OrderIcon";
 import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import {formatMillesime} from '@/utils/formatLibelle';
 
 const ConditionalTh = chakra(
   ({
@@ -232,10 +234,10 @@ export const HeadLineContent = ({
           <TooltipIcon
             ml="1"
             label={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>Nb d'élèves</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
             onClick={() => openGlossaire("nombre-deleves")}
           />
@@ -253,10 +255,10 @@ export const HeadLineContent = ({
           <TooltipIcon
             ml="1"
             label={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>Nb d'élèves</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
             onClick={() => openGlossaire("nombre-deleves")}
           />
@@ -274,10 +276,10 @@ export const HeadLineContent = ({
           <TooltipIcon
             ml="1"
             label={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>Nb d'élèves</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
             onClick={() => openGlossaire("nombre-deleves")}
           />
@@ -294,10 +296,10 @@ export const HeadLineContent = ({
           <TooltipIcon
             ml="1"
             label={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>Effectifs en entrée en première année de formation.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
             onClick={() => openGlossaire("effectif-en-entree")}
           />
@@ -315,13 +317,13 @@ export const HeadLineContent = ({
           <TooltipIcon
             ml="1"
             label={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>
                   Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.
                 </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
                 <TauxPressionScale />
-              </Box>
+              </Flex>
             }
             onClick={() => openGlossaire("taux-de-pression")}
           />
@@ -339,10 +341,10 @@ export const HeadLineContent = ({
           <TooltipIcon
             ml="1"
             label={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>Le ratio entre l’effectif d’entrée en formation et sa capacité.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
             onClick={() => openGlossaire("taux-de-remplissage")}
           />
@@ -360,13 +362,17 @@ export const HeadLineContent = ({
             <TooltipIcon
               ml="1"
               label={
-                <Box>
+                <Flex direction="column" gap={2}>
                   <Text>
                     Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des
                     taux d'emploi et de poursuite d'études appliquées au niveau de diplôme.
                   </Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                  <Text>
+                    Tous les taux InserJeunes affichés correspondent aux derniers millésimes disponibles
+                    ({formatMillesime(CURRENT_IJ_MILLESIME)}), quelle que soit la rentrée scolaire.
+                  </Text>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("quadrant")}
             />
@@ -385,10 +391,14 @@ export const HeadLineContent = ({
           <TooltipIcon
             ml="1"
             label={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text>
+                  Tous les taux InserJeunes affichés correspondent aux derniers millésimes disponibles
+                  ({formatMillesime(CURRENT_IJ_MILLESIME)}), quelle que soit la rentrée scolaire.
+                </Text>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
             onClick={() => openGlossaire("taux-emploi-6-mois")}
           />
@@ -406,10 +416,14 @@ export const HeadLineContent = ({
           <TooltipIcon
             ml="1"
             label={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text>
+                  Tous les taux InserJeunes affichés correspondent aux derniers millésimes disponibles
+                  ({formatMillesime(CURRENT_IJ_MILLESIME)}), quelle que soit la rentrée scolaire.
+                </Text>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
             onClick={() => openGlossaire("taux-poursuite-etudes")}
           />
@@ -427,13 +441,17 @@ export const HeadLineContent = ({
           <TooltipIcon
             ml="1"
             label={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>
                   (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
                   dernière année de formation.
                 </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text>
+                  Tous les taux InserJeunes affichés correspondent aux derniers millésimes disponibles
+                  ({formatMillesime(CURRENT_IJ_MILLESIME)}), quelle que soit la rentrée scolaire.
+                </Text>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
             onClick={() => openGlossaire("taux-de-devenir-favorable")}
           />

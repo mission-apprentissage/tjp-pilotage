@@ -1,4 +1,5 @@
-import { Badge, Box, Text } from "@chakra-ui/react";
+import {Badge, Flex,Text} from '@chakra-ui/react';
+import {CURRENT_IJ_MILLESIME} from 'shared';
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
@@ -42,10 +43,13 @@ export const TauxEmploi = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOf
         <TooltipIcon
           ml="1"
           label={
-            <Box>
-              <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
+            <Flex direction="column" gap={2}>
+              <Text>
+                La part de ceux qui sont en emploi 6 mois après leur sortie d’étude
+                (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+              </Text>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
           onClick={() => openGlossaire("taux-emploi-6-mois")}
         />

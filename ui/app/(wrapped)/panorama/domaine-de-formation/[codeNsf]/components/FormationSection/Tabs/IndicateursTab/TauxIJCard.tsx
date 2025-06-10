@@ -1,11 +1,12 @@
-import { Box, Flex, Select, Text, VisuallyHidden } from "@chakra-ui/react";
+import { Flex, Select, Text, VisuallyHidden } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 import type { ScopeZone } from "shared";
-import { ScopeEnum } from "shared";
+import {CURRENT_IJ_MILLESIME,ScopeEnum} from 'shared';
 
 import type { Formation, FormationIndicateurs, TauxIJType } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 import { BadgeScope } from "@/components/BadgeScope";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+import {formatMillesime} from '@/utils/formatLibelle';
 
 import { DevenirBarGraph } from "./DevenirBarGraph";
 import { displayIJDatas } from "./displayIndicators";
@@ -19,10 +20,13 @@ const GlossaireIcon = ({ tauxIJSelected }: { tauxIJSelected: TauxIJType }) => {
         iconSize={"16px"}
         glossaireEntryKey={"taux-emploi-6-mois"}
         tooltip={
-          <Box>
-            <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
+          <Flex direction={"column"} gap={2}>
+            <Text>
+              La part de ceux qui sont en emploi 6 mois après leur sortie d’étude
+              (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+            </Text>
+            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+          </Flex>
         }
       />
     );
@@ -35,10 +39,13 @@ const GlossaireIcon = ({ tauxIJSelected }: { tauxIJSelected: TauxIJType }) => {
         iconSize={"16px"}
         glossaireEntryKey={"taux-poursuite-etudes"}
         tooltip={
-          <Box>
-            <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
+          <Flex direction={"column"} gap={2}>
+            <Text>
+              Tout élève inscrit à N+1 (réorientation et redoublement compris)
+              (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+            </Text>
+            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+          </Flex>
         }
       />
     );
@@ -51,13 +58,13 @@ const GlossaireIcon = ({ tauxIJSelected }: { tauxIJSelected: TauxIJType }) => {
         iconSize={"16px"}
         glossaireEntryKey={"taux-de-devenir-favorable"}
         tooltip={
-          <Box>
+          <Flex direction={"column"} gap={2}>
             <Text>
               (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-              dernière année de formation.
+              dernière année de formation (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
             </Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
+            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+          </Flex>
         }
       />
     );

@@ -1,4 +1,4 @@
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import { Flex, Heading, Text } from "@chakra-ui/react";
 
 import { InformationDonneeIncompletes } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/InformationDonneeIncompletes";
 import type {
@@ -43,16 +43,17 @@ export const Dashboard = ({
               <GlossaireShortcut
                 ml={2}
                 tooltip={
-                  <Box>
-                    Cette mention signale que la formation est enseignée en apprentissage sur les années civiles 2023
-                    et/ou 2024.
-                    <br />
-                    Une formation peut apparaître "dédoublée", il s'agit alors d'une classe mixte (voie scolaire et
-                    apprentissage), dont la part d'apprentis est inconnue.
-                    <br />
-                    <br />
-                    Cliquez pour plus d'infos.
-                  </Box>
+                  <Flex direction={"column"} gap={2}>
+                    <Text>
+                      Cette mention signale que la formation est enseignée en apprentissage sur les années civiles 2023
+                      et/ou 2024.
+                    </Text>
+                    <Text>
+                      Une formation peut apparaître "dédoublée", il s'agit alors d'une classe mixte (voie scolaire et
+                      apprentissage), dont la part d'apprentis est inconnue.
+                    </Text>
+                    <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                  </Flex>
                 }
               />
             )}

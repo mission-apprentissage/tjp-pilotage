@@ -13,13 +13,16 @@ import {
   useToken,
   VStack,
 } from "@chakra-ui/react";
+import { CURRENT_IJ_MILLESIME } from "shared";
 import { OBJECTIF_TAUX_TRANSFO_REFORME } from "shared/objectives/TAUX_TRANSFO";
 import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { IndicateurType, PilotageReformeStats, TauxTransformation } from "@/app/(wrapped)/suivi-impact/types";
+import { BadgeMillesimes } from "@/components/BadgeMillesimes";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
+import { formatMillesime } from "@/utils/formatLibelle";
 import { formatNumber, formatPercentageFixedDigits } from "@/utils/formatUtils";
 
 import { MultiProgressBar } from "./MultiProgressBar";
@@ -173,7 +176,6 @@ const StatCard = ({
       <CardBody color={color} py="2" px="3" alignItems={"center"} minHeight={40}>
         <HStack
           width="100%"
-          justifyContent={tooltip ? "space-between" : "start"}
           mr="4"
           flex={1}
         >
@@ -188,6 +190,7 @@ const StatCard = ({
           </Heading>
           {tooltip}
         </HStack>
+        <BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} mt={2}/>
         <Box fontWeight="bold" fontSize="40" color={"bluefrance.113"}>
           {getValue(type)}
         </Box>
@@ -296,10 +299,13 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
               <TooltipIcon
                 mr="6px"
                 label={
-                  <Box>
-                    <Text>La part d’élèves qui sont en emploi 6 mois après leur sortie d’études</Text>
-                    <Text>Cliquez ici pour plus d'infos.</Text>
-                  </Box>
+                  <Flex direction="column" gap={2}>
+                    <Text>
+                      La part d’élèves qui sont en emploi 6 mois après leur sortie d’études
+                      (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+                    </Text>
+                    <Text fontWeight={700}>Cliquez ici pour plus d'infos.</Text>
+                  </Flex>
                 }
                 onClick={() => openGlossaire("taux-emploi-6-mois")}
               />
@@ -313,10 +319,13 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
               <TooltipIcon
                 mr="6px"
                 label={
-                  <Box>
-                    <Text>Tout élève inscrit à la rentrée N+1 (réorientation et redoublement compris)</Text>
-                    <Text>Cliquez ici pour plus d'infos.</Text>
-                  </Box>
+                  <Flex direction="column" gap={2}>
+                    <Text>
+                      Tout élève inscrit à la rentrée N+1 (réorientation et redoublement compris)
+                      (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+                    </Text>
+                    <Text fontWeight={700}>Cliquez ici pour plus d'infos.</Text>
+                  </Flex>
                 }
                 onClick={() => openGlossaire("taux-poursuite-etudes")}
               />

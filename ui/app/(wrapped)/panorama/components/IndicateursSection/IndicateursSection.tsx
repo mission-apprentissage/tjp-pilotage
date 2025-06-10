@@ -1,10 +1,13 @@
 import { Box, Flex, Heading, HStack, Img, SimpleGrid, Stack, Text } from "@chakra-ui/react";
-import { CURRENT_RENTREE } from "shared";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { StatsFormations } from "@/app/(wrapped)/panorama/types";
+import { BadgeMillesimes } from "@/components/BadgeMillesimes";
+import { BadgeRentreeScolaire } from "@/components/BadgeRentreeScolaire";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import { formatMillesime } from "@/utils/formatLibelle";
 import { formatNumberToString, formatPercentage } from "@/utils/formatUtils";
 
 import { StatCard } from "./StatCard";
@@ -42,7 +45,7 @@ export const IndicateursSection = ({
         </Box>
         <Flex direction={"row"} mt={"8px"}>
           <Flex style={{ textWrap: "pretty" }}>
-            Retrouvez ici les principaux indicateurs sur votre territoire (Voie scolaire, Chiffres {CURRENT_RENTREE}).{" "}
+            Retrouvez ici les principaux indicateurs sur votre territoire (voie scolaire).
           </Flex>
         </Flex>
         <Img alignSelf={"end"} src="/design_search.svg" objectFit="cover" width={"auto"} height={"100%"} mt={"1rem"} alt=""/>
@@ -50,6 +53,7 @@ export const IndicateursSection = ({
       <SimpleGrid spacing={3} columns={[1, 3, 3]} flex={2}>
         <StatCard
           label={`Nombre de formations dans votre ${typeTerritoire === "region" ? "région" : "département"}`}
+          badge={<BadgeRentreeScolaire rentreeScolaire={CURRENT_RENTREE} />}
           value={stats?.nbFormations ?? "-"}
         />
         <StatCard
@@ -66,23 +70,24 @@ export const IndicateursSection = ({
                   ml={0.5}
                   color="grey.425"
                   tooltip={
-                    <Box>
+                    <Flex direction="column" gap={2}>
                       <Text>Effectifs en entrée en première année de formation.</Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
-                    </Box>
+                      <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                    </Flex>
                   }
                 />
               </HStack>
             ) : undefined
           }
+          badge={<BadgeRentreeScolaire rentreeScolaire={CURRENT_RENTREE} />}
           glossaire={
             <TooltipIcon
               ml="1"
               label={
-                <Box display="inline">
+                <Flex direction="column" gap={2}>
                   <Text>Nombre total d’élèves, toutes années de formation confondues</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("nombre-deleves")}
             />
@@ -93,14 +98,15 @@ export const IndicateursSection = ({
           value={formatPercentage(stats?.tauxRemplissage, 0, "-")}
           tooltip={formatPercentage(stats?.tauxRemplissage, 2, "-")}
           type={"percentage"}
+          badge={<BadgeRentreeScolaire rentreeScolaire={CURRENT_RENTREE} />}
           glossaire={
             <TooltipIcon
               ml="1"
               label={
-                <Box>
+                <Flex direction="column" gap={2}>
                   <Text>Le ratio entre l’effectif d’entrée en formation et sa capacité.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("taux-de-remplissage")}
             />
@@ -111,17 +117,18 @@ export const IndicateursSection = ({
           value={formatPercentage(stats?.tauxDevenirFavorable, 0, "-")}
           tooltip={formatPercentage(stats?.tauxDevenirFavorable, 2, "-")}
           type={"percentage"}
+          badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
           glossaire={
             <TooltipIcon
               ml="1"
               label={
-                <Box display="inline">
+                <Flex direction="column" gap={2}>
                   <Text>
                     (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-                    dernière année de formation.
+                    dernière année de formation (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
                   </Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("taux-de-devenir-favorable")}
             />
@@ -132,14 +139,18 @@ export const IndicateursSection = ({
           value={formatPercentage(stats?.tauxPoursuite, 0, "-")}
           tooltip={formatPercentage(stats?.tauxPoursuite, 2, "-")}
           type={"percentage"}
+          badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
           glossaire={
             <TooltipIcon
               ml="1"
               label={
-                <Box>
-                  <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                <Flex direction="column" gap={2}>
+                  <Text>
+                    Tout élève inscrit à N+1 (réorientation et redoublement compris)
+                    (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+                  </Text>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("taux-poursuite-etudes")}
             />
@@ -150,14 +161,18 @@ export const IndicateursSection = ({
           value={formatPercentage(stats?.tauxInsertion, 0, "-")}
           tooltip={formatPercentage(stats?.tauxInsertion, 2, "-")}
           type={"percentage"}
+          badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
           glossaire={
             <TooltipIcon
               ml="1"
               label={
-                <Box>
-                  <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’études.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                <Flex direction="column" gap={2}>
+                  <Text>
+                    La part de ceux qui sont en emploi 6 mois après leur sortie d’études
+                    (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
+                  </Text>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("taux-emploi-6-mois")}
             />

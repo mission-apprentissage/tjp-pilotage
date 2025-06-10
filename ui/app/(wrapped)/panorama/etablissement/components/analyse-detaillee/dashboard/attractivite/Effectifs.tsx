@@ -1,4 +1,4 @@
-import { Badge, Box, Text } from "@chakra-ui/react";
+import { Badge, Flex, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -38,10 +38,10 @@ export const Effectifs = ({ effectifEntree, capacite }: { effectifEntree?: numbe
         <TooltipIcon
           ml="1"
           label={
-            <Box>
+            <Flex direction="column" gap={2}>
               <Text>Effectifs en entrée en première année de formation.</Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
           onClick={() => openGlossaire("effectif-en-entree")}
         />

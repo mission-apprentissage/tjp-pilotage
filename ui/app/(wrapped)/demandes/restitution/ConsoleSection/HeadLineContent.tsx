@@ -1,4 +1,4 @@
-import { Box, chakra, Text, Th, Tooltip } from "@chakra-ui/react";
+import { Box, chakra, Flex, Text, Th, Tooltip } from "@chakra-ui/react";
 import type { CSSProperties } from "react";
 
 import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/STATS_DEMANDES_COLUMN";
@@ -605,10 +605,10 @@ export const HeadLineContent = ({
               ml="1"
               mt="1px"
               label={
-                <>
+                <Flex direction="column" gap={2}>
                   <Text>Capacité théorique issue d'Affelnet pour la rentrée 2024, voie scolaire</Text>
-                  <Text>Cliquer pour plus d'infos.</Text>
-                </>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("capacite")}
               placement={"bottom-end"}
@@ -625,13 +625,13 @@ export const HeadLineContent = ({
               ml="1"
               mt="1px"
               label={
-                <>
+                <Flex direction="column" gap={2}>
                   <Text>
                     Effectif en entrée de formation issue du Constat de Rentrée 2024,
                     comptant uniquement les élèves en voie scolaire
                   </Text>
-                  <Text>Cliquer pour plus d'infos.</Text>
-                </>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("effectif-en-entree")}
               placement={"bottom-end"}
@@ -649,13 +649,13 @@ export const HeadLineContent = ({
               ml="1"
               mt="1px"
               label={
-                <>
+                <Flex direction="column" gap={2}>
                   <Text>
                     Taux de remplissage par rapport à la capacité théorique
                     d'Affelnet pour la rentrée 2024, voie scolaire
                   </Text>
-                  <Text>Cliquer pour plus d'infos.</Text>
-                </>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("taux-de-remplissage")}
               placement={"bottom-end"}
@@ -673,13 +673,13 @@ export const HeadLineContent = ({
               ml="1"
               mt="1px"
               label={
-                <>
+                <Flex direction="column" gap={2}>
                   <Text>
                     Taux de pression (ou de demande dans le cas des BTS)
                     issue d'Affelnet pour la rentrée 2024, voie scolaire
                   </Text>
-                  <Text>Cliquer pour plus d'infos.</Text>
-                </>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("taux-de-pression")}
               placement={"bottom-end"}
@@ -697,10 +697,10 @@ export const HeadLineContent = ({
               ml="1"
               mt="1px"
               label={
-                <Box>
+                <Flex direction="column" gap={2}>
                   <Text>Le ratio entre le nombre de voeux et la capacité de la formation dans l'établissement.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               onClick={() => openGlossaire("taux-de-demande")}
               placement={"bottom-end"}
