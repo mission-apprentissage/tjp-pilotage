@@ -1,10 +1,14 @@
 import { Box, chakra, Th, Tooltip } from "@chakra-ui/react";
 import type { CSSProperties } from "react";
 
+import { TooltipDefinitionPositionQuadrant } from "@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant";
+import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { CORRECTIONS_COLUMNS } from "@/app/(wrapped)/demandes/corrections/CORRECTIONS_COLUMN";
 import type { OrderCorrections } from "@/app/(wrapped)/demandes/corrections/types";
 import { OrderIcon } from "@/components/OrderIcon";
-import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 const ConditionalTh = chakra(
@@ -16,6 +20,7 @@ const ConditionalTh = chakra(
     colonne,
     onClick,
     isNumeric = false,
+    icon
   }: {
     className?: string;
     style?: CSSProperties;
@@ -24,30 +29,40 @@ const ConditionalTh = chakra(
     colonne: keyof typeof CORRECTIONS_COLUMNS;
     onClick?: (column: OrderCorrections["orderBy"]) => void;
     isNumeric?: boolean;
+    icon?: React.ReactNode;
   }) => {
     if (colonneFilters.includes(colonne))
       return (
-        <Tooltip label={CORRECTIONS_COLUMNS[colonne]} placement="top">
-          <Th
-            className={className}
-            style={style}
-            isNumeric={isNumeric}
-            maxW={170}
-            p={2}
-            cursor={onClick ? "pointer" : "default"}
-            whiteSpace="nowrap"
-            onClick={() => onClick && onClick(colonne as OrderCorrections["orderBy"])}
-            fontSize={12}
-            fontWeight={700}
-            lineHeight={"20px"}
-            textTransform={"uppercase"}
-            textOverflow={"ellipsis"}
-            alignSelf={"stretch"}
-            isTruncated
-          >
-            {children}
-          </Th>
-        </Tooltip>
+        <Th
+          className={className}
+          style={style}
+          isNumeric={isNumeric}
+          p={2}
+          cursor={onClick ? "pointer" : "default"}
+          whiteSpace="nowrap"
+          onClick={() => onClick && onClick(colonne as OrderCorrections["orderBy"])}
+        >
+
+          <Box maxW={170} sx={{
+            display: "flex",
+            alignItems: "center",
+          }}>
+            <Tooltip label={CORRECTIONS_COLUMNS[colonne]} placement="top">
+              <Box
+                fontSize={12}
+                fontWeight={700}
+                lineHeight={"20px"}
+                textTransform={"uppercase"}
+                textOverflow={"ellipsis"}
+                alignSelf={"stretch"}
+                isTruncated
+              >
+                {children}
+              </Box>
+            </Tooltip>
+            {icon}
+          </Box>
+        </Th>
       );
     return null;
   }
@@ -162,12 +177,10 @@ export const HeadLineContent = ({
         colonne={"positionQuadrant"}
         isNumeric
         bgColor={getCellColor("positionQuadrant")}
+        icon={
+          <TooltipDefinitionPositionQuadrant />
+        }
       >
-        <TooltipIcon
-          mt={"auto"}
-          me="1"
-          label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
-        />
         {CORRECTIONS_COLUMNS.positionQuadrant}
       </ConditionalTh>
       <ConditionalTh
@@ -178,13 +191,10 @@ export const HeadLineContent = ({
         minW={200}
         maxW={200}
         bgColor={getCellColor("tauxInsertionRegional")}
+        icon={<TooltipDefinitionTauxEmploi6Mois />}
       >
         <OrderIcon {...order} column="tauxInsertionRegional" />
         {CORRECTIONS_COLUMNS.tauxInsertionRegional}
-        <TooltipIcon
-          ml="1"
-          label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude pour cette formation à l'échelle régionale (voie scolaire)."
-        />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -192,13 +202,10 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         textAlign="center"
         bgColor={getCellColor("tauxPoursuiteRegional")}
+        icon={<TooltipDefinitionTauxPoursuiteEtudes />}
       >
         <OrderIcon {...order} column="tauxPoursuiteRegional" />
         {CORRECTIONS_COLUMNS.tauxPoursuiteRegional}
-        <TooltipIcon
-          ml="1"
-          label="Tout élève inscrit à N+1 (réorientation et redoublement compris) pour cette formation à l'échelle régionale (voie scolaire)."
-        />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -206,13 +213,10 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         textAlign="center"
         bgColor={getCellColor("tauxDevenirFavorableRegional")}
+        icon={<TooltipDefinitionTauxDevenirFavorable />}
       >
         <OrderIcon {...order} column="tauxDevenirFavorableRegional" />
         {CORRECTIONS_COLUMNS.tauxDevenirFavorableRegional}
-        <TooltipIcon
-          ml="2"
-          label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation pour cette formation à l'échelle régionale (voie scolaire)."
-        />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -220,18 +224,10 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         textAlign="center"
         bgColor={getCellColor("tauxPressionRegional")}
+        icon={<TooltipDefinitionTauxDePression />}
       >
         <OrderIcon {...order} column="tauxPressionRegional" />
         {CORRECTIONS_COLUMNS.tauxPressionRegional}
-        <TooltipIcon
-          ml="1"
-          label={
-            <>
-              <Box>Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.</Box>
-              <TauxPressionScale />
-            </>
-          }
-        />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -241,10 +237,10 @@ export const HeadLineContent = ({
         minW={200}
         maxW={200}
         bgColor={getCellColor("nbEtablissement")}
+        icon={<TooltipIcon ml="1" label="Le nombre d'établissement dispensant la formation dans la région." />}
       >
         <OrderIcon {...order} column="nbEtablissement" />
         {CORRECTIONS_COLUMNS.nbEtablissement}
-        <TooltipIcon ml="1" label="Le nombre d'établissement dispensant la formation dans la région." />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}

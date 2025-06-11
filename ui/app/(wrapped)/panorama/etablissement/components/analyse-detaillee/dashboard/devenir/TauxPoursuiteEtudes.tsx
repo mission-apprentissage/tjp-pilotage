@@ -1,13 +1,12 @@
-import { Badge, Box, Text } from "@chakra-ui/react";
+import { Badge } from "@chakra-ui/react";
 
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
 import { VerticalBarChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/VerticalBarChart";
 import type { ChiffresIJOffre } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
-import { TooltipIcon } from "@/components/TooltipIcon";
-import {formatMillesime} from '@/utils/formatLibelle';
-import {formatPercentageWithoutSign} from '@/utils/formatUtils';
+import { formatMillesime } from '@/utils/formatLibelle';
+import { formatPercentageWithoutSign } from '@/utils/formatUtils';
 
 const checkDataAvailability = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOffre }): boolean => {
   if (chiffresIJOffre) {
@@ -33,22 +32,10 @@ const getVerticalBarChartData = ({
 };
 
 export const TauxPoursuiteEtudes = ({ chiffresIJOffre }: { chiffresIJOffre?: ChiffresIJOffre }) => {
-  const { openGlossaire } = useGlossaireContext();
   return (
     <DashboardCard
       label={"Poursuite d'études"}
-      tooltip={
-        <TooltipIcon
-          ml="1"
-          label={
-            <Box>
-              <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
-          }
-          onClick={() => openGlossaire("taux-poursuite-etudes")}
-        />
-      }
+      tooltip={<TooltipDefinitionTauxPoursuiteEtudes />}
       badge={
         <Badge variant="lavander" size={"xs"}>
           Étab.

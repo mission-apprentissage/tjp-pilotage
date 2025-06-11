@@ -60,7 +60,7 @@ export const PremiersVoeux = ({
           glossaireEntryKey="voeux"
           tooltip={
             <Box>
-              <Text>{codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? "Nombre de voeux" : "Nombre de 1ers voeux"}</Text>
+              <Text>{codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? "Nombre total de vœux (Parcoursup)" : "Nombre de vœux de 1ère position (Affelnet)"}</Text>
               <Text>Cliquez pour plus d'infos.</Text>
             </Box>
           }
