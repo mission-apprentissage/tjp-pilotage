@@ -1,10 +1,11 @@
 import { Badge } from "@chakra-ui/react";
+import { CURRENT_RENTREE } from "shared";
 
+import { TooltipDefinitionNombreEleves } from "@/app/(wrapped)/components/definitions/DefinitionNombreEleves";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
 import { HorizontalBarChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/HorizontalBarChart";
 import type { ChiffresEntreeOffre } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
-import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 
 export const NombreElevesParAnnee = ({ chiffresEntreeOffre }: { chiffresEntreeOffre?: ChiffresEntreeOffre }) => {
   const checkDataAvailability = (): boolean => {
@@ -51,8 +52,8 @@ export const NombreElevesParAnnee = ({ chiffresEntreeOffre }: { chiffresEntreeOf
 
   return (
     <DashboardCard
-      label="Nombre d'élèves par année (Constat de rentrée 2023)"
-      tooltip={<GlossaireShortcut tooltip="Nombre d'élèves" glossaireEntryKey="nombre-deleves" />}
+      label={`Nombre d'élèves par année (Constat de rentrée ${CURRENT_RENTREE})`}
+      tooltip={<TooltipDefinitionNombreEleves />}
       badge={
         <Badge variant="lavander" size={"xs"}>
           Étab.
@@ -61,7 +62,7 @@ export const NombreElevesParAnnee = ({ chiffresEntreeOffre }: { chiffresEntreeOf
     >
       {checkDataAvailability() ? (
         <HorizontalBarChart
-          title="Nombre d'élèves par année (Constat de rentrée 2023)"
+          title={` Nombre d'élèves par année (Constat de rentrée ${CURRENT_RENTREE})`}
           data={getHorizontalBarChartData()}
         />
       ) : (

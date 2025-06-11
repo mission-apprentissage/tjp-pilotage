@@ -3,16 +3,18 @@ import { Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tr } from "@ch
 import NextLink from "next/link";
 
 import type { FORMATION_COLUMNS } from "@/app/(wrapped)/console/formations/FORMATION_COLUMNS";
-import type { Filters, Line } from "@/app/(wrapped)/console/formations/types";
+import type { Filters, Formation  } from "@/app/(wrapped)/console/formations/types";
 import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
+import {BadgeTypeFamille} from '@/components/BadgeTypeFamille';
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { formatFamilleMetierLibelle } from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
+
 
 const ConditionalTd = chakra(
   ({
@@ -47,7 +49,7 @@ const ConditionalTd = chakra(
 );
 
 export const FormationLineContent = ({
-  line,
+  formation,
   onClickExpend,
   onClickCollapse,
   expended = false,
@@ -57,7 +59,7 @@ export const FormationLineContent = ({
   colonneFilters,
   getCellBgColor,
 }: {
-  line: Partial<Line>;
+  formation: Partial<Formation>;
   onClickExpend?: () => void;
   onClickCollapse?: () => void;
   expended?: boolean;
@@ -86,10 +88,10 @@ export const FormationLineContent = ({
       )}
     </Td>
     <ConditionalTd colonne={"rentreeScolaire"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.rentreeScolaire ?? "-"}
+      {formation.rentreeScolaire ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne={"libelleDispositif"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.libelleDispositif ?? "-"}
+      {formation.libelleDispositif ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne={"libelleFormation"}
@@ -106,23 +108,33 @@ export const FormationLineContent = ({
       }}
     >
       <Flex>
-        <Flex w={"fit-content"} my={"auto"}>
-          {formatFamilleMetierLibelle(line, "long", "sm", "12px")}
-        </Flex>
-        <BadgeFormationRenovee
-          isFormationRenovee={line.isFormationRenovee}
-          marginStart={2}
+        {formatFamilleMetierLibelle({ formation, labelSize: "long", size: "sm", fontSize: "12px", withBadge: false })}
+        <BadgeTypeFamille
+          typeFamille={formation.typeFamille}
           labelSize="long"
+          size="sm"
+          ms={2}
         />
-        {line.formationRenovee && (
-          <Flex ms={2} my={"auto"} width={"fit-content"} h={"1.8rem"} whiteSpace={"nowrap"} direction={"column"}>
-            <BadgeFermeture dateFermeture={line.dateFermeture} labelSize="long" size="sm" />
+        <BadgeFormationRenovee
+          isFormationRenovee={formation.isFormationRenovee}
+          labelSize="long"
+          size="sm"
+          ms={2}
+        />
+        {formation.formationRenovee && (
+          <Flex my={"auto"} width={"fit-content"} h={"1.8rem"} whiteSpace={"nowrap"} direction={"column"}>
+            <BadgeFermeture
+              dateFermeture={formation.dateFermeture}
+              labelSize="long"
+              size="sm"
+              ms={2}
+            />
             <Link
               variant="text"
               as={NextLink}
               href={createParameterizedUrl("/console/formations", {
                 filters: {
-                  cfd: [line.formationRenovee],
+                  cfd: [formation.formationRenovee],
                 },
               })}
               color="bluefrance.113"
@@ -137,25 +149,29 @@ export const FormationLineContent = ({
       </Flex>
     </ConditionalTd>
     <ConditionalTd colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <BadgesFormationSpecifique formationSpecifique={line.formationSpecifique} labelSize="long" />
+      <BadgesFormationSpecifique
+        formationSpecifique={formation.formationSpecifique}
+        labelSize="long"
+        size="sm"
+      />
     </ConditionalTd>
     <ConditionalTd colonne={"libelleNiveauDiplome"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.libelleNiveauDiplome ?? "-"}
+      {formation.libelleNiveauDiplome ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne={"libelleFamille"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.libelleFamille ?? "-"}
+      {formation.libelleFamille ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne={"cfd"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.cfd ?? "-"}
+      {formation.cfd ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne={"cpc"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.cpc ?? "-"}
+      {formation.cpc ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne={"cpcSecteur"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.cpcSecteur ?? "-"}
+      {formation.cpcSecteur ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne={"libelleNsf"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.libelleNsf ?? "-"}
+      {formation.libelleNsf ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne={"nbEtablissement"}
@@ -169,25 +185,25 @@ export const FormationLineContent = ({
         href={createParameterizedUrl("/console/etablissements", {
           filters: {
             ...filters,
-            cfd: [line.cfd],
-            codeDispositif: line.codeDispositif ? [line.codeDispositif] : undefined,
+            cfd: [formation.cfd],
+            codeDispositif: formation.codeDispositif ? [formation.codeDispositif] : undefined,
           },
         })}
       >
-        {line.nbEtablissement ?? "-"}
+        {formation.nbEtablissement ?? "-"}
       </Link>
     </ConditionalTd>
     <ConditionalTd colonne={"effectif1"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
-      {line.effectif1 ?? "-"}
+      {formation.effectif1 ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne={"effectif2"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
-      {line.effectif2 ?? "-"}
+      {formation.effectif2 ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne={"effectif3"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
-      {line.effectif3 ?? "-"}
+      {formation.effectif3 ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne={"effectifEntree"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
-      {line.effectifEntree ?? "-"}
+      {formation.effectifEntree ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne={"tauxPression"}
@@ -196,9 +212,9 @@ export const FormationLineContent = ({
       textAlign={"center"}
     >
       <TableBadge sx={
-        getTauxPressionStyle(line.tauxPression !== undefined ? formatNumber(line.tauxPression, 2) : undefined)
+        getTauxPressionStyle(formation.tauxPression !== undefined ? formatNumber(formation.tauxPression, 2) : undefined)
       }>
-        {formatNumberToString(line.tauxPression, 2, "-")}
+        {formatNumberToString(formation.tauxPression, 2, "-")}
       </TableBadge>
     </ConditionalTd>
     <ConditionalTd
@@ -207,7 +223,7 @@ export const FormationLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper value={line.tauxRemplissage} />
+      <GraphWrapper value={formation.tauxRemplissage} />
     </ConditionalTd>
     {canShowQuadrantPosition && (
       <ConditionalTd
@@ -216,7 +232,7 @@ export const FormationLineContent = ({
         getCellBgColor={getCellBgColor}
         textAlign={"center"}
       >
-        {line.positionQuadrant ?? "-"}
+        {formation.positionQuadrant ?? "-"}
       </ConditionalTd>
     )}
     <ConditionalTd
@@ -225,7 +241,7 @@ export const FormationLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} />
+      <GraphWrapper continuum={formation.continuum} value={formation.tauxInsertion} />
     </ConditionalTd>
     <ConditionalTd
       colonne={"tauxPoursuite"}
@@ -233,10 +249,10 @@ export const FormationLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
+      <GraphWrapper continuum={formation.continuum} value={formation.tauxPoursuite} />
     </ConditionalTd>
     <ConditionalTd colonne={"tauxDevenirFavorable"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper continuum={line.continuum} value={line.tauxDevenirFavorable} my="auto" />
+      <GraphWrapper continuum={formation.continuum} value={formation.tauxDevenirFavorable} my="auto" />
     </ConditionalTd>
   </>
 );
@@ -262,6 +278,6 @@ export const FormationLinePlaceholder = ({
   getCellBgColor: (column: keyof typeof FORMATION_COLUMNS) => string;
 }) => (
   <Tr bg={"grey.975"}>
-    <FormationLineContent line={{}} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
+    <FormationLineContent formation={{}} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
   </Tr>
 );

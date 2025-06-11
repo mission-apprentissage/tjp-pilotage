@@ -3,6 +3,7 @@ import { z } from "zod";
 import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import { OrderZodType } from "../../enum/orderEnum";
+import { TypeFamilleZodType } from "../../enum/typeFamilleEnum";
 import {VoieZodType} from '../../enum/voieEnum';
 import {CampagneSchema} from '../../schema/campagneSchema';
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
@@ -29,6 +30,8 @@ const CorrectionItem = z.object({
   libelleDispositif: z.string().optional(),
   codeDispositif: z.string(),
   cfd: z.string(),
+  isFormationRenovee: z.boolean().optional(),
+  typeFamille: TypeFamilleZodType.optional(),
   // Demande
   coloration: z.boolean().optional(),
   libelleColoration1: z.string().optional(),

@@ -1,8 +1,11 @@
-import { Box, Flex, Select, Text, VisuallyHidden } from "@chakra-ui/react";
+import { Flex, Select, Text, VisuallyHidden } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 import type { ScopeZone } from "shared";
 import { ScopeEnum } from "shared";
 
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import type { Formation, FormationIndicateurs, TauxIJType } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 import { BadgeScope } from "@/components/BadgeScope";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
@@ -13,34 +16,12 @@ import { displayIJDatas } from "./displayIndicators";
 const GlossaireIcon = ({ tauxIJSelected }: { tauxIJSelected: TauxIJType }) => {
   if (tauxIJSelected === "tauxInsertion") {
     return (
-      <GlossaireShortcut
-        display={"inline"}
-        marginInline={1}
-        iconSize={"16px"}
-        glossaireEntryKey={"taux-emploi-6-mois"}
-        tooltip={
-          <Box>
-            <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
-        }
-      />
+      <TooltipDefinitionTauxEmploi6Mois />
     );
   }
   if (tauxIJSelected === "tauxPoursuite") {
     return (
-      <GlossaireShortcut
-        display={"inline"}
-        marginInline={1}
-        iconSize={"16px"}
-        glossaireEntryKey={"taux-poursuite-etudes"}
-        tooltip={
-          <Box>
-            <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
-        }
-      />
+      <TooltipDefinitionTauxPoursuiteEtudes />
     );
   }
   if (tauxIJSelected === "tauxDevenirFavorable") {
@@ -50,15 +31,7 @@ const GlossaireIcon = ({ tauxIJSelected }: { tauxIJSelected: TauxIJType }) => {
         marginInline={1}
         iconSize={"16px"}
         glossaireEntryKey={"taux-de-devenir-favorable"}
-        tooltip={
-          <Box>
-            <Text>
-              (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-              dernière année de formation.
-            </Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
-        }
+        tooltip={<TooltipDefinitionTauxDevenirFavorable />}
       />
     );
   }

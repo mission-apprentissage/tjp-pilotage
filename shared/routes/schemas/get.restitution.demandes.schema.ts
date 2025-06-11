@@ -4,6 +4,7 @@ import { DemandeStatutZodType } from "../../enum/demandeStatutEnum";
 import { DemandeTypeZodType } from "../../enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import {OrderZodType} from '../../enum/orderEnum';
+import { TypeFamilleZodType } from "../../enum/typeFamilleEnum";
 import {VoieZodType} from '../../enum/voieEnum';
 import { CampagneSchema } from "../../schema/campagneSchema";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
@@ -23,7 +24,9 @@ const DemandeSchema = z.object({
   secteur: z.string().optional(),
   // Formation
   libelleNsf: z.string().optional(),
-  libelleFormation: z.string().optional(),
+  libelleFormation: z.string(),
+  typeFamille: TypeFamilleZodType.optional(),
+  isFormationRenovee: z.boolean().optional(),
   formationSpecifique: FormationSpecifiqueFlagsSchema,
   libelleNiveauDiplome: z.string().optional(),
   libelleDispositif: z.string().optional(),

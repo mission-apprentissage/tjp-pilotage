@@ -16,6 +16,7 @@ import {
 import { OBJECTIF_TAUX_TRANSFO_REFORME } from "shared/objectives/TAUX_TRANSFO";
 import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { IndicateurType, PilotageReformeStats, TauxTransformation } from "@/app/(wrapped)/suivi-impact/types";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -243,7 +244,11 @@ const TauxTransfoCard = (
               Taux de transformation cumulé
               </Heading>
               <TooltipIcon
-                label="Cliquez ici pour plus d’infos" onClick={onModalOpen}
+                label={
+                  <Box>
+                    <Text>Comprendre le calcul du taux de transformation cumulé. Cliquez pour plus d’infos.</Text>
+                  </Box>
+                } onClick={onModalOpen}
               />
             </Flex>
             <Box width="100%">
@@ -292,18 +297,7 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
           <StatCard
             label="taux d'emploi à 6 mois"
             data={data}
-            tooltip={
-              <TooltipIcon
-                mr="6px"
-                label={
-                  <Box>
-                    <Text>La part d’élèves qui sont en emploi 6 mois après leur sortie d’études</Text>
-                    <Text>Cliquez ici pour plus d'infos.</Text>
-                  </Box>
-                }
-                onClick={() => openGlossaire("taux-emploi-6-mois")}
-              />
-            }
+            tooltip={<TooltipDefinitionTauxEmploi6Mois />}
           ></StatCard>
           <StatCard
             label="taux poursuite d'études"
@@ -315,7 +309,7 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
                 label={
                   <Box>
                     <Text>Tout élève inscrit à la rentrée N+1 (réorientation et redoublement compris)</Text>
-                    <Text>Cliquez ici pour plus d'infos.</Text>
+                    <Text>Cliquez pour plus d'infos.</Text>
                   </Box>
                 }
                 onClick={() => openGlossaire("taux-poursuite-etudes")}

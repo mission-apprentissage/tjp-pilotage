@@ -7,7 +7,7 @@ import { getChiffresEntree, getChiffresIj, getEtablissement, getFilters, getForm
 
 type Formation = z.infer<typeof FormationSchema>;
 
-function formatLibelleFormation(formations: Formation[], formation: Formation): string {
+function formatLibelleFormationWithDispositifs(formations: Formation[], formation: Formation): string {
   const formationWithSameLibelle = formations.filter(
     (f) =>
       f.libelleFormation === formation.libelleFormation &&
@@ -53,7 +53,7 @@ export const getAnalyseDetailleeEtablissementFactory =
       formations.forEach((formation) => {
         formationsObject[formation.offre] = {
           ...formation,
-          libelleFormation: formatLibelleFormation(formations, formation),
+          libelleFormation: formatLibelleFormationWithDispositifs(formations, formation),
         };
       });
 
