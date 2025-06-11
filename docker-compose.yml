@@ -38,6 +38,26 @@ services:
       - MP_WEBROOT=smtp
     volumes:
       - pilotage_smtp_data:/data
+  
+  reverse_proxy_documentation_support:
+    image: nginx:alpine
+    volumes:
+      - ./documentation_support:/usr/share/nginx/html
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    expose:
+      - "80"
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - pilotage_network
+
+networks:
+  pilotage_network:
+    name: pilotage_network
+
 
 volumes:
   pilotage_postgres_data:
