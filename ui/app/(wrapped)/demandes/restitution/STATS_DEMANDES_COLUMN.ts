@@ -64,7 +64,7 @@ export const STATS_DEMANDES_COLUMNS = {
   tauxPoursuiteRegional: "Tx de poursuite d'études régional",
   tauxDevenirFavorableRegional: "Tx de devenir favorable régional",
   tauxPressionRegional: "Tx de pression régional",
-  nbEtablissement: "Nb établissement",
+  nbEtablissement: "Nb établissements",
   // RH
   nbRecrutementRH: "Nombre de recrutements",
   disciplinesRecrutementRH: "Disciplines des recrutements",
@@ -153,7 +153,7 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<typeof STATS_DEMANDES_COLU
   tauxPoursuiteRegional: "Tx de poursuite d'études régional",
   tauxDevenirFavorableRegional: "Tx de devenir favorable régional",
   tauxPressionRegional: "Tx de pression régional",
-  nbEtablissement: "Nb établissement",
+  nbEtablissement: "Nb établissements",
   // RH
   nbRecrutementRH: "Nombre de recrutements",
   nbReconversionRH: "Nombre de reconversions",

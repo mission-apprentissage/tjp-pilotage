@@ -1,12 +1,14 @@
 import { Flex, Select, Text, VisuallyHidden } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 import type { ScopeZone } from "shared";
-import {CURRENT_IJ_MILLESIME,ScopeEnum} from 'shared';
+import {ScopeEnum} from 'shared';
 
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import type { Formation, FormationIndicateurs, TauxIJType } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 import { BadgeScope } from "@/components/BadgeScope";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
-import {formatMillesime} from '@/utils/formatLibelle';
 
 import { DevenirBarGraph } from "./DevenirBarGraph";
 import { displayIJDatas } from "./displayIndicators";
@@ -14,40 +16,12 @@ import { displayIJDatas } from "./displayIndicators";
 const GlossaireIcon = ({ tauxIJSelected }: { tauxIJSelected: TauxIJType }) => {
   if (tauxIJSelected === "tauxInsertion") {
     return (
-      <GlossaireShortcut
-        display={"inline"}
-        marginInline={1}
-        iconSize={"16px"}
-        glossaireEntryKey={"taux-emploi-6-mois"}
-        tooltip={
-          <Flex direction={"column"} gap={2}>
-            <Text>
-              La part de ceux qui sont en emploi 6 mois après leur sortie d’étude
-              (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-            </Text>
-            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-          </Flex>
-        }
-      />
+      <TooltipDefinitionTauxEmploi6Mois />
     );
   }
   if (tauxIJSelected === "tauxPoursuite") {
     return (
-      <GlossaireShortcut
-        display={"inline"}
-        marginInline={1}
-        iconSize={"16px"}
-        glossaireEntryKey={"taux-poursuite-etudes"}
-        tooltip={
-          <Flex direction={"column"} gap={2}>
-            <Text>
-              Tout élève inscrit à N+1 (réorientation et redoublement compris)
-              (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-            </Text>
-            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-          </Flex>
-        }
-      />
+      <TooltipDefinitionTauxPoursuiteEtudes />
     );
   }
   if (tauxIJSelected === "tauxDevenirFavorable") {
@@ -57,15 +31,7 @@ const GlossaireIcon = ({ tauxIJSelected }: { tauxIJSelected: TauxIJType }) => {
         marginInline={1}
         iconSize={"16px"}
         glossaireEntryKey={"taux-de-devenir-favorable"}
-        tooltip={
-          <Flex direction={"column"} gap={2}>
-            <Text>
-              (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-              dernière année de formation (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-            </Text>
-            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-          </Flex>
-        }
+        tooltip={<TooltipDefinitionTauxDevenirFavorable />}
       />
     );
   }

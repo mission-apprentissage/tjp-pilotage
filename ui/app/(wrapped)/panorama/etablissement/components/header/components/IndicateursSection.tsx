@@ -1,6 +1,8 @@
 import { Badge, Flex, GridItem, Heading, Img, Text, Tooltip, useToken } from "@chakra-ui/react";
-import { CURRENT_IJ_MILLESIME } from "shared";
 
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
@@ -10,7 +12,6 @@ import type {
   Indicateurs,
 } from "@/app/(wrapped)/panorama/etablissement/components/header/types";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
-import { formatMillesime } from "@/utils/formatLibelle";
 import { formatNumberToString } from "@/utils/formatUtils";
 
 import { DonneesIncompletes } from "./DonneesIncompletes";
@@ -83,23 +84,7 @@ const IndicateurTauxEmploi6mois = ({ indicateur }: { indicateur?: Indicateur }) 
   <DashboardCard
     label="Taux d'emploi à 6 mois"
     grow={1}
-    tooltip={
-      <GlossaireShortcut
-        display={"inline"}
-        marginInline={1}
-        iconSize={"16px"}
-        glossaireEntryKey={"taux-emploi-6-mois"}
-        tooltip={
-          <Flex direction="column" gap={2}>
-            <Text>
-              La part de ceux qui sont en emploi 6 mois après leur sortie d’étude
-              (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-            </Text>
-            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-          </Flex>
-        }
-      />
-    }
+    tooltip={<TooltipDefinitionTauxEmploi6Mois />}
     minH={"120px"}
     badge={
       <Badge variant="lavander" size={"xs"}>
@@ -119,23 +104,7 @@ const IndicateurPoursuiteDetudes = ({ indicateur }: { indicateur?: Indicateur })
   <DashboardCard
     label="Poursuite d'études"
     grow={1}
-    tooltip={
-      <GlossaireShortcut
-        display={"inline"}
-        marginInline={1}
-        iconSize={"16px"}
-        glossaireEntryKey={"taux-poursuite-etudes"}
-        tooltip={
-          <Flex direction="column" gap={2}>
-            <Text>
-              Tout élève inscrit à N+1 (réorientation et redoublement compris)
-              (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-            </Text>
-            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-          </Flex>
-        }
-      />
-    }
+    tooltip={<TooltipDefinitionTauxPoursuiteEtudes />}
     minH={"120px"}
     badge={
       <Badge variant="lavander" size={"xs"}>
@@ -162,15 +131,7 @@ const IndicateurTauxDevenirFavorable = ({ indicateur }: { indicateur?: Indicateu
           marginInline={1}
           iconSize={"16px"}
           glossaireEntryKey={"taux-de-devenir-favorable"}
-          tooltip={
-            <Flex direction="column" gap={2}>
-              <Text>
-                (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-                dernière année de formation (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-              </Text>
-              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-            </Flex>
-          }
+          tooltip={<TooltipDefinitionTauxDevenirFavorable />}
         />
       }
       minH={"120px"}
@@ -217,7 +178,8 @@ export const IndicateursSection = ({ indicateurs }: { indicateurs?: Indicateurs 
             glossaireEntryKey={"inserjeunes"}
             tooltip={
               <Flex direction="column" gap={2}>
-                <Text>Ces chiffres incluent l'apprentissage pour les établissements qui en proposent.</Text>
+                <Text>Ces chiffres incluent les élèves en apprentissage pour les établissements qui en proposent en classes mixtes{' '}
+                  (les données pour les classes en 100% apprentissage ne sont pas disponibles).</Text>
                 <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
               </Flex>
             }
@@ -231,8 +193,8 @@ export const IndicateursSection = ({ indicateurs }: { indicateurs?: Indicateurs 
             tooltip={
               <Flex direction="column" gap={2}>
                 <Text>
-                  Cohorte d’élèves pour laquelle les indicateurs InserJeunes ont été mesurés systématiquement sur 2
-                  années scolaires cumulées.
+                  Cohorte d’élèves pour laquelle les indicateurs InserJeunes ont été mesurés{" "}
+                  (systématiquement pour 2 années scolaires cumulées)
                 </Text>
                 <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
               </Flex>

@@ -1,12 +1,12 @@
 import { Box, Flex, Heading, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import {ANNEE_CHOMAGE, CURRENT_IJ_MILLESIME} from 'shared';
+import {ANNEE_CHOMAGE} from 'shared';
 
+import { TooltipDefinitionTauxEmploi6Mois } from '@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois';
+import { TooltipDefinitionTauxPoursuiteEtudes } from '@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes';
 import type { Order, PilotageReformeStatsRegion, TauxTransformation } from "@/app/(wrapped)/suivi-impact/types";
-import { GlossaireShortcut } from '@/components/GlossaireShortcut';
 import { OrderIcon } from "@/components/OrderIcon";
 import { TooltipIcon } from "@/components/TooltipIcon";
-import {formatMillesime} from '@/utils/formatLibelle';
 import { formatPercentageFixedDigits } from "@/utils/formatUtils";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
@@ -136,7 +136,8 @@ export const VueRegionAcademieSection = ({
                         marginInline={1}
                         label={
                           <Box>
-                            <Text>Taux de transformation cumulé par région.</Text>
+                            <Text>Taux de transformation cumulé par région (demandes validées).{" "}
+                              Cliquer pour plus d’infos.</Text>
                           </Box>
                         }
                         onClick={() => onModalOpen()}
@@ -156,7 +157,8 @@ export const VueRegionAcademieSection = ({
                         marginInline={1}
                         label={
                           <Box>
-                            <Text>Taux de transformation cumulé par région.</Text>
+                            <Text>Taux de transformation cumulé par région (projets inclus).{" "}
+                              Cliquer pour plus d’infos.</Text>
                           </Box>
                         }
                         onClick={() => onModalOpen()}
@@ -171,21 +173,7 @@ export const VueRegionAcademieSection = ({
                         <br/>
                           d'études
                       </Text>
-                      <GlossaireShortcut
-                        display={"inline"}
-                        marginInline={1}
-                        iconSize={"12px"}
-                        glossaireEntryKey={"taux-poursuite-etudes"}
-                        tooltip={
-                          <Flex gap={2} direction="column">
-                            <Text>
-                              Tout élève inscrit à N+1 (réorientation et redoublement compris).
-                              (Millésimes {formatMillesime(CURRENT_IJ_MILLESIME)})
-                            </Text>
-                            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-                          </Flex>
-                        }
-                      />
+                      <TooltipDefinitionTauxPoursuiteEtudes />
                     </Flex>
                   </Th>
                   <Th isNumeric cursor="pointer" pb="4"  onClick={() => handleOrder("tauxInsertion")}>
@@ -196,21 +184,7 @@ export const VueRegionAcademieSection = ({
                         <br/>
                         à 6 mois
                       </Text>
-                      <GlossaireShortcut
-                        display={"inline"}
-                        marginInline={1}
-                        iconSize={"12px"}
-                        glossaireEntryKey={"taux-emploi-6-mois"}
-                        tooltip={
-                          <Flex gap={2} direction="column">
-                            <Text>
-                              La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.
-                              (Millésimes {formatMillesime(CURRENT_IJ_MILLESIME)})
-                            </Text>
-                            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-                          </Flex>
-                        }
-                      />
+                      <TooltipDefinitionTauxEmploi6Mois />
                     </Flex>
                   </Th>
                   <Th isNumeric cursor="pointer" pb="4" width="15%" onClick={() => handleOrder("tauxChomage")}>

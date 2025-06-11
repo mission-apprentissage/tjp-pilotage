@@ -1,10 +1,11 @@
 import {ArrowForwardIcon, ChevronDownIcon} from '@chakra-ui/icons';
-import {Button, Flex, Grid, GridItem, Highlight, ListItem, Menu, MenuButton, MenuItem, MenuList, Modal,ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, OrderedList, Select, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure, VStack} from '@chakra-ui/react';
+import { Button, Flex, Grid, GridItem, Highlight, ListItem, Menu, MenuButton, MenuItem, MenuList, Modal,ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, OrderedList, Select, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure, VStack} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { ScopeEnum } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
+import { TooltipDefinitionDomaineDeFormation } from '@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation';
 import type {
   FiltersPilotage,
   FilterTracker,
@@ -313,7 +314,10 @@ export const FiltersSection = ({
             </Multiselect>
           </GridItem>
           <GridItem>
-            <Text>Domaine (NSF)</Text>
+            <Text>
+              Domaine (NSF)
+              <TooltipDefinitionDomaineDeFormation />
+            </Text>
             <Multiselect
               width={"100%"}
               size="md"
