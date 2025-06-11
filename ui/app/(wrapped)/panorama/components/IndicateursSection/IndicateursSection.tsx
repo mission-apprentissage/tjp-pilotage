@@ -1,13 +1,15 @@
 import { Box, Flex, Heading, HStack, Img, SimpleGrid, Stack, Text } from "@chakra-ui/react";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { CURRENT_RENTREE } from "shared";
 
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
+import { TooltipDefinitionTauxRemplissage } from "@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { StatsFormations } from "@/app/(wrapped)/panorama/types";
-import { BadgeMillesimes } from "@/components/BadgeMillesimes";
 import { BadgeRentreeScolaire } from "@/components/BadgeRentreeScolaire";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { TooltipIcon } from "@/components/TooltipIcon";
-import { formatMillesime } from "@/utils/formatLibelle";
 import { formatNumberToString, formatPercentage } from "@/utils/formatUtils";
 
 import { StatCard } from "./StatCard";
@@ -98,85 +100,28 @@ export const IndicateursSection = ({
           value={formatPercentage(stats?.tauxRemplissage, 0, "-")}
           tooltip={formatPercentage(stats?.tauxRemplissage, 2, "-")}
           type={"percentage"}
-          badge={<BadgeRentreeScolaire rentreeScolaire={CURRENT_RENTREE} />}
-          glossaire={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Flex direction="column" gap={2}>
-                  <Text>Le ratio entre l’effectif d’entrée en formation et sa capacité.</Text>
-                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-                </Flex>
-              }
-              onClick={() => openGlossaire("taux-de-remplissage")}
-            />
-          }
+          glossaire={<TooltipDefinitionTauxRemplissage />}
         />
         <StatCard
           label={`Taux de devenir favorable dans votre région`}
           value={formatPercentage(stats?.tauxDevenirFavorable, 0, "-")}
           tooltip={formatPercentage(stats?.tauxDevenirFavorable, 2, "-")}
           type={"percentage"}
-          badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
-          glossaire={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Flex direction="column" gap={2}>
-                  <Text>
-                    (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-                    dernière année de formation (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-                  </Text>
-                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-                </Flex>
-              }
-              onClick={() => openGlossaire("taux-de-devenir-favorable")}
-            />
-          }
+          glossaire={<TooltipDefinitionTauxDevenirFavorable />}
         />
         <StatCard
           label="Taux de poursuite d'études dans votre région"
           value={formatPercentage(stats?.tauxPoursuite, 0, "-")}
           tooltip={formatPercentage(stats?.tauxPoursuite, 2, "-")}
           type={"percentage"}
-          badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
-          glossaire={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Flex direction="column" gap={2}>
-                  <Text>
-                    Tout élève inscrit à N+1 (réorientation et redoublement compris)
-                    (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-                  </Text>
-                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-                </Flex>
-              }
-              onClick={() => openGlossaire("taux-poursuite-etudes")}
-            />
-          }
+          glossaire={<TooltipDefinitionTauxPoursuiteEtudes />}
         />
         <StatCard
           label="Taux d'emploi à 6 mois dans votre région"
           value={formatPercentage(stats?.tauxInsertion, 0, "-")}
           tooltip={formatPercentage(stats?.tauxInsertion, 2, "-")}
           type={"percentage"}
-          badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
-          glossaire={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Flex direction="column" gap={2}>
-                  <Text>
-                    La part de ceux qui sont en emploi 6 mois après leur sortie d’études
-                    (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-                  </Text>
-                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-                </Flex>
-              }
-              onClick={() => openGlossaire("taux-emploi-6-mois")}
-            />
-          }
+          glossaire={<TooltipDefinitionTauxEmploi6Mois />}
         />
       </SimpleGrid>
     </Stack>

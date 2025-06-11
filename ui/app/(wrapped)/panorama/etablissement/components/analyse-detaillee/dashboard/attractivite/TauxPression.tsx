@@ -5,7 +5,7 @@ import { LineChart } from "@/app/(wrapped)/panorama/etablissement/components/ana
 import type { ChiffresEntreeOffre } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
-import {formatNumber} from '@/utils/formatUtils';
+import { formatNumber } from '@/utils/formatUtils';
 
 const CODE_NIVEAU_DIPLOME_BTS = "320";
 

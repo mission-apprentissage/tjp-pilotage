@@ -17,12 +17,12 @@ import { CURRENT_IJ_MILLESIME } from "shared";
 import { OBJECTIF_TAUX_TRANSFO_REFORME } from "shared/objectives/TAUX_TRANSFO";
 import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { IndicateurType, PilotageReformeStats, TauxTransformation } from "@/app/(wrapped)/suivi-impact/types";
 import { BadgeMillesimes } from "@/components/BadgeMillesimes";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeColors } from "@/theme/themeColors";
-import { formatMillesime } from "@/utils/formatLibelle";
 import { formatNumber, formatPercentageFixedDigits } from "@/utils/formatUtils";
 
 import { MultiProgressBar } from "./MultiProgressBar";
@@ -246,7 +246,11 @@ const TauxTransfoCard = (
               Taux de transformation cumulé
               </Heading>
               <TooltipIcon
-                label="Cliquez ici pour plus d’infos" onClick={onModalOpen}
+                label={
+                  <Box>
+                    <Text>Comprendre le calcul du taux de transformation cumulé. Cliquez pour plus d’infos.</Text>
+                  </Box>
+                } onClick={onModalOpen}
               />
             </Flex>
             <Box width="100%">
@@ -295,21 +299,7 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
           <StatCard
             label="taux d'emploi à 6 mois"
             data={data}
-            tooltip={
-              <TooltipIcon
-                mr="6px"
-                label={
-                  <Flex direction="column" gap={2}>
-                    <Text>
-                      La part d’élèves qui sont en emploi 6 mois après leur sortie d’études
-                      (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-                    </Text>
-                    <Text fontWeight={700}>Cliquez ici pour plus d'infos.</Text>
-                  </Flex>
-                }
-                onClick={() => openGlossaire("taux-emploi-6-mois")}
-              />
-            }
+            tooltip={<TooltipDefinitionTauxEmploi6Mois />}
           ></StatCard>
           <StatCard
             label="taux poursuite d'études"
@@ -319,13 +309,10 @@ const IndicateursSortie = ({ data, onModalOpen }: { data?: PilotageReformeStats,
               <TooltipIcon
                 mr="6px"
                 label={
-                  <Flex direction="column" gap={2}>
-                    <Text>
-                      Tout élève inscrit à la rentrée N+1 (réorientation et redoublement compris)
-                      (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-                    </Text>
-                    <Text fontWeight={700}>Cliquez ici pour plus d'infos.</Text>
-                  </Flex>
+                  <Box>
+                    <Text>Tout élève inscrit à la rentrée N+1 (réorientation et redoublement compris)</Text>
+                    <Text>Cliquez pour plus d'infos.</Text>
+                  </Box>
                 }
                 onClick={() => openGlossaire("taux-poursuite-etudes")}
               />

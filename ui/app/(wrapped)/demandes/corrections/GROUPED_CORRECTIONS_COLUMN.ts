@@ -81,7 +81,7 @@ export const GROUPED_CORRECTIONS_COLUMNS: Record<
       tauxPoursuiteRegional: "Tx de poursuite d'études régional",
       tauxDevenirFavorableRegional: "Tx de devenir favorable régional",
       tauxPressionRegional: "Tx de pression régional",
-      nbEtablissement: "Nb établissement",
+      nbEtablissement: "Nb établissements",
     },
   },
 } satisfies Record<
@@ -155,7 +155,7 @@ export const GROUPED_CORRECTIONS_COLUMNS_OPTIONAL: Record<
       tauxPoursuiteRegional: "Tx de poursuite d'études régional",
       tauxDevenirFavorableRegional: "Tx de devenir favorable régional",
       tauxPressionRegional: "Tx de pression régional",
-      nbEtablissement: "Nb établissement",
+      nbEtablissement: "Nb établissements",
     },
   },
 } satisfies Record<string, { color: string; options: Partial<typeof CORRECTIONS_COLUMNS_OPTIONAL> }>;

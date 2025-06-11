@@ -2,8 +2,9 @@ import { Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@ch
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import { formatMillesime } from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -120,19 +121,7 @@ export const TableQuadrant = ({
               >
                 {handleOrder && <OrderIcon {...order} column="tauxInsertion" />}
                 TX EMPLOI
-                <TooltipIcon
-                  ml="1"
-                  label={
-                    <Flex direction="column" gap={2}>
-                      <Text>
-                        La part de ceux qui sont en emploi 6 mois après leur sortie d’étude
-                        (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-                      </Text>
-                      <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-                    </Flex>
-                  }
-                  onClick={() => openGlossaire("taux-emploi-6-mois")}
-                />
+                <TooltipDefinitionTauxEmploi6Mois />
               </Th>
               <Th
                 px="2"
@@ -144,19 +133,7 @@ export const TableQuadrant = ({
               >
                 {handleOrder && <OrderIcon {...order} column="tauxPoursuite" />}
                 TX POURSUITE
-                <TooltipIcon
-                  ml="1"
-                  label={
-                    <Flex direction="column" gap={2}>
-                      <Text>
-                        Tout élève inscrit à N+1 (réorientation et redoublement compris)
-                        (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-                      </Text>
-                      <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-                    </Flex>
-                  }
-                  onClick={() => openGlossaire("taux-poursuite-etudes")}
-                />
+                <TooltipDefinitionTauxPoursuiteEtudes />
               </Th>
             </Tr>
           </Thead>

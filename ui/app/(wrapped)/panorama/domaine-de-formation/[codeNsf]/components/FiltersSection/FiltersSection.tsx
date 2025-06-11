@@ -2,6 +2,7 @@ import { Button, Container, Flex, FormLabel, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
 import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
 import { useNsfContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/nsfContext";
@@ -33,7 +34,9 @@ export const FiltersSection = () => {
     <Flex bgColor={"bluefrance.975"} position="sticky" top={"52px"} left={0} zIndex={20}>
       <Container maxW={"container.xl"}>
         <FormLabel htmlFor="nsf-select" py={"12px"}>
-          Rechercher un domaine de formation (NSF) ou par formation
+          Rechercher un domaine de formation (NSF)
+          <TooltipDefinitionDomaineDeFormation />
+          ou par formation
         </FormLabel>
         <Flex justify="space-between" gap={"1rem"} mb={"24px"} mt={"12px"} align="center">
           <SelectNsf

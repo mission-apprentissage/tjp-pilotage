@@ -1,10 +1,10 @@
 import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
-import { CURRENT_IJ_MILLESIME } from "shared";
 
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import type { PanoramaStatsTauxInsertion, PanoramaStatsTauxPoursuite } from "@/app/(wrapped)/panorama/types";
 import { BarGraph } from "@/app/(wrapped)/suivi-impact/components/BarGraph";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
-import { formatMillesime } from "@/utils/formatLibelle";
 
 export const TauxInserJeunesSection = ({
   region,
@@ -35,20 +35,8 @@ export const TauxInserJeunesSection = ({
           <Flex>
             <Text fontWeight={"bold"} color="grey.200">
               TAUX D'EMPLOI À 6 MOIS
-            </Text>
-            <GlossaireShortcut
-              ml={2}
-              tooltip={
-                <Flex direction="column" gap={2}>
-                  <Text>
-                    La part de ceux qui sont en emploi 6 mois après leur sortie d’étude
-                    (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-                  </Text>
-                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-                </Flex>
-              }
-              glossaireEntryKey="taux-emploi-6-mois"
-            />
+            </Text>``
+            <TooltipDefinitionTauxEmploi6Mois />
           </Flex>
           <BarGraph graphData={tauxInsertion} isFiltered={true} libelleRegion={region} />
         </Box>
@@ -59,19 +47,9 @@ export const TauxInserJeunesSection = ({
             <Text fontWeight={"bold"} color="grey.200" my={"8px"}>
               TAUX DE POURSUITE D'ÉTUDES
             </Text>
-            <GlossaireShortcut
-              ml={2}
-              tooltip={
-                <Flex direction="column" gap={2}>
-                  <Text>
-                    Tout élève inscrit à N+1 (réorientation et redoublement compris)
-                    (millésimes {formatMillesime(CURRENT_IJ_MILLESIME)}).
-                  </Text>
-                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-                </Flex>
-              }
-              glossaireEntryKey="taux-poursuite-etudes"
-            />
+            <Box alignSelf="center">
+              <TooltipDefinitionTauxPoursuiteEtudes />
+            </Box>
           </Flex>
           <BarGraph graphData={tauxPoursuite} isFiltered={true} libelleRegion={region} />
         </Box>
