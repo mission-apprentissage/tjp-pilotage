@@ -101,18 +101,21 @@ export const ConsoleSection = ({
           getCellBgColor={getCellBgColor}
         />
         <Tbody>
-          {data?.formations.map((line) => (
-            <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
+          {data?.formations.map((formation) => (
+            <Fragment key={`${formation.cfd}_${formation.codeDispositif}`}>
               <Tr h="12" bg={"white"} role="group">
                 <FormationLineContent
                   isSticky={isSticky}
-                  line={line}
+                  formation={formation}
                   filters={filters}
-                  expended={historiqueId?.cfd === line.cfd && historiqueId?.codeDispositif === line.codeDispositif}
+                  expended={(
+                    historiqueId?.cfd === formation.cfd
+                    && historiqueId?.codeDispositif === formation.codeDispositif
+                  )}
                   onClickExpend={() =>
                     setHistoriqueId({
-                      cfd: line.cfd,
-                      codeDispositif: line.codeDispositif,
+                      cfd: formation.cfd,
+                      codeDispositif: formation.codeDispositif,
                     })
                   }
                   onClickCollapse={() => setHistoriqueId(undefined)}
@@ -121,7 +124,7 @@ export const ConsoleSection = ({
                   getCellBgColor={getCellBgColor}
                 />
               </Tr>
-              {historiqueId?.cfd === line.cfd && historiqueId?.codeDispositif === line.codeDispositif && (
+              {historiqueId?.cfd === formation.cfd && historiqueId?.codeDispositif === formation.codeDispositif && (
                 <>
                   {historique?.map((historiqueLine) => (
                     <Tr
@@ -130,7 +133,7 @@ export const ConsoleSection = ({
                     >
                       <FormationLineContent
                         isSticky={isSticky}
-                        line={historiqueLine}
+                        formation={historiqueLine}
                         canShowQuadrantPosition={canShowQuadrantPosition}
                         colonneFilters={colonneFilters}
                         filters={filters}

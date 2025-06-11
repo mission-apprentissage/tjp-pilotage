@@ -8,7 +8,6 @@ import type {
 } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
-import type { TypeFamilleKeys } from "@/components/BadgeTypeFamille";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "@/components/BadgeVoieApprentissage";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
@@ -35,7 +34,7 @@ export const Dashboard = ({
           {formation?.libelleFormation.replace("2nde commune", " ").replace("1ere commune", " ")}
         </Heading>
         <Flex direction={"row"} gap={2}>
-          <BadgeTypeFamille typeFamille={formation?.typeFamille as TypeFamilleKeys} labelSize="long" size={"md"} />
+          <BadgeTypeFamille typeFamille={formation?.typeFamille} labelSize="long" size={"md"} />
           <Flex>
             <BadgeVoieApprentissage voie={formation?.voie} labelSize="long" size={"md"} />
             <BadgeFormationRenovee isFormationRenovee={formation?.isFormationRenovee} labelSize="long" size={"md"} />

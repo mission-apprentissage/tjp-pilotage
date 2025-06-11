@@ -1,6 +1,10 @@
 import { Box, Flex, Heading, HStack, Img, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
+import { TooltipDefinitionTauxRemplissage } from "@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { StatsFormations } from "@/app/(wrapped)/panorama/types";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
@@ -93,75 +97,28 @@ export const IndicateursSection = ({
           value={formatPercentage(stats?.tauxRemplissage, 0, "-")}
           tooltip={formatPercentage(stats?.tauxRemplissage, 2, "-")}
           type={"percentage"}
-          glossaire={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Box>
-                  <Text>Le ratio entre l’effectif d’entrée en formation et sa capacité.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              onClick={() => openGlossaire("taux-de-remplissage")}
-            />
-          }
+          glossaire={<TooltipDefinitionTauxRemplissage />}
         />
         <StatCard
           label={`Taux de devenir favorable dans votre région`}
           value={formatPercentage(stats?.tauxDevenirFavorable, 0, "-")}
           tooltip={formatPercentage(stats?.tauxDevenirFavorable, 2, "-")}
           type={"percentage"}
-          glossaire={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Box display="inline">
-                  <Text>
-                    (nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en
-                    dernière année de formation.
-                  </Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              onClick={() => openGlossaire("taux-de-devenir-favorable")}
-            />
-          }
+          glossaire={<TooltipDefinitionTauxDevenirFavorable />}
         />
         <StatCard
           label="Taux de poursuite d'études dans votre région"
           value={formatPercentage(stats?.tauxPoursuite, 0, "-")}
           tooltip={formatPercentage(stats?.tauxPoursuite, 2, "-")}
           type={"percentage"}
-          glossaire={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Box>
-                  <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              onClick={() => openGlossaire("taux-poursuite-etudes")}
-            />
-          }
+          glossaire={<TooltipDefinitionTauxPoursuiteEtudes />}
         />
         <StatCard
           label="Taux d'emploi à 6 mois dans votre région"
           value={formatPercentage(stats?.tauxInsertion, 0, "-")}
           tooltip={formatPercentage(stats?.tauxInsertion, 2, "-")}
           type={"percentage"}
-          glossaire={
-            <TooltipIcon
-              ml="1"
-              label={
-                <Box>
-                  <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’études.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              onClick={() => openGlossaire("taux-emploi-6-mois")}
-            />
-          }
+          glossaire={<TooltipDefinitionTauxEmploi6Mois />}
         />
       </SimpleGrid>
     </Stack>

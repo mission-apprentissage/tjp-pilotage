@@ -1,5 +1,6 @@
 import { Divider, Flex, Heading, List, ListItem, SimpleGrid, Text } from "@chakra-ui/react";
 
+import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
 import { PositiveNegativeBarChart } from "@/app/(wrapped)/demandes/pilotage/components/PositiveNegativeBarChart";
 import type { Pilotage } from "@/app/(wrapped)/demandes/pilotage/types";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
@@ -66,6 +67,7 @@ export const FiliereNiveauDiplomeSection = ({
         <Flex direction={"row"} gap={2} color={"bluefrance.113"}>
           <Text fontWeight={500} fontSize={16}>
             10 DOMAINES LES PLUS TRANSFORMÉS
+            <TooltipDefinitionDomaineDeFormation label="Par domaine NSF, en nombre de places transformées (incl. places ouvertes, fermées, et places existantes colorées)." />
           </Text>
           <TooltipIcon
             zIndex={1}

@@ -1,12 +1,12 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
-import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
+import { TypeFamilleEnum } from 'shared/enum/typeFamilleEnum';
 import type { searchNsfFormationSchema } from "shared/routes/schemas/get.nsf-diplome.search.search.schema";
 import type { z } from "zod";
 
 import { getKbdClient } from "@/db/db";
 import { openForRentreeScolaire } from "@/modules/data/utils/openForRentreeScolaire";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const findManyInDataFormationQuery = async ({
