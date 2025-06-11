@@ -92,7 +92,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
       tauxPoursuiteRegional: "Tx de poursuite d'études régional",
       tauxDevenirFavorableRegional: "Tx de devenir favorable régional",
       tauxPressionRegional: "Tx de pression régional",
-      nbEtablissement: "Nb établissement",
+      nbEtablissement: "Nb établissements",
     },
   },
   // RH
@@ -225,7 +225,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
       tauxPoursuiteRegional: "Tx de poursuite d'études régional",
       tauxDevenirFavorableRegional: "Tx de devenir favorable régional",
       tauxPressionRegional: "Tx de pression régional",
-      nbEtablissement: "Nb établissement",
+      nbEtablissement: "Nb établissements",
     },
   },
   // RH

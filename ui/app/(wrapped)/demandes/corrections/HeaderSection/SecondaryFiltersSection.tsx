@@ -4,11 +4,10 @@ import type { TypeDemandeType } from "shared/enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
 import type { Corrections, FiltersCorrections } from "@/app/(wrapped)/demandes/corrections/types";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/demandes/utils/typeDemandeUtils";
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { Multiselect } from "@/components/Multiselect";
-import { TooltipIcon } from "@/components/TooltipIcon";
 import {feature} from '@/utils/feature';
 import { formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 
@@ -25,7 +24,6 @@ export const SecondaryFiltersSection = ({
   resetFilters: () => void;
   data?: Corrections;
 }) => {
-  const { openGlossaire } = useGlossaireContext();
   return (
     <Box borderRadius={4} mb={8} display={["none", null, "block"]}>
       <Flex justifyContent={"start"} flexDirection={"column"} gap={4} py={3}>
@@ -33,11 +31,7 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <Text fontWeight={500} mb={1}>
               Domaine de formation (NSF)
-              <TooltipIcon
-                ml="1"
-                label="Cliquez pour plus d'infos."
-                onClick={() => openGlossaire("domaine-de-formation-nsf")}
-              />
+              <TooltipDefinitionDomaineDeFormation />
             </Text>
             <Multiselect
               onClose={filterTracker("codeNsf")}
