@@ -6,7 +6,7 @@ import { useEtablissementContext } from "@/app/(wrapped)/panorama/etablissement/
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
-import { formatCommuneLibelleWithCodeDepartement, formatLibelleFormation } from "@/utils/formatLibelle";
+import { formatCommuneLibelleWithCodeDepartement, formatLibelleFormationWithDispositifs } from "@/utils/formatLibelle";
 import { formatArray } from "@/utils/formatUtils";
 
 export const ExportList = () => {
@@ -44,7 +44,7 @@ export const ExportList = () => {
           commune: etablissement.commune,
           codeDepartement: etablissement.codeDepartement,
         }),
-        libelleFormation: formatLibelleFormation(etablissement),
+        libelleFormation: formatLibelleFormationWithDispositifs(etablissement),
         voie: formatArray(etablissement.voies),
       })),
       {
@@ -57,6 +57,8 @@ export const ExportList = () => {
         effectif: "Effectif",
         tauxInsertion: "Taux d'insertion à 6 mois",
         tauxPoursuite: "Taux de poursuite d'études",
+        tauxDevenirFavorable: "Taux de devenir favorable",
+        tauxPression: "Taux de pression",
         libelleAcademie: "Académie",
         libelleRegion: "Région",
       }
@@ -74,7 +76,7 @@ export const ExportList = () => {
           commune: etablissement.commune,
           codeDepartement: etablissement.codeDepartement,
         }),
-        libelleFormation: formatLibelleFormation(etablissement),
+        libelleFormation: formatLibelleFormationWithDispositifs(etablissement),
         voie: formatArray(etablissement.voies),
       })),
       {
@@ -87,6 +89,8 @@ export const ExportList = () => {
         effectif: "Effectif",
         tauxInsertion: "Taux d'insertion à 6 mois",
         tauxPoursuite: "Taux de poursuite d'études",
+        tauxDevenirFavorable: "Taux de devenir favorable",
+        tauxPression: "Taux de pression",
         libelleAcademie: "Académie",
         libelleRegion: "Région",
       }

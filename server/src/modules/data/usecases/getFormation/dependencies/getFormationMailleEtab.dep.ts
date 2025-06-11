@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
 
 import { getKbdClient } from "@/db/db";
@@ -34,6 +35,9 @@ export const getFormationMailleEtab = ({
         eb("dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
       ])
     )
+    .$narrowType<{
+      typeFamille: TypeFamille;
+    }>()
     .orderBy(["libelleNsf", "libelleNiveauDiplome", "libelleFormation"])
     .distinct();
 
@@ -60,6 +64,9 @@ export const getFormationMailleEtab = ({
       sb.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
       sb.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
     ])
+    .$narrowType<{
+      typeFamille: TypeFamille;
+    }>()
     .orderBy([
       "formations.codeNsf",
       "formations.libelleNiveauDiplome",

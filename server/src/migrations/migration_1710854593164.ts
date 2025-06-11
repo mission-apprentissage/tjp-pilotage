@@ -24,8 +24,8 @@ export const up = async (db: Kysely<unknown>) => {
   // Ne passe pas via le insertInto de kysely
   await db.executeQuery(
     sql`
-    INSERT INTO "campagne" ("annee", "dateDebut", "statut") VALUES ('2023', '2023-10-03'::timestamp with time zone, 'terminée');
-    INSERT INTO "campagne" ("annee", "statut") VALUES ('2024', 'en attente');
+    INSERT INTO "campagne" ("annee", "dateDebut", "dateFin", "statut") VALUES ('2023', '2023-10-03'::timestamp with time zone, '2024-05-01'::timestamp with time zone 'terminée');
+    INSERT INTO "campagne" ("annee", "dateDebut", "dateFin", "statut") VALUES ('2024', '2024-04-01'::timestamp with time zone, '2025-07-03'::timestamp with time zone, 'en attente');
   `.compile(db)
   );
 };

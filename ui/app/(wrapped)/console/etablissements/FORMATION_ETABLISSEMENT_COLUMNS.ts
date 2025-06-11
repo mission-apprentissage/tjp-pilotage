@@ -8,8 +8,6 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   libelleEtablissement: "Nom d'établissement",
   libelleDispositif: "Dispositif",
   libelleFormation: "Formation",
-  formationSpecifique: "Formation spécifique",
-  actionPrioritaire: "Action prioritaire ?",
   // Établissement
   commune: "Commune",
   codeDepartement: "Code Département",
@@ -30,6 +28,13 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   codeDispositif: "Code dispositif",
+  // Tags formation
+  formationSpecifique: "Formation spécifique",
+  actionPrioritaire: "Action prioritaire ?",
+  typeFamille: "Type de famille de métiers",
+  isFormationRenovee: "Formation rénovée ?",
+  isHistorique: "Historique ?",
+  isHistoriqueCoExistant: "Historique co-existant ?",
   // Effectifs
   evolutionEffectif: "Évolution des effectifs",
   effectif1: "Année 1",
@@ -69,6 +74,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   evolutionTauxInsertionEtablissement: string;
   evolutionTauxPoursuiteEtablissement: string;
   evolutionTauxDevenirFavorableEtablissement: string;
+  isHistorique: string;
 };
 
 export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL = {

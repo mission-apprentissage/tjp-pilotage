@@ -1,10 +1,10 @@
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
-import {getDateRentreeScolaire} from 'shared/utils/getRentreeScolaire';
+import { TypeFamilleEnum } from 'shared/enum/typeFamilleEnum';
 
 import { getKbdClient } from "@/db/db";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { isFormationRenovee } from "@/modules/utils/isFormationRenovee";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 import type { Filters } from "./searchDiplome.usecase";
@@ -74,7 +74,7 @@ export const searchDiplomeQuery = async (filters: Filters) => {
       }
       return q;
     })
-    .select((eb) =>
+    .select((eb) => [
       eb
         .case()
         .when("dataFormation.codeNiveauDiplome", "in", [
@@ -104,9 +104,7 @@ export const searchDiplomeQuery = async (filters: Filters) => {
           )
         )
         .end()
-        .as("dispositifs")
-    )
-    .select((eb) => [
+        .as("dispositifs"),
       "dataFormation.cfd as value",
       sql<string>`CONCAT(${eb.ref("dataFormation.libelleFormation")},
       ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')',
@@ -125,16 +123,7 @@ export const searchDiplomeQuery = async (filters: Filters) => {
         else null
         end
       `.as("dateFermeture"),
-      eb
-        .selectFrom("formationHistorique")
-        .innerJoin("formationView as fva", "fva.cfd", "formationHistorique.ancienCFD")
-        .select("formationHistorique.ancienCFD")
-        .where(wb => wb.and([
-          wb(wb.ref("formationHistorique.cfd"), "=", wb.ref("dataFormation.cfd")),
-          wb("fva.dateFermeture", "is not", null),
-          filters.campagne ? wb("fva.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(filters.campagne)}`) : wb.val(true)
-        ]))
-        .limit(1)
+      isFormationRenovee({eb, rentreeScolaire: filters.campagne})
         .as("isFormationRenovee"),
     ])
     .distinctOn([

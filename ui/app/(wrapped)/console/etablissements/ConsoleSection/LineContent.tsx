@@ -1,5 +1,5 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, chakra, Flex, IconButton, Link, Skeleton, Tag, Td, Text, Tr } from "@chakra-ui/react";
+import { Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { CURRENT_RENTREE } from "shared";
 
@@ -7,8 +7,10 @@ import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissemen
 import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import type { Line } from "@/app/(wrapped)/console/etablissements/types";
 import {getEvolutionTauxEntreeData, getEvolutionTauxSortieData} from '@/app/(wrapped)/console/utils/extractEvolutionData';
+import {BadgeFermeture} from '@/components/BadgeFermeture';
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
+import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
 import {GraphEvolution} from '@/components/GraphEvolution';
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
@@ -170,15 +172,27 @@ export const EtablissementLineContent = ({
       }}
     >
       <Flex>
-        {formatFamilleMetierLibelle(line, "long", "sm", "12px")}
-        <BadgeFormationRenovee isFormationRenovee={!!line.isFormationRenovee} />
+        {formatFamilleMetierLibelle({ formation: line, labelSize: "long", size: "sm", fontSize: "12px", withBadge: false })}
+        <BadgeTypeFamille
+          typeFamille={line.typeFamille}
+          labelSize="long"
+          size="sm"
+          ms={2}
+        />
+        <BadgeFormationRenovee
+          isFormationRenovee={!!line.isFormationRenovee}
+          labelSize="long"
+          size="sm"
+          ms={2}
+        />
         {line.formationRenovee && (
-          <Flex ms={2} my={"auto"} width={"fit-content"} h={"1.8rem"} whiteSpace={"nowrap"} direction={"column"}>
-            {line.dateFermeture && (
-              <Tag size="sm" bgColor="grey.1000_active" color={"grey.425"} width={"fit-content"} fontSize={12}>
-                Fermeture au {line.dateFermeture}
-              </Tag>
-            )}
+          <Flex my={"auto"} width={"fit-content"} h={"1.8rem"} whiteSpace={"nowrap"} direction={"column"}>
+            <BadgeFermeture
+              dateFermeture={line.dateFermeture}
+              labelSize="long"
+              size="sm"
+              ms={2}
+            />
             <Link
               variant="text"
               as={NextLink}
@@ -199,7 +213,11 @@ export const EtablissementLineContent = ({
       </Flex>
     </ConditionalTd>
     <ConditionalTd colonne={"formationSpecifique"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <BadgesFormationSpecifique formationSpecifique={line.formationSpecifique} />
+      <BadgesFormationSpecifique
+        formationSpecifique={line.formationSpecifique}
+        labelSize="long"
+        size="sm"
+      />
     </ConditionalTd>
     <ConditionalTd colonne="libelleNiveauDiplome" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleNiveauDiplome ?? "-"}

@@ -1,8 +1,7 @@
 import type { FastifyRequestType } from "fastify/types/type-provider";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 
 import type { RequestUser } from "@/modules/core/model/User";
+import { inject } from "@/utils/inject";
 
 import { updateUserLastSeenAt } from "./updateUserLastSeenAt.dep";
 

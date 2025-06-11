@@ -4,6 +4,7 @@ import type { CSSObjectWithLabel, StylesConfig } from "react-select";
 import Select from "react-select";
 
 import { client } from "@/api.client";
+import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
 import type { NsfOption, NsfOptions } from "@/app/(wrapped)/panorama/domaine-de-formation/types";
 
 const selectStyle: StylesConfig<NsfOption, false> = {
@@ -37,12 +38,14 @@ export const SelectNsf = chakra(
     className,
     isClearable = true,
     routeSelectedNsf,
+    hideLabel = false
   }: {
     defaultNsfs: NsfOptions;
     defaultSelected: NsfOption | null;
     className?: string;
     isClearable?: boolean;
     routeSelectedNsf: (selected: NsfOption) => void;
+    hideLabel?: boolean;
   }) => {
     const [search, setSearch] = useState<string>("");
 
@@ -60,9 +63,13 @@ export const SelectNsf = chakra(
       <Flex flexDirection="column" gap="2" className={className}>
         <Flex width="100%">
           <FormControl>
-            <FormLabel htmlFor="nsf-select">
-              Rechercher un domaine de formation (NSF) ou par formation
-            </FormLabel>
+            { !hideLabel && (
+              <FormLabel htmlFor="nsf-select">
+                Rechercher un domaine de formation (NSF)
+                <TooltipDefinitionDomaineDeFormation />
+                ou par formation
+              </FormLabel>
+            )}
             <Select
               inputId="nsf-select"
               noOptionsMessage={({ inputValue }) =>

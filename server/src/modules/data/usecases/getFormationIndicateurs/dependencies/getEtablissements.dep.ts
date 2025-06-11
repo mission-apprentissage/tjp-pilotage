@@ -1,4 +1,3 @@
-import { sql } from "kysely";
 
 import { getKbdClient } from "@/db/db";
 
@@ -20,9 +19,9 @@ export const getEtablissements = async ({
     .selectFrom("maille_etab")
     .innerJoin("indicateurEntree", "indicateurEntree.formationEtablissementId", "maille_etab.id")
     .where("cfd", "=", cfd)
-    .groupBy(["rentreeScolaire", "libelleFormation"])
     .select((eb) => [
       eb.ref("rentreeScolaire").as("rentreeScolaire"),
-      sql<number>`count(distinct ${eb.ref("uai")})`.as("nbEtablissements"),
+      eb.ref("maille_etab.uai").as("uai"),
+      eb.ref("maille_etab.voie").as("voie")
     ])
     .execute();

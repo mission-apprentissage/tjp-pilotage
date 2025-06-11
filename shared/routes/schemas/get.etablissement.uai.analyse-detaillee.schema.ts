@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import {TypeFamilleZodType} from '../../enum/typeFamilleEnum';
 import {VoieZodType} from '../../enum/voieEnum';
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 
@@ -76,9 +77,10 @@ export const FormationSchema = z.object({
   cfd: z.string(),
   codeDispositif: z.string().optional(),
   codeNiveauDiplome: z.string(),
-  typeFamille: z.string().optional(),
+  typeFamille: TypeFamilleZodType.optional(),
   dateOuverture: z.date().optional(),
   formationSpecifique: FormationSpecifiqueFlagsSchema,
+  isFormationRenovee: z.boolean().optional(),
 });
 
 const OffreSchema = z.string();

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import {TypeFamilleZodType} from '../../enum/typeFamilleEnum';
+
 const queryFiltersSchema = z.object({
   codeRegion: z.string().optional(),
   codeAcademie: z.string().optional(),
@@ -18,7 +20,7 @@ export const getFormationCfdSchema = {
       cfd: z.string(),
       libelle: z.string(),
       codeNiveauDiplome: z.string().optional(),
-      typeFamille: z.string().optional(),
+      typeFamille: TypeFamilleZodType.optional(),
       codeNsf: z.string().optional(),
       libelleRome: z.string().optional(),
       isTransitionDemographique: z.boolean().optional(),

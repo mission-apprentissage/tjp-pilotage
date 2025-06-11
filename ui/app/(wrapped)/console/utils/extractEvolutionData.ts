@@ -1,5 +1,5 @@
-import {formatMillesime} from '@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData';
-import {formatNumber} from '@/utils/formatUtils';
+import { formatMillesime } from '@/utils/formatLibelle';
+import { formatNumber } from '@/utils/formatUtils';
 
 
 export const getEvolutionEffectifData = ({

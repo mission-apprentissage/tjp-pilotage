@@ -13,10 +13,10 @@ export const HorizontalBarChart = ({
   title: string;
   data: Record<
     string,
-    {
+    Array<{
       label: string;
       value: number;
-    }[]
+    }>
   >;
 }) => {
   const chartRef = useRef<echarts.ECharts>();

@@ -8,7 +8,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { redirectDneFactory } from "./redirectDne.usecase";
 
-describe("redirectDne usecase", () => {
+describe("server > src > modules > core > usecases > redirectDne > usecase", () => {
   it("Doit throw s'il n'y a pas de code_verifier", async () => {
     const redirectDne = redirectDneFactory({
       getDneClient: vi.fn().mockResolvedValue({
@@ -392,7 +392,7 @@ describe("redirectDne usecase", () => {
           firstname: ssoUserInfo.given_name,
           lastname: ssoUserInfo.family_name,
           role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE[RoleDNEEnum.DGESCO],
-          uais: [],
+          uais: undefined,
           password: null,
           codeRegion: undefined,
           sub: undefined,
@@ -442,7 +442,7 @@ describe("redirectDne usecase", () => {
           firstname: ssoUserInfo.given_name,
           lastname: ssoUserInfo.family_name,
           role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE[RoleDNEEnum.INS],
-          uais: [],
+          uais: undefined,
           password: null,
           codeRegion: "11",
           sub: undefined,
@@ -527,7 +527,7 @@ describe("redirectDne usecase", () => {
           firstname: ssoUserInfo.given_name,
           lastname: ssoUserInfo.family_name,
           role: ROLE_DNE_ROLE_ORION_CORRESPONDANCE[RoleDNEEnum.DASEN],
-          uais: [],
+          uais: undefined,
           password: null,
           codeRegion: undefined,
           sub: undefined,

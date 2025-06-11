@@ -39,8 +39,12 @@ export const formatArray = (values?: Array<string | number | undefined>, capital
   return values.filter((value) => value).join(", ");
 };
 
-export const formatNumber = (value?: number, numberOfDigits: number = 0): number => {
-  if (!value) return 0;
+export const formatNumber = (
+  value?: number,
+  numberOfDigits: number = 0,
+  nullValue: number = 0
+): number => {
+  if (value === undefined || value === null || Number.isNaN(value)) return nullValue;
   return Number.parseFloat(value.toFixed(numberOfDigits));
 };
 

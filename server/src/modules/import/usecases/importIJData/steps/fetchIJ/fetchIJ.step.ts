@@ -1,9 +1,8 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { MILLESIMES_IJ } from "shared";
 
 import type { IJUaiData } from "@/modules/import/services/inserJeunesApi/formatUaiData";
 import { getUaiData } from "@/modules/import/services/inserJeunesApi/inserJeunes.api";
+import { inject } from "@/utils/inject";
 
 import { cacheIj, clearIjCache } from "./cacheIJ.dep";
 
