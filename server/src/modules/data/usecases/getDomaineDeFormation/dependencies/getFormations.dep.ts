@@ -1,6 +1,7 @@
 import { sql } from "kysely";
 import type { VoieType } from "shared";
 import { CURRENT_RENTREE } from "shared";
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
 
 import { getKbdClient } from "@/db/db";
@@ -12,11 +13,13 @@ export const getFormations = async ({
   codeRegion,
   codeDepartement,
   codeAcademie,
+  voie
 }: {
   codeNsf: string;
   codeRegion?: string;
   codeDepartement?: string;
   codeAcademie?: string;
+  voie?: VoieType
 }) =>
   getKbdClient()
     .with("formations", (wb) =>
@@ -47,7 +50,6 @@ export const getFormations = async ({
           wb("formations.dateOuverture", "<=", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
           wb("fva.dateFermeture", "is not", null),
           wb("fva.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`),
-          wb("formationHistorique.ancienCFD", "in", (eb) => eb.selectFrom("formationEtablissement").select("cfd"))
         ]))
         .select("formationHistorique.cfd")
         .distinct()
@@ -61,6 +63,7 @@ export const getFormations = async ({
             .onRef("formationEtablissement.voie", "=", "formations.voie")
         )
         .innerJoin("dataEtablissement", "dataEtablissement.uai", "formationEtablissement.uai")
+        .leftJoin("indicateurEntree", "indicateurEntree.formationEtablissementId", "formationEtablissement.id")
         .selectAll("formations")
         .select((sb) => [
           sb.ref("formationEtablissement.uai").as("uai"),
@@ -87,9 +90,16 @@ export const getFormations = async ({
           }
           return q;
         })
+        .$call((q) => {
+          if (voie) {
+            return q.where("formationEtablissement.voie", "=", voie);
+          }
+          return q;
+        })
+        .where(wb => wb("indicateurEntree.rentreeScolaire", "=", wb.val(CURRENT_RENTREE)))
     )
     .selectFrom("formations")
-    .innerJoin("formation_etab", "formations.cfd", "formation_etab.cfd")
+    .leftJoin("formation_etab", "formations.cfd", "formation_etab.cfd")
     .selectAll("formations")
     .select((sb) => [
       sb.fn.count<number>("formation_etab.uai").as("nbEtab"),
@@ -110,6 +120,9 @@ export const getFormations = async ({
       "formations.dateOuverture",
       "formations.voie"
     ])
-    .$narrowType<{ voie: VoieType }>()
+    .$narrowType<{
+      voie: VoieType;
+      typeFamille: TypeFamille;
+    }>()
     .execute()
     .then(cleanNull);

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { TypeFormationSpecifiqueZodType } from "../../enum/formationSpecifiqueEnum";
 import {OrderZodType} from '../../enum/orderEnum';
 import { PositionQuadrantZodType } from "../../enum/positionQuadrantEnum";
+import { TypeFamilleZodType } from "../../enum/typeFamilleEnum";
 import { FormationSpecifiqueFlagsSchema } from "../../schema/formationSpecifiqueFlagsSchema";
 import { OptionSchema } from "../../schema/optionSchema";
 
@@ -52,7 +53,7 @@ export const FormationLineSchema = z.object({
     })
     .optional(),
   positionQuadrant: z.string().optional(),
-  typeFamille: z.string().optional(),
+  typeFamille: TypeFamilleZodType.optional(),
   isHistoriqueCoExistant: z.coerce.boolean().optional(),
   // CFD de l'éventuelle formation renovant la formation actuelle
   formationRenovee: z.string().optional(),

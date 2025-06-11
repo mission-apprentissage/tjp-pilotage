@@ -15,5 +15,5 @@ Les différentes catégories de formations “spécifiques” dans Orion incluen
 - [action prioritaire](action-prioritaire.md)
 
 
->💡 **A noter**  
+>💡 **A noter**
 >Le terme de “formation spécifique” n’est utilisé dans Orion que pour désigner ces groupes de formation et ne correspond pas à une catégorisation officielle des formations

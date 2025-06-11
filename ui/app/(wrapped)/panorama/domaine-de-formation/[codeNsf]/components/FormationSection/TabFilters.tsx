@@ -1,15 +1,23 @@
 import { Flex, Select } from "@chakra-ui/react";
 
+import { useDomaineDeFormation } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/domaineDeFormationContext";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
-import type { FormationsCounter, Presence, Voie } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
+import type { Presence, Voie } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/types";
 
 import { FormationTabs } from "./FormationTabs";
 
-export const TabFilters = ({ counter }: { counter: FormationsCounter }) => {
+export const TabFilters = () => {
+  const { counter } = useDomaineDeFormation();
   const { handlePresenceChange, handleVoieChange, currentFilters, handleTabFormationChange } = useFormationContext();
 
   return (
-    <Flex w={"100%"} p={"16px"} bgColor={"bluefrance.975"} alignItems={"center"} justifyContent={"space-between"}>
+    <Flex w={"100%"} p={"16px"} bgColor={"bluefrance.975"} alignItems={"center"} justifyContent={"space-between"} position="sticky"
+      // 52px = navbar height
+      // 119px = page filters height
+      top="calc(119px + 52px)"
+      left="0"
+      zIndex="10"
+    >
       <Flex gap={"16px"}>
         <Select
           onChange={(e) => handlePresenceChange(e.target.value as Presence)}
@@ -35,7 +43,7 @@ export const TabFilters = ({ counter }: { counter: FormationsCounter }) => {
           borderStyle={"solid"}
           aria-label="Sélectionner une voie"
         >
-          <option value="">Voie: Tout ({counter.allVoies})</option>
+          <option value="">Voie: Scolaire + Apprentissage ({counter.allVoies})</option>
           <option value="scolaire">Scolaire ({counter.scolaire})</option>
           <option value="apprentissage">Apprentissage ({counter.apprentissage})</option>
         </Select>

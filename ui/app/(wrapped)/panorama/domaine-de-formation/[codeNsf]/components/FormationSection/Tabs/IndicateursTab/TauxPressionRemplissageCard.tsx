@@ -2,8 +2,9 @@ import { Box, Flex, Select, Text, useToken, VisuallyHidden } from "@chakra-ui/re
 import _ from "lodash";
 import { useMemo } from "react";
 import type { ScopeZone } from "shared";
-import { ScopeEnum } from "shared";
+import { ScopeEnum, VoieEnum } from "shared";
 
+import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
 import type {
   Formation,
   FormationIndicateurs,
@@ -116,6 +117,7 @@ export const TauxPressionRemplissageCard = ({
   tauxAttractiviteSelected: TauxAttractiviteType;
   handleChangeTauxAttractivite: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }) => {
+  const { currentFilters: { voie } } = useFormationContext();
   const blue = useToken("colors", "bluefrance.113");
   const green = useToken("colors", "greenArchipel.557");
   const orange = useToken("colors", "orangeTerreBattue.645");
@@ -176,7 +178,7 @@ export const TauxPressionRemplissageCard = ({
           <GlossaireIcon isBTS={formation.isBTS} tauxAttractiviteSelected={tauxAttractiviteSelected} />
         </Flex>
       </Flex>
-      {displayTauxAttractiviteDatas(lineChartDatas) ? (
+      {displayTauxAttractiviteDatas(lineChartDatas) && voie !== VoieEnum.apprentissage ? (
         <TauxPressionRemplissageGraph
           title={tauxAttractiviteSelected === "tauxRemplissage" ? "Taux de remplissage" : "Taux de pression"}
           data={lineChartDatas}

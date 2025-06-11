@@ -6,6 +6,7 @@ import type { Etablissement } from "shared/routes/schemas/get.formation.cfd.map.
 import { client } from "@/api.client";
 import { FormationHeader } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/components/FormationSection/FormationHeader";
 import { useFormationContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/formationContext";
+import { useNsfContext } from "@/app/(wrapped)/panorama/domaine-de-formation/[codeNsf]/context/nsfContext";
 
 import { FormationAbsente } from "./components/FormationAbsente";
 import { ExportListEtablissements } from "./ExportListEtablissements";
@@ -22,7 +23,7 @@ const COORDOONNEES_FRANCE = {
 
 const useEtablissementsTab = () => {
   const { currentFilters, handleClearBbox, handleSetBbox } = useFormationContext();
-  const { cfd, codeRegion, codeAcademie, codeDepartement } = currentFilters;
+  const { selection: { cfd }, codeRegion, codeAcademie, codeDepartement } = currentFilters;
   const mapContainer = createRef<HTMLDivElement>();
   const [activeUai, setActiveUai] = useState<string | null>(null);
   const [hoverUai, setHoverUai] = useState<string | null>(null);
@@ -61,6 +62,7 @@ const useEtablissementsTab = () => {
           codeDepartement,
           orderBy: currentFilters.etab.orderBy,
           includeAll: currentFilters.etab.includeAll,
+          voie: currentFilters.voie ? currentFilters.voie : undefined
         },
       },
       {
@@ -148,9 +150,10 @@ const useEtablissementsTab = () => {
 };
 
 export const EtablissementsTab = () => {
-  const { currentFilters, codeNsf, libelleNsf } = useFormationContext();
+  const { codeNsf, libelleNsf } = useNsfContext();
+  const { currentFilters } = useFormationContext();
   const {
-    cfd,
+    selection: { cfd },
     etab: { view },
   } = currentFilters;
 

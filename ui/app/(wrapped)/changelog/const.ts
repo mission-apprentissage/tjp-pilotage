@@ -1,4 +1,8 @@
+import type { Role } from "shared";
+import type { UserFonction } from "shared/enum/userFonctionEnum";
 import { z } from "zod";
+
+import type { Auth } from "@/app/authContext";
 
 export const ChangelogTypeZodType = z.enum(["BANDEAU", "Fonctionnalité", "Données", "Bug", "Maintenance"]);
 
@@ -15,6 +19,8 @@ export interface IChangelog {
     description: string,
     document?: string,
     show: boolean,
+    roles?: Role[]
+    fonctions?: UserFonction[]
 }
 
 export const CHANGELOG: IChangelog[] = [
@@ -233,8 +239,8 @@ export const CHANGELOG: IChangelog[] = [
   },
   {
     "id": "ad424ff3-be91-44f7-910f-864f36c6c8a6",
-    "deployed": true,
-    "show": true,
+    "deployed": false,
+    "show": false,
     "title": "Erreur dans les données d’apprentissage",
     "types": [ChangelogTypeEnum["BANDEAU"]],
     "date": new Date("2025-04-23"),
@@ -243,8 +249,8 @@ export const CHANGELOG: IChangelog[] = [
   },
   {
     "id": "84981ee7-5930-4cb2-8a8e-026892c67a79",
-    "deployed": true,
-    "show": true,
+    "deployed": false,
+    "show": false,
     "title": "Erreur données apprentissage (Domaine de formation)",
     "types": [ChangelogTypeEnum["Bug"]],
     "date": new Date("2025-04-23"),
@@ -271,4 +277,58 @@ export const CHANGELOG: IChangelog[] = [
     "description": "Le service Orion sera en maintenance le 06/05/2025 de 17h jusqu'au lendemain 07/05/2025 maximum.",
     "document": "",
   },
+  {
+    "id": "f88dd011-c177-46a7-b80f-2f3a60822ac9",
+    "deployed": true,
+    "show": true,
+    "title": "",
+    "types": [ChangelogTypeEnum["BANDEAU"]],
+    "date": new Date("2025-05-20"),
+    "description": "Nous avons ouvert la connexion depuis votre portail professionnel (Arena).",
+    "document": "",
+    "fonctions": ["Inspecteur", "DASEN"],
+  },
+  {
+    "id": "dc817ae2-116d-47c4-8e85-ccb98dc470a0",
+    "deployed": true,
+    "show": true,
+    "title": "Ouverture de connexion depuis le portail professionnel",
+    "types": [ChangelogTypeEnum["Fonctionnalité"]],
+    "date": new Date("2025-05-20"),
+    "description": "Nous avons ouvert la connexion depuis votre portail professionnel (Arena). Vous retrouverez le lien pour Orion dans l'onglet : Enquêtes et Pilotage, rubrique Formations professionnelles sous le nom \"Orion inserjeunes\". En cliquant dessus, vous vous connecterez automatiquement à Orion avec votre compte professionnel.",
+    "document": "",
+    "fonctions": ["Inspecteur", "DASEN"],
+  },
+  {
+    "id": "f83dac09-b854-456f-ba26-0653d5574d6c",
+    "deployed": true,
+    "show": true,
+    "title": "Ouverture des brouillons",
+    "types": [ChangelogTypeEnum["Fonctionnalité"]],
+    "date": new Date("2025-05-28"),
+    "description": "Le partage de brouillon de demande est maintenant ouvert par défaut aux personnes ayant les droits sur un même établissement (UAI).",
+    "document": "",
+  }
 ];
+
+const isRoleAllowed = (entry: IChangelog, role: Role) => {
+  return entry.roles?.includes(role) ?? true;
+};
+
+const isFunctionAllowed = (entry: IChangelog, fonction: UserFonction) => {
+  return entry.fonctions?.includes(fonction) ?? true;
+};
+
+export const getChangelog = (auth?: Auth) => {
+  return CHANGELOG.filter((entry) => {
+    if (auth?.user?.role && entry.roles) {
+      return isRoleAllowed(entry, auth?.user.role);
+    }
+
+    if (auth?.user?.fonction && entry.fonctions) {
+      return isFunctionAllowed(entry, auth?.user.fonction);
+    }
+
+    return !entry.fonctions && !entry.roles;
+  });
+};

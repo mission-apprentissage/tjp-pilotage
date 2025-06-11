@@ -6,7 +6,7 @@ import {
   isDemandeBrouillonVisible,
   isDemandeSelectable,
 } from "@/modules/utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 import type { Filters } from "./countDemandes.usecase";

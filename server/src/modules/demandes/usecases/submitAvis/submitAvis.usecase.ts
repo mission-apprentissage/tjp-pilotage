@@ -1,6 +1,4 @@
 import * as Boom from "@hapi/boom";
-// eslint-disable-next-line import/no-extraneous-dependencies, n/no-extraneous-import
-import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
 import {PermissionEnum} from 'shared/enum/permissionEnum';
 import type { submitAvisSchema } from "shared/routes/schemas/post.demande.avis.submit.schema";
@@ -9,6 +7,7 @@ import type { z } from "zod";
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
 import { updateDemandeWithHistory } from "@/modules/demandes/repositories/updateDemandeWithHistory.query";
+import { inject } from "@/utils/inject";
 
 import { createAvisQuery } from "./deps/createAvis.query";
 

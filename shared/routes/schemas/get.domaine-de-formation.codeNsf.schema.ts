@@ -1,9 +1,10 @@
 import { z } from "zod";
 
+import { TypeFamilleZodType } from "../../enum/typeFamilleEnum";
 import { VoieZodType} from '../../enum/voieEnum';
 import { OptionSchema } from "../../schema/optionSchema";
 
-const filtersSchema = z.object({
+const FiltersSchema = z.object({
   regions: z.array(OptionSchema),
   academies: z.array(
     OptionSchema.extend({
@@ -18,13 +19,13 @@ const filtersSchema = z.object({
   ),
 });
 
-export const formationSchema = z.object({
+export const FormationSchema = z.object({
   codeNsf: z.string(),
   cfd: z.string(),
   codeNiveauDiplome: z.string(),
   libelleFormation: z.string(),
   libelleNiveauDiplome: z.string().optional(),
-  typeFamille: z.string().optional(),
+  typeFamille: TypeFamilleZodType.optional(),
   nbEtab: z.number(),
   apprentissage: z.boolean(),
   scolaire: z.boolean(),
@@ -33,25 +34,26 @@ export const formationSchema = z.object({
   voie: VoieZodType
 });
 
-const queryFiltersSchema = z.object({
+const QueryFiltersSchema = z.object({
   codeRegion: z.string().optional(),
   codeAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),
+  voie: VoieZodType.optional()
 });
 
-export type QueryFilters = z.infer<typeof queryFiltersSchema>;
+export type QueryFilters = z.infer<typeof QueryFiltersSchema>;
 
 export const getDomaineDeFormationCodeNsfSchema = {
   params: z.object({
     codeNsf: z.string(),
   }),
-  querystring: queryFiltersSchema,
+  querystring: QueryFiltersSchema,
   response: {
     200: z.object({
       codeNsf: z.string(),
       libelleNsf: z.string(),
-      filters: filtersSchema,
-      formations: z.array(formationSchema),
+      filters: FiltersSchema,
+      formations: z.array(FormationSchema),
     }),
   },
 };

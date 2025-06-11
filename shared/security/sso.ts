@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { Role } from "../enum/roleEnum";
+import type { UserFonction } from "../enum/userFonctionEnum";
 
 const roleDNEZodType = z.enum([
   "DRAFPIC",
@@ -71,4 +72,22 @@ export const ROLE_DNE_ROLE_ORION_CORRESPONDANCE: Record<RoleDNE, Role> = {
   PERDIR: "perdir",
   RECTEUR: "invite",
   DASEN: "invite",
+};
+
+export const ROLE_DNE_FONCTION_ORION_CORRESPONDANCE: Record<RoleDNE, UserFonction> = {
+  DRAFPIC: "DRAFPIC",
+  DRAFPIC_ETUDE: "Chargé(e) d'étude DRAFPIC",
+  DRAIO: "DRAIO",
+  SGASGRA: "SGRASGA",
+  DOS: "Services DOS",
+  SSA: "SSA",
+  RDSI: "Référent(e) DSI",
+  CFP: "Conseiller(ère) en formation professionnelle",
+  CMQ: "Directeur(ice) de CMQ",
+  DGESCO: "DGESCO",
+  IGESR: "Inspécteur(ice) général(e)",
+  INS: "Inspécteur(ice)",
+  PERDIR: "Chef(fe) d'établissement",
+  RECTEUR: "Recteur(ice)",
+  DASEN: "DASEN",
 };

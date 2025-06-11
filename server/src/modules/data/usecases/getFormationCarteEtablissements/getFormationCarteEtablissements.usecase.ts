@@ -11,7 +11,7 @@ const getFormationCarteEtablissementsFactory =
       getBoundaries,
     }
   ) =>
-    async ({ cfd }: Params, { codeAcademie, codeRegion, codeDepartement, orderBy, includeAll }: QueryFilters) => {
+    async ({ cfd }: Params, { codeAcademie, codeRegion, codeDepartement, orderBy, includeAll, voie }: QueryFilters) => {
       const [formation, etablissements, bbox] = await Promise.all([
         deps.getFormation({ cfd }),
         deps.getEtablissements({
@@ -21,6 +21,7 @@ const getFormationCarteEtablissementsFactory =
           codeDepartement,
           orderBy,
           includeAll,
+          voie
         }),
         deps.getBoundaries({ codeAcademie, codeRegion, codeDepartement }),
       ]);
