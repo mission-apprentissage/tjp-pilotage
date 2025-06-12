@@ -20,12 +20,18 @@ export const demandeValidators = {
     }
     return undefined;
   },
-  libelleColoration: (demande) => {
+  libelleColoration1: (demande) => {
     if (demande.coloration && !demande.libelleColoration1) {
-      return "Le champ 'libellé coloration' est obligatoire";
+      return "Le champ 'libellé coloration 1' est obligatoire";
     }
     if (!demande.coloration && demande.libelleColoration1) {
-      return "Le champ 'libellé coloration' doit être vide";
+      return "Le champ 'libellé coloration 1' doit être vide";
+    }
+    return undefined;
+  },
+  libelleColoration2: (demande) => {
+    if ((!demande.coloration || !demande.libelleColoration1) && demande.libelleColoration2) {
+      return "Le champ 'libellé coloration 2' doit être vide";
     }
     return undefined;
   },
