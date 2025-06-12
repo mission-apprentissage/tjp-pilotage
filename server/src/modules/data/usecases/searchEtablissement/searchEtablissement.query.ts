@@ -41,8 +41,17 @@ export const searchEtablissementQuery = async ({
       ])
     )
     .$call((q) => {
+      // Dans le cas de la recherche d'établissement dans le formulaire, on ne veut que les établissements qui sont
+      // - les collèges (CLG),
+      // - les établissements régionaux d'enseignement adapté (EREA),
+      // - les lycées pro (LP),
+      // - les lycées (LYC)
       if(isFormulaire) return q.where("dataEtablissement.typeUai", "in", ["CLG", "EREA", "LP", "LYC"]);
-      return q.where("dataEtablissement.typeUai", "in", ["CLG", "EREA", "EXP", "LP", "LYC", "SEP", "TSGE"]);
+      // Sinon dans le cas du panorama établissement par exemple on inclut également
+      // - les sections d'enseignement professionnel (SEP),
+      // - les expérience en milieu professionnel (EXP),
+      // - les tronc commun sciences de gestion et numérique (TSGE)
+      return q.where("dataEtablissement.typeUai", "in", ["CLG", "EREA", "LP", "LYC", "EXP", "SEP", "TSGE"]);
     })
     .$call((q) => {
       if (!codeRegion) return q;
