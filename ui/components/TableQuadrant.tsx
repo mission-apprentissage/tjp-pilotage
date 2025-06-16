@@ -1,6 +1,8 @@
 import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
@@ -117,16 +119,7 @@ export const TableQuadrant = ({
               >
                 {handleOrder && <OrderIcon {...order} column="tauxInsertion" />}
                 TX EMPLOI
-                <TooltipIcon
-                  ml="1"
-                  label={
-                    <Box>
-                      <Text>La part de ceux qui sont en emploi 6 mois après leur sortie d’étude.</Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
-                    </Box>
-                  }
-                  onClick={() => openGlossaire("taux-emploi-6-mois")}
-                />
+                <TooltipDefinitionTauxEmploi6Mois />
               </Th>
               <Th
                 px="2"
@@ -138,16 +131,7 @@ export const TableQuadrant = ({
               >
                 {handleOrder && <OrderIcon {...order} column="tauxPoursuite" />}
                 TX POURSUITE
-                <TooltipIcon
-                  ml="1"
-                  label={
-                    <Box>
-                      <Text>Tout élève inscrit à N+1 (réorientation et redoublement compris).</Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
-                    </Box>
-                  }
-                  onClick={() => openGlossaire("taux-poursuite-etudes")}
-                />
+                <TooltipDefinitionTauxPoursuiteEtudes />
               </Th>
             </Tr>
           </Thead>

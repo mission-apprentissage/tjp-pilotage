@@ -1,11 +1,18 @@
 import { Box, chakra, Text, Th, Tooltip } from "@chakra-ui/react";
 import type { CSSProperties } from "react";
 
+import { TooltipDefinitionAMICMA } from "@/app/(wrapped)/components/definitions/DefinitionAMICMA";
+import { TooltipDefinitionColoration } from "@/app/(wrapped)/components/definitions/DefinitionColoration";
+import { TooltipDefinitionFCIL } from "@/app/(wrapped)/components/definitions/DefinitionFCIL";
+import { TooltipDefinitionPositionQuadrant } from "@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant";
+import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/STATS_DEMANDES_COLUMN";
 import type { OrderDemandesRestitution } from "@/app/(wrapped)/demandes/restitution/types";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { OrderIcon } from "@/components/OrderIcon";
-import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 const ConditionalTh = chakra(
@@ -18,6 +25,7 @@ const ConditionalTh = chakra(
     onClick,
     isNumeric = false,
     overrideTooltip,
+    icon
   }: {
     className?: string;
     style?: CSSProperties;
@@ -27,11 +35,11 @@ const ConditionalTh = chakra(
     onClick?: (column: OrderDemandesRestitution["orderBy"]) => void;
     isNumeric?: boolean;
     overrideTooltip?: (tooltip: string) => string;
+    icon?: React.ReactNode;
   }) => {
     if (colonneFilters.includes(colonne))
       return (
         <Th
-          maxW={170}
           p={2}
           className={className}
           style={style}
@@ -39,22 +47,26 @@ const ConditionalTh = chakra(
           cursor={onClick ? "pointer" : "default"}
           onClick={() => onClick && onClick(colonne as OrderDemandesRestitution["orderBy"])}
         >
-          <Tooltip label={overrideTooltip ? overrideTooltip(STATS_DEMANDES_COLUMNS[colonne]) : STATS_DEMANDES_COLUMNS[colonne]} placement="top">
-            <Box
-              fontSize={12}
-              fontWeight={700}
-              lineHeight={"20px"}
-              textTransform={"uppercase"}
-              textOverflow={"ellipsis"}
-              alignSelf={"stretch"}
-              isTruncated
-              whiteSpace="nowrap"
-              display="flex"
-              alignItems="center"
-            >
-              {children}
-            </Box>
-          </Tooltip>
+          <Box maxW={170} sx={{
+            display: "flex",
+            alignItems: "center",
+          }}>
+            <Tooltip label={overrideTooltip ? overrideTooltip(STATS_DEMANDES_COLUMNS[colonne]) : STATS_DEMANDES_COLUMNS[colonne]} placement="top">
+              <Box
+                fontSize={12}
+                fontWeight={700}
+                lineHeight={"20px"}
+                textTransform={"uppercase"}
+                textOverflow={"ellipsis"}
+                alignSelf={"stretch"}
+                isTruncated
+                whiteSpace="nowrap"
+              >
+                {children}
+              </Box>
+            </Tooltip>
+            {icon}
+          </Box>
         </Th>
       );
     return null;
@@ -233,6 +245,7 @@ export const HeadLineContent = ({
         colonne={"libelleColoration"}
         onClick={handleOrder}
         bgColor={getCellColor("libelleColoration")}
+        icon={<TooltipDefinitionColoration />}
       >
         <OrderIcon {...order} column="libelleColoration" />
         {STATS_DEMANDES_COLUMNS.libelleColoration}
@@ -242,6 +255,7 @@ export const HeadLineContent = ({
         colonne={"libelleFCIL"}
         onClick={handleOrder}
         bgColor={getCellColor("libelleFCIL")}
+        icon={<TooltipDefinitionFCIL />}
       >
         <OrderIcon {...order} column="libelleFCIL" />
         {STATS_DEMANDES_COLUMNS.libelleFCIL}
@@ -251,6 +265,7 @@ export const HeadLineContent = ({
         colonne={"amiCma"}
         onClick={handleOrder}
         bgColor={getCellColor("amiCma")}
+        icon={<TooltipDefinitionAMICMA />}
       >
         <OrderIcon {...order} column="amiCma" />
         {STATS_DEMANDES_COLUMNS.amiCma}
@@ -350,12 +365,8 @@ export const HeadLineContent = ({
         colonne={"positionQuadrant"}
         isNumeric
         bgColor={getCellColor("positionQuadrant")}
+        icon={<TooltipDefinitionPositionQuadrant />}
       >
-        <TooltipIcon
-          mr="1"
-          label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
-          placement={"bottom-end"}
-        />
         {STATS_DEMANDES_COLUMNS.positionQuadrant}
       </ConditionalTh>
       <ConditionalTh
@@ -366,15 +377,10 @@ export const HeadLineContent = ({
         minW={200}
         maxW={200}
         bgColor={getCellColor("tauxInsertionRegional")}
+        icon={<TooltipDefinitionTauxEmploi6Mois />}
       >
         <OrderIcon {...order} column="tauxInsertionRegional" />
         {STATS_DEMANDES_COLUMNS.tauxInsertionRegional}
-        <TooltipIcon
-          ml="1"
-          mt="1px"
-          label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude pour cette formation à l'échelle régionale (voie scolaire)."
-          placement={"bottom-end"}
-        />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -382,15 +388,10 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         textAlign="center"
         bgColor={getCellColor("tauxPoursuiteRegional")}
+        icon={<TooltipDefinitionTauxPoursuiteEtudes />}
       >
         <OrderIcon {...order} column="tauxPoursuiteRegional" />
         {STATS_DEMANDES_COLUMNS.tauxPoursuiteRegional}
-        <TooltipIcon
-          ml="1"
-          mt="1px"
-          label="Tout élève inscrit à N+1 (réorientation et redoublement compris) pour cette formation à l'échelle régionale (voie scolaire)."
-          placement={"bottom-end"}
-        />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -398,14 +399,10 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         textAlign="center"
         bgColor={getCellColor("tauxDevenirFavorableRegional")}
+        icon={<TooltipDefinitionTauxDevenirFavorable />}
       >
         <OrderIcon {...order} column="tauxDevenirFavorableRegional" />
         {STATS_DEMANDES_COLUMNS.tauxDevenirFavorableRegional}
-        <TooltipIcon
-          ml="2"
-          label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation pour cette formation à l'échelle régionale (voie scolaire)."
-          placement={"bottom-end"}
-        />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -413,20 +410,10 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         textAlign="center"
         bgColor={getCellColor("tauxPressionRegional")}
+        icon={<TooltipDefinitionTauxDePression />}
       >
         <OrderIcon {...order} column="tauxPressionRegional" />
         {STATS_DEMANDES_COLUMNS.tauxPressionRegional}
-        <TooltipIcon
-          ml="1"
-          mt="1px"
-          label={
-            <>
-              <Box>Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional.</Box>
-              <TauxPressionScale />
-            </>
-          }
-          placement={"bottom-end"}
-        />
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}

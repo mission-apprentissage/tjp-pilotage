@@ -1,12 +1,11 @@
-import { Badge, Box, Flex, Img, Text, Tooltip } from "@chakra-ui/react";
+import { Badge, Flex, Img, Text, Tooltip } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipDefinitionTauxRemplissage } from "@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage";
 import { CounterChart } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/components/CounterChart";
-import { formatTaux } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 import { DashboardCard } from "@/app/(wrapped)/panorama/etablissement/components/DashboardCard";
-import { TooltipIcon } from "@/components/TooltipIcon";
+import { formatPercentageWithoutSign} from '@/utils/formatUtils';
 
 const getCompareData = ({
   tauxRemplissage,
@@ -22,7 +21,7 @@ const getCompareData = ({
         <Flex>
           <Img src={"/icons/arrow_up.svg"} alt="Icône tendance à la hausse" />
           <Text fontWeight={"bold"} color="success.425">
-            {`+${formatTaux(tauxRemplissage - tauxRemplissageAnneePrecedente)}`}
+            {`+${formatPercentageWithoutSign(tauxRemplissage - tauxRemplissageAnneePrecedente)}`}
           </Text>
         </Flex>
       </Tooltip>
@@ -33,7 +32,7 @@ const getCompareData = ({
         <Flex>
           <Img src={"/icons/arrow_down.svg"} alt="Icône tendance à la baisse" />
           <Text fontWeight={"bold"} color="warning.525">
-            {`${formatTaux(tauxRemplissage - tauxRemplissageAnneePrecedente)}`}
+            {`${formatPercentageWithoutSign(tauxRemplissage - tauxRemplissageAnneePrecedente)}`}
           </Text>
         </Flex>
       </Tooltip>
@@ -53,23 +52,10 @@ export const TauxRemplissage = ({
   tauxRemplissage?: number;
   tauxRemplissageAnneePrecedente?: number;
 }) => {
-  const { openGlossaire } = useGlossaireContext();
-
   return (
     <DashboardCard
       label="Taux de remplissage"
-      tooltip={
-        <TooltipIcon
-          ml="1"
-          label={
-            <Box>
-              <Text>Le ratio entre l’effectif d’entrée en formation et sa capacité.</Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
-          }
-          onClick={() => openGlossaire("taux-de-remplissage")}
-        />
-      }
+      tooltip={<TooltipDefinitionTauxRemplissage />}
       badge={
         <Badge variant="lavander" size={"xs"}>
           Étab.
@@ -77,7 +63,7 @@ export const TauxRemplissage = ({
       }
     >
       <CounterChart
-        data={typeof tauxRemplissage === "undefined" ? undefined : formatTaux(tauxRemplissage)}
+        data={typeof tauxRemplissage === "undefined" ? undefined : formatPercentageWithoutSign(tauxRemplissage)}
         compareData={getCompareData({
           tauxRemplissage,
           tauxRemplissageAnneePrecedente,

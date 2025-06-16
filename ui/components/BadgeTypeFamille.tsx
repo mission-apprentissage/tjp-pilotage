@@ -2,11 +2,6 @@ import type { BadgeProps } from "@chakra-ui/react";
 import {Badge, chakra} from '@chakra-ui/react';
 import {TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
 
-import {
-  formatTypeFamilleCourt,
-  formatTypeFamilleLong,
-} from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
-
 export const TYPE_FAMILLE_KEYS = {
   [TypeFamilleEnum["2nde_commune"]]: "info",
   [TypeFamilleEnum["1ere_commune"]]: "info",
@@ -16,19 +11,40 @@ export const TYPE_FAMILLE_KEYS = {
 
 export type TypeFamilleKeys = keyof typeof TYPE_FAMILLE_KEYS;
 
+export const formatTypeFamilleLong = (typeFamille?: TypeFamilleKeys): string => {
+  if (!typeFamille) {
+    return "";
+  }
+  return typeFamille
+    .replace(TypeFamilleEnum["2nde_commune"], "Seconde commune")
+    .replace(TypeFamilleEnum["1ere_commune"], "Première année commune")
+    .replace(TypeFamilleEnum["specialite"], "Spécialité")
+    .replace(TypeFamilleEnum["option"], "Option")
+    .replace("fermeture", "Fermeture au ");
+};
+
+export const formatTypeFamilleCourt = (typeFamille?: TypeFamilleKeys): string => {
+  if (!typeFamille) {
+    return "";
+  }
+  return typeFamille
+    .replace(TypeFamilleEnum["2nde_commune"], "2de")
+    .replace(TypeFamilleEnum["1ere_commune"], "1ère")
+    .replace(TypeFamilleEnum["specialite"], "Spé")
+    .replace(TypeFamilleEnum["option"], "Opt")
+    .replace("fermeture", "Fermeture au ");
+};
+
+
 export const BadgeTypeFamille = chakra(({
   typeFamille,
   labelSize = "short",
   size = "xs",
-  fontSize,
-  children,
   ...props
 }: {
   typeFamille?: TypeFamilleKeys;
   labelSize?: "short" | "long";
-  size?: "xs" | "sm" | "md";
-  fontSize?: string;
-  children?: React.ReactNode;
+  size?: "xs" | "sm" | "md" | "lg";
   props?: BadgeProps;
 }) => {
   if (!typeFamille) {
@@ -43,9 +59,14 @@ export const BadgeTypeFamille = chakra(({
   }[typeFamille];
 
   return (
-    <Badge variant={typeFamilleVariant} size={size} fontSize={fontSize} {...props}>
+    <Badge
+      variant={typeFamilleVariant}
+      h={"fit-content"}
+      flex={"shrink"}
+      size={size}
+      {...props}
+    >
       {labelSize === "short" ? formatTypeFamilleCourt(typeFamille) : formatTypeFamilleLong(typeFamille)}
-      {children && <> {children}</>}
     </Badge>
   );
 });

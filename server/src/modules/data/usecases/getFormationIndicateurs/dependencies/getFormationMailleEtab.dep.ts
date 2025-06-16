@@ -1,4 +1,5 @@
 import { CURRENT_RENTREE } from "shared";
+import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 
 import { getKbdClient } from "@/db/db";
 import { notHistoriqueUnlessCoExistant } from "@/modules/data/utils/notHistorique";
@@ -61,6 +62,9 @@ export const getFormationMailleEtab = ({
       "formations.typeFamille",
       "formations.codeNsf",
     ])
+    .$narrowType<{
+      typeFamille: TypeFamille;
+    }>()
     .$call((q) => {
       if (codeRegion) {
         return q.where("codeRegion", "=", codeRegion);

@@ -1,5 +1,5 @@
 import type { BadgeProps} from '@chakra-ui/react';
-import {Badge, chakra,Flex, Text, Tooltip} from '@chakra-ui/react';
+import {Badge, chakra,Flex, Tooltip} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
@@ -10,41 +10,44 @@ export const BadgeTransitionEcologique = chakra(({
   withIcon = false,
   labelSize = "short",
   size = "xs",
-  textTransform = "uppercase",
   openGlossaire,
   ...props
 }: {
   isFormationTransitionEcologique?: boolean;
   withIcon?: boolean;
   labelSize?: "short" | "long";
-  size?: "xs" | "sm" | "md";
-  textTransform?: "uppercase" | "capitalize" | "lowercase";
+  size?: "xs" | "sm" | "md" | "lg";
   openGlossaire?: (key: GlossaireEntryKey) => void;
   props?: BadgeProps;
 }) => {
   if (!isFormationTransitionEcologique) return <></>;
   if (!openGlossaire)
     return (
-      <Badge gap={1} size={size} my={"auto"} bgColor={"success.950"} color={"success.425"} {...props}>
+      <Badge
+        gap={1}
+        my={"auto"}
+        bgColor={"success.950"}
+        color={"success.425"}
+        size={size}
+        {...props}
+      >
         {withIcon && (
           <Flex my={"auto"}>
             <Icon icon="ri:file-info-fill" />
           </Flex>
         )}
-        <Text textTransform={textTransform}>
-          {labelSize === "short" ? "Éco" : TypeFormationSpecifiqueEnum["Transition écologique"]}
-        </Text>
+        {labelSize === "short" ? "Éco" : TypeFormationSpecifiqueEnum["Transition écologique"]}
       </Badge>
     );
   return (
     <Tooltip label="Cliquez pour plus d'infos.">
       <Badge
         gap={1}
-        size={size}
         my={"auto"}
         bgColor={"success.950"}
         color={"success.425"}
         cursor={"pointer"}
+        size={size}
         onClick={(e) => {
           e.stopPropagation();
           openGlossaire("transition-ecologique");
@@ -56,9 +59,7 @@ export const BadgeTransitionEcologique = chakra(({
             <Icon icon="ri:file-info-fill" />
           </Flex>
         )}
-        <Text textTransform={textTransform}>
-          {labelSize === "short" ? "Éco" : TypeFormationSpecifiqueEnum["Transition écologique"]}
-        </Text>
+        {labelSize === "short" ? "Éco" : TypeFormationSpecifiqueEnum["Transition écologique"]}
       </Badge>
     </Tooltip>
   );

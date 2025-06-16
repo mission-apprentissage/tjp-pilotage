@@ -2,8 +2,8 @@ import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
-import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
-import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
+import type { TypeFamille } from 'shared/enum/typeFamilleEnum';
+import { TypeFamilleEnum } from 'shared/enum/typeFamilleEnum';
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -23,7 +23,8 @@ import { selectTauxPressionAgg } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "@/modules/data/utils/tauxRemplissage";
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { isFormationRenovee } from '@/modules/utils/isFormationRenovee';
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const getFormationsQuery = async ({
@@ -57,6 +58,7 @@ export const getFormationsQuery = async ({
         .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
         .onRef("formationEtablissement.voie", "=", "formationView.voie")
     )
+    .innerJoin("dataFormation", "dataFormation.cfd", "formationView.cfd")
     .leftJoin("dispositif", "dispositif.codeDispositif", "formationEtablissement.codeDispositif")
     .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "formationView.codeNiveauDiplome")
@@ -201,16 +203,7 @@ export const getFormationsQuery = async ({
       }).as("tauxDevenirFavorable"),
       isHistoriqueCoExistant(eb, rentreeScolaire[0]).as("isHistoriqueCoExistant"),
       "formationHistorique.cfd as formationRenovee",
-      eb
-        .selectFrom("formationHistorique")
-        .innerJoin("formationView as fva", "fva.cfd", "formationHistorique.ancienCFD")
-        .select("formationHistorique.ancienCFD")
-        .where(wb => wb.and([
-          wb(wb.ref("formationHistorique.cfd"), "=", wb.ref("formationView.cfd")),
-          wb("fva.dateFermeture", "is not", null),
-          wb("fva.dateFermeture", ">", sql<Date>`${getDateRentreeScolaire(rentreeScolaire[0])}`)
-        ]))
-        .limit(1)
+      isFormationRenovee({ eb, rentreeScolaire: rentreeScolaire[0] })
         .as("isFormationRenovee"),
       sql<string | null>`
           case when ${eb.ref("formationView.dateFermeture")} is not null
@@ -257,6 +250,7 @@ export const getFormationsQuery = async ({
       "formationView.isTransitionDemographique",
       "formationView.isTransitionEcologique",
       "formationView.isTransitionNumerique",
+      "dataFormation.cfd",
       "nsf.libelleNsf",
       "formationHistorique.cfd",
       "indicateurEntree.rentreeScolaire",
@@ -266,6 +260,9 @@ export const getFormationsQuery = async ({
       "libelleFamille",
       "niveauDiplome.libelleNiveauDiplome",
     ])
+    .$narrowType<{
+      typeFamille: TypeFamille;
+    }>()
     .$call((eb) => {
       if (search)
         return eb.where((eb) =>

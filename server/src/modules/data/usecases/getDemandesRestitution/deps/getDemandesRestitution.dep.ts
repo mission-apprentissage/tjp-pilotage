@@ -3,6 +3,7 @@ import { CURRENT_RENTREE } from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import type { TypeDemandeType } from "shared/enum/demandeTypeEnum";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import type { TypeFamille } from "shared/enum/typeFamilleEnum";
 import { getMillesimeFromCampagne } from "shared/time/millesimes";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
@@ -19,11 +20,12 @@ import { selectTauxInsertion6mois } from "@/modules/data/utils/tauxInsertion6moi
 import { selectTauxPoursuite } from "@/modules/data/utils/tauxPoursuite";
 import { selectTauxPression, selectTauxPressionParFormationEtParRegionDemande } from "@/modules/data/utils/tauxPression";
 import { selectTauxRemplissage } from "@/modules/data/utils/tauxRemplissage";
-import {countDifferenceCapaciteApprentissage, countDifferenceCapaciteApprentissageColoree, countDifferenceCapaciteScolaire, countDifferenceCapaciteScolaireColoree, countPlacesColorees,countPlacesColoreesFermeesApprentissage, countPlacesColoreesFermeesScolaire, countPlacesColoreesOuvertesApprentissage, countPlacesColoreesOuvertesScolaire, countPlacesFermeesApprentissage, countPlacesFermeesScolaire, countPlacesOuvertesApprentissage, countPlacesOuvertesScolaire} from '@/modules/utils/countCapacite';
+import { countDifferenceCapaciteApprentissage, countDifferenceCapaciteApprentissageColoree, countDifferenceCapaciteScolaire, countDifferenceCapaciteScolaireColoree, countPlacesColorees, countPlacesColoreesFermeesApprentissage, countPlacesColoreesFermeesScolaire, countPlacesColoreesOuvertesApprentissage, countPlacesColoreesOuvertesScolaire, countPlacesFermeesApprentissage, countPlacesFermeesScolaire, countPlacesOuvertesApprentissage, countPlacesOuvertesScolaire } from '@/modules/utils/countCapacite';
 import { formatFormationSpecifique } from "@/modules/utils/formatFormationSpecifique";
 import {isDemandeBrouillonVisible,isDemandeNotDeleted, isDemandeSelectable} from '@/modules/utils/isDemandeSelectable';
 import { isFormationActionPrioritaire } from "@/modules/utils/isFormationActionPrioritaire";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { isFormationRenovee } from '@/modules/utils/isFormationRenovee';
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 export const getDemandesRestitutionQuery = async ({
@@ -60,13 +62,13 @@ export const getDemandesRestitutionQuery = async ({
         return eb;
       })
     )
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
-    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
-    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
-    .leftJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .innerJoin("dispositif", "dispositif.codeDispositif", "demande.codeDispositif")
+    .innerJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .innerJoin("academie", "academie.codeAcademie", "dataEtablissement.codeAcademie")
+    .innerJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .innerJoin("niveauDiplome", "niveauDiplome.codeNiveauDiplome", "dataFormation.codeNiveauDiplome")
     .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
     .leftJoin("formationScolaireView as formationView", "formationView.cfd", "demande.cfd")
     .leftJoin("indicateurRegionSortie", (join) =>
@@ -93,7 +95,8 @@ export const getDemandesRestitutionQuery = async ({
         .onRef("actionPrioritaire.codeDispositif", "=", "demande.codeDispositif")
         .onRef("actionPrioritaire.codeRegion", "=", "demande.codeRegion")
     )
-    .leftJoin((eb) => eb.selectFrom("formationScolaireView")
+    .leftJoin((eb) => eb
+      .selectFrom("formationScolaireView")
       .innerJoin("formationEtablissement", (join) =>
         join
           .onRef("formationEtablissement.cfd", "=", "formationScolaireView.cfd")
@@ -106,14 +109,18 @@ export const getDemandesRestitutionQuery = async ({
         sb.ref("formationEtablissement.codeDispositif").as("codeDispositif"),
         sb.ref("formationScolaireView.voie").as("voie"),
         sb.ref("formationEtablissement.uai").as("uai"),
-        capaciteAnnee({ alias: "indicateurEntree"}).as("capacite"),
+        capaciteAnnee({ alias: "indicateurEntree" }).as("capacite"),
         effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
-        premiersVoeuxAnnee({alias: "indicateurEntree"}).as("premierVoeu"),
+        premiersVoeuxAnnee({ alias: "indicateurEntree" }).as("premierVoeu"),
         selectTauxRemplissage("indicateurEntree").as("remplissage"),
         sb.case().when(sql<string>`LEFT(${sb.ref("formationScolaireView.codeNiveauDiplome")}, 3)`, '<>', '320').then(selectTauxPression("indicateurEntree", "formationScolaireView", true)).end().as("pression"),
         sb.case().when(sql<string>`LEFT(${sb.ref("formationScolaireView.codeNiveauDiplome")}, 3)`, '=', '320').then(selectTauxPression("indicateurEntree", "formationScolaireView", true)).end().as("demande"),
       ]).as("tauxEntree"),
-    (join) => join.onRef("tauxEntree.cfd", "=", "demande.cfd").onRef("tauxEntree.rentreeScolaire", "=", "demande.rentreeScolaire").onRef("tauxEntree.codeDispositif", "=", "demande.codeDispositif").onRef("tauxEntree.uai", "=", "demande.uai")
+    (join) => join
+      .onRef("tauxEntree.cfd", "=", "demande.cfd")
+      .onRef("tauxEntree.rentreeScolaire", "=", "demande.rentreeScolaire")
+      .onRef("tauxEntree.codeDispositif", "=", "demande.codeDispositif")
+      .onRef("tauxEntree.uai", "=", "demande.uai")
     )
     .selectAll("demande")
     .select((eb) => [
@@ -157,6 +164,8 @@ export const getDemandesRestitutionQuery = async ({
         codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "demande.codeRegion",
       }).as(TypeFormationSpecifiqueEnum["Action prioritaire"]),
+      isFormationRenovee({ eb, rentreeScolaire: rentreeScolaire })
+        .as("isFormationRenovee"),
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
@@ -169,8 +178,9 @@ export const getDemandesRestitutionQuery = async ({
     ])
     .$narrowType<{
       statut: DemandeStatutType,
-      typeDemande: TypeDemandeType
-     }>()
+      typeDemande: TypeDemandeType,
+      typeFamille: TypeFamille,
+    }>()
     .$call((eb) => {
       if (search)
         return eb.where((eb) =>
@@ -261,12 +271,12 @@ export const getDemandesRestitutionQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if(coloration === "true") return eb.where(
+      if (coloration === "true") return eb.where(
         (eb) => eb.or([
           sql<boolean>`${countPlacesColorees(eb)} > 0`,
         ])
       );
-      if(coloration === "false") return eb.where(
+      if (coloration === "false") return eb.where(
         (eb) => eb.or([
           sql<boolean>`${countPlacesColorees(eb)} < 0`,
         ])
@@ -343,6 +353,7 @@ export const getDemandesRestitutionQuery = async ({
       updatedAt: demande.updatedAt?.toISOString(),
       formationSpecifique: formatFormationSpecifique(demande),
       isOldDemande: demande.isOldDemande ?? false,
+      isFormationRenovee: !!demande.isFormationRenovee
     })),
     count: parseInt(demandes[0]?.count) || 0,
   };

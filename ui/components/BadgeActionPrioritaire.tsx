@@ -1,5 +1,5 @@
-import type { BadgeProps} from "@chakra-ui/react";
-import { Badge, Flex, Text, Tooltip } from "@chakra-ui/react";
+import type { BadgeProps } from "@chakra-ui/react";
+import { Badge, Flex, Tooltip } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
@@ -10,38 +10,41 @@ export const BadgeActionPrioritaire = ({
   withIcon = false,
   labelSize = "short",
   size = "xs",
-  textTransform = "uppercase",
   openGlossaire,
   ...props
 }: {
   isFormationActionPrioritaire?: boolean;
   withIcon?: boolean;
   labelSize?: "short" | "long";
-  size?: "xs" | "sm" | "md";
-  textTransform?: "uppercase" | "capitalize" | "lowercase";
+  size?: "xs" | "sm" | "md" | "lg";
   openGlossaire?: (key: GlossaireEntryKey) => void;
   props?: BadgeProps;
 }) => {
   if (!isFormationActionPrioritaire) return <></>;
   if (!openGlossaire)
     return (
-      <Badge gap={1} size={size} my={"auto"} bgColor={"yellowTournesol.950"} color={"yellowTournesol.407"} {...props}>
+      <Badge
+        gap={1}
+        my={"auto"}
+        size={size}
+        bgColor={"yellowTournesol.950"}
+        color={"yellowTournesol.407"}
+        {...props}
+      >
         {withIcon && (
           <Flex my={"auto"}>
             <Icon icon="ri:file-info-fill" />
           </Flex>
         )}
-        <Text textTransform={textTransform}>
-          {labelSize === "short" ? "Prio" : TypeFormationSpecifiqueEnum["Action prioritaire"]}
-        </Text>
+        {labelSize === "short" ? "Prio" : TypeFormationSpecifiqueEnum["Action prioritaire"]}
       </Badge>
     );
   return (
     <Tooltip label="Cliquez pour plus d'infos.">
       <Badge
         gap={1}
-        size={size}
         my={"auto"}
+        size={size}
         bgColor={"yellowTournesol.950"}
         color={"yellowTournesol.407"}
         cursor={"pointer"}
@@ -56,9 +59,7 @@ export const BadgeActionPrioritaire = ({
             <Icon icon="ri:file-info-fill" />
           </Flex>
         )}
-        <Text textTransform={textTransform}>
-          {labelSize === "short" ? "Prio" : TypeFormationSpecifiqueEnum["Action prioritaire"]}
-        </Text>
+        {labelSize === "short" ? "Prio" : TypeFormationSpecifiqueEnum["Action prioritaire"]}
       </Badge>
     </Tooltip>
   );

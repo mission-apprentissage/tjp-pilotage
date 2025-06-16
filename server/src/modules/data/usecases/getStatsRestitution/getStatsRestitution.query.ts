@@ -23,7 +23,7 @@ import {
   countPlacesTransformeesScolaire,
 } from "@/modules/utils/countCapacite";
 import { isDemandeSelectable } from "@/modules/utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "@/modules/utils/normalizeSearch";
+import { getNormalizedSearchArray } from "@/modules/utils/searchHelpers";
 import { cleanNull } from "@/utils/noNull";
 
 import type { Filters } from "./getStatsRestitution.usecase";
@@ -194,12 +194,12 @@ export const getStatsRestitutionQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if(coloration === "true") return eb.where(
+      if (coloration === "true") return eb.where(
         (eb) => eb.or([
           sql<boolean>`${countPlacesColorees(eb)} > 0`,
         ])
       );
-      if(coloration === "false") return eb.where(
+      if (coloration === "false") return eb.where(
         (eb) => eb.or([
           sql<boolean>`${countPlacesColorees(eb)} < 0`,
         ])
