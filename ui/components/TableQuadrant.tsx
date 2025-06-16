@@ -1,7 +1,8 @@
-import { Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { Flex, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { CURRENT_IJ_MILLESIME } from "shared";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 
+import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
 import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -11,8 +12,6 @@ import { getTauxPressionStyle } from "@/utils/getBgScale";
 import { GraphWrapper } from "./GraphWrapper";
 import { OrderIcon } from "./OrderIcon";
 import { TableBadge } from "./TableBadge";
-import { TauxPressionScale } from "./TauxPressionScale";
-import { TooltipIcon } from "./TooltipIcon";
 
 type Formation = {
   libelleFormation?: string;
@@ -96,20 +95,7 @@ export const TableQuadrant = ({
               >
                 {handleOrder && <OrderIcon {...order} column="tauxPression" />}
                 TX PRESSION
-                <TooltipIcon
-                  ml="1"
-                  label={
-                    <Flex direction="column" gap={2}>
-                      <Text>
-                        Le ratio entre le nombre de premiers voeux et la capacité de la formation au niveau régional
-                        (RS {CURRENT_RENTREE}).
-                      </Text>
-                      <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
-                      <TauxPressionScale />
-                    </Flex>
-                  }
-                  onClick={() => openGlossaire("taux-de-pression")}
-                />
+                <TooltipDefinitionTauxDePression />
               </Th>
               <Th
                 px="2"

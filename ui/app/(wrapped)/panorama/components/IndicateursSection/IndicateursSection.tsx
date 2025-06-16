@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, HStack, Img, SimpleGrid, Stack, Text } from "@chakra-ui/react";
-import { CURRENT_RENTREE } from "shared";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
@@ -7,6 +7,7 @@ import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components
 import { TooltipDefinitionTauxRemplissage } from "@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import type { StatsFormations } from "@/app/(wrapped)/panorama/types";
+import { BadgeMillesimes } from "@/components/BadgeMillesimes";
 import { BadgeRentreeScolaire } from "@/components/BadgeRentreeScolaire";
 import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -101,6 +102,7 @@ export const IndicateursSection = ({
           tooltip={formatPercentage(stats?.tauxRemplissage, 2, "-")}
           type={"percentage"}
           glossaire={<TooltipDefinitionTauxRemplissage />}
+          badge={<BadgeRentreeScolaire rentreeScolaire={CURRENT_RENTREE} />}
         />
         <StatCard
           label={`Taux de devenir favorable dans votre région`}
@@ -108,6 +110,7 @@ export const IndicateursSection = ({
           tooltip={formatPercentage(stats?.tauxDevenirFavorable, 2, "-")}
           type={"percentage"}
           glossaire={<TooltipDefinitionTauxDevenirFavorable />}
+          badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
         />
         <StatCard
           label="Taux de poursuite d'études dans votre région"
@@ -115,6 +118,7 @@ export const IndicateursSection = ({
           tooltip={formatPercentage(stats?.tauxPoursuite, 2, "-")}
           type={"percentage"}
           glossaire={<TooltipDefinitionTauxPoursuiteEtudes />}
+          badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
         />
         <StatCard
           label="Taux d'emploi à 6 mois dans votre région"
@@ -122,6 +126,7 @@ export const IndicateursSection = ({
           tooltip={formatPercentage(stats?.tauxInsertion, 2, "-")}
           type={"percentage"}
           glossaire={<TooltipDefinitionTauxEmploi6Mois />}
+          badge={<BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />}
         />
       </SimpleGrid>
     </Stack>

@@ -1,5 +1,6 @@
 import { Box, chakra, Flex, Text, Th, Tooltip } from "@chakra-ui/react";
 import type { CSSProperties } from "react";
+import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import { TooltipDefinitionAMICMA } from "@/app/(wrapped)/components/definitions/DefinitionAMICMA";
 import { TooltipDefinitionColoration } from "@/app/(wrapped)/components/definitions/DefinitionColoration";
@@ -10,7 +11,7 @@ import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/component
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
 import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
 import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/STATS_DEMANDES_COLUMN";
-import type { OrderDemandesRestitution } from "@/app/(wrapped)/demandes/restitution/types";
+import type { FiltersDemandesRestitution,OrderDemandesRestitution } from "@/app/(wrapped)/demandes/restitution/types";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -76,6 +77,7 @@ const ConditionalTh = chakra(
 export const HeadLineContent = ({
   order,
   handleOrder,
+  activeFilters,
   colonneFilters,
   getCellColor,
   displayPilotageColumns,
@@ -83,6 +85,7 @@ export const HeadLineContent = ({
 }: {
   order: OrderDemandesRestitution;
   handleOrder: (column: OrderDemandesRestitution["orderBy"]) => void;
+  activeFilters: FiltersDemandesRestitution;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
   getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
   displayPilotageColumns: boolean;
@@ -365,7 +368,9 @@ export const HeadLineContent = ({
         colonne={"positionQuadrant"}
         isNumeric
         bgColor={getCellColor("positionQuadrant")}
-        icon={<TooltipDefinitionPositionQuadrant />}
+        icon={<TooltipDefinitionPositionQuadrant
+          millesime={getMillesimeFromCampagne(activeFilters.campagne!)}
+        />}
       >
         {STATS_DEMANDES_COLUMNS.positionQuadrant}
       </ConditionalTh>
@@ -377,7 +382,9 @@ export const HeadLineContent = ({
         minW={200}
         maxW={200}
         bgColor={getCellColor("tauxInsertionRegional")}
-        icon={<TooltipDefinitionTauxEmploi6Mois />}
+        icon={<TooltipDefinitionTauxEmploi6Mois
+          millesime={getMillesimeFromCampagne(activeFilters.campagne!)}
+        />}
       >
         <OrderIcon {...order} column="tauxInsertionRegional" />
         {STATS_DEMANDES_COLUMNS.tauxInsertionRegional}
@@ -388,7 +395,9 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         textAlign="center"
         bgColor={getCellColor("tauxPoursuiteRegional")}
-        icon={<TooltipDefinitionTauxPoursuiteEtudes />}
+        icon={<TooltipDefinitionTauxPoursuiteEtudes
+          millesime={getMillesimeFromCampagne(activeFilters.campagne!)}
+        />}
       >
         <OrderIcon {...order} column="tauxPoursuiteRegional" />
         {STATS_DEMANDES_COLUMNS.tauxPoursuiteRegional}
@@ -399,7 +408,9 @@ export const HeadLineContent = ({
         onClick={handleOrder}
         textAlign="center"
         bgColor={getCellColor("tauxDevenirFavorableRegional")}
-        icon={<TooltipDefinitionTauxDevenirFavorable />}
+        icon={<TooltipDefinitionTauxDevenirFavorable
+          millesime={getMillesimeFromCampagne(activeFilters.campagne!)}
+        />}
       >
         <OrderIcon {...order} column="tauxDevenirFavorableRegional" />
         {STATS_DEMANDES_COLUMNS.tauxDevenirFavorableRegional}

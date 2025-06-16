@@ -1,7 +1,9 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
+import { CURRENT_IJ_MILLESIME } from "shared";
 
 import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
 import type { PanoramaTopFlops } from "@/app/(wrapped)/panorama/types";
+import { BadgeMillesimes } from "@/components/BadgeMillesimes";
 
 import { TopFlopChartItem } from "./TopFlopChartItem";
 
@@ -16,6 +18,7 @@ export const TopFlopChart = ({
         <Text my="32px" fontSize="medium">
           Les dix formations présentant le <strong>meilleur taux de devenir favorable</strong>
         </Text>
+        <BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME}/>
         <TooltipDefinitionTauxDevenirFavorable />
       </Flex>
       <VStack alignItems="stretch" spacing="1" ml={"100px"}>
@@ -31,6 +34,7 @@ export const TopFlopChart = ({
         <Text my="32px" fontSize={"medium"}>
           Les dix formations à examiner, par <strong>taux de devenir favorable</strong>
         </Text>
+        <BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME}/>
         <TooltipDefinitionTauxDevenirFavorable />
       </Flex>
       <VStack alignItems="stretch" spacing="1" ml={"100px"}>
