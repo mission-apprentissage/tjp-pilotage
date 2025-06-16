@@ -19,11 +19,12 @@ export const submitDemandeRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler(PermissionEnum["demande/ecriture"]),
       handler: async (request, response) => {
-        const { demande } = request.body;
+        const { demande, isModificationUaiCfd } = request.body;
         if (!request.user) throw Boom.unauthorized();
 
         const result = await submitDemandeUsecase({
           demande,
+          isModificationUaiCfd,
           user: request.user,
         });
         response.status(200).send(result);

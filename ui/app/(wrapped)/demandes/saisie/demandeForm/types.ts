@@ -45,7 +45,7 @@ export type DemandeFormType = {
   nbRecrutementRH?: number;
   discipline1RecrutementRH?: string;
   discipline2RecrutementRH?: string;
-  reconversionRH: boolean;
+  reconversionRH?: boolean;
   nbReconversionRH?: number;
   discipline1ReconversionRH?: string;
   discipline2ReconversionRH?: string;

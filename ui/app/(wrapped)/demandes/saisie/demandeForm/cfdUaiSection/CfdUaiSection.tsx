@@ -52,6 +52,7 @@ export const CfdUaiSection = ({
   campagne,
   formId,
   active,
+  isAdjustDemande = false,
   disabled,
   defaultValues,
   formMetadata,
@@ -66,6 +67,7 @@ export const CfdUaiSection = ({
   campagne?: CampagneType;
   formId?: string;
   active: boolean;
+  isAdjustDemande?: boolean;
   disabled?: boolean;
   defaultValues: PartialDemandeFormType;
   formMetadata?: DemandeMetadata;
@@ -111,7 +113,7 @@ export const CfdUaiSection = ({
 
   return (
     <DarkMode>
-      <Box color="chakra-body-text" bg="blueecume.400_hover" p="6" borderRadius="6">
+      <Box color="chakra-body-text" bg="blueecume.400_hover" p="6" borderRadius="6" height={"100%"}>
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
           <TagCampagne campagne={campagne} />
@@ -129,6 +131,11 @@ export const CfdUaiSection = ({
           {disabled && (
             <Tag size="lg" colorScheme={"red"} ml={"auto"}>
               Mode consultation
+            </Tag>
+          )}
+          {isAdjustDemande && (
+            <Tag size="lg" colorScheme={"orange"} ml={"auto"}>
+              Modification de formation et/ou d'établissement
             </Tag>
           )}
         </Heading>
@@ -165,12 +172,16 @@ export const CfdUaiSection = ({
                 <Button
                   isDisabled={isSubmitDisabled}
                   onClick={() => submitCFDUAISection()}
-                  mt={8}
+                  mt={16}
                   ms="auto"
                   size="lg"
                   variant={"primary"}
                 >
-                  Passer à l'étape suivante
+                  {isAdjustDemande ? (
+                    "Sauvegarder la modification de formation et/ou d'établissement"
+                  ) : (
+                    "Passer à l'étape suivante"
+                  )}
                 </Button>
               )}
             </Flex>

@@ -34,7 +34,7 @@ import { Conseils } from "@/app/(wrapped)/demandes/saisie/components/Conseils";
 import { MenuFormulaire } from "@/app/(wrapped)/demandes/saisie/components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/demandes/SCROLL_OFFSETS";
 import type { Demande, DemandeMetadata } from "@/app/(wrapped)/demandes/types";
-import {canCorrectDemande} from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
+import {canAdjustDemande, canCorrectDemande} from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
 import type { DetailedApiError } from "@/utils/apiError";
@@ -142,10 +142,25 @@ export const DemandeForm = ({
   }, []);
 
   const submitCFDUAISection = () => {
-    if (step !== 2)
+    if (step !== 2) {
+      if( demande && canAdjustDemande({ demande, user })) {
+        submitDemande({
+          body: {
+            demande: {
+              ...demande,
+              uai: getValues("uai"),
+              cfd: getValues("cfd"),
+              codeDispositif: getValues("codeDispositif"),
+            },
+            isModificationUaiCfd: true,
+          }
+        });
+        return;
+      }
       setTimeout(() => {
         step2Ref.current?.scrollIntoView({ behavior: "smooth" });
       }, 500);
+    }
     setStep(2);
   };
 
@@ -208,6 +223,8 @@ export const DemandeForm = ({
   const isCorrection = !!queryParams.get("correction");
   const showCorrection = isCorrection && canCorrectDemande({demande, user});
 
+  const isAdjustDemande = queryParams.get("adjust") === "true";
+
   return (
     <FormProvider {...form}>
       <Box
@@ -256,7 +273,8 @@ export const DemandeForm = ({
             formMetadata={formMetadata}
             onEditUaiCfdSection={onEditUaiCfdSection}
             active={step === 1}
-            disabled={disabled}
+            isAdjustDemande={isAdjustDemande && canAdjustDemande({demande, user})}
+            disabled={disabled && !canAdjustDemande({demande, user})}
             isFCIL={isFCIL}
             setIsFCIL={setIsFCIL}
             setDateFermetureFormation={setDateFermetureFormation}
@@ -265,7 +283,26 @@ export const DemandeForm = ({
             statutComponentRef={statutComponentRef}
             campagne={campagne}
           />
-          {step === 2 && (
+          {isAdjustDemande && (
+            <Box position={"relative"}>
+              {errors && (
+                <Alert mt="8" alignItems="flex-start" status="error">
+                  <AlertIcon />
+                  <Box>
+                    <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
+                    <AlertDescription mt="2">
+                      <UnorderedList>
+                        {Object.entries(errors).map(([key, msg]) => (
+                          <li key={key}>{msg}</li>
+                        ))}
+                      </UnorderedList>
+                    </AlertDescription>
+                  </Box>
+                </Alert>
+              )}
+            </Box>
+          )}
+          {(step === 2 && !isAdjustDemande) && (
             <Box>
               <Grid templateColumns={"repeat(3, 1fr)"} columnGap={8}>
                 <GridItem>
