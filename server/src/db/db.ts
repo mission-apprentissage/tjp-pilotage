@@ -24,6 +24,12 @@ export interface DB
     >;
   };
 
+  demandeConstatView: {
+    [K in keyof DBSchema["demandeConstatNonMaterializedView"]]: NonNullable<
+      DBSchema["demandeConstatNonMaterializedView"][K]
+    >;
+  };
+
   formationApprentissageView: {
     [K in keyof DBSchema["formationNonMaterializedView"]]: NonNullable<DBSchema["formationNonMaterializedView"][K]>;
   };

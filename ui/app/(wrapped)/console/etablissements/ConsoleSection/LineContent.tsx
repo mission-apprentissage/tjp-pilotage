@@ -1,21 +1,25 @@
-import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tr } from "@chakra-ui/react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { chakra, Flex, Link, Skeleton, Td, Text, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { CURRENT_RENTREE } from "shared";
+import type { UserType } from "shared/schema/userSchema";
 
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
-import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
-import type { Line } from "@/app/(wrapped)/console/etablissements/types";
+import type {FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Line} from '@/app/(wrapped)/console/etablissements/types';
 import {BadgeFermeture} from '@/components/BadgeFermeture';
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
+import {BadgeTypeDemande} from '@/components/BadgeTypeDemande';
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
+import {DateEffetTransformationComponent} from '@/components/DateEffetTransformationComponent';
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
+import { feature } from "@/utils/feature";
 import { formatCodeDepartement,formatFamilleMetierLibelle } from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
+
 
 const ConditionalTd = chakra(
   ({
@@ -27,9 +31,9 @@ const ConditionalTd = chakra(
     isNumeric = false,
   }: {
     className?: string;
-    colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-    colonne: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS;
-    getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
+    colonneFilters: (FORMATION_ETABLISSEMENT_COLUMNS_KEYS)[];
+    colonne: FORMATION_ETABLISSEMENT_COLUMNS_KEYS;
+    getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
     children: React.ReactNode;
     isNumeric?: boolean;
   }) => {
@@ -51,41 +55,20 @@ const ConditionalTd = chakra(
 
 export const EtablissementLineContent = ({
   line,
-  onClickExpend,
-  onClickCollapse,
-  expended = false,
   isFirstColumnSticky,
   isSecondColumnSticky,
   colonneFilters,
   getCellBgColor,
+  user,
 }: {
   line: Partial<Line>;
-  onClickExpend?: () => void;
-  onClickCollapse?: () => void;
-  expended?: boolean;
   isFirstColumnSticky?: boolean;
   isSecondColumnSticky?: boolean;
-  colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-  getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
+  colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+  getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
+  user?: UserType;
 }) => (
   <>
-    <Td pr="0" py="1" _groupHover={{ bgColor: "blueecume.850 !important" }}>
-      {onClickExpend && (
-        <IconButton
-          transform={expended ? "rotate(180deg)" : ""}
-          variant="ghost"
-          onClick={() => (!expended ? onClickExpend() : onClickCollapse?.())}
-          size="xs"
-          aria-label="Afficher l'historique"
-          icon={<ChevronDownIcon />}
-        />
-      )}
-      {!onClickExpend && (
-        <Box as="span" opacity={0.3} fontWeight="bold">
-          &nbsp;&nbsp;└─
-        </Box>
-      )}
-    </Td>
     <ConditionalTd colonne="rentreeScolaire" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.rentreeScolaire ?? CURRENT_RENTREE}
     </ConditionalTd>
@@ -180,13 +163,16 @@ export const EtablissementLineContent = ({
               as={NextLink}
               href={createParameterizedUrl("/console/etablissements", {
                 filters: {
-                  cfd: [line.formationRenovee],
+                  cfd: line.formationRenovee.split(", "),
+                  rentreeScolaire: line.rentreeScolaire,
                 },
               })}
               color="bluefrance.113"
             >
               <Flex my="auto">
-                <Text fontSize={12}>Voir la formation rénovée</Text>
+                <Text fontSize={12}>
+                  Voir {line.formationRenovee.split(", ").length > 1 ? "les formations rénovées" :"la formation rénovée"}
+                </Text>
                 <ArrowForwardIcon ml={1} boxSize={"14px"} verticalAlign={"baseline"} />
               </Flex>
             </Link>
@@ -298,6 +284,38 @@ export const EtablissementLineContent = ({
     <ConditionalTd colonne="valeurAjoutee" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
       {line.valeurAjoutee ?? "-"}
     </ConditionalTd>
+    {feature.donneesTransfoConsole && user && (
+      <>
+        <ConditionalTd
+          colonne="numero"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          textAlign="center"
+        >
+          {line.numero}
+        </ConditionalTd>
+        <ConditionalTd
+          colonne="dateEffetTransformation"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          textAlign="center"
+        >
+          <DateEffetTransformationComponent
+            dateEffetTransformation={line.dateEffetTransformation}
+            typeDemande={line.typeDemande}
+            rentreeScolaire={line.rentreeScolaire}
+          />
+        </ConditionalTd>
+        <ConditionalTd
+          colonne="typeDemande"
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          textAlign="center"
+        >
+          <BadgeTypeDemande typeDemande={line.typeDemande} />
+        </ConditionalTd>
+      </>
+    )}
   </>
 );
 
@@ -318,8 +336,8 @@ export const EtablissementLinePlaceholder = ({
   colonneFilters,
   getCellBgColor,
 }: {
-  colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-  getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
+  colonneFilters: (FORMATION_ETABLISSEMENT_COLUMNS_KEYS)[];
+  getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
 }) => (
   <Tr bg={"grey.975"}>
     <EtablissementLineContent line={{}} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />

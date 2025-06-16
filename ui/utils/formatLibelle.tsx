@@ -1,7 +1,10 @@
 import { Flex } from "@chakra-ui/react";
+import _ from "lodash";
 import type { ReactNode } from "react";
 import type {Role} from "shared";
 import { RoleEnum } from "shared";
+import type { TypeDemandeType } from "shared/enum/demandeTypeEnum";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import {SecteurEnum} from 'shared/enum/secteurEnum';
 import type {TypeFamille} from 'shared/enum/typeFamilleEnum';
 import { TypeFamilleEnum} from 'shared/enum/typeFamilleEnum';
@@ -206,3 +209,32 @@ export const formatRole = (role: Role) => {
     return "Inconnu";
   }
 };
+
+export const formatTypeDemande = (typeDemande?: TypeDemandeType): string => {
+  switch (typeDemande) {
+  case DemandeTypeEnum["ouverture_nette"]:
+  case DemandeTypeEnum["ouverture_compensation"]:
+    return "Ouverture";
+  case DemandeTypeEnum["augmentation_nette"]:
+  case DemandeTypeEnum["augmentation_compensation"]:
+    return "Augmentation";
+  case DemandeTypeEnum["fermeture"]:
+  case DemandeTypeEnum["ajustement"]:
+  case DemandeTypeEnum["coloration"]:
+  case DemandeTypeEnum["diminution"]:
+  case DemandeTypeEnum["transfert"]:
+    return _.capitalize(typeDemande);
+  default:
+    return "";
+  }
+};
+
+export const formatTypeDemandeArray = (typeDemande: string):
+  Array<{value: TypeDemandeType, label: string}> =>
+  typeDemande
+    .split( ", ")
+    .map((typeDemande) => ({
+      label: formatTypeDemande(typeDemande as TypeDemandeType),
+      value: typeDemande as TypeDemandeType,
+    }));
+

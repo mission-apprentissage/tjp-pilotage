@@ -1,3 +1,4 @@
+
 import type { client } from "@/api.client";
 import type { ExportColumns } from "@/utils/downloadExport";
 
@@ -128,3 +129,27 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT = {
   tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
 } satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL>;
+
+export const FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED = {
+  ...FORMATION_ETABLISSEMENT_COLUMNS,
+  // Caractéristiques de la transformation
+  numero: "Numéro de la demande",
+  typeDemande: "Type de demande",
+  dateEffetTransformation: "Date d'effet de la transformation",
+} satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]>;
+
+export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED = {
+  ...FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL,
+  // Caractéristiques de la transformation
+  numero: "Numéro de la demande",
+  typeDemande: "Type de demande",
+  dateEffetTransformation: "Date d'effet de la transformation",
+} satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED>;
+
+export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED = {
+  ...FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
+  // Caractéristiques de la transformation
+  numero: "Numéro de la demande",
+  typeDemande: "Type de demande",
+  dateEffetTransformation: "Date d'effet de la transformation",
+} satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED>;

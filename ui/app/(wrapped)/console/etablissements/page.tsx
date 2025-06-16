@@ -7,7 +7,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { parse } from "qs";
 import { useContext, useEffect, useState } from "react";
+import type { TypeDemandeType } from 'shared/enum/demandeTypeEnum';
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
+import type { UserType } from 'shared/schema/userSchema';
 
 import { client } from "@/api.client";
 import { CreateRequeteEnregistreeModal } from "@/app/(wrapped)/console/components/CreateRequeteEnregistreeModal";
@@ -21,19 +23,21 @@ import { TableHeader } from "@/components/TableHeader";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatExportFilename } from "@/utils/formatExportFilename";
-import {formatLibelleFormationWithoutTags} from '@/utils/formatLibelle';
+import {formatLibelleFormationWithoutTags, formatTypeDemande} from '@/utils/formatLibelle';
 import { formatArray } from "@/utils/formatUtils";
 import { useAuth } from '@/utils/security/useAuth';
 
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import {
   FORMATION_ETABLISSEMENT_COLUMNS,
+  FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED,
   FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
+  FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED,
 } from "./FORMATION_ETABLISSEMENT_COLUMNS";
-import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL } from "./GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
+import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL, GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED } from "./GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import { SideSection } from "./SideSection/SideSection";
-import type { Filters, Order } from "./types";
+import type { Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS, Order } from "./types";
 
 const PAGE_SIZE = 30;
 
@@ -45,30 +49,42 @@ const ColonneFilterSection = chakra(
     forcedColonnes,
     handleColonneFilters,
     trackEvent,
+    user,
   }: {
-    colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-    forcedColonnes?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-    handleColonneFilters: (value: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]) => void;
+    colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+    forcedColonnes?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+    handleColonneFilters: (value: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]) => void;
     trackEvent: (name: string, params?: Record<string, unknown>) => void;
-  }) =>
-    <Flex justifyContent={"start"} direction="row">
-      <GroupedMultiselect
-        width={"48"}
-        size="md"
-        variant={"newInput"}
-        onChange={(selected) => handleColonneFilters(selected as (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[])}
-        groupedOptions={Object.entries(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL).reduce(
-          (acc, [group, { color, options }]) => {
-            acc[group] = {
-              color,
-              options: Object.entries(options).map(([value, label]) => ({
-                label,
-                value,
-                isDisabled: forcedColonnes?.includes(value as keyof typeof FORMATION_ETABLISSEMENT_COLUMNS),
-              })),
-            };
-            return acc;
-          },
+    user?: UserType;
+  }) => {
+
+    const groupedOptions = user
+      ? Object.entries(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED)
+      : Object.entries(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL);
+
+    const options = user
+      ? Object.entries(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED)
+      : Object.entries(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT);
+
+    return (
+      <Flex justifyContent={"start"} direction="row">
+        <GroupedMultiselect
+          width={"48"}
+          size="md"
+          variant={"newInput"}
+          onChange={(selected) => handleColonneFilters(selected as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[])}
+          groupedOptions={groupedOptions.reduce(
+            (acc, [group, { color, options }]) => {
+              acc[group] = {
+                color,
+                options: Object.entries(options).map(([value, label]) => ({
+                  label,
+                  value,
+                  isDisabled: forcedColonnes?.includes(value as FORMATION_ETABLISSEMENT_COLUMNS_KEYS),
+                })),
+              };
+              return acc;
+            },
           {} as Record<
             string,
             {
@@ -76,27 +92,29 @@ const ColonneFilterSection = chakra(
               options: { label: string; value: string; disabled?: boolean }[];
             }
           >
-        )}
-        defaultOptions={Object.entries(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT)?.map(([value, label]) => {
-          return {
-            label,
-            value,
-          };
-        })}
-        value={colonneFilters ?? []}
-        customButton={
-          <MenuButton
-            as={Button}
-            variant={"externalLink"}
-            leftIcon={<Icon icon={"ri:table-line"} />}
-            color="bluefrance.113"
-            onClick={() => trackEvent("etablissements:affichage-colonnes")}
-          >
+          )}
+          defaultOptions={options?.map(([value, label]) => {
+            return {
+              label,
+              value,
+            };
+          })}
+          value={colonneFilters ?? []}
+          customButton={
+            <MenuButton
+              as={Button}
+              variant={"externalLink"}
+              leftIcon={<Icon icon={"ri:table-line"} />}
+              color="bluefrance.113"
+              onClick={() => trackEvent("etablissements:affichage-colonnes")}
+            >
             Modifier les colonnes
-          </MenuButton>
-        }
-      />
-    </Flex>
+            </MenuButton>
+          }
+        />
+      </Flex>
+    );
+  }
 );
 
 const Page = () => {
@@ -104,11 +122,11 @@ const Page = () => {
   const trackEvent = usePlausible();
   const router = useRouter();
   const queryParams = useSearchParams();
-  const { auth } = useAuth();
+  const { auth, user } = useAuth();
   const searchParams: {
     filters?: Partial<Filters>;
     search?: string;
-    columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
+    columns?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     order?: Partial<Order>;
     page?: string;
   } = parse(queryParams.toString(), { arrayLimit: Infinity });
@@ -180,7 +198,7 @@ const Page = () => {
     };
 
     const columns = {
-      ..._.omit(FORMATION_ETABLISSEMENT_COLUMNS, "formationSpecifique"),
+      ..._.omit(user ? FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED : FORMATION_ETABLISSEMENT_COLUMNS, "formationSpecifique"),
       ...(filters.codeRegion && region ? regionsColumns : {}),
       ...(filters.codeAcademie && academies ? academiesColumns : {}),
       ...(filters.codeDepartement && departements ? departementsColumns : {}),
@@ -189,7 +207,7 @@ const Page = () => {
     let etablissements = [];
 
     etablissements = data.etablissements.map((etablissement) => ({
-      ...etablissement,
+      ..._.pick(etablissement, Object.keys(FORMATION_ETABLISSEMENT_COLUMNS)),
       ...(filters.codeRegion && region
         ? {
           selectedCodeRegion: region.value,
@@ -216,6 +234,15 @@ const Page = () => {
       isFormationRenovee: etablissement.isFormationRenovee,
       isHistorique: !!etablissement.formationRenovee,
       isHistoriqueCoExistant: etablissement.isHistoriqueCoExistant,
+      ...user && {
+        ...etablissement,
+        typeDemande: etablissement.typeDemande
+          ? etablissement.typeDemande
+            .split(" ,")
+            .map((typeDemande) => formatTypeDemande(typeDemande as TypeDemandeType))
+            .join(", ")
+          : undefined
+      }
     }));
 
     return {
@@ -246,13 +273,18 @@ const Page = () => {
     downloadExcel(formatExportFilename("etablissement_export"), etablissements, columns);
   };
 
-  const [colonneFilters, setColonneFilters] = useState<(keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]>(
+  const defaultColumns = (user ?
+    Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED)
+    : Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT)) as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+
+  const [colonneFilters, setColonneFilters] = useState<FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]>(
     (columns.length
       ? columns
-      : Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT)) as (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]
+      : defaultColumns
+    )
   );
 
-  const handleColonneFilters = (value: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[]) => {
+  const handleColonneFilters = (value: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]) => {
     setSearchParams({ columns: value });
     setColonneFilters(value);
   };
@@ -414,6 +446,7 @@ const Page = () => {
                 handleColonneFilters={handleColonneFilters}
                 forcedColonnes={["libelleEtablissement", "libelleFormation"]}
                 trackEvent={trackEvent}
+                user={user}
               />
             }
             onExportCsv={onExportCsv}
@@ -434,6 +467,7 @@ const Page = () => {
             order={order}
             setSearchParams={setSearchParams}
             colonneFilters={colonneFilters}
+            user={user}
           />
         </Flex>
       </Flex>

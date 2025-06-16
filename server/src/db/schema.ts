@@ -200,7 +200,6 @@ export interface Demande {
   updatedBy: string | null;
   capaciteScolaireColoreeActuelle: Generated<number | null>;
   capaciteApprentissageColoreeActuelle: Generated<number | null>;
-  isOldDemande: boolean | null;
   partenairesEconomiquesImpliques: boolean | null;
   partenaireEconomique1: string | null;
   partenaireEconomique2: string | null;
@@ -221,6 +220,8 @@ export interface Demande {
   inspecteurReferent: string | null;
   achatEquipementCout: number | null;
   travauxAmenagementCout: number | null;
+  isOldDemande: Generated<boolean>;
+  libellecoloration: string | null;
 }
 
 export interface DemandeAccessLog {
@@ -228,6 +229,36 @@ export interface DemandeAccessLog {
   demandeNumero: string | null;
   userId: string | null;
   updatedAt: Timestamp | null;
+}
+
+export interface DemandeConstatNonMaterializedView {
+  numero: string | null;
+  typeDemande: string | null;
+  cfd: string | null;
+  codeDispositif: string | null;
+  uai: string | null;
+  rentreeScolaire: number | null;
+  capaciteScolaireActuelle: number | null;
+  capaciteScolaire: number | null;
+  capaciteScolaireColoreeActuelle: number | null;
+  capaciteScolaireColoree: number | null;
+  capaciteApprentissageActuelle: number | null;
+  capaciteApprentissage: number | null;
+  capaciteApprentissageColoreeActuelle: number | null;
+  capaciteApprentissageColoree: number | null;
+  differenceCapaciteScolaire: number | null;
+  differenceCapaciteScolaireColoree: number | null;
+  differenceCapaciteApprentissage: number | null;
+  differenceCapaciteApprentissageColoree: number | null;
+  annee: string | null;
+  effectifEntreeAvant: number | null;
+  effectifEntreeApres: number | null;
+  deltaEffectif: number | null;
+  capaciteEntreeAvant: number | null;
+  capaciteEntreeApres: number | null;
+  deltaCapacite: number | null;
+  voeuEntreeAvant: number | null;
+  voeuEntreeApres: number | null;
 }
 
 export interface Departement {
@@ -454,7 +485,6 @@ export interface LatestDemandeNonMaterializedView {
   updatedBy: string | null;
   capaciteScolaireColoreeActuelle: number | null;
   capaciteApprentissageColoreeActuelle: number | null;
-  isOldDemande: boolean | null;
   partenairesEconomiquesImpliques: boolean | null;
   partenaireEconomique1: string | null;
   partenaireEconomique2: string | null;
@@ -475,6 +505,8 @@ export interface LatestDemandeNonMaterializedView {
   inspecteurReferent: string | null;
   achatEquipementCout: number | null;
   travauxAmenagementCout: number | null;
+  isOldDemande: boolean | null;
+  libellecoloration: string | null;
 }
 
 export interface Maintenance {
@@ -612,6 +644,7 @@ export interface DB {
   dataFormation: DataFormation;
   demande: Demande;
   demandeAccessLog: DemandeAccessLog;
+  demandeConstatNonMaterializedView: DemandeConstatNonMaterializedView;
   departement: Departement;
   diplomeProfessionnel: DiplomeProfessionnel;
   discipline: Discipline;

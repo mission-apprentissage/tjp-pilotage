@@ -67,6 +67,11 @@ const FormationEtablissementLineSchema = z.object({
   // Flag indiquant si la formation est renovée
   isFormationRenovee: z.coerce.boolean().optional(),
   dateFermeture: z.string().optional(),
+  // Caractéristiques de la transformation
+  numero: z.string().optional(),
+  // typeDemande: DemandeTypeZodType.optional(),
+  typeDemande: z.string().optional(),
+  dateEffetTransformation: z.string().optional(),
 });
 
 const FiltersSchema = z.object({
@@ -110,6 +115,7 @@ export const getFormationEtablissementsSchema = {
         libellesNsf: z.array(OptionSchema),
         secteurs: z.array(OptionSchema),
         positionsQuadrant: z.array(OptionSchema),
+        rentreesScolaires: z.array(OptionSchema),
       }),
       etablissements: z.array(FormationEtablissementLineSchema),
     }),
