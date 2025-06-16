@@ -50,6 +50,7 @@ export const getFormationEtablissementsQuery = async ({
   search,
   order,
   orderBy,
+  user
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
 
@@ -67,7 +68,7 @@ export const getFormationEtablissementsQuery = async ({
     .innerJoin("indicateurEntree", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
     .leftJoin("indicateurSortie", (join) =>
       join
@@ -85,7 +86,9 @@ export const getFormationEtablissementsQuery = async ({
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .leftJoin("formationView as formationContinuum", "formationContinuum.cfd", "indicateurSortie.cfdContinuum")
     .leftJoin("formationHistorique", (join) =>
-      join.onRef("formationHistorique.ancienCFD", "=", "formationView.cfd").on(isScolaireFormationHistorique)
+      join
+        .onRef("formationHistorique.ancienCFD", "=", "formationView.cfd")
+        .on(isScolaireFormationHistorique)
     )
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
@@ -113,6 +116,21 @@ export const getFormationEtablissementsQuery = async ({
         .onRef("actionPrioritaire.codeDispositif", "=", "formationEtablissement.codeDispositif")
         .onRef("actionPrioritaire.codeRegion", "=", "etablissement.codeRegion")
     )
+    .$if(!!user, (eb) =>
+      eb
+        .leftJoin("demandeConstatView as demandeConstat", (join) =>
+          join
+            .onRef("demandeConstat.cfd", "=", "formationEtablissement.cfd")
+            .onRef("demandeConstat.codeDispositif", "=", "formationEtablissement.codeDispositif")
+            .onRef("demandeConstat.uai", "=", "formationEtablissement.uai")
+            .on("demandeConstat.rentreeScolaire", "=", parseInt(rentreeScolaire[0]))
+        )
+        .select([
+          sql<string>`string_agg("demandeConstat"."numero", ', ')`.as("numero"),
+          sql<string>`string_agg("demandeConstat"."typeDemande", ', ')`.as("typeDemande"),
+          sql<string>`string_agg(("demandeConstat"."rentreeScolaire"::varchar), ', ')`.as("dateEffetTransformation"),
+        ])
+    )
     .select((eb) => [
       sql<number>`COUNT(*) OVER()`.as("count"),
       "etablissement.libelleEtablissement",
@@ -130,7 +148,7 @@ export const getFormationEtablissementsQuery = async ({
       "academie.codeAcademie",
       "region.libelleRegion",
       "etablissement.codeRegion",
-      "etablissement.uai as uai",
+      "etablissement.uai",
       "formationView.typeFamille",
       "familleMetier.libelleFamille",
       "dispositif.libelleDispositif",
@@ -139,7 +157,7 @@ export const getFormationEtablissementsQuery = async ({
       "indicateurEntree.rentreeScolaire",
       "indicateurEtablissement.valeurAjoutee",
       "indicateurEntree.anneeDebut",
-      "formationHistorique.cfd as formationRenovee",
+      sql<string>`string_agg("formationHistorique"."cfd", ', ')`.as("formationRenovee"),
       selectTauxRemplissage("indicateurEntree").as("tauxRemplissage"),
       effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
       effectifAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as("effectif1"),
@@ -166,8 +184,7 @@ export const getFormationEtablissementsQuery = async ({
         )
         .end()
         .as("continuumEtablissement"),
-      isFormationRenovee({ eb, rentreeScolaire: rentreeScolaire[0] })
-        .as("isFormationRenovee"),
+      isFormationRenovee({ eb, rentreeScolaire: rentreeScolaire[0] }).as("isFormationRenovee"),
       isFormationActionPrioritaire({
         cfdRef: "formationEtablissement.cfd",
         codeDispositifRef: "formationEtablissement.codeDispositif",
@@ -373,7 +390,6 @@ export const getFormationEtablissementsQuery = async ({
       "formationView.isTransitionNumerique",
       "dataFormation.cfd",
       "nsf.libelleNsf",
-      "formationHistorique.cfd",
       "etablissement.id",
       "departement.libelleDepartement",
       "departement.codeDepartement",

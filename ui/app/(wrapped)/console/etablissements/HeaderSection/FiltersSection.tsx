@@ -7,10 +7,10 @@ import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum
 
 import { DeleteRequeteEnregistreeButton } from "@/app/(wrapped)/console/components/DeleteRequeteEnregistreeButton";
 import { FilterTags } from "@/app/(wrapped)/console/components/FilterTags";
-import type { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import type {
   Filters,
   FiltersList,
+  FORMATION_ETABLISSEMENT_COLUMNS_KEYS,
   Order,
   RequetesEnregistrees,
   RequetesSuggerees,
@@ -70,14 +70,14 @@ export const FiltersSection = ({
   setSearchParams: (params: {
     filters?: Partial<Filters>;
     search?: string;
-    columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
+    columns?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     order?: Partial<Order>;
     page?: number;
   }) => void;
   searchParams: {
     filters?: Partial<Filters>;
     search?: string;
-    columns?: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
+    columns?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     order?: Partial<Order>;
     page?: string;
   };

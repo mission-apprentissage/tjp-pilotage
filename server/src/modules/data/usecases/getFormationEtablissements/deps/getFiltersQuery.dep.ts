@@ -229,6 +229,17 @@ export const getFiltersQuery = async ({
     ])
     .execute();
 
+  const rentreesScolaires = await getKbdClient()
+    .selectFrom("indicateurEntree")
+    .select([
+      "indicateurEntree.rentreeScolaire as value",
+      "indicateurEntree.rentreeScolaire as label",
+    ])
+    .distinct()
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc")
+    .execute();
+
   return {
     regions: regionFilters.map(cleanNull),
     departements: departementFilters.map(cleanNull),
@@ -251,5 +262,6 @@ export const getFiltersQuery = async ({
         value: PositionQuadrantEnum["Hors quadrant"],
       },
     ],
+    rentreesScolaires: rentreesScolaires.map(cleanNull),
   };
 };

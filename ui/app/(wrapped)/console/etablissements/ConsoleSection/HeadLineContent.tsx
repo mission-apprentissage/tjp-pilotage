@@ -1,6 +1,7 @@
-import {Box, chakra, Th, Thead, Tooltip, Tr, VisuallyHidden} from '@chakra-ui/react';
+import {Box, chakra, Th, Thead, Tooltip, Tr} from '@chakra-ui/react';
 import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
+import type { UserType } from 'shared/schema/userSchema';
 
 import { TooltipDefinitionDomaineDeFormation } from '@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation';
 import { TooltipDefinitionEffectifEnEntree } from '@/app/(wrapped)/components/definitions/DefinitionEffectifEnEntree';
@@ -14,9 +15,10 @@ import { TooltipDefinitionTauxPoursuiteEtudes } from '@/app/(wrapped)/components
 import { TooltipDefinitionTauxRemplissage } from '@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage';
 import { TooltipDefinitionValeurAjoutee } from '@/app/(wrapped)/components/definitions/DefinitionValeurAjoutee';
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
-import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
-import type { Filters, Order } from "@/app/(wrapped)/console/etablissements/types";
+import { FORMATION_ETABLISSEMENT_COLUMNS, FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
+import type {Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Order} from '@/app/(wrapped)/console/etablissements/types';
 import { OrderIcon } from "@/components/OrderIcon";
+import { feature } from '@/utils/feature';
 
 const ConditionalTh = chakra(
   ({
@@ -33,9 +35,9 @@ const ConditionalTh = chakra(
     className?: string;
     style?: CSSProperties;
     children: React.ReactNode;
-    colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-    colonne: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS;
-    getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
+    colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
+    colonne: FORMATION_ETABLISSEMENT_COLUMNS_KEYS;
+    getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
     onClick?: (column: Order["orderBy"]) => void;
     isNumeric?: boolean;
     icon?: React.ReactNode;
@@ -55,7 +57,7 @@ const ConditionalTh = chakra(
             display: "flex",
             alignItems: "center",
           }}>
-            <Tooltip label={FORMATION_ETABLISSEMENT_COLUMNS[colonne]} placement="top">
+            <Tooltip label={FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED[colonne]} placement="top">
               <Box
                 fontSize={12}
                 fontWeight={700}
@@ -84,6 +86,7 @@ export const HeadLineContent = ({
   isSecondColumnSticky,
   colonneFilters,
   getCellBgColor,
+  user
 }: {
   order: Partial<Order>;
   setSearchParams: (params: {
@@ -94,8 +97,9 @@ export const HeadLineContent = ({
   }) => void;
   isFirstColumnSticky?: boolean;
   isSecondColumnSticky?: boolean;
-  colonneFilters: (keyof typeof FORMATION_ETABLISSEMENT_COLUMNS)[];
-  getCellBgColor: (column: keyof typeof FORMATION_ETABLISSEMENT_COLUMNS) => string;
+  colonneFilters: (FORMATION_ETABLISSEMENT_COLUMNS_KEYS)[];
+  getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
+  user?: UserType
 }) => {
   const trackEvent = usePlausible();
 
@@ -115,9 +119,6 @@ export const HeadLineContent = ({
   return (
     <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" zIndex={"docked"}>
       <Tr bg={"white"}>
-        <Th>
-          <VisuallyHidden>Historique</VisuallyHidden>
-        </Th>
         <ConditionalTh colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} colonne="rentreeScolaire">
           {FORMATION_ETABLISSEMENT_COLUMNS.rentreeScolaire}
         </ConditionalTh>
@@ -446,6 +447,40 @@ export const HeadLineContent = ({
           <OrderIcon {...order} column="valeurAjoutee" />
           {FORMATION_ETABLISSEMENT_COLUMNS.valeurAjoutee}
         </ConditionalTh>
+        {feature.donneesTransfoConsole && user && (
+          <>
+            <ConditionalTh
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              colonne="numero"
+              cursor="pointer"
+              onClick={handleOrder}
+            >
+              <OrderIcon {...order} column="numero" />
+              {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.numero}
+            </ConditionalTh>
+            <ConditionalTh
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              colonne="dateEffetTransformation"
+              cursor="pointer"
+              onClick={handleOrder}
+            >
+              <OrderIcon {...order} column="dateEffetTransformation" />
+              {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.dateEffetTransformation}
+            </ConditionalTh>
+            <ConditionalTh
+              colonneFilters={colonneFilters}
+              getCellBgColor={getCellBgColor}
+              colonne="typeDemande"
+              cursor="pointer"
+              onClick={handleOrder}
+            >
+              <OrderIcon {...order} column="typeDemande" />
+              {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.typeDemande}
+            </ConditionalTh>
+          </>
+        )}
       </Tr>
     </Thead>
   );

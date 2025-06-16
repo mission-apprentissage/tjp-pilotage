@@ -160,6 +160,9 @@ export const themeColors = {
     950: "#C7F6FC",
     "950_hover": "#64ecf8",
     "950_active": "#5bd8e3",
+    200: "#233e41",
+    "200_hover": "#3e686d",
+    "200_active": "#4d7f85",
   },
   orangeTerreBattue: {
     645: "#E4794A",

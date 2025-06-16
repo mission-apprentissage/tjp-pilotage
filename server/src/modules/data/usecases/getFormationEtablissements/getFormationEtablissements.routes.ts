@@ -15,9 +15,11 @@ export const getFormationEtablissementsRoutes = (server: Server) => {
     server.route({
       ...props,
       handler: async (request, response) => {
+        const user = request.user;
         const { ...filters } = request.query;
         const etablissements = await getFormationEtablissements({
           ...filters,
+          user,
         });
         response.status(200).send(etablissements);
       },
