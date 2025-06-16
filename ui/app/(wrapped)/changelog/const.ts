@@ -299,6 +299,16 @@ export const CHANGELOG: IChangelog[] = [
     "document": "",
     "fonctions": ["Inspecteur", "DASEN"],
   },
+  {
+    "id": "f83dac09-b854-456f-ba26-0653d5574d6c",
+    "deployed": true,
+    "show": true,
+    "title": "Ouverture des brouillons",
+    "types": [ChangelogTypeEnum["Fonctionnalité"]],
+    "date": new Date("2025-05-28"),
+    "description": "Le partage de brouillon de demande est maintenant ouvert par défaut aux personnes ayant les droits sur un même établissement (UAI).",
+    "document": "",
+  }
 ];
 
 const isRoleAllowed = (entry: IChangelog, role: Role) => {

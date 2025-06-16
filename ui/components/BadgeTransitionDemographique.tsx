@@ -1,5 +1,5 @@
 import type { BadgeProps} from '@chakra-ui/react';
-import {Badge, chakra,Flex, Text, Tooltip} from '@chakra-ui/react';
+import {Badge, chakra,Flex, Tooltip} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
@@ -10,41 +10,44 @@ export const BadgeTransitionDemographique = chakra(({
   withIcon = false,
   labelSize = "short",
   size = "xs",
-  textTransform = "uppercase",
   openGlossaire,
   ...props
 }: {
   isFormationTransitionDemographique?: boolean;
   withIcon?: boolean;
   labelSize?: "short" | "long";
-  size?: "xs" | "sm" | "md";
-  textTransform?: "uppercase" | "capitalize" | "lowercase";
+  size?: "xs" | "sm" | "md" | "lg";
   openGlossaire?: (key: GlossaireEntryKey) => void;
   props?: BadgeProps;
 }) => {
   if (!isFormationTransitionDemographique) return <></>;
   if (!openGlossaire)
     return (
-      <Badge gap={1} size={size} my={"auto"} bgColor={"grey.1000_active"} color={"grey.425"} {...props}>
+      <Badge
+        gap={1}
+        my={"auto"}
+        bgColor={"grey.1000_active"}
+        color={"grey.425"}
+        size={size}
+        {...props}
+      >
         {withIcon && (
           <Flex my={"auto"}>
             <Icon icon="ri:file-info-fill" />
           </Flex>
         )}
-        <Text textTransform={textTransform}>
-          {labelSize === "short" ? "Démo" : TypeFormationSpecifiqueEnum["Transition démographique"]}
-        </Text>
+        {labelSize === "short" ? "Démo" : TypeFormationSpecifiqueEnum["Transition démographique"]}
       </Badge>
     );
   return (
     <Tooltip label="Cliquez pour plus d'infos.">
       <Badge
         gap={1}
-        size={size}
         my={"auto"}
         bgColor={"grey.1000_active"}
         color={"grey.425"}
         cursor={"pointer"}
+        size={size}
         onClick={(e) => {
           e.stopPropagation();
           openGlossaire("transition-demographique");
@@ -56,9 +59,7 @@ export const BadgeTransitionDemographique = chakra(({
             <Icon icon="ri:file-info-fill" />
           </Flex>
         )}
-        <Text textTransform={textTransform}>
-          {labelSize === "short" ? "Démo" : TypeFormationSpecifiqueEnum["Transition démographique"]}
-        </Text>
+        {labelSize === "short" ? "Démo" : TypeFormationSpecifiqueEnum["Transition démographique"]}
       </Badge>
     </Tooltip>
   );

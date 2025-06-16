@@ -1,9 +1,9 @@
 import * as Boom from "@hapi/boom";
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import {getPermissionScope, hasRole, RoleEnum} from 'shared';
+import { getPermissionScope, hasRole, RoleEnum } from 'shared';
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import {PermissionEnum} from 'shared/enum/permissionEnum';
+import { PermissionEnum } from 'shared/enum/permissionEnum';
 
 import type { DB } from "@/db/db";
 import type { RequestUser } from "@/modules/core/model/User";
@@ -34,7 +34,7 @@ export const isDemandeSelectable =
     (eb: ExpressionBuilder<DB, "demande">) => {
       const filters = getDemandeSelectableFilters(user);
 
-      if(hasRole({user, role: RoleEnum["invite"]})) return eb
+      if (hasRole({ user, role: RoleEnum["invite"] })) return eb
         .and([
           filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
           eb("demande.statut", "in", [
@@ -42,7 +42,7 @@ export const isDemandeSelectable =
             DemandeStatutEnum["refusée"]]),
         ]);
 
-      if(hasRole({user, role: RoleEnum["region"]})) return eb
+      if (hasRole({ user, role: RoleEnum["region"] })) return eb
         .and([
           filters.codeRegion ? eb("demande.codeRegion", "=", filters.codeRegion) : sql<boolean>`true`,
           eb("demande.statut", "in", [

@@ -4,6 +4,7 @@ import type { CSSObjectWithLabel, StylesConfig } from "react-select";
 import Select from "react-select";
 
 import { client } from "@/api.client";
+import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
 import type { NsfOption, NsfOptions } from "@/app/(wrapped)/panorama/domaine-de-formation/types";
 
 const selectStyle: StylesConfig<NsfOption, false> = {
@@ -64,7 +65,9 @@ export const SelectNsf = chakra(
           <FormControl>
             { !hideLabel && (
               <FormLabel htmlFor="nsf-select">
-              Rechercher un domaine de formation (NSF) ou par formation
+                Rechercher un domaine de formation (NSF)
+                <TooltipDefinitionDomaineDeFormation />
+                ou par formation
               </FormLabel>
             )}
             <Select
