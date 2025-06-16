@@ -49,7 +49,7 @@ export const submitDemandeSchema = {
       nbRecrutementRH: z.coerce.number().optional(),
       discipline1RecrutementRH: z.string().optional(),
       discipline2RecrutementRH: z.string().optional(),
-      reconversionRH: z.boolean(),
+      reconversionRH: z.boolean().optional(),
       nbReconversionRH: z.coerce.number().optional(),
       discipline1ReconversionRH: z.string().optional(),
       discipline2ReconversionRH: z.string().optional(),
@@ -92,6 +92,7 @@ export const submitDemandeSchema = {
       numero: z.string().optional(),
       campagneId: z.string(),
     }),
+    isModificationUaiCfd: z.boolean().optional(),
   }),
   response: {
     200: z.object({
