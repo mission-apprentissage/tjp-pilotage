@@ -5,7 +5,6 @@ import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
 import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -43,7 +42,6 @@ export const TableQuadrant = ({
     orderBy?: string;
   };
 }) => {
-  const { openGlossaire } = useGlossaireContext();
   const getTdColor = (formation: Formation) => {
     if (currentFormationId && `${formation.cfd}_${formation.codeDispositif}` === currentFormationId)
       return "white !important";
