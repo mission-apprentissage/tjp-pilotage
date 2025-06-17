@@ -78,7 +78,7 @@ export const CapaciteSection = ({ disabled }: { disabled?: boolean; }) => {
   const uai = watch("uai");
   const codeDispositif = watch("codeDispositif");
 
-  const shouldFetchCapacite = !!cfd && !!uai && !!codeDispositif;
+  const shouldFetchCapacite = !!cfd && !!uai && !!codeDispositif && !disabled;
 
   const { data: capacitePrecedente } = useQuery({
     keepPreviousData: false,

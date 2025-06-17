@@ -20,7 +20,7 @@ import { isAxiosError } from "axios";
 import { useRouter, useSearchParams} from 'next/navigation';
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import {hasRole, RoleEnum} from 'shared';
+import { hasRole, RoleEnum} from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
@@ -34,12 +34,12 @@ import { Conseils } from "@/app/(wrapped)/demandes/saisie/components/Conseils";
 import { MenuFormulaire } from "@/app/(wrapped)/demandes/saisie/components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/demandes/SCROLL_OFFSETS";
 import type { Demande, DemandeMetadata } from "@/app/(wrapped)/demandes/types";
-import {canAdjustDemande, canCorrectDemande} from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
+import { canCorrectDemande, canEditCfdUai} from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
 import type { DetailedApiError } from "@/utils/apiError";
 import { getDetailedErrorMessage } from "@/utils/apiError";
-import {getRoutingAccessSaisieDemande} from '@/utils/getRoutingAccesDemande';
+import { getRoutingAccessSaisieDemande} from "@/utils/getRoutingAccesDemande";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
@@ -143,28 +143,18 @@ export const DemandeForm = ({
 
   const submitCFDUAISection = () => {
     if (step !== 2) {
-      if( demande && canAdjustDemande({ demande, user })) {
-        submitDemande({
-          body: {
-            demande: {
-              ...demande,
-              uai: getValues("uai"),
-              cfd: getValues("cfd"),
-              codeDispositif: getValues("codeDispositif"),
-            },
-            isModificationUaiCfd: true,
-          }
-        });
-        return;
+      if( demande && isEditCfdUai) {
+        setTimeout(() => {
+          submitComponentRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 500);
+      } else {
+        setTimeout(() => {
+          step2Ref.current?.scrollIntoView({ behavior: "smooth" });
+        }, 500);
       }
-      setTimeout(() => {
-        step2Ref.current?.scrollIntoView({ behavior: "smooth" });
-      }, 500);
     }
     setStep(2);
   };
-
-  const statutComponentRef = useRef<HTMLDivElement>(null);
 
   const typeDemandeRef = useRef<HTMLDivElement>(null);
   const motifsEtPrecisionsRef = useRef<HTMLDivElement>(null);
@@ -173,6 +163,7 @@ export const DemandeForm = ({
   const internatEtRestaurationRef = useRef<HTMLDivElement>(null);
   const commentaireEtPiecesJointesRef = useRef<HTMLDivElement>(null);
   const correctionRef = useRef<HTMLDivElement>(null);
+  const submitComponentRef = useRef<HTMLDivElement>(null);
 
   const anchorsRefs = {
     typeDemande: typeDemandeRef,
@@ -223,7 +214,14 @@ export const DemandeForm = ({
   const isCorrection = !!queryParams.get("correction");
   const showCorrection = isCorrection && canCorrectDemande({demande, user});
 
-  const isAdjustDemande = queryParams.get("adjust") === "true";
+  const isEditCfdUai = queryParams.get("editCfdUai") === "true" && canEditCfdUai({demande, user});
+
+  useEffect(() => {
+    if (isEditCfdUai) {
+      onEditUaiCfdSection();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditCfdUai]);
 
   return (
     <FormProvider {...form}>
@@ -272,37 +270,18 @@ export const DemandeForm = ({
             defaultValues={defaultValues}
             formMetadata={formMetadata}
             onEditUaiCfdSection={onEditUaiCfdSection}
-            active={step === 1}
-            isAdjustDemande={isAdjustDemande && canAdjustDemande({demande, user})}
-            disabled={disabled && !canAdjustDemande({demande, user})}
+            active={step === 1 || isEditCfdUai}
+            isEditCfdUai={isEditCfdUai}
+            disabled={disabled && !isEditCfdUai}
             isFCIL={isFCIL}
             setIsFCIL={setIsFCIL}
             setDateFermetureFormation={setDateFermetureFormation}
             isCFDUaiSectionValid={isCFDUaiSectionValid}
             submitCFDUAISection={submitCFDUAISection}
-            statutComponentRef={statutComponentRef}
+            submitComponentRef={submitComponentRef}
             campagne={campagne}
           />
-          {isAdjustDemande && (
-            <Box position={"relative"}>
-              {errors && (
-                <Alert mt="8" alignItems="flex-start" status="error">
-                  <AlertIcon />
-                  <Box>
-                    <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
-                    <AlertDescription mt="2">
-                      <UnorderedList>
-                        {Object.entries(errors).map(([key, msg]) => (
-                          <li key={key}>{msg}</li>
-                        ))}
-                      </UnorderedList>
-                    </AlertDescription>
-                  </Box>
-                </Alert>
-              )}
-            </Box>
-          )}
-          {(step === 2 && !isAdjustDemande) && (
+          {(step === 2 || isEditCfdUai) && (
             <Box>
               <Grid templateColumns={"repeat(3, 1fr)"} columnGap={8}>
                 <GridItem>
@@ -338,12 +317,12 @@ export const DemandeForm = ({
                   <InformationsBlock
                     refs={anchorsRefs}
                     formId={formId}
-                    disabled={disabled}
+                    disabled={disabled || isEditCfdUai}
                     campagne={campagne}
                     demande={demande}
                     showCorrection={showCorrection}
                     footerActions={
-                      <Flex direction="row" gap={4} ref={statutComponentRef}>
+                      <Flex direction="row" gap={4} ref={submitComponentRef}>
                         {canSubmitBrouillon() && (
                           <Button
                             isDisabled={
@@ -377,7 +356,7 @@ export const DemandeForm = ({
                           isDisabled={
                             disabled ||
                             isActionsDisabled ||
-                            !isCampagneEnCours(campagne)
+                            (!isCampagneEnCours(campagne) && !isEditCfdUai)
                           }
                           isLoading={isSubmitting}
                           variant="primary"
@@ -393,6 +372,7 @@ export const DemandeForm = ({
                                   autreMotif: escapeString(values.autreMotif),
                                   autreMotifRefus: escapeString(values.autreMotifRefus),
                                 },
+                                isEditCfdUai
                               },
                             })
                           )}

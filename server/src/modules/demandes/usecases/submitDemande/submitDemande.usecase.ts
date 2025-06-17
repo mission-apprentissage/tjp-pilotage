@@ -70,11 +70,11 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
     async ({
       demande,
       user,
-      isModificationUaiCfd = false,
+      isEditCfdUai = false,
     }: {
       user: RequestUser;
       demande: Demande;
-      isModificationUaiCfd?: boolean;
+      isEditCfdUai?: boolean;
     }) => {
       const currentDemande = demande.numero ? await deps.findOneDemandeQuery(demande.numero) : undefined;
 
@@ -91,7 +91,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
         région: () => user.codeRegion === dataEtablissement.codeRegion,
         national: () => true,
       });
-      const isCampagneOpen = isModificationUaiCfd || guardCampagne(campagne);
+      const isCampagneOpen = isEditCfdUai || guardCampagne(campagne);
 
       if (!isCampagneOpen) {
         logger.error(

@@ -108,7 +108,7 @@ export const canEditDemandeStatut = ({
   else return editableStatuts.includes(demande.statut);
 };
 
-export const canAdjustDemande = ({
+export const canEditCfdUai = ({
   demande,
   user
 } : {

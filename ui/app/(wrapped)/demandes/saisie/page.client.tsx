@@ -40,7 +40,7 @@ import { isCampagneTerminee } from "shared/utils/campagneUtils";
 import { client } from "@/api.client";
 import { StatutTag } from "@/app/(wrapped)/demandes/components/StatutTag";
 import { getMessageAccompagnementCampagne } from "@/app/(wrapped)/demandes/utils/messageAccompagnementUtils";
-import {canAdjustDemande,canCheckDemande, canCorrectDemande, canCreateDemande, canDeleteDemande, canEditDemande, canImportDemande} from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
+import { canCheckDemande, canCorrectDemande, canCreateDemande, canDeleteDemande,canEditDemande, canImportDemande} from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
 import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/demandes/utils/statutUtils";
 import { getTypeDemandeLabel } from "@/app/(wrapped)/demandes/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -388,12 +388,6 @@ export const PageClient = () => {
                             suffix: demande.numero
                           });
 
-                          const linkSaisieAdjust = getRoutingAccessSaisieDemande({
-                            user,
-                            campagne: data?.campagne,
-                            suffix: `${demande.numero}?adjust=true`
-                          });
-
                           const linkSaisieImported = getRoutingAccessSaisieDemande({
                             user,
                             campagne: data?.campagne,
@@ -404,11 +398,6 @@ export const PageClient = () => {
                             user,
                             campagne: data?.campagne,
                             suffix: demande.numero
-                          });
-
-                          const isAdjustDisabled = !canAdjustDemande({
-                            demande,
-                            user,
                           });
 
                           const isModificationDisabled = !canEditDemande({
@@ -561,25 +550,6 @@ export const PageClient = () => {
                                       icon={<Icon icon="ri:eye-line" width={"24px"} color={bluefrance113} />}
                                     />
                                   </Tooltip>
-                                  { !isAdjustDisabled && (
-                                    <Tooltip label="Modifier la formation ou l'établissement de la demande" shouldWrapChildren>
-                                      <IconButton
-                                        disabled={isAdjustDisabled}
-                                        as={NextLink}
-                                        href={linkSaisieAdjust}
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          e.stopPropagation();
-                                          router.push(linkSaisieAdjust);
-                                        }}
-                                        aria-label="Modifier la formation ou l'établissement de la demande"
-                                        color={"bluefrance.113"}
-                                        bgColor={"transparent"}
-                                        icon={<Icon icon="ri:equalizer-line" width={"24px"} color={bluefrance113} />}
-                                      />
-
-                                    </Tooltip>
-                                  )}
                                   {
                                     !isModificationDisabled && (
                                       <Tooltip label="Modifier la demande" shouldWrapChildren>
