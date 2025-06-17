@@ -159,7 +159,7 @@ export const QuadrantSection = ({
         </Box>
 
         <Flex color={"grey.200"} my={"24px"} gap={2}>
-          <Text><strong>Comparez</strong> les formations entres elles et par rapport aux moyens régionaux</Text>
+          <Text><strong>Comparez</strong> les formations entres elles et par rapport aux moyennes régionales</Text>
           <BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />
         </Flex>
       </Box>
