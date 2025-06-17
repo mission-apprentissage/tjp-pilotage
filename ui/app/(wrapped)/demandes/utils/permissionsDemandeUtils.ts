@@ -132,6 +132,10 @@ const canEditOldDemande = ({
   demande: Demande,
   user?: UserType
 }): boolean => {
+  if (isAdmin({ user }) &&
+      !isStatutDemandeValidee(demande.statut) &&
+      !isStatutRefusee(demande.statut)) return true;
+
   if(feature.saisieDisabled) return false;
   if(!demande.canEdit) return false;
   if(!isCampagneEnCours(demande?.campagne)) return false;
