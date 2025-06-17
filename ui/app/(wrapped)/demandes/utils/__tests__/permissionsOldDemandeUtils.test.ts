@@ -267,7 +267,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.when.canImportDemande();
     fixture.then.verifierCanNotImport();
 
-    fixture.when.canEditDemande( );
+    fixture.when.canEditDemande();
     fixture.then.verifierCanNotEdit();
 
     fixture.when.canCreateDemande();
@@ -285,41 +285,41 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.given.campagne2024();
     fixture.given.demandeEditable();
 
-    fixture.when.canEditDemande( );
+    fixture.when.canEditDemande();
     fixture.then.verifierCanEdit();
 
     fixture.when.canDeleteDemande();
     fixture.then.verifierCanDelete();
   });
 
-  it("Un utilisateur national ne doit pas pouvoir modifier une demande non éditable", () => {
+  it("Un utilisateur national doit pouvoir modifier une demande non éditable", () => {
     fixture.given.utilisateurNational();
     fixture.given.campagne2024();
     fixture.given.demandeNonEditable();
 
-    fixture.when.canEditDemande( );
-    fixture.then.verifierCanNotEdit();
+    fixture.when.canEditDemande();
+    fixture.then.verifierCanEdit();
   });
 
-  it("Un utilisateur national ne doit pas pouvoir créer ou modifier une demande pendant une campagne terminée", () => {
+  it("Un utilisateur national ne doit pas pouvoir créer, mais doit pouvoir modifier une demande pendant une campagne terminée", () => {
     fixture.given.utilisateurNational();
     fixture.given.campagne2023Terminee();
     fixture.given.demandeEditable();
 
-    fixture.when.canEditDemande( );
-    fixture.then.verifierCanNotEdit();
+    fixture.when.canEditDemande();
+    fixture.then.verifierCanEdit();
 
     fixture.when.canCreateDemande();
     fixture.then.verifierCanNotCreate();
   });
 
-  it("Un utilisateur national ne doit pas pouvoir créer ou modifier une demande pendant une campagne en attente", () => {
+  it("Un utilisateur national ne doit pas pouvoir créer, mais doit pouvoir modifier une demande pendant une campagne en attente", () => {
     fixture.given.utilisateurNational();
     fixture.given.campagne2025EnAttente();
     fixture.given.demandeEditable();
 
-    fixture.when.canEditDemande( );
-    fixture.then.verifierCanNotEdit();
+    fixture.when.canEditDemande();
+    fixture.then.verifierCanEdit();
 
     fixture.when.canCreateDemande();
     fixture.then.verifierCanNotCreate();
@@ -330,7 +330,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.given.campagne2024();
     fixture.given.demandeEditable();
 
-    fixture.when.canEditDemande( );
+    fixture.when.canEditDemande();
     fixture.then.verifierCanEdit();
   });
 
@@ -347,7 +347,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.given.campagne2024();
     fixture.given.demandeEditable();
 
-    fixture.when.canEditDemande( );
+    fixture.when.canEditDemande();
     fixture.then.verifierCanEdit();
 
     fixture.when.canCreateDemande();
@@ -362,7 +362,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.given.campagne2024();
     fixture.given.demandeEditable();
 
-    fixture.when.canEditDemande( );
+    fixture.when.canEditDemande();
     fixture.then.verifierCanEdit();
   });
 
@@ -371,7 +371,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.given.campagne2024();
 
     fixture.given.demandeNonEditable();
-    fixture.when.canEditDemande( );
+    fixture.when.canEditDemande();
     fixture.then.verifierCanNotEdit();
   });
 
@@ -380,7 +380,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.given.campagne2024();
 
     fixture.given.demandeEditable();
-    fixture.when.canEditDemande( );
+    fixture.when.canEditDemande();
     fixture.then.verifierCanNotEdit();
   });
 
@@ -389,7 +389,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.given.campagne2024();
 
     fixture.given.demandeEditable();
-    fixture.when.canEditDemande( );
+    fixture.when.canEditDemande();
     fixture.then.verifierCanNotEdit();
   });
 
@@ -498,9 +498,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.given.campagne2024();
     fixture.given.demandeEditable();
 
-    fixture.when.canEditDemande( );
+    fixture.when.canEditDemande();
 
     fixture.then.verifierCanEdit();
   });
-
 });
