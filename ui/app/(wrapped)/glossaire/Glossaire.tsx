@@ -23,7 +23,7 @@ export const Glossaire = () => {
 
 
   return (
-    <Box display={"flex"} flexGrow={"1"} justifyContent={"end"} zIndex={"tooltip"}>
+    <Box display={"flex"} ms={"auto"} justifyContent={"end"} zIndex={"tooltip"}>
       <Button
         variant={"secondary"}
         leftIcon={<QuestionOutlineIcon height={"14px"} width={"14px"} />}
