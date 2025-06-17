@@ -1,11 +1,11 @@
-import { Box, chakra, Th, Thead, Tooltip, Tr, VisuallyHidden } from "@chakra-ui/react";
+import { Box, chakra,Th, Thead, Tooltip, Tr, VisuallyHidden } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
 
 import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
 import { TooltipDefinitionEffectifEnEntree } from "@/app/(wrapped)/components/definitions/DefinitionEffectifEnEntree";
-import {TooltipDefinitionFormationSpecifique} from '@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique';
-import {TooltipDefinitionNombreEleves} from '@/app/(wrapped)/components/definitions/DefinitionNombreEleves';
+import { TooltipDefinitionFormationSpecifique} from '@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique';
+import { TooltipDefinitionNombreEleves} from '@/app/(wrapped)/components/definitions/DefinitionNombreEleves';
 import { TooltipDefinitionPositionQuadrant } from "@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant";
 import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
 import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";

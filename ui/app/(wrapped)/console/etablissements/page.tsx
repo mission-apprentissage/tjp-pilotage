@@ -168,6 +168,7 @@ const Page = () => {
       query: getEtablissementsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
     {
+      enabled: !!filters.rentreeScolaire,
       staleTime: 10000000,
     }
   );
@@ -400,7 +401,7 @@ const Page = () => {
       setSearchParams({ filters: filters });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters]);
+  }, []);
 
   return (
     <>

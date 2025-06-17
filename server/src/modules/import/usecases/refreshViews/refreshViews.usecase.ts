@@ -21,10 +21,6 @@ export const [refreshViews] = inject(
       await deps.refreshDemandeMaterializedView().then(() => {
         console.log("latestDemandeView refreshed");
       });
-
-      await deps.refreshDemandeConstatMaterializedView().then(() => {
-        console.log("demandeConstatView refreshed");
-      });
     };
   }
 );

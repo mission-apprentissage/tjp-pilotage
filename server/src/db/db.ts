@@ -16,6 +16,7 @@ export interface DB
     DBSchema,
     | "latestDemandeNonMaterializedView"
     | "formationNonMaterializedView"
+    | "demandeConstatNonMaterializedView"
   > {
 
   latestDemandeView: {

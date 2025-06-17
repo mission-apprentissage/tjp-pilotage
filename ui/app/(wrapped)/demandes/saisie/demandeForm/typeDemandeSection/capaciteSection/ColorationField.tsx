@@ -1,5 +1,4 @@
 import {
-  Box,
   chakra,
   Flex,
   FormControl,
@@ -52,13 +51,13 @@ export const ColorationField = chakra(({ disabled, className }: { disabled?: boo
           color="bluefrance.113"
           mb={"6px"}
           tooltip={
-            <Box>
+            <Flex direction="column" gap={2}>
               <Text>
                 Une coloration consiste à adapter le projet pédagogique à un champ professionnel particulier, en général
                 concentré sur un territoire donné.
               </Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
         />
       </Flex>

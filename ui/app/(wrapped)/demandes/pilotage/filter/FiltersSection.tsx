@@ -354,9 +354,7 @@ export const FiltersSection = ({
                     <Text>
                       Le taux de transformation peut être établi avec ou sans considérer les colorations de formation.
                     </Text>
-                    <Text>
-                      Cliquez pour plus d'infos
-                    </Text>
+                    <Text fontWeight={700}>Cliquez pour plus d'infos</Text>
                   </Flex>
                 }
                 onClick={onOpen}

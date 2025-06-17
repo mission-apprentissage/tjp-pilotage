@@ -1,24 +1,24 @@
-import {Box, chakra, Th, Thead, Tooltip, Tr} from '@chakra-ui/react';
+import { Box, chakra, Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
-import type { UserType } from 'shared/schema/userSchema';
+import type { UserType } from "shared/schema/userSchema";
 
-import { TooltipDefinitionDomaineDeFormation } from '@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation';
-import { TooltipDefinitionEffectifEnEntree } from '@/app/(wrapped)/components/definitions/DefinitionEffectifEnEntree';
-import { TooltipDefinitionFormationSpecifique } from '@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique';
-import { TooltipDefinitionNombreEleves } from '@/app/(wrapped)/components/definitions/DefinitionNombreEleves';
-import { TooltipDefinitionPositionQuadrant } from '@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant';
-import { TooltipDefinitionTauxDePression } from '@/app/(wrapped)/components/definitions/DefinitionTauxDePression';
-import { TooltipDefinitionTauxDevenirFavorable } from '@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable';
-import { TooltipDefinitionTauxEmploi6Mois } from '@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois';
-import { TooltipDefinitionTauxPoursuiteEtudes } from '@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes';
-import { TooltipDefinitionTauxRemplissage } from '@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage';
-import { TooltipDefinitionValeurAjoutee } from '@/app/(wrapped)/components/definitions/DefinitionValeurAjoutee';
+import { TooltipDefinitionDomaineDeFormation } from "@/app/(wrapped)/components/definitions/DefinitionDomaineDeFormation";
+import { TooltipDefinitionEffectifEnEntree } from "@/app/(wrapped)/components/definitions/DefinitionEffectifEnEntree";
+import { TooltipDefinitionFormationSpecifique } from "@/app/(wrapped)/components/definitions/DefinitionFormationSpecifique";
+import { TooltipDefinitionNombreEleves } from "@/app/(wrapped)/components/definitions/DefinitionNombreEleves";
+import { TooltipDefinitionPositionQuadrant } from "@/app/(wrapped)/components/definitions/DefinitionPositionQuadrant";
+import { TooltipDefinitionTauxDePression } from "@/app/(wrapped)/components/definitions/DefinitionTauxDePression";
+import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
+import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
+import { TooltipDefinitionTauxPoursuiteEtudes } from "@/app/(wrapped)/components/definitions/DefinitionTauxPoursuiteEtudes";
+import { TooltipDefinitionTauxRemplissage } from "@/app/(wrapped)/components/definitions/DefinitionTauxRemplissage";
+import { TooltipDefinitionValeurAjoutee } from "@/app/(wrapped)/components/definitions/DefinitionValeurAjoutee";
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
 import { FORMATION_ETABLISSEMENT_COLUMNS, FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
-import type {Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Order} from '@/app/(wrapped)/console/etablissements/types';
+import type {Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Order} from "@/app/(wrapped)/console/etablissements/types";
 import { OrderIcon } from "@/components/OrderIcon";
-import { feature } from '@/utils/feature';
+import { feature } from "@/utils/feature";
 
 const ConditionalTh = chakra(
   ({
@@ -159,6 +159,24 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="libelleDepartement" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleDepartement}
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleAcademie"
+          cursor="pointer"
+        >
+          <OrderIcon {...order} column="libelleAcademie" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.libelleAcademie}
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleRegion"
+          cursor="pointer"
+        >
+          <OrderIcon {...order} column="libelleRegion" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.libelleRegion}
         </ConditionalTh>
         <ConditionalTh
           colonneFilters={colonneFilters}
@@ -386,10 +404,10 @@ export const HeadLineContent = ({
           colonne="tauxPoursuite"
           cursor="pointer"
           onClick={handleOrder}
+          icon={<TooltipDefinitionTauxPoursuiteEtudes />}
         >
           <OrderIcon {...order} column="tauxPoursuite" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPoursuite}
-          <TooltipDefinitionTauxPoursuiteEtudes />
         </ConditionalTh>
         <ConditionalTh
           colonneFilters={colonneFilters}
@@ -397,10 +415,10 @@ export const HeadLineContent = ({
           colonne="tauxDevenirFavorable"
           cursor="pointer"
           onClick={handleOrder}
+          icon={<TooltipDefinitionTauxDevenirFavorable />}
         >
           <OrderIcon {...order} column="tauxDevenirFavorable" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorable}
-          <TooltipDefinitionTauxDevenirFavorable />
         </ConditionalTh>
         <ConditionalTh
           colonneFilters={colonneFilters}
@@ -465,6 +483,7 @@ export const HeadLineContent = ({
               colonne="dateEffetTransformation"
               cursor="pointer"
               onClick={handleOrder}
+              maxW={64}
             >
               <OrderIcon {...order} column="dateEffetTransformation" />
               {FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED.dateEffetTransformation}

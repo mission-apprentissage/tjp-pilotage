@@ -1,22 +1,23 @@
-import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { chakra, Flex, Link, Skeleton, Td, Text, Tr } from "@chakra-ui/react";
+import { ArrowForwardIcon  } from "@chakra-ui/icons";
+import { chakra, Flex, Link, Skeleton, Td, Text, Tooltip,Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { CURRENT_RENTREE } from "shared";
+import { Fragment } from "react";
+import { CURRENT_IJ_MILLESIME,CURRENT_RENTREE } from "shared";
 import type { UserType } from "shared/schema/userSchema";
 
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
-import type {FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Line} from '@/app/(wrapped)/console/etablissements/types';
-import {BadgeFermeture} from '@/components/BadgeFermeture';
+import type { FORMATION_ETABLISSEMENT_COLUMNS_KEYS,Line } from "@/app/(wrapped)/console/etablissements/types";
+import { BadgeFermeture } from "@/components/BadgeFermeture";
 import { BadgeFormationRenovee } from "@/components/BadgeFormationRenovee";
 import { BadgesFormationSpecifique } from "@/components/BadgesFormationSpecifique";
-import {BadgeTypeDemande} from '@/components/BadgeTypeDemande';
+import { BadgeTypeDemande } from "@/components/BadgeTypeDemande";
 import { BadgeTypeFamille } from "@/components/BadgeTypeFamille";
-import {DateEffetTransformationComponent} from '@/components/DateEffetTransformationComponent';
+import { DateEffetTransformationComponent } from "@/components/DateEffetTransformationComponent";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
 import { feature } from "@/utils/feature";
-import { formatCodeDepartement,formatFamilleMetierLibelle } from "@/utils/formatLibelle";
+import { formatCodeDepartement,formatFamilleMetierLibelle , formatMillesime} from "@/utils/formatLibelle";
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -112,6 +113,12 @@ export const EtablissementLineContent = ({
     </ConditionalTd>
     <ConditionalTd colonne="libelleDepartement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleDepartement ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd colonne="libelleAcademie" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      {line.libelleAcademie ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd colonne="libelleRegion" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      {line.libelleRegion ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne="secteur" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.secteur ?? "-"}{" "}
@@ -241,7 +248,12 @@ export const EtablissementLineContent = ({
       <GraphWrapper value={line.tauxRemplissage} />
     </ConditionalTd>
     <ConditionalTd colonne="positionQuadrant" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.positionQuadrant ?? "-"}
+      <Tooltip
+        label={`Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`}
+        placement="top"
+      >
+        {line.positionQuadrant ?? "-"}
+      </Tooltip>
     </ConditionalTd>
     <ConditionalTd
       colonne="tauxInsertion"
@@ -249,7 +261,7 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} />
+      <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} millesime={CURRENT_IJ_MILLESIME} />
     </ConditionalTd>
     <ConditionalTd
       colonne="tauxPoursuite"
@@ -257,7 +269,7 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
+      <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} millesime={CURRENT_IJ_MILLESIME} />
     </ConditionalTd>
     <ConditionalTd
       colonne="tauxDevenirFavorable"
@@ -265,13 +277,21 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign="center"
     >
-      <GraphWrapper continuum={line.continuum} value={line.tauxDevenirFavorable} />
+      <GraphWrapper continuum={line.continuum} value={line.tauxDevenirFavorable} millesime={CURRENT_IJ_MILLESIME} />
     </ConditionalTd>
     <ConditionalTd colonne="tauxInsertionEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxInsertionEtablissement} />
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxInsertionEtablissement}
+        millesime={CURRENT_IJ_MILLESIME}
+      />
     </ConditionalTd>
     <ConditionalTd colonne="tauxPoursuiteEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxPoursuiteEtablissement} />
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxPoursuiteEtablissement}
+        millesime={CURRENT_IJ_MILLESIME}
+      />
     </ConditionalTd>
     <ConditionalTd
       colonne="tauxDevenirFavorableEtablissement"
@@ -279,7 +299,11 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign="center"
     >
-      <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxDevenirFavorableEtablissement} />
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxDevenirFavorableEtablissement}
+        millesime={CURRENT_IJ_MILLESIME}
+      />
     </ConditionalTd>
     <ConditionalTd colonne="valeurAjoutee" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} isNumeric>
       {line.valeurAjoutee ?? "-"}
@@ -292,13 +316,27 @@ export const EtablissementLineContent = ({
           getCellBgColor={getCellBgColor}
           textAlign="center"
         >
-          {line.numero}
+          {line.numero?.split(", ").map((numero, index, numeros) => (
+            <Fragment key={numero + index}>
+              <Link
+                key={numero + index}
+                as={NextLink}
+                href={`/demandes/saisie/${numero}`}
+                target="_blank"
+                color="bluefrance.113"
+              >
+                {numero}
+              </Link>
+              {index < (numeros.length -1) && <Text as="span">, </Text>}
+            </Fragment>
+          ))}
         </ConditionalTd>
         <ConditionalTd
           colonne="dateEffetTransformation"
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           textAlign="center"
+          justifyContent="center"
         >
           <DateEffetTransformationComponent
             dateEffetTransformation={line.dateEffetTransformation}
