@@ -61,6 +61,7 @@ export const SideSection = ({
               </option>
             ))}
           </Select>
+          <Divider />
           <Multiselect
             size="md"
             variant="newInput"

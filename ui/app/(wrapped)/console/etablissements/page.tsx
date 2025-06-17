@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { parse } from "qs";
 import { useContext, useEffect, useState } from "react";
+import { CURRENT_RENTREE } from 'shared';
 import type { TypeDemandeType } from 'shared/enum/demandeTypeEnum';
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import type { UserType } from 'shared/schema/userSchema';
@@ -300,6 +301,7 @@ const Page = () => {
   const { codeRegion, setCodeRegion } = useContext(CodeRegionContext);
   const { codeDepartement, setCodeDepartement } = useContext(CodeDepartementContext);
   const { uais } = useContext(UaisContext);
+  const rentreeScolaire = CURRENT_RENTREE;
 
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("etablissements:filtre", { props: { filter_name: filterName } });
@@ -393,8 +395,12 @@ const Page = () => {
       filters.uai = uais;
       setSearchParams({ filters: filters });
     }
+    if(rentreeScolaire && !filters.rentreeScolaire?.length) {
+      filters.rentreeScolaire = [rentreeScolaire];
+      setSearchParams({ filters: filters });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [filters]);
 
   return (
     <>

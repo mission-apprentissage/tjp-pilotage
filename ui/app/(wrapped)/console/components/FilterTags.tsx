@@ -20,6 +20,7 @@ enum FILTRES_KEYS {
   "cfd" = "formations",
   "cfdFamille" = "familles",
   "positionQuadrant" = "positionsQuadrant",
+  "rentreeScolaire" = "rentreesScolaires",
 }
 
 export const FilterTags = chakra(
