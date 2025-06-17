@@ -12,13 +12,11 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react";
-import { getMillesimeFromCampagne } from "shared/time/millesimes";
 
 import type {
   DemandesRestitution,
   FiltersDemandesRestitution,
 } from "@/app/(wrapped)/demandes/restitution/types";
-import { BadgeMillesimes } from "@/components/BadgeMillesimes";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { Multiselect } from "@/components/Multiselect";
 
@@ -52,9 +50,6 @@ export const PrimaryFiltersSection = ({
                 <Box justifyContent={"start"}>
                   <Flex direction={"row"} gap={2}>
                     <Text color="white" mb={2} fontWeight={500}>CAMPAGNE</Text>
-                    {activeFilters.campagne && (
-                      <BadgeMillesimes millesimes={getMillesimeFromCampagne(activeFilters.campagne)} mb={2} labelSize="long"/>
-                    )}
                   </Flex>
                   <Flex direction={"column"} gap={1}>
                     <Menu gutter={0} matchWidth={true} autoSelect={false}>
