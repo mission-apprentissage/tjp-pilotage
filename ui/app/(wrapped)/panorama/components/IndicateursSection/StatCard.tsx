@@ -8,6 +8,7 @@ export const StatCard = chakra(
     color = "inherit",
     tooltip,
     type = "absolute",
+    badge,
     sub,
     glossaire,
   }: {
@@ -16,23 +17,24 @@ export const StatCard = chakra(
     color?: string;
     tooltip?: string;
     type?: "absolute" | "percentage";
+    badge?: ReactNode;
     sub?: ReactNode;
     glossaire?: ReactNode;
   }) => (
     <Card>
       <CardBody
         color={color}
-        p={"16px"}
-        justifyContent={"space-between"}
+        p={5}
         display={"flex"}
-        gap={["4px", null, "8px"]}
+        gap={2}
         flexDir={"column"}
       >
         <Heading as="h2" fontSize={14} display={"inline"}>
           {label}
           {glossaire}
         </Heading>
-        <Flex direction="column">
+        {badge}
+        <Flex direction="column" mt={"auto"}>
           <Tooltip label={tooltip} placement="left">
             <Flex direction={"row"} alignItems={"baseline"}>
               <Heading as="h3" fontWeight="bold" fontSize="40px">

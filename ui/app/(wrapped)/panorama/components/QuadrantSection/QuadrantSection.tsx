@@ -1,7 +1,9 @@
-import { Box, Heading, Stack } from "@chakra-ui/react";
+import {Box, Flex,Heading, Stack, Text} from '@chakra-ui/react';
 import { useMemo } from "react";
+import { CURRENT_IJ_MILLESIME } from "shared";
 
 import type { Order, PanoramaFormations } from "@/app/(wrapped)/panorama/types";
+import { BadgeMillesimes } from "@/components/BadgeMillesimes";
 import { useStateParams } from "@/utils/useFilters";
 
 import { QuadrantDisplay } from "./QuadrantDisplay";
@@ -155,6 +157,11 @@ export const QuadrantSection = ({
         <Box w={"33%"} mt={"16px"}>
           <hr />
         </Box>
+
+        <Flex color={"grey.200"} my={"24px"} gap={2}>
+          <Text><strong>Comparez</strong> les formations entres elles et par rapport aux moyennes régionales</Text>
+          <BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />
+        </Flex>
       </Box>
       <Stack direction={["column", "row"]} spacing="72px">
         <QuadrantTabs

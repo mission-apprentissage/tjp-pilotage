@@ -1,5 +1,4 @@
 import {
-  Box,
   chakra,
   Flex,
   FormControl,
@@ -38,10 +37,10 @@ export const CmqImpliqueField = chakra(({ disabled, className }: { disabled?: bo
         <TooltipIcon
           mt={"1"}
           label={
-            <Box w={"fit-content"}>
+            <Flex direction="column" gap={2}>
               <Text>Campus des Métiers et des Qualifications</Text>
-              <Text mt={2}>Cliquez pour plus d'infos.</Text>
-            </Box>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
           onClick={() => openGlossaire("cmq")}
           color={"bluefrance.113"}
