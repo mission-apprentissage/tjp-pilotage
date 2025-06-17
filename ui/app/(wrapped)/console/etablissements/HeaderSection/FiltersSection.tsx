@@ -3,6 +3,7 @@ import {Button, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuLi
 import { Icon } from "@iconify/react";
 import { usePlausible } from "next-plausible";
 import { useState } from "react";
+import { CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 
 import { DeleteRequeteEnregistreeButton } from "@/app/(wrapped)/console/components/DeleteRequeteEnregistreeButton";
@@ -106,6 +107,7 @@ export const FiltersSection = ({
         codeNsf: [],
         positionQuadrant: [],
         formationSpecifique: [],
+        rentreeScolaire: [CURRENT_RENTREE],
       },
     });
     setRequeteEnregistreeActuelle({ nom: "Requêtes favorites" });

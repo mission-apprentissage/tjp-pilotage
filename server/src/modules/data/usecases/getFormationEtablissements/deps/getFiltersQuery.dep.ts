@@ -233,7 +233,7 @@ export const getFiltersQuery = async ({
     .selectFrom("indicateurEntree")
     .select([
       "indicateurEntree.rentreeScolaire as value",
-      "indicateurEntree.rentreeScolaire as label",
+      sql<string>`CONCAT('RS ', ${sql.ref("indicateurEntree.rentreeScolaire")})`.as("label"),
     ])
     .distinct()
     .$castTo<{ label: string; value: string }>()
