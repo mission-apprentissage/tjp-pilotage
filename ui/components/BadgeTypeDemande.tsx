@@ -26,12 +26,10 @@ const IconTypeDemande = ({typeDemande}:{typeDemande: TypeDemandeType}) => {
 
 export const BadgeTypeDemande = chakra(({
   typeDemande,
-  labelSize = "short",
   size = "md",
   ...props
 }: {
   typeDemande?: string;
-  labelSize?: "short" | "long";
   size?: "xs" | "sm" | "md" | "lg";
   props?: BadgeProps;
 }) => {
@@ -44,12 +42,13 @@ export const BadgeTypeDemande = chakra(({
       {
         formatTypeDemandeArray(typeDemande).map((formatedTypeDemande, index) => (
           <Badge
+            key={`${formatedTypeDemande}_${index}`}
             bgColor={getTypeDemandeColor(formatedTypeDemande.value)}
             color={"white"}
             h={"fit-content"}
             flex={"shrink"}
             size={size}
-            key={`${formatedTypeDemande}_${index}`}
+            my={"auto"}
             gap={2}
             {...props}
           >

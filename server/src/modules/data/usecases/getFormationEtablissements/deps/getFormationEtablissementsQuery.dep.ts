@@ -123,12 +123,13 @@ export const getFormationEtablissementsQuery = async ({
             .onRef("demandeConstat.cfd", "=", "formationEtablissement.cfd")
             .onRef("demandeConstat.codeDispositif", "=", "formationEtablissement.codeDispositif")
             .onRef("demandeConstat.uai", "=", "formationEtablissement.uai")
-            .on("demandeConstat.rentreeScolaire", "=", parseInt(rentreeScolaire[0]))
+            // .on("demandeConstat.rentreeScolaire", "=", parseInt(rentreeScolaire[0]))
+            .on("demandeConstat.annee", "=", rentreeScolaire[0])
         )
         .select([
-          sql<string>`string_agg("demandeConstat"."numero", ', ')`.as("numero"),
-          sql<string>`string_agg("demandeConstat"."typeDemande", ', ')`.as("typeDemande"),
-          sql<string>`string_agg(("demandeConstat"."rentreeScolaire"::varchar), ', ')`.as("dateEffetTransformation"),
+          sql<string>`string_agg("demandeConstat"."numero", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("numero"),
+          sql<string>`string_agg("demandeConstat"."typeDemande", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("typeDemande"),
+          sql<string>`string_agg(("demandeConstat"."rentreeScolaire"::varchar), ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("dateEffetTransformation"),
         ])
     )
     .select((eb) => [

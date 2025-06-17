@@ -1,7 +1,7 @@
 import { Flex, Select, Text, VisuallyHidden } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 import type { ScopeZone } from "shared";
-import { ScopeEnum } from "shared";
+import {ScopeEnum} from 'shared';
 
 import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";

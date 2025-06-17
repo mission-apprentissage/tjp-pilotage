@@ -9,30 +9,25 @@ export const DateEffetTransformationComponent = chakra(({
   rentreeScolaire,
   dateEffetTransformation,
   typeDemande,
-  labelSize = "short",
-  size = "md",
   ...props
 }: {
   rentreeScolaire?: string;
   dateEffetTransformation?: string;
-  typeDemande?:string;
-  labelSize?: "short" | "long";
-  size?: "xs" | "sm" | "md" | "lg";
+  typeDemande?: string;
   props?: BadgeProps;
 }) => {
 
 
   if(!dateEffetTransformation || !rentreeScolaire || !typeDemande) return null;
-  const dateEffetTransformationArray = dateEffetTransformation?.split(", ").map(parseInt);
+  const dateEffetTransformationArray = dateEffetTransformation?.split(", ");
   const typeDemandeArray = formatTypeDemandeArray(typeDemande);
-  const highlightedColors: Record<number, string> = {};
+  const highlightedColors: Record<string, string> = {};
   dateEffetTransformationArray.forEach((dateEffetTransformation, index) => {
     highlightedColors[dateEffetTransformation] = useToken("colors", getTypeDemandeColor(typeDemandeArray[index]?.value));
   });
 
-
   return (
-    <Flex direction={"row"} gap={2} {...props}>
+    <Flex direction={"row"} gap={2} w={"fit-content"} {...props}>
       <svg width="104" height="38" viewBox="0 0 100 38" fill="none" xmlns="http://www.w3.org/2000/svg">
         <line x1="0" y1="16" x2="104" y2="16" stroke="#DDDDDD"/>
         <circle cx="16" cy="16" r="8" fill={highlightedColors[parseInt(rentreeScolaire)] ?? "#D9D9D9"}

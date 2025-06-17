@@ -27,7 +27,7 @@ import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
-import { CURRENT_RENTREE } from "shared";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
 import QuadrantPlaceholder from "@/app/(wrapped)/demandes/pilotage/components/QuadrantPlaceholder";
@@ -35,6 +35,7 @@ import type {Filters, FiltersPilotage, FormationsPilotage, OrderFormationsPilota
 import {getScopeCode} from '@/app/(wrapped)/demandes/pilotage/utils';
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { InfoTooltipContent } from "@/app/(wrapped)/panorama/components/QuadrantSection/InfoTooltipContent";
+import { BadgeMillesimes } from "@/components/BadgeMillesimes";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
@@ -234,7 +235,10 @@ export const QuadrantSection = ({
       {shouldShowQuadrant ? (
         <Flex gap={6} direction="column" p={8}>
           <Flex direction="row" justify="space-between" gap={4} flex={1}>
-            <Heading fontSize={20}>Quadrant des formations</Heading>
+            <Flex direction={"row"} gap={2}>
+              <Heading fontSize={20} my={"auto"}>Quadrant des formations</Heading>
+              <BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} my={"auto"}/>
+            </Flex>
             <Flex direction={"row"} gap={4}>
               <ExportMenuButton
                 onExportCsv={async () => {
@@ -354,10 +358,10 @@ export const QuadrantSection = ({
                     <Radio value="eleve">Élevé</Radio>
                     <TooltipIcon
                       label={
-                        <Box>
+                        <Flex direction="column" gap={4}>
                           <Text>Formations pour lesquelles le taux de pression est supérieur ou égal à 1.3</Text>
-                          <Text mt={4}>Cliquez pour plus d'infos.</Text>
-                        </Box>
+                          <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                        </Flex>
                       }
                       onClick={() => {
                         openGlossaire("taux-de-pression");
@@ -369,10 +373,10 @@ export const QuadrantSection = ({
                     <Radio value="faible">Bas</Radio>
                     <TooltipIcon
                       label={
-                        <Box>
+                        <Flex direction="column" gap={4}>
                           <Text>Formations pour lesquelles le taux de pression est inférieur à 0.7</Text>
-                          <Text mt={4}>Cliquez pour plus d'infos.</Text>
-                        </Box>
+                          <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                        </Flex>
                       }
                       onClick={() => {
                         openGlossaire("taux-de-pression");
@@ -563,16 +567,16 @@ export const QuadrantSection = ({
                   />
                   <Flex direction="column" width="100%">
                     <Text fontSize={12}>Taux d'emploi régional</Text>
-                    <GraphWrapper w="100%" continuum={formation.continuum} value={formation.tauxInsertion} />
+                    <GraphWrapper w="100%" continuum={formation.continuum} value={formation.tauxInsertion} millesime={CURRENT_IJ_MILLESIME} />
                   </Flex>
                   <Flex direction="column" width="100%">
                     <Text fontSize={12}>Taux de poursuite d'études régional</Text>
-                    <GraphWrapper w="100%" continuum={formation.continuum} value={formation.tauxPoursuite} />
+                    <GraphWrapper w="100%" continuum={formation.continuum} value={formation.tauxPoursuite} millesime={CURRENT_IJ_MILLESIME} />
                   </Flex>
                   {formation.tauxDevenirFavorable && (
                     <Flex direction="column" width="100%">
                       <Text fontSize={12}>Taux de devenir favorable régional</Text>
-                      <GraphWrapper w="100%" continuum={formation.continuum} value={formation.tauxDevenirFavorable} />
+                      <GraphWrapper w="100%" continuum={formation.continuum} value={formation.tauxDevenirFavorable} millesime={CURRENT_IJ_MILLESIME} />
                     </Flex>
                   )}
                 </Flex>
