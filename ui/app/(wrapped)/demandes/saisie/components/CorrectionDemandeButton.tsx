@@ -20,7 +20,6 @@ import {
   Select,
   Text,
   Textarea,
-  Tooltip,
   useDisclosure,
   useToast,
   useToken,
@@ -37,7 +36,9 @@ import { client } from "@/api.client";
 import type { Demandes } from "@/app/(wrapped)/demandes/saisie/types";
 import type { AnneeCampagneMotifCorrection} from "@/app/(wrapped)/demandes/utils/motifCorrectionUtils";
 import { getMotifCorrectionOptionsParAnneeCampagne } from "@/app/(wrapped)/demandes/utils/motifCorrectionUtils";
+import { canEditCfdUai } from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
 import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
+
 
 export const CorrectionDemandeButton = chakra(
   ({ user, demande, campagne }: { user?: UserType; demande: Demandes[number], campagne: CampagneType }) => {
@@ -92,48 +93,44 @@ export const CorrectionDemandeButton = chakra(
 
     return (
       <>
-        {
-          isCorrected ? (
-            <Tooltip label="demande déjà corrigée">
-              <Button
-                ms={2}
-                disabled={isCorrected}
-                rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
-                bgColor={"transparent"}
-                border={"1px solid"}
-                borderColor={bluefrance113}
-                borderRadius="0"
-                p={2}
-                h={"fit-content"}
-                opacity={0.3}
-                cursor={"not-allowed"}
-              >
-                <Flex direction={"row"} gap={2}>
-                  <Text color={bluefrance113}>Corriger la demande</Text>
-                </Flex>
-              </Button>
-            </Tooltip>
-          ) : (
-            <Menu gutter={0} matchWidth={true}>
-              <MenuButton
-                ms={2}
-                as={Button}
-                rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
-                bgColor={"transparent"}
-                border={"1px solid"}
-                borderColor={bluefrance113}
-                borderRadius="0"
-                p={2}
-                h={"fit-content"}
+        <Menu gutter={0} >
+          <MenuButton
+            ms={2}
+            as={Button}
+            rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
+            bgColor={"transparent"}
+            border={"1px solid"}
+            borderColor={bluefrance113}
+            borderRadius="0"
+            p={2}
+            h={"fit-content"}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <Flex direction={"row"} gap={2}>
+              <Text color={bluefrance113}>Corriger la demande</Text>
+            </Flex>
+          </MenuButton>
+          <MenuList p={0}>
+            {canEditCfdUai({ demande, user }) && (
+              <MenuItem
+                px={2}
+                py={3}
                 onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
+                  router.push(getRoutingAccessSaisieDemande({user, campagne, suffix: `${demande.numero}?editCfdUai=true`}));
                 }}
               >
-                <Flex direction={"row"} gap={2}>
-                  <Text color={bluefrance113}>Corriger la demande</Text>
+                <Flex direction={"row"} h={"100%"} w="100%" gap={2}>
+                  <Icon icon="ri:equalizer-line" color={bluefrance113} width={"18px"} />
+                  <Text color={bluefrance113}>Modifier la formation ou l'établissement</Text>
                 </Flex>
-              </MenuButton>
-              <MenuList p={0}>
+              </MenuItem>
+            )}
+            {!isCorrected && (
+              <>
                 <MenuItem
                   px={2}
                   py={3}
@@ -176,9 +173,10 @@ export const CorrectionDemandeButton = chakra(
                     <Text color={bluefrance113}>Annuler la demande</Text>
                   </Flex>
                 </MenuItem>
-              </MenuList>
-            </Menu>
-          )}
+              </>
+            )}
+          </MenuList>
+        </Menu>
         <Modal
           isOpen={isOpenModalReport}
           onClose={() => {

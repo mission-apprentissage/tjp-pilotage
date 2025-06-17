@@ -52,7 +52,7 @@ export const CfdUaiSection = ({
   campagne,
   formId,
   active,
-  isAdjustDemande = false,
+  isEditCfdUai = false,
   disabled,
   defaultValues,
   formMetadata,
@@ -62,12 +62,12 @@ export const CfdUaiSection = ({
   setDateFermetureFormation,
   submitCFDUAISection,
   isCFDUaiSectionValid,
-  statutComponentRef,
+  submitComponentRef,
 }: {
   campagne?: CampagneType;
   formId?: string;
   active: boolean;
-  isAdjustDemande?: boolean;
+  isEditCfdUai?: boolean;
   disabled?: boolean;
   defaultValues: PartialDemandeFormType;
   formMetadata?: DemandeMetadata;
@@ -77,7 +77,7 @@ export const CfdUaiSection = ({
   setDateFermetureFormation: (dateFermetureFormation?: string) => void;
   submitCFDUAISection: () => void;
   isCFDUaiSectionValid: (_: Partial<DemandeFormType>) => boolean;
-  statutComponentRef?: React.RefObject<HTMLDivElement>;
+  submitComponentRef?: React.RefObject<HTMLDivElement>;
 }) => {
   const { watch, getValues } = useFormContext<DemandeFormType>();
 
@@ -107,8 +107,8 @@ export const CfdUaiSection = ({
     return () => subscription.unsubscribe();
   }, [watch, getValues, isCFDUaiSectionValid]);
 
-  const anchorToStatus = () => {
-    statutComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
+  const anchorToSubmit = () => {
+    submitComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -125,7 +125,7 @@ export const CfdUaiSection = ({
               ml={2}
               aria-label="Editer"
               variant={"ghost"}
-              onClick={() => anchorToStatus()}
+              onClick={() => anchorToSubmit()}
             />
           )}
           {disabled && (
@@ -133,7 +133,7 @@ export const CfdUaiSection = ({
               Mode consultation
             </Tag>
           )}
-          {isAdjustDemande && (
+          {isEditCfdUai && (
             <Tag size="lg" colorScheme={"orange"} ml={"auto"}>
               Modification de formation et/ou d'établissement
             </Tag>
@@ -177,11 +177,7 @@ export const CfdUaiSection = ({
                   size="lg"
                   variant={"primary"}
                 >
-                  {isAdjustDemande ? (
-                    "Sauvegarder la modification de formation et/ou d'établissement"
-                  ) : (
-                    "Passer à l'étape suivante"
-                  )}
+                  Passer à l'étape suivante
                 </Button>
               )}
             </Flex>
