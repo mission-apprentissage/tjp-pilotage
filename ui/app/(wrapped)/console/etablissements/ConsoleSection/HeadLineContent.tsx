@@ -162,6 +162,24 @@ export const HeadLineContent = ({
         <ConditionalTh
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          colonne="libelleAcademie"
+          cursor="pointer"
+        >
+          <OrderIcon {...order} column="libelleAcademie" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.libelleAcademie}
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleRegion"
+          cursor="pointer"
+        >
+          <OrderIcon {...order} column="libelleRegion" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.libelleRegion}
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
           colonne="secteur"
           cursor="pointer"
           onClick={handleOrder}
