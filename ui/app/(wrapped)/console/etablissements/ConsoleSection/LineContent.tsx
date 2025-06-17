@@ -130,6 +130,12 @@ export const EtablissementLineContent = ({
     <ConditionalTd colonne="libelleDepartement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleDepartement ?? "-"}
     </ConditionalTd>
+    <ConditionalTd colonne="libelleAcademie" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      {line.libelleAcademie ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd colonne="libelleRegion" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      {line.libelleRegion ?? "-"}
+    </ConditionalTd>
     <ConditionalTd colonne="secteur" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.secteur ?? "-"}{" "}
     </ConditionalTd>
