@@ -59,7 +59,7 @@ export const createDemandeQuery = ({
       createdBy: user.id,
       statut: DemandeStatutEnum["proposition"],
       typeDemande: getTypeDemande(demande),
-      isOldDemande: demande.isOldDemande ?? false,
+      isOldDemande: false,
     })
     .returning("id")
     .executeTakeFirst();

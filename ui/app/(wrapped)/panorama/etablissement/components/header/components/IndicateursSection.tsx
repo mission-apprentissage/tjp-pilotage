@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, GridItem, Heading, Img, Text, Tooltip, useToken } from "@chakra-ui/react";
+import { Badge, Flex, GridItem, Heading, Img, Text, Tooltip, useToken } from "@chakra-ui/react";
 
 import { TooltipDefinitionTauxDevenirFavorable } from "@/app/(wrapped)/components/definitions/DefinitionTauxDevenirFavorable";
 import { TooltipDefinitionTauxEmploi6Mois } from "@/app/(wrapped)/components/definitions/DefinitionTauxEmploi6Mois";
@@ -54,13 +54,13 @@ const IndicateurValeurAjoutee = ({ indicateur }: { indicateur?: Indicateur }) =>
         iconSize={"16px"}
         glossaireEntryKey={"valeur-ajoutee"}
         tooltip={
-          <Box>
+          <Flex direction="column" gap={2}>
             <Text>
               Capacité de l'établissement à insérer, en prenant en compte le profil social des élèves et le taux de
               chômage de la zone d'emploi, comparativement au taux de référence d’établissements similaires.
             </Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
+            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+          </Flex>
         }
       />
     }
@@ -177,11 +177,11 @@ export const IndicateursSection = ({ indicateurs }: { indicateurs?: Indicateurs 
             iconSize={"14px"}
             glossaireEntryKey={"inserjeunes"}
             tooltip={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>Ces chiffres incluent les élèves en apprentissage pour les établissements qui en proposent en classes mixtes{' '}
                   (les données pour les classes en 100% apprentissage ne sont pas disponibles).</Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
           />
         </Flex>
@@ -191,13 +191,13 @@ export const IndicateursSection = ({ indicateurs }: { indicateurs?: Indicateurs 
             marginLeft={1}
             glossaireEntryKey={"millesime"}
             tooltip={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>
                   Cohorte d’élèves pour laquelle les indicateurs InserJeunes ont été mesurés{" "}
                   (systématiquement pour 2 années scolaires cumulées)
                 </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
           />
         </Badge>

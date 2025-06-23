@@ -132,10 +132,6 @@ const canEditOldDemande = ({
   demande: Demande,
   user?: UserType
 }): boolean => {
-  if (isAdmin({ user }) &&
-      !isStatutDemandeValidee(demande.statut) &&
-      !isStatutRefusee(demande.statut)) return true;
-
   if(feature.saisieDisabled) return false;
   if(!demande.canEdit) return false;
   if(!isCampagneEnCours(demande?.campagne)) return false;
@@ -154,6 +150,7 @@ export const canEditDemande = ({
   demande: Demande,
   user?: UserType
 }): boolean => {
+  if(isAdmin({ user })) return true;
   if(isOldDemande({demande, user})) return canEditOldDemande({ demande: demande, user });
   if (!canEditDemandeStatut({ demande, user })) return false;
   if (!demande.canEdit) return false;
