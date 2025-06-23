@@ -1,5 +1,6 @@
 "use client";
 import { Box, Flex, Text } from "@chakra-ui/react";
+import {CURRENT_IJ_MILLESIME} from 'shared';
 
 import type { Formation } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 import { GraphWrapper } from "@/components/GraphWrapper";
@@ -27,13 +28,13 @@ export const FormationTooltipContent = ({
     <Text mb={1} fontWeight="medium">
       Taux d'emploi :
     </Text>
-    <GraphWrapper mb={1} w="100%" continuum={formation.continuum} value={formation.tauxInsertion} />
-    <GraphWrapper mb={1} w="100%" continuum={formation.continuum} value={formation.tauxInsertionRegional} outlined />
+    <GraphWrapper mb={1} w="100%" continuum={formation.continuum} value={formation.tauxInsertion} millesime={CURRENT_IJ_MILLESIME} />
+    <GraphWrapper mb={1} w="100%" continuum={formation.continuum} value={formation.tauxInsertionRegional} outlined millesime={CURRENT_IJ_MILLESIME} />
     <Text mb={1} mt={4} fontWeight="medium">
       Taux de poursuite d'études :
     </Text>
-    <GraphWrapper w="100%" mb={1} continuum={formation.continuum} value={formation.tauxPoursuite} />
-    <GraphWrapper w="100%" mb={1} continuum={formation.continuum} value={formation.tauxPoursuiteRegional} outlined />
+    <GraphWrapper w="100%" mb={1} continuum={formation.continuum} value={formation.tauxPoursuite} millesime={CURRENT_IJ_MILLESIME}  />
+    <GraphWrapper w="100%" mb={1} continuum={formation.continuum} value={formation.tauxPoursuiteRegional} outlined millesime={CURRENT_IJ_MILLESIME} />
     <Flex direction="row" justify={"flex-end"} gap={2} mt={6}>
       <Box borderRadius="4px" bgColor={"bluefrance.525"} w={4} h={4} />
       <Text fontSize={12} fontWeight={700} lineHeight={4}>

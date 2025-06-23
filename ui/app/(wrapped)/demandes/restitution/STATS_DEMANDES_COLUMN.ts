@@ -58,6 +58,7 @@ export const STATS_DEMANDES_COLUMNS = {
   createdAt: "Date de création",
   updatedAt: "Date de dernière modification",
   // Devenir favorable de la formation
+  millesime: "Millésime",
   positionQuadrant: "Position dans le quadrant",
   tauxInsertionRegional: "Tx d'emploi à 6 mois régional",
   tauxPoursuiteRegional: "Tx de poursuite d'études régional",
@@ -110,6 +111,7 @@ export const STATS_DEMANDES_COLUMNS = {
     transitionDemographique: boolean;
     transitionEcologique: boolean;
     transitionNumerique: boolean;
+    millesime: string;
   }
 >;
 

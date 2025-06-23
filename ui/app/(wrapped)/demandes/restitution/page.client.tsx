@@ -411,6 +411,7 @@ export const PageClient = () => {
         data={data}
         isLoading={isLoading}
         handleOrder={handleOrder}
+        activeFilters={filters}
         order={order}
         colonneFilters={colonneFilters}
         displayPilotageColumns={displayPilotageColumns}

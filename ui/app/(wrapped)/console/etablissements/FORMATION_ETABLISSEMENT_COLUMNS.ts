@@ -1,5 +1,8 @@
+import { CURRENT_IJ_MILLESIME } from "shared";
+
 import type { client } from "@/api.client";
 import type { ExportColumns } from "@/utils/downloadExport";
+import { formatMillesime } from "@/utils/formatLibelle";
 
 export const FORMATION_ETABLISSEMENT_COLUMNS = {
   // Rentrée scolaire
@@ -45,13 +48,13 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   // Indicateurs
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
-  tauxInsertion: "Tx d'emploi 6 mois régional",
-  tauxPoursuite: "Tx de poursuite d'études régional",
-  positionQuadrant: "Position dans le quadrant",
-  tauxDevenirFavorable: "Tx de devenir favorable régional",
-  tauxInsertionEtablissement: "Tx d'emploi 6 mois de la formation dans l'établissement",
-  tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
-  tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
+  tauxInsertion: `Tx d'emploi 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  tauxPoursuite: `Tx de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  tauxDevenirFavorable: `Tx de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  tauxInsertionEtablissement: `Tx d'emploi 6 mois de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  tauxPoursuiteEtablissement: `Tx de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  tauxDevenirFavorableEtablissement: `Tx de devenir favorable de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   valeurAjoutee: "Valeur ajoutée",
 } satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]> & {
   formationSpecifique: string;

@@ -1,4 +1,5 @@
 import { chakra, Tag, Td } from "@chakra-ui/react";
+import {CURRENT_IJ_MILLESIME} from 'shared';
 import { SecteurEnum } from "shared/enum/secteurEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 import { unEscapeString } from "shared/utils/escapeString";
@@ -174,7 +175,7 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxInsertionRegional")}
       >
-        <GraphWrapper value={correction.tauxInsertionRegional} />
+        <GraphWrapper value={correction.tauxInsertionRegional} millesime={CURRENT_IJ_MILLESIME} />
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -182,7 +183,7 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxPoursuiteRegional")}
       >
-        <GraphWrapper value={correction.tauxPoursuiteRegional} />
+        <GraphWrapper value={correction.tauxPoursuiteRegional} millesime={CURRENT_IJ_MILLESIME} />
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -190,7 +191,7 @@ export const LineContent = ({
         textAlign="center"
         bgColor={getCellColor("tauxDevenirFavorableRegional")}
       >
-        <GraphWrapper value={correction.tauxDevenirFavorableRegional} />
+        <GraphWrapper value={correction.tauxDevenirFavorableRegional} millesime={CURRENT_IJ_MILLESIME} />
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

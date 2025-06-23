@@ -1,4 +1,4 @@
-import { Box, Flex, Select, Text, useToken, VisuallyHidden } from "@chakra-ui/react";
+import { Flex, Select, Text, useToken, VisuallyHidden } from "@chakra-ui/react";
 import _ from "lodash";
 import { useMemo } from "react";
 import type { ScopeZone } from "shared";
@@ -62,10 +62,10 @@ const GlossaireIcon = ({
         iconSize={"16px"}
         glossaireEntryKey={"taux-de-remplissage"}
         tooltip={
-          <Box>
+          <Flex direction={"column"} gap={2}>
             <Text>Le ratio entre l’effectif d’entrée en formation et sa capacité.</Text>
-            <Text>Cliquez pour plus d'infos.</Text>
-          </Box>
+            <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+          </Flex>
         }
       />
     );
@@ -76,10 +76,10 @@ const GlossaireIcon = ({
       return (
         <GlossaireShortcut
           tooltip={
-            <Box>
+            <Flex direction={"column"} gap={2}>
               <Text>Le ratio entre le nombre de voeux et la capacité de la formation dans l'établissement.</Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
           glossaireEntryKey="taux-de-demande"
         />
@@ -88,12 +88,12 @@ const GlossaireIcon = ({
       return (
         <GlossaireShortcut
           tooltip={
-            <Box>
+            <Flex direction={"column"} gap={2}>
               <Text>
                 Le ratio entre le nombre de premiers voeux et la capacité de la formation dans l'établissement.
               </Text>
-              <Text>Cliquez pour plus d'infos.</Text>
-            </Box>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
           glossaireEntryKey="taux-de-pression"
         />
