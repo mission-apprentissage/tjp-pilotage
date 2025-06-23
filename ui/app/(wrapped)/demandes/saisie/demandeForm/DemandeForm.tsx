@@ -207,7 +207,6 @@ export const DemandeForm = ({
   const queryParams = useSearchParams();
   const isCorrection = !!queryParams.get("correction");
   const showCorrection = isCorrection && canCorrectDemande({demande, user});
-  console.log(formId);
 
   return (
     <FormProvider {...form}>

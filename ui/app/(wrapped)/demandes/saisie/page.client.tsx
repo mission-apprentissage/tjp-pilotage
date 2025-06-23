@@ -191,8 +191,8 @@ export const PageClient = () => {
             status: "error",
             title: Object.values(getDetailedErrorMessage(error) ?? {}).join(", ") ?? "Une erreur est survenue lors de l'import de la demande",
           });
-          setIsImporting(false);
         }
+        setIsImporting(false);
       },
     });
 
