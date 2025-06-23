@@ -131,7 +131,7 @@ export const [submitDemandeUsecase, submitDemandeFactory] = inject(
           id: sameDemande.id,
           errors: {
             same_demande:
-              "Une demande similaire existe avec ces mêmes champs: code diplôme, numéro établissement, dispositif et rentrée scolaire.",
+              `Une demande similaire sur la campagne ${campagne!.annee} existe déjà avec ces mêmes champs: code diplôme, numéro établissement, dispositif et rentrée scolaire.`,
           },
         });
       }
