@@ -1,5 +1,5 @@
-import { ArrowForwardIcon  } from "@chakra-ui/icons";
-import { chakra, Flex, Link, Skeleton, Td, Text, Tooltip,Tr } from "@chakra-ui/react";
+import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { Box, chakra, Flex, IconButton,Link, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { Fragment } from "react";
 import { CURRENT_IJ_MILLESIME,CURRENT_RENTREE } from "shared";
@@ -55,6 +55,10 @@ const ConditionalTd = chakra(
 );
 
 export const EtablissementLineContent = ({
+  showHistoriqueCollapseColumn,
+  onClickExpend,
+  onClickCollapse,
+  expended,
   line,
   isFirstColumnSticky,
   isSecondColumnSticky,
@@ -62,6 +66,10 @@ export const EtablissementLineContent = ({
   getCellBgColor,
   user,
 }: {
+  showHistoriqueCollapseColumn: boolean;
+  onClickExpend?: () => void;
+  onClickCollapse?: () => void;
+  expended?: boolean;
   line: Partial<Line>;
   isFirstColumnSticky?: boolean;
   isSecondColumnSticky?: boolean;
@@ -70,6 +78,26 @@ export const EtablissementLineContent = ({
   user?: UserType;
 }) => (
   <>
+    {
+      showHistoriqueCollapseColumn && (
+        <Td pr="0" py="1" _groupHover={{ bgColor: "blueecume.850 !important" }}>
+          {onClickExpend && (
+            <IconButton
+              transform={expended ? "rotate(180deg)" : ""}
+              variant="ghost"
+              onClick={() => (!expended ? onClickExpend() : onClickCollapse?.())}
+              size="xs"
+              aria-label="Afficher l'historique"
+              icon={<ChevronDownIcon />}
+            />
+          )}
+          {!onClickExpend && (
+            <Box as="span" opacity={0.3} fontWeight="bold">
+          &nbsp;&nbsp;└─
+            </Box>
+          )}
+        </Td>
+      )}
     <ConditionalTd colonne="rentreeScolaire" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.rentreeScolaire ?? CURRENT_RENTREE}
     </ConditionalTd>
@@ -350,7 +378,12 @@ export const EtablissementLineContent = ({
           getCellBgColor={getCellBgColor}
           textAlign="center"
         >
-          <BadgeTypeDemande typeDemande={line.typeDemande} />
+          <BadgeTypeDemande
+            typeDemande={line.typeDemande}
+            numero={line.numero}
+            dateEffetTransformation={line.dateEffetTransformation}
+            rentreeScolaire={line.rentreeScolaire}
+          />
         </ConditionalTd>
       </>
     )}
@@ -373,11 +406,19 @@ export const EtablissementLineLoader = () => (
 export const EtablissementLinePlaceholder = ({
   colonneFilters,
   getCellBgColor,
+  user,
 }: {
   colonneFilters: (FORMATION_ETABLISSEMENT_COLUMNS_KEYS)[];
   getCellBgColor: (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => string;
+  user?: UserType;
 }) => (
   <Tr bg={"grey.975"}>
-    <EtablissementLineContent line={{}} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} />
+    <EtablissementLineContent
+      showHistoriqueCollapseColumn={true}
+      line={{}}
+      colonneFilters={colonneFilters}
+      getCellBgColor={getCellBgColor}
+      user={user}
+    />
   </Tr>
 );

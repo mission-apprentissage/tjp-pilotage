@@ -1,8 +1,8 @@
 import type { BadgeProps } from "@chakra-ui/react";
-import { chakra, Flex, Text, useToken} from '@chakra-ui/react';
+import { chakra, Flex, Text, useToken} from "@chakra-ui/react";
 
-import {formatTypeDemandeArray} from '@/utils/formatLibelle';
-import {getTypeDemandeColor} from '@/utils/getTypeDemandeColor';
+import { formatTypeDemandeArray} from "@/utils/formatLibelle";
+import { getTypeDemandeBgColor} from "@/utils/getTypeDemandeColor";
 
 
 export const DateEffetTransformationComponent = chakra(({
@@ -23,7 +23,7 @@ export const DateEffetTransformationComponent = chakra(({
   const typeDemandeArray = formatTypeDemandeArray(typeDemande);
   const highlightedColors: Record<string, string> = {};
   dateEffetTransformationArray.forEach((dateEffetTransformation, index) => {
-    highlightedColors[dateEffetTransformation] = useToken("colors", getTypeDemandeColor(typeDemandeArray[index]?.value));
+    highlightedColors[dateEffetTransformation] = useToken("colors", getTypeDemandeBgColor(typeDemandeArray[index]?.value));
   });
 
   return (

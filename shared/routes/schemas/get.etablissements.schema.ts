@@ -69,7 +69,6 @@ const FormationEtablissementLineSchema = z.object({
   dateFermeture: z.string().optional(),
   // Caractéristiques de la transformation
   numero: z.string().optional(),
-  // typeDemande: DemandeTypeZodType.optional(),
   typeDemande: z.string().optional(),
   dateEffetTransformation: z.string().optional(),
 });

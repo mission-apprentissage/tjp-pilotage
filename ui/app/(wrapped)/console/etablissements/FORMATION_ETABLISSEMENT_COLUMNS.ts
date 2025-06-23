@@ -151,7 +151,6 @@ export const FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED = {
 export const FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED = {
   ...FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT,
   // Caractéristiques de la transformation
-  numero: "Numéro de la demande",
   typeDemande: "Type de demande",
   dateEffetTransformation: "Date d'effet de la transformation",
 } satisfies Partial<typeof FORMATION_ETABLISSEMENT_COLUMNS_OPTIONAL_CONNECTED>;

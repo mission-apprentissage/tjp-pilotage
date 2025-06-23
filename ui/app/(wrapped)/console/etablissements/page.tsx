@@ -403,6 +403,12 @@ const Page = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if(!filters.rentreeScolaire?.length)
+      setSearchParams({ filters: { ...filters, rentreeScolaire: [CURRENT_RENTREE] } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.rentreeScolaire]);
+
   return (
     <>
       <HeaderSection

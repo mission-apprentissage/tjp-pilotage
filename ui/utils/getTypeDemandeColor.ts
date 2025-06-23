@@ -2,8 +2,8 @@ import type {TypeDemandeType} from 'shared/enum/demandeTypeEnum';
 import { DemandeTypeEnum} from 'shared/enum/demandeTypeEnum';
 
 
-const TYPE_DEMANDE_COLORS: Record<TypeDemandeType, string> = {
-  [DemandeTypeEnum["transfert"]]: "bluefrance.850_hover",
+const TYPE_DEMANDE_BG_COLORS: Record<TypeDemandeType, string> = {
+  [DemandeTypeEnum["transfert"]]: "purpleGlycine.950",
   [DemandeTypeEnum["coloration"]]: "bluefrance.850_hover",
   [DemandeTypeEnum["ajustement"]]: "bluefrance.850_hover",
   [DemandeTypeEnum["augmentation_nette"]]: "bluefrance.525",
@@ -14,5 +14,20 @@ const TYPE_DEMANDE_COLORS: Record<TypeDemandeType, string> = {
   [DemandeTypeEnum["diminution"]]: "greenArchipel.200_active",
 };
 
-export const getTypeDemandeColor = (typeDemande: TypeDemandeType): string =>
-  TYPE_DEMANDE_COLORS[typeDemande] || "grey.1000_active";
+const TYPE_DEMANDE_COLORS: Record<TypeDemandeType, string> = {
+  [DemandeTypeEnum["transfert"]]: "purpleGlycine.319",
+  [DemandeTypeEnum["coloration"]]: "white",
+  [DemandeTypeEnum["ajustement"]]: "white",
+  [DemandeTypeEnum["augmentation_nette"]]: "white",
+  [DemandeTypeEnum["augmentation_compensation"]]: "white",
+  [DemandeTypeEnum["ouverture_nette"]]: "white",
+  [DemandeTypeEnum["ouverture_compensation"]]: "white",
+  [DemandeTypeEnum["fermeture"]]: "white",
+  [DemandeTypeEnum["diminution"]]: "white",
+};
+
+export const getTypeDemandeTextColor = (typeDemande: TypeDemandeType): string =>
+  TYPE_DEMANDE_COLORS[typeDemande] || "white";
+
+export const getTypeDemandeBgColor = (typeDemande: TypeDemandeType): string =>
+  TYPE_DEMANDE_BG_COLORS[typeDemande] || "grey.1000_active";

@@ -68,7 +68,7 @@ export const getFormationEtablissementsQuery = async ({
     .innerJoin("indicateurEntree", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
-        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
     )
     .leftJoin("indicateurSortie", (join) =>
       join
@@ -124,12 +124,13 @@ export const getFormationEtablissementsQuery = async ({
             .onRef("demandeConstat.codeDispositif", "=", "formationEtablissement.codeDispositif")
             .onRef("demandeConstat.uai", "=", "formationEtablissement.uai")
             // .on("demandeConstat.rentreeScolaire", "=", parseInt(rentreeScolaire[0]))
-            .on("demandeConstat.annee", "=", rentreeScolaire[0])
+            // .on("demandeConstat.annee", "in", rentreeScolaire)
         )
         .select([
           sql<string>`string_agg("demandeConstat"."numero", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("numero"),
           sql<string>`string_agg("demandeConstat"."typeDemande", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("typeDemande"),
           sql<string>`string_agg(("demandeConstat"."rentreeScolaire"::varchar), ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("dateEffetTransformation"),
+          sql<string>`string_agg("demandeConstat"."annee", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("anneeCampagne"),
         ])
     )
     .select((eb) => [
@@ -422,6 +423,8 @@ export const getFormationEtablissementsQuery = async ({
     .limit(limit)
     .execute()
     .then(cleanNull);
+
+  console.log(result.map((r) => r.numero));
 
   return {
     count: result[0]?.count ?? 0,
