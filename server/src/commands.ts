@@ -158,6 +158,32 @@ export const down = async (db: Kysely<unknown>) => {};
   });
 
 program
+  .command("clean:testdb")
+  .description("Clean all test databases")
+  .action(async () => {
+    exec(
+      `
+      echo "\nCleaning test databases... (orion-test-*)\n"
+      PGPASSWORD=${config.psql.password} psql -h "${config.psql.host}" -U "${config.psql.user}" -d "postgres" -c"
+      SELECT datname FROM pg_database WHERE datname LIKE 'orion-test-%'
+      " | grep -o 'orion-test-[^ ]*' | while read -r dbname; do
+        echo "Dropping database: $dbname"
+
+        PGPASSWORD=${config.psql.password} psql -h "${config.psql.host}" -U "${config.psql.user}" -d "postgres" -c "DROP DATABASE IF EXISTS \\"$dbname\\";"
+      done
+      echo "\nAll test databases cleaned."
+      `, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          return;
+        }
+        if (stdout) console.log(stdout);
+        if (stderr) console.error(`stderr: ${stderr}`);
+      }
+    );
+  });
+
+program
   .command("migrations:generate-schema")
   .description("Generate kysely schema")
   .action(async () => {
