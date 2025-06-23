@@ -25,6 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale/fr";
 import NextLink from "next/link";
@@ -45,6 +46,8 @@ import { getStepWorkflow, getStepWorkflowAvis } from "@/app/(wrapped)/demandes/u
 import { getTypeDemandeLabel } from "@/app/(wrapped)/demandes/utils/typeDemandeUtils";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
+import type { DetailedApiError} from "@/utils/apiError";
+import {getDetailedErrorMessage } from "@/utils/apiError";
 import { formatCodeDepartement, formatDepartementLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { getRoutingAccessSaisieDemande, getRoutingAccesSyntheseDemande } from "@/utils/getRoutingAccesDemande";
 import { useAuth } from "@/utils/security/useAuth";
@@ -182,10 +185,14 @@ export const PageClient = () => {
         router.push(getRoutingAccessSaisieDemande({ user, campagne: currentCampagne, suffix: demande.numero }));
       },
       onError: (error) => {
-        toast({
-          variant: "error",
-          title: error.message,
-        });
+        if(isAxiosError<DetailedApiError>(error)) {
+          toast({
+            variant: "left-accent",
+            status: "error",
+            title: Object.values(getDetailedErrorMessage(error) ?? {}).join(", ") ?? "Une erreur est survenue lors de l'import de la demande",
+          });
+          setIsImporting(false);
+        }
       },
     });
 
