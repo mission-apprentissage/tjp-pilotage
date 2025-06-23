@@ -88,7 +88,7 @@ const fixtureBuilder = () => {
       utilisateurExpert: () => {
         user = createUserBuilder({role: RoleEnum["expert_region"]});
       },
-      utilisateurNational: () => {
+      utilisateurAdmin: () => {
         user = createUserBuilder({role: RoleEnum["admin"]});
       },
       utilisateurPerdirExpe: () => {
@@ -226,8 +226,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture = fixtureBuilder();
   });
 
-  it("Un utilisateur national doit pouvoir importer une demande d'une campagne terminée", () => {
-    fixture.given.utilisateurNational();
+  it("Un utilisateur admin national doit pouvoir importer une demande d'une campagne terminée", () => {
+    fixture.given.utilisateurAdmin();
     fixture.given.campagne("2023", CampagneStatutEnum["terminée"]);
     fixture.given.demandeValidee();
     fixture.given.isNotAlreadyImported();
@@ -236,8 +236,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.then.verifierCanImport();
   });
 
-  it("Un utilisateur national ne doit pas pouvoir importer une demande d'une campagne terminée qui a déjà été importée", () => {
-    fixture.given.utilisateurNational();
+  it("Un utilisateur admin national ne doit pas pouvoir importer une demande d'une campagne terminée qui a déjà été importée", () => {
+    fixture.given.utilisateurAdmin();
     fixture.given.campagne("2023", CampagneStatutEnum["terminée"]);
     fixture.given.demandeValidee();
     fixture.given.isAlreadyImported();
@@ -246,8 +246,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.then.verifierCanNotImport();
   });
 
-  it("Un utilisateur national ne doit pas pouvoir importer une demande d'une campagne non terminée", () => {
-    fixture.given.utilisateurNational();
+  it("Un utilisateur admin national ne doit pas pouvoir importer une demande d'une campagne non terminée", () => {
+    fixture.given.utilisateurAdmin();
     fixture.given.campagne("2023");
     fixture.given.demandeValidee();
     fixture.given.isNotAlreadyImported();
@@ -312,8 +312,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
-  it("Un utilisateur national doit pouvoir modifier une demande", () => {
-    fixture.given.utilisateurNational();
+  it("Un utilisateur admin national doit pouvoir modifier une demande", () => {
+    fixture.given.utilisateurAdmin();
     fixture.given.campagne("2024");
     fixture.given.demandeEditable();
 
@@ -324,34 +324,46 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.then.verifierCanDelete();
   });
 
-  it("Un utilisateur national ne doit pas pouvoir modifier une demande non éditable", () => {
-    fixture.given.utilisateurNational();
+  it("Un utilisateur admin national doit pouvoir modifier une demande même non éditable", () => {
+    fixture.given.utilisateurAdmin();
     fixture.given.campagne("2024");
     fixture.given.demandeNonEditable();
 
     fixture.when.canEditDemande();
-    fixture.then.verifierCanNotEdit();
+    fixture.then.verifierCanEdit();
   });
 
-  it("Un utilisateur national ne doit pas pouvoir créer ou modifier une demande pendant une campagne terminée", () => {
-    fixture.given.utilisateurNational();
+  it("Un utilisateur admin national doit pouvoir modifier une demande même pendant une campagne terminée", () => {
+    fixture.given.utilisateurAdmin();
     fixture.given.campagne("2023", CampagneStatutEnum["terminée"]);
     fixture.given.demandeEditable();
 
     fixture.when.canEditDemande();
-    fixture.then.verifierCanNotEdit();
+    fixture.then.verifierCanEdit();
+  });
+
+  it("Un utilisateur admin national ne doitpas pouvoir créer une demande même pendant une campagne terminée", () => {
+    fixture.given.utilisateurAdmin();
+    fixture.given.campagne("2023", CampagneStatutEnum["terminée"]);
+    fixture.given.demandeEditable();
 
     fixture.when.canCreateDemande();
     fixture.then.verifierCanNotCreate();
   });
 
-  it("Un utilisateur national ne doit pas pouvoir créer ou modifier une demande pendant une campagne en attente", () => {
-    fixture.given.utilisateurNational();
+  it("Un utilisateur admin national doit pouvoir modifier une demande même pendant une campagne en attente", () => {
+    fixture.given.utilisateurAdmin();
     fixture.given.campagne("2025", CampagneStatutEnum["en attente"]);
     fixture.given.demandeEditable();
 
     fixture.when.canEditDemande();
-    fixture.then.verifierCanNotEdit();
+    fixture.then.verifierCanEdit();
+  });
+
+  it("Un utilisateur admin national ne doit pas pouvoir créer une demande même pendant une campagne en attente", () => {
+    fixture.given.utilisateurAdmin();
+    fixture.given.campagne("2025", CampagneStatutEnum["en attente"]);
+    fixture.given.demandeEditable();
 
     fixture.when.canCreateDemande();
     fixture.then.verifierCanNotCreate();
@@ -489,8 +501,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.then.verifierCanEdit();
   });
 
-  it("Un utilisateur national doit pouvoir créer et modifier une demande lors d'une campagne qui n'est pas la dernière en cours", () => {
-    fixture.given.utilisateurNational();
+  it("Un utilisateur admin national doit pouvoir créer et modifier une demande lors d'une campagne qui n'est pas la dernière en cours", () => {
+    fixture.given.utilisateurAdmin();
     fixture.given.campagne("2024");
     fixture.given.demandeEditable();
 
@@ -593,8 +605,8 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.then.verifierCanEdit();
   });
 
-  it("Un utilisateur national doit pouvoir éditer une demande d'une campagne en cours", () => {
-    fixture.given.utilisateurNational();
+  it("Un utilisateur admin national doit pouvoir éditer une demande d'une campagne en cours", () => {
+    fixture.given.utilisateurAdmin();
     fixture.given.campagne("2025");
     fixture.given.demandeEditable();
 

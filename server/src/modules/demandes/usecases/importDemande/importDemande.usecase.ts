@@ -4,7 +4,8 @@ import {PermissionEnum} from 'shared/enum/permissionEnum';
 
 import type { RequestUser } from "@/modules/core/model/User";
 import { findOneDemandeQuery } from "@/modules/demandes/repositories/findOneDemande.query";
-import {getCurrentCampagne} from '@/modules/utils/getCurrentCampagne';
+import { findOneSimilarDemandeQuery } from "@/modules/demandes/repositories/findOneSimilarDemande.query";
+import { getCurrentCampagne } from "@/modules/utils/getCurrentCampagne";
 import logger from "@/services/logger";
 
 import { createDemandeQuery } from "./dependencies/createDemande.dep";
@@ -19,6 +20,7 @@ const importDemandeFactory =
       getCurrentCampagne,
       getDemandeWithMetadata,
       hasAlreadyBeenImported,
+      findOneSimilarDemandeQuery,
     }
   ) =>
     async ({ numero, user }: { user: RequestUser; numero: string }) => {
@@ -74,6 +76,28 @@ const importDemandeFactory =
       });
 
       if (!isAllowed) throw Boom.forbidden();
+      const sameDemande = await deps.findOneSimilarDemandeQuery({
+        ...demande,
+        notNumero: numero,
+        campagneId: campagne.id,
+      });
+      if (sameDemande) {
+        logger.error(
+          {
+            sameDemande,
+            demande,
+            user
+          },
+          "[IMPORT_INTENTION] Demande similaire existante"
+        );
+        throw Boom.badRequest("Demande similaire existante", {
+          id: sameDemande.id,
+          errors: {
+            same_demande:
+              `Une demande similaire sur la campagne ${campagne.annee} existe déjà avec ces mêmes champs: code diplôme, numéro établissement, dispositif et rentrée scolaire.`,
+          },
+        });
+      }
 
       const importedDemande = await deps.createDemandeQuery({
         demande,
