@@ -1,12 +1,15 @@
 import { Table, TableContainer, Tbody, Tr } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { Fragment, useEffect, useRef, useState } from "react";
+import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 import type { UserType } from "shared/schema/userSchema";
 
+import { client } from "@/api.client";
 import { GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED } from "@/app/(wrapped)/console/etablissements/GROUPED_FORMATION_ETABLISSEMENT_COLUMNS";
-import type { Etablissements, Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS, Order } from "@/app/(wrapped)/console/etablissements/types";
+import type { Etablissements, Filters, FORMATION_ETABLISSEMENT_COLUMNS_KEYS, LineId,Order } from "@/app/(wrapped)/console/etablissements/types";
 
 import { HeadLineContent } from "./HeadLineContent";
-import { EtablissementLineContent } from "./LineContent";
+import { EtablissementLineContent, EtablissementLineLoader, EtablissementLinePlaceholder } from "./LineContent";
 
 const getCellBgColor = (column: FORMATION_ETABLISSEMENT_COLUMNS_KEYS) => {
   const groupLabel = Object.keys(GROUPED_FORMATION_ETABLISSEMENT_COLUMNS_CONNECTED).find((groupLabel) => {
@@ -36,6 +39,31 @@ export const ConsoleSection = ({
   colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
   user?: UserType;
 }) => {
+  const [historiqueId, setHistoriqueId] = useState<LineId>();
+
+  const { data: historiqueData, isFetching: isFetchingHistoriqueData } = useQuery({
+    keepPreviousData: false,
+    staleTime: 10000000,
+    queryKey: ["formations", historiqueId, filters],
+    enabled: !!historiqueId,
+    queryFn: async () => {
+      if (!historiqueId) return;
+      return (
+        await client.ref("[GET]/etablissements").query({
+          query: {
+            ...filters,
+            cfd: [historiqueId?.cfd],
+            codeDispositif: historiqueId?.codeDispositif ? [historiqueId?.codeDispositif] : undefined,
+            uai: [historiqueId.uai],
+            limit: 2,
+            order: "desc",
+            orderBy: "rentreeScolaire",
+            rentreeScolaire: RENTREES_SCOLAIRES.filter((rentree) => rentree !== CURRENT_RENTREE),
+          },
+        })
+      ).etablissements;
+    },
+  });
 
   const [isFirstColumnSticky, setIsFirstColumnSticky] = useState(false);
   const [isSecondColumnSticky, setIsSecondColumnSticky] = useState(false);
@@ -78,20 +106,62 @@ export const ConsoleSection = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           user={user}
+          showHistoriqueCollapseColumn={filters.rentreeScolaire?.[0] === CURRENT_RENTREE}
         />
         <Tbody>
           {data?.etablissements.map((line) => (
             <Fragment key={`${line.uai}_${line.codeDispositif}_${line.cfd}`}>
               <Tr h="12" bg={"white"} role="group">
                 <EtablissementLineContent
+                  showHistoriqueCollapseColumn={filters.rentreeScolaire?.[0] === CURRENT_RENTREE}
                   isFirstColumnSticky={isFirstColumnSticky}
                   isSecondColumnSticky={isSecondColumnSticky}
                   line={line}
+                  expended={
+                    historiqueId?.cfd === line.cfd &&
+                    historiqueId.codeDispositif === line.codeDispositif &&
+                    historiqueId.uai === line.uai
+                  }
+                  onClickExpend={() =>
+                    setHistoriqueId({
+                      cfd: line.cfd,
+                      codeDispositif: line.codeDispositif,
+                      uai: line.uai,
+                    })
+                  }
+                  onClickCollapse={() => setHistoriqueId(undefined)}
                   colonneFilters={colonneFilters}
                   getCellBgColor={getCellBgColor}
                   user={user}
                 />
               </Tr>
+              {historiqueId?.cfd === line.cfd &&
+                historiqueId.codeDispositif === line.codeDispositif &&
+                historiqueId.uai === line.uai && (
+                <>
+                  {historiqueData?.map((historiqueLine) => (
+                    <Tr key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`} bg={"grey.975"}>
+                      <EtablissementLineContent
+                        showHistoriqueCollapseColumn={true}
+                        isFirstColumnSticky={isFirstColumnSticky}
+                        isSecondColumnSticky={isSecondColumnSticky}
+                        line={historiqueLine}
+                        colonneFilters={colonneFilters}
+                        getCellBgColor={getCellBgColor}
+                        user={user}
+                      />
+                    </Tr>
+                  ))}
+                  {historiqueData && !historiqueData.length && (
+                    <EtablissementLinePlaceholder
+                      colonneFilters={colonneFilters}
+                      getCellBgColor={getCellBgColor}
+                      user={user}
+                    />
+                  )}
+                  {isFetchingHistoriqueData && <EtablissementLineLoader />}
+                </>
+              )}
             </Fragment>
           ))}
         </Tbody>

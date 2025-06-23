@@ -204,4 +204,5 @@ export const themeColors = {
     383: "#685c48",
     950: "#f7ecdb",
   },
+  white: "#ffffff",
 };

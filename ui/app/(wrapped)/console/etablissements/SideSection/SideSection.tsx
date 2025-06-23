@@ -51,7 +51,11 @@ export const SideSection = ({
             variant="newInput"
             width="18rem"
             onChange={(e) => {
-              handleFilters("rentreeScolaire", [e.target.value]);
+              if(e.target.value) {
+                handleFilters("rentreeScolaire", [e.target.value]);
+                return;
+              }
+              handleFilters("rentreeScolaire", [CURRENT_RENTREE]); // Reset to current rentrée if no value is selected
             }}
             value={searchParams.filters?.rentreeScolaire?.[0] ?? CURRENT_RENTREE}
           >
