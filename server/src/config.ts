@@ -3,7 +3,7 @@ import env from "env-var";
 /* eslint-disable-next-line import/no-named-as-default-member */
 const { get } = env;
 
-const environement = get("ENV").required().asEnum(["local", "recette1", "recette2", "production", "test"]);
+const environement = get("ENV").required().asEnum(["local", "recette1", "recette2", "qualification", "production", "test"]);
 const publicUrl = get("PUBLIC_URL").required().asString();
 
 // if (process.env.NODE_ENV === "test") {

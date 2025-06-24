@@ -132,7 +132,7 @@ fileignoreconfig:
 - filename: ui/app/(wrapped)/statistiques/page.tsx
   checksum: 4eff930f0a5a1df09c53d1a2e65c8911b3ae7d0ca8d2393ce371d9773af1e217
 - filename: ui/config.public.ts
-  checksum: 5a6c64c078366fc4c259fcf660abb66e4db3ffbc8365fdad5d3c05cad54d99dc
+  checksum: 39a510ca4eb48020a6186ca513f124e5d756e2d504de74565404e7e292afb76d
 - filename: ui/src/config.public.ts
   checksum: b13b0a1f3d9590d335062a88e76609c40ba790129e481f7e5c25fbdab6840617
 - filename: ui/src/utils/generateUri.ts
