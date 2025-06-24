@@ -9,7 +9,7 @@ export interface PublicConfig {
   host: string;
   baseUrl: string;
   apiEndpoint: string;
-  env: "local" | "recette1" | "recette2" | "production";
+  env: "local" | "recette1" | "recette2" | "qualification" | "production";
   version: string;
   productMeta: {
     brandName: "orion";
@@ -78,6 +78,26 @@ function getRecette2PublicConfig(): PublicConfig {
   };
 }
 
+function getQualificationPublicConfig(): PublicConfig {
+  const host = "qualification.orion.inserjeunes.incubateur.net";
+
+  return {
+    sentry: {
+      dsn: "https://87a205584ce84a5ab3f207e60ff3674d@sentry.incubateur.net/140",
+      enabled: true,
+    },
+    crisp: {
+      token: "no-token",
+    },
+    host,
+    baseUrl: `https://${host}`,
+    env: "qualification",
+    apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
+    productMeta: getProductMeta(),
+  };
+}
+
 function getLocalPublicConfig(): PublicConfig {
   const host = "localhost";
   return {
@@ -129,6 +149,7 @@ function getEnv(): PublicConfig["env"] {
   case "production":
   case "recette1":
   case "recette2":
+  case "qualification":
   case "local":
     return env;
   default:
@@ -144,6 +165,8 @@ function getPublicConfig(): PublicConfig {
     return getRecette1PublicConfig();
   case "recette2":
     return getRecette2PublicConfig();
+  case "qualification":
+    return getQualificationPublicConfig();
   case "local":
     return getLocalPublicConfig();
   }
