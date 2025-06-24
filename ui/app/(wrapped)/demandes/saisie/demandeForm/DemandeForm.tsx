@@ -20,7 +20,7 @@ import { isAxiosError } from "axios";
 import { useRouter, useSearchParams} from 'next/navigation';
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { hasRole, RoleEnum} from "shared";
+import { hasRole, isAdmin, RoleEnum} from "shared";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
@@ -34,7 +34,7 @@ import { Conseils } from "@/app/(wrapped)/demandes/saisie/components/Conseils";
 import { MenuFormulaire } from "@/app/(wrapped)/demandes/saisie/components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "@/app/(wrapped)/demandes/SCROLL_OFFSETS";
 import type { Demande, DemandeMetadata } from "@/app/(wrapped)/demandes/types";
-import { canCorrectDemande, canEditCfdUai} from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
+import { canCorrectDemande, canEditDemandeCfdUai} from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
 import type { DetailedApiError } from "@/utils/apiError";
@@ -214,7 +214,7 @@ export const DemandeForm = ({
   const isCorrection = !!queryParams.get("correction");
   const showCorrection = isCorrection && canCorrectDemande({demande, user});
 
-  const isEditCfdUai = queryParams.get("editCfdUai") === "true" && canEditCfdUai({demande, user});
+  const isEditCfdUai = queryParams.get("editCfdUai") === "true" && canEditDemandeCfdUai({demande, user});
 
   useEffect(() => {
     if (isEditCfdUai) {
@@ -328,7 +328,11 @@ export const DemandeForm = ({
                             isDisabled={
                               disabled ||
                               isActionsDisabled ||
-                              !isCampagneEnCours(campagne)
+                              (
+                                !isCampagneEnCours(campagne) &&
+                                !isAdmin({ user }) &&
+                                !isEditCfdUai
+                              )
                             }
                             isLoading={isSubmitting}
                             variant="draft"
@@ -356,7 +360,11 @@ export const DemandeForm = ({
                           isDisabled={
                             disabled ||
                             isActionsDisabled ||
-                            (!isCampagneEnCours(campagne) && !isEditCfdUai)
+                            (
+                              !isCampagneEnCours(campagne) &&
+                              !isAdmin({ user }) &&
+                              !isEditCfdUai
+                            )
                           }
                           isLoading={isSubmitting}
                           variant="primary"
