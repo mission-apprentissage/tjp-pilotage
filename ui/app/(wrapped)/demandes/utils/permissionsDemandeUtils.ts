@@ -108,7 +108,7 @@ export const canEditDemandeStatut = ({
   else return editableStatuts.includes(demande.statut);
 };
 
-export const canEditCfdUai = ({
+export const canEditDemandeCfdUai = ({
   demande,
   user
 } : {
@@ -119,8 +119,8 @@ export const canEditCfdUai = ({
 }) => {
   if(isStatutDemandeValidee(demande?.statut)) return (
     hasRole({ user, role: RoleEnum["admin_region"] })
-      || hasRole({ user, role: RoleEnum["admin"] })
-      || hasRole({ user, role: RoleEnum["gestionnaire_region"] })
+    || hasRole({ user, role: RoleEnum["admin"] })
+    || hasRole({ user, role: RoleEnum["gestionnaire_region"] })
   );
   return false;
 };

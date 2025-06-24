@@ -1,34 +1,13 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  chakra,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Select,
-  Text,
-  Textarea,
-  useDisclosure,
-  useToast,
-  useToken,
-} from "@chakra-ui/react";
+import { Button, chakra, Flex, FormControl, FormErrorMessage, FormLabel, IconButton,Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Text, Textarea, Tooltip, useDisclosure, useToast, useToken } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { hasPermission } from "shared";
+import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import { PermissionEnum } from "shared/enum/permissionEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { UserType } from "shared/schema/userSchema";
 
@@ -36,12 +15,22 @@ import { client } from "@/api.client";
 import type { Demandes } from "@/app/(wrapped)/demandes/saisie/types";
 import type { AnneeCampagneMotifCorrection} from "@/app/(wrapped)/demandes/utils/motifCorrectionUtils";
 import { getMotifCorrectionOptionsParAnneeCampagne } from "@/app/(wrapped)/demandes/utils/motifCorrectionUtils";
-import { canEditCfdUai } from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
+import { canCorrectDemande, canEditDemande, canEditDemandeCfdUai, canEditDemandeStatut } from "@/app/(wrapped)/demandes/utils/permissionsDemandeUtils";
 import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
 
 
-export const CorrectionDemandeButton = chakra(
-  ({ user, demande, campagne }: { user?: UserType; demande: Demandes[number], campagne: CampagneType }) => {
+export const ModificationDemandeButton = chakra(
+  ({
+    user,
+    demande,
+    campagne,
+    onChangeCheckedDemandes
+  }: {
+    user?: UserType;
+    demande: Demandes[number];
+    campagne: CampagneType;
+    onChangeCheckedDemandes: (demande: { statut: DemandeStatutType, numero: string }) => void;
+  }) => {
     const toast = useToast();
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -91,29 +80,48 @@ export const CorrectionDemandeButton = chakra(
 
     const [annulationDemandeStep, setAnnulationDemandeStep] = useState<1 | 2>(1);
 
+    const canEdit = canEditDemande({ demande: { ...demande, campagne }, user });
+    const canEditCfdUai = canEditDemandeCfdUai({ demande, user });
+    const canEditStatut = canEditDemandeStatut({ demande: { ...demande, campagne }, user }) && hasPermission(user?.role, PermissionEnum["demande-statut/ecriture"]);
+    const canCorrect = canCorrectDemande({ demande: { ...demande, campagne }, user }) && !isCorrected;
+
+    if (!canEdit && !canEditCfdUai && !canEditStatut && !canCorrect) return null;
+
     return (
       <>
         <Menu gutter={0} >
-          <MenuButton
-            ms={2}
-            as={Button}
-            rightIcon={<Icon icon="ri:arrow-down-s-line" color={bluefrance113} />}
-            bgColor={"transparent"}
-            border={"1px solid"}
-            borderColor={bluefrance113}
-            borderRadius="0"
-            p={2}
-            h={"fit-content"}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <Flex direction={"row"} gap={2}>
-              <Text color={bluefrance113}>Corriger la demande</Text>
-            </Flex>
-          </MenuButton>
+          <Tooltip label="Modifier la demande" shouldWrapChildren>
+            <MenuButton
+              as={IconButton}
+              icon={<Icon icon="ri:pencil-line" width={"24px"} color={bluefrance113} />}
+              bgColor={"transparent"}
+              borderRadius="0"
+              p={2}
+              h={"fit-content"}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              aria-label="Modifier la demande"
+            />
+          </Tooltip>
           <MenuList p={0}>
-            {canEditCfdUai({ demande, user }) && (
+            {canEdit && (
+              <MenuItem
+                px={2}
+                py={3}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  router.push(getRoutingAccessSaisieDemande({user, campagne, suffix: demande.numero}));
+                }}
+              >
+                <Flex direction={"row"} h={"100%"} w="100%" gap={2}>
+                  <Icon icon="ri:edit-line" color={bluefrance113} width={"18px"} />
+                  <Text color={bluefrance113}>Modifier la demande</Text>
+                </Flex>
+              </MenuItem>
+            )}
+            {!canEdit && canEditCfdUai && (
               <MenuItem
                 px={2}
                 py={3}
@@ -124,12 +132,28 @@ export const CorrectionDemandeButton = chakra(
                 }}
               >
                 <Flex direction={"row"} h={"100%"} w="100%" gap={2}>
-                  <Icon icon="ri:equalizer-line" color={bluefrance113} width={"18px"} />
+                  <Icon icon="ri:edit-line" color={bluefrance113} width={"18px"} />
                   <Text color={bluefrance113}>Modifier la formation ou l'établissement</Text>
                 </Flex>
               </MenuItem>
             )}
-            {!isCorrected && (
+            {canEditStatut && (
+              <MenuItem
+                px={2}
+                py={3}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onChangeCheckedDemandes(demande);
+                }}
+              >
+                <Flex direction={"row"} h={"100%"} w="100%" gap={2}>
+                  <Icon icon="ri:contract-line" color={bluefrance113} width={"18px"} />
+                  <Text color={bluefrance113}>Modifier le statut de la demande</Text>
+                </Flex>
+              </MenuItem>
+            )}
+            {canCorrect && (
               <>
                 <MenuItem
                   px={2}
