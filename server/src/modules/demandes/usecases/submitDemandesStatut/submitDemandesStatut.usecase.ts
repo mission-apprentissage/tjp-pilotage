@@ -65,9 +65,10 @@ export const [submitDemandesStatutUsecase, submitDemandesStatutFactory] = inject
           national: () => true,
         });
 
+        // Les administrateurs peuvent modifier tous les statuts de demande
         const canEditDemandeInCampagne = campangeData.statut === CampagneStatutEnum["en cours"] || isAdmin({ user });
         const canEditDemande = demandeData.statut &&
-          !NON_EDITABLE_STATUS.includes(demandeData.statut as DemandeStatutType);
+          (!NON_EDITABLE_STATUS.includes(demandeData.statut as DemandeStatutType));
 
         if (!isAllowed) {
           logger.error(
