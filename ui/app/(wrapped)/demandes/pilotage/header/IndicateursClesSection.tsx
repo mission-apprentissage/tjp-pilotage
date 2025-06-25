@@ -1,5 +1,5 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
-import {Box,Button,Collapse,Divider, Flex, Grid, GridItem, HStack, Skeleton, Text, VisuallyHidden, VStack} from '@chakra-ui/react';
+import {Button,Collapse,Divider, Flex, Grid, GridItem, HStack, Skeleton, Text, VisuallyHidden, VStack} from '@chakra-ui/react';
 import { Icon } from "@iconify/react";
 import _ from 'lodash';
 import { useState } from 'react';
@@ -116,7 +116,7 @@ export const IndicateursClesSection = ({
               label={
                 <Flex direction="column" gap={4}>
                   <Text>Comprendre le taux de transformation.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
                 </Flex>
               }
               my="auto"
@@ -249,7 +249,7 @@ export const IndicateursClesSection = ({
                         Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des
                         taux d'emploi et de poursuite d'études appliquées au niveau de diplôme.
                       </Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
+                      <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
                     </Flex>
                   }
                   onClick={() => openGlossaire("quadrant")}
@@ -292,7 +292,7 @@ export const IndicateursClesSection = ({
                         Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des
                         taux d'emploi et de poursuite d'études appliquées au niveau de diplôme.
                       </Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
+                      <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
                     </Flex>
                   }
                   onClick={() => openGlossaire("quadrant")}
@@ -315,14 +315,14 @@ export const IndicateursClesSection = ({
           tooltip={
             <TooltipIcon
               label={
-                <Box>
+                <Flex direction="column" gap={4}>
                   <Text>
                     Dans Orion, à partir de la campagne 2024, on désigne comme «Colorations» les places ouvertes
                     colorées soit la différence (si elle est positive) entre le nombre de places colorées actuelles
                     et le nombre de futurs places colorées d'une demande de transformation sur Orion.
                   </Text>
-                  <Text mt={4}>Cliquez pour plus d'infos.</Text>
-                </Box>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
               h={"24px"}
               onClick={() => openGlossaire("coloration")}
@@ -357,7 +357,7 @@ export const IndicateursClesSection = ({
                         Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des
                         taux d'emploi et de poursuite d'études appliquées au niveau de diplôme.
                       </Text>
-                      <Text>Cliquez pour plus d'infos.</Text>
+                      <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
                     </Flex>
                   }
                   onClick={() => openGlossaire("quadrant")}
