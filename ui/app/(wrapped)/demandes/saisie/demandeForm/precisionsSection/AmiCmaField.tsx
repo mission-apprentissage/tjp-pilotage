@@ -1,5 +1,4 @@
 import {
-  Box,
   chakra,
   Flex,
   FormControl,
@@ -38,10 +37,10 @@ export const AmiCmaField = chakra(({ disabled, className }: { disabled?: boolean
         <TooltipIcon
           mt={"1"}
           label={
-            <Box w={"fit-content"}>
+            <Flex direction="column" gap={2}>
               <Text>Appel à Manifestation d'Intérêt « Compétences et métiers d’avenir »</Text>
-              <Text mt={2}>Cliquez pour plus d'infos.</Text>
-            </Box>
+              <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+            </Flex>
           }
           onClick={() => openGlossaire("ami-cma")}
           color={"bluefrance.113"}

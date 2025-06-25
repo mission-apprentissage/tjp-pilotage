@@ -48,7 +48,9 @@ export const PrimaryFiltersSection = ({
             <Flex justifyContent={"start"} gap={4} flexDirection={"column"} py={3} w="100%">
               <Flex gap={4}>
                 <Box justifyContent={"start"}>
-                  <Text color="white" mb={2} fontWeight={500}>CAMPAGNE</Text>
+                  <Flex direction={"row"} gap={2}>
+                    <Text color="white" mb={2} fontWeight={500}>CAMPAGNE</Text>
+                  </Flex>
                   <Flex direction={"column"} gap={1}>
                     <Menu gutter={0} matchWidth={true} autoSelect={false}>
                       <MenuButton

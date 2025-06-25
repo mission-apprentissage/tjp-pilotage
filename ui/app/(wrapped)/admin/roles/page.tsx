@@ -24,6 +24,7 @@ import { PermissionEnum} from 'shared/enum/permissionEnum';
 import type {PermissionScope} from 'shared/enum/permissionScopeEnum';
 
 import { themeDefinition } from "@/theme/theme";
+import { formatRole } from "@/utils/formatLibelle";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { PermissionBadge } from "./components/PermissionBadge";
@@ -147,7 +148,7 @@ const Page = () => {
                       fontWeight={700}
                       borderBottom={"none"}
                     >
-                      {ROLES_LABELS[role](selectedUser?.codeRegion).label}
+                      {formatRole(role)}
                     </Td>
                     <Td
                       position="sticky"

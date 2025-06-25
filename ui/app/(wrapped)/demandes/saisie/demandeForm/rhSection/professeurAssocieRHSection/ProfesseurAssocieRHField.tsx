@@ -1,5 +1,4 @@
 import {
-  Box,
   chakra,
   Flex,
   FormControl,
@@ -32,12 +31,12 @@ export const ProfesseurAssocieRHField = chakra(
             color="bluefrance.113"
             mb={"6px"}
             tooltip={
-              <Box>
+              <Flex direction="column" gap={2}>
                 <Text>
                   Dans le cas d’enseignements assurés par un salarié du secteur privé expert dans son domaine.
                 </Text>
-                <Text>Cliquez pour plus d'infos.</Text>
-              </Box>
+                <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+              </Flex>
             }
           />
         </Flex>
