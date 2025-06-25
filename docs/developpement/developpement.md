@@ -148,8 +148,6 @@ Deploie l'application sur l'environnement cible
   yarn deploy <environnement> <OPTIONAL:--user USERNAME>
 ```
 
-> Optionel si vous avez [configuré 1password](./1password.md#automatisation-de-ansible)
-
 ### Gestion des migrations
 
 Cli pour créer une migration
