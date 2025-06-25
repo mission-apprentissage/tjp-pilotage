@@ -10,6 +10,7 @@ on:
           - production
           - recette1
           - recette2
+          - qualification
   workflow_call:
     inputs:
       environment:
