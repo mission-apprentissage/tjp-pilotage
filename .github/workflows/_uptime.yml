@@ -45,7 +45,7 @@ jobs:
           if_key_exists: replace
 
       - name: Get env ip
-        run: echo "IP_ADDRESS=$(awk '/^\[${{ inputs.environment }}\]/{getline; print}' .infra/env.ini" >> $GITHUB_ENV
+        run: echo "IP_ADDRESS=$(awk '/^\[${{ inputs.environment }}\]/{getline; print}' .infra/env.ini)" >> $GITHUB_ENV
       
       - name: uptime over SSH
         run: ssh deploy@$IP_ADDRESS "uptime"
