@@ -12,6 +12,18 @@ readonly OP_ACCOUNT="inserjeunes"
 function runPlaybook() {
   echo "Lancement du playbook ${PLAYBOOK_NAME} pour l'environnement ${ENV_FILTER}..."
 
+  if [[ -z "${ANSIBLE_BECOME_PASS:-}" ]]; then
+    if [[ $* != *"pass"* ]]; then
+      ansible_extra_opts+=("--ask-become-pass")
+    fi
+  fi
+
+  if [[ -z "${ANSIBLE_REMOTE_USER:-}" ]]; then
+    if [[ $* != *"--user"* ]]; then
+      echo "Vous n'avez pas précisé d'utilisateur, ajoutez l'option --user <username> ou de définissez la variable d'environnement ANSIBLE_REMOTE_USER."
+    fi
+  fi
+
   # This env-vars is used by CI to decrypt
   if [[ -z "${ANSIBLE_VAULT_PASSWORD_FILE:-}" ]]; then
     ansible_extra_opts+=("--vault-password-file" "${SCRIPT_DIR}/get-vault-password-client.sh")
