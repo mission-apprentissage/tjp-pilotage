@@ -84,7 +84,7 @@ export const getFormationEtablissementsQuery = async ({
     .leftJoin("departement", "departement.codeDepartement", "etablissement.codeDepartement")
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
-    .leftJoin("formationView as formationContinuum", "formationContinuum.cfd", "indicateurSortie.cfdContinuum")
+    .leftJoin("dataFormation as formationContinuum", "formationContinuum.cfd", "indicateurSortie.cfdContinuum")
     .leftJoin("formationHistorique", (join) =>
       join
         .onRef("formationHistorique.ancienCFD", "=", "formationView.cfd")
@@ -124,7 +124,13 @@ export const getFormationEtablissementsQuery = async ({
             .onRef("demandeConstat.codeDispositif", "=", "formationEtablissement.codeDispositif")
             .onRef("demandeConstat.uai", "=", "formationEtablissement.uai")
             // .on("demandeConstat.rentreeScolaire", "=", parseInt(rentreeScolaire[0]))
-            // .on("demandeConstat.annee", "in", rentreeScolaire)
+            .on("demandeConstat.rentreeScolaire", ">=", parseInt(rentreeScolaire[0]))
+            .on((eb) =>
+              eb(sql<number>`
+                abs(${eb.ref("demandeConstat.differenceCapaciteScolaire")}) +
+                abs(${eb.ref("demandeConstat.differenceCapaciteApprentissage")})
+              `, ">", 1)
+            )
         )
         .select([
           sql<string>`string_agg("demandeConstat"."numero", ', ' ORDER BY "demandeConstat"."rentreeScolaire")`.as("numero"),
@@ -423,8 +429,6 @@ export const getFormationEtablissementsQuery = async ({
     .limit(limit)
     .execute()
     .then(cleanNull);
-
-  console.log(result.map((r) => r.numero));
 
   return {
     count: result[0]?.count ?? 0,
