@@ -1,7 +1,7 @@
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tr } from "@chakra-ui/react";
+import {Box, chakra, Flex, IconButton, Link, Skeleton, Td, Text, Tooltip,Tr} from '@chakra-ui/react';
 import NextLink from "next/link";
-import { CURRENT_RENTREE } from "shared";
+import {CURRENT_IJ_MILLESIME,CURRENT_RENTREE} from 'shared';
 
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
 import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
@@ -15,7 +15,7 @@ import {GraphEvolution} from '@/components/GraphEvolution';
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParameterizedUrl } from "@/utils/createParameterizedUrl";
-import { formatCodeDepartement,formatFamilleMetierLibelle } from "@/utils/formatLibelle";
+import {formatCodeDepartement, formatFamilleMetierLibelle, formatMillesime} from '@/utils/formatLibelle';
 import { formatNumber, formatNumberToString } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
@@ -147,6 +147,12 @@ export const EtablissementLineContent = ({
     </ConditionalTd>
     <ConditionalTd colonne="libelleDepartement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleDepartement ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd colonne="libelleAcademie" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      {line.libelleAcademie ?? "-"}
+    </ConditionalTd>
+    <ConditionalTd colonne="libelleRegion" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+      {line.libelleRegion ?? "-"}
     </ConditionalTd>
     <ConditionalTd colonne="secteur" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.secteur ?? "-"}{" "}
@@ -293,7 +299,12 @@ export const EtablissementLineContent = ({
       />
     </ConditionalTd>
     <ConditionalTd colonne="positionQuadrant" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.positionQuadrant ?? "-"}
+      <Tooltip
+        label={`Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`}
+        placement="top"
+      >
+        {line.positionQuadrant ?? "-"}
+      </Tooltip>
     </ConditionalTd>
     <ConditionalTd
       colonne="tauxInsertion"
@@ -301,7 +312,7 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} />
+      <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} millesime={CURRENT_IJ_MILLESIME} />
     </ConditionalTd>
     <ConditionalTd colonne={"evolutionTauxInsertion"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
       <GraphEvolution
@@ -316,7 +327,7 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign={"center"}
     >
-      <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
+      <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} millesime={CURRENT_IJ_MILLESIME} />
     </ConditionalTd>
     <ConditionalTd colonne={"evolutionTauxPoursuite"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
       <GraphEvolution
@@ -331,7 +342,7 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign="center"
     >
-      <GraphWrapper continuum={line.continuum} value={line.tauxDevenirFavorable} />
+      <GraphWrapper continuum={line.continuum} value={line.tauxDevenirFavorable} millesime={CURRENT_IJ_MILLESIME} />
     </ConditionalTd>
     <ConditionalTd colonne={"evolutionTauxDevenirFavorable"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
       <GraphEvolution
@@ -341,7 +352,11 @@ export const EtablissementLineContent = ({
       />
     </ConditionalTd>
     <ConditionalTd colonne="tauxInsertionEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxInsertionEtablissement} />
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxInsertionEtablissement}
+        millesime={CURRENT_IJ_MILLESIME}
+      />
     </ConditionalTd>
     <ConditionalTd colonne={"evolutionTauxInsertionEtablissement"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
       <GraphEvolution
@@ -351,7 +366,11 @@ export const EtablissementLineContent = ({
       />
     </ConditionalTd>
     <ConditionalTd colonne="tauxPoursuiteEtablissement" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxPoursuiteEtablissement} />
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxPoursuiteEtablissement}
+        millesime={CURRENT_IJ_MILLESIME}
+      />
     </ConditionalTd>
     <ConditionalTd colonne={"evolutionTauxPoursuiteEtablissement"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
       <GraphEvolution
@@ -366,7 +385,11 @@ export const EtablissementLineContent = ({
       getCellBgColor={getCellBgColor}
       textAlign="center"
     >
-      <GraphWrapper continuum={line.continuumEtablissement} value={line.tauxDevenirFavorableEtablissement} />
+      <GraphWrapper
+        continuum={line.continuumEtablissement}
+        value={line.tauxDevenirFavorableEtablissement}
+        millesime={CURRENT_IJ_MILLESIME}
+      />
     </ConditionalTd>
     <ConditionalTd colonne={"evolutionTauxDevenirFavorableEtablissement"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
       <GraphEvolution

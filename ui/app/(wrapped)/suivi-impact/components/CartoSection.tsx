@@ -1,7 +1,9 @@
 import { Box, Flex, Heading, Select, Skeleton, VisuallyHidden } from "@chakra-ui/react";
 import { useCallback, useMemo, useState } from "react";
+import {CURRENT_IJ_MILLESIME} from 'shared';
 
 import type { Filters, IndicateurOption, IndicateurType, PilotageReformeStatsRegion, PilotageReformeStatsRegionData } from "@/app/(wrapped)/suivi-impact/types";
+import {BadgeMillesimes} from '@/components/BadgeMillesimes';
 import { CartoGraph } from "@/components/CartoGraph";
 import { formatNumber } from "@/utils/formatUtils";
 
@@ -98,6 +100,7 @@ export const CartoSection = ({
             >
             Visualisation territoriale
             </Heading>
+            <BadgeMillesimes millesimes={CURRENT_IJ_MILLESIME} />
             <VisuallyHidden as="label" htmlFor="select-indicateur-carto">Indicateur</VisuallyHidden>
             <Select
               id="select-indicateur-carto"

@@ -1,4 +1,4 @@
-import {Box, chakra, Th, Thead, Tooltip, Tr, VisuallyHidden} from '@chakra-ui/react';
+import { Box, chakra,Th, Thead, Tooltip, Tr, VisuallyHidden } from '@chakra-ui/react';
 import { usePlausible } from "next-plausible";
 import type { CSSProperties } from "react";
 
@@ -158,6 +158,24 @@ export const HeadLineContent = ({
         >
           <OrderIcon {...order} column="libelleDepartement" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleDepartement}
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleAcademie"
+          cursor="pointer"
+        >
+          <OrderIcon {...order} column="libelleAcademie" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.libelleAcademie}
+        </ConditionalTh>
+        <ConditionalTh
+          colonneFilters={colonneFilters}
+          getCellBgColor={getCellBgColor}
+          colonne="libelleRegion"
+          cursor="pointer"
+        >
+          <OrderIcon {...order} column="libelleRegion" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.libelleRegion}
         </ConditionalTh>
         <ConditionalTh
           colonneFilters={colonneFilters}
@@ -416,10 +434,10 @@ export const HeadLineContent = ({
           colonne="tauxPoursuite"
           cursor="pointer"
           onClick={handleOrder}
+          icon={<TooltipDefinitionTauxPoursuiteEtudes />}
         >
           <OrderIcon {...order} column="tauxPoursuite" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxPoursuite}
-          <TooltipDefinitionTauxPoursuiteEtudes />
         </ConditionalTh>
         <ConditionalTh
           colonne={"evolutionTauxPoursuite"}
@@ -435,10 +453,10 @@ export const HeadLineContent = ({
           colonne="tauxDevenirFavorable"
           cursor="pointer"
           onClick={handleOrder}
+          icon={<TooltipDefinitionTauxDevenirFavorable />}
         >
           <OrderIcon {...order} column="tauxDevenirFavorable" />
           {FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorable}
-          <TooltipDefinitionTauxDevenirFavorable />
         </ConditionalTh>
         <ConditionalTh
           colonne={"evolutionTauxDevenirFavorable"}
