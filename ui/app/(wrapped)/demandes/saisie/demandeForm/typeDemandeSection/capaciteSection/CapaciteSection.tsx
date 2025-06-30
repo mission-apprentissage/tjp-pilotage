@@ -1,7 +1,8 @@
 import { Box, Flex, FormErrorMessage, Highlight, Input, Table, Tbody, Td, Text, Th, Thead, Tr, VisuallyHidden } from "@chakra-ui/react";
 import {Icon} from '@iconify/react';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {useEffect,useState} from 'react';
+import type { RefObject} from "react";
+import {useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { CURRENT_RENTREE } from "shared";
 import { isTypeColoration, isTypeOuverture } from "shared/utils/typeDemandeUtils";
@@ -9,6 +10,7 @@ import { isTypeColoration, isTypeOuverture } from "shared/utils/typeDemandeUtils
 import {client} from '@/api.client';
 import {InfoBox} from '@/app/(wrapped)/demandes/saisie/components/InfoBox';
 import type { DemandeFormType } from "@/app/(wrapped)/demandes/saisie/demandeForm/types";
+import { SCROLL_OFFSET } from "@/app/(wrapped)/demandes/SCROLL_OFFSETS";
 
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
 import { CapaciteApprentissageColoreeActuelleField } from "./CapaciteApprentissageColoreeActuelleField";
@@ -43,7 +45,13 @@ const differenceCapacité = (valueA: number | undefined, valueB: number | undefi
   return valueA - valueB > 0 ? `+${valueA - valueB}` : valueA - valueB;
 };
 
-export const CapaciteSection = ({ disabled }: { disabled?: boolean; }) => {
+export const CapaciteSection = ({
+  disabled,
+  capaciteRef
+}: {
+  disabled?: boolean;
+  capaciteRef: RefObject<HTMLDivElement>;
+}) => {
   const queryClient = useQueryClient();
 
   const [hasEffectif, setHasEffectif] = useState(false);
@@ -122,7 +130,7 @@ export const CapaciteSection = ({ disabled }: { disabled?: boolean; }) => {
   );
 
   return (
-    <Flex gap="6" mb="4" direction={"column"}>
+    <Flex ref={capaciteRef} scrollMarginTop={SCROLL_OFFSET} gap="6" mb="4" direction={"column"}>
       <ColorationField disabled={disabled} />
       <LibelleColorationField disabled={disabled} />
       {hasEffectif && (
@@ -243,7 +251,7 @@ export const CapaciteSection = ({ disabled }: { disabled?: boolean; }) => {
             </Td>
             <Td p={0} border={"none"}>
               <VisuallyHidden as="label" htmlFor="capaciteApprentissageActuelle">
-                  Capacité en apprentissage actuelle
+                Capacité en apprentissage actuelle
               </VisuallyHidden>
               <CapaciteApprentissageActuelleField
                 id={"capaciteApprentissageActuelle"}
@@ -254,7 +262,7 @@ export const CapaciteSection = ({ disabled }: { disabled?: boolean; }) => {
             </Td>
             <Td p={0} border={"none"}>
               <VisuallyHidden as="label" htmlFor="capaciteApprentissage">
-                  Capacité en apprentissage
+                Capacité en apprentissage
               </VisuallyHidden>
               <CapaciteApprentissageField id={"capaciteApprentissage"} disabled={disabled} maxW={240} flex={1} />
             </Td>
