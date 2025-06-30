@@ -97,11 +97,13 @@ export const GraphEvolution = ({
       series: [
         {
           type: "line",
-          smooth: true,
           data: Object.values(data).map((value) => isPercentage ?
             formatPercentageWithoutSign(value, 2) :
             formatNumber(value,2)
           ),
+          lineStyle: {
+            width: 2
+          },
           animation: false,
           showSymbol: false,
           color: getEvolutionColor({ data }),
@@ -140,7 +142,7 @@ export const GraphEvolution = ({
   }, [data]);
 
   return (
-    <AspectRatio ratio={7.5} w={"100%"}>
+    <AspectRatio ratio={4.5} w={"100%"}>
       <Box position="relative" overflow="visible !important">
         <Box ref={containerRef} height={"100%"} w={"100%"} role="figure" />
       </Box>

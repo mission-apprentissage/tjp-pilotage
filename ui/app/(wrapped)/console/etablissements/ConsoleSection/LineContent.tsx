@@ -243,7 +243,7 @@ export const EtablissementLineContent = ({
     <ConditionalTd colonne="libelleNsf" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
       {line.libelleNsf ?? "-"}
     </ConditionalTd>
-    <ConditionalTd colonne={"evolutionEffectif"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
+    <ConditionalTd colonne={"evolutionEffectif"} colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} p={0}>
       <GraphEvolution
         title="Évolution des effectifs"
         data={getEvolutionEffectifData(line)}
@@ -280,7 +280,7 @@ export const EtablissementLineContent = ({
       <GraphEvolution
         title={FORMATION_ETABLISSEMENT_COLUMNS.evolutionTauxPression}
         data={getEvolutionTauxEntreeData({ evolutions: line.evolutionTauxEntree, taux: "tauxPression"})}
-        isPercentage={true}
+        isPercentage={false}
       />
     </ConditionalTd>
     <ConditionalTd
