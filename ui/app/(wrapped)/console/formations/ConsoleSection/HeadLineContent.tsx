@@ -232,6 +232,7 @@ export const HeadLineContent = ({
           colonne={"evolutionEffectif"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
+          maxWidth={36}
         >
           {FORMATION_COLUMNS.evolutionEffectif}
         </ConditionalTh>
@@ -298,7 +299,7 @@ export const HeadLineContent = ({
           colonne={"evolutionTauxPression"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          maxWidth={48}
+          maxWidth={36}
         >
           {FORMATION_COLUMNS.evolutionTauxPression}
         </ConditionalTh>
@@ -318,7 +319,7 @@ export const HeadLineContent = ({
           colonne={"evolutionTauxRemplissage"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          maxWidth={48}
+          maxWidth={36}
         >
           {FORMATION_COLUMNS.evolutionTauxRemplissage}
         </ConditionalTh>
@@ -351,7 +352,7 @@ export const HeadLineContent = ({
           colonne={"evolutionTauxInsertion"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          maxWidth={48}
+          maxWidth={36}
         >
           {FORMATION_COLUMNS.evolutionTauxInsertion}
         </ConditionalTh>
@@ -371,7 +372,7 @@ export const HeadLineContent = ({
           colonne={"evolutionTauxPoursuite"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          maxWidth={48}
+          maxWidth={36}
         >
           {FORMATION_COLUMNS.evolutionTauxPoursuite}
         </ConditionalTh>
@@ -391,7 +392,7 @@ export const HeadLineContent = ({
           colonne={"evolutionTauxDevenirFavorable"}
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
-          maxWidth={48}
+          maxWidth={36}
         >
           {FORMATION_COLUMNS.evolutionTauxDevenirFavorable}
         </ConditionalTh>

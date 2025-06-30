@@ -230,7 +230,7 @@ export const FormationLineContent = ({
       <GraphEvolution
         title={FORMATION_COLUMNS.evolutionTauxPression}
         data={getEvolutionTauxEntreeData({ evolutions: formation.evolutionTauxEntree, taux: "tauxPression"})}
-        isPercentage={true}
+        isPercentage={false}
       />
     </ConditionalTd>
     <ConditionalTd
