@@ -186,6 +186,7 @@ const DemandeSchema = z.object({
   ),
   suiviId: z.string().optional(),
   isOldDemande: z.boolean(),
+  canEdit: z.boolean(),
 });
 
 export const FiltersSchema = z.object({ numero: z.string() });
@@ -197,7 +198,6 @@ export const getDemandeSchema = {
     200: DemandeSchema.merge(
       z.object({
         metadata: MetadataSchema,
-        canEdit: z.boolean(),
       })
     ),
   },

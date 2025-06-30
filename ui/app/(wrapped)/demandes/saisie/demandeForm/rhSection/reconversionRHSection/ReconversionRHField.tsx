@@ -16,9 +16,6 @@ export const ReconversionRHField = chakra(({ disabled, className }: { disabled?:
       <Controller
         name="reconversionRH"
         control={control}
-        rules={{
-          validate: (value) => typeof value === "boolean" || "Le champ est obligatoire",
-        }}
         render={({ field: { onChange, value, onBlur, ref } }) => (
           <RadioGroup
             ms={6}
@@ -26,6 +23,7 @@ export const ReconversionRHField = chakra(({ disabled, className }: { disabled?:
             onBlur={onBlur}
             onChange={(v) => onChange(toBoolean(v))}
             value={JSON.stringify(value)}
+            defaultValue="false"
           >
             <Radio
               ref={ref}

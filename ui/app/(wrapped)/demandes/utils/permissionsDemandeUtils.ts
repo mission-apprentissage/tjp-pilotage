@@ -1,9 +1,9 @@
 import {hasPermission, hasRole, isUserInRegionsExperimentation2024} from 'shared';
-import type {DemandeStatutType} from 'shared/enum/demandeStatutEnum';
+import type {DemandeStatutType, DemandeStatutTypeWithoutSupprimee} from 'shared/enum/demandeStatutEnum';
 import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
 import type {TypeDemandeType} from 'shared/enum/demandeTypeEnum';
 import {PermissionEnum} from 'shared/enum/permissionEnum';
-import {RoleEnum} from 'shared/enum/roleEnum';
+import { RoleEnum} from 'shared/enum/roleEnum';
 import type { CampagneType } from 'shared/schema/campagneSchema';
 import type { UserType } from 'shared/schema/userSchema';
 import {isAdmin, isUserNational} from 'shared/security/securityUtils';
@@ -17,8 +17,8 @@ import { isUserPartOfSaisieDemande } from '@/utils/isPartOfSaisieDemande';
 
 export type Demande = {
   campagne: CampagneType,
-  statut: DemandeStatutType,
-  typeDemande: TypeDemandeType,
+  statut?: DemandeStatutTypeWithoutSupprimee,
+  typeDemande?: TypeDemandeType,
   canEdit: boolean,
   isOldDemande: boolean
 }
@@ -103,8 +103,9 @@ export const canEditDemandeStatut = ({
     DemandeStatutEnum["refusée"],
   ];
 
+  if(!demande || !demande.statut) return false;
   if(hasRole({ user, role: RoleEnum["perdir"] })) return editableStatutsPerdir.includes(demande.statut);
-  if(hasRole({ user, role: RoleEnum["admin"] }) || hasRole({ user, role: RoleEnum["admin_region"] })) return editableStatutsAdmin.includes(demande.statut);
+  if(isAdmin({ user })) return editableStatutsAdmin.includes(demande.statut);
   else return editableStatuts.includes(demande.statut);
 };
 
@@ -120,7 +121,6 @@ export const canEditDemandeCfdUai = ({
   if(isStatutDemandeValidee(demande?.statut)) return (
     hasRole({ user, role: RoleEnum["admin_region"] })
     || hasRole({ user, role: RoleEnum["admin"] })
-    || hasRole({ user, role: RoleEnum["gestionnaire_region"] })
   );
   return false;
 };
@@ -150,7 +150,6 @@ export const canEditDemande = ({
   demande: Demande,
   user?: UserType
 }): boolean => {
-  if(isAdmin({ user })) return true;
   if(isOldDemande({demande, user})) return canEditOldDemande({ demande: demande, user });
   if (!canEditDemandeStatut({ demande, user })) return false;
   if (!demande.canEdit) return false;
@@ -186,7 +185,7 @@ export const canCorrectDemande = ({
   demande?: Demande,
   user?: UserType
 }): boolean =>
-  feature.correction &&
+  feature.newCorrection &&
   !!demande &&
   hasPermission(user?.role, PermissionEnum["demande/ecriture"]) &&
   isCampagneTerminee(demande?.campagne) &&

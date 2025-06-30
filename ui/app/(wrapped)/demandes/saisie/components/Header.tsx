@@ -3,7 +3,6 @@ import { Box, Button, Collapse, Flex, Highlight, Menu, MenuButton, MenuItem, Men
 import { useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { usePlausible } from "next-plausible";
-import { useState } from "react";
 import type { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import type { CampagneType } from "shared/schema/campagneSchema";
 import type { OptionType } from "shared/schema/optionSchema";
@@ -42,6 +41,8 @@ export const Header = ({
   checkedDemandes,
   setCheckedDemandes,
   setIsModifyingGroup,
+  statut,
+  setStatut
 }: {
   searchParams: ISearchParams;
   setSearchParams: (params: ISearchParams) => void;
@@ -61,6 +62,8 @@ export const Header = ({
   checkedDemandes: CheckedDemandesType | undefined;
   setCheckedDemandes: (checkedDemandes: CheckedDemandesType | undefined) => void;
   setIsModifyingGroup: (isModifyingGroup: boolean) => void;
+  statut: DemandeStatutType | undefined;
+  setStatut: (statut: DemandeStatutType | undefined) => void;
 }) => {
   const { user } = useAuth();
   const toast = useToast();
@@ -171,8 +174,6 @@ export const Header = ({
       }, 500);
     },
   });
-
-  const [statut, setStatut] = useState<DemandeStatutType | undefined>();
 
   return (
     <Flex direction={"column"} gap={2} mb={2}>

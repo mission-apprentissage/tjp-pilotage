@@ -7,7 +7,7 @@ import { client } from "@/api.client";
 import { DemandeSpinner } from "@/app/(wrapped)/demandes/saisie/components/DemandeSpinner";
 import { DemandeForm } from "@/app/(wrapped)/demandes/saisie/demandeForm/DemandeForm";
 import { DemandeFilesProvider } from "@/app/(wrapped)/demandes/saisie/demandeForm/observationsSection/filesSection/filesContext";
-import { canEditDemande,canEditDemandeCfdUai } from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
+import { canCorrectDemande, canEditDemande,canEditDemandeCfdUai } from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
 import { getRoutingAccessSaisieDemande } from "@/utils/getRoutingAccesDemande";
 import { GuardSaisieDemande } from "@/utils/security/GuardSaisieDemande";
 import { useAuth } from "@/utils/security/useAuth";
@@ -38,9 +38,10 @@ export const PageClient = ({
 
 
   if (isLoading || !demande) return <DemandeSpinner />;
-  const isAdjustDemande = queryParams.get("editCfdUai") === "true" && canEditDemandeCfdUai({ demande, user });
+  const isAdjustDemande = !!queryParams.get("editCfdUai") && canEditDemandeCfdUai({ demande, user });
+  const isCorrection = (!!queryParams.get("correction") || !!queryParams.get("report")) && canCorrectDemande({ demande, user });
 
-  const isDisabled = !(canEditDemande({ demande, user }) || isAdjustDemande);
+  const isDisabled = !(canEditDemande({ demande, user }) || isAdjustDemande || isCorrection);
 
   return (
     <GuardSaisieDemande campagne={demande.campagne}>

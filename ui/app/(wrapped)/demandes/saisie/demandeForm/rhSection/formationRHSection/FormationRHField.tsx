@@ -16,9 +16,6 @@ export const FormationRHField = chakra(({ disabled, className }: { disabled?: bo
       <Controller
         name="formationRH"
         control={control}
-        rules={{
-          validate: (value) => typeof value === "boolean" || "Le champ est obligatoire",
-        }}
         render={({ field: { onChange, value, onBlur, ref } }) => (
           <RadioGroup
             ms={6}
@@ -26,6 +23,7 @@ export const FormationRHField = chakra(({ disabled, className }: { disabled?: bo
             onBlur={onBlur}
             onChange={(v) => onChange(toBoolean(v))}
             value={JSON.stringify(value)}
+            defaultValue="false"
           >
             <Radio
               ref={ref}
