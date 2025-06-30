@@ -187,15 +187,15 @@ export const formatRole = (role: Role) => {
   case RoleEnum["admin"]:
     return "Administrateur";
   case RoleEnum["admin_region"]:
-    return "Administrateur région";
+    return "Administrateur RA";
   case RoleEnum["expert_region"]:
-    return "Expert région";
+    return "Expert RA";
   case RoleEnum["gestionnaire_region"]:
-    return "Gestionnaire région";
+    return "Gestionnaire RA";
   case RoleEnum["pilote"]:
     return "Pilote national";
   case RoleEnum["pilote_region"]:
-    return "Pilote région";
+    return "Pilote RA";
   case RoleEnum["perdir"]:
     return "PERDIR / Chef d'établissement";
   case RoleEnum["region"]:

@@ -133,6 +133,7 @@ export const canEditDemande = ({
   demande: Demande,
   user?: UserType
 }): boolean => {
+  if(isAdmin({ user })) return true;
   if(isOldDemande({demande, user})) return canEditOldDemande({ demande: demande, user });
   if (!canEditDemandeStatut({ demande, user })) return false;
   if (!demande.canEdit) return false;

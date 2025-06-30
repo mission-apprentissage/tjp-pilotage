@@ -250,10 +250,10 @@ export const EffectifsEtAttractiviteGraphs = ({
               iconSize={"16px"}
               glossaireEntryKey={"effectif-en-entree"}
               tooltip={
-                <Box>
+                <Flex direction="column" gap={2}>
                   <Text>Effectifs en entrée en première année de formation.</Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
+                  <Text fontWeight={700}>Cliquez pour plus d'infos.</Text>
+                </Flex>
               }
             />
           </Flex>

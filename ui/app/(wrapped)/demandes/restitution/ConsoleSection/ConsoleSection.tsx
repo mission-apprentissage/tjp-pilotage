@@ -6,6 +6,7 @@ import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitu
 import type { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/demandes/restitution/STATS_DEMANDES_COLUMN";
 import type {
   DemandesRestitution,
+  FiltersDemandesRestitution,
   OrderDemandesRestitution,
 } from "@/app/(wrapped)/demandes/restitution/types";
 
@@ -52,6 +53,7 @@ export const ConsoleSection = ({
   data,
   isLoading,
   order,
+  activeFilters,
   handleOrder,
   colonneFilters,
   displayPilotageColumns,
@@ -60,6 +62,7 @@ export const ConsoleSection = ({
   data?: DemandesRestitution;
   isLoading: boolean;
   order: OrderDemandesRestitution;
+  activeFilters: FiltersDemandesRestitution;
   handleOrder: (column: OrderDemandesRestitution["orderBy"]) => void;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
   displayPilotageColumns: boolean;
@@ -101,6 +104,7 @@ export const ConsoleSection = ({
               <HeadLineContent
                 order={order}
                 handleOrder={handleOrder}
+                activeFilters={activeFilters}
                 colonneFilters={colonneFilters}
                 getCellColor={getCellColor}
                 displayPilotageColumns={displayPilotageColumns}

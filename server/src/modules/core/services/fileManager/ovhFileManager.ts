@@ -20,6 +20,12 @@ function generateNewS3Client() {
       accessKeyId: config.s3.accessKey!,
       secretAccessKey: config.s3.secretKey!,
     },
+    // Correction pour éviter que des sockets restent ouverts indéfiniment
+    // cf. https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/node-configuring-maxsockets.html
+    requestHandler: {
+      requestTimeout: 3000,
+      httpsAgent: { maxSockets: 50 },
+    }
   });
 }
 

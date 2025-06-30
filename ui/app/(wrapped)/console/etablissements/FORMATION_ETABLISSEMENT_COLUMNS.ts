@@ -1,5 +1,8 @@
+import { CURRENT_IJ_MILLESIME } from "shared";
+
 import type { client } from "@/api.client";
 import type { ExportColumns } from "@/utils/downloadExport";
+import { formatMillesime } from "@/utils/formatLibelle";
 
 export const FORMATION_ETABLISSEMENT_COLUMNS = {
   // Rentrée scolaire
@@ -48,19 +51,19 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   evolutionTauxPression: "Évolution du taux de pression",
   tauxRemplissage: "Tx de remplissage",
   evolutionTauxRemplissage: "Évolution du taux de remplissage",
-  tauxInsertion: "Tx d'emploi 6 mois régional",
+  tauxInsertion: `Tx d'emploi 6 mois régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   evolutionTauxInsertion: "Évolution du taux d'emploi à 6 mois régional",
-  tauxPoursuite: "Tx de poursuite d'études régional",
   evolutionTauxPoursuite: "Évolution du taux de poursuite d'études régional",
-  positionQuadrant: "Position dans le quadrant",
-  tauxDevenirFavorable: "Tx de devenir favorable régional",
+  tauxDevenirFavorable: `Tx de devenir favorable régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   evolutionTauxDevenirFavorable: "Évolution du taux de devenir favorable régional",
-  tauxInsertionEtablissement: "Tx d'emploi 6 mois de la formation dans l'établissement",
+  tauxInsertionEtablissement: `Tx d'emploi 6 mois de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   evolutionTauxInsertionEtablissement: "Évolution du taux d'emploi à 6 mois de la formation dans l'établissement",
-  tauxPoursuiteEtablissement: "Tx de poursuite d'études de la formation dans l'établissement",
+  tauxPoursuiteEtablissement: `Tx de poursuite d'études de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   evolutionTauxPoursuiteEtablissement: "Évolution du taux de poursuite d'études de la formation dans l'établissement",
-  tauxDevenirFavorableEtablissement: "Tx de devenir favorable de la formation dans l'établissement",
+  tauxDevenirFavorableEtablissement: `Tx de devenir favorable de la formation dans l'établissement (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   evolutionTauxDevenirFavorableEtablissement: "Évolution du taux de devenir favorable de la formation dans l'établissement",
+  tauxPoursuite: `Tx de poursuite d'études régional (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
+  positionQuadrant: `Position dans le quadrant (millésimes ${formatMillesime(CURRENT_IJ_MILLESIME)})`,
   valeurAjoutee: "Valeur ajoutée",
 } satisfies ExportColumns<(typeof client.infer)["[GET]/etablissements"]["etablissements"][number]> & {
   formationSpecifique: string;

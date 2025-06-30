@@ -18,7 +18,7 @@ export const BadgeFermeture = chakra(({
 
   return (
     <Badge variant={"grey"} size={size} {...props}>
-      {labelSize === "long" ? `Fermeture au ${dateFermeture}` : dateFermeture}
+      {labelSize === "short" ? dateFermeture : `Fermeture au ${dateFermeture}`}
     </Badge>
   );
 });
