@@ -43,9 +43,6 @@ export const ProfesseurAssocieRHField = chakra(
         <Controller
           name="professeurAssocieRH"
           control={control}
-          rules={{
-            validate: (value) => typeof value === "boolean" || "Le champ est obligatoire",
-          }}
           render={({ field: { onChange, value, onBlur, ref } }) => (
             <RadioGroup
               ms={6}
@@ -53,6 +50,7 @@ export const ProfesseurAssocieRHField = chakra(
               onBlur={onBlur}
               onChange={(v) => onChange(toBoolean(v))}
               value={JSON.stringify(value)}
+              defaultValue="false"
             >
               <Radio
                 ref={ref}

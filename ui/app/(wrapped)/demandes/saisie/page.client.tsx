@@ -231,6 +231,7 @@ export const PageClient = () => {
   });
 
   const [ checkedDemandes, setCheckedDemandes ] = useState<CheckedDemandesType | undefined>();
+  const [ statut, setStatut ] = useState<DemandeStatutType | undefined>();
   const canCheckDemandes = hasPermission(user?.role, PermissionEnum["demande-statut/ecriture"]);
 
   const onChangeCheckedDemandes = (demande: { statut: DemandeStatutType, numero: string }) => {
@@ -306,6 +307,8 @@ export const PageClient = () => {
               checkedDemandes={checkedDemandes}
               setCheckedDemandes={setCheckedDemandes}
               setIsModifyingGroup={setIsModifyingGroup}
+              statut={statut}
+              setStatut={setStatut}
             />
             {isModifyingGroup ? (
               <DemandeSpinner mt={6}/>
@@ -427,7 +430,7 @@ export const PageClient = () => {
                           const isChecked = checkedDemandes !== undefined &&
                           checkedDemandes.demandes.length > 0 &&
                           checkedDemandes.demandes.includes(demande.numero);
-                          const canBeChecked = !isModificationDisabled && canCheckDemande({
+                          const canBeChecked = canCheckDemande({
                             demande: {
                               ...demande,
                               campagne: data?.campagne
@@ -548,6 +551,7 @@ export const PageClient = () => {
                                     demande={demande}
                                     campagne={data?.campagne}
                                     onChangeCheckedDemandes={onChangeCheckedDemandes}
+                                    setStatut={setStatut}
                                   />
                                   {!isDeleteDisabled && (<DeleteDemandeButton demande={demande} />) }
                                   <Tooltip label="Suivre la demande" shouldWrapChildren>

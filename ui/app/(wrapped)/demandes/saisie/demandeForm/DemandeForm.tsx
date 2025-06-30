@@ -157,6 +157,7 @@ export const DemandeForm = ({
   };
 
   const typeDemandeRef = useRef<HTMLDivElement>(null);
+  const capaciteRef = useRef<HTMLDivElement>(null);
   const motifsEtPrecisionsRef = useRef<HTMLDivElement>(null);
   const ressourcesHumainesRef = useRef<HTMLDivElement>(null);
   const travauxEtEquipementsRef = useRef<HTMLDivElement>(null);
@@ -167,6 +168,7 @@ export const DemandeForm = ({
 
   const anchorsRefs = {
     typeDemande: typeDemandeRef,
+    capacite: capaciteRef,
     motifsEtPrecisions: motifsEtPrecisionsRef,
     ressourcesHumaines: ressourcesHumainesRef,
     travauxEtEquipements: travauxEtEquipementsRef,
@@ -176,8 +178,13 @@ export const DemandeForm = ({
   } as Record<string, React.RefObject<HTMLDivElement>>;
 
   const typeDemande = form.watch("typeDemande");
-  const isTypeDemandeNotFermetureOuDiminution =
-    !!typeDemande && !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
+  const isOldDemande = (demande && !!demande.isOldDemande);
+  const sectionsTravauxInternatEtRestaurationVisible = (
+    !isTypeFermeture(typeDemande) &&
+    !isTypeDiminution(typeDemande) &&
+    !isOldDemande
+  );
+  const sectionStatutVisible = !isTypeAjustement(typeDemande) && isOldDemande;
 
   const getStatutSubmit = (
     statutActuel?: Exclude<DemandeStatutType, "supprimée">
@@ -211,10 +218,9 @@ export const DemandeForm = ({
   };
 
   const queryParams = useSearchParams();
-  const isCorrection = !!queryParams.get("correction");
-  const showCorrection = isCorrection && canCorrectDemande({demande, user});
-
-  const isEditCfdUai = queryParams.get("editCfdUai") === "true" && canEditDemandeCfdUai({demande, user});
+  const isCorrection = !!queryParams.get("correction") && canCorrectDemande({ demande, user });
+  const isReport = !!queryParams.get("report") && canCorrectDemande({ demande, user });
+  const isEditCfdUai = !!queryParams.get("editCfdUai") && canEditDemandeCfdUai({ demande, user });
 
   useEffect(() => {
     if (isEditCfdUai) {
@@ -288,8 +294,8 @@ export const DemandeForm = ({
                   <Box position="sticky" z-index="sticky" top={STICKY_OFFSET} textAlign={"start"}>
                     <MenuFormulaire
                       refs={anchorsRefs}
-                      isTypeDemandeNotFermetureOuDiminution={isTypeDemandeNotFermetureOuDiminution}
-                      showCorrection={showCorrection}
+                      sectionsTravauxInternatEtRestaurationVisible={sectionsTravauxInternatEtRestaurationVisible}
+                      sectionStatutVisible={sectionStatutVisible}
                     />
                     <Box position="relative">
                       <Conseils dateFermetureFormation={dateFermetureFormation} />
@@ -319,8 +325,10 @@ export const DemandeForm = ({
                     formId={formId}
                     disabled={disabled || isEditCfdUai}
                     campagne={campagne}
-                    demande={demande}
-                    showCorrection={showCorrection}
+                    isCorrection={isCorrection}
+                    isReport={isReport}
+                    sectionsTravauxInternatEtRestaurationVisible={sectionsTravauxInternatEtRestaurationVisible}
+                    sectionStatutVisible={sectionStatutVisible}
                     footerActions={
                       <Flex direction="row" gap={4} ref={submitComponentRef}>
                         {canSubmitBrouillon() && (
@@ -363,7 +371,9 @@ export const DemandeForm = ({
                             (
                               !isCampagneEnCours(campagne) &&
                               !isAdmin({ user }) &&
-                              !isEditCfdUai
+                              !isEditCfdUai &&
+                              !isReport &&
+                              !isCorrection
                             )
                           }
                           isLoading={isSubmitting}

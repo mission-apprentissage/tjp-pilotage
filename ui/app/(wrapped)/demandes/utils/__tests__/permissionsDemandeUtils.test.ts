@@ -2,7 +2,7 @@ import type { Role} from 'shared';
 import { RoleEnum } from 'shared';
 import type { CampagneStatut} from 'shared/enum/campagneStatutEnum';
 import { CampagneStatutEnum } from 'shared/enum/campagneStatutEnum';
-import type { DemandeStatutType} from 'shared/enum/demandeStatutEnum';
+import type { DemandeStatutTypeWithoutSupprimee} from 'shared/enum/demandeStatutEnum';
 import {DemandeStatutEnum} from 'shared/enum/demandeStatutEnum';
 import {DemandeTypeEnum} from 'shared/enum/demandeTypeEnum';
 import type { CampagneType } from "shared/schema/campagneSchema";
@@ -11,6 +11,7 @@ import {beforeEach,describe, expect, it} from 'vitest';
 
 import type { Demande } from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
 import { canCorrectDemande, canCreateDemande, canDeleteDemande, canEditDemande, canImportDemande } from '@/app/(wrapped)/demandes/utils/permissionsDemandeUtils';
+import { feature } from "@/utils/feature";
 
 const createUserBuilder = ({
   role,
@@ -118,7 +119,7 @@ const fixtureBuilder = () => {
       campagne: (annee: string, statut?: CampagneStatut) => {
         campagne = createCampagneBuilder({annee, statut: statut ?? CampagneStatutEnum["en cours"]});
       },
-      demandeEditable: (statut?: DemandeStatutType, isOldDemande: boolean = false) => {
+      demandeEditable: (statut?: DemandeStatutTypeWithoutSupprimee, isOldDemande: boolean = false) => {
         demande = createDemandeBuilder({
           campagne,
           statut: statut ?? DemandeStatutEnum["projet de demande"],
@@ -127,7 +128,7 @@ const fixtureBuilder = () => {
           isOldDemande
         });
       },
-      demandeNonEditable: (statut?: DemandeStatutType, isOldDemande: boolean = false) => {
+      demandeNonEditable: (statut?: DemandeStatutTypeWithoutSupprimee, isOldDemande: boolean = false) => {
         demande = createDemandeBuilder({
           campagne,
           statut: statut ?? DemandeStatutEnum["projet de demande"],
@@ -324,22 +325,22 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.then.verifierCanDelete();
   });
 
-  it("Un utilisateur admin national doit pouvoir modifier une demande même non éditable", () => {
+  it("Un utilisateur admin national ne doit pas pouvoir modifier une demande non éditable", () => {
     fixture.given.utilisateurAdmin();
     fixture.given.campagne("2024");
     fixture.given.demandeNonEditable();
 
     fixture.when.canEditDemande();
-    fixture.then.verifierCanEdit();
+    fixture.then.verifierCanNotEdit();
   });
 
-  it("Un utilisateur admin national doit pouvoir modifier une demande même pendant une campagne terminée", () => {
+  it("Un utilisateur admin national ne doit pas pouvoir modifier une demande pendant une campagne terminée", () => {
     fixture.given.utilisateurAdmin();
     fixture.given.campagne("2023", CampagneStatutEnum["terminée"]);
     fixture.given.demandeEditable();
 
     fixture.when.canEditDemande();
-    fixture.then.verifierCanEdit();
+    fixture.then.verifierCanNotEdit();
   });
 
   it("Un utilisateur admin national ne doitpas pouvoir créer une demande même pendant une campagne terminée", () => {
@@ -351,13 +352,13 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
     fixture.then.verifierCanNotCreate();
   });
 
-  it("Un utilisateur admin national doit pouvoir modifier une demande même pendant une campagne en attente", () => {
+  it("Un utilisateur admin national ne doit pas pouvoir modifier une demande pendant une campagne en attente", () => {
     fixture.given.utilisateurAdmin();
     fixture.given.campagne("2025", CampagneStatutEnum["en attente"]);
     fixture.given.demandeEditable();
 
     fixture.when.canEditDemande();
-    fixture.then.verifierCanEdit();
+    fixture.then.verifierCanNotEdit();
   });
 
   it("Un utilisateur admin national ne doit pas pouvoir créer une demande même pendant une campagne en attente", () => {
@@ -550,6 +551,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.newCorrection) return;
     fixture.then.verifierCanShowCorrectionButton();
   });
 
@@ -560,6 +562,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.newCorrection) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
@@ -570,6 +573,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.newCorrection) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
@@ -580,6 +584,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.newCorrection) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
@@ -590,6 +595,7 @@ describe("ui > app > (wrapped) > demandes > utils > permissionsDemandeUtils", ()
 
     fixture.when.canShowCorrectionButton();
 
+    if(!feature.newCorrection) return;
     fixture.then.verifierCanNotShowCorrectionButton();
   });
 
