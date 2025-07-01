@@ -2,7 +2,7 @@ import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, chakra, Flex, IconButton,Link, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { Fragment } from "react";
-import { CURRENT_IJ_MILLESIME,CURRENT_RENTREE } from "shared";
+import { CURRENT_IJ_MILLESIME } from "shared";
 import type { UserType } from "shared/schema/userSchema";
 
 import { ETABLISSEMENT_COLUMN_WIDTH } from "@/app/(wrapped)/console/etablissements/ETABLISSEMENT_COLUMN_WIDTH";
@@ -55,7 +55,6 @@ const ConditionalTd = chakra(
 );
 
 export const EtablissementLineContent = ({
-  showHistoriqueCollapseColumn,
   onClickExpend,
   onClickCollapse,
   expended,
@@ -66,7 +65,6 @@ export const EtablissementLineContent = ({
   getCellBgColor,
   user,
 }: {
-  showHistoriqueCollapseColumn: boolean;
   onClickExpend?: () => void;
   onClickCollapse?: () => void;
   expended?: boolean;
@@ -78,28 +76,25 @@ export const EtablissementLineContent = ({
   user?: UserType;
 }) => (
   <>
-    {
-      showHistoriqueCollapseColumn && (
-        <Td pr="0" py="1" _groupHover={{ bgColor: "blueecume.850 !important" }}>
-          {onClickExpend && (
-            <IconButton
-              transform={expended ? "rotate(180deg)" : ""}
-              variant="ghost"
-              onClick={() => (!expended ? onClickExpend() : onClickCollapse?.())}
-              size="xs"
-              aria-label="Afficher l'historique"
-              icon={<ChevronDownIcon />}
-            />
-          )}
-          {!onClickExpend && (
-            <Box as="span" opacity={0.3} fontWeight="bold">
-          &nbsp;&nbsp;└─
-            </Box>
-          )}
-        </Td>
+    <Td pr="0" py="1" _groupHover={{ bgColor: "blueecume.850 !important" }}>
+      {onClickExpend && (
+        <IconButton
+          transform={expended ? "rotate(180deg)" : ""}
+          variant="ghost"
+          onClick={() => (!expended ? onClickExpend() : onClickCollapse?.())}
+          size="xs"
+          aria-label="Afficher l'historique"
+          icon={<ChevronDownIcon />}
+        />
       )}
+      {!onClickExpend && (
+        <Box as="span" opacity={0.3} fontWeight="bold">
+          &nbsp;&nbsp;└─
+        </Box>
+      )}
+    </Td>
     <ConditionalTd colonne="rentreeScolaire" colonneFilters={colonneFilters} getCellBgColor={getCellBgColor}>
-      {line.rentreeScolaire ?? CURRENT_RENTREE}
+      {line.rentreeScolaire ?? "-"}
     </ConditionalTd>
     <ConditionalTd
       colonne="libelleEtablissement"
@@ -414,7 +409,6 @@ export const EtablissementLinePlaceholder = ({
 }) => (
   <Tr bg={"grey.975"}>
     <EtablissementLineContent
-      showHistoriqueCollapseColumn={true}
       line={{}}
       colonneFilters={colonneFilters}
       getCellBgColor={getCellBgColor}

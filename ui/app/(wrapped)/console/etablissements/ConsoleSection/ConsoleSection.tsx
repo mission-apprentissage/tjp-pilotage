@@ -1,7 +1,6 @@
 import { Table, TableContainer, Tbody, Tr } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 import type { UserType } from "shared/schema/userSchema";
 
 import { client } from "@/api.client";
@@ -58,7 +57,10 @@ export const ConsoleSection = ({
             limit: 2,
             order: "desc",
             orderBy: "rentreeScolaire",
-            rentreeScolaire: RENTREES_SCOLAIRES.filter((rentree) => rentree !== CURRENT_RENTREE),
+            rentreeScolaire: filters?.rentreeScolaire?.[0] ? [
+              `${parseInt(filters.rentreeScolaire[0]) - 1}`,
+              `${parseInt(filters.rentreeScolaire[0]) - 2}`
+            ] : [],
           },
         })
       ).etablissements;
@@ -106,14 +108,12 @@ export const ConsoleSection = ({
           colonneFilters={colonneFilters}
           getCellBgColor={getCellBgColor}
           user={user}
-          showHistoriqueCollapseColumn={filters.rentreeScolaire?.[0] === CURRENT_RENTREE}
         />
         <Tbody>
           {data?.etablissements.map((line) => (
             <Fragment key={`${line.uai}_${line.codeDispositif}_${line.cfd}`}>
               <Tr h="12" bg={"white"} role="group">
                 <EtablissementLineContent
-                  showHistoriqueCollapseColumn={filters.rentreeScolaire?.[0] === CURRENT_RENTREE}
                   isFirstColumnSticky={isFirstColumnSticky}
                   isSecondColumnSticky={isSecondColumnSticky}
                   line={line}
@@ -142,7 +142,6 @@ export const ConsoleSection = ({
                   {historiqueData?.map((historiqueLine) => (
                     <Tr key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`} bg={"grey.975"}>
                       <EtablissementLineContent
-                        showHistoriqueCollapseColumn={true}
                         isFirstColumnSticky={isFirstColumnSticky}
                         isSecondColumnSticky={isSecondColumnSticky}
                         line={historiqueLine}

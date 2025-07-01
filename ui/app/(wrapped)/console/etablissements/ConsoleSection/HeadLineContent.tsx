@@ -80,7 +80,6 @@ const ConditionalTh = chakra(
 );
 
 export const HeadLineContent = ({
-  showHistoriqueCollapseColumn,
   order,
   setSearchParams,
   isFirstColumnSticky,
@@ -89,7 +88,6 @@ export const HeadLineContent = ({
   getCellBgColor,
   user
 }: {
-  showHistoriqueCollapseColumn: boolean;
   order: Partial<Order>;
   setSearchParams: (params: {
     filters?: Partial<Filters>;
@@ -121,11 +119,9 @@ export const HeadLineContent = ({
   return (
     <Thead position="sticky" top="0" boxShadow="0 0 6px 0 rgb(0,0,0,0.15)" zIndex={"docked"}>
       <Tr bg={"white"}>
-        {showHistoriqueCollapseColumn && (
-          <Th>
-            <VisuallyHidden>Historique</VisuallyHidden>
-          </Th>
-        )}
+        <Th>
+          <VisuallyHidden>Historique</VisuallyHidden>
+        </Th>
         <ConditionalTh colonneFilters={colonneFilters} getCellBgColor={getCellBgColor} colonne="rentreeScolaire">
           {FORMATION_ETABLISSEMENT_COLUMNS.rentreeScolaire}
         </ConditionalTh>
