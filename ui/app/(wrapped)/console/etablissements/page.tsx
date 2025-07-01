@@ -1,6 +1,6 @@
 "use client";
 
-import {Button, Center, chakra, Flex, MenuButton,Spinner, useDisclosure} from '@chakra-ui/react';
+import { Button, Center, chakra, Flex, MenuButton, Spinner, Tab, TabList, Tabs, Text,useDisclosure } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -44,6 +44,91 @@ const PAGE_SIZE = 30;
 
 type QueryResult = (typeof client.infer)["[GET]/etablissements"];
 
+const COLONNES_EVOLUTION_TAUX: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> = [
+  "rentreeScolaire",
+  "libelleEtablissement",
+  "libelleFormation",
+  "tauxPression",
+  "tauxRemplissage",
+  "tauxInsertion",
+  "tauxPoursuite",
+  "positionQuadrant",
+  "tauxDevenirFavorable",
+  "tauxInsertionEtablissement",
+  "tauxPoursuiteEtablissement",
+  "tauxDevenirFavorableEtablissement",
+];
+
+const COLONNES_SUIVI_TRANSFO: Array<Partial<FORMATION_ETABLISSEMENT_COLUMNS_KEYS>> = [
+  "rentreeScolaire",
+  "libelleEtablissement",
+  "libelleFormation",
+  "dateEffetTransformation",
+  "typeDemande",
+];
+
+const TabsSection = chakra((
+  {
+    handleColonneFilters,
+  }:
+  {
+    handleColonneFilters: (value: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]) => void;
+  }
+) => {
+  return (<Tabs
+    isLazy={true}
+    // index={getTabIndex()}
+    display="flex"
+    flex="1"
+    flexDirection="column"
+    variant="blue-border"
+    minHeight="0"
+    width={"100%"}
+  >
+    <TabList>
+      <Tab
+        as={Button}
+        onClick={() => {
+          handleColonneFilters(
+            Object.keys(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT_CONNECTED) as FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]
+          );
+        }}
+        p={2}
+      >
+        <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+          <Icon icon="ri:slideshow-line" />
+          <Text>Vue globale</Text>
+        </Flex>
+      </Tab>
+      <Tab
+        as={Button}
+        onClick={() => {
+          handleColonneFilters(COLONNES_EVOLUTION_TAUX);
+        }}
+        p={2}
+      >
+        <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+          <Icon icon="ri:line-chart-line" />
+          <Text>Évolution des taux</Text>
+        </Flex>
+      </Tab>
+      <Tab
+        as={Button}
+        onClick={() => {
+          handleColonneFilters(COLONNES_SUIVI_TRANSFO);
+        }}
+        p={2}
+      >
+        <Flex direction={"row"} justify={"center"} alignItems={"center"} py={0} px={1} gap={2}>
+          <Icon icon="ri:seedling-line" />
+          <Text>Suivi de la transformation</Text>
+        </Flex>
+      </Tab>
+    </TabList>
+  </Tabs>
+  );
+});
+
 const ColonneFilterSection = chakra(
   ({
     colonneFilters,
@@ -51,12 +136,14 @@ const ColonneFilterSection = chakra(
     handleColonneFilters,
     trackEvent,
     user,
+    className
   }: {
     colonneFilters: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     forcedColonnes?: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[];
     handleColonneFilters: (value: FORMATION_ETABLISSEMENT_COLUMNS_KEYS[]) => void;
     trackEvent: (name: string, params?: Record<string, unknown>) => void;
     user?: UserType;
+    className?: string;
   }) => {
 
     const groupedOptions = user
@@ -68,7 +155,7 @@ const ColonneFilterSection = chakra(
       : Object.entries(FORMATION_ETABLISSEMENT_COLUMNS_DEFAULT);
 
     return (
-      <Flex justifyContent={"start"} direction="row">
+      <Flex justifyContent={"start"} direction="row" className={className}>
         <GroupedMultiselect
           width={"48"}
           size="md"
@@ -423,52 +510,58 @@ const Page = () => {
       <Flex direction={"row"} flex={1} position="relative" minH="0">
         <SideSection searchParams={searchParams} filtersList={data?.filters} handleFilters={handleFilters} />
         <Flex direction="column" flex={1} position="relative" minW={0}>
-          <TableHeader
-            p={4}
-            SaveFiltersButton={
-              <Flex py="2">
-                <Button
-                  variant={"externalLink"}
-                  leftIcon={<Icon icon="ri:save-3-line" />}
-                  onClick={() => {
-                    onOpen();
+          <Flex direction={"column"}>
+            <TableHeader
+              p={4}
+              SaveFiltersButton={
+                <Flex py="2">
+                  <Button
+                    variant={"externalLink"}
+                    leftIcon={<Icon icon="ri:save-3-line" />}
+                    onClick={() => {
+                      onOpen();
+                    }}
+                  >
+                    Enregistrer la requête
+                  </Button>
+                </Flex>
+              }
+              SearchInput={
+                <ConsoleSearchInput
+                  placeholder="Rechercher dans les résultats"
+                  onChange={(newValue) => {
+                    const oldValue = searchFormationEtablissement;
+                    setSearchFormationEtablissement(newValue);
+                    if (newValue.length > 2 || oldValue.length > newValue.length) {
+                      onSearch();
+                    }
                   }}
-                >
-                  Enregistrer la requête
-                </Button>
-              </Flex>
-            }
-            SearchInput={
-              <ConsoleSearchInput
-                placeholder="Rechercher dans les résultats"
-                onChange={(newValue) => {
-                  const oldValue = searchFormationEtablissement;
-                  setSearchFormationEtablissement(newValue);
-                  if (newValue.length > 2 || oldValue.length > newValue.length) {
-                    onSearch();
-                  }
-                }}
-                value={searchFormationEtablissement}
-                onClick={onSearch}
-                width={{ base: "15rem", ["2xl"]: "25rem" }}
-              />
-            }
-            ColonneFilter={
+                  value={searchFormationEtablissement}
+                  onClick={onSearch}
+                  width={{ base: "15rem", ["2xl"]: "25rem" }}
+                />
+              }
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
+              page={page}
+              pageSize={PAGE_SIZE}
+              count={data?.count}
+              onPageChange={(newPage) => setSearchParams({ page: newPage })}
+            />
+            <Flex ms={"auto"} p={4} gap={2} flexWrap="wrap" alignItems="center">
               <ColonneFilterSection
                 colonneFilters={colonneFilters}
                 handleColonneFilters={handleColonneFilters}
                 forcedColonnes={["libelleEtablissement", "libelleFormation"]}
                 trackEvent={trackEvent}
                 user={user}
+                ms={"auto"}
               />
-            }
-            onExportCsv={onExportCsv}
-            onExportExcel={onExportExcel}
-            page={page}
-            pageSize={PAGE_SIZE}
-            count={data?.count}
-            onPageChange={(newPage) => setSearchParams({ page: newPage })}
-          />
+              <TabsSection
+                handleColonneFilters={handleColonneFilters}
+              />
+            </Flex>
+          </Flex>
           {isLoading && (
             <Center height="100%" width="100%" position="absolute" bg="rgb(255,255,255,0.8)" zIndex="1">
               <Spinner />

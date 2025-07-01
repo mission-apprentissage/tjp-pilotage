@@ -1,10 +1,11 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { CURRENT_RENTREE } from "shared";
 import { TypeFormationSpecifiqueEnum } from "shared/enum/formationSpecifiqueEnum";
 import { PositionQuadrantEnum } from "shared/enum/positionQuadrantEnum";
 import type { TypeFamille } from "shared/enum/typeFamilleEnum";
 import { TypeFamilleEnum } from "shared/enum/typeFamilleEnum";
+import { getMillesimeFromRentreeScolaire } from "shared/utils/getMillesime";
 import { MAX_LIMIT } from "shared/utils/maxLimit";
 
 import { getKbdClient } from "@/db/db";
@@ -32,7 +33,6 @@ export const getFormationEtablissementsQuery = async ({
   offset = 0,
   limit = MAX_LIMIT,
   rentreeScolaire = [CURRENT_RENTREE],
-  millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
   codeAcademie,
   codeDepartement,
@@ -53,6 +53,7 @@ export const getFormationEtablissementsQuery = async ({
   user
 }: Partial<Filters>) => {
   const search_array = getNormalizedSearchArray(search);
+  const millesimeSortie = getMillesimeFromRentreeScolaire({ rentreeScolaire: rentreeScolaire[0], offset: 0 });
 
   const result = await getKbdClient()
     .selectFrom("formationScolaireView as formationView")
@@ -226,45 +227,39 @@ export const getFormationEtablissementsQuery = async ({
       eb.ref("formationView.isTransitionDemographique").as(TypeFormationSpecifiqueEnum["Transition démographique"]),
       eb.ref("formationView.isTransitionEcologique").as(TypeFormationSpecifiqueEnum["Transition écologique"]),
       eb.ref("formationView.isTransitionNumerique").as(TypeFormationSpecifiqueEnum["Transition numérique"]),
+      hasContinuum({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("continuum"),
+      withPoursuiteReg({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("tauxPoursuite"),
+      withInsertionReg({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("tauxInsertion"),
+      withTauxDevenirFavorableReg({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("tauxDevenirFavorable"),
     ])
     .$narrowType<{
       continuumEtablissement: { cfd: string; libelleFormation: string };
       typeFamille: TypeFamille;
     }>()
-    .select([
-      (eb) =>
-        hasContinuum({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.codeDispositif",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("continuum"),
-      (eb) =>
-        withPoursuiteReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.codeDispositif",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxPoursuite"),
-      (eb) =>
-        withInsertionReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.codeDispositif",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxInsertion"),
-      (eb) =>
-        withTauxDevenirFavorableReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.codeDispositif",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxDevenirFavorable"),
-    ])
     .$call((eb) => {
       if (search)
         return eb.where((eb) =>
