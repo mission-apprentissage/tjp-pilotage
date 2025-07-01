@@ -169,7 +169,11 @@ export const getDemandesQuery = async (
                   ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
+                  unaccent(${eb.ref("dataFormation.cfd")}),
+                  ' ',
                   unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.uai")}),
                   ' ',
                   unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")})
                 )`,
